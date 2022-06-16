@@ -1,0 +1,228 @@
+import React, { useEffect, useState } from 'react'
+import IntlMessages from '../../../utils/IntlMessages'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { SkillBoxEditModal } from './skillBoxEditModal'
+import RemoveSkill from './RemoveSkill'
+import axiosInstance from '../../../utils/AxiosInstance'
+import './index.css'
+import SkillBoxButton from './skillBox'
+import { toast } from 'react-toastify'
+
+export const Skills = (props) => {
+  const [showSkillBoxModal, setShowSkillBoxModal] = useState(false)
+  const [savingLoading, setSavingLoading] = useState(false)
+  const [showRemoveSkill, setShowRemoveSkill] = useState(false)
+  const [allSkill, setAllSkills] = useState([])
+  const [selcetedSkills, setSelectedSkills] = useState([])
+  const [userSkill, setUserSkill] = useState([])
+  const [newSkill, setNewSkill] = useState()
+  const [removeSkill, setRemoveSkill] = useState([])
+
+  const remove = async () => {
+    await axiosInstance
+      .delete('/skills/multiple', { data: removeSkill })
+      .then((data) => {
+        toast.success(<IntlMessages id='alerts.success_change' />)
+
+        setShowRemoveSkill(false)
+
+        setUserSkill(
+          userSkill.filter((skill) => removeSkill.indexOf(skill.name) < 0)
+        )
+        setRemoveSkill([])
+        setTimeout(() => {
+          GetSkillsFromDB()
+        }, 4000)
+      })
+      .catch(() => {
+        setShowRemoveSkill(false)
+        toast.success(<IntlMessages id='alerts.success_change' />)
+        getUserSkills()
+        GetSkillsFromDB()
+      })
+  }
+
+  const editAddedSelectedSkill = (name) => {
+    let array = selcetedSkills
+    const index = array.indexOf(name)
+    if (index > -1) {
+      array.splice(index, 1)
+    }
+    setSelectedSkills(array)
+  }
+
+  const editRemoveSkill = (name) => {
+    let array = removeSkill
+    const index = array.indexOf(name)
+    if (index > -1) {
+      array.splice(index, 1)
+    }
+    setRemoveSkill(array)
+  }
+
+  const update = async () => {
+    await axiosInstance
+      .post('/skills/multiple', { data: selcetedSkills })
+      .then((data) => {
+        toast.success(<IntlMessages id='alerts.success_change' />)
+        selcetedSkills.map((skill) => {
+          setUserSkill((old) => [...old, { name: skill }])
+        })
+        setShowSkillBoxModal(false)
+        setTimeout(() => {
+          GetSkillsFromDB()
+          // getUserSkills()
+        }, 5000)
+        setSelectedSkills([])
+      })
+      .catch(() => {
+        toast.success(<IntlMessages id='alerts.success_change' />)
+        // setTimeout(() => {
+        selcetedSkills.map((skill) => {
+          setUserSkill((old) => [...old, { name: skill }])
+        })
+        getUserSkills()
+        GetSkillsFromDB()
+        setSelectedSkills([])
+        setShowSkillBoxModal(false)
+        // }, 5000)
+      })
+  }
+
+  const getUserSkills = async () => {
+    await axiosInstance
+      .get('/users')
+      .then((response) => {
+        setUserSkill(response.data.Skills)
+      })
+      .catch((err) => err)
+  }
+
+  const GetSkillsFromDB = async () => {
+    await axiosInstance
+      .get('/skills/recomendet')
+      .then((data) => {
+        setAllSkills(data.data)
+      })
+      .catch((data) => setAllSkills(data.data))
+  }
+
+  useEffect(() => {
+    getUserSkills()
+    GetSkillsFromDB()
+  }, [])
+
+  return (
+    <div>
+      <div
+        className='my-account rounded  profile-tags-div mx-0 mt-4'
+        style={{ border: '1px solid #bbbdbf' }}
+      >
+        <h4 className='m-3'>
+          <IntlMessages id='portfolio.skills_title' />
+          <span className='float-end'>
+            <FontAwesomeIcon
+              icon={faPlus}
+              className='mx-4 icon'
+              style={{ height: '25px', width: '25px' }}
+              onClick={() => setShowSkillBoxModal(true)}
+            />
+
+            <FontAwesomeIcon
+              icon={faPencilAlt}
+              className='icon'
+              style={{ height: '25px', width: '25px' }}
+              onClick={
+                userSkill && userSkill.length > 0
+                  ? () => {
+                      setShowRemoveSkill(true)
+                    }
+                  : () => {
+                      setShowRemoveSkill(false)
+                      toast.error('You dont have any skills selected!')
+                    }
+              }
+            />
+          </span>
+        </h4>
+        <div className='w-100 ms-3 mb-3'>
+          {userSkill && userSkill.length > 0 ? (
+            userSkill.map((data) => (
+              <SkillBoxButton
+                data={data}
+                from={'index'}
+                from0={'public'}
+                key={data.id}
+              />
+            ))
+          ) : (
+            <SkillBoxButton
+              data={{ name: 'add' }}
+              from={'index'}
+              isEmpty={true}
+              openModal={() => {
+                setShowSkillBoxModal(true)
+              }}
+            />
+          )}
+          {/* {userSkill && userSkill.map(<SkillBoxButton data={userSkill} />)} */}
+        </div>
+      </div>
+      <SkillBoxEditModal
+        allSkill={allSkill}
+        show={showSkillBoxModal}
+        onHide={() => {
+          setNewSkill()
+          setShowSkillBoxModal(false)
+          setSelectedSkills([])
+        }}
+        setAllSkills={(data) => {
+          setAllSkills(data)
+        }}
+        editAddedSelectedSkill={(data) => editAddedSelectedSkill(data)}
+        selcetedSkills={selcetedSkills}
+        setSelectedSkills={(data) => setSelectedSkills(data)}
+        loading={savingLoading}
+        recomendetSkill={allSkill && allSkill}
+        setLoading={() => setSavingLoading()}
+        onSave={() => {
+          if (selcetedSkills.length == 0) {
+            return toast.error('No skill is selected')
+          }
+          update()
+        }}
+        newSkill={newSkill}
+        setNewSkill={(data) => setNewSkill(data)}
+      />
+      <RemoveSkill
+        show={showRemoveSkill}
+        onHide={() => {
+          setRemoveSkill([])
+          setShowRemoveSkill(false)
+        }}
+        userSkill={userSkill}
+        selcetedSkills={selcetedSkills}
+        setSelectedSkills={(data) => setSelectedSkills(data)}
+        loading={savingLoading}
+        recomendetSkill={allSkill && allSkill}
+        setRemoveSkill={(data) => setRemoveSkill(data)}
+        setLoading={() => setSavingLoading()}
+        onSave={() => {
+          if (removeSkill.length == 0) {
+            return toast.error('No skill is selected')
+          }
+          remove()
+        }}
+        editRemoveSkill={(skill) => editRemoveSkill(skill)}
+        newSkill={newSkill}
+        setNewSkill={(data) => setNewSkill(data)}
+      />
+    </div>
+  )
+}
+
+/*
+     te all skills jon te gjitha skill perveq skill qe i ka useri
+     to all skills only skills than 
+     not are in is the skill that user have */

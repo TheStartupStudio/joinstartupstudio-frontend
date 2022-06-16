@@ -1,0 +1,295 @@
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Image } from 'react-bootstrap'
+import axiosInstance from '../../../utils/AxiosInstance'
+import avatar from '../../../assets/images/profile-image.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faFacebookF,
+  faLinkedinIn,
+  faTwitter,
+  faInstagram,
+  faTwitterSquare,
+  faFacebookSquare
+} from '@fortawesome/free-brands-svg-icons'
+import { faGlobe, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import './index.css'
+import IntlMessages from '../../../utils/IntlMessages'
+import EditBio from './EditBio'
+import Certificate from '../../../assets/images/lts-certifeid-logo.png'
+import { toast } from 'react-toastify'
+
+export default function PersonalBio() {
+  const userId = useSelector((state) => state.user.user.user.id)
+  const [user, setUser] = useState()
+  const [userBio, setUserBio] = useState()
+  const [userConnections, setuserConnections] = useState()
+  const [charset, setCharset] = useState(450)
+  const [loading, setLoading] = useState(false)
+  const [updateBio, setUpdateBio] = useState(false)
+  const [showEditBioModal, setShowEditBioModal] = useState(false)
+  const [isCertified, setIsCertified] = useState(false)
+
+  useEffect(() => {
+    getUser()
+  }, [])
+
+  const getUser = async () => {
+    setLoading(true)
+    await axiosInstance
+      .get('/connect/count')
+      .then((response) =>
+        setuserConnections(parseInt(response.data.connectionCount))
+      )
+    await axiosInstance
+      .get(`/users/${userId}`)
+      .then((response) => {
+        setUser(response.data)
+        setUserBio(response.data.bio)
+        setLoading(false)
+      })
+      .catch((err) => setLoading(false))
+  }
+
+  const handleChange = async (event) => {
+    const { value } = event.target
+    setUserBio(value)
+  }
+
+  const submit = async () => {
+    setUpdateBio(true)
+    await axiosInstance
+      .put(`/users`, {
+        bio: userBio
+      })
+      .then((response) => {
+        toast.success(<IntlMessages id='alerts.success_change' />)
+        setUserBio(response.data.bio)
+
+        onClose()
+      })
+      .catch((err) => err)
+    setUpdateBio(false)
+  }
+
+  const onClose = () => {
+    setShowEditBioModal(false)
+    // setUserBio(user.bio)
+  }
+  const style = {
+    user_proffesion: {
+      textAlign: 'left',
+      font: 'normal normal 500 12px/16px Montserrat',
+      letterSpacing: '0.48px',
+      color: '#707070',
+      paddingLeft: '1px',
+      opacity: '1'
+    },
+    user_name: {
+      textAlign: 'left',
+      font: 'normal normal 500 21px/17px Montserrat',
+      letterSpacing: '0.84px',
+      color: '#333D3D',
+      opacity: '1'
+    },
+    social_links: {
+      paddingLeft: '3px'
+    }
+  }
+  return (
+    <>
+      <div className='mx-0 mt-4 my-account p-3'>
+        <div className='d-flex flex-wrap pb-0 mb-3'>
+          <div className='d-flex my-auto'>
+            <Image
+              src={user?.profile_image ? user?.profile_image : avatar}
+              className='me-2 rounded-circle float-start user-image'
+            />
+          </div>
+          <div className='portfolio-user-info'>
+            <div className='row'>
+              <div className='col-10'>
+                <div className='d-flex flex-wrap ps-0 flex-grow-1 justify-content-between'>
+                  <div className='user-info-grid mt-0 mt-md-4 mt-lg-0'>
+                    <div
+                      className='ps-md-2 pt-md-5 pb-md-3'
+                      style={{ flexGrow: 1 }}
+                    >
+                      <p
+                        className='w-100 d-flex mt-auto ps-0 mb-0 pb-0 pt-3'
+                        style={style.user_name}
+                      >
+                        {user?.name}
+                      </p>
+                      <p
+                        className='mb-0 pt-1'
+                        style={{ ...style.user_proffesion, display: 'block' }}
+                      >
+                        {user?.profession ? user?.profession : ''}
+                      </p>
+                      <div
+                        style={{
+                          flexBasis: '100%',
+                          height: 0
+                        }}
+                      ></div>
+                      {(user?.social_links?.linkedIn ||
+                        user?.social_links?.twitter ||
+                        user?.social_links?.instagram ||
+                        user?.social_links?.facebook ||
+                        user?.social_links?.website) && (
+                        <div
+                          className='mt-0 ps-1 d-flex flex-wrap pt-1 pt-md-auto'
+                          style={style.social_links}
+                        >
+                          {user?.social_links?.linkedIn && (
+                            <a
+                              href={
+                                user.social_links.linkedIn?.startsWith('https')
+                                  ? user.social_links.linkedIn
+                                  : `https://${user.social_links.linkedIn}`
+                              }
+                              rel='noreferrer'
+                              target='_blank'
+                              className='link me-1'
+                            >
+                              <FontAwesomeIcon icon={faLinkedinIn} />
+                            </a>
+                          )}
+                          {user?.social_links?.twitter && (
+                            <a
+                              href={
+                                user.social_links.twitter?.startsWith('https')
+                                  ? user.social_links.twitter
+                                  : `https://${user.social_links.twitter}`
+                              }
+                              rel='noreferrer'
+                              target='_blank'
+                              className='link mx-1'
+                            >
+                              <FontAwesomeIcon icon={faTwitter} />
+                            </a>
+                          )}
+                          {user?.social_links?.instagram && (
+                            <a
+                              href={
+                                user.social_links.instagram?.startsWith('https')
+                                  ? user.social_links.instagram
+                                  : `https://${user.social_links.instagram}`
+                              }
+                              rel='noreferrer'
+                              target='_blank'
+                              className='link mx-1'
+                            >
+                              <FontAwesomeIcon icon={faInstagram} />
+                            </a>
+                          )}
+
+                          {user?.social_links?.website && (
+                            <a
+                              href={
+                                user.social_links.website?.startsWith('https')
+                                  ? user.social_links.website
+                                  : `https://${user.social_links.website}`
+                              }
+                              rel='noreferrer'
+                              target='_blank'
+                              className='link mx-1'
+                            >
+                              <FontAwesomeIcon icon={faGlobe} />
+                            </a>
+                          )}
+                          {user?.social_links?.facebook && (
+                            <a
+                              href={
+                                user.social_links.facebook?.startsWith('https')
+                                  ? user.social_links.facebook
+                                  : `https://${user.social_links.facebook}`
+                              }
+                              rel='noreferrer'
+                              target='_blank'
+                              className='link mx-1'
+                            >
+                              <FontAwesomeIcon icon={faFacebookF} />
+                            </a>
+                          )}
+                        </div>
+                      )}
+
+                      {user && (
+                        <p className='connections px-0 pt-1 pt-sm-auto'>
+                          {userConnections > 500 ? (
+                            <>
+                              500+ <IntlMessages id='connection.title' />
+                            </>
+                          ) : (
+                            <>
+                              <span> {userConnections} </span>
+                              <IntlMessages id='connection.title' />
+                            </>
+                          )}
+                        </p>
+                      )}
+                    </div>
+                    <div className='d-lg-flex flex-wrap w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate'>
+                      {isCertified && (
+                        <>
+                          <img src={Certificate} className='mt-4' />
+                          <p className='verified mb-0'>
+                            <IntlMessages id='general.verifyWithNova' />
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='col-2'>
+                <div
+                  className='float-lg-end float-end mx-2 mx-md-0 mt-3'
+                  onClick={() => setShowEditBioModal(true)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <FontAwesomeIcon
+                    className='edit-pencil float-end me-2'
+                    style={{ height: '25px', width: '25px' }}
+                    icon={faPencilAlt}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className='my-0'>
+          {user && (
+            <>
+              <span className='user-bio'>
+                {userBio && userBio.slice(0, charset)}
+                {userBio?.length >= charset && '...'}
+              </span>
+              {userBio?.length > charset && (
+                <p className='user-bio-read-more pe-auto p-0 mt-1 mb-0'>
+                  <span onClick={() => setCharset(charset + userBio.length)}>
+                    <IntlMessages id='general.readMore' />
+                  </span>
+                </p>
+              )}
+            </>
+          )}
+        </div>
+        <EditBio
+          show={showEditBioModal}
+          onHide={() => onClose()}
+          user={user}
+          userBio={userBio}
+          userConnections={userConnections}
+          handleChange={(event) => handleChange(event)}
+          avatar={avatar}
+          onSubmit={() => submit()}
+          loading={loading}
+          updateBio={updateBio}
+        />
+      </div>
+    </>
+  )
+}

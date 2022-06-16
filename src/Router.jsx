@@ -1,0 +1,258 @@
+/* Top Level Route file */
+
+import React from 'react'
+import { Switch, Route, Redirect } from 'react-router-dom'
+import { useSelector, connect } from 'react-redux'
+import { IntlProvider } from 'react-intl'
+import AppLocale from './lang'
+import Layout from './pages/Layout'
+import PublicLayout from './pages/Layout/publicLayout'
+import CSVUpload from './components/CSVUpload'
+import VerifyEmailByCode from './pages/Register/verifyEmailByCode'
+import LtsJournal from './pages/LtsJournal'
+import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
+import PublishedProject from './pages/StartupProfile/components/published'
+import EditProject from './pages/StartupProfile/pages/edit'
+
+const Login = React.lazy(() => import('./pages/Auth/Login'))
+const SecurePage = React.lazy(() => import('../src/pages/Secure'))
+const ForgotPassword = React.lazy(() =>
+  import('./pages/Auth/Login/forgotPassword')
+)
+const ResetPassword = React.lazy(() =>
+  import('./pages/Auth/Login/resetPassword')
+)
+const CreateAccount = React.lazy(() =>
+  import('./pages/Auth/Login/createAccount')
+)
+const NotFound = React.lazy(() => import('../src/pages/NotFound'))
+
+const Terms = React.lazy(() => import('./pages/Terms'))
+const Register = React.lazy(() => import('./pages/Register'))
+const Dashboard = React.lazy(() => import('./pages/Dashboard'))
+const Portfolio = React.lazy(() => import('./pages/Portfolio'))
+const EditPortfolio = React.lazy(() =>
+  import('./pages/Portfolio/editPortfolio')
+)
+const MyProjects = React.lazy(() => import('./pages/StartupProfile'))
+const Preview = React.lazy(() => import('./pages/StartupProfile/preview'))
+const PrivateProject = React.lazy(() =>
+  import('./pages/StartupProfile/components/PrivateProject')
+)
+const SavedMedia = React.lazy(() => import('./pages/Saved'))
+const Resubscribe = React.lazy(() => import('./pages/Resubscribe'))
+const StartupLive = React.lazy(() => import('./pages/StartupLive'))
+const Spotlight = React.lazy(() => import('./pages/Spotlight'))
+const LiveStream = React.lazy(() => import('./pages/StartupLive/livestream'))
+const AllVideos = React.lazy(() => import('./pages/BeyondYourCourse/allVideos'))
+const BeyondYourCourse = React.lazy(() => import('./pages/BeyondYourCourse'))
+const BeyondYourCourseVideo = React.lazy(() =>
+  import('../src/pages/BeyondYourCourse/beyondYourCourseVideo')
+)
+const Profile = React.lazy(() => import('./pages/Profile/index'))
+const ProfilePreview = React.lazy(() =>
+  import('./pages/Profile/profilePreview')
+)
+const MyMarketReadyGuide = React.lazy(() =>
+  import('./pages/MyMarketReadyGuide')
+)
+const PublicProfile = React.lazy(() => import('./pages/Profile/publicProfile'))
+const PublicPortfolio = React.lazy(() =>
+  import('./pages/Portfolio/publicPortfolio')
+)
+
+const PreviewPublicPortfolio = React.lazy(() =>
+  import('./pages/PortfolioNew/previewPublicPortfolio')
+)
+const UserPortfolioProj = React.lazy(() =>
+  import('./pages/StartupProfile/userProjects')
+)
+
+const MyNotes = React.lazy(() => import('../src/pages/MyNotes'))
+const SampleNote = React.lazy(() => import('../src/pages/MyNotes/sampleNote'))
+const MyJournals = React.lazy(() => import('../src/pages/MyJournals'))
+const Logout = React.lazy(() => import('./pages/Auth/LogOut'))
+const VerifyEmail = React.lazy(() => import('./pages/Verify'))
+const MyConnections = React.lazy(() => import('./pages/MyConnections'))
+const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
+const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
+const PreviewPortfolioNew = React.lazy(() =>
+  import('./pages/PortfolioNew/previewPortfolio')
+)
+const EditPortfolioNew = React.lazy(() =>
+  import('./pages/PortfolioNew/editPortfolio')
+)
+
+function Router(props) {
+  const currentAppLocale = AppLocale[props.locale]
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
+  const clientBaseURL = `${process.env.REACT_APP_CLIENT_BASE_URL}`
+
+  return (
+    // return window.location.href.includes(`public`) ? (
+    //   <React.Fragment>
+    //     <Route
+    //       exact
+    //       path='/public-portfolio/:username'
+    //       component={PublicPortfolio}
+    //     />
+    //     <Route exact path='/public-profile/:username' component={PublicProfile} />
+    //   </React.Fragment>
+    // ) : (
+    <IntlProvider
+      locale={currentAppLocale.locale}
+      messages={currentAppLocale.messages}
+    >
+      <React.Fragment>
+        {isAuthenticated ? (
+          <Layout>
+            <Switch>
+              <Route path='/dashboard' component={Dashboard} />
+              <Route path='/savedMedia' component={SavedMedia} />
+              <Route path='/csv-upload' component={CSVUpload} />
+              <Route path='/portfolio' component={Portfolio} />
+              {/* <Route path='/edit-portfolio' component={EditPortfolio} /> */}
+              <Route
+                exact
+                path='/edit-portfolio'
+                component={EditPortfolioNew}
+              />
+              <Route
+                exact
+                path='/edit-portfolio/recommendation/:id'
+                component={EditPortfolioNew}
+              />
+              <Route
+                path='/preview-portfolio'
+                component={PreviewPortfolioNew}
+              />
+              <Route
+                exact
+                path='/user-portfolio/:username'
+                component={PreviewPublicPortfolio}
+              />
+              <Route
+                exact
+                path='/beyond-your-course'
+                component={BeyondYourCourse}
+              />
+              <Route
+                exact
+                path='/beyond-your-course/:id'
+                component={BeyondYourCourse}
+              />
+              <Route path='/story-in-motion' component={StoryInMotion} />
+              <Route path='/PrivateProject' component={PrivateProject} />
+              <Route path='/UserProject/:uid' component={UserPortfolioProj} />
+              <Route path='/MyStartupProfile' component={MyProjects} />
+              <Route path='/PreviewMyStartupProfile/:id' component={Preview} />
+              <Route path='/:page/videos' component={AllVideos} />
+              <Route exact path='/startup-live' component={StartupLive} />
+              <Route exact path='/spotlight' component={Spotlight} />
+              <Route exact path='/startup-livestream' component={LiveStream} />
+              <Route exact path='/account' component={Profile} />
+              <Route exact path='/profile-preview' component={ProfilePreview} />
+              <Route
+                path='/lts-journal/'
+                component={(props) => <LtsJournal {...props} category='lts' />}
+              />
+              <Route
+                path='/wellness-journal/'
+                component={(props) => (
+                  <LtsJournal {...props} category='wellness' />
+                )}
+              />
+              <Route
+                path='/personal-finance-journal/'
+                component={(props) => (
+                  <LtsJournal {...props} category='personal-finance' />
+                )}
+              />
+              <Route
+                path='/market-ready/'
+                component={(props) => (
+                  <LtsJournal {...props} category='market-ready' />
+                )}
+              />
+              <Route
+                exact
+                path='/my-course-in-entrepreneurship'
+                component={MyCourseEntrepreneurship}
+              />
+              <Route
+                path='/my-course-in-entrepreneurship/journal'
+                component={(props) => (
+                  <LtsJournal {...props} category='entrepreneurship' />
+                )}
+              />
+              <Route
+                exact
+                path='/My-Market-Ready-Guide'
+                component={MyMarketReadyGuide}
+              />
+              <Route
+                exact
+                path='/MyStartupProfile'
+                component={MyStartupProfile}
+              />
+              <Route exact path='/editProject/:id' component={EditProject} />
+              <Route
+                exact
+                path='/PublishedProject/:id'
+                component={PublishedProject}
+              />
+              <Route
+                path='/:page/video/:id'
+                component={BeyondYourCourseVideo}
+              />
+              <Route path='/sample-note' component={SampleNote} />
+              <Route exact path='/my-notes/:id' component={MyNotes} />
+              <Route
+                exact
+                path='/my-journal/:month/:id'
+                component={MyJournals}
+              />
+              <Route exact path='/my-account' component={Profile} />
+              <Route path='/verify' component={VerifyEmail} />
+              <Route path='/logout' component={Logout} />
+              <Route exact path='/my-connections' component={MyConnections} />
+              <Route
+                exact
+                path='/my-connections/request/:id'
+                component={MyConnections}
+              />
+              <Redirect from='/register' exact to='/dashboard' />
+              <Redirect from='/' exact to='/dashboard' />
+              <Route component={NotFound} />
+            </Switch>
+          </Layout>
+        ) : (
+          <PublicLayout>
+            <Switch>
+              <Route path='/verify-email' component={VerifyEmailByCode} />
+              <Route exact path='/lts-secure' component={SecurePage} />
+              <Route exact path='/forgot-password' component={ForgotPassword} />
+              <Route exact path='/reset-password' component={ResetPassword} />
+              <Route exact path='/create-account' component={CreateAccount} />
+              <Route exact path='/terms' component={Terms} />
+              <Route path='/register' component={Register} />
+              <Route exact path='/trial-ended' component={Resubscribe} />
+              <Route exact path='/subscription-ended' component={Resubscribe} />
+              <Route path='/logout' component={Logout} />
+              <Route exact path='/' component={Login} />
+              <Route path='/verify' component={VerifyEmail} />
+              <Route component={NotFound} />
+            </Switch>
+          </PublicLayout>
+        )}
+      </React.Fragment>
+    </IntlProvider>
+  )
+}
+
+const mapStateToProps = ({ lang }) => {
+  const { locale } = lang
+  return { locale }
+}
+
+export default connect(mapStateToProps, {})(Router)

@@ -1,0 +1,193 @@
+.recommendation-container .rcmd-user .pendingLabel {
+  color: red;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: -15px;
+  font-family: Montserrat;
+}
+
+.recommendation-container .rcmd-user h5 {
+  font: normal normal bold 20px/22px Arial;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+
+.recommendation-container .rcmd-user p {
+  font: normal normal normal 10px/24px Arial;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+
+.recommendation-container .rcmd-description p {
+  font: normal normal 300 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+}
+
+.misconduct-modal .contact-us input::placeholder {
+  font-size: 14px;
+  opacity: 1;
+  padding: 0;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  font-weight: 500;
+}
+
+.misconduct-modal .contact-us input {
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  font-weight: 500;
+  border: 1px solid #bbbdbf;
+  height: 48px;
+  background-color: white;
+  font-size: 14px;
+  padding: 2px 8px;
+}
+
+.misconduct-modal h3 {
+  text-align: left;
+  font: normal normal 600 24px/29px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+
+.edit-rcmd-container {
+  height: 500px;
+  overflow-y: auto;
+}
+
+.edit-rcmd-container .no-rcmd-yet {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font: normal normal medium 20px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+
+.editing-rcmd {
+  border: 1px solid #bbbdbf;
+  border-radius: 6px;
+}
+
+.editing-rcmd button {
+  width: 80px;
+  height: 30px;
+}
+
+.editing-rcmd textarea {
+  border: 1px solid #bbbdbf;
+  border-radius: 6px;
+  padding: 10px;
+  resize: none;
+  width: 100%;
+  height: 200px;
+}
+
+.edit-rcmd-container .edit-rcmd-responsive {
+  display: flex;
+  justify-content: space-between;
+}
+
+.recommendation-container .contact-us label {
+  font-size: 12px;
+  /* font: normal normal medium 12px/15px Montserrat; */
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+
+.respond-rcmd-request .contact-us input {
+  font-size: 12px;
+}
+
+.respond-rcmd-request .rcmd-user h2 {
+  font-family: Montserrat;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+
+.respond-rcmd-request .rcmd-user p {
+  font-family: Montserrat;
+  font-size: 12px;
+  letter-spacing: 0.48px;
+  color: #707070;
+}
+
+.respond-rcmd-request .rcmd-user h5 {
+  font-size: 21px;
+  font-weight: 500;
+  font-family: Montserrat;
+  /* font: normal normal medium 21px/17px Montserrat; */
+  letter-spacing: 0.84px;
+  color: #231f20;
+  opacity: 1;
+  display: inline-block;
+}
+
+.respond-rcmd-request .contact-us textarea {
+  border-radius: 0;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  font-weight: 500;
+  border: 1px solid #bbbdbf;
+  background-color: white;
+  font-size: 12px;
+  padding: 8px;
+  min-height: 48px;
+  max-height: 80px;
+}
+
+@media (max-width: 425px) {
+  .respond-rcmd-request .cancel-subscription-button {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .rcmd-header .rcmd-mobile-header {
+    display: block !important;
+  }
+
+  .rcmd-header .rcmd-desktop-header {
+    display: none !important;
+  }
+
+  .edit-rcmd-container .edit-rcmd-responsive {
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+
+  .edit-rcmd-responsive .rcmd-edit-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  .recommendation-container {
+    flex-wrap: wrap;
+  }
+
+  .break-rcmd {
+    display: block !important;
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .misconduct-modal h3 {
+    font-size: 18px;
+  }
+}

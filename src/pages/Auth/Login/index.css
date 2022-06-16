@@ -1,0 +1,105 @@
+.login-logo {
+  width: 200px;
+}
+
+.login-title {
+  margin-top: 20px;
+  font-weight: 100;
+  font-size: 50px;
+  color: gray;
+}
+
+.login-left-content {
+  margin-bottom: 50px;
+}
+
+.login-left-content p {
+  color: gray;
+}
+
+.social-media-items {
+  margin-top: 25px;
+}
+
+.social-media-items :hover {
+  color: #a7ca42;
+}
+
+.social-media-item {
+  margin-right: 20px;
+  color: black;
+  font-size: 20px;
+}
+
+.login-create-account {
+  text-align: right;
+  position: relative;
+}
+
+.login-create-account a {
+  position: absolute;
+  top: -75px;
+  right: 20px;
+  color: gray;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.public-page-form .register-btn {
+	display: block;
+	width: auto;
+	padding-right: 20px;
+	padding-left: 20px;
+	margin-left: auto;
+}
+
+.radio-wrapper {
+	display: grid;
+	grid-template-columns: 25px auto;
+}
+
+.radio-wrapper > div {
+	display: flex;
+	align-items: center;
+}
+
+.radio-wrapper * {
+	font-size: 10px;
+	text-align: left;
+}
+
+.radio-wrapper input[type='radio'] {
+	width: 20px;
+	height: 20px;
+	background-clip: content-box;
+	border: 2px solid #01c5d1;
+	background-color: #fff;
+	border-radius: 50%;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	padding: 3px;
+}
+.radio-wrapper input[type='radio']:checked {
+	background-color: #01c5d1;
+}
+
+.create-account-title {
+	margin-left: 100px;
+}
+
+@media (min-width: 767.98px) {
+  .center-content {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (max-width: 767.98px) {
+	.create-account-title {
+		margin-left: 0;
+	}
+}

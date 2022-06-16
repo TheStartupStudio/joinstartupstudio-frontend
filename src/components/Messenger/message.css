@@ -1,0 +1,157 @@
+.message {
+  display: flex;
+  flex-direction: column;
+  /* margin-top: 5px; */
+}
+
+.messageTop {
+  display: flex;
+  max-width: 70%;
+}
+
+.messageImg {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  /* margin-right: 10px; */
+}
+
+.messageText {
+  position: relative;
+  padding: 9px;
+  border-radius: 4px;
+  background-color: #333d3d1a;
+  max-width: 220px;
+  color: #333d3db3;
+  font-size: 12px;
+  word-break: break-word;
+  font-weight: 300;
+  /* padding-right: -10px; */
+}
+
+.messageText span {
+  text-align: left;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  font-weight: 600;
+}
+
+.messageBottom {
+  font-size: 12px;
+  /* margin-top: 10px; */
+}
+
+.message.own {
+  align-items: flex-end;
+}
+
+.message.own .messageText {
+  background-color: #ace7ec;
+  color: #707070;
+}
+
+.chatBoxHeader p {
+  font-size: 14px;
+  color: #333d3d;
+  letter-spacing: 0.4px;
+  opacity: 1;
+  font-weight: 500;
+}
+
+.chatMessageInput {
+  /* height: 38px !important; */
+  max-height: 90px !important;
+  overflow-y: none !important;
+  resize: none !important;
+  border-radius: 0 !important;
+  border: 1px solid #333d3d1a !important;
+  font-size: 12px !important;
+}
+
+.chatBoxTop {
+  overflow: overlay;
+}
+
+.messageDate {
+  font-size: 10px;
+  display: block;
+}
+
+.chatBoxWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 242px;
+  scroll-behavior: smooth;
+}
+
+.chatBoxBottom {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.load-more {
+  font-size: 10px;
+  text-align: center;
+  color: #01c5d1;
+  cursor: pointer;
+}
+
+.searchingMessages {
+  height: 320px;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.chatBoxTop::-webkit-scrollbar-track {
+  background-color: #edeaea;
+}
+
+.chatBoxTop::-webkit-scrollbar {
+  width: 3px;
+}
+
+.chatBoxTop::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #e4e4e4;
+}
+
+.newConnectionMessageHeader {
+}
+
+.foundMessage {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cancelMessage {
+  font-size: 10px;
+  text-align: right;
+  color: #01c5d1 !important;
+  cursor: pointer;
+}
+
+.chatProfileImage {
+  object-fit: cover;
+}
+
+.chatDate {
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 0.28px;
+  color: #707070;
+  opacity: 1;
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+  .messageText {
+    max-width: 400px;
+  }
+}

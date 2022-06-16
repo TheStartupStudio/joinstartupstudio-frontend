@@ -1,0 +1,94 @@
+.pageTitle span {
+  text-align: left;
+  font: normal normal 600 25px/30px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+  opacity: 1;
+}
+.page-description-story-in-motion span {
+  text-align: left;
+  font: normal normal 500 14px/15px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+  opacity: 1;
+}
+
+.page-description-this-week-podcast span {
+  text-align: left;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: #333d3d;
+  opacity: 1;
+}
+.story-in-motion-now-playing span {
+  text-align: left;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.68px;
+  color: #333d3d;
+  opacity: 1;
+}
+.story-in-motion-also-avalible span {
+  text-align: left;
+  font: normal normal 600 13px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+  opacity: 1;
+}
+.story-in-motion-Previous-Podcast-Episodes span {
+  text-align: left;
+  font: normal normal 500 20px Montserrat;
+  letter-spacing: 0.8px;
+  color: #333d3d;
+  opacity: 1;
+}
+.story-in-motion-podcast-icon {
+  font-size: 20px;
+  color: #bbbdbf;
+}
+.story-in-motion-podcast-title {
+  text-align: left;
+  font: normal normal bold 14px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+  opacity: 1;
+}
+.story-in-motion-podcast-date {
+  font: normal normal 500 10px Montserrat !important;
+  color: #333d3d;
+}
+.story-in-motion-podcast-description {
+  color: #333d3d;
+  font: normal normal 300 10px Montserrat;
+  word-break: break-word;
+}
+.story-in-motion-logo {
+  width: 100%;
+}
+.podcast-platforms-img img {
+  cursor: pointer;
+}
+.postcast-faworite-widget span {
+  text-align: left;
+  font: normal normal 500 20px/7px Montserrat;
+  letter-spacing: 0.8px;
+  color: #231f20;
+  opacity: 1;
+}
+@media only screen and (max-width: 800px) {
+  .story-in-motion-logo {
+    width: 60%;
+  }
+}
+.view_all span {
+  text-align: right;
+  font: normal normal 600 13px/16px Montserrat;
+  letter-spacing: 0.52px;
+  color: #51c7df;
+  opacity: 1;
+  margin-top: -15px;
+}
+#waveform > wave {
+  overflow: hidden !important;
+}

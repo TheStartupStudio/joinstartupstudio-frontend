@@ -1,0 +1,9 @@
+.saved-videos-widget img {
+  height: 200px;
+}
+
+@media (min-width: 576px) {
+  .saved-videos-widget img {
+    height: 180px !important;
+  }
+}

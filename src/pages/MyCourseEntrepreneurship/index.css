@@ -1,0 +1,113 @@
+.alert-modal .modal-dialog {
+  max-width: 540px;
+}
+.alert-modal .modal-content {
+  border-radius: 0px !important;
+}
+.alert-modal .modal-body {
+  padding: 70px 60px 50px;
+}
+.alert-modal .alert-modal__text {
+  text-align: center;
+  font: normal normal 600 18px/21px Montserrat;
+  letter-spacing: 0.72px;
+  color: #707070;
+  margin-bottom: 14px;
+}
+.alert-modal .alert-modal__buttons {
+  padding: 0 30px;
+}
+.alert-modal .alert-modal__buttons > * {
+  display: flex;
+}
+.alert-modal .alert-modal__buttons > *:not(:last-child) {
+  margin-bottom: 4px;
+}
+
+.levels-of-journey {
+}
+.levels-of-journey__level {
+  padding-left: 20px;
+}
+.levels-of-journey__level:not(:first-child) {
+  margin-top: 20px;
+}
+.levels-of-journey__title {
+  font: normal normal 23px/28px Montserrat;
+  font-weight: 500;
+  letter-spacing: 0px;
+  color: #231f20;
+}
+.levels-of-journey__title span {
+  font: normal normal bold 23px/28px Montserrat;
+}
+.levels-of-journey__level:nth-child(1) .levels-of-journey__title span {
+  color: #51c7df;
+}
+.levels-of-journey__level:nth-child(2) .levels-of-journey__title span {
+  color: #99cc33;
+}
+.levels-of-journey__level:nth-child(3) .levels-of-journey__title span {
+  color: #ff3399;
+}
+.levels-of-journey__description {
+  font: normal normal 300 16px/19px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  padding-left: 80px;
+}
+
+.entrepreneurs {
+}
+.entrepreneurs__item {
+}
+.entrepreneurs__item-inner {
+}
+.entrepreneurs__item-title {
+  font: normal normal 600 24px/29px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  margin-bottom: 3px;
+}
+.entrepreneurs__item-position {
+  font: normal normal 500 17px/20px Montserrat;
+  letter-spacing: 0px;
+  color: #bbbdbf;
+  margin-bottom: 7px;
+}
+.entrepreneurs__item-video {
+}
+
+.key_points {
+  margin-top: -27px;
+}
+.key_points__item {
+  margin-top: 27px;
+}
+.key_points__item-inner {
+}
+.key_points__item-video {
+}
+.key_points__item-video .react-player__play-icon {
+  border-width: 14px 0px 14px 22px !important;
+  border-color: transparent transparent transparent black !important;
+  position: relative;
+}
+.key_points__item-video .react-player__play-icon::before {
+  content: '';
+  position: absolute;
+  border-radius: 100px;
+  width: 62px;
+  height: 62px;
+  border: 6px solid black;
+  top: 50%;
+  left: 50%;
+  transform: translate(calc(-50% - 13px), -50%);
+}
+.key_points__item-title {
+  text-align: center;
+  font: normal normal 9px/11px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  margin-top: 10px;
+}

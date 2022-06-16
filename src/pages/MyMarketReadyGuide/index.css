@@ -1,0 +1,140 @@
+.MY_MARKET_READY_GUIDE .page_title {
+  text-align: left;
+  font: normal normal 600 25px/30px Montserrat;
+  letter-spacing: 0px;
+  text-transform: uppercase;
+  opacity: 1;
+}
+.MY_MARKET_READY_GUIDE .desc {
+  text-align: left;
+  font: normal normal 600 13px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+  opacity: 1;
+}
+.MY_MARKET_READY_GUIDE .video_desc {
+  text-align: left;
+  font: normal normal 300 16px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.MY_MARKET_READY_GUIDE .image-desc {
+  text-align: left;
+  font: normal normal 600 13px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+  opacity: 1;
+}
+.title {
+  display: block;
+  text-align: left;
+  font: normal normal 500 14px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  margin-bottom: 10px;
+}
+.Properties {
+  text-align: left;
+  font: normal normal normal 14px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+}
+.accordion_button {
+  background: #f8f7f7 0% 0% no-repeat padding-box;
+  border: 1px solid #f3f3f3;
+  opacity: 1;
+  text-align: left;
+  font: normal normal 600 15px/15px Montserrat;
+  letter-spacing: 0.6px;
+  color: #333d3d;
+  opacity: 1;
+}
+.accordion_button:not(.collapsed) {
+  background: #f8f7f7 0% 0% no-repeat padding-box;
+  border: 1px solid #f3f3f3;
+  opacity: 1;
+  outline: 0 !important;
+  color: black;
+  text-align: left;
+  font: normal normal 600 15px/15px Montserrat;
+  letter-spacing: 0.6px;
+  color: #333d3d;
+  opacity: 1;
+}
+.accordion_button:active 
+/* .accordion_button:focus  */ {
+  outline: 0 !important;
+}
+.accordion-outter {
+  background: #3c3c3c 0% 0% no-repeat padding-box !important;
+  color: white;
+  opacity: 1;
+}
+.accordion-outter:not(.collapsed) {
+  color: white !important;
+}
+.accordion-button:after {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+.accordion-button-inner::after {
+  outline: 0 !important;
+  display: block;
+  content: '+';
+  transform: 0 !important;
+  font-weight: bold;
+  font-size: 43px;
+  margin-right: 1px;
+  background-image: none !important;
+  color: #707070;
+}
+.accordion-button-inner:not(.collapsed)::after {
+  transform: rotate(0deg) !important;
+}
+.accordion-outter {
+  text-align: left;
+  font: normal normal 600 16px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #fcfcfc;
+  opacity: 1;
+}
+.accordion-outter-body {
+  text-align: left;
+  font: normal normal 300 16px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+.accordion-button-inner {
+  text-align: left;
+  font: normal normal 600 15px/15px Montserrat;
+  letter-spacing: 0.6px;
+  color: #333d3d;
+  opacity: 1;
+}
+.inner_span {
+  text-align: left;
+  font: normal normal 500 14px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  display: block;
+  margin: 14px 0px;
+}
+.accordion-body {
+  box-shadow: 0px 6px 9px #00000029;
+}
+.button-accordion {
+  text-align: left;
+  font: normal normal 600 16px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #fcfcfc;
+  opacity: 1;
+}
+.Properties .title {
+  display: block;
+  text-align: left;
+  font: normal normal bold 14px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  margin-bottom: 10px;
+}
