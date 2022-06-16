@@ -21,16 +21,14 @@ import {
 
 export default function Profile(props) {
   const user = useSelector((state) => state.user.user.user)
-  const [connectionRequests, setConnectionRequests] = useState(0)
-  const [myConnections, setMyConnections] = useState(0)
   const [lastLogin, setLastLogin] = useState(null)
   const [newMessages, setNewMessages] = useState([])
   const isAllowedLevel = IsUserLevelAuthorized()
+  const [totalStudents, setTotalStudents] = useState(0)
 
   useEffect(() => {
-    getAllConnectionRequests()
-    getConnectionsAll()
     getNewMessages()
+    getTotalStudents()
   }, [])
 
   useEffect(() => {
@@ -103,24 +101,21 @@ export default function Profile(props) {
     setLastLogin(formatedDate)
   }, [])
 
-  const getAllConnectionRequests = async () => {
-    await getConnectionRequests()
-      .then((requests) => setConnectionRequests(requests.data.count))
-      .catch((e) => e)
-  }
-
-  const getConnectionsAll = async () => {
-    await getConnections()
-      .then((connections) => setMyConnections(connections.data.count))
-      .catch((e) => e)
-  }
-
   const getNewMessages = async () => {
     if (!isAllowedLevel) return
     await axiosInstance
       .get('/privateChat/unread-messages')
       .then((data) => {
         setNewMessages(data.data)
+      })
+      .catch((err) => err)
+  }
+
+  const getTotalStudents = async () => {
+    await axiosInstance
+      .get('/instructor/total-students')
+      .then((data) => {
+        setTotalStudents(data.data.total_students)
       })
       .catch((err) => err)
   }
@@ -229,7 +224,7 @@ export default function Profile(props) {
         }}
         className='dashboard-notification'
       >
-        <h3 className='mt-3 text-lg-center'>
+        <h3 className='text-lg-center' style={{ marginTop: '39px' }}>
           <IntlMessages id='dashboard.my_notifications' />
         </h3>
         <div className='row'>
@@ -248,20 +243,10 @@ export default function Profile(props) {
             )}
             <div className='row'>
               <div className='col-10'>
-                <p className='mt-2 mb-0'>
-                  <IntlMessages id='dashboard.connection_requests' />
-                </p>
+                <p className='mt-2 mb-0'>Total Students</p>
               </div>
               <div className='col-1 text-left'>
-                <p className='mt-2 mb-0'>{connectionRequests}</p>
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-10'>
-                <p className='mt-2 mb-0'>Total Connections</p>
-              </div>
-              <div className='col-1 text-left'>
-                <p className='mt-2 mb-0'>{myConnections}</p>
+                <p className='mt-2 mb-0'>{totalStudents}</p>
               </div>
             </div>
           </div>

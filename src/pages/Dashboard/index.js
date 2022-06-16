@@ -4,17 +4,13 @@ import { Link } from 'react-router-dom'
 import IntlMessages from '../../utils/IntlMessages'
 import Profile from '../../components/Profile'
 import Calendar from '../../components/Calendar'
-import RecommendedConnections from '../../components/Connections/recommendedConnections'
 import { changeSidebarState } from '../../redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
-import { IsUserLevelAuthorized, ShowMessenger } from '../../utils/helpers'
-import NewestProjectsByTheCommunity from '../StartupProfile/NewestProjectsByTheCommunity'
 import Messenger from '../../components/Messenger/Messenger'
-import UserContactForm from '../../components/UserContactForm'
+import { ActiveStudents } from '../../components/ActiveStudents'
 
 function Dashboard() {
-  const [width, setWidth] = useState(window.innerWidth)
   const dispatch = useDispatch()
   const [newMessage, setNewMessage] = useState([])
   const [chatId, setChatId] = useState('')
@@ -22,17 +18,6 @@ function Dashboard() {
   useEffect(() => {
     dispatch(changeSidebarState(false))
   })
-
-  const resize = () => {
-    setWidth(window.innerWidth)
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', resize)
-    return () => {
-      window.removeEventListener('resize', resize)
-    }
-  }, [])
 
   return (
     <div className='container-fluid'>
@@ -51,11 +36,6 @@ function Dashboard() {
               clearChat={() => setChatId('')}
             />
 
-            <div className='mt-4'>
-              <div className='row'>
-                <NewestProjectsByTheCommunity width={width} from='Dashboard' />
-              </div>
-            </div>
             <div className='my-4'>
               <div className='row'>
                 <div className='col-md-12 col-lg-8'>
@@ -63,20 +43,10 @@ function Dashboard() {
                     className='page-title'
                     style={{ textTransform: 'capitalize' }}
                   >
-                    <IntlMessages id='dashboard.recommended_connections' />
+                    Recently Active Students
                   </h3>
                 </div>
-                <div className='col-md-12 col-lg-4 text-lg-end'>
-                  <h2
-                    className='view-connections link mt-2'
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <Link to='/my-connections'>
-                      <IntlMessages id='dashboard.view_all_connections' />
-                    </Link>
-                  </h2>
-                </div>
-                <RecommendedConnections width={width} />
+                <ActiveStudents />
               </div>
             </div>
           </div>
@@ -84,19 +54,12 @@ function Dashboard() {
         <div className='col-12 col-xl-3 px-0'>
           <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
             <Calendar />
-            {IsUserLevelAuthorized() ? (
-              <Messenger
-                chatOpened={(id) => setChatId(id)}
-                newMessage={(message) => setNewMessage(message)}
-              />
-            ) : (
-              <UserContactForm />
-            )}
-            <div
-              className={`community-connect px-3 ${
-                !IsUserLevelAuthorized() && 'notAllowed'
-              } my-2`}
-            >
+            <Messenger
+              chatOpened={(id) => setChatId(id)}
+              newMessage={(message) => setNewMessage(message)}
+            />
+
+            <div className={`community-connect px-3`}>
               <Link to='/my-connections'>
                 <FontAwesomeIcon
                   icon={faUsers}
