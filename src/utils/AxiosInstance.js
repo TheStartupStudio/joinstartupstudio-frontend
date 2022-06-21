@@ -12,6 +12,10 @@ axiosInstance.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config
     const token = JSON.parse(localStorage.getItem('user'))
+    if (!token) {
+      return Promise.reject(error)
+    }
+
     if (
       error.config &&
       error.response &&

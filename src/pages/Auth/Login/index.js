@@ -71,6 +71,7 @@ function Login() {
           dispatch(userLogin())
         })
         .catch((err) => {
+          dispatch(loginLoading(false))
           if (err.message === 'Incorrect username or password.') {
             toast.error(<IntlMessages id='alerts.email_password_incorrect' />)
           } else {

@@ -37,8 +37,8 @@ const userReducer = (state = initialState, action) => {
       }
 
     case USER_LOGIN_SUCCESS:
-      const currentUser = JSON.stringify(payload)
-      localStorage.setItem('user', currentUser)
+      // const currentUser = JSON.stringify(payload)
+      // localStorage.setItem('user', currentUser)
       localStorage.setItem('currentLanguage', payload.language)
       localStorage.setItem('name', payload.user.name)
       localStorage.setItem('profileImage', payload.user.profileImage)

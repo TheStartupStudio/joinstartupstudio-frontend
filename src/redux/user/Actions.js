@@ -23,15 +23,6 @@ export const userLogin = () => async (dispatch) => {
       'Authorization'
     ] = `Bearer ${localStorage.getItem('access_token')}`
     axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
-
-    const currentUser = await Auth.currentAuthenticatedUser({
-      bypassCache: true
-    })
-    if (currentUser.attributes['custom:isVerified'] == 0) {
-      window.location.href = '/verify-email'
-      return
-    }
-
     const user = await axiosInstance
       .get('/instructor/')
       .then()
@@ -43,6 +34,14 @@ export const userLogin = () => async (dispatch) => {
         })
         return
       })
+
+    const currentUser = await Auth.currentAuthenticatedUser({
+      bypassCache: true
+    })
+    if (currentUser.attributes['custom:isVerified'] == 0) {
+      window.location.href = '/verify-email'
+      return
+    }
 
     if (user.data.is_active !== true) {
       window.location.href = '/verify-email'
@@ -65,6 +64,7 @@ export const userLogin = () => async (dispatch) => {
         window.location = '/trial-ended'
     } else {
       let payloadData = user.data
+
       payloadData.agreedConnections = false
       payloadData.profileImage = user.data.profile_image
       payloadData.language = localStorage.getItem('currentLanguage')
@@ -73,6 +73,13 @@ export const userLogin = () => async (dispatch) => {
         token: user.data.cognito_Id,
         user: payloadData
       }
+
+      const user_token = {
+        user: payloadData,
+        token: localStorage.getItem('access_token')
+      }
+
+      localStorage.setItem('user', JSON.stringify(user_token))
 
       dispatch({
         type: USER_LOGIN_SUCCESS,
