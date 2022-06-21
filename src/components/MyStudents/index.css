@@ -1,0 +1,75 @@
+.Add-User-Bulk .title {
+  text-align: left;
+  font: normal normal 600 18px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.Add-User-Bulk .description {
+  text-align: left;
+  font: normal normal 300 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+}
+.Add-User-Bulk .description .brand {
+  text-align: left;
+  font: normal normal 500 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #51c7df;
+}
+.Add-User-Bulk .supported-formats {
+  text-align: left;
+  font: normal normal 500 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+}
+.supported-formats-description {
+  text-align: left;
+  font: normal normal 300 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+}
+.upload-user-input {
+  border: 1px solid #bbbdbf;
+}
+.upload-user-input p {
+  text-align: left;
+  font: normal normal 500 13px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+.upload-user-button {
+  background: #01c5d1;
+  text-align: left;
+  font: normal normal 600 12px Montserrat;
+  letter-spacing: 0.52px;
+  color: #ffffff;
+  opacity: 1;
+  box-shadow: none;
+  border: 0;
+  text-transform: uppercase;
+}
+.add-individual {
+  text-align: left;
+  font: normal normal 600 18px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.add-individual-inputs-div input,
+select {
+  border: 1px solid #bbbdbf;
+  border-radius: 1px;
+}
+/* .add-individual-inputs-div input::placeholder {
+} */
+.Add-Student-Modal > modal-content {
+  width: 90vw;
+}
+.modal-content {
+  min-width: 60vw;
+}
+.add-student-select .css-1s2u09g-control {
+  height: 100%;
+}

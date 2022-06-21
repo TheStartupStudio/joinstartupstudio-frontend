@@ -422,23 +422,27 @@ function Header(props) {
                       </Link>
                       <Link
                         className='dropdown-item py-2 dropdown-menu-hover'
-                        to='/MyStartupProfile'
+                        to='/edit-portfolio'
+                        onClick={() => setShowDropDown((preState) => !preState)}
                       >
-                        MY PROJECTS
+                        MY PORTFOLIO
                       </Link>
                       <Link
                         className='dropdown-item py-2 dropdown-menu-hover'
-                        to='#'
-                        onClick={showModal}
+                        to='/#'
+                        onClick={() => setShowDropDown((preState) => !preState)}
                       >
-                        <IntlMessages id='navigation.contact_us' />
+                        MY RESOURCES
                       </Link>
                       <Link
                         className='dropdown-item py-2 dropdown-menu-hover'
-                        to='#'
-                        onClick={showMisconductModal}
+                        to='/#'
+                        onClick={() => {
+                          showModal()
+                          setShowDropDown((preState) => !preState)
+                        }}
                       >
-                        REPORT MISCONDUCT
+                        SUPPORT
                       </Link>
                       <Link
                         className='dropdown-item py-2 dropdown-menu-hover'
