@@ -141,7 +141,7 @@ const EditNote = (props) => {
       >
         <Modal.Header
           style={{ cursor: 'move' }}
-          className='add-new-note-title my-auto p-0 mx-3 mx-md-5 mb-2'
+          className='add-new-note-title general-modal-header my-auto p-0 mx-3 mx-md-5 mb-2'
         >
           <h3 className='mb-1 pt-4 mt-2 newNote_title  flex-grow-1'>
             {props.from != 'editFromVideo' ? (

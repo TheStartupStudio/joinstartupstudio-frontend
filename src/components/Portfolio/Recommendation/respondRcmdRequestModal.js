@@ -74,7 +74,7 @@ export const RespondRcmdRequestModal = (props) => {
       keyboard={false}
       className='edit-modal'
     >
-      <Modal.Header className='contact-us-title my-auto p-0 mx-4'>
+      <Modal.Header className='contact-us-title my-auto p-0 mx-4 general-modal-header'>
         <h3 className='mb-0 pt-4 mt-2 '>RECOMMENDATION REQUEST</h3>
         <button
           type='button'

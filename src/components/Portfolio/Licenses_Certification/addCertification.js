@@ -76,7 +76,7 @@ const AddCertification = (props) => {
       dialogClassName='my-modal'
       className='edit_modal mt-md-5'
     >
-      <Modal.Header className='edit-modal p-0 mx-4'>
+      <Modal.Header className='edit-modal p-0 mx-4 general-modal-header'>
         <h3 className='mt-4 mb-0 edit-modal-box-title'>
           <IntlMessages id='portfolio.EDIT_LICENSES_CERTIFICATIONS' />
         </h3>

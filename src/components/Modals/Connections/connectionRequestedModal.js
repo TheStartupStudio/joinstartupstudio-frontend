@@ -16,7 +16,7 @@ export const ConnectionRequestedModal = (props) => {
       id='subscription-modal'
       className='requested-modal'
     >
-      <Modal.Header className='connection-modal-header mx-4'>
+      <Modal.Header className='connection-modal-header general-modal-header mx-4'>
         <button
           type='button'
           className='btn-close me-3 mt-3'

@@ -13,7 +13,7 @@ export const SkillBoxEditModal = (props) => {
       keyboard={false}
       className='edit-modal '
     >
-      <Modal.Header className='edit-modal p-0 mx-4'>
+      <Modal.Header className='edit-modal p-0 mx-4 general-modal-header'>
         <h3 className='mt-4 mb-0 edit-modal-box-title'>
           <IntlMessages id='portfolio.edit_top_skills' />
         </h3>

@@ -19,7 +19,7 @@ const DeleteConfirmedModal = (props) => {
       // id='subscription-modal'
       className='background-delete-modal'
     >
-      <Modal.Header className='pb-0 mx-4 d-flex justify-content-end'>
+      <Modal.Header className='pb-0 mx-4 d-flex justify-content-end general-modal-header'>
         <button
           type='button'
           className='btn-close mt-4'

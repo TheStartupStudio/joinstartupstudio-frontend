@@ -52,11 +52,11 @@ export const ContactUserModal = (props) => {
         keyboard={false}
         id='contact-us-modal'
       >
-        <Modal.Header className='contact-us-title my-auto p-0 mx-4'>
+        <Modal.Header className='contact-us-title my-auto general-modal-header p-0 mx-4'>
           <h3 className='mb-0 pt-4 mt-2 '>CONTACT USER</h3>
           <button
             type='button'
-            className='btn-close me-1'
+            className='btn-close me-1 mt-0 pt-1'
             aria-label='Close'
             onClick={props.onHide}
           />

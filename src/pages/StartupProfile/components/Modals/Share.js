@@ -76,7 +76,7 @@ const Share = (props) => {
       backdrop='static'
       keyboard={false}
     >
-      <Modal.Header className='contact-us-title my-auto p-0 mx-4 px-md-5'>
+      <Modal.Header className='contact-us-title my-auto p-0 mx-4 px-md-5 general-modal-header'>
         <h3 className='mb-0 pt-4 mt-2'>SHARE THIS PROJECT</h3>
         <button
           type='button'

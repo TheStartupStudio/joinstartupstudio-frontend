@@ -52,13 +52,13 @@ const ContactUsModal = (props) => {
       keyboard={false}
       id='contact-us-modal'
     >
-      <Modal.Header className='contact-us-title my-auto p-0 mx-4'>
+      <Modal.Header className='contact-us-title general-modal-header my-auto p-0 mx-4'>
         <h3 className='mb-0 pt-4 mt-2 '>
           <IntlMessages id='modal.contact_us' />
         </h3>
         <button
           type='button'
-          className='btn-close me-1'
+          className='btn-close me-1 mt-0 pt-1'
           aria-label='Close'
           onClick={props.onHide}
         />

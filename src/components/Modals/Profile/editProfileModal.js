@@ -111,11 +111,11 @@ const EditProfileModal = (props) => {
       onHide={props.onHide}
       backdrop='static'
       keyboard={false}
-      className='edit-modal edit-profile-modal'
+      className='edit-modal general-modal-header edit-profile-modal'
     >
-      <Modal.Header className='pb-0 mx-4'>
+      <Modal.Header className='pb-0 general-modal-header mx-4'>
         {props.page == 'profile' ? (
-          <h3 className='mt-4 mb-0'>
+          <h3 className='mt-4 mb-0 contact-bio'>
             <IntlMessages id='my_account.edit_my_bio' />
           </h3>
         ) : (
@@ -125,9 +125,11 @@ const EditProfileModal = (props) => {
         )}
         <button
           type='button'
-          className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
+          className='btn-close me-1 pt-3 mt-0 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
           aria-label='Close'
-          onClick={props.onHide}
+          onClick={() => {
+            props.onHide()
+          }}
         />
       </Modal.Header>
       <Modal.Body

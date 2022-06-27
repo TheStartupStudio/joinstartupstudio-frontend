@@ -10,16 +10,16 @@ export default function AddNewUserTag(props) {
       onHide={props.onHide}
       backdrop='static'
       keyboard={false}
-      className='edit-modal'
+      className='edit-modal general-modal-header'
       id=''
     >
-      <Modal.Header className='edit-modal p-0 mx-5'>
+      <Modal.Header className='edit-modal general-modal-header p-0 mx-5'>
         <h3 className='mt-4 mb-0'>
           <IntlMessages id='my_account.add_my_personal_profile_tags' />
         </h3>
         <button
           type='button'
-          className='btn-close me-1'
+          className='btn-close me-1 mt-0 pt-1'
           aria-label='Close'
           onClick={props.onHide}
         />
@@ -41,23 +41,21 @@ export default function AddNewUserTag(props) {
         {props.tagName.length > 0 && <ProfileTag tags={props.tagName} />}
       </ModalBody>
 
-      <div className='border-0 py-0 my-0 mb-2'>
-        <div className='row p-0 mb-3'>
-          <div className='col-md-11'>
-            <button
-              className='float-end edit-account mt-4'
-              disabled={props.loading}
-              onClick={() => {
-                props.onSave()
-              }}
-            >
-              {props.loading ? (
-                <span className='spinner-border spinner-border-sm' />
-              ) : (
-                <IntlMessages id='general.save' />
-              )}
-            </button>
-          </div>
+      <div className='border-0 py-0 my-0 mb-2 position-relative'>
+        <div className='me-md-5 p-0 mb-3'>
+          <button
+            className='float-end edit-account mt-4'
+            disabled={props.loading}
+            onClick={() => {
+              props.onSave()
+            }}
+          >
+            {props.loading ? (
+              <span className='spinner-border spinner-border-sm' />
+            ) : (
+              <IntlMessages id='general.save' />
+            )}
+          </button>
         </div>
       </div>
     </Modal>

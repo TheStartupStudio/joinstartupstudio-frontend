@@ -142,15 +142,15 @@ export const ShareVideoModal = (props) => {
         onHide={props.onHide}
         backdrop='static'
         keyboard={false}
-        className='edit-experience-modal share-video-modal'
+        className='edit-experience-modal share-video-modal px-4'
       >
-        <Modal.Header className='pb-0 mx-4'>
+        <Modal.Header className='pb-0 general-modal-header'>
           <h3 className='mt-4 mb-0 contact-bio'>
             SHARE VIDEO WITH A CONNECTION
           </h3>
           <button
             type='button'
-            className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
+            className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto mt-0 pt-1'
             aria-label='Close'
             onClick={() => {
               props.onHide()
@@ -159,7 +159,7 @@ export const ShareVideoModal = (props) => {
             }}
           />
         </Modal.Header>
-        <Modal.Body className='px-4'>
+        <Modal.Body>
           <div className='row'>
             <div className='row mx-0'>
               <div className='col-12 mt-2 mb-2'>

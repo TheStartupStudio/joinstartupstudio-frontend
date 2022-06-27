@@ -89,9 +89,9 @@ const NotesModal = (props) => {
       backdrop='static'
       keyboard={false}
       style={{ marginTop: '3.9%' }}
-      className='edit-modal'
+      className='edit-modal general-modal-header'
     >
-      <Modal.Header className='add-new-note-title my-auto p-0 mx-5'>
+      <Modal.Header className='add-new-note-title general-modal-header my-auto p-0 mx-4'>
         <h3 className='mb-0 pt-4 mt-2 '>
           <IntlMessages id='my_notes.add_a_new_note' />
         </h3>
@@ -102,7 +102,7 @@ const NotesModal = (props) => {
           onClick={props.onHide}
         />
       </Modal.Header>
-      <Modal.Body className='mt-4 mb-3 mx-5 add-new-note'>
+      <Modal.Body className='mt-4 mb-3 mx-4 add-new-note'>
         <div className='row w-100'></div>
         <div className='row p-0 add-new-note'>
           <div className='col-md-8 mx-auto'></div>
@@ -143,7 +143,7 @@ const NotesModal = (props) => {
       </Modal.Body>
       <div
         style={{ border: '0px' }}
-        className='mt-0 pt-0 border-0 border-none mx-5 mb-4'
+        className='mt-0 pt-0 border-0 border-none mx-4 pe-1 mb-4'
       >
         <button
           className='float-end m-0 px-md-5 save-button add-new-note-button-text ms-1'

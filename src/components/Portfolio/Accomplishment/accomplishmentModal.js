@@ -129,7 +129,7 @@ export const AccomplishmentModal = (props) => {
         keyboard={false}
         className='edit-modal edit-profile-modal edit-experience-modal'
       >
-        <Modal.Header className='pb-0 mx-4'>
+        <Modal.Header className='pb-0 mx-4 general-modal-header'>
           <h3 className='mt-4 mb-0 contact-bio'>
             {!isUpdating ? 'ADD NEW ACCOMPLISHMENT' : 'EDIT ACCOMPLISHMENT '}
           </h3>

@@ -41,7 +41,7 @@ const ProfileTags = (props) => {
       className='edit-my-profile-tags'
       keyboard={false}
     >
-      <Modal.Header className='edit-modal p-0 mx-4 '>
+      <Modal.Header className='edit-modal general-modal-header p-0 mx-4 '>
         <h3 className='mt-4 mb-0'>
           <IntlMessages id='my_account.edit_my_profile_tags' />
         </h3>

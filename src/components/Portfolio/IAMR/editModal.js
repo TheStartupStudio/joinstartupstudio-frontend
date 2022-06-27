@@ -106,7 +106,7 @@ const EditModal = (props) => {
       keyboard={false}
       className='edit-modal '
     >
-      <Modal.Header className='edit-modal p-0 mx-2 mx-md-5'>
+      <Modal.Header className='edit-modal p-0 mx-2 mx-md-5 general-modal-header'>
         <h3 className='mt-4 mb-0 edit-modal-box-title'>EDIT SUBMISSION</h3>
         <button
           type='button'
