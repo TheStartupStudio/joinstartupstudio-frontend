@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { ActiveStudents } from '../../components/ActiveStudents'
 import AddStudentsModal from '../../components/MyStudents/AddStudentsModal/addStudentsModal'
-
+import EditBlunk from '../../components/MyStudents/AddStudentsModal/editBlunk'
+import './index.css'
 const MyStudents = () => {
   const [addStudent, setAddStudents] = useState(false)
+  const [editBlunk, setEditBlunk] = useState(false)
 
   return (
     <div id='main-body'>
@@ -28,10 +30,19 @@ const MyStudents = () => {
                   <ActiveStudents />
                 </div>
                 <p
-                  className='testsetAddStudents'
+                  className='setAddStudents'
+                  role={'button'}
                   onClick={() => setAddStudents(true)}
                 >
-                  test
+                  Add Users
+                </p>
+
+                <p
+                  className='setAddStudents'
+                  role={'button'}
+                  onClick={() => setEditBlunk(true)}
+                >
+                  Edit Blunk
                 </p>
               </div>
             </div>
@@ -42,6 +53,7 @@ const MyStudents = () => {
         show={addStudent}
         onHide={() => setAddStudents(false)}
       />
+      <EditBlunk show={editBlunk} onHide={() => setEditBlunk(false)} />
     </div>
   )
 }
