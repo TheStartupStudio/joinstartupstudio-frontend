@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { ActiveStudents } from '../../components/ActiveStudents'
+import StudentsTable from '../../components/Students/studentsTable'
 import AddStudentsModal from '../../components/MyStudents/AddStudentsModal/addStudentsModal'
 import EditBlunk from '../../components/MyStudents/AddStudentsModal/editBlunk'
 import './index.css'
@@ -44,6 +45,9 @@ const MyStudents = () => {
                 >
                   Edit Blunk
                 </p>
+              </div>
+              <div>
+                <StudentsTable />
               </div>
             </div>
           </div>
