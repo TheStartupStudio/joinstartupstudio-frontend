@@ -11,10 +11,10 @@ export const ConfirmationModal = (props) => {
       id='subscription-modal'
     >
       <Modal.Body>
-        <div className='mt-4 mb-4 blocked-user-modal confirmation-modal px-md-5 text-center'>
+        <div className='mt-4 mb-4 py-4 blocked-user-modal confirmation-modal px-md-5 text-center'>
           <p>{props.message}</p>
           <button
-            className='cancel-subscription-button accept-request-button'
+            className='cancel-subscription-button accept-request-button mt-2'
             style={{ backgroundColor: '#F2359D' }}
             onClick={() => props.onHide()}
           >

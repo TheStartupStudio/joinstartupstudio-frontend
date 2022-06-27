@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { ActiveStudents } from '../../components/ActiveStudents'
+import StudentsTable from '../../components/Students/studentsTable'
 import AddStudentsModal from '../../components/MyStudents/AddStudentsModal/addStudentsModal'
 
 const MyStudents = () => {
@@ -33,6 +34,9 @@ const MyStudents = () => {
                 >
                   test
                 </p>
+              </div>
+              <div>
+                <StudentsTable />
               </div>
             </div>
           </div>
