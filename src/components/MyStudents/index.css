@@ -17,6 +17,9 @@
   letter-spacing: 0px;
   color: #51c7df;
 }
+.brand a:hover {
+  color: #a7ca42 !important;
+}
 .Add-User-Bulk .supported-formats {
   text-align: left;
   font: normal normal 500 16px/18px Montserrat;
@@ -40,16 +43,22 @@
   opacity: 1;
 }
 .upload-user-button {
+  width: 219px !important;
+}
+/* .upload-user-button {
   background: #01c5d1;
-  text-align: left;
-  font: normal normal 600 12px Montserrat;
+  font: normal normal 600 13px Montserrat;
   letter-spacing: 0.52px;
   color: #ffffff;
   opacity: 1;
   box-shadow: none;
   border: 0;
   text-transform: uppercase;
-}
+  width: 219px;
+} */
+/* .upload-user-button:hover {
+  background-color: #a7ca42;
+} */
 .add-individual {
   text-align: left;
   font: normal normal 600 18px/22px Montserrat;
@@ -70,4 +79,145 @@ select {
 
 .add-student-select .css-1s2u09g-control {
   height: 100%;
+}
+.add-new-input-for-user {
+  text-align: left;
+  width: auto;
+  font: normal normal 500 14px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #51c7df;
+  opacity: 1;
+  cursor: pointer;
+}
+.border-lts {
+  border: 1px solid #01c5d1;
+  /* border-color: ; */
+}
+.lts-button {
+  width: 186px;
+  height: 40px;
+}
+@media (max-width: 720px) {
+  .add-individual-first-div {
+    border-bottom: 1px solid #01c5d1;
+  }
+  .edit-modal-sm {
+    font-size: 14px;
+  }
+  .upload-user-input p {
+    text-align: left;
+    font: normal normal 500 12px Montserrat;
+    letter-spacing: 0px;
+    color: #707070;
+    opacity: 1;
+  }
+  .upload-user-button {
+    width: 180px;
+  }
+}
+.brand:hover {
+  color: #a7ca42;
+}
+.image-upload {
+  height: 48px !important;
+}
+.edit-modal-sm {
+  font-size: 25px !important;
+}
+.image-upload::placeholder {
+  text-align: left;
+  font: normal normal 500 13px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+.bluk-edit-description {
+  text-align: left;
+  font: normal normal 600 18px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.blunk-activated-div p {
+  text-align: left;
+  font: normal normal 300 17px/20px Montserrat;
+  letter-spacing: 0.68px;
+  color: #707070;
+  opacity: 1;
+}
+.blunk-activated-div {
+  background: #e5e5e54d 0% 0% no-repeat padding-box;
+  min-width: 234px;
+  height: 54px;
+}
+/* Toggle */
+.form-switch {
+  display: inline-block;
+  /* cursor: pointer; */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.form-switch i {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.3rem;
+  width: 46px;
+  height: 24px;
+  /* border: 1px solid #707070; */
+  background-color: #e6e6e6;
+  border-radius: 24px;
+  vertical-align: text-bottom;
+  transition: all 0.3s linear;
+  cursor: pointer;
+}
+
+.form-switch i::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  background-color: #333d3d29;
+  border-radius: 11px;
+  transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+  transition: all 0.25s linear;
+}
+
+.form-switch i::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  background-color: #fff;
+  border: 1px solid #707070;
+  border-radius: 11px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+  transform: translate3d(2px, 2px, 0);
+  transition: all 0.2s ease-in-out;
+}
+
+.form-switch:active i::after {
+  width: 28px;
+  transform: translate3d(2px, 2px, 0);
+}
+
+.form-switch:active input:checked + i::after {
+  transform: translate3d(16px, 2px, 0);
+}
+
+.form-switch input {
+  display: none;
+}
+
+.form-switch input:checked + i {
+  background-color: #a7ca42;
+}
+
+.form-switch input:checked + i::before {
+  transform: translate3d(14px, 2px, 0) scale3d(0, 0, 0);
+}
+
+.form-switch input:checked + i::after {
+  transform: translate3d(22px, 2px, 0);
 }
