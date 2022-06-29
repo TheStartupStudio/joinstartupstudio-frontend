@@ -325,7 +325,7 @@ export const CreateNewStartupProfile = (props) => {
         backdrop='static'
         keyboard={false}
       >
-        <Modal.Header className='contact-us-title my-auto p-0 mx-4'>
+        <Modal.Header className='contact-us-title my-auto p-0 mx-4 general-modal-header'>
           <h3 className='mb-0 pt-4 mt-2 '>
             {props.from === 'edit' ? 'EDIT' : 'ADD'} PROJECT INFORMATION
           </h3>
@@ -655,7 +655,7 @@ export const CreateNewStartupProfile = (props) => {
         <div className='border-0 me-4'>
           <div className='row p-0 mb-3'>
             <button
-              className='float-end ms-auto me-2 edit-account'
+              className='float-end ms-auto me-4 edit-account'
               disabled={loading}
               onClick={
                 props.from != 'edit' ? () => verify() : () => handleUpdate()

@@ -11,10 +11,10 @@ const BlockedUserModal = (props) => {
       keyboard={false}
       id='subscription-modal'
     >
-      <Modal.Header className='connection-modal-header mx-4'>
+      <Modal.Header className='connection-modal-header general-modal-header mx-4'>
         <button
           type='button'
-          className='btn-close me-3 mt-3'
+          className='btn-close me-1 mt-0 pt-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
           aria-label='Close'
           onClick={() => props.onHide()}
         ></button>

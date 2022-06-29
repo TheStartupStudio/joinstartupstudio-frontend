@@ -46,7 +46,7 @@ export const AllNotesFromThisPage = (props) => {
       >
         <Modal.Header
           style={{ cursor: 'move' }}
-          className='add-new-note-title my-auto p-0 mx-3 mx-md-5 mb-2'
+          className='add-new-note-title general-modal-header my-auto p-0 mx-3 mx-md-4 mb-2'
         >
           <h3 className='mb-1 pt-4 mt-2 newNote_title'>
             ALL NOTES CREATED ON THIS PAGE
@@ -61,10 +61,10 @@ export const AllNotesFromThisPage = (props) => {
           />
         </Modal.Header>
         <Modal.Body
-          className='mx-md-4 px-md-3 pt-0 pt-2'
+          className='mx-md-4 pt-0 pt-2 px-0'
           style={{ maxHeight: '100%' }}
         >
-          <div className='single_note_primary_div'>
+          <div className='single_note_primary_div px-0'>
             {props?.allNotes
               ? props?.allNotes.map((data) => {
                   return (

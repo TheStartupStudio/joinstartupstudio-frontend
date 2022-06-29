@@ -1027,7 +1027,6 @@ input[type='file'] {
   color: #333d3d;
   text-transform: uppercase;
   opacity: 1;
-  padding-bottom: 10px;
 }
 .edit-modal h4 {
   font-weight: 600;
@@ -4204,4 +4203,7 @@ ul.sidebar-menu-item .collapse a {
 .edit-founders__name {
   display: grid;
   grid-template-columns: 60px auto;
+}
+.general-modal-header h3 {
+  padding-bottom: 10px;
 }

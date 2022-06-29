@@ -13,6 +13,7 @@ import searchIcon from '../../assets/images/search-icon.png'
 import EditBulk from '../../components/MyStudents/AddStudentsModal/editBulk'
 import AddStudentsModal from '../../components/MyStudents/AddStudentsModal/addStudentsModal'
 import { StudentCountContext } from '../../components/MyStudents/studentCountContext'
+import EditStudentModal from '../MyStudents/AddStudentsModal/EditStudentModal'
 
 export default function StudentsTable(props) {
   const [currentEditingStudent, setCurrentEditingStudent] = useState()
@@ -37,6 +38,8 @@ export default function StudentsTable(props) {
   const [showAddStudentsModal, setShowAddStudentsModal] = useState(false)
   const { state, dispatch } = useContext(StudentCountContext)
 
+  const [openEditUserModal, setOpenEditUserModal] = useState(false)
+  const [studentToEdit, setStudentToEdit] = useState({})
   const filteringCondition = (student) => {
     return student?.name?.includes(searchingKeyword)
   }
@@ -98,6 +101,17 @@ export default function StudentsTable(props) {
         }
       })
       .catch((e) => e)
+  }
+
+  const updateState = (id, data) => {
+    setStudents((old) =>
+      old.map((student) => {
+        if (student.id == id) {
+          return data
+        }
+        return student
+      })
+    )
   }
 
   const updateSelectedOptions = (data) => {
@@ -547,7 +561,8 @@ export default function StudentsTable(props) {
                     role='button'
                     className='my-1 fw-bold'
                     onClick={() => {
-                      // onEdit(record);
+                      setStudentToEdit(record)
+                      setOpenEditUserModal(true)
                     }}
                     style={{ color: '#51C7DF' }}
                   >
@@ -818,6 +833,12 @@ export default function StudentsTable(props) {
           />
         </>
       )}
+      <EditStudentModal
+        show={openEditUserModal}
+        onHide={() => setOpenEditUserModal(false)}
+        data={studentToEdit}
+        updateState={(id, data) => updateState(id, data)}
+      />
 
       {showToggleActivationModal && (
         <DeactivateDialogModal

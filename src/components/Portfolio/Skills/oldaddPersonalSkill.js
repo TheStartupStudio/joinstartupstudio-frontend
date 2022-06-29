@@ -13,7 +13,7 @@ export default function AddPersonalSkill(props) {
       className='edit-modal'
       id=''
     >
-      <Modal.Header className='edit-modal p-0 mx-5'>
+      <Modal.Header className='edit-modal p-0 mx-5 general-modal-header'>
         <h3 className='mt-4 mb-0'>
           <IntlMessages id='my_account.add_my_personal_profile_tags' />
         </h3>

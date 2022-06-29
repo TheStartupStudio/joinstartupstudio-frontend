@@ -76,21 +76,21 @@ const EditPasswordModal = (props) => {
       onHide={props.onHide}
       backdrop='static'
       keyboard={false}
-      className='edit-modal'
+      className='edit-modal general-modal-header'
       id='password-modal'
     >
-      <Modal.Header className='pb-0 mx-5'>
+      <Modal.Header className='pb-0 mx-4 general-modal-header'>
         <h3 className='mt-4 mb-0'>
           <IntlMessages id='my_account.update_password' />
         </h3>
         <button
           type='button'
-          className='btn-close me-1'
+          className='btn-close me-1 mt-0 pt-1'
           aria-label='Close'
           onClick={props.onHide}
         ></button>
       </Modal.Header>
-      <Modal.Body className='mx-md-5 my-4 px-md-5'>
+      <Modal.Body className='mx-md-4 my-4 px-md-5'>
         <div className='w-100 mx-auto'>
           <p className='mb-0 password-label'>
             <IntlMessages id='my_account.original_password' />

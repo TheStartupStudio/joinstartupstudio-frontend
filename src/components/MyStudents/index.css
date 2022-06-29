@@ -131,7 +131,7 @@ select {
   color: #707070;
   opacity: 1;
 }
-.bluk-edit-description {
+.bulk-edit-description {
   text-align: left;
   font: normal normal 600 18px/22px Montserrat;
   letter-spacing: 0px;
@@ -220,4 +220,43 @@ select {
 
 .form-switch input:checked + i::after {
   transform: translate3d(22px, 2px, 0);
+}
+.view-student-title {
+  text-align: left;
+  font: normal normal 600 20px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  text-transform: uppercase;
+  opacity: 1;
+}
+.certification-status {
+  text-align: left;
+  font: normal normal 600 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+.statusOk {
+  font-size: 30px;
+  color: #99cc33;
+  margin-bottom: -10px;
+}
+
+.statusFalse {
+  font-size: 30px;
+  color: #ea3b97;
+}
+.view-student-portfolio-journals span {
+  text-align: left;
+  font: normal normal 600 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #51c7df;
+  opacity: 1;
+}
+.user-id-label {
+  text-align: left;
+  font: normal normal 600 12px/15px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
 }

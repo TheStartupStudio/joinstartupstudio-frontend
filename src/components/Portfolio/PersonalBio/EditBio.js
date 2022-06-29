@@ -32,13 +32,12 @@ const EditProfileModal = (props) => {
       dialogClassName='my-modal'
       className='edit_modal mt-md-5'
     >
-      <Modal.Header className='pb-0 mx-4'>
+      <Modal.Header className='pb-0 mx-4 general-modal-header'>
         <h3
-          className='pt-3 mb-0 pb-1'
+          className='mt-4 mb-0 contact-bio'
           style={{
-            textAlign: ' left',
-            font: 'normal normal 600 20px/24px Montserrat',
-            letterSpacing: '0px',
+            textAlign: 'left',
+            font: 'normal normal 600 20px Montserrat',
             color: '#333D3D',
             textTransform: 'uppercase',
             opacity: 1
@@ -48,7 +47,7 @@ const EditProfileModal = (props) => {
         </h3>
         <button
           type='button'
-          className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-0 my-auto'
+          className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
           aria-label='Close'
           onClick={props.onHide}
         />

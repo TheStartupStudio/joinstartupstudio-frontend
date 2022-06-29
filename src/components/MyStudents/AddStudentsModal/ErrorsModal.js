@@ -18,7 +18,7 @@ const ErrorsModal = (props) => {
       }}
       style={{ marginTop: '3.9%' }}
     >
-      <Modal.Header className='contact-us-title my-auto p-0 mx-4'>
+      <Modal.Header className='contact-us-title general-modal-header my-auto p-0 mx-4'>
         <h3 className='mb-0 pt-4 mt-2 '>Errors while adding users</h3>
         <button
           type='button'

@@ -12,10 +12,10 @@ export default function RemoveSkill(props) {
       keyboard={false}
       className='edit-modal'
     >
-      <Modal.Header className='edit-modal p-0 mx-4 edit-top-title'>
-        <h4 className='mt-4 mb-0'>
+      <Modal.Header className='edit-modal p-0 mx-4 edit-top-title general-modal-header'>
+        <h3 className='mt-4 mb-0'>
           <IntlMessages id='portfolio.edit_top_skills' />
-        </h4>
+        </h3>
         <button
           type='button'
           className='btn-close me-1'

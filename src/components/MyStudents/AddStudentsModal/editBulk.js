@@ -51,7 +51,7 @@ const EditBulk = (props) => {
       }}
       style={{ marginTop: '3.9%' }}
     >
-      <Modal.Header className='contact-us-title my-auto p-0 mx-4'>
+      <Modal.Header className='contact-us-title general-modal-header my-auto p-0 mx-4'>
         <h3 className='mb-0 pt-4 mt-2 pb-2'>BULK EDIT STUDENTS</h3>
         <button
           type='button'
@@ -62,10 +62,10 @@ const EditBulk = (props) => {
       </Modal.Header>
       <Modal.Body>
         <div className='row mx-0'>
-          <p className='w-100 bluk-edit-description'>
+          <p className='w-100 bulk-edit-description'>
             Change settings below to update all selected users.
           </p>
-          <div className='bulk-edit-options row'>
+          <div className='bulk-edit-options row pe-0'>
             <Select
               placeholder={'Level'}
               options={Level}

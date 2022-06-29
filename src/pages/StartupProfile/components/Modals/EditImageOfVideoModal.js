@@ -84,11 +84,13 @@ const EditImageOfVideoModal = (props) => {
       keyboard={false}
       className=''
     >
-      <Modal.Header className='contact-us-title my-auto p-0 mx-4 border-0'>
-        <h1 className='page-title mt-3'>Select image for thumbnail of video</h1>
+      <Modal.Header className='contact-us-title general-modal-header my-auto p-0 mx-4'>
+        <h3 className='page-title mt-3 mt-4 mb-0 edit-modal-box-title'>
+          Select image for thumbnail of video
+        </h3>
         <button
           type='button'
-          className='btn-close me-4'
+          className='btn-close me-1'
           aria-label='Close'
           onClick={() => props.onHide()}
         />

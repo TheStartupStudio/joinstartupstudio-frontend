@@ -157,7 +157,7 @@ const CreateNewNote = (props) => {
       >
         <Modal.Header
           // style={{ cursor: 'move' }}
-          className='add-new-note-title my-auto p-0 mx-3 mx-md-5 mb-2 d-flex'
+          className='add-new-note-title general-modal-header my-auto p-0 mx-3 mx-md-4 mb-2 d-flex'
         >
           <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1'>
             {props.from != 'video' ? (
@@ -181,7 +181,7 @@ const CreateNewNote = (props) => {
             }}
           />
         </Modal.Header>
-        <Modal.Body className='mx-md-4 px-md-4 pt-0'>
+        <Modal.Body className='mx-md-4 px-md-0 pt-0'>
           <span className='newNote_date'>
             Created: {moment(Date.now()).format('L')}&nbsp;&nbsp; Edited:
             {moment(Date.now()).format('L')}
@@ -215,19 +215,19 @@ const CreateNewNote = (props) => {
               <IntlMessages id='foul_words.notice' />
             </div>
           )}
-        </Modal.Body>{' '}
-        <Modal.Footer
-          style={{ border: '0px' }}
-          className='mt-0 pt-0 border-0 border-none pe-md-5'
-        >
-          <button
-            className='float-end m-0 px-md-5 save-button add-new-note-button-text pe-md-5'
-            onClick={validate}
+          <Modal.Footer
+            style={{ border: '0px' }}
+            className='mt-0 pt-0 border-0 border-none mx-md-4 pe-md-4'
           >
-            {loading ? 'loading' : <IntlMessages id='general.save' />}
-            {/* <IntlMessages id='general.save' /> */}
-          </button>
-        </Modal.Footer>
+            <button
+              className='float-end m-0 px-md-5 save-button add-new-note-button-text'
+              onClick={validate}
+            >
+              {loading ? 'loading' : <IntlMessages id='general.save' />}
+              {/* <IntlMessages id='general.save' /> */}
+            </button>
+          </Modal.Footer>
+        </Modal.Body>{' '}
       </Resizable>
     </Modal>
   )
