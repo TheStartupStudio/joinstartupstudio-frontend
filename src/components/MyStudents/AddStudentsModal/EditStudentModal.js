@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Image, Modal } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import Select from 'react-select'
 import defaultImage from '../../../assets/images/profile-image.png'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import '../index.css'
+import Auth from '@aws-amplify/auth'
 
 const EditStudentModal = (props) => {
   const [loading, setLoading] = useState(false)
@@ -32,12 +33,29 @@ const EditStudentModal = (props) => {
     const { name, value } = e
     setData((old) => ({ ...old, [name]: value }))
   }
-  const handleSubmit = () => {
+
+  const handleSubmit = async () => {
     setLoading(true)
-    props.updateState(data?.id, data)
-    setLoading(false)
-    props.onHide()
-    toast.success('Data was successfuly updated')
+    const currentUser = await Auth.currentAuthenticatedUser()
+    // await Auth.updateAttributes()
+    console.log(currentUser)
+    axiosInstance
+      .put(`/instructor/update-student/${data.id}`, {
+        ...data,
+        from: 'editViewUser',
+        newEmail: data?.email
+      })
+      .then(async (response) => {
+        props.updateState(data?.id, data)
+        setLoading(false)
+        props.onHide()
+        toast.success('Data was successfuly updated')
+      })
+      .catch((err) => {
+        toast.error('Something went wrong, Try again')
+        setLoading(false)
+        props.onHide()
+      })
   }
   return (
     <Modal
