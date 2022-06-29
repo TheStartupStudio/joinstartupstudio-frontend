@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { ActiveStudents } from '../../components/ActiveStudents'
 import StudentsTable from '../../components/StudentsTable/studentsTable'
 import StudentData from '../../components/MyStudents/studentData'
+import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
 import './index.css'
 import { StudentCountProvider } from '../../components/MyStudents/studentCountContext'
 
@@ -35,6 +36,7 @@ const MyStudents = () => {
             <div className='col-12 col-xl-3'>
               <div className='account-page-padding'>
                 <StudentData />
+                <CertificationRequestsWidget />
               </div>
             </div>
             <div className='col-12'>

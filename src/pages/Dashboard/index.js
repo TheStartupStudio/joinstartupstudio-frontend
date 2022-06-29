@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
 import Messenger from '../../components/Messenger/Messenger'
 import { ActiveStudents } from '../../components/ActiveStudents'
+import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
 
 function Dashboard() {
   const dispatch = useDispatch()
@@ -54,7 +55,8 @@ function Dashboard() {
         <div className='col-12 col-xl-3 px-0'>
           <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
             <Calendar />
-            <Messenger
+            <CertificationRequestsWidget />
+            {/* <Messenger
               chatOpened={(id) => setChatId(id)}
               newMessage={(message) => setNewMessage(message)}
             />
@@ -76,7 +78,7 @@ function Dashboard() {
               <Link to='/my-connections'>
                 <p className='my-auto ms-2'>Connect with my community</p>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
