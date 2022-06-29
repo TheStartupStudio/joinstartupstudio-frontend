@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import moment from 'moment'
 import './studentsTable.css'
 import DataTable from 'react-data-table-component'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -9,11 +10,15 @@ import createClass from 'create-react-class'
 import { DeactivateDialogModal } from './deactivateDialogModal'
 import { ConfirmationModal } from '../Modals/confirmationModal'
 import searchIcon from '../../assets/images/search-icon.png'
+import EditBulk from '../../components/MyStudents/AddStudentsModal/editBulk'
+import AddStudentsModal from '../../components/MyStudents/AddStudentsModal/addStudentsModal'
+import { StudentCountContext } from '../../components/MyStudents/studentCountContext'
 
 export default function StudentsTable(props) {
   const [currentEditingStudent, setCurrentEditingStudent] = useState()
   const [tooglingActivationStudent, setTooglingActivationStudent] = useState()
   const [bulkDeactivatingStudents, setBulkDeactivatingStudents] = useState([])
+  const [bulkEditingStudents, setBulkEditingStudents] = useState([])
   const [students, setStudents] = useState([])
   const [isSearching, setIsSearching] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -23,10 +28,14 @@ export default function StudentsTable(props) {
     useState(false)
   const [showBulkDeactivationModal, setShowBulkDeactivationModal] =
     useState(false)
+  const [showBulkEditModal, setShowBulkEditModal] = useState(false)
   const [deactivateLoading, setDeactivateLoading] = useState(false)
+  const [editLoading, setEditLoading] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const [showStudentsOption, setShowStudentsOption] = useState('all')
   const [searchingKeyword, setSearchingKeyword] = useState('')
+  const [showAddStudentsModal, setShowAddStudentsModal] = useState(false)
+  const { state, dispatch } = useContext(StudentCountContext)
 
   const filteringCondition = (student) => {
     return student?.name?.includes(searchingKeyword)
@@ -35,6 +44,26 @@ export default function StudentsTable(props) {
   useEffect(() => {
     getStudents()
   }, [])
+
+  useEffect(() => {
+    if (students.length) {
+      dispatch({ type: 'studentsCount', studentsCount: students.length })
+      var today = moment().startOf('day')
+
+      const count = students.filter((student) => {
+        var createdDate = moment(student.createdAt, 'YYYY-MM-DD').startOf('day')
+        var diff = today.diff(createdDate, 'days')
+
+        if (diff <= 7) {
+          return true
+        }
+
+        return false
+      }).length
+
+      dispatch({ type: 'recentlyActive', recentlyActive: count })
+    }
+  }, [students.length])
 
   useEffect(() => {
     setSelectedRows([])
@@ -94,7 +123,8 @@ export default function StudentsTable(props) {
       fontWeight: '500',
       ':hover': {
         border: '1px solid #BBBDBF'
-      }
+      },
+      zIndex: 100
     }),
     menu: (base) => ({
       ...base,
@@ -103,8 +133,10 @@ export default function StudentsTable(props) {
       cursor: 'pointer',
       margin: 0,
       paddingTop: 0,
-      boxShadow: '0px 3px 6px #00000029'
+      boxShadow: '0px 3px 6px #00000029',
+      zIndex: 9999
     }),
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
     valueContainer: (base) => ({
       ...base
     }),
@@ -153,6 +185,15 @@ export default function StudentsTable(props) {
     }
   })
 
+  const noDataComponent = () => {
+    return (
+      <div className='no-data-component text-center'>
+        You don't have any students yet. <br /> Use the blue link above to
+        upload your rosters.
+      </div>
+    )
+  }
+
   const MultiValue = (props) => {
     return (
       <components.MultiValue {...props}>
@@ -170,7 +211,7 @@ export default function StudentsTable(props) {
     }))
   }
 
-  const handleSubmit = async () => {
+  const editSingleStudent = async () => {
     setLoading(true)
     await axiosInstance
       .put(
@@ -191,17 +232,17 @@ export default function StudentsTable(props) {
   }
 
   const defaultLevels = [
-    { label: 'L1 (ES)', value: 'ES' },
-    { label: 'L2 (MS)', value: 'MS' },
-    { label: 'L3 (HS)', value: 'HS' },
+    { label: 'L1 (ES)', value: 'L1' },
+    { label: 'L2 (MS)', value: 'L2' },
+    { label: 'L3 (HS)', value: 'L3' },
     { label: 'L4', value: 'L4' }
   ]
 
   const defaultYears = [
-    { label: 'LTS YEAR 1', value: 'L1' },
-    { label: 'LTS YEAR 2', value: 'L2' },
-    { label: 'LTS YEAR 3', value: 'L3' },
-    { label: 'LTS YEAR 4', value: 'L4' }
+    { label: 'LTS YEAR 1', value: 'LTS1' },
+    { label: 'LTS YEAR 2', value: 'LTS2' },
+    { label: 'LTS YEAR 3', value: 'LTS3' },
+    { label: 'LTS YEAR 4', value: 'LTS4' }
   ]
 
   const customStyles = {
@@ -249,7 +290,7 @@ export default function StudentsTable(props) {
   }
 
   const handleBulkDeactiveAction = () => {
-    if (!selectedRows) return
+    if (!selectedRows.length) return
 
     setCurrentEditingStudent()
     setTooglingActivationStudent()
@@ -260,28 +301,22 @@ export default function StudentsTable(props) {
 
   const bulkDeactivateStudents = async () => {
     setDeactivateLoading(true)
-    const studentsData = bulkDeactivatingStudents.map((student) => {
-      return student.id
-    })
+
     await axiosInstance
       .post(`/instructor/bulk-update/`, {
-        studentsData,
+        studentsIds: bulkDeactivatingStudents,
         bulkDeactivate: true
       })
       .then((data) => {
-        setShowConfirmationModal(true)
         setStudents(
           students.map((student) => {
-            console.log(
-              'studentsData.includes(student.id) :>> ',
-              studentsData.includes(student.id)
-            )
-            if (studentsData.includes(student.id)) {
+            if (bulkDeactivatingStudents.includes(student.id)) {
               student.deactivated = true
             }
             return student
           })
         )
+        setShowConfirmationModal(true)
       })
       .catch((err) => {
         toast.error(<IntlMessages id='alerts.something_went_wrong' />)
@@ -290,16 +325,48 @@ export default function StudentsTable(props) {
     setShowBulkDeactivationModal(false)
   }
 
-  const noDataComponent = () => {
-    return (
-      <div className='no-data-component text-center'>
-        You don't have any students yet. <br /> Use the blue link above to
-        upload your rosters.
-      </div>
-    )
+  const handleBulkEditAction = () => {
+    if (!selectedRows.length) return
+    setCurrentEditingStudent()
+    setTooglingActivationStudent()
+
+    setBulkEditingStudents(selectedRows)
+    setShowBulkEditModal(true)
   }
 
-  const handleBulkEditAction = () => {}
+  const bulkEditStudents = async (options) => {
+    setEditLoading(true)
+
+    await axiosInstance
+      .post(`/instructor/bulk-update/`, {
+        studentsIds: bulkEditingStudents,
+        options: options
+      })
+      .then((data) => {
+        const updatedStudents = students.map((student) => {
+          if (bulkEditingStudents.includes(student.id)) {
+            for (const property in options) {
+              if (property === 'activated') {
+                student['deactivated'] = !options[property]
+              } else {
+                student[property] = options[property]
+              }
+            }
+          }
+          return student
+        })
+        setStudents(updatedStudents)
+        setShowConfirmationModal(true)
+        setShowBulkEditModal(false)
+      })
+      .catch((err) => {
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+      })
+
+    setEditLoading(false)
+    setDeactivateLoading(false)
+    setShowBulkDeactivationModal(false)
+  }
 
   const tableColumns = React.useMemo(
     () => [
@@ -367,7 +434,7 @@ export default function StudentsTable(props) {
                     className='w-75 px-2 py-1'
                     style={{ border: '1px solid #BBBDBF', height: '35px' }}
                     name='name'
-                    value={currentEditingStudent.name}
+                    value={currentEditingStudent?.name}
                     onChange={handleChange}
                   />
                   <button
@@ -396,10 +463,12 @@ export default function StudentsTable(props) {
               <div className='w-50'>
                 {currentEditingStudent?.id === record.id ? (
                   <Select
+                    menuPortalTarget={document.body}
+                    menuPosition={'fixed'}
                     options={defaultLevels}
                     value={{
-                      label: currentEditingStudent.level,
-                      value: currentEditingStudent.level
+                      label: currentEditingStudent?.level,
+                      value: currentEditingStudent?.level
                     }}
                     onChange={(newValue) =>
                       handleChange({
@@ -430,10 +499,12 @@ export default function StudentsTable(props) {
               <div className='w-50'>
                 {currentEditingStudent?.id === record.id ? (
                   <Select
+                    menuPortalTarget={document.body}
+                    menuPosition={'fixed'}
                     options={defaultYears}
                     value={{
-                      label: currentEditingStudent.year,
-                      value: currentEditingStudent.year
+                      label: currentEditingStudent?.year,
+                      value: currentEditingStudent?.year
                     }}
                     onChange={(newValue) =>
                       handleChange({
@@ -487,7 +558,7 @@ export default function StudentsTable(props) {
                       <button
                         className='edit-btn my-1 fw-bold ms-auto'
                         onClick={() => {
-                          handleSubmit()
+                          editSingleStudent()
                         }}
                         disabled={loading}
                         style={{ background: '#01c5d1' }}
@@ -591,6 +662,15 @@ export default function StudentsTable(props) {
                   </div>
                 </div>
               </div>
+              <div className='col-6 text-end'>
+                <p
+                  className='setAddStudents p-0 m-0'
+                  role={'button'}
+                  onClick={() => setShowAddStudentsModal(true)}
+                >
+                  Add Users
+                </p>
+              </div>
             </div>
           </div>
           <div className='col-12'>
@@ -684,7 +764,13 @@ export default function StudentsTable(props) {
           data={tableData()}
           pagination
           selectableRows
-          onSelectedRowsChange={(rows) => setSelectedRows(rows.selectedRows)}
+          onSelectedRowsChange={(rows) =>
+            setSelectedRows(
+              rows?.selectedRows?.map((row) => {
+                return row.id
+              })
+            )
+          }
           striped
           selectableRowsNoSelectAll
           customStyles={customStyles}
@@ -716,6 +802,19 @@ export default function StudentsTable(props) {
               setBulkDeactivatingStudents([])
             }}
             message={'Student(s) deactivated.'}
+          />
+        </>
+      )}
+
+      {bulkEditingStudents && (
+        <>
+          <ConfirmationModal
+            show={showConfirmationModal}
+            onHide={() => {
+              setShowConfirmationModal(false)
+              setBulkEditingStudents([])
+            }}
+            message={'Student(s) updated.'}
           />
         </>
       )}
@@ -764,6 +863,23 @@ export default function StudentsTable(props) {
             />
           </>
         )}
+      {bulkEditingStudents.length > 0 && (
+        <EditBulk
+          show={showBulkEditModal}
+          students={bulkEditingStudents}
+          loading={editLoading}
+          onSave={(options) => bulkEditStudents(options)}
+          onHide={() => setShowBulkEditModal(false)}
+        />
+      )}
+
+      <AddStudentsModal
+        show={showAddStudentsModal}
+        onHide={() => setShowAddStudentsModal(false)}
+        addStudents={(addedStudents) => {
+          setStudents([...addedStudents, ...students])
+        }}
+      />
     </>
   )
 }

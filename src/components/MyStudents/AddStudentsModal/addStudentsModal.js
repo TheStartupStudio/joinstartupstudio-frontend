@@ -17,9 +17,21 @@ const AddStudentsModal = (props) => {
   const [users, addUser] = useState([])
   const [addUserInputs, setAddUserInputs] = useState(3)
   const [loading, setLoading] = useState(false)
+  const [csvLoading, setCsvLoading] = useState(false)
   const [isUploaded, setUploaded] = useState(false)
   const [showErrorModal, setShowErrorsModal] = useState(false)
   const [errors, setErrors] = useState([])
+
+  const userRequiredFields = [
+    'name',
+    'lastName',
+    'UserEmail',
+    'password',
+    'level',
+    'year'
+  ]
+
+  let addedUsers = []
 
   const handleChange = (e, index) => {
     const { name, value } = e
@@ -35,12 +47,32 @@ const AddStudentsModal = (props) => {
     }
   }
 
+  const validateUsersBeforeSubmit = () => {
+    let validateError = false
+    users.forEach((user) => {
+      userRequiredFields.forEach((field) => {
+        if (!user[field]) {
+          validateError = true
+        }
+      })
+    })
+
+    if (validateError)
+      return toast.error('Please fill in all the required fields!')
+
+    req(users)
+    setLoading(true)
+  }
+
   async function req(results) {
     if (results.length <= 0) {
       setLoading(false)
+      setCsvLoading(false)
 
       if (!errors[0] === undefined) setShowErrorsModal(true)
-      debugger
+      addUser([])
+      props.addStudents(addedUsers)
+      addedUsers = []
       props.onHide()
       return
     }
@@ -83,6 +115,7 @@ const AddStudentsModal = (props) => {
             }
           })
           .then((response) => {
+            addedUsers = [response.data.user, ...addedUsers]
             req(results)
           })
           .catch((error) => {
@@ -94,7 +127,7 @@ const AddStudentsModal = (props) => {
           setErrors((old) => [
             ...old,
             {
-              message: `User with email ${item.UserEmail} alredy exist`,
+              message: `User with email ${item.UserEmail} already exists`,
               user: item
             }
           ])
@@ -103,7 +136,7 @@ const AddStudentsModal = (props) => {
           setErrors((old) => [
             ...old,
             {
-              message: `Something when't wrong with email `,
+              message: `Something went wrong with the email`,
               user: item
             }
           ])
@@ -112,7 +145,7 @@ const AddStudentsModal = (props) => {
   }
 
   const csvSubmit = () => {
-    setLoading(true)
+    setCsvLoading(true)
 
     const input = document.getElementById('csvFile').files[0]
     const reader = new FileReader()
@@ -194,20 +227,21 @@ const AddStudentsModal = (props) => {
               </label>
               <button
                 className='lts-button px-3 upload-user-button float-end mt-md-3 col-5 text-center col-md-auto'
+                disabled={csvLoading || loading}
                 onClick={
                   isUploaded
                     ? () => {
-                        setLoading(true)
+                        setCsvLoading(true)
                         csvSubmit()
                       }
                     : () => {
                         toast.error(
-                          'You need to upload a csv file beffore submit'
+                          'You need to upload a csv file before submit'
                         )
                       }
                 }
               >
-                {loading ? (
+                {csvLoading ? (
                   <span className='spinner-border spinner-border-sm' />
                 ) : (
                   'UPLOAD USER FILE CSV'
@@ -241,10 +275,13 @@ const AddStudentsModal = (props) => {
             <button
               className='lts-button'
               onClick={() => {
-                setLoading(true)
-                req(users)
+                if (users.length > 0) {
+                  validateUsersBeforeSubmit()
+                } else {
+                  toast.error('Please add users')
+                }
               }}
-              disabled={loading ? true : false}
+              disabled={loading || csvLoading}
             >
               {loading ? (
                 <span className='spinner-border spinner-border-sm' />

@@ -3,11 +3,15 @@ import { Modal } from 'react-bootstrap'
 import Select from 'react-select'
 import IntlMessages from '../../../utils/IntlMessages'
 import '../index.css'
-const EditBlunk = (props) => {
+const EditBulk = (props) => {
   const [toggle, setToggle] = useState(0)
   const [showPublishModal, setShowPublishModal] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [data, setData] = useState({})
+  const [data, setData] = useState()
+
+  useEffect(() => {
+    console.log('props.students :>> ', props.students)
+  }, [props])
 
   const YEAR = [
     { name: 'year', value: 'LTS1', label: 'LTS YEAR 1' },
@@ -33,9 +37,11 @@ const EditBlunk = (props) => {
       ...provided
     })
   }
+
   useEffect(() => {
     console.log(data)
   }, [data])
+
   return (
     <Modal
       show={props.show}
@@ -103,10 +109,12 @@ const EditBlunk = (props) => {
                   checked={toggle}
                   onChange={(e) => {
                     if (toggle) {
-                      updateData({ name: 'active', value: !toggle })
+                      const newData = { ...data }
+                      delete newData.activated
+                      setData(newData)
                       setToggle(!toggle)
                     } else {
-                      updateData({ name: 'active', value: !toggle })
+                      updateData({ name: 'activated', value: !toggle })
                       setToggle(!toggle)
                     }
                   }}
@@ -122,8 +130,8 @@ const EditBlunk = (props) => {
           <div className=''>
             <button
               className='float-end edit-account me-0'
-              disabled={props.loading}
-              onClick={() => props.onSave()}
+              disabled={props.loading || !data}
+              onClick={() => props.onSave(data)}
             >
               {props.loading ? (
                 <IntlMessages id='general.loading' />
@@ -138,4 +146,4 @@ const EditBlunk = (props) => {
   )
 }
 
-export default EditBlunk
+export default EditBulk
