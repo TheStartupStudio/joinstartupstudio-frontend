@@ -175,9 +175,10 @@ function LtsJournalContent(props) {
 
           {videos &&
             videos.constructor == Array &&
-            videos.map((video) => (
+            videos.map((video, index) => (
               <MediaLightbox
                 video={video}
+                key={index}
                 show={showVideo === video.id}
                 onClose={() => setShowVideo(false)}
                 // watchData={videoWatchData}
@@ -191,8 +192,9 @@ function LtsJournalContent(props) {
                 videos.length > 1 ? 'multiple' : 'single'
               }`}
             >
-              {videos.map((video) => (
+              {videos.map((video, index) => (
                 <div
+                  key={index}
                   className={`journal-entries__video${
                     journal.content == '' ? '--welcome-video' : ''
                   }`}

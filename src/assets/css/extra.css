@@ -765,3 +765,35 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+.customDatePickerWidth,
+.customDatePickerWidth > div.react-datepicker-wrapper,
+.customDatePickerWidth
+  > div
+  > div.react-datepicker__input-container
+  .customDatePickerWidth
+  > div
+  > div.react-datepicker__input-container
+  input,
+.react-datepicker,
+.react-datepicker__month-container {
+  width: 99%;
+}
+.react-datepicker .react-datepicker__day-name,
+.react-datepicker .react-datepicker__day,
+.react-datepicker .react-datepicker__time-name {
+  /* width: 38px; */
+  /* width: 2.5rem; */
+  width: 100%;
+  line-height: 2.5rem;
+  font-size: 12px !important;
+}
+
+.customDatePickerWidth .react-datepicker__day-names,
+.customDatePickerWidth .react-datepicker__week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.customDatePickerWidth .react-datepicker__month {
+  margin: 0;
+}

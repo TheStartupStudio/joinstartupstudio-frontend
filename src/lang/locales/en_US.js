@@ -610,6 +610,16 @@ const EnLangs = {
   'my_journal.entrepreneurship_title': 'MY COURSE IN ENTREPRENEURSHIP',
   'my_journal.entrepreneurship_description':
     'Embarking on the Entrepreneurial Journey',
+  'my_journal.hs1_title': 'HS YEAR 1',
+  'my_journal.hs1_description': 'HS YEAR 1 Description',
+  'my_journal.hs2_title': 'HS YEAR 2',
+  'my_journal.hs2_description': 'HS YEAR 2 Description',
+  'my_journal.hs3_title': 'HS YEAR 3',
+  'my_journal.hs3_description': 'HS YEAR 3 Description',
+  'my_journal.hs4_title': 'HS YEAR 4',
+  'my_journal.hs4_description': 'HS YEAR 4 Description',
+  'my_journal.my-training_title': 'MY TRAINING',
+  'my_journal.my-training_description': 'MY TRAINING Description',
 
   'my_journal.not_started_journal': 'NOT STARTED',
   'my_journal.edit_journal': 'Edit Journal',
