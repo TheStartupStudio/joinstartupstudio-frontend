@@ -40,6 +40,8 @@ import Tooltip from 'react-bootstrap/Tooltip'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { ShareMyPortfolioWidget } from '../../components/Portfolio/preview/shareMyPortfolioWidget'
 import { editSocialMedia } from '../../redux/user/Actions'
+import StudentData from '../../components/MyStudents/studentData'
+import { StudentCountProvider } from '../../components/MyStudents/studentCountContext'
 
 function Profile(props) {
   const [user, setUser] = useState({})
@@ -647,14 +649,12 @@ function Profile(props) {
               aria-describedby='basic-addon2'
             />
           </div> */}
-          <div
-            className='d-flex px-3 px-xl-0 justify-content-start'
-            style={{ marginTop: '40px' }}
-          >
-            <ShareMyPortfolioWidget user={user && user} />
+          <div style={{ marginTop: '40px' }}>
+            <StudentCountProvider>
+              <StudentData fetchStudents={true} />
+            </StudentCountProvider>
           </div>
 
-          <ConnectionRequestsBox />
           <ShowMessenger />
           <div className={'community-connect my-2'}>
             <Link to='/my-connections'>

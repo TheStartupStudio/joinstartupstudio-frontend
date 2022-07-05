@@ -11,10 +11,10 @@ export default function Footer() {
   return (
     <section id='footer'>
       <div className='container-fluid'>
-        <div className='row footer-copyright'>
+        <div className='row mx-md-4 footer-copyright'>
           <div
             className='col-sm-12 col-lg-4 text-align-left-footer'
-            style={{ paddingLeft: '20px' }}
+            // style={{ paddingLeft: '20px' }}
           >
             <p>© POWERED BY THE STARTUP STUDIO</p>
           </div>
@@ -29,8 +29,8 @@ export default function Footer() {
             </a>
           </div>
           <div className='col-md-3 col-sm-12 col-lg-4 text-align-right-footer'>
-            <div className='footer-menu' style={{ paddingRight: '20px' }}>
-              <ul>
+            <div className='footer-menu'>
+              <ul className='mt-1 mt-lg-0'>
                 {/* <li>
                   <a
                     href='https://www.facebook.com/learntostart/'

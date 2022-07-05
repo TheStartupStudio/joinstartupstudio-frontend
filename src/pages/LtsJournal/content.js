@@ -217,7 +217,8 @@ function LtsJournalContent(props) {
             </div>
           )}
 
-          {journal?.content?.includes('<p') ? (
+          {journal?.content?.includes('<div') ||
+          journal?.content?.includes('<p') ? (
             parse(`${journal.content}`)
           ) : (
             <p className='page-card__content-description'>{journal.content}</p>
