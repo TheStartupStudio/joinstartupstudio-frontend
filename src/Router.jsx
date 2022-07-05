@@ -155,36 +155,31 @@ function Router(props) {
               <Route exact path='/account' component={Profile} />
               <Route exact path='/profile-preview' component={ProfilePreview} />
               <Route
-                path='/lts-journal/'
-                component={(props) => <LtsJournal {...props} category='lts' />}
+                path='/my-training/'
+                component={(props) => <LtsJournal {...props} category='my-training' />}
               />
               <Route
-                path='/wellness-journal/'
+                path='/hs1-journal/'
                 component={(props) => (
-                  <LtsJournal {...props} category='wellness' />
+                  <LtsJournal {...props} category='hs1' />
                 )}
               />
               <Route
-                path='/personal-finance-journal/'
+                path='/hs2-journal/'
                 component={(props) => (
-                  <LtsJournal {...props} category='personal-finance' />
+                  <LtsJournal {...props} category='hs2' />
                 )}
               />
               <Route
-                path='/market-ready/'
+                path='/hs3-journal/'
                 component={(props) => (
-                  <LtsJournal {...props} category='market-ready' />
+                  <LtsJournal {...props} category='hs3' />
                 )}
               />
               <Route
-                exact
-                path='/my-course-in-entrepreneurship'
-                component={MyCourseEntrepreneurship}
-              />
-              <Route
-                path='/my-course-in-entrepreneurship/journal'
+                path='/hs4-journal/'
                 component={(props) => (
-                  <LtsJournal {...props} category='entrepreneurship' />
+                  <LtsJournal {...props} category='hs4' />
                 )}
               />
               <Route

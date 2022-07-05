@@ -128,32 +128,28 @@ function Sidebar(props) {
                 </NavLink>
               </li>
               <li>
-                {/* <NavLink
+                <NavLink
                   onClick={() => {
                     dispatch(setAccordionToggled(false))
                     props.hideHeaderIcons()
                   }}
-                  to={'/edit-portfolio'}
-                  className='mt-md-1'
-                  activeClassName='sidenav active'
-                >
-                  <div className='d-flex' style={{ alignItems: 'center' }}>
-                    <FontAwesomeIcon icon={faIdCard} />
-                    <span className='ps-2'>MY PORTFOLIO</span>
-                  </div>
-                </NavLink> */}
-                <a
-                  href='/#'
-                  className={`mt-md-1 ${
-                    location.pathname.includes('edit-portfolio') ? 'active' : ''
+                  to='/my-training'
+                  className={`${
+                    location.pathname.includes('my-training') ? 'active' : ''
                   }`}
                 >
                   <div className='d-flex' style={{ alignItems: 'center' }}>
-                    <FontAwesomeIcon icon={faIdCard} />
-                    <span className='ps-2'>MY TRAINING</span>
+                    <FontAwesomeIcon
+                      className='sidebar-icon me-1'
+                      icon={faIdCard}
+                    />
+                    <div className='ms-2'>
+                      <span>MY TRAINING</span>
+                    </div>
                   </div>
-                </a>
+                </NavLink>
               </li>
+
               <li
                 className='dropdownMenuSidebarHover'
                 data-bs-toggle='collapse'
@@ -171,7 +167,9 @@ function Sidebar(props) {
                       className='sidebar-icon me-2'
                       icon={faFolder}
                     />
-                    <div className='ms-1 flex-grow-1'>MY CURRICULUM</div>
+                    <div className='ms-1 flex-grow-1'>
+                      <span>MY CURRICULUM</span>
+                    </div>
                     <FontAwesomeIcon
                       icon={faAngleDown}
                       className='me-2 me-md-0'
@@ -194,11 +192,13 @@ function Sidebar(props) {
                       dispatch(setAccordionToggled(false))
                       props.hideHeaderIcons()
                     }}
-                    to='/#'
+                    to='/hs1-journal'
                     activeClassName='sidenav active'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>HS YEAR 1</div>
+                      <div className='ms-4 ps-2 py-1'>
+                        <span>HS YEAR 1</span>
+                      </div>
                     </div>
                   </NavLink>
                 </li>
@@ -208,11 +208,13 @@ function Sidebar(props) {
                       dispatch(setAccordionToggled(false))
                       props.hideHeaderIcons()
                     }}
-                    to='/#'
+                    to='/hs2-journal'
                     activeClassName='sidenav active'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>HS YEAR 2</div>
+                      <div className='ms-4 ps-2 py-1'>
+                        <span>HS YEAR 2</span>
+                      </div>
                     </div>
                   </NavLink>
                 </li>
@@ -222,11 +224,13 @@ function Sidebar(props) {
                       dispatch(setAccordionToggled(false))
                       props.hideHeaderIcons()
                     }}
-                    to='/#'
+                    to='/hs3-journal'
                     activeClassName='sidenav active'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>HS YEAR 3</div>
+                      <div className='ms-4 ps-2 py-1'>
+                        <span>HS YEAR 3</span>
+                      </div>
                     </div>
                   </NavLink>
                 </li>
@@ -236,11 +240,13 @@ function Sidebar(props) {
                       dispatch(setAccordionToggled(false))
                       props.hideHeaderIcons()
                     }}
-                    to='/#'
+                    to='/hs4-journal'
                     activeClassName='sidenav active'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>HS YEAR 4</div>
+                      <div className='ms-4 ps-2 py-1'>
+                        <span>HS YEAR 4</span>
+                      </div>
                     </div>
                   </NavLink>
                 </li>
@@ -310,7 +316,7 @@ function Sidebar(props) {
                       props.hideHeaderIcons()
                     }}
                     to='/#'
-                    activeClassName='sidenav active'
+                    activeClassName='sidenav'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
                       <div className='ms-4 ps-2 py-1'>MY ASSESSMENTS</div>

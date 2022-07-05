@@ -34,7 +34,7 @@ function LtsJournal(props) {
   async function getJournals(redir = true) {
     try {
       let { data } = await axiosInstance.get(`/ltsJournals/`, {
-        params: { category: props.category }
+        params: { category: props.category, platform: 'instructor' }
       })
       setJournalsData(data)
       setJournals(data)
@@ -100,18 +100,18 @@ function LtsJournal(props) {
   })
 
   let titleMapping = {
-    lts: 'my_journal.lts_title',
-    wellness: 'my_journal.wellness_title',
-    'personal-finance': 'my_journal.personal-finance_title',
-    'market-ready': 'my_journal.market-ready_title',
-    entrepreneurship: 'my_journal.entrepreneurship_title'
+    hs1: 'my_journal.hs1_title',
+    hs2: 'my_journal.hs2_title',
+    hs3: 'my_journal.hs3_title',
+    hs4: 'my_journal.hs4_title',
+    'my-training': 'my_journal.my-training_title'
   }
   let descriptionMapping = {
-    lts: 'my_journal.lts_description',
-    wellness: 'my_journal.wellness_description',
-    'personal-finance': 'my_journal.personal-finance_description',
-    'market-ready': 'my_journal.market-ready_description',
-    entrepreneurship: 'my_journal.entrepreneurship_description'
+    hs1: 'my_journal.hs1_description',
+    hs2: 'my_journal.hs2_description',
+    hs3: 'my_journal.hs3_description',
+    hs4: 'my_journal.hs4_description',
+    'my-training': 'my_journal.my-training_description'
   }
   const handleJournalSearch = (e) => {
     e.preventDefault()
