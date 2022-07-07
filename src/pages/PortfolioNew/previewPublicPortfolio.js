@@ -86,13 +86,17 @@ const PreviewPublicPortfolio = () => {
 
   const getConnections = async () => {
     await axiosInstance.get('/connect').then((res) => {
-      setConnections(res.data.data)
+      setConnections(res.data.count)
     })
   }
 
   const getUser = () => {
+    const url = loggedUser
+      ? `/users/${username}/portfolio`
+      : `/${username}/portfolio`
+
     axiosInstance
-      .get(`/users/${username}/portfolio`)
+      .get(url)
       .then((response) => {
         setUser(response.data.user)
         setIsConnected(response.data.isConnected)
@@ -279,7 +283,7 @@ const PreviewPublicPortfolio = () => {
                       </p>
                     </div>
                   )}
-                  <ConnectionRequestsBox count={connections.length} />
+                  <ConnectionRequestsBox count={connections.count} />
                   <ShowMessenger />
                 </div>
               </div>

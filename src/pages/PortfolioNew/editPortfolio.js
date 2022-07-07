@@ -76,8 +76,8 @@ function EditPortfolio() {
         <div className='row'>
           <div className='col-12 col-lg-11 pe-lg-5 gx-0 gx-sm-auto'>
             <div className='page-padding'>
-              <div className='row'>
-                <div className='col-12 col-lg-7 col-xl-8'>
+              <div className='row mx-0'>
+                <div className='col-12 col-lg-7 col-xl-8 m-0 p-0'>
                   <span className='my_portfolio_title'>
                     <IntlMessages
                       id='register.my_portfolio'
@@ -94,7 +94,7 @@ function EditPortfolio() {
                     <IntlMessages id='portfolio.my_portfolio_edit' />
                   </p>
                 </div>
-                <div className='col-lg-5 col-xl-4 gx-lg-0'>
+                <div className='col-lg-5 col-xl-4 gx-lg-0 m-0 p-0'>
                   <div className='col-12 ps-md-0'>
                     <span className='my_portfolio_publish pe-xxl-0 '>
                       <IntlMessages id='portfolio.Publish.My.Portfolio' />
