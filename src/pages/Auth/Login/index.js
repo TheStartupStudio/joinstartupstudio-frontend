@@ -42,6 +42,10 @@ function Login() {
     }))
   }
 
+  const enterLogin = (e) => {
+    if (e.key.toLowerCase() == 'enter') handleSubmit(e)
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     setLoading(true)
@@ -157,6 +161,7 @@ function Login() {
                   type='text'
                   name='email'
                   placeholder={placeholder}
+                  onKeyDown={enterLogin}
                   onChange={(event) => handleChange(event)}
                 />
               )}
@@ -171,6 +176,7 @@ function Login() {
                   type='password'
                   name='password'
                   placeholder={placeholder}
+                  onKeyDown={enterLogin}
                   onChange={(event) => handleChange(event)}
                 />
               )}
