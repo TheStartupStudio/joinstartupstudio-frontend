@@ -659,6 +659,13 @@ function MyConnections() {
                           })}
                       </div>
 
+                      {recommendedConnections.length === 0 && (
+                        <p className='page-description fw-light ms-0 ps-0'>
+                          You don’t have any recommended connection requests
+                          yet!
+                        </p>
+                      )}
+
                       {recommendedConnections.length > 0 && (
                         <ConnectionsSlider
                           data={recommendedConnections}

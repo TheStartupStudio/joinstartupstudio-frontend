@@ -20,7 +20,11 @@ import {
 } from '../../../utils/helpers'
 
 export default function PreviewPersonalBio(props) {
-  const userId = useSelector((state) => state.user.user.user.id)
+  const userId = useSelector((state) => state?.user?.user?.user?.id)
+  const loggedUser = useSelector((state) => {
+    const user = state?.user?.user?.user
+    return { role_id: user?.role_id, level: user?.level }
+  })
   const [user, setUser] = useState()
   const [userBio, setUserBio] = useState()
   const [userConnections, setuserConnections] = useState()
@@ -32,6 +36,7 @@ export default function PreviewPersonalBio(props) {
   const [isCertified, setIsCertified] = useState(false)
   const [isConnected, setIsConnected] = useState(false)
   const [loadingConnecting, setLoadingConnecting] = useState(false)
+  const [levelMatch, setLevelMatch] = useState(false)
   const loggedUserLevel = IsUserLevelAuthorized()
   const previewedUserLevel = checkLevelAuthorized(props?.user?.level)
 
@@ -41,6 +46,18 @@ export default function PreviewPersonalBio(props) {
       setUser(props.user)
       setUserBio(props.user.bio)
       setuserConnections(props.user.connections_count)
+      if (loggedUser.role_id === 1) {
+        if (
+          props.user.role_id === loggedUser.role_id &&
+          props.user.level === loggedUser.level
+        ) {
+          setLevelMatch(true)
+        }
+      } else {
+        if (props.user.role_id === loggedUser.role_id) {
+          setLevelMatch(true)
+        }
+      }
     }
   }, [props.user])
 
@@ -51,12 +68,12 @@ export default function PreviewPersonalBio(props) {
 
   const getUser = async () => {
     setLoading(true)
-    await axiosInstance
+    axiosInstance
       .get('/connect/count')
       .then((response) =>
         setuserConnections(parseInt(response.data.connectionCount))
       )
-    await axiosInstance
+    axiosInstance
       .get(`/users/${userId}`)
       .then((response) => {
         setUser(response.data)
@@ -263,33 +280,37 @@ export default function PreviewPersonalBio(props) {
             <div className='d-flex portfolio-connect'>
               {props.user && props.user.id !== userId && (
                 <div className='new-message text-start text-md-end my-auto'>
-                  {isConnected === 'accept' ? (
-                    props.user?.is_contact &&
-                    loggedUserLevel &&
-                    previewedUserLevel &&
-                    props.user?.UserPortfolio.is_published && (
-                      <button
-                        onClick={() => {
-                          props.contactUser()
-                        }}
-                      >
-                        Contact
-                      </button>
-                    )
-                  ) : isConnected === 'request' ? (
-                    <button disabled={loadingConnecting}>Requested</button>
-                  ) : isConnected === 'block' ? (
-                    <></>
-                  ) : (
-                    <button
-                      disabled={loadingConnecting}
-                      onClick={() => {
-                        setLoadingConnecting(true)
-                        props.newConnectionRequest()
-                      }}
-                    >
-                      Connect
-                    </button>
+                  {userId && (
+                    <>
+                      {isConnected === 'accept' ? (
+                        props.user?.is_contact &&
+                        loggedUserLevel &&
+                        previewedUserLevel &&
+                        props.user?.UserPortfolio.is_published && (
+                          <button
+                            onClick={() => {
+                              props.contactUser()
+                            }}
+                          >
+                            Contact
+                          </button>
+                        )
+                      ) : isConnected === 'request' ? (
+                        <button disabled={loadingConnecting}>Requested</button>
+                      ) : isConnected === 'block' ? (
+                        <></>
+                      ) : levelMatch ? (
+                        <button
+                          disabled={loadingConnecting}
+                          onClick={() => {
+                            setLoadingConnecting(true)
+                            props.newConnectionRequest()
+                          }}
+                        >
+                          Connect
+                        </button>
+                      ) : null}
+                    </>
                   )}
                 </div>
               )}

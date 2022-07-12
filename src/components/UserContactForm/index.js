@@ -91,8 +91,8 @@ const UserContactForm = (props) => {
           >
             <option value=''>Send email to...</option>
             {instructors.map((instructor) => (
-              <option value={instructor.User.email} key={instructor.id}>
-                {instructor.User.name}
+              <option value={instructor?.User?.email} key={instructor.id}>
+                {instructor?.User?.name}
               </option>
             ))}
           </select>

@@ -100,8 +100,11 @@ const AddStudentsModal = (props) => {
       username: item['UserEmail'],
       password: item['password'],
       attributes: {
-        'custom:universityCode': item.communityCode,
-        'custom:isVerified': '0',
+        'custom:universityCode': 'dev2020',
+        'custom:isVerified': '1',
+        'custom:language': 'en',
+        'custom:email': item['UserEmail'],
+        'custom:password': item['password'],
         name: item.name + ' ' + item.lastName
       }
     })
