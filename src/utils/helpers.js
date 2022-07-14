@@ -14,7 +14,7 @@ export const IsUserLevelAuthorized = () => {
 }
 
 export const checkLevelAuthorized = (level) => {
-  return level !== 'ES' && level !== 'MS' && level !== 'HS'
+  return level !== 'L1' && level !== 'L2' && level !== 'L3'
 }
 
 export const refreshToken = async () => {

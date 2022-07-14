@@ -138,7 +138,7 @@ const Messenger = (props) => {
       setConnections(
         result.filter((connection) => {
           const level = connection.level
-          return level !== 'ES' && level !== 'MS' && level !== 'HS'
+          return level !== 'L1' && level !== 'L2' && level !== 'L3'
         })
       )
     })

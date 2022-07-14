@@ -315,7 +315,7 @@ const Chat = (props) => {
           {props.searchOpen && (
             <div className='newConnectionMessageHeader my-0'>
               <div className='row my-0'>
-                <div className='col-12 my-2'>
+                <div className='col-12 my-1'>
                   <p
                     onClick={props.closeChat}
                     className={'cancelMessage m-0 d-inline-block float-end'}
@@ -323,7 +323,7 @@ const Chat = (props) => {
                     Cancel
                   </p>
                 </div>
-                <div className='col-12 text-center my-1 '>
+                <div className='col-12 text-center'>
                   <p className='m-0'>NEW MESSAGE</p>
                 </div>
                 <hr className='m-auto my-2' style={{ width: '92%' }} />

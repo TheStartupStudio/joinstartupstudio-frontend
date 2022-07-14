@@ -74,7 +74,7 @@ const UserContactForm = (props) => {
   }
 
   return (
-    <div className='user-contact-form px-3 py-4 me-lg-2 my-4'>
+    <div className='user-contact-form px-3 py-4 my-4'>
       <h3 className='text-lg-center'>Contact</h3>
       <form
         onSubmit={handleSubmit(sendEmail)}

@@ -114,7 +114,10 @@ const AddStudentsModal = (props) => {
             data: {
               ...item,
               name: item.name + ' ' + item.lastName,
-              cognito_Id: res.userSub
+              cognito_Id: res.userSub,
+              stripe_subscription_id: 'true',
+              payment_type: 'school',
+              is_active: 1
             }
           })
           .then((response) => {

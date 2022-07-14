@@ -286,8 +286,12 @@ function MyConnections() {
   const getAllUsers = _.debounce((keyword) => {
     if (keyword.length < 3) {
       setLoading(false)
+      setSearchingUsers(false)
       return
     }
+
+    setLoading(true)
+    setSearchingUsers(true)
 
     axiosInstance
       .get(`/connect/filter-users?keyword=${keyword}`)
@@ -327,7 +331,7 @@ function MyConnections() {
       .catch((e) => {
         setLoading(false)
       })
-  }, 1000)
+  }, 500)
 
   const getAllTags = async () => {
     await axiosInstance.get('/tags').then((res) => {
@@ -376,7 +380,7 @@ function MyConnections() {
     if (value !== '') {
       setRecommendedConnections(allRecommendedConnections)
       getAllUsers(value)
-      setSearchingUsers(true)
+      // setSearchingUsers(true)
     } else {
       setSearchingUsers(false)
       setSelectedRecommendedTags([])
@@ -529,7 +533,7 @@ function MyConnections() {
                           placeholder={placeholder}
                           aria-describedby='button-addon1'
                           onChange={(e) => {
-                            setLoading(true)
+                            // setLoading(true)
                             handleSearch(e)
                           }}
                         />

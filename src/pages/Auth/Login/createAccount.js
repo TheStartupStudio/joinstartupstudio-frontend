@@ -150,7 +150,7 @@ function CreateAccount() {
               role: user?.role,
               instructor_id: Number(user.instructor),
               year: user.program,
-              level: user.type === 'student' ? 'HS' : 'Adult',
+              level: user.type === 'student' ? 'L3' : 'L4',
               password: user.password
             }
             await registerUser(params)

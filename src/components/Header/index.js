@@ -395,7 +395,7 @@ function Header(props) {
                       /> */}
                         <img
                           src={
-                            mainState.user.user.user.profileImage !== ''
+                            mainState.user.user.user.profileImage
                               ? mainState.user.user.user.profileImage
                               : avator
                           }
