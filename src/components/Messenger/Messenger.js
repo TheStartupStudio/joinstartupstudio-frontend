@@ -370,7 +370,6 @@ const Messenger = (props) => {
               setSearchedMessageId(null)
               userDisconnectedFromRoom()
             }}
-            key={1}
             setFoulWords={setFoulWords}
             newMessage={newMessage}
             newChatMessage={newChatMessage}

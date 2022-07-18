@@ -619,7 +619,8 @@ const EnLangs = {
   'my_journal.hs4_title': 'HS YEAR 4',
   'my_journal.hs4_description': 'HS YEAR 4 Description',
   'my_journal.my-training_title': 'MY TRAINING',
-  'my_journal.my-training_description': 'MY TRAINING Description',
+  'my_journal.my-training_description':
+    'Welcome to your LTS Training. Here you will be introduced to what it means to be a LTS Instructor and you will prepare for your experience in this new type of classroom.',
 
   'my_journal.not_started_journal': 'NOT STARTED',
   'my_journal.edit_journal': 'Edit Journal',

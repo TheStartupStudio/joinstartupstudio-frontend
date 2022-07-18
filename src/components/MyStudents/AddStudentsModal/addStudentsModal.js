@@ -1,6 +1,6 @@
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useState, useReducer } from 'react'
 import { Modal } from 'react-bootstrap'
 import axiosInstance from '../../../utils/AxiosInstance'
 import '../index.css'
@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 import ErrorsModal from './ErrorsModal'
 import file from '../../../assets/files/UserCSV.csv'
 import _ from 'lodash'
+import { validateEmail, validatePassword } from '../../../utils/helpers'
 
 const AddStudentsModal = (props) => {
   const [users, addUser] = useState([])
@@ -21,6 +22,7 @@ const AddStudentsModal = (props) => {
   const [isUploaded, setUploaded] = useState(false)
   const [showErrorModal, setShowErrorsModal] = useState(false)
   const [errors, setErrors] = useState([])
+  const [successfullyAdded, setSuccessfullyAdded] = useState(0)
 
   const userRequiredFields = [
     'name',
@@ -69,7 +71,8 @@ const AddStudentsModal = (props) => {
       setLoading(false)
       setCsvLoading(false)
 
-      if (!errors[0] === undefined) setShowErrorsModal(true)
+      // if (hasErrors) setShowErrorsModal(true)
+      setShowErrorsModal(true)
       addUser([])
       props.addStudents(addedUsers)
       addedUsers = []
@@ -88,11 +91,38 @@ const AddStudentsModal = (props) => {
       setErrors((old) => [
         ...old,
         {
-          message: `This field failed beacuse of empty input`,
+          message: `Please fill in all the required fields.`,
           code: 400,
-          user: item
+          user: item['UserEmail']
         }
       ])
+
+      return req(results)
+    }
+
+    if (!validateEmail(item['UserEmail'])) {
+      setErrors((old) => [
+        ...old,
+        {
+          message: `Please provide a valid email.`,
+          code: 400,
+          user: item['UserEmail']
+        }
+      ])
+
+      return req(results)
+    }
+
+    if (!validatePassword(item['password'])) {
+      setErrors((old) => [
+        ...old,
+        {
+          message: `Password must contain at least 8 characters and it should have at least one number, lowercase & uppercase character.`,
+          code: 400,
+          user: item['UserEmail']
+        }
+      ])
+
       return req(results)
     }
 
@@ -122,6 +152,7 @@ const AddStudentsModal = (props) => {
           })
           .then((response) => {
             addedUsers = [response.data.user, ...addedUsers]
+            setSuccessfullyAdded((prev) => prev + 1)
             req(results)
           })
           .catch((error) => {
@@ -129,24 +160,14 @@ const AddStudentsModal = (props) => {
           })
       })
       .catch((err) => {
-        if (err.code == 'UsernameExistsException') {
-          setErrors((old) => [
-            ...old,
-            {
-              message: `User with email ${item.UserEmail} already exists`,
-              user: item
-            }
-          ])
-          req(results)
-        } else {
-          setErrors((old) => [
-            ...old,
-            {
-              message: `Something went wrong with the email`,
-              user: item
-            }
-          ])
-        }
+        setErrors((old) => [
+          ...old,
+          {
+            message: err.message,
+            user: item['UserEmail']
+          }
+        ])
+        req(results)
       })
   }
 
@@ -301,8 +322,17 @@ const AddStudentsModal = (props) => {
       <ErrorsModal
         show={showErrorModal}
         setErrors={() => setErrors([])}
-        onHide={() => setShowErrorsModal(false)}
+        onHide={() => {
+          setShowErrorsModal(false)
+          setLoading(false)
+          setErrors([])
+        }}
         errors={errors}
+        finishedReport={{
+          total: successfullyAdded + errors.length,
+          added: successfullyAdded,
+          failed: errors.length
+        }}
       />
     </>
   )

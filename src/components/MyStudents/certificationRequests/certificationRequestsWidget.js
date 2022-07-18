@@ -11,22 +11,25 @@ export default function CertificationRequestsWidget(props) {
         continue the certification process.
       </p>
       <table>
-        <tr>
-          <th>Student Name</th>
-          <th>Scoring</th>
-          <th>Status</th>
-        </tr>
-
-        <tr>
-          <td>///</td>
-          <td>///</td>
-          <td>///</td>
-        </tr>
-        <tr>
-          <td>///</td>
-          <td>///</td>
-          <td>///</td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Scoring</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>///</td>
+            <td>///</td>
+            <td>///</td>
+          </tr>
+          <tr>
+            <td>///</td>
+            <td>///</td>
+            <td>///</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   )

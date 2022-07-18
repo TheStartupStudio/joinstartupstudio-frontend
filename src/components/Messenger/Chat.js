@@ -450,16 +450,18 @@ const Chat = (props) => {
 
             {messages.length > 0 &&
               messages.map((message, index) => (
-                <>
+                <React.Fragment key={message.id}>
                   <Message
-                    key={index}
+                    key={message.id}
                     data={message}
                     visibleScrollBar={visibleScrollBar}
                   />
+                  <div></div>
+
                   {message.id === searchedMessageId && (
                     <div ref={FoundMessageRef} />
                   )}
-                </>
+                </React.Fragment>
               ))}
 
             {pageNumberDown > 0 && props.searchingMessage && (

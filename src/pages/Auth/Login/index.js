@@ -102,7 +102,7 @@ function Login() {
                 <img className='login-logo' src={SUSLogo} alt='logo' />
                 <h1 className='login-title'>Welcome...</h1>
                 <p>
-                  ...to the Learn to Start Student Platform. Please log in to
+                  ...to the Learn to Start Instructor Platform. Please log in to
                   access your platform.
                 </p>
 

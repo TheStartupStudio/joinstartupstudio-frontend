@@ -260,3 +260,9 @@ select {
   color: #707070;
   opacity: 1;
 }
+
+.errors-modal-body {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

@@ -3,10 +3,14 @@ import React from 'react'
 const IndividualError = (props) => {
   delete props.user.id
   return (
-    <div className='w-100 text-left mb-4 ps-4'>
-      <p className='text-center'>{props.message}</p>
+    <div className='text-start mb-2 mx-2'>
+      <p className='text-start m-0 p-0'>
+        User email: <span style={{ fontWeight: 500 }}>{props.user} </span>
+        <br />
+        Error message: <span className='text-danger'>{props.message} </span>
+      </p>
       {/* <p>{props.message.length != 0 ? props.message : 'Empty fields'}</p> */}
-      <p>
+      {/* <p>
         {props.code == 400 && (
           <>
             {props.user.name === undefined ? (
@@ -36,8 +40,8 @@ const IndividualError = (props) => {
             )}
           </>
         )}
-      </p>
-      <hr />
+      </p> */}
+      <hr className='my-2' />
     </div>
   )
 }
