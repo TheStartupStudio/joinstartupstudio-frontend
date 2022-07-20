@@ -183,10 +183,6 @@ const PreviewPublicPortfolio = () => {
                                 EDUCATION
                               </span>
                             </div>
-                            {console.log(
-                              'loggedUserLevel :>> ',
-                              user?.recommendationsTo.length
-                            )}
                             {selected === 'EXPERIENCE' ? (
                               <>
                                 {background?.experience?.length !== 0 && (
