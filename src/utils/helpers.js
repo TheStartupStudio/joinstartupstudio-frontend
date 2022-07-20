@@ -9,7 +9,7 @@ import _ from 'lodash'
 import UserContactForm from '../components/UserContactForm'
 
 export const IsUserLevelAuthorized = () => {
-  const loggedUserLevel = useSelector((state) => state.user.user.user.level)
+  const loggedUserLevel = useSelector((state) => state?.user?.user?.user?.level)
   return checkLevelAuthorized(loggedUserLevel)
 }
 

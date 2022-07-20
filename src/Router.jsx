@@ -34,7 +34,7 @@ const Portfolio = React.lazy(() => import('./pages/Portfolio'))
 const EditPortfolio = React.lazy(() =>
   import('./pages/Portfolio/editPortfolio')
 )
-const MyStudents=React.lazy(()=>import('./pages/MyStudents'))
+const MyStudents = React.lazy(() => import('./pages/MyStudents'))
 const MyProjects = React.lazy(() => import('./pages/StartupProfile'))
 const Preview = React.lazy(() => import('./pages/StartupProfile/preview'))
 const PrivateProject = React.lazy(() =>
@@ -112,7 +112,7 @@ function Router(props) {
               <Route path='/savedMedia' component={SavedMedia} />
               <Route path='/csv-upload' component={CSVUpload} />
               <Route path='/portfolio' component={Portfolio} />
-              <Route path='/my-students' component={MyStudents}/>
+              <Route path='/my-students' component={MyStudents} />
               {/* <Route path='/edit-portfolio' component={EditPortfolio} /> */}
               <Route
                 exact
@@ -156,31 +156,25 @@ function Router(props) {
               <Route exact path='/profile-preview' component={ProfilePreview} />
               <Route
                 path='/my-training/'
-                component={(props) => <LtsJournal {...props} category='my-training' />}
+                component={(props) => (
+                  <LtsJournal {...props} category='my-training' />
+                )}
               />
               <Route
                 path='/hs1-journal/'
-                component={(props) => (
-                  <LtsJournal {...props} category='hs1' />
-                )}
+                component={(props) => <LtsJournal {...props} category='hs1' />}
               />
               <Route
                 path='/hs2-journal/'
-                component={(props) => (
-                  <LtsJournal {...props} category='hs2' />
-                )}
+                component={(props) => <LtsJournal {...props} category='hs2' />}
               />
               <Route
                 path='/hs3-journal/'
-                component={(props) => (
-                  <LtsJournal {...props} category='hs3' />
-                )}
+                component={(props) => <LtsJournal {...props} category='hs3' />}
               />
               <Route
                 path='/hs4-journal/'
-                component={(props) => (
-                  <LtsJournal {...props} category='hs4' />
-                )}
+                component={(props) => <LtsJournal {...props} category='hs4' />}
               />
               <Route
                 exact
@@ -238,6 +232,11 @@ function Router(props) {
               <Route path='/logout' component={Logout} />
               <Route exact path='/' component={Login} />
               <Route path='/verify' component={VerifyEmail} />
+              <Route
+                exact
+                path='/user-portfolio/:username'
+                component={PreviewPublicPortfolio}
+              />
               <Route component={NotFound} />
             </Switch>
           </PublicLayout>

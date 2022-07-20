@@ -31,7 +31,6 @@ const PreviewPortfolio = () => {
 
   useEffect(() => {
     getUser()
-    getUserRecommendations()
   }, [])
 
   useEffect(() => {
@@ -40,6 +39,7 @@ const PreviewPortfolio = () => {
     user.show_experience && getUserExperiences()
     user.show_accomplishments && getUserAccomplishments()
     user.show_education && getUserEducations()
+    user.show_recommendations && getUserRecommendations()
   }, [user])
 
   const authorizedLevel = IsUserLevelAuthorized()

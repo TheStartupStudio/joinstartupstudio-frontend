@@ -13,7 +13,7 @@ function ActiveUsers(props) {
         </h2>
         <h2 className='headline online-users'>
           <IntlMessages id='chat.there_are' />
-          {onlineUsers.length}
+          {onlineUsers.length > 0 ? onlineUsers.length - 1 : 0}
           <IntlMessages id='chat.other_participants' />
         </h2>
       </div>

@@ -20,6 +20,7 @@ export const Recommendation = (props) => {
   const [pendingRecommendations, setPendingRecommendations] = useState([])
   const [connections, setConnections] = useState([])
   const [requestId, setRequestId] = useState()
+  const [isPublished, setIsPublished] = useState(false)
 
   useEffect(() => {
     getUserRecommendations()
@@ -30,6 +31,24 @@ export const Recommendation = (props) => {
   useEffect(() => {
     setRequestId(props.requestId)
   }, [props.requestId])
+
+  useEffect(() => {
+    props.user !== undefined && setIsPublished(props.user?.show_recommendations)
+  }, [props.user])
+
+  const updateShowPreference = async () => {
+    const oldPublishValue = isPublished
+    setIsPublished(!isPublished)
+    await axiosInstance
+      .put(`/users`, {
+        show_recommendations: !oldPublishValue
+      })
+      .then()
+      .catch((e) => {
+        setIsPublished(!oldPublishValue)
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+      })
+  }
 
   const getUserConnections = async () => {
     await axiosInstance.get('/connect').then((res) => {
@@ -108,15 +127,40 @@ export const Recommendation = (props) => {
     <>
       <div className='experiences-container mx-0 mt-4'>
         <div className='rcmd-header'>
-          <div className='d-flex m-3 experience-header rcmd-desktop-header'>
-            <h4
-              className='title p-0 my-auto float-start'
-              // style={{ width: '20%' }}
-            >
-              RECOMMENDATIONS
-            </h4>
-            <div className='break-experience'></div>
-            <div className='d-flex show_in_portfolio'>
+          <div className='m-3 rcmd-desktop-header'>
+            <div className='d-flex experience-header'>
+              <h4
+                className='title p-0 float-start'
+                // style={{ width: '20%' }}
+              >
+                RECOMMENDATIONS
+              </h4>
+              <div className='break-experience'></div>
+              <div className='d-flex show_in_portfolio justify-content-end'>
+                <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>
+                  Show in My Portfolio
+                </p>
+
+                <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>
+                  <input
+                    type='checkbox'
+                    checked={isPublished}
+                    onChange={() => updateShowPreference()}
+                  />
+                  <i className='my-auto'></i>
+                </label>
+
+                <span className='float-end my-auto pe-1 pe-md-0 ps-md-4'>
+                  <FontAwesomeIcon
+                    icon={faPencilAlt}
+                    className=''
+                    style={{ height: '25px', width: '25px', cursor: 'pointer' }}
+                    onClick={() => setShowRecommendationModal(true)}
+                  />
+                </span>
+              </div>
+            </div>
+            <div className='d-flex experience-header show_in_portfolio justify-content-end'>
               <p
                 className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'
                 onClick={() => setShowRcmdRequestModal(true)}
@@ -126,7 +170,7 @@ export const Recommendation = (props) => {
               </p>
               <p className='my-auto'>|</p>
               <p
-                className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'
+                className='py-3 py-md-0 my-auto ps-md-3 p-0'
                 onClick={() => setShowAllRequestsModal(true)}
                 style={{ cursor: 'pointer' }}
               >
@@ -136,16 +180,9 @@ export const Recommendation = (props) => {
                   : 0}
                 )
               </p>
-              <span className='float-end my-auto pe-1 pe-md-0 ps-xl-4'>
-                <FontAwesomeIcon
-                  icon={faPencilAlt}
-                  className=''
-                  style={{ height: '25px', width: '25px', cursor: 'pointer' }}
-                  onClick={() => setShowRecommendationModal(true)}
-                />
-              </span>
             </div>
           </div>
+
           <div className='d-flex m-3 experience-header rcmd-mobile-header d-none'>
             <div className='d-inline-block w-100'>
               <h4
@@ -163,21 +200,38 @@ export const Recommendation = (props) => {
                 />
               </span>
             </div>
+            <div className='d-flex show_in_portfolio justify-content-end'>
+              <p className='p-0 m-0 my-auto'>Show in My Portfolio</p>
 
-            <div className='d-flex mt-md-2 show_in_portfolio flex-wrap'>
+              <label className='p-0 m-0 float-end my-auto form-switch d-flex'>
+                <input
+                  type='checkbox'
+                  checked={isPublished}
+                  onChange={() => updateShowPreference()}
+                />
+                <i className='my-auto'></i>
+              </label>
+            </div>
+
+            <div className='d-flex justify-content-start mt-2 show_in_portfolio flex-wrap'>
               <p
-                className='py-md-0 my-auto px-md-3 p-0 pe-2'
+                className='p-0 m-0 text-start'
                 onClick={() => setShowRcmdRequestModal(true)}
                 style={{ cursor: 'pointer' }}
               >
                 Request a Recommendation
               </p>
+              <p className='my-auto text-center rcmd-seperator'>|</p>
               <p
-                className='py-md-0 my-auto px-md-3 p-0 pe-2'
+                className='p-0 m-0 rmcd-respond-requests'
                 onClick={() => setShowAllRequestsModal(true)}
                 style={{ cursor: 'pointer' }}
               >
-                Respond to Requests
+                Respond to Requests(
+                {pendingRecommendations.length > 0
+                  ? pendingRecommendations.length
+                  : 0}
+                )
               </p>
             </div>
           </div>

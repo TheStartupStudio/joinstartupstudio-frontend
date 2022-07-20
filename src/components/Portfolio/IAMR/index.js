@@ -20,7 +20,7 @@ export const IAMR = (props) => {
   const [submissions, setSubmissions] = useState([])
   const [activeSubmission, setActiveSubmission] = useState(null)
   const [isPublished, setIsPublished] = useState(false)
-  const { user } = useSelector((state) => state.user.user)
+  const user = useSelector((state) => state?.user?.user?.user)
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_iamr)
@@ -42,7 +42,7 @@ export const IAMR = (props) => {
 
   useEffect(() => {
     axiosInstance
-      .get(`/users/submissions/user/${props.user.id}`)
+      .get(`/submissions/user/${props.user.id}`)
       .then((data) => setSubmissions(data.data.submissions))
   }, [])
 
@@ -95,7 +95,14 @@ export const IAMR = (props) => {
                           className='add-submission'
                           style={{ width: '100%' }}
                         >
-                          <a href={submission.link} target='_blank'>
+                          <a
+                            href={
+                              submission.link.startsWith('http')
+                                ? submission.link
+                                : 'https://' + submission.link
+                            }
+                            target='_blank'
+                          >
                             <img src={submission.imageUrl} alt='' />
                           </a>
                         </div>
@@ -184,13 +191,13 @@ export const IAMR = (props) => {
                 <div className='col-12 text-end'>
                   <NavLink
                     to={
-                      props.user.id !== user.id
+                      props.user.id !== user?.id
                         ? `/UserProject/${props.user.id}`
                         : '/MyStartupProfile'
                     }
                     className='d-block me-2 mt-2'
                   >
-                    <strong>VIEW MY PROJECTS</strong>
+                    {isPublished ? <strong>VIEW MY PROJECTS</strong> : ''}
                   </NavLink>
                 </div>
               )}
