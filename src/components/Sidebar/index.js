@@ -197,7 +197,7 @@ function Sidebar(props) {
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
                       <div className='ms-4 ps-2 py-1'>
-                        <span>HS YEAR 1</span>
+                        <span>LTS 1</span>
                       </div>
                     </div>
                   </NavLink>
@@ -213,7 +213,7 @@ function Sidebar(props) {
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
                       <div className='ms-4 ps-2 py-1'>
-                        <span>HS YEAR 2</span>
+                        <span>LTS 2</span>
                       </div>
                     </div>
                   </NavLink>
@@ -229,7 +229,7 @@ function Sidebar(props) {
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
                       <div className='ms-4 ps-2 py-1'>
-                        <span>HS YEAR 3</span>
+                        <span>LTS 3</span>
                       </div>
                     </div>
                   </NavLink>
@@ -245,7 +245,7 @@ function Sidebar(props) {
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
                       <div className='ms-4 ps-2 py-1'>
-                        <span>HS YEAR 4</span>
+                        <span>LTS 4</span>
                       </div>
                     </div>
                   </NavLink>

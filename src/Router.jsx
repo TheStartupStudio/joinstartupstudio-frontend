@@ -83,6 +83,9 @@ const PreviewPortfolioNew = React.lazy(() =>
 const EditPortfolioNew = React.lazy(() =>
   import('./pages/PortfolioNew/editPortfolio')
 )
+const JournalsManagement = React.lazy(() =>
+  import('./pages/JournalsManagement')
+)
 
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
@@ -207,6 +210,11 @@ function Router(props) {
               <Route path='/verify' component={VerifyEmail} />
               <Route path='/logout' component={Logout} />
               <Route exact path='/my-connections' component={MyConnections} />
+              <Route
+                exact
+                path='/edit-journals'
+                component={JournalsManagement}
+              />
               <Route
                 exact
                 path='/my-connections/request/:id'
