@@ -6,7 +6,7 @@ export default function CertificationRequestsWidget(props) {
       <p className='title my-2'>CERTIFICATION REQUESTS</p>
       <p className='description my-2'>
         Students below have requested certification. Please review their I Am
-        Ready page and assess each Outcome. Once all parts are saved, the
+        Ready page and assess each proof of skill. Once all parts are saved, the
         student will be notified on their updated status and whether they may
         continue the certification process.
       </p>
