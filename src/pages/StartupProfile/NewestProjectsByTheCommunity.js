@@ -34,7 +34,7 @@ const NewestProjectsByTheCommunity = (props) => {
     await axiosInstance
       .get('/business/')
       .then((res) => setLastetProject(res.data))
-      .catch((err) => console.log(err))
+      .catch((err) => err)
   }
 
   useEffect(() => {

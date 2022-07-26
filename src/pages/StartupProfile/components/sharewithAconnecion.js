@@ -74,7 +74,7 @@ const SharewithAconnecion = (props) => {
 
         shareVideo(messageData)
       })
-      .catch((e) => console.log(e))
+      .catch((e) => e)
   }
 
   return (

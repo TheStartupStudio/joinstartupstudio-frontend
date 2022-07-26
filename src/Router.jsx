@@ -83,6 +83,11 @@ const PreviewPortfolioNew = React.lazy(() =>
 const EditPortfolioNew = React.lazy(() =>
   import('./pages/PortfolioNew/editPortfolio')
 )
+
+const PasswordChangeRequired = React.lazy(() =>
+  import('./pages/Auth/Login/passwordChangeRequired')
+)
+
 const JournalsManagement = React.lazy(() =>
   import('./pages/JournalsManagement')
 )
@@ -180,6 +185,12 @@ function Router(props) {
                 component={(props) => <LtsJournal {...props} category='hs4' />}
               />
               <Route
+                path='/market-ready/'
+                component={(props) => (
+                  <LtsJournal {...props} category='market-ready' />
+                )}
+              />
+              <Route
                 exact
                 path='/My-Market-Ready-Guide'
                 component={MyMarketReadyGuide}
@@ -200,7 +211,7 @@ function Router(props) {
                 component={BeyondYourCourseVideo}
               />
               <Route path='/sample-note' component={SampleNote} />
-              <Route exact path='/my-notes/:id' component={MyNotes} />
+              <Route exact path='/my-notes/:id?' component={MyNotes} />
               <Route
                 exact
                 path='/my-journal/:month/:id'
@@ -244,6 +255,10 @@ function Router(props) {
                 exact
                 path='/user-portfolio/:username'
                 component={PreviewPublicPortfolio}
+              />
+              <Route
+                path='/password-change-required'
+                component={PasswordChangeRequired}
               />
               <Route component={NotFound} />
             </Switch>

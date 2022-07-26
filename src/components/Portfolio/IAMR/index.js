@@ -73,9 +73,9 @@ export const IAMR = (props) => {
           <h4 className='m-3 text-center iamr-title'>I AM MARKET-READY</h4>
 
           <p className='m-3'>
-            The components of your portfolio speak to the outcomes of
-            Empowerment and Performance as you introduce the world to who you
-            are, what you can do, and your ability to prove it.
+            The components of your portfolio speak to your level of market-ready
+            skills as you introduce the world to who you are, what you can do,
+            and your ability to prove it.
           </p>
 
           <div className='iamr-submissions m-3'>

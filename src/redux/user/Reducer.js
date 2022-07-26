@@ -7,7 +7,8 @@ import {
   USER_REMOVE_ERROR_MESSAGE,
   USER_CHANGE_NAME,
   EDIT_SOCIAL_MEDIA,
-  USER_CHANGE_PROFILE_IMAGE
+  USER_CHANGE_PROFILE_IMAGE,
+  NEED_RESET
 } from './Types'
 
 const user = JSON.parse(localStorage.getItem('user'))
@@ -18,7 +19,8 @@ const initialState = {
   loading: false,
   successMessage: null,
   errorMessage: null,
-  loginLoading: false
+  loginLoading: false,
+  oldPassword: null
 }
 
 const userReducer = (state = initialState, action) => {
@@ -28,6 +30,12 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         loginLoading: payload
+      }
+
+    case NEED_RESET:
+      return {
+        ...state,
+        oldPassword: payload
       }
 
     case LOADING:

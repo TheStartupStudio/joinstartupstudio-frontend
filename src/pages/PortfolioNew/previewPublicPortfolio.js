@@ -53,7 +53,7 @@ const PreviewPublicPortfolio = () => {
 
   useEffect(() => {
     if (
-      (!background && !user?.recommendationsTo) ||
+      (background?.length === 0 && user?.recommendationsTo.length === 0) ||
       (background?.accomplishments?.length === 0 &&
         background?.education?.length === 0 &&
         background?.experience?.length === 0 &&

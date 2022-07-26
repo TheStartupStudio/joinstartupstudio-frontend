@@ -45,7 +45,9 @@ function CSVUpload(props) {
         const params = {
           name: item['First Name'] + ' ' + item['Surname'],
           email: item['UserEmail'],
-          universityId: 1,
+          universityId: {}.hasOwnProperty.call(item, 'University')
+            ? parseInt(item['University'])
+            : 1,
           instructor_id:
             !{}.hasOwnProperty.call(item, 'Type') ||
             item['Type'] !== 'Instructor'
@@ -57,7 +59,13 @@ function CSVUpload(props) {
           stripe_subscription_id: 'true',
           payment_type: 'school',
           is_active: 1,
-          type: {}.hasOwnProperty.call(item, 'Type') ? item['Type'] : null
+          type: {}.hasOwnProperty.call(item, 'Type') ? item['Type'] : null,
+          role_id: {}.hasOwnProperty.call(item, 'Role')
+            ? parseInt(item['Role'])
+            : 1,
+          profession: {}.hasOwnProperty.call(item, 'Profession')
+            ? item['Profession']
+            : 'Student'
         }
         await registerUser(params)
         localStorage.setItem('email', item['UserEmail'])

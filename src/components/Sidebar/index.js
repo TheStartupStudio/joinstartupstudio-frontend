@@ -255,10 +255,10 @@ function Sidebar(props) {
               <li
                 className='dropdownMenuSidebarHover'
                 data-bs-toggle='collapse'
-                href='#collapseCertificates'
+                href='#collapseClassroom'
                 role='button'
                 aria-expanded='true'
-                aria-controls='collapseCertificates'
+                aria-controls='collapseClassroom'
               >
                 <a>
                   <div
@@ -285,7 +285,7 @@ function Sidebar(props) {
               </li>
               <div
                 className='collapse'
-                id='collapseCertificates'
+                id='collapseClassroom'
                 data-parent='#side-menu-main'
               >
                 <li>
@@ -410,6 +410,86 @@ function Sidebar(props) {
                     </div>
                   </a> */}
                 </li>
+              </div>
+              <li
+                className='dropdownMenuSidebarHover'
+                data-bs-toggle='collapse'
+                href='#collapseCertificates'
+                role='button'
+                aria-expanded='true'
+                aria-controls='collapseCertificates'
+              >
+                <a>
+                  <div
+                    className='d-flex w-100'
+                    style={{ alignItems: 'center' }}
+                  >
+                    <FontAwesomeIcon
+                      className='sidebar-icon me-2'
+                      icon={faCertificate}
+                    />
+                    <div className='flex-grow-1'>
+                      <span>MY CERTIFICATION</span>
+                    </div>
+                    <FontAwesomeIcon
+                      icon={faAngleDown}
+                      className='me-2 me-md-0'
+                      style={{
+                        fontSize: '16px',
+                        color: '#333D3D'
+                      }}
+                    />
+                  </div>
+                </a>
+              </li>
+              <div
+                className='collapse'
+                id='collapseCertificates'
+                data-parent='#side-menu-main'
+              >
+                <li>
+                  {/* <NavLink
+                    onClick={() => {
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
+                    }}
+                    to='/beyond-your-course'
+                    activeClassName='sidenav active'
+                  >
+                    <div className='d-flex' style={{ alignItems: 'center' }}>
+                      <div className='ms-4 ps-2 py-1'>
+                        <IntlMessages id='beyond_your_course.master_classes_upper' />
+                      </div>
+                    </div>
+                  </NavLink> */}
+                  <NavLink
+                    to={'/My-Market-Ready-Guide'}
+                    activeClassName='sidenav active'
+                  >
+                    <div className='d-flex' style={{ alignItems: 'center' }}>
+                      <div className='ms-4 ps-2 py-1'>
+                        MY MARKET-READY GUIDE
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    onClick={() => {
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
+                    }}
+                    to='/market-ready'
+                    activeClassName='sidenav active'
+                  >
+                    <div className='d-flex' style={{ alignItems: 'center' }}>
+                      <div className='ms-4 ps-2 py-1'>
+                        <IntlMessages id='navigation.market_ready' />
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li></li>
               </div>
               {/* <li>
                 <NavLink

@@ -1,12 +1,9 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import ReactPlayer from 'react-player'
-import modalImage from '../../assets/images/ASSESSMENT MODEL V2 (SALES) (2).png'
 import image from '../../assets/images/assessment-model-thumbnail.png'
 import { SingleA } from './SingleA'
-import { default as data } from './index.json'
+import { default as data } from './index'
 import { Image } from './image'
-import { Accordion } from 'react-bootstrap'
 
 const FirstDiv = () => {
   const [showImageModal, SetShowImageModal] = useState(false)

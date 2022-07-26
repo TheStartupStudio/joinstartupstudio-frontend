@@ -614,11 +614,14 @@ const EnLangs = {
   'my_journal.hs1_description':
     'Welcome to LTS 1. Here you will find the curriculum for this level broken down into tasks that you will guide students through. You will also find the space to reflect on your experience through each of these tasks.',
   'my_journal.hs2_title': 'LTS 2',
-  'my_journal.hs2_description': 'LTS 2 Description',
+  'my_journal.hs2_description':
+    'Welcome to LTS 2. Here you will find the curriculum for this level broken down into tasks that you will guide students through. You will also find the space to reflect on your experience through each of these tasks.',
   'my_journal.hs3_title': 'LTS 3',
-  'my_journal.hs3_description': 'LTS 3 Description',
+  'my_journal.hs3_description':
+    'Welcome to LTS 3. Here you will find the curriculum for this level broken down into tasks that you will guide students through. You will also find the space to reflect on your experience through each of these tasks.',
   'my_journal.hs4_title': 'LTS 4',
-  'my_journal.hs4_description': 'LTS 4 Description',
+  'my_journal.hs4_description':
+    'Welcome to LTS 4. Here you will find the curriculum for this level broken down into tasks that you will guide students through. You will also find the space to reflect on your experience through each of these tasks.',
   'my_journal.my-training_title': 'MY TRAINING',
   'my_journal.my-training_description':
     'Welcome to your LTS Training. Here you will be introduced to what it means to be a LTS Instructor and you will prepare for your experience in this new type of classroom.',
