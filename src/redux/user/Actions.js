@@ -8,14 +8,15 @@ import {
   EDIT_SOCIAL_MEDIA,
   USER_LOGOUT,
   USER_CHANGE_PROFILE_IMAGE,
-  USER_EDIT_ERROR
+  USER_EDIT_ERROR,
+  NEED_RESET
 } from './Types'
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import IntlMessages from '../../utils/IntlMessages'
 
-export const userLogin = () => async (dispatch) => {
+export const userLogin = (old_password) => async (dispatch) => {
   try {
     dispatch({ type: LOADING })
 
@@ -41,6 +42,18 @@ export const userLogin = () => async (dispatch) => {
     if (currentUser.attributes['custom:isVerified'] == 0) {
       window.location.href = '/verify-email'
       return
+    }
+
+    if (user.data.payment_type === 'school' && !user.data.last_login) {
+      dispatch({
+        type: NEED_RESET,
+        payload: old_password
+      })
+      dispatch({
+        type: LOGIN_LOADING,
+        payload: false
+      })
+      return 'passwordResetRequired'
     }
 
     if (user.data.is_active !== true) {

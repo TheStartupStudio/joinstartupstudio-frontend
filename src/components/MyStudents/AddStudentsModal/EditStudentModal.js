@@ -38,7 +38,6 @@ const EditStudentModal = (props) => {
     setLoading(true)
     const currentUser = await Auth.currentAuthenticatedUser()
     // await Auth.updateAttributes()
-    console.log(currentUser)
     axiosInstance
       .put(`/instructor/update-student/${data.id}`, {
         ...data,

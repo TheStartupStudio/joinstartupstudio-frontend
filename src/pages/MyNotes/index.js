@@ -366,7 +366,7 @@ function MyNotes(props) {
                       >
                         <IntlMessages id='my_notes.save_note' />{' '}
                       </Link>
-                    ) : (
+                    ) : notes.length > 0 ? (
                       <Link
                         to='#'
                         style={{ marginLeft: 'auto', marginTop: '-1px' }}
@@ -382,7 +382,7 @@ function MyNotes(props) {
                           }}
                         />
                       </Link>
-                    )}
+                    ) : null}
                   </div>
                   {textQuillStandart && (
                     <div className='my-notes-body mt-3 mb-4'>
@@ -645,7 +645,7 @@ function MyNotes(props) {
                         >
                           <IntlMessages id='my_notes.save_note' />{' '}
                         </Link>
-                      ) : (
+                      ) : notes.length > 0 ? (
                         <Link
                           to='#'
                           style={{ marginLeft: 'auto' }}
@@ -661,7 +661,7 @@ function MyNotes(props) {
                             }}
                           />
                         </Link>
-                      )}
+                      ) : null}
                     </div>
                     {textQuillStandart && (
                       <div className='my-notes-body mt-3 mb-4'>

@@ -34,7 +34,10 @@ function LtsJournal(props) {
   async function getJournals(redir = true) {
     try {
       let { data } = await axiosInstance.get(`/ltsJournals/`, {
-        params: { category: props.category, platform: 'instructor' }
+        params: {
+          category: props.category,
+          platform: props.category === 'market-ready' ? 'student' : 'instructor'
+        }
       })
       setJournalsData(data)
       setJournals(data)
@@ -104,6 +107,7 @@ function LtsJournal(props) {
     hs2: 'my_journal.hs2_title',
     hs3: 'my_journal.hs3_title',
     hs4: 'my_journal.hs4_title',
+    'market-ready': 'my_journal.market-ready_title',
     'my-training': 'my_journal.my-training_title'
   }
   let descriptionMapping = {
@@ -111,6 +115,7 @@ function LtsJournal(props) {
     hs2: 'my_journal.hs2_description',
     hs3: 'my_journal.hs3_description',
     hs4: 'my_journal.hs4_description',
+    'market-ready': 'my_journal.market-ready_description',
     'my-training': 'my_journal.my-training_description'
   }
   const handleJournalSearch = (e) => {

@@ -343,7 +343,7 @@ function Header(props) {
                     to={
                       firstNote !== ''
                         ? `${`/my-notes/${firstNote}`}`
-                        : '/sample-note'
+                        : '/my-notes'
                     }
                   >
                     <div>
@@ -564,7 +564,7 @@ function Header(props) {
                     to={
                       firstNote !== ''
                         ? `${`/my-notes/${firstNote}`}`
-                        : '/sample-note'
+                        : '/my-notes'
                     }
                   >
                     <div>

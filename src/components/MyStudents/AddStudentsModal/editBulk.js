@@ -9,10 +9,6 @@ const EditBulk = (props) => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState()
 
-  useEffect(() => {
-    console.log('props.students :>> ', props.students)
-  }, [props])
-
   const YEAR = [
     { name: 'year', value: 'LTS1', label: 'LTS YEAR 1' },
     { name: 'year', value: 'LTS2', label: 'LTS YEAR 2' },
@@ -37,10 +33,6 @@ const EditBulk = (props) => {
       ...provided
     })
   }
-
-  useEffect(() => {
-    console.log(data)
-  }, [data])
 
   return (
     <Modal

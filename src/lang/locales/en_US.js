@@ -610,14 +610,18 @@ const EnLangs = {
   'my_journal.entrepreneurship_title': 'MY COURSE IN ENTREPRENEURSHIP',
   'my_journal.entrepreneurship_description':
     'Embarking on the Entrepreneurial Journey',
-  'my_journal.hs1_title': 'HS YEAR 1',
-  'my_journal.hs1_description': 'HS YEAR 1 Description',
-  'my_journal.hs2_title': 'HS YEAR 2',
-  'my_journal.hs2_description': 'HS YEAR 2 Description',
-  'my_journal.hs3_title': 'HS YEAR 3',
-  'my_journal.hs3_description': 'HS YEAR 3 Description',
-  'my_journal.hs4_title': 'HS YEAR 4',
-  'my_journal.hs4_description': 'HS YEAR 4 Description',
+  'my_journal.hs1_title': 'LTS 1',
+  'my_journal.hs1_description':
+    'Welcome to LTS 1. Here you will find the curriculum for this level broken down into tasks that you will guide students through. You will also find the space to reflect on your experience through each of these tasks.',
+  'my_journal.hs2_title': 'LTS 2',
+  'my_journal.hs2_description':
+    'Welcome to LTS 2. Here you will find the curriculum for this level broken down into tasks that you will guide students through. You will also find the space to reflect on your experience through each of these tasks.',
+  'my_journal.hs3_title': 'LTS 3',
+  'my_journal.hs3_description':
+    'Welcome to LTS 3. Here you will find the curriculum for this level broken down into tasks that you will guide students through. You will also find the space to reflect on your experience through each of these tasks.',
+  'my_journal.hs4_title': 'LTS 4',
+  'my_journal.hs4_description':
+    'Welcome to LTS 4. Here you will find the curriculum for this level broken down into tasks that you will guide students through. You will also find the space to reflect on your experience through each of these tasks.',
   'my_journal.my-training_title': 'MY TRAINING',
   'my_journal.my-training_description':
     'Welcome to your LTS Training. Here you will be introduced to what it means to be a LTS Instructor and you will prepare for your experience in this new type of classroom.',

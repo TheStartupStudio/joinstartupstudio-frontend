@@ -84,6 +84,14 @@ const EditPortfolioNew = React.lazy(() =>
   import('./pages/PortfolioNew/editPortfolio')
 )
 
+const PasswordChangeRequired = React.lazy(() =>
+  import('./pages/Auth/Login/passwordChangeRequired')
+)
+
+const JournalsManagement = React.lazy(() =>
+  import('./pages/JournalsManagement')
+)
+
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
@@ -177,6 +185,12 @@ function Router(props) {
                 component={(props) => <LtsJournal {...props} category='hs4' />}
               />
               <Route
+                path='/market-ready/'
+                component={(props) => (
+                  <LtsJournal {...props} category='market-ready' />
+                )}
+              />
+              <Route
                 exact
                 path='/My-Market-Ready-Guide'
                 component={MyMarketReadyGuide}
@@ -197,7 +211,7 @@ function Router(props) {
                 component={BeyondYourCourseVideo}
               />
               <Route path='/sample-note' component={SampleNote} />
-              <Route exact path='/my-notes/:id' component={MyNotes} />
+              <Route exact path='/my-notes/:id?' component={MyNotes} />
               <Route
                 exact
                 path='/my-journal/:month/:id'
@@ -207,6 +221,11 @@ function Router(props) {
               <Route path='/verify' component={VerifyEmail} />
               <Route path='/logout' component={Logout} />
               <Route exact path='/my-connections' component={MyConnections} />
+              <Route
+                exact
+                path='/edit-journals'
+                component={JournalsManagement}
+              />
               <Route
                 exact
                 path='/my-connections/request/:id'
@@ -236,6 +255,10 @@ function Router(props) {
                 exact
                 path='/user-portfolio/:username'
                 component={PreviewPublicPortfolio}
+              />
+              <Route
+                path='/password-change-required'
+                component={PasswordChangeRequired}
               />
               <Route component={NotFound} />
             </Switch>

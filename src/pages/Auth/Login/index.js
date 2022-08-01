@@ -1,17 +1,14 @@
 import React, { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { FormattedMessage } from 'react-intl'
 import { Auth } from 'aws-amplify'
-import { userLogin, loginLoading } from '../../../redux'
+import { userLogin, loginLoading, passwordResetRequired } from '../../../redux'
 import IntlMessages from '../../../utils/IntlMessages'
 import { validateEmail } from '../../../utils/helpers'
 import SUSLogo from '../../../assets/images/sus-institute-logo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-import landingVideoPosterEn from '../../../assets/images/landing-video-poster-en.png'
-import landingVideoPosterEs from '../../../assets/images/landing-video-poster-es.jpg'
 import './index.css'
 import {
   faTwitter,
@@ -31,6 +28,7 @@ function Login() {
       : 'en'
   const [loading, setLoading] = useState(false)
   const isLoading = useSelector((state) => state.user.loginLoading)
+  const history = useHistory()
 
   const dispatch = useDispatch()
 
@@ -72,7 +70,11 @@ function Login() {
             response.attributes['custom:language']
           )
           localStorage.setItem('email', user.email)
-          dispatch(userLogin())
+          dispatch(userLogin(user.password)).then((res) => {
+            if (res === 'passwordResetRequired') {
+              history.push('/password-change-required')
+            }
+          })
         })
         .catch((err) => {
           dispatch(loginLoading(false))
@@ -102,8 +104,8 @@ function Login() {
                 <img className='login-logo' src={SUSLogo} alt='logo' />
                 <h1 className='login-title'>Welcome...</h1>
                 <p>
-                  ...to the Learn to Start Instructor Platform. Please log in to
-                  access your platform.
+                  ...to the Learn to Start Instructor Management System. Please
+                  log in to access your platform.
                 </p>
 
                 <div className='social-media-items'>

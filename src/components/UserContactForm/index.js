@@ -67,7 +67,6 @@ const UserContactForm = (props) => {
         toast.success(res.data.message)
       })
       .catch((err) => {
-        console.log(err)
         setLoading(false)
         toast.error('Error sending email!')
       })

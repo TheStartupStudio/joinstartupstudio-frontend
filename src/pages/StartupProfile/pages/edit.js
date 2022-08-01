@@ -86,7 +86,7 @@ const EditProject = (props) => {
         toast.success('The video url was updated successful.')
         setopenEditVideoModal(false)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => err)
   }
 
   useEffect(() => {
@@ -170,7 +170,7 @@ const EditProject = (props) => {
             show_founders: !oldData.show_founders
           }))
         })
-        .catch((err) => console.log(err))
+        .catch((err) => err)
     } else if (name == 'showFounder') {
       await axiosInstance
         .put('/Business/update/founder', {
@@ -184,7 +184,7 @@ const EditProject = (props) => {
             show_founders: !oldData.show_founders
           }))
         })
-        .catch((err) => console.log(err))
+        .catch((err) => err)
     }
   }
 
