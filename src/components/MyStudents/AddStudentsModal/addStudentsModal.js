@@ -20,13 +20,14 @@ const AddStudentsModal = (props) => {
   const [loading, setLoading] = useState(false)
   const [csvLoading, setCsvLoading] = useState(false)
   const [isUploaded, setUploaded] = useState(false)
+  const [uploadedFileName, setUploadedFileName] = useState('')
   const [showErrorModal, setShowErrorsModal] = useState(false)
   const [errors, setErrors] = useState([])
   const [successfullyAdded, setSuccessfullyAdded] = useState(0)
 
   const userRequiredFields = [
-    'name',
-    'lastName',
+    'FirstName',
+    'LastName',
     'UserEmail',
     'password',
     'level',
@@ -70,7 +71,8 @@ const AddStudentsModal = (props) => {
     if (results.length <= 0) {
       setLoading(false)
       setCsvLoading(false)
-
+      setUploadedFileName('')
+      setUploaded(false)
       // if (hasErrors) setShowErrorsModal(true)
       setShowErrorsModal(true)
       addUser([])
@@ -81,9 +83,15 @@ const AddStudentsModal = (props) => {
     }
 
     const item = results.shift()
+
+    if (results.length === 0 && !item['FirstName'] && !item['LastName']) {
+      return req(results)
+    }
+
     if (
       !item['UserEmail'] ||
-      !item['name'] ||
+      !item['FirstName'] ||
+      !item['LastName'] ||
       !item['password'] ||
       !item['level'] ||
       !item['year']
@@ -126,6 +134,42 @@ const AddStudentsModal = (props) => {
       return req(results)
     }
 
+    if (
+      item['level'] !== 'L1' &&
+      item['level'] !== 'L2' &&
+      item['level'] !== 'L3' &&
+      item['level'] !== 'L4'
+    ) {
+      setErrors((old) => [
+        ...old,
+        {
+          message: `Level must be either: L1, L2, L3 or L4.`,
+          code: 400,
+          user: item['UserEmail']
+        }
+      ])
+
+      return req(results)
+    }
+
+    if (
+      item['year'] !== 'LTS1' &&
+      item['year'] !== 'LTS2' &&
+      item['year'] !== 'LTS3' &&
+      item['year'] !== 'LTS4'
+    ) {
+      setErrors((old) => [
+        ...old,
+        {
+          message: `Year must be either: LTS1, LTS2, LTS3 or LTS4.`,
+          code: 400,
+          user: item['UserEmail']
+        }
+      ])
+
+      return req(results)
+    }
+
     await Auth.signUp({
       username: item['UserEmail'],
       password: item['password'],
@@ -135,7 +179,7 @@ const AddStudentsModal = (props) => {
         'custom:language': 'en',
         'custom:email': item['UserEmail'],
         'custom:password': item['password'],
-        name: item.name + ' ' + item.lastName
+        name: item.FirstName + ' ' + item.LastName
       }
     })
       .then(async (res) => {
@@ -143,7 +187,7 @@ const AddStudentsModal = (props) => {
           .post('/instructor/add-users', {
             data: {
               ...item,
-              name: item.name + ' ' + item.lastName,
+              name: item.FirstName + ' ' + item.LastName,
               cognito_Id: res.userSub,
               stripe_subscription_id: 'true',
               payment_type: 'school',
@@ -239,12 +283,15 @@ const AddStudentsModal = (props) => {
                   id='csvFile'
                   name='csvFile'
                   className='d-none'
-                  onChange={() => {
+                  onChange={(e) => {
                     setUploaded(true)
+                    setUploadedFileName(e.target.files[0].name)
                   }}
                 />
                 <div className='image-upload d-flex upload-user-input w-100 my-auto py-2 px-2'>
-                  <p className='py-auto my-auto'>Upload new file</p>
+                  <p className='py-auto my-auto'>
+                    {!uploadedFileName ? 'Upload new file' : uploadedFileName}
+                  </p>
                   <FontAwesomeIcon
                     icon={faFileUpload}
                     className='edit-modal-sm ms-auto float-end'
@@ -326,6 +373,7 @@ const AddStudentsModal = (props) => {
           setShowErrorsModal(false)
           setLoading(false)
           setErrors([])
+          setSuccessfullyAdded(0)
         }}
         errors={errors}
         finishedReport={{
