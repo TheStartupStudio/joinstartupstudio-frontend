@@ -10,7 +10,7 @@ import IntlMessages from '../../../utils/IntlMessages'
 import csvToArray from '../../CSVUpload/csvToArray'
 import { toast } from 'react-toastify'
 import ErrorsModal from './ErrorsModal'
-import file from '../../../assets/files/UserCSV.csv'
+import file from '../../../assets/files/CSV_USERS_EXAMPLE.csv'
 import _ from 'lodash'
 import { validateEmail, validatePassword } from '../../../utils/helpers'
 
@@ -199,7 +199,14 @@ const AddStudentsModal = (props) => {
             setSuccessfullyAdded((prev) => prev + 1)
             req(results)
           })
-          .catch((error) => {
+          .catch((err) => {
+            setErrors((old) => [
+              ...old,
+              {
+                message: 'Something went wrong!',
+                user: item['UserEmail']
+              }
+            ])
             req(results)
           })
       })

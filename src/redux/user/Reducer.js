@@ -85,18 +85,11 @@ const userReducer = (state = initialState, action) => {
         errorMessage: null
       }
     case USER_CHANGE_NAME: {
-      return {
-        ...state,
-        name: payload
-      }
-    }
-    case USER_CHANGE_PROFILE_IMAGE: {
       const userObject = {
         token: localStorage.getItem('access_token'),
         user: {
-          ...user.user,
-          profileImage: payload,
-          profile_image: payload
+          ...state.user.user,
+          name: payload
         }
       }
       localStorage.setItem('user', JSON.stringify(userObject))
@@ -107,7 +100,31 @@ const userReducer = (state = initialState, action) => {
           ...state.user,
           user: {
             ...state.user.user,
-            profileImage: payload
+            name: payload
+          }
+        }
+      }
+    }
+    case USER_CHANGE_PROFILE_IMAGE: {
+      const userObject = {
+        token: localStorage.getItem('access_token'),
+        user: {
+          ...state.user.user,
+          profileImage: payload,
+          profile_image: payload
+        }
+      }
+
+      localStorage.setItem('user', JSON.stringify(userObject))
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          user: {
+            ...state.user.user,
+            profileImage: payload,
+            profile_image: payload
           }
         }
       }
@@ -117,11 +134,10 @@ const userReducer = (state = initialState, action) => {
       const userObject = {
         token: localStorage.getItem('access_token'),
         user: {
-          ...user.user,
+          ...state.user.user,
           social_links: payload
         }
       }
-
       localStorage.setItem('user', JSON.stringify(userObject))
 
       return state
