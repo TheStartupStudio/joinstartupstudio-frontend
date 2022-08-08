@@ -23,7 +23,6 @@ function Dashboard() {
     await axiosInstance
       .get('/resources')
       .then((res) => {
-        console.log({ res })
         setResources(res.data)
       })
       .catch((e) => e)
@@ -39,14 +38,8 @@ function Dashboard() {
               Resources for setting up your Learn to Start classrooms.
             </p>
             <div className='resource-cards-container my-4'>
-              {/* <ActiveStudents /> */}
-              {resources[0] && <ResourceCard data={resources[0]} />}
-              {resources[0] && <ResourceCard data={resources[0]} />}
-              {resources[0] && <ResourceCard data={resources[0]} />}
-              {resources[0] && <ResourceCard data={resources[0]} />}
-              {resources[0] && <ResourceCard data={resources[0]} />}
-              {resources[0] && <ResourceCard data={resources[0]} />}
-              {resources[0] && <ResourceCard data={resources[0]} />}
+              {resources.length > 0 &&
+                resources.map((resource) => <ResourceCard data={resource} />)}
             </div>
           </div>
         </div>

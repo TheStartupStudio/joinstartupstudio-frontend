@@ -1,6 +1,7 @@
 .resourceCard .details {
   border: 1px solid rgb(187, 189, 191);
-  height: 45%;
+  min-height: 130px;
+  border-top: 0;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
 }
@@ -8,6 +9,11 @@
 .resourceCard {
   width: 100%;
   border: 0;
+  min-height: 260px !important;
+  border-radius: 6px;
+  outline: none;
+  overflow: hidden;
+  word-break: break-all;
 }
 
 .resourceCard .details .links {

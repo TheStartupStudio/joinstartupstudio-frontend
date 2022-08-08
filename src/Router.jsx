@@ -122,7 +122,7 @@ function Router(props) {
               <Route path='/csv-upload' component={CSVUpload} />
               <Route path='/portfolio' component={Portfolio} />
               <Route path='/my-students' component={MyStudents} />
-              {/* <Route path='/resources' component={Resources} /> */}
+              <Route path='/resources' component={Resources} />
               {/* <Route path='/edit-portfolio' component={EditPortfolio} /> */}
               <Route
                 exact
