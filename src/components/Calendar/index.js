@@ -25,7 +25,7 @@ export default function Calendar() {
             />
           </div>
         </div>
-        <div className='col-xl-12 col-md-6 col-sm-12'>
+        {/* <div className='col-xl-12 col-md-6 col-sm-12'>
           <h4 className='upcoming-events-title mt-4 mt-lg-5 mt-xl-4'>
             <IntlMessages id='dashboard.upcoming_events' />
           </h4>
@@ -38,7 +38,7 @@ export default function Calendar() {
               />
             </React.Fragment>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

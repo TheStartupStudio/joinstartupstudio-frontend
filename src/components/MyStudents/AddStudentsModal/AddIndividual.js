@@ -4,8 +4,8 @@ import '../index.css'
 
 const AddIndividual = (props) => {
   const [dataValidation, setDataValidation] = useState({
-    name: '',
-    lastName: '',
+    FirstName: '',
+    LastName: '',
     UserEmail: '',
     password: '',
     level: '',
@@ -47,10 +47,10 @@ const AddIndividual = (props) => {
 
     setDataValidation((old) => ({ ...old, [name]: value }))
     if (
-      dataValidation.name.length === 0 &&
-      dataValidation.name === '' &&
-      dataValidation.lastName.length === 0 &&
-      dataValidation.lastName === '' &&
+      dataValidation.FirstName.length === 0 &&
+      dataValidation.FirstName === '' &&
+      dataValidation.LastName.length === 0 &&
+      dataValidation.LastName === '' &&
       dataValidation.UserEmail.length === 0 &&
       dataValidation.UserEmail === '' &&
       dataValidation.password.length === 0 &&
@@ -72,12 +72,12 @@ const AddIndividual = (props) => {
       >
         <input
           className={`w-100 py-2 px-2 ${
-            dataValidation.name.length === 0 && isChanged
+            dataValidation.FirstName.length === 0 && isChanged
               ? 'border border-danger'
               : 'false'
           }`}
           type='text'
-          name='name'
+          name='FirstName'
           placeholder='First Name'
           onChange={(e) => {
             handleValidation({ name: e.target.name, value: e.target.value })
@@ -88,12 +88,12 @@ const AddIndividual = (props) => {
       <div className='col-6 mb-2 mb-md-auto col-md-2 mx-0 ps-0 pe-1 add-individual-inputs-div'>
         <input
           className={`w-100 py-2 px-2 ${
-            dataValidation.lastName.length === 0 &&
+            dataValidation.LastName.length === 0 &&
             isChanged &&
             'border border-danger'
           }`}
           type='text'
-          name='lastName'
+          name='LastName'
           placeholder='Last Name'
           onChange={(e) => {
             handleValidation({ name: e.target.name, value: e.target.value })

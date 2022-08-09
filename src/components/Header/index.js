@@ -52,7 +52,7 @@ function Header(props) {
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
   const [showDropDown, setShowDropDown] = useState(false)
   // const profileImage = useSelector((state) => state.user.profileImage)
-  const name = useSelector((state) => state.user.name)
+  const name = useSelector((state) => state.user.user.user.name)
   const [notifications, setNotifications] = useState([])
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [showNotifications, setShowNotifications] = useState(false)
@@ -429,7 +429,7 @@ function Header(props) {
                       </Link>
                       <Link
                         className='dropdown-item py-2 dropdown-menu-hover'
-                        to='/#'
+                        to='/resources'
                         onClick={() => setShowDropDown((preState) => !preState)}
                       >
                         MY RESOURCES

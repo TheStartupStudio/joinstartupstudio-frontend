@@ -17,7 +17,6 @@ export default function StudentData(props) {
       .get('/instructor/my-students')
       .then((res) => {
         if (res.data.students.length) {
-          console.log('res.data.students.length :>> ', res.data.students.length)
           dispatch({
             type: 'studentsCount',
             studentsCount: res.data.students.length

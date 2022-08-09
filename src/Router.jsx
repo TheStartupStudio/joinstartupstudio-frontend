@@ -35,6 +35,7 @@ const EditPortfolio = React.lazy(() =>
   import('./pages/Portfolio/editPortfolio')
 )
 const MyStudents = React.lazy(() => import('./pages/MyStudents'))
+const Resources = React.lazy(() => import('./pages/Resources'))
 const MyProjects = React.lazy(() => import('./pages/StartupProfile'))
 const Preview = React.lazy(() => import('./pages/StartupProfile/preview'))
 const PrivateProject = React.lazy(() =>
@@ -121,6 +122,7 @@ function Router(props) {
               <Route path='/csv-upload' component={CSVUpload} />
               <Route path='/portfolio' component={Portfolio} />
               <Route path='/my-students' component={MyStudents} />
+              <Route path='/resources' component={Resources} />
               {/* <Route path='/edit-portfolio' component={EditPortfolio} /> */}
               <Route
                 exact
