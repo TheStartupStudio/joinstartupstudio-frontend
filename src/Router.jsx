@@ -13,6 +13,7 @@ import LtsJournal from './pages/LtsJournal'
 import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
 import PublishedProject from './pages/StartupProfile/components/published'
 import EditProject from './pages/StartupProfile/pages/edit'
+import StudentJournals from './pages/studentJournals'
 
 const Login = React.lazy(() => import('./pages/Auth/Login'))
 const SecurePage = React.lazy(() => import('../src/pages/Secure'))
@@ -170,6 +171,40 @@ function Router(props) {
                   <LtsJournal {...props} category='my-training' />
                 )}
               />
+                 {/* Students journals */}
+              {/* <Route
+                path='/student-journals/:id/'
+                component={StudentJournals}
+              /> */}
+              <Route
+                path='/students-journals/:studentId'
+                component={(props) => (
+                  <StudentJournals {...props} category='my-training' />
+                )}
+              />
+              {/* <Route
+                path='/students/:studentId/'
+                component={(props) => <StudentJournals {...props} category='hs1' />}
+              />
+              <Route
+                path='/students/:studentId/'
+                component={(props) => <StudentJournals {...props} category='hs2' />}
+              />
+              <Route
+                path='/students/:studentId/'
+                component={(props) => <StudentJournals {...props} category='hs3' />}
+              />
+              <Route
+                path='/students/:studentId/'
+                component={(props) => <StudentJournals {...props} category='hs4' />}
+              />
+              <Route
+                path='/students/:studentId/'
+                component={(props) => (
+                  <StudentJournals {...props} category='market-ready' />
+                )}
+              /> */}
+              {/* Students journals */}
               <Route
                 path='/hs1-journal/'
                 component={(props) => <LtsJournal {...props} category='hs1' />}
