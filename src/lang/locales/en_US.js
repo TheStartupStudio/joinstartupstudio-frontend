@@ -558,7 +558,9 @@ const EnLangs = {
     'Introduction to Cash Flow Analysis',
 
   //Startup live
-  'startup_live.page_description': 'Welcome to your live classroom',
+  'startup_live.page_description':
+    'A webinar product where we invite our entire market community to interact with our learners.',
+
   'startup_live.starting_in': 'Starting In',
   'startup_live.join_session': 'Join Session',
   'startup_live.now_streaming': 'Now streaming',

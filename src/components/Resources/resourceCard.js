@@ -16,16 +16,17 @@ const ResourceCard = (props) => {
         <p className='NewestProjectsByTheCommunity_card_title m-0 pb-2 text-center'>
           {props.data.name}
         </p>
-        {props.data.ResourcesLinks.map((link) => (
-          <a
-            className='links text-center d-block'
-            href={link.url}
-            target='_blank'
-            rel='noreferrer'
-          >
-            {link.name}
-          </a>
-        ))}
+        {props.data?.ResourcesLinks.length > 0 &&
+          props.data.ResourcesLinks.map((link) => (
+            <a
+              className='links text-center d-block'
+              href={link.url}
+              target='_blank'
+              rel='noreferrer'
+            >
+              {link.name}
+            </a>
+          ))}
       </div>
     </div>
   )
