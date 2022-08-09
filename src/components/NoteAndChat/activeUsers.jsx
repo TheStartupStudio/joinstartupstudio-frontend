@@ -9,7 +9,8 @@ function ActiveUsers(props) {
     <div className='activeUsers'>
       <div id='users'>
         <h2 className='headline comunity'>
-          <IntlMessages id='chat.engage_with_comunity' />
+          Engage in your Startup Live Webinar. <br />
+          Send in questions to engage with our community of guest experts.
         </h2>
         <h2 className='headline online-users'>
           <IntlMessages id='chat.there_are' />

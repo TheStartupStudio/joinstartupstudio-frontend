@@ -127,28 +127,77 @@ function Sidebar(props) {
                   </div>
                 </NavLink>
               </li>
-              <li>
-                <NavLink
-                  onClick={() => {
-                    dispatch(setAccordionToggled(false))
-                    props.hideHeaderIcons()
-                  }}
-                  to='/my-training'
-                  className={`${
-                    location.pathname.includes('my-training') ? 'active' : ''
-                  }`}
-                >
-                  <div className='d-flex' style={{ alignItems: 'center' }}>
+              <li
+                className='dropdownMenuSidebarHover'
+                data-bs-toggle='collapse'
+                href='#collapseTraining'
+                role='button'
+                aria-expanded='true'
+                aria-controls='collapseTraining'
+              >
+                <a>
+                  <div
+                    className='d-flex w-100'
+                    style={{ alignItems: 'center' }}
+                  >
                     <FontAwesomeIcon
-                      className='sidebar-icon me-1'
+                      className='sidebar-icon me-2'
                       icon={faIdCard}
                     />
-                    <div className='ms-2'>
+                    <div className='flex-grow-1 ms-1'>
                       <span>MY TRAINING</span>
                     </div>
+                    <FontAwesomeIcon
+                      icon={faAngleDown}
+                      className='me-2 me-md-0'
+                      style={{
+                        fontSize: '16px',
+                        color: '#333D3D'
+                      }}
+                    />
                   </div>
-                </NavLink>
+                </a>
               </li>
+              <div
+                className='collapse'
+                id='collapseTraining'
+                data-parent='#side-menu-main'
+              >
+                <li>
+                  <NavLink to={'/my-training'} activeClassName='sidenav active'>
+                    <div className='d-flex' style={{ alignItems: 'center' }}>
+                      <div className='ms-4 ps-2 py-1'>Introduction to LTS</div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/My-Market-Ready-Guide'}
+                    activeClassName='sidenav active'
+                  >
+                    <div className='d-flex' style={{ alignItems: 'center' }}>
+                      <div className='ms-4 ps-2 py-1'>
+                        Understanding Certification
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+
+                <li>
+                  <NavLink
+                    onClick={() => {
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
+                    }}
+                    to='/resources'
+                    activeClassName='sidenav active'
+                  >
+                    <div className='d-flex' style={{ alignItems: 'center' }}>
+                      <div className='ms-4 ps-2 py-1'>MY RESOURCES</div>
+                    </div>
+                  </NavLink>
+                </li>
+              </div>
 
               <li
                 className='dropdownMenuSidebarHover'
@@ -411,140 +460,6 @@ function Sidebar(props) {
                   </a> */}
                 </li>
               </div>
-              <li
-                className='dropdownMenuSidebarHover'
-                data-bs-toggle='collapse'
-                href='#collapseCertificates'
-                role='button'
-                aria-expanded='true'
-                aria-controls='collapseCertificates'
-              >
-                <a>
-                  <div
-                    className='d-flex w-100'
-                    style={{ alignItems: 'center' }}
-                  >
-                    <FontAwesomeIcon
-                      className='sidebar-icon me-2'
-                      icon={faCertificate}
-                    />
-                    <div className='flex-grow-1'>
-                      <span>MY CERTIFICATION</span>
-                    </div>
-                    <FontAwesomeIcon
-                      icon={faAngleDown}
-                      className='me-2 me-md-0'
-                      style={{
-                        fontSize: '16px',
-                        color: '#333D3D'
-                      }}
-                    />
-                  </div>
-                </a>
-              </li>
-              <div
-                className='collapse'
-                id='collapseCertificates'
-                data-parent='#side-menu-main'
-              >
-                <li>
-                  {/* <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to='/beyond-your-course'
-                    activeClassName='sidenav active'
-                  >
-                    <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>
-                        <IntlMessages id='beyond_your_course.master_classes_upper' />
-                      </div>
-                    </div>
-                  </NavLink> */}
-                  <NavLink
-                    to={'/My-Market-Ready-Guide'}
-                    activeClassName='sidenav active'
-                  >
-                    <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>
-                        MY MARKET-READY GUIDE
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to='/market-ready'
-                    activeClassName='sidenav active'
-                  >
-                    <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>
-                        <IntlMessages id='navigation.market_ready' />
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li></li>
-              </div>
-              {/* <li>
-                <NavLink
-                  onClick={() => dispatch(setAccordionToggled(false))}
-                  to='/portfolio'
-                  activeClassName='sidenav active'
-                  onClick={() => props.hideHeaderIcons()}
-                >
-                  <div className='d-flex' style={{ alignItems: 'center' }}>
-                    <FontAwesomeIcon
-                      className='sidebar-icon me-1'
-                      icon={faIdCard}
-                    />
-                    <div className='ms-2'>
-                      <IntlMessages id='navigation.portfolio' />
-                    </div>
-                  </div>
-                </NavLink>
-              </li> */}
-              {/* <li>
-                <NavLink
-                  to={`/beyond-your-course`}
-                  activeClassName='sidenav active'
-                  onClick={() => dispatch(setAccordionToggled(false))}
-                  onClick={() => props.hideHeaderIcons()}
-                >
-                  <div className='d-flex' style={{ alignItems: 'center' }}>
-                    <FontAwesomeIcon
-                      className='sidebar-icon me-1'
-                      icon={faMapSigns}
-                    />
-                    <div className='ms-2'>
-                      <IntlMessages id='navigation.beyond_your_course' />
-                    </div>
-                  </div>
-                </NavLink>
-              </li> */}
-              {/* <li>
-                <NavLink
-                  activeClassName='sidenav active'
-                  to={`/story-in-motion`}
-                  onClick={() => dispatch(setAccordionToggled(false))}
-                  onClick={() => props.hideHeaderIcons()}
-                >
-                  <div className='d-flex' style={{ alignItems: 'center' }}>
-                    <FontAwesomeIcon
-                      className='sidebar-icon me-1'
-                      icon={faChild}
-                    />
-                    <div className='ms-2'>
-                      <IntlMessages id='sidebar.story_in_motion' />
-                    </div>
-                  </div>
-                </NavLink>
-              </li> */}
             </ul>
             <div className='sidebar-bottom'>
               <div style={{ position: 'relative' }}>

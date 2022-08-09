@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ReactPlayer from 'react-player'
-import image from '../../assets/images/assessment-model-thumbnail.png'
+import image from '../../assets/images/FivePillars_no_bg.png'
 import { SingleA } from './SingleA'
 import { default as data } from './index'
 import { Image } from './image'
