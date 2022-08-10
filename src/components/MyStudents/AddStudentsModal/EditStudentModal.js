@@ -95,12 +95,9 @@ const EditStudentModal = (props) => {
                 props.onHide()
               }}
             />
-            {console.log(props)}
             <div className='mt-auto me-4'>
               <span className='border-end pe-2 '>Portfolio</span>
-              <Link to={`/students-journals/${props.data.id}/`}>
-                <span className='ps-2'>Journals</span>
-              </Link>
+              <span className='ps-2'>Journals</span>
             </div>
           </div>
         </div>
