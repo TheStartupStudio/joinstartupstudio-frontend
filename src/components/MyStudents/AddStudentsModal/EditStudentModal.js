@@ -6,6 +6,7 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import '../index.css'
 import Auth from '@aws-amplify/auth'
+import { Link } from 'react-router-dom'
 
 const EditStudentModal = (props) => {
   const [loading, setLoading] = useState(false)
@@ -94,8 +95,14 @@ const EditStudentModal = (props) => {
                 props.onHide()
               }}
             />
+            {console.log()}
             <div className='mt-auto me-4'>
-              <span className='border-end pe-2 '>Portfolio</span>
+              <Link
+                to={`/user-portfolio/${props.data.username}`}
+                className='border-end pe-2'
+              >
+                Portfolio
+              </Link>
               <span className='ps-2'>Journals</span>
             </div>
           </div>
