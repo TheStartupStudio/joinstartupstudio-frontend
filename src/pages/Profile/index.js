@@ -194,15 +194,44 @@ function Profile(props) {
         toast.error(<IntlMessages id='alerts.valid_email' />)
       } else {
         const currentUser = await Auth.currentAuthenticatedUser()
-        await axiosInstance
-          .put(`/users`, { email: changedUser.email })
+        await Auth.updateUserAttributes(currentUser, {
+          email: changedUser.email
+        })
           .then(async () => {
-            await Auth.updateUserAttributes(currentUser, {
-              email: changedUser.email
-            })
+            await axiosInstance
+              .put(`/users`, { email: changedUser.email })
+              .then((res) => {
+                if (editPage === 'email') {
+                  toast.success('Your email has been changed successfully')
+                  setUser(res.data)
+
+                  const storageUser = JSON.parse(localStorage.getItem('user'))
+                  const userObject = {
+                    token: localStorage.getItem('access_token'),
+                    user: {
+                      ...storageUser.user,
+                      email: changedUser.email
+                    }
+                  }
+                  localStorage.setItem('user', JSON.stringify(userObject))
+
+                  closeModal('profileModal')
+                }
+              })
+              .catch((err) => {
+                toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+              })
           })
-          .catch((err) => err)
+          .catch((err) => {
+            toast.error(err.message)
+          })
       }
+    }
+
+    if (editPage === 'email') {
+      setLoading(false)
+      closeModal('profileModal')
+      return
     }
 
     await axiosInstance

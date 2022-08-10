@@ -193,7 +193,7 @@ function Sidebar(props) {
                     activeClassName='sidenav active'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>MY RESOURCES</div>
+                      <div className='ms-4 ps-2 py-1'>My Resources</div>
                     </div>
                   </NavLink>
                 </li>

@@ -10,11 +10,14 @@ import UserContactForm from '../components/UserContactForm'
 
 export const IsUserLevelAuthorized = () => {
   const loggedUserLevel = useSelector((state) => state?.user?.user?.user?.level)
-  return checkLevelAuthorized(loggedUserLevel)
+  const loggedUserRole = useSelector(
+    (state) => state?.user?.user?.user?.role_id
+  )
+  return checkLevelAuthorized(loggedUserLevel, loggedUserRole)
 }
 
-export const checkLevelAuthorized = (level) => {
-  return level !== 'L1' && level !== 'L2' && level !== 'L3'
+export const checkLevelAuthorized = (level, role = null) => {
+  return role !== 1 || (level !== 'L1' && level !== 'L2' && level !== 'L3')
 }
 
 export const refreshToken = async () => {

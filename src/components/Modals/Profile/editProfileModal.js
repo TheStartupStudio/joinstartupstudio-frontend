@@ -41,7 +41,7 @@ const EditProfileModal = (props) => {
   useEffect(() => {
     setUserData(props.userData)
     setUserMedia(props.userData.social_links)
-  }, [props.userData])
+  }, [props.userData, props.show])
 
   const changeProfilePicture = async (event) => {
     // setLoading(true)
