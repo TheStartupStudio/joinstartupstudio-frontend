@@ -18,7 +18,8 @@ const initialState = {
   messages: [],
   newMsg: '',
   fetchingLocation: false,
-  typeYourMessage: 'Type your Message...'
+  typeYourMessage: 'Type your Message...',
+  socketId: ''
 }
 
 class Chat extends Component {
@@ -39,28 +40,15 @@ class Chat extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const scopeThis = this
-    if (prevProps.room && prevProps.room !== prevState.room) {
+    if (prevProps.room && prevProps.room !== this.props.room) {
       const currentLanguage = localStorage.getItem('currentLanguage')
       const typeYourMessage =
         currentLanguage === 'es'
           ? 'Escribe tu Mensaje...'
           : 'Type your Message...'
       this.setState({
-        room: prevProps.room,
+        room: this.props.room,
         typeYourMessage: typeYourMessage
-      })
-      const localStorageUser = JSON.parse(localStorage.getItem('user'))
-      const user = localStorageUser.user
-      const params = {
-        name: user.name,
-        room: this.state.room
-      }
-      socket = io(`${serverBaseURL}`)
-
-      socket.emit('join', params, function (err) {
-        if (err) {
-          // this.props.history.push('/')
-        }
       })
 
       const formatMessage = (message) => {
@@ -92,6 +80,25 @@ class Chat extends Component {
           })
           .catch((err) => err)
       }
+      const localStorageUser = JSON.parse(localStorage.getItem('user'))
+      const user = localStorageUser.user
+
+      socket.emit('roomChanged', {
+        name: user.name,
+        newRoom: this.props.room,
+        prevRoom: prevProps.room
+      })
+
+      const params = {
+        name: user.name,
+        room: this.props.room
+      }
+
+      socket.emit('join', params, function (err) {
+        if (err) {
+          // this.props.history.push('/')
+        }
+      })
 
       socket.on('updateUserList', function (allUsers) {
         scopeThis.setState({
@@ -99,65 +106,14 @@ class Chat extends Component {
         })
       })
 
-      socket.on('newMessage', (message) => {
-        var formattedTime = moment(message.createdDate)
-        let newMsg = {
-          text: message.text,
-          from: message.from,
-          room: this.state.room,
-          createdDate: formattedTime
-        }
-
-        // saveMessage(newMsg)
-        let results =
-          scopeThis.state.messages && scopeThis.state.messages.length
-            ? scopeThis.state.messages
-            : []
-        results.push(formatMessage(newMsg))
-        scopeThis.setState({
-          messages: results
-        })
-
-        const msgArr = scopeThis.state.messages
-        if (msgArr.length > 3) {
-          scopeThis.scrollToBottom()
-        }
-      })
-
-      socket.on('createLocationMsg', (message) => {
-        var formattedTime = moment(message.createdDate).format('h:mm a')
-        let newMsg = {
-          url: message.url,
-          from: message.from,
-          room: message.room,
-          createdDate: formattedTime
-        }
-        let results = scopeThis.state.messages
-        results.push(newMsg)
-        scopeThis.setState({
-          messages: results,
-          fetchingLocation: false
-        })
-      })
-
-      socket.on('disconnect', function () {
-        console.log('Connection lost from server.')
-      })
-
-      getMessages(prevProps.room).then((data) => {
+      getMessages(this.props.room).then((data) => {
         this.scrollToBottom()
       })
     }
   }
 
   componentDidMount() {
-    const localStorageUser = JSON.parse(localStorage.getItem('user'))
-    const user = localStorageUser.user
     const scopeThis = this
-    const params = {
-      name: user.name,
-      room: this.state.room
-    }
 
     const getUserData = async () => {
       await axiosInstance
@@ -169,7 +125,102 @@ class Chat extends Component {
         })
         .catch((err) => err)
     }
+
+    const localStorageUser = JSON.parse(localStorage.getItem('user'))
+    const user = localStorageUser.user
+
+    const params = {
+      name: user.name,
+      room: this.props.room
+    }
+
+    socket = io(`${serverBaseURL}`)
+
+    socket.emit('join', params, function (err) {
+      if (err) {
+        // this.props.history.push('/')
+      }
+    })
+
+    socket.on('connect', () => {
+      scopeThis.setState({
+        socketId: socket.id
+      })
+    })
+
+    socket.on('updateUserList', function (allUsers) {
+      scopeThis.setState({
+        users: allUsers
+      })
+    })
+
+    socket.on('newMessage', (message) => {
+      var formattedTime = moment(message.createdDate)
+      let newMsg = {
+        text: message.text,
+        from: message.from,
+        room: this.props.room,
+        createdDate: formattedTime
+      }
+
+      const formatMessage = (message) => {
+        const localStorageUser = JSON.parse(localStorage.getItem('user'))
+        const currentUserName = localStorageUser.user.name
+        return {
+          ...message,
+          isCurrentPerson: message.from === currentUserName
+        }
+      }
+
+      // saveMessage(newMsg)
+      let results =
+        scopeThis.state.messages && scopeThis.state.messages.length
+          ? scopeThis.state.messages
+          : []
+      results.push(formatMessage(newMsg))
+      scopeThis.setState({
+        messages: results
+      })
+
+      const msgArr = scopeThis.state.messages
+      if (msgArr.length > 3) {
+        scopeThis.scrollToBottom()
+      }
+    })
+
+    socket.on('disconnect', function () {
+      console.log('Connection lost from server.')
+    })
+
+    const formatMessage = (message) => {
+      const localStorageUser = JSON.parse(localStorage.getItem('user'))
+      const currentUserName = localStorageUser.user.name
+      return {
+        ...message,
+        isCurrentPerson: message.from === currentUserName
+      }
+    }
+
+    const getMessages = async (room) => {
+      await axiosInstance
+        .get(`/chats/${room}`)
+        .then((response) => {
+          const allUsers =
+            response && response.data && response.data.map((item) => item.from)
+          const uniqueUsers = [...new Set(allUsers)]
+
+          this.setState({
+            messages:
+              (response && response.data.map((item) => formatMessage(item))) ||
+              [],
+            initialUsers: uniqueUsers
+          })
+        })
+        .catch((err) => err)
+    }
+
     getUserData()
+    getMessages(this.props.room)
   }
 
   scrollToBottom() {
@@ -219,7 +270,7 @@ class Chat extends Component {
       text: obj.text,
       from: localStorageUser.user.name,
       userId: localStorageUser.user._id,
-      room: this.state.room,
+      room: this.props.room,
       createdDate: formattedTime
     }
     const saveMessage = async (message) => {
@@ -270,7 +321,7 @@ class Chat extends Component {
           initialUsers={initialUsers}
         />
         <div className='messages_wrap'>
-          <Messages messages={this.state.messages} room={this.state.room} />
+          <Messages messages={this.state.messages} room={this.props.room} />
           <div className='newMsgForm'>
             <div className='wrap'>
               <form onSubmit={(e) => this.newMessage(e)}>

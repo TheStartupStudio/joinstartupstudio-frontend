@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Container, Row } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
+import Select, { components } from 'react-select'
 import { Link } from 'react-router-dom'
 import CountdownTimer from 'react-component-countdown-timer'
 import moment from 'moment'
@@ -39,14 +40,67 @@ function StartupLive() {
   const [state, setState] = useState({})
   const [connections, setConnections] = useState([])
   const [width, setWidth] = useState(window.innerWidth)
+  const [allowedStartupLiveOptions, setAllowedStartupLiveOptions] = useState([])
+  const [selectedStartupLive, setSelectedStartupLive] = useState()
+  const AllStartupLiveOptions = [
+    {
+      label: 'Startup Live Instructors',
+      value: {
+        id: 'instructors',
+        room: 'startup-live-instructors',
+        src_link:
+          'https://stream.joinstartuplive.com/view/69fd2f33-c13c-48a6-90b6-52dac364d53c/?embedded=True'
+      }
+    },
+    {
+      label: 'Startup Live L1',
+      value: {
+        id: 'L1',
+        room: 'startup-live-l1',
+        src_link:
+          'https://stream.joinstartuplive.com/view/6ced9dec-0baf-4977-ae13-114cd6a7bf8e/?embedded=True'
+      }
+    },
+    {
+      label: 'Startup Live L2',
+      value: {
+        id: 'L2',
+        room: 'startup-live-l2',
+        src_link:
+          'https://stream.joinstartuplive.com/view/6abf6fa6-4f1c-4a02-a772-145a711fa2d9/?embedded=True'
+      }
+    },
+    {
+      label: 'Startup Live L3',
+      value: {
+        id: 'L3',
+        room: 'startup-live-l3',
+        src_link:
+          'https://stream.joinstartuplive.com/view/149ff6e6-1771-41f2-898a-fdcf7d35de6e/?embedded=True'
+      }
+    },
+    {
+      label: 'Startup Live L4',
+      value: {
+        id: 'L4',
+        room: 'startup-live-l4',
+        src_link:
+          'https://stream.joinstartuplive.com/view/7f97514c-0324-4467-bacf-452920edcf3c/?embedded=True'
+      }
+    }
+  ]
 
   useEffect(() => {
+    setSelectedStartupLive(AllStartupLiveOptions[0])
+
+    getUserLevels()
     getStartupLiveVideos()
     getUserConnections()
 
     setTimeout(() => {
       setShowstartuplive(true)
     }, 3000)
+
     return () => {
       setState({})
     }
@@ -66,6 +120,64 @@ function StartupLive() {
   const getUserConnections = async () => {
     await axiosInstance.get('/connect').then((res) => {
       setConnections(res.data.data)
+    })
+  }
+
+  const getUserLevels = async () => {
+    await axiosInstance.get('/instructor/student-levels').then((res) => {
+      setAllowedStartupLiveOptions([
+        AllStartupLiveOptions[0],
+        ...AllStartupLiveOptions.filter((level) =>
+          res.data.levels.includes(level.value.id)
+        )
+      ])
+    })
+  }
+
+  const dropDownStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      boxShadow: 'none',
+      border: '1px solid #BBBDBF',
+      borderRadius: '0',
+      height: 15,
+      fontSize: '16px',
+      cursor: 'pointer',
+      color: '#707070',
+      fontWeight: '500',
+      ':hover': {
+        border: '1px solid #BBBDBF'
+      },
+      zIndex: 100
+    }),
+    menu: (base) => ({
+      ...base,
+      border: 'none',
+      fontSize: '14px',
+      cursor: 'pointer',
+      margin: 0,
+      paddingTop: 0,
+      boxShadow: '0px 3px 6px #00000029',
+      zIndex: 9999
+    }),
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    valueContainer: (base) => ({
+      ...base
+    }),
+    option: (styles, state) => ({
+      ...styles,
+      cursor: 'pointer',
+      fontWeight: 600,
+      color: '231F20',
+      fontSize: '14px',
+      paddingTop: '2px',
+      paddingBottom: '2px',
+      ':hover': {
+        backgroundColor: 'white',
+        background: 'white'
+      },
+      backgroundColor: 'white'
+      // textTransform: 'uppercase'
     })
   }
 
@@ -141,33 +253,41 @@ function StartupLive() {
             <p className='page-description'>
               <IntlMessages id='startup_live.page_description' />
             </p>
-            <Row>
-              <div
-                className='col-12'
-                style={{ visibility: showStartuplive ? 'visible' : 'hidden' }}
-              >
-                <iframe
-                  src='https://stream.joinstartuplive.com/view/5f924403-c31c-4f3a-ad8c-40fe08a0bac9/?embedded=True'
-                  // src='https://stream.joinstartuplive.com/view/5f924403-c31c-4f3a-ad8c-40fe08a0bac9/?embedded=True'
-                  width={'100%'}
-                  // height={'325px'}
-                  height={width < 700 ? (width + 75) / 2.15 : 380}
-                  style={{
-                    border: '1px solid #BBBDBF'
-                  }}
-                  scrolling='no'
-                  className='sl-offline-image-preview'
-                ></iframe>
-
-                {/* <div className='startup-live-image'>
-                  <img
-                    src={
-                      currentLanguage === 'es' ? StartupLiveEs : StartupLiveEn
-                    }
-                    alt='#'
-                  />
-                </div> */}
+            <div className='row mb-2'>
+              <div className='col-12 col-lg-4 col-md-6'>
+                <p className='page-description m-0 p-0'>Select Startup Live</p>
+                <Select
+                  options={allowedStartupLiveOptions}
+                  value={selectedStartupLive}
+                  onChange={setSelectedStartupLive}
+                  placeholder={'Select Startup Live'}
+                  className='mb-0 me-0 custom-dropdown'
+                  styles={dropDownStyles}
+                  autoFocus={false}
+                  isSearchable={false}
+                />
               </div>
+            </div>
+            <Row>
+              {selectedStartupLive && (
+                <div
+                  className='col-12'
+                  style={{ visibility: showStartuplive ? 'visible' : 'hidden' }}
+                >
+                  <iframe
+                    src={selectedStartupLive.value.src_link}
+                    width={'100%'}
+                    height={width < 700 ? (width + 75) / 2.15 : 380}
+                    style={{
+                      border: '1px solid #BBBDBF'
+                    }}
+                    scrolling='no'
+                    className='sl-offline-image-preview'
+                    title='startup live'
+                  ></iframe>
+                </div>
+              )}
+
               <div className='spotlight-container'>
                 <div className='row pitch-apply'>
                   <div className='col-12 my-2 d-flex'>
@@ -204,9 +324,6 @@ function StartupLive() {
                   <h3>
                     <IntMessages id='startup_live.startup_archive' />
                   </h3>
-                  {/* <Link className='guidance-link' to={`/startup-live/videos`}>
-                    <IntMessages id='general.view_all' />
-                  </Link> */}
                 </div>
                 <div className='card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start flex-column flex-sm-row'>
                   {[0, 0].map((item, index) => (
@@ -389,8 +506,9 @@ function StartupLive() {
         </div>
         <div className='col-12 col-xl-3 px-3'>
           <div className='msg-widget-startup-live'>
-            {/* <ShowMessenger /> */}
-            <Chat room={'5f96a12568d0c2c580fca9fe'} />
+            {selectedStartupLive && (
+              <Chat room={selectedStartupLive.value.room} />
+            )}
             <NotesButton />
 
             <div className={'community-connect my-2'}>

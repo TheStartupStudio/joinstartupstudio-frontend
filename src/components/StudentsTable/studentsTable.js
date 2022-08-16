@@ -41,7 +41,9 @@ export default function StudentsTable(props) {
   const [openEditUserModal, setOpenEditUserModal] = useState(false)
   const [studentToEdit, setStudentToEdit] = useState({})
   const filteringCondition = (student) => {
-    return student?.name?.includes(searchingKeyword)
+    return student?.name
+      ?.toLocaleLowerCase()
+      .includes(searchingKeyword?.toLocaleLowerCase())
   }
 
   useEffect(() => {
