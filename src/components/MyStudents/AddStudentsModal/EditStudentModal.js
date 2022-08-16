@@ -96,8 +96,18 @@ const EditStudentModal = (props) => {
               }}
             />
             <div className='mt-auto me-4'>
-              <span className='border-end pe-2 '>Portfolio</span>
-              <span className='ps-2'>Journals</span>
+              <Link
+                to={`/user-portfolio/${props.data.username}`}
+                className='border-end pe-2'
+              >
+                <span className='border-end pe-2 '>Portfolio</span>
+              </Link>
+              <Link
+                to={`/students-journals/${props.data.id}`}
+                className='border-end pe-2'
+              >
+                <span className='ps-2'>Journals</span>
+              </Link>
             </div>
           </div>
         </div>
