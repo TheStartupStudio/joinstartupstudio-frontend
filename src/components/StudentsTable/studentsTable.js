@@ -36,8 +36,10 @@ export default function StudentsTable(props) {
   const [showStudentsOption, setShowStudentsOption] = useState('all')
   const [searchingKeyword, setSearchingKeyword] = useState('')
   const [showAddStudentsModal, setShowAddStudentsModal] = useState(false)
+  const [setSchool, school] = useState(false)
+  const [universities, setUniversities] = useState([])
   const { state, dispatch } = useContext(StudentCountContext)
-
+  const [instructors, setInstructors] = useState()
   const [openEditUserModal, setOpenEditUserModal] = useState(false)
   const [studentToEdit, setStudentToEdit] = useState({})
   const filteringCondition = (student) => {
@@ -51,11 +53,11 @@ export default function StudentsTable(props) {
   }, [])
 
   useEffect(() => {
-    if (students.length) {
-      dispatch({ type: 'studentsCount', studentsCount: students.length })
+    if (students?.length) {
+      dispatch({ type: 'studentsCount', studentsCount: students?.length })
       var today = moment().startOf('day')
 
-      const count = students.filter((student) => {
+      const count = students?.filter((student) => {
         var createdDate = moment(student.createdAt, 'YYYY-MM-DD').startOf('day')
         var diff = today.diff(createdDate, 'days')
 
@@ -68,7 +70,7 @@ export default function StudentsTable(props) {
 
       dispatch({ type: 'recentlyActive', recentlyActive: count })
     }
-  }, [students.length])
+  }, [students?.length])
 
   useEffect(() => {
     setSelectedRows([])
@@ -78,17 +80,17 @@ export default function StudentsTable(props) {
     if (!isSearching) {
       if (showStudentsOption === 'all') return students
       if (showStudentsOption === 'active')
-        return students.filter((student) => !student.deactivated)
-      else return students.filter((student) => student.deactivated)
+        return students?.filter((student) => !student.deactivated)
+      else return students?.filter((student) => student.deactivated)
     } else {
       if (showStudentsOption === 'all')
-        return students.filter((student) => filteringCondition(student))
+        return students?.filter((student) => filteringCondition(student))
       if (showStudentsOption === 'active')
-        return students.filter(
+        return students?.filter(
           (student) => !student.deactivated && filteringCondition(student)
         )
       else
-        return students.filter(
+        return students?.filter(
           (student) => student.deactivated && filteringCondition(student)
         )
     }
@@ -98,22 +100,66 @@ export default function StudentsTable(props) {
     await axiosInstance
       .get('/instructor/my-students')
       .then((res) => {
-        if (res.data.students.length) {
+        if (res.data.students?.length) {
+          let newArrray = []
+          res.data.instructorsnew.map((instructor) => {
+            newArrray.push({
+              value: instructor.instructorInfo.id,
+              label: instructor.name
+            })
+          })
+
+          setUniversities(res.data?.schools)
+          setInstructors(newArrray)
           setStudents(res.data.students)
+          setSchool(res.data.universityName)
         }
       })
       .catch((e) => e)
   }
 
   const updateState = (id, data) => {
-    setStudents((old) =>
-      old.map((student) => {
+    const studentsFiltered = students
+      .filter((student) => {
+        if (student.id != data.id) {
+          return student
+        } else {
+          if (data.instructor_id == data.Instructor.id) {
+            return student
+          }
+        }
+      })
+      .map((student, index) => {
         if (student.id == id) {
+          // if (data.instructor_id != data.Instructor.id) {
+          //   removeUserFromState(index)
+          // }
           return data
         }
         return student
       })
-    )
+    debugger
+
+    setStudents(studentsFiltered)
+    // setStudents((old) =>
+    //   old.filter((student) => {
+    //     if (student.id == id) {
+    //       if (data.instructor_id != data.Instructor.id) {
+    //         return null
+    //       }
+    //       return data
+    //     } else {
+    //       return student
+    //     }
+    //   })
+    // )
+  }
+
+  const removeUserFromState = (index) => {
+    let states = students
+    console.log(states)
+    states.splice(index, index + 1)
+    setStudents(states)
   }
 
   const updateSelectedOptions = (data) => {
@@ -236,7 +282,7 @@ export default function StudentsTable(props) {
       )
       .then(({ data }) => {
         setStudents(
-          students.map((student) => (student.id === data.id ? data : student))
+          students?.map((student) => (student.id === data.id ? data : student))
         )
         toast.success('Student updated!')
       })
@@ -292,7 +338,9 @@ export default function StudentsTable(props) {
         if (data) {
           setShowConfirmationModal(true)
           setStudents(
-            students.map((student) => (student.id === data.id ? data : student))
+            students?.map((student) =>
+              student.id === data.id ? data : student
+            )
           )
         } else {
           toast.error(<IntlMessages id='alerts.something_went_wrong' />)
@@ -325,7 +373,7 @@ export default function StudentsTable(props) {
       })
       .then((data) => {
         setStudents(
-          students.map((student) => {
+          students?.map((student) => {
             if (bulkDeactivatingStudents.includes(student.id)) {
               student.deactivated = true
             }
@@ -359,7 +407,7 @@ export default function StudentsTable(props) {
         options: options
       })
       .then((data) => {
-        const updatedStudents = students.map((student) => {
+        const updatedStudents = students?.map((student) => {
           if (bulkEditingStudents.includes(student.id)) {
             for (const property in options) {
               if (property === 'activated') {
@@ -543,7 +591,7 @@ export default function StudentsTable(props) {
       {
         name: 'School',
         key: 'school',
-        selector: (row) => 'FFFFF',
+        selector: (row) => `FFFFF`,
         sortable: true,
         omit: !selectedOptions.includes('school')
       },
@@ -623,8 +671,8 @@ export default function StudentsTable(props) {
                       <span style={{ color: '#333d3d83' }}>
                         (
                         {!isSearching
-                          ? students.length
-                          : students.filter((student) =>
+                          ? students?.length
+                          : students?.filter((student) =>
                               filteringCondition(student)
                             ).length}
                         )
@@ -643,9 +691,9 @@ export default function StudentsTable(props) {
                       <span style={{ color: '#333d3d83' }}>
                         (
                         {!isSearching
-                          ? students.filter((student) => !student.deactivated)
+                          ? students?.filter((student) => !student.deactivated)
                               .length
-                          : students.filter(
+                          : students?.filter(
                               (student) =>
                                 !student.deactivated &&
                                 filteringCondition(student)
@@ -666,9 +714,9 @@ export default function StudentsTable(props) {
                       <span style={{ color: '#333d3d83' }}>
                         (
                         {!isSearching
-                          ? students.filter((student) => student.deactivated)
+                          ? students?.filter((student) => student.deactivated)
                               .length
-                          : students.filter(
+                          : students?.filter(
                               (student) =>
                                 student.deactivated &&
                                 filteringCondition(student)
@@ -838,7 +886,12 @@ export default function StudentsTable(props) {
       <EditStudentModal
         show={openEditUserModal}
         onHide={() => setOpenEditUserModal(false)}
-        data={studentToEdit}
+        instructors={instructors}
+        setStudentToEdit={setStudentToEdit}
+        data={() => {
+          return studentToEdit
+        }}
+        school={universities}
         updateState={(id, data) => updateState(id, data)}
       />
 
