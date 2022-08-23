@@ -7,10 +7,12 @@ import { toast } from 'react-toastify'
 import '../index.css'
 import Auth from '@aws-amplify/auth'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const EditStudentModal = (props) => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState({})
+  const { user } = useSelector((state) => state.user.user)
 
   useEffect(() => {
     setData(props?.data)
@@ -48,6 +50,7 @@ const EditStudentModal = (props) => {
       .then(async (response) => {
         props.updateState(data?.id, data)
         setLoading(false)
+        props.setStudentToEdit({})
         props.onHide()
         toast.success('Data was successfuly updated')
       })
@@ -98,14 +101,11 @@ const EditStudentModal = (props) => {
             <div className='mt-auto me-4'>
               <Link
                 to={`/user-portfolio/${props.data.username}`}
-                className='border-end pe-2'
+                className='pe-2'
               >
-                <span className='border-end pe-2 '>Portfolio</span>
+                <span className='border-end pe-2'>Portfolio</span>
               </Link>
-              <Link
-                to={`/students-journals/${props.data.id}`}
-                className='border-end pe-2'
-              >
+              <Link to={`/students-journals/${props.data.id}`} className='pe-2'>
                 <span className='ps-2'>Journals</span>
               </Link>
             </div>
@@ -154,7 +154,7 @@ const EditStudentModal = (props) => {
               name='UserEmail'
             />
           </div>
-          <div class='input-group mb-3'>
+          {/* <div class='input-group mb-3'>
             <label for='userName w-100'>User Chosen Role</label>
             <input
               type='text'
@@ -164,20 +164,25 @@ const EditStudentModal = (props) => {
               disabled
               name='UserChosenRole'
             />
-          </div>
-          <div class='mb-3'>
+          </div> */}
+          <div class='mt-4'>
             <textarea
               class='form-control'
               id='exampleFormControlTextarea1'
+              defaultValue={data.user_note}
+              // value={data?.user_note}
+              name='user_note'
+              onChange={(e) =>
+                handleChange({ name: 'user_note', value: e.target.value })
+              }
               placeholder='Add user notes here...'
               rows='4'
-              disabled
             ></textarea>
           </div>
         </div>
         <div className='col-lg-4 col-12 ps-lg-5 pt-1'>
           <div className='row'>
-            <div className='col-6 px-0'>
+            {/* <div className='col-6 px-0'>
               <label for='userId' className='user-id-label'>
                 User ID Number
               </label>
@@ -190,23 +195,24 @@ const EditStudentModal = (props) => {
                 disabled
                 name='userId'
               />
-            </div>
-            <div className='col-6 px-0 ps-2 text-center'>
+            </div> */}
+            <div className='col-12 px-0 text-center'>
               <label for='unit' className='user-id-label'>
                 Unit
               </label>
               <Select
-                options={defaultLevels}
-                defaultValue={'Unit'}
-                isDisabled
-                name='unit'
-                placeholder={data?.level}
-                onChange={(newValue) => {
-                  handleChange({
-                    name: 'level',
-                    value: newValue.value
-                  })
-                }}
+                options={props?.school}
+                defaultValue={data?.Instructor?.University?.name}
+                name='university'
+                placeholder={data?.Instructor?.University?.name}
+                // onChange={(newValue) => {
+                //   handleChange({
+                //     name: 'university',
+                //     value: newValue.value,
+                //     universityChanged: 'true'
+                //   })
+                // }}
+                isDisabled={true}
                 className='my-auto py-auto'
                 // styles={customStyles}
               />
@@ -256,15 +262,16 @@ const EditStudentModal = (props) => {
                 Instructor
               </label>
               <Select
-                options={defaultYears}
-                defaultValue={data?.year}
-                placeholder={data?.year}
+                options={props?.instructors}
+                defaultValue={user?.name}
+                placeholder={user?.name}
                 onChange={(newValue) => {
                   handleChange({
-                    target: { name: 'year', value: newValue.value }
+                    name: 'instructor_id',
+                    value: newValue.value
                   })
                 }}
-                isDisabled={true}
+                isDisabled={false}
                 className='my-auto py-auto'
                 // styles={customStyles}
               />

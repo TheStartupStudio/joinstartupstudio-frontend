@@ -77,7 +77,7 @@ const EnLangs = {
   //Forgot password
   'forgot_password.title': 'Forgot your password?',
   'forgot_password.input_your_email':
-    'Input your email below, and if there is an account associated with it, you’ll be send a link to reset your password.',
+    'Input your email below, and if there is an account associated with it, you’ll be sent a link to reset your password.',
   'forgot_password.associated':
     'If there is an account associated with this email, you will receive an email with a link to reset your password.',
   'forgot_password.mistake': 'Got here by mistake?',
