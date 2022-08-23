@@ -37,11 +37,11 @@ const EditPortfolio = React.lazy(() =>
 )
 const MyStudents = React.lazy(() => import('./pages/MyStudents'))
 const Resources = React.lazy(() => import('./pages/Resources'))
-const MyProjects = React.lazy(() => import('./pages/StartupProfile'))
+// const MyProjects = React.lazy(() => import('./pages/StartupProfile'))
 const Preview = React.lazy(() => import('./pages/StartupProfile/preview'))
-const PrivateProject = React.lazy(() =>
-  import('./pages/StartupProfile/components/PrivateProject')
-)
+// const PrivateProject = React.lazy(() =>
+//   import('./pages/StartupProfile/components/PrivateProject')
+// )
 const SavedMedia = React.lazy(() => import('./pages/Saved'))
 const Resubscribe = React.lazy(() => import('./pages/Resubscribe'))
 const StartupLive = React.lazy(() => import('./pages/StartupLive'))
@@ -155,9 +155,9 @@ function Router(props) {
                 component={BeyondYourCourse}
               />
               <Route path='/story-in-motion' component={StoryInMotion} />
-              <Route path='/PrivateProject' component={PrivateProject} />
+              {/* <Route path='/PrivateProject' component={PrivateProject} /> */}
               <Route path='/UserProject/:uid' component={UserPortfolioProj} />
-              <Route path='/MyStartupProfile' component={MyProjects} />
+              {/* <Route path='/MyStartupProfile' component={MyProjects} /> */}
               <Route path='/PreviewMyStartupProfile/:id' component={Preview} />
               <Route path='/:page/videos' component={AllVideos} />
               <Route exact path='/startup-live' component={StartupLive} />
@@ -171,7 +171,7 @@ function Router(props) {
                   <LtsJournal {...props} category='my-training' />
                 )}
               />
-                 {/* Students journals */}
+              {/* Students journals */}
               {/* <Route
                 path='/student-journals/:id/'
                 component={StudentJournals}

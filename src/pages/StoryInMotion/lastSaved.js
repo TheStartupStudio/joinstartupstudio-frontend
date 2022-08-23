@@ -137,7 +137,7 @@ export const LastSaved = ({
                   icon={faPause}
                   style={style.play}
                   onClick={() => onClick('pause')}
-                  className='mx-auto h3 float-end story-in-motion-podcast-icon mb-0 p-0 z'
+                  className='mx-auto h3 float-end me-md-3 story-in-motion-podcast-icon mb-0 p-0 z'
                 />
               )}
             </span>

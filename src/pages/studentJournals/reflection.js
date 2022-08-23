@@ -205,7 +205,7 @@ function LtsJournalReflection(props) {
 
         {foulWords && (
           <div className='p-2 foul-words-notice'>
-            <IntlMessages id='foul_words.notice' />
+            {FoulWords.printMessage(foulWords)}
           </div>
         )}
 

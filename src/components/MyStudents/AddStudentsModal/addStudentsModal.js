@@ -22,6 +22,7 @@ const AddStudentsModal = (props) => {
   const [isUploaded, setUploaded] = useState(false)
   const [uploadedFileName, setUploadedFileName] = useState('')
   const [showErrorModal, setShowErrorsModal] = useState(false)
+  const [fileInputKey, setFileInputKey] = useState(Date.now())
   const [errors, setErrors] = useState([])
   const [successfullyAdded, setSuccessfullyAdded] = useState(0)
 
@@ -73,6 +74,7 @@ const AddStudentsModal = (props) => {
       setCsvLoading(false)
       setUploadedFileName('')
       setUploaded(false)
+      setFileInputKey(Date.now())
       // if (hasErrors) setShowErrorsModal(true)
       setShowErrorsModal(true)
       addUser([])
@@ -229,8 +231,16 @@ const AddStudentsModal = (props) => {
     const reader = new FileReader()
 
     reader.onload = function (e) {
-      const results = csvToArray(e.target.result, ',')
-      req(results)
+      try {
+        const results = csvToArray(e.target.result, ',')
+        req(results)
+      } catch (error) {
+        setCsvLoading(false)
+        setUploadedFileName('')
+        setUploaded(false)
+        setFileInputKey(Date.now())
+        return toast.error(error.message)
+      }
     }
 
     reader.readAsText(input)
@@ -290,6 +300,7 @@ const AddStudentsModal = (props) => {
                   id='csvFile'
                   name='csvFile'
                   className='d-none'
+                  key={fileInputKey}
                   onChange={(e) => {
                     setUploaded(true)
                     setUploadedFileName(e.target.files[0].name)
