@@ -112,9 +112,11 @@ export const ExperienceModal = (props) => {
 
   const addExperience = async () => {
     setLoading(true)
-    if (!checkDate()) {
-      setLoading(false)
-      return
+    if (!experienceData['present']) {
+      if (!checkDate()) {
+        setLoading(false)
+        return
+      }
     }
     const newExperience = experienceData
     for (var key in experienceData) {
@@ -169,9 +171,11 @@ export const ExperienceModal = (props) => {
 
   const updateExperience = async () => {
     setLoading(true)
-    if (!checkDate()) {
-      setLoading(false)
-      return
+    if (!experienceData['present']) {
+      if (!checkDate()) {
+        setLoading(false)
+        return
+      }
     }
     const newExperience = experienceData
     for (var key in defaultExperienceData) {
