@@ -113,6 +113,7 @@ export const ExperienceModal = (props) => {
   const addExperience = async () => {
     setLoading(true)
     if (!checkDate()) {
+      setLoading(false)
       return
     }
     const newExperience = experienceData
@@ -169,6 +170,7 @@ export const ExperienceModal = (props) => {
   const updateExperience = async () => {
     setLoading(true)
     if (!checkDate()) {
+      setLoading(false)
       return
     }
     const newExperience = experienceData
