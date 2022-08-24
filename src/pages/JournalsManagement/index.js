@@ -6,7 +6,6 @@ import EditJournals from '../../components/JournalsManagement/editJournals'
 
 function JournalsManagement() {
   const dispatch = useDispatch()
-
   useEffect(() => {
     dispatch(changeSidebarState(false))
   })

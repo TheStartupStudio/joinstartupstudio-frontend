@@ -64,7 +64,7 @@ function MyCourseEntrepreneurship() {
                       playing={true}
                       preload='metadata'
                       light={
-                        'https://d5tx03iw7t69i.cloudfront.net/Thumbnails/M1/M1-Vid-1.png'
+                        'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg'
                       }
                       config={{
                         file: {

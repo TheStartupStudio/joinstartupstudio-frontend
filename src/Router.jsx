@@ -232,17 +232,17 @@ function Router(props) {
                 path='/My-Market-Ready-Guide'
                 component={MyMarketReadyGuide}
               />
-              <Route
+              {/* <Route
                 exact
                 path='/MyStartupProfile'
                 component={MyStartupProfile}
-              />
-              <Route exact path='/editProject/:id' component={EditProject} />
+              /> */}
+              {/* <Route exact path='/editProject/:id' component={EditProject} />
               <Route
                 exact
                 path='/PublishedProject/:id'
                 component={PublishedProject}
-              />
+              /> */}
               <Route
                 path='/:page/video/:id'
                 component={BeyondYourCourseVideo}

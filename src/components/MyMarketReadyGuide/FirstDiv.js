@@ -2,12 +2,24 @@ import React, { useState } from 'react'
 import ReactPlayer from 'react-player'
 import image from '../../assets/images/FivePillars_no_bg.png'
 import { SingleA } from './SingleA'
-import { default as data } from './index'
+// import { default as data } from './index'
 import { Image } from './image'
+import { useEffect } from 'react'
+import axiosInstance from '../../utils/AxiosInstance'
 
 const FirstDiv = () => {
   const [showImageModal, SetShowImageModal] = useState(false)
+  const [data, setData] = useState()
 
+  useEffect(() => {
+    getMyMarketReadyData()
+  }, [])
+  const getMyMarketReadyData = async () => {
+    await axiosInstance.get('/ltsJournals/my-market-ready').then((response) => {
+      console.log(response)
+      setData(response.data)
+    })
+  }
   return (
     <div className='row'>
       <div className='col-12 col-md-6'>

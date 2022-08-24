@@ -23,7 +23,7 @@ export const SingleB = ({ data, index }) => {
         data-bs-parent='#accordionExample0'
       >
         <div className='accordion-body'>
-          <div dangerouslySetInnerHTML={{ __html: data.Properties }}></div>
+          <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
         </div>
       </div>
     </div>
