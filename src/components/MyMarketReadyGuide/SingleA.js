@@ -16,7 +16,7 @@ export const SingleA = ({ data, index }) => {
             aria-expanded='false'
             aria-controls={`collapse_outer${index}`}
           >
-            {data.title}
+            {data?.title}
           </button>
         </h2>
         <div
@@ -29,11 +29,11 @@ export const SingleA = ({ data, index }) => {
           <div className='accordion-body py-4' eventKey={`${index}`}>
             <div
               className='accordion-outter-body px-2'
-              dangerouslySetInnerHTML={{ __html: data.content }}
+              dangerouslySetInnerHTML={{ __html: data?.content }}
             ></div>
             <div className='row d-row' id='accordionExample0'>
-              {data.small &&
-                data.small.map((data, index) => {
+              {data?.small &&
+                data.small?.map((data, index) => {
                   return (
                     <div className='Properties col-12 col-md-4 mt-2'>
                       <SingleB data={data} index={index} key={index} />
