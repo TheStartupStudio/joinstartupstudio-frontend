@@ -11,11 +11,14 @@ import { useSelector } from 'react-redux'
 
 const EditStudentModal = (props) => {
   const [loading, setLoading] = useState(false)
+  const [resetLoading, setResetLoading] = useState(false)
+  const [resetSubmitted, setResetSubmitted] = useState(false)
   const [data, setData] = useState({})
   const { user } = useSelector((state) => state.user.user)
 
   useEffect(() => {
     setData(props?.data)
+    setResetSubmitted(false)
   }, [props])
 
   const defaultLevels = [
@@ -59,6 +62,21 @@ const EditStudentModal = (props) => {
         // props.onHide()
       })
   }
+
+  const handlePasswordReset = async () => {
+    setResetLoading(true)
+
+    await axiosInstance
+      .put(`/instructor/change-student-password/${data.id}`)
+      .then(async () => {
+        setResetSubmitted(true)
+      })
+      .catch((err) => {
+        toast.error('Something went wrong, please try again!')
+      })
+    setResetLoading(false)
+  }
+
   return (
     <Modal
       show={props.show}
@@ -164,7 +182,7 @@ const EditStudentModal = (props) => {
               name='UserChosenRole'
             />
           </div> */}
-          <div class='mt-4'>
+          <div class='mt-2'>
             <textarea
               class='form-control'
               id='exampleFormControlTextarea1'
@@ -177,6 +195,33 @@ const EditStudentModal = (props) => {
               placeholder='Add user notes here...'
               rows='4'
             ></textarea>
+          </div>
+          <div className='mt-2'>
+            <button
+              className='lts-button w-50'
+              style={{
+                background: !resetSubmitted ? '#ea3b97' : 'rgb(187, 189, 191)',
+                hover: {
+                  background: !resetSubmitted ? '#a7ca42' : 'rgb(187, 189, 191)'
+                }
+              }}
+              onClick={() => {
+                handlePasswordReset()
+              }}
+              disabled={resetLoading || resetSubmitted}
+            >
+              {resetLoading ? (
+                <span className='spinner-border spinner-border-sm' />
+              ) : (
+                'RESET PASSWORD'
+              )}
+            </button>
+            {resetSubmitted && (
+              <p className='user-id-label mt-1'>
+                Default password was set to:{' '}
+                <span style={{ color: '#01c5d1' }}> Learntostart1! </span>
+              </p>
+            )}
           </div>
         </div>
         <div className='col-lg-4 col-12 ps-lg-5 pt-1'>

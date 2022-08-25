@@ -2884,7 +2884,7 @@ white-space: nowrap; */
 
 .edit-account:hover,
 .lts-button:hover {
-  background: #a7ca42 !important;
+  background: #a7ca42;
 }
 .dashboard-notification h3 {
   font-size: 20px;

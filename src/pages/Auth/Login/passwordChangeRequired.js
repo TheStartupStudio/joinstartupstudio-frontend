@@ -57,10 +57,10 @@ const PasswordChangeRequired = () => {
               toast.success(
                 <IntlMessages id='alert.my_account.password_change_success' />
               )
+              setLoading(false)
               setTimeout(() => {
-                setLoading(false)
                 window.location.href = `/`
-              }, 2000)
+              }, 1500)
             })
             .catch((e) => {
               toast.error(<IntlMessages id='alerts.something_went_wrong' />)
