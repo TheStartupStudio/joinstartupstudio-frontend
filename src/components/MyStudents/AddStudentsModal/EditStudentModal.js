@@ -39,8 +39,7 @@ const EditStudentModal = (props) => {
 
   const handleSubmit = async () => {
     setLoading(true)
-    const currentUser = await Auth.currentAuthenticatedUser()
-    // await Auth.updateAttributes()
+
     axiosInstance
       .put(`/instructor/update-student/${data.id}`, {
         ...data,
@@ -55,9 +54,9 @@ const EditStudentModal = (props) => {
         toast.success('Data was successfuly updated')
       })
       .catch((err) => {
-        toast.error('Something went wrong, Try again')
+        toast.error(err.response.data)
         setLoading(false)
-        props.onHide()
+        // props.onHide()
       })
   }
   return (

@@ -138,7 +138,6 @@ export default function StudentsTable(props) {
         }
         return student
       })
-    debugger
 
     setStudents(studentsFiltered)
     // setStudents((old) =>

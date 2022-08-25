@@ -193,44 +193,34 @@ function Profile(props) {
       } else if (editPage == 'email' && !validateEmail(changedUser.email)) {
         toast.error(<IntlMessages id='alerts.valid_email' />)
       } else {
-        const currentUser = await Auth.currentAuthenticatedUser()
-        await Auth.updateUserAttributes(currentUser, {
-          email: changedUser.email
-        })
-          .then(async () => {
-            await axiosInstance
-              .put(`/users`, { email: changedUser.email })
-              .then((res) => {
-                if (editPage === 'email') {
-                  toast.success('Your email has been changed successfully')
-                  setUser(res.data)
+        await axiosInstance
+          .put(`/users/change-email`, { new_email: changedUser.email })
+          .then((res) => {
+            if (editPage === 'email') {
+              toast.success('Your email has been changed successfully')
+              setUser(res.data)
 
-                  const storageUser = JSON.parse(localStorage.getItem('user'))
-                  const userObject = {
-                    token: localStorage.getItem('access_token'),
-                    user: {
-                      ...storageUser.user,
-                      email: changedUser.email
-                    }
-                  }
-                  localStorage.setItem('user', JSON.stringify(userObject))
-
-                  closeModal('profileModal')
+              const storageUser = JSON.parse(localStorage.getItem('user'))
+              const userObject = {
+                token: localStorage.getItem('access_token'),
+                user: {
+                  ...storageUser.user,
+                  email: changedUser.email
                 }
-              })
-              .catch((err) => {
-                toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-              })
+              }
+              localStorage.setItem('user', JSON.stringify(userObject))
+
+              closeModal('profileModal')
+            }
           })
           .catch((err) => {
-            toast.error(err.message)
+            setLoading(false)
+            toast.error(err.response.data)
           })
       }
     }
 
     if (editPage === 'email') {
-      setLoading(false)
-      closeModal('profileModal')
       return
     }
 

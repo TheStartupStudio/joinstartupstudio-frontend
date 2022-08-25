@@ -44,7 +44,7 @@ function StartupLive() {
   const [selectedStartupLive, setSelectedStartupLive] = useState()
   const AllStartupLiveOptions = [
     {
-      label: 'Startup Live Instructors',
+      label: 'Instructor Training',
       value: {
         id: 'instructors',
         room: 'startup-live-instructors',
@@ -53,7 +53,7 @@ function StartupLive() {
       }
     },
     {
-      label: 'Startup Live L1',
+      label: 'Live Events for Elementary School',
       value: {
         id: 'L1',
         room: 'startup-live-l1',
@@ -62,7 +62,7 @@ function StartupLive() {
       }
     },
     {
-      label: 'Startup Live L2',
+      label: 'Live Events for Middle School',
       value: {
         id: 'L2',
         room: 'startup-live-l2',
@@ -71,7 +71,7 @@ function StartupLive() {
       }
     },
     {
-      label: 'Startup Live L3',
+      label: 'Live Events for High School',
       value: {
         id: 'L3',
         room: 'startup-live-l3',
@@ -80,7 +80,7 @@ function StartupLive() {
       }
     },
     {
-      label: 'Startup Live L4',
+      label: 'Live Events for Adult Participants',
       value: {
         id: 'L4',
         room: 'startup-live-l4',
