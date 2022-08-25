@@ -74,7 +74,7 @@ const FirstDiv = () => {
       </div>
       <div className='col-md-11 pe-md-5 mb-4'>
         <div className='accordion' id='accordionExample'>
-          {data.map((data, index) => (
+          {data?.map((data, index) => (
             <SingleA data={data} index={index} key={index} />
           ))}
         </div>
