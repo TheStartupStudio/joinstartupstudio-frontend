@@ -29,7 +29,7 @@ export const SingleA = ({ data, index }) => {
           <div className='accordion-body py-4' eventKey={`${index}`}>
             <div
               className='accordion-outter-body px-2'
-              dangerouslySetInnerHTML={{ __html: data.Properties }}
+              dangerouslySetInnerHTML={{ __html: data.content }}
             ></div>
             <div className='row d-row' id='accordionExample0'>
               {data.small &&

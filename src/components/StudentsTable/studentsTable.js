@@ -887,9 +887,7 @@ export default function StudentsTable(props) {
         onHide={() => setOpenEditUserModal(false)}
         instructors={instructors}
         setStudentToEdit={setStudentToEdit}
-        data={() => {
-          return studentToEdit
-        }}
+        data={studentToEdit}
         school={universities}
         updateState={(id, data) => updateState(id, data)}
       />

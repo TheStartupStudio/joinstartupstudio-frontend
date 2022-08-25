@@ -164,7 +164,7 @@ export const IAMR = (props) => {
               )}
               {!props.preview && props.preview !== '1' ? (
                 <div className='col-12'>
-                  <div className='d-flex justify-content-end show_in_portfolio'>
+                  {/* <div className='d-flex justify-content-end show_in_portfolio'>
                     <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2 show-portfolio-text'>
                       Show link to My Projects in My Portfolio
                     </p>
@@ -185,7 +185,7 @@ export const IAMR = (props) => {
                     >
                       <strong>EDIT MY PROJECT</strong>
                     </NavLink>
-                  </div>
+                  </div> */}
                 </div>
               ) : (
                 <div className='col-12 text-end'>

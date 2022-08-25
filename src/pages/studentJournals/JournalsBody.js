@@ -67,7 +67,6 @@ function JournalsBody(props) {
       setFetchingUserData(false)
 
       if (data.journals.length > 0 && redir) {
-        console.log(data.journals.length > 0 && redir, 'hereee')
         if (data.journals[0].children && data.journals[0].children.length > 0) {
           console.log(`${props.match.url}/${data.journals[0].children[0].id}`)
           history.push(`${props.match.url}/${data.journals[0].children[0].id}`)
@@ -309,7 +308,12 @@ function JournalsBody(props) {
                               {journals.map((journalItem, journalItemIdx) => (
                                 <div
                                   key={journalItem.id}
-                                  className={`accordion-menu__item`}
+                                  className={`accordion-menu__item${
+                                    journalItem.title ==
+                                    'SECTION FOUR: FEEDBACK '
+                                      ? '-toggle'
+                                      : ''
+                                  }`}
                                 >
                                   {journalItem.children &&
                                   journalItem.children.length ? (

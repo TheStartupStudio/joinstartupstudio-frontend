@@ -71,6 +71,15 @@ export const ExperienceModal = (props) => {
     }
   }
 
+  const checkDate = () => {
+    if (experienceData['start_date'] > experienceData['end_date']) {
+      toast.error('Data incorrect formated')
+      return false
+    } else {
+      return true
+    }
+  }
+
   const imageChange = async (e) => {
     const file = e.target.files[0]
     if (e.target.files && e.target.files.length > 0) {
@@ -103,6 +112,12 @@ export const ExperienceModal = (props) => {
 
   const addExperience = async () => {
     setLoading(true)
+    if (!experienceData['present']) {
+      if (!checkDate()) {
+        setLoading(false)
+        return
+      }
+    }
     const newExperience = experienceData
     for (var key in experienceData) {
       if (
@@ -156,6 +171,12 @@ export const ExperienceModal = (props) => {
 
   const updateExperience = async () => {
     setLoading(true)
+    if (!experienceData['present']) {
+      if (!checkDate()) {
+        setLoading(false)
+        return
+      }
+    }
     const newExperience = experienceData
     for (var key in defaultExperienceData) {
       if (
