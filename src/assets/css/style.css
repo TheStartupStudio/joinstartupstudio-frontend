@@ -4207,3 +4207,44 @@ ul.sidebar-menu-item .collapse a {
 .general-modal-header h3 {
   padding-bottom: 10px;
 }
+
+.page-card__content-description .circle {
+  border-radius: 50%;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  background-color: #e2e9f4;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.page-card__content-description .circle::before {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.page-card__content-description .circle.pink::before {
+  background-color: #ff3399;
+}
+
+.page-card__content-description .circle.green::before {
+  background-color: #99cc33;
+}
+
+.page-card__content-description .circle.black::before {
+  background-color: #000000;
+}
+
+.page-card__content-description .circle.blue::before {
+  background-color: #51c7df;
+}

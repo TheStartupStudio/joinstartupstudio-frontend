@@ -45,7 +45,7 @@ export const MessageWarningModal = (props) => {
               checked={checked}
               onChange={() => setChecked(!checked)}
             />
-            <label className='my-auto' for='flexCheckDefault'>
+            <label className='my-auto' htmlFor='flexCheckDefault'>
               I understand and agree to abide by these guidelines.
             </label>
           </div>

@@ -166,7 +166,7 @@ function Sidebar(props) {
                 <li>
                   <NavLink to={'/my-training'} activeClassName='sidenav active'>
                     <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>Introduction to LTS</div>
+                      <div className='ms-4 ps-2 py-1'>INTRODUCTION TO LTS</div>
                     </div>
                   </NavLink>
                 </li>
@@ -177,7 +177,7 @@ function Sidebar(props) {
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
                       <div className='ms-4 ps-2 py-1'>
-                        Understanding Certification
+                        UNDERSTANDING CERTIFICATION
                       </div>
                     </div>
                   </NavLink>
@@ -193,7 +193,7 @@ function Sidebar(props) {
                     activeClassName='sidenav active'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>My Resources</div>
+                      <div className='ms-4 ps-2 py-1'>MY RESOURCES</div>
                     </div>
                   </NavLink>
                 </li>

@@ -450,9 +450,9 @@ const Chat = (props) => {
 
             {messages.length > 0 &&
               messages.map((message, index) => (
-                <React.Fragment key={message.id}>
+                <React.Fragment key={index}>
                   <Message
-                    key={message.id}
+                    key={index}
                     data={message}
                     visibleScrollBar={visibleScrollBar}
                   />

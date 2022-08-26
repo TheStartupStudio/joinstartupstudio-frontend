@@ -22,17 +22,17 @@ const EditStudentModal = (props) => {
   }, [props])
 
   const defaultLevels = [
-    { label: 'L1 (ES)', value: 'ES' },
-    { label: 'L2 (MS)', value: 'MS' },
-    { label: 'L3 (HS)', value: 'HS' },
+    { label: 'L1 (ES)', value: 'L1' },
+    { label: 'L2 (MS)', value: 'L2' },
+    { label: 'L3 (HS)', value: 'L3' },
     { label: 'L4', value: 'L4' }
   ]
 
   const defaultYears = [
-    { label: 'LTS YEAR 1', value: 'L1' },
-    { label: 'LTS YEAR 2', value: 'L2' },
-    { label: 'LTS YEAR 3', value: 'L3' },
-    { label: 'LTS YEAR 4', value: 'L4' }
+    { label: 'LTS1', value: 'LTS1' },
+    { label: 'LTS2', value: 'LTS2' },
+    { label: 'LTS3', value: 'LTS3' },
+    { label: 'LTS4', value: 'LTS4' }
   ]
 
   const handleChange = (e) => {
@@ -139,11 +139,12 @@ const EditStudentModal = (props) => {
             className='border border-1 rounded-circle border border-dark text-center mx-auto'
             width={'101px'}
             height={'101px'}
+            alt='#'
           />
         </div>
         <div className='col-12 col-lg-6 pe-lg-4'>
           <div class='input-group mb-1'>
-            <label for=' w-100'>User Name</label>
+            <label htmlFor=' w-100'>User Name</label>
 
             <input
               type='text'
@@ -157,7 +158,7 @@ const EditStudentModal = (props) => {
             />
           </div>
           <div class='input-group mb-1'>
-            <label for='userName w-100'>User Email</label>
+            <label htmlFor='userName w-100'>User Email</label>
             <input
               type='text'
               class='form-control w-100'
@@ -172,7 +173,7 @@ const EditStudentModal = (props) => {
             />
           </div>
           {/* <div class='input-group mb-3'>
-            <label for='userName w-100'>User Chosen Role</label>
+            <label htmlFor='userName w-100'>User Chosen Role</label>
             <input
               type='text'
               class='form-control w-100'
@@ -224,10 +225,10 @@ const EditStudentModal = (props) => {
             )}
           </div>
         </div>
-        <div className='col-lg-4 col-12 ps-lg-5 pt-1'>
-          <div className='row'>
+        <div className='col-lg-4 col-12'>
+          <div className='row mx-auto'>
             {/* <div className='col-6 px-0'>
-              <label for='userId' className='user-id-label'>
+              <label htmlFor='userId' className='user-id-label'>
                 User ID Number
               </label>
               <input
@@ -240,8 +241,8 @@ const EditStudentModal = (props) => {
                 name='userId'
               />
             </div> */}
-            <div className='col-12 px-0 text-center'>
-              <label for='unit' className='user-id-label'>
+            <div className='col-12 px-0 text-center mt-2 mt-lg-0'>
+              <label htmlFor='unit' className='user-id-label'>
                 Unit
               </label>
               <Select
@@ -262,9 +263,9 @@ const EditStudentModal = (props) => {
               />
             </div>
           </div>
-          <div className='row'>
+          <div className='row mx-auto'>
             <div className='col-6 px-0 text-center'>
-              <label for='level' className='user-id-label'>
+              <label htmlFor='level' className='user-id-label'>
                 Level
               </label>
               <Select
@@ -282,7 +283,7 @@ const EditStudentModal = (props) => {
               />
             </div>
             <div className='col-6 px-0 ps-2 text-center'>
-              <label for='year' className='user-id-label'>
+              <label htmlFor='year' className='user-id-label'>
                 Year
               </label>
               <Select
@@ -300,9 +301,9 @@ const EditStudentModal = (props) => {
               />
             </div>
           </div>
-          <div className='row '>
+          <div className='row mx-auto'>
             <div className='col-12 px-0 text-center'>
-              <label for='userId' className='user-id-label'>
+              <label htmlFor='userId' className='user-id-label'>
                 Instructor
               </label>
               <Select
@@ -321,7 +322,7 @@ const EditStudentModal = (props) => {
               />
             </div>
           </div>
-          <div className='row mt-3'>
+          <div className='row mx-auto mt-3'>
             <div className=' col-12 ms-auto my-auto blunk-activated-div d-flex'>
               <p className='my-auto'>Activated </p>
               <label className='px-0 ps-sm-1 ps-lg-1 form-switch my-auto d-flex w-100'>
@@ -339,7 +340,7 @@ const EditStudentModal = (props) => {
               </label>
             </div>
           </div>
-          <div className='row mt-3'>
+          <div className='row mx-auto mt-3'>
             <button
               className='lts-button w-100'
               onClick={() => {
