@@ -23,6 +23,7 @@ const ResourceCard = (props) => {
               href={link.url}
               target='_blank'
               rel='noreferrer'
+              key={link.id}
             >
               {link.name}
             </a>

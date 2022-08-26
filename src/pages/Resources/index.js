@@ -39,7 +39,9 @@ function Dashboard() {
             </p>
             <div className='resource-cards-container my-4'>
               {resources.length > 0 &&
-                resources.map((resource) => <ResourceCard data={resource} />)}
+                resources.map((resource) => (
+                  <ResourceCard data={resource} key={resource.id} />
+                ))}
             </div>
           </div>
         </div>

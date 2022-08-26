@@ -13,13 +13,26 @@ const EditStudentModal = (props) => {
   const [loading, setLoading] = useState(false)
   const [resetLoading, setResetLoading] = useState(false)
   const [resetSubmitted, setResetSubmitted] = useState(false)
-  const [data, setData] = useState({})
   const { user } = useSelector((state) => state.user.user)
 
+  const defaultData = {
+    name: '',
+    email: '',
+    user_note: '',
+    certificat: false,
+    deactivated: false
+  }
+
+  const [data, setData] = useState(defaultData)
+
   useEffect(() => {
-    setData(props?.data)
+    if (!props?.data) {
+      setData(defaultData)
+    } else {
+      setData(props.data)
+    }
     setResetSubmitted(false)
-  }, [props])
+  }, [props.data])
 
   const defaultLevels = [
     { label: 'L1 (ES)', value: 'L1' },
@@ -54,7 +67,7 @@ const EditStudentModal = (props) => {
         setLoading(false)
         props.setStudentToEdit({})
         props.onHide()
-        toast.success('Data was successfuly updated')
+        toast.success('Data was successfully updated!')
       })
       .catch((err) => {
         toast.error(err.response.data)
@@ -77,7 +90,7 @@ const EditStudentModal = (props) => {
     setResetLoading(false)
   }
 
-  return (
+  return data?.id ? (
     <Modal
       show={props.show}
       onHide={props.onHide}
@@ -97,7 +110,7 @@ const EditStudentModal = (props) => {
             CERTIFICATION STATUS
             <span
               style={{ cursor: 'pointer' }}
-              class={`ms-2 mb-0 pb-0 pt-auto  ${
+              className={`ms-2 mb-0 pb-0 pt-auto  ${
                 props.data.certificat ? 'statusOk' : 'statusFalse'
               }`}
             >
@@ -143,28 +156,28 @@ const EditStudentModal = (props) => {
           />
         </div>
         <div className='col-12 col-lg-6 pe-lg-4'>
-          <div class='input-group mb-1'>
+          <div className='input-group mb-1'>
             <label htmlFor=' w-100'>User Name</label>
 
             <input
               type='text'
-              class='form-control w-100'
+              className='form-control w-100'
               name='name'
-              defaultValue={data?.name}
+              // defaultValue={data?.name}
               value={data?.name}
               onChange={(e) =>
                 handleChange({ name: 'name', value: e.target.value })
               }
             />
           </div>
-          <div class='input-group mb-1'>
+          <div className='input-group mb-1'>
             <label htmlFor='userName w-100'>User Email</label>
             <input
               type='text'
-              class='form-control w-100'
+              className='form-control w-100'
               aria-label='Sizing example input'
               aria-describedby='inputGroup-sizing-default'
-              defaultValue={data?.email}
+              // defaultValue={data?.email}
               value={data?.email}
               onChange={(e) =>
                 handleChange({ name: 'email', value: e.target.value })
@@ -172,23 +185,23 @@ const EditStudentModal = (props) => {
               name='UserEmail'
             />
           </div>
-          {/* <div class='input-group mb-3'>
+          {/* <div className='input-group mb-3'>
             <label htmlFor='userName w-100'>User Chosen Role</label>
             <input
               type='text'
-              class='form-control w-100'
+              className='form-control w-100'
               aria-label='Sizing example input'
               aria-describedby='inputGroup-sizing-default'
               disabled
               name='UserChosenRole'
             />
           </div> */}
-          <div class='mt-2'>
+          <div className='mt-2'>
             <textarea
-              class='form-control'
+              className='form-control'
               id='exampleFormControlTextarea1'
-              defaultValue={data.user_note}
-              // value={data?.user_note}
+              // defaultValue={data.user_note}
+              value={data?.user_note ? data?.user_note : ''}
               name='user_note'
               onChange={(e) =>
                 handleChange({ name: 'user_note', value: e.target.value })
@@ -233,7 +246,7 @@ const EditStudentModal = (props) => {
               </label>
               <input
                 type='text'
-                class='form-control text-center'
+                className='form-control text-center'
                 value={data.id}
                 aria-label='Sizing example input'
                 aria-describedby='inputGroup-sizing-default'
@@ -247,7 +260,7 @@ const EditStudentModal = (props) => {
               </label>
               <Select
                 options={props?.school}
-                defaultValue={data?.Instructor?.University?.name}
+                // defaultValue={data?.Instructor?.University?.name}
                 name='university'
                 placeholder={data?.Instructor?.University?.name}
                 // onChange={(newValue) => {
@@ -270,7 +283,7 @@ const EditStudentModal = (props) => {
               </label>
               <Select
                 options={defaultLevels}
-                defaultValue={data?.level}
+                // defaultValue={data?.level}
                 placeholder={data?.level}
                 onChange={(newValue) => {
                   handleChange({
@@ -288,7 +301,7 @@ const EditStudentModal = (props) => {
               </label>
               <Select
                 options={defaultYears}
-                defaultValue={data?.year}
+                // defaultValue={data?.year}
                 placeholder={data?.year}
                 onChange={(newValue) => {
                   handleChange({
@@ -308,7 +321,7 @@ const EditStudentModal = (props) => {
               </label>
               <Select
                 options={props?.instructors}
-                defaultValue={user?.name}
+                // defaultValue={user?.name}
                 placeholder={user?.name}
                 onChange={(newValue) => {
                   handleChange({
@@ -358,7 +371,7 @@ const EditStudentModal = (props) => {
         </div>
       </Modal.Body>
     </Modal>
-  )
+  ) : null
 }
 
 export default EditStudentModal

@@ -4248,3 +4248,7 @@ ul.sidebar-menu-item .collapse a {
 .page-card__content-description .circle.blue::before {
   background-color: #51c7df;
 }
+
+.page-card__content-description .circle.grey::before {
+  background-color: #bfbfbf;
+}
