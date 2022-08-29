@@ -9,7 +9,8 @@ import {
   USER_LOGOUT,
   USER_CHANGE_PROFILE_IMAGE,
   USER_EDIT_ERROR,
-  NEED_RESET
+  NEED_RESET,
+  UPDATE_USER_TNC
 } from './Types'
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -177,5 +178,14 @@ export const loginLoading = (data) => async (dispatch) => {
       type: LOGIN_LOADING,
       payload: 'Server Error'
     })
+  }
+}
+export const updateTnC = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: UPDATE_USER_TNC
+    })
+  } catch (err) {
+    console.log(err)
   }
 }

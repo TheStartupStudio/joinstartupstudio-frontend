@@ -4,7 +4,8 @@ export {
   userUpdate,
   userUpdateProfileImage,
   userLogout,
-  loginLoading
+  loginLoading,
+  updateTnC
 } from './user/Actions'
 
 export {

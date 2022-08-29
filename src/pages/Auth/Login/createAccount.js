@@ -444,7 +444,11 @@ function CreateAccount() {
                     />
                   </div>
                   <div>
-                    <a href={'/terms'} className='public-page-terms-link'>
+                    <a
+                      href={'/terms'}
+                      target='_blank'
+                      className='public-page-terms-link'
+                    >
                       <IntlMessages
                         id='create_account.terms'
                         className='text-center'

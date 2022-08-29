@@ -8,7 +8,8 @@ import {
   USER_CHANGE_NAME,
   EDIT_SOCIAL_MEDIA,
   USER_CHANGE_PROFILE_IMAGE,
-  NEED_RESET
+  NEED_RESET,
+  UPDATE_USER_TNC
 } from './Types'
 
 const user = JSON.parse(localStorage.getItem('user'))
@@ -136,6 +137,19 @@ const userReducer = (state = initialState, action) => {
         user: {
           ...state.user.user,
           social_links: payload
+        }
+      }
+      localStorage.setItem('user', JSON.stringify(userObject))
+
+      return state
+    }
+
+    case UPDATE_USER_TNC: {
+      const userObject = {
+        token: localStorage.getItem('access_token'),
+        user: {
+          ...state.user.user,
+          TnC: true
         }
       }
       localStorage.setItem('user', JSON.stringify(userObject))
