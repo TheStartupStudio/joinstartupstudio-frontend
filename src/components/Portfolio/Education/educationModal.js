@@ -367,6 +367,10 @@ export const EducationModal = (props) => {
                     type='month'
                     name='start_date'
                     id='start_date'
+                    max={new Date().toLocaleDateString('fr-CA', {
+                      year: 'numeric',
+                      month: '2-digit'
+                    })}
                     value={monthYearOnly(educationData?.start_date)}
                     onChange={handleChange}
                   />
@@ -377,6 +381,10 @@ export const EducationModal = (props) => {
                     className='my-2'
                     type='month'
                     name='end_date'
+                    max={new Date().toLocaleDateString('fr-CA', {
+                      year: 'numeric',
+                      month: '2-digit'
+                    })}
                     id='end_date'
                     value={monthYearOnly(educationData?.end_date)}
                     onChange={handleChange}

@@ -175,6 +175,10 @@ export const AccomplishmentModal = (props) => {
                     type='month'
                     name='date_issued'
                     id='start_date'
+                    max={new Date().toLocaleDateString('fr-CA', {
+                      year: 'numeric',
+                      month: '2-digit'
+                    })}
                     value={monthYearOnly(accompData?.date_issued)}
                     onChange={handleChange}
                   />

@@ -385,6 +385,10 @@ export const ExperienceModal = (props) => {
                     className='my-2'
                     type='month'
                     name='start_date'
+                    max={new Date().toLocaleDateString('fr-CA', {
+                      year: 'numeric',
+                      month: '2-digit'
+                    })}
                     id='start_date'
                     value={monthYearOnly(experienceData?.start_date)}
                     onChange={handleChange}
@@ -396,6 +400,10 @@ export const ExperienceModal = (props) => {
                     className='my-2'
                     type='month'
                     name='end_date'
+                    max={new Date().toLocaleDateString('fr-CA', {
+                      year: 'numeric',
+                      month: '2-digit'
+                    })}
                     id='end_date'
                     value={monthYearOnly(experienceData.end_date)}
                     onChange={handleChange}
