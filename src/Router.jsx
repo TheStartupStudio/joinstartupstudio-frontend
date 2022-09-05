@@ -138,7 +138,7 @@ function Router(props) {
               <Route
                 path='/preview-portfolio'
                 component={PreviewPortfolioNew}
-              />
+              /><Route exact path='/terms' component={Terms} />
               <Route
                 exact
                 path='/user-portfolio/:username'

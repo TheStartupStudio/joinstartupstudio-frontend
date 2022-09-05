@@ -5,7 +5,12 @@ import ReactGA from 'react-ga'
 import { Auth } from 'aws-amplify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
-import { changeSidebarState, getAllNotes, getAllPodcast } from '../../redux'
+import {
+  changeSidebarState,
+  getAllNotes,
+  getAllPodcast,
+  updateTnC
+} from '../../redux'
 // import Language from '../Language'
 import ContactUsModal from '../Modals/contactUsModal'
 import MisconductModal from '../Modals/misconductModal'
@@ -24,6 +29,7 @@ import { faUsers } from '@fortawesome/free-solid-svg-icons'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import socket from '../../utils/notificationSocket'
 import Notifications from './notifications'
+import TermAndCondition from './TermAndCondition'
 
 function Header(props) {
   const { user } = useSelector((state) => state.user.user)
@@ -31,6 +37,7 @@ function Header(props) {
   const currentLanguage = useSelector((state) => state.lang.locale)
   const sideBarState = useSelector((state) => state.general.sidebarState)
   const notes = useSelector((state) => state.course)
+  const [TnCModal, setOpenTnCModal] = useState(false)
 
   const [firstNote, setFirstNote] = useState('')
   // const [noteActive, setNoteActive] = useState(false)
@@ -74,6 +81,7 @@ function Header(props) {
   //   : false
 
   useEffect(() => {
+    isUserAgredToTnC()
     ReactGA.initialize('UA-130670492-3')
     ReactGA.pageview(window.location.href)
   })
@@ -147,6 +155,14 @@ function Header(props) {
       setTimeout(() => {
         setShowDropDown(false)
       }, 200)
+    }
+  }
+
+  const isUserAgredToTnC = () => {
+    var pathArray = window.location.pathname.split('/')[1]
+    console.log(pathArray)
+    if (!user.TnC && pathArray != 'terms') {
+      setOpenTnCModal(true)
     }
   }
 
@@ -676,6 +692,15 @@ function Header(props) {
       <MisconductModal
         show={showMisconductReportModal}
         onHide={() => setShowMisconductReportModal(false)}
+      />
+
+      <TermAndCondition
+        show={TnCModal}
+        onHide={() => {
+          user.TnC = true
+          setOpenTnCModal(false)
+          dispatch(updateTnC())
+        }}
       />
     </div>
   )
