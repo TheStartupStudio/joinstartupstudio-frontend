@@ -71,6 +71,22 @@ export const EducationModal = (props) => {
     }
   }
 
+  const checkDate = () => {
+    if (educationData['start_date'] > educationData['end_date']) {
+      toast.error('End date can’t be earlier than start date')
+      return false
+    } else {
+      return true
+    }
+  }
+
+  const cleanEndDate = () => {
+    setEducationData((old) => ({
+      ...old,
+      end_date: null
+    }))
+  }
+
   const imageChange = async (e) => {
     const file = e.target.files[0]
     if (e.target.files && e.target.files.length > 0) {
@@ -102,6 +118,12 @@ export const EducationModal = (props) => {
   }
 
   const addEducation = async () => {
+    if (!educationData['present']) {
+      if (!checkDate()) {
+        setLoading(false)
+        return
+      }
+    }
     setLoading(true)
     const newEducation = educationData
     for (var key in educationData) {
@@ -392,8 +414,11 @@ export const EducationModal = (props) => {
                     id='present'
                     value={educationData?.present}
                     checked={educationData?.present}
-                    disabled={educationData?.end_date}
-                    onChange={handleChange}
+                    // disabled={educationData?.end_date}
+                    onChange={(e) => {
+                      cleanEndDate()
+                      handleChange(e)
+                    }}
                   />
                   <label htmlFor='present'>Current Position</label>
                 </div>

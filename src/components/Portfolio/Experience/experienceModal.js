@@ -73,11 +73,18 @@ export const ExperienceModal = (props) => {
 
   const checkDate = () => {
     if (experienceData['start_date'] > experienceData['end_date']) {
-      toast.error('Data incorrect formated')
+      toast.error('End date can’t be earlier than start date')
       return false
     } else {
       return true
     }
+  }
+
+  const cleanEndDate = () => {
+    setExperienceData((old) => ({
+      ...old,
+      end_date: null
+    }))
   }
 
   const imageChange = async (e) => {
@@ -411,8 +418,11 @@ export const ExperienceModal = (props) => {
                     id='present'
                     value={experienceData?.present}
                     checked={experienceData?.present}
-                    disabled={experienceData?.end_date}
-                    onChange={handleChange}
+                    // disabled={experienceData?.end_date}
+                    onChange={(e) => {
+                      cleanEndDate()
+                      handleChange(e)
+                    }}
                   />
                   <label htmlFor='present'>Current Position</label>
                 </div>
