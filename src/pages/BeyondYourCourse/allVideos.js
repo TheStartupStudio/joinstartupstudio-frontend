@@ -12,6 +12,7 @@ import { ShowMessenger } from '../../utils/helpers'
 import Video from '../../components/Video'
 import { NotesButton } from '../../components/Notes'
 import ReactPaginate from 'react-paginate'
+import '../Saved/index.css'
 
 export default function GuidanceEncouragement() {
   const [pageTitle, setPageTitle] = useState('')

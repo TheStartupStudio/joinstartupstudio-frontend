@@ -71,7 +71,7 @@ function StartupLive() {
       }
     },
     {
-      label: 'Live Events for High School',
+      label: 'Live Events for HS & EDU',
       value: {
         id: 'L3',
         room: 'startup-live-l3',

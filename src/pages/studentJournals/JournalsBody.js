@@ -36,9 +36,10 @@ function JournalsBody(props) {
   const [notAllowed, setNotAllowed] = useState(false)
   const currentLanguage = useSelector((state) => state.lang.locale)
   const [user, setUser] = useState({})
-
+  const [globalCategory, setGlobalCategory] = useState('lts')
   let contentContainer = useRef()
   async function getJournals(category = 'lts', redir = true) {
+    setGlobalCategory(category)
     try {
       let { data } = await axiosInstance
         .get(`/ltsJournals/fromInstructor/`, {
@@ -68,16 +69,13 @@ function JournalsBody(props) {
 
       if (data.journals.length > 0 && redir) {
         if (data.journals[0].children && data.journals[0].children.length > 0) {
-          console.log(`${props.match.url}/${data.journals[0].children[0].id}`)
           history.push(`${props.match.url}/${data.journals[0].children[0].id}`)
         } else {
           history.push(`${props.match.url}/${data.journals[0].id}`)
         }
       }
-      console.log('here')
       if (journalActive == 'no') {
         activeteFirstJournal()
-        console.log('here')
       }
     } catch (err) {}
   }
@@ -132,9 +130,18 @@ function JournalsBody(props) {
   const options = [
     { value: 'lts', label: 'MY LEARN TO START JOURNAL' },
     { value: 'wellness', label: 'MY WELLNESS JOURNAL' },
-    { value: 'personal-finance', label: 'MY PERSONAL FINANCE JOURNAL' },
-    { value: 'market-ready', label: 'MY MARKET-READY JOURNAL' },
-    { value: 'entrepreneurship', label: 'MY COURSE IN ENTREPRENEURSHIP' }
+    {
+      value: 'personal-finance',
+      label: 'MY PERSONAL FINANCE JOURNAL'
+    },
+    {
+      value: 'market-ready',
+      label: 'MY MARKET-READY JOURNAL'
+    },
+    {
+      value: 'entrepreneurship',
+      label: 'MY COURSE IN ENTREPRENEURSHIP'
+    }
   ]
 
   const handleJournalSearch = (e) => {
@@ -299,7 +306,6 @@ function JournalsBody(props) {
                               </FormattedMessage>
                             </label>
                           </div>
-
                           <div className='page-card__sidebar-content styled-scrollbar'>
                             <Accordion
                               defaultActiveKey='0'
@@ -308,12 +314,7 @@ function JournalsBody(props) {
                               {journals.map((journalItem, journalItemIdx) => (
                                 <div
                                   key={journalItem.id}
-                                  className={`accordion-menu__item${
-                                    journalItem.title ==
-                                    'SECTION FOUR: FEEDBACK '
-                                      ? '-toggle'
-                                      : ''
-                                  }`}
+                                  className={`accordion-menu__item`}
                                 >
                                   {journalItem.children &&
                                   journalItem.children.length ? (
@@ -385,21 +386,20 @@ function JournalsBody(props) {
                                       </Accordion.Collapse>
                                     </>
                                   ) : (
-                                    <NavLink
-                                      className={
-                                        window.location.pathname.includes(
-                                          'lts-journal'
-                                        ) ||
-                                        window.location.pathname.includes(
-                                          'personal-finance-journal'
-                                        )
-                                          ? 'accordion-menu__item-toggle'
-                                          : ''
-                                      }
-                                      to={`${props.match.url}/${journalItem.id}`}
-                                    >
-                                      <span>{journalItem.title}</span>
-                                    </NavLink>
+                                    <>
+                                      <NavLink
+                                        className={
+                                          globalCategory == 'lts' ||
+                                          globalCategory ==
+                                            'personal-finance-journal'
+                                            ? 'accordion-menu__item-toggle'
+                                            : ''
+                                        }
+                                        to={`${props.match.url}/${journalItem.id}`}
+                                      >
+                                        <span>{journalItem.title}</span>
+                                      </NavLink>
+                                    </>
                                   )}
                                 </div>
                               ))}

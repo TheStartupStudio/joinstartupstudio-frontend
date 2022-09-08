@@ -368,7 +368,7 @@ function Sidebar(props) {
                     activeClassName='sidenav'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>MY ASSESSMENTS</div>
+                      <div className='ms-4 ps-2 py-1'>IAMR(™) Assessments</div>
                     </div>
                   </NavLink>
                 </li>

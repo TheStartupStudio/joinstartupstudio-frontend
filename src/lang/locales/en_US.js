@@ -559,7 +559,7 @@ const EnLangs = {
 
   //Startup live
   'startup_live.page_description':
-    'A webinar product where we invite our entire market community to interact with our learners.',
+    'Welcome to our live webinar where we invite our entire market community to interact with our learners',
 
   'startup_live.starting_in': 'Starting In',
   'startup_live.join_session': 'Join Session',
