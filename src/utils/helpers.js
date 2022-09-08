@@ -98,6 +98,14 @@ export const monthYearOnly = (date) => {
   return `${d.getFullYear()}-${month}`
 }
 
+export const formatDate = (date) => {
+  if (!date) {
+    return null
+  }
+  const d = date.split('-')
+  return `${d[0]}-${d[1]}`
+}
+
 export const detectFoulWords = _.debounce((message, callback) => {
   if (message.trim() == '') {
     callback(null)

@@ -6,7 +6,7 @@ import defaultImage from '../../../assets/images/profile-image.png'
 import { toast } from 'react-toastify'
 import DeleteDialogModal from '../BackgroundModals/deleteDialogModal'
 import DeleteConfirmedModal from '../BackgroundModals/deleteConfirmedModal'
-import { monthYearOnly } from '../../../utils/helpers'
+import { formatDate } from '../../../utils/helpers'
 
 export const AccomplishmentModal = (props) => {
   const defaultAccompData = {
@@ -27,7 +27,10 @@ export const AccomplishmentModal = (props) => {
 
   useEffect(() => {
     if (props.currentAccomp.length === 0) return
-    setAccompData(props.currentAccomp)
+    setAccompData({
+      ...props.currentAccomp,
+      start_date: formatDate(props.currentAccomp.date_issued)
+    })
     setIsUpdating(true)
   }, [props.currentAccomp])
 
@@ -179,7 +182,7 @@ export const AccomplishmentModal = (props) => {
                       year: 'numeric',
                       month: '2-digit'
                     })}
-                    value={monthYearOnly(accompData?.date_issued)}
+                    value={accompData?.date_issued}
                     onChange={handleChange}
                   />
                 </div>
