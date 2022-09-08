@@ -221,6 +221,7 @@ function Profile(props) {
     }
 
     if (editPage === 'email') {
+      setLoading(false)
       return
     }
 

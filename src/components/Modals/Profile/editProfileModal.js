@@ -28,6 +28,7 @@ import {
 } from '../../../redux'
 import { getImageDataURL, readImageFile } from '../../../utils/helpers'
 import { userEdit } from '../../../redux/user/Actions'
+import { toast } from 'react-toastify'
 
 const EditProfileModal = (props) => {
   const general = useSelector((state) => state.general)
@@ -43,10 +44,34 @@ const EditProfileModal = (props) => {
     setUserMedia(props.userData.social_links)
   }, [props.userData, props.show])
 
-  const changeProfilePicture = async (event) => {
+  const changeProfilePicture = async (e) => {
     // setLoading(true)
-    const imageData = await readFile(event.target.files[0])
-    dispatch(setImageCropperData(imageData))
+    const file = e.target.files[0]
+    if (e.target.files && e.target.files.length > 0) {
+      const fileSize = file.size / 1024 / 1024
+      if (fileSize > 0.5) {
+        return toast.error('Image size exceeds 512KB.')
+      }
+
+      var img = document.createElement('img')
+
+      var reader = new FileReader()
+      reader.onloadend = function (ended) {
+        img.src = ended.target.result
+        const formData = new FormData()
+        formData.append('image', ended.target.result)
+      }
+
+      reader.readAsDataURL(e.target.files[0])
+      img.onload = async function () {
+        if (this.width < 140 || this.height < 140) {
+          return toast.error('Minimum required format: 140x140px.')
+        } else {
+          const imageData = await readFile(e.target.files[0])
+          dispatch(setImageCropperData(imageData))
+        }
+      }
+    }
   }
 
   const handleChange = (event) => {

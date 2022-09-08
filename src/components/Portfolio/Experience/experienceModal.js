@@ -12,7 +12,7 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import DeleteDialogModal from '../BackgroundModals/deleteDialogModal'
 import DeleteConfirmedModal from '../BackgroundModals/deleteConfirmedModal'
-import { monthYearOnly } from '../../../utils/helpers'
+import { formatDate } from '../../../utils/helpers'
 import ImageCropper from '../../ImageCropper'
 import { readFile } from '../../../utils/canvasUtils'
 import { useDispatch, useSelector } from 'react-redux'
@@ -47,7 +47,11 @@ export const ExperienceModal = (props) => {
 
   useEffect(() => {
     if (props.currentExperience.length === 0) return
-    setExperienceData(props.currentExperience)
+    setExperienceData({
+      ...props.currentExperience,
+      start_date: formatDate(props.currentExperience.start_date),
+      end_date: formatDate(props.currentExperience.end_date)
+    })
     setSelectedImage(props.currentExperience.image_url)
     setIsUpdating(true)
   }, [props.currentExperience])
@@ -392,8 +396,12 @@ export const ExperienceModal = (props) => {
                     className='my-2'
                     type='month'
                     name='start_date'
+                    max={new Date().toLocaleDateString('fr-CA', {
+                      year: 'numeric',
+                      month: '2-digit'
+                    })}
                     id='start_date'
-                    value={monthYearOnly(experienceData?.start_date)}
+                    value={experienceData?.start_date}
                     onChange={handleChange}
                   />
                 </div>
@@ -403,8 +411,12 @@ export const ExperienceModal = (props) => {
                     className='my-2'
                     type='month'
                     name='end_date'
+                    max={new Date().toLocaleDateString('fr-CA', {
+                      year: 'numeric',
+                      month: '2-digit'
+                    })}
                     id='end_date'
-                    value={monthYearOnly(experienceData.end_date)}
+                    value={experienceData.end_date}
                     onChange={handleChange}
                     disabled={experienceData?.present}
                     placeholder='Title (Example: Copywriter)'

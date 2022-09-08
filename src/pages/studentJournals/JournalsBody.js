@@ -201,20 +201,20 @@ function JournalsBody(props) {
       ) : notAllowed ? (
         <NotAllowed />
       ) : (
-        <>
+        <div id='main-body'>
           <div className='container-fluid'>
             <div className='row'>
-              <div className='col-12'>
-                <div className='account-page-padding row'>
-                  <div className='col-12 col-md-6'>
-                    <h3 className='page-title-inner'>STUDENT JOURNAL VIEW</h3>
-                    <span className='title-description'>
-                      View your student journals.
-                    </span>
-                  </div>
-                  <div className='col-12 col-md-6 ps-4'>
-                    <div className='user-info col-12 d-flex'>
-                      <div className='user-image-and-name col-6'>
+              <div className='col-12 col-md-11 px-0'>
+                <div className='page-padding'>
+                  <div className='row pb-2'>
+                    <div className='col-12'>
+                      <h3 className='page-title-inner'>STUDENT JOURNAL VIEW</h3>
+                      <span className='title-description'>
+                        View your student journals.
+                      </span>
+                    </div>
+                    <div className='mt-2 col-12 justify-content-lg-end row m-0 p-0'>
+                      <div className='user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 col-xxl-2'>
                         <img
                           className='rounded-circle user-image'
                           src={
@@ -230,7 +230,7 @@ function JournalsBody(props) {
                         />
                         <span className='user-name ps-2'>{user?.name}</span>
                       </div>
-                      <div className='col-6'>
+                      <div className='col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0'>
                         <Select
                           defaultValue={options[0]}
                           tabSelectsValue={(data) => alert(data)}
@@ -243,34 +243,29 @@ function JournalsBody(props) {
                       </div>
                     </div>
                   </div>
-                  {/* <Select options={options} /> */}
-                </div>
-              </div>
-              <div className='container-fluid'>
-                <div className='row'>
-                  <div className='col-12 col-md-11 px-0'>
-                    <div className='page-padding'>
-                      <div className='page-card page-card--reverse'>
-                        <div
-                          className='page-card__content styled-scrollbar col-lg-8 col-md-7'
-                          ref={contentContainer}
-                        >
-                          <Switch>
-                            <Route
-                              path={`${props.match.url}/:journalId`}
-                              render={(renderprops) => (
-                                <>
-                                  <LtsJournalContent
-                                    studentId={studentId}
-                                    {...renderprops}
-                                    contentContainer={contentContainer}
-                                    backRoute={props.match.url}
-                                    saved={journalChanged}
-                                  />
-                                </>
-                              )}
-                            />
-                            {/* <Route
+                  <div className='page-bottom-border'></div>
+                  <div className='row my-notes mt-2'>
+                    <div className='page-card page-card--reverse'>
+                      <div
+                        className='page-card__content styled-scrollbar col-lg-8 col-md-7'
+                        ref={contentContainer}
+                      >
+                        <Switch>
+                          <Route
+                            path={`${props.match.url}/:journalId`}
+                            render={(renderprops) => (
+                              <>
+                                <LtsJournalContent
+                                  studentId={studentId}
+                                  {...renderprops}
+                                  contentContainer={contentContainer}
+                                  backRoute={props.match.url}
+                                  saved={journalChanged}
+                                />
+                              </>
+                            )}
+                          />
+                          {/* <Route
                       component={(renderprops) => {
                         noJournalSelected()
                         return <div></div>

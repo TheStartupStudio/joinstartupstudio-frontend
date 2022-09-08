@@ -249,8 +249,14 @@ export default function StudentsTable(props) {
   const noDataComponent = () => {
     return (
       <div className='no-data-component text-center'>
-        You don't have any students yet. <br /> Use the blue link above to
-        upload your rosters.
+        {isSearching ? (
+          'You do not have any students with this information.'
+        ) : (
+          <>
+            You don't have any students yet. <br /> Use the blue link above to
+            upload your rosters.
+          </>
+        )}
       </div>
     )
   }

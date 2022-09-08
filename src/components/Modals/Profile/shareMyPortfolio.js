@@ -31,7 +31,7 @@ const ShareMyPortfolio = (props) => {
           </span>
           <button
             type='button'
-            className='btn-close p-0 pb-3 pt-2 float-end d-flex order-0'
+            className='btn-close p-0 float-end d-flex order-0'
             aria-label='Close'
             onClick={props.onHide}
             style={{ background: 'none' }}

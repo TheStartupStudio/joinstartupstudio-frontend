@@ -205,7 +205,11 @@ const AddCertification = (props) => {
                       name='date_issued'
                       placeholder={placeholder}
                       min='2000-03'
-                      max='2040-03'
+                      max={new Date().toLocaleDateString('fr-CA', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                      })}
                       onfocus={() => setIsType(true)}
                       onFocus={() => setIsType(true)}
                       onChange={(data) => {
