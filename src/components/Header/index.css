@@ -1,89 +1,87 @@
 .lds-facebook {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  left: 8px;
+  width: 16px;
+  background: #01c5d1;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook div:nth-child(1) {
+  left: 8px;
+  animation-delay: -0.24s;
+}
+.lds-facebook div:nth-child(2) {
+  left: 32px;
+  animation-delay: -0.12s;
+}
+.lds-facebook div:nth-child(3) {
+  left: 56px;
+  animation-delay: 0;
+}
+@keyframes lds-facebook {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%,
+  100% {
+    top: 24px;
+    height: 32px;
+  }
+}
+
+input,
+textarea {
+  background: #e5e5e54d;
+  border: 0;
+}
+
+.image-upload-widget {
+  background-color: #e4e4e4;
+  width: 100;
+  padding: 5px;
+  border: 0;
+}
+.modal {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .TnC_modal_dialog.modal:before {
     display: inline-block;
-    position: relative;
-    width: 80px;
-    height: 80px;
-  }
-  .lds-facebook div {
-    display: inline-block;
-    position: absolute;
-    left: 8px;
-    width: 16px;
-    background: #01c5d1;
-    animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-  }
-  .lds-facebook div:nth-child(1) {
-    left: 8px;
-    animation-delay: -0.24s;
-  }
-  .lds-facebook div:nth-child(2) {
-    left: 32px;
-    animation-delay: -0.12s;
-  }
-  .lds-facebook div:nth-child(3) {
-    left: 56px;
-    animation-delay: 0;
-  }
-  @keyframes lds-facebook {
-    0% {
-      top: 8px;
-      height: 64px;
-    }
-    50%,
-    100% {
-      top: 24px;
-      height: 32px;
-    }
-  }
-  
-  input,
-  textarea {
-    background: #e5e5e54d;
-    border: 0;
-  }
-  
-  .image-upload-widget {
-    background-color: #e4e4e4;
-    width: 100;
-    padding: 5px;
-    border: 0;
-  }
-  .modal {
-    text-align: center;
-  }
-  
-  @media screen and (min-width: 768px) {
-    .modal:before {
-      display: inline-block;
-      vertical-align: middle;
-      content: ' ';
-      height: 100%;
-    }
-  }
-  
-  .modal-dialog {
-    display: inline-block;
-    text-align: left;
     vertical-align: middle;
+    content: ' ';
+    height: 100%;
   }
-  
-  #TnC-modal p {
-    font: normal normal 300 19px Montserrat;
-    letter-spacing: 1px;
-    color: #231f20;
-  }
-  
-  #TnC-modal input[type='checkbox'] {
-    border: 2px solid #707070;
-    opacity: 1;
-    height: 16px;
-    width: 16px;
-  }
-  
-  #TnC-modal label {
-    font: normal normal bold 13px Montserrat;
-    letter-spacing: 0.68px;
-    color: #707070;
-    opacity: 1;
-  }
-  
+}
+
+.TnC_modal_dialog > .modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+#TnC-modal p {
+  font: normal normal 300 19px Montserrat;
+  letter-spacing: 1px;
+  color: #231f20;
+}
+
+#TnC-modal input[type='checkbox'] {
+  border: 2px solid #707070;
+  opacity: 1;
+  height: 16px;
+  width: 16px;
+}
+
+#TnC-modal label {
+  font: normal normal bold 13px Montserrat;
+  letter-spacing: 0.68px;
+  color: #707070;
+  opacity: 1;
+}
