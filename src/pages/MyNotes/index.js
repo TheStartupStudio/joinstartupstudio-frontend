@@ -16,9 +16,16 @@ import NotSavedModal from '../../components/Modals/notSavedNoteModal'
 import NotesModal from '../../components/Modals/Notes'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { detectFoulWords, removeHtmlFromString } from '../../utils/helpers'
-import { faPlus, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faPencilAlt,
+  faTrashAlt
+} from '@fortawesome/free-solid-svg-icons'
 import FoulWords from '../../utils/FoulWords'
 import { NOTES } from '../../utils/constants'
+import DeleteNoteModal from '../../components/Modals/Notes/DeleteNoteModal'
+import { toast } from 'react-toastify'
+import { removeNoteFromState } from '../../redux'
 
 function MyNotes(props) {
   const id = useParams().id
@@ -28,6 +35,7 @@ function MyNotes(props) {
   const [editedDate, setEditedDate] = useState('')
   const [contentId, setContentId] = useState('')
   const [searchedNotes, setSearchedNote] = useState('')
+  const [deleteNoteModal, setDeleteNoteModal] = useState(false)
   const [notesOrder, setNotesOrder] = useState('')
   const [editNote, setEditNote] = useState(false)
   const [showNote, setShowNote] = useState(false)
@@ -48,6 +56,14 @@ function MyNotes(props) {
   const showModal = (location) => {
     setNextTarget(location)
     setShowNotSavedModal(true)
+  }
+
+  const deleteNote = async () => {
+    dispatch(removeNoteFromState(id))
+    const redirect = notes.filter((note) => note.id != id)[0].id
+    history.push(`${redirect}`)
+    setDeleteNoteModal(false)
+    // console.log(redirect, 'redirect')
   }
 
   const showAddModal = () => {
@@ -366,22 +382,39 @@ function MyNotes(props) {
                       >
                         <IntlMessages id='my_notes.save_note' />{' '}
                       </Link>
-                    ) : notes.length > 0 ? (
-                      <Link
-                        to='#'
-                        style={{ marginLeft: 'auto', marginTop: '-1px' }}
-                        onClick={() => setEditNote(true)}
-                      >
-                        <FontAwesomeIcon
-                          icon={faPencilAlt}
-                          className='plus-ico'
-                          style={{
-                            width: '22px',
-                            height: '22px',
-                            color: '#707070'
-                          }}
-                        />
-                      </Link>
+                    ) : notes?.length > 0 ? (
+                      <>
+                        <Link
+                          to='#'
+                          style={{ marginLeft: 'auto', marginTop: '-1px' }}
+                          onClick={() => setEditNote(true)}
+                        >
+                          <FontAwesomeIcon
+                            icon={faPencilAlt}
+                            className='plus-ico'
+                            style={{
+                              width: '22px',
+                              height: '22px',
+                              color: '#707070'
+                            }}
+                          />
+                        </Link>
+                        <Link
+                          to='#'
+                          style={{ marginLeft: '50px', marginTop: '-1px' }}
+                          onClick={() => setDeleteNoteModal(true)}
+                        >
+                          <FontAwesomeIcon
+                            icon={faTrashAlt}
+                            className='plus-ico'
+                            style={{
+                              width: '22px',
+                              height: '22px',
+                              color: '#FF3399'
+                            }}
+                          />
+                        </Link>
+                      </>
                     ) : null}
                   </div>
                   {textQuillStandart && (
@@ -750,6 +783,12 @@ function MyNotes(props) {
             show={showNotSavedModal}
             onHide={closeModal}
             continue={() => continueWithoutSaving(nextTarget)}
+          />
+          <DeleteNoteModal
+            message={'Are you sure you want to delete this note?'}
+            show={deleteNoteModal}
+            onHide={() => setDeleteNoteModal(false)}
+            deleteNote={() => deleteNote()}
           />
         </div>
       </div>

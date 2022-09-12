@@ -7,7 +7,8 @@ import {
   GET_NOTE_SUCCESS,
   GET_NOTE_ERROR,
   SAVE_NOTE_SUCCESS,
-  SAVE_NOTE_ERROR
+  SAVE_NOTE_ERROR,
+  NOTE_REMOVED_SUCCESS
 } from './Types'
 
 import axiosInstance from '../../utils/AxiosInstance'
@@ -56,6 +57,25 @@ export const getNote = (data) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: GET_NOTE_ERROR,
+      payload: err?.response?.data?.message || 'Server Error'
+    })
+  }
+}
+
+export const removeNoteFromState = (data) => async (dispatch) => {
+  try {
+    //loading first
+    dispatch({ type: LOADING })
+
+    await axiosInstance.delete(`/notes/${data}`).then((res) => {
+      dispatch({
+        type: NOTE_REMOVED_SUCCESS,
+        payload: data
+      })
+    })
+  } catch (err) {
+    dispatch({
+      type: SAVE_NOTE_ERROR,
       payload: err?.response?.data?.message || 'Server Error'
     })
   }

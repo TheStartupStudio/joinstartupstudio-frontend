@@ -6,7 +6,8 @@ import {
   GET_NOTE_SUCCESS,
   GET_NOTE_ERROR,
   SAVE_NOTE_SUCCESS,
-  SAVE_NOTE_ERROR
+  SAVE_NOTE_ERROR,
+  NOTE_REMOVED_SUCCESS
 } from './Types'
 
 const initialState = {
@@ -67,7 +68,14 @@ const courseReducer = (state = initialState, action) => {
         successMessage: true,
         errorMessage: null
       }
-
+    case NOTE_REMOVED_SUCCESS:
+      return {
+        ...state,
+        notes: state.notes.filter((note) => note.id != payload),
+        loading: false,
+        successMessage: false,
+        errorMessage: false
+      }
     case SAVE_NOTE_ERROR:
       return {
         ...state,
