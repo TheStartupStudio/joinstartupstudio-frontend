@@ -29,7 +29,7 @@ export const AccomplishmentModal = (props) => {
     if (props.currentAccomp.length === 0) return
     setAccompData({
       ...props.currentAccomp,
-      start_date: formatDate(props.currentAccomp.date_issued)
+      date_issued: formatDate(props.currentAccomp.date_issued)
     })
     setIsUpdating(true)
   }, [props.currentAccomp])
@@ -53,7 +53,7 @@ export const AccomplishmentModal = (props) => {
       }
     }
 
-    if (!newAccomp.end_date) newAccomp.end_date = null
+    // if (!newAccomp.end_date) newAccomp.end_date = null
 
     await axiosInstance
       .post(`/userBackground`, newAccomp)

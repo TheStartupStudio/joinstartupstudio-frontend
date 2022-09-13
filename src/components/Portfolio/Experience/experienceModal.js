@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -41,6 +41,7 @@ export const ExperienceModal = (props) => {
   const [showDeleteDialogModal, setShowDeleteDialogModal] = useState(false)
   const [showDeleteConfirmedModal, setShowDeleteConfirmedModal] =
     useState(false)
+  const endDateRef = useRef()
 
   const general = useSelector((state) => state.general)
   const dispatch = useDispatch()
@@ -68,10 +69,19 @@ export const ExperienceModal = (props) => {
             : { link: prevValues.external_links.link, file: value }
       }))
     } else {
-      setExperienceData((prevValues) => ({
-        ...prevValues,
-        [name]: name === 'present' ? checked : value
-      }))
+      if (name === 'present') {
+        endDateRef.current.value = ''
+        setExperienceData((prevValues) => ({
+          ...prevValues,
+          end_date: null,
+          present: checked
+        }))
+      } else {
+        setExperienceData((prevValues) => ({
+          ...prevValues,
+          [name]: value
+        }))
+      }
     }
   }
 
@@ -411,12 +421,15 @@ export const ExperienceModal = (props) => {
                     className='my-2'
                     type='month'
                     name='end_date'
+                    ref={endDateRef}
                     max={new Date().toLocaleDateString('fr-CA', {
                       year: 'numeric',
                       month: '2-digit'
                     })}
                     id='end_date'
-                    value={experienceData.end_date}
+                    value={
+                      experienceData?.end_date ? experienceData?.end_date : ''
+                    }
                     onChange={handleChange}
                     disabled={experienceData?.present}
                     placeholder='Title (Example: Copywriter)'
