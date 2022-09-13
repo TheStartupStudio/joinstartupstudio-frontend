@@ -1,0 +1,7 @@
+.custom-pagination .page-item.active .page-link {
+  background-color: #01c5d1 !important;
+}
+.page-link:hover {
+  background-color: #a7ca42 !important;
+  color: white;
+}

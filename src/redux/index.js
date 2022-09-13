@@ -21,7 +21,8 @@ export {
   getVideosWatched,
   getAllNotes,
   getNote,
-  saveOrEditNote
+  saveOrEditNote,
+  removeNoteFromState
 } from './course/Actions'
 
 export {

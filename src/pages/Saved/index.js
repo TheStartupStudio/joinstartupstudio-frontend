@@ -10,7 +10,7 @@ import Video from '../../components/Video'
 import { NotesButton } from '../../components/Notes'
 import { ShowMessenger } from '../../utils/helpers'
 import ReactPaginate from 'react-paginate'
-
+import './index.css'
 const SavedMedia = () => {
   const [selected, setSelected] = useState('video')
   const [playingUrl, setPlayingUrl] = useState('')
