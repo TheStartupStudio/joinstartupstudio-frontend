@@ -26,6 +26,7 @@ import { NOTES } from '../../utils/constants'
 import DeleteNoteModal from '../../components/Modals/Notes/DeleteNoteModal'
 import { toast } from 'react-toastify'
 import { removeNoteFromState } from '../../redux'
+import './index.css'
 
 function MyNotes(props) {
   const id = useParams().id
@@ -371,31 +372,44 @@ function MyNotes(props) {
                         : null}
                     </span>
                     {editNote ? (
-                      <Link
-                        to='#'
-                        className='save-button col-white'
-                        style={{
-                          marginLeft: 'auto',
-                          marginTop: '-1px'
-                        }}
-                        onClick={handleSubmit}
-                      >
-                        <IntlMessages id='my_notes.save_note' />{' '}
-                      </Link>
+                      <>
+                        <Link
+                          to='#'
+                          className='save-button col-white float-end'
+                          style={{
+                            marginLeft: 'auto',
+                            marginTop: '-1px'
+                          }}
+                          onClick={handleSubmit}
+                        >
+                          <IntlMessages id='my_notes.save_note' />{' '}
+                        </Link>
+                        <Link
+                          to='#'
+                          className='save-button col-white ms-auto float-end me-2'
+                          style={{
+                            marginTop: '-1px'
+                          }}
+                          onClick={() => setEditNote(false)}
+                        >
+                          <span>Cancel</span>
+                        </Link>
+                      </>
                     ) : notes?.length > 0 ? (
                       <>
                         <Link
                           to='#'
+                          className='notes-branding-color'
                           style={{ marginLeft: 'auto', marginTop: '-1px' }}
                           onClick={() => setEditNote(true)}
                         >
                           <FontAwesomeIcon
                             icon={faPencilAlt}
-                            className='plus-ico'
+                            className='plus-icon float-end notes-branding-color'
                             style={{
-                              width: '22px',
+                              width: '18px',
                               height: '22px',
-                              color: '#707070'
+                              color: '#21c5d0'
                             }}
                           />
                         </Link>
@@ -403,14 +417,15 @@ function MyNotes(props) {
                           to='#'
                           style={{ marginLeft: '50px', marginTop: '-1px' }}
                           onClick={() => setDeleteNoteModal(true)}
+                          className='notes-branding-color'
                         >
                           <FontAwesomeIcon
                             icon={faTrashAlt}
-                            className='plus-ico'
+                            className='plus-icon float-end me-3 notes-branding-color'
                             style={{
-                              width: '22px',
+                              width: '18px',
                               height: '22px',
-                              color: '#FF3399'
+                              color: '#21c5d0'
                             }}
                           />
                         </Link>
