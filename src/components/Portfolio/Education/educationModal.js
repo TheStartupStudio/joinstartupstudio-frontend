@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -41,6 +41,7 @@ export const EducationModal = (props) => {
   const [showDeleteDialogModal, setShowDeleteDialogModal] = useState(false)
   const [showDeleteConfirmedModal, setShowDeleteConfirmedModal] =
     useState(false)
+  const endDateRef = useRef()
 
   const general = useSelector((state) => state.general)
   const dispatch = useDispatch()
@@ -68,10 +69,19 @@ export const EducationModal = (props) => {
             : { link: prevValues.external_links.link, file: value }
       }))
     } else {
-      setEducationData((prevValues) => ({
-        ...prevValues,
-        [name]: name === 'present' ? checked : value
-      }))
+      if (name === 'present') {
+        endDateRef.current.value = ''
+        setEducationData((prevValues) => ({
+          ...prevValues,
+          end_date: null,
+          present: checked
+        }))
+      } else {
+        setEducationData((prevValues) => ({
+          ...prevValues,
+          [name]: value
+        }))
+      }
     }
   }
 
@@ -389,11 +399,13 @@ export const EducationModal = (props) => {
                       year: 'numeric',
                       month: '2-digit'
                     })}
+                    value={
+                      educationData?.end_date ? educationData.end_date : ''
+                    }
+                    ref={endDateRef}
                     id='end_date'
-                    value={educationData?.end_date}
                     onChange={handleChange}
                     disabled={educationData?.present}
-                    placeholder='Title (Example: Copywriter)'
                   />
                 </div>
                 <div className='col-12 col-lg-4 my-auto pt-lg-4'>
