@@ -91,7 +91,24 @@ function Sidebar(props) {
                   className='accordion accordion-flush'
                   id='accordionFlushExample'
                 ></div>
-                <a
+                <NavLink
+                  onClick={() => {
+                    dispatch(setAccordionToggled(false))
+                    props.hideHeaderIcons()
+                  }}
+                  to='/dashboard'
+                  className={`${
+                    location.pathname.includes('dashboard') ? 'active' : ''
+                  }`}
+                >
+                  <div className='d-flex' style={{ alignItems: 'center' }}>
+                    <div className='dashboard me-1'></div>
+                    <div className='ms-2'>
+                      <IntlMessages id='navigation.dashboard' />
+                    </div>
+                  </div>
+                </NavLink>
+                {/* <a
                   href='/dashboard'
                   className={`mt-md-1 ${
                     location.pathname.includes('dashboard') ? 'active' : ''
@@ -103,7 +120,7 @@ function Sidebar(props) {
                       <IntlMessages id='navigation.dashboard' />
                     </div>
                   </div>
-                </a>
+                </a> */}
               </li>
               <li>
                 <NavLink

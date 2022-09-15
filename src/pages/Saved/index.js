@@ -41,8 +41,8 @@ const SavedMedia = () => {
 
   const style = {
     firstDiv: {
-      maxHeight: '160px',
-      minHeight: '160px',
+      // maxHeight: '188px',
+      minHeight: '188px',
       overflow: 'hidden',
       paddingTop: '1rem'
     },
