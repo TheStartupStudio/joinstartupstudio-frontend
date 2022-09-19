@@ -78,7 +78,11 @@ export const ExperienceDetails = (props) => {
                         target={'_blank'}
                         className='my-auto ms-2'
                       >
-                        {experience.external_links?.link}
+                        {experience?.external_links?.link?.length > 40
+                          ? experience?.external_links?.link
+                              .toString()
+                              .substring(0, 30) + '...'
+                          : experience?.external_links?.link}
                       </a>
                     </div>
                   )}
