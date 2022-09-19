@@ -445,7 +445,7 @@ function Header(props) {
                       </Link>
                       <Link
                         className='dropdown-item py-2 dropdown-menu-hover'
-                        to='/#'
+                        to='#'
                         onClick={() => {
                           showModal()
                           setShowDropDown((preState) => !preState)

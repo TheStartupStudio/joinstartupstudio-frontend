@@ -12,7 +12,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import { setAccordionToggled } from '../../redux'
 import IntlMessages from '../../utils/IntlMessages'
-import SUSLogo from '../../assets/images/sus-institute-logo.png'
+import SUSLogo from '../../assets/images/LTS-logo.png'
 import sidebarImage from '../../assets/images/side-logo.png'
 import sidebarImageES from '../../assets/images/side-logo-es.png'
 

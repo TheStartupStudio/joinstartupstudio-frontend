@@ -14,7 +14,7 @@ const SPodcast = (data, playingUrl, audioPlaying, url) => {
   const style = {
     firstDiv: {
       // maxHeight: '160px',
-      minHeight: '160px',
+      minHeight: '188px',
       overflow: 'hidden',
       paddingTop: '1rem'
     }
@@ -112,7 +112,7 @@ const SPodcast = (data, playingUrl, audioPlaying, url) => {
         </div>
         <p
           className='my-0 gy-0 py-0 saved-page-podcast-description'
-          style={{ wordBreak: ' break-all', marginTop: '-10px' }}
+          style={{ wordBreak: ' break-words', marginTop: '-10px' }}
         >
           {descriptionLimit < data.data.description.length ? (
             <span>{data.data.description.substr(0, descriptionLimit)}...</span>

@@ -126,7 +126,7 @@ function MyNotes(props) {
     unblockHandle.current = history.block((targetLocation) => {
       if (
         !showNotSavedModal &&
-        textEdited &&
+        editNote &&
         props.history.location.pathname !== targetLocation.pathname
       ) {
         showModal(targetLocation)
@@ -215,7 +215,7 @@ function MyNotes(props) {
                   <IntlMessages id='my_notes.page_description' />
                   <button
                     className='float-end add-note-button py-2 ps-4'
-                    onClick={showAddModal}
+                    onClick={!editNote ? () => showAddModal() : ''}
                   >
                     <IntlMessages id='my_notes.add_button' />
 
@@ -307,9 +307,14 @@ function MyNotes(props) {
                                   <ul className='content-list-of-month'>
                                     <li
                                       key={index}
-                                      onClick={() => {
-                                        if (!textEdited) getNoteById(note.id)
-                                      }}
+                                      onClick={
+                                        editNote
+                                          ? ''
+                                          : () => {
+                                              if (!textEdited)
+                                                getNoteById(note.id)
+                                            }
+                                      }
                                     >
                                       <Link
                                         className={

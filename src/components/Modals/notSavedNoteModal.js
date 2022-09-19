@@ -42,7 +42,7 @@ const NotSavedModal = (props) => {
               color: '#01C5D1',
               textTransform: 'none'
             }}
-            onClick={props.continue}
+            onClick={() => props.continue()}
           >
             <IntlMessages id='my_notes.leave_anyway' />
           </button>

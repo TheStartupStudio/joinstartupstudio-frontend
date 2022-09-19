@@ -113,6 +113,7 @@ function Router(props) {
     <IntlProvider
       locale={currentAppLocale.locale}
       messages={currentAppLocale.messages}
+      onError={()=>''}
     >
       <React.Fragment>
         {isAuthenticated ? (
