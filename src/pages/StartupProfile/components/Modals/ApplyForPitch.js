@@ -23,9 +23,6 @@ const ApplyForPitch = (props) => {
     Business_Plan: '',
     Pitch_Deck: ''
   })
-  //   const handleUpload = (e) => {
-  //     console.log(e)
-  //   }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -34,10 +31,6 @@ const ApplyForPitch = (props) => {
       [name]: value
     }))
   }
-
-  //   useEffect(() => {
-  //     console.log(data)
-  //   }, [data])
 
   const verify = () => {
     if (!agreed) {
@@ -88,7 +81,7 @@ const ApplyForPitch = (props) => {
               })
           })
       })
-      .catch((err) => console.log(err))
+      .catch((err) => err)
   }
   return (
     <Modal

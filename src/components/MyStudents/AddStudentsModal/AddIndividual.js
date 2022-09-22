@@ -36,15 +36,6 @@ const AddIndividual = (props) => {
   const handleValidation = (e) => {
     const { name, value } = e
 
-    // console.log(
-    //   dataValidation.name.length,
-    //   dataValidation.lastName.length,
-    //   dataValidation.UserEmail.length,
-    //   dataValidation.password.length,
-    //   dataValidation.level.length,
-    //   dataValidation.year.length
-    // )
-
     setDataValidation((old) => ({ ...old, [name]: value }))
     if (
       dataValidation.FirstName.length === 0 &&

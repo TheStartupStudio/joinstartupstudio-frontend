@@ -11,7 +11,6 @@ import markdown from './markdown'
 import parse from 'html-react-parser'
 
 function LtsJournalContent(props) {
-  console.log(props, '----------------------------')
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
   let [videoWatchData, setVideoWatchData] = useState([])

@@ -66,7 +66,6 @@ const EditProject = (props) => {
   }
 
   const updateState = (data) => {
-    // console.log(data)
     setProjects(data)
   }
   const updateProjectImage = (data) => {
@@ -238,7 +237,6 @@ const EditProject = (props) => {
         >
           <div className='d-flex flex-wrap pb-0 mb-3'>
             <div className='d-flex my-auto'>
-              {console.log(project)}
               <img
                 id='myProjectImage'
                 src={project?.image ? project?.image : defaultImage}
@@ -400,27 +398,6 @@ const EditProject = (props) => {
                 </span>
               </div>
               <div className='vide mx-auto my-auto mb-4 pt-4 col-12 row'>
-                {/* <ReactPlayer
-                  className='justify-content-center mx-auto my-auto col-12'
-                  height='190px'
-                  onClick={(e) => {
-                    console.log(e)
-                    setShowVideo(true)
-                  }}
-                  // width='360px'
-                  url={project?.company_video}
-                  controls={false}
-                  light={project?.image}
-                  playing={false}
-                  config={{
-                    file: {
-                      attributes: {
-                        poster: project?.company_video,
-                        controlsList: 'nodownload'
-                      }
-                    }
-                  }}
-                /> */}
                 <div className='col-12 w-100' style={{ position: 'relative' }}>
                   <img
                     src={

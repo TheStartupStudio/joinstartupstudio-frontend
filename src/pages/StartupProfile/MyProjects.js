@@ -53,18 +53,6 @@ const MyProjects = (props) => {
     }
   }, [props.width])
 
-  // const getLastetProjcet = async () => {
-  //   await axiosInstance
-  //     .get('/business/ById')
-  //     .then((res) => {
-  //       setMyProjects(res.data)
-  //     })
-  //     .catch((err) => console.log(err))
-  // }
-
-  // useEffect(() => {
-  //   getLastetProjcet()
-  // }, [])
   const handlePreviousVideo = async (page, startIndex, endIndex) => {
     if (startIndex > 0) {
       if (page == 1) {

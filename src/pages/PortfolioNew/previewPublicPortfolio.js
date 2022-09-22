@@ -167,7 +167,6 @@ const PreviewPublicPortfolio = () => {
                               skills={user?.Skills && user?.Skills}
                             />
                           </div>
-                          {console.log(emptyBackground, 'emptyBackground')}
                           {!emptyBackground && (
                             <>
                               <div className='mt-5 row text-center w-100 pe-0 me-0'>

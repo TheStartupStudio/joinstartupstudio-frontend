@@ -186,6 +186,6 @@ export const updateTnC = () => async (dispatch) => {
       type: UPDATE_USER_TNC
     })
   } catch (err) {
-    console.log(err)
+    err
   }
 }

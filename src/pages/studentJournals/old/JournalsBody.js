@@ -11,7 +11,6 @@ import LtsJournalContent from './content'
 
 const JournalsBody = (props) => {
   let contentContainer = useRef()
-  console.log(props)
   return (
     <div id='main-body'>
       <div className='container-fluid mt-5'>
@@ -26,7 +25,6 @@ const JournalsBody = (props) => {
                   path={`student-journals/684/:id`}
                   render={(renderprops) => (
                     <>
-                      {console.log(renderprops, 'renderprops')}
                       <LtsJournalContent
                         {...renderprops}
                         contentContainer={contentContainer}
@@ -63,7 +61,6 @@ const JournalsBody = (props) => {
                     >
                       {journalItem.children && journalItem.children.length ? (
                         <>
-                          {console.log(journalItem)}
                           <Accordion.Toggle
                             as={'a'}
                             href='#'

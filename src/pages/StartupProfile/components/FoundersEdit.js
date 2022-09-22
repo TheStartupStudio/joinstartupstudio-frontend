@@ -35,12 +35,8 @@ const FoundersEdit = (props) => {
     setLoading(true)
     await axiosInstance
       .post('/business/delete/founders', deletetFounders)
-      .then((res) => {
-        // console.log(res)
-      })
-      .catch((res) => {
-        // console.log(res)
-      })
+      .then((res) => {})
+      .catch((res) => {})
 
     await axiosInstance
       .put('/business/update/founders', founder)
@@ -90,44 +86,10 @@ const FoundersEdit = (props) => {
               return founder
             })
           )
-          // console.log(
-          //   founder.map((founder) => {
-          //     if (founder.Business_Founders.id == id) {
-          //       return {
-          //         ...founder,
-          //         Business_Founders: { is_visible: false }
-          //       }
-          //     }
-          //     return founder
-          //   })
-          // )
-          // })
-          // setFounder((old) =>
-          //   founder.forEach((founder) => {
-          //     if (founder.id == id) {
-          //       founder.Business_Founders.role = e.target.value
-          //     }
-          //   })
-          // )
         })
-        .catch((err) => console.log(err))
-
-      // setFounder((oldData) => ({
-      //   ...oldData
-      // }))
-      // setProjects(
-      //   project.founders.filter((user) => {
-      //     if (user.id == id) {
-      //     }
-      // })
-      // )
-      // })
+        .catch((err) => err)
     }
   }
-
-  // useEffect(() => {
-  //   console.log(deletetFounders, `here`)
-  // }, [deletetFounders])
 
   const getProject = async () =>
     await axiosInstance.get('/business/edit/' + id).then((res) => {

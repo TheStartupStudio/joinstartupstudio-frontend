@@ -16,7 +16,6 @@ const FirstDiv = () => {
   }, [])
   const getMyMarketReadyData = async () => {
     await axiosInstance.get('/ltsJournals/my-market-ready').then((response) => {
-      console.log(response)
       setData(response.data)
     })
   }

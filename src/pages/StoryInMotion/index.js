@@ -66,10 +66,6 @@ function StoryInMotion() {
     dispatch(changeSidebarState(false))
   })
 
-  // useEffect(() => {
-  //   console.log(`isPlaying index`, isPlaying)
-  // }, [isPlaying])
-
   const gettracks = async () => {
     setLoading(true)
     await axiosInstance
@@ -151,16 +147,6 @@ function StoryInMotion() {
         )
       )
     }
-
-    // if (lastSaved.length < 2) {
-    //   console.log(
-    //     tracks.map((track) => {
-    //       console.log(track)
-    //       return track.saved === true
-    //     })
-    //   )
-    //   // setLastSaved(tracks.map((track) => track.saved == true))
-    // }
   }
 
   return (

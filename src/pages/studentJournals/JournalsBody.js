@@ -36,10 +36,9 @@ function JournalsBody(props) {
   const [notAllowed, setNotAllowed] = useState(false)
   const currentLanguage = useSelector((state) => state.lang.locale)
   const [user, setUser] = useState({})
-  const [globalCategory, setGlobalCategory] = useState('lts')
+
   let contentContainer = useRef()
   async function getJournals(category = 'lts', redir = true) {
-    setGlobalCategory(category)
     try {
       let { data } = await axiosInstance
         .get(`/ltsJournals/fromInstructor/`, {
@@ -130,18 +129,9 @@ function JournalsBody(props) {
   const options = [
     { value: 'lts', label: 'MY LEARN TO START JOURNAL' },
     { value: 'wellness', label: 'MY WELLNESS JOURNAL' },
-    {
-      value: 'personal-finance',
-      label: 'MY PERSONAL FINANCE JOURNAL'
-    },
-    {
-      value: 'market-ready',
-      label: 'MY MARKET-READY JOURNAL'
-    },
-    {
-      value: 'entrepreneurship',
-      label: 'MY COURSE IN ENTREPRENEURSHIP'
-    }
+    { value: 'personal-finance', label: 'MY PERSONAL FINANCE JOURNAL' },
+    { value: 'market-ready', label: 'MY MARKET-READY JOURNAL' },
+    { value: 'entrepreneurship', label: 'MY COURSE IN ENTREPRENEURSHIP' }
   ]
 
   const handleJournalSearch = (e) => {
@@ -201,20 +191,20 @@ function JournalsBody(props) {
       ) : notAllowed ? (
         <NotAllowed />
       ) : (
-        <>
+        <div id='main-body'>
           <div className='container-fluid'>
             <div className='row'>
-              <div className='col-12'>
-                <div className='account-page-padding row'>
-                  <div className='col-12 col-md-6'>
-                    <h3 className='page-title-inner'>STUDENT JOURNAL VIEW</h3>
-                    <span className='title-description'>
-                      View your student journals.
-                    </span>
-                  </div>
-                  <div className='col-12 col-md-6 ps-4'>
-                    <div className='user-info col-12 d-flex'>
-                      <div className='user-image-and-name col-6'>
+              <div className='col-12 col-md-11 px-0'>
+                <div className='page-padding'>
+                  <div className='row pb-2'>
+                    <div className='col-12'>
+                      <h3 className='page-title-inner'>STUDENT JOURNAL VIEW</h3>
+                      <span className='title-description'>
+                        View your student journals.
+                      </span>
+                    </div>
+                    <div className='mt-2 col-12 justify-content-lg-end row m-0 p-0'>
+                      <div className='user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 col-xxl-2'>
                         <img
                           className='rounded-circle user-image'
                           src={
@@ -230,7 +220,7 @@ function JournalsBody(props) {
                         />
                         <span className='user-name ps-2'>{user?.name}</span>
                       </div>
-                      <div className='col-6'>
+                      <div className='col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0'>
                         <Select
                           defaultValue={options[0]}
                           tabSelectsValue={(data) => alert(data)}
@@ -243,179 +233,173 @@ function JournalsBody(props) {
                       </div>
                     </div>
                   </div>
-                  {/* <Select options={options} /> */}
-                </div>
-              </div>
-              <div className='container-fluid'>
-                <div className='row'>
-                  <div className='col-12 col-md-11 px-0'>
-                    <div className='page-padding'>
-                      <div className='page-card page-card--reverse'>
-                        <div
-                          className='page-card__content styled-scrollbar col-lg-8 col-md-7'
-                          ref={contentContainer}
-                        >
-                          <Switch>
-                            <Route
-                              path={`${props.match.url}/:journalId`}
-                              render={(renderprops) => (
-                                <>
-                                  <LtsJournalContent
-                                    studentId={studentId}
-                                    {...renderprops}
-                                    contentContainer={contentContainer}
-                                    backRoute={props.match.url}
-                                    saved={journalChanged}
-                                  />
-                                </>
-                              )}
-                            />
-                            {/* <Route
+                  <div className='page-bottom-border'></div>
+                  <div className='row my-notes mt-2'>
+                    <div className='page-card page-card--reverse'>
+                      <div
+                        className='page-card__content styled-scrollbar col-lg-8 col-md-7'
+                        ref={contentContainer}
+                      >
+                        <Switch>
+                          <Route
+                            path={`${props.match.url}/:journalId`}
+                            render={(renderprops) => (
+                              <>
+                                <LtsJournalContent
+                                  studentId={studentId}
+                                  {...renderprops}
+                                  contentContainer={contentContainer}
+                                  backRoute={props.match.url}
+                                  saved={journalChanged}
+                                />
+                              </>
+                            )}
+                          />
+                          {/* <Route
                       component={(renderprops) => {
                         noJournalSelected()
                         return <div></div>
                       }}
                     /> */}
-                          </Switch>
-                        </div>{' '}
-                        {/* page-card__content */}
-                        <div className='page-card__sidebar col-lg-4 col-md-5'>
-                          <div className='page-card__sidebar-header'>
-                            <label className='search-input'>
-                              <img
-                                className='search-input__icon'
-                                src={searchIcon}
-                                alt='#'
-                              />
-
-                              <FormattedMessage
-                                id='my_journal.search_journals'
-                                defaultMessage='my_journal.search_journals'
-                              >
-                                {(placeholder) => (
-                                  <input
-                                    type='text'
-                                    className='search-input__input'
-                                    name='searchedNote'
-                                    placeholder={placeholder}
-                                    onChange={(e) => {
-                                      handleJournalSearch(e)
-                                    }}
-                                  />
-                                )}
-                              </FormattedMessage>
-                            </label>
-                          </div>
-                          <div className='page-card__sidebar-content styled-scrollbar'>
-                            <Accordion
-                              defaultActiveKey='0'
-                              className='accordion-menu'
-                            >
-                              {journals.map((journalItem, journalItemIdx) => (
-                                <div
-                                  key={journalItem.id}
-                                  className={`accordion-menu__item`}
-                                >
-                                  {journalItem.children &&
-                                  journalItem.children.length ? (
-                                    <>
-                                      <Accordion.Toggle
-                                        as={'a'}
-                                        href='#'
-                                        className={
-                                          'accordion-menu__item-toggle'
-                                        }
-                                        eventKey={`${journalItemIdx}`}
-                                      >
-                                        <span>{journalItem.title}</span>
-                                        <FontAwesomeIcon icon={faAngleDown} />
-                                      </Accordion.Toggle>
-
-                                      <Accordion.Collapse
-                                        eventKey={`${journalItemIdx}`}
-                                      >
-                                        <ul className='accordion-menu__submenu'>
-                                          {journalItem.children.map(
-                                            (journalChildren) => (
-                                              <li
-                                                key={journalChildren.id}
-                                                className='accordion-menu__submenu-item'
-                                              >
-                                                <NavLink
-                                                  to={`${props.match.url}/${journalChildren.id}`}
-                                                >
-                                                  <div className='accordion-menu__submenu-item-icon'>
-                                                    <FontAwesomeIcon
-                                                      icon={faFileAlt}
-                                                    />
-                                                  </div>
-                                                  <div className='accordion-menu__submenu-item-details'>
-                                                    <h5 className='accordion-menu__submenu-item-title'>
-                                                      {journalChildren.title}
-                                                    </h5>
-                                                    {journalChildren.userEntry &&
-                                                    !!journalChildren.userEntry
-                                                      .length &&
-                                                    !!journalChildren
-                                                      .userEntry[0]
-                                                      .createdAt ? (
-                                                      <div className='accordion-menu__submenu-item-subtitle'>
-                                                        {moment(
-                                                          journalChildren
-                                                            .userEntry[0]
-                                                            .createdAt
-                                                        )
-                                                          .locale(
-                                                            currentLanguage
-                                                          )
-                                                          .format(
-                                                            'MMMM D, YYYY | hh:mma'
-                                                          )}
-                                                      </div>
-                                                    ) : (
-                                                      <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
-                                                        NOT STARTED
-                                                      </div>
-                                                    )}
-                                                  </div>
-                                                </NavLink>
-                                              </li>
-                                            )
-                                          )}
-                                        </ul>
-                                      </Accordion.Collapse>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <NavLink
-                                        className={
-                                          globalCategory == 'lts' ||
-                                          globalCategory ==
-                                            'personal-finance-journal'
-                                            ? 'accordion-menu__item-toggle'
-                                            : ''
-                                        }
-                                        to={`${props.match.url}/${journalItem.id}`}
-                                      >
-                                        <span>{journalItem.title}</span>
-                                      </NavLink>
-                                    </>
-                                  )}
-                                </div>
-                              ))}
-                              {/* journals.map */}
-                            </Accordion>
-                          </div>
-                        </div>
-                        {/* page-card__sidebar */}
+                        </Switch>
                       </div>
+                      <div className='page-card__sidebar col-lg-4 col-md-5'>
+                        <div className='page-card__sidebar-header'>
+                          <label className='search-input'>
+                            <img
+                              className='search-input__icon'
+                              src={searchIcon}
+                              alt='#'
+                            />
+
+                            <FormattedMessage
+                              id='my_journal.search_journals'
+                              defaultMessage='my_journal.search_journals'
+                            >
+                              {(placeholder) => (
+                                <input
+                                  type='text'
+                                  className='search-input__input'
+                                  name='searchedNote'
+                                  placeholder={placeholder}
+                                  onChange={(e) => {
+                                    handleJournalSearch(e)
+                                  }}
+                                />
+                              )}
+                            </FormattedMessage>
+                          </label>
+                        </div>
+
+                        <div className='page-card__sidebar-content styled-scrollbar'>
+                          <Accordion
+                            defaultActiveKey='0'
+                            className='accordion-menu'
+                          >
+                            {journals.map((journalItem, journalItemIdx) => (
+                              <div
+                                key={journalItem.id}
+                                className={`accordion-menu__item${
+                                  journalItem.title == 'SECTION FOUR: FEEDBACK '
+                                    ? '-toggle'
+                                    : ''
+                                }`}
+                              >
+                                {journalItem.children &&
+                                journalItem.children.length ? (
+                                  <>
+                                    <Accordion.Toggle
+                                      as={'a'}
+                                      href='#'
+                                      className={'accordion-menu__item-toggle'}
+                                      eventKey={`${journalItemIdx}`}
+                                    >
+                                      <span>{journalItem.title}</span>
+                                      <FontAwesomeIcon icon={faAngleDown} />
+                                    </Accordion.Toggle>
+
+                                    <Accordion.Collapse
+                                      eventKey={`${journalItemIdx}`}
+                                    >
+                                      <ul className='accordion-menu__submenu'>
+                                        {journalItem.children.map(
+                                          (journalChildren) => (
+                                            <li
+                                              key={journalChildren.id}
+                                              className='accordion-menu__submenu-item'
+                                            >
+                                              <NavLink
+                                                to={`${props.match.url}/${journalChildren.id}`}
+                                              >
+                                                <div className='accordion-menu__submenu-item-icon'>
+                                                  <FontAwesomeIcon
+                                                    icon={faFileAlt}
+                                                  />
+                                                </div>
+                                                <div className='accordion-menu__submenu-item-details'>
+                                                  <h5 className='accordion-menu__submenu-item-title'>
+                                                    {journalChildren.title}
+                                                  </h5>
+                                                  {journalChildren.userEntry &&
+                                                  !!journalChildren.userEntry
+                                                    .length &&
+                                                  !!journalChildren.userEntry[0]
+                                                    .createdAt ? (
+                                                    <div className='accordion-menu__submenu-item-subtitle'>
+                                                      {moment(
+                                                        journalChildren
+                                                          .userEntry[0]
+                                                          .createdAt
+                                                      )
+                                                        .locale(currentLanguage)
+                                                        .format(
+                                                          'MMMM D, YYYY | hh:mma'
+                                                        )}
+                                                    </div>
+                                                  ) : (
+                                                    <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
+                                                      NOT STARTED
+                                                    </div>
+                                                  )}
+                                                </div>
+                                              </NavLink>
+                                            </li>
+                                          )
+                                        )}
+                                      </ul>
+                                    </Accordion.Collapse>
+                                  </>
+                                ) : (
+                                  <NavLink
+                                    className={
+                                      window.location.pathname.includes(
+                                        'lts-journal'
+                                      ) ||
+                                      window.location.pathname.includes(
+                                        'personal-finance-journal'
+                                      )
+                                        ? 'accordion-menu__item-toggle'
+                                        : ''
+                                    }
+                                    to={`${props.match.url}/${journalItem.id}`}
+                                  >
+                                    <span>{journalItem.title}</span>
+                                  </NavLink>
+                                )}
+                              </div>
+                            ))}
+                            {/* journals.map */}
+                          </Accordion>
+                        </div>
+                      </div>
+                      {/* page-card__sidebar */}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   )

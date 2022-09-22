@@ -9,27 +9,6 @@ const VideoPreview = (props) => {
   return (
     <div className='col-12 col-lg-6'>
       <div className='vide row mt-5'>
-        {/* <ReactPlayer
-                  className='justify-content-center mx-auto my-auto col-12'
-                  height='190px'
-                  onClick={(e) => {
-                    console.log(e)
-                    setShowVideo(true)
-                  }}
-                  // width='360px'
-                  url={project?.company_video}
-                  controls={false}
-                  light={project?.image}
-                  playing={false}
-                  config={{
-                    file: {
-                      attributes: {
-                        poster: project?.company_video,
-                        controlsList: 'nodownload'
-                      }
-                    }
-                  }}
-                /> */}
         <div className='col-12 w-100' style={{ position: 'relative' }}>
           <img
             src={

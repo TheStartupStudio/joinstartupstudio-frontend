@@ -70,25 +70,12 @@ export default function Waveform({
   handle,
   isPlaying
 }) {
-  // const waveformRef = useRef(null)
   const wavesurfer = useRef(null)
-  // const [playing, setPlaying] = useState(isPlaying)
-  // console.log(`playing`, playing)
   const [duration, setDuration] = useState()
   const [now, setNow] = useState()
-  // const [changed, setchanged] = useState(false)
-  // create new WaveSurfer instance
-  // On component mount and when url changes
 
   useEffect(() => {
     if (url) {
-      // console.log('playingplayingplaying', playing)
-      // isPlayingParent(true)
-      // handlePlayPause()
-      // // const options = formWaveSurferOptions(waveformRef.current)
-      // const options = document.getElementById('#waveform')
-      // setDuration('0')
-
       wavesurfer.current = WaveSurfer.create({
         container: document.querySelector('#waveform'),
         backend: 'MediaElement'
@@ -118,18 +105,11 @@ export default function Waveform({
       wavesurfer?.current?.playPause()
     }
   }
-  // useEffect(() => {
-  //   setPlaying(wavesurfer.current.playPause())
-  // }, [url, changed])
+
   useEffect(() => {
-    // console.log(url != url)
     setDuration(wavesurfer?.current?.getDuration())
     handlePlayPause()
   }, [isPlaying])
-
-  // useEffect(() => {
-  //   wavesurfer?.current?.play()
-  // }, [url, isPlaying])
 
   const goBackward = () => {
     wavesurfer.current.skip(-10)
@@ -140,7 +120,6 @@ export default function Waveform({
     setNow(wavesurfer.current.getCurrentTime())
   }
 
-  // isPlayingParent(playing)
   function getMinutes(t) {
     var min = parseInt(parseInt(t) / 60)
     var sec = parseInt(t % 60)

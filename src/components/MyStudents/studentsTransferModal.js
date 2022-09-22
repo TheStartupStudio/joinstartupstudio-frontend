@@ -421,13 +421,15 @@ const StudentsTransferModal = (props) => {
                       </tr>
                     ))
                   ) : (
-                    <td
-                      colSpan={6}
-                      className='pt-4'
-                      style={{ fontSize: '14px' }}
-                    >
-                      You dont have new transfer requests!
-                    </td>
+                    <tr>
+                      <td
+                        colSpan={6}
+                        // className='pt-4'
+                        style={{ fontSize: '14px' }}
+                      >
+                        You dont have new transfer requests!
+                      </td>
+                    </tr>
                   )
                 ) : props.receivedTransferRequests.length > 0 ? (
                   props.receivedTransferRequests.map((transfer) => (
@@ -486,9 +488,15 @@ const StudentsTransferModal = (props) => {
                     </tr>
                   ))
                 ) : (
-                  <td colSpan={6} className='pt-4' style={{ fontSize: '14px' }}>
-                    You dont have new transfer requests!
-                  </td>
+                  <tr>
+                    <td
+                      colSpan={6}
+                      // className='pt-4'
+                      style={{ fontSize: '14px' }}
+                    >
+                      You dont have new transfer requests!
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
