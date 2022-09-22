@@ -1796,7 +1796,7 @@ ul.content-list-of-month li:hover span {
   color: #21c5d0 !important;
 }
 .my-notes-edited {
-  display: flex;
+  /* display: flex; */
   justify-content: space-between;
   align-items: baseline;
 }

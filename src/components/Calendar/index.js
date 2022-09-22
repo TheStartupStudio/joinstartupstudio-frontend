@@ -25,20 +25,24 @@ export default function Calendar() {
             />
           </div>
         </div>
-        {/* <div className='col-xl-12 col-md-6 col-sm-12'>
-          <h4 className='upcoming-events-title mt-4 mt-lg-5 mt-xl-4'>
-            <IntlMessages id='dashboard.upcoming_events' />
-          </h4>
-          <div>
-            <React.Fragment>
-              <Event
-                dateTime={<IntlMessages id='event.welcome_to_LTS_date_time' />}
-                title={<IntlMessages id='event.welcome_to_LTS' />}
-                auther='Anastasia Hall'
-              />
-            </React.Fragment>
+        {
+          <div className='col-xl-12 col-md-6 col-sm-12'>
+            <h4 className='upcoming-events-title mt-4 mt-lg-5 mt-xl-4'>
+              <IntlMessages id='dashboard.upcoming_events' />
+            </h4>
+            <div>
+              <React.Fragment>
+                <Event
+                  dateTime={'Thursday, Sept. 29th'}
+                  title={
+                    ' Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall'
+                  }
+                  auther='Anastasia Hall'
+                />
+              </React.Fragment>
+            </div>
           </div>
-        </div> */}
+        }
       </div>
     </div>
   )

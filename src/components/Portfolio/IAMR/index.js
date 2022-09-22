@@ -26,19 +26,19 @@ export const IAMR = (props) => {
     props.user !== undefined && setIsPublished(props.user?.show_iamr)
   }, [props.user])
 
-  const updateShowPreference = async () => {
-    const oldPublishValue = isPublished
-    setIsPublished(!isPublished)
-    await axiosInstance
-      .put(`/users`, {
-        show_iamr: !oldPublishValue
-      })
-      .then()
-      .catch((e) => {
-        setIsPublished(!oldPublishValue)
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-      })
-  }
+  // const updateShowPreference = async () => {
+  //   const oldPublishValue = isPublished
+  //   setIsPublished(!isPublished)
+  //   await axiosInstance
+  //     .put(`/users`, {
+  //       show_iamr: !oldPublishValue
+  //     })
+  //     .then()
+  //     .catch((e) => {
+  //       setIsPublished(!oldPublishValue)
+  //       toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+  //     })
+  // }
 
   useEffect(() => {
     axiosInstance
