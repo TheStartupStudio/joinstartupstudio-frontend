@@ -505,10 +505,10 @@ function StartupLive() {
           </div>
         </div>
         <div className='col-12 col-xl-3 px-3'>
-          <div className='msg-widget-startup-live'>
-            {selectedStartupLive && (
+          <div className='msg-widget-startup-live d-none'>
+            {/* {selectedStartupLive && (
               <Chat room={selectedStartupLive.value.room} />
-            )}
+            )} */}
             <NotesButton />
 
             <div className={'community-connect my-2'}>

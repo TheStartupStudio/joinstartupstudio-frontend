@@ -1,0 +1,7 @@
+.react-datepicker__day--highlighted {
+  background-color: #a7ca42;
+}
+.no-selected-data {
+  font-size: 18px !important;
+  font-weight: bold;
+}

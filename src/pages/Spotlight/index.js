@@ -227,9 +227,9 @@ function StartupLive() {
           </div>
         </div>
         <div className='col-12 col-xl-3 px-3'>
-          <div className='msg-widget-startup-live'>
+          <div className='msg-widget-startup-live d-none'>
             {/* <ShowMessenger /> */}
-            <Chat room={'spotlight-room'} />
+            {/* <Chat room={'spotlight-room'} /> */}
             {/* <NotesButton /> */}
 
             <div className={'community-connect my-2'}>
