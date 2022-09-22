@@ -19,7 +19,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import { setAccordionToggled } from '../../redux'
 import IntlMessages from '../../utils/IntlMessages'
-import SUSLogoStudent from '../../assets/images/sus-logo-rgb-horz-full-color@2x.png'
+import SUSLogoStudent from '../../assets/images/LTS-logo.png'
 import sidebarImage from '../../assets/images/side-logo.png'
 import diagramAnimation from '../../assets/json/lts-diagram.json'
 import sidebarImageES from '../../assets/images/side-logo-es.png'
@@ -75,11 +75,6 @@ function Sidebar(props) {
             >
               <NavLink to='/dashboard'>
                 <img src={SUSLogoStudent} alt='logo' />
-                <center>
-                  <span className='sidebar_title_span text-uppercase'>
-                    Instructor platform
-                  </span>
-                </center>
               </NavLink>
             </div>
             <ul
