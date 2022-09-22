@@ -14,6 +14,7 @@ import EditBulk from '../../components/MyStudents/AddStudentsModal/editBulk'
 import AddStudentsModal from '../../components/MyStudents/AddStudentsModal/addStudentsModal'
 import { StudentCountContext } from '../../components/MyStudents/studentCountContext'
 import EditStudentModal from '../MyStudents/AddStudentsModal/EditStudentModal'
+import StudentsTransferModal from '../../components/MyStudents/studentsTransferModal'
 
 export default function StudentsTable(props) {
   const [currentEditingStudent, setCurrentEditingStudent] = useState()
@@ -42,6 +43,12 @@ export default function StudentsTable(props) {
   const [instructors, setInstructors] = useState()
   const [openEditUserModal, setOpenEditUserModal] = useState(false)
   const [studentToEdit, setStudentToEdit] = useState({})
+  const [showStudentsTransferModal, setShowStudentsTransferModal] =
+    useState(false)
+  const [sentTransferRequests, setSentTransferRequests] = useState([])
+  const [receivedTransferRequests, setReceivedTransferRequests] = useState([])
+  const [receivedTransfersCount, setReceivedTransfersCount] = useState(0)
+
   const filteringCondition = (student) => {
     return student?.name
       ?.toLocaleLowerCase()
@@ -50,6 +57,7 @@ export default function StudentsTable(props) {
 
   useEffect(() => {
     getStudents()
+    getTransferedStudents()
   }, [])
 
   useEffect(() => {
@@ -71,6 +79,14 @@ export default function StudentsTable(props) {
       dispatch({ type: 'recentlyActive', recentlyActive: count })
     }
   }, [students?.length])
+
+  useEffect(() => {
+    setReceivedTransfersCount(
+      receivedTransferRequests.filter(
+        (transfer) => transfer.status === 'pending'
+      ).length
+    )
+  }, [receivedTransferRequests])
 
   useEffect(() => {
     setSelectedRows([])
@@ -118,6 +134,122 @@ export default function StudentsTable(props) {
       .catch((e) => e)
   }
 
+  const deleteSingleSentTransfer = (id) => {
+    setSentTransferRequests((sentTransferRequests) =>
+      sentTransferRequests.map((transfer) => {
+        if (transfer.id === id) {
+          transfer.status = 'canceled'
+          transfer.updatedAt = Date.now()
+        }
+        return transfer
+      })
+    )
+
+    setStudents((students) =>
+      students.map((student) => {
+        if (student?.transferHistory[0]?.id === id) {
+          delete student.transferHistory[0]
+        }
+        return student
+      })
+    )
+  }
+
+  const handleBulkSentDelete = (status) => {
+    if (status === 'pending') {
+      setSentTransferRequests((sentTransferRequests) =>
+        sentTransferRequests.filter(
+          (transfer) =>
+            transfer.status !== 'pending' && transfer.status !== 'canceled'
+        )
+      )
+
+      setStudents((students) =>
+        students.map((student) => {
+          if (student?.transferHistory[0]?.status === 'pending') {
+            delete student.transferHistory[0]
+          }
+          return student
+        })
+      )
+    }
+
+    if (status === 'approved') {
+      setSentTransferRequests((sentTransferRequests) =>
+        sentTransferRequests.filter(
+          (transfer) => transfer.status !== 'approved'
+        )
+      )
+    }
+  }
+
+  const handleBulkReceivedUpdate = (status) => {
+    setReceivedTransferRequests((receivedTransferRequest) =>
+      receivedTransferRequest.map((transfer) => {
+        if (transfer.status === 'pending') transfer.status = status
+        transfer.updatedAt = Date.now()
+        return transfer
+      })
+    )
+
+    if (status === 'denied') {
+      toast.success('Students transfer denied!')
+    }
+
+    if (status === 'approved') {
+      getStudents()
+      toast.success('Students transfer accepted!')
+    }
+  }
+
+  const respondSingleReceivedTransfer = (id, status, student) => {
+    setReceivedTransferRequests((sentTransferRequests) =>
+      sentTransferRequests.map((transfer) => {
+        if (transfer.id === id) {
+          transfer.status = status
+        }
+        transfer.updatedAt = Date.now()
+        return transfer
+      })
+    )
+
+    if (status === 'approved') {
+      setStudents((students) => {
+        return [student, ...students]
+      })
+    }
+  }
+
+  const addNewTransferRequest = (transfer) => {
+    setStudents((students) =>
+      students.map((student) => {
+        if (student.id === transfer.userId) {
+          student.transferHistory[0] = transfer
+        }
+        return student
+      })
+    )
+    setSentTransferRequests((sentTransferRequests) => [
+      transfer,
+      ...sentTransferRequests
+    ])
+  }
+
+  const getTransferedStudents = async () => {
+    axiosInstance
+      .get('/instructor/transfers/sent-requests')
+      .then((res) => {
+        setSentTransferRequests(res.data)
+      })
+      .catch((e) => e)
+    axiosInstance
+      .get('/instructor/transfers/received-requests')
+      .then((res) => {
+        setReceivedTransferRequests(res.data)
+      })
+      .catch((e) => e)
+  }
+
   const updateState = (id, data) => {
     const studentsFiltered = students
       .filter((student) => {
@@ -131,34 +263,12 @@ export default function StudentsTable(props) {
       })
       .map((student, index) => {
         if (student.id == id) {
-          // if (data.instructor_id != data.Instructor.id) {
-          //   removeUserFromState(index)
-          // }
           return data
         }
         return student
       })
 
     setStudents(studentsFiltered)
-    // setStudents((old) =>
-    //   old.filter((student) => {
-    //     if (student.id == id) {
-    //       if (data.instructor_id != data.Instructor.id) {
-    //         return null
-    //       }
-    //       return data
-    //     } else {
-    //       return student
-    //     }
-    //   })
-    // )
-  }
-
-  const removeUserFromState = (index) => {
-    let states = students
-    console.log(states)
-    states.splice(index, index + 1)
-    setStudents(states)
   }
 
   const updateSelectedOptions = (data) => {
@@ -732,9 +842,19 @@ export default function StudentsTable(props) {
                   </div>
                 </div>
               </div>
-              <div className='col-6 text-end'>
+              <div className='col-6 text-end setAddStudents d-flex justify-content-end align-items-end'>
                 <p
-                  className='setAddStudents p-0 m-0'
+                  className='p-0 m-0'
+                  role={'button'}
+                  onClick={() => setShowStudentsTransferModal(true)}
+                >
+                  Student transfers<span>({receivedTransfersCount})</span>
+                </p>
+                <span className='mx-2' style={{ color: '#333d3d83' }}>
+                  |
+                </span>
+                <p
+                  className='p-0 m-0'
                   role={'button'}
                   onClick={() => setShowAddStudentsModal(true)}
                 >
@@ -892,6 +1012,7 @@ export default function StudentsTable(props) {
         show={openEditUserModal}
         onHide={() => setOpenEditUserModal(false)}
         instructors={instructors}
+        addNewTransferRequest={addNewTransferRequest}
         setStudentToEdit={setStudentToEdit}
         data={studentToEdit}
         school={universities}
@@ -958,6 +1079,17 @@ export default function StudentsTable(props) {
         addStudents={(addedStudents) => {
           setStudents([...addedStudents, ...students])
         }}
+      />
+
+      <StudentsTransferModal
+        show={showStudentsTransferModal}
+        onHide={() => setShowStudentsTransferModal(false)}
+        receivedTransferRequests={receivedTransferRequests}
+        sentTransferRequests={sentTransferRequests}
+        deleteSingleSentTransfer={deleteSingleSentTransfer}
+        handleBulkSentDelete={handleBulkSentDelete}
+        handleBulkReceivedUpdate={handleBulkReceivedUpdate}
+        respondSingleReceivedTransfer={respondSingleReceivedTransfer}
       />
     </>
   )

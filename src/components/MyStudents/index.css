@@ -266,3 +266,62 @@ select {
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+.students-transfer-modal .table-container {
+  height: 400px;
+}
+
+.students-transfer-modal .transfers-table {
+  /* min-height: 300px;
+  max-height: 400px; */
+  height: 100%;
+}
+
+.students-transfer-modal .bulk-deleting {
+  height: 98%;
+  width: calc(100% - 2rem);
+  backdrop-filter: blur(5px);
+  overflow: auto;
+  /* border-radius: 10px; */
+  box-shadow: 0 3px 3px rgb(0 0 0 / 30%);
+  background-color: rgb(221 221 221 / 50%);
+  /* background-color: rgb(151 148 148 / 50%); */
+  position: absolute;
+  z-index: 100;
+  top: -5px;
+  overflow: hidden;
+}
+
+.students-transfer-modal .transfers-table th {
+  font-weight: 600;
+}
+
+.students-transfer-modal .transfer-dialog p {
+  font-size: 16px;
+  width: 400px;
+}
+
+.students-transfer-modal .transfer-dialog .lts-button {
+  height: 35px;
+  width: 180px;
+}
+
+@media (max-width: 768px) {
+  .students-transfer-modal .transfer-dialog p {
+    font-size: 14px;
+    width: auto;
+  }
+
+  .students-transfer-modal .transfer-dialog .lts-button {
+    height: 30px;
+    width: 100px;
+    margin: 0px 10px;
+  }
+
+  .students-transfer-modal .transfer-dialog {
+  }
+}
+
+/* .students-transfer-modal .students-info p {
+  font-size: 14px;
+} */

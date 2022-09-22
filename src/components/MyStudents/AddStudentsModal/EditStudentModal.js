@@ -14,6 +14,7 @@ const EditStudentModal = (props) => {
   const [resetLoading, setResetLoading] = useState(false)
   const [resetSubmitted, setResetSubmitted] = useState(false)
   const { user } = useSelector((state) => state.user.user)
+  const [newInstructorId, setNewInstructorId] = useState(null)
 
   const defaultData = {
     name: '',
@@ -50,30 +51,58 @@ const EditStudentModal = (props) => {
 
   const handleChange = (e) => {
     const { name, value } = e
-    setData((old) => ({ ...old, [name]: value }))
+    if (name === 'instructor_id') {
+      if (props.data.instructor_id !== value) {
+        setNewInstructorId(value)
+      }
+    } else {
+      setData((old) => ({ ...old, [name]: value }))
+    }
   }
 
   const handleSubmit = async () => {
+    let newStudentData = data
+
+    if (newInstructorId) {
+      setLoading(true)
+      await axiosInstance
+        .post('/instructor/transfers', {
+          userId: props.data.id,
+          toInstructor: newInstructorId
+        })
+        .then((transfer) => {
+          props.addNewTransferRequest(transfer.data)
+          newStudentData.transferHistory[0] = transfer.data
+          toast.success('New transfer request submitted!')
+        })
+        .catch((e) => toast.error('Transfer failed!'))
+      setNewInstructorId(null)
+    }
+
+    if (JSON.stringify(props.data) === JSON.stringify(data)) {
+      setLoading(false)
+      return
+    }
+
     setLoading(true)
 
-    axiosInstance
+    await axiosInstance
       .put(`/instructor/update-student/${data.id}`, {
         ...data,
         from: 'editViewUser',
         newEmail: data?.email
       })
       .then(async (response) => {
-        props.updateState(data?.id, data)
-        setLoading(false)
+        props.updateState(data?.id, newStudentData)
         props.setStudentToEdit({})
         props.onHide()
         toast.success('Data was successfully updated!')
       })
       .catch((err) => {
         toast.error(err.response.data)
-        setLoading(false)
-        // props.onHide()
       })
+    setNewInstructorId(null)
+    setLoading(false)
   }
 
   const handlePasswordReset = async () => {
@@ -210,7 +239,7 @@ const EditStudentModal = (props) => {
               rows='4'
             ></textarea>
           </div>
-          <div className='mt-2'>
+          <div className='mt-2 d-flex'>
             <button
               className='lts-button w-50'
               style={{
@@ -319,20 +348,33 @@ const EditStudentModal = (props) => {
               <label htmlFor='userId' className='user-id-label'>
                 Instructor
               </label>
-              <Select
-                options={props?.instructors}
-                // defaultValue={user?.name}
-                placeholder={user?.name}
-                onChange={(newValue) => {
-                  handleChange({
-                    name: 'instructor_id',
-                    value: newValue.value
-                  })
-                }}
-                isDisabled={false}
-                className='my-auto py-auto'
-                // styles={customStyles}
-              />
+              {data?.transferHistory[0]?.transferTo?.User?.name ? (
+                <p
+                  className='text-center text-warning p-0 m-0'
+                  style={{
+                    // color: '#ff894d',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}
+                >
+                  Pending transfer
+                </p>
+              ) : (
+                <Select
+                  options={props?.instructors}
+                  // defaultValue={user?.name}
+                  placeholder={user?.name}
+                  onChange={(newValue) => {
+                    handleChange({
+                      name: 'instructor_id',
+                      value: newValue.value
+                    })
+                  }}
+                  isDisabled={false}
+                  className='my-auto py-auto'
+                  // styles={customStyles}
+                />
+              )}
             </div>
           </div>
           <div className='row mx-auto mt-3'>

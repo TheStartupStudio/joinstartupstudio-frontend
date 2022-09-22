@@ -160,7 +160,6 @@ function Header(props) {
 
   const isUserAgredToTnC = () => {
     var pathArray = window.location.pathname.split('/')[1]
-    console.log(pathArray)
     if (!user.TnC && pathArray != 'terms') {
       setOpenTnCModal(true)
     }
