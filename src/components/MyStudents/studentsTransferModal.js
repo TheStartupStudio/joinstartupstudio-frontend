@@ -387,7 +387,7 @@ const StudentsTransferModal = (props) => {
                 {!isReceivedSelected ? (
                   props.sentTransferRequests.length > 0 ? (
                     props.sentTransferRequests.map((transfer) => (
-                      <tr>
+                      <tr key={transfer.id}>
                         <td>{transfer.student.name}</td>
                         <td>{transfer.transferTo.User.name}</td>
                         <td className={getStatusColor(transfer.status)}>
@@ -433,7 +433,7 @@ const StudentsTransferModal = (props) => {
                   )
                 ) : props.receivedTransferRequests.length > 0 ? (
                   props.receivedTransferRequests.map((transfer) => (
-                    <tr>
+                    <tr key={transfer.id}>
                       <td>{transfer.student.name}</td>
                       <td>{transfer.transferFrom.User.name}</td>
                       <td className={getStatusColor(transfer.status)}>
