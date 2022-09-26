@@ -16,7 +16,7 @@ import { formatDate } from '../../../utils/helpers'
 import ImageCropper from '../../ImageCropper'
 import { readFile } from '../../../utils/canvasUtils'
 import { useDispatch, useSelector } from 'react-redux'
-import { setImageCropperData, setCroppedImage } from '../../../redux'
+import { setImageCropperData } from '../../../redux'
 
 export const EducationModal = (props) => {
   const defaultEducationData = {

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import IntlMessages from '../../utils/IntlMessages'
 import Profile from '../../components/Profile'
-import Calendar from '../../components/Calendar'
+// import Calendar from '../../components/Calendar'
 import { changeSidebarState } from '../../redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
@@ -54,7 +54,7 @@ function Dashboard() {
         </div>
         <div className='col-12 col-xl-3 px-0'>
           <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
-            <Calendar />
+            {/* <Calendar /> */}
             <CertificationRequestsWidget />
             {/* <Messenger
               chatOpened={(id) => setChatId(id)}

@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, Row } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import IntlMessages from '../../utils/IntlMessages'
-import Calendar from '../../components/Calendar'
+// import Calendar from '../../components/Calendar'
 import NoteAndChat from '../../components/NoteAndChat/noteAndChat'
 
 function LiveStream() {

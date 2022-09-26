@@ -15,7 +15,7 @@ import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
 import { changeSidebarState } from '../../redux'
 import Video from '../../components/Video'
-import Calendar from '../../components/Calendar'
+
 import NoteAndChat from '../../components/NoteAndChat/noteAndChat'
 import StartupLiveEn from '../../assets/images/startup-live-logo-new.png'
 import StartupLiveEs from '../../assets/images/startup-live-es.jpg'
