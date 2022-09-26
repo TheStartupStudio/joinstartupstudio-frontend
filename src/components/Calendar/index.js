@@ -4,8 +4,6 @@ import DatePicker, { registerLocale } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import es from 'date-fns/locale/es' // the locale you want
 import Event from '../Event'
-import IntlMessages from '../../utils/IntlMessages'
-import moment from 'moment/moment'
 import './index.css'
 
 // document.getElementsByClassName(
@@ -102,7 +100,7 @@ export default function Calendar() {
               <React.Fragment>
                 {events.map((event) => (
                   <Event
-                    date={moment(event.date).format('MMMM Do, YYYY')}
+                    date={event.date}
                     time={event.time}
                     title={event.title}
                     author={event.author}
