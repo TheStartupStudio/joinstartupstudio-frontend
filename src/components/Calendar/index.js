@@ -102,8 +102,7 @@ export default function Calendar() {
               <React.Fragment>
                 {events.map((event) => (
                   <Event
-                    // dateTime={'Thursday, Sept. 29th'}
-                    date={moment(event.date).format('ll')}
+                    date={moment(event.date).format('MMMM Do, YYYY')}
                     time={event.time}
                     title={event.title}
                     author={event.author}

@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, Row } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import IntlMessages from '../../utils/IntlMessages'
-// import Calendar from '../../components/Calendar'
+import Calendar from '../../components/Calendar'
 import NoteAndChat from '../../components/NoteAndChat/noteAndChat'
 
 function LiveStream() {
@@ -53,6 +53,7 @@ function LiveStream() {
           </div>
         </div>
         <div className='col-12 col-md-3 px-0'>
+          {' '}
           <Calendar />
         </div>
       </Row>
