@@ -21,7 +21,7 @@ export default function Calendar() {
       title:
         'Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall',
       author: 'Anastasia Hall',
-      date: '2022,09,29',
+      date: '2022/09/29',
       time: '12:44 pm'
     }
   ])
@@ -98,11 +98,12 @@ export default function Calendar() {
                 </div>
               )}
               <React.Fragment>
-                {events.map((event) => (
+                {events.map((event, index) => (
                   <Event
                     date={event.date}
                     time={event.time}
                     title={event.title}
+                    key={index}
                     author={event.author}
                   />
                 ))}

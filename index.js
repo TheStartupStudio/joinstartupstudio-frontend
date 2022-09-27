@@ -110,7 +110,6 @@ function Sidebar() {
               <li>
                 <NavLink
                   to={`/story-in-motion`}
-                  // activeclassname='active'
                   activeclassname='sidenav active'
                   onClick={() => dispatch(setAccordionToggled(false))}
                 >

@@ -37,11 +37,8 @@ const EditPortfolio = React.lazy(() =>
 )
 const MyStudents = React.lazy(() => import('./pages/MyStudents'))
 const Resources = React.lazy(() => import('./pages/Resources'))
-// const MyProjects = React.lazy(() => import('./pages/StartupProfile'))
 const Preview = React.lazy(() => import('./pages/StartupProfile/preview'))
-// const PrivateProject = React.lazy(() =>
-//   import('./pages/StartupProfile/components/PrivateProject')
-// )
+
 const SavedMedia = React.lazy(() => import('./pages/Saved'))
 const Resubscribe = React.lazy(() => import('./pages/Resubscribe'))
 const StartupLive = React.lazy(() => import('./pages/StartupLive'))
@@ -100,16 +97,6 @@ function Router(props) {
   const clientBaseURL = `${process.env.REACT_APP_CLIENT_BASE_URL}`
 
   return (
-    // return window.location.href.includes(`public`) ? (
-    //   <React.Fragment>
-    //     <Route
-    //       exact
-    //       path='/public-portfolio/:username'
-    //       component={PublicPortfolio}
-    //     />
-    //     <Route exact path='/public-profile/:username' component={PublicProfile} />
-    //   </React.Fragment>
-    // ) : (
     <IntlProvider
       locale={currentAppLocale.locale}
       messages={currentAppLocale.messages}
@@ -125,7 +112,6 @@ function Router(props) {
               <Route path='/portfolio' component={Portfolio} />
               <Route path='/my-students' component={MyStudents} />
               <Route path='/resources' component={Resources} />
-              {/* <Route path='/edit-portfolio' component={EditPortfolio} /> */}
               <Route
                 exact
                 path='/edit-portfolio'
