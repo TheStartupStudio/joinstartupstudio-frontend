@@ -93,7 +93,7 @@ export default function MediaLightbox(props) {
       <div className='media-lightbox__inner'>
         <div className='media-lightbox__overlay' onClick={closeLightbox} />
 
-        <div className='media-lightbox__content-scroll'>
+        <div className='media-lightbox__content-scroll' onClick={closeLightbox}>
           <div className='media-lightbox__content'>
             <button className='media-lightbox__close' onClick={closeLightbox}>
               <FontAwesomeIcon icon={faTimes} />
