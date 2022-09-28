@@ -127,49 +127,54 @@ const EditStudentModal = (props) => {
       keyboard={false}
       className='edit-profile-modal'
     >
-      <Modal.Header className='pb-0 general-modal-header mx-4 row'>
-        <div className='col-4 px-0'>
-          <p className='mt-5 mb-0 view-student-title pb-0 pt-auto order-1 order-lg-1'>
-            VIEW STUDENT
-          </p>
+      <Modal.Header className='pb-0 general-modal-header mt-4 mx-4 row position-relative'>
+        <div className='col-12 col-lg-3 p-0'>
+          <p className='view-student-title p-0 m-0'>VIEW STUDENT</p>
         </div>
-        <div className='col-12 col-lg-5 certification-status px-0 pb-0 mt-auto mb-1 order-3 order-lg-2'>
-          <p className='float-md-end mt-4 mt-md-auto pt-auto mb-0 pb-0 pe-3'>
-            {' '}
-            CERTIFICATION STATUS
-            <span
-              style={{ cursor: 'pointer' }}
-              className={`ms-2 mb-0 pb-0 pt-auto  ${
-                props.data.certificat ? 'statusOk' : 'statusFalse'
-              }`}
-            >
-              ●
-            </span>
-          </p>
-        </div>
-        <div className='col-6 col-lg-3 view-student-portfolio-journals px-0 pb-0 mt-auto mb-1 mx-0 order-2 order-lg-3'>
-          <div className='float-end'>
-            <button
-              type='button'
-              className='btn-close pt-3 mt-0 mb-lg-2 mt-2 mt-lg-0 float-end my-auto'
-              aria-label='Close'
-              onClick={() => {
-                props.onHide()
-              }}
-            />
-            <div className='mt-auto me-4'>
+        <div className='col-12 col-lg-9 mt-2 pb-2 pe-lg-4'>
+          <div className='row align-items-end justify-content-end'>
+            <div className='col-12 col-sm-7 col-lg-5 certification-status d-flex align-items-end justify-content-lg-end p-0'>
+              <p className='p-0 m-0'>CERTIFICATION STATUS</p>
+              <span
+                style={{ cursor: 'pointer', paddingBottom: '3px' }}
+                className={`ms-1 ${
+                  props.data.certificat ? 'statusOk' : 'statusFalse'
+                }`}
+              >
+                ●
+              </span>
+            </div>
+            <div className='col-12 col-sm-5 col-lg-4 view-student-portfolio-journals d-flex justify-content-start justify-content-sm-end align-items-end pe-lg-4 p-0'>
               <Link
                 to={`/user-portfolio/${props.data.username}`}
-                className='pe-2'
+                className='d-flex'
               >
-                <span className='border-end pe-2'>Portfolio</span>
+                <span>Portfolio</span>
               </Link>
-              <Link to={`/students-journals/${props.data.id}`} className='pe-2'>
-                <span className='ps-2'>Journals</span>
+              <span
+                className='px-1 my-auto fw-normal'
+                style={{ color: '#707070' }}
+              >
+                |
+              </span>
+              <Link
+                to={`/students-journals/${props.data.id}`}
+                className='d-flex'
+              >
+                <span>Journals</span>
               </Link>
             </div>
           </div>
         </div>
+        <button
+          type='button'
+          className='btn-close edit-student-close'
+          style={{ position: 'absolute', top: '0px', right: 0 }}
+          aria-label='Close'
+          onClick={() => {
+            props.onHide()
+          }}
+        />
         {/* <div className='col-1 px-0'>
           
         </div> */}

@@ -287,26 +287,7 @@
     margin: 3px !important;
   }
 }
-@media (min-width: 870px) and (max-width: 900px) {
-  .videoPlayerModal .modal-dialog {
-    margin-top: 11%;
-  }
-}
-@media (min-width: 600px) and (max-width: 870px) {
-  .videoPlayerModal .modal-dialog {
-    margin-top: 28%;
-  }
-}
-@media (min-width: 200px) and (max-width: 600px) {
-  .videoPlayerModal .modal-dialog {
-    margin-top: 60%;
-  }
-}
-@media (min-width: 500px) and (max-width: 580px) {
-  .videoPlayerModal .modal-dialog {
-    margin-top: 28%;
-  }
-}
+
 @media (max-width: 1024px) {
   .beyond-your-course-video-thumb-icon {
     /* top: 65%;

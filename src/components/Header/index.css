@@ -35,23 +35,20 @@
     height: 32px;
   }
 }
-
 input,
 textarea {
   background: #e5e5e54d;
   border: 0;
 }
-
 .image-upload-widget {
   background-color: #e4e4e4;
   width: 100;
   padding: 5px;
   border: 0;
 }
-.modal {
+.TnC_modal_dialog.modal {
   text-align: center;
 }
-
 @media screen and (min-width: 768px) {
   .TnC_modal_dialog.modal:before {
     display: inline-block;
@@ -60,7 +57,6 @@ textarea {
     height: 100%;
   }
 }
-
 .TnC_modal_dialog > .modal-dialog {
   display: inline-block;
   text-align: left;
@@ -71,14 +67,12 @@ textarea {
   letter-spacing: 1px;
   color: #231f20;
 }
-
 #TnC-modal input[type='checkbox'] {
   border: 2px solid #707070;
   opacity: 1;
   height: 16px;
   width: 16px;
 }
-
 #TnC-modal label {
   font: normal normal bold 13px Montserrat;
   letter-spacing: 0.68px;

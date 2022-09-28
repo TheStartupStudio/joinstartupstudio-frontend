@@ -293,8 +293,8 @@ const AddStudentsModal = (props) => {
               <p className='supported-formats mb-0'>Supported formats: -</p>
               <p className='supported-formats-description mb-0'>.csv only</p>
             </div>
-            <div className='col-12 col-md-5 pt-3 ps-0'>
-              <label className='text-center border-1 col-6 col-md-12'>
+            <div className='col-12 col-md-5 pt-3 row justify-content-end'>
+              <label className='text-center border-1 col-12 col-sm-6 col-md-12 ps-0 pe-0'>
                 <input
                   type='file'
                   id='csvFile'
@@ -317,28 +317,30 @@ const AddStudentsModal = (props) => {
                   />
                 </div>
               </label>
-              <button
-                className='lts-button px-3 upload-user-button float-end mt-md-3 col-5 text-center col-md-auto'
-                disabled={csvLoading || loading}
-                onClick={
-                  isUploaded
-                    ? () => {
-                        setCsvLoading(true)
-                        csvSubmit()
-                      }
-                    : () => {
-                        toast.error(
-                          'You need to upload a csv file before submit'
-                        )
-                      }
-                }
-              >
-                {csvLoading ? (
-                  <span className='spinner-border spinner-border-sm' />
-                ) : (
-                  'UPLOAD USER FILE CSV'
-                )}
-              </button>
+              <div className='col-12 col-sm-6 col-md-auto mt-2 mt-sm-0 mt-md-3 pe-0 ps-0 ps-sm-2'>
+                <button
+                  className='lts-button px-3 upload-user-button float-end mt-md-3 text-center'
+                  disabled={csvLoading || loading}
+                  onClick={
+                    isUploaded
+                      ? () => {
+                          setCsvLoading(true)
+                          csvSubmit()
+                        }
+                      : () => {
+                          toast.error(
+                            'You need to upload a csv file before submit'
+                          )
+                        }
+                  }
+                >
+                  {csvLoading ? (
+                    <span className='spinner-border spinner-border-sm' />
+                  ) : (
+                    'UPLOAD USER FILE CSV'
+                  )}
+                </button>
+              </div>
             </div>
             <div className='row mx-0 ps-0'>
               <p className='add-individual mx-0 px-0 mt-2 mb-0'>

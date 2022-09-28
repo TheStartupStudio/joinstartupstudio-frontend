@@ -41,9 +41,14 @@
   letter-spacing: 0px;
   color: #707070;
   opacity: 1;
+  overflow: hidden;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .upload-user-button {
   width: 219px !important;
+  height: 48px !important;
 }
 /* .upload-user-button {
   background: #01c5d1;
@@ -237,13 +242,12 @@ select {
   opacity: 1;
 }
 .statusOk {
-  font-size: 30px;
+  font-size: 25px;
   color: #99cc33;
-  margin-bottom: -10px;
 }
 
 .statusFalse {
-  font-size: 30px;
+  font-size: 25px;
   color: #ea3b97;
 }
 .view-student-portfolio-journals span {
@@ -317,11 +321,17 @@ select {
     width: 100px;
     margin: 0px 10px;
   }
+}
 
-  .students-transfer-modal .transfer-dialog {
+@media (max-width: 991px) {
+  .edit-student-close {
+    top: -5px !important;
   }
 }
 
-/* .students-transfer-modal .students-info p {
-  font-size: 14px;
-} */
+@media (max-width: 899px) {
+  .upload-user-button {
+    width: 100% !important;
+    font-size: 12px;
+  }
+}
