@@ -19,6 +19,7 @@ import { detectFoulWords, removeHtmlFromString } from '../../utils/helpers'
 import {
   faPlus,
   faPencilAlt,
+  faTrash,
   faTrashAlt
 } from '@fortawesome/free-solid-svg-icons'
 import FoulWords from '../../utils/FoulWords'
@@ -26,7 +27,6 @@ import { NOTES } from '../../utils/constants'
 import DeleteNoteModal from '../../components/Modals/Notes/DeleteNoteModal'
 import { toast } from 'react-toastify'
 import { removeNoteFromState } from '../../redux'
-import './index.css'
 
 function MyNotes(props) {
   const id = useParams().id
@@ -36,11 +36,10 @@ function MyNotes(props) {
   const [editedDate, setEditedDate] = useState('')
   const [contentId, setContentId] = useState('')
   const [searchedNotes, setSearchedNote] = useState('')
-  const [deleteNoteModal, setDeleteNoteModal] = useState(false)
   const [notesOrder, setNotesOrder] = useState('')
   const [editNote, setEditNote] = useState(false)
   const [showNote, setShowNote] = useState(false)
-  const currentLanguage = useSelector((state) => state.lang.locale)
+  // const currentLanguage = useSelector((state) => state.lang.locale)
   const notes = useSelector((state) => state.course.notes)
   const [showAddNotesModal, setShowAddNotesModal] = useState(false)
   // Prompt Logic
@@ -48,7 +47,7 @@ function MyNotes(props) {
   const [textEdited, setTextEdited] = useState(false)
   const [showNotSavedModal, setShowNotSavedModal] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
-
+  const [deleteNoteModal, setDeleteNoteModal] = useState(false)
   const { user } = useSelector((state) => state.user.user)
   const history = useHistory()
   const unblockHandle = useRef()
@@ -57,13 +56,6 @@ function MyNotes(props) {
   const showModal = (location) => {
     setNextTarget(location)
     setShowNotSavedModal(true)
-  }
-
-  const deleteNote = async () => {
-    dispatch(removeNoteFromState(id))
-    const redirect = notes.filter((note) => note.id != id)[0].id
-    history.push(`${redirect}`)
-    setDeleteNoteModal(false)
   }
 
   const showAddModal = () => {
@@ -84,6 +76,14 @@ function MyNotes(props) {
       ['bold', 'italic', 'underline'],
       [{ list: 'ordered' }, { list: 'bullet' }]
     ]
+  }
+
+  const deleteNote = async () => {
+    dispatch(removeNoteFromState(id))
+    const redirect = notes.filter((note) => note.id != id)[0].id
+    history.push(`${redirect}`)
+    setDeleteNoteModal(false)
+    // console.log(redirect, 'redirect')
   }
 
   const quillFormats = [
@@ -327,17 +327,20 @@ function MyNotes(props) {
                                             ' my-notes' ? (
                                               note.title
                                             ) : (
-                                              <IntlMessages id={note.title} />
+                                              <IntlMessages
+                                                id={note.title}
+                                                defaultMessage={`${note.title}`}
+                                              />
                                             )}
                                           </h5>
                                         )}
                                         <span>
                                           {moment(note.createdAt)
-                                            .locale(currentLanguage)
+                                            // .locale(currentLanguage)
                                             .format('MMM. DD, YYYY')}{' '}
                                           | <span className='ms-2'></span>
                                           {moment(note.createdAt)
-                                            .locale(currentLanguage)
+                                            // .locale(currentLanguage)
                                             .format('hh:mma')}
                                         </span>
                                       </Link>
@@ -352,10 +355,18 @@ function MyNotes(props) {
                 </div>
                 <div className='col-sm-12 col-lg-8 my-notes-content'>
                   <h5 className='mt-3'>
-                    {noteTitle && <IntlMessages id={`${noteTitle}`} />}
+                    {noteTitle && (
+                      <IntlMessages
+                        id={`${noteTitle}`}
+                        defaultMessage={`${noteTitle}`}
+                      />
+                    )}
                   </h5>
                   <div className='my-notes-edited'>
-                    <IntlMessages id='my_notes.edited' />
+                    <IntlMessages
+                      id='my_notes.edited'
+                      defaultMessage={`my_notes.edited`}
+                    />
                     <span
                       style={{
                         paddingRight: '2px',
@@ -365,28 +376,28 @@ function MyNotes(props) {
                     >
                       {editedDate
                         ? moment(editedDate)
-                            .locale(currentLanguage)
+                            // .locale(currentLanguage)
                             .format('MMM. DD, YYYY')
                         : null}
                       <span className='mx-1' />
                       {editedDate
                         ? moment(editedDate)
-                            .locale(currentLanguage)
+                            // .locale(currentLanguage)
                             .format('hh:mm:ss')
                         : null}
                     </span>
                     {editNote ? (
                       <>
+                        {' '}
                         <Link
                           to='#'
-                          className='save-button col-white float-end'
+                          className='save-button col-white ms-auto float-end'
                           style={{
-                            marginLeft: 'auto',
                             marginTop: '-1px'
                           }}
                           onClick={handleSubmit}
                         >
-                          <IntlMessages id='my_notes.save_note' />{' '}
+                          <IntlMessages id='my_notes.save_note' />
                         </Link>
                         <Link
                           to='#'
@@ -403,15 +414,14 @@ function MyNotes(props) {
                       <>
                         <Link
                           to='#'
-                          className='notes-branding-color'
                           style={{ marginLeft: 'auto', marginTop: '-1px' }}
                           onClick={() => setEditNote(true)}
                         >
                           <FontAwesomeIcon
                             icon={faPencilAlt}
-                            className='plus-icon float-end notes-branding-color'
+                            className='plus-icon float-end'
                             style={{
-                              width: '18px',
+                              width: '22px',
                               height: '22px',
                               color: '#21c5d0'
                             }}
@@ -421,13 +431,12 @@ function MyNotes(props) {
                           to='#'
                           style={{ marginLeft: '50px', marginTop: '-1px' }}
                           onClick={() => setDeleteNoteModal(true)}
-                          className='notes-branding-color'
                         >
                           <FontAwesomeIcon
                             icon={faTrashAlt}
-                            className='plus-icon float-end me-3 notes-branding-color'
+                            className='plus-icon float-end me-4'
                             style={{
-                              width: '18px',
+                              width: '22px',
                               height: '22px',
                               color: '#21c5d0'
                             }}
@@ -470,15 +479,11 @@ function MyNotes(props) {
                         className='my-notes-edited created-in ms-1 d-flex justify-content-start'
                         style={{ marginTop: '20px' }}
                       >
-                        <IntlMessages id='my_notes.created_in' />
-                        {/* <span className='ml-1 blue-text ms-2 text-uppercase'>
-                          {createdIn === 'master-classes' ||
-                          createdIn === 'guidance-encouragement' ? (
-                            <IntlMessages id='navigation.beyond_your_course' />
-                          ) : createdIn === 'my-note' ? (
-                            <IntlMessages id='content.my_notes' />
-                          ) : null}{' '}
-                        </span> */}
+                        <IntlMessages
+                          id='my_notes.created_in'
+                          defaultMessage={'my_notes.created_in'}
+                        />
+
                         <Link
                           className='blue-text created-in'
                           to={
@@ -511,33 +516,6 @@ function MyNotes(props) {
                               : 'My Notes'}
                           </p>
                         </Link>
-                        {/* <Link
-                            to={
-                              createdIn === 'startup-live'
-                                ? '/startup-live'
-                                : createdIn === 'startup-live-videos'
-                                ? `/startup-live/video/${contentId}`
-                                : createdIn === 'guidance-encouragement'
-                                ? `/encouragement/video/${contentId}`
-                                : createdIn === 'master-classes'
-                                ? `/master-classes/video/${contentId}`
-                                : null
-                            }
-                          > */}
-                        {/* {createdIn === 'startup-live' ? '' : ': '} */}
-                        {/* {noteTitle && (
-                            <FormattedMessage id={`${noteTitle}`}>
-                              {(noteTitle) => (
-                                <p
-                                  className='d-inline-block'
-                                  style={{ fontSize: '14px !important' }}
-                                >
-                                  {noteTitle}
-                                </p>
-                              )}
-                            </FormattedMessage> */}
-                        {/* )} */}
-                        {/* </Link> */}
                       </div>
                     </div>
                   )}
@@ -637,18 +615,21 @@ function MyNotes(props) {
                                               ' my-notes' ? (
                                                 note.title
                                               ) : (
-                                                <IntlMessages id={note.title} />
+                                                <IntlMessages
+                                                  id={note.title}
+                                                  onError={() => alert('error')}
+                                                />
                                               )}
                                             </h5>
                                           )}
                                           <span>
-                                            {moment(note.createdAt)
-                                              .locale(currentLanguage)
-                                              .format('MMM DD, YYYY')}{' '}
+                                            {moment(note.createdAt).format(
+                                              'MMM DD, YYYY'
+                                            )}{' '}
                                             |{' '}
-                                            {moment(note.createdAt)
-                                              .locale(currentLanguage)
-                                              .format('hh:mma')}
+                                            {moment(note.createdAt).format(
+                                              'hh:mma'
+                                            )}
                                           </span>
                                         </Link>
                                       </li>
@@ -678,41 +659,69 @@ function MyNotes(props) {
                         className='ms-1'
                       >
                         {editedDate
-                          ? moment(editedDate)
-                              .locale(currentLanguage)
-                              .format('MMM, DD, YYYY')
+                          ? moment(editedDate).format('MMM, DD, YYYY')
                           : null}{' '}
                         {editedDate
-                          ? moment(editedDate)
-                              .locale(currentLanguage)
-                              .format('hh:mm:ss')
+                          ? moment(editedDate).format('hh:mm:ss')
                           : null}
                       </span>
                       {editNote ? (
-                        <Link
-                          to='#'
-                          className='save-button col-white'
-                          style={{ marginLeft: 'auto' }}
-                          onClick={handleSubmit}
-                        >
-                          <IntlMessages id='my_notes.save_note' />{' '}
-                        </Link>
-                      ) : notes.length > 0 ? (
-                        <Link
-                          to='#'
-                          style={{ marginLeft: 'auto' }}
-                          onClick={() => setEditNote(true)}
-                        >
-                          <FontAwesomeIcon
-                            icon={faPencilAlt}
-                            className='plus-ico'
+                        <>
+                          <Link
+                            to='#'
+                            className='save-button col-white float-end'
                             style={{
-                              width: '22px',
-                              height: '22px',
-                              color: '#707070'
+                              marginLeft: 'auto',
+                              marginTop: '-1px'
                             }}
-                          />
-                        </Link>
+                            onClick={handleSubmit}
+                          >
+                            <IntlMessages id='my_notes.save_note' />{' '}
+                          </Link>
+                          <Link
+                            to='#'
+                            className='save-button col-white ms-auto float-end me-2'
+                            style={{
+                              marginTop: '-1px'
+                            }}
+                            onClick={() => setEditNote(false)}
+                          >
+                            <span>Cancel</span>
+                          </Link>
+                        </>
+                      ) : notes.length > 0 ? (
+                        <>
+                          <Link
+                            to='#'
+                            style={{ marginLeft: 'auto', float: 'right' }}
+                            onClick={() => setEditNote(true)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faPencilAlt}
+                              className='plus-ico'
+                              style={{
+                                width: '22px',
+                                height: '22px',
+                                color: '#707070'
+                              }}
+                            />
+                          </Link>
+                          <Link
+                            to='#'
+                            style={{ marginLeft: '50px', marginTop: '-1px' }}
+                            onClick={() => setDeleteNoteModal(true)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faTrashAlt}
+                              className='plus-icon float-end me-4'
+                              style={{
+                                width: '22px',
+                                height: '22px',
+                                color: '#21c5d0'
+                              }}
+                            />
+                          </Link>
+                        </>
                       ) : null}
                     </div>
                     {textQuillStandart && (
