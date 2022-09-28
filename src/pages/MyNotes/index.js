@@ -666,29 +666,26 @@ function MyNotes(props) {
                           : null}
                       </span>
                       {editNote ? (
-                        <>
+                        <div className='row mt-2 me-auto'>
                           <Link
                             to='#'
-                            className='save-button col-white float-end'
+                            className='save-button col-6 order-2 col-white float-md-end mt-4'
                             style={{
-                              marginLeft: 'auto',
-                              marginTop: '-1px'
+                              marginLeft: 'auto'
                             }}
                             onClick={handleSubmit}
                           >
-                            <IntlMessages id='my_notes.save_note' />{' '}
+                            <IntlMessages id='my_notes.save_note' />
                           </Link>
                           <Link
                             to='#'
-                            className='save-button col-white ms-auto float-end me-2'
-                            style={{
-                              marginTop: '-1px'
-                            }}
+                            className='save-button col-4 col-white mt-auto order-1 ms-auto float-end me-2'
+                            style={{}}
                             onClick={() => setEditNote(false)}
                           >
                             <span>Cancel</span>
                           </Link>
-                        </>
+                        </div>
                       ) : notes.length > 0 ? (
                         <>
                           <Link
