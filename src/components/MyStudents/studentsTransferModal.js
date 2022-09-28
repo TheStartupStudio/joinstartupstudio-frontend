@@ -424,7 +424,7 @@ const StudentsTransferModal = (props) => {
                     <tr>
                       <td
                         colSpan={6}
-                        // className='pt-4'
+                        className='text-center'
                         style={{ fontSize: '14px' }}
                       >
                         You dont have new transfer requests!
@@ -491,7 +491,7 @@ const StudentsTransferModal = (props) => {
                   <tr>
                     <td
                       colSpan={6}
-                      // className='pt-4'
+                      className='text-center'
                       style={{ fontSize: '14px' }}
                     >
                       You dont have new transfer requests!
