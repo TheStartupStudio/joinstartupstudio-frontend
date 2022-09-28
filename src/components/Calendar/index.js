@@ -35,7 +35,7 @@ export default function Calendar() {
                 <Event
                   dateTime={'Thursday, Sept. 29th'}
                   title={
-                    ' Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall'
+                    'Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall'
                   }
                   auther='Anastasia Hall'
                 />

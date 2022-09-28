@@ -27,8 +27,8 @@ const Header = (props) => {
   return (
     <div className='w-100 row'>
       <div className='col-12 col-md-6'>
-        <h3 className='page-title-inner'>STUDENT JOURNAL VIEW</h3>
-        <span className='title-description'>View your student journals.</span>
+        <h3 className='page-title mb-0 pb-0'>STUDENT JOURNAL VIEW</h3>
+        <span className='page-description'>View your student journals.</span>
       </div>
       <div className='col-12 col-md-6 ps-4'>
         <div className='user-info'>

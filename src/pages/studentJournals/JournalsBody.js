@@ -204,7 +204,7 @@ function JournalsBody(props) {
                       </span>
                     </div>
                     <div className='mt-2 col-12 justify-content-lg-end row m-0 p-0'>
-                      <div className='user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 col-xxl-2'>
+                      <div className='user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 d-flex justify-content-md-end'>
                         <img
                           className='rounded-circle user-image'
                           src={
@@ -218,7 +218,9 @@ function JournalsBody(props) {
                               : 'no image'
                           }
                         />
-                        <span className='user-name ps-2'>{user?.name}</span>
+                        <span className='user-name ps-2 my-auto'>
+                          {user?.name}
+                        </span>
                       </div>
                       <div className='col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0'>
                         <Select

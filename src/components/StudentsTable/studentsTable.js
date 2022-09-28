@@ -639,7 +639,7 @@ export default function StudentsTable(props) {
         cell: (record) => {
           return (
             <>
-              <div className='w-50'>
+              <div className='table-edit-dropdown'>
                 {currentEditingStudent?.id === record.id ? (
                   <Select
                     menuPortalTarget={document.body}
@@ -675,7 +675,7 @@ export default function StudentsTable(props) {
         cell: (record) => {
           return (
             <>
-              <div className='w-50'>
+              <div className='table-edit-dropdown'>
                 {currentEditingStudent?.id === record.id ? (
                   <Select
                     menuPortalTarget={document.body}
@@ -773,7 +773,7 @@ export default function StudentsTable(props) {
         <div className='row'>
           <div className='col-12'>
             <div className='row'>
-              <div className='col-6'>
+              <div className='col-12 col-md-6'>
                 <div className='d-flex flex-row switch_students_options align-items-end h-100'>
                   <div
                     className={`${
@@ -842,7 +842,7 @@ export default function StudentsTable(props) {
                   </div>
                 </div>
               </div>
-              <div className='col-6 text-end setAddStudents d-flex justify-content-end align-items-end'>
+              <div className='col-12 col-md-6 mt-2 mt-md-0 text-end setAddStudents d-flex justify-content-md-end justify-content-start align-items-end'>
                 <p
                   className='p-0 m-0'
                   role={'button'}
