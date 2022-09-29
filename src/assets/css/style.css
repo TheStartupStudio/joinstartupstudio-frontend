@@ -1051,7 +1051,7 @@ input[type='file'] {
 }
 .edit-modal input,
 .edit-label {
-  height: 36px;
+  height: 42px;
   border: 1px solid #bbbdbf;
   opacity: 1;
   width: 100%;
@@ -4002,10 +4002,6 @@ ul.sidebar-menu-item a {
 
 ul.sidebar-menu-item .collapse a {
   font-weight: 400;
-}
-
-.edit-bio-upload-image span {
-  margin-top: -4px;
 }
 
 .saved-videos-widget .view-all {

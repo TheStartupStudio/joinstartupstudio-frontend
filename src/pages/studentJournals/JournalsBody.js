@@ -30,7 +30,6 @@ function JournalsBody(props) {
   const history = useHistory()
   let [journals, setJournals] = useState([])
   let [loaded, setLoaded] = useState(false)
-  let [journalActive, setJournalActive] = useState('no')
   const [journalsData, setJournalsData] = useState()
   const [fetchingUserData, setFetchingUserData] = useState(true)
   const [notAllowed, setNotAllowed] = useState(false)
@@ -73,34 +72,13 @@ function JournalsBody(props) {
           history.push(`${props.match.url}/${data.journals[0].id}`)
         }
       }
-      if (journalActive == 'no') {
-        activeteFirstJournal()
-      }
     } catch (err) {}
   }
 
-  function noJournalSelected() {
-    setJournalActive('no')
-    if (loaded) {
-      activeteFirstJournal()
-    }
-  }
-
-  function activeteFirstJournal() {
-    if (journals.length > 0) {
-      if (journals[0].children && journals[0].children.length > 0) {
-        history.push(`${props.match.url}/${journals[0].children[0].id}`)
-      } else {
-        history.push(`${props.match.url}/${journals[0].id}`)
-      }
-    }
-  }
-
   function journalChanged(journal) {
-    // let updatedJournals = updateJournalEntry(journals, journal);
-    // setJournals(updatedJournals);
     getJournals(false)
   }
+
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(changeSidebarState(false))

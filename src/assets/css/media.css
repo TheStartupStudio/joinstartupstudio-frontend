@@ -1621,14 +1621,6 @@
 }
 
 @media (max-width: 767px) {
-  .edit-bio-upload-image span {
-    margin-top: 3px;
-  }
-
-  .edit-bio-upload-image svg {
-    margin-top: 1px;
-  }
-
   .portfolio-user-info {
     margin-top: 20px;
     width: 100%;

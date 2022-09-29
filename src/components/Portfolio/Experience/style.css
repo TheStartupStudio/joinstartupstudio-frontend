@@ -36,6 +36,10 @@
   color: #707070;
 }
 
+.image-upload .fa-file-upload {
+  margin: auto;
+}
+
 .edit-experience-modal input {
   height: 48px;
   margin-right: 0px !important;
