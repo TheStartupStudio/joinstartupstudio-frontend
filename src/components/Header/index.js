@@ -30,6 +30,7 @@ import { faBell } from '@fortawesome/free-solid-svg-icons'
 import socket from '../../utils/notificationSocket'
 import Notifications from './notifications'
 import TermAndCondition from './TermAndCondition'
+import StudentOfInstructors from '../GetInstructorStudents/index.js'
 
 function Header(props) {
   const { user } = useSelector((state) => state.user.user)
@@ -58,6 +59,8 @@ function Header(props) {
     useState(false)
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
   const [showDropDown, setShowDropDown] = useState(false)
+  const [countStudentOfInstructor, setCountStudentOfInstructor] =
+    useState(false)
   // const profileImage = useSelector((state) => state.user.profileImage)
   const name = useSelector((state) => state.user.user.user.name)
   const [notifications, setNotifications] = useState([])
@@ -446,6 +449,16 @@ function Header(props) {
                         className='dropdown-item py-2 dropdown-menu-hover'
                         to='#'
                         onClick={() => {
+                          setCountStudentOfInstructor(true)
+                          setShowDropDown((preState) => !preState)
+                        }}
+                      >
+                        Admin panel
+                      </Link>
+                      <Link
+                        className='dropdown-item py-2 dropdown-menu-hover'
+                        to='#'
+                        onClick={() => {
                           showModal()
                           setShowDropDown((preState) => !preState)
                         }}
@@ -700,6 +713,10 @@ function Header(props) {
           setOpenTnCModal(false)
           dispatch(updateTnC())
         }}
+      />
+      <StudentOfInstructors
+        onShow={countStudentOfInstructor}
+        onHide={() => setCountStudentOfInstructor(false)}
       />
     </div>
   )

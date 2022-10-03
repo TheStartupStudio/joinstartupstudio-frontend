@@ -24,6 +24,8 @@ import { ShowMessenger } from '../../utils/helpers'
 import { NotesButton } from '../../components/Notes'
 import Chat from '../../components/NoteAndChat/chat'
 import Countdown from 'react-countdown'
+import { EmailToInstructorModal } from '../StartupProfile/components/EmailToInstructorModal'
+import StartupMailer from '../../components/StartupLiveMailer'
 
 function StartupLive() {
   const firstEventTime = new Date('2022-08-30T16:30:00').getTime()
@@ -505,6 +507,7 @@ function StartupLive() {
           </div>
         </div>
         <div className='col-12 col-xl-3 px-3'>
+          <StartupMailer />
           <div className='msg-widget-startup-live d-none'>
             {/* {selectedStartupLive && (
               <Chat room={selectedStartupLive.value.room} />
