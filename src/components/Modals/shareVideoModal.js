@@ -144,7 +144,7 @@ export const ShareVideoModal = (props) => {
         keyboard={false}
         className='edit-experience-modal share-video-modal px-4'
       >
-        <Modal.Header className='pb-0 general-modal-header'>
+        <Modal.Header className='pb-0 mx-4 modal-header'>
           <h3 className='mt-4 mb-0 contact-bio'>
             SHARE VIDEO WITH A CONNECTION
           </h3>

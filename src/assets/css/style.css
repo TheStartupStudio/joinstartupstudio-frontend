@@ -3289,7 +3289,7 @@ wave > wave:first-child {
   background: #f8f7f7;
   padding: 15px;
   display: flex;
-  height: 600px;
+  min-height: 600px;
 }
 .page-card--reverse {
   flex-direction: row-reverse;
