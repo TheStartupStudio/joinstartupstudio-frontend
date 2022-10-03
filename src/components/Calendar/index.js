@@ -5,6 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import es from 'date-fns/locale/es' // the locale you want
 import Event from '../Event'
 import './index.css'
+import moment from 'moment'
 
 // document.getElementsByClassName(
 //   'react-datepicker__day--highlighted'
@@ -21,8 +22,8 @@ export default function Calendar() {
       title:
         'Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall',
       author: 'Anastasia Hall',
-      date: '2022/09/29',
-      time: '12:44 pm'
+      date: '2022/10/04',
+      time: '01:00 pm'
     }
   ])
 
@@ -39,31 +40,9 @@ export default function Calendar() {
               locale={currentLanguage}
               selected={startDate}
               onChange={(date) => setStartDate(date)}
-              // onSelect={(e) => {
-              //   setSelectedDate(e)
-              //   setTodayEvents((old) => [])
-              //   events.map((event) => {
-              //     if (
-              //       moment(new Date(event.date)).format('MMM Do YY') ==
-              //       moment(new Date(e)).format('MMM Do YY')
-              //     ) {
-              //       setTodayEvents((old) => [...old, event])
-              //     }
-              //   })
-              // }}
-              // renderCalendarInfo={'renderCalendarInfo'}
-              // weekLabel={'test'}
-              // className='red-border'
               highlightDates={dates}
-              // onChange={(date) => {
-              //   alert(new Date(date))
-              //   setStartDate(date)
-              // }}
               inline
-              // onDayMouseEnter={(day) => console.log(day, 'alter')}
-              // onSelect={(day) => console.log(day, 'alter')}
               onFocus={'test'}
-              // onBlur={(e) => 4 == 4 && <Info />}
               autoFocus={true}
             />
           </div>
@@ -74,8 +53,6 @@ export default function Calendar() {
               <h4 className='upcoming-events-title mt-4 mt-lg-5 mt-xl-4'>
                 UPCOMING LIVE EVENTS
                 <br />
-                {/* {moment(selectedDate).format('ll')} */}
-                {/* <IntlMessages id='dashboard.upcoming_events' /> */}
               </h4>
             )}
             <div>
@@ -99,13 +76,25 @@ export default function Calendar() {
               )}
               <React.Fragment>
                 {events.map((event, index) => (
-                  <Event
-                    date={event.date}
-                    time={event.time}
-                    title={event.title}
-                    key={index}
-                    author={event.author}
-                  />
+                  <>
+                    {new Date(
+                      moment(event.date).format('YYYY.MM.DD')
+                    ).getTime() /
+                      1000 <
+                    new Date().getTime() / 1000 ? (
+                      false
+                    ) : (
+                      <>
+                        <Event
+                          date={event.date}
+                          time={event.time}
+                          title={event.title}
+                          key={index}
+                          author={event.author}
+                        />
+                      </>
+                    )}
+                  </>
                 ))}
               </React.Fragment>
             </div>

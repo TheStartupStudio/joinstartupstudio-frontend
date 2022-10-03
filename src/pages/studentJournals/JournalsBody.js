@@ -35,9 +35,11 @@ function JournalsBody(props) {
   const [notAllowed, setNotAllowed] = useState(false)
   const currentLanguage = useSelector((state) => state.lang.locale)
   const [user, setUser] = useState({})
+  const [globalCategory, setGlobalCategory] = useState('lts')
 
   let contentContainer = useRef()
   async function getJournals(category = 'lts', redir = true) {
+    setGlobalCategory(category)
     try {
       let { data } = await axiosInstance
         .get(`/ltsJournals/fromInstructor/`, {
@@ -352,12 +354,9 @@ function JournalsBody(props) {
                                 ) : (
                                   <NavLink
                                     className={
-                                      window.location.pathname.includes(
-                                        'lts-journal'
-                                      ) ||
-                                      window.location.pathname.includes(
+                                      globalCategory == 'lts' ||
+                                      globalCategory ==
                                         'personal-finance-journal'
-                                      )
                                         ? 'accordion-menu__item-toggle'
                                         : ''
                                     }
