@@ -55,6 +55,13 @@ const EditStudentModal = (props) => {
       if (props.data.instructor_id !== value) {
         setNewInstructorId(value)
       }
+
+      console.log(newInstructorId, props.data.instructor_id, value)
+
+      if (newInstructorId !== null && props.data.instructor_id === value) {
+        console.log('reset!')
+        setNewInstructorId(null)
+      }
     } else {
       setData((old) => ({ ...old, [name]: value }))
     }

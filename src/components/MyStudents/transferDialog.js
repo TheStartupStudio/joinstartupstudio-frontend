@@ -5,7 +5,7 @@ export const TransferDialog = (props) => {
   return props.transferDialogData ? (
     <div className='bulk-deleting d-flex justify-content-center px-3 px-md-0'>
       <div className='d-flex h-100 justify-content-center align-items-center flex-column transfer-dialog'>
-        <p className='pb-0 mb-2'>
+        <p className='pb-0 mb-2 text-center'>
           {props.transferDialogData.action === 'delete_pending'
             ? 'Are you sure you want to delete all pending sent student transfer requests?'
             : props.transferDialogData.action === 'delete_approved'

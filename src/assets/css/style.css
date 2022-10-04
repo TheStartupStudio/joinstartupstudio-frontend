@@ -3289,7 +3289,7 @@ wave > wave:first-child {
   background: #f8f7f7;
   padding: 15px;
   display: flex;
-  min-height: 600px;
+  height: 600px;
 }
 .page-card--reverse {
   flex-direction: row-reverse;
@@ -3304,6 +3304,8 @@ wave > wave:first-child {
     width: 100%;
     border-right: none;
     padding-right: 0px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .page-card__content:not(:empty) {
     flex: 1;
@@ -3340,6 +3342,7 @@ wave > wave:first-child {
   overflow-x: hidden;
   overflow-y: auto;
 }
+
 .page-card__content-title {
   font: normal normal 600 15px/14px Montserrat;
   letter-spacing: 0.6px;

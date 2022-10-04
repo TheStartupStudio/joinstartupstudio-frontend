@@ -271,7 +271,7 @@ const StudentsTransferModal = (props) => {
         isUpdatingCondition() && props.onHide()
       }}
       style={{ marginTop: '3.9%' }}
-      className='edit-modal'
+      // className='edit-modal'
     >
       <Modal.Header className='contact-us-title my-auto p-0 mx-4 general-modal-header'>
         <h3 className='mb-0 pt-4 mt-2'>Students Transfer</h3>
