@@ -42,8 +42,8 @@ export default function Calendar() {
               onChange={(date) => setStartDate(date)}
               highlightDates={dates}
               inline
-              onFocus={'test'}
-              autoFocus={true}
+              onFocus={false}
+              autoFocus={false}
             />
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function Calendar() {
                     {new Date(
                       moment(event.date).format('YYYY.MM.DD')
                     ).getTime() /
-                      1000 <
+                      1000 >
                     new Date().getTime() / 1000 ? (
                       false
                     ) : (
