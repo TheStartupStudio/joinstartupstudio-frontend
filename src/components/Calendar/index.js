@@ -14,18 +14,10 @@ import moment from 'moment'
 export default function Calendar() {
   const [startDate, setStartDate] = useState(new Date())
   const currentLanguage = useSelector((state) => state.lang.locale)
+  const [dataTOHide, setDataToHide] = useState(startDate)
   const [selectedDate, setSelectedDate] = useState(startDate)
   const [todayEvents, setTodayEvents] = useState([])
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title:
-        'Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall',
-      author: 'Anastasia Hall',
-      date: '2022/10/04',
-      time: '01:00 pm'
-    }
-  ])
+  const [events, setEvents] = useState([])
 
   let dates = events.map((data) => new Date(data.date))
 
@@ -39,7 +31,10 @@ export default function Calendar() {
             <DatePicker
               locale={currentLanguage}
               selected={startDate}
-              onChange={(date) => setStartDate(date)}
+              onChange={(date) => {
+                console.log(moment(date).format('Y/M/D'))
+                setStartDate(date)
+              }}
               highlightDates={dates}
               inline
               onFocus={false}
