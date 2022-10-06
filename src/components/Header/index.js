@@ -77,6 +77,7 @@ function Header(props) {
           setAllowToShow(false)
         }
       })
+      .catch((e) => e)
   }
 
   /**
@@ -99,7 +100,6 @@ function Header(props) {
     isUserAgredToTnC()
     ReactGA.initialize('UA-130670492-3')
     ReactGA.pageview(window.location.href)
-    hasAccess()
   })
 
   // useEffect(() => {
@@ -145,6 +145,7 @@ function Header(props) {
 
       setUnreadNotifications(res.data.unreadNotifications)
     })
+    hasAccess()
   }, [])
 
   useEffect(

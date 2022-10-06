@@ -37,7 +37,6 @@ const StudentOfInstructors = (props) => {
   }
 
   useEffect(() => {
-    console.log(props.allow)
     if (props.allow) {
       getData()
     }
