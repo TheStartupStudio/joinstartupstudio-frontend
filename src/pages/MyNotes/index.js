@@ -113,9 +113,9 @@ function MyNotes(props) {
   useEffect(
     function () {
       if (notesOrder === 'sortByCreatedDate') {
-        notes.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
+        notes.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)).reverse()
       } else if (notesOrder === 'sortByEditedDate') {
-        notes.sort((a, b) => (a.updatedAt > b.updatedAt ? 1 : -1))
+        notes.sort((a, b) => (a.updatedAt > b.updatedAt ? 1 : -1)).reverse()
       }
     },
     [notesOrder]

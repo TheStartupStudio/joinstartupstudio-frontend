@@ -66,6 +66,18 @@ function Header(props) {
   const [notifications, setNotifications] = useState([])
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [showNotifications, setShowNotifications] = useState(false)
+  const [allowToShow, setAllowToShow] = useState(false)
+  const hasAccess = async () => {
+    await axiosInstance
+      .get('/studentsInstructorss/has-access')
+      .then((response) => {
+        if (response.data.allow) {
+          setAllowToShow(true)
+        } else {
+          setAllowToShow(false)
+        }
+      })
+  }
 
   /**
    * we are using these temporary vars
@@ -87,6 +99,7 @@ function Header(props) {
     isUserAgredToTnC()
     ReactGA.initialize('UA-130670492-3')
     ReactGA.pageview(window.location.href)
+    hasAccess()
   })
 
   // useEffect(() => {
@@ -445,16 +458,20 @@ function Header(props) {
                       >
                         MY PORTFOLIO
                       </Link>
-                      <Link
-                        className='dropdown-item py-2 dropdown-menu-hover'
-                        to='#'
-                        onClick={() => {
-                          setCountStudentOfInstructor(true)
-                          setShowDropDown((preState) => !preState)
-                        }}
-                      >
-                        Admin panel
-                      </Link>
+                      {allowToShow ? (
+                        <Link
+                          className='dropdown-item py-2 dropdown-menu-hover'
+                          to='#'
+                          onClick={() => {
+                            setCountStudentOfInstructor(true)
+                            setShowDropDown((preState) => !preState)
+                          }}
+                        >
+                          Admin panel
+                        </Link>
+                      ) : (
+                        ''
+                      )}
                       <Link
                         className='dropdown-item py-2 dropdown-menu-hover'
                         to='#'
@@ -715,6 +732,7 @@ function Header(props) {
         }}
       />
       <StudentOfInstructors
+        allow={() => allowToShow}
         onShow={countStudentOfInstructor}
         onHide={() => setCountStudentOfInstructor(false)}
       />
