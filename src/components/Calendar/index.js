@@ -12,24 +12,7 @@ export default function Calendar() {
   const currentLanguage = useSelector((state) => state.lang.locale)
   const [selectedDate, setSelectedDate] = useState()
   // eslint-disable-next-line
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title:
-        'Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall',
-      author: 'Anastasia Hall',
-      date: '2022/10/05',
-      time: '12:00 pm'
-    },
-    {
-      id: 2,
-      title:
-        'Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall',
-      author: 'Anastasia Hall',
-      date: '2022/10/06',
-      time: '01:00 pm'
-    }
-  ])
+  const [events, setEvents] = useState([])
 
   let dates = events.map((data) => new Date(data.date))
 
