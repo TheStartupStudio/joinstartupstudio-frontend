@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -12,11 +12,14 @@ import { toast, ToastContainer } from 'react-toastify'
 import { detectFoulWords, removeHtmlFromString } from '../../utils/helpers'
 import FoulWords from '../../utils/FoulWords'
 import { JOURNALS } from '../../utils/constants'
+import { useHistory } from 'react-router-dom'
+import NotSavedModal from '../../components/Modals/notSavedNoteModal'
 
 function LtsJournalReflection(props) {
   const journalId = props.journal.id
   const journalEntryId = props.journalEntry.id
   const entryId = props.entry?.id
+  const history = useHistory()
 
   const currentLanguage = useSelector((state) => state.lang.locale)
 
@@ -25,6 +28,22 @@ function LtsJournalReflection(props) {
   let [saving, setSaving] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
   const loggedUser = useSelector((state) => state.user.user.user)
+  const unblockHandle = useRef()
+  const [showNotSavedModal, setShowNotSavedModal] = useState(false)
+  const [nextTarget, setNextTarget] = useState(null)
+
+  const closeModal = () => setShowNotSavedModal(false)
+
+  const continueWithoutSaving = (location) => {
+    setEditing(false)
+    setShowNotSavedModal(false)
+    history.push(location.pathname)
+  }
+
+  const showModal = (location) => {
+    setNextTarget(location)
+    setShowNotSavedModal(true)
+  }
 
   const quillModules = {
     toolbar: [
@@ -119,6 +138,32 @@ function LtsJournalReflection(props) {
     detectFoulWords(removeHtmlFromString(value), (data) => {
       setFoulWords(data)
     })
+  }
+
+  useEffect(() => {
+    unblockHandle.current = history.block((targetLocation) => {
+      if (
+        !showNotSavedModal &&
+        editing
+        // && props.history.location.pathname != targetLocation.pathname
+      ) {
+        showModal(targetLocation)
+
+        return false
+      }
+      return true
+    })
+    return function () {
+      unblockHandle.current.current && unblockHandle.current.current()
+    }
+  })
+
+  function handleConfirm() {
+    if (unblockHandle) {
+      unblockHandle.current()
+    }
+    // navigate to some other page or do some routing action now
+    // history.push("/any/other/path")
   }
 
   return (
@@ -221,6 +266,11 @@ function LtsJournalReflection(props) {
           )}
         </div>
       </div>
+      <NotSavedModal
+        show={showNotSavedModal}
+        onHide={closeModal}
+        continue={() => continueWithoutSaving(nextTarget)}
+      />{' '}
     </>
   )
 }

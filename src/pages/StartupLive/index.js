@@ -320,189 +320,35 @@ function StartupLive() {
                 </div>
               </div>
             </Row>
-            <Row>
-              <div>
-                <div className='guidance-videos-top mt-5 guidance-encouragement-page-titles '>
-                  <h3>
-                    <IntMessages id='startup_live.startup_archive' />
-                  </h3>
-                </div>
-                <div className='card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start flex-column flex-sm-row'>
-                  {[0, 0].map((item, index) => (
-                    <div
-                      className='card-group mt-4 all-videos-beyond-your-course-videos col-12 col-sm-5 col-md-4 me-4'
-                      key={index}
-                    >
-                      <div
-                        className='card mobile-card'
-                        // style={{ paddingRight: '20px' }}
-                      >
-                        <Link to={'#'}>
-                          <div className='beyond-your-course-video-thumb beyound-all-videos-thumb'>
-                            <div
-                              style={{
-                                position: 'absolute',
-                                right: '10px',
-                                top: '10px'
-                              }}
-                            ></div>
-                            <div>
-                              <img
-                                src={StartupLiveEn}
-                                // style={{ height: '200px' }}
-                                width='100%'
-                                // height=''
-                              />
-                              <div className='beyond-your-course-video-thumb-icon'>
-                                {/* <FontAwesomeIcon icon={faPlay} /> */}
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Row>
             {startupLiveVideos.length > 0 && (
-              <div>
-                <div className='guidance-videos-top mt-5 guidance-encouragement-page-titles '>
-                  <h3>
-                    <IntMessages id='startup_live.startup_archive' />
-                  </h3>
-                  <Link className='guidance-link' to={`/startup-live/videos`}>
-                    <IntMessages id='general.view_all' />
-                  </Link>
-                </div>
-                <div className='beyond-videos-desktop'>
-                  <div className='arrow-icon-1'>
-                    <button
-                      className={`videos-track`}
-                      onClick={() => {
-                        handlePreviousVideo(
-                          3,
-                          startStartupLiveVideoIndex,
-                          endStartupLiveVideoIndex
-                        )
-                      }}
-                      style={
-                        {
-                          // width: '2%'
-                        }
-                      }
-                    >
-                      <FontAwesomeIcon
-                        icon={faChevronLeft}
-                        className='videos-track-icon'
-                        // style={{ marginRight: '20px' }}
+              <Row>
+                <div>
+                  <div className='guidance-videos-top mt-5 guidance-encouragement-page-titles '>
+                    <h3>
+                      <IntMessages id='startup_live.startup_archive' />
+                    </h3>
+                    <Link className='guidance-link' to={`/startup-live/videos`}>
+                      <IntMessages id='general.view_all' />
+                    </Link>
+                  </div>
+                  <div className='row ps-2'>
+                    {startupLiveVideos.map((video) => (
+                      <Video
+                        id={video.id}
+                        key={video.id}
+                        // thumbnail={video.thumbnail}
+                        thumbnail={video.thumbnail}
+                        title={video.title}
+                        description={' '}
+                        page={'startup-live'}
+                        videoData={video}
+                        connections={connections}
+                        type={'view-all'}
                       />
-                    </button>
-                  </div>
-                  <div className='card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100'>
-                    {startupLiveVideos
-                      ?.slice(
-                        startStartupLiveVideoIndex,
-                        endStartupLiveVideoIndex
-                      )
-                      .map((video, index) => (
-                        <Video
-                          id={video.id}
-                          key={index}
-                          thumbnail={
-                            currentLanguage === 'en'
-                              ? StartupLiveEn
-                              : StartupLiveEs
-                          }
-                          title={video.title}
-                          description={video.description}
-                          page={'startup-live'}
-                          videoData={video}
-                          connections={connections}
-                        />
-                      ))}
-                  </div>
-                  <div className='arrow-icon-1 justify-content-start'>
-                    <button
-                      className={`videos-track`}
-                      style={{ width: '2%' }}
-                      onClick={() => {
-                        handleNextVideo(
-                          3,
-                          startStartupLiveVideoIndex,
-                          endStartupLiveVideoIndex
-                        )
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faChevronRight}
-                        className='videos-track-icon'
-                      />
-                    </button>
+                    ))}
                   </div>
                 </div>
-                <div className='row mt-2'>
-                  <div className='beyond-videos-mobile mc-videos-mobile'>
-                    <div className='arrow-icon-1'>
-                      <button
-                        className='videos-track'
-                        onClick={() => {
-                          handlePreviousVideoMobile(
-                            3,
-                            startStartupLiveVideoIndex,
-                            endStartupLiveVideoIndexMobile
-                          )
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faChevronLeft}
-                          className='videos-track-icon'
-                        />
-                      </button>
-                    </div>
-                    <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
-                      {startupLiveVideos
-                        ?.slice(
-                          startStartupLiveVideoIndex,
-                          endStartupLiveVideoIndexMobile
-                        )
-                        .map((video, index) => (
-                          <Video
-                            id={video.id}
-                            key={index}
-                            thumbnail={
-                              currentLanguage === 'en'
-                                ? StartupLiveEn
-                                : StartupLiveEs
-                            }
-                            title={video.title}
-                            description={video.description}
-                            page={'startup-live'}
-                            videoData={video}
-                            connections={connections}
-                          />
-                        ))}
-                    </div>
-                    <div className='arrow-icon-1 justify-content-start'>
-                      <button
-                        className='videos-track'
-                        onClick={() => {
-                          handleNextVideoMobile(
-                            3,
-                            startStartupLiveVideoIndex,
-                            endStartupLiveVideoIndexMobile
-                          )
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faChevronRight}
-                          className='videos-track-icon'
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </Row>
             )}
           </div>
         </div>

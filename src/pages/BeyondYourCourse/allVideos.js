@@ -124,7 +124,9 @@ export default function GuidanceEncouragement() {
                       title={video.title}
                       description={video.description}
                       page={
-                        pageTitle === 'CAREER GUIDANCE'
+                        window.location.href.includes('startup-live/videos')
+                          ? 'startup-live'
+                          : pageTitle === 'CAREER GUIDANCE'
                           ? 'master-classes'
                           : 'encouragement'
                       }

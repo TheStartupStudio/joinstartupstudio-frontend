@@ -16,8 +16,8 @@ import { NotesButton } from '../Notes'
 export default function VideoView(props) {
   const [showVideoModal, setShowVideoModal] = useState(false)
   const [showNotesButton, setShowNotesButton] = useState(false)
-  const url =
-    props.page === 'startup-live' ? `/${props.page}/video/${props.id}` : ''
+  const url = ''
+  // props.page === 'startup-live' ? `/${props.page}/video/${props.id}` : ''
   const [videoData, setVideoData] = useState([])
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function VideoView(props) {
 
               <div
                 onClick={() => {
-                  props.page !== 'startup-live' && setShowVideoModal(true)
+                  setShowVideoModal(true)
                   setShowNotesButton(true)
                 }}
               >
@@ -100,9 +100,7 @@ export default function VideoView(props) {
             </div>
             <div
               className='card-body-video'
-              onClick={() =>
-                props.page !== 'startup-live' && setShowVideoModal(true)
-              }
+              onClick={() => setShowVideoModal(true)}
             >
               <>
                 <h5>
@@ -147,7 +145,11 @@ export default function VideoView(props) {
                     style={{
                       width: '25px',
                       height: '25px',
-                      color: videoData.favorite ? '#F2359D' : '#FFFFFF'
+                      color: videoData.favorite
+                        ? '#F2359D'
+                        : props.page === 'startup-live'
+                        ? 'grey'
+                        : '#FFFFFF'
                     }}
                     onClick={() =>
                       props.type !== 'widget'
@@ -159,18 +161,24 @@ export default function VideoView(props) {
                 <div
                   onClick={() => {
                     setShowNotesButton(true)
-                    props.page !== 'startup-live' && setShowVideoModal(true)
+                    setShowVideoModal(true)
                   }}
                 >
                   <img
                     src={
-                      window.location.href.includes('startup-live')
-                        ? StartupLiveEn
-                        : props.thumbnail
+                      props.thumbnail
+                      // window.location.href.includes('startup-live')
+                      //   ? StartupLiveEn
+                      //   : props.thumbnail
                     }
                     // style={{ height: '200px' }}
                     width='100%'
                     // height=''
+                    alt='#'
+                    style={{
+                      objectFit:
+                        props.page === 'startup-live' ? 'contain' : 'cover'
+                    }}
                   />
                   <div className='beyond-your-course-video-thumb-icon'>
                     <FontAwesomeIcon icon={faPlay} />
@@ -180,7 +188,7 @@ export default function VideoView(props) {
               <div
                 className='card-body-video'
                 onClick={() => {
-                  props.page !== 'startup-live' && setShowVideoModal(true)
+                  setShowVideoModal(true)
                 }}
               >
                 {props.videoData && (
