@@ -432,7 +432,7 @@ export const EducationModal = (props) => {
                 </div>
                 <div className='col-12 col-lg-4 my-auto pt-lg-4'>
                   <input
-                    className='my-2 mt-lg-4'
+                    className='my-2'
                     type='checkbox'
                     name='present'
                     id='present'

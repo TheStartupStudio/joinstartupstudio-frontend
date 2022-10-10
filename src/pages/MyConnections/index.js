@@ -29,21 +29,21 @@ function MyConnections() {
   const [loading, setLoading] = useState(false)
   const [connections, setConnections] = useState([])
   const [connectionRequests, setConnectionRequests] = useState([])
-  const [recommendedConnections, setRecommendedConnections] = useState([])
+  // const [recommendedConnections, setRecommendedConnections] = useState([])
   const [allUsers, setAllUsers] = useState([])
-  const [allTags, setAllTags] = useState([])
-  const [selectedTags, setSelectedTags] = useState([])
+  // const [allTags, setAllTags] = useState([])
+  // const [selectedTags, setSelectedTags] = useState([])
   const [filteredUsers, setFilteredUsers] = useState([])
   const [respondConnectionModal1, setRespondConnectionModal] = useState(false)
   const [blockedUserModal, setBlockedUserModal] = useState(false)
   const [currentResponseId, setCurrentResponseId] = useState('')
   const [searchingUsers, setSearchingUsers] = useState(false)
-  const [recommendedUsersTags, setRecommendedUsersTags] = useState([])
-  const [selectedRecommendedTags, setSelectedRecommendedTags] = useState([])
-  const [allRecommendedConnections, setAllRecommendedConnections] = useState([])
+  // const [recommendedUsersTags, setRecommendedUsersTags] = useState([])
+  // const [selectedRecommendedTags, setSelectedRecommendedTags] = useState([])
+  // const [allRecommendedConnections, setAllRecommendedConnections] = useState([])
   const [width, setWidth] = useState(null)
-  const [filteringRecommendedConnections, setFilteringRecommendedConnections] =
-    useState(false)
+  // const [filteringRecommendedConnections, setFilteringRecommendedConnections] =
+  //   useState(false)
   const [currentModalStatus, setCurrentModalStatus] = useState('')
   const userId = useSelector((state) => state.user.user.user.id)
   const lastLogin = useSelector((state) => state.user.user.user.last_login)
@@ -68,11 +68,11 @@ function MyConnections() {
     const myWidth = window.innerWidth
     setWidth(myWidth)
 
-    getRecommendedConnections()
+    // getRecommendedConnections()
+    getConnectionRequests()
     getConnections()
     // getAllUsers()
-    getConnectionRequests()
-    getAllTags()
+    // getAllTags()
 
     if (lastLogin === null && !localStorage.getItem('agreedConnections'))
       setShowWarningModal(true)
@@ -110,17 +110,17 @@ function MyConnections() {
   //   filterUsers(searchedUsers)
   // }, [selectedTags])
 
-  useEffect(() => {
-    filterRecommendedUsers()
-  }, [])
+  // useEffect(() => {
+  //   filterRecommendedUsers()
+  // }, [])
 
-  useDidMountEffect(() => {
-    filterUsers()
-  }, [selectedTags])
+  // useDidMountEffect(() => {
+  //   filterUsers()
+  // }, [selectedTags])
 
-  useDidMountEffect(() => {
-    filterRecommendedUsers()
-  }, [selectedRecommendedTags])
+  // useDidMountEffect(() => {
+  //   filterRecommendedUsers()
+  // }, [selectedRecommendedTags])
 
   const getConnections = async () => {
     await axiosInstance.get(`/connect/${connectionPage + 1}`).then((res) => {
@@ -136,18 +136,18 @@ function MyConnections() {
     })
   }
 
-  const getRecommendedConnections = () => {
-    axiosInstance
-      .get('/connect/recommended')
-      .then((res) => {
-        if (res.data.users.length) {
-          setRecommendedConnections(res.data.users)
-          setAllRecommendedConnections(res.data.users)
-          setRecommendedUsersTags(res.data.tags)
-        }
-      })
-      .catch((e) => e)
-  }
+  // const getRecommendedConnections = () => {
+  //   axiosInstance
+  //     .get('/connect/recommended')
+  //     .then((res) => {
+  //       if (res.data.users.length) {
+  //         setRecommendedConnections(res.data.users)
+  //         setAllRecommendedConnections(res.data.users)
+  //         setRecommendedUsersTags(res.data.tags)
+  //       }
+  //     })
+  //     .catch((e) => e)
+  // }
 
   const toggleRespondConnectionModal = (id) => {
     const connectionRequest = connectionRequests.find(
@@ -333,11 +333,11 @@ function MyConnections() {
       })
   }, 500)
 
-  const getAllTags = async () => {
-    await axiosInstance.get('/tags').then((res) => {
-      setAllTags(res.data)
-    })
-  }
+  // const getAllTags = async () => {
+  //   await axiosInstance.get('/tags').then((res) => {
+  //     setAllTags(res.data)
+  //   })
+  // }
 
   const blockUser = async () => {
     const connection = connectionRequests.find(
@@ -378,13 +378,12 @@ function MyConnections() {
   const handleSearch = (event) => {
     const { value } = event.target
     if (value !== '') {
-      setRecommendedConnections(allRecommendedConnections)
+      // setRecommendedConnections(allRecommendedConnections)
       getAllUsers(value)
-      // setSearchingUsers(true)
     } else {
       setSearchingUsers(false)
-      setSelectedRecommendedTags([])
-      setSelectedTags([])
+      // setSelectedRecommendedTags([])
+      // setSelectedTags([])
       setFilteredUsers([])
       setAllUsers([])
     }
@@ -397,56 +396,56 @@ function MyConnections() {
 
     const filteredAllUsers = allUsers?.filter((filteredUsers) => {
       if (filteredUsers.status === 'block') return false
-      if (selectedTags.length) {
-        if (!filteredUsers.Tags.length) return false
-        let tagCondition = false
-        for (let i = 0; i < filteredUsers.Tags.length; i++) {
-          if (selectedTags.includes(filteredUsers.Tags[i].id)) {
-            tagCondition = true
-          }
-        }
-        if (!tagCondition) return false
-      }
+      // if (selectedTags.length) {
+      //   if (!filteredUsers.Tags.length) return false
+      //   let tagCondition = false
+      //   for (let i = 0; i < filteredUsers.Tags.length; i++) {
+      //     if (selectedTags.includes(filteredUsers.Tags[i].id)) {
+      //       tagCondition = true
+      //     }
+      //   }
+      //   if (!tagCondition) return false
+      // }
 
       return filteredUsers
     })
     setFilteredUsers(filteredAllUsers)
   }
 
-  const filterRecommendedUsers = () => {
-    if (!selectedRecommendedTags.length) {
-      setFilteringRecommendedConnections(false)
-      return setRecommendedConnections(allRecommendedConnections)
-    }
+  // const filterRecommendedUsers = () => {
+  //   if (!selectedRecommendedTags.length) {
+  //     setFilteringRecommendedConnections(false)
+  //     return setRecommendedConnections(allRecommendedConnections)
+  //   }
 
-    setFilteringRecommendedConnections(true)
-    const filteredAllUsers = allRecommendedConnections?.filter(
-      (filteredUsers) => {
-        if (filteredUsers.status === 'block') return false
+  //   setFilteringRecommendedConnections(true)
+  //   const filteredAllUsers = allRecommendedConnections?.filter(
+  //     (filteredUsers) => {
+  //       if (filteredUsers.status === 'block') return false
 
-        // if (filteredUsers.Tags.length < selectedRecommendedTags.length)
-        //   return false
-        if (selectedRecommendedTags.length) {
-          if (!filteredUsers.Tags.length) return false
-          const user_tags_ids = filteredUsers.Tags.map((tag) => {
-            return tag.id
-          })
+  //       // if (filteredUsers.Tags.length < selectedRecommendedTags.length)
+  //       //   return false
+  //       if (selectedRecommendedTags.length) {
+  //         if (!filteredUsers.Tags.length) return false
+  //         const user_tags_ids = filteredUsers.Tags.map((tag) => {
+  //           return tag.id
+  //         })
 
-          // const found = user_tags_ids.some(
-          //   (r) => selectedRecommendedTags.indexOf(r) >= 0
-          // )
-          for (let i = 0; i < selectedRecommendedTags.length; i++) {
-            if (!user_tags_ids.includes(selectedRecommendedTags[i]))
-              return false
-          }
+  //         // const found = user_tags_ids.some(
+  //         //   (r) => selectedRecommendedTags.indexOf(r) >= 0
+  //         // )
+  //         for (let i = 0; i < selectedRecommendedTags.length; i++) {
+  //           if (!user_tags_ids.includes(selectedRecommendedTags[i]))
+  //             return false
+  //         }
 
-          // if (!found) return false
-        }
-        return true
-      }
-    )
-    setRecommendedConnections(filteredAllUsers)
-  }
+  //         // if (!found) return false
+  //       }
+  //       return true
+  //     }
+  //   )
+  //   setRecommendedConnections(filteredAllUsers)
+  // }
 
   const updateUserStatus = (id, status) => {
     let changedUserIndex = allUsers.findIndex((x) => x.id === id)
@@ -458,42 +457,42 @@ function MyConnections() {
 
     setAllUsers(updatedAllUsers)
 
-    let changedUserIndexRecommended = recommendedConnections.findIndex(
-      (x) => x.id === id
-    )
-    if (changedUserIndexRecommended < 0) return
+    // let changedUserIndexRecommended = recommendedConnections.findIndex(
+    //   (x) => x.id === id
+    // )
+    // if (changedUserIndexRecommended < 0) return
 
-    const updatedAllRecommended = [...recommendedConnections]
+    // const updatedAllRecommended = [...recommendedConnections]
 
-    updatedAllRecommended[changedUserIndexRecommended].status = status
+    // updatedAllRecommended[changedUserIndexRecommended].status = status
 
-    setRecommendedConnections(updatedAllRecommended)
+    // setRecommendedConnections(updatedAllRecommended)
   }
 
-  const toggleTag = (id, tagState) => {
-    if (tagState) {
-      const newSelectedTags = [...selectedTags]
-      newSelectedTags.push(id)
-      setSelectedTags(newSelectedTags)
-    } else {
-      const newSelectedTags = selectedTags.filter((tag) => tag !== id)
-      setSelectedTags(newSelectedTags)
-    }
-  }
+  // const toggleTag = (id, tagState) => {
+  //   if (tagState) {
+  //     const newSelectedTags = [...selectedTags]
+  //     newSelectedTags.push(id)
+  //     setSelectedTags(newSelectedTags)
+  //   } else {
+  //     const newSelectedTags = selectedTags.filter((tag) => tag !== id)
+  //     setSelectedTags(newSelectedTags)
+  //   }
+  // }
 
-  const toggleRecommendedTag = (id, tagState) => {
-    if (tagState) {
-      const newSelectedTags = [...selectedRecommendedTags]
-      newSelectedTags.push(id)
-      setSelectedRecommendedTags(newSelectedTags)
-    } else {
-      const newSelectedTags = selectedRecommendedTags.filter(
-        (tag) => tag !== id
-      )
+  // const toggleRecommendedTag = (id, tagState) => {
+  //   if (tagState) {
+  //     const newSelectedTags = [...selectedRecommendedTags]
+  //     newSelectedTags.push(id)
+  //     setSelectedRecommendedTags(newSelectedTags)
+  //   } else {
+  //     const newSelectedTags = selectedRecommendedTags.filter(
+  //       (tag) => tag !== id
+  //     )
 
-      setSelectedRecommendedTags(newSelectedTags)
-    }
-  }
+  //     setSelectedRecommendedTags(newSelectedTags)
+  //   }
+  // }
 
   return (
     <Container fluid>
@@ -548,7 +547,7 @@ function MyConnections() {
                 <h3 className='page-title text-capitalize'>
                   My search results
                 </h3>
-                <p className='page-description mb-0'>Select tags to filter:</p>
+                {/* <p className='page-description mb-0'>Select tags to filter:</p>
                 <div className='mt-0'>
                   {allTags &&
                     allTags.map((tag) => {
@@ -556,7 +555,7 @@ function MyConnections() {
                         <TagBox key={tag.id} data={tag} toggleTag={toggleTag} />
                       )
                     })}
-                </div>
+                </div> */}
                 <div className='container-fluid content-center'>
                   <div className='mb-5 row d-flex ps-2'>
                     {loading && (
@@ -567,7 +566,6 @@ function MyConnections() {
                     {filteredUsers.length > 0 && (
                       <ConnectionsSlider
                         data={filteredUsers}
-                        // keyDiffer={filteringRecommendedConnections}
                         removeConnection={(user) => {
                           setConnectiontoBeRemoved(user)
                           setShowRemoveConnectionModal(true)
@@ -579,20 +577,6 @@ function MyConnections() {
                         }
                       />
                     )}
-
-                    {/* {filteredUsers &&
-                      filteredUsers.map((user) => {
-                        return (
-                          <ConnectionBox
-                            key={user.id}
-                            data={user}
-                            toggleRespondConnectionModal={
-                              toggleRespondConnectionModal
-                            }
-                            newConnectionRequest={newConnectionRequest}
-                          />
-                        )
-                      })} */}
                   </div>
                 </div>
               </div>
@@ -617,14 +601,13 @@ function MyConnections() {
                     />
                   )}
                 </div>
-                <div className='row mx-auto mt-5 m-0 p-0'>
+                {/* <div className='row mx-auto mt-5 m-0 p-0'>
                   <div className='ms-0 ps-0'>
                     <div className='d-flex'>
                       <h3 className='my-connection-titles ms-0 ps-0 mb-0'>
                         <IntlMessages id='connection.recommended_requests' />
                       </h3>
                       <OverlayTrigger
-                        // delay={{ hide: 450, show: 300 }}
                         overlay={(props) => (
                           <Tooltip {...props}>
                             Recommendations are based on your selected tags in
@@ -680,7 +663,7 @@ function MyConnections() {
                       )}
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 <div className='mb-md-5 mx-auto row mt-5 m-0 p-0'>
                   <ApprovedConnections

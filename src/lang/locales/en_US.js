@@ -849,13 +849,13 @@ const EnLangs = {
   'connection.accept_request':
     'You have successfully accepted the connection request',
   'connection.page_title': 'My Connections',
-  'connection.page_description': 'Your connections around the globe',
+  'connection.page_description': 'Your Learn to Start Peers',
   'connection.my_requests': 'My Connection Requests',
   'connection.recommended_requests': 'Recommended Connections',
   'connection.no_requests':
-    'You don’t have any connection requests yet! Get started by exploring your recommended connections below and requesting connections with others who have similar interests. Or you can search your community by name using the search box above.',
+    'You don’t have any connection requests yet! Get started by searching for your peers in the search box above.',
   'connection.no_connections':
-    'You don’t have any connection requests yet! Get started by exploring your recommended connections above and requesting connections with others who have similar interests. Or you can search your community by name using the search box above.',
+    'You don’t have any connections yet! Get started by searching for your peers in the search box above.',
   'connection.search_community': 'SEARCH YOUR COMMUNITY',
   'connection.user_blocked':
     'This user has been blocked. You will no longer see connection requests or messages from this user.',
