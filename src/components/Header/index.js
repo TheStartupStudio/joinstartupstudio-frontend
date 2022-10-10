@@ -452,13 +452,13 @@ function Header(props) {
                       >
                         <IntlMessages id='my_account.page_title' />
                       </Link>
-                      <Link
+                      {/* <Link
                         className='dropdown-item py-2 dropdown-menu-hover'
                         to='/edit-portfolio'
                         onClick={() => setShowDropDown((preState) => !preState)}
                       >
                         MY PORTFOLIO
-                      </Link>
+                      </Link> */}
                       {allowToShow ? (
                         <Link
                           className='dropdown-item py-2 dropdown-menu-hover'
