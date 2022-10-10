@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import ReactPlayer from 'react-player'
@@ -37,6 +37,7 @@ export default function MediaLightbox(props) {
   )
   let [saveTimer, setSaveTimer] = useState(0)
   let [watchedVideo, setWatchedVideo] = useState(false)
+  const videoRef = useRef(null)
 
   useEffect(() => {
     setWatchTime(0)
@@ -88,35 +89,28 @@ export default function MediaLightbox(props) {
     }
   }
 
+  const closeFn = (input) => {
+    if (input == 'media-lightbox__content-scroll') {
+      closeLightbox()
+    }
+  }
   return (
     <div className='media-lightbox'>
       <div className='media-lightbox__inner'>
-        <div className='media-lightbox__overlay' onClick={closeLightbox} />
+        <div className='media-lightbox__overlay' />
 
-        <div className='media-lightbox__content-scroll' onClick={closeLightbox}>
+        <div
+          className='media-lightbox__content-scroll'
+          onClick={(e) => closeFn(e.target.className)}
+        >
           <div className='media-lightbox__content'>
             <button className='media-lightbox__close' onClick={closeLightbox}>
               <FontAwesomeIcon icon={faTimes} />
             </button>
             <div className='media-lightbox__content-main'>
               <div className='media-lightbox__video'>
-                {/* <div
-                  className='media-lightbox__intervals'
-                  style={{ '--duration': duration }}
-                >
-                  {intervals.map((int, idx) => (
-                    <div
-                      key={idx}
-                      className='media-lightbox__interval'
-                      style={{
-                        '--start': int[0],
-                        '--end': int[1]
-                      }}
-                    />
-                  ))}
-                </div> */}
                 <ReactPlayer
-                  className='media-lightbox__video-player'
+                  className='video_inner media-lightbox__video-player'
                   url={props.video.url}
                   controls={true}
                   width='100%'
@@ -124,6 +118,7 @@ export default function MediaLightbox(props) {
                   config={{
                     file: { attributes: { controlsList: 'nodownload' } }
                   }}
+                  ref={videoRef}
                   playing={true}
                   onProgress={({ playedSeconds }) => {
                     updateLatestInterval(playedSeconds)

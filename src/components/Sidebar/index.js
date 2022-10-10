@@ -184,13 +184,11 @@ function Sidebar(props) {
                 </li>
                 <li>
                   <NavLink
-                    to={'/My-Market-Ready-Guide'}
+                    to={'/edit-portfolio'}
                     activeClassName='sidenav active'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>
-                        UNDERSTANDING CERTIFICATION
-                      </div>
+                      <div className='ms-4 ps-2 py-1'>MY PORTFOLIO</div>
                     </div>
                   </NavLink>
                 </li>
@@ -206,6 +204,18 @@ function Sidebar(props) {
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
                       <div className='ms-4 ps-2 py-1'>MY RESOURCES</div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/My-Market-Ready-Guide'}
+                    activeClassName='sidenav active'
+                  >
+                    <div className='d-flex' style={{ alignItems: 'center' }}>
+                      <div className='ms-4 ps-2 py-1'>
+                        UNDERSTANDING CERTIFICATION
+                      </div>
                     </div>
                   </NavLink>
                 </li>
@@ -371,7 +381,7 @@ function Sidebar(props) {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
+                  {/* <NavLink
                     onClick={() => {
                       dispatch(setAccordionToggled(false))
                       props.hideHeaderIcons()
@@ -381,6 +391,19 @@ function Sidebar(props) {
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
                       <div className='ms-4 ps-2 py-1'>IAMR(™) Assessments</div>
+                    </div>
+                  </NavLink> */}
+                  <NavLink
+                    onClick={() => {
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
+                    }}
+                    to='#'
+                    disable
+                    activeClassName='sidenav'
+                  >
+                    <div className='d-flex' style={{ alignItems: 'center' }}>
+                      <div className='ms-4 ps-2 py-1'>MY IAMR INBOX</div>
                     </div>
                   </NavLink>
                 </li>
