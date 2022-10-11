@@ -15,14 +15,14 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState()
   // eslint-disable-next-line
   const [events, setEvents] = useState([
-    // {
-    //   id: 1,
-    //   title:
-    //     'Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall',
-    //   author: 'Anastasia Hall',
-    //   date: '2022/10/05',
-    //   time: '12:00 pm'
-    // },
+    {
+      id: 1,
+      title:
+        'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
+      author: 'Anastasia Hall',
+      date: '2022/10/27',
+      time: '2:00 pm'
+    }
     // {
     //   id: 2,
     //   title:
