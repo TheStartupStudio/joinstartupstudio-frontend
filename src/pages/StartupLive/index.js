@@ -353,7 +353,7 @@ function StartupLive() {
           </div>
         </div>
         <div className='col-12 col-xl-3 px-3'>
-          <div className='msg-widget-startup-live d-none'>
+          <div className='msg-widget-startup-live'>
             <StartupMailer />
             {/* {selectedStartupLive && (
               <Chat room={selectedStartupLive.value.room} />
