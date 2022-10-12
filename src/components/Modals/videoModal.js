@@ -128,14 +128,14 @@ export const VideoModal = (props) => {
                   : props.updateFavorite(!videoData.favorite)
               }
             />
-            {IsUserLevelAuthorized() && (
+            {/* {IsUserLevelAuthorized() && (
               <FontAwesomeIcon
                 icon={faShareAltSquare}
                 className='mt-3'
                 style={{ width: '25px', height: '25px', color: '#FFFFFF' }}
                 onClick={() => setShowShareVideoModal(true)}
               />
-            )}
+            )} */}
           </div>
           {!playVideo ? (
             <div className='d-flex justify-content-center align-items-center'>
