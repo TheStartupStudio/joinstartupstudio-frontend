@@ -315,7 +315,8 @@ function StartupLive() {
                       fontWeight: '300'
                     }}
                   >
-                    With Anastasia Hall, Gary Conroy, and the Global Ambassadors
+                    With Our Director of Wellness Jeremy Hall and The Startup
+                    Studio’s Global Ambassadors
                   </p>
                 </div>
               </div>
