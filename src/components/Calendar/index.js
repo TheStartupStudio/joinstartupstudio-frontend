@@ -16,6 +16,17 @@ export default function Calendar() {
   // eslint-disable-next-line
   const [events, setEvents] = useState([
     {
+      id: 2,
+      title:
+        'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
+      author: 'Anastasia Hall',
+      date: '2022/10/27',
+      time: '2:00 pm'
+    }
+  ])
+
+  const filterEventsByDate = [
+    {
       id: 1,
       title:
         'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
@@ -23,29 +34,18 @@ export default function Calendar() {
       date: '2022/10/27',
       time: '2:00 pm'
     }
-    // {
-    //   id: 2,
-    //   title:
-    //     'Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall',
-    //   author: 'Anastasia Hall',
-    //   date: '2022/10/06',
-    //   time: '01:00 pm'
-    // },
-    // {
-    //   id: 2,
-    //   title:
-    //     'Live Q&A with Story in Motion Podcast Episode 1 Guest: Adam Marshall',
-    //   author: 'Anastasia Hall',
-    //   date: '2022/10/06',
-    //   time: '01:00 pm'
-    // }
-  ])
+  ]
 
   let dates = events.map((data) => new Date(data.date))
-
+  console.log(dates, 'filter')
   const filterUpComing = (data) => {
     setEventsForDay(
       events.filter((event) => moment(data).format('YYYY/MM/DD') == event.date)
+    )
+    setEvents(
+      filterEventsByDate.filter(
+        (event) => moment(data).format('YYYY/MM/DD') !== event.date
+      )
     )
   }
 
@@ -88,7 +88,7 @@ export default function Calendar() {
                   />
                 </>
               ))
-            : 'We do not have any event on this date'}
+            : 'There are not any events in the selected date.'}
         </div>
         <div className='col-xl-12 col-md-6 col-sm-12'>
           {events.length != 0 && (
