@@ -908,7 +908,7 @@ const EnLangs = {
   'navigation.course_month_1_lesson_2': 'The Myths of Entrepreneurship',
   'sidebar.story_in_motion': 'STORY IN MOTION®',
   'storyInMotion.page_description':
-    'A Learn to Start Institute Podcast - Conversations on Empowerment, Wellness and Performance.',
+    'A Learn to Start podcast - Conversations on Empowerment, Wellness and Performance.',
   'storyInMotion.page_week_podcast': 'THIS WEEK’S PODCAST',
   'storyInMotion.page_week_now_playing': 'NOW PLAYING:',
   // 'storyInMotion.page_also_avalible':

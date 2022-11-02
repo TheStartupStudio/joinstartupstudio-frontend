@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import IntlMessages from '../../utils/IntlMessages'
@@ -25,7 +25,7 @@ function LtsJournalReflection(props) {
   const currentLanguage = useSelector((state) => state.lang.locale)
 
   let [content, setContent] = useState(props.entry?.content || '')
-  let [editing, setEditing] = useState(false)
+  let [editing, setEditing] = useState(true)
   let [saving, setSaving] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
   const loggedUser = useSelector((state) => state.user.user.user)
@@ -114,7 +114,7 @@ function LtsJournalReflection(props) {
             updatedAt: moment().locale(currentLanguage).toString()
           })
 
-        setEditing(false)
+        setEditing(true)
       }
     } catch (error) {
       if (error.response) {
@@ -138,23 +138,23 @@ function LtsJournalReflection(props) {
     })
   }
 
-  useEffect(() => {
-    unblockHandle.current = history.block((targetLocation) => {
-      if (
-        !showNotSavedModal &&
-        editing
-        // && props.history.location.pathname != targetLocation.pathname
-      ) {
-        showModal(targetLocation)
+  // useEffect(() => {
+  //   unblockHandle.current = history.block((targetLocation) => {
+  //     if (
+  //       !showNotSavedModal &&
+  //       editing
+  //       // && props.history.location.pathname != targetLocation.pathname
+  //     ) {
+  //       showModal(targetLocation)
 
-        return false
-      }
-      return true
-    })
-    return function () {
-      unblockHandle.current.current && unblockHandle.current.current()
-    }
-  })
+  //       return false
+  //     }
+  //     return true
+  //   })
+  //   return function () {
+  //     unblockHandle.current.current && unblockHandle.current.current()
+  //   }
+  // })
 
   function handleConfirm() {
     if (unblockHandle) {
@@ -218,17 +218,24 @@ function LtsJournalReflection(props) {
             )}
 
             {(!entryId || editing) && (
-              <button className='button' onClick={handleSubmit}>
-                <IntlMessages
-                  id={
-                    saving
-                      ? 'general.saving'
-                      : entryId
-                      ? 'journals.save'
-                      : 'journals.add'
-                  }
-                />
-              </button>
+              <>
+                {saving && (
+                  <div className='' style={{ color: '#01c5d1' }}>
+                    <FontAwesomeIcon icon={faSpinner} className='' spin />
+                  </div>
+                )}
+              </>
+              // <button className='button' onClick={handleSubmit}>
+              //   <IntlMessages
+              //     id={
+              //       saving
+              //         ? 'general.saving'
+              //         : entryId
+              //         ? 'journals.save'
+              //         : 'journals.add'
+              //     }
+              //   />
+              // </button>
             )}
           </div>
         </div>
