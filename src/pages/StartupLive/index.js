@@ -315,7 +315,8 @@ function StartupLive() {
                       fontWeight: '300'
                     }}
                   >
-                    With Anastasia Hall, Gary Conroy, and the Global Ambassadors
+                    With Our Director of Wellness Jeremy Hall and The Startup
+                    Studio’s Global Ambassadors
                   </p>
                 </div>
               </div>
@@ -353,7 +354,7 @@ function StartupLive() {
           </div>
         </div>
         <div className='col-12 col-xl-3 px-3'>
-          <div className='msg-widget-startup-live d-none'>
+          <div className='msg-widget-startup-live'>
             <StartupMailer />
             {/* {selectedStartupLive && (
               <Chat room={selectedStartupLive.value.room} />

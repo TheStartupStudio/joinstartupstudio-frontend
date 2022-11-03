@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import IntlMessages from '../../utils/IntlMessages'
@@ -14,6 +14,7 @@ import FoulWords from '../../utils/FoulWords'
 import { JOURNALS } from '../../utils/constants'
 import { useHistory } from 'react-router-dom'
 import NotSavedModal from '../../components/Modals/notSavedNoteModal'
+import _ from 'lodash'
 
 function LtsJournalReflection(props) {
   const journalId = props.journal.id
@@ -24,7 +25,7 @@ function LtsJournalReflection(props) {
   const currentLanguage = useSelector((state) => state.lang.locale)
 
   let [content, setContent] = useState(props.entry?.content || '')
-  let [editing, setEditing] = useState(false)
+  let [editing, setEditing] = useState(true)
   let [saving, setSaving] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
   const loggedUser = useSelector((state) => state.user.user.user)
@@ -83,7 +84,7 @@ function LtsJournalReflection(props) {
     } catch (err) {}
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (from, value) => {
     if (saving) return
 
     setSaving(true)
@@ -97,20 +98,15 @@ function LtsJournalReflection(props) {
       if (!entryId) {
         let { data } = await axiosInstance.post(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`,
-          {
-            content
-          }
+          from == 'debounce' ? { content: value } : { content }
         )
 
         props.saved && props.saved(data)
       } else {
         await axiosInstance.put(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`,
-          {
-            content
-          }
+          from == 'debounce' ? { content: value } : { content }
         )
-
         props.saved &&
           props.saved({
             ...props,
@@ -118,7 +114,7 @@ function LtsJournalReflection(props) {
             updatedAt: moment().locale(currentLanguage).toString()
           })
 
-        setEditing(false)
+        setEditing(true)
       }
     } catch (error) {
       if (error.response) {
@@ -135,28 +131,30 @@ function LtsJournalReflection(props) {
 
   const handleContentChange = (value) => {
     setContent(value)
+
+    debounce(handleSubmit, value)
     detectFoulWords(removeHtmlFromString(value), (data) => {
       setFoulWords(data)
     })
   }
 
-  useEffect(() => {
-    unblockHandle.current = history.block((targetLocation) => {
-      if (
-        !showNotSavedModal &&
-        editing
-        // && props.history.location.pathname != targetLocation.pathname
-      ) {
-        showModal(targetLocation)
+  // useEffect(() => {
+  //   unblockHandle.current = history.block((targetLocation) => {
+  //     if (
+  //       !showNotSavedModal &&
+  //       editing
+  //       // && props.history.location.pathname != targetLocation.pathname
+  //     ) {
+  //       showModal(targetLocation)
 
-        return false
-      }
-      return true
-    })
-    return function () {
-      unblockHandle.current.current && unblockHandle.current.current()
-    }
-  })
+  //       return false
+  //     }
+  //     return true
+  //   })
+  //   return function () {
+  //     unblockHandle.current.current && unblockHandle.current.current()
+  //   }
+  // })
 
   function handleConfirm() {
     if (unblockHandle) {
@@ -165,6 +163,12 @@ function LtsJournalReflection(props) {
     // navigate to some other page or do some routing action now
     // history.push("/any/other/path")
   }
+  const debounce = useCallback(
+    _.debounce(async (func, value) => {
+      func('debounce', value)
+    }, 3000),
+    []
+  )
 
   return (
     <>
@@ -214,17 +218,24 @@ function LtsJournalReflection(props) {
             )}
 
             {(!entryId || editing) && (
-              <button className='button' onClick={handleSubmit}>
-                <IntlMessages
-                  id={
-                    saving
-                      ? 'general.saving'
-                      : entryId
-                      ? 'journals.save'
-                      : 'journals.add'
-                  }
-                />
-              </button>
+              <>
+                {saving && (
+                  <div className='' style={{ color: '#01c5d1' }}>
+                    <FontAwesomeIcon icon={faSpinner} className='' spin />
+                  </div>
+                )}
+              </>
+              // <button className='button' onClick={handleSubmit}>
+              //   <IntlMessages
+              //     id={
+              //       saving
+              //         ? 'general.saving'
+              //         : entryId
+              //         ? 'journals.save'
+              //         : 'journals.add'
+              //     }
+              //   />
+              // </button>
             )}
           </div>
         </div>
@@ -235,7 +246,7 @@ function LtsJournalReflection(props) {
               theme='snow'
               name='textQuillStandart'
               value={content}
-              onChange={(value) => handleContentChange(value)}
+              onChange={handleContentChange}
               modules={quillModules}
               formats={quillFormats}
             />
