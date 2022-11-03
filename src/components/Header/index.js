@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import ReactGA from 'react-ga'
@@ -31,6 +31,7 @@ import socket from '../../utils/notificationSocket'
 import Notifications from './notifications'
 import TermAndCondition from './TermAndCondition'
 import StudentOfInstructors from '../GetInstructorStudents/index.js'
+import useOnClickOutside from 'use-onclickoutside'
 
 function Header(props) {
   const { user } = useSelector((state) => state.user.user)
@@ -67,6 +68,13 @@ function Header(props) {
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [showNotifications, setShowNotifications] = useState(false)
   const [allowToShow, setAllowToShow] = useState(false)
+  const notificationsRef = useRef(null)
+  useOnClickOutside(notificationsRef, () => {
+    setTimeout(() => {
+      setShowNotifications(false)
+    }, 100)
+  })
+
   const hasAccess = async () => {
     await axiosInstance
       .get('/studentsInstructorss/has-access')
@@ -285,7 +293,9 @@ function Header(props) {
                   className={`nav-link icon-menu px-2 my-auto nav-notifications position-relative ${
                     showNotifications ? 'active' : ''
                   }`}
-                  onClick={() => setShowNotifications(!showNotifications)}
+                  onClick={() =>
+                    !showNotifications && setShowNotifications(true)
+                  }
                 >
                   <FontAwesomeIcon
                     icon={faBell}
@@ -307,6 +317,7 @@ function Header(props) {
                     notifications={notifications}
                     setShowNotifications={setShowNotifications}
                     setUnreadNotifications={setUnreadNotifications}
+                    notificationsRef={notificationsRef}
                   />
                 )}
               </li>

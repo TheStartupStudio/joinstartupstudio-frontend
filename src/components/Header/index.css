@@ -79,3 +79,8 @@ textarea {
   color: #707070;
   opacity: 1;
 }
+
+.notifications-wrapper .notification-date {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.55);
+}
