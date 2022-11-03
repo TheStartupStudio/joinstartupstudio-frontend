@@ -166,7 +166,7 @@ function LtsJournalReflection(props) {
   const debounce = useCallback(
     _.debounce(async (func, value) => {
       func('debounce', value)
-    }, 3000),
+    }, 5000),
     []
   )
 
