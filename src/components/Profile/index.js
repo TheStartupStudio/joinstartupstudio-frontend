@@ -18,6 +18,12 @@ import {
   getConnections,
   IsUserLevelAuthorized
 } from '../../utils/helpers'
+import marketReadyGuideOne from '../../assets/images/market-ready-1-badge.png'
+import marketReadyGuideTwo from '../../assets/images/market-ready-2-badge.png'
+import listen from '../../assets/images/read_watch_listen_Listen_with typo.png'
+import read from '../../assets/images/read_watch_listen_Read_with typo.png'
+import watch from '../../assets/images/read_watch_listen_Watch_with typo.png'
+import './index.css'
 
 export default function Profile(props) {
   const user = useSelector((state) => state.user.user.user)
@@ -214,7 +220,7 @@ export default function Profile(props) {
           </div>
         </div>
       </Col>
-      <Col
+      {/* <Col
         lg={6}
         sm={12}
         style={{
@@ -261,7 +267,163 @@ export default function Profile(props) {
             </div>
           </div>
         </div>
-      </Col>
+      </Col> */}
+      <div
+        style={{
+          minHeight: '166px'
+        }}
+        className='mx-0 px-0 col-12 col-lg-6 row mt-4 mt-md-0 widget-interesting text-center'
+      >
+        <div className='col-12 col-md-4 mx-auto my-auto fw-bold py-4'>
+          <p className='my-0 mx-auto' style={{ color: '#FE43A1' }}>
+            READ
+          </p>
+          <p className='my-0 mx-auto' style={{ color: '#99CC33' }}>
+            WATCH
+          </p>
+          <p className='my-0 mx-auto' style={{ color: '#51C7DF' }}>
+            LISTEN
+          </p>
+        </div>
+        <div
+          className='col-12 col-md-8 text-start my-auto fw-bold'
+          style={{ fontSize: '14px' }}
+        >
+          LTS Ss read this @nytimes article on the slow growth of Snap. <br />
+          How can Snap generate new revenue streams outside of ads?
+        </div>
+      </div>
+      {/* end of twitter widget */}
+      {/* read watch listen widget */}
+      {/* certification status */}
+      <div
+        style={{
+          minHeight: '166px'
+        }}
+        className='notification-box col-lg-6 col-sm-12 mt-4 row position-relative'
+      >
+        <p className='text-center fw-bold' style={{ fontSize: '20px' }}>
+          My Certification Progress
+        </p>
+        <div className='col-6 text-center fw-bold'>
+          <img src={marketReadyGuideOne} style={{ width: '100px' }} />
+          <p className='mb-0 py-0 mt-2'>
+            <span style={{ color: '#54C7DF' }}>0 </span> / 15 skills{' '}
+          </p>
+          <p className='mt-0 py-0'>Certified </p>
+        </div>
+        <div className='col-6 text-center fw-bold'>
+          <img src={marketReadyGuideTwo} style={{ width: '100px' }} />
+          <p className='mb-0 py-0 mt-2'>
+            <span style={{ color: '#CF2E81' }}>0 </span> / 20 skills{' '}
+          </p>
+          <p className='mt-0 py-0'>Certified </p>
+        </div>
+        <p
+          className='overlay-comming-soon position-absolute my-auto mx-auto text-center'
+          style={{
+            fontWeight: 'bold',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            zIndex: 4,
+            fontSize: '20px',
+            color: 'white',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          Coming soon
+        </p>
+        <div
+          className='overlay-comming-soon position-absolute'
+          style={{
+            height: '100%',
+            width: '100%',
+            zIndex: 2,
+            backgroundColor: '#828888',
+            opacity: '0.9'
+          }}
+        ></div>
+      </div>
+      {/* end of certification status */}
+      {/* read and more */}
+      <div
+        className='col-lg-6 col-12 mt-4 row px-4 gx-0 float-end ps-auto ms-auto'
+        style={{
+          backgroundColor: '#F8F7F7',
+          minHeight: '166px',
+          fontWeight: '600'
+        }}
+      >
+        <div className='read-section w-100 border-bottom row gx-0'>
+          <div className='col-4 col-md-3 text-start text-md-start  read-watch-listen-image-div'>
+            <img src={read} className={'w-auto '} style={{ height: '130px' }} />
+          </div>
+          <div
+            style={{ float: 'right' }}
+            className={
+              'text-start w-auto my-auto col-8 read-watch-listen-text-div'
+            }
+          >
+            <p className='my-0 text-start read-watch-listen-title'>
+              LIKE, COMMENTS, SUBSCRIBE
+            </p>
+            <p className='text-start my-0' style={{ fontSize: '10px' }}>
+              Mark Bergen
+            </p>
+          </div>
+        </div>
+        {/* second */}
+        <div className='read-section w-100 border-bottom row gx-0'>
+          <div className='col-4 col-md-3 text-start text-md-start read-watch-listen-image-div'>
+            <img
+              src={watch}
+              className={'w-auto '}
+              style={{ height: '130px' }}
+            />
+          </div>
+          <div
+            style={{ float: 'right' }}
+            className={
+              'text-start my-auto col-8 col-md-9 read-watch-listen-text-div'
+            }
+          >
+            <p className='my-0 text-start w-100 read-watch-listen-title'>
+              VICTORIA'S SECRET: ANGELS AND DEMONS
+            </p>
+            <p className='text-start my-0' style={{ fontSize: '10px' }}>
+              Hulu
+            </p>
+          </div>
+        </div>
+        {/* third  */}
+        <div
+          className='read-section w-100 row gx-0 pb-2'
+          style={{ borderBottom: '0px' }}
+        >
+          <div className='col-4 col-md-3 text-start text-md-start read-watch-listen-image-div'>
+            <img
+              src={listen}
+              className={'w-auto '}
+              style={{ height: '130px' }}
+            />
+          </div>
+          <div
+            style={{ float: 'right' }}
+            className={
+              'text-center w-auto my-auto col-8 read-watch-listen-text-div'
+            }
+          >
+            <p className='my-0 text-start read-watch-listen-title'>
+              WISDOM FROM THE TOP WITH GUY RAZ
+            </p>
+            <p className='text-start my-0' style={{ fontSize: '10px' }}>
+              Luminary and NPR
+            </p>
+          </div>
+        </div>
+        {/*  */}
+      </div>
     </Row>
   )
 }
