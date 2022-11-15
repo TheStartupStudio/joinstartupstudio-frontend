@@ -366,7 +366,7 @@ export default function Profile(props) {
             }
           >
             <p className='my-0 text-start read-watch-listen-title'>
-              LIKE, COMMENTS, SUBSCRIBE
+              LIKE, COMMENT, SUBSCRIBE
             </p>
             <p className='text-start my-0' style={{ fontSize: '10px' }}>
               Mark Bergen
