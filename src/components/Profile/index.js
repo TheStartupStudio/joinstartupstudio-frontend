@@ -274,7 +274,7 @@ export default function Profile(props) {
         }}
         className='mx-0 px-0 col-12 col-lg-6 row mt-4 mt-md-0 widget-interesting text-center'
       >
-        <div className='col-12 col-md-4 mx-auto my-auto fw-bold py-4'>
+        <div className='col-4 col-md-4 mx-auto my-auto fw-bold py-4'>
           <p className='my-0 mx-auto' style={{ color: '#FE43A1' }}>
             READ
           </p>
@@ -286,7 +286,7 @@ export default function Profile(props) {
           </p>
         </div>
         <div
-          className='col-12 col-md-8 text-start my-auto fw-bold'
+          className='col-8 col-md-8 text-start my-auto fw-bold'
           style={{ fontSize: '14px' }}
         >
           LTS Ss read this @nytimes article on the slow growth of Snap. <br />
@@ -348,7 +348,7 @@ export default function Profile(props) {
       {/* end of certification status */}
       {/* read and more */}
       <div
-        className='col-lg-6 col-12 mt-4 row px-4 gx-0 float-end ps-auto ms-auto'
+        className='col-lg-6 col-12 mt-4 row px-md-4 gx-0 float-end ps-auto ms-auto'
         style={{
           backgroundColor: '#F8F7F7',
           minHeight: '166px',
@@ -356,14 +356,12 @@ export default function Profile(props) {
         }}
       >
         <div className='read-section w-100 border-bottom row gx-0'>
-          <div className='col-4 col-md-3 text-start text-md-start  read-watch-listen-image-div'>
+          <div className='col-5 col-md-3 text-start text-md-start  read-watch-listen-image-div'>
             <img src={read} className={'w-auto '} style={{ height: '130px' }} />
           </div>
           <div
             style={{ float: 'right' }}
-            className={
-              'text-start w-auto my-auto col-8 read-watch-listen-text-div'
-            }
+            className={'text-start my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
               LIKE, COMMENT, SUBSCRIBE
@@ -375,7 +373,7 @@ export default function Profile(props) {
         </div>
         {/* second */}
         <div className='read-section w-100 border-bottom row gx-0'>
-          <div className='col-4 col-md-3 text-start text-md-start read-watch-listen-image-div'>
+          <div className='col-5 col-md-3 text-start text-md-start read-watch-listen-image-div'>
             <img
               src={watch}
               className={'w-auto '}
@@ -385,7 +383,7 @@ export default function Profile(props) {
           <div
             style={{ float: 'right' }}
             className={
-              'text-start my-auto col-8 col-md-9 read-watch-listen-text-div'
+              'text-start my-auto col-7 col-md-9 read-watch-listen-text-div'
             }
           >
             <p className='my-0 text-start w-100 read-watch-listen-title'>
@@ -401,18 +399,12 @@ export default function Profile(props) {
           className='read-section w-100 row gx-0 pb-2'
           style={{ borderBottom: '0px' }}
         >
-          <div className='col-4 col-md-3 text-start text-md-start read-watch-listen-image-div'>
-            <img
-              src={listen}
-              className={'w-auto '}
-              style={{ height: '130px' }}
-            />
+          <div className='col-5 col-md-3 text-start text-md-start read-watch-listen-image-div'>
+            <img src={listen} style={{ height: '130px' }} />
           </div>
           <div
             style={{ float: 'right' }}
-            className={
-              'text-center w-auto my-auto col-8 read-watch-listen-text-div'
-            }
+            className={'text-center my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
               WISDOM FROM THE TOP WITH GUY RAZ
