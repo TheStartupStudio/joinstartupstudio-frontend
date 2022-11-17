@@ -31,12 +31,19 @@ export default function Profile(props) {
   const [newMessages, setNewMessages] = useState([])
   const isAllowedLevel = IsUserLevelAuthorized()
   const [totalStudents, setTotalStudents] = useState(0)
+  const [dashboardInfo, setDashboardInfo] = useState({})
 
   useEffect(() => {
     getNewMessages()
     getTotalStudents()
+    setDashboardData()
   }, [])
 
+  const setDashboardData = async () => {
+    await axiosInstance.get('/dashboard').then((res) => {
+      setDashboardInfo(res.data)
+    })
+  }
   useEffect(() => {
     if (props.newMessage.length === 0) return
     const arrivalMessage = props.newMessage
@@ -107,6 +114,9 @@ export default function Profile(props) {
     setLastLogin(formatedDate)
   }, [])
 
+  const redirect = (input) => {
+    window.open(input, '_blank')
+  }
   const getNewMessages = async () => {
     if (!isAllowedLevel) return
     await axiosInstance
@@ -272,25 +282,29 @@ export default function Profile(props) {
         style={{
           minHeight: '166px'
         }}
-        className='mx-0 px-0 col-12 col-lg-6 row mt-4 mt-md-0 widget-interesting text-center'
+        className='mx-0 px-0 col-12 col-lg-6 row mt-4 mt-md-0 widget-interesting text-center '
       >
-        <div className='col-4 col-md-4 mx-auto my-auto fw-bold py-4'>
-          <p className='my-0 mx-auto' style={{ color: '#FE43A1' }}>
-            READ
-          </p>
-          <p className='my-0 mx-auto' style={{ color: '#99CC33' }}>
-            WATCH
-          </p>
-          <p className='my-0 mx-auto' style={{ color: '#51C7DF' }}>
-            LISTEN
-          </p>
+        <div className='col-4 col-md-4 mx-auto my-auto fw-bold py-4 '>
+          <div
+            className='h-auto w-auto user-select-none'
+            onClick={() => redirect(dashboardInfo.link)}
+          >
+            <p className='my-0 mx-auto' style={{ color: '#FE43A1' }}>
+              READ
+            </p>
+            <p className='my-0 mx-auto' style={{ color: '#99CC33' }}>
+              WATCH
+            </p>
+            <p className='my-0 mx-auto' style={{ color: '#51C7DF' }}>
+              LISTEN
+            </p>
+          </div>
         </div>
         <div
           className='col-8 col-md-8 text-start my-auto fw-bold'
-          style={{ fontSize: '14px' }}
+          style={{ fontSize: '14px', wordBreak: 'break-word' }}
         >
-          LTS Ss read this @nytimes article on the slow growth of Snap. <br />
-          How can Snap generate new revenue streams outside of ads?
+          {dashboardInfo.text}
         </div>
       </div>
       {/* end of twitter widget */}
