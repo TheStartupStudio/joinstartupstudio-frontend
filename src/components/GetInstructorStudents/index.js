@@ -5,6 +5,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import './index.css'
+import { useHistory } from 'react-router-dom'
 
 const StudentOfInstructors = (props) => {
   const [universities, setUniversities] = useState([])
@@ -15,7 +16,8 @@ const StudentOfInstructors = (props) => {
   const [totalNumber, setTotalNumber] = useState(-1)
   const [dashboardData, setDashboardData] = useState([])
   const [toShow, setStateToShow] = useState('none')
-  const [showButtons, setShowButtons] = useState(true)
+  const history = useHistory()
+
   const getData = async () => {
     await axiosInstance.get('/studentsInstructorss/init').then((res) => {
       setUniversities(res.data)
@@ -62,6 +64,7 @@ const StudentOfInstructors = (props) => {
       res.data.updated
         ? toast.success('Data successfully updated')
         : toast.error('Data was not updated')
+      history.go(0)
     })
   }
 
@@ -74,7 +77,7 @@ const StudentOfInstructors = (props) => {
       id=''
     >
       <Modal.Header className='contact-us-title my-auto general-modal-header p-0 mx-4'>
-        <h3 className='mb-0 pt-4 mt-2 '>Admin panel</h3>
+        <h3 className='mb-0 pt-4 mt-2'>Admin panel</h3>
         <button
           type='button'
           className='btn-close me-1 mt-0 pt-1'
@@ -86,66 +89,54 @@ const StudentOfInstructors = (props) => {
         />
       </Modal.Header>
       <Modal.Body style={{ minHeight: '150px' }}>
-        {showButtons && (
-          <>
-            <div className='row px-md-4'>
-              <div className='col-12 col-md-6 px-md-4'>
-                <button
-                  className={`btn w-100  ${
-                    toShow == 'CountStudent'
-                      ? 'brand-button-active'
-                      : 'brand-button'
-                  }`}
-                  onClick={() => setStateToShow('CountStudent')}
-                >
-                  Count student
-                </button>
-              </div>
-              <div className='col-12 col-md-6 px-md-4'>
-                <button
-                  className={`btn  w-100 brand-button ${
-                    toShow == 'dashboard'
-                      ? 'brand-button-active'
-                      : 'brand-button'
-                  }`}
-                  onClick={() => setStateToShow('dashboard')}
-                >
-                  Edit dashboard
-                </button>
-              </div>
+        <>
+          <div className='row px-md-4 mt-md-4'>
+            <div className='col-12 col-md-6 px-md-4'>
+              <button
+                className={`btn w-100  ${
+                  toShow == 'CountStudent'
+                    ? 'brand-button-active'
+                    : 'brand-button'
+                }`}
+                onClick={() =>
+                  toShow == 'CountStudent'
+                    ? setStateToShow('none')
+                    : setStateToShow('CountStudent')
+                }
+              >
+                {toShow == 'CountStudent' ? 'Close' : 'Count student'}
+              </button>
             </div>
-          </>
-        )}
-        <div className='row'>
-          {showButtons ? (
-            <button
-              className='btn brand-button w-auto ms-auto me-4 mt-2'
-              onClick={() => setShowButtons(false)}
-            >
-              Hide buttons
-            </button>
-          ) : (
-            <button
-              className='btn brand-button w-auto ms-auto me-4 mt-2'
-              onClick={() => setShowButtons(true)}
-            >
-              Show buttons
-            </button>
-          )}
-        </div>
+            <div className='col-12 col-md-6 px-md-4'>
+              <button
+                className={`btn  w-100 brand-button ${
+                  toShow == 'dashboard' ? 'brand-button-active' : 'brand-button'
+                }`}
+                onClick={() =>
+                  toShow == 'dashboard'
+                    ? setStateToShow('none')
+                    : setStateToShow('dashboard')
+                }
+              >
+                {toShow == 'dashboard' ? 'Close' : 'Edit dashboard'}
+              </button>
+            </div>
+          </div>
+        </>
+        <div className='row'></div>
         {toShow != 'none' && <hr />}
         {toShow == 'dashboard' ? (
           <>
             <Form onSubmit={handleSubmit(changeDashboard)}>
               <div className='mb-4 py-2 px-md-2 row'>
-                <Col sm={12} md={6}>
-                  <label for='text' className='brand-text'>
+                <Col sm={12} md={12}>
+                  <label for='text' className='brand-text mt-3'>
                     Text to show
                   </label>
-                  <input
+                  <textarea
                     className='mt-2 mb-2 col-12 p-md-2'
-                    type='text'
                     name='text'
+                    rows={4}
                     placeholder={'Link'}
                     value={dashboardData ? dashboardData.text : ''}
                     {...register('text', {
@@ -159,7 +150,7 @@ const StudentOfInstructors = (props) => {
                     }
                   />
                 </Col>
-                <Col sm={12} md={6}>
+                <Col sm={12} md={12}>
                   <label for='link' className='brand-text'>
                     Link to redirect
                   </label>
@@ -182,7 +173,7 @@ const StudentOfInstructors = (props) => {
                 </Col>
               </div>
               <button
-                className='btn w-100 save-button add-new-note-button-text'
+                className='btn w-100 save-button add-new-note-button-text fw-bold brand-button'
                 type='submit'
               >
                 Submit
@@ -214,6 +205,19 @@ const StudentOfInstructors = (props) => {
                     }}
                   />
                   <div className='row col-12 col-md-7'>
+                    {universities?.filter((uni) => uni.value == isUniChosed)[0]
+                      ?.universityInstructors.length != 0 &&
+                    !(
+                      selectedInstructorsName.length == 0 &&
+                      isUniChosed == 0 &&
+                      totalNumber == -1
+                    ) ? (
+                      <>
+                        <p className='text-starts fw-bold mb-3'>Instructors</p>
+                      </>
+                    ) : (
+                      ''
+                    )}
                     {universities
                       .filter((univerity) => univerity.value == isUniChosed)[0]
                       ?.universityInstructors.map((instructor, index) => (

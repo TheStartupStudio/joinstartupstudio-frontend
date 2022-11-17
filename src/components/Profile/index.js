@@ -16,7 +16,8 @@ import avator from '../../assets/images/profile-image.png'
 import {
   getConnectionRequests,
   getConnections,
-  IsUserLevelAuthorized
+  IsUserLevelAuthorized,
+  isValidHttpUrl
 } from '../../utils/helpers'
 import marketReadyGuideOne from '../../assets/images/market-ready-1-badge.png'
 import marketReadyGuideTwo from '../../assets/images/market-ready-2-badge.png'
@@ -24,6 +25,7 @@ import listen from '../../assets/images/read_watch_listen_Listen_with typo.png'
 import read from '../../assets/images/read_watch_listen_Read_with typo.png'
 import watch from '../../assets/images/read_watch_listen_Watch_with typo.png'
 import './index.css'
+import { Link } from 'react-router-dom'
 
 export default function Profile(props) {
   const user = useSelector((state) => state.user.user.user)
@@ -34,9 +36,9 @@ export default function Profile(props) {
   const [dashboardInfo, setDashboardInfo] = useState({})
 
   useEffect(() => {
+    setDashboardData()
     getNewMessages()
     getTotalStudents()
-    setDashboardData()
   }, [])
 
   const setDashboardData = async () => {
@@ -115,6 +117,7 @@ export default function Profile(props) {
   }, [])
 
   const redirect = (input) => {
+    if (!isValidHttpUrl(input)) input = `http://${input}`
     window.open(input, '_blank')
   }
   const getNewMessages = async () => {
@@ -227,6 +230,10 @@ export default function Profile(props) {
                 <FontAwesomeIcon icon={faFacebookF} />
               </a>
             )}
+            <div className='dashboard_lastLogin w-100'>
+              <span className='me-1'>Last Login:</span>
+              {lastLogin}
+            </div>
           </div>
         </div>
       </Col>
@@ -301,7 +308,7 @@ export default function Profile(props) {
           </div>
         </div>
         <div
-          className='col-8 col-md-8 text-start my-auto fw-bold'
+          className='col-8 col-md-8 text-start my-auto info-text-dashboard'
           style={{ fontSize: '14px', wordBreak: 'break-word' }}
         >
           {dashboardInfo.text}
@@ -316,7 +323,10 @@ export default function Profile(props) {
         }}
         className='notification-box col-lg-6 col-sm-12 mt-4 row position-relative'
       >
-        <p className='text-center fw-bold' style={{ fontSize: '20px' }}>
+        <p
+          className='text-center certification-progress'
+          style={{ fontSize: '20px' }}
+        >
           My Certification Progress
         </p>
         <div className='col-6 text-center fw-bold'>
@@ -380,7 +390,10 @@ export default function Profile(props) {
             <p className='my-0 text-start read-watch-listen-title'>
               LIKE, COMMENT, SUBSCRIBE
             </p>
-            <p className='text-start my-0' style={{ fontSize: '10px' }}>
+            <p
+              className='text-start my-0 read-watch-listen-author'
+              style={{ fontSize: '10px' }}
+            >
               Mark Bergen
             </p>
           </div>
@@ -403,14 +416,17 @@ export default function Profile(props) {
             <p className='my-0 text-start w-100 read-watch-listen-title'>
               VICTORIA'S SECRET: ANGELS AND DEMONS
             </p>
-            <p className='text-start my-0' style={{ fontSize: '10px' }}>
+            <p
+              className='text-start my-0 read-watch-listen-author'
+              style={{ fontSize: '10px' }}
+            >
               Hulu
             </p>
           </div>
         </div>
         {/* third  */}
         <div
-          className='read-section w-100 row gx-0 pb-2'
+          className='read-section w-100 row gx-0'
           style={{ borderBottom: '0px' }}
         >
           <div className='col-5 col-md-3 text-start text-md-start read-watch-listen-image-div'>
@@ -423,7 +439,10 @@ export default function Profile(props) {
             <p className='my-0 text-start read-watch-listen-title'>
               WISDOM FROM THE TOP WITH GUY RAZ
             </p>
-            <p className='text-start my-0' style={{ fontSize: '10px' }}>
+            <p
+              className='text-start my-0 read-watch-listen-author'
+              style={{ fontSize: '10px' }}
+            >
               Luminary and NPR
             </p>
           </div>
