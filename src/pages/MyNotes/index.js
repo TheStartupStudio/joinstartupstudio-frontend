@@ -83,7 +83,6 @@ function MyNotes(props) {
     const redirect = notes.filter((note) => note.id != id)[0].id
     history.push(`${redirect}`)
     setDeleteNoteModal(false)
-    // console.log(redirect, 'redirect')
   }
 
   const quillFormats = [

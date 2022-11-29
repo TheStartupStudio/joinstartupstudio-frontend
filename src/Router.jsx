@@ -14,6 +14,8 @@ import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
 import PublishedProject from './pages/StartupProfile/components/published'
 import EditProject from './pages/StartupProfile/pages/edit'
 import StudentJournals from './pages/studentJournals'
+import IamrContents from './pages/Iamr/IamrContentsAccordion'
+import ImrContent from './pages/Iamr/ImrContent'
 
 const Login = React.lazy(() => import('./pages/Auth/Login'))
 const SecurePage = React.lazy(() => import('../src/pages/Secure'))
@@ -67,6 +69,7 @@ const PreviewPublicPortfolio = React.lazy(() =>
 const UserPortfolioProj = React.lazy(() =>
   import('./pages/StartupProfile/userProjects')
 )
+const Iamr = React.lazy(() => import('../src/pages/Iamr'))
 
 const MyNotes = React.lazy(() => import('../src/pages/MyNotes'))
 const SampleNote = React.lazy(() => import('../src/pages/MyNotes/sampleNote'))
@@ -257,6 +260,7 @@ function Router(props) {
               />
               <Redirect from='/register' exact to='/dashboard' />
               <Redirect from='/' exact to='/dashboard' />
+              <Route path='/iamr' component={Iamr} />
               <Route component={NotFound} />
             </Switch>
           </Layout>

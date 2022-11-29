@@ -27,6 +27,7 @@ function LtsJournalReflection(props) {
   let [content, setContent] = useState(props.entry?.content || '')
   let [editing, setEditing] = useState(true)
   let [saving, setSaving] = useState(false)
+  const [notSaved, setNotSaved] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
   const loggedUser = useSelector((state) => state.user.user.user)
   const unblockHandle = useRef()
@@ -102,6 +103,7 @@ function LtsJournalReflection(props) {
         )
 
         props.saved && props.saved(data)
+        setNotSaved(false)
       } else {
         await axiosInstance.put(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`,
@@ -115,6 +117,7 @@ function LtsJournalReflection(props) {
           })
 
         setEditing(true)
+        setNotSaved(false)
       }
     } catch (error) {
       if (error.response) {
@@ -131,30 +134,30 @@ function LtsJournalReflection(props) {
 
   const handleContentChange = (value) => {
     setContent(value)
-
+    setNotSaved(true)
     debounce(handleSubmit, value)
     detectFoulWords(removeHtmlFromString(value), (data) => {
       setFoulWords(data)
     })
   }
 
-  // useEffect(() => {
-  //   unblockHandle.current = history.block((targetLocation) => {
-  //     if (
-  //       !showNotSavedModal &&
-  //       editing
-  //       // && props.history.location.pathname != targetLocation.pathname
-  //     ) {
-  //       showModal(targetLocation)
+  useEffect(() => {
+    unblockHandle.current = history.block((targetLocation) => {
+      if (
+        !showNotSavedModal &&
+        notSaved
+        // && props.history.location.pathname != targetLocation.pathname
+      ) {
+        showModal(targetLocation)
 
-  //       return false
-  //     }
-  //     return true
-  //   })
-  //   return function () {
-  //     unblockHandle.current.current && unblockHandle.current.current()
-  //   }
-  // })
+        return false
+      }
+      return true
+    })
+    return function () {
+      unblockHandle.current.current && unblockHandle.current.current()
+    }
+  })
 
   function handleConfirm() {
     if (unblockHandle) {
