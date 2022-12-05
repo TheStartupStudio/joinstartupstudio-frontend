@@ -388,13 +388,13 @@ export default function Profile(props) {
             className={'text-start my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
-              LIKE, COMMENT, SUBSCRIBE
+              TWELVE AND A HALF AUTHOR
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              Mark Bergen
+              GARY VAYNERCHUK
             </p>
           </div>
         </div>
@@ -414,13 +414,13 @@ export default function Profile(props) {
             }
           >
             <p className='my-0 text-start w-100 read-watch-listen-title'>
-              VICTORIA'S SECRET: ANGELS AND DEMONS
+              THE INVENTOR: OUT FOR BLOOD IN SILICON VALLEY SOURCE
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              Hulu
+              HBO
             </p>
           </div>
         </div>
@@ -437,13 +437,13 @@ export default function Profile(props) {
             className={'text-center my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
-              WISDOM FROM THE TOP WITH GUY RAZ
+              THE FUTURE OF EVERYTHING SOURCE
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              Luminary and NPR
+              THE WALL STREET JOURNAL
             </p>
           </div>
         </div>
