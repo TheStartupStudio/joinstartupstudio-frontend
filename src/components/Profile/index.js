@@ -388,7 +388,7 @@ export default function Profile(props) {
             className={'text-start my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
-              TWELVE AND A HALF AUTHOR
+              TWELVE AND A HALF
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
@@ -414,7 +414,7 @@ export default function Profile(props) {
             }
           >
             <p className='my-0 text-start w-100 read-watch-listen-title'>
-              THE INVENTOR: OUT FOR BLOOD IN SILICON VALLEY SOURCE
+              THE INVENTOR: OUT FOR BLOOD IN SILICON VALLEY
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
@@ -437,7 +437,7 @@ export default function Profile(props) {
             className={'text-center my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
-              THE FUTURE OF EVERYTHING SOURCE
+              THE FUTURE OF EVERYTHING
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
