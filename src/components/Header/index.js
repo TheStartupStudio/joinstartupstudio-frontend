@@ -686,13 +686,13 @@ function Header(props) {
             >
               <IntlMessages id='my_account.page_title' />
             </Link>
-            <Link
+            {/* <Link
               className='dropdown-item py-2 dropdown-menu-hover'
               to='/MyStartupProfile'
               onClick={() => setShowDropDown((preState) => !preState)}
             >
               MY PROJECTS
-            </Link>
+            </Link> */}
             <Link
               className='dropdown-item py-2 dropdown-menu-hover'
               to='/my-connections'
