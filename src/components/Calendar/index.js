@@ -120,7 +120,8 @@ export default function Calendar() {
                   />
                 </>
               ))
-            : 'There are not any events in the selected date.'}
+            : ''}
+          {/* : 'There are not any events in the selected date.'} */}
         </div>
         <div className='col-xl-12 col-md-6 col-sm-12'>
           {events.length != 0 && (

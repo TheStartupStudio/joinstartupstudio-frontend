@@ -161,7 +161,8 @@ ul.sidebar-menu-item a {
   height: 20px !important;
 }
 .sidebar-bottom img {
-  margin-top: 43% !important;
+  /* margin-top: 43% !important; */
+  margin-top: 16% !important;
   width: 100%;
 }
 .sidebar-bottom {
@@ -1912,8 +1913,9 @@ ul.content-list-of-month li:hover span {
   font-weight: 600;
 }
 .public-page-form
-  input:not(.public-page-form input[type='radio']):not(.public-page-form
-    input[type='check']),
+  input:not(.public-page-form input[type='radio']):not(
+    .public-page-form input[type='check']
+  ),
 .form-item {
   font-size: 12px;
   font-weight: normal;
