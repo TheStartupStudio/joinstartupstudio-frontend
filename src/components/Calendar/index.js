@@ -15,22 +15,22 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState()
   // eslint-disable-next-line
   const [events, setEvents] = useState([
-    {
-      id: 2,
-      title:
-        'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
-      author: 'Anastasia Hall',
-      date: '2022/10/27',
-      time: '2:00 pm'
-    },
-    {
-      id: 3,
-      title:
-        'Live Q&A with Story in Motion Podcast Episode 3 Guest: Tonya Evans',
-      author: 'Anastasia Hall',
-      date: '2022/11/30',
-      time: '01:30 pm EST'
-    },
+    // {
+    //   id: 2,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
+    //   author: 'Anastasia Hall',
+    //   date: '2022/10/27',
+    //   time: '2:00 pm'
+    // },
+    // {
+    //   id: 3,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 3 Guest: Tonya Evans',
+    //   author: 'Anastasia Hall',
+    //   date: '2022/11/30',
+    //   time: '01:30 pm EST'
+    // },
     {
       id: 4,
       title:
@@ -42,22 +42,22 @@ export default function Calendar() {
   ])
 
   const filterEventsByDate = [
-    {
-      id: 2,
-      title:
-        'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
-      author: 'Anastasia Hall',
-      date: '2022/10/27',
-      time: '2:00 pm'
-    },
-    {
-      id: 3,
-      title:
-        'Live Q&A with Story in Motion Podcast Episode 3 Guest: Tonya Evans',
-      author: 'Anastasia Hall',
-      date: '2022/11/30',
-      time: '01:30 pm EST'
-    },
+    // {
+    //   id: 2,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
+    //   author: 'Anastasia Hall',
+    //   date: '2022/10/27',
+    //   time: '2:00 pm'
+    // },
+    // {
+    //   id: 3,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 3 Guest: Tonya Evans',
+    //   author: 'Anastasia Hall',
+    //   date: '2022/11/30',
+    //   time: '01:30 pm EST'
+    // },
     {
       id: 4,
       title:
