@@ -215,7 +215,7 @@ function Sidebar(props) {
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
                       <div className='ms-4 ps-2 py-1'>
-                        UNDERSTANDING CERTIFICATION
+                        MY MARKET-READY GUIDE
                       </div>
                     </div>
                   </NavLink>

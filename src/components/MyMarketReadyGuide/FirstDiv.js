@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import ReactPlayer from 'react-player'
-import image from '../../assets/images/FivePillars_no_bg.png'
+import image from '../../assets/images/market-ready.jpg'
 import { SingleA } from './SingleA'
-// import { default as data } from './index'
 import { Image } from './image'
 import { useEffect } from 'react'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -14,11 +13,13 @@ const FirstDiv = () => {
   useEffect(() => {
     getMyMarketReadyData()
   }, [])
+
   const getMyMarketReadyData = async () => {
     await axiosInstance.get('/ltsJournals/my-market-ready').then((response) => {
       setData(response.data)
     })
   }
+
   return (
     <div className='row'>
       <div className='col-12 col-md-6'>
@@ -51,33 +52,51 @@ const FirstDiv = () => {
           </div>
         </div>
         <p className='video_desc mt-3'>
-          Welcome to your market-ready guide. This guide is designed to walk you
-          through the purpose of the market-ready page, the process of creating
-          the page, and the outcomes of creating the page. Through this guide
-          you will create your Market-Ready Page and submit to both your
-          instructor and for final certification.
+          <p>
+            Through your market-ready journal, you have the ability to prepare
+            for the certification process. As you build your portfolio, you want
+            to evaluate your growth and the proof of your growth specific to
+            in-demand employability skills. The Startup Studio offers two
+            market-ready certifications:
+          </p>
+          <ul className='float-end'>
+            <li className='mt-4'>
+              Market-Ready Certification 1: Competitive Entry Level
+              Employability
+            </li>
+            <li className='mt-3'>
+              Market-Ready Certification 2: Competitive Project Management
+              Employability/Self-Employment
+            </li>
+          </ul>
+          <p className='mt-4'>
+            You earn these certifications by proving your proficiency in twenty
+            in-demand employability skills. In-demand meaning, demanded by
+            current employers. The journal allows you to evaluate your current
+            level of development in each of these skills, before you submit your
+            evidence to your teacher for feedback, and ultimately to The Startup
+            Studio for certification.
+          </p>
         </p>
       </div>
-      <div
-        className='col-12 col-md-6 image-desc ps-lg-2 px-3 px-md-0 text-center'
-        // style={{ maxWidth: '500px' }}
-      >
+      <div className='col-12 col-md-6 image-desc ps-lg-2 px-3 px-md-0 text-center'>
         <img
           src={image}
           style={{ maxWidth: '400px' }}
           className='w-100'
           onClick={() => SetShowImageModal('true')}
+          alt='#'
         />
 
-        <p className='mt-2 text-center'>The Five Pillars of Assessment</p>
+        <p className='mt-2 text-center'>Process to market ready</p>
       </div>
-      <div className='col-md-11 pe-md-5 mb-4'>
+      {/* <div className='col-md-11 pe-md-5 mb-4'>
         <div className='accordion' id='accordionExample'>
           {data?.map((data, index) => (
             <SingleA data={data} index={index} key={index} />
           ))}
         </div>
-      </div>
+      </div> */}
       <Image
         show={showImageModal}
         onHide={() => SetShowImageModal(false)}
