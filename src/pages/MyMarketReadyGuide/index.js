@@ -14,10 +14,11 @@ function MyMarket() {
   return (
     <div className='account-page-padding page-border MY_MARKET_READY_GUIDE ps-md-4 row'>
       <div className='col-12 col-md-10'>
-        <h3 className='page_title mb-0'>Learner’s Market-Ready Guide</h3>
+        <h3 className='page_title mb-0'>
+          Introduction to Your Market-Ready Journal
+        </h3>
         <p className='desc'>
-          Learn how students gather and track their progress towards becoming
-          market-ready.
+          Learn how to use your journal to prepare for certification.
         </p>
         <FirstDiv />
       </div>
