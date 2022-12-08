@@ -15,29 +15,61 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState()
   // eslint-disable-next-line
   const [events, setEvents] = useState([
+    // {
+    //   id: 2,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
+    //   author: 'Anastasia Hall',
+    //   date: '2022/10/27',
+    //   time: '2:00 pm'
+    // },
+    // {
+    //   id: 3,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 3 Guest: Tonya Evans',
+    //   author: 'Anastasia Hall',
+    //   date: '2022/11/30',
+    //   time: '01:30 pm EST'
+    // },
     {
-      id: 2,
+      id: 4,
       title:
-        'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
+        'Live Q&A with Story in Motion Podcast Episode 4 Guest: Emily Johnson',
       author: 'Anastasia Hall',
-      date: '2022/10/27',
-      time: '2:00 pm'
+      date: '2022/12/14',
+      time: '01:30 pm'
     }
   ])
 
   const filterEventsByDate = [
+    // {
+    //   id: 2,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
+    //   author: 'Anastasia Hall',
+    //   date: '2022/10/27',
+    //   time: '2:00 pm'
+    // },
+    // {
+    //   id: 3,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 3 Guest: Tonya Evans',
+    //   author: 'Anastasia Hall',
+    //   date: '2022/11/30',
+    //   time: '01:30 pm EST'
+    // },
     {
-      id: 1,
+      id: 4,
       title:
-        'Live Q&A with Story in Motion Podcast Episode 2 Guest: Mehul Desai',
+        'Live Q&A with Story in Motion Podcast Episode 4 Guest: Emily Johnson',
       author: 'Anastasia Hall',
-      date: '2022/10/27',
-      time: '2:00 pm'
+      date: '2022/12/14',
+      time: '01:30 pm'
     }
   ]
 
   let dates = events.map((data) => new Date(data.date))
-  console.log(dates, 'filter')
+
   const filterUpComing = (data) => {
     setEventsForDay(
       events.filter((event) => moment(data).format('YYYY/MM/DD') == event.date)
@@ -88,7 +120,8 @@ export default function Calendar() {
                   />
                 </>
               ))
-            : 'There are not any events in the selected date.'}
+            : ''}
+          {/* : 'There are not any events in the selected date.'} */}
         </div>
         <div className='col-xl-12 col-md-6 col-sm-12'>
           {events.length != 0 && (

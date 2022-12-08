@@ -126,3 +126,12 @@ export const detectFoulWords = _.debounce((message, callback) => {
 export const removeHtmlFromString = (string) => {
   return string.replace(/<[^>]*>?/gm, '')
 }
+
+export function isValidHttpUrl(string) {
+  try {
+    const url = new URL(string)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+  } catch (err) {
+    return false
+  }
+}

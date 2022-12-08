@@ -1,0 +1,35 @@
+.iamr-header h3 {
+  font-weight: 900;
+}
+.iamr-header p {
+  font-weight: 400px;
+}
+.iamr-header p > span {
+  font-weight: bold;
+  color: #fe43a1 !important;
+}
+.iamr-status-point {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50%;
+}
+.accordion-data {
+  border: 0 !important;
+}
+.accordion-data-item {
+  border: 0 !important;
+}
+.accordion-button:not(.collapsed) {
+  border: none;
+  background-color: transparent;
+  color: black;
+}
+.accordion-button::after {
+  display: none;
+}
+.accordion-body:hover {
+  border: 0px !important;
+}
+.accordion-button:not(.collapsed) {
+  box-shadow: none;
+}

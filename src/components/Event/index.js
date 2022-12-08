@@ -11,7 +11,7 @@ export default function Event({ date, time, title, author }) {
         {time}
       </h4>
       <p className={styles.title}>{title}</p>
-      <small className={styles.auther}>{author}</small>
+      {/* <small className={styles.auther}>{author}</small> */}
     </div>
   )
 }

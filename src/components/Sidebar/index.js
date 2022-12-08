@@ -27,6 +27,7 @@ import $ from 'jquery'
 import Lottie from 'react-lottie'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import './index.css'
+import logoImage from '../../assets/images/LearntoStart-Diagram-3D.png'
 
 function Sidebar(props) {
   const sideBarState = useSelector((state) => state.general.sidebarState)
@@ -498,7 +499,8 @@ function Sidebar(props) {
             </ul>
             <div className='sidebar-bottom'>
               <div style={{ position: 'relative' }}>
-                {!animationPlaying && (
+                <img src={logoImage} alt='logoimage' />
+                {/* {!animationPlaying && (
                   <FontAwesomeIcon
                     icon={faPlay}
                     onClick={() => setAnimationPlaying(true)}
@@ -534,7 +536,7 @@ function Sidebar(props) {
                       callback: () => setAnimationPlaying(false)
                     }
                   ]}
-                />
+                /> */}
               </div>
               {/* {currentLanguage === 'en' ? (
                 <img src={sidebarImage} alt='sidebar' />
