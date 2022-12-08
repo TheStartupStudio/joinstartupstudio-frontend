@@ -88,7 +88,7 @@ const FirstDiv = () => {
           alt='#'
         />
 
-        <p className='mt-2 text-center'>The Five Pillars of Assessment</p>
+        <p className='mt-2 text-center'>Process to market ready</p>
       </div>
       {/* <div className='col-md-11 pe-md-5 mb-4'>
         <div className='accordion' id='accordionExample'>
