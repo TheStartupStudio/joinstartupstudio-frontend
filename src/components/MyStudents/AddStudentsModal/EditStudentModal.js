@@ -5,7 +5,6 @@ import defaultImage from '../../../assets/images/profile-image.png'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import '../index.css'
-import Auth from '@aws-amplify/auth'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -95,9 +94,7 @@ const EditStudentModal = (props) => {
 
     await axiosInstance
       .put(`/instructor/update-student/${data.id}`, {
-        ...data,
-        from: 'editViewUser',
-        newEmail: data?.email
+        ...data
       })
       .then(async (response) => {
         props.updateState(data?.id, newStudentData)
