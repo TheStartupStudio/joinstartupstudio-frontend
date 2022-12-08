@@ -36,10 +36,10 @@ const EditStudentModal = (props) => {
   }, [props.data])
 
   const defaultLevels = [
-    { label: 'L1 (ES)', value: 'L1' },
-    { label: 'L2 (MS)', value: 'L2' },
-    { label: 'L3 (HS)', value: 'L3' },
-    { label: 'L4', value: 'L4' }
+    { label: 'LS', value: 'LS' },
+    { label: 'MS', value: 'MS' },
+    { label: 'HS', value: 'HS' },
+    { label: 'HE', value: 'HE' }
   ]
 
   const defaultYears = [

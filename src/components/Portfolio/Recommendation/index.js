@@ -56,7 +56,7 @@ export const Recommendation = (props) => {
       setConnections(
         result.filter((connection) => {
           const level = connection.level
-          return level !== 'L1' && level !== 'L2' && level !== 'L3'
+          return level !== 'LS' && level !== 'MS' && level !== 'HS'
         })
       )
     })

@@ -14,17 +14,17 @@ const AddIndividual = (props) => {
   const [isChanged, setIsChanged] = useState(false)
 
   const YEAR = [
-    { name: 'year', value: 'LTS1', label: 'LTS YEAR 1' },
-    { name: 'year', value: 'LTS2', label: 'LTS YEAR 2' },
-    { name: 'year', value: 'LTS3', label: 'LTS YEAR 3' },
-    { name: 'year', value: 'LTS4', label: 'LTS YEAR 4' }
+    { name: 'year', value: 'LTS1', label: 'LTS1' },
+    { name: 'year', value: 'LTS2', label: 'LTS2' },
+    { name: 'year', value: 'LTS3', label: 'LTS3' },
+    { name: 'year', value: 'LTS4', label: 'LTS4' }
   ]
 
   const Level = [
-    { name: 'level', value: 'L1', label: 'L1 (ES)' },
-    { name: 'level', value: 'L2', label: 'L2 (MS)' },
-    { name: 'level', value: 'L3', label: 'L3 (HS)' },
-    { name: 'level', value: 'L4', label: 'L4 (ADUL)' }
+    { name: 'level', value: 'LS', label: 'LS' },
+    { name: 'level', value: 'MS', label: 'MS' },
+    { name: 'level', value: 'HS', label: 'HS' },
+    { name: 'level', value: 'HE', label: 'HE' }
   ]
 
   const customStyles = {

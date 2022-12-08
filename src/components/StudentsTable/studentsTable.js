@@ -147,7 +147,10 @@ export default function StudentsTable(props) {
 
     setStudents((students) =>
       students.map((student) => {
-        if (student?.transferHistory[0]?.id === id) {
+        if (
+          student?.transferHistory &&
+          student?.transferHistory[0]?.id === id
+        ) {
           delete student.transferHistory[0]
         }
         return student
@@ -166,7 +169,10 @@ export default function StudentsTable(props) {
 
       setStudents((students) =>
         students.map((student) => {
-          if (student?.transferHistory[0]?.status === 'pending') {
+          if (
+            student?.transferHistory &&
+            student?.transferHistory[0]?.status === 'pending'
+          ) {
             delete student.transferHistory[0]
           }
           return student
@@ -409,17 +415,17 @@ export default function StudentsTable(props) {
   }
 
   const defaultLevels = [
-    { label: 'L1 (ES)', value: 'L1' },
-    { label: 'L2 (MS)', value: 'L2' },
-    { label: 'L3 (HS)', value: 'L3' },
-    { label: 'L4', value: 'L4' }
+    { label: 'LS', value: 'LS' },
+    { label: 'MS', value: 'MS' },
+    { label: 'HS', value: 'HS' },
+    { label: 'HE', value: 'HE' }
   ]
 
   const defaultYears = [
-    { label: 'LTS YEAR 1', value: 'LTS1' },
-    { label: 'LTS YEAR 2', value: 'LTS2' },
-    { label: 'LTS YEAR 3', value: 'LTS3' },
-    { label: 'LTS YEAR 4', value: 'LTS4' }
+    { label: 'LTS1', value: 'LTS1' },
+    { label: 'LTS2', value: 'LTS2' },
+    { label: 'LTS3', value: 'LTS3' },
+    { label: 'LTS4', value: 'LTS4' }
   ]
 
   const customStyles = {

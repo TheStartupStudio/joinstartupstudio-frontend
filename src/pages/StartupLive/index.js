@@ -57,7 +57,7 @@ function StartupLive() {
     {
       label: 'Live Events for Elementary School',
       value: {
-        id: 'L1',
+        id: 'LS',
         room: 'startup-live-l1',
         src_link:
           'https://stream.joinstartuplive.com/view/6ced9dec-0baf-4977-ae13-114cd6a7bf8e/?embedded=True'
@@ -66,7 +66,7 @@ function StartupLive() {
     {
       label: 'Live Events for Middle School',
       value: {
-        id: 'L2',
+        id: 'MS',
         room: 'startup-live-l2',
         src_link:
           'https://stream.joinstartuplive.com/view/6abf6fa6-4f1c-4a02-a772-145a711fa2d9/?embedded=True'
@@ -75,7 +75,7 @@ function StartupLive() {
     {
       label: 'Live Events for HS & EDU',
       value: {
-        id: 'L3',
+        id: 'HS',
         room: 'startup-live-l3',
         src_link:
           'https://stream.joinstartuplive.com/view/149ff6e6-1771-41f2-898a-fdcf7d35de6e/?embedded=True'
@@ -84,7 +84,7 @@ function StartupLive() {
     {
       label: 'Live Events for Adult Participants',
       value: {
-        id: 'L4',
+        id: 'HE',
         room: 'startup-live-l4',
         src_link:
           'https://stream.joinstartuplive.com/view/7f97514c-0324-4467-bacf-452920edcf3c/?embedded=True'

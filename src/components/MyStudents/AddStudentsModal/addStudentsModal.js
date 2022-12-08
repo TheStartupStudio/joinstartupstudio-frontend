@@ -137,15 +137,15 @@ const AddStudentsModal = (props) => {
     }
 
     if (
-      item['level'] !== 'L1' &&
-      item['level'] !== 'L2' &&
-      item['level'] !== 'L3' &&
-      item['level'] !== 'L4'
+      item['level'] !== 'LS' &&
+      item['level'] !== 'MS' &&
+      item['level'] !== 'HS' &&
+      item['level'] !== 'HE'
     ) {
       setErrors((old) => [
         ...old,
         {
-          message: `Level must be either: L1, L2, L3 or L4.`,
+          message: `Level must be either: LS, MS, HS or HE.`,
           code: 400,
           user: item['UserEmail']
         }
@@ -197,7 +197,9 @@ const AddStudentsModal = (props) => {
             }
           })
           .then((response) => {
-            addedUsers = [response.data.user, ...addedUsers]
+            const addedUser = response.data.user
+            addedUser.transferHistory = []
+            addedUsers = [addedUser, ...addedUsers]
             setSuccessfullyAdded((prev) => prev + 1)
             req(results)
           })
