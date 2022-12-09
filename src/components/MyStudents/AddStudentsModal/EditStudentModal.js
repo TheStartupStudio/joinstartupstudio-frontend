@@ -245,9 +245,9 @@ const EditStudentModal = (props) => {
               rows='4'
             ></textarea>
           </div>
-          <div className='mt-2 d-flex'>
+          <div className='mt-2 reset-student-password d-flex flex-column'>
             <button
-              className='lts-button w-50'
+              className='lts-button reset-button'
               style={{
                 background: !resetSubmitted ? '#ea3b97' : 'rgb(187, 189, 191)',
                 hover: {

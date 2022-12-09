@@ -310,10 +310,18 @@ select {
   width: 180px;
 }
 
+.reset-student-password .reset-button {
+  width: 50%;
+}
+
 @media (max-width: 768px) {
   .students-transfer-modal .transfer-dialog p {
     font-size: 14px;
     width: auto;
+  }
+
+  .reset-student-password .reset-button {
+    width: 100%;
   }
 
   .students-transfer-modal .transfer-dialog .lts-button {
