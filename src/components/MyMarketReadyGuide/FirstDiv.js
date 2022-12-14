@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import ReactPlayer from 'react-player'
-import image from '../../assets/images/market-ready.jpg'
+import badge1 from '../../assets/images/market-ready-1-badge.png'
+import badge2 from '../../assets/images/market-ready-2-badge.png'
+import image from '../../assets/images/five-pillars.jpg'
 import { SingleA } from './SingleA'
 import { Image } from './image'
 import { useEffect } from 'react'
@@ -51,7 +53,7 @@ const FirstDiv = () => {
             />
           </div>
         </div>
-        <p className='video_desc mt-3'>
+        <div className='video_desc mt-3'>
           <p>
             Through your market-ready journal, you have the ability to prepare
             for the certification process. As you build your portfolio, you want
@@ -59,16 +61,20 @@ const FirstDiv = () => {
             in-demand employability skills. The Startup Studio offers two
             market-ready certifications:
           </p>
-          <ul className='float-end'>
-            <li className='mt-4'>
+          <div className='d-flex mt-4 align-items-center flex-column flex-sm-row'>
+            <img src={badge1} alt='' style={{ width: '100px' }} />
+            <p className='my-auto'>
               Market-Ready Certification 1: Competitive Entry Level
-              Employability
-            </li>
-            <li className='mt-3'>
+              Employability{' '}
+            </p>
+          </div>
+          <div className='d-flex mt-4 align-items-center flex-column flex-sm-row'>
+            <img src={badge2} alt='' style={{ width: '100px' }} />
+            <p className='my-auto'>
               Market-Ready Certification 2: Competitive Project Management
               Employability/Self-Employment
-            </li>
-          </ul>
+            </p>
+          </div>
           <p className='mt-4'>
             You earn these certifications by proving your proficiency in twenty
             in-demand employability skills. In-demand meaning, demanded by
@@ -77,12 +83,12 @@ const FirstDiv = () => {
             evidence to your teacher for feedback, and ultimately to The Startup
             Studio for certification.
           </p>
-        </p>
+        </div>
       </div>
       <div className='col-12 col-md-6 image-desc ps-lg-2 px-3 px-md-0 text-center'>
         <img
           src={image}
-          style={{ maxWidth: '400px' }}
+          style={{ maxWidth: '400px', marginTop: '-20px' }}
           className='w-100'
           onClick={() => SetShowImageModal('true')}
           alt='#'

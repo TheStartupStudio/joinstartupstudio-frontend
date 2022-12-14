@@ -68,7 +68,7 @@ export const getConnections = async () => {
 
 export const shareVideo = async (message) => {
   const serverBaseURL = `${process.env.REACT_APP_SERVER_BASE_URL}`
-  const socket = io(`${serverBaseURL}`)
+  const socket = io(`${serverBaseURL}`, { transports: ['websocket'] })
   socket.emit('sendMessage', message)
 }
 

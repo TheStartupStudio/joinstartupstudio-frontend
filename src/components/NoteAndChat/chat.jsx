@@ -134,7 +134,7 @@ class Chat extends Component {
       room: this.props.room
     }
 
-    socket = io(`${serverBaseURL}`)
+    socket = io(`${serverBaseURL}`, { transports: ['websocket'] })
 
     socket.emit('join', params, function (err) {
       if (err) {

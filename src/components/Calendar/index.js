@@ -131,29 +131,25 @@ export default function Calendar() {
           )}
           <div>
             <React.Fragment>
-              {events.map((event, index) => (
-                <>
-                  {new Date(
-                    moment(`${event.date} ${event.time}`).format(
-                      'YYYY.MM.DD h:mm:ss a'
-                    )
-                  ).getTime() /
-                    1000 <
-                  new Date().getTime() / 1000 ? (
-                    false
-                  ) : (
-                    <>
-                      <Event
-                        date={event.date}
-                        time={event.time}
-                        title={event.title}
-                        key={index}
-                        author={event.author}
-                      />
-                    </>
-                  )}
-                </>
-              ))}
+              {events.map((event, index) =>
+                new Date(
+                  moment(`${event.date} ${event.time}`).format(
+                    'YYYY.MM.DD h:mm:ss a'
+                  )
+                ).getTime() /
+                  1000 <
+                new Date().getTime() / 1000 ? (
+                  false
+                ) : (
+                  <Event
+                    date={event.date}
+                    time={event.time}
+                    title={event.title}
+                    key={index}
+                    author={event.author}
+                  />
+                )
+              )}
             </React.Fragment>
           </div>
         </div>

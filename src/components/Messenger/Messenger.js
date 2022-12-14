@@ -42,7 +42,7 @@ const Messenger = (props) => {
   const serverBaseURL = `${process.env.REACT_APP_SERVER_BASE_URL}`
 
   useEffect(() => {
-    socket.current = io(`${serverBaseURL}`)
+    socket.current = io(`${serverBaseURL}`, { transports: ['websocket'] })
     socket.current.on('getMessage', (data) => {
       setArrivalMessage(data)
     })
