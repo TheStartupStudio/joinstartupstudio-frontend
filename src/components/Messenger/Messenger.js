@@ -52,6 +52,10 @@ const Messenger = (props) => {
 
     if (lastLogin === null && !localStorage.getItem('agreedMessages'))
       setShowWarningModal(true)
+
+    return () => {
+      socket.current.disconnect()
+    }
   }, [])
 
   useEffect(() => {
