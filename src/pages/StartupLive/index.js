@@ -80,16 +80,16 @@ function StartupLive() {
         src_link:
           'https://stream.joinstartuplive.com/view/149ff6e6-1771-41f2-898a-fdcf7d35de6e/?embedded=True'
       }
-    },
-    {
-      label: 'Live Events for Adult Participants',
-      value: {
-        id: 'HE',
-        room: 'startup-live-l4',
-        src_link:
-          'https://stream.joinstartuplive.com/view/7f97514c-0324-4467-bacf-452920edcf3c/?embedded=True'
-      }
     }
+    // {
+    //   label: 'Live Events for Adult Participants',
+    //   value: {
+    //     id: 'HE',
+    //     room: 'startup-live-l4',
+    //     src_link:
+    //       'https://stream.joinstartuplive.com/view/7f97514c-0324-4467-bacf-452920edcf3c/?embedded=True'
+    //   }
+    // }
   ]
 
   useEffect(() => {
@@ -191,7 +191,7 @@ function StartupLive() {
     await axiosInstance
       .get(`/contents/by-type/startup-live`)
       .then((response) => {
-        setStartupLiveVideos(response.data)
+        setStartupLiveVideos(response.data?.slice(0, 3))
       })
       .catch((err) => err)
   }
