@@ -94,7 +94,9 @@ const FirstDiv = () => {
           alt='#'
         />
 
-        <p className='mt-2 text-center'>Process to market ready</p>
+        <p className='mt-2 text-center'>
+          Learn to Start Process to Market-Ready
+        </p>
       </div>
       {/* <div className='col-md-11 pe-md-5 mb-4'>
         <div className='accordion' id='accordionExample'>
