@@ -1,0 +1,12 @@
+.item-title {
+  text-align: left;
+  font: normal normal 600 15px Montserrat;
+  letter-spacing: 0px;
+  color: #101313ca;
+}
+.item-content {
+  text-align: left;
+  font: normal normal 400 13px Montserrat;
+  letter-spacing: 0px;
+  color: #101313ca;
+}
