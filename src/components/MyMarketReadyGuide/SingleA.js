@@ -35,12 +35,10 @@ export const SingleA = ({ data, title, index }) => {
             {data.map((item) => (
               <div className='w-100 row'>
                 <p>
-                  <span className='item-title text-start pe-2 text-capitalize'>
+                  <span className='item-title text-start pe-2'>
                     {item.title}:
                   </span>
-                  <span className='item-content text-capitalize'>
-                    {item.content}
-                  </span>
+                  <span className='item-content'>{item.content}</span>
                 </p>
               </div>
             ))}
