@@ -94,6 +94,8 @@ const JournalsManagement = React.lazy(() =>
   import('./pages/JournalsManagement')
 )
 
+const IAMRinbox = React.lazy(() => import('./pages/IAMRinbox'))
+
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
@@ -103,7 +105,7 @@ function Router(props) {
     <IntlProvider
       locale={currentAppLocale.locale}
       messages={currentAppLocale.messages}
-      onError={()=>''}
+      onError={() => ''}
     >
       <React.Fragment>
         {isAuthenticated ? (
@@ -128,7 +130,8 @@ function Router(props) {
               <Route
                 path='/preview-portfolio'
                 component={PreviewPortfolioNew}
-              /><Route exact path='/terms' component={Terms} />
+              />
+              <Route exact path='/terms' component={Terms} />
               <Route
                 exact
                 path='/user-portfolio/:username'
@@ -258,6 +261,7 @@ function Router(props) {
                 path='/my-connections/request/:id'
                 component={MyConnections}
               />
+              <Route path='/iamr-inbox' component={IAMRinbox} />
               <Redirect from='/register' exact to='/dashboard' />
               <Redirect from='/' exact to='/dashboard' />
               <Route path='/iamr' component={Iamr} />
