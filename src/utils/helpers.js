@@ -7,6 +7,7 @@ import Messenger from '../components/Messenger/Messenger'
 import foulWordsJSON from '../assets/json/foul-words.json'
 import _ from 'lodash'
 import UserContactForm from '../components/UserContactForm'
+import { format } from 'date-fns'
 
 export const IsUserLevelAuthorized = () => {
   const loggedUserLevel = useSelector((state) => state?.user?.user?.user?.level)
@@ -133,5 +134,28 @@ export function isValidHttpUrl(string) {
     return url.protocol === 'http:' || url.protocol === 'https:'
   } catch (err) {
     return false
+  }
+}
+
+export const beautifulDateFormat = (date, customFormat = null) => {
+  if (!date) return
+  const dateNow = new Date()
+  const inputDate = new Date(date)
+
+  const dateDifference =
+    (dateNow.getTime() - inputDate.getTime()) / (1000 * 60 * 60 * 24.0)
+
+  // if (customFormat) return format(new Date(date), customFormat)
+
+  if (dateDifference > 6) {
+    return format(
+      new Date(inputDate.toISOString().slice(0, -1)),
+      customFormat === 'hh:mm a' ? customFormat : 'MMMM dd, yyyy'
+    )
+  } else {
+    return format(
+      new Date(inputDate.toISOString().slice(0, -1)),
+      customFormat ?? "EEEE h:mmaaaaa'm'"
+    )
   }
 }
