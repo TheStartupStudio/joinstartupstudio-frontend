@@ -75,8 +75,8 @@ function Header(props) {
     }, 100)
   })
 
-  const hasAccess = async () => {
-    await axiosInstance
+  const hasAccess = () => {
+    axiosInstance
       .get('/studentsInstructorss/has-access')
       .then((response) => {
         if (response.data.allow) {
@@ -153,6 +153,9 @@ function Header(props) {
 
       setUnreadNotifications(res.data.unreadNotifications)
     })
+  }, [user.id])
+
+  useEffect(() => {
     hasAccess()
   }, [])
 

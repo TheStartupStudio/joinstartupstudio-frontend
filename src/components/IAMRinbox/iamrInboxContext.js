@@ -34,7 +34,7 @@ export const IamrInboxProvider = ({ children }) => {
 
   const selectQuestionsMenu = useCallback(
     (payload) => {
-      if (payload === state.questionsMenuSelected || state.loading) return
+      if (payload === state.questionsMenuSelected || state.replying) return
 
       dispatch({
         type: 'SET_QUESTIONS_MENU_SELECTED',
@@ -45,7 +45,7 @@ export const IamrInboxProvider = ({ children }) => {
   )
 
   const setLoading = useCallback(
-    async (payload) => {
+    (payload) => {
       dispatch({
         type: 'SET_LOADING',
         payload: payload
@@ -54,16 +54,87 @@ export const IamrInboxProvider = ({ children }) => {
     [dispatch]
   )
 
+  const setReplying = useCallback(
+    (payload) => {
+      dispatch({
+        type: 'SET_REPLYING',
+        payload: payload
+      })
+    },
+    [dispatch]
+  )
+
+  const newMessage = useCallback(
+    ({ message, ticket }) => {
+      //prettier-ignore
+      const questions = ticket.type === 'instruction' ? state.studentQuestions : state.certificationFeedbackQuestions
+
+      const newRows = questions.rows.map((x) =>
+        x.id === ticket.id ? { ...x, TicketAnswers: message } : x
+      )
+
+      //prettier-ignore
+      const type = ticket.type === 'instruction' ? 'UPDATE_STUDENT_QUESTIONS' : 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS'
+
+      dispatch({
+        type: type,
+        payload: { ...questions, rows: newRows }
+      })
+    },
+    [dispatch, state]
+  )
+
+  const ticketOpened = useCallback(
+    (ticket) => {
+      //prettier-ignore
+      const questions = ticket.type === 'instruction' ? state.studentQuestions : state.certificationFeedbackQuestions
+
+      const foundIndex = questions.rows.find(
+        (row) => row.id === ticket.id && !row.read_by_instructor
+      )
+
+      if (!foundIndex) return
+
+      const newRows = questions.rows.map((x) =>
+        x.id === ticket.id ? { ...x, read_by_instructor: true } : x
+      )
+
+      //prettier-ignore
+      const type = ticket.type === 'instruction' ? 'UPDATE_STUDENT_QUESTIONS' : 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS'
+
+      dispatch({
+        type: type,
+        payload: {
+          ...questions,
+          unreadCount: questions.unreadCount - 1,
+          rows: newRows
+        }
+      })
+    },
+    [state.certificationFeedbackQuestions, state.studentQuestions]
+  )
+
+  const resetAllQuestions = useCallback(() => {
+    dispatch({
+      type: 'RESET_ALL_QUESTIONS'
+    })
+  }, [dispatch])
+
   const value = useMemo(() => {
     return {
       studentQuestions: state.studentQuestions,
       certificationFeedbackQuestions: state.certificationFeedbackQuestions,
       questionsMenuSelected: state.questionsMenuSelected,
       loading: state.loading,
+      replying: state.replying,
       setStudentQuestions,
       setCertificationFeedbackQuestions,
       selectQuestionsMenu,
       setLoading,
+      setReplying,
+      newMessage,
+      resetAllQuestions,
+      ticketOpened,
       dispatch
     }
   }, [
@@ -71,7 +142,11 @@ export const IamrInboxProvider = ({ children }) => {
     setStudentQuestions,
     selectQuestionsMenu,
     setCertificationFeedbackQuestions,
-    setLoading
+    setLoading,
+    setReplying,
+    newMessage,
+    resetAllQuestions,
+    ticketOpened
   ])
 
   return (

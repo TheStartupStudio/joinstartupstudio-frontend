@@ -1,6 +1,11 @@
-.inbox-menu {
+/* .iamr-inbox {
   min-height: 100vh;
+} */
+
+.inbox-menu {
   background-color: #f8f7f7;
+  padding: 0;
+  padding-bottom: 20px;
 }
 
 .iamr-inbox .inbox-menu h4 {
@@ -8,12 +13,11 @@
   letter-spacing: 0.96px;
   color: #231f20;
   margin-left: 22px;
-  margin-top: 38px;
-  margin-bottom: 50px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .iamr-inbox .inbox-menu .menu-option {
-  height: 38px;
   display: flex;
   cursor: pointer;
   position: relative;
@@ -23,6 +27,9 @@
   font: normal normal 600 14px/18px Montserrat;
   letter-spacing: 0px;
   margin-left: 22px;
+  width: 70%;
+  padding: 10px 0px;
+  word-break: break-word;
 }
 
 .iamr-inbox .inbox-menu .menu-option .unread-tickets-number {
@@ -36,10 +43,11 @@
   color: #ffffff;
   text-align: center;
   line-height: 18px;
-  position: absolute;
-  right: 27px;
-  top: 50%;
-  transform: translateY(-50%);
+  /* position: absolute; */
+  margin-right: 27px;
+  margin-left: 12px;
+  /* top: 50%; */
+  /* transform: translateY(-50%); */
 }
 
 .iamr-inbox .inbox-menu .menu-option.selected h5 {
@@ -51,17 +59,22 @@
   border-left: 10px solid #51c7df;
 }
 
+.iamr-inbox .inbox-tickets-container {
+  height: 100vh;
+}
+
 .iamr-inbox .inbox-tickets-container .top-menu {
-  margin-top: 38px;
   position: relative;
+  justify-content: space-between;
 }
 
 .inbox-tickets-container .top-menu .tickets-filter {
-  width: 138px;
+  /* width: 138px; */
   height: 47px;
   background: #f8f7f7 0% 0% no-repeat padding-box;
   opacity: 1;
   cursor: pointer;
+  position: relative;
 }
 
 .inbox-tickets-container .top-menu .tickets-filter p {
@@ -76,9 +89,9 @@
   box-shadow: 0px 3px 6px #00000029;
   opacity: 1;
   position: absolute;
-  width: 135px;
+  width: 100%;
   top: 47px;
-  z-index: 1;
+  z-index: 3;
 }
 
 .inbox-tickets-container .top-menu .tickets-filter-expanded p {
@@ -119,6 +132,9 @@
   opacity: 1;
   padding: 0;
   margin: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .single-ticket .ticket-information .subject,
@@ -269,6 +285,7 @@
   color: #707070;
   font-weight: 300;
   font-size: 12px;
+  margin: 0;
 }
 
 .chat-container .chat-message .message-text p:nth-child(2) {
@@ -284,7 +301,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-height: 170px;
+  min-height: 300px;
   max-height: 50vh;
   overflow-y: auto;
 }
@@ -320,4 +337,75 @@
   justify-content: center;
   right: 22px;
   top: 32px;
+}
+
+/* medias */
+
+@media (min-width: 992px) {
+  .iamr-inbox .inbox-menu {
+    padding: 0;
+  }
+
+  .iamr-inbox .inbox-menu h4 {
+    margin-top: 38px;
+    margin-bottom: 50px;
+  }
+
+  .iamr-inbox {
+    min-height: 100vh;
+  }
+
+  .iamr-inbox .inbox-tickets-container .top-menu {
+    margin-top: 38px !important;
+    justify-content: unset;
+  }
+}
+
+@media (max-width: 992px) {
+  .single-ticket .ticket-information {
+    gap: 0px;
+  }
+
+  .inbox-tickets-container .single-ticket img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .single-ticket .ticket-information .from {
+    font-size: 16px;
+    line-height: initial;
+  }
+
+  .single-ticket .ticket-information .subject,
+  .single-ticket .ticket-information .last-message {
+    font-size: 12px;
+  }
+
+  .inbox-tickets-container .single-ticket {
+    height: 100px;
+  }
+
+  .single-ticket .ticket-status {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+  }
+
+  .chat-container .chat-message .message-text {
+    min-height: initial;
+  }
+
+  .chat-container .chat-header .status .lts-button {
+    height: 20px;
+    width: 100px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .chat-container .messages-container {
+    max-height: initial;
+    min-height: initial;
+    height: 300px;
+  }
 }

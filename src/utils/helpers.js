@@ -150,12 +150,14 @@ export const beautifulDateFormat = (date, customFormat = null) => {
   if (dateDifference > 6) {
     return format(
       new Date(inputDate.toISOString().slice(0, -1)),
-      customFormat === 'hh:mm a' ? customFormat : 'MMMM dd, yyyy'
+      customFormat?.type === 'hours' ? customFormat.format : 'MMMM dd, yyyy'
     )
+  } else if (dateDifference < 1 && customFormat?.type !== 'hours') {
+    return 'Today'
   } else {
     return format(
       new Date(inputDate.toISOString().slice(0, -1)),
-      customFormat ?? "EEEE h:mmaaaaa'm'"
+      customFormat?.format ?? "EEEE h:mmaaaaa'm'"
     )
   }
 }

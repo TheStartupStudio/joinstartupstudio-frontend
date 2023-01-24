@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import searchIcon from '../../assets/images/search-icon.png'
 import {
   faAngleDoubleRight,
   faCaretLeft
@@ -9,16 +8,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useIamrInboxContext from './iamrInboxContext'
 import './index.css'
 import imgTest from '../../assets/images/performance.png'
-import { beautifulDateFormat } from '../../utils/helpers'
 import TicketMessage from './ticketMessage'
 import TextareaAutosize from 'react-textarea-autosize'
 import linkifyHtml from 'linkify-html'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
+import LoadingAnimation from './loadingAnimation'
 
 function TicketChat({ ticket, close, isTicketOpened }) {
-  const { tickets, loading, setLoading, dispatch } = useIamrInboxContext()
-  const handleSearch = () => {}
+  const { ticketOpened, replying, setLoading, setReplying, newMessage } =
+    useIamrInboxContext()
   const submitIconRef = useRef(null)
   const messageBoxRef = useRef(null)
   const [pageWidth, setPageWidth] = useState([window.innerWidth])
@@ -43,28 +42,21 @@ function TicketChat({ ticket, close, isTicketOpened }) {
 
   const submitMessage = async (message) => {
     setMessageInput('')
-    setLoading(true)
+    setReplying(true)
 
     await axiosInstance
       .post(`instructor/iamr/tickets/reply/${ticket.id}`, { message })
       .then((res) => {
         const { id, name, profile_image } = loggedUser
-        setMessages((messages) => [
-          ...messages,
-          { ...res.data, User: { id, name, profile_image } }
-        ])
+        const message = { ...res.data, User: { id, name, profile_image } }
+        setMessages((messages) => [...messages, message])
+        newMessage({ message, ticket })
       })
       .catch((e) => {
         toast.error('Ticket reply failed, please try again!')
       })
 
-    setLoading(false)
-  }
-
-  const getMessages = () => {
-    axiosInstance
-      .get(`instructor/iamr/tickets/messages/${ticket.id}`)
-      .then((res) => setMessages(res.data))
+    setReplying(false)
   }
 
   const handleWindowSizeChange = () => {
@@ -86,15 +78,33 @@ function TicketChat({ ticket, close, isTicketOpened }) {
     // getMessages()
     return () => {
       window.removeEventListener('resize', handleWindowSizeChange)
+      setReplying(false)
       setLoading(false)
     }
-  }, [])
+  }, [setLoading, setReplying])
 
   useEffect(() => {
     setMessageInput('')
     setMessages([])
+
+    const getMessages = async () => {
+      setLoading(true)
+
+      await axiosInstance
+        .get(`instructor/iamr/tickets/messages/${ticket.id}`)
+        .then(({ data }) => setMessages(data))
+
+      setLoading(false)
+    }
+
     getMessages()
-  }, [ticket])
+  }, [setLoading, ticket])
+
+  useEffect(() => {
+    if (!ticket.read_by_instructor) {
+      ticketOpened(ticket)
+    }
+  }, [ticket, ticketOpened])
 
   useEffect(() => {
     if (messageBoxRef.current.value.split('\n').length > 5) {
@@ -108,7 +118,7 @@ function TicketChat({ ticket, close, isTicketOpened }) {
 
   return (
     <div
-      className='ticket-chat'
+      className='ticket-chat p-0'
       style={{ display: isTicketOpened ? 'block' : 'none' }}
     >
       <div className='header'>
@@ -123,11 +133,15 @@ function TicketChat({ ticket, close, isTicketOpened }) {
           />
           <p className='p-0 m-0 my-auto'> INBOX</p>
         </div>
-        <p className='p-0 m-0'>RESPONSES TO QUESTIONS</p>
+        <p className='p-0 m-0'>
+          {ticket.type === 'instruction'
+            ? 'RESPONSES TO QUESTIONS'
+            : 'FEEDBACK RESPONSES'}
+        </p>
       </div>
       <div className='chat-container'>
         <div className='chat-header row m-0'>
-          <div className='chat-user p-0 col-4'>
+          <div className='chat-user p-0 col-12 col-sm-6'>
             {/* prettier-ignore */}
             <img src={imgTest} alt='profile' className='rounded-circle'/>
             <div className='d-flex flex-column ms-2'>
@@ -138,14 +152,15 @@ function TicketChat({ ticket, close, isTicketOpened }) {
               </p>
             </div>
           </div>
-          <div className='status col-8 p-0 d-flex align-items-center justify-content-end'>
+          <div className='status col-12 col-sm-6 mt-2 mt-lg-0 p-0 d-flex align-items-center justify-content-end'>
             <p className='m-0 me-2'>{ticket.resolved ? 'Resolved' : ''}</p>
             <button className='lts-button'>VIEW IAMR</button>
           </div>
         </div>
         <div className='messages-container' ref={scrollRef}>
+          <LoadingAnimation />
           {messages.map((message) => (
-            <TicketMessage id={message.id} message={message} />
+            <TicketMessage key={message.id} message={message} />
           ))}
         </div>
         <div className='new-message'>
@@ -157,9 +172,7 @@ function TicketChat({ ticket, close, isTicketOpened }) {
             onKeyDown={handleSubmit}
             onChange={(e) => setMessageInput(e.target.value)}
             value={messageInput}
-            disabled={loading}
-            // onKeyDown={handleSubmit}
-            // disabled={props.searchOpen && !selectedConnection}
+            disabled={replying}
           />
           <div className='submit-icon' ref={submitIconRef}>
             <FontAwesomeIcon
