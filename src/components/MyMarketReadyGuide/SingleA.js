@@ -2,11 +2,11 @@ import React from 'react'
 import { SingleB } from './SingleB'
 import Accordion from 'react-bootstrap/Accordion'
 
-export const SingleA = ({ data, index }) => {
+export const SingleA = ({ data, title, index }) => {
   return (
     <div className='mt-2'>
       <div className='accordion-item'>
-        <h2 className='accordion-header' id={`heading-${index}`}>
+        <h2 className='accordion-header' id={`heading-${1}`}>
           <button
             className='accordion-button collapsed accordion-outter button-accordion'
             type='button'
@@ -16,7 +16,7 @@ export const SingleA = ({ data, index }) => {
             aria-expanded='false'
             aria-controls={`collapse_outer${index}`}
           >
-            {data?.title}
+            {title}
           </button>
         </h2>
         <div
@@ -27,20 +27,32 @@ export const SingleA = ({ data, index }) => {
           data-bs-parent={`#accordionExample`}
         >
           <div className='accordion-body py-4' eventKey={`${index}`}>
-            <div
+            {/* <div
               className='accordion-outter-body px-2'
               dangerouslySetInnerHTML={{ __html: data?.content }}
-            ></div>
-            <div className='row d-row' id='accordionExample0'>
-              {data?.small &&
-                data.small?.map((data, index) => {
+            > */}
+            {console.log(data)}
+            {data.map((item) => (
+              <div className='w-100 row'>
+                <p>
+                  <span className='item-title text-start pe-2'>
+                    {item.title}:
+                  </span>
+                  <span className='item-content'>{item.content}</span>
+                </p>
+              </div>
+            ))}
+            {/* </div> */}
+            {/* <div className='row d-row' id='accordionExample0'> */}
+            {/* {data?.small &&
+                data?.small.map((data, index) => {
                   return (
                     <div className='Properties col-12 col-md-4 mt-2'>
                       <SingleB data={data} index={index} key={index} />
                     </div>
                   )
-                })}
-            </div>
+                })} */}
+            {/* </div> */}
           </div>
         </div>
       </div>

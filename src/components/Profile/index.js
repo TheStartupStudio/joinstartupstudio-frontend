@@ -388,13 +388,13 @@ export default function Profile(props) {
             className={'text-start my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
-              TWELVE AND A HALF
+              THE POWER LAW: VENTURE CAPITAL & THE MAKING OF THE NEW FUTURE
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              GARY VAYNERCHUK
+              SEBASTIAN MALLABY
             </p>
           </div>
         </div>
@@ -414,13 +414,13 @@ export default function Profile(props) {
             }
           >
             <p className='my-0 text-start w-100 read-watch-listen-title'>
-              THE INVENTOR: OUT FOR BLOOD IN SILICON VALLEY
+              WHITE HOT: THE RISE & FALL OF ABERCROMBIE & FITCH
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              HBO
+              NETFLIX
             </p>
           </div>
         </div>
@@ -436,14 +436,12 @@ export default function Profile(props) {
             style={{ float: 'right' }}
             className={'text-center my-auto col-7 read-watch-listen-text-div'}
           >
-            <p className='my-0 text-start read-watch-listen-title'>
-              THE FUTURE OF EVERYTHING
-            </p>
+            <p className='my-0 text-start read-watch-listen-title'>HARD FORK</p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              THE WALL STREET JOURNAL
+              THE NEW YORK TIMES
             </p>
           </div>
         </div>
