@@ -40,6 +40,16 @@ function TicketChat({ ticket, close, isTicketOpened }) {
     }
   }
 
+  const handleSubmitMobile = () => {
+    if (messageInput) {
+      const formattedMessage = linkifyHtml(
+        messageInput.replace(/^\s+|\s+$/g, ''),
+        options
+      )
+      submitMessage(formattedMessage)
+    }
+  }
+
   const submitMessage = async (message) => {
     setMessageInput('')
     setReplying(true)
@@ -182,7 +192,7 @@ function TicketChat({ ticket, close, isTicketOpened }) {
                 height: '15px',
                 width: '15px'
               }}
-              // onClick={handleSubmitMobile}
+              onClick={handleSubmitMobile}
             />
           </div>
         </div>
