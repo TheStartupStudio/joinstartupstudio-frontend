@@ -90,7 +90,7 @@ function LtsJournalReflection(props) {
     if (saving) return
 
     setSaving(true)
-    setContentDidUpdate(props.entry?.content !== content)
+    setContentDidUpdate(props.entry?.content !== value)
 
     if (foulWords) {
       await FoulWords.register(loggedUser.id, foulWords, JOURNALS)
@@ -140,6 +140,7 @@ function LtsJournalReflection(props) {
   const handleContentChange = (value) => {
     setContent(value)
     setNotSaved(true)
+    setContentDidUpdate(false)
     debounce(handleSubmit, value)
     detectFoulWords(removeHtmlFromString(value), (data) => {
       setFoulWords(data)
