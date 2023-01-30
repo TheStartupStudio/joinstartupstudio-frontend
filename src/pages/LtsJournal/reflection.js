@@ -126,7 +126,9 @@ function LtsJournalReflection(props) {
       if (error.response) {
         toast.error(error.response.data.errors.map((e) => e.message).join('.'))
       } else if (error.request) {
-        toast.error('Something went wrong, answer was not saved.')
+        toast.error(
+          'Something went wrong, please try to save the answer again.'
+        )
       } else {
         toast.error(`Error: ${error.message}`)
       }
