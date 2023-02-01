@@ -13,9 +13,10 @@ import {
 } from './Types'
 
 const user = JSON.parse(localStorage.getItem('user'))
+const auth_token = localStorage.getItem('access_token')
 
 const initialState = {
-  isAuthenticated: user ? true : false,
+  isAuthenticated: user && auth_token ? true : false,
   user: user,
   loading: false,
   successMessage: null,

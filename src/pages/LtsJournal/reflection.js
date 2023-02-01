@@ -33,6 +33,7 @@ function LtsJournalReflection(props) {
   const unblockHandle = useRef()
   const [showNotSavedModal, setShowNotSavedModal] = useState(false)
   const [nextTarget, setNextTarget] = useState(null)
+  const [contentDidUpdate, setContentDidUpdate] = useState(false)
 
   const closeModal = () => setShowNotSavedModal(false)
 
@@ -89,6 +90,7 @@ function LtsJournalReflection(props) {
     if (saving) return
 
     setSaving(true)
+    setContentDidUpdate(props.entry?.content !== value)
 
     if (foulWords) {
       await FoulWords.register(loggedUser.id, foulWords, JOURNALS)
@@ -119,11 +121,14 @@ function LtsJournalReflection(props) {
         setEditing(true)
         setNotSaved(false)
       }
+      setContentDidUpdate(false)
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.errors.map((e) => e.message).join('.'))
       } else if (error.request) {
-        console.log(error.request)
+        toast.error(
+          'Something went wrong, please try to save the answer again.'
+        )
       } else {
         toast.error(`Error: ${error.message}`)
       }
@@ -135,6 +140,7 @@ function LtsJournalReflection(props) {
   const handleContentChange = (value) => {
     setContent(value)
     setNotSaved(true)
+    setContentDidUpdate(false)
     debounce(handleSubmit, value)
     detectFoulWords(removeHtmlFromString(value), (data) => {
       setFoulWords(data)
@@ -228,17 +234,6 @@ function LtsJournalReflection(props) {
                   </div>
                 )}
               </>
-              // <button className='button' onClick={handleSubmit}>
-              //   <IntlMessages
-              //     id={
-              //       saving
-              //         ? 'general.saving'
-              //         : entryId
-              //         ? 'journals.save'
-              //         : 'journals.add'
-              //     }
-              //   />
-              // </button>
             )}
           </div>
         </div>
@@ -267,7 +262,7 @@ function LtsJournalReflection(props) {
           </div>
         )}
 
-        <div className='journal-entries__entry-reflection-footer'>
+        <div className='journal-entries__entry-reflection-footer d-flex justify-content-between'>
           {!entryId && props.showCancel === true && (
             <button className='button' onClick={() => props?.cancel()}>
               <IntlMessages id={'journals.cancel'} />
@@ -276,6 +271,11 @@ function LtsJournalReflection(props) {
           {entryId && editing && (
             <button className='button' onClick={deleteReflection}>
               <IntlMessages id={'journals.delete'} />
+            </button>
+          )}
+          {notSaved && !saving && contentDidUpdate && (
+            <button className='button' onClick={handleSubmit} disabled={saving}>
+              <IntlMessages id={'journals.save'} />
             </button>
           )}
         </div>
