@@ -33,15 +33,14 @@ function InboxTickets({ getTicketsByPage }) {
     : certificationFeedbackQuestions
 
   const PER_PAGE = 1
-  const pageCount = tickets.count
+  const pageCount = tickets?.count
 
   const filterBySelected = (read_by_instructor) => {
     if (!selectedFilter || selectedFilter === 'all') return true
     return selectedFilter === 'read' ? read_by_instructor : !read_by_instructor
   }
-
-  const currentPageData = tickets.rows
-    .filter((ticket) =>
+  const currentPageData = tickets?.rows
+    ?.filter((ticket) =>
       questionsMenuSelected
         ? ticket.type === 'instruction' &&
           filterBySelected(ticket.read_by_instructor)
