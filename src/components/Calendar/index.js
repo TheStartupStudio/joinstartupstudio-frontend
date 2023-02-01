@@ -39,14 +39,14 @@ export default function Calendar() {
     //   date: '2022/12/14',
     //   time: '01:30 pm'
     // },
-    {
-      id: 5,
-      title:
-        'Live Q&A with Story in Motion Podcast Episode 5 Guest: Matt Custage',
-      author: 'Anastasia Hall',
-      date: '2023/01/26',
-      time: '09:00am EST'
-    }
+    // {
+    //   id: 5,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 5 Guest: Matt Custage',
+    //   author: 'Anastasia Hall',
+    //   date: '2023/01/26',
+    //   time: '09:00am EST'
+    // }
   ])
 
   const filterEventsByDate = [
@@ -74,14 +74,14 @@ export default function Calendar() {
     //   date: '2022/12/14',
     //   time: '01:30 pm'
     // },
-    {
-      id: 5,
-      title:
-        'Live Q&A with Story in Motion Podcast Episode 5 Guest: Matt Custage',
-      author: 'Anastasia Hall',
-      date: '2023/01/26',
-      time: '09:00am EST'
-    }
+    // {
+    //   id: 5,
+    //   title:
+    //     'Live Q&A with Story in Motion Podcast Episode 5 Guest: Matt Custage',
+    //   author: 'Anastasia Hall',
+    //   date: '2023/01/26',
+    //   time: '09:00am EST'
+    // }
   ]
 
   let dates = events.map((data) => new Date(data.date))
