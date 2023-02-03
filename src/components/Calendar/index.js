@@ -47,6 +47,14 @@ export default function Calendar() {
     //   date: '2023/01/26',
     //   time: '09:00am EST'
     // }
+    {
+      id: 6,
+      title:
+        'Live Q&A with Story in Motion Podcast Episode 6 Guest: Julia Aquino',
+      author: 'Anastasia Hall',
+      date: '2023/02/22',
+      time: '09:00am EST'
+    }
   ])
 
   const filterEventsByDate = [
@@ -82,6 +90,14 @@ export default function Calendar() {
     //   date: '2023/01/26',
     //   time: '09:00am EST'
     // }
+    {
+      id: 6,
+      title:
+        'Live Q&A with Story in Motion Podcast Episode 6 Guest: Julia Aquino',
+      author: 'Anastasia Hall',
+      date: '2023/02/22',
+      time: '09:00am EST'
+    }
   ]
 
   let dates = events.map((data) => new Date(data.date))
