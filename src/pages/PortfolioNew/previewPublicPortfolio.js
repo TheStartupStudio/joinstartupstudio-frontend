@@ -29,6 +29,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import { IAMR } from '../../components/Portfolio/IAMR/index'
+import { EducationCertifications } from './educationAndCertification/certification/EducationCertifications'
 
 const PreviewPublicPortfolio = () => {
   const [user, setUser] = useState()
@@ -153,7 +154,7 @@ const PreviewPublicPortfolio = () => {
                           newConnectionRequest={() => newConnectionRequest()}
                         />
                       )}
-                      {user.UserPortfolio.is_published ? (
+                      {user.UserPortfolio.is_published || background ? (
                         <>
                           {user && (
                             /*user.show_iamr &&*/ <IAMR
@@ -203,30 +204,28 @@ const PreviewPublicPortfolio = () => {
 
                                 {selected === 'EXPERIENCE' ? (
                                   <>
-                                    {background?.experience?.length !== 0 ||
-                                      (background?.experience?.length !==
-                                        undefined && (
-                                        <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 row text-start mt-5 preview-container'>
-                                          <h4>EXPERIENCE</h4>
+                                    {background?.experience?.length > 0 && (
+                                      <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 row text-start mt-5 preview-container'>
+                                        <h4>EXPERIENCE</h4>
 
-                                          {background?.experience?.map(
-                                            (experience, index, { length }) => {
-                                              return (
-                                                <ExperienceDetails
-                                                  experience={experience}
-                                                  key={experience.id}
-                                                  index={index}
-                                                  length={length}
-                                                  // setCurrentExperience={(experience) =>
-                                                  //   setCurrentExperience(experience)
-                                                  // }
-                                                  editing={false}
-                                                />
-                                              )
-                                            }
-                                          )}
-                                        </div>
-                                      ))}
+                                        {background?.experience?.map(
+                                          (experience, index, { length }) => {
+                                            return (
+                                              <ExperienceDetails
+                                                experience={experience}
+                                                key={experience.id}
+                                                index={index}
+                                                length={length}
+                                                // setCurrentExperience={(experience) =>
+                                                //   setCurrentExperience(experience)
+                                                // }
+                                                editing={false}
+                                              />
+                                            )
+                                          }
+                                        )}
+                                      </div>
+                                    )}
 
                                     {user?.recommendationsTo.length > 0 && (
                                       <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 text-start mt-3 preview-container'>
@@ -257,20 +256,43 @@ const PreviewPublicPortfolio = () => {
                                       background?.accomplishments?.length > 0 ||
                                       background?.certificates?.length > 0) && (
                                       <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 row text-start mt-5 preview-container'>
-                                        {background?.education?.length > 0 &&
-                                          user.show_education && (
-                                            <>
-                                              <h4>EDUCATION</h4>
-                                              {background?.education?.map(
-                                                (
-                                                  education,
-                                                  index,
-                                                  { length }
-                                                ) => {
+                                        {background?.education?.length > 0 && (
+                                          <>
+                                            <h4>EDUCATION</h4>
+                                            {background?.education?.map(
+                                              (
+                                                education,
+                                                index,
+                                                { length }
+                                              ) => {
+                                                return (
+                                                  <EducationDetails
+                                                    education={education}
+                                                    key={education.id}
+                                                    index={index}
+                                                    length={length}
+                                                    // setCurrentExperience={(experience) =>
+                                                    //   setCurrentExperience(experience)
+                                                    // }
+                                                    editing={false}
+                                                  />
+                                                )
+                                              }
+                                            )}
+                                          </>
+                                        )}
+
+                                        {background?.accomplishments?.length >
+                                          0 && (
+                                          <>
+                                            <h4>ACCOMPLISHMENTS</h4>
+                                            <div className='experience-details'>
+                                              {background?.accomplishments?.map(
+                                                (accomp, index, { length }) => {
                                                   return (
-                                                    <EducationDetails
-                                                      education={education}
-                                                      key={education.id}
+                                                    <AccomplishmentDetails
+                                                      accomp={accomp}
+                                                      key={accomp.id}
                                                       index={index}
                                                       length={length}
                                                       // setCurrentExperience={(experience) =>
@@ -281,51 +303,23 @@ const PreviewPublicPortfolio = () => {
                                                   )
                                                 }
                                               )}
-                                            </>
-                                          )}
-
-                                        {background?.accomplishments?.length >
-                                          0 &&
-                                          user.show_accomplishments && (
-                                            <>
-                                              <h4>ACCOMPLISHMENTS</h4>
-                                              <div className='experience-details'>
-                                                {background?.accomplishments?.map(
-                                                  (
-                                                    accomp,
-                                                    index,
-                                                    { length }
-                                                  ) => {
-                                                    return (
-                                                      <AccomplishmentDetails
-                                                        accomp={accomp}
-                                                        key={accomp.id}
-                                                        index={index}
-                                                        length={length}
-                                                        // setCurrentExperience={(experience) =>
-                                                        //   setCurrentExperience(experience)
-                                                        // }
-                                                        editing={false}
-                                                      />
-                                                    )
-                                                  }
-                                                )}
-                                              </div>
-                                            </>
-                                          )}
+                                            </div>
+                                          </>
+                                        )}
                                       </div>
                                     )}
 
-                                    {background?.certificates?.length > 0 &&
-                                      user.show_certifications && (
+                                    {background?.certificates?.length > 0 && (
+                                      <>
                                         <div className='col-12'>
-                                          <Licenses_Certification_Preview
+                                          <EducationCertifications
                                             certificates={
                                               background?.certificates
                                             }
                                           />
                                         </div>
-                                      )}
+                                      </>
+                                    )}
                                   </>
                                 )}
                               </div>
