@@ -388,13 +388,13 @@ export default function Profile(props) {
             className={'text-start my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
-              THE POWER LAW: VENTURE CAPITAL & THE MAKING OF THE NEW FUTURE
+              IN-N-OUT BURGER
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              SEBASTIAN MALLABY
+              STACY PERMAN
             </p>
           </div>
         </div>
@@ -414,13 +414,13 @@ export default function Profile(props) {
             }
           >
             <p className='my-0 text-start w-100 read-watch-listen-title'>
-              WHITE HOT: THE RISE & FALL OF ABERCROMBIE & FITCH
+              I LOVE YOU, YOU HATE ME
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              NETFLIX
+              PEACOCK
             </p>
           </div>
         </div>
@@ -436,12 +436,14 @@ export default function Profile(props) {
             style={{ float: 'right' }}
             className={'text-center my-auto col-7 read-watch-listen-text-div'}
           >
-            <p className='my-0 text-start read-watch-listen-title'>HARD FORK</p>
+            <p className='my-0 text-start read-watch-listen-title'>
+              THE INDICATOR
+            </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              THE NEW YORK TIMES
+              PLANET MONEY
             </p>
           </div>
         </div>
