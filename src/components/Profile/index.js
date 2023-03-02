@@ -11,41 +11,33 @@ import {
 } from '@fortawesome/free-brands-svg-icons'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
-import IntlMessages from '../../utils/IntlMessages'
 import avator from '../../assets/images/profile-image.png'
-import {
-  getConnectionRequests,
-  getConnections,
-  IsUserLevelAuthorized,
-  isValidHttpUrl
-} from '../../utils/helpers'
+import { IsUserLevelAuthorized, isValidHttpUrl } from '../../utils/helpers'
 import marketReadyGuideOne from '../../assets/images/market-ready-1-badge.png'
 import marketReadyGuideTwo from '../../assets/images/market-ready-2-badge.png'
 import listen from '../../assets/images/read_watch_listen_Listen_with typo.png'
 import read from '../../assets/images/read_watch_listen_Read_with typo.png'
 import watch from '../../assets/images/read_watch_listen_Watch_with typo.png'
 import './index.css'
-import { Link } from 'react-router-dom'
 
 export default function Profile(props) {
   const user = useSelector((state) => state.user.user.user)
   const [lastLogin, setLastLogin] = useState(null)
   const [newMessages, setNewMessages] = useState([])
   const isAllowedLevel = IsUserLevelAuthorized()
-  const [totalStudents, setTotalStudents] = useState(0)
-  const [dashboardInfo, setDashboardInfo] = useState({})
+  const [dashboardWidget, setDashboardWidget] = useState({})
 
   useEffect(() => {
-    setDashboardData()
+    getDashboardWidgetData()
     getNewMessages()
-    getTotalStudents()
   }, [])
 
-  const setDashboardData = async () => {
+  const getDashboardWidgetData = async () => {
     await axiosInstance.get('/dashboard').then((res) => {
-      setDashboardInfo(res.data)
+      setDashboardWidget(res.data)
     })
   }
+
   useEffect(() => {
     if (props.newMessage.length === 0) return
     const arrivalMessage = props.newMessage
@@ -126,15 +118,6 @@ export default function Profile(props) {
       .get('/privateChat/unread-messages')
       .then((data) => {
         setNewMessages(data.data)
-      })
-      .catch((err) => err)
-  }
-
-  const getTotalStudents = async () => {
-    await axiosInstance
-      .get('/instructor/total-students')
-      .then((data) => {
-        setTotalStudents(data.data.total_students)
       })
       .catch((err) => err)
   }
@@ -237,65 +220,16 @@ export default function Profile(props) {
           </div>
         </div>
       </Col>
-      {/* <Col
-        lg={6}
-        sm={12}
-        style={{
-          backgroundColor: '#F8F7F7',
-          borderRadius: 0,
-          minHeight: '166px'
-        }}
-        className='dashboard-notification'
-      >
-        <h3 className='text-lg-center' style={{ marginTop: '39px' }}>
-          <IntlMessages id='dashboard.my_notifications' />
-        </h3>
-        <div className='row'>
-          <div className='col-7'>
-            {IsUserLevelAuthorized() && (
-              <div className='row'>
-                <div className='col-10'>
-                  <p className='mt-2 mb-0'>New Messages</p>
-                </div>
-                <div className='col-1 text-left'>
-                  <p className='mt-2 mb-0'>
-                    {newMessages?.length ? newMessages.length : '0'}
-                  </p>
-                </div>
-              </div>
-            )}
-            <div className='row'>
-              <div className='col-10'>
-                <p className='mt-2 mb-0'>Total Students</p>
-              </div>
-              <div className='col-1 text-left'>
-                <p className='mt-2 mb-0'>{totalStudents}</p>
-              </div>
-            </div>
-          </div>
-          <div className='col-5'>
-            <div className='row'>
-              <div className='col-12'>
-                <p className='mt-2 mb-0 last-login'>Last Login:</p>
-              </div>
-              <div className='col-12'>
-                <p>{lastLogin}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Col> */}
       <div
         style={{
-          minHeight: '166px'
+          minHeight: '166px',
+          cursor: 'pointer'
         }}
+        onClick={() => redirect(dashboardWidget?.link)}
         className='mx-0 px-0 col-12 col-lg-6 row mt-4 mt-md-0 widget-interesting text-center '
       >
         <div className='col-4 col-md-4 mx-auto my-auto fw-bold py-4 '>
-          <div
-            className='h-auto w-auto user-select-none'
-            onClick={() => redirect(dashboardInfo.link)}
-          >
+          <div className='h-auto w-auto user-select-none'>
             <p className='my-0 mx-auto' style={{ color: '#FE43A1' }}>
               READ
             </p>
@@ -311,7 +245,7 @@ export default function Profile(props) {
           className='col-8 col-md-8 text-start my-auto info-text-dashboard'
           style={{ fontSize: '14px', wordBreak: 'break-word' }}
         >
-          {dashboardInfo.text}
+          {dashboardWidget?.description}
         </div>
       </div>
       {/* end of twitter widget */}
@@ -330,14 +264,14 @@ export default function Profile(props) {
           My Certification Progress
         </p>
         <div className='col-6 text-center fw-bold'>
-          <img src={marketReadyGuideOne} style={{ width: '100px' }} />
+          <img src={marketReadyGuideOne} style={{ width: '100px' }} alt='' />
           <p className='mb-0 py-0 mt-2'>
             <span style={{ color: '#54C7DF' }}>0 </span> / 15 skills{' '}
           </p>
           <p className='mt-0 py-0'>Certified </p>
         </div>
         <div className='col-6 text-center fw-bold'>
-          <img src={marketReadyGuideTwo} style={{ width: '100px' }} />
+          <img src={marketReadyGuideTwo} style={{ width: '100px' }} alt='' />
           <p className='mb-0 py-0 mt-2'>
             <span style={{ color: '#CF2E81' }}>0 </span> / 20 skills{' '}
           </p>
@@ -381,20 +315,25 @@ export default function Profile(props) {
       >
         <div className='read-section w-100 border-bottom row gx-0'>
           <div className='col-5 col-md-3 text-start text-md-start  read-watch-listen-image-div'>
-            <img src={read} className={'w-auto '} style={{ height: '130px' }} />
+            <img
+              src={read}
+              className={'w-auto '}
+              style={{ height: '130px' }}
+              alt=''
+            />
           </div>
           <div
             style={{ float: 'right' }}
             className={'text-start my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
-              IN-N-OUT BURGER
+              {dashboardWidget?.read?.title}
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              STACY PERMAN
+              {dashboardWidget?.read?.author}
             </p>
           </div>
         </div>
@@ -405,6 +344,7 @@ export default function Profile(props) {
               src={watch}
               className={'w-auto '}
               style={{ height: '130px' }}
+              alt=''
             />
           </div>
           <div
@@ -414,13 +354,13 @@ export default function Profile(props) {
             }
           >
             <p className='my-0 text-start w-100 read-watch-listen-title'>
-              I LOVE YOU, YOU HATE ME
+              {dashboardWidget?.watch?.title}
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              PEACOCK
+              {dashboardWidget?.watch?.author}
             </p>
           </div>
         </div>
@@ -430,20 +370,20 @@ export default function Profile(props) {
           style={{ borderBottom: '0px' }}
         >
           <div className='col-5 col-md-3 text-start text-md-start read-watch-listen-image-div'>
-            <img src={listen} style={{ height: '130px' }} />
+            <img src={listen} style={{ height: '130px' }} alt='' />
           </div>
           <div
             style={{ float: 'right' }}
             className={'text-center my-auto col-7 read-watch-listen-text-div'}
           >
             <p className='my-0 text-start read-watch-listen-title'>
-              THE INDICATOR
+              {dashboardWidget?.listen?.title}
             </p>
             <p
               className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
-              PLANET MONEY
+              {dashboardWidget?.listen?.author}
             </p>
           </div>
         </div>

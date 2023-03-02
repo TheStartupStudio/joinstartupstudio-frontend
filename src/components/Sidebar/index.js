@@ -400,7 +400,6 @@ function Sidebar(props) {
                       props.hideHeaderIcons()
                     }}
                     to='#'
-                    disable
                     activeClassName='sidenav'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
