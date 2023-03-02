@@ -1,18 +1,11 @@
-import { useEffect, useState, useContext } from 'react'
-import { useSelector } from 'react-redux'
-import searchIcon from '../../assets/images/search-icon.png'
+import { memo } from 'react'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import useIamrInboxContext from './iamrInboxContext'
 import './index.css'
 import imgTest from '../../assets/images/performance.png'
 import { beautifulDateFormat } from '../../utils/helpers'
 
 function Ticket({ ticket, setSelectedTicket }) {
-  const { tickets } = useIamrInboxContext()
-
-  const handleSearch = () => {}
-
   return (
     <div
       className='single-ticket d-flex'
@@ -48,4 +41,4 @@ function Ticket({ ticket, setSelectedTicket }) {
   )
 }
 
-export default Ticket
+export default memo(Ticket)

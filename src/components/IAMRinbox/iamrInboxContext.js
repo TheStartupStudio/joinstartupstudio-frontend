@@ -160,8 +160,8 @@ const useIamrInboxContext = () => {
   const context = useContext(IamrInboxContext)
 
   // Check if context is being used inside IamrInboxProvider
-  // setTickets function only exists if component has been wrapped in IamrInboxProvider
-  if (context.setStudentQuestions === undefined) {
+  // setStudentQuestions function only exists if component has been wrapped in IamrInboxProvider
+  if (context?.setStudentQuestions === undefined) {
     throw new Error('useIamrInboxContext must be used within iamrInboxContext')
   }
 

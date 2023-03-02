@@ -41,29 +41,13 @@ function InboxTickets() {
     ? studentQuestions
     : certificationFeedbackQuestions
 
-  const PER_PAGE = 1
+  const PER_PAGE = 5
   const pageCount = tickets.count
 
   const filterBySelected = (read_by_instructor) => {
     if (!selectedFilter || selectedFilter === 'all') return true
     return selectedFilter === 'read' ? read_by_instructor : !read_by_instructor
   }
-
-  const currentPageData = tickets.rows
-    .filter((ticket) =>
-      questionsMenuSelected
-        ? ticket.type === 'instruction' &&
-          filterBySelected(ticket.read_by_instructor)
-        : ticket.type !== 'instruction' &&
-          filterBySelected(ticket.read_by_instructor)
-    )
-    .map((ticket) => (
-      <Ticket
-        key={ticket.id}
-        ticket={ticket}
-        setSelectedTicket={setSelectedTicket}
-      />
-    ))
 
   const isTicketOpened = useMemo(() => {
     return (
@@ -81,6 +65,19 @@ function InboxTickets() {
       (!questionsMenuSelected && selectedTicket?.type === 'instruction')
     )
   }, [questionsMenuSelected, selectedTicket?.type])
+
+  const currentPageTickets =
+    isMenuOpened &&
+    !loading &&
+    tickets.rows
+      .filter((ticket) => filterBySelected(ticket.read_by_instructor))
+      .map((ticket) => (
+        <Ticket
+          key={ticket.id}
+          ticket={ticket}
+          setSelectedTicket={setSelectedTicket}
+        />
+      ))
 
   const showPagination = useMemo(() => {
     return isMenuOpened && tickets?.count > PER_PAGE
@@ -103,10 +100,11 @@ function InboxTickets() {
     }
   }, 500)
 
+  //fetchStudentQuestions
   useEffect(() => {
     let canceled = false
 
-    const fetch = async () => {
+    const fetchStudentQuestions = async () => {
       if (isSearching) return
 
       setLoading(true)
@@ -120,17 +118,18 @@ function InboxTickets() {
       setLoading(false)
     }
 
-    fetch()
+    fetchStudentQuestions()
 
     return () => {
       canceled = true
     }
   }, [isSearching, questionsPage, setLoading, setStudentQuestions])
 
+  //fetchCertificationFeedbackQuestions
   useEffect(() => {
     let canceled = false
 
-    const fetch = async () => {
+    const fetchCertificationFeedbackQuestions = async () => {
       if (isSearching) return
 
       setLoading(true)
@@ -144,7 +143,7 @@ function InboxTickets() {
       setLoading(false)
     }
 
-    fetch()
+    fetchCertificationFeedbackQuestions()
 
     return () => {
       canceled = true
@@ -156,6 +155,7 @@ function InboxTickets() {
     setLoading
   ])
 
+  //fetch search results
   useEffect(() => {
     let canceled = false
 
@@ -283,9 +283,9 @@ function InboxTickets() {
             />
           )}
 
-          {!isTicketOpened && <LoadingAnimation />}
+          <LoadingAnimation show={!isTicketOpened && loading} />
 
-          {isMenuOpened && !loading && currentPageData}
+          {currentPageTickets}
         </div>
       </div>
 

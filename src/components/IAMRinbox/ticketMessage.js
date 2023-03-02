@@ -1,16 +1,11 @@
-import { useEffect, useState, useContext } from 'react'
+import { memo } from 'react'
 import { useSelector } from 'react-redux'
-import searchIcon from '../../assets/images/search-icon.png'
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import useIamrInboxContext from './iamrInboxContext'
 import './index.css'
 import imgTest from '../../assets/images/performance.png'
 import { beautifulDateFormat } from '../../utils/helpers'
 
 function TicketMessage({ message }) {
   const loggedUserId = useSelector((state) => state.user.user.user.id)
-  const handleSearch = () => {}
 
   return (
     <div
@@ -48,4 +43,4 @@ function TicketMessage({ message }) {
   )
 }
 
-export default TicketMessage
+export default memo(TicketMessage)

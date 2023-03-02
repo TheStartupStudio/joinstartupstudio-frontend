@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import {
   faAngleDoubleRight,
@@ -16,13 +16,14 @@ import { toast } from 'react-toastify'
 import LoadingAnimation from './loadingAnimation'
 
 function TicketChat({ ticket, close, isTicketOpened }) {
-  const { ticketOpened, replying, setLoading, setReplying, newMessage } =
+  const { ticketOpened, replying, setReplying, newMessage } =
     useIamrInboxContext()
   const submitIconRef = useRef(null)
   const messageBoxRef = useRef(null)
   const [pageWidth, setPageWidth] = useState([window.innerWidth])
   const [messageInput, setMessageInput] = useState('')
   const [messages, setMessages] = useState([])
+  const [fetching, setFetching] = useState(false)
   const options = { defaultProtocol: 'https', target: '_blank' }
   const loggedUser = useSelector((state) => state.user.user.user)
   const scrollRef = useRef(null)
@@ -85,30 +86,29 @@ function TicketChat({ ticket, close, isTicketOpened }) {
   useEffect(() => {
     scrollBottom()
     window.addEventListener('resize', handleWindowSizeChange)
-    // getMessages()
     return () => {
       window.removeEventListener('resize', handleWindowSizeChange)
       setReplying(false)
-      setLoading(false)
+      setFetching(false)
     }
-  }, [setLoading, setReplying])
+  }, [setFetching, setReplying])
 
   useEffect(() => {
     setMessageInput('')
     setMessages([])
 
     const getMessages = async () => {
-      setLoading(true)
+      setFetching(true)
 
       await axiosInstance
         .get(`instructor/iamr/tickets/messages/${ticket.id}`)
         .then(({ data }) => setMessages(data))
 
-      setLoading(false)
+      setFetching(false)
     }
 
     getMessages()
-  }, [setLoading, ticket])
+  }, [ticket])
 
   useEffect(() => {
     if (!ticket.read_by_instructor) {
@@ -168,7 +168,8 @@ function TicketChat({ ticket, close, isTicketOpened }) {
           </div>
         </div>
         <div className='messages-container' ref={scrollRef}>
-          <LoadingAnimation />
+          <LoadingAnimation show={fetching} />
+
           {messages.map((message) => (
             <TicketMessage key={message.id} message={message} />
           ))}
