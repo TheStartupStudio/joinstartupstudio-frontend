@@ -203,7 +203,7 @@ export default function VideoView(props) {
                           props.page === 'master-classes' ? 'center' : 'left'
                       }}
                     >
-                      {!props.description.includes(' ') ? (
+                      {!props.description?.includes(' ') ? (
                         <IntlMessages id={props.description} />
                       ) : (
                         props.description
