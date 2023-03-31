@@ -117,6 +117,8 @@ function TicketChat({ ticket, close, isTicketOpened }) {
   }, [ticket, ticketOpened])
 
   useEffect(() => {
+    if (!messageBoxRef.current) return
+
     if (messageBoxRef.current.value.split('\n').length > 5) {
       submitIconRef.current.style.right = '38px'
     } else {
@@ -174,29 +176,34 @@ function TicketChat({ ticket, close, isTicketOpened }) {
             <TicketMessage key={message.id} message={message} />
           ))}
         </div>
-        <div className='new-message'>
-          <TextareaAutosize
-            className=''
-            placeholder='Aa'
-            maxRows={5}
-            ref={messageBoxRef}
-            onKeyDown={handleSubmit}
-            onChange={(e) => setMessageInput(e.target.value)}
-            value={messageInput}
-            disabled={replying}
-          />
-          <div className='submit-icon' ref={submitIconRef}>
-            <FontAwesomeIcon
-              icon={faAngleDoubleRight}
-              style={{
-                color: 'white',
-                height: '15px',
-                width: '15px'
-              }}
-              onClick={handleSubmitMobile}
+        <hr />
+        {ticket.type === 'instruction' && ticket.resolved ? (
+          <p className='resolved mt-3'>Ticket is resolved.</p>
+        ) : (
+          <div className='new-message'>
+            <TextareaAutosize
+              className=''
+              placeholder='Aa'
+              maxRows={5}
+              ref={messageBoxRef}
+              onKeyDown={handleSubmit}
+              onChange={(e) => setMessageInput(e.target.value)}
+              value={messageInput}
+              disabled={replying}
             />
+            <div className='submit-icon' ref={submitIconRef}>
+              <FontAwesomeIcon
+                icon={faAngleDoubleRight}
+                style={{
+                  color: 'white',
+                  height: '15px',
+                  width: '15px'
+                }}
+                onClick={handleSubmitMobile}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

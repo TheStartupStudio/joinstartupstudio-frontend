@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import './index.css'
 import imgTest from '../../assets/images/performance.png'
 import { beautifulDateFormat } from '../../utils/helpers'
+import parse from 'html-react-parser'
 
 function TicketMessage({ message }) {
   const loggedUserId = useSelector((state) => state.user.user.user.id)
@@ -13,7 +14,7 @@ function TicketMessage({ message }) {
         loggedUserId === message.sent_from ? 'self' : ''
       } w-100`}
     >
-      <div className='row'>
+      <div className='row profile__date'>
         <div className='chat-user col-7 col-lg-4'>
           {/* prettier-ignore */}
           <img src={imgTest} alt='profile' className='rounded-circle'/>
@@ -31,7 +32,7 @@ function TicketMessage({ message }) {
         </div>
       </div>
       <div className='message-text mt-1 mt-lg-2'>
-        <p>{message.message}</p>
+        <p>{parse(message.message)}</p>
         <p>
           {beautifulDateFormat(message.createdAt, {
             format: 'hh:mm a',

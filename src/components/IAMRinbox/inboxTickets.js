@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import searchIcon from '../../assets/images/search-icon.png'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,6 +10,7 @@ import ReactPaginate from 'react-paginate'
 import { debounce } from 'lodash'
 import axiosInstance from '../../utils/AxiosInstance'
 import LoadingAnimation from './loadingAnimation'
+import useOnClickOutside from 'use-onclickoutside'
 
 function InboxTickets() {
   const {
@@ -30,6 +31,7 @@ function InboxTickets() {
   const [userSearchPage, setUserSearchPage] = useState(0)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [isSearching, setIsSearching] = useState(false)
+  const dropdownRef = useRef(null)
 
   const currentPage = isSearching
     ? userSearchPage
@@ -42,7 +44,9 @@ function InboxTickets() {
     : certificationFeedbackQuestions
 
   const PER_PAGE = 5
-  const pageCount = tickets.count
+
+  const pageCount =
+    tickets.count < PER_PAGE ? 1 : Math.ceil(tickets.count / PER_PAGE)
 
   const filterBySelected = (read_by_instructor) => {
     if (!selectedFilter || selectedFilter === 'all') return true
@@ -208,6 +212,10 @@ function InboxTickets() {
     return axiosInstance.get(url)
   }
 
+  useOnClickOutside(dropdownRef, () => {
+    setFilterExpanded(false)
+  })
+
   return (
     <div className='col-12 col-lg-9 inbox-tickets-container px-4 d-flex justify-content-between flex-column'>
       <div>
@@ -215,6 +223,7 @@ function InboxTickets() {
           <div
             className='tickets-filter col-12 col-sm-3 me-sm-2 justify-content-center d-flex align-items-center'
             onClick={() => setFilterExpanded((prev) => !prev)}
+            ref={dropdownRef}
           >
             <FontAwesomeIcon
               icon={faFilter}

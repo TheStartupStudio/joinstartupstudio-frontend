@@ -60,7 +60,7 @@
 }
 
 .iamr-inbox .inbox-tickets-container {
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .iamr-inbox .inbox-tickets-container .top-menu {
@@ -266,7 +266,7 @@
 .chat-container .chat-message .message-text {
   background: #f8f7f7 0% 0% no-repeat padding-box;
   border-radius: 0px 10px 10px 10px;
-  min-height: 90px;
+  /* min-height: 90px; */
   padding: 10px;
   margin-left: 42px;
   display: flex;
@@ -286,6 +286,8 @@
   font-weight: 300;
   font-size: 12px;
   margin: 0;
+  word-break: break-word;
+  white-space: pre-line;
 }
 
 .chat-container .chat-message .message-text p:nth-child(2) {
@@ -306,8 +308,20 @@
   overflow-y: auto;
 }
 
+.chat-container .resolved {
+  font-size: 14px;
+  color: green;
+  text-align: center;
+  font-weight: bold;
+}
+
+.chat-container hr {
+  color: #333d3d29;
+  margin: 0;
+  opacity: 1;
+}
+
 .chat-container .new-message {
-  border-top: 1px solid #333d3d29;
   position: relative;
   padding: 20px 12px;
 }
@@ -410,3 +424,9 @@
     height: 300px;
   }
 }
+
+/* @media (min-width: 576px) {
+  .messages-container .chat-message {
+    width: calc(60% + 64px) !important;
+  }
+} */
