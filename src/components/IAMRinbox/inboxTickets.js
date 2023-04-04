@@ -283,7 +283,7 @@ function InboxTickets() {
             </div>
           </div>
         </div>
-        <div className='row all-tickets mt-3 gy-2 m-0'>
+        <div className='row all-tickets gy-2 m-0 my-3'>
           {selectedTicket?.type && (
             <TicketChat
               ticket={selectedTicket}
@@ -316,7 +316,7 @@ function InboxTickets() {
           breakLabel='...'
           breakClassName='page-item'
           breakLinkClassName='page-link px-3'
-          containerClassName='pagination custom-pagination my-4 justify-content-end'
+          containerClassName='pagination custom-pagination mb-3 justify-content-end'
           activeClassName='active'
           renderOnZeroPageCount={null}
         />
