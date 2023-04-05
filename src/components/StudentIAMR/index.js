@@ -20,7 +20,7 @@ const IAMR = () => {
   return (
     <div className='iamr-container'>
       <div
-        className={`page-border accordion ${expanded ? 'expanded' : ''}`}
+        className={`page-border accordion pb-4 ${expanded ? 'expanded' : ''}`}
         ref={accordionRef}
       >
         <FontAwesomeIcon

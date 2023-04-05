@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { Route, useParams } from 'react-router-dom'
-// import CertificationStatus from '../certificationStatus'
 import { useIamrContext } from '../iamrContext/context'
 import LoadingAnimation from '../loadingAnimation'
 import SkillJournal from '../skillJournal'
 import SkillContent from '../skillContent'
 import CertificationStatus from '../certificationStatus'
 import SkillUploads from '../skillUploads'
+import IAMRWelcomePage from '../iamrWelcome'
 
 const SkillsRouter = () => {
   const { loading } = useIamrContext()
@@ -30,6 +30,11 @@ const SkillsRouter = () => {
           </div>
         ) : (
           <>
+            <Route
+              exact
+              path={'/student-iamr/:studentId'}
+              component={IAMRWelcomePage}
+            />
             <Route
               exact
               path={`/student-iamr/:studentId/:id/content`}

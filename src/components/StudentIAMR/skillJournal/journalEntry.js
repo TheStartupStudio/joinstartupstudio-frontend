@@ -1,10 +1,19 @@
 import React from 'react'
 import './index.css'
 
-const JournalEntry = ({ entry, children }) => {
+const JournalEntry = ({ index, entry, children, skillTags }) => {
   return (
     <div className='journal-question'>
-      <p className='page-content-text'>{entry?.title}</p>
+      <div className='page-content-text mb-2'>
+        {entry?.title}
+        {index === 0 && (
+          <ul className='mb-0'>
+            {skillTags.map((tag) => (
+              <li>{tag.name}</li>
+            ))}
+          </ul>
+        )}
+      </div>
       {children}
     </div>
   )
