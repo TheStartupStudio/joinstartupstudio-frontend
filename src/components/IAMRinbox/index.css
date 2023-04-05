@@ -114,6 +114,10 @@
   cursor: pointer;
 }
 
+.inbox-tickets-container .single-ticket.unread {
+  background: #d2e0e5;
+}
+
 .inbox-tickets-container .single-ticket img {
   width: 70px;
   height: 70px;

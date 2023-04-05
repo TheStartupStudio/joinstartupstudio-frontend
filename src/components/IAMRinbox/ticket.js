@@ -11,7 +11,9 @@ function Ticket({ ticket, setSelectedTicket }) {
   const uploadUrl = `/student-iamr/${ticket.User?.id}/${ticket.IamrSkill?.id}/uploads/${ticket.UserSkillUpload?.id}`
   return (
     <div
-      className='single-ticket d-flex'
+      className={`single-ticket d-flex ${
+        !ticket.read_by_instructor ? 'unread' : ''
+      }`}
       onClick={() => {
         ticket.type === 'certification_submit'
           ? history.push(uploadUrl)

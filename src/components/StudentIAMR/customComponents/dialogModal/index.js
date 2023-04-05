@@ -1,14 +1,34 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 
-const CertificationSubmitModal = ({ show, onHide, loading, submit }) => {
+const DialogModal = ({
+  show,
+  onHide,
+  onSubmit,
+  title,
+  submitBtnText,
+  isApprovable
+}) => {
+  const [loading, setLoading] = useState(false)
+
+  const submit = () => {
+    onSubmit()
+  }
+
+  const hideModal = () => {
+    if (loading) return
+    onHide()
+  }
+
   return (
     <Modal
       show={show}
-      onHide={onHide}
+      onHide={hideModal}
       backdrop='static'
       keyboard={false}
-      className='no-border-modal confirmation-modal approve'
+      className={`no-border-modal confirmation-modal ${
+        isApprovable ? 'approve' : ''
+      }`}
       centered
     >
       <Modal.Header
@@ -19,32 +39,23 @@ const CertificationSubmitModal = ({ show, onHide, loading, submit }) => {
           type='button'
           className='btn-close mt-2'
           aria-label='Close'
-          onClick={onHide}
+          onClick={hideModal}
         />
       </Modal.Header>
       <Modal.Body>
         <div className='my-2 my-md-4 mx-2 mx-md-5'>
-          <h3 className='title'>
-            Are you sure you want submit for certification?
-          </h3>
+          <h3 className='title'>{title}</h3>
           <div className='mt-4 text-center'>
-            <button
-              className='cancel-subscription-button'
-              disabled={loading}
-              style={{ backgroundColor: '#01C5D1', width: '100%' }}
-              onClick={() => {
-                submit()
-              }}
-            >
+            <button disabled={loading} className='confirm-btn' onClick={submit}>
               {loading ? (
                 <span className='spinner-border spinner-border-sm' />
               ) : (
-                `SUBMIT`
+                submitBtnText
               )}
             </button>
           </div>
           <div className='mt-2 text-center'>
-            <p onClick={onHide} className='cancel'>
+            <p onClick={hideModal} className='cancel'>
               CANCEL
             </p>
           </div>
@@ -54,4 +65,4 @@ const CertificationSubmitModal = ({ show, onHide, loading, submit }) => {
   )
 }
 
-export default CertificationSubmitModal
+export default DialogModal

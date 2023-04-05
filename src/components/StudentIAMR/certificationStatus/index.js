@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { useParams } from 'react-router-dom'
-import './certificationStatus.css'
+import './index.css'
 import LoadingAnimation from '../loadingAnimation'
 import { showErrors } from '../../../utils/helpers'
 
