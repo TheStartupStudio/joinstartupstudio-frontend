@@ -14,6 +14,8 @@ import linkifyHtml from 'linkify-html'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import LoadingAnimation from './loadingAnimation'
+import NotificationTypes from '../../utils/notificationTypes'
+import socket from '../../utils/notificationSocket'
 
 function TicketChat({ ticket, close, isTicketOpened }) {
   const { ticketOpened, replying, setReplying, newMessage } =
@@ -62,6 +64,22 @@ function TicketChat({ ticket, close, isTicketOpened }) {
         const message = { ...res.data, User: { id, name, profile_image } }
         setMessages((messages) => [...messages, message])
         newMessage({ message, ticket })
+
+        const type =
+          ticket.type === 'instruction'
+            ? NotificationTypes.INSTRUCTIONS_TICKET_REPLY.key
+            : NotificationTypes.FEEDBACK_TICKET_REPLY.key
+        const url =
+          ticket.type === 'instruction'
+            ? `/iamr/${ticket.skill_id}/instructions/${ticket.id}`
+            : `/iamr/${ticket.skill_id}/feedback/${ticket.id}`
+
+        socket?.emit('sendNotification', {
+          sender: loggedUser,
+          receiver: ticket.User,
+          type: type,
+          url: url
+        })
       })
       .catch((e) => {
         toast.error('Ticket reply failed, please try again!')

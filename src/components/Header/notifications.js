@@ -65,7 +65,7 @@ const Notifications = (props) => {
               return (
                 <>
                   <a
-                    className={`nav-link notification-link px-0`}
+                    className={`nav-link notification-link px-0 pb-0`}
                     onClick={() => notificationClick(notification)}
                     key={notification.id}
                     style={{

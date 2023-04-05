@@ -4,12 +4,16 @@ import { useIamrContext } from '../iamrContext/context'
 import { showErrors } from '../../../utils/helpers'
 import { toast } from 'react-toastify'
 import { useParams } from 'react-router-dom'
+import notificationTypes from '../../../utils/notificationTypes'
+import { useSelector } from 'react-redux'
+import notificationSocket from '../../../utils/notificationSocket'
 
 export default function useUploads({ skillId, setSelectedUpload }) {
   const [uploads, setUploads] = useState([])
   const [loading, setLoading] = useState(true)
   const { updateSkillStatus } = useIamrContext()
   const { studentId, uploadId } = useParams()
+  const loggedUser = useSelector((state) => state.user.user.user)
 
   useEffect(() => {
     if (!skillId) return
@@ -40,9 +44,25 @@ export default function useUploads({ skillId, setSelectedUpload }) {
         values
       )
       .then(({ data }) => {
-        const { upload, updatedSkillStatus } = data
+        const { upload, updatedSkillStatus, ticket } = data
         onSuccessCb()
         editUploads({ upload, updatedSkillStatus })
+        const type =
+          values.status === 'developing'
+            ? notificationTypes.FEEDBACK_RECEIVED.key
+            : notificationTypes.PROFICIENT_SKILL.key
+
+        const url =
+          values.status === 'developing'
+            ? `/iamr/${skillId}/feedback/${ticket?.id}`
+            : `/iamr/${skillId}/uploads/${upload.id}`
+
+        notificationSocket?.emit('sendNotification', {
+          sender: loggedUser,
+          receiver: { id: upload.user_id },
+          type: type,
+          url: url
+        })
       })
       .catch((e) => {
         onRejectCb && onRejectCb()
