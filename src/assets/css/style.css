@@ -3756,7 +3756,7 @@ wave > wave:first-child {
   font-size: 12px !important;
   line-height: 14px !important;
   font-family: Montserrat !important;
-
+  word-break: break-word;
   letter-spacing: 0.48px !important;
   color: #434b4b !important;
 }

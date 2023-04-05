@@ -59,13 +59,15 @@ const StudentOfInstructors = (props) => {
     formState: { errors }
   } = useForm()
 
-  const changeDashboard = async (value) => {
-    await axiosInstance.put('/dashboard', dashboardData).then((res) => {
-      res.data.updated
-        ? toast.success('Data successfully updated')
-        : toast.error('Data was not updated')
-      history.go(0)
-    })
+  const changeDashboard = (value) => {
+    axiosInstance
+      .put(`/dashboard/${dashboardData?.id}`, dashboardData)
+      .then((res) => {
+        toast.success('Dashboard widget updated successfully.')
+      })
+      .catch((e) => {
+        toast.error('Dashboard widget update failed.')
+      })
   }
 
   return (
@@ -130,28 +132,25 @@ const StudentOfInstructors = (props) => {
             <Form onSubmit={handleSubmit(changeDashboard)}>
               <div className='mb-4 py-2 px-md-2 row'>
                 <Col sm={12} md={12}>
-                  <label for='text' className='brand-text mt-3'>
+                  <label htmlFor='text' className='brand-text mt-3'>
                     Text to show
                   </label>
                   <textarea
                     className='mt-2 mb-2 col-12 p-md-2'
                     name='text'
                     rows={4}
-                    placeholder={'Link'}
-                    value={dashboardData ? dashboardData.text : ''}
-                    {...register('text', {
-                      required: true
-                    })}
+                    placeholder={'Description'}
+                    value={dashboardData ? dashboardData.description : ''}
                     onChange={(e) =>
                       setDashboardData((old) => ({
                         ...old,
-                        text: e.target.value
+                        description: e.target.value
                       }))
                     }
                   />
                 </Col>
                 <Col sm={12} md={12}>
-                  <label for='link' className='brand-text'>
+                  <label htmlFor='link' className='brand-text'>
                     Link to redirect
                   </label>
                   <input
@@ -159,9 +158,6 @@ const StudentOfInstructors = (props) => {
                     type='text'
                     name='link'
                     placeholder={'Link'}
-                    {...register('link', {
-                      required: true
-                    })}
                     value={dashboardData ? dashboardData.link : ''}
                     onChange={(e) =>
                       setDashboardData((old) => ({
@@ -170,6 +166,156 @@ const StudentOfInstructors = (props) => {
                       }))
                     }
                   />
+                </Col>
+                <Col sm={12} md={12} className='row mb-4'>
+                  <p
+                    className='brand-text mb-0 col-12'
+                    style={{ fontSize: '18px' }}
+                  >
+                    Read
+                  </p>
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='title' className='brand-text'>
+                      Title
+                    </label>
+                    <input
+                      type='text'
+                      name='title'
+                      className='p-md-2 w-100'
+                      placeholder={'Title'}
+                      value={dashboardData ? dashboardData?.read?.title : ''}
+                      onChange={(e) =>
+                        setDashboardData((old) => ({
+                          ...old,
+                          read: {
+                            ...old.read,
+                            title: e.target.value
+                          }
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='author' className='brand-text'>
+                      Author
+                    </label>
+                    <input
+                      type='text'
+                      name='author'
+                      className='p-md-2 w-100'
+                      placeholder={'author'}
+                      value={dashboardData ? dashboardData?.read?.author : ''}
+                      onChange={(e) =>
+                        setDashboardData((old) => ({
+                          ...old,
+                          read: {
+                            ...old.read,
+                            author: e.target.value
+                          }
+                        }))
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col sm={12} md={12} className='row mb-4'>
+                  <p
+                    className='brand-text mb-0 col-12'
+                    style={{ fontSize: '18px' }}
+                  >
+                    Watch
+                  </p>
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='title' className='brand-text'>
+                      Title
+                    </label>
+                    <input
+                      type='text'
+                      name='title'
+                      className='p-md-2 w-100'
+                      placeholder={'Title'}
+                      value={dashboardData ? dashboardData?.watch?.title : ''}
+                      onChange={(e) =>
+                        setDashboardData((old) => ({
+                          ...old,
+                          watch: {
+                            ...old.watch,
+                            title: e.target.value
+                          }
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='author' className='brand-text'>
+                      Author
+                    </label>
+                    <input
+                      type='text'
+                      name='author'
+                      className='p-md-2 w-100'
+                      placeholder={'author'}
+                      value={dashboardData ? dashboardData?.watch?.author : ''}
+                      onChange={(e) =>
+                        setDashboardData((old) => ({
+                          ...old,
+                          watch: {
+                            ...old.watch,
+                            author: e.target.value
+                          }
+                        }))
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col sm={12} md={12} className='row mb-4'>
+                  <p
+                    className='brand-text mb-0 col-12'
+                    style={{ fontSize: '18px' }}
+                  >
+                    Listen
+                  </p>
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='title' className='brand-text'>
+                      Title
+                    </label>
+                    <input
+                      type='text'
+                      name='title'
+                      className='p-md-2 w-100'
+                      placeholder={'Title'}
+                      value={dashboardData ? dashboardData?.listen?.title : ''}
+                      onChange={(e) =>
+                        setDashboardData((old) => ({
+                          ...old,
+                          listen: {
+                            ...old.listen,
+                            title: e.target.value
+                          }
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='author' className='brand-text'>
+                      Author
+                    </label>
+                    <input
+                      type='text'
+                      name='author'
+                      className='p-md-2 w-100'
+                      placeholder={'author'}
+                      value={dashboardData ? dashboardData?.listen?.author : ''}
+                      onChange={(e) =>
+                        setDashboardData((old) => ({
+                          ...old,
+                          listen: {
+                            ...old.listen,
+                            author: e.target.value
+                          }
+                        }))
+                      }
+                    />
+                  </div>
                 </Col>
               </div>
               <button
@@ -222,7 +368,7 @@ const StudentOfInstructors = (props) => {
                       .filter((univerity) => univerity.value == isUniChosed)[0]
                       ?.universityInstructors.map((instructor, index) => (
                         <div className='mb-2'>
-                          <label for={`instructor ${instructor.User.id}`}>
+                          <label htmlFor={`instructor ${instructor.User.id}`}>
                             {instructor.User.name}
                           </label>
                           <input

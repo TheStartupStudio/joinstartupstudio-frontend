@@ -10,48 +10,41 @@ axiosInstance.interceptors.response.use(
     return response
   },
   async function (error) {
-    const originalRequest = error.config
     const token = JSON.parse(localStorage.getItem('user'))
-    if (!token) {
+
+    if (!token || error?.response?.status !== 401 || error.config._retry) {
       return Promise.reject(error)
     }
 
-    if (
-      error.config &&
-      error.response &&
-      error.response.status === 401 &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true
+    if (error?.response?.status === 401) {
+      error.config._retry = true
+    }
 
-      try {
-        const cognitoUser = await Auth.currentAuthenticatedUser()
-        const currentSession = await Auth.currentSession()
-        cognitoUser.refreshSession(
-          currentSession.refreshToken,
-          (err, session) => {
-            if (err) {
-              localStorage.clear()
-              window.location.href = '/logout'
-            }
-            const { idToken } = session
-            token.token = idToken.jwtToken
-            localStorage.setItem('user', JSON.stringify(token))
-            error.config.headers.Authorization = `Bearer ${idToken.jwtToken}`
-            return axiosInstance.request(originalRequest)
+    const cognitoUser = await Auth.currentAuthenticatedUser()
+    const currentSession = cognitoUser.signInUserSession
+    return new Promise((resolve, reject) => {
+      const token = JSON.parse(localStorage.getItem('user'))
+      cognitoUser.refreshSession(
+        currentSession.refreshToken,
+        (err, session) => {
+          // do something with the new session
+          if (err) {
+            localStorage.clear()
+            window.location.href = '/logout'
+            reject()
           }
-        )
-      } catch (err) {
-        localStorage.clear()
-        window.location.href = '/logout'
-      }
-    }
-
-    if (originalRequest._retry) {
-      error.config.headers.Authorization = `Bearer ${token.token}`
-      return axiosInstance.request(originalRequest)
-    }
-    return Promise.reject(error)
+          const { idToken } = session
+          token.token = idToken.jwtToken
+          localStorage.setItem('user', JSON.stringify(token))
+          error.config.headers.Authorization = `Bearer ${idToken.jwtToken}`
+          resolve()
+        }
+      )
+    })
+      .then(() => {
+        return axios.request(error.config)
+      })
+      .catch((e) => Promise.reject(error))
   }
 )
 
@@ -64,25 +57,6 @@ axiosInstance.interceptors.request.use(
     return request
   },
   (error) => {
-    return Promise.reject(error)
-  }
-)
-axios.interceptors.request.use(
-  (request) => {
-    return request
-  },
-  (error) => {
-    window.location.replace('/login')
-    return Promise.reject(error)
-  }
-)
-axios.interceptors.response.use(
-  (response) => {
-    // Edit response config cf
-    return response
-  },
-  (error) => {
-    window.location.replace('/login')
     return Promise.reject(error)
   }
 )

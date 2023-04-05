@@ -388,7 +388,6 @@ function Sidebar(props) {
                       props.hideHeaderIcons()
                     }}
                     to='/iamr-inbox'
-                    disabled
                     activeClassName='sidenav'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>
