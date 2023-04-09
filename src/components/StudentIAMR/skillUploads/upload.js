@@ -19,6 +19,7 @@ const Upload = ({ upload, skill, editUpload }) => {
       <div className='upload my-3'>
         <div className='row'>
           <div className='col-12 col-md-6 mb-2'>
+            <span className='page-content-title mb-2'>TITLE</span>
             <input
               className='upload-item'
               type='text'
@@ -29,6 +30,7 @@ const Upload = ({ upload, skill, editUpload }) => {
             />
           </div>
           <div className='col-12 col-md-6 mb-2'>
+            <span className='page-content-title mb-2'>TYPE</span>
             <Dropdown
               title={`${upload.type ? upload.type : 'Type'}`}
               expanded={expandedTypeDropdown}
@@ -43,7 +45,52 @@ const Upload = ({ upload, skill, editUpload }) => {
               </ul>
             </Dropdown>
           </div>
+          {upload.link && (
+            <div className='col-12 mb-2'>
+              <span className='page-content-title mb-2'>LINK</span>
+              <div className='upload-item'>
+                <a
+                  href={
+                    upload.link?.startsWith('http')
+                      ? upload.link
+                      : `https://${upload.link}`
+                  }
+                  rel='noreferrer'
+                  target={'_blank'}
+                  className='my-auto'
+                >
+                  {upload.link?.length > 40
+                    ? upload.link.toString().substring(0, 30) + '...'
+                    : upload.link}
+                </a>
+              </div>
+            </div>
+          )}
+
+          {upload.imported_journal_entry && (
+            <div className='col-12 mb-2 imported-entry'>
+              <div className='page-content-title mb-2'>
+                <p className='mb-2'>IMPORTED JOURNAL ENTRY</p>
+                <p className='mb-1'>
+                  Journal:{' '}
+                  <span className='fw-bold'>
+                    {upload.imported_journal_entry.journalTitle}
+                  </span>
+                </p>
+                <p className='mb-0'>
+                  Journal Entry:{' '}
+                  <span className='fw-bold'>
+                    {upload.imported_journal_entry.journalEntry}
+                  </span>
+                </p>
+              </div>
+              <div className='upload-item'>
+                <p className='m-0'>{upload.imported_journal_entry.userEntry}</p>
+              </div>
+            </div>
+          )}
           <div className='col-12'>
+            <span className='page-content-title mb-2'>SELECTED SKILL TAGS</span>
             <Dropdown
               title={`${skill.title} - SKILL DROP DOWN MENU`}
               expanded={expandedSkillDropdown}
