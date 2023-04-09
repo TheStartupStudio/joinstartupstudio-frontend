@@ -1,6 +1,6 @@
 const Explanation = ({ tag }) => {
   return (
-    <div key={tag.id} className='col-12 explanation-container mb-2'>
+    <div className='col-12 explanation-container mb-2'>
       <p className='page-content-title mb-2'>EXPLANATION - {tag.name}</p>
       <textarea
         value={tag.explanation ?? ''}
