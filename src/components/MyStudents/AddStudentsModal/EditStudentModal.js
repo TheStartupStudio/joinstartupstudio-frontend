@@ -145,7 +145,7 @@ const EditStudentModal = (props) => {
                 ●
               </span>
             </div>
-            <div className="col-12 col-sm-5 col-lg-4 view-student-portfolio-journals d-flex justify-content-start justify-content-sm-end align-items-end pe-lg-4 p-0">
+            <div className="col-12 col-sm-5 col-lg-5 view-student-portfolio-journals d-flex justify-content-start justify-content-sm-end align-items-end pe-lg-4 p-0">
               <Link
                 to={`/user-portfolio/${props.data.username}`}
                 className="d-flex"

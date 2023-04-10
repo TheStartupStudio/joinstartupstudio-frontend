@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -63,7 +63,7 @@ const Notifications = (props) => {
           <>
             {props.notifications.map((notification) => {
               return (
-                <>
+                <React.Fragment key={notification.id}>
                   <a
                     className={`nav-link notification-link px-0 pb-0`}
                     onClick={() => notificationClick(notification)}
@@ -78,7 +78,7 @@ const Notifications = (props) => {
                   <span className='notification-date'>
                     {formatDate(notification.createdAt)}
                   </span>
-                </>
+                </React.Fragment>
               )
             })}
           </>
