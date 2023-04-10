@@ -1,24 +1,24 @@
-import React from 'react'
-import ReactPlayer from 'react-player'
+import React from "react";
+import ReactPlayer from "react-player";
 
-import { useParams } from 'react-router-dom'
+import { useParams } from "react-router-dom";
 
 const ImrContent = (props) => {
-  const { id } = useParams()
+  const { id } = useParams();
   return (
     <div>
-      <p className='text-uppercase'>{'title'} - INSTRUCTIONS & QUESTIONS </p>
+      <p className="text-uppercase">{"title"} - INSTRUCTIONS & QUESTIONS </p>
       <ReactPlayer
-        className='video_inner media-lightbox__video-player'
+        className="video_inner media-lightbox__video-player"
         url={
-          'https://d5tx03iw7t69i.cloudfront.net/Journal/LearnToStartJournal/LTS_1_-_Welcome_to_your_Learn_to_Start_Journal.mov'
+          "https://d5tx03iw7t69i.cloudfront.net/Journal/LearnToStartJournal/LTS_1_-_Welcome_to_your_Learn_to_Start_Journal.mov"
         }
         controls={true}
         showPreview={true}
-        width='100%'
-        height='100%'
+        width="100%"
+        height="100%"
         config={{
-          file: { attributes: { controlsList: 'nodownload' } }
+          file: { attributes: { controlsList: "nodownload" } },
         }}
         // ref={'videoRef'}
         playing={true}
@@ -32,7 +32,7 @@ const ImrContent = (props) => {
         //   setNewInterval(seconds)
         // }}
       />
-      <p>Text:</p>
+      <p></p>
       <p>
         Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text ever
@@ -45,7 +45,7 @@ const ImrContent = (props) => {
         of Lorem Ipsum.
       </p>
     </div>
-  )
-}
+  );
+};
 
-export default ImrContent
+export default ImrContent;
