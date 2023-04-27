@@ -5,3 +5,46 @@
   font-size: 18px !important;
   font-weight: bold;
 }
+
+.react-datepicker__day--highlighted-custom-1,
+.react-datepicker__month-text--highlighted-custom-1,
+.react-datepicker__quarter-text--highlighted-custom-1,
+.react-datepicker__year-text--highlighted-custom-1 {
+  /*color: magenta;*/
+  color:#fff !important;
+  background-color:#ff3399 !important;
+
+}
+.react-datepicker__day--highlighted-custom-2,
+.react-datepicker__month-text--highlighted-custom-2,
+.react-datepicker__quarter-text--highlighted-custom-2,
+.react-datepicker__year-text--highlighted-custom-2 {
+  /*color: green;*/
+  color:#fff !important;
+  background-color: #99cc33 !important;
+}
+
+.react-datepicker__day-names,
+.react-datepicker__week {
+  white-space: nowrap;
+  gap:2px;
+  margin-top:2px;
+  margin-bottom:2px
+}
+
+
+.react-datepicker__day--highlighted,
+.react-datepicker__month-text--highlighted,
+.react-datepicker__quarter-text--highlighted,
+.react-datepicker__year-text--highlighted {
+  border-radius: 0.3rem;
+  background-color: #3dcc4a;
+  color: #fff;
+}
+
+.react-datepicker__day--selected {
+  background-color: #56b8b8 !important;
+  color: #fff;
+  border-radius: 0px !important;
+
+}
