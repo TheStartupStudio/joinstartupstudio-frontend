@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import IntlMessages from '../../utils/IntlMessages'
 import Profile from '../../components/Profile'
 import Calendar from '../../components/Calendar'
+import LevelWrapper from '../../components/LevelWrapper'
 import { changeSidebarState } from '../../redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
@@ -15,6 +16,9 @@ function Dashboard() {
   const dispatch = useDispatch()
   const [newMessage, setNewMessage] = useState([])
   const [chatId, setChatId] = useState('')
+  const user = {
+    level: 'HS'
+  }
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
@@ -31,11 +35,21 @@ function Dashboard() {
             <p className='page-description'>
               <IntlMessages id='dashboard.page_description' />
             </p>
-            <Profile
-              newMessage={newMessage}
-              chatOpened={chatId}
-              clearChat={() => setChatId('')}
-            />
+            
+            <LevelWrapper user={user}>
+              <Profile
+                newMessage={newMessage}
+                chatOpened={chatId}
+                clearChat={() => setChatId('')}
+                level={'MS'}
+              />
+              <Profile
+                newMessage={newMessage}
+                chatOpened={chatId}
+                clearChat={() => setChatId('')}
+                level={'HS'}
+              />
+            </LevelWrapper>
 
             <div className='my-4'>
               <div className='row'>
