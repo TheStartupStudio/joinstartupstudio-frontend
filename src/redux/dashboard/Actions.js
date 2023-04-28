@@ -13,13 +13,10 @@ import { JOURNAL_GET_ERROR } from "../journal/Types";
 import axios from "axios";
 
 export const getPeriodsStart = () => async (dispatch) => {
-  debugger;
   try {
-    debugger;
     // dispatch({ type: GET_PERIODS_START });
     const response = await axiosInstance.get("/periods");
     const periods = response.data;
-    debugger;
     dispatch({
       type: GET_PERIODS_SUCCESS,
       payload: { periods },
@@ -33,7 +30,6 @@ export const getPeriodsStart = () => async (dispatch) => {
 };
 
 export const getPeriodsSuccess = (periods) => {
-  debugger;
   return {
     type: GET_PERIODS_SUCCESS,
     payload: periods,

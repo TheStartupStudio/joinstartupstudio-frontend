@@ -1,0 +1,33 @@
+.iamr-page-padding {
+  padding-left: calc(0.5rem + 10px);
+  padding-right: 20px;
+  padding-top: 40px;
+}
+
+.iamr-page-padding:nth-child(2) {
+  padding-top: 0;
+}
+
+.iamr-page-header .page-description {
+  font-size: 17px;
+  color: #fe43a1 !important;
+  font-weight: normal;
+}
+
+.iamr-page .error {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.iamr-page .student-name {
+  color: #707070;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+@media (max-width: 576px) {
+  .iamr-page-header .page-description {
+    font-size: 14px;
+  }
+}

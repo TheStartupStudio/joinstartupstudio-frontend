@@ -1296,13 +1296,13 @@ link a:hover {
   width: 100%;
   resize: none;
   padding: 10px;
-  font-size: 17px;
+  font-size: 14px;
   font-family: 'Montserrat', sans-serif !important;
 }
 .contact-us textarea::placeholder {
   text-align: left;
   font-weight: 300;
-  font-size: 17px;
+  font-size: 14px;
   letter-spacing: 0.68px;
   color: #707070;
   opacity: 1;
@@ -4251,4 +4251,9 @@ ul.sidebar-menu-item .collapse a {
 
 .page-card__content-description .circle.grey::before {
   background-color: #bfbfbf;
+}
+
+.no-border-modal .modal-content {
+  border: 0px;
+  border-radius: 0px !important;
 }

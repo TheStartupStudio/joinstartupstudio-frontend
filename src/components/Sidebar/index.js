@@ -382,24 +382,12 @@ function Sidebar(props) {
                   </NavLink>
                 </li>
                 <li>
-                  {/* <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to='/#'
-                    activeClassName='sidenav'
-                  >
-                    <div className='d-flex' style={{ alignItems: 'center' }}>
-                      <div className='ms-4 ps-2 py-1'>IAMR(™) Assessments</div>
-                    </div>
-                  </NavLink> */}
                   <NavLink
                     onClick={() => {
                       dispatch(setAccordionToggled(false))
                       props.hideHeaderIcons()
                     }}
-                    to='#'
+                    to='/iamr-inbox'
                     activeClassName='sidenav'
                   >
                     <div className='d-flex' style={{ alignItems: 'center' }}>

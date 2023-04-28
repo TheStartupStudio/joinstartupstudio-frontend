@@ -8,6 +8,7 @@ import foulWordsJSON from '../assets/json/foul-words.json'
 import _ from 'lodash'
 import UserContactForm from '../components/UserContactForm'
 import { format } from 'date-fns'
+import { toast } from 'react-toastify'
 
 export const IsUserLevelAuthorized = () => {
   const loggedUserLevel = useSelector((state) => state?.user?.user?.user?.level)
@@ -150,12 +151,25 @@ export const beautifulDateFormat = (date, customFormat = null) => {
   if (dateDifference > 6) {
     return format(
       new Date(inputDate.toISOString().slice(0, -1)),
-      customFormat === 'hh:mm a' ? customFormat : 'MMMM dd, yyyy'
+      customFormat?.type === 'hours' ? customFormat.format : 'MMMM dd, yyyy'
     )
+  } else if (dateDifference < 1 && customFormat?.type !== 'hours') {
+    return 'Today'
   } else {
     return format(
       new Date(inputDate.toISOString().slice(0, -1)),
-      customFormat ?? "EEEE h:mmaaaaa'm'"
+      customFormat?.format ?? "EEEE h:mmaaaaa'm'"
     )
   }
+}
+
+export const showErrors = (e) => {
+  const error = e.response?.data
+  return (
+    <>
+      {Array.isArray(error?.errors)
+        ? error?.errors.map((error) => toast.error(error.message))
+        : toast.error(error)}
+    </>
+  )
 }

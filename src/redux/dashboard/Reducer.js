@@ -20,7 +20,6 @@ const dashboardReducer = (state = initialState, action) => {
         error: null,
       };
     case GET_PERIODS_SUCCESS:
-      debugger;
       return {
         ...state,
         periods: payload.periods,

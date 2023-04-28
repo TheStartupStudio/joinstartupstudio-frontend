@@ -17,7 +17,9 @@ function Dashboard() {
   const dispatch = useDispatch();
   const periods = useSelector((state) => state.dashboard.periods);
   const reducers = useSelector((state) => state);
-  console.log(reducers);
+  const user = {
+    level: 'HS'
+  }
 
   const [newMessage, setNewMessage] = useState([]);
   const [chatId, setChatId] = useState("");
@@ -27,7 +29,6 @@ function Dashboard() {
   // }, []);
   console.log(periods);
   useEffect(() => {
-    debugger;
     dispatch(getPeriodsStart());
   }, []);
   const openTaskEventModal = () => {
@@ -49,11 +50,29 @@ function Dashboard() {
             <p className="page-description">
               <IntlMessages id="dashboard.page_description" />
             </p>
+<<<<<<< HEAD
             <Profile
               newMessage={newMessage}
               chatOpened={chatId}
               clearChat={() => setChatId("")}
             />
+=======
+            
+            <LevelWrapper user={user}>
+              <Profile
+                newMessage={newMessage}
+                chatOpened={chatId}
+                clearChat={() => setChatId('')}
+                level={'MS'}
+              />
+              <Profile
+                newMessage={newMessage}
+                chatOpened={chatId}
+                clearChat={() => setChatId('')}
+                level={'HS'}
+              />
+            </LevelWrapper>
+>>>>>>> origin/dev
 
             <div className="my-4">
               <div className="row">
