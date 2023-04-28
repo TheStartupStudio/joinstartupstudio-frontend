@@ -12,6 +12,7 @@ import { ActiveStudents } from "../../components/ActiveStudents";
 import CertificationRequestsWidget from "../../components/MyStudents/certificationRequests/certificationRequestsWidget";
 import TaskEventModal from "../../components/Modals/taskEventModal";
 import { getPeriodsStart } from "../../redux/dashboard/Actions";
+import LevelWrapper from '../../components/LevelWrapper'
 
 function Dashboard() {
   const dispatch = useDispatch();
