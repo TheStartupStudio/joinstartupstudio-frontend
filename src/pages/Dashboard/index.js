@@ -50,13 +50,6 @@ function Dashboard() {
             <p className="page-description">
               <IntlMessages id="dashboard.page_description" />
             </p>
-<<<<<<< HEAD
-            <Profile
-              newMessage={newMessage}
-              chatOpened={chatId}
-              clearChat={() => setChatId("")}
-            />
-=======
             
             <LevelWrapper user={user}>
               <Profile
@@ -72,7 +65,6 @@ function Dashboard() {
                 level={'HS'}
               />
             </LevelWrapper>
->>>>>>> origin/dev
 
             <div className="my-4">
               <div className="row">
