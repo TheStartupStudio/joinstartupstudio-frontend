@@ -11,13 +11,13 @@ import Messenger from "../../components/Messenger/Messenger";
 import { ActiveStudents } from "../../components/ActiveStudents";
 import CertificationRequestsWidget from "../../components/MyStudents/certificationRequests/certificationRequestsWidget";
 import TaskEventModal from "../../components/Modals/taskEventModal";
-import { getPeriodsStart } from "../../redux/dashboard/Actions";
+import {getEventsStart, getPeriodsStart} from "../../redux/dashboard/Actions";
 import LevelWrapper from '../../components/LevelWrapper'
 
 function Dashboard() {
   const dispatch = useDispatch();
   const periods = useSelector((state) => state.dashboard.periods);
-  const reducers = useSelector((state) => state);
+  const events = useSelector((state) => state.dashboard.events);
   const user = {
     level: 'HS'
   }
@@ -25,12 +25,12 @@ function Dashboard() {
   const [newMessage, setNewMessage] = useState([]);
   const [chatId, setChatId] = useState("");
   const [taskEventModal, setTaskEventModal] = useState(false);
-  // useEffect(() => {
-  //   dispatch(changeSidebarState(false));
-  // }, []);
-  console.log(periods);
+  useEffect(() => {
+    dispatch(changeSidebarState(false));
+  }, []);
   useEffect(() => {
     dispatch(getPeriodsStart());
+    dispatch(getEventsStart())
   }, []);
   const openTaskEventModal = () => {
     setTaskEventModal(true);
@@ -51,7 +51,7 @@ function Dashboard() {
             <p className="page-description">
               <IntlMessages id="dashboard.page_description" />
             </p>
-            
+
             <LevelWrapper user={user}>
               <Profile
                 newMessage={newMessage}
@@ -100,6 +100,9 @@ function Dashboard() {
             <TaskEventModal
               show={taskEventModal}
               onHide={closeTaskEventModal}
+              periods={periods}
+              events={events}
+
             />
             <CertificationRequestsWidget />
             {/* <Messenger

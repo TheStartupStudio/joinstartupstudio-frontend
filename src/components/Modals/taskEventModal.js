@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { DropdownButton, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -9,44 +9,46 @@ import FoulWords from "../../utils/FoulWords";
 import DropdownMenu from "react-bootstrap/DropdownMenu";
 import DatePicker from "react-datepicker";
 import "react-quill/dist/quill.snow.css";
+import PeriodSelector from "../PeriodSelector/PeriodSelector";
+import {useDispatch, useSelector} from "react-redux";
+import {postEventStart} from "../../redux/dashboard/Actions";
 
 const TaskEventModal = (props) => {
   const [tab, setTab] = useState("task");
   const [startDate, setStartDate] = useState(new Date());
+  const [periods, setPeriods] = useState(props.periods);
+
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    setPeriods(props.periods)
+  },[props.periods])
+
 
   const initialState = {
-    taskName: "",
-    taskDate: "",
-    taskDescription: "",
-    eventName: "",
-    eventDate: "",
-    eventDescription: "",
+    name: "",
+    date: "",
+    description: "",
+    type:"",
     requirements: "",
-    chooseClasses: "",
+    chooseClasses: {}
   };
   const [state, setState] = useState(initialState);
-  const [tasks, setTasks] = useState([]);
-  const [events, setEvents] = useState([]);
-  const task = {
-    taskName: state.taskName,
-    taskDate: state.taskDate,
-    taskDescription: state.taskDescription,
-    requirements: state.requirements,
-    chooseClasses: state.chooseClasses,
-  };
-  const event = {
-    eventName: state.eventName,
-    eventDate: state.eventDate,
-    eventDescription: state.eventDescription,
-    requirements: state.requirements,
-    chooseClasses: state.chooseClasses,
-  };
 
-  console.log(tasks);
+  useEffect(()=>{
+    const newState = {...state}
+    newState.type = tab == 'task' ? "task" : "event"
+    setState(newState)
+  },[tab])
 
-  const handleInputChange = (name, value) => {
-    setState({ ...state, [name]: value });
-  };
+const [selectedPeriod, setSelectedPeriod] = useState({})
+
+    const handleInputChange = (name, value) => {
+        setState({ ...state, [name]: value });
+    };
+
+
+
   const activeTabStyle = {
     backgroundColor: "#51c7df",
     color: "#fff",
@@ -63,11 +65,21 @@ const TaskEventModal = (props) => {
     setState(initialState);
   };
 
-  const onSave = () => {
-    tab == "task" && setTasks([...tasks, task]);
-    tab == "event" && setEvents([...events, event]);
-  };
+console.log(state)
+const onSave = () => {
+  let newEvent = {
+    name:state.name,
+    date: state.date,
+    description: state.description,
+    type:state.type,
+    requirements: state.requirements,
+    chooseClasses: state.chooseClasses
+  }
 
+  dispatch(postEventStart(newEvent))
+
+
+}
   const modules = {
     toolbar: [
       ["bold", "italic", "underline", "strike"],
@@ -174,11 +186,11 @@ const TaskEventModal = (props) => {
                   id={tab === "task" ? "taskName" : "eventName"}
                   onChange={(e) =>
                     handleInputChange(
-                      tab === "task" ? "taskName" : "eventName",
+                      "name",
                       e.target.value
                     )
                   }
-                  value={state[tab === "task" ? "taskName" : "eventName"]}
+                  value={state.name}
                 />
               )}
             </FormattedMessage>
@@ -203,11 +215,11 @@ const TaskEventModal = (props) => {
                   pattern="\d{4}-\d{2}-\d{2}"
                   onChange={(e) =>
                     handleInputChange(
-                      tab === "task" ? "taskDate" : "eventDate",
+                      "date",
                       e.target.value
                     )
                   }
-                  value={tab === "task" ? state.taskDate : state.eventDate}
+                  value={state.date}
                 />
               )}
             </FormattedMessage>
@@ -235,14 +247,12 @@ const TaskEventModal = (props) => {
                   formats={formats}
                   onChange={(e) =>
                     handleInputChange(
-                      tab === "task" ? "taskDescription" : "eventDescription",
+                      "description",
                       e
                     )
                   }
                   value={
-                    tab === "task"
-                      ? state.taskDescription
-                      : state.eventDescription
+                  state.description
                   }
                 />
               )}
@@ -275,28 +285,11 @@ const TaskEventModal = (props) => {
             </FormattedMessage>
           </div>
           <div className="col-md-12">
-            <label
-              htmlFor="chooseClasses"
-              style={{ fontSize: "14px", fontWeight: "bold" }}
-            >
-              <FormattedMessage id="calendar_task-events.choose_classes" />
-            </label>
-            <select
-              style={{ outline: "none" }}
-              className="form-select form-select-md mb-3 rounded-0 shadow-none"
-              onChange={(e) =>
-                handleInputChange("chooseClasses", e.target.value)
-              }
-              value={state.chooseClasses}
-              name="chooseClasses"
-            >
-              <option disabled selected>
-                Open this select menu
-              </option>
-              <option value="class-1">Class One</option>
-              <option value="class-2">Class Two</option>
-              <option value="class-3">Class Three</option>
-            </select>
+            <PeriodSelector periods={periods}
+                            handleChangePeriod={(e)=>handleInputChange("chooseClasses", e)}
+            />
+
+
           </div>
 
           {/*{foulWords && (*/}
