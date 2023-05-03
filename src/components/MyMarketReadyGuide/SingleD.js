@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SingleB } from "./SingleB";
 import Accordion from "react-bootstrap/Accordion";
-import Dropdown from "../StudentIAMR/customComponents/dropdown";
+import Dropdown from "../IAMR/customComponents/dropdown";
 import { faBox } from "@fortawesome/free-solid-svg-icons";
 import "./index.css";
 

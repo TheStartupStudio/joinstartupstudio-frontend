@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import badge1 from "../../assets/images/market-ready-1-badge.png";
 import badge2 from "../../assets/images/market-ready-2-badge.png";
-import image from "../../assets/images/triangle.png";
+import image from "../../assets/images/five-pillars.jpg";
 import { SingleA } from "./SingleA";
 import { Image } from "./image";
+import { useEffect } from "react";
 import axiosInstance from "../../utils/AxiosInstance";
+
 import "./index.css";
-import { SingleC } from "./SingleC";
-import { SingleD } from "./SingleD";
 
 const FirstDiv = () => {
   const [showImageModal, SetShowImageModal] = useState(false);
@@ -267,17 +267,11 @@ const FirstDiv = () => {
       </div>
       <div className="col-md-11 pe-md-5 mb-4">
         <div className="accordion" id="accordionExample">
-          <SingleC
-            data={data}
-            index={2}
-            title={"OVERVIEW OF CERTIFICATION SYSTEM"}
-          />
           <SingleA
             data={data}
             index={1}
-            title={"TYPES OF UPLOADS FOR SUBMISSION"}
+            title={" Types of Uploads and Their Descriptions"}
           />
-          <SingleD data={data} index={3} title={"EVALUATION SYSTEM"} />
 
           {/* {data?.map((data, index) => (
             <SingleA data={data} index={index} key={index} />

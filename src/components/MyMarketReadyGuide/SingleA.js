@@ -22,7 +22,7 @@ export const SingleA = ({ data, title, index }) => {
         <div
           id={`collapse_outer${index}`}
           eventKey={`${index}`}
-          class={`accordion-collapse collapse `}
+          className={`accordion-collapse collapse `}
           aria-labelledby={`heading-${index}`}
           data-bs-parent={`#accordionExample`}
         >
@@ -31,14 +31,13 @@ export const SingleA = ({ data, title, index }) => {
               className='accordion-outter-body px-2'
               dangerouslySetInnerHTML={{ __html: data?.content }}
             > */}
-            {console.log(data)}
-            {data.map((item) => (
-              <div className='w-100 row'>
+            {data.map((item, index) => (
+              <div className='w-100 row' key={index}>
                 <p>
                   <span className='item-title text-start pe-2'>
                     {item.title}:
                   </span>
-                  <span className='item-content'>{item.content}</span>
+                  <span className='item-content '>{item.content}</span>
                 </p>
               </div>
             ))}
