@@ -10,3 +10,46 @@
   letter-spacing: 0px;
   color: #101313ca;
 }
+
+.skills-box {
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+.skills-box .skill-box {
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px 0 #cfcfcf;
+  font-size: 14px;
+}
+
+.skill-box h5 {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.skill-box ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.skill-box ul li {
+  font-weight: 500;
+}
+
+.skill-box ul li::before {
+  content: "\2022";
+  color: #51c7df;
+  font-weight: bold;
+  display: inline-block;
+  font-size: 20px;
+  width: 1em;
+  margin-left: -1em;
+}
+
+#activePage {
+  border: 1px solid #bbbdbf;
+  color: #707070;
+  border-radius: 0;
+}

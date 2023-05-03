@@ -1,149 +1,154 @@
-import React, { useState, useEffect, useContext } from 'react'
-import moment from 'moment'
-import './studentsTable.css'
-import DataTable from 'react-data-table-component'
-import axiosInstance from '../../utils/AxiosInstance'
-import Select, { components } from 'react-select'
-import { toast } from 'react-toastify'
-import IntlMessages from '../../utils/IntlMessages'
-import createClass from 'create-react-class'
-import { DeactivateDialogModal } from './deactivateDialogModal'
-import { ConfirmationModal } from '../Modals/confirmationModal'
-import searchIcon from '../../assets/images/search-icon.png'
-import EditBulk from '../../components/MyStudents/AddStudentsModal/editBulk'
-import AddStudentsModal from '../../components/MyStudents/AddStudentsModal/addStudentsModal'
-import { StudentCountContext } from '../../components/MyStudents/studentCountContext'
-import EditStudentModal from '../MyStudents/AddStudentsModal/EditStudentModal'
-import StudentsTransferModal from '../../components/MyStudents/studentsTransferModal'
+import React, { useState, useEffect, useContext } from "react";
+import moment from "moment";
+import "./studentsTable.css";
+import DataTable from "react-data-table-component";
+import axiosInstance from "../../utils/AxiosInstance";
+import Select, { components } from "react-select";
+import { toast } from "react-toastify";
+import IntlMessages from "../../utils/IntlMessages";
+import createClass from "create-react-class";
+import { DeactivateDialogModal } from "./deactivateDialogModal";
+import { ConfirmationModal } from "../Modals/confirmationModal";
+import searchIcon from "../../assets/images/search-icon.png";
+import EditBulk from "../../components/MyStudents/AddStudentsModal/editBulk";
+import AddStudentsModal from "../../components/MyStudents/AddStudentsModal/addStudentsModal";
+import { StudentCountContext } from "../../components/MyStudents/studentCountContext";
+import EditStudentModal from "../MyStudents/AddStudentsModal/EditStudentModal";
+import StudentsTransferModal from "../../components/MyStudents/studentsTransferModal";
+import Certification1Badge from "../../assets/images/market-ready-1-badge.png";
+import Certification2Badge from "../../assets/images/market-ready-2-badge.png";
 
 export default function StudentsTable(props) {
-  const [currentEditingStudent, setCurrentEditingStudent] = useState()
-  const [tooglingActivationStudent, setTooglingActivationStudent] = useState()
-  const [bulkDeactivatingStudents, setBulkDeactivatingStudents] = useState([])
-  const [bulkEditingStudents, setBulkEditingStudents] = useState([])
-  const [students, setStudents] = useState([])
-  const [isSearching, setIsSearching] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [selectedOptions, setSelectedOptions] = useState(['level', 'year'])
-  const [selectedRows, setSelectedRows] = useState([])
+  const [currentEditingStudent, setCurrentEditingStudent] = useState();
+  const [tooglingActivationStudent, setTooglingActivationStudent] = useState();
+  const [bulkDeactivatingStudents, setBulkDeactivatingStudents] = useState([]);
+  const [bulkEditingStudents, setBulkEditingStudents] = useState([]);
+  const [students, setStudents] = useState([]);
+  console.log("students", students);
+  const [isSearching, setIsSearching] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState(["level", "year"]);
+  const [selectedRows, setSelectedRows] = useState([]);
   const [showToggleActivationModal, setShowToggleActivationModal] =
-    useState(false)
+    useState(false);
   const [showBulkDeactivationModal, setShowBulkDeactivationModal] =
-    useState(false)
-  const [showBulkEditModal, setShowBulkEditModal] = useState(false)
-  const [deactivateLoading, setDeactivateLoading] = useState(false)
-  const [editLoading, setEditLoading] = useState(false)
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
-  const [showStudentsOption, setShowStudentsOption] = useState('all')
-  const [searchingKeyword, setSearchingKeyword] = useState('')
-  const [showAddStudentsModal, setShowAddStudentsModal] = useState(false)
-  const [setSchool, school] = useState(false)
-  const [universities, setUniversities] = useState([])
-  const { state, dispatch } = useContext(StudentCountContext)
-  const [instructors, setInstructors] = useState()
-  const [openEditUserModal, setOpenEditUserModal] = useState(false)
-  const [studentToEdit, setStudentToEdit] = useState({})
+    useState(false);
+  const [showBulkEditModal, setShowBulkEditModal] = useState(false);
+  const [deactivateLoading, setDeactivateLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showStudentsOption, setShowStudentsOption] = useState("all");
+  const [searchingKeyword, setSearchingKeyword] = useState("");
+  const [showAddStudentsModal, setShowAddStudentsModal] = useState(false);
+  const [setSchool, school] = useState(false);
+  const [universities, setUniversities] = useState([]);
+  const { state, dispatch } = useContext(StudentCountContext);
+  const [instructors, setInstructors] = useState();
+  const [openEditUserModal, setOpenEditUserModal] = useState(false);
+  const [studentToEdit, setStudentToEdit] = useState({});
   const [showStudentsTransferModal, setShowStudentsTransferModal] =
-    useState(false)
-  const [sentTransferRequests, setSentTransferRequests] = useState([])
-  const [receivedTransferRequests, setReceivedTransferRequests] = useState([])
-  const [receivedTransfersCount, setReceivedTransfersCount] = useState(0)
+    useState(false);
+  const [sentTransferRequests, setSentTransferRequests] = useState([]);
+  const [receivedTransferRequests, setReceivedTransferRequests] = useState([]);
+  const [receivedTransfersCount, setReceivedTransfersCount] = useState(0);
 
   const filteringCondition = (student) => {
     return student?.name
       ?.toLocaleLowerCase()
-      .includes(searchingKeyword?.toLocaleLowerCase())
-  }
+      .includes(searchingKeyword?.toLocaleLowerCase());
+  };
 
   useEffect(() => {
-    getStudents()
-    getTransferedStudents()
-  }, [])
+    getStudents();
+    getTransferedStudents();
+  }, []);
 
   useEffect(() => {
     if (students?.length) {
-      dispatch({ type: 'studentsCount', studentsCount: students?.length })
-      var today = moment().startOf('day')
+      dispatch({ type: "studentsCount", studentsCount: students?.length });
+      var today = moment().startOf("day");
 
       const count = students?.filter((student) => {
-        var createdDate = moment(student.createdAt, 'YYYY-MM-DD').startOf('day')
-        var diff = today.diff(createdDate, 'days')
+        var createdDate = moment(student.createdAt, "YYYY-MM-DD").startOf(
+          "day"
+        );
+        var diff = today.diff(createdDate, "days");
 
         if (diff <= 7) {
-          return true
+          return true;
         }
 
-        return false
-      }).length
+        return false;
+      }).length;
 
-      dispatch({ type: 'recentlyActive', recentlyActive: count })
+      dispatch({ type: "recentlyActive", recentlyActive: count });
     }
-  }, [students?.length])
+  }, [students?.length]);
 
   useEffect(() => {
     setReceivedTransfersCount(
       receivedTransferRequests.filter(
-        (transfer) => transfer.status === 'pending'
+        (transfer) => transfer.status === "pending"
       ).length
-    )
-  }, [receivedTransferRequests])
+    );
+  }, [receivedTransferRequests]);
 
   useEffect(() => {
-    setSelectedRows([])
-  }, [showStudentsOption])
+    setSelectedRows([]);
+  }, [showStudentsOption]);
 
   const tableData = () => {
     if (!isSearching) {
-      if (showStudentsOption === 'all') return students
-      if (showStudentsOption === 'active')
-        return students?.filter((student) => !student.deactivated)
-      else return students?.filter((student) => student.deactivated)
+      if (showStudentsOption === "all") return students;
+      if (showStudentsOption === "active")
+        return students?.filter((student) => !student.deactivated);
+      else return students?.filter((student) => student.deactivated);
     } else {
-      if (showStudentsOption === 'all')
-        return students?.filter((student) => filteringCondition(student))
-      if (showStudentsOption === 'active')
+      if (showStudentsOption === "all")
+        return students?.filter((student) => filteringCondition(student));
+      if (showStudentsOption === "active")
         return students?.filter(
           (student) => !student.deactivated && filteringCondition(student)
-        )
+        );
       else
         return students?.filter(
           (student) => student.deactivated && filteringCondition(student)
-        )
+        );
     }
-  }
+  };
 
   const getStudents = async () => {
     await axiosInstance
-      .get('/instructor/my-students')
+      .get("/instructor/my-students")
       .then((res) => {
         if (res.data.students?.length) {
-          let newArrray = []
+          let newArrray = [];
           res.data.instructorsnew.map((instructor) => {
             newArrray.push({
               value: instructor.instructorInfo.id,
-              label: instructor.name
-            })
-          })
+              label: instructor.name,
+            });
+          });
 
-          setUniversities(res.data?.schools)
-          setInstructors(newArrray)
-          setStudents(res.data.students)
-          setSchool(res.data.universityName)
+          setUniversities(res.data?.schools);
+          setInstructors(newArrray);
+          setStudents(res.data.students);
+          setSchool(res.data.universityName);
         }
       })
-      .catch((e) => e)
-  }
+      .catch((e) => e);
+  };
 
   const deleteSingleSentTransfer = (id) => {
     setSentTransferRequests((sentTransferRequests) =>
       sentTransferRequests.map((transfer) => {
         if (transfer.id === id) {
-          transfer.status = 'canceled'
-          transfer.updatedAt = Date.now()
+          transfer.status = "canceled";
+          transfer.updatedAt = Date.now();
         }
-        return transfer
+        return transfer;
       })
-    )
+    );
 
     setStudents((students) =>
       students.map((student) => {
@@ -151,188 +156,188 @@ export default function StudentsTable(props) {
           student?.transferHistory &&
           student?.transferHistory[0]?.id === id
         ) {
-          delete student.transferHistory[0]
+          delete student.transferHistory[0];
         }
-        return student
+        return student;
       })
-    )
-  }
+    );
+  };
 
   const handleBulkSentDelete = (status) => {
-    if (status === 'pending') {
+    if (status === "pending") {
       setSentTransferRequests((sentTransferRequests) =>
         sentTransferRequests.filter(
           (transfer) =>
-            transfer.status !== 'pending' && transfer.status !== 'canceled'
+            transfer.status !== "pending" && transfer.status !== "canceled"
         )
-      )
+      );
 
       setStudents((students) =>
         students.map((student) => {
           if (
             student?.transferHistory &&
-            student?.transferHistory[0]?.status === 'pending'
+            student?.transferHistory[0]?.status === "pending"
           ) {
-            delete student.transferHistory[0]
+            delete student.transferHistory[0];
           }
-          return student
+          return student;
         })
-      )
+      );
     }
 
-    if (status === 'approved') {
+    if (status === "approved") {
       setSentTransferRequests((sentTransferRequests) =>
         sentTransferRequests.filter(
-          (transfer) => transfer.status !== 'approved'
+          (transfer) => transfer.status !== "approved"
         )
-      )
+      );
     }
-  }
+  };
 
   const handleBulkReceivedUpdate = (status) => {
     setReceivedTransferRequests((receivedTransferRequest) =>
       receivedTransferRequest.map((transfer) => {
-        if (transfer.status === 'pending') transfer.status = status
-        transfer.updatedAt = Date.now()
-        return transfer
+        if (transfer.status === "pending") transfer.status = status;
+        transfer.updatedAt = Date.now();
+        return transfer;
       })
-    )
+    );
 
-    if (status === 'denied') {
-      toast.success('Students transfer denied!')
+    if (status === "denied") {
+      toast.success("Students transfer denied!");
     }
 
-    if (status === 'approved') {
-      getStudents()
-      toast.success('Students transfer accepted!')
+    if (status === "approved") {
+      getStudents();
+      toast.success("Students transfer accepted!");
     }
-  }
+  };
 
   const respondSingleReceivedTransfer = (id, status, student) => {
     setReceivedTransferRequests((sentTransferRequests) =>
       sentTransferRequests.map((transfer) => {
         if (transfer.id === id) {
-          transfer.status = status
+          transfer.status = status;
         }
-        transfer.updatedAt = Date.now()
-        return transfer
+        transfer.updatedAt = Date.now();
+        return transfer;
       })
-    )
+    );
 
-    if (status === 'approved') {
+    if (status === "approved") {
       setStudents((students) => {
-        return [student, ...students]
-      })
+        return [student, ...students];
+      });
     }
-  }
+  };
 
   const addNewTransferRequest = (transfer) => {
     setStudents((students) =>
       students.map((student) => {
         if (student.id === transfer.userId) {
-          student.transferHistory[0] = transfer
+          student.transferHistory[0] = transfer;
         }
-        return student
+        return student;
       })
-    )
+    );
     setSentTransferRequests((sentTransferRequests) => [
       transfer,
-      ...sentTransferRequests
-    ])
-  }
+      ...sentTransferRequests,
+    ]);
+  };
 
   const getTransferedStudents = async () => {
     axiosInstance
-      .get('/instructor/transfers/sent-requests')
+      .get("/instructor/transfers/sent-requests")
       .then((res) => {
-        setSentTransferRequests(res.data)
+        setSentTransferRequests(res.data);
       })
-      .catch((e) => e)
+      .catch((e) => e);
     axiosInstance
-      .get('/instructor/transfers/received-requests')
+      .get("/instructor/transfers/received-requests")
       .then((res) => {
-        setReceivedTransferRequests(res.data)
+        setReceivedTransferRequests(res.data);
       })
-      .catch((e) => e)
-  }
+      .catch((e) => e);
+  };
 
   const updateState = (id, data) => {
     const studentsFiltered = students
       .filter((student) => {
         if (student.id != data.id) {
-          return student
+          return student;
         } else {
           if (data.instructor_id == data.Instructor.id) {
-            return student
+            return student;
           }
         }
       })
       .map((student, index) => {
         if (student.id == id) {
-          return data
+          return data;
         }
-        return student
-      })
+        return student;
+      });
 
-    setStudents(studentsFiltered)
-  }
+    setStudents(studentsFiltered);
+  };
 
   const updateSelectedOptions = (data) => {
     if (selectedOptions.includes(data.value)) {
       setSelectedOptions(
         selectedOptions.filter((option) => option !== data.value)
-      )
+      );
     } else {
-      setSelectedOptions([...selectedOptions, data.value])
+      setSelectedOptions([...selectedOptions, data.value]);
     }
-  }
+  };
 
   const dropDownStyles = {
     control: (provided, state) => ({
       ...provided,
-      boxShadow: 'none',
-      border: '1px solid #BBBDBF',
-      borderRadius: '0',
+      boxShadow: "none",
+      border: "1px solid #BBBDBF",
+      borderRadius: "0",
       height: 15,
-      fontSize: '16px',
-      cursor: 'pointer',
-      color: '#707070',
-      fontWeight: '500',
-      ':hover': {
-        border: '1px solid #BBBDBF'
+      fontSize: "16px",
+      cursor: "pointer",
+      color: "#707070",
+      fontWeight: "500",
+      ":hover": {
+        border: "1px solid #BBBDBF",
       },
-      zIndex: 100
+      zIndex: 100,
     }),
     menu: (base) => ({
       ...base,
-      border: 'none',
-      fontSize: '14px',
-      cursor: 'pointer',
+      border: "none",
+      fontSize: "14px",
+      cursor: "pointer",
       margin: 0,
       paddingTop: 0,
-      boxShadow: '0px 3px 6px #00000029',
-      zIndex: 9999
+      boxShadow: "0px 3px 6px #00000029",
+      zIndex: 9999,
     }),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
     valueContainer: (base) => ({
-      ...base
+      ...base,
     }),
     option: (styles, state) => ({
       ...styles,
-      cursor: 'pointer',
+      cursor: "pointer",
       fontWeight: 600,
-      color: '231F20',
-      fontSize: '14px',
-      paddingTop: '2px',
-      paddingBottom: '2px',
-      ':hover': {
-        backgroundColor: 'white',
-        background: 'white'
+      color: "231F20",
+      fontSize: "14px",
+      paddingTop: "2px",
+      paddingBottom: "2px",
+      ":hover": {
+        backgroundColor: "white",
+        background: "white",
       },
-      backgroundColor: 'white',
-      textTransform: 'uppercase'
-    })
-  }
+      backgroundColor: "white",
+      textTransform: "uppercase",
+    }),
+  };
 
   const Option = createClass({
     render() {
@@ -340,33 +345,33 @@ export default function StudentsTable(props) {
         <div>
           <components.Option {...this.props}>
             <div
-              className='d-flex align-items-center'
+              className="d-flex align-items-center"
               onClick={() => updateSelectedOptions(this.props.data)}
             >
               <input
-                style={{ cursor: 'pointer', borderRadius: '0' }}
-                type='checkbox'
+                style={{ cursor: "pointer", borderRadius: "0" }}
+                type="checkbox"
                 checked={selectedOptions.includes(this.props.data.value)}
                 onChange={(e) => e}
-              />{' '}
+              />{" "}
               <label
-                style={{ cursor: 'pointer', paddingTop: '2px' }}
-                className='my-auto ms-2'
+                style={{ cursor: "pointer", paddingTop: "2px" }}
+                className="my-auto ms-2"
               >
-                {this.props.value}{' '}
+                {this.props.value}{" "}
               </label>
             </div>
           </components.Option>
         </div>
-      )
-    }
-  })
+      );
+    },
+  });
 
   const noDataComponent = () => {
     return (
-      <div className='no-data-component text-center'>
+      <div className="no-data-component text-center">
         {isSearching ? (
-          'You do not have any students with this information.'
+          "You do not have any students with this information."
         ) : (
           <>
             You don't have any students yet. <br /> Use the blue link above to
@@ -374,28 +379,28 @@ export default function StudentsTable(props) {
           </>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   const MultiValue = (props) => {
     return (
       <components.MultiValue {...props}>
         <span>{props.data.label}</span>
       </components.MultiValue>
-    )
-  }
+    );
+  };
 
   const handleChange = (event) => {
-    const { name, value } = event.target
+    const { name, value } = event.target;
 
     setCurrentEditingStudent((prevValues) => ({
       ...prevValues,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   const editSingleStudent = async () => {
-    setLoading(true)
+    setLoading(true);
     await axiosInstance
       .put(
         `/instructor/update-student/${currentEditingStudent.id}`,
@@ -404,207 +409,207 @@ export default function StudentsTable(props) {
       .then(({ data }) => {
         setStudents(
           students?.map((student) => (student.id === data.id ? data : student))
-        )
-        toast.success('Student updated!')
+        );
+        toast.success("Student updated!");
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-      })
-    setLoading(false)
-    setCurrentEditingStudent()
-  }
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />);
+      });
+    setLoading(false);
+    setCurrentEditingStudent();
+  };
 
   const defaultLevels = [
-    { label: 'LS', value: 'LS' },
-    { label: 'MS', value: 'MS' },
-    { label: 'HS', value: 'HS' },
-    { label: 'HE', value: 'HE' }
-  ]
+    { label: "LS", value: "LS" },
+    { label: "MS", value: "MS" },
+    { label: "HS", value: "HS" },
+    { label: "HE", value: "HE" },
+  ];
 
   const defaultYears = [
-    { label: 'LTS1', value: 'LTS1' },
-    { label: 'LTS2', value: 'LTS2' },
-    { label: 'LTS3', value: 'LTS3' },
-    { label: 'LTS4', value: 'LTS4' }
-  ]
+    { label: "LTS1", value: "LTS1" },
+    { label: "LTS2", value: "LTS2" },
+    { label: "LTS3", value: "LTS3" },
+    { label: "LTS4", value: "LTS4" },
+  ];
 
   const customStyles = {
     rows: {
       style: {
-        minHeight: '100px' // override the row height
-      }
+        minHeight: "100px", // override the row height
+      },
     },
     headCells: {
       style: {
-        paddingLeft: '8px', // override the cell padding for head cells
-        paddingRight: '8px'
-      }
+        paddingLeft: "8px", // override the cell padding for head cells
+        paddingRight: "8px",
+      },
     },
     cells: {
       style: {
-        paddingLeft: '8px', // override the cell padding for data cells
-        paddingRight: '8px',
-        color: '#231F20'
-      }
-    }
-  }
+        paddingLeft: "8px", // override the cell padding for data cells
+        paddingRight: "8px",
+        color: "#231F20",
+      },
+    },
+  };
 
   const handleSingleActivationToggle = async () => {
-    setDeactivateLoading(true)
+    setDeactivateLoading(true);
     await axiosInstance
       .put(`/instructor/update-student/${tooglingActivationStudent.data.id}`, {
-        deactivated: !tooglingActivationStudent.data.deactivated
+        deactivated: !tooglingActivationStudent.data.deactivated,
       })
       .then(({ data }) => {
         if (data) {
-          setShowConfirmationModal(true)
+          setShowConfirmationModal(true);
           setStudents(
             students?.map((student) =>
               student.id === data.id ? data : student
             )
-          )
+          );
         } else {
-          toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+          toast.error(<IntlMessages id="alerts.something_went_wrong" />);
         }
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-      })
-    setDeactivateLoading(false)
-    setShowToggleActivationModal(false)
-  }
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />);
+      });
+    setDeactivateLoading(false);
+    setShowToggleActivationModal(false);
+  };
 
   const handleBulkDeactiveAction = () => {
-    if (!selectedRows.length) return
+    if (!selectedRows.length) return;
 
-    setCurrentEditingStudent()
-    setTooglingActivationStudent()
+    setCurrentEditingStudent();
+    setTooglingActivationStudent();
 
-    setBulkDeactivatingStudents(selectedRows)
-    setShowBulkDeactivationModal(true)
-  }
+    setBulkDeactivatingStudents(selectedRows);
+    setShowBulkDeactivationModal(true);
+  };
 
   const bulkDeactivateStudents = async () => {
-    setDeactivateLoading(true)
+    setDeactivateLoading(true);
 
     await axiosInstance
       .post(`/instructor/bulk-update/`, {
         studentsIds: bulkDeactivatingStudents,
-        bulkDeactivate: true
+        bulkDeactivate: true,
       })
       .then((data) => {
         setStudents(
           students?.map((student) => {
             if (bulkDeactivatingStudents.includes(student.id)) {
-              student.deactivated = true
+              student.deactivated = true;
             }
-            return student
+            return student;
           })
-        )
-        setShowConfirmationModal(true)
+        );
+        setShowConfirmationModal(true);
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-      })
-    setDeactivateLoading(false)
-    setShowBulkDeactivationModal(false)
-  }
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />);
+      });
+    setDeactivateLoading(false);
+    setShowBulkDeactivationModal(false);
+  };
 
   const handleBulkEditAction = () => {
-    if (!selectedRows.length) return
-    setCurrentEditingStudent()
-    setTooglingActivationStudent()
+    if (!selectedRows.length) return;
+    setCurrentEditingStudent();
+    setTooglingActivationStudent();
 
-    setBulkEditingStudents(selectedRows)
-    setShowBulkEditModal(true)
-  }
+    setBulkEditingStudents(selectedRows);
+    setShowBulkEditModal(true);
+  };
 
   const bulkEditStudents = async (options) => {
-    setEditLoading(true)
+    setEditLoading(true);
 
     await axiosInstance
       .post(`/instructor/bulk-update/`, {
         studentsIds: bulkEditingStudents,
-        options: options
+        options: options,
       })
       .then((data) => {
         const updatedStudents = students?.map((student) => {
           if (bulkEditingStudents.includes(student.id)) {
             for (const property in options) {
-              if (property === 'activated') {
-                student['deactivated'] = !options[property]
+              if (property === "activated") {
+                student["deactivated"] = !options[property];
               } else {
-                student[property] = options[property]
+                student[property] = options[property];
               }
             }
           }
-          return student
-        })
-        setStudents(updatedStudents)
-        setShowConfirmationModal(true)
-        setShowBulkEditModal(false)
+          return student;
+        });
+        setStudents(updatedStudents);
+        setShowConfirmationModal(true);
+        setShowBulkEditModal(false);
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-      })
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />);
+      });
 
-    setEditLoading(false)
-    setDeactivateLoading(false)
-    setShowBulkDeactivationModal(false)
-  }
+    setEditLoading(false);
+    setDeactivateLoading(false);
+    setShowBulkDeactivationModal(false);
+  };
 
   const tableColumns = React.useMemo(
     () => [
       {
-        name: 'Name',
-        key: 'name',
+        name: "Name",
+        key: "name",
         show: true,
         selector: (row) => row.name,
         sortable: true,
-        width: '300px',
+        width: "300px",
         cell: (record) => (
           <>
-            <div className='d-flex flex-column my-auto justify-content-center w-100'>
+            <div className="d-flex flex-column my-auto justify-content-center w-100">
               {currentEditingStudent?.id !== record.id ? (
                 <>
                   <p
-                    className='mb-1'
-                    style={{ color: '#231F20!important', fontWeight: '500' }}
+                    className="mb-1"
+                    style={{ color: "#231F20!important", fontWeight: "500" }}
                   >
                     {record.name}
                   </p>
-                  <div className='d-flex'>
+                  <div className="d-flex">
                     <span
-                      role='button'
+                      role="button"
                       onClick={() => {
-                        setCurrentEditingStudent(record)
+                        setCurrentEditingStudent(record);
                       }}
                     >
                       Quick Edit User
                     </span>
-                    <span className='mx-2'>|</span>
+                    <span className="mx-2">|</span>
                     {!record.deactivated ? (
                       <span
-                        role='button'
+                        role="button"
                         onClick={() => {
                           setTooglingActivationStudent({
                             data: record,
-                            action_type: 'deactivate'
-                          })
-                          setShowToggleActivationModal(true)
+                            action_type: "deactivate",
+                          });
+                          setShowToggleActivationModal(true);
                         }}
                       >
                         Deactivate User
                       </span>
                     ) : (
                       <span
-                        role='button'
+                        role="button"
                         onClick={() => {
                           setTooglingActivationStudent({
                             data: record,
-                            action_type: 'activate'
-                          })
-                          setShowToggleActivationModal(true)
+                            action_type: "activate",
+                          });
+                          setShowToggleActivationModal(true);
                         }}
                       >
                         Activate User
@@ -613,17 +618,17 @@ export default function StudentsTable(props) {
                   </div>
                 </>
               ) : (
-                <div className='d-flex flex-column justify-content-start'>
+                <div className="d-flex flex-column justify-content-start">
                   <input
-                    type='text'
-                    className='w-75 px-2 py-1'
-                    style={{ border: '1px solid #BBBDBF', height: '35px' }}
-                    name='name'
+                    type="text"
+                    className="w-75 px-2 py-1"
+                    style={{ border: "1px solid #BBBDBF", height: "35px" }}
+                    name="name"
                     value={currentEditingStudent?.name}
                     onChange={handleChange}
                   />
                   <button
-                    className='edit-btn m-0 mt-1 p-0'
+                    className="edit-btn m-0 mt-1 p-0"
                     onClick={() => setCurrentEditingStudent()}
                   >
                     Cancel
@@ -632,164 +637,230 @@ export default function StudentsTable(props) {
               )}
             </div>
           </>
-        )
+        ),
       },
       {
-        name: 'Level',
-        key: 'level',
+        name: "Level",
+        key: "level",
         show: false,
         hidden: true,
         selector: (row) => row.level,
         sortable: true,
-        omit: !selectedOptions.includes('level'),
+        omit: !selectedOptions.includes("level"),
         cell: (record) => {
           return (
             <>
-              <div className='table-edit-dropdown'>
+              <div className="table-edit-dropdown">
                 {currentEditingStudent?.id === record.id ? (
                   <Select
                     menuPortalTarget={document.body}
-                    menuPosition={'fixed'}
+                    menuPosition={"fixed"}
                     options={defaultLevels}
                     value={{
                       label: currentEditingStudent?.level,
-                      value: currentEditingStudent?.level
+                      value: currentEditingStudent?.level,
                     }}
                     onChange={(newValue) =>
                       handleChange({
-                        target: { name: 'level', value: newValue.value }
+                        target: { name: "level", value: newValue.value },
                       })
                     }
-                    className='my-auto py-auto'
+                    className="my-auto py-auto"
                     // styles={customStyles}
                   />
                 ) : (
-                  <p className='my-auto'>{record.level} </p>
+                  <p className="my-auto">{record.level} </p>
                 )}
               </div>
             </>
-          )
-        }
+          );
+        },
       },
       {
-        name: 'Year',
-        key: 'year',
-        selector: (row) => (row.year ? row.year : 'NONE'),
+        name: "Year",
+        key: "year",
+        selector: (row) => (row.year ? row.year : "NONE"),
         sortable: true,
-        omit: !selectedOptions.includes('year'),
+        omit: !selectedOptions.includes("year"),
 
         cell: (record) => {
+          console.log("record", record);
           return (
             <>
-              <div className='table-edit-dropdown'>
+              <div className="table-edit-dropdown">
                 {currentEditingStudent?.id === record.id ? (
                   <Select
                     menuPortalTarget={document.body}
-                    menuPosition={'fixed'}
+                    menuPosition={"fixed"}
                     options={defaultYears}
                     value={{
                       label: currentEditingStudent?.year,
-                      value: currentEditingStudent?.year
+                      value: currentEditingStudent?.year,
                     }}
                     onChange={(newValue) =>
                       handleChange({
-                        target: { name: 'year', value: newValue.value }
+                        target: { name: "year", value: newValue.value },
                       })
                     }
-                    className='my-auto py-auto'
+                    className="my-auto py-auto"
                     // styles={customStyles}
                   />
                 ) : (
-                  <p className='my-auto'>
-                    {record.year ? record.year : 'None'}{' '}
+                  <p className="my-auto">
+                    {record.year ? record.year : "None"}{" "}
                   </p>
                 )}
               </div>
             </>
-          )
-        }
+          );
+        },
       },
       {
-        name: 'School',
-        key: 'school',
+        name: "School",
+        key: "school",
         selector: (row) => `FFFFF`,
         sortable: true,
-        omit: !selectedOptions.includes('school')
+        omit: !selectedOptions.includes("school"),
       },
       {
-        key: 'action',
-        className: 'action',
+        name: "Certification Status",
+        key: "CertificationStatus",
+        selector: (row) =>
+          row.completedSkills1 ? row.completedSkills1 : "NONE",
+        sortable: true,
+        cell: (record) => {
+          console.log("record", record);
+          return (
+            <>
+              <div className="d-flex justify-content-between text-center w-100">
+                <div className="w-50 d-flex align-items-center">
+                  <div className="w-50">
+                    <img
+                      className="w-100 h-100"
+                      src={Certification1Badge}
+                      alt=""
+                    />
+                  </div>
+                  <span>
+                    <span className="d-flex">
+                      <p className="text-info mb-0 pb-0 fw-bold">
+                        {record.completedSkills1?.length}{" "}
+                      </p>
+                      /
+                      <p className="mb-0 pb-0">
+                        {record.certification1Skills
+                          ? record.certification1Skills
+                          : 0}
+                      </p>
+                    </span>
+                    Skills
+                  </span>
+                </div>
+                <div className="w-50 d-flex align-items-center">
+                  <div className="w-50">
+                    <img
+                      className="w-100 h-100"
+                      src={Certification2Badge}
+                      alt=""
+                    />
+                  </div>
+                  <span>
+                    <span className="d-flex">
+                      <p
+                        className="mb-0 pb-0 fw-bold"
+                        style={{ color: "#a22f6a" }}
+                      >
+                        {record.completedSkills2?.length}
+                      </p>
+                      /
+                      <p className="mb-0 pb-0">
+                        {record.certification2Skills
+                          ? record.certification2Skills
+                          : 0}
+                      </p>
+                    </span>
+                    Skills
+                  </span>
+                </div>
+              </div>
+            </>
+          );
+        },
+      },
+      {
+        key: "action",
+        className: "action",
         sortable: false,
         cell: (record) => {
           return (
             <>
-              <div className='d-flex justify-content-end w-100 text-end me-3'>
+              <div className="d-flex justify-content-end w-100 text-end me-3">
                 <div
-                  className='d-flex text-center flex-column'
-                  style={{ width: '95px' }}
+                  className="d-flex text-center flex-column"
+                  style={{ width: "95px" }}
                 >
                   <span
-                    role='button'
-                    className='my-1 fw-bold'
+                    role="button"
+                    className="my-1 fw-bold"
                     onClick={() => {
-                      setStudentToEdit(record)
-                      setOpenEditUserModal(true)
+                      setStudentToEdit(record);
+                      setOpenEditUserModal(true);
                     }}
-                    style={{ color: '#51C7DF' }}
+                    style={{ color: "#51C7DF" }}
                   >
                     View
                   </span>
                   {currentEditingStudent?.id === record.id && (
                     <>
                       <button
-                        className='edit-btn my-1 fw-bold ms-auto'
+                        className="edit-btn my-1 fw-bold ms-auto"
                         onClick={() => {
-                          editSingleStudent()
+                          editSingleStudent();
                         }}
                         disabled={loading}
-                        style={{ background: '#01c5d1' }}
+                        style={{ background: "#01c5d1" }}
                       >
-                        {loading ? 'SAVING...' : 'SAVE'}
+                        {loading ? "SAVING..." : "SAVE"}
                       </button>
                     </>
                   )}
                 </div>
               </div>
             </>
-          )
-        }
-      }
+          );
+        },
+      },
     ],
     [currentEditingStudent, loading, selectedOptions, students]
-  )
+  );
 
   const handleSearch = (keyword) => {
     if (keyword.length > 2) {
-      setIsSearching(true)
-      setSearchingKeyword(keyword)
+      setIsSearching(true);
+      setSearchingKeyword(keyword);
     } else {
-      setSearchingKeyword('')
-      setIsSearching(false)
+      setSearchingKeyword("");
+      setIsSearching(false);
     }
-  }
+  };
 
   return (
     <>
       <>
-        <div className='row'>
-          <div className='col-12'>
-            <div className='row'>
-              <div className='col-12 col-md-6'>
-                <div className='d-flex flex-row switch_students_options align-items-end h-100'>
+        <div className="row">
+          <div className="col-12">
+            <div className="row">
+              <div className="col-12 col-md-6">
+                <div className="d-flex flex-row switch_students_options align-items-end h-100">
                   <div
                     className={`${
-                      showStudentsOption !== 'all' ? 'not_active' : ''
+                      showStudentsOption !== "all" ? "not_active" : ""
                     }`}
-                    onClick={() => setShowStudentsOption('all')}
+                    onClick={() => setShowStudentsOption("all")}
                   >
                     <p>
                       ALL
-                      <span style={{ color: '#333d3d83' }}>
+                      <span style={{ color: "#333d3d83" }}>
                         (
                         {!isSearching
                           ? students?.length
@@ -800,16 +871,16 @@ export default function StudentsTable(props) {
                       </span>
                     </p>
                   </div>
-                  <div className='div mx-1'>|</div>
+                  <div className="div mx-1">|</div>
                   <div
                     className={`${
-                      showStudentsOption !== 'active' ? 'not_active' : ''
+                      showStudentsOption !== "active" ? "not_active" : ""
                     }`}
-                    onClick={() => setShowStudentsOption('active')}
+                    onClick={() => setShowStudentsOption("active")}
                   >
                     <p>
                       ACTIVE
-                      <span style={{ color: '#333d3d83' }}>
+                      <span style={{ color: "#333d3d83" }}>
                         (
                         {!isSearching
                           ? students?.filter((student) => !student.deactivated)
@@ -823,16 +894,16 @@ export default function StudentsTable(props) {
                       </span>
                     </p>
                   </div>
-                  <div className='div mx-1'>|</div>
+                  <div className="div mx-1">|</div>
                   <div
                     className={`${
-                      showStudentsOption !== 'inactive' ? 'not_active' : ''
+                      showStudentsOption !== "inactive" ? "not_active" : ""
                     }`}
-                    onClick={() => setShowStudentsOption('inactive')}
+                    onClick={() => setShowStudentsOption("inactive")}
                   >
                     <p>
                       INACTIVE
-                      <span style={{ color: '#333d3d83' }}>
+                      <span style={{ color: "#333d3d83" }}>
                         (
                         {!isSearching
                           ? students?.filter((student) => student.deactivated)
@@ -848,20 +919,20 @@ export default function StudentsTable(props) {
                   </div>
                 </div>
               </div>
-              <div className='col-12 col-md-6 mt-2 mt-md-0 text-end setAddStudents d-flex justify-content-md-end justify-content-start align-items-end'>
+              <div className="col-12 col-md-6 mt-2 mt-md-0 text-end setAddStudents d-flex justify-content-md-end justify-content-start align-items-end">
                 <p
-                  className='p-0 m-0'
-                  role={'button'}
+                  className="p-0 m-0"
+                  role={"button"}
                   onClick={() => setShowStudentsTransferModal(true)}
                 >
                   Student transfers<span>({receivedTransfersCount})</span>
                 </p>
-                <span className='mx-2' style={{ color: '#333d3d83' }}>
+                <span className="mx-2" style={{ color: "#333d3d83" }}>
                   |
                 </span>
                 <p
-                  className='p-0 m-0'
-                  role={'button'}
+                  className="p-0 m-0"
+                  role={"button"}
                   onClick={() => setShowAddStudentsModal(true)}
                 >
                   Add Users
@@ -869,61 +940,61 @@ export default function StudentsTable(props) {
               </div>
             </div>
           </div>
-          <div className='col-12'>
-            <div className='row justify-content-between'>
-              <div className='col-12 col-md-5 mt-2'>
-                <div className='connections-search' style={{ height: '48px' }}>
-                  <div className='input-group h-100'>
-                    <div className='input-group-prepend my-auto'>
+          <div className="col-12">
+            <div className="row justify-content-between">
+              <div className="col-12 col-md-5 mt-2">
+                <div className="connections-search" style={{ height: "48px" }}>
+                  <div className="input-group h-100">
+                    <div className="input-group-prepend my-auto">
                       <button
-                        className='btn btn-outline-secondary my-2 ms-2'
-                        type='button'
-                        id='button-addon1'
+                        className="btn btn-outline-secondary my-2 ms-2"
+                        type="button"
+                        id="button-addon1"
                       >
-                        <img src={searchIcon} alt='#' width='90%' />
+                        <img src={searchIcon} alt="#" width="90%" />
                       </button>
                     </div>
 
                     <input
-                      type='text'
-                      className='form-control'
-                      name='searchedNote'
-                      placeholder={'SEARCH USERS'}
-                      aria-describedby='button-addon1'
+                      type="text"
+                      className="form-control"
+                      name="searchedNote"
+                      placeholder={"SEARCH USERS"}
+                      aria-describedby="button-addon1"
                       onChange={(e) => handleSearch(e.target.value)}
                     />
                   </div>
                 </div>
               </div>
-              <div className='col-12 col-md-7'>
-                <div className='row h-100 me-0 align-items-end justify-content-end'>
-                  <div className='col-12 col-sm-6 col-xxl-5 mt-2 pe-0'>
+              <div className="col-12 col-md-7">
+                <div className="row h-100 me-0 align-items-end justify-content-end">
+                  <div className="col-12 col-sm-6 col-xxl-5 mt-2 pe-0">
                     <Select
                       options={[
-                        { label: 'edit', value: 'edit' },
-                        { label: 'deactivate', value: 'deactivate' }
+                        { label: "edit", value: "edit" },
+                        { label: "deactivate", value: "deactivate" },
                       ]}
-                      value={'Bulk Actions'}
-                      placeholder={'Bulk Actions'}
+                      value={"Bulk Actions"}
+                      placeholder={"Bulk Actions"}
                       onChange={(newValue) =>
-                        newValue.value === 'edit'
+                        newValue.value === "edit"
                           ? handleBulkEditAction()
                           : handleBulkDeactiveAction()
                       }
-                      className='mb-0 me-0 custom-dropdown'
+                      className="mb-0 me-0 custom-dropdown"
                       styles={dropDownStyles}
                       autoFocus={false}
                       isSearchable={false}
                     />
                   </div>
-                  <div className='col-12 col-sm-6 col-xxl-5 mt-2 me-0 pe-0'>
+                  <div className="col-12 col-sm-6 col-xxl-5 mt-2 me-0 pe-0">
                     <Select
                       options={[
-                        { label: 'level', value: 'level' },
-                        { label: 'year', value: 'year' },
-                        { label: 'school', value: 'school' }
+                        { label: "level", value: "level" },
+                        { label: "year", value: "year" },
+                        { label: "school", value: "school" },
                       ]}
-                      placeholder={'Show Columns'}
+                      placeholder={"Show Columns"}
                       // value={'Show Columns'}
                       // onChange={
                       //   // (newValue) =>
@@ -932,12 +1003,12 @@ export default function StudentsTable(props) {
                       //   // })
                       // }
                       defaultValue={[
-                        { label: 'level', value: 'level' },
-                        { label: 'year', value: 'year' }
+                        { label: "level", value: "level" },
+                        { label: "year", value: "year" },
                       ]}
                       value={null}
-                      className='mb-0 custom-dropdown'
-                      style={{ width: '200px', maxWidth: '200px' }}
+                      className="mb-0 custom-dropdown"
+                      style={{ width: "200px", maxWidth: "200px" }}
                       styles={dropDownStyles}
                       autoFocus={false}
                       isSearchable={false}
@@ -955,7 +1026,7 @@ export default function StudentsTable(props) {
         </div>
 
         <DataTable
-          title='Employees'
+          title="Employees"
           columns={tableColumns}
           data={tableData()}
           pagination
@@ -963,7 +1034,7 @@ export default function StudentsTable(props) {
           onSelectedRowsChange={(rows) =>
             setSelectedRows(
               rows?.selectedRows?.map((row) => {
-                return row.id
+                return row.id;
               })
             )
           }
@@ -979,12 +1050,12 @@ export default function StudentsTable(props) {
         <DeactivateDialogModal
           show={showBulkDeactivationModal}
           onHide={() => {
-            setShowBulkDeactivationModal(false)
-            setBulkDeactivatingStudents([])
+            setShowBulkDeactivationModal(false);
+            setBulkDeactivatingStudents([]);
           }}
           deactivateLoading={deactivateLoading}
           handleAction={() => {
-            bulkDeactivateStudents()
+            bulkDeactivateStudents();
           }}
         />
       )}
@@ -994,10 +1065,10 @@ export default function StudentsTable(props) {
           <ConfirmationModal
             show={showConfirmationModal}
             onHide={() => {
-              setShowConfirmationModal(false)
-              setBulkDeactivatingStudents([])
+              setShowConfirmationModal(false);
+              setBulkDeactivatingStudents([]);
             }}
-            message={'Student(s) deactivated.'}
+            message={"Student(s) deactivated."}
           />
         </>
       )}
@@ -1007,10 +1078,10 @@ export default function StudentsTable(props) {
           <ConfirmationModal
             show={showConfirmationModal}
             onHide={() => {
-              setShowConfirmationModal(false)
-              setBulkEditingStudents([])
+              setShowConfirmationModal(false);
+              setBulkEditingStudents([]);
             }}
-            message={'Student(s) updated.'}
+            message={"Student(s) updated."}
           />
         </>
       )}
@@ -1029,12 +1100,12 @@ export default function StudentsTable(props) {
         <DeactivateDialogModal
           show={showToggleActivationModal}
           onHide={() => {
-            setShowToggleActivationModal(false)
-            setTooglingActivationStudent()
+            setShowToggleActivationModal(false);
+            setTooglingActivationStudent();
           }}
           deactivateLoading={deactivateLoading}
           handleAction={() => {
-            handleSingleActivationToggle()
+            handleSingleActivationToggle();
           }}
           action_type={
             tooglingActivationStudent && tooglingActivationStudent.action_type
@@ -1043,29 +1114,29 @@ export default function StudentsTable(props) {
       )}
 
       {tooglingActivationStudent &&
-        tooglingActivationStudent.action_type === 'deactivate' && (
+        tooglingActivationStudent.action_type === "deactivate" && (
           <>
             <ConfirmationModal
               show={showConfirmationModal}
               onHide={() => {
-                setShowConfirmationModal(false)
-                setTooglingActivationStudent()
+                setShowConfirmationModal(false);
+                setTooglingActivationStudent();
               }}
-              message={'Student(s) deactivated.'}
+              message={"Student(s) deactivated."}
             />
           </>
         )}
 
       {tooglingActivationStudent &&
-        tooglingActivationStudent.action_type === 'activate' && (
+        tooglingActivationStudent.action_type === "activate" && (
           <>
             <ConfirmationModal
               show={showConfirmationModal}
               onHide={() => {
-                setShowConfirmationModal(false)
-                setTooglingActivationStudent()
+                setShowConfirmationModal(false);
+                setTooglingActivationStudent();
               }}
-              message={'Student(s) activated.'}
+              message={"Student(s) activated."}
             />
           </>
         )}
@@ -1083,7 +1154,7 @@ export default function StudentsTable(props) {
         show={showAddStudentsModal}
         onHide={() => setShowAddStudentsModal(false)}
         addStudents={(addedStudents) => {
-          setStudents([...addedStudents, ...students])
+          setStudents([...addedStudents, ...students]);
         }}
       />
 
@@ -1098,5 +1169,5 @@ export default function StudentsTable(props) {
         respondSingleReceivedTransfer={respondSingleReceivedTransfer}
       />
     </>
-  )
+  );
 }

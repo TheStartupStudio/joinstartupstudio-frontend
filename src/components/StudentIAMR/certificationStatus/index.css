@@ -13,3 +13,7 @@
   opacity: 1;
   /* font-weight: 500; */
 }
+.lts-button:disabled,
+.lts-button[disabled] {
+  opacity: 0.5;
+}
