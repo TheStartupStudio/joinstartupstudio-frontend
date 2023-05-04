@@ -46,11 +46,13 @@ const EnLangs = {
   "login.email": "Email address",
   "login.password": "Password",
   "login.title": "Login To Your Account",
+  "login.title2":'Login',
   "login.security": "The security of your information is important.",
   "login.protect_data": "Learn how we protect you.",
   "login.forgot_password": " Forgot your password?",
   "login.register": "Don’t have an account?",
   "login.register_link": "Register",
+  "login.next": "Next",
 
   //LTS Secure
   "lts_secure.partnership_for": "A partnership for",
