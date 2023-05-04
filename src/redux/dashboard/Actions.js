@@ -75,10 +75,8 @@ export const getEventsError = (error) => async (dispatch) => {
 export const postEventStart = (event) => async (dispatch) => {
   dispatch({ type: POST_EVENT_START });
   try {
-    debugger
 
     const response = await postEvent(event);
-    debugger
 
     const periods = response.data;
     dispatch(postEventSuccess(periods))
@@ -88,10 +86,10 @@ export const postEventStart = (event) => async (dispatch) => {
   }
 };
 
-export const postEventSuccess = (events) => {
+export const postEventSuccess = (event) => {
   return {
     type: POST_EVENT_SUCCESS,
-    payload: {events},
+    payload: {event},
   };
 };
 

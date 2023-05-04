@@ -6,22 +6,33 @@ import es from 'date-fns/locale/es' // the locale you want
 import './index.css'
 import {addDays, subDays} from "date-fns";
 
-export default function Calendar() {
+export default function Calendar(props) {
   const currentLanguage = useSelector((state) => state.lang.locale)
   registerLocale('es', es)
   const [startDate, setStartDate] = useState(new Date());
-console.log(startDate)
+
+  const events = props.events?.filter((event)=>event.type == 'event')
+  const tasks = props.events?.filter((event)=>event.type == 'task')
+
+
+
+  const eventDates = events?.map((event)=> new Date(new Date(event.date).toLocaleDateString('en-US')))
+  const taskDates = tasks?.map((event)=> new Date(new Date(event.date).toLocaleDateString('en-US')))
 
 
   const calendar = {
-  events: [
-      new Date('05/01/2023'),
-      new Date('05/02/2023')
-  ],
-    tasks:[
-      new Date('04/23/2023'),
-      new Date('04/01/2023')
-    ]
+    events:eventDates,
+    tasks:taskDates
+  // events: [
+  //     // new Date('05/01/2023'),
+  //     // new Date('05/02/2023')
+  //     // ...eventDates
+  // ],
+  //   tasks:[
+  //     // new Date('04/23/2023'),
+  //     // new Date('04/01/2023')
+  //     //   ...taskDates
+  //   ]
   }
   const highlightWithRanges = [
     {

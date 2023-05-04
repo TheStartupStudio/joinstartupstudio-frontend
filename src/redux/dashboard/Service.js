@@ -14,8 +14,6 @@ export const getEvents = async () => {
 
 export const postEvent = async (event) => {
         const response = await axiosInstance.post("/events",event);
-        debugger
-
         return response;
 };
 

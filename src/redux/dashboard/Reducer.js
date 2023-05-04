@@ -3,7 +3,7 @@ import {
   GET_EVENTS_START, GET_EVENTS_SUCCESS,
   GET_PERIODS_ERROR,
   GET_PERIODS_START,
-  GET_PERIODS_SUCCESS,
+  GET_PERIODS_SUCCESS, POST_EVENT_ERROR, POST_EVENT_START, POST_EVENT_SUCCESS,
 } from "./Types";
 
 const initialState = {
@@ -54,6 +54,27 @@ const dashboardReducer = (state = initialState, action) => {
         loading: false,
         error:payload.error
       }
+    case POST_EVENT_START:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      }
+    case POST_EVENT_SUCCESS:
+      debugger
+      return {
+        ...state,
+        events: [...state.events, payload.event],
+        loading: false,
+        error:null,
+      }
+    case POST_EVENT_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error:payload.error
+      }
+
 
 
     default:

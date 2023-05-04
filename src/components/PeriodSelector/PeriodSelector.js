@@ -8,7 +8,7 @@ const PeriodSelector = (props) => {
     const handleChangePeriod = (value) => {
         setSelectedPeriod(value)
     }
-    const selectedPeriod = props.periods.find((period)=>period.name = selectPeriod)
+    const selectedPeriod = props.periods?.find((period)=>period.name === selectPeriod)
 
     useEffect(()=>{
 
@@ -16,8 +16,8 @@ const PeriodSelector = (props) => {
     },[props.periods])
     useEffect(()=>{
         const newSelectedPeriod = {
-            name:selectedPeriod.name,
-            id:selectedPeriod.id
+            name:selectedPeriod?.name,
+            id:selectedPeriod?.id
         }
         props.handleChangePeriod(newSelectedPeriod)
     },[selectPeriod])

@@ -13,11 +13,20 @@ import CertificationRequestsWidget from "../../components/MyStudents/certificati
 import TaskEventModal from "../../components/Modals/taskEventModal";
 import {getEventsStart, getPeriodsStart} from "../../redux/dashboard/Actions";
 import LevelWrapper from '../../components/LevelWrapper'
+import TestCalendar from "../../components/Calendar/TestCalendar";
+import FullCalendar from "../../components/Calendar/FullCalendar";
+import FullCalendarComponent from "../../components/Calendar/FullCalendar";
+import BigCalendar from "../../components/Calendar/ReactBigCalendar";
 
 function Dashboard() {
   const dispatch = useDispatch();
   const periods = useSelector((state) => state.dashboard.periods);
   const events = useSelector((state) => state.dashboard.events);
+  // const [calendarEvents,setCalendarEvents] = useState();
+  //
+  // const handleCalendarEvents = (events) => {
+  //   setCalendarEvents(events)
+  // }
   const user = {
     level: 'HS'
   }
@@ -32,6 +41,9 @@ function Dashboard() {
     dispatch(getPeriodsStart());
     dispatch(getEventsStart())
   }, []);
+
+
+
   const openTaskEventModal = () => {
     setTaskEventModal(true);
   };
@@ -84,7 +96,10 @@ function Dashboard() {
         </div>
         <div className="col-12 col-xl-3 px-0">
           <div className="account-page-padding" style={{ paddingLeft: "20px" }}>
-            <Calendar />
+            {/*<Calendar events={events}/>*/}
+            {/*<TestCalendar/>*/}
+            <FullCalendarComponent events={events}/>
+            {/*<BigCalendar/>*/}
             <button
               style={{
                 backgroundColor: "#51c7df",
@@ -102,6 +117,7 @@ function Dashboard() {
               onHide={closeTaskEventModal}
               periods={periods}
               events={events}
+
 
             />
             <CertificationRequestsWidget />
