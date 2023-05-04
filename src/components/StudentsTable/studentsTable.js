@@ -769,7 +769,9 @@ export default function StudentsTable(props) {
                         className="mb-0 pb-0 fw-bold"
                         style={{ color: "#a22f6a" }}
                       >
-                        {record.completedSkills2?.length}
+                        {record.completedSkills2
+                          ? record.completedSkills2.length
+                          : 0}
                       </p>
                       /
                       <p className="mb-0 pb-0">
