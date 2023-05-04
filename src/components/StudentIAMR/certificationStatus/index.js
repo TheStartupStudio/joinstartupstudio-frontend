@@ -7,7 +7,6 @@ import { showErrors } from "../../../utils/helpers";
 
 const CertificationStatus = () => {
   const [loading, setLoading] = useState(true);
-  const [certification, setCertification] = useState({});
   const [certificationStatus, setCertificationStatus] = useState();
   const [hasAccess, setHasAccess] = useState(false);
 
@@ -20,11 +19,8 @@ const CertificationStatus = () => {
       ? "student-certification-2"
       : "";
 
-  console.log("certificationType", certificationType);
-
-  const { status, unCompletedSkills } = certificationStatus || {};
-  console.log("unCompletedSkills", unCompletedSkills);
-  console.log("certificationStatus", certificationStatus);
+  const { status, unCompletedSkills, unApprovedSkills } =
+    certificationStatus || {};
 
   useEffect(() => {
     if (id == 1 || id == 2) {
@@ -77,7 +73,7 @@ const CertificationStatus = () => {
         ) : (
           <>
             <p className="title">Certification {id} Skills</p>
-            {!status && unCompletedSkills?.length > 0 && (
+            {!status && unCompletedSkills?.length > 0 ? (
               <>
                 <p>
                   Student is still developing certian skills and will need to
@@ -89,9 +85,24 @@ const CertificationStatus = () => {
                   </p>
                 ))}
               </>
+            ) : (
+              unApprovedSkills?.length > 0 && (
+                <>
+                  <p>
+                    The student still has unapproved skills and will need to
+                    update their proof to earn certification:
+                  </p>
+                  {certificationStatus.unApprovedSkills.map((skill) => (
+                    <p className="text-danger" key={skill}>
+                      {skill}
+                    </p>
+                  ))}
+                </>
+              )
             )}
             {hasAccess &&
-            (!unCompletedSkills || unCompletedSkills?.length === 0) ? (
+            (!unCompletedSkills || unCompletedSkills?.length === 0) &&
+            (!unApprovedSkills || unApprovedSkills?.length === 0) ? (
               <button
                 className="lts-button float-end mt-2 me-sm-3"
                 style={{ background: "#99cc33" }}
@@ -110,17 +121,20 @@ const CertificationStatus = () => {
               )
             )}
 
-            {!status && unCompletedSkills?.length === 0 && (
-              <div className="completed-certification">
-                <p>
-                  It is time for student to submit their proof of skills to The
-                  Startup Studio to earn the Market-Ready Certification {id}:{" "}
-                  <span style={{ color: "#333d3d", fontWeight: 500 }}>
-                    Competitive Entry Level Employability
-                  </span>
-                </p>
-              </div>
-            )}
+            {!status &&
+              unCompletedSkills?.length === 0 &&
+              unApprovedSkills?.length === 0 && (
+                <div className="completed-certification">
+                  <p>
+                    It is time for student to submit their proof of skills to
+                    The Startup Studio to earn the Market-Ready Certification{" "}
+                    {id}:{" "}
+                    <span style={{ color: "#333d3d", fontWeight: 500 }}>
+                      Competitive Entry Level Employability
+                    </span>
+                  </p>
+                </div>
+              )}
           </>
         )}
       </div>
