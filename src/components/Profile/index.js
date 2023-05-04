@@ -266,26 +266,34 @@ function Profile(props) {
       <div
         style={{
           minHeight: "166px",
+          backgroundColor: "#F8F7F7",
+          marginLeft: "0",
         }}
         className="notification-box col-lg-6 col-sm-12 mt-4 row position-relative"
       >
         <p
-          className="text-center certification-progress"
-          style={{ fontSize: "20px" }}
+          className="text-center certification-progress mt-1"
+          style={{ fontSize: "20px", height: "auto" }}
         >
           IAMR Inbox
         </p>
-        <div className="col-6 text-center fw-bold">
-          <img src={Questions} style={{ width: "150px" }} alt="" />
-          <p className="mb-0 py-0 mt-2">
-            {studentQuestions?.unreadCount}
+        <div
+          className="col-6 text-center fw-bold "
+          style={{ marginTop: "-3rem" }}
+        >
+          <img src={Questions} style={{ width: "180px" }} alt="" />
+          <p className="mb-0 py-0" style={{ marginTop: "-2rem" }}>
+            {studentQuestions.unreadCount ? studentQuestions?.unreadCount : 0}
             &nbsp; Questions
           </p>
         </div>
-        <div className="col-6 text-center fw-bold">
-          <img src={Feedbacks} style={{ width: "150px" }} alt="" />
-          <p className="mb-0 py-0 mt-2">
-            {feedbackRequests?.unreadCount}
+        <div
+          className="col-6 text-center fw-bold"
+          style={{ marginTop: "-3rem" }}
+        >
+          <img src={Feedbacks} style={{ width: "180px" }} alt="" />
+          <p className="mb-0 py-0" style={{ marginTop: "-2rem" }}>
+            {feedbackRequests.unreadCount ? feedbackRequests.unreadCount : 0}
             &nbsp; Requests
           </p>
         </div>

@@ -24,7 +24,6 @@ export default function StudentsTable(props) {
   const [bulkDeactivatingStudents, setBulkDeactivatingStudents] = useState([]);
   const [bulkEditingStudents, setBulkEditingStudents] = useState([]);
   const [students, setStudents] = useState([]);
-  console.log("students", students);
   const [isSearching, setIsSearching] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(["level", "year"]);
@@ -684,7 +683,6 @@ export default function StudentsTable(props) {
         omit: !selectedOptions.includes("year"),
 
         cell: (record) => {
-          console.log("record", record);
           return (
             <>
               <div className="table-edit-dropdown">
@@ -729,7 +727,6 @@ export default function StudentsTable(props) {
           row.completedSkills1 ? row.completedSkills1 : "NONE",
         sortable: true,
         cell: (record) => {
-          console.log("record", record);
           return (
             <>
               <div className="d-flex justify-content-between text-center w-100">
@@ -744,7 +741,9 @@ export default function StudentsTable(props) {
                   <span>
                     <span className="d-flex">
                       <p className="text-info mb-0 pb-0 fw-bold">
-                        {record.completedSkills1?.length}{" "}
+                        {record.completedSkills1
+                          ? record.completedSkills1.length
+                          : 0}{" "}
                       </p>
                       /
                       <p className="mb-0 pb-0">
