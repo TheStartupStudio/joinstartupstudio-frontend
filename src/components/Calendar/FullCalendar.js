@@ -7,11 +7,9 @@ import moment from 'moment';
 import {formatDate} from "@fullcalendar/core";
 import './index.css'
 
-
 let eventGuid = 0
 let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
 
-console.log(todayStr)
 export const INITIAL_EVENTS = [
     {
         id: createEventId(),
@@ -46,7 +44,6 @@ const FullCalendarComponent = (props) => {
     console.log(currentEvents)
 
     const formatEvents = (events) => {
-
         const NEW_EVENTS =events?.map(item => ({
             id: String(item.id),
             title: item.name,
@@ -55,12 +52,7 @@ const FullCalendarComponent = (props) => {
         }));
 
         return NEW_EVENTS
-
-
     }
-
-
-
 
     useEffect(()=>{
        props.events && setEvents(formatEvents(props.events))
@@ -98,7 +90,6 @@ const FullCalendarComponent = (props) => {
         setCurrentEvents(events);
     };
 
-
     const renderEventContent = (eventInfo) => {
         console.log(eventInfo.event.extendedProps.type)
 
@@ -132,32 +123,36 @@ const FullCalendarComponent = (props) => {
 
     const [events, setEvents] = useState([]);
 
-    // useEffect(() => {
-    //     setEvents([
-    //         {
-    //             title: 'Event 1',
-    //             start: moment().toDate(),
-    //             end: moment().add(2, 'hours').toDate(),
-    //         },
-    //         {
-    //             title: 'Event 2',
-    //             start: moment().add(1, 'day').toDate(),
-    //             end: moment().add(1, 'day').add(2, 'hours').toDate(),
-    //         },
-    //         {
-    //             title: 'Event 3',
-    //             start: moment().add(1, 'day').toDate(),
-    //             end: moment().add(1, 'day').add(3, 'hours').toDate(),
-    //         },
-    //         {
-    //             title: 'Event 4',
-    //             start: moment().add(1, 'day').toDate(),
-    //             end: moment().add(1, 'day').add(4, 'hours').toDate(),
-    //         },
-    //     ]);
-    // }, []);
+    useEffect(() => {
+        setEvents([
+            {
+                className: 'event-event',
+                title: 'Event 1',
+                start: moment().toDate(),
+                end: moment().add(2, 'hours').toDate(),
+            },
+            {
+                className: 'event-task',
+                title: 'Event 2',
+                start: moment().add(1, 'day').toDate(),
+                end: moment().add(1, 'day').add(2, 'hours').toDate(),
+            },
+            {
+                className: 'event-event',
+                title: 'Event 3',
+                start: moment().add(1, 'day').toDate(),
+                end: moment().add(1, 'day').add(3, 'hours').toDate(),
+            },
+            {
+                className: 'event-event',
+                title: 'Event 4',
+                start: moment().add(1, 'day').toDate(),
+                end: moment().add(1, 'day').add(4, 'hours').toDate(),
+            },
+        ]);
+    }, []);
 
-const    eventContent = (info) => {
+    const eventContent = (info) => {
         // Determine the event type
         var eventType = info.event.extendedProps.type;
 
@@ -186,13 +181,11 @@ const    eventContent = (info) => {
         };
     }
 
-
     return (
         <FullCalendar
-            height={250}
-
+            dayCellClassNames={'fc-cell-custom'}
             // eventBackgroundColor={'#000'}
-            // eventColor={'#000'}
+            eventColor={'red'}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             headerToolbar={{
                 // left: 'prev,next today',
@@ -214,8 +207,8 @@ const    eventContent = (info) => {
             eventAdd={function(){}}
             eventChange={function(){}}
             eventRemove={function(){}}
-/>
-);
+        />
+    );
 };
 
 export default FullCalendarComponent;
