@@ -18,7 +18,7 @@ import IamrContents from "./pages/Iamr/IamrContentsAccordion";
 import ImrContent from "./pages/Iamr/ImrContent";
 
 const Login = React.lazy(() => import("./pages/Auth/Login"));
-const ChooseLogin = React.lazy(() => import("./pages/Auth/Login/chooseLogin"));
+const ChooseLogin = React.lazy(() => import("./pages/Auth/Login/ChooseLogin"));
 const SecurePage = React.lazy(() => import("../src/pages/Secure"));
 const ForgotPassword = React.lazy(() =>
   import("./pages/Auth/Login/forgotPassword")
@@ -271,7 +271,7 @@ function Router(props) {
                 component={StudentIAMR}
               />
               <Redirect from="/register" exact to="/dashboard" />
-              <Redirect from="/" exact to="/dashboard" />
+              <Redirect from="/ims-login" exact to="/dashboard" />
               <Route path="/iamr" component={Iamr} />
               <Route component={NotFound} />
             </Switch>
