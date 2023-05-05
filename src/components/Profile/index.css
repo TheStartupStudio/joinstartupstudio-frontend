@@ -71,3 +71,23 @@
   color: #707070;
   opacity: 1;
 }
+.listen-bg__img,
+.watch-bg__img,
+.read-bg__img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+}
+.listen-bg__img {
+  background-image: url("../../assets/images/read_watch_listen_Listen_with typo1.png");
+}
+.read-bg__img {
+  background-image: url("../../assets/images/read_watch_listen_Read_with\ typo2.png");
+}
+.watch-bg__img {
+  background-image: url("../../assets/images/read_watch_listen_Watch_with\ typo1.png");
+}

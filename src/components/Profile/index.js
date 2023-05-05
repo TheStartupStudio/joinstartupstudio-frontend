@@ -265,14 +265,16 @@ function Profile(props) {
       {/* certification status */}
       <div
         style={{
-          minHeight: "166px",
           backgroundColor: "#F8F7F7",
           marginLeft: "0",
+          minHeight: "166px",
+          height: "250px",
+          fontWeight: "600",
         }}
         className="notification-box col-lg-6 col-sm-12 mt-4 row position-relative"
       >
         <p
-          className="text-center certification-progress mt-1"
+          className="text-center certification-progress mt-4"
           style={{ fontSize: "20px", height: "auto" }}
         >
           IAMR Inbox
@@ -330,17 +332,16 @@ function Profile(props) {
         style={{
           backgroundColor: "#F8F7F7",
           minHeight: "166px",
+          height: "250px",
           fontWeight: "600",
         }}
       >
-        <div className="read-section w-100 border-bottom row gx-0">
-          <div className="col-5 col-md-3 text-start text-md-start  read-watch-listen-image-div">
-            <img
-              src={read}
-              className={"w-auto "}
-              style={{ height: "130px" }}
-              alt=""
-            />
+        <div
+          className="read-section w-100 border-bottom row gx-0"
+          style={{ height: "33.3%" }}
+        >
+          <div className=" col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4">
+            <div className="read-bg__img"></div>
           </div>
           <div
             style={{ float: "right" }}
@@ -358,14 +359,12 @@ function Profile(props) {
           </div>
         </div>
         {/* second */}
-        <div className="read-section w-100 border-bottom row gx-0">
-          <div className="col-5 col-md-3 text-start text-md-start read-watch-listen-image-div">
-            <img
-              src={watch}
-              className={"w-auto "}
-              style={{ height: "130px" }}
-              alt=""
-            />
+        <div
+          className="read-section w-100 border-bottom row gx-0"
+          style={{ height: "33.3%" }}
+        >
+          <div className="col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4">
+            <div className="watch-bg__img"></div>
           </div>
           <div
             style={{ float: "right" }}
@@ -387,10 +386,10 @@ function Profile(props) {
         {/* third  */}
         <div
           className="read-section w-100 row gx-0"
-          style={{ borderBottom: "0px" }}
+          style={{ borderBottom: "0px", height: "33.3%" }}
         >
-          <div className="col-5 col-md-3 text-start text-md-start read-watch-listen-image-div">
-            <img src={listen} style={{ height: "130px" }} alt="" />
+          <div className="col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4">
+            <div className="listen-bg__img"></div>
           </div>
           <div
             style={{ float: "right" }}
