@@ -721,8 +721,8 @@ export default function StudentsTable(props) {
         omit: !selectedOptions.includes("school"),
       },
       {
-        name: "Certification Status",
-        key: "CertificationStatus",
+        name: "IAMR Status",
+        key: "IAMRStatus",
         selector: (row) =>
           row.completedSkills1 ? row.completedSkills1 : "NONE",
         sortable: true,
