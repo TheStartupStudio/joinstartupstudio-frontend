@@ -71,7 +71,9 @@ const ChooseLogin = () => {
       if (loginRole === "ims") {
         return history.push("/ims-login");
       } else if (loginRole === "main") {
-        return window.location.replace("https://main.learntostart.com/");
+        return window.location.replace(
+          "https://mainplatform-dev.learntostart.com/"
+        );
       }
     }
   };
