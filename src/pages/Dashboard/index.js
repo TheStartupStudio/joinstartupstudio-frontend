@@ -1,41 +1,69 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import IntlMessages from '../../utils/IntlMessages'
-import Profile from '../../components/Profile'
-import Calendar from '../../components/Calendar'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import IntlMessages from "../../utils/IntlMessages";
+import Profile from "../../components/Profile";
+import Calendar from "../../components/Calendar";
+import { changeSidebarState } from "../../redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUsers } from "@fortawesome/free-solid-svg-icons";
+import Messenger from "../../components/Messenger/Messenger";
+import { ActiveStudents } from "../../components/ActiveStudents";
+import CertificationRequestsWidget from "../../components/MyStudents/certificationRequests/certificationRequestsWidget";
+import TaskEventModal from "../../components/Modals/taskEventModal";
+import {getEventsStart, getPeriodsStart} from "../../redux/dashboard/Actions";
 import LevelWrapper from '../../components/LevelWrapper'
-import { changeSidebarState } from '../../redux'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUsers } from '@fortawesome/free-solid-svg-icons'
-import Messenger from '../../components/Messenger/Messenger'
-import { ActiveStudents } from '../../components/ActiveStudents'
-import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
+import TestCalendar from "../../components/Calendar/TestCalendar";
+import FullCalendar from "../../components/Calendar/FullCalendar";
+import FullCalendarComponent from "../../components/Calendar/FullCalendar";
+import BigCalendar from "../../components/Calendar/ReactBigCalendar";
 
 function Dashboard() {
-  const dispatch = useDispatch()
-  const [newMessage, setNewMessage] = useState([])
-  const [chatId, setChatId] = useState('')
+  const dispatch = useDispatch();
+  const periods = useSelector((state) => state.dashboard.periods);
+  const events = useSelector((state) => state.dashboard.events);
+  // const [calendarEvents,setCalendarEvents] = useState();
+  //
+  // const handleCalendarEvents = (events) => {
+  //   setCalendarEvents(events)
+  // }
   const user = {
     level: 'HS'
   }
 
+  const [newMessage, setNewMessage] = useState([]);
+  const [chatId, setChatId] = useState("");
+  const [taskEventModal, setTaskEventModal] = useState(false);
   useEffect(() => {
-    dispatch(changeSidebarState(false))
-  })
+    dispatch(changeSidebarState(false));
+  }, []);
+  useEffect(() => {
+    dispatch(getPeriodsStart());
+    dispatch(getEventsStart())
+  }, []);
+
+
+
+  const openTaskEventModal = () => {
+    setTaskEventModal(true);
+  };
+
+  const closeTaskEventModal = () => {
+    setTaskEventModal(false);
+  };
 
   return (
-    <div className='container-fluid'>
-      <div className='row'>
-        <div className='col-12 col-md-12 col-xl-9 pe-0 me-0'>
-          <div className='account-page-padding page-border'>
-            <h3 className='page-title'>
-              <IntlMessages id='navigation.dashboard' />
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-12 col-md-12 col-xl-9 pe-0 me-0">
+          <div className="account-page-padding page-border">
+            <h3 className="page-title">
+              <IntlMessages id="navigation.dashboard" />
             </h3>
-            <p className='page-description'>
-              <IntlMessages id='dashboard.page_description' />
+            <p className="page-description">
+              <IntlMessages id="dashboard.page_description" />
             </p>
-            
+
             <LevelWrapper user={user}>
               <Profile
                 newMessage={newMessage}
@@ -51,12 +79,12 @@ function Dashboard() {
               />
             </LevelWrapper>
 
-            <div className='my-4'>
-              <div className='row'>
-                <div className='col-md-12 col-lg-8'>
+            <div className="my-4">
+              <div className="row">
+                <div className="col-md-12 col-lg-8">
                   <h3
-                    className='page-title'
-                    style={{ textTransform: 'capitalize' }}
+                    className="page-title"
+                    style={{ textTransform: "capitalize" }}
                   >
                     Recently Active Students
                   </h3>
@@ -66,9 +94,32 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <div className='col-12 col-xl-3 px-0'>
-          <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
-            <Calendar />
+        <div className="col-12 col-xl-3 px-0">
+          <div className="account-page-padding" style={{ paddingLeft: "20px" }}>
+            {/*<Calendar events={events}/>*/}
+            {/*<TestCalendar/>*/}
+            <FullCalendarComponent events={events}/>
+            {/*<BigCalendar/>*/}
+            <button
+              style={{
+                backgroundColor: "#51c7df",
+                color: "#fff",
+                fontWeight: "bold",
+                fontSize: 14,
+              }}
+              onClick={openTaskEventModal}
+              className="px-4 py-2 border-0 rounded color transform text-uppercase font-weight-bold w-100 my-1"
+            >
+              Create Task/Event
+            </button>
+            <TaskEventModal
+              show={taskEventModal}
+              onHide={closeTaskEventModal}
+              periods={periods}
+              events={events}
+
+
+            />
             <CertificationRequestsWidget />
             {/* <Messenger
               chatOpened={(id) => setChatId(id)}
@@ -97,7 +148,7 @@ function Dashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

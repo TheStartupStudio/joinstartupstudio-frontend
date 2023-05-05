@@ -103,3 +103,49 @@
 		margin-left: 0;
 	}
 }
+
+.ims-login-role {
+
+}
+
+.ims-login-role:hover {
+background-color: #51C7DF;
+}
+.main-login-role{
+
+}
+
+
+.main-login-role:hover {
+    background-color: #ff3399;
+}
+
+svg {
+    width: 70%;
+}
+
+.learner-logo:hover * {
+    fill:white
+}
+.learner-logo-clicked {
+    fill:white
+}
+.learner-logo-clicked [class^="st"] {
+    fill: white;
+}
+
+
+.instructor-logo:hover * {
+    /*fill:white*/
+}
+.instructor-logo-clicked {
+    /*fill:white*/
+}
+.instructor-logo-clicked [class^="st"] {
+    /*fill: white;*/
+}
+
+
+
+
+

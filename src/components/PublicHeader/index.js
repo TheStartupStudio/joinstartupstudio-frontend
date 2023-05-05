@@ -1,64 +1,76 @@
-import React from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import React from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 // import Language from '../Language'
-import IntlMessages from '../../utils/IntlMessages'
-import SUSLogo from '../../assets/images/sus-institute-logo.png'
-import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import IntlMessages from "../../utils/IntlMessages";
+import SUSLogo from "../../assets/images/sus-institute-logo.png";
+import SUSLogoStudent from "../../assets/images/LTS-logo.png";
+import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 
 function PublicHeader() {
-  const showMenuMobile = window.location.href.includes('lts-secure')
-  const location = useLocation()
-
+  const showMenuMobile = window.location.href.includes("lts-secure");
+  const location = useLocation();
   return (
     <div>
       <nav
         className={`navbar navbar-expand-lg justify-content-between py-4 px-4 px-md-5 ${
-          showMenuMobile && 'desktop-menu mt-lg-5'
+          showMenuMobile && "desktop-menu mt-lg-5"
         }  px-xl-2`}
         style={
-          window.location.href.includes('lts-secure') ||
-          window.location.href.includes('register')
+          window.location.href.includes("lts-secure") ||
+          window.location.href.includes("register")
             ? null
-            : { backgroundColor: ' #F8F7F7' }
+            : { backgroundColor: " #F8F7F7" }
         }
       >
-        <div className={`sidebar-header ${showMenuMobile && 'ms-md-5'}`}>
-          <NavLink to='/'>
-            {location.pathname !== '/' && (
-              <img src={SUSLogo} alt='logo' className='ms-md-5' />
+        <div className={`sidebar-header ${showMenuMobile && "ms-md-5"}`}>
+          <NavLink to="/">
+            {location.pathname !== "/" && (
+              <img src={SUSLogoStudent} alt="logo" className="ms-md-5" />
             )}
           </NavLink>
+          {location.pathname == "/ims-login" && (
+            <div
+              style={{
+                textTransform: "uppercase",
+                color: "#707070",
+                fontSize: 18,
+              }}
+              className="ms-md-5"
+            >
+              Instructor platform
+            </div>
+          )}
         </div>
-        <ul className='navbar-nav navbar-expand-lg public-nav'>
-          {window.location.href.includes('terms') ||
-          window.location.href.includes('lts-secure') ? (
-            <li className='nav-item'>
+        <ul className="navbar-nav navbar-expand-lg public-nav">
+          {window.location.href.includes("terms") ||
+          window.location.href.includes("lts-secure") ? (
+            <li className="nav-item">
               {/* <a className='nav-link' href='/create-account'>
                 <IntlMessages id='navigation.create_your_account' />
               </a> */}
             </li>
-          ) : window.location.href.includes('register') ? (
-            <li className='nav-item'>
-              <a className='nav-link mx-auto' href='/logout'>
-                <IntlMessages id='navigation.logout' />
+          ) : window.location.href.includes("register") ? (
+            <li className="nav-item">
+              <a className="nav-link mx-auto" href="/logout">
+                <IntlMessages id="navigation.logout" />
               </a>
             </li>
           ) : null}
-          {window.location.href.includes('create-account') ||
-          window.location.href.includes('lts-secure') ||
-          window.location.href.includes('subscription-ended') ||
-          window.location.href.includes('register') ||
-          window.location.href.includes('reset-password') ||
-          window.location.href.includes('forgot-password') ||
-          window.location.href.includes('trial-ended') ? (
-            <li className='nav-item'>
-              <a className='nav-link' href='/'>
-                <IntlMessages id='navigation.login' />
+          {window.location.href.includes("create-account") ||
+          window.location.href.includes("lts-secure") ||
+          window.location.href.includes("subscription-ended") ||
+          window.location.href.includes("register") ||
+          window.location.href.includes("reset-password") ||
+          window.location.href.includes("forgot-password") ||
+          window.location.href.includes("trial-ended") ? (
+            <li className="nav-item">
+              <a className="nav-link" href="/">
+                <IntlMessages id="navigation.login" />
               </a>
             </li>
           ) : null}
-          {location.pathname === '/' && (
-            <li className='nav-item'>
+          {location.pathname === "/" && (
+            <li className="nav-item">
               {/* <Link className='nav-link' to='/create-account'>
                 <IntlMessages id='navigation.create_your_account' />
               </Link> */}
@@ -70,27 +82,27 @@ function PublicHeader() {
         </ul>
       </nav>
       {showMenuMobile && (
-        <nav className='mobile-menu'>
+        <nav className="mobile-menu">
           <Navbar
             collapseOnSelect
-            expand='lg'
-            bg='light'
-            variant='light'
-            className='border-0'
+            expand="lg"
+            bg="light"
+            variant="light"
+            className="border-0"
           >
-            <Navbar.Brand href='#home'>
-              <img src={SUSLogo} alt='logo' style={{ width: '200px' }} />
+            <Navbar.Brand href="#home">
+              <img src={SUSLogo} alt="logo" style={{ width: "200px" }} />
             </Navbar.Brand>
-            <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse
-              id='responsive-navbar-nav'
-              className='border-bottom nav-item'
+              id="responsive-navbar-nav"
+              className="border-bottom nav-item"
             >
-              <Nav className='mr-auto d-inline text-end font-weight-bold public-nav'>
-                <Nav.Link className='me-auto' href='/'>
+              <Nav className="mr-auto d-inline text-end font-weight-bold public-nav">
+                <Nav.Link className="me-auto" href="/">
                   LOGIN
                 </Nav.Link>
-                <Nav.Link className='me-auto' href='/create-account'>
+                <Nav.Link className="me-auto" href="/create-account">
                   CREATE YOUR ACCOUNT
                 </Nav.Link>
                 {/* <NavDropdown title='Dropdown' id='collasible-nav-dropdown'>
@@ -112,7 +124,7 @@ function PublicHeader() {
         </nav>
       )}
     </div>
-  )
+  );
 }
 
-export default PublicHeader
+export default PublicHeader;

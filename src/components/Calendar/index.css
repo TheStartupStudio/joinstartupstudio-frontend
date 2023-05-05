@@ -5,3 +5,169 @@
   font-size: 18px !important;
   font-weight: bold;
 }
+
+.react-datepicker__day--highlighted-custom-1,
+.react-datepicker__month-text--highlighted-custom-1,
+.react-datepicker__quarter-text--highlighted-custom-1,
+.react-datepicker__year-text--highlighted-custom-1 {
+  /*color: magenta;*/
+  color:#fff !important;
+  background-color:#ff3399 !important;
+
+}
+.react-datepicker__day--highlighted-custom-2,
+.react-datepicker__month-text--highlighted-custom-2,
+.react-datepicker__quarter-text--highlighted-custom-2,
+.react-datepicker__year-text--highlighted-custom-2 {
+  /*color: green;*/
+  color:#fff !important;
+  background-color: #99cc33 !important;
+}
+
+.react-datepicker__day-names,
+.react-datepicker__week {
+  white-space: nowrap;
+  gap:2px;
+  margin-top:2px;
+  margin-bottom:2px
+}
+
+
+.react-datepicker__day--highlighted,
+.react-datepicker__month-text--highlighted,
+.react-datepicker__quarter-text--highlighted,
+.react-datepicker__year-text--highlighted {
+  border-radius: 0.3rem;
+  background-color: #3dcc4a;
+  color: #fff;
+}
+
+.react-datepicker__day--highlighted-custom-1:hover::before,
+.react-datepicker__day--highlighted-custom-2:hover::before {
+  content: attr(title);
+  position: absolute;
+  z-index: 9999;
+  background-color: #333;
+  color: #fff;
+  font-size: 12px;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.react-datepicker__day--selected {
+  background-color: #56b8b8 !important;
+  color: #fff;
+  border-radius: 0px !important;
+}
+
+
+
+/*///////////////// SCHEDULER ////////////////*/
+
+
+.css-1bzx5rb-MuiTableCell-root.Cell-cell {
+  width: 20px;
+}
+
+.css-1bzx5rb-MuiTableCell-root .Cell-dayOfWeek {
+  width: 0px
+}
+
+.MuiTable-root.Table-table.css-15f0u4c-MuiTable-root{
+  min-width:0px;
+}
+
+.HorizontalAppointment-title {
+  display: none;
+}
+.css-sizvqo-MuiTableCell-root {
+  width: 25px;
+  position: relative;
+  padding: 0;
+}
+
+.MuiTableCell-root.MuiTableCell-body.MuiTableCell-sizeMedium.Cell-cell.css-sizvqo-MuiTableCell-root {
+  height: 25px;
+}
+
+.css-sizvqo-MuiTableCell-root .Cell-text {
+  position:absolute;
+  top:-10px;
+  right:-10px;
+}
+
+/*///////////////// FULL CALENDAR ///////////////*/
+
+.fc-day .fc-daygrid-day-frame .fc-daygrid-day-events .fc-daygrid-event-harness .fc-event .fc-event-main {
+  /*display: none;*/
+  border: none;
+  height: 4px;
+}
+
+.fc-day .fc-daygrid-day-frame .fc-daygrid-day-events .fc-daygrid-event-harness .fc-event .fc-event-main i {
+  display: none;
+}
+.fc-daygrid-event-harness {
+  border: none;
+}
+
+
+/*.fc-day .fc-daygrid-day-frame .fc-daygrid-day-events .fc-daygrid-event-harness .fc-daygrid-dot-event {*/
+/*  display: none;*/
+/*}*/
+
+.fc-popover .fc-popover-body .fc-daygrid-event-harness .fc-event .fc-event-main {
+  display: block;
+}
+
+.fc-daygrid-day-number {
+  font-size: 10px;
+}
+
+.fc-col-header-cell-cushion {
+  font-size: 10px;
+}
+
+
+
+
+.fc-daygrid-day {
+  height: 20px;
+}
+
+/*div.fc-daygrid-day-events {*/
+/*  height: 20px;*/
+/*}*/
+
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+  height: 15px;
+}
+
+.fc-daygrid-day-bottom a {
+  font-size: 8px;
+}
+
+/*tr td {*/
+/*  height: 20px;*/
+/*}*/
+
+.fc-daygrid-day-frame {
+  background-color: #efefef;
+  /*margin: 4px*/
+}
+
+.fc-daygrid-day-events {
+  width: 70%;
+  margin: 2px
+}
+
+.fc-day.fc-daygrid-day {
+  padding: 6px
+}
+
+.fc-h-event {
+  /*background-color: #fff;*/
+  border:none;
+  outline:none
+}
