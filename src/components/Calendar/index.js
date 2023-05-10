@@ -43,8 +43,6 @@ export default function Calendar(props) {
     }
   ];
 
-
-
   return (
     <div className='customDatePickerWidth'>
       <div className='row'>
