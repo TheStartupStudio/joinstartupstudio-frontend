@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { DropdownButton, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -10,44 +10,83 @@ import DropdownMenu from "react-bootstrap/DropdownMenu";
 import DatePicker from "react-datepicker";
 import "react-quill/dist/quill.snow.css";
 import PeriodSelector from "../PeriodSelector/PeriodSelector";
-import {useDispatch, useSelector} from "react-redux";
-import {postEventStart} from "../../redux/dashboard/Actions";
+import { useDispatch, useSelector } from "react-redux";
+import { editEventStart, postEventStart } from "../../redux/dashboard/Actions";
 
 const TaskEventModal = (props) => {
   const [tab, setTab] = useState("task");
-  const [startDate, setStartDate] = useState(new Date());
   const [periods, setPeriods] = useState(props.periods);
+
+  useEffect(() => {
+    const newState = {
+      name: props.event?.name,
+      startDate: props.event?.startDate,
+      endDate: props.event?.endDate,
+      startTime: props.event?.startTime,
+      endTime: props.event?.endTime,
+      description: props.event?.description,
+      type: props.event?.type,
+      requirements: props.event?.requirements,
+      chooseClasses: props.event?.period,
+    };
+    setState(newState);
+    setTab(props.event?.type);
+  }, [props.event]);
 
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    setPeriods(props.periods)
-  },[props.periods])
+  useEffect(() => {
+    setPeriods(props.periods);
+  }, [props.periods]);
 
+  // const initialState = {
+  //   name: "",
+  //   date: "",
+  //   description: "",
+  //   type: "",
+  //   requirements: "",
+  //   chooseClasses: {},
+  // };
 
   const initialState = {
     name: "",
-    date: "",
+    startDate: "",
+    endDate: "",
+    startTime: "",
+    endTime: "",
     description: "",
-    type:"",
+    type: "",
     requirements: "",
-    chooseClasses: {}
+    chooseClasses: {},
   };
+
   const [state, setState] = useState(initialState);
+  useEffect(() => {
+    const newState = { ...state };
+    newState.type = tab == "task" ? "task" : "event";
+    setState(newState);
+  }, [tab]);
 
-  useEffect(()=>{
-    const newState = {...state}
-    newState.type = tab == 'task' ? "task" : "event"
-    setState(newState)
-  },[tab])
+  const isEndTimeBeforeStartTime = () => {
+    const startTimeArray = state.startTime.split(":");
+    const endTimeArray = state.endTime.split(":");
+    if (!!endTimeArray[0]) {
+      return (
+        +endTimeArray[0] < +startTimeArray[0] ||
+        (+endTimeArray[0] === +startTimeArray[0] &&
+          +endTimeArray[1] <= +startTimeArray[1])
+      );
+    }
+  };
 
-const [selectedPeriod, setSelectedPeriod] = useState({})
-
-    const handleInputChange = (name, value) => {
-        setState({ ...state, [name]: value });
-    };
-
-
+  useEffect(() => {
+    if (!isEdit()) {
+      setTab("task");
+    }
+  }, []);
+  const handleInputChange = (name, value) => {
+    setState({ ...state, [name]: value });
+  };
 
   const activeTabStyle = {
     backgroundColor: "#51c7df",
@@ -62,74 +101,67 @@ const [selectedPeriod, setSelectedPeriod] = useState({})
   };
   const toggleTab = (tab) => {
     setTab(tab);
-    setState(initialState);
+    if (!isEdit()) {
+      setState(initialState);
+    }
   };
 
-console.log(state)
-const onSave = () => {
-  let newEvent = {
-    name:state.name,
-    date: state.date,
-    description: state.description,
-    type:state.type,
-    requirements: state.requirements,
-    chooseClasses: state.chooseClasses
-  }
+  const onPostEvent = () => {
+    let newEventObj = {
+      name: state.name,
+      startDate: state.startDate,
+      startTime: state.startTime,
+      endDate: state.endDate,
+      endTime: state.endTime,
+      description: state.description,
+      type: state.type,
+      requirements: state.requirements,
+      chooseClasses: state.chooseClasses,
+    };
 
-  dispatch(postEventStart(newEvent))
-
-
-}
-  const modules = {
-    toolbar: [
-      ["bold", "italic", "underline", "strike"],
-      ["blockquote", "code-block"],
-
-      [{ header: 1 }, { header: 2 }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ script: "sub" }, { script: "super" }],
-      [{ indent: "-1" }, { indent: "+1" }],
-      [{ direction: "rtl" }],
-
-      [{ size: ["small", false, "large", "huge"] }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-      [{ color: [] }, { background: [] }],
-      [{ font: [] }],
-      [{ align: [] }],
-
-      ["clean"],
-    ],
+    dispatch(postEventStart(newEventObj));
   };
 
-  const formats = [
-    "font",
-    "size",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "color",
-    "background",
-    "script",
-    "header",
-    "blockquote",
-    "code-block",
-    "indent",
-    "list",
-    "direction",
-    "align",
-    "link",
-    "image",
-    "video",
-    "formula",
-  ];
+  const onEditEvent = () => {
+    let newEvent = {
+      name: state.name,
+      startDate: state.startDate,
+      startTime: state.startTime,
+      endDate: state.endDate,
+      endTime: state.endTime,
+      description: state.description,
+      type: state.type,
+      requirements: state.requirements,
+      chooseClasses: state.chooseClasses,
+    };
 
+    dispatch(editEventStart(newEvent, { eventId: props.event.id }));
+  };
+  const isEdit = () => {
+    return props.event != null;
+  };
+
+  useEffect(() => {
+    if (isEndTimeBeforeStartTime()) {
+      const newState = { ...state };
+      const tomorrow = new Date(newState.startDate);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const date = new Date(tomorrow);
+      const formattedDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      const parts = formattedDate.split("/");
+      const formattedDateInNewFormat = `${parts[2]}-${parts[0]}-${parts[1]}`;
+      newState.endDate = formattedDateInNewFormat;
+      setState(newState);
+    }
+  }, [state.endTime]);
   return (
     <Modal
       show={props.show}
       onHide={props.onHide}
-      // close={props.closeAddModalSaved}
       backdrop="static"
       keyboard={false}
       style={{ marginTop: "3.9%" }}
@@ -184,23 +216,21 @@ const onSave = () => {
                   style={{ height: 55 }}
                   placeholder={placeholder}
                   id={tab === "task" ? "taskName" : "eventName"}
-                  onChange={(e) =>
-                    handleInputChange(
-                      "name",
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => handleInputChange("name", e.target.value)}
                   value={state.name}
                 />
               )}
             </FormattedMessage>
           </div>
 
-          <div className="col-md-12 w-100">
+          <div
+            className={isEndTimeBeforeStartTime() ? "col-md-6" : "col-md-12"}
+          >
             <label
               htmlFor="date"
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
+              Start{" "}
               <FormattedMessage id={`calendar_task-events.date_of_${tab}`} />
             </label>
             <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
@@ -214,17 +244,97 @@ const onSave = () => {
                   id={tab === "task" ? "taskDate" : "eventDate"}
                   pattern="\d{4}-\d{2}-\d{2}"
                   onChange={(e) =>
-                    handleInputChange(
-                      "date",
-                      e.target.value
-                    )
+                    handleInputChange("startDate", e.target.value)
                   }
-                  value={state.date}
+                  value={state.startDate}
                 />
               )}
             </FormattedMessage>
           </div>
-
+          {isEndTimeBeforeStartTime() ? (
+            <div className="col-md-6 ">
+              <label
+                htmlFor="date"
+                style={{ fontSize: "14px", fontWeight: "bold" }}
+              >
+                End{" "}
+                <FormattedMessage id={`calendar_task-events.date_of_${tab}`} />
+              </label>
+              <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
+                {(placeholder) => (
+                  <input
+                    className="my-1 mb-4 py-2 px-2 w-100 rounded-0 bg-light"
+                    type="date"
+                    name={tab === "task" ? "taskDate" : "eventDate"}
+                    style={{ height: 55 }}
+                    placeholder={placeholder}
+                    id={tab === "task" ? "taskDate" : "eventDate"}
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    onChange={(e) =>
+                      handleInputChange("endDate", e.target.value)
+                    }
+                    value={state.endDate}
+                  />
+                )}
+              </FormattedMessage>
+            </div>
+          ) : null}
+          <div className="col-md-6 ">
+            <label
+              htmlFor="date"
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
+              Start time of task
+              {/*<FormattedMessage id={`calendar_task-events.date_of_${tab}`} />*/}
+            </label>
+            <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
+              {(placeholder) => (
+                <input
+                  className="my-1 mb-4 py-2 px-2 w-100 rounded-0 bg-light"
+                  type="time"
+                  name={tab === "task" ? "taskDate" : "eventDate"}
+                  style={{ height: 55 }}
+                  placeholder={placeholder}
+                  id={tab === "task" ? "taskDate" : "eventDate"}
+                  pattern="\d{4}-\d{2}-\d{2}"
+                  onChange={(e) =>
+                    handleInputChange("startTime", e.target.value)
+                  }
+                  value={state.startTime}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+          <div className="col-md-6 ">
+            <label
+              htmlFor="date"
+              style={{ fontSize: "14px", fontWeight: "bold" }}
+            >
+              End time of task
+              {/*<FormattedMessage id={`calendar_task-events.date_of_${tab}`} />*/}
+            </label>
+            <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
+              {(placeholder) => (
+                <input
+                  className="my-1 mb-4 py-2 px-2 w-100 rounded-0 bg-light"
+                  type="time"
+                  name={tab === "task" ? "taskDate" : "eventDate"}
+                  style={{ height: 55 }}
+                  placeholder={placeholder}
+                  id={tab === "task" ? "taskDate" : "eventDate"}
+                  pattern="\d{4}-\d{2}-\d{2}"
+                  onChange={(e) => handleInputChange("endTime", e.target.value)}
+                  value={state.endTime}
+                />
+              )}
+            </FormattedMessage>
+          </div>
+          {/*{isAfterMidnight() || isEndTimeBeforeStartTime() ? (*/}
+          {/*  <div>*/}
+          {/*    <label htmlFor="endDate">End Date:</label>*/}
+          {/*    <input type="date" id="endDate" name="endDate" />*/}
+          {/*  </div>*/}
+          {/*) : null}*/}
           <div className="col-md-12">
             <label
               htmlFor="description"
@@ -243,17 +353,8 @@ const onSave = () => {
                   className="my-1 mb-4 py-2 px-0 w-100 rounded-0 scroll-add-new-note-modal"
                   style={{ height: "150px" }}
                   placeholder={placeholder}
-                  modules={modules}
-                  formats={formats}
-                  onChange={(e) =>
-                    handleInputChange(
-                      "description",
-                      e
-                    )
-                  }
-                  value={
-                  state.description
-                  }
+                  onChange={(e) => handleInputChange("description", e)}
+                  value={state.description}
                 />
               )}
             </FormattedMessage>
@@ -285,18 +386,11 @@ const onSave = () => {
             </FormattedMessage>
           </div>
           <div className="col-md-12">
-            <PeriodSelector periods={periods}
-                            handleChangePeriod={(e)=>handleInputChange("chooseClasses", e)}
+            <PeriodSelector
+              periods={periods}
+              handleChangePeriod={(e) => handleInputChange("chooseClasses", e)}
             />
-
-
           </div>
-
-          {/*{foulWords && (*/}
-          {/*  <div className="p-2 foul-words-notice">*/}
-          {/*    {FoulWords.printMessage(foulWords)}*/}
-          {/*  </div>*/}
-          {/*)}*/}
         </div>
       </Modal.Body>
       <div
@@ -305,10 +399,8 @@ const onSave = () => {
       >
         <button
           className="float-end m-0 px-md-5 save-button add-new-note-button-text ms-1"
-          // onClick={handleSubmit}
-          onClick={onSave}
+          onClick={isEdit() ? onEditEvent : onPostEvent}
         >
-          {/*{loading ? "loading" : <IntlMessages id="general.save" />}*/}
           <IntlMessages id="general.save" />
         </button>
       </div>

@@ -1,214 +1,249 @@
-import React, { useState, useEffect } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction'
-import moment from 'moment';
-import {formatDate} from "@fullcalendar/core";
-import './index.css'
+import React, { useState, useEffect, useRef } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import moment from "moment";
+import "./index.css";
+import "react-tippy/dist/tippy.css";
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
+import CalendarEventModal from "../Modals/CalendarEventModal";
+import { useDispatch } from "react-redux";
+import {
+  changeEventDateStart,
+  editEventStart,
+  getEventsStart,
+  getPeriodsStart,
+} from "../../redux/dashboard/Actions";
 
-let eventGuid = 0
-let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
+let eventGuid = 0;
+let todayStr = new Date().toISOString().replace(/T.*$/, "");
 
 export const INITIAL_EVENTS = [
-    {
-        id: createEventId(),
-        title: 'All-day event',
-        start: todayStr
-    },
-    {
-        id: createEventId(),
-        title: 'All-day event2',
-        start: todayStr
-    },
-    {
-        id: createEventId(),
-        title: 'All-day event3',
-        start: todayStr
-    },
-    {
-        id: createEventId(),
-        title: 'All-day event4',
-        start: todayStr
-    },
-]
+  {
+    id: createEventId(),
+    title: "All-day event",
+    start: todayStr,
+  },
+  {
+    id: createEventId(),
+    title: "All-day event2",
+    start: todayStr,
+  },
+  {
+    id: createEventId(),
+    title: "All-day event3",
+    start: todayStr,
+  },
+  {
+    id: createEventId(),
+    title: "All-day event4",
+    start: todayStr,
+  },
+];
 
 export function createEventId() {
-    return String(eventGuid++)
+  return String(eventGuid++);
 }
 
 const FullCalendarComponent = (props) => {
-    const [weekendsVisible, setWeekendsVisible] = useState(true);
-    // const [events,setEvents] = useState(props.events)
-    const [currentEvents, setCurrentEvents] = useState([]);
-    console.log(currentEvents)
+  const [weekendsVisible, setWeekendsVisible] = useState(true);
+  const [currentEvents, setCurrentEvents] = useState([]);
+  const [showEventModal, setShowEventModal] = useState(false);
+  const dispatch = useDispatch();
 
-    const formatEvents = (events) => {
-        const NEW_EVENTS =events?.map(item => ({
-            id: String(item.id),
-            title: item.name,
-            start: item.date,
-            type:item.type
-        }));
+  const handleShowEventModal = () => {
+    setShowEventModal(true);
+  };
 
-        return NEW_EVENTS
+  const handleHideEventModal = () => {
+    setShowEventModal(false);
+  };
+
+  const handleDateSelect = (selectInfo) => {
+    let title = prompt("Please enter a new title for your event");
+    let calendarApi = selectInfo.view.calendar;
+
+    calendarApi.unselect(); // clear date selection
+
+    if (title) {
+      calendarApi.addEvent({
+        id: createEventId(),
+        title,
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+        allDay: selectInfo.allDay,
+      });
     }
+  };
 
-    useEffect(()=>{
-       props.events && setEvents(formatEvents(props.events))
-    },[props.events])
+  const handleEvents = (events) => {
+    setCurrentEvents(events);
+  };
 
-    console.log(props.events)
-    const handleWeekendsToggle = () => {
-        setWeekendsVisible(!weekendsVisible);
+  const renderEventContent = (eventInfo) => {
+    const backgroundColor = () => {
+      if (eventInfo.event.extendedProps.type == "event") {
+        return "green";
+      } else if (eventInfo.event.extendedProps.type == "task") {
+        return "blue";
+      }
     };
-
-    const handleDateSelect = (selectInfo) => {
-        let title = prompt('Please enter a new title for your event');
-        let calendarApi = selectInfo.view.calendar;
-
-        calendarApi.unselect(); // clear date selection
-
-        if (title) {
-            calendarApi.addEvent({
-                id: createEventId(),
-                title,
-                start: selectInfo.startStr,
-                end: selectInfo.endStr,
-                allDay: selectInfo.allDay,
-            });
-        }
-    };
-
-    const handleEventClick = (clickInfo) => {
-        // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        //     clickInfo.event.remove();
-        // }
-    };
-
-    const handleEvents = (events) => {
-        setCurrentEvents(events);
-    };
-
-    const renderEventContent = (eventInfo) => {
-        console.log(eventInfo.event.extendedProps.type)
-
-        const backgroundColor = () => {
-            if(eventInfo.event.extendedProps.type == 'event') {
-                return 'green'
-            } else if (eventInfo.event.extendedProps.type == 'task') {
-                return 'blue'
-            }
-        }
-
-        return (
-            <div style={{backgroundColor:  backgroundColor(),
-                // height: 2
-            }}>
-                {/*<b>{eventInfo.timeText}</b>*/}
-                <i>{eventInfo.event.title}</i>
-            </div>
-        );
-    };
-
-    const renderSidebarEvent = (event) => {
-        return (
-            <li key={event.id}>
-                <b>{formatDate(event.start, { year: 'numeric', month: 'short', day: 'numeric' })}</b>
-                <i>{event.title}</i>
-            </li>
-        );
-    };
-
-
-    const [events, setEvents] = useState([]);
-
-    useEffect(() => {
-        setEvents([
-            {
-                className: 'event-event',
-                title: 'Event 1',
-                start: moment().toDate(),
-                end: moment().add(2, 'hours').toDate(),
-            },
-            {
-                className: 'event-task',
-                title: 'Event 2',
-                start: moment().add(1, 'day').toDate(),
-                end: moment().add(1, 'day').add(2, 'hours').toDate(),
-            },
-            {
-                className: 'event-event',
-                title: 'Event 3',
-                start: moment().add(1, 'day').toDate(),
-                end: moment().add(1, 'day').add(3, 'hours').toDate(),
-            },
-            {
-                className: 'event-event',
-                title: 'Event 4',
-                start: moment().add(1, 'day').toDate(),
-                end: moment().add(1, 'day').add(4, 'hours').toDate(),
-            },
-        ]);
-    }, []);
-
-    const eventContent = (info) => {
-        // Determine the event type
-        var eventType = info.event.extendedProps.type;
-
-        // Set the background color based on the event type
-        var eventBackgroundColor;
-        if (eventType === 'task') {
-            eventBackgroundColor = 'red';
-        } else if (eventType === 'event') {
-            eventBackgroundColor = 'green';
-        } else {
-            eventBackgroundColor = 'blue';
-        }
-
-        // Create the HTML for the event
-        var eventHtml = '<div class="fc-content">' +
-            '<span class="fc-title">' + info.event.title + '</span>' +
-            '</div>';
-
-        // Set the background color
-        var backgroundColor = eventBackgroundColor;
-
-        // Return the modified HTML
-        return {
-            html: eventHtml,
-            backgroundColor: backgroundColor
-        };
-    }
 
     return (
-        <FullCalendar
-            dayCellClassNames={'fc-cell-custom'}
-            // eventBackgroundColor={'#000'}
-            eventColor={'red'}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            headerToolbar={{
-                // left: 'prev,next today',
-                // center: 'title',
-                // right: 'dayGridMonth,timeGridWeek,timeGridDay',
-            }}
-            initialView='dayGridMonth'
-            editable={true}
-            selectable={true}
-            selectMirror={true}
-            dayMaxEvents={4}
-            weekends={weekendsVisible}
-            events={events}
-            initialEvents={currentEvents}
-            select={handleDateSelect}
-            eventContent={renderEventContent} // custom render function
-            eventClick={handleEventClick}
-            eventsSet={handleEvents}
-            eventAdd={function(){}}
-            eventChange={function(){}}
-            eventRemove={function(){}}
-        />
+      <div
+        style={{
+          backgroundColor: backgroundColor(),
+        }}
+      >
+        <i>{eventInfo.event.title}</i>
+      </div>
     );
+  };
+
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    const convertedEvents = props.events?.map((event) => {
+      const start = moment(event.startDate).toDate();
+      const end = moment(event.startDate).add(2, "hours").toDate();
+      const className = event.type === "task" ? "event-task" : "event-event";
+      const title = event.name;
+      const id = event.id;
+
+      return {
+        id,
+        start,
+        end,
+        className,
+        title,
+      };
+    });
+    console.log(convertedEvents);
+    setEvents(convertedEvents);
+  }, [props.events]);
+
+  // useEffect(() => {
+  //   const newEvents = [
+  //     {
+  //       className: "event-event",
+  //       title: "Event 1",
+  //       start: moment().toDate(),
+  //       end: moment().add(2, "hours").toDate(),
+  //     },
+  //     {
+  //       className: "event-task",
+  //       title: "Event 2",
+  //       start: moment().add(1, "day").toDate(),
+  //       end: moment().add(1, "day").add(2, "hours").toDate(),
+  //     },
+  //     {
+  //       className: "event-event",
+  //       title: "Event 3",
+  //       start: moment().add(1, "day").toDate(),
+  //       end: moment().add(1, "day").add(3, "hours").toDate(),
+  //     },
+  //     {
+  //       className: "event-event",
+  //       title: "Event 4",
+  //       start: moment().add(1, "day").toDate(),
+  //       end: moment().add(1, "day").add(4, "hours").toDate(),
+  //     },
+  //     {
+  //       className: "event-event",
+  //       title: "Event 5",
+  //       start: moment().add(1, "day").toDate(),
+  //       end: moment().add(1, "day").add(2, "hours").toDate(),
+  //     },
+  //   ];
+  //   debugger;
+  //   setEvents(newEvents);
+  // }, []);
+
+  const [foundedEvent, setFoundedEvent] = useState(null);
+
+  const foundEvent = (event) => {
+    return props.events?.find((ev) => ev?.id == +event.event?.id);
+  };
+  const handleEventClick = (event) => {
+    const eventFounded = foundEvent(event);
+    setFoundedEvent(eventFounded);
+    handleShowEventModal();
+  };
+
+  const ISOtoUSDateFormat = (date) => {
+    const dateObj = new Date(date);
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const formattedDate = dateObj
+      .toLocaleDateString("en-US", options)
+      .replace(/\//g, "-");
+    return formattedDate;
+  };
+  const handleChangeDate = (event) => {
+    const formattedDate = ISOtoUSDateFormat(event.event.start);
+    const eventFounded = foundEvent(event);
+    dispatch(changeEventDateStart(formattedDate, { eventId: eventFounded.id }));
+  };
+  const handleMouseEnter = (arg) => {
+    tippy(arg.el, {
+      content: arg.event.title,
+    });
+  };
+  return (
+    <>
+      <FullCalendar
+        dayCellClassNames={"fc-cell-custom"}
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        editable={true}
+        selectable={true}
+        selectMirror={true}
+        dayMaxEvents={2}
+        weekends={weekendsVisible}
+        events={events}
+        headerToolbar={{
+          left: "title",
+          center: "",
+          right: "prev,next",
+        }}
+        initialEvents={currentEvents}
+        select={handleDateSelect}
+        eventContent={renderEventContent}
+        eventClick={(event) => handleEventClick(event)}
+        eventsSet={handleEvents}
+        eventMouseEnter={handleMouseEnter}
+        eventAdd={function () {}}
+        eventChange={handleChangeDate}
+        eventRemove={function () {}}
+        duration={{ weeks: 4 }}
+        moreLinkContent={(n) => (
+          <div
+            style={{
+              backgroundColor: "#1ea1f1",
+              width: "9px",
+              height: "9px",
+              borderRadius: "50%",
+              color: "#fff",
+              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 6,
+            }}
+          >
+            +{n.num}
+          </div>
+        )}
+        moreLinkClassNames={"more-link"}
+      />
+      <CalendarEventModal
+        show={showEventModal}
+        onHide={handleHideEventModal}
+        event={foundedEvent}
+        onEdit={(event) => dispatch(editEventStart(event))}
+      />
+    </>
+  );
 };
 
 export default FullCalendarComponent;

@@ -102,35 +102,93 @@
 .fc-day .fc-daygrid-day-frame .fc-daygrid-day-events .fc-daygrid-event-harness .fc-event .fc-event-main {
   /*display: none;*/
   border: none;
-  height: 4px;
+  height: 1px;
 }
 
 .fc-day .fc-daygrid-day-frame .fc-daygrid-day-events .fc-daygrid-event-harness .fc-event .fc-event-main i {
   display: none;
 }
+
+.fc-day.fc-daygrid-day {
+  padding: 2px;
+  background-color: #fff !important;
+}
+
+.fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
+  background-color: #f4f4f4 !important;
+}
 .fc-daygrid-event-harness {
   border: none;
+  width: 65%;
+}
+
+.fc-popover {
+  left:0;
+  width: 200px;
+  overflow-y:auto
+}
+
+.fc-popover-body .fc-daygrid-event-harness {
+  width: 90%;
+}
+
+.fc-daygrid-event-harness i {
+  color: white;
 }
 
 
-/*.fc-day .fc-daygrid-day-frame .fc-daygrid-day-events .fc-daygrid-event-harness .fc-daygrid-dot-event {*/
-/*  display: none;*/
-/*}*/
+ .fc-daygrid-event-dot {
+   border:none !important;
+}
 
+.fc-daygrid-dot-event {
+  padding: 1px 0 !important;
+}
+
+.fc-daygrid-day-frame.fc-daygrid-dot-event {
+   height: 1px !important;
+   padding: 1px 0 !important;
+ }
 .fc-popover .fc-popover-body .fc-daygrid-event-harness .fc-event .fc-event-main {
   display: block;
 }
 
 .fc-daygrid-day-number {
-  font-size: 10px;
+  font-size: 8px;
+  color: #000;
+  padding:2px !important;
 }
 
 .fc-col-header-cell-cushion {
-  font-size: 10px;
+  font-size: 8px;
+  color: #000;
+  text-transform: uppercase;
 }
 
+.fc-scrollgrid.fc-scrollgrid-liquid {
+  border: none;
+}
 
+.fc.fc-theme-standard {
+  border: 2px solid #f4f4f4;
+  padding: 10px;
+}
 
+.fc-toolbar-title {
+  font-size: 17px !important;
+}
+
+.fc-header-toolbar.fc-toolbar {
+  margin-bottom: 0 !important;
+
+}
+
+.fc .fc-button-primary {
+  background-color: #fff;
+  border: none;
+  color: #000;
+  padding:0px
+}
 
 .fc-daygrid-day {
   height: 20px;
@@ -142,12 +200,14 @@
 
 .fc-daygrid-day-events .fc-event {
   text-indent: -10000px;
-  height: 10px;
-  min-height: 10px !important;
+  /*height: 10px;*/
+  /*min-height: 10px !important;*/
 }
 
 .event-event {
-  background: #FF3399;
+  background: #FF3399 ;
+  position: relative;
+  /*height: 15px;*/
 }
 
 .event-event:hover {
@@ -156,6 +216,8 @@
 
 .event-task {
   background: #A7CA42;
+  position: relative;
+  /*height: 2px;*/
 }
 
 .event-task:hover {
@@ -167,35 +229,79 @@
   outline:none
 }
 .fc-cell-custom {
-  background-color: #efefef;
+  background-color: #f4f4f4;
+}
+
+.fc-daygrid-day-top {
+  height: 10px !important;
 }
 
 @media screen and (min-width: 1200px) {
   .fc-daygrid-day-top {
-    height: 18px;
+    height: 14px;
+  }
+
+  .fc-daygrid-day-events {
+    height: 20px !important;
   }
 
   .fc-daygrid-day-events .fc-event {
-    height: 3px;
-    min-height: 3px !important;
+    height: 1px;
+    min-height: 1px !important;
   }
   .fc.fc-media-screen.fc-direction-ltr.fc-theme-standard {
     height: 350px;
   }
   .fc-cell-custom {
-    height: 30px !important;
+    height: 25px !important;
   }
   .fc-cell-custom .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
     min-height: 30px !important;
-    height: 36px;
+    height: 30px;
   }
+
+  /*.fc-daygrid-day-frame.fc-scrollgrid-sync-inner.fc-daygrid-day-events {*/
+  /*  height: 20px !important;*/
+  /*}*/
   .fc-scroller {
     overflow: hidden !important;
   }
-  
+
   table.fc-scrollgrid-sync-table,
   table.fc-col-header,
   .fc-daygrid-body.fc-daygrid-body-unbalanced {
     width: 100% !important;
   }
+}
+
+.more-link {
+  text-align: center;
+  width: 100%;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+
+}
+
+
+
+.fc .fc-daygrid-more-link {
+  padding: 0px
+}
+
+.fc-theme-standard td, .fc-theme-standard th {
+  border: none !important;
+}
+
+.fc-popover {
+  height:146px !important;
+  background: #fff;
+}
+
+.fc-theme-standard .fc-popover-header {
+  background: #fff;
+  border-bottom: 1px solid #777;
+}
+.fc-popover-body {
+  /*background: #fff;*/
 }

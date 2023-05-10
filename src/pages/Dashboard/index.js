@@ -11,8 +11,8 @@ import Messenger from "../../components/Messenger/Messenger";
 import { ActiveStudents } from "../../components/ActiveStudents";
 import CertificationRequestsWidget from "../../components/MyStudents/certificationRequests/certificationRequestsWidget";
 import TaskEventModal from "../../components/Modals/taskEventModal";
-import {getEventsStart, getPeriodsStart} from "../../redux/dashboard/Actions";
-import LevelWrapper from '../../components/LevelWrapper'
+import { getEventsStart, getPeriodsStart } from "../../redux/dashboard/Actions";
+import LevelWrapper from "../../components/LevelWrapper";
 
 import FullCalendarComponent from "../../components/Calendar/FullCalendar";
 
@@ -20,14 +20,10 @@ function Dashboard() {
   const dispatch = useDispatch();
   const periods = useSelector((state) => state.dashboard.periods);
   const events = useSelector((state) => state.dashboard.events);
-  // const [calendarEvents,setCalendarEvents] = useState();
-  //
-  // const handleCalendarEvents = (events) => {
-  //   setCalendarEvents(events)
-  // }
+
   const user = {
-    level: 'HS'
-  }
+    level: "HS",
+  };
 
   const [newMessage, setNewMessage] = useState([]);
   const [chatId, setChatId] = useState("");
@@ -37,10 +33,8 @@ function Dashboard() {
   }, []);
   useEffect(() => {
     dispatch(getPeriodsStart());
-    dispatch(getEventsStart())
+    dispatch(getEventsStart());
   }, []);
-
-
 
   const openTaskEventModal = () => {
     setTaskEventModal(true);
@@ -66,14 +60,14 @@ function Dashboard() {
               <Profile
                 newMessage={newMessage}
                 chatOpened={chatId}
-                clearChat={() => setChatId('')}
-                level={'MS'}
+                clearChat={() => setChatId("")}
+                level={"MS"}
               />
               <Profile
                 newMessage={newMessage}
                 chatOpened={chatId}
-                clearChat={() => setChatId('')}
-                level={'HS'}
+                clearChat={() => setChatId("")}
+                level={"HS"}
               />
             </LevelWrapper>
 
@@ -94,7 +88,7 @@ function Dashboard() {
         </div>
         <div className="col-12 col-xl-3 px-0">
           <div className="account-page-padding" style={{ paddingLeft: "20px" }}>
-            <FullCalendarComponent events={events}/>
+            <FullCalendarComponent events={events} />
             <button
               style={{
                 backgroundColor: "#51c7df",
@@ -112,8 +106,6 @@ function Dashboard() {
               onHide={closeTaskEventModal}
               periods={periods}
               events={events}
-
-
             />
             <CertificationRequestsWidget />
             {/* <Messenger
