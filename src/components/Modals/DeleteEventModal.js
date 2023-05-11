@@ -17,7 +17,7 @@ import {
   getPeriodsStart,
   postEventStart,
 } from "../../redux/dashboard/Actions";
-import TaskEventModal from "./taskEventModal";
+import TaskEventModal from "./TaskEventModal";
 import { changeSidebarState } from "../../redux";
 import { DeleteConfirmation } from "../Portfolio/Confirm_modal";
 

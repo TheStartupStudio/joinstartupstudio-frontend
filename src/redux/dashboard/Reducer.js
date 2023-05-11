@@ -2,6 +2,12 @@ import {
   CHANGE_EVENT_DATE_ERROR,
   CHANGE_EVENT_DATE_START,
   CHANGE_EVENT_DATE_SUCCESS,
+  CLOSE_ADD_TASK_MODAL,
+  CLOSE_CALENDAR_DELETE_EVENT_MODAL,
+  CLOSE_CALENDAR_EVENT_MODAL,
+  CLOSE_CALENDAR_EVENT_MODAL_IN_CLICK,
+  CLOSE_EDIT_TASK_MODAL,
+  CLOSE_TASK_MODAL,
   DELETE_EVENT_ERROR,
   DELETE_EVENT_START,
   DELETE_EVENT_SUCCESS,
@@ -14,6 +20,12 @@ import {
   GET_PERIODS_ERROR,
   GET_PERIODS_START,
   GET_PERIODS_SUCCESS,
+  OPEN_ADD_TASK_MODAL,
+  OPEN_CALENDAR_DELETE_EVENT_MODAL,
+  OPEN_CALENDAR_EVENT_MODAL,
+  OPEN_CALENDAR_EVENT_MODAL_IN_CLICK,
+  OPEN_EDIT_TASK_MODAL,
+  OPEN_TASK_MODAL,
   POST_EVENT_ERROR,
   POST_EVENT_START,
   POST_EVENT_SUCCESS,
@@ -24,6 +36,11 @@ const initialState = {
   events: [],
   loading: false,
   error: null,
+  addTaskEventModal: false,
+  editTaskEventModal: false,
+  taskEventModalInClick: false,
+  calendarEventModal: false,
+  calendarDeleteEventModal: false,
 };
 
 const dashboardReducer = (state = initialState, action) => {
@@ -92,6 +109,8 @@ const dashboardReducer = (state = initialState, action) => {
         events: [...state.events, payload.event],
         loading: false,
         error: null,
+        addTaskEventModal: false,
+        taskEventModalInClick: false,
       };
       break;
 
@@ -124,6 +143,8 @@ const dashboardReducer = (state = initialState, action) => {
         events: updatedEvents,
         loading: false,
         error: null,
+        editTaskEventModal: false,
+        // calendarEventModal: false,
       };
       break;
 
@@ -148,6 +169,8 @@ const dashboardReducer = (state = initialState, action) => {
         events: state.events.filter((event) => event.id !== deletedEvent.id),
         loading: false,
         error: null,
+        calendarEventModal: false,
+        calendarDeleteEventModal: false,
       };
     case DELETE_EVENT_ERROR:
       return {
@@ -165,7 +188,6 @@ const dashboardReducer = (state = initialState, action) => {
       };
       break;
     case CHANGE_EVENT_DATE_SUCCESS:
-      debugger;
       return {
         ...state,
         events: state.events.map((event) => {
@@ -185,6 +207,26 @@ const dashboardReducer = (state = initialState, action) => {
         error: payload.error,
       };
       break;
+    case OPEN_ADD_TASK_MODAL:
+      return { ...state, addTaskEventModal: true };
+    case CLOSE_ADD_TASK_MODAL:
+      return { ...state, addTaskEventModal: false };
+    case OPEN_EDIT_TASK_MODAL:
+      return { ...state, editTaskEventModal: true };
+    case CLOSE_EDIT_TASK_MODAL:
+      return { ...state, editTaskEventModal: false };
+    case OPEN_CALENDAR_EVENT_MODAL:
+      return { ...state, calendarEventModal: true };
+    case CLOSE_CALENDAR_EVENT_MODAL:
+      return { ...state, calendarEventModal: false };
+    case OPEN_CALENDAR_EVENT_MODAL_IN_CLICK:
+      return { ...state, taskEventModalInClick: true };
+    case CLOSE_CALENDAR_EVENT_MODAL_IN_CLICK:
+      return { ...state, taskEventModalInClick: false };
+    case OPEN_CALENDAR_DELETE_EVENT_MODAL:
+      return { ...state, calendarDeleteEventModal: true };
+    case CLOSE_CALENDAR_DELETE_EVENT_MODAL:
+      return { ...state, calendarDeleteEventModal: false };
     default:
       return state;
   }

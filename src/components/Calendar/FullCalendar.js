@@ -9,13 +9,22 @@ import "react-tippy/dist/tippy.css";
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import CalendarEventModal from "../Modals/CalendarEventModal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   changeEventDateStart,
+  closeAddTaskModal,
+  closeCalendarEventInClickModal,
+  closeCalendarEventModal,
+  closeTaskModal,
   editEventStart,
   getEventsStart,
   getPeriodsStart,
+  openAddTaskModal,
+  openCalendarEventInClickModal,
+  openCalendarEventModal,
+  openTaskModal,
 } from "../../redux/dashboard/Actions";
+import TaskEventModal from "../Modals/TaskEventModal";
 
 let eventGuid = 0;
 let todayStr = new Date().toISOString().replace(/T.*$/, "");
@@ -48,18 +57,19 @@ export function createEventId() {
 }
 
 const FullCalendarComponent = (props) => {
+  const calendarEventModal = useSelector(
+    (state) => state.dashboard.calendarEventModal
+  );
+  const openCalendarModal = () => {
+    dispatch(openCalendarEventModal());
+  };
+
+  const closeCalendarModal = () => {
+    dispatch(closeCalendarEventModal());
+  };
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState([]);
-  const [showEventModal, setShowEventModal] = useState(false);
   const dispatch = useDispatch();
-
-  const handleShowEventModal = () => {
-    setShowEventModal(true);
-  };
-
-  const handleHideEventModal = () => {
-    setShowEventModal(false);
-  };
 
   const handleDateSelect = (selectInfo) => {
     let title = prompt("Please enter a new title for your event");
@@ -119,56 +129,27 @@ const FullCalendarComponent = (props) => {
         title,
       };
     });
-    console.log(convertedEvents);
     setEvents(convertedEvents);
   }, [props.events]);
-
-  // useEffect(() => {
-  //   const newEvents = [
-  //     {
-  //       className: "event-event",
-  //       title: "Event 1",
-  //       start: moment().toDate(),
-  //       end: moment().add(2, "hours").toDate(),
-  //     },
-  //     {
-  //       className: "event-task",
-  //       title: "Event 2",
-  //       start: moment().add(1, "day").toDate(),
-  //       end: moment().add(1, "day").add(2, "hours").toDate(),
-  //     },
-  //     {
-  //       className: "event-event",
-  //       title: "Event 3",
-  //       start: moment().add(1, "day").toDate(),
-  //       end: moment().add(1, "day").add(3, "hours").toDate(),
-  //     },
-  //     {
-  //       className: "event-event",
-  //       title: "Event 4",
-  //       start: moment().add(1, "day").toDate(),
-  //       end: moment().add(1, "day").add(4, "hours").toDate(),
-  //     },
-  //     {
-  //       className: "event-event",
-  //       title: "Event 5",
-  //       start: moment().add(1, "day").toDate(),
-  //       end: moment().add(1, "day").add(2, "hours").toDate(),
-  //     },
-  //   ];
-  //   debugger;
-  //   setEvents(newEvents);
-  // }, []);
 
   const [foundedEvent, setFoundedEvent] = useState(null);
 
   const foundEvent = (event) => {
     return props.events?.find((ev) => ev?.id == +event.event?.id);
   };
+
+  const [startDate, setStartDate] = useState(null);
+
+  const addOnDayClick = (event) => {
+    console.log(event);
+
+    setStartDate(event.startStr);
+    openTaskEventModal();
+  };
   const handleEventClick = (event) => {
     const eventFounded = foundEvent(event);
     setFoundedEvent(eventFounded);
-    handleShowEventModal();
+    openCalendarModal();
   };
 
   const ISOtoUSDateFormat = (date) => {
@@ -189,6 +170,27 @@ const FullCalendarComponent = (props) => {
       content: arg.event.title,
     });
   };
+  // const handleMouseEnter = (arg) => {
+  //   tippy(arg.el, {
+  //     content: () => {
+  //       const tooltip = document.createElement("div");
+  //       tooltip.innerHTML = `<p>${arg.event.title}</p><p>This is my mini tooltip!</p>`;
+  //       return tooltip;
+  //     },
+  //   });
+  // };
+
+  const taskEventModal = useSelector(
+    (state) => state.dashboard.taskEventModalInClick
+  );
+  const openTaskEventModal = () => {
+    dispatch(openCalendarEventInClickModal());
+  };
+
+  const closeTaskEventModal = () => {
+    dispatch(closeCalendarEventInClickModal());
+  };
+
   return (
     <>
       <FullCalendar
@@ -207,12 +209,12 @@ const FullCalendarComponent = (props) => {
           right: "prev,next",
         }}
         initialEvents={currentEvents}
-        select={handleDateSelect}
+        select={(event) => addOnDayClick(event)}
         eventContent={renderEventContent}
         eventClick={(event) => handleEventClick(event)}
         eventsSet={handleEvents}
         eventMouseEnter={handleMouseEnter}
-        eventAdd={function () {}}
+        // eventAdd={openTaskEventModal}
         eventChange={handleChangeDate}
         eventRemove={function () {}}
         duration={{ weeks: 4 }}
@@ -237,10 +239,18 @@ const FullCalendarComponent = (props) => {
         moreLinkClassNames={"more-link"}
       />
       <CalendarEventModal
-        show={showEventModal}
-        onHide={handleHideEventModal}
+        show={calendarEventModal}
+        onHide={closeCalendarModal}
         event={foundedEvent}
         onEdit={(event) => dispatch(editEventStart(event))}
+      />
+      <TaskEventModal
+        show={taskEventModal}
+        onHide={closeTaskEventModal}
+        periods={props.periods}
+        event={null}
+        onEdit={null}
+        startDate={startDate}
       />
     </>
   );

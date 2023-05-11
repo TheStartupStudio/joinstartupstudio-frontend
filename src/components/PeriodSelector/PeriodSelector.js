@@ -33,7 +33,7 @@ const PeriodSelector = (props) => {
       </label>
       <select
         style={{ outline: "none" }}
-        className="form-select form-select-md mb-3 rounded-0 shadow-none"
+        className="form-select form-select-md mb-3  shadow-none"
         onChange={(e) => handleChangePeriod(e.target.value)}
         value={selectPeriod}
         name="chooseClasses"

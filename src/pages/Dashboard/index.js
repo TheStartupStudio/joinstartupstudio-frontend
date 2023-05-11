@@ -10,8 +10,15 @@ import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import Messenger from "../../components/Messenger/Messenger";
 import { ActiveStudents } from "../../components/ActiveStudents";
 import CertificationRequestsWidget from "../../components/MyStudents/certificationRequests/certificationRequestsWidget";
-import TaskEventModal from "../../components/Modals/taskEventModal";
-import { getEventsStart, getPeriodsStart } from "../../redux/dashboard/Actions";
+import TaskEventModal from "../../components/Modals/TaskEventModal";
+import {
+  closeAddTaskModal,
+  closeTaskModal,
+  getEventsStart,
+  getPeriodsStart,
+  openAddTaskModal,
+  openTaskModal,
+} from "../../redux/dashboard/Actions";
 import LevelWrapper from "../../components/LevelWrapper";
 
 import FullCalendarComponent from "../../components/Calendar/FullCalendar";
@@ -27,7 +34,6 @@ function Dashboard() {
 
   const [newMessage, setNewMessage] = useState([]);
   const [chatId, setChatId] = useState("");
-  const [taskEventModal, setTaskEventModal] = useState(false);
   useEffect(() => {
     dispatch(changeSidebarState(false));
   }, []);
@@ -35,13 +41,25 @@ function Dashboard() {
     dispatch(getPeriodsStart());
     dispatch(getEventsStart());
   }, []);
+  // const [taskEventModal, setTaskEventModal] = useState(false);
+  //
+  // const openTaskEventModal = () => {
+  //   setTaskEventModal(true, );
+  // };
+  //
+  // const closeTaskEventModal = () => {
+  //   setTaskEventModal(false);
+  // };
 
+  const taskEventModal = useSelector(
+    (state) => state.dashboard.addTaskEventModal
+  );
   const openTaskEventModal = () => {
-    setTaskEventModal(true);
+    dispatch(openAddTaskModal());
   };
 
   const closeTaskEventModal = () => {
-    setTaskEventModal(false);
+    dispatch(closeAddTaskModal());
   };
 
   return (
@@ -88,7 +106,7 @@ function Dashboard() {
         </div>
         <div className="col-12 col-xl-3 px-0">
           <div className="account-page-padding" style={{ paddingLeft: "20px" }}>
-            <FullCalendarComponent events={events} />
+            <FullCalendarComponent events={events} periods={periods} />
             <button
               style={{
                 backgroundColor: "#51c7df",
@@ -105,7 +123,9 @@ function Dashboard() {
               show={taskEventModal}
               onHide={closeTaskEventModal}
               periods={periods}
-              events={events}
+              event={null}
+              onEdit={null}
+              startDate={null}
             />
             <CertificationRequestsWidget />
             {/* <Messenger
