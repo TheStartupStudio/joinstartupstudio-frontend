@@ -721,6 +721,17 @@ export default function StudentsTable(props) {
         omit: !selectedOptions.includes("school"),
       },
       {
+        name: "Class",
+        key: "class",
+        selector: (row) => (row.class ? row.class : "none"),
+        sortable: true,
+        // cell:(record)=>{
+        //   return (
+
+        //   )
+        // }
+      },
+      {
         name: "IAMR Status",
         key: "IAMRStatus",
         selector: (row) =>
