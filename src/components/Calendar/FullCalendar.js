@@ -71,43 +71,52 @@ const FullCalendarComponent = (props) => {
   const [currentEvents, setCurrentEvents] = useState([]);
   const dispatch = useDispatch();
 
-  const handleDateSelect = (selectInfo) => {
-    let title = prompt("Please enter a new title for your event");
-    let calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      });
-    }
-  };
-
   const handleEvents = (events) => {
     setCurrentEvents(events);
   };
 
   const renderEventContent = (eventInfo) => {
+    const foundedEvent = props.events?.find(
+      (ev) => ev?.id == +eventInfo.event?.id
+    );
+    let event = "";
+    let color = "";
     const backgroundColor = () => {
-      if (eventInfo.event.extendedProps.type == "event") {
-        return "green";
-      } else if (eventInfo.event.extendedProps.type == "task") {
-        return "blue";
+      if (eventInfo.event.classNames[0] == "event-event") {
+        event = "Event";
+        color = "#FF3399";
+        return "#FF3399";
+      } else if (eventInfo.event.classNames[0] == "event-task") {
+        event = "Task";
+        color = "#A7CA42";
+        return "#A7CA42";
       }
     };
 
     return (
-      <div
-        style={{
-          backgroundColor: backgroundColor(),
-        }}
-      >
-        <i>{eventInfo.event.title}</i>
+      // <div>
+      //   <i>{eventInfo.event.title}</i>
+      // </div>
+      <div className={"custom-popover"}>
+        <div
+          style={{
+            // backgroundColor: backgroundColor(),
+            width: "100%",
+            display: "flex",
+            gap: 4,
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{ backgroundColor: backgroundColor(), width: 3, height: 3 }}
+          ></div>
+          <span style={{ color: color }}>{event}:</span>
+          <span style={{ color: color }}>{eventInfo.event.title}</span>
+        </div>
+        <div style={{ color: "#000" }}>
+          {foundedEvent.startTime.slice(0, 5)} -{" "}
+          {foundedEvent.endTime.slice(0, 5)}
+        </div>
       </div>
     );
   };
@@ -116,7 +125,7 @@ const FullCalendarComponent = (props) => {
   useEffect(() => {
     const convertedEvents = props.events?.map((event) => {
       const start = moment(event.startDate).toDate();
-      const end = moment(event.startDate).add(2, "hours").toDate();
+      const end = moment(event.endDate).toDate();
       const className = event.type === "task" ? "event-task" : "event-event";
       const title = event.name;
       const id = event.id;
@@ -129,10 +138,16 @@ const FullCalendarComponent = (props) => {
         title,
       };
     });
+
     setEvents(convertedEvents);
   }, [props.events]);
 
   const [foundedEvent, setFoundedEvent] = useState(null);
+
+  useEffect(() => {
+    const event = props.events.find((event) => event.id == foundedEvent?.id);
+    setFoundedEvent(event);
+  }, [props.events]);
 
   const foundEvent = (event) => {
     return props.events?.find((ev) => ev?.id == +event.event?.id);
@@ -141,8 +156,6 @@ const FullCalendarComponent = (props) => {
   const [startDate, setStartDate] = useState(null);
 
   const addOnDayClick = (event) => {
-    console.log(event);
-
     setStartDate(event.startStr);
     openTaskEventModal();
   };
@@ -160,10 +173,65 @@ const FullCalendarComponent = (props) => {
       .replace(/\//g, "-");
     return formattedDate;
   };
+
+  const formatDate = (date) => {
+    const parts = date.split("-");
+    const newDate = parts[2] + "-" + parts[0] + "-" + parts[1];
+    return newDate;
+  };
+
+  function getDaysBetweenDates(date1, date2) {
+    const parsedDate1 = Date.parse(date1);
+    const parsedDate2 = Date.parse(date2);
+
+    if (isNaN(parsedDate1) || isNaN(parsedDate2)) {
+      throw new Error("Invalid date format");
+    }
+
+    const timestamp1 = parsedDate1 / 1000;
+    const timestamp2 = parsedDate2 / 1000;
+
+    const difference = timestamp2 - timestamp1;
+
+    const days = Math.floor(difference / (60 * 60 * 24));
+
+    return days;
+  }
+
+  function isValidDate(dateString) {
+    var date = new Date(dateString);
+    return !isNaN(date.getTime());
+  }
+
   const handleChangeDate = (event) => {
-    const formattedDate = ISOtoUSDateFormat(event.event.start);
     const eventFounded = foundEvent(event);
-    dispatch(changeEventDateStart(formattedDate, { eventId: eventFounded.id }));
+    const formattedStartDate = formatDate(ISOtoUSDateFormat(event.event.start));
+
+    const days = getDaysBetweenDates(
+      eventFounded.startDate,
+      formattedStartDate
+    );
+
+    let endDate = "";
+
+    if (eventFounded.endDate !== "0000-00-00") {
+      endDate = new Date(eventFounded.endDate);
+      endDate.setDate(endDate.getDate() + days);
+    }
+
+    const newEndDate = new Date(endDate);
+
+    const formattedEndDate = formatDate(ISOtoUSDateFormat(newEndDate));
+
+    dispatch(
+      changeEventDateStart(
+        {
+          startDate: formattedStartDate,
+          endDate: isValidDate(formattedEndDate) ? formattedEndDate : null,
+        },
+        { eventId: eventFounded.id }
+      )
+    );
   };
   const handleMouseEnter = (arg) => {
     tippy(arg.el, {
@@ -214,10 +282,10 @@ const FullCalendarComponent = (props) => {
         eventClick={(event) => handleEventClick(event)}
         eventsSet={handleEvents}
         eventMouseEnter={handleMouseEnter}
-        // eventAdd={openTaskEventModal}
         eventChange={handleChangeDate}
         eventRemove={function () {}}
         duration={{ weeks: 4 }}
+        // rang
         moreLinkContent={(n) => (
           <div
             style={{

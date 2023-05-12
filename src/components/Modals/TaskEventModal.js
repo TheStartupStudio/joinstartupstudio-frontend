@@ -28,9 +28,9 @@ const TaskEventModal = (props) => {
       const newState = {
         name: props.event?.name,
         startDate: props.event?.startDate,
-        endDate: props.event?.endDate,
+        endDate: props.event?.endDate ? props.event?.endDate : null,
         startTime: props.event?.startTime,
-        endTime: props.event?.endTime ?? "",
+        endTime: props.event?.endTime,
         description: props.event?.description,
         type: props.event?.type,
         requirements: props.event?.requirements,
@@ -56,7 +56,7 @@ const TaskEventModal = (props) => {
   const initialState = {
     name: "",
     startDate: "",
-    endDate: "",
+    endDate: null,
     startTime: "",
     endTime: "",
     description: "",
@@ -66,7 +66,6 @@ const TaskEventModal = (props) => {
   };
 
   const [state, setState] = useState(initialState);
-  console.log(state);
 
   useEffect(() => {
     const newState = { ...state };
@@ -122,7 +121,7 @@ const TaskEventModal = (props) => {
       name: state.name,
       startDate: state.startDate,
       startTime: state.startTime,
-      endDate: state.endDate,
+      endDate: state.endDate ? state.endDate : null,
       endTime: state.endTime,
       description: state.description,
       type: state.type,
@@ -140,7 +139,7 @@ const TaskEventModal = (props) => {
       name: state.name,
       startDate: state.startDate,
       startTime: state.startTime,
-      endDate: state.endDate,
+      endDate: state.endDate ? state.endDate : null,
       endTime: state.endTime,
       description: state.description,
       type: state.type,

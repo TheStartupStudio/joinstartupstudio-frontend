@@ -28,8 +28,6 @@ export const deleteEvent = async (eventId) => {
 };
 
 export const changeEventDate = async (eventDate, eventId) => {
-  const response = await axiosInstance.patch(`/events/${eventId}`, {
-    date: eventDate,
-  });
+  const response = await axiosInstance.patch(`/events/${eventId}`, eventDate);
   return response;
 };

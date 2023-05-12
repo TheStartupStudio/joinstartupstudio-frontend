@@ -105,7 +105,15 @@
   height: 1px;
 }
 
-.fc-day .fc-daygrid-day-frame .fc-daygrid-day-events .fc-daygrid-event-harness .fc-event .fc-event-main i {
+
+
+
+
+/*.fc-day .fc-daygrid-day-frame .fc-daygrid-day-events .fc-daygrid-event-harness .fc-event .fc-event-main i {*/
+/*  display: none;*/
+/*}*/
+
+.fc-day .fc-daygrid-day-frame .custom-popover{
   display: none;
 }
 
@@ -149,8 +157,22 @@
    height: 1px !important;
    padding: 1px 0 !important;
  }
+
+
+.fc-cell-custom .fc-scrollgrid-sync-inner .custom-popover {
+  border: none;
+  height: 1px !important;
+  background-color: inherit !important;
+}
+
 .fc-popover .fc-popover-body .fc-daygrid-event-harness .fc-event .fc-event-main {
   display: block;
+}
+
+
+
+.fc-popover .event-event,.fc-popover .event-task {
+  background-color: #fff !important;
 }
 
 .fc-daygrid-day-number {
@@ -296,6 +318,21 @@
 .fc-popover {
   height:146px !important;
   background: #fff;
+}
+/*.fc-popover .fc-more-popover {*/
+
+/*  left:0 !important;*/
+/*  top:-2px !important;*/
+
+/*}*/
+
+#fc-dom-7 {
+  left:0 !important;
+  top:-2px !important;
+}
+
+.fc .fc-more-popover .fc-popover-body{
+  min-width: 100%;
 }
 
 .fc-theme-standard .fc-popover-header {
