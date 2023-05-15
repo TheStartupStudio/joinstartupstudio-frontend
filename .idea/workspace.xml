@@ -5,11 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Calendar/FullCalendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Calendar/FullCalendar.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Calendar/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Calendar/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/DeleteEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/DeleteEventModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Service.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TimePicker/TimePicker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TimePicker/TimePicker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Types.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +59,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
@@ -84,7 +94,8 @@
       <workItem from="1682793025995" duration="4422000" />
       <workItem from="1683011117496" duration="81694000" />
       <workItem from="1683529563402" duration="25237000" />
-      <workItem from="1683702324579" duration="66900000" />
+      <workItem from="1683702324579" duration="67480000" />
+      <workItem from="1684134188258" duration="19780000" />
     </task>
     <servers />
   </component>

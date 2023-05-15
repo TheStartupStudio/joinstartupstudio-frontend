@@ -16,18 +16,12 @@ import {
   CHANGE_EVENT_DATE_START,
   CHANGE_EVENT_DATE_SUCCESS,
   CHANGE_EVENT_DATE_ERROR,
-  OPEN_TASK_MODAL,
-  CLOSE_TASK_MODAL,
   OPEN_CALENDAR_EVENT_MODAL,
   CLOSE_CALENDAR_EVENT_MODAL,
   OPEN_CALENDAR_DELETE_EVENT_MODAL,
   CLOSE_CALENDAR_DELETE_EVENT_MODAL,
-  OPEN_ADD_TASK_MODAL,
-  CLOSE_ADD_TASK_MODAL,
-  OPEN_EDIT_TASK_MODAL,
-  CLOSE_EDIT_TASK_MODAL,
-  OPEN_CALENDAR_EVENT_MODAL_IN_CLICK,
-  CLOSE_CALENDAR_EVENT_MODAL_IN_CLICK,
+  OPEN_TASK_MODAL,
+  CLOSE_TASK_MODAL,
 } from "./Types";
 
 import {
@@ -191,30 +185,17 @@ export const changeEventDateError = (error) => async (dispatch) => {
   });
 };
 
-export const openAddTaskModal = (type) => async (dispatch) => {
+export const openTaskModal = (type) => async (dispatch) => {
   dispatch({
-    type: OPEN_ADD_TASK_MODAL,
-    payload: type,
+    type: OPEN_TASK_MODAL,
+    payload: { type },
   });
 };
 
-export const closeAddTaskModal = (type) => async (dispatch) =>
+export const closeTaskModal = (type) => async (dispatch) =>
   dispatch({
-    type: CLOSE_ADD_TASK_MODAL,
-    payload: type,
-  });
-
-export const openEditTaskModal = (type) => async (dispatch) => {
-  dispatch({
-    type: OPEN_EDIT_TASK_MODAL,
-    payload: type,
-  });
-};
-
-export const closeEditTaskModal = (type) => async (dispatch) =>
-  dispatch({
-    type: CLOSE_EDIT_TASK_MODAL,
-    payload: type,
+    type: CLOSE_TASK_MODAL,
+    payload: { type },
   });
 
 export const openCalendarEventModal = () => ({
@@ -231,11 +212,4 @@ export const openCalendarDeleteEventModal = () => ({
 
 export const closeCalendarDeleteEventModal = () => ({
   type: CLOSE_CALENDAR_DELETE_EVENT_MODAL,
-});
-export const openCalendarEventInClickModal = () => ({
-  type: OPEN_CALENDAR_EVENT_MODAL_IN_CLICK,
-});
-
-export const closeCalendarEventInClickModal = () => ({
-  type: CLOSE_CALENDAR_EVENT_MODAL_IN_CLICK,
 });

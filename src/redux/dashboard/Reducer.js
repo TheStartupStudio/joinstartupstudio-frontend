@@ -2,12 +2,8 @@ import {
   CHANGE_EVENT_DATE_ERROR,
   CHANGE_EVENT_DATE_START,
   CHANGE_EVENT_DATE_SUCCESS,
-  CLOSE_ADD_TASK_MODAL,
   CLOSE_CALENDAR_DELETE_EVENT_MODAL,
   CLOSE_CALENDAR_EVENT_MODAL,
-  CLOSE_CALENDAR_EVENT_MODAL_IN_CLICK,
-  CLOSE_EDIT_TASK_MODAL,
-  CLOSE_TASK_MODAL,
   DELETE_EVENT_ERROR,
   DELETE_EVENT_START,
   DELETE_EVENT_SUCCESS,
@@ -20,12 +16,10 @@ import {
   GET_PERIODS_ERROR,
   GET_PERIODS_START,
   GET_PERIODS_SUCCESS,
-  OPEN_ADD_TASK_MODAL,
+  OPEN_TASK_MODAL,
+  CLOSE_TASK_MODAL,
   OPEN_CALENDAR_DELETE_EVENT_MODAL,
   OPEN_CALENDAR_EVENT_MODAL,
-  OPEN_CALENDAR_EVENT_MODAL_IN_CLICK,
-  OPEN_EDIT_TASK_MODAL,
-  OPEN_TASK_MODAL,
   POST_EVENT_ERROR,
   POST_EVENT_START,
   POST_EVENT_SUCCESS,
@@ -207,22 +201,46 @@ const dashboardReducer = (state = initialState, action) => {
         error: payload.error,
       };
       break;
-    case OPEN_ADD_TASK_MODAL:
-      return { ...state, addTaskEventModal: true };
-    case CLOSE_ADD_TASK_MODAL:
-      return { ...state, addTaskEventModal: false };
-    case OPEN_EDIT_TASK_MODAL:
-      return { ...state, editTaskEventModal: true };
-    case CLOSE_EDIT_TASK_MODAL:
-      return { ...state, editTaskEventModal: false };
+    case OPEN_TASK_MODAL:
+      if (payload.type == "create") {
+        return {
+          ...state,
+          addTaskEventModal: true,
+        };
+      } else if (payload.type == "update") {
+        return {
+          ...state,
+          editTaskEventModal: true,
+        };
+      } else if (payload.type == "create-in-click") {
+        return {
+          ...state,
+          taskEventModalInClick: true,
+        };
+      }
+
+    case CLOSE_TASK_MODAL:
+      if (payload.type == "create") {
+        return {
+          ...state,
+          addTaskEventModal: false,
+        };
+      } else if (payload.type == "update") {
+        return {
+          ...state,
+          editTaskEventModal: false,
+        };
+      } else if (payload.type == "create-in-click") {
+        return {
+          ...state,
+          taskEventModalInClick: false,
+        };
+      }
+
     case OPEN_CALENDAR_EVENT_MODAL:
       return { ...state, calendarEventModal: true };
     case CLOSE_CALENDAR_EVENT_MODAL:
       return { ...state, calendarEventModal: false };
-    case OPEN_CALENDAR_EVENT_MODAL_IN_CLICK:
-      return { ...state, taskEventModalInClick: true };
-    case CLOSE_CALENDAR_EVENT_MODAL_IN_CLICK:
-      return { ...state, taskEventModalInClick: false };
     case OPEN_CALENDAR_DELETE_EVENT_MODAL:
       return { ...state, calendarDeleteEventModal: true };
     case CLOSE_CALENDAR_DELETE_EVENT_MODAL:

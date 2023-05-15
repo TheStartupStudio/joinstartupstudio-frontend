@@ -8,18 +8,16 @@ import "./index.css";
 import "react-tippy/dist/tippy.css";
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
+import "tippy.js/themes/light-border.css";
 import CalendarEventModal from "../Modals/CalendarEventModal";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   changeEventDateStart,
-  closeAddTaskModal,
   closeCalendarEventInClickModal,
   closeCalendarEventModal,
   closeTaskModal,
   editEventStart,
-  getEventsStart,
-  getPeriodsStart,
-  openAddTaskModal,
   openCalendarEventInClickModal,
   openCalendarEventModal,
   openTaskModal,
@@ -94,13 +92,9 @@ const FullCalendarComponent = (props) => {
     };
 
     return (
-      // <div>
-      //   <i>{eventInfo.event.title}</i>
-      // </div>
       <div className={"custom-popover"}>
         <div
           style={{
-            // backgroundColor: backgroundColor(),
             width: "100%",
             display: "flex",
             gap: 4,
@@ -233,30 +227,69 @@ const FullCalendarComponent = (props) => {
       )
     );
   };
+
+  const convertDate = (date) => {
+    const inputDate = new Date(date);
+    const day = inputDate.getDate();
+    const month = inputDate.toLocaleString("default", { month: "long" });
+    const year = inputDate.getFullYear();
+
+    const formattedDate = `${day} ${month}`;
+    return formattedDate;
+  };
+
+  function convertToAMPM(time) {
+    if (time) {
+      const [hours, minutes] = time.split(":");
+      const date = new Date();
+      date.setHours(hours);
+      date.setMinutes(minutes);
+      const options = { hour: "numeric", minute: "numeric", hour12: true };
+      return date.toLocaleString("en-US", options);
+    }
+  }
   const handleMouseEnter = (arg) => {
+    const event = props.events.find((event) => event.id == arg.event?.id);
     tippy(arg.el, {
-      content: arg.event.title,
+      content: () => {
+        const tooltip = document.createElement("div");
+        tooltip.innerHTML = `<div >
+                                <div>${arg.event.title}</div> 
+                                  <div className={"d-flex g-2 w-100 "}>
+                                        <div>
+                                          ${convertDate(event?.startDate)}
+                                          ${
+                                            event?.endDate
+                                              ? " - " +
+                                                convertDate(event?.endDate)
+                                              : ""
+                                          }
+                                          ,
+                                        </div>
+                                        <div className={"ml-2"}>
+                                          ${convertToAMPM(
+                                            event?.startTime.slice(0, 5)
+                                          )} -
+                                          ${convertToAMPM(
+                                            event?.endTime.slice(0, 5)
+                                          )}
+                                        </div>
+                                  </div>
+                            </div>`;
+        return tooltip;
+      },
     });
   };
-  // const handleMouseEnter = (arg) => {
-  //   tippy(arg.el, {
-  //     content: () => {
-  //       const tooltip = document.createElement("div");
-  //       tooltip.innerHTML = `<p>${arg.event.title}</p><p>This is my mini tooltip!</p>`;
-  //       return tooltip;
-  //     },
-  //   });
-  // };
 
   const taskEventModal = useSelector(
     (state) => state.dashboard.taskEventModalInClick
   );
   const openTaskEventModal = () => {
-    dispatch(openCalendarEventInClickModal());
+    dispatch(openTaskModal("create-in-click"));
   };
 
   const closeTaskEventModal = () => {
-    dispatch(closeCalendarEventInClickModal());
+    dispatch(closeTaskModal("create-in-click"));
   };
 
   return (
@@ -285,7 +318,6 @@ const FullCalendarComponent = (props) => {
         eventChange={handleChangeDate}
         eventRemove={function () {}}
         duration={{ weeks: 4 }}
-        // rang
         moreLinkContent={(n) => (
           <div
             style={{

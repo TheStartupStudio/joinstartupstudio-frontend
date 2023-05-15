@@ -109,9 +109,16 @@
 
 
 
-/*.fc-day .fc-daygrid-day-frame .fc-daygrid-day-events .fc-daygrid-event-harness .fc-event .fc-event-main i {*/
-/*  display: none;*/
-/*}*/
+
+.fc-day .fc-daygrid-day .fc-cell-custom {
+  height: 30px !important;
+  min-height: 30px !important;
+}
+
+
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events{
+  min-height: 1rem !important;
+}
 
 .fc-day .fc-daygrid-day-frame .custom-popover{
   display: none;
@@ -258,7 +265,16 @@
   height: 10px !important;
 }
 
+@media screen and (max-width: 1200px) {
+  .fc-daygrid-day-events .fc-event {
+    height: 10px;
+    min-height: 10px !important;
+  }
+}
+
 @media screen and (min-width: 1200px) {
+
+
   .fc-daygrid-day-top {
     height: 14px;
   }
@@ -267,20 +283,22 @@
     height: 20px !important;
   }
 
-  .fc-daygrid-day-events .fc-event {
-    height: 1px;
-    min-height: 1px !important;
-  }
+
   .fc.fc-media-screen.fc-direction-ltr.fc-theme-standard {
     height: 350px;
   }
   .fc-cell-custom {
-    height: 25px !important;
+    height: 30px !important;
   }
   .fc-cell-custom .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
     min-height: 30px !important;
-    height: 30px;
+    height: 25px;
   }
+
+
+  /*.fc-day.fc-daygrid-day-events.fc-event {*/
+  /*  height: 10px !important;*/
+  /*}*/
 
   /*.fc-daygrid-day-frame.fc-scrollgrid-sync-inner.fc-daygrid-day-events {*/
   /*  height: 20px !important;*/

@@ -29,41 +29,38 @@ const DeleteEventModal = (props) => {
         onHide={props.onHide}
         backdrop="static"
         keyboard={false}
-        style={{ marginTop: "3.9%" }}
-        className="edit-modal general-modal-header"
+        id="subscription-modal"
       >
-        <Modal.Header className="add-new-note-title general-modal-header my-auto p-0 mx-4">
-          <h3 className="mb-0 pt-4 mt-2 ">
-            {/*<IntlMessages id="calendar_task-events.add_a_new_task/event" />*/}
-            Event
-          </h3>
-          <button
-            type="button"
-            className="btn-close me-1"
-            aria-label="Close"
-            onClick={props.onHide}
-          />
-        </Modal.Header>
-        <Modal.Body className="mt-4 mb-3 mx-4 add-new-note">
-          <div>Are you sure that you want to delete this event?</div>
-        </Modal.Body>
-        <div
-          style={{ border: "0px" }}
-          className="mt-0 pt-0 border-0 border-none mx-4 pe-1 mb-4"
+        <Modal.Body
+          style={{
+            borderRadius: 5,
+            boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",
+          }}
         >
-          <button
-            onClick={props.onDelete}
-            className="float-end m-0 px-md-5 save-button add-new-note-button-text ms-1"
-          >
-            Yes
-          </button>
-          <button
-            onClick={props.onHide}
-            className="float-end m-0 px-md-5 save-button add-new-note-button-text ms-1"
-          >
-            No
-          </button>
-        </div>
+          <div className="mt-4 mb-4 blocked-user-modal confirmation-modal px-md-5 text-center">
+            <p
+              style={{ color: props.type == "task" ? "#A7CA42" : "#FF3399" }}
+            >{`Are you sure that you want to delete this ${props.type}`}</p>
+            <button
+              className="cancel-subscription-button"
+              style={{ background: "#51C7DF" }}
+              onClick={() => props.onDelete()}
+            >
+              Yes, delete the {props.type}
+            </button>
+            <button
+              className="cancel-subscription-button mt-2"
+              onClick={() => props.onHide()}
+              style={{
+                color: "#BBBDBF",
+                background: "#fff",
+                border: "1px solid #BBBDBF",
+              }}
+            >
+              No, don't delete my {props.type}
+            </button>
+          </div>
+        </Modal.Body>
       </Modal>
     </>
   );

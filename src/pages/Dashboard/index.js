@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import IntlMessages from "../../utils/IntlMessages";
 import Profile from "../../components/Profile";
-import Calendar from "../../components/Calendar";
 import { changeSidebarState } from "../../redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import Messenger from "../../components/Messenger/Messenger";
 import { ActiveStudents } from "../../components/ActiveStudents";
 import CertificationRequestsWidget from "../../components/MyStudents/certificationRequests/certificationRequestsWidget";
 import TaskEventModal from "../../components/Modals/TaskEventModal";
 import {
-  closeAddTaskModal,
   closeTaskModal,
   getEventsStart,
   getPeriodsStart,
-  openAddTaskModal,
   openTaskModal,
 } from "../../redux/dashboard/Actions";
 import LevelWrapper from "../../components/LevelWrapper";
@@ -41,25 +34,16 @@ function Dashboard() {
     dispatch(getPeriodsStart());
     dispatch(getEventsStart());
   }, []);
-  // const [taskEventModal, setTaskEventModal] = useState(false);
-  //
-  // const openTaskEventModal = () => {
-  //   setTaskEventModal(true, );
-  // };
-  //
-  // const closeTaskEventModal = () => {
-  //   setTaskEventModal(false);
-  // };
 
   const taskEventModal = useSelector(
     (state) => state.dashboard.addTaskEventModal
   );
   const openTaskEventModal = () => {
-    dispatch(openAddTaskModal());
+    dispatch(openTaskModal("create"));
   };
 
   const closeTaskEventModal = () => {
-    dispatch(closeAddTaskModal());
+    dispatch(closeTaskModal("create"));
   };
 
   return (

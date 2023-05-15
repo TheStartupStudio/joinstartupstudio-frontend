@@ -111,9 +111,6 @@ const TaskEventModal = (props) => {
   };
   const toggleTab = (tab) => {
     setTab(tab);
-    // if (!isEdit()) {
-    //   setState(initialState);
-    // }
   };
 
   const onPostEvent = () => {
