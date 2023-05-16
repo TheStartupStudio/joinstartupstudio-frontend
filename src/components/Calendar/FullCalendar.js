@@ -254,7 +254,9 @@ const FullCalendarComponent = (props) => {
       content: () => {
         const tooltip = document.createElement("div");
         tooltip.innerHTML = `<div >
-                                <div>${arg.event.title}</div> 
+                                <div style="color:#fff; text-align:center; font-size: 16px; font-weight: bold">${
+                                  arg.event.title
+                                }</div> 
                                   <div className={"d-flex g-2 w-100 "}>
                                         <div>
                                           ${convertDate(event?.startDate)}
