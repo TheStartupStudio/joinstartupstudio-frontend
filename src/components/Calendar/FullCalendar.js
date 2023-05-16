@@ -295,7 +295,7 @@ const FullCalendarComponent = (props) => {
   return (
     <>
       <FullCalendar
-        dayCellClassNames={"fc-cell-custom"}
+        dayCellClassNames={"fc-cell-custom "}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         editable={true}

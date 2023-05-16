@@ -127,6 +127,8 @@
 .fc-day.fc-daygrid-day {
   padding: 2px;
   background-color: #fff !important;
+  min-height: 30px !important;
+  height: 30px !important;
 }
 
 .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
@@ -259,6 +261,7 @@
 }
 .fc-cell-custom {
   background-color: #f4f4f4;
+
 }
 
 .fc-daygrid-day-top {
@@ -267,8 +270,13 @@
 
 @media screen and (max-width: 1200px) {
   .fc-daygrid-day-events .fc-event {
-    height: 10px;
-    min-height: 10px !important;
+    height: 7px;
+    min-height: 7px !important;
+  }
+
+  .fc-cell-custom .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
+    min-height: 40px !important;
+    height: 40px !important;
   }
 }
 
@@ -283,13 +291,15 @@
     height: 20px !important;
   }
 
+  .fc-scrollgrid-sync-table{
+    height: 200px !important;
+  }
 
   .fc.fc-media-screen.fc-direction-ltr.fc-theme-standard {
-    height: 350px;
+    height: 275px;
   }
-  .fc-cell-custom {
-    height: 30px !important;
-  }
+
+
   .fc-cell-custom .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
     min-height: 30px !important;
     height: 25px;
