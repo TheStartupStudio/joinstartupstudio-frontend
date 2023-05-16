@@ -943,6 +943,17 @@ const EnLangs = {
   "calendar_task-events.description_of_event": "Description of event",
   "calendar_task-events.requirements": "Requirements",
   "calendar_task-events.choose_classes": "Choose classes",
+  "calendar_task-events.chosen_classes": "Chosen classes",
+  "calendar_task-events.event": "Event",
+  "calendar_task-events.task": "Task",
+  "calendar_task-events.start_date_of_task": "Start date of task",
+  "calendar_task-events.end_date_of_task": "End date of task",
+  "calendar_task-events.start_time_of_task": "Start time of task",
+  "calendar_task-events.end_time_of_task": "End time of task",
+  "calendar_task-events.start_date_of_event": "Start date of event",
+  "calendar_task-events.end_date_of_event": "End date of event",
+  "calendar_task-events.start_time_of_event": "Start time of event",
+  "calendar_task-events.end_time_of_event": "End time of event",
 };
 
 export default EnLangs;

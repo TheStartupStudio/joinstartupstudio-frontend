@@ -1,53 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import IntlMessages from "../../utils/IntlMessages";
-import Profile from "../../components/Profile";
-import Calendar from "../../components/Calendar";
-import { changeSidebarState } from "../../redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import Messenger from "../../components/Messenger/Messenger";
-import { ActiveStudents } from "../../components/ActiveStudents";
-import CertificationRequestsWidget from "../../components/MyStudents/certificationRequests/certificationRequestsWidget";
-import TaskEventModal from "../../components/Modals/taskEventModal";
-import {getEventsStart, getPeriodsStart} from "../../redux/dashboard/Actions";
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import IntlMessages from '../../utils/IntlMessages'
+import Profile from '../../components/Profile'
+import { changeSidebarState } from '../../redux'
+import { ActiveStudents } from '../../components/ActiveStudents'
+import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
+import TaskEventModal from '../../components/Modals/TaskEventModal'
+import {
+  closeTaskModal,
+  getEventsStart,
+  getPeriodsStart,
+  openTaskModal,
+} from '../../redux/dashboard/Actions'
 import LevelWrapper from '../../components/LevelWrapper'
-import FullCalendarComponent from "../../components/Calendar/FullCalendar";
+
+import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 
 function Dashboard() {
-  const dispatch = useDispatch();
-  const periods = useSelector((state) => state.dashboard.periods);
-  const events = useSelector((state) => state.dashboard.events);
-  // const [calendarEvents,setCalendarEvents] = useState();
-  //
-  // const handleCalendarEvents = (events) => {
-  //   setCalendarEvents(events)
-  // }
+  const dispatch = useDispatch()
+  const periods = useSelector((state) => state.dashboard.periods)
+  const events = useSelector((state) => state.dashboard.events)
+
   const user = {
-    level: 'HS'
+    level: 'HS',
   }
 
-  const [newMessage, setNewMessage] = useState([]);
-  const [chatId, setChatId] = useState("");
-  const [taskEventModal, setTaskEventModal] = useState(false);
+  const [newMessage, setNewMessage] = useState([])
+  const [chatId, setChatId] = useState('')
   useEffect(() => {
-    dispatch(changeSidebarState(false));
-  }, []);
+    dispatch(changeSidebarState(false))
+  }, [])
   useEffect(() => {
-    dispatch(getPeriodsStart());
+    dispatch(getPeriodsStart())
     dispatch(getEventsStart())
-  }, []);
+  }, [])
 
-
-
+  const taskEventModal = useSelector(
+    (state) => state.dashboard.addTaskEventModal
+  )
   const openTaskEventModal = () => {
-    setTaskEventModal(true);
-  };
+    dispatch(openTaskModal('create'))
+  }
 
   const closeTaskEventModal = () => {
-    setTaskEventModal(false);
-  };
+    dispatch(closeTaskModal('create'))
+  }
 
   return (
     <div className="container-fluid">
@@ -81,7 +78,7 @@ function Dashboard() {
                 <div className="col-md-12 col-lg-8">
                   <h3
                     className="page-title"
-                    style={{ textTransform: "capitalize" }}
+                    style={{ textTransform: 'capitalize' }}
                   >
                     Recently Active Students
                   </h3>
@@ -92,13 +89,13 @@ function Dashboard() {
           </div>
         </div>
         <div className="col-12 col-xl-3 px-0">
-          <div className="account-page-padding" style={{ paddingLeft: "20px" }}>
-            <FullCalendarComponent events={events}/>
+          <div className="account-page-padding" style={{ paddingLeft: '20px' }}>
+            <FullCalendarComponent events={events} periods={periods} />
             <button
               style={{
-                backgroundColor: "#51c7df",
-                color: "#fff",
-                fontWeight: "bold",
+                backgroundColor: '#51c7df',
+                color: '#fff',
+                fontWeight: 'bold',
                 fontSize: 14,
               }}
               onClick={openTaskEventModal}
@@ -110,9 +107,9 @@ function Dashboard() {
               show={taskEventModal}
               onHide={closeTaskEventModal}
               periods={periods}
-              events={events}
-
-
+              event={null}
+              onEdit={null}
+              startDate={null}
             />
             <CertificationRequestsWidget />
             {/* <Messenger
@@ -142,7 +139,7 @@ function Dashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Dashboard;
+export default Dashboard

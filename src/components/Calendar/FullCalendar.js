@@ -1,221 +1,361 @@
-import React, { useState, useEffect } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction'
-import moment from 'moment';
-import {formatDate} from "@fullcalendar/core";
-import './index.css'
+import React, { useState, useEffect, useRef } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import moment from "moment";
+import "./index.css";
+import "react-tippy/dist/tippy.css";
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/themes/light-border.css";
+import CalendarEventModal from "../Modals/CalendarEventModal";
+import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  changeEventDateStart,
+  closeCalendarEventInClickModal,
+  closeCalendarEventModal,
+  closeTaskModal,
+  editEventStart,
+  openCalendarEventInClickModal,
+  openCalendarEventModal,
+  openTaskModal,
+} from "../../redux/dashboard/Actions";
+import TaskEventModal from "../Modals/TaskEventModal";
 
+let eventGuid = 0;
+let todayStr = new Date().toISOString().replace(/T.*$/, "");
 
-let eventGuid = 0
-let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
-
-console.log(todayStr)
 export const INITIAL_EVENTS = [
-    {
-        id: createEventId(),
-        title: 'All-day event',
-        start: todayStr
-    },
-    {
-        id: createEventId(),
-        title: 'All-day event2',
-        start: todayStr
-    },
-    {
-        id: createEventId(),
-        title: 'All-day event3',
-        start: todayStr
-    },
-    {
-        id: createEventId(),
-        title: 'All-day event4',
-        start: todayStr
-    },
-]
+  {
+    id: createEventId(),
+    title: "All-day event",
+    start: todayStr,
+  },
+  {
+    id: createEventId(),
+    title: "All-day event2",
+    start: todayStr,
+  },
+  {
+    id: createEventId(),
+    title: "All-day event3",
+    start: todayStr,
+  },
+  {
+    id: createEventId(),
+    title: "All-day event4",
+    start: todayStr,
+  },
+];
 
 export function createEventId() {
-    return String(eventGuid++)
+  return String(eventGuid++);
 }
 
 const FullCalendarComponent = (props) => {
-    const [weekendsVisible, setWeekendsVisible] = useState(true);
-    // const [events,setEvents] = useState(props.events)
-    const [currentEvents, setCurrentEvents] = useState([]);
-    console.log(currentEvents)
+  const calendarEventModal = useSelector(
+    (state) => state.dashboard.calendarEventModal
+  );
+  const openCalendarModal = () => {
+    dispatch(openCalendarEventModal());
+  };
 
-    const formatEvents = (events) => {
+  const closeCalendarModal = () => {
+    dispatch(closeCalendarEventModal());
+  };
+  const [weekendsVisible, setWeekendsVisible] = useState(true);
+  const [currentEvents, setCurrentEvents] = useState([]);
+  const dispatch = useDispatch();
 
-        const NEW_EVENTS =events?.map(item => ({
-            id: String(item.id),
-            title: item.name,
-            start: item.date,
-            type:item.type
-        }));
+  const handleEvents = (events) => {
+    setCurrentEvents(events);
+  };
 
-        return NEW_EVENTS
-
-
-    }
-
-
-
-
-    useEffect(()=>{
-       props.events && setEvents(formatEvents(props.events))
-    },[props.events])
-
-    console.log(props.events)
-    const handleWeekendsToggle = () => {
-        setWeekendsVisible(!weekendsVisible);
+  const renderEventContent = (eventInfo) => {
+    const foundedEvent = props.events?.find(
+      (ev) => ev?.id == +eventInfo.event?.id
+    );
+    let event = "";
+    let color = "";
+    const backgroundColor = () => {
+      if (eventInfo.event.classNames[0] == "event-event") {
+        event = "Event";
+        color = "#FF3399";
+        return "#FF3399";
+      } else if (eventInfo.event.classNames[0] == "event-task") {
+        event = "Task";
+        color = "#A7CA42";
+        return "#A7CA42";
+      }
     };
-
-    const handleDateSelect = (selectInfo) => {
-        let title = prompt('Please enter a new title for your event');
-        let calendarApi = selectInfo.view.calendar;
-
-        calendarApi.unselect(); // clear date selection
-
-        if (title) {
-            calendarApi.addEvent({
-                id: createEventId(),
-                title,
-                start: selectInfo.startStr,
-                end: selectInfo.endStr,
-                allDay: selectInfo.allDay,
-            });
-        }
-    };
-
-    const handleEventClick = (clickInfo) => {
-        // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        //     clickInfo.event.remove();
-        // }
-    };
-
-    const handleEvents = (events) => {
-        setCurrentEvents(events);
-    };
-
-
-    const renderEventContent = (eventInfo) => {
-        console.log(eventInfo.event.extendedProps.type)
-
-        const backgroundColor = () => {
-            if(eventInfo.event.extendedProps.type == 'event') {
-                return 'green'
-            } else if (eventInfo.event.extendedProps.type == 'task') {
-                return 'blue'
-            }
-        }
-
-        return (
-            <div style={{backgroundColor:  backgroundColor(),
-                // height: 2
-            }}>
-                {/*<b>{eventInfo.timeText}</b>*/}
-                <i>{eventInfo.event.title}</i>
-            </div>
-        );
-    };
-
-    const renderSidebarEvent = (event) => {
-        return (
-            <li key={event.id}>
-                <b>{formatDate(event.start, { year: 'numeric', month: 'short', day: 'numeric' })}</b>
-                <i>{event.title}</i>
-            </li>
-        );
-    };
-
-
-    const [events, setEvents] = useState([]);
-
-    // useEffect(() => {
-    //     setEvents([
-    //         {
-    //             title: 'Event 1',
-    //             start: moment().toDate(),
-    //             end: moment().add(2, 'hours').toDate(),
-    //         },
-    //         {
-    //             title: 'Event 2',
-    //             start: moment().add(1, 'day').toDate(),
-    //             end: moment().add(1, 'day').add(2, 'hours').toDate(),
-    //         },
-    //         {
-    //             title: 'Event 3',
-    //             start: moment().add(1, 'day').toDate(),
-    //             end: moment().add(1, 'day').add(3, 'hours').toDate(),
-    //         },
-    //         {
-    //             title: 'Event 4',
-    //             start: moment().add(1, 'day').toDate(),
-    //             end: moment().add(1, 'day').add(4, 'hours').toDate(),
-    //         },
-    //     ]);
-    // }, []);
-
-const    eventContent = (info) => {
-        // Determine the event type
-        var eventType = info.event.extendedProps.type;
-
-        // Set the background color based on the event type
-        var eventBackgroundColor;
-        if (eventType === 'task') {
-            eventBackgroundColor = 'red';
-        } else if (eventType === 'event') {
-            eventBackgroundColor = 'green';
-        } else {
-            eventBackgroundColor = 'blue';
-        }
-
-        // Create the HTML for the event
-        var eventHtml = '<div class="fc-content">' +
-            '<span class="fc-title">' + info.event.title + '</span>' +
-            '</div>';
-
-        // Set the background color
-        var backgroundColor = eventBackgroundColor;
-
-        // Return the modified HTML
-        return {
-            html: eventHtml,
-            backgroundColor: backgroundColor
-        };
-    }
-
 
     return (
-        <FullCalendar
-            height={250}
+      <div className={"custom-popover"}>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            gap: 4,
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{ backgroundColor: backgroundColor(), width: 3, height: 3 }}
+          ></div>
+          <span style={{ color: color }}>{event}:</span>
+          <span style={{ color: color }}>{eventInfo.event.title}</span>
+        </div>
+        <div style={{ color: "#000" }}>
+          {foundedEvent.startTime.slice(0, 5)} -{" "}
+          {foundedEvent.endTime.slice(0, 5)}
+        </div>
+      </div>
+    );
+  };
 
-            // eventBackgroundColor={'#000'}
-            // eventColor={'#000'}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            headerToolbar={{
-                // left: 'prev,next today',
-                // center: 'title',
-                // right: 'dayGridMonth,timeGridWeek,timeGridDay',
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    const convertedEvents = props.events?.map((event) => {
+      const start = moment(event.startDate).toDate();
+      const end = moment(event.endDate).toDate();
+      const className = event.type === "task" ? "event-task" : "event-event";
+      const title = event.name;
+      const id = event.id;
+
+      return {
+        id,
+        start,
+        end,
+        className,
+        title,
+      };
+    });
+
+    setEvents(convertedEvents);
+  }, [props.events]);
+
+  const [foundedEvent, setFoundedEvent] = useState(null);
+
+  useEffect(() => {
+    const event = props.events.find((event) => event.id == foundedEvent?.id);
+    setFoundedEvent(event);
+  }, [props.events]);
+
+  const foundEvent = (event) => {
+    return props.events?.find((ev) => ev?.id == +event.event?.id);
+  };
+
+  const [startDate, setStartDate] = useState(null);
+
+  const addOnDayClick = (event) => {
+    setStartDate(event.startStr);
+    openTaskEventModal();
+  };
+  const handleEventClick = (event) => {
+    const eventFounded = foundEvent(event);
+    setFoundedEvent(eventFounded);
+    openCalendarModal();
+  };
+
+  const ISOtoUSDateFormat = (date) => {
+    const dateObj = new Date(date);
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const formattedDate = dateObj
+      .toLocaleDateString("en-US", options)
+      .replace(/\//g, "-");
+    return formattedDate;
+  };
+
+  const formatDate = (date) => {
+    const parts = date.split("-");
+    const newDate = parts[2] + "-" + parts[0] + "-" + parts[1];
+    return newDate;
+  };
+
+  function getDaysBetweenDates(date1, date2) {
+    const parsedDate1 = Date.parse(date1);
+    const parsedDate2 = Date.parse(date2);
+
+    if (isNaN(parsedDate1) || isNaN(parsedDate2)) {
+      throw new Error("Invalid date format");
+    }
+
+    const timestamp1 = parsedDate1 / 1000;
+    const timestamp2 = parsedDate2 / 1000;
+
+    const difference = timestamp2 - timestamp1;
+
+    const days = Math.floor(difference / (60 * 60 * 24));
+
+    return days;
+  }
+
+  function isValidDate(dateString) {
+    var date = new Date(dateString);
+    return !isNaN(date.getTime());
+  }
+
+  const handleChangeDate = (event) => {
+    const eventFounded = foundEvent(event);
+    const formattedStartDate = formatDate(ISOtoUSDateFormat(event.event.start));
+
+    const days = getDaysBetweenDates(
+      eventFounded.startDate,
+      formattedStartDate
+    );
+
+    let endDate = "";
+
+    if (eventFounded.endDate !== "0000-00-00") {
+      endDate = new Date(eventFounded.endDate);
+      endDate.setDate(endDate.getDate() + days);
+    }
+
+    const newEndDate = new Date(endDate);
+
+    const formattedEndDate = formatDate(ISOtoUSDateFormat(newEndDate));
+
+    dispatch(
+      changeEventDateStart(
+        {
+          startDate: formattedStartDate,
+          endDate: isValidDate(formattedEndDate) ? formattedEndDate : null,
+        },
+        { eventId: eventFounded.id }
+      )
+    );
+  };
+
+  const convertDate = (date) => {
+    const inputDate = new Date(date);
+    const day = inputDate.getDate();
+    const month = inputDate.toLocaleString("default", { month: "long" });
+    const year = inputDate.getFullYear();
+
+    const formattedDate = `${day} ${month}`;
+    return formattedDate;
+  };
+
+  function convertToAMPM(time) {
+    if (time) {
+      const [hours, minutes] = time.split(":");
+      const date = new Date();
+      date.setHours(hours);
+      date.setMinutes(minutes);
+      const options = { hour: "numeric", minute: "numeric", hour12: true };
+      return date.toLocaleString("en-US", options);
+    }
+  }
+  const handleMouseEnter = (arg) => {
+    const event = props.events.find((event) => event.id == arg.event?.id);
+    tippy(arg.el, {
+      content: () => {
+        const tooltip = document.createElement("div");
+        tooltip.innerHTML = `<div >
+                                <div style="color:#fff; text-align:center; font-size: 16px; font-weight: bold">${
+                                  arg.event.title
+                                }</div> 
+                                  <div className={"d-flex g-2 w-100 "}>
+                                        <div>
+                                          ${convertDate(event?.startDate)}
+                                          ${
+                                            event?.endDate
+                                              ? " - " +
+                                                convertDate(event?.endDate)
+                                              : ""
+                                          }
+                                          ,
+                                        </div>
+                                        <div className={"ml-2"}>
+                                          ${convertToAMPM(
+                                            event?.startTime.slice(0, 5)
+                                          )} -
+                                          ${convertToAMPM(
+                                            event?.endTime.slice(0, 5)
+                                          )}
+                                        </div>
+                                  </div>
+                            </div>`;
+        return tooltip;
+      },
+    });
+  };
+
+  const taskEventModal = useSelector(
+    (state) => state.dashboard.taskEventModalInClick
+  );
+  const openTaskEventModal = () => {
+    dispatch(openTaskModal("create-in-click"));
+  };
+
+  const closeTaskEventModal = () => {
+    dispatch(closeTaskModal("create-in-click"));
+  };
+
+  return (
+    <>
+      <FullCalendar
+        dayCellClassNames={"fc-cell-custom "}
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        editable={true}
+        selectable={true}
+        selectMirror={true}
+        dayMaxEvents={2}
+        weekends={weekendsVisible}
+        events={events}
+        headerToolbar={{
+          left: "title",
+          center: "",
+          right: "prev,next",
+        }}
+        initialEvents={currentEvents}
+        select={(event) => addOnDayClick(event)}
+        eventContent={renderEventContent}
+        eventClick={(event) => handleEventClick(event)}
+        eventsSet={handleEvents}
+        eventMouseEnter={handleMouseEnter}
+        eventChange={handleChangeDate}
+        eventRemove={function () {}}
+        duration={{ weeks: 4 }}
+        moreLinkContent={(n) => (
+          <div
+            style={{
+              backgroundColor: "#1ea1f1",
+              width: "9px",
+              height: "9px",
+              borderRadius: "50%",
+              color: "#fff",
+              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 6,
             }}
-            initialView='dayGridMonth'
-            editable={true}
-            selectable={true}
-            selectMirror={true}
-            dayMaxEvents={4}
-            weekends={weekendsVisible}
-            events={events}
-            initialEvents={currentEvents}
-            select={handleDateSelect}
-            eventContent={renderEventContent} // custom render function
-            eventClick={handleEventClick}
-            eventsSet={handleEvents}
-            eventAdd={function(){}}
-            eventChange={function(){}}
-            eventRemove={function(){}}
-/>
-);
+          >
+            +{n.num}
+          </div>
+        )}
+        moreLinkClassNames={"more-link"}
+      />
+      <CalendarEventModal
+        show={calendarEventModal}
+        onHide={closeCalendarModal}
+        event={foundedEvent}
+        onEdit={(event) => dispatch(editEventStart(event))}
+      />
+      <TaskEventModal
+        show={taskEventModal}
+        onHide={closeTaskEventModal}
+        periods={props.periods}
+        event={null}
+        onEdit={null}
+        startDate={startDate}
+      />
+    </>
+  );
 };
 
 export default FullCalendarComponent;
