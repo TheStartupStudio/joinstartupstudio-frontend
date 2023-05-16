@@ -177,12 +177,15 @@ const TaskEventModal = (props) => {
       onHide={props.onHide}
       backdrop="static"
       keyboard={false}
-      style={{ marginTop: "3.9%" }}
-      className="edit-modal general-modal-header"
+      // className="edit-modal general-modal-header"
     >
       <Modal.Header className="add-new-note-title general-modal-header my-auto p-0 mx-4">
         <h3 className="mb-0 pt-4 mt-2 ">
-          <IntlMessages id="calendar_task-events.add_a_new_task/event" />
+          {isEdit() ? (
+            <IntlMessages id={`calendar_task-events.edit_${tab}`} />
+          ) : (
+            <IntlMessages id="calendar_task-events.add_a_new_task/event" />
+          )}
         </h3>
         <button
           type="button"
@@ -223,17 +226,14 @@ const TaskEventModal = (props) => {
             <FormattedMessage id={`calendar_task-events.name_of_${tab}`}>
               {(placeholder) => (
                 <input
-                  className="my-1 mb-4 py-2 px-2 w-100  "
+                  className="my-1 mb-4 py-2 px-2 w-100 event-input text-dark "
                   type="text"
                   name={tab === "task" ? "taskName" : "eventName"}
                   style={{
                     height: 48,
                     borderRadius: "0.25rem",
                     backgroundColor: "white",
-                    "::placeholder": {
-                      color: "#000",
-                      fontWeight: "bold",
-                    },
+                    color: "#000",
                   }}
                   placeholder={placeholder}
                   id={tab === "task" ? "taskName" : "eventName"}
@@ -321,8 +321,9 @@ const TaskEventModal = (props) => {
               htmlFor="date"
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
-              Start time of task
-              {/*<FormattedMessage id={`calendar_task-events.date_of_${tab}`} />*/}
+              <FormattedMessage
+                id={`calendar_task-events.start_time_of_${tab}`}
+              />
             </label>
             <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
               {(placeholder) => (
@@ -338,8 +339,9 @@ const TaskEventModal = (props) => {
               htmlFor="date"
               style={{ fontSize: "14px", fontWeight: "bold" }}
             >
-              End time of task
-              {/*<FormattedMessage id={`calendar_task-events.date_of_${tab}`} />*/}
+              <FormattedMessage
+                id={`calendar_task-events.end_time_of_${tab}`}
+              />
             </label>
             <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
               {(placeholder) => (
