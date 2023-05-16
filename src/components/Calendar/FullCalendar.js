@@ -250,15 +250,26 @@ const FullCalendarComponent = (props) => {
   }
   const handleMouseEnter = (arg) => {
     const event = props.events.find((event) => event.id == arg.event?.id);
+    console.log(event);
     tippy(arg.el, {
+      theme: "custom",
       content: () => {
         const tooltip = document.createElement("div");
-        tooltip.innerHTML = `<div >
-                                <div style="color:#fff; text-align:center; font-size: 16px; font-weight: bold">${
-                                  arg.event.title
-                                }</div> 
+        tooltip.innerHTML =
+          event.type === "task"
+            ? `<div>
+                               
                                   <div className={"d-flex g-2 w-100 "}>
-                                        <div>
+                                        <div
+                                        style=
+                                        "text-transform:uppercase;
+                                         text-align:center;
+                                         margin-bottom: 4px;
+                                         padding-bottom:4px;
+                                         border-bottom: 1px solid #e3e3e3;
+                                         font-size:13px;
+                                         "
+                                        >
                                           ${convertDate(event?.startDate)}
                                           ${
                                             event?.endDate
@@ -266,9 +277,18 @@ const FullCalendarComponent = (props) => {
                                                 convertDate(event?.endDate)
                                               : ""
                                           }
-                                          ,
+                                         
                                         </div>
-                                        <div className={"ml-2"}>
+                                        
+                                      
+                                        <ul>
+                                          <li style="color:#A7CA42;list-style-type:square; ">
+                                            Task: ${event?.name}
+                                          </li>
+                                             <div style="font-size:12px; color:#231F20; font: normal normal normal Montserrat;">
+                                        ${event?.user?.name}
+                                        </div>
+                                          <div className={"ml-2"} style="font-size: 12px;">
                                           ${convertToAMPM(
                                             event?.startTime.slice(0, 5)
                                           )} -
@@ -276,6 +296,53 @@ const FullCalendarComponent = (props) => {
                                             event?.endTime.slice(0, 5)
                                           )}
                                         </div>
+                                        
+                                          </ul>
+                                          
+                                 
+                            </div>`
+            : `<div>
+                               
+                                  <div className={"d-flex g-2 w-100 "}>
+                                            <div
+                                        style=
+                                        "text-transform:uppercase;
+                                         text-align:center;
+                                         margin-bottom: 4px;
+                                         padding-bottom:4px;
+                                         border-bottom: 1px solid #e3e3e3;
+                                         font-size:13px;
+                                         "
+                                        >
+                                          ${convertDate(event?.startDate)}
+                                          ${
+                                            event?.endDate
+                                              ? " - " +
+                                                convertDate(event?.endDate)
+                                              : ""
+                                          }
+                                        </div>
+                                       
+                                        
+                                        
+                                          <ul>
+                                          <li style="color:#FF3399;list-style-type:square">
+                                            Task: ${event?.name}
+                                          </li>
+                                          <div style="font-size:12px; color:#231F20; font: normal normal normal Montserrat;">
+                                        ${event?.user?.name}
+                                        </div>
+                                          <div className={"ml-2"} style="font-size: 12px">
+                                          ${convertToAMPM(
+                                            event?.startTime.slice(0, 5)
+                                          )} -
+                                          ${convertToAMPM(
+                                            event?.endTime.slice(0, 5)
+                                          )}
+                                        </div>
+                                        
+                                          </ul>
+                                        
                                   </div>
                             </div>`;
         return tooltip;
