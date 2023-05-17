@@ -1,22 +1,22 @@
-import { Col, Form } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
-import axiosInstance from "../../utils/AxiosInstance";
-import { toast } from "react-toastify";
+import { Col, Form } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import axiosInstance from '../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
 
 const NotificationComponent = (props) => {
-  const [notification, setNotification] = useState({
-    title: "",
-    description: "",
-    url: "",
-  });
+  const [notification, setNotification] = useState(props.notification)
+
+  // useEffect(() => {
+  //   if (props.notification) setNotification(props.notification)
+  // }, [props.notification])
 
   useEffect(() => {
-    props.handleChange(notification);
-  }, [notification]);
+    props.handleChange(notification)
+  }, [notification])
 
   const onChangeNotification = (name, value) => {
-    setNotification({ ...notification, [name]: value });
-  };
+    setNotification({ ...notification, [name]: value })
+  }
   return (
     <>
       <>
@@ -31,10 +31,10 @@ const NotificationComponent = (props) => {
                   type="text"
                   name="title"
                   className="p-md-2 w-100"
-                  placeholder={"Title"}
+                  placeholder={'Title'}
                   value={notification.title}
                   onChange={(e) =>
-                    onChangeNotification("title", e.target.value)
+                    onChangeNotification('title', e.target.value)
                   }
                 />
               </div>
@@ -46,10 +46,10 @@ const NotificationComponent = (props) => {
                   type="text"
                   name="description"
                   className="p-md-2 w-100"
-                  placeholder={"Description"}
+                  placeholder={'Description'}
                   value={notification.description}
                   onChange={(e) =>
-                    onChangeNotification("description", e.target.value)
+                    onChangeNotification('description', e.target.value)
                   }
                 />
               </div>
@@ -62,15 +62,15 @@ const NotificationComponent = (props) => {
                 className="mt-2 mb-2 col-12 p-md-2"
                 type="text"
                 name="link"
-                placeholder={"Link"}
+                placeholder={'Link'}
                 value={notification.url}
-                onChange={(e) => onChangeNotification("url", e.target.value)}
+                onChange={(e) => onChangeNotification('url', e.target.value)}
               />
             </Col>
           </div>
         </Form>
       </>
     </>
-  );
-};
-export default NotificationComponent;
+  )
+}
+export default NotificationComponent

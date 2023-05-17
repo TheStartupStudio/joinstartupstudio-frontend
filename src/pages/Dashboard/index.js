@@ -15,6 +15,9 @@ import {
 import LevelWrapper from '../../components/LevelWrapper'
 
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
+import NotificationBox from '../NotificationBox-dashboard/NotificationBox'
+import { faBell } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function Dashboard() {
   const dispatch = useDispatch()
@@ -111,7 +114,27 @@ function Dashboard() {
               onEdit={null}
               startDate={null}
             />
-            <CertificationRequestsWidget />
+            <div>
+              <div className={'d-flex gap-2 notifications-box'}>
+                <FontAwesomeIcon
+                  icon={faBell}
+                  style={{
+                    fontSize: '26px',
+                    color: '#333D3D',
+                  }}
+                  className="nav-bell-icon pt-1"
+                />
+                <div>THE STARTUP STUDIO’S UPDATES</div>
+              </div>
+              <div className={'notifications-container'}>
+                <NotificationBox />
+                <div>
+                  <button className="view-all-button">View All</button>
+                </div>
+              </div>
+            </div>
+
+            {/*<CertificationRequestsWidget />*/}
             {/* <Messenger
               chatOpened={(id) => setChatId(id)}
               newMessage={(message) => setNewMessage(message)}

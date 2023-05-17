@@ -1,6 +1,12 @@
 .notification-content-list {
     margin-bottom: 0.5rem;
+
 }
+.notifications-container {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+}
+
 .notification-content-list:hover {
     background: #F8F7F7;
     cursor: pointer;
@@ -16,12 +22,14 @@
     margin-bottom: 4px;
     color: #000;
     overflow-wrap: anywhere;
+    font: normal normal 300 12px/14px Montserrat;
 }
 
 .notification-content-description{
     font-weight: bold;
     font-style: normal;
     overflow-wrap: anywhere;
+    font: normal normal normal 12px/14px Montserrat;
 
 }
 
@@ -31,4 +39,9 @@
     margin-left: 4px;
     margin-bottom: 2px;
     font-size: 12px
+}
+
+.notifications-box {
+    font: normal normal 600 13px/15px Montserrat;
+    padding: 10px;
 }
