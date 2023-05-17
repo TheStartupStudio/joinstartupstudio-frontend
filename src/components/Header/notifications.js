@@ -1,60 +1,60 @@
-import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import axiosInstance from '../../utils/AxiosInstance'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-import NotificationTypes from '../../utils/notificationTypes'
-import { format } from 'date-fns'
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import axiosInstance from "../../utils/AxiosInstance";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import NotificationTypes from "../../utils/notificationTypes";
+import { format } from "date-fns";
 
 const Notifications = (props) => {
-  const history = useHistory()
-  const [loading, setLoading] = useState(false)
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    return () => {}
-  }, [])
+    return () => {};
+  }, []);
 
   const formatDate = (date) => {
-    if (!date) return
-    const dateNow = new Date()
-    const notificationsDate = new Date(date)
+    if (!date) return;
+    const dateNow = new Date();
+    const notificationsDate = new Date(date);
 
     const dateDifference =
       (dateNow.getTime() - notificationsDate.getTime()) /
-      (1000 * 60 * 60 * 24.0)
+      (1000 * 60 * 60 * 24.0);
 
     if (dateDifference > 6) {
-      return format(new Date(date), 'MMMM dd, yyyy')
+      return format(new Date(date), "MMMM dd, yyyy");
     } else {
-      return format(new Date(date), "EEEE h:mmaaaaa'm'")
+      return format(new Date(date), "EEEE h:mmaaaaa'm'");
     }
-  }
+  };
 
   const notificationClick = (notification) => {
-    setLoading(true)
+    setLoading(true);
     axiosInstance
-      .patch('/notifications', {
-        id: notification.id
+      .patch("/notifications", {
+        id: notification.id,
       })
       .then(() => {
         if (!notification.read) {
-          props.setUnreadNotifications(props.unreadNotifications - 1)
+          props.setUnreadNotifications(props.unreadNotifications - 1);
         }
-        notification.read = true
-        props.setShowNotifications(false)
-        setLoading(false)
-        history.push(notification.url)
-      })
-  }
+        notification.read = true;
+        props.setShowNotifications(false);
+        setLoading(false);
+        history.push(`/${notification.url}`);
+      });
+  };
 
   return (
-    <div className='notifications-wrapper' ref={props.notificationsRef}>
-      <div className='position-relative'>
+    <div className="notifications-wrapper" ref={props.notificationsRef}>
+      <div className="position-relative">
         {loading && (
-          <div className='notifications-loader'>
+          <div className="notifications-loader">
             <FontAwesomeIcon
               icon={faSpinner}
-              className='notifications-spinner'
+              className="notifications-spinner"
               spin
             />
           </div>
@@ -69,17 +69,18 @@ const Notifications = (props) => {
                     onClick={() => notificationClick(notification)}
                     key={notification.id}
                     style={{
-                      color: notification.read ? 'rgba(0,0,0,.55)' : 'black'
+                      color: notification.read ? "rgba(0,0,0,.55)" : "black",
                     }}
+                    href
                   >
                     {notification.Sender.name}
                     {NotificationTypes[notification.type]?.value}
                   </a>
-                  <span className='notification-date'>
+                  <span className="notification-date">
                     {formatDate(notification.createdAt)}
                   </span>
                 </React.Fragment>
-              )
+              );
             })}
           </>
         ) : (
@@ -87,7 +88,7 @@ const Notifications = (props) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Notifications
+export default Notifications;

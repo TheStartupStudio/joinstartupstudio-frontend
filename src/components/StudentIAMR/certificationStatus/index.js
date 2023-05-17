@@ -77,6 +77,7 @@ const CertificationStatus = () => {
         ) : (
           <>
             <p className="title">Certification {id} Skills</p>
+
             {!status && unCompletedSkills?.length > 0 && (
               <>
                 <p>
@@ -100,7 +101,7 @@ const CertificationStatus = () => {
                 //  onClick={() => setShowConfirmUploadModal(true)}
                 //  disabled={upload.approved_by_instructor}
               >
-                {status === "pending" ? "Certify" : "CERTIFICATED"}
+                {status !== "approved" ? "CERTIFY" : "CERTIFIED"}
               </button>
             ) : status && status === "pending" ? (
               <p> Student has a pending certification request! </p>
@@ -113,8 +114,9 @@ const CertificationStatus = () => {
             {!status && unCompletedSkills?.length === 0 && (
               <div className="completed-certification">
                 <p>
-                  It is time for student to submit their proof of skills to The
-                  Startup Studio to earn the Market-Ready Certification {id}:{" "}
+                  It is time for this student to submit their proof of skills to
+                  The Startup Studio to earn the Market-Ready Certification {id}
+                  :{" "}
                   <span style={{ color: "#333d3d", fontWeight: 500 }}>
                     Competitive Entry Level Employability
                   </span>

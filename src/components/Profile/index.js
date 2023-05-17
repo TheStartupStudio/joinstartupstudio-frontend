@@ -266,26 +266,34 @@ function Profile(props) {
       <div
         style={{
           minHeight: "166px",
+          backgroundColor: "#F8F7F7",
+          marginLeft: 0,
         }}
         className="notification-box col-lg-6 col-sm-12 mt-4 row position-relative"
       >
         <p
-          className="text-center certification-progress"
+          className="text-center certification-progress pt-5"
           style={{ fontSize: "20px" }}
         >
           IAMR Inbox
         </p>
-        <div className="col-6 text-center fw-bold">
+        <div
+          className="col-6 text-center fw-bold"
+          style={{ marginTop: "-40px" }}
+        >
           <img src={Questions} style={{ width: "150px" }} alt="" />
           <p className="mb-0 py-0 mt-2">
-            {studentQuestions?.unreadCount}
+            {studentQuestions?.unreadCount ? studentQuestions?.unreadCount : 0}
             &nbsp; Questions
           </p>
         </div>
-        <div className="col-6 text-center fw-bold">
+        <div
+          className="col-6 text-center fw-bold"
+          style={{ marginTop: "-40px" }}
+        >
           <img src={Feedbacks} style={{ width: "150px" }} alt="" />
           <p className="mb-0 py-0 mt-2">
-            {feedbackRequests?.unreadCount}
+            {feedbackRequests?.unreadCount ? feedbackRequests?.unreadCount : 0}
             &nbsp; Requests
           </p>
         </div>
