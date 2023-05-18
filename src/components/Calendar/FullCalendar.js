@@ -296,7 +296,6 @@ const FullCalendarComponent = (props) => {
       theme: 'custom',
       arrow: true,
       placement: 'bottom',
-      trigger: 'click',
 
       content: () => {
         const tooltip = document.createElement('div')
@@ -466,9 +465,6 @@ const FullCalendarComponent = (props) => {
           <div
             style={{
               backgroundColor: '#1ea1f1',
-              // width: '9px',
-              // height: '9px',
-              // borderRadius: '50%',
               width: '100%',
               color: '#fff',
               textAlign: 'center',
