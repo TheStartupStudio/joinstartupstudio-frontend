@@ -142,11 +142,17 @@
 .fc-popover {
   left:0;
   width: 200px;
-  overflow-y:auto
+  overflow-y:auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.fc-popover-header {
+  width: 80%
+}
 .fc-popover-body .fc-daygrid-event-harness {
-  width: 90%;
+  width: 100%;
 }
 
 .fc-daygrid-event-harness i {
@@ -172,6 +178,10 @@
   border: none;
   height: 1px !important;
   background-color: inherit !important;
+}
+
+.custom-popover {
+  width: 100% !important;
 }
 
 .fc-popover .fc-popover-body .fc-daygrid-event-harness .fc-event .fc-event-main {
@@ -350,6 +360,32 @@
   left: -3.5px !important;
   overflow: initial;
 }
+
+.fc-popover-header::before {
+  content: "";
+  display: inline-block;
+  height: 1px;
+  background-color: black;
+  margin-right: 10px;
+}
+
+.fc-popover-title {
+  font-weight:500;
+
+}
+
+.fc-toolbar-title {
+  font-weight:700;
+  text-transform: uppercase;
+}
+
+.fc-icon{
+  color:#bbbdbf !important;
+  font-weight:600;
+
+
+}
+
 /*.fc-popover .fc-more-popover {*/
 
 /*  left:0 !important;*/
@@ -370,14 +406,29 @@
 
 .fc-theme-standard .fc-popover-header {
   background: #fff;
-  border-bottom: 1px solid #777;
+  border-bottom: 1px solid #e3e3e3;
 }
 .fc-popover-body {
   background: #fff;
+  box-shadow: rgba(15, 15, 15, 0.025) 0px 0.05px 2px 0px !important;
 }
-
+.fc-icon-x {
+  right:-20px !important;
+  position: relative !important;
+}
 .fc-button-group{
   margin-bottom: 1px;
+}
+
+.fc-daygrid-more-link {
+  border-radius: 3px !important;
+  margin-top:2px !important;
+  height: 9px !important;
+  max-width: 100% !important;
+}
+
+.custom-popover .event-ul {
+  margin: 0px !important;
 }
 
 /*/////////////////////// TIPPY //////////////////////*/
@@ -388,4 +439,43 @@
   color: black;
   box-shadow: rgba(15, 15, 15, 0.025) 0px 0.05px 2px 0px;
   border: 1px solid #e3e3e3
+}
+
+
+.tippy-box[data-theme~='custom'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: white;
+
+
+}
+.tippy-box[data-theme~='custom'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: white;
+}
+.tippy-box[data-theme~='custom'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: white;
+}
+.tippy-box[data-theme~='custom'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: white;
+
+}
+
+.event-ul {
+  padding-left: 1rem !important;
+  margin-bottom: 0rem;
+  margin: 5px !important;
+}
+
+.event-li .event-span, .event-li .event-name,.event-li .event-time {
+  position: relative;
+  left: -6px;
+  top:-1px
+}
+
+
+.custom-popover .event-name{
+  margin-top: -5px !important;
+}
+
+.custom-popover .event-li{
+  margin-top: -12px !important;
+  padding: 4px 0px !important; ;
 }
