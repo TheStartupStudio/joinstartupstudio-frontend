@@ -105,34 +105,6 @@ const StudentOfInstructors = (props) => {
   const user = useSelector((state) => state.user.user.user)
   const loggedUser = useSelector((state) => state.user.user.user)
 
-  // useEffect(() => {
-  //   socket?.emit('newNotificationUser', {
-  //     name: user.name,
-  //     id: user.id,
-  //   })
-  //
-  //   socket?.on('getNotifications', (data) => {
-  //     setReceivedNotifications((receivedNotifications) => {
-  //       debugger
-  //       return [
-  //         {
-  //           ...data.notifications,
-  //           Sender: { ...data.Sender },
-  //         },
-  //         ...receivedNotifications,
-  //       ]
-  //     })
-  //     // setUnreadNotifications(
-  //     //     (unreadNotifications) => Number(unreadNotifications) + 1
-  //     // )
-  //   })
-  //
-  //
-  //   return () => {
-  //     socket.disconnect()
-  //   }
-  // }, [])
-
   const handleSubmitNotification = () => {
     socket?.emit('sendNotifications', {
       notifications: notifications,
@@ -562,7 +534,7 @@ const StudentOfInstructors = (props) => {
             ))}
             <div className={'d-flex justify-content-end mb-2'}>
               <button
-                className="float-end btn-primary m-0 px-md-5 add-new-note-button-text"
+                className="float-end m-0 px-md-5 save-button add-new-note-button-text"
                 onClick={onAddNewNotification}
               >
                 {loading ? 'loading' : 'Add more'}

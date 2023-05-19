@@ -3,19 +3,22 @@ import { useEffect, useState } from 'react'
 import socket from '../../utils/notificationSocket'
 import axiosInstance from '../../utils/AxiosInstance'
 import { useSelector } from 'react-redux'
-import notifications from '../../components/Header/notifications'
+import { Link } from 'react-router-dom'
 
-const NotificationListItem = ({ title, description }) => {
+const NotificationListItem = ({ title, description, url }) => {
   return (
-    <li className="notification-content-list-item-dot">
-      <p className="notification-content-title">
+    <Link className="notification-content-list" to={url}>
+      <div className={'dot-container'}>
+        <span className={'notification-content-list-item-dot'}></span>
+      </div>
+      <span className="notification-content-title">
         {title}:{'  '}
         <span className="notification-content-description">{description}</span>
-      </p>
-    </li>
+      </span>
+    </Link>
   )
 }
-const NotificationBox = () => {
+const NotificationBox = (props) => {
   const { user } = useSelector((state) => state.user.user)
   const [receivedNotifications, setReceivedNotifications] = useState([])
   console.log(receivedNotifications)
@@ -58,25 +61,23 @@ const NotificationBox = () => {
   }, [])
 
   return (
-    <div className="notification-content-list">
-      <ul>
-        {receivedNotifications?.map((notification) => {
-          return (
-            <NotificationListItem
-              title={notification?.title}
-              description={notification?.description}
-            />
+    <div>
+      <div className={'notification-list'}>
+        {receivedNotifications
+          .slice(
+            0,
+            props.sliceIndex !== undefined ? props.sliceIndex : undefined
           )
-        })}
-        {/*<NotificationListItem*/}
-        {/*  title={'Notification Title'}*/}
-        {/*  description={'Notification Description'}*/}
-        {/*/>*/}
-        {/*<NotificationListItem*/}
-        {/*  title={'Notification Title'}*/}
-        {/*  description={'Notification Description'}*/}
-        {/*/>*/}
-      </ul>
+          ?.map((notification) => {
+            return (
+              <NotificationListItem
+                title={notification?.title}
+                description={notification?.description}
+                url={notification?.url}
+              />
+            )
+          })}
+      </div>
     </div>
   )
 }
