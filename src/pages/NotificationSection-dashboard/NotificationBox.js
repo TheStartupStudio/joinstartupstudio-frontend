@@ -30,8 +30,6 @@ const NotificationBox = (props) => {
         if (res.data.notifications.length > 0) {
           setReceivedNotifications(res.data.notifications)
         }
-
-        // setUnreadNotifications(res.data.unreadNotifications)
       })
   }, [user.id])
   useEffect(() => {
@@ -50,9 +48,6 @@ const NotificationBox = (props) => {
         ]
         return newNotificationsArray
       })
-      // setUnreadNotifications(
-      //     (unreadNotifications) => Number(unreadNotifications) + 1
-      // )
     })
 
     return () => {
@@ -68,9 +63,10 @@ const NotificationBox = (props) => {
             0,
             props.sliceIndex !== undefined ? props.sliceIndex : undefined
           )
-          ?.map((notification) => {
+          ?.map((notification, index) => {
             return (
               <NotificationListItem
+                key={index}
                 title={notification?.title}
                 description={notification?.description}
                 url={notification?.url}
