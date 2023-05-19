@@ -15,6 +15,9 @@ import {
 import LevelWrapper from '../../components/LevelWrapper'
 
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
+import NotificationBox from '../NotificationBox-dashboard/NotificationBox'
+import { faBell } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function Dashboard() {
   const dispatch = useDispatch()
@@ -44,6 +47,15 @@ function Dashboard() {
 
   const closeTaskEventModal = () => {
     dispatch(closeTaskModal('create'))
+  }
+  const [sliceIndex, setSliceIndex] = useState(3)
+
+  const handleShowMore = () => {
+    if (typeof sliceIndex === 'undefined') {
+      setSliceIndex(3)
+    } else {
+      setSliceIndex(undefined)
+    }
   }
 
   return (
@@ -111,7 +123,44 @@ function Dashboard() {
               onEdit={null}
               startDate={null}
             />
-            <CertificationRequestsWidget />
+            <div className="notifications-section">
+              <div className={'d-flex gap-2 notifications-section-header'}>
+                <div className="notifications-bell-icon-container">
+                  <FontAwesomeIcon
+                    icon={faBell}
+                    style={{
+                      fontSize: '26px',
+                      color: '#333D3D',
+                    }}
+                    className="nav-bell-icon pt-1"
+                  />
+                  <span className={'notification-content-list-item-dot'}></span>
+                </div>
+
+                <div className={'notifications-section-title'}>
+                  THE STARTUP STUDIO’S UPDATES
+                </div>
+              </div>
+              <div className={'position-relative'}>
+                <div className={'triangle'}></div>
+
+                <div className={'notifications-container'}>
+                  <NotificationBox sliceIndex={sliceIndex} />
+                  <div>
+                    <button
+                      className="view-all-button"
+                      onClick={handleShowMore}
+                    >
+                      {typeof sliceIndex !== 'undefined'
+                        ? 'View All'
+                        : 'View less'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/*<CertificationRequestsWidget />*/}
             {/* <Messenger
               chatOpened={(id) => setChatId(id)}
               newMessage={(message) => setNewMessage(message)}
