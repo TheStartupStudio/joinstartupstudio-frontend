@@ -48,14 +48,14 @@ export default function Calendar(props) {
       <div className='row'>
         <div className='col-xl-12 col-md-6 col-sm-12'>
           <div className='col-md-12 col-12 mx-auto mx-md-auto mx-0 gx-0 gx-md-auto calendar-under-threehoundertpx pe-2'>
-            <DatePicker
+            {props.events && <DatePicker
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
                 locale={currentLanguage}
                 inline
                 autoFocus={false}
                 highlightDates={highlightWithRanges}
-            />
+            />}
           </div>
         </div>
       </div>
