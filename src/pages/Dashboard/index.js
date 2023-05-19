@@ -91,15 +91,15 @@ function Dashboard() {
         <div className="col-12 col-xl-3 px-0">
           <div className="account-page-padding" style={{ paddingLeft: '20px' }}>
             <FullCalendarComponent events={events} periods={periods} />
+
             <button
               style={{
                 backgroundColor: '#51c7df',
                 color: '#fff',
-                fontWeight: 'bold',
                 fontSize: 14,
               }}
               onClick={openTaskEventModal}
-              className="px-4 py-2 border-0 rounded color transform text-uppercase font-weight-bold w-100 my-1"
+              className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
             >
               Create Task/Event
             </button>
