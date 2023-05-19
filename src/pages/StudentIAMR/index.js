@@ -1,14 +1,23 @@
 import IAMR from '../../components/StudentIAMR'
 import {
   IamrProvider,
-  useIamrContext
+  useIamrContext,
 } from '../../components/StudentIAMR/iamrContext/context'
 import './index.css'
-import Calendar from '../../components/Calendar'
+import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import axiosInstance from '../../utils/AxiosInstance'
 import LoadingAnimation from '../../components/StudentIAMR/loadingAnimation'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  closeTaskModal,
+  getEventsStart,
+  getPeriodsStart,
+  openTaskModal,
+} from '../../redux/dashboard/Actions'
+import TaskEventModal from '../../components/Modals/TaskEventModal'
+import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
 
 export default function StudentIAMR() {
   return (
@@ -19,6 +28,7 @@ export default function StudentIAMR() {
 }
 
 function StudentIamrContainer() {
+  const dispatch = useDispatch()
   const {
     loading,
     student,
@@ -26,10 +36,17 @@ function StudentIamrContainer() {
     setSkills,
     setCertificationOneStatus,
     setCertificationTwoStatus,
-    setLoading
+    setLoading,
   } = useIamrContext()
   const { studentId } = useParams()
   const [error, setError] = useState(false)
+  const periods = useSelector((state) => state.dashboard.periods)
+  const events = useSelector((state) => state.dashboard.events)
+
+  useEffect(() => {
+    dispatch(getPeriodsStart())
+    dispatch(getEventsStart())
+  }, [])
 
   useEffect(() => {
     axiosInstance
@@ -39,7 +56,7 @@ function StudentIamrContainer() {
           skills,
           certificationOneStatus,
           certificationTwoStatus,
-          student
+          student,
         } = data
         setSkills(skills)
         setCertificationOneStatus(certificationOneStatus)
@@ -53,24 +70,34 @@ function StudentIamrContainer() {
         setLoading(false)
       })
   }, [])
+  const taskEventModal = useSelector(
+    (state) => state.dashboard.addTaskEventModal
+  )
+  const openTaskEventModal = () => {
+    dispatch(openTaskModal('create'))
+  }
+
+  const closeTaskEventModal = () => {
+    dispatch(closeTaskModal('create'))
+  }
 
   return (
-    <div className='container-fluid iamr-page'>
-      <div className='row'>
-        <div className='col-12 col-xl-9 px-0'>
-          <div className='page-border'>
+    <div className="container-fluid iamr-page">
+      <div className="row">
+        <div className="col-12 col-xl-9 px-0">
+          <div className="page-border">
             {loading ? (
               <LoadingAnimation show={loading} />
             ) : error ? (
-              <p className='error my-5 py-5'>{error}</p>
+              <p className="error my-5 py-5">{error}</p>
             ) : (
               <>
-                <div className='iamr-page-padding iamr-page-header border-bottom'>
-                  <h3 className='page-title'>STUDENT UPLOADS</h3>
-                  <h3 className='page-title student-name'>{student?.name}</h3>
-                  <p className='page-description mt-3 mt-md-5'>
+                <div className="iamr-page-padding iamr-page-header border-bottom">
+                  <h3 className="page-title">STUDENT UPLOADS</h3>
+                  <h3 className="page-title student-name">{student?.name}</h3>
+                  <p className="page-description mt-3 mt-md-5">
                     WELCOME TO{' '}
-                    <span className='fw-bold'>
+                    <span className="fw-bold">
                       I AM MARKET READY CERTIFICATION SYSTEM{' '}
                     </span>
                   </p>
@@ -80,9 +107,30 @@ function StudentIamrContainer() {
             )}
           </div>
         </div>
-        <div className='col-12 col-xl-3 px-0'>
-          <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
-            <Calendar />
+        <div className="col-12 col-xl-3 px-0">
+          <div className="account-page-padding" style={{ paddingLeft: '20px' }}>
+            <FullCalendarComponent events={events} periods={periods} />
+            <button
+              style={{
+                backgroundColor: '#51c7df',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: 14,
+              }}
+              onClick={openTaskEventModal}
+              className="px-4 py-2 border-0 rounded color transform text-uppercase font-weight-bold w-100 my-1"
+            >
+              Create Task/Event
+            </button>
+            <TaskEventModal
+              show={taskEventModal}
+              onHide={closeTaskEventModal}
+              periods={periods}
+              event={null}
+              onEdit={null}
+              startDate={null}
+            />
+            <CertificationRequestsWidget />
           </div>
         </div>
       </div>

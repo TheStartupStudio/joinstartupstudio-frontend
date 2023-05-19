@@ -5,7 +5,7 @@ import Profile from '../../components/Profile'
 import { changeSidebarState } from '../../redux'
 import { ActiveStudents } from '../../components/ActiveStudents'
 import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
-import TaskEventModal from '../../components/Modals/TaskEventModal'
+
 import {
   closeTaskModal,
   getEventsStart,
@@ -15,6 +15,7 @@ import {
 import LevelWrapper from '../../components/LevelWrapper'
 
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
+import TaskEventModal from '../../components/Modals/TaskEventModal'
 
 function Dashboard() {
   const dispatch = useDispatch()
