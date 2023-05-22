@@ -20,6 +20,16 @@ const NotificationComponent = (props) => {
   return (
     <>
       <>
+        {props.notifications.length > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button
+              type="button"
+              className="remove-notification btn-close"
+              aria-label="Close"
+              onClick={props.handleRemove}
+            ></button>
+          </div>
+        )}
         <Form>
           <div className="mb-4 py-2 px-md-2 row">
             <Col sm={12} md={12}>
