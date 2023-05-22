@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { DropdownButton, Modal } from "react-bootstrap";
-import Form from "react-bootstrap/Form";
-import Dropdown from "react-bootstrap/Dropdown";
-import IntlMessages from "../../utils/IntlMessages";
-import { FormattedMessage } from "react-intl";
-import ReactQuill from "react-quill";
-import FoulWords from "../../utils/FoulWords";
-import DropdownMenu from "react-bootstrap/DropdownMenu";
-import DatePicker from "react-datepicker";
-import "react-quill/dist/quill.snow.css";
-import PeriodSelector from "../PeriodSelector/PeriodSelector";
-import { useDispatch, useSelector } from "react-redux";
-import { editEventStart, postEventStart } from "../../redux/dashboard/Actions";
-import TimePicker from "../TimePicker/TimePicker";
-import "./TaskEventModal.css";
+import React, { useEffect, useState } from 'react'
+import { DropdownButton, Modal } from 'react-bootstrap'
+import Form from 'react-bootstrap/Form'
+import Dropdown from 'react-bootstrap/Dropdown'
+import IntlMessages from '../../utils/IntlMessages'
+import { FormattedMessage } from 'react-intl'
+import ReactQuill from 'react-quill'
+import FoulWords from '../../utils/FoulWords'
+import DropdownMenu from 'react-bootstrap/DropdownMenu'
+import DatePicker from 'react-datepicker'
+import 'react-quill/dist/quill.snow.css'
+import PeriodSelector from '../PeriodSelector/PeriodSelector'
+import { useDispatch, useSelector } from 'react-redux'
+import { editEventStart, postEventStart } from '../../redux/dashboard/Actions'
+import TimePicker from '../TimePicker/TimePicker'
+import './TaskEventModal.css'
 
 const TaskEventModal = (props) => {
-  const [tab, setTab] = useState("task");
-  const [periods, setPeriods] = useState(props.periods);
+  const [tab, setTab] = useState('task')
+  const [periods, setPeriods] = useState(props.periods)
 
   useEffect(() => {
-    props.show === false && setState(initialState);
-  }, [props.show]);
+    props.show === false && setState(initialState)
+  }, [props.show])
 
   useEffect(() => {
     if (isEdit()) {
@@ -35,83 +35,83 @@ const TaskEventModal = (props) => {
         type: props.event?.type,
         requirements: props.event?.requirements,
         chooseClasses: props.event?.period,
-      };
-      setState(newState);
-      setTab(props.event?.type);
+      }
+      setState(newState)
+      setTab(props.event?.type)
     }
-  }, [props.event]);
+  }, [props.event])
 
   useEffect(() => {
     if (isAddingOnClick()) {
-      setState({ ...state, startDate: props.startDate });
+      setState({ ...state, startDate: props.startDate })
     }
-  }, [props.startDate]);
+  }, [props.startDate])
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    setPeriods(props.periods);
-  }, [props.periods]);
+    setPeriods(props.periods)
+  }, [props.periods])
 
   const initialState = {
-    name: "",
-    startDate: "",
+    name: '',
+    startDate: '',
     endDate: null,
-    startTime: "",
-    endTime: "",
-    description: "",
-    type: "",
-    requirements: "",
+    startTime: '',
+    endTime: '',
+    description: '',
+    type: '',
+    requirements: '',
     chooseClasses: {},
-  };
+  }
 
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(initialState)
 
   useEffect(() => {
-    const newState = { ...state };
-    newState.type = tab == "task" ? "task" : "event";
-    setState(newState);
-  }, [tab]);
+    const newState = { ...state }
+    newState.type = tab == 'task' ? 'task' : 'event'
+    setState(newState)
+  }, [tab])
 
   const isEndTimeBeforeStartTime = () => {
-    const startTimeArray = state.startTime.split(":");
-    const endTimeArray = state.endTime.split(":");
+    const startTimeArray = state.startTime.split(':')
+    const endTimeArray = state.endTime.split(':')
     if (!!endTimeArray[0]) {
       return (
         +endTimeArray[0] < +startTimeArray[0] ||
         (+endTimeArray[0] === +startTimeArray[0] &&
           +endTimeArray[1] <= +startTimeArray[1])
-      );
+      )
     }
-  };
+  }
 
   useEffect(() => {
     if (!isEdit()) {
-      setTab("task");
+      setTab('task')
     }
-  }, []);
+  }, [])
   const handleInputChange = (name, value) => {
-    setState({ ...state, [name]: value });
-  };
+    setState({ ...state, [name]: value })
+  }
 
   const activeTabStyle = {
-    backgroundColor: "#51c7df",
-    color: "#fff",
-    border: "1px solid #51c7df",
-    borderRadius: "0.25rem",
+    backgroundColor: '#51c7df',
+    color: '#fff',
+    border: '1px solid #51c7df',
+    borderRadius: '0.25rem',
     marginBottom: 6,
-  };
+  }
 
   const inActiveTabStyle = {
-    backgroundColor: "#fff",
-    color: "#666",
-    border: "1px solid #666",
-    borderRadius: "0.25rem",
+    backgroundColor: '#fff',
+    color: '#666',
+    border: '1px solid #666',
+    borderRadius: '0.25rem',
     marginBottom: 6,
-  };
+  }
   const toggleTab = (tab) => {
-    setTab(tab);
-  };
+    setTab(tab)
+  }
 
   const onPostEvent = () => {
     let newEventObj = {
@@ -124,12 +124,12 @@ const TaskEventModal = (props) => {
       type: state.type,
       requirements: state.requirements,
       chooseClasses: state.chooseClasses,
-    };
-    if (isAddingOnClick()) {
-      setState(initialState);
     }
-    dispatch(postEventStart(newEventObj));
-  };
+    if (isAddingOnClick()) {
+      setState(initialState)
+    }
+    dispatch(postEventStart(newEventObj))
+  }
 
   const onEditEvent = () => {
     let newEvent = {
@@ -142,41 +142,42 @@ const TaskEventModal = (props) => {
       type: state.type,
       requirements: state.requirements,
       chooseClasses: state.chooseClasses,
-    };
+    }
 
-    dispatch(editEventStart(newEvent, { eventId: props.event.id }));
-  };
+    dispatch(editEventStart(newEvent, { eventId: props.event.id }))
+  }
   const isEdit = () => {
-    return props.event != null;
-  };
+    return props.event != null
+  }
 
   const isAddingOnClick = () => {
-    return props.startDate != null;
-  };
+    return props.startDate != null
+  }
 
   useEffect(() => {
     if (isEndTimeBeforeStartTime()) {
-      const newState = { ...state };
-      const tomorrow = new Date(newState.startDate);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const date = new Date(tomorrow);
-      const formattedDate = date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
-      const parts = formattedDate.split("/");
-      const formattedDateInNewFormat = `${parts[2]}-${parts[0]}-${parts[1]}`;
-      newState.endDate = formattedDateInNewFormat;
-      setState(newState);
+      const newState = { ...state }
+      const tomorrow = new Date(newState.startDate)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const date = new Date(tomorrow)
+      const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      })
+      const parts = formattedDate.split('/')
+      const formattedDateInNewFormat = `${parts[2]}-${parts[0]}-${parts[1]}`
+      newState.endDate = formattedDateInNewFormat
+      setState(newState)
     }
-  }, [state.endTime]);
+  }, [state.endTime])
   return (
     <Modal
       show={props.show}
       onHide={props.onHide}
       backdrop="static"
       keyboard={false}
+      className={'task-event-modal'}
       // className="edit-modal general-modal-header"
     >
       <Modal.Header className="add-new-note-title general-modal-header my-auto p-0 mx-4">
@@ -198,9 +199,9 @@ const TaskEventModal = (props) => {
         <div className="row w-100 m-0 mb-4">
           <div className="col-md-6">
             <button
-              style={tab == "task" ? activeTabStyle : inActiveTabStyle}
+              style={tab == 'task' ? activeTabStyle : inActiveTabStyle}
               className="btn w-100"
-              onClick={() => toggleTab("task")}
+              onClick={() => toggleTab('task')}
             >
               Task
             </button>
@@ -208,8 +209,8 @@ const TaskEventModal = (props) => {
           <div className="col-md-6">
             <button
               className="btn w-100"
-              style={tab == "event" ? activeTabStyle : inActiveTabStyle}
-              onClick={() => toggleTab("event")}
+              style={tab == 'event' ? activeTabStyle : inActiveTabStyle}
+              onClick={() => toggleTab('event')}
             >
               Event
             </button>
@@ -218,8 +219,8 @@ const TaskEventModal = (props) => {
         <div className="row px-2 add-new-note">
           <div className="col-md-12">
             <label
-              htmlFor={tab === "task" ? "taskName" : "eventName"}
-              style={{ fontSize: "14px", fontWeight: "bold" }}
+              htmlFor={tab === 'task' ? 'taskName' : 'eventName'}
+              style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               <FormattedMessage id={`calendar_task-events.name_of_${tab}`} />
             </label>
@@ -228,16 +229,16 @@ const TaskEventModal = (props) => {
                 <input
                   className="my-1 mb-4 py-2 px-2 w-100 event-input text-dark "
                   type="text"
-                  name={tab === "task" ? "taskName" : "eventName"}
+                  name={tab === 'task' ? 'taskName' : 'eventName'}
                   style={{
                     height: 48,
-                    borderRadius: "0.25rem",
-                    backgroundColor: "white",
-                    color: "#000",
+                    borderRadius: '0.25rem',
+                    backgroundColor: 'white',
+                    color: '#000',
                   }}
                   placeholder={placeholder}
-                  id={tab === "task" ? "taskName" : "eventName"}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
+                  id={tab === 'task' ? 'taskName' : 'eventName'}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
                   value={state.name}
                 />
               )}
@@ -245,13 +246,13 @@ const TaskEventModal = (props) => {
           </div>
 
           <div
-            className={isEndTimeBeforeStartTime() ? "col-md-6" : "col-md-12"}
+            className={isEndTimeBeforeStartTime() ? 'col-md-6' : 'col-md-12'}
           >
             <label
               htmlFor="date"
-              style={{ fontSize: "14px", fontWeight: "bold" }}
+              style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
-              Start{" "}
+              Start{' '}
               <FormattedMessage id={`calendar_task-events.date_of_${tab}`} />
             </label>
             <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
@@ -259,21 +260,21 @@ const TaskEventModal = (props) => {
                 <input
                   className="my-1 mb-4 py-2 px-2 w-100  "
                   type="date"
-                  name={tab === "task" ? "taskDate" : "eventDate"}
+                  name={tab === 'task' ? 'taskDate' : 'eventDate'}
                   style={{
                     height: 48,
-                    borderRadius: "0.25rem",
-                    backgroundColor: "white",
-                    "::placeholder": {
-                      color: "#000",
-                      fontWeight: "bold",
+                    borderRadius: '0.25rem',
+                    backgroundColor: 'white',
+                    '::placeholder': {
+                      color: '#000',
+                      fontWeight: 'bold',
                     },
                   }}
                   placeholder={placeholder}
-                  id={tab === "task" ? "taskDate" : "eventDate"}
+                  id={tab === 'task' ? 'taskDate' : 'eventDate'}
                   pattern="\d{4}-\d{2}-\d{2}"
                   onChange={(e) =>
-                    handleInputChange("startDate", e.target.value)
+                    handleInputChange('startDate', e.target.value)
                   }
                   value={state.startDate}
                 />
@@ -284,9 +285,9 @@ const TaskEventModal = (props) => {
             <div className="col-md-6 ">
               <label
                 htmlFor="date"
-                style={{ fontSize: "14px", fontWeight: "bold" }}
+                style={{ fontSize: '14px', fontWeight: 'bold' }}
               >
-                End{" "}
+                End{' '}
                 <FormattedMessage id={`calendar_task-events.date_of_${tab}`} />
               </label>
               <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
@@ -294,21 +295,21 @@ const TaskEventModal = (props) => {
                   <input
                     className="my-1 mb-4 py-2 px-2 w-100 "
                     type="date"
-                    name={tab === "task" ? "taskDate" : "eventDate"}
+                    name={tab === 'task' ? 'taskDate' : 'eventDate'}
                     style={{
                       height: 48,
-                      borderRadius: "0.25rem",
-                      backgroundColor: "white",
-                      "::placeholder": {
-                        color: "#000",
-                        fontWeight: "bold",
+                      borderRadius: '0.25rem',
+                      backgroundColor: 'white',
+                      '::placeholder': {
+                        color: '#000',
+                        fontWeight: 'bold',
                       },
                     }}
                     placeholder={placeholder}
-                    id={tab === "task" ? "taskDate" : "eventDate"}
+                    id={tab === 'task' ? 'taskDate' : 'eventDate'}
                     pattern="\d{4}-\d{2}-\d{2}"
                     onChange={(e) =>
-                      handleInputChange("endDate", e.target.value)
+                      handleInputChange('endDate', e.target.value)
                     }
                     value={state.endDate}
                   />
@@ -319,7 +320,7 @@ const TaskEventModal = (props) => {
           <div className="col-md-6 ">
             <label
               htmlFor="date"
-              style={{ fontSize: "14px", fontWeight: "bold" }}
+              style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               <FormattedMessage
                 id={`calendar_task-events.start_time_of_${tab}`}
@@ -328,7 +329,7 @@ const TaskEventModal = (props) => {
             <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
               {(placeholder) => (
                 <TimePicker
-                  onChange={(e) => handleInputChange("startTime", e)}
+                  onChange={(e) => handleInputChange('startTime', e)}
                   value={state.startTime}
                 />
               )}
@@ -337,7 +338,7 @@ const TaskEventModal = (props) => {
           <div className="col-md-6 ">
             <label
               htmlFor="date"
-              style={{ fontSize: "14px", fontWeight: "bold" }}
+              style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               <FormattedMessage
                 id={`calendar_task-events.end_time_of_${tab}`}
@@ -346,7 +347,7 @@ const TaskEventModal = (props) => {
             <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
               {(placeholder) => (
                 <TimePicker
-                  onChange={(e) => handleInputChange("endTime", e)}
+                  onChange={(e) => handleInputChange('endTime', e)}
                   value={state.endTime}
                 />
               )}
@@ -356,7 +357,7 @@ const TaskEventModal = (props) => {
           <div className="col-md-12">
             <label
               htmlFor="description"
-              style={{ fontSize: "14px", fontWeight: "bold" }}
+              style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               <FormattedMessage
                 id={`calendar_task-events.description_of_${tab}`}
@@ -366,19 +367,19 @@ const TaskEventModal = (props) => {
               {(placeholder) => (
                 <ReactQuill
                   theme="snow"
-                  name={tab === "task" ? "taskDescription" : "eventDescription"}
-                  id={tab === "task" ? "taskDescription" : "eventDescription"}
+                  name={tab === 'task' ? 'taskDescription' : 'eventDescription'}
+                  id={tab === 'task' ? 'taskDescription' : 'eventDescription'}
                   className="my-1 mb-4 py-2 px-0 w-100 rounded-0 scroll-add-new-note-modal"
                   style={{
-                    height: "150px",
-                    "::placeholder": {
-                      color: "#000",
-                      fontWeight: "bold",
+                    height: '150px',
+                    '::placeholder': {
+                      color: '#000',
+                      fontWeight: 'bold',
                       fontSize: 16,
                     },
                   }}
                   placeholder={placeholder}
-                  onChange={(e) => handleInputChange("description", e)}
+                  onChange={(e) => handleInputChange('description', e)}
                   value={state.description}
                 />
               )}
@@ -388,7 +389,7 @@ const TaskEventModal = (props) => {
           <div className="col-md-12">
             <label
               htmlFor="requirements"
-              style={{ fontSize: "14px", fontWeight: "bold" }}
+              style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               <FormattedMessage id="calendar_task-events.requirements" />
             </label>
@@ -400,13 +401,13 @@ const TaskEventModal = (props) => {
                   name="requirements"
                   style={{
                     height: 48,
-                    borderRadius: "0.25rem",
-                    backgroundColor: "white",
+                    borderRadius: '0.25rem',
+                    backgroundColor: 'white',
                   }}
                   placeholder={placeholder}
                   id="requirements"
                   onChange={(e) =>
-                    handleInputChange("requirements", e.target.value)
+                    handleInputChange('requirements', e.target.value)
                   }
                   value={state.requirements}
                 />
@@ -416,13 +417,13 @@ const TaskEventModal = (props) => {
           <div className="col-md-12">
             <PeriodSelector
               periods={periods}
-              handleChangePeriod={(e) => handleInputChange("chooseClasses", e)}
+              handleChangePeriod={(e) => handleInputChange('chooseClasses', e)}
             />
           </div>
         </div>
       </Modal.Body>
       <div
-        style={{ border: "0px" }}
+        style={{ border: '0px' }}
         className="mt-0 pt-0 border-0 border-none mx-4 pe-1 mb-4"
       >
         <button
@@ -433,6 +434,6 @@ const TaskEventModal = (props) => {
         </button>
       </div>
     </Modal>
-  );
-};
-export default TaskEventModal;
+  )
+}
+export default TaskEventModal

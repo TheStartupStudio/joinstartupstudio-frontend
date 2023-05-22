@@ -115,6 +115,12 @@ const StudentOfInstructors = (props) => {
     })
   }
 
+  const removeNotification = (e, index) => {
+    const newNotifications = [...notifications]
+    newNotifications.splice(index, 1)
+    setNotifications(newNotifications)
+  }
+
   return (
     <Modal
       show={props.onShow}
@@ -529,7 +535,11 @@ const StudentOfInstructors = (props) => {
                 handleChange={(e) => {
                   handleChangeNotifications(e, index)
                 }}
+                handleRemove={(e) => {
+                  removeNotification(e, index)
+                }}
                 notification={notification}
+                notifications={notifications}
               />
             ))}
             <div className={'d-flex justify-content-end mb-2'}>
