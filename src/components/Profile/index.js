@@ -1,68 +1,77 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faFacebookF,
   faLinkedinIn,
   faTwitter,
   faInstagram,
-} from "@fortawesome/free-brands-svg-icons";
-import { faGlobe } from "@fortawesome/free-solid-svg-icons";
-import axiosInstance from "../../utils/AxiosInstance";
-import avator from "../../assets/images/profile-image.png";
-import { IsUserLevelAuthorized, isValidHttpUrl } from "../../utils/helpers";
-import Questions from "../../assets/images/questions.png";
-import Feedbacks from "../../assets/images/feedbacks.png";
-import listen from "../../assets/images/read_watch_listen_Listen_with typo.png";
-import read from "../../assets/images/read_watch_listen_Read_with typo.png";
-import watch from "../../assets/images/read_watch_listen_Watch_with typo.png";
-import "./index.css";
+} from '@fortawesome/free-brands-svg-icons'
+import { faGlobe } from '@fortawesome/free-solid-svg-icons'
+import axiosInstance from '../../utils/AxiosInstance'
+import avator from '../../assets/images/profile-image.png'
+import { IsUserLevelAuthorized, isValidHttpUrl } from '../../utils/helpers'
+import Questions from '../../assets/images/questions.png'
+import Feedbacks from '../../assets/images/feedbacks.png'
+import listen from '../../assets/images/read_watch_listen_Listen_with typo.png'
+import read from '../../assets/images/read_watch_listen_Read_with typo.png'
+import watch from '../../assets/images/read_watch_listen_Watch_with typo.png'
+import './index.css'
+import BriefingModal from '../Modals/BriefingModal'
 
 function Profile(props) {
-  const user = useSelector((state) => state.user.user.user);
-  const [lastLogin, setLastLogin] = useState(null);
-  const [newMessages, setNewMessages] = useState([]);
-  const isAllowedLevel = IsUserLevelAuthorized();
-  const [dashboardWidget, setDashboardWidget] = useState({});
-  const [studentQuestions, setStudentQuestions] = useState({});
-  const [feedbackRequests, setFeedbackRequests] = useState({});
+  const user = useSelector((state) => state.user.user.user)
+  const [lastLogin, setLastLogin] = useState(null)
+  const [newMessages, setNewMessages] = useState([])
+  const isAllowedLevel = IsUserLevelAuthorized()
+  const [dashboardWidget, setDashboardWidget] = useState({})
+  const [studentQuestions, setStudentQuestions] = useState({})
+  const [feedbackRequests, setFeedbackRequests] = useState({})
+  const [briefingModal, setBriefingModal] = useState(false)
+
+  const handleOpenBriefingModal = () => {
+    setBriefingModal(true)
+  }
+  const handleCloseBriefingModal = () => {
+    setBriefingModal(false)
+  }
 
   useEffect(() => {
     const questionAndFeedbacksHandler = async () => {
-      await axiosInstance.get("/instructor/iamr/tickets").then((res) => {
-        setStudentQuestions(res.data.student_questions);
-        setFeedbackRequests(res.data.certification_feedback_questions);
-      });
-    };
-    questionAndFeedbacksHandler();
-  }, []);
+      await axiosInstance.get('/instructor/iamr/tickets').then((res) => {
+        setStudentQuestions(res.data.student_questions)
+        setFeedbackRequests(res.data.certification_feedback_questions)
+      })
+    }
+    questionAndFeedbacksHandler()
+  }, [])
 
   useEffect(() => {
-    getDashboardWidgetData();
-    getNewMessages();
-  }, []);
+    getDashboardWidgetData()
+    getNewMessages()
+  }, [])
 
   const getDashboardWidgetData = async () => {
-    await axiosInstance.get("/dashboard").then((res) => {
-      setDashboardWidget(res.data);
-    });
-  };
+    await axiosInstance.get('/dashboard').then((res) => {
+      setDashboardWidget(res.data)
+    })
+  }
 
   useEffect(() => {
-    if (props.newMessage?.length === 0) return;
-    const arrivalMessage = props.newMessage;
+    if (props.newMessage?.length === 0) return
+    const arrivalMessage = props.newMessage
     if (
       arrivalMessage?.chatOpen &&
       arrivalMessage?.currentConversation ==
         arrivalMessage?.arrivalMessage.room_id
     )
-      return;
+      return
 
     const unReadMessageExists = newMessages.some(
       (newMessage) => newMessage.id === arrivalMessage?.arrivalMessage.room_id
-    );
+    )
 
     if (
       !unReadMessageExists &&
@@ -71,7 +80,7 @@ function Profile(props) {
       setNewMessages([
         ...newMessages,
         { id: arrivalMessage?.arrivalMessage.room_id },
-      ]);
+      ])
     } else if (
       unReadMessageExists &&
       arrivalMessage?.arrivalMessage.from === user.id
@@ -80,59 +89,59 @@ function Profile(props) {
         newMessages.filter(
           (message) => message.id !== arrivalMessage?.arrivalMessage.room_id
         )
-      );
+      )
     }
-  }, [props.newMessage]);
+  }, [props.newMessage])
 
   useEffect(() => {
-    if (!props.chatOpened) return;
-    const room_id = props.chatOpened;
-    setNewMessages(newMessages.filter((room) => room.id != room_id));
-    props.clearChat("");
-  }, [props.chatOpened]);
+    if (!props.chatOpened) return
+    const room_id = props.chatOpened
+    setNewMessages(newMessages.filter((room) => room.id != room_id))
+    props.clearChat('')
+  }, [props.chatOpened])
 
   useEffect(() => {
     if (user.last_login === null) {
-      return setLastLogin("None");
+      return setLastLogin('None')
     }
-    const milliseconds = user.last_login * 1000;
+    const milliseconds = user.last_login * 1000
     const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    const date = new Date(milliseconds);
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ]
+    const date = new Date(milliseconds)
     const formatedDate =
       monthNames[date.getMonth()] +
-      " " +
+      ' ' +
       date.getUTCDate() +
-      ", " +
-      date.getFullYear();
-    setLastLogin(formatedDate);
-  }, []);
+      ', ' +
+      date.getFullYear()
+    setLastLogin(formatedDate)
+  }, [])
 
   const redirect = (input) => {
-    if (!isValidHttpUrl(input)) input = `http://${input}`;
-    window.open(input, "_blank");
-  };
+    if (!isValidHttpUrl(input)) input = `http://${input}`
+    window.open(input, '_blank')
+  }
   const getNewMessages = async () => {
-    if (!isAllowedLevel) return;
+    if (!isAllowedLevel) return
     await axiosInstance
-      .get("/privateChat/unread-messages")
+      .get('/privateChat/unread-messages')
       .then((data) => {
-        setNewMessages(data.data);
+        setNewMessages(data.data)
       })
-      .catch((err) => err);
-  };
+      .catch((err) => err)
+  }
 
   return (
     <Row className="mx-0">
@@ -140,9 +149,9 @@ function Profile(props) {
         lg={6}
         sm={12}
         style={{
-          backgroundColor: "#F8F7F7",
+          backgroundColor: '#F8F7F7',
           borderRadius: 0,
-          minHeight: "166px",
+          minHeight: '166px',
         }}
         className="notification-box"
       >
@@ -158,7 +167,7 @@ function Profile(props) {
             {user?.social_links?.linkedIn && (
               <a
                 href={
-                  user.social_links.linkedIn.startsWith("https")
+                  user.social_links.linkedIn.startsWith('https')
                     ? user.social_links.linkedIn
                     : `https://${user.social_links.linkedIn}`
                 }
@@ -172,7 +181,7 @@ function Profile(props) {
             {user?.social_links?.twitter && (
               <a
                 href={
-                  user.social_links.twitter.startsWith("https")
+                  user.social_links.twitter.startsWith('https')
                     ? user.social_links.twitter
                     : `https://${user.social_links.twitter}`
                 }
@@ -186,7 +195,7 @@ function Profile(props) {
             {user?.social_links?.instagram && (
               <a
                 href={
-                  user.social_links.instagram.startsWith("https")
+                  user.social_links.instagram.startsWith('https')
                     ? user.social_links.instagram
                     : `https://${user.social_links.instagram}`
                 }
@@ -200,7 +209,7 @@ function Profile(props) {
             {user?.social_links?.website && (
               <a
                 href={
-                  user.social_links.website.startsWith("https")
+                  user.social_links.website.startsWith('https')
                     ? user.social_links.website
                     : `https://${user.social_links.website}`
                 }
@@ -214,7 +223,7 @@ function Profile(props) {
             {user?.social_links?.facebook && (
               <a
                 href={
-                  user.social_links.facebook.startsWith("https")
+                  user.social_links.facebook.startsWith('https')
                     ? user.social_links.facebook
                     : `https://${user.social_links.facebook}`
                 }
@@ -234,28 +243,42 @@ function Profile(props) {
       </Col>
       <div
         style={{
-          minHeight: "166px",
-          cursor: "pointer",
+          minHeight: '166px',
+          cursor: 'pointer',
         }}
         onClick={() => redirect(dashboardWidget?.link)}
         className="mx-0 px-0 col-12 col-lg-6 row mt-4 mt-md-0 widget-interesting text-center "
       >
         <div className="col-4 col-md-4 mx-auto my-auto fw-bold py-4 ">
           <div className="h-auto w-auto user-select-none">
-            <p className="my-0 mx-auto" style={{ color: "#FE43A1" }}>
+            <p className="my-0 mx-auto" style={{ color: '#FE43A1' }}>
               READ
             </p>
-            <p className="my-0 mx-auto" style={{ color: "#99CC33" }}>
+            <p className="my-0 mx-auto" style={{ color: '#99CC33' }}>
               WATCH
             </p>
-            <p className="my-0 mx-auto" style={{ color: "#51C7DF" }}>
+            <p className="my-0 mx-auto" style={{ color: '#51C7DF' }}>
               LISTEN
             </p>
           </div>
+          <button
+            className="py-2 border-0 color transform text-uppercase text-center  w-100 my-1"
+            style={{
+              backgroundColor: 'rgb(81, 199, 223)',
+              color: 'rgb(255, 255, 255)',
+              fontSize: 14,
+            }}
+            onClick={(event) => {
+              event.stopPropagation()
+              handleOpenBriefingModal()
+            }}
+          >
+            Briefing
+          </button>
         </div>
         <div
           className="col-8 col-md-8 text-start my-auto info-text-dashboard"
-          style={{ fontSize: "14px", wordBreak: "break-word" }}
+          style={{ fontSize: '14px', wordBreak: 'break-word' }}
         >
           {dashboardWidget?.description}
         </div>
@@ -265,36 +288,36 @@ function Profile(props) {
       {/* certification status */}
       <div
         style={{
-          backgroundColor: "#F8F7F7",
-          marginLeft: "0",
-          minHeight: "166px",
-          height: "250px",
-          fontWeight: "600",
+          backgroundColor: '#F8F7F7',
+          marginLeft: '0',
+          minHeight: '166px',
+          height: '250px',
+          fontWeight: '600',
         }}
         className="notification-box col-lg-6 col-sm-12 mt-4 row position-relative"
       >
         <p
           className="text-center certification-progress mt-4"
-          style={{ fontSize: "20px", height: "auto" }}
+          style={{ fontSize: '20px', height: 'auto' }}
         >
           IAMR Inbox
         </p>
         <div
           className="col-6 text-center fw-bold "
-          style={{ marginTop: "-3rem" }}
+          style={{ marginTop: '-3rem' }}
         >
-          <img src={Questions} style={{ width: "180px" }} alt="" />
-          <p className="mb-0 py-0" style={{ marginTop: "-2rem" }}>
+          <img src={Questions} style={{ width: '180px' }} alt="" />
+          <p className="mb-0 py-0" style={{ marginTop: '-2rem' }}>
             {studentQuestions.unreadCount ? studentQuestions?.unreadCount : 0}
             &nbsp; Questions
           </p>
         </div>
         <div
           className="col-6 text-center fw-bold"
-          style={{ marginTop: "-3rem" }}
+          style={{ marginTop: '-3rem' }}
         >
-          <img src={Feedbacks} style={{ width: "180px" }} alt="" />
-          <p className="mb-0 py-0" style={{ marginTop: "-2rem" }}>
+          <img src={Feedbacks} style={{ width: '180px' }} alt="" />
+          <p className="mb-0 py-0" style={{ marginTop: '-2rem' }}>
             {feedbackRequests.unreadCount ? feedbackRequests.unreadCount : 0}
             &nbsp; Requests
           </p>
@@ -330,29 +353,29 @@ function Profile(props) {
       <div
         className="col-lg-6 col-12 mt-4 row px-md-4 gx-0 float-end ps-auto ms-auto"
         style={{
-          backgroundColor: "#F8F7F7",
-          minHeight: "166px",
-          height: "250px",
-          fontWeight: "600",
+          backgroundColor: '#F8F7F7',
+          minHeight: '166px',
+          height: '250px',
+          fontWeight: '600',
         }}
       >
         <div
           className="read-section w-100 border-bottom row gx-0"
-          style={{ height: "33.3%" }}
+          style={{ height: '33.3%' }}
         >
           <div className=" col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4">
             <div className="read-bg__img"></div>
           </div>
           <div
-            style={{ float: "right" }}
-            className={"text-start my-auto col-7 read-watch-listen-text-div"}
+            style={{ float: 'right' }}
+            className={'text-start my-auto col-7 read-watch-listen-text-div'}
           >
             <p className="my-0 text-start read-watch-listen-title">
               {dashboardWidget?.read?.title}
             </p>
             <p
               className="text-start my-0 read-watch-listen-author"
-              style={{ fontSize: "10px" }}
+              style={{ fontSize: '10px' }}
             >
               {dashboardWidget?.read?.author}
             </p>
@@ -361,15 +384,15 @@ function Profile(props) {
         {/* second */}
         <div
           className="read-section w-100 border-bottom row gx-0"
-          style={{ height: "33.3%" }}
+          style={{ height: '33.3%' }}
         >
           <div className="col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4">
             <div className="watch-bg__img"></div>
           </div>
           <div
-            style={{ float: "right" }}
+            style={{ float: 'right' }}
             className={
-              "text-start my-auto col-7 col-md-9 read-watch-listen-text-div"
+              'text-start my-auto col-7 col-md-9 read-watch-listen-text-div'
             }
           >
             <p className="my-0 text-start w-100 read-watch-listen-title">
@@ -377,7 +400,7 @@ function Profile(props) {
             </p>
             <p
               className="text-start my-0 read-watch-listen-author"
-              style={{ fontSize: "10px" }}
+              style={{ fontSize: '10px' }}
             >
               {dashboardWidget?.watch?.author}
             </p>
@@ -386,21 +409,21 @@ function Profile(props) {
         {/* third  */}
         <div
           className="read-section w-100 row gx-0"
-          style={{ borderBottom: "0px", height: "33.3%" }}
+          style={{ borderBottom: '0px', height: '33.3%' }}
         >
           <div className="col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4">
             <div className="listen-bg__img"></div>
           </div>
           <div
-            style={{ float: "right" }}
-            className={"text-center my-auto col-7 read-watch-listen-text-div"}
+            style={{ float: 'right' }}
+            className={'text-center my-auto col-7 read-watch-listen-text-div'}
           >
             <p className="my-0 text-start read-watch-listen-title">
               {dashboardWidget?.listen?.title}
             </p>
             <p
               className="text-start my-0 read-watch-listen-author"
-              style={{ fontSize: "10px" }}
+              style={{ fontSize: '10px' }}
             >
               {dashboardWidget?.listen?.author}
             </p>
@@ -408,7 +431,8 @@ function Profile(props) {
         </div>
         {/*  */}
       </div>
+      <BriefingModal show={briefingModal} onHide={handleCloseBriefingModal} />
     </Row>
-  );
+  )
 }
-export default Profile;
+export default Profile
