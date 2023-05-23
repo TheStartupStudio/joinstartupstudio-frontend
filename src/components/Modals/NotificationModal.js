@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form'
 import IntlMessages from '../../utils/IntlMessages'
 import 'react-quill/dist/quill.snow.css'
 import './NotificationModal.css'
+import { toast } from 'react-toastify'
 
 const NotificationModal = (props) => {
   const initialState = {

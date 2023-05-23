@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import NotificationModal from '../../components/Modals/NotificationModal'
 import DeleteNotificationModal from '../../components/Modals/DeleteNotificationModal'
+import { toast } from 'react-toastify'
 
 const NotificationListItem = ({
   title,
@@ -145,16 +146,27 @@ const NotificationBox = (props) => {
   }
 
   const handleUpdateNotification = (updatedNotification) => {
-    socket?.emit('editNotification', {
-      updatedNotification,
-      notificationId: updatedNotification.id,
-    })
+    try {
+      socket?.emit('editNotification', {
+        updatedNotification,
+        notificationId: updatedNotification.id,
+      })
+      toast.success('Notification updated successfully!')
+    } catch (e) {
+      toast.error('Notification updating error!')
+    }
   }
 
   const onDeleteNotification = () => {
-    socket?.emit('deleteNotification', {
-      notificationId: notification.id,
-    })
+    try {
+      socket?.emit('deleteNotification', {
+        notificationId: notification.id,
+      })
+      handleCloseDeleteNotificationModal()
+      toast.success('Notification deleted successfully!')
+    } catch (e) {
+      toast.error('Notification deleting error!')
+    }
   }
   return (
     <>
