@@ -429,7 +429,6 @@ function Profile(props) {
             </p>
           </div>
         </div>
-        {/*  */}
       </div>
       <BriefingModal show={briefingModal} onHide={handleCloseBriefingModal} />
     </Row>

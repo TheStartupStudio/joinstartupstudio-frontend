@@ -1,14 +1,26 @@
+.briefing-modal .modal-dialog {
+    max-width: 710px !important;
+}
 
+.close-briefing-modal .btn-close  {
+    color: #231F20;
+}
+
+.briefing-modal .modal-header {
+    /*padding-bottom: 10px !important;*/
+    margin-right: -7px;
+}
 .briefing-modal .modal-title {
     /*text-transform: uppercase;*/
     /*font-weight: bold;*/
     font-size: 22px;
     text-transform: uppercase;
     text-align: left;
-    font: normal normal bold 22px/15px Montserrat;
+    font: normal normal bold 18px/15px Montserrat;
     letter-spacing: 0.88px;
     color: #231F20;
     opacity: 1;
+    margin-top:10px
 }
 
 .close-briefing-modal {
@@ -19,27 +31,31 @@
 
 .briefing-modal .modal-content {
     border-radius: 0px !important;
-    padding: 10px 50px !important;
+    padding: 10px 35px !important;
     background-color: #fbfbfb !important;
 }
 
 
 .briefing-modal .briefing-modal-body {
     background-color: inherit;
-    padding: 10px 0 !important;
+    padding: 20px 0px !important;
 }
 
 .content-item-title {
     text-align: left;
-    font: normal normal normal 17px/20px Montserrat;
+    font: normal normal normal 14px/20px Montserrat;
     letter-spacing: 0.68px;
     color: #707070;
 }
 
 .content-item-description {
-
+margin-left: 6px;
     text-align: left;
-    font: normal normal 600 17px/20px Montserrat;
+    font: normal normal 600 14px/20px Montserrat;
     letter-spacing: 0.68px;
     color: #707070;
+}
+
+.content-item-container {
+    margin: 8px 0;
 }
