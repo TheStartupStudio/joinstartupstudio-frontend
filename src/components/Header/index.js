@@ -694,6 +694,29 @@ function Header(props) {
             >
               <IntlMessages id="my_account.page_title" />
             </Link>
+            {
+              <Link
+                className="dropdown-item py-2 dropdown-menu-hover"
+                to="/edit-portfolio"
+                onClick={() => setShowDropDown((preState) => !preState)}
+              >
+                MY PORTFOLIO
+              </Link>
+            }
+            {allowToShow ? (
+              <Link
+                className="dropdown-item py-2 dropdown-menu-hover"
+                to="#"
+                onClick={() => {
+                  setCountStudentOfInstructor(true)
+                  setShowDropDown((preState) => !preState)
+                }}
+              >
+                Admin panel
+              </Link>
+            ) : (
+              ''
+            )}
             {/* <Link
               className='dropdown-item py-2 dropdown-menu-hover'
               to='/MyStartupProfile'
@@ -701,26 +724,36 @@ function Header(props) {
             >
               MY PROJECTS
             </Link> */}
-            <Link
-              className="dropdown-item py-2 dropdown-menu-hover"
-              to="/my-connections"
-              onClick={() => setShowDropDown((preState) => !preState)}
-            >
-              MY COMMUNITY
-            </Link>
+            {/*<Link*/}
+            {/*  className="dropdown-item py-2 dropdown-menu-hover"*/}
+            {/*  to="/my-connections"*/}
+            {/*  onClick={() => setShowDropDown((preState) => !preState)}*/}
+            {/*>*/}
+            {/*  MY COMMUNITY*/}
+            {/*</Link>*/}
+            {/*<Link*/}
+            {/*  className="dropdown-item py-2 dropdown-menu-hover"*/}
+            {/*  to="#"*/}
+            {/*  onClick={showModal}*/}
+            {/*>*/}
+            {/*  <IntlMessages id="navigation.contact_us" />*/}
+            {/*</Link>*/}
+            {/*<Link*/}
+            {/*  className="dropdown-item py-2 dropdown-menu-hover"*/}
+            {/*  to="#"*/}
+            {/*  onClick={showMisconductModal}*/}
+            {/*>*/}
+            {/*  REPORT MISCONDUCT*/}
+            {/*</Link>*/}
             <Link
               className="dropdown-item py-2 dropdown-menu-hover"
               to="#"
-              onClick={showModal}
+              onClick={() => {
+                showModal()
+                setShowDropDown((preState) => !preState)
+              }}
             >
-              <IntlMessages id="navigation.contact_us" />
-            </Link>
-            <Link
-              className="dropdown-item py-2 dropdown-menu-hover"
-              to="#"
-              onClick={showMisconductModal}
-            >
-              REPORT MISCONDUCT
+              SUPPORT
             </Link>
             <Link
               className="dropdown-item py-2 dropdown-menu-hover"
