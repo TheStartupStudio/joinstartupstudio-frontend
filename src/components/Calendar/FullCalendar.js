@@ -120,7 +120,7 @@ const FullCalendarComponent = (props) => {
                   padding: 0,
                 }}
               >
-                {foundedEvent.type == 'task' ? 'Task' : 'Event'}:{' '}
+                {foundedEvent?.type == 'task' ? 'Task' : 'Event'}:{' '}
                 {foundedEvent?.name}
               </span>
               <div
