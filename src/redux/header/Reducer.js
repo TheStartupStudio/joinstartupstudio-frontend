@@ -88,6 +88,7 @@ const headerReducer = (state = initialState, action) => {
         }
         return briefing
       })
+      toast.success('Briefing updated successfully.')
       return {
         ...state,
         briefings: updatedBriefings,
@@ -95,16 +96,16 @@ const headerReducer = (state = initialState, action) => {
         error: null,
       }
 
-      toast.success('Briefing updated successfully.')
       break
 
     case EDIT_BRIEFING_ERROR:
+      toast.error('Briefing update failed.')
+
       return {
         ...state,
         loading: false,
         error: payload.error,
       }
-      toast.error('Briefing update failed.')
       break
     case DELETE_BRIEFING_START:
       return {
