@@ -111,13 +111,18 @@ const StudentOfInstructors = (props) => {
   const loggedUser = useSelector((state) => state.user.user.user)
 
   const handleSubmitNotification = () => {
-    socket?.emit('sendNotifications', {
-      notifications: notifications,
-      sender: loggedUser,
-      receiver: null,
-      from: 'manual',
-      type: NotificationTypes.DEFAULT_NOTIFICATION.key,
-    })
+    try {
+      socket?.emit('sendNotifications', {
+        notifications: notifications,
+        sender: loggedUser,
+        receiver: null,
+        from: 'manual',
+        type: NotificationTypes.DEFAULT_NOTIFICATION.key,
+      })
+      toast.success('Notification added successfully!')
+    } catch (e) {
+      toast.error('Notification adding error!')
+    }
   }
 
   const removeNotification = (e, index) => {
