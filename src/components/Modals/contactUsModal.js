@@ -28,7 +28,9 @@ const ContactUsModal = (props) => {
     // if (!validateEmail(email)) {
     //   toast.error(<IntlMessages id="alerts.valid_email" />)
     // } else
-    if (message.length === 0) {
+    if (subject.length === 0) {
+      toast.error(<IntlMessages id="alerts.subject_required" />)
+    } else if (message.length === 0) {
       toast.error(<IntlMessages id="alerts.contact_message" />)
     } else {
       const params = {
