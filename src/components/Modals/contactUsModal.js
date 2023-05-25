@@ -38,7 +38,6 @@ const ContactUsModal = (props) => {
         email: user.email,
         subject: subject,
       }
-      console.log(params)
       axiosInstance
         .post(process.env.REACT_APP_SERVER_BASE_URL + 'users/contact', params)
         .then(() => {

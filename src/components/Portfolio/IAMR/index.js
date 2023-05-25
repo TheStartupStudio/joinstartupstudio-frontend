@@ -56,105 +56,140 @@ export const IAMR = (props) => {
     setDeleteModal(true)
   }
 
+  const IAMRSubmissionCard = (props) => {
+    return (
+      <div>
+        <div
+          style={{
+            backgroundImage: `url(${props.submission?.imageUrl})`,
+            // backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            height: 215,
+            width: 290,
+            display: 'flex',
+            alignItems: 'flex-end',
+            border: '1px solid #e3e3e3',
+            // backgroundSize: '100% 100%',
+            backgroundSize: 'cover',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#51C7DF',
+              padding: 10,
+              color: '#fff',
+              fontWeight: 500,
+              width: '100%',
+            }}
+          >
+            I AM VIDEO
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return props?.preview !== 'undefined' ? (
     <div className={['iamr-section', props.className].join(' ')}>
       <div
-        className='my-account rounded  iamr-section mx-0 mt-4'
-        style={{
-          border: props?.preview ? 'none' : '1px solid #bbbdbf'
-        }}
+      // className="my-account rounded  iamr-section mx-0 mt-4"
+      // style={{
+      //   border: props?.preview ? 'none' : '1px solid #bbbdbf',
+      // }}
       >
         <div
-          className='iamr-content'
-          style={{
-            margin: props?.preview ? '40px 0 20px 0' : '40px 20px 20px 20px'
-          }}
+        // className="iamr-content"
+        // style={{
+        //   margin: props?.preview ? '40px 0 20px 0' : '40px 20px 20px 20px',
+        // }}
         >
-          <h4 className='m-3 text-center iamr-title'>I AM MARKET-READY</h4>
+          <h4 className="m-3 text-center iamr-title">I AM MARKET-READY</h4>
 
-          <p className='m-3'>
+          <p className="m-3">
             The components of your portfolio speak to your level of market-ready
             skills as you introduce the world to who you are, what you can do,
             and your ability to prove it.
           </p>
 
-          <div className='iamr-submissions m-3'>
-            <div className='row d-flex justify-content-between'>
+          <div className="iamr-submissions m-3">
+            <div className="row d-flex justify-content-between">
               {submissions.map((submission) => {
                 return (
                   <div
-                    className='col-12 col-sm-5 col-lg-5 px-0'
+                    className="col-12 col-sm-5 col-lg-5 px-0"
                     key={submission.id}
                   >
-                    <div className='iamr-submission'>
-                      <p className='text-center iamr-Current Positionsubmission-title'>
-                        {submission.title}
-                      </p>
-                      {props.preview ? (
-                        <div
-                          className='add-submission'
-                          style={{ width: '100%' }}
-                        >
-                          <a
-                            href={
-                              submission.link.startsWith('http')
-                                ? submission.link
-                                : 'https://' + submission.link
-                            }
-                            target='_blank'
-                          >
-                            <img src={submission.imageUrl} alt='' />
-                          </a>
-                        </div>
-                      ) : (
-                        <div className='add-submission'>
-                          <div className='submission-actions'>
-                            <a onClick={() => updateSubmission(submission)}>
-                              <FontAwesomeIcon
-                                icon={faPencilAlt}
-                                className='mb-2 ms-1 icon'
-                                style={{ height: '25px', width: '25px' }}
-                              />
-                            </a>
-                            <a onClick={() => deleteSubmission(submission)}>
-                              <FontAwesomeIcon
-                                icon={faTrash}
-                                className='mb-2 ms-1 icon'
-                                style={{ height: '25px', width: '25px' }}
-                              />
-                            </a>
-                          </div>
-                          <a
-                            href={
-                              submission.link?.startsWith('http')
-                                ? submission.link
-                                : `https://${submission.link}`
-                            }
-                            target='_blank'
-                          >
-                            <img src={submission.imageUrl} alt='' />
-                          </a>
-                        </div>
-                      )}
-                    </div>
+                    <IAMRSubmissionCard submission={submission} />
+                    {/*<div className="iamr-submission">*/}
+                    {/*  <p className="text-center iamr-Current Positionsubmission-title">*/}
+                    {/*    {submission.title}*/}
+                    {/*  </p>*/}
+                    {/*  {props.preview ? (*/}
+                    {/*    <div*/}
+                    {/*      className="add-submission"*/}
+                    {/*      style={{ width: '100%' }}*/}
+                    {/*    >*/}
+                    {/*      <a*/}
+                    {/*        href={*/}
+                    {/*          submission.link.startsWith('http')*/}
+                    {/*            ? submission.link*/}
+                    {/*            : 'https://' + submission.link*/}
+                    {/*        }*/}
+                    {/*        target="_blank"*/}
+                    {/*      >*/}
+                    {/*        <img src={submission.imageUrl} alt="" />*/}
+                    {/*      </a>*/}
+                    {/*    </div>*/}
+                    {/*  ) : (*/}
+                    {/*    <div className="add-submission">*/}
+                    {/*      <div className="submission-actions">*/}
+                    {/*        <a onClick={() => updateSubmission(submission)}>*/}
+                    {/*          <FontAwesomeIcon*/}
+                    {/*            icon={faPencilAlt}*/}
+                    {/*            className="mb-2 ms-1 icon"*/}
+                    {/*            style={{ height: '25px', width: '25px' }}*/}
+                    {/*          />*/}
+                    {/*        </a>*/}
+                    {/*        <a onClick={() => deleteSubmission(submission)}>*/}
+                    {/*          <FontAwesomeIcon*/}
+                    {/*            icon={faTrash}*/}
+                    {/*            className="mb-2 ms-1 icon"*/}
+                    {/*            style={{ height: '25px', width: '25px' }}*/}
+                    {/*          />*/}
+                    {/*        </a>*/}
+                    {/*      </div>*/}
+                    {/*      <a*/}
+                    {/*        href={*/}
+                    {/*          submission.link?.startsWith('http')*/}
+                    {/*            ? submission.link*/}
+                    {/*            : `https://${submission.link}`*/}
+                    {/*        }*/}
+                    {/*        target="_blank"*/}
+                    {/*      >*/}
+                    {/*        <img src={submission.imageUrl} alt="" />*/}
+                    {/*      </a>*/}
+                    {/*    </div>*/}
+                    {/*  )}*/}
+                    {/*</div>*/}
                   </div>
                 )
               })}
               {!props.preview && props.preview !== '1' && (
-                <div className='col-12 col-sm-5 col-lg-5 px-0'>
-                  <div className='iamr-submission'>
-                    <p className='text-center iamr-submission-title'>
+                <div className="col-12 col-sm-5 col-lg-5 px-0">
+                  <div className="iamr-submission">
+                    <p className="text-center iamr-submission-title">
                       Add Another Submission
                     </p>
                     <div
-                      className='add-submission'
+                      className="add-submission"
                       style={{ width: '100%' }}
                       onClick={() => setIamrModal(true)}
                     >
-                      <span className='submission-plus'>
+                      <span className="submission-plus">
                         <FontAwesomeIcon
                           icon={faPlus}
-                          className='mx-4 icon gray-ico'
+                          className="mx-4 icon gray-ico"
                           style={{ height: '60px', width: '60px' }}
                         />
                       </span>
@@ -163,7 +198,7 @@ export const IAMR = (props) => {
                 </div>
               )}
               {!props.preview && props.preview !== '1' ? (
-                <div className='col-12'>
+                <div className="col-12">
                   {/* <div className='d-flex justify-content-end show_in_portfolio'>
                     <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2 show-portfolio-text'>
                       Show link to My Projects in My Portfolio
@@ -188,14 +223,14 @@ export const IAMR = (props) => {
                   </div> */}
                 </div>
               ) : (
-                <div className='col-12 text-end'>
+                <div className="col-12 text-end">
                   <NavLink
                     to={
                       props.user.id !== user?.id
                         ? `/UserProject/${props.user.id}`
                         : '/MyStartupProfile'
                     }
-                    className='d-block me-2 mt-2'
+                    className="d-block me-2 mt-2"
                   >
                     {isPublished ? <strong>VIEW MY PROJECTS</strong> : ''}
                   </NavLink>
@@ -234,7 +269,7 @@ export const IAMR = (props) => {
             onSave={(submission) => {
               setSubmissions([
                 ...submissions.filter((s) => s.id != submission.id),
-                submission
+                submission,
               ])
             }}
           />
