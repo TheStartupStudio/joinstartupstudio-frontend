@@ -158,7 +158,9 @@ const PortfolioSection = (props) => {
               </span>
             </div>
           ) : null}
-          {props.isAdd ? <ActionIcon icon={faPlus} /> : null}
+          {props.isAdd ? (
+            <ActionIcon handleOnClick={props.onAdd} icon={faPlus} />
+          ) : null}
           {props.isEdit ? (
             <ActionIcon handleOnClick={props.onEdit} icon={faPencilAlt} />
           ) : null}
@@ -222,12 +224,55 @@ function EditPortfolio() {
   }
 
   const [showEditBioModal, setShowEditBioModal] = useState(false)
+  const [showSkillBoxModal, setShowSkillBoxModal] = useState(false)
+  const [showRemoveSkill, setShowRemoveSkill] = useState(false)
 
   const handleOpenEditBioModal = () => {
     setShowEditBioModal(true)
   }
   const handleCloseEditBioModal = () => {
     setShowEditBioModal(false)
+  }
+  const handleOpenSkillBoxModal = () => {
+    setShowSkillBoxModal(true)
+  }
+  const handleCloseSkillBoxModal = () => {
+    setShowSkillBoxModal(false)
+  }
+  const handleOpenRemoveSkillModal = () => {
+    setShowRemoveSkill(true)
+  }
+  const handleCloseRemoveSkillModal = () => {
+    setShowRemoveSkill(false)
+  }
+
+  const VerifyButton = () => {
+    return (
+      <div
+        style={{
+          border: '1px solid #F2359D',
+          borderRadius: 3,
+          color: '#F2359D',
+          width: '75%',
+          textAlign: 'center',
+          padding: '10px 4px',
+          height: 35,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = '#F2359D' // Change background color on hover
+          e.target.style.color = '#FFFFFF' // Change text color on hover
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = 'transparent' // Revert background color on mouse leave
+          e.target.style.color = '#F2359D' // Revert text color on mouse leave
+        }}
+      >
+        Verify
+      </div>
+    )
   }
 
   return (
@@ -321,7 +366,7 @@ function EditPortfolio() {
           />
         </PortfolioSection>
         {user && (
-          <PortfolioSection showLinkToProjects={true} title={'Accomplishment'}>
+          <PortfolioSection showLinkToProjects={true}>
             <div
               style={{
                 textAlign: 'end',
@@ -337,19 +382,55 @@ function EditPortfolio() {
             <IAMR user={user} />
           </PortfolioSection>
         )}
+        <PortfolioSection
+          title={'Market-ready certified skills'}
+          isEdit={true}
+          isAdd={true}
+          onAdd={handleOpenSkillBoxModal}
+          onEdit={handleOpenRemoveSkillModal}
+        >
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: '85%' }}>
+              <Skills
+                closeRemoveSkill={handleCloseRemoveSkillModal}
+                removeSkillModal={showRemoveSkill}
+                closeSkillBox={handleCloseSkillBoxModal}
+                showSkillModal={showSkillBoxModal}
+              />
+            </div>
+            <div
+              className={'py-2'}
+              style={{
+                width: '15%',
+                display: 'flex',
+                alignItems: 'start',
+                justifyContent: 'end',
+              }}
+            >
+              <VerifyButton />
+            </div>
+          </div>
+        </PortfolioSection>
+        <div>
+          <div
+            style={{
+              font: 'normal normal 600 24px Montserrat',
+              letterSpacing: 0,
+              color: '#231F20',
+              marginLeft: 10,
+            }}
+          >
+            EXPERIENCE
+          </div>
+          <PortfolioSection
+            title={'Experience'}
+            isAdd={true}
+            showInMyPortfolio={true}
+          >
+            <Experience />
+          </PortfolioSection>
+        </div>
       </div>
-      {/*<EditBio*/}
-      {/*  show={showEditBioModal}*/}
-      {/*  onHide={() => onClose()}*/}
-      {/*  user={user}*/}
-      {/*  userBio={userBio}*/}
-      {/*  userConnections={userConnections}*/}
-      {/*  handleChange={(event) => handleChange(event)}*/}
-      {/*  avatar={avatar}*/}
-      {/*  onSubmit={() => submit()}*/}
-      {/*  loading={loading}*/}
-      {/*  updateBio={updateBio}*/}
-      {/*/>*/}
     </div>
 
     // <div id='main-body'>

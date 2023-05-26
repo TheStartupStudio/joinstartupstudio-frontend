@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import IntlMessages from '../../../utils/IntlMessages'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+  faTrash,
+  faPencilAlt,
+  faPlus,
+  faVideo,
+  faVideoSlash,
+  faFileVideo,
+  faPhotoVideo,
+  faPlay,
+} from '@fortawesome/free-solid-svg-icons'
 import IAMRModal from './iamrModal'
 import DeleteSubmissionModal from './deleteSubmissionModal'
 import EditModal from './editModal'
@@ -11,6 +20,7 @@ import { NavLink } from 'react-router-dom'
 
 import './index.css'
 import { useSelector } from 'react-redux'
+import { faEdit } from '@fortawesome/free-regular-svg-icons'
 
 export const IAMR = (props) => {
   const [iamrModal, setIamrModal] = useState(false)
@@ -57,33 +67,202 @@ export const IAMR = (props) => {
   }
 
   const IAMRSubmissionCard = (props) => {
+    console.log(props.submission)
     return (
-      <div>
-        <div
+      <a
+        href={
+          props.submission?.link?.startsWith('http')
+            ? props.submission?.link
+            : 'https://' + props.submission?.link
+        }
+        target="_blank"
+        style={{
+          position: 'relative',
+          width: 'calc(100% - 30px)',
+          height: 200,
+          border: '1px solid #E5E5E5',
+        }}
+      >
+        <img
+          src={props.submission?.imageUrl}
           style={{
-            backgroundImage: `url(${props.submission?.imageUrl})`,
-            // backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            height: 215,
-            width: 290,
+            objectFit: 'cover',
+            width: '100%',
+            height: '100%',
             display: 'flex',
             alignItems: 'flex-end',
             border: '1px solid #e3e3e3',
-            // backgroundSize: '100% 100%',
-            backgroundSize: 'cover',
+          }}
+        />
+        <div
+          style={{
+            backgroundColor: 'rgba(207, 207, 207, 0.90)',
+            color: '#fff',
+            fontWeight: 500,
+            position: 'absolute',
+            top: 1,
+            right: 1,
+            display: 'flex',
+            height: '30px',
+            paddingRight: 3,
+            zIndex: 1,
           }}
         >
           <div
             style={{
-              backgroundColor: '#51C7DF',
-              padding: 10,
-              color: '#fff',
-              fontWeight: 500,
-              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              marginTop: 7,
+              padding: '5px 3px',
+            }}
+            onClick={(e) => {
+              props.updateSubmission(props.submission)
+              e.preventDefault()
             }}
           >
-            I AM VIDEO
+            <FontAwesomeIcon
+              icon={faPencilAlt}
+              className="mb-2 ms-1 icon"
+              style={{ height: '15px', width: '15px' }}
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginTop: 7,
+              padding: '5px 3px',
+            }}
+            onClick={(e) => {
+              props.deleteSubmission(props.submission)
+              e.preventDefault()
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faTrash}
+              className="mb-2 ms-1 icon"
+              style={{ height: '15px', width: '15px' }}
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            backgroundColor: '#51C7DF',
+            padding: '10px 20px',
+            color: '#fff',
+            fontWeight: 500,
+            width: '100%',
+            position: 'absolute',
+            bottom: 0,
+            zIndex: 1,
+          }}
+        >
+          I AM VIDEO
+        </div>
+        {props.index == 1 && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1,
+              // width: '50px',
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faPlay}
+              className="mb-2 ms-1 "
+              color={'#FFFFFF'}
+              style={{ height: '45px', width: '45px' }}
+            />
+          </div>
+        )}
+        {props.index !== 1 && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '33%',
+              top: '66%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1,
+              // width: '50px',
+            }}
+          >
+            <div
+              style={{
+                font: 'normal normal normal 31px/27px Montserrat',
+                color: '#fff',
+              }}
+            >
+              Description
+            </div>
+          </div>
+        )}
+
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor:
+              props.index !== 1 ? 'rgba(0, 0, 0, 0.35)' : 'rgba(0, 0, 0, 0.15)',
+          }}
+        ></div>
+      </a>
+    )
+  }
+  const AddSubmissionCard = (props) => {
+    return (
+      <div
+        onClick={props.onOpenIamrModal}
+        style={{
+          position: 'relative',
+          width: 'calc(100% - 30px)',
+          height: 200,
+          border: '1px solid #E5E5E5',
+          cursor: 'pointer',
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: '#CFCFCF',
+            padding: '10px 20px',
+            color: '#fff',
+            fontWeight: 500,
+            width: '100%',
+            position: 'absolute',
+            bottom: 0,
+            zIndex: 1,
+          }}
+        >
+          Add Another Submission
+        </div>
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 1,
+            // width: '50px',
+          }}
+        >
+          <div
+            className="add-submission"
+            style={{ width: '100%', position: 'relative' }}
+            onClick={() => setIamrModal(true)}
+          >
+            <span className="submission-plus">
+              <FontAwesomeIcon
+                icon={faPlus}
+                className="mx-4  "
+                style={{ height: '60px', width: '60px' }}
+                color={'#BBBDBF'}
+              />
+            </span>
           </div>
         </div>
       </div>
@@ -113,88 +292,35 @@ export const IAMR = (props) => {
           </p>
 
           <div className="iamr-submissions m-3">
-            <div className="row d-flex justify-content-between">
-              {submissions.map((submission) => {
+            <div
+              // className="row d-flex justify-content-between"
+              className="row d-flex justify-content-around"
+              style={{ rowGap: 30 }}
+            >
+              {submissions.map((submission, index) => {
                 return (
                   <div
-                    className="col-12 col-sm-5 col-lg-5 px-0"
+                    className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center"
                     key={submission.id}
                   >
-                    <IAMRSubmissionCard submission={submission} />
-                    {/*<div className="iamr-submission">*/}
-                    {/*  <p className="text-center iamr-Current Positionsubmission-title">*/}
-                    {/*    {submission.title}*/}
-                    {/*  </p>*/}
-                    {/*  {props.preview ? (*/}
-                    {/*    <div*/}
-                    {/*      className="add-submission"*/}
-                    {/*      style={{ width: '100%' }}*/}
-                    {/*    >*/}
-                    {/*      <a*/}
-                    {/*        href={*/}
-                    {/*          submission.link.startsWith('http')*/}
-                    {/*            ? submission.link*/}
-                    {/*            : 'https://' + submission.link*/}
-                    {/*        }*/}
-                    {/*        target="_blank"*/}
-                    {/*      >*/}
-                    {/*        <img src={submission.imageUrl} alt="" />*/}
-                    {/*      </a>*/}
-                    {/*    </div>*/}
-                    {/*  ) : (*/}
-                    {/*    <div className="add-submission">*/}
-                    {/*      <div className="submission-actions">*/}
-                    {/*        <a onClick={() => updateSubmission(submission)}>*/}
-                    {/*          <FontAwesomeIcon*/}
-                    {/*            icon={faPencilAlt}*/}
-                    {/*            className="mb-2 ms-1 icon"*/}
-                    {/*            style={{ height: '25px', width: '25px' }}*/}
-                    {/*          />*/}
-                    {/*        </a>*/}
-                    {/*        <a onClick={() => deleteSubmission(submission)}>*/}
-                    {/*          <FontAwesomeIcon*/}
-                    {/*            icon={faTrash}*/}
-                    {/*            className="mb-2 ms-1 icon"*/}
-                    {/*            style={{ height: '25px', width: '25px' }}*/}
-                    {/*          />*/}
-                    {/*        </a>*/}
-                    {/*      </div>*/}
-                    {/*      <a*/}
-                    {/*        href={*/}
-                    {/*          submission.link?.startsWith('http')*/}
-                    {/*            ? submission.link*/}
-                    {/*            : `https://${submission.link}`*/}
-                    {/*        }*/}
-                    {/*        target="_blank"*/}
-                    {/*      >*/}
-                    {/*        <img src={submission.imageUrl} alt="" />*/}
-                    {/*      </a>*/}
-                    {/*    </div>*/}
-                    {/*  )}*/}
-                    {/*</div>*/}
+                    <IAMRSubmissionCard
+                      submission={submission}
+                      index={index}
+                      updateSubmission={(submission) =>
+                        updateSubmission(submission)
+                      }
+                      deleteSubmission={(submission) =>
+                        deleteSubmission(submission)
+                      }
+                    />
                   </div>
                 )
               })}
               {!props.preview && props.preview !== '1' && (
-                <div className="col-12 col-sm-5 col-lg-5 px-0">
-                  <div className="iamr-submission">
-                    <p className="text-center iamr-submission-title">
-                      Add Another Submission
-                    </p>
-                    <div
-                      className="add-submission"
-                      style={{ width: '100%' }}
-                      onClick={() => setIamrModal(true)}
-                    >
-                      <span className="submission-plus">
-                        <FontAwesomeIcon
-                          icon={faPlus}
-                          className="mx-4 icon gray-ico"
-                          style={{ height: '60px', width: '60px' }}
-                        />
-                      </span>
-                    </div>
-                  </div>
+                <div className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center">
+                  <AddSubmissionCard
+                    onOpenIamrModal={() => setIamrModal(true)}
+                  />
                 </div>
               )}
               {!props.preview && props.preview !== '1' ? (

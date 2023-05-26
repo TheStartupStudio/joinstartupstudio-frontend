@@ -23,7 +23,7 @@ export const Skills = (props) => {
     await axiosInstance
       .delete('/skills/multiple', { data: removeSkill })
       .then((data) => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
 
         setShowRemoveSkill(false)
 
@@ -37,7 +37,7 @@ export const Skills = (props) => {
       })
       .catch(() => {
         setShowRemoveSkill(false)
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         getUserSkills()
         GetSkillsFromDB()
       })
@@ -65,7 +65,7 @@ export const Skills = (props) => {
     await axiosInstance
       .post('/skills/multiple', { data: selcetedSkills })
       .then((data) => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         selcetedSkills.map((skill) => {
           setUserSkill((old) => [...old, { name: skill }])
         })
@@ -77,7 +77,7 @@ export const Skills = (props) => {
         setSelectedSkills([])
       })
       .catch(() => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         // setTimeout(() => {
         selcetedSkills.map((skill) => {
           setUserSkill((old) => [...old, { name: skill }])
@@ -116,65 +116,75 @@ export const Skills = (props) => {
   return (
     <div>
       <div
-        className='my-account rounded  profile-tags-div mx-0 mt-4'
-        style={{ border: '1px solid #bbbdbf' }}
+      // className='my-account rounded  profile-tags-div mx-0 mt-4'
+      // style={{ border: '1px solid #bbbdbf' }}
       >
-        <h4 className='m-3'>
-          <IntlMessages id='portfolio.skills_title' />
-          <span className='float-end'>
-            <FontAwesomeIcon
-              icon={faPlus}
-              className='mx-4 icon'
-              style={{ height: '25px', width: '25px' }}
-              onClick={() => setShowSkillBoxModal(true)}
-            />
+        {/*<h4 className="m-3">*/}
+        {/*  /!*<IntlMessages id="portfolio.skills_title" />*!/*/}
+        {/*  <span className="float-end">*/}
+        {/*    <FontAwesomeIcon*/}
+        {/*      icon={faPlus}*/}
+        {/*      className="mx-4 icon"*/}
+        {/*      style={{ height: '25px', width: '25px' }}*/}
+        {/*      onClick={() => props.openSkillBox()}*/}
+        {/*      // onClick={() => setShowSkillBoxModal(true)}*/}
+        {/*    />*/}
 
-            <FontAwesomeIcon
-              icon={faPencilAlt}
-              className='icon'
-              style={{ height: '25px', width: '25px' }}
-              onClick={
-                userSkill && userSkill.length > 0
-                  ? () => {
-                      setShowRemoveSkill(true)
-                    }
-                  : () => {
-                      setShowRemoveSkill(false)
-                      toast.error('You dont have any skills selected!')
-                    }
-              }
-            />
-          </span>
-        </h4>
-        <div className='w-100 ms-3 mb-3'>
-          {userSkill && userSkill.length > 0 ? (
-            userSkill.map((data) => (
-              <SkillBoxButton
-                data={data}
-                from={'index'}
-                from0={'public'}
-                key={data.id}
-              />
-            ))
-          ) : (
-            <SkillBoxButton
-              data={{ name: 'add' }}
-              from={'index'}
-              isEmpty={true}
-              openModal={() => {
-                setShowSkillBoxModal(true)
-              }}
-            />
-          )}
-          {/* {userSkill && userSkill.map(<SkillBoxButton data={userSkill} />)} */}
+        {/*    <FontAwesomeIcon*/}
+        {/*      icon={faPencilAlt}*/}
+        {/*      className="icon"*/}
+        {/*      style={{ height: '25px', width: '25px' }}*/}
+        {/*      onClick={*/}
+        {/*        userSkill && userSkill.length > 0*/}
+        {/*          ? () => {*/}
+        {/*              props.openRemoveSkill()*/}
+        {/*              // setShowRemoveSkill(true)*/}
+        {/*            }*/}
+        {/*          : () => {*/}
+        {/*              setShowRemoveSkill(false)*/}
+        {/*              props.closeRemoveSkill()*/}
+        {/*              // toast.error('You dont have any skills selected!')*/}
+        {/*            }*/}
+        {/*      }*/}
+        {/*    />*/}
+        {/*  </span>*/}
+        {/*</h4>*/}
+        <div className="w-100 mb-3">
+          <div className="row">
+            {userSkill && userSkill.length > 0 ? (
+              userSkill.map((data) => (
+                <div className="col-md-3 col-sm-6" key={data.id}>
+                  <SkillBoxButton
+                    data={data}
+                    from={'index'}
+                    from0={'public'}
+                    key={data.id}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="col-md-3 col-sm-6">
+                <SkillBoxButton
+                  data={{ name: 'add' }}
+                  from={'index'}
+                  isEmpty={true}
+                  openModal={() => {
+                    props.openSkillBox()
+                    // setShowSkillBoxModal(true)
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <SkillBoxEditModal
         allSkill={allSkill}
-        show={showSkillBoxModal}
+        show={props.showSkillModal}
         onHide={() => {
           setNewSkill()
-          setShowSkillBoxModal(false)
+          props.closeSkillBox()
+          // setShowSkillBoxModal(false)
           setSelectedSkills([])
         }}
         setAllSkills={(data) => {
@@ -196,10 +206,11 @@ export const Skills = (props) => {
         setNewSkill={(data) => setNewSkill(data)}
       />
       <RemoveSkill
-        show={showRemoveSkill}
+        show={props.removeSkillModal}
         onHide={() => {
           setRemoveSkill([])
-          setShowRemoveSkill(false)
+          props.closeRemoveSkill()
+          // setShowRemoveSkill(false);
         }}
         userSkill={userSkill}
         selcetedSkills={selcetedSkills}
@@ -224,5 +235,5 @@ export const Skills = (props) => {
 
 /*
      te all skills jon te gjitha skill perveq skill qe i ka useri
-     to all skills only skills than 
+     to all skills only skills than
      not are in is the skill that user have */
