@@ -110,6 +110,8 @@ export const Experience = (props) => {
                     border: '1px solid #E5E5E5',
                     borderRadius: 6,
                     background: '#F8F8F8 0% 0% no-repeat padding-box',
+                    height: 230,
+                    minHeight: 230,
                   }}
                 >
                   <ExperienceDetails

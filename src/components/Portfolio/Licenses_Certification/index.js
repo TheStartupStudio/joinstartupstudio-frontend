@@ -38,12 +38,12 @@ export default function Licenses_Certification(pr) {
     setIsPublished(!isPublished)
     await axiosInstance
       .put(`/users`, {
-        show_certifications: !oldPublishValue
+        show_certifications: !oldPublishValue,
       })
       .then()
       .catch((e) => {
         setIsPublished(!oldPublishValue)
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
       })
   }
 
@@ -51,7 +51,7 @@ export default function Licenses_Certification(pr) {
     await axiosInstance
       .delete('/userCertificates/multiple', { data: certificatedToRemove })
       .then((res) => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         let data = userCertification.filter(
           (item) => !certificatedToRemove.includes(item.id)
         )
@@ -61,7 +61,7 @@ export default function Licenses_Certification(pr) {
         // getuserCertification()
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setCertificatedToRemove([])
         setRemoveCertification(false)
         getuserCertification()
@@ -97,8 +97,8 @@ export default function Licenses_Certification(pr) {
       await axiosInstance
         .post('/upload/img', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+            'Content-Type': 'multipart/form-data',
+          },
         })
         .then(async (response) => {
           image = response.data.fileLocation
@@ -109,10 +109,10 @@ export default function Licenses_Certification(pr) {
       await axiosInstance
         .post('/userCertificates', {
           ...certificateData,
-          image: image
+          image: image,
         })
         .then((res) => {
-          toast.success(<IntlMessages id='alerts.success_change' />)
+          toast.success(<IntlMessages id="alerts.success_change" />)
           setLoading(false)
           setAddCertificateModal(false)
           // setCertificateImage()
@@ -122,59 +122,59 @@ export default function Licenses_Certification(pr) {
           setAddCertificateModal(false)
           setLoading(false)
           // setCertificateImage()
-          toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+          toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         })
     }
   }
 
   return (
     <>
-      <div className='my-account rounded mx-0 mt-4'>
-        <div className='experiences-container' style={{ border: '0' }}>
-          <div className='d-flex m-3 experience-header'>
-            <h4
-              className='title p-0 my-auto float-start'
-              style={{ width: '0' }}
-            >
-              LICENSES & CERTIFICATIONS
-            </h4>
-            <span className='float-end my-auto px-2 ms-auto'>
-              <FontAwesomeIcon
-                icon={faPlus}
-                className='mx-3'
-                style={{ height: '25px', width: '25px', cursor: 'pointer' }}
-                onClick={() => setAddCertificateModal(true)}
-              />
-            </span>
-            {userCertification.length > 0 && (
-              <span className='float-end my-auto pe-1 pe-md-0'>
-                <FontAwesomeIcon
-                  icon={faPencilAlt}
-                  className='icon'
-                  style={{ height: '25px', width: '25px', cursor: 'pointer' }}
-                  onClick={() => {
-                    setRemoveCertification(true)
-                  }}
-                />
-              </span>
-            )}
-            <div className='break-experience'></div>
-            <div className='d-flex show_in_portfolio'>
-              <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>
-                Show in My Portfolio
-              </p>
+      <div className="my-account rounded mx-0 mt-4">
+        {/*<div className='experiences-container' style={{ border: '0' }}>*/}
+        {/*  <div className='d-flex m-3 experience-header'>*/}
+        {/*    <h4*/}
+        {/*      className='title p-0 my-auto float-start'*/}
+        {/*      style={{ width: '0' }}*/}
+        {/*    >*/}
+        {/*      LICENSES & CERTIFICATIONS*/}
+        {/*    </h4>*/}
+        {/*    <span className='float-end my-auto px-2 ms-auto'>*/}
+        {/*      <FontAwesomeIcon*/}
+        {/*        icon={faPlus}*/}
+        {/*        className='mx-3'*/}
+        {/*        style={{ height: '25px', width: '25px', cursor: 'pointer' }}*/}
+        {/*        onClick={() => setAddCertificateModal(true)}*/}
+        {/*      />*/}
+        {/*    </span>*/}
+        {/*    {userCertification.length > 0 && (*/}
+        {/*      <span className='float-end my-auto pe-1 pe-md-0'>*/}
+        {/*        <FontAwesomeIcon*/}
+        {/*          icon={faPencilAlt}*/}
+        {/*          className='icon'*/}
+        {/*          style={{ height: '25px', width: '25px', cursor: 'pointer' }}*/}
+        {/*          onClick={() => {*/}
+        {/*            setRemoveCertification(true)*/}
+        {/*          }}*/}
+        {/*        />*/}
+        {/*      </span>*/}
+        {/*    )}*/}
+        {/*    <div className='break-experience'></div>*/}
+        {/*    <div className='d-flex show_in_portfolio'>*/}
+        {/*      <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>*/}
+        {/*        Show in My Portfolio*/}
+        {/*      </p>*/}
 
-              <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>
-                <input
-                  type='checkbox'
-                  checked={isPublished}
-                  onChange={() => updateShowPreference()}
-                />
-                <i className='my-auto'></i>
-              </label>
-            </div>
-          </div>
-        </div>
+        {/*      <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>*/}
+        {/*        <input*/}
+        {/*          type='checkbox'*/}
+        {/*          checked={isPublished}*/}
+        {/*          onChange={() => updateShowPreference()}*/}
+        {/*        />*/}
+        {/*        <i className='my-auto'></i>*/}
+        {/*      </label>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
         {/* <h4 className='m-3'>
           <IntlMessages id='portfolio.LICENSES_CERTIFICATIONS' />
@@ -193,24 +193,31 @@ export default function Licenses_Certification(pr) {
             />
           </span>
         </h4> */}
-        <div className='mx-3 mt-4 mb-4'>
+        <div className="mx-3 mt-4 mb-4">
           {userCertification.length > 0 ? (
-            <div className='row'>
+            <div className="row">
               {userCertification?.map((data, index) => (
-                <Certification key={index} data={data} />
+                <div
+                  className="col-md-4 d-flex
+
+                  justify-content-center align-items-center"
+                  key={index}
+                >
+                  <Certification data={data} />
+                </div>
               ))}
             </div>
           ) : (
             <div
-              className='border rounded px-5'
+              className="border rounded px-5"
               style={{ width: '140px', height: '180px' }}
               onClick={() => setAddCertificateModal(true)}
             >
               <FontAwesomeIcon
                 icon={faPlus}
-                className='w-100 h-100 skills-button'
+                className="w-100 h-100 skills-button"
                 style={{
-                  cursor: 'pointer'
+                  cursor: 'pointer',
                   // border: '1px solid #BBBDBF'
                 }}
               />

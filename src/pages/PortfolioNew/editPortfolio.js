@@ -23,6 +23,35 @@ import novaeLogo from '../../assets/images/novae-logo-horz.png'
 import avatar from '../../assets/images/profile-image.png'
 import EditBio from '../../components/Portfolio/PersonalBio/EditBio'
 
+export const VerifyButton = (props) => {
+  return (
+    <div
+      style={{
+        border: '1px solid #F2359D',
+        borderRadius: 3,
+        color: '#F2359D',
+        width: props.width ? props.width : '100%',
+        textAlign: 'center',
+        padding: '10px 4px',
+        height: 35,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      onMouseEnter={(e) => {
+        e.target.style.backgroundColor = '#F2359D' // Change background color on hover
+        e.target.style.color = '#FFFFFF' // Change text color on hover
+      }}
+      onMouseLeave={(e) => {
+        e.target.style.backgroundColor = 'transparent' // Revert background color on mouse leave
+        e.target.style.color = '#F2359D' // Revert text color on mouse leave
+      }}
+    >
+      Verify
+    </div>
+  )
+}
+
 const ActionIcon = (props) => {
   return (
     <div
@@ -166,7 +195,7 @@ const PortfolioSection = (props) => {
           ) : null}
         </div>
       </div>
-      <div style={{ padding: '0 15px 30px 15px' }}>{props.children}</div>
+      <div style={{ padding: '0 15px 15px 15px' }}>{props.children}</div>
     </div>
   )
 }
@@ -244,35 +273,6 @@ function EditPortfolio() {
   }
   const handleCloseRemoveSkillModal = () => {
     setShowRemoveSkill(false)
-  }
-
-  const VerifyButton = () => {
-    return (
-      <div
-        style={{
-          border: '1px solid #F2359D',
-          borderRadius: 3,
-          color: '#F2359D',
-          width: '75%',
-          textAlign: 'center',
-          padding: '10px 4px',
-          height: 35,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.backgroundColor = '#F2359D' // Change background color on hover
-          e.target.style.color = '#FFFFFF' // Change text color on hover
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.backgroundColor = 'transparent' // Revert background color on mouse leave
-          e.target.style.color = '#F2359D' // Revert text color on mouse leave
-        }}
-      >
-        Verify
-      </div>
-    )
   }
 
   return (
@@ -407,7 +407,7 @@ function EditPortfolio() {
                 justifyContent: 'end',
               }}
             >
-              <VerifyButton />
+              <VerifyButton width={'75%'} />
             </div>
           </div>
         </PortfolioSection>
@@ -429,7 +429,44 @@ function EditPortfolio() {
           >
             <Experience />
           </PortfolioSection>
+          <PortfolioSection title={'RECOMMENDATIONS'} isAdd={true}>
+            <Recommendation />
+          </PortfolioSection>
         </div>
+        <div>
+          <div
+            style={{
+              font: 'normal normal 600 24px Montserrat',
+              letterSpacing: 0,
+              color: '#231F20',
+              marginLeft: 10,
+            }}
+          >
+            EDUCATION AND ACCOMPLISHMENTS
+          </div>
+          <PortfolioSection
+            title={'EDUCATION'}
+            isAdd={true}
+            showInMyPortfolio={true}
+          >
+            <Education />
+          </PortfolioSection>
+          <PortfolioSection
+            title={'ACCOMPLISHMENTS'}
+            isAdd={true}
+            showInMyPortfolio={true}
+          >
+            <Accomplishment />
+          </PortfolioSection>
+        </div>
+        <PortfolioSection
+          title={'LICENSES & CERTIFICATIONS'}
+          showInMyPortfolio={true}
+          isAdd={true}
+          isEdit={true}
+        >
+          <Licenses_Certification />
+        </PortfolioSection>
       </div>
     </div>
 

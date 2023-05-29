@@ -34,12 +34,12 @@ export const Accomplishment = (props) => {
     setIsPublished(!isPublished)
     await axiosInstance
       .put(`/users`, {
-        show_accomplishments: !oldPublishValue
+        show_accomplishments: !oldPublishValue,
       })
       .then()
       .catch((e) => {
         setIsPublished(!oldPublishValue)
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
       })
   }
 
@@ -70,63 +70,71 @@ export const Accomplishment = (props) => {
 
   return (
     <>
-      <div className='experiences-container mx-0 mt-4'>
-        <div className='d-flex m-3 experience-header'>
-          <h4 className='title p-0 my-auto float-start'>ACCOMPLISHMENTS</h4>
-          <span className='float-end my-auto pe-1 pe-md-0'>
-            <FontAwesomeIcon
-              icon={faPlus}
-              className=''
-              style={{ height: '25px', width: '25px', cursor: 'pointer' }}
-              onClick={() => setShowAccompModal(true)}
-            />
-          </span>
-          <div className='break-experience'></div>
-          <div className='d-flex show_in_portfolio'>
-            <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>
-              Show in My Portfolio
-            </p>
+      <div className="experiences-container mx-0 mt-4">
+        {/*<div className='d-flex m-3 experience-header'>*/}
+        {/*  <h4 className='title p-0 my-auto float-start'>ACCOMPLISHMENTS</h4>*/}
+        {/*  <span className='float-end my-auto pe-1 pe-md-0'>*/}
+        {/*    <FontAwesomeIcon*/}
+        {/*      icon={faPlus}*/}
+        {/*      className=''*/}
+        {/*      style={{ height: '25px', width: '25px', cursor: 'pointer' }}*/}
+        {/*      onClick={() => setShowAccompModal(true)}*/}
+        {/*    />*/}
+        {/*  </span>*/}
+        {/*  <div className='break-experience'></div>*/}
+        {/*  <div className='d-flex show_in_portfolio'>*/}
+        {/*    <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>*/}
+        {/*      Show in My Portfolio*/}
+        {/*    </p>*/}
 
-            <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>
-              <input
-                type='checkbox'
-                checked={isPublished}
-                onChange={() => updateShowPreference()}
-              />
-              <i className='my-auto'></i>
-            </label>
-          </div>
-        </div>
+        {/*    <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>*/}
+        {/*      <input*/}
+        {/*        type='checkbox'*/}
+        {/*        checked={isPublished}*/}
+        {/*        onChange={() => updateShowPreference()}*/}
+        {/*      />*/}
+        {/*      <i className='my-auto'></i>*/}
+        {/*    </label>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
         {accomps.length !== 0 ? (
-          <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 row experience-details'>
+          <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row experience-details gap-4">
             {accomps.map((accomp, index, { length }) => {
               return (
-                <AccomplishmentDetails
-                  accomp={accomp}
-                  key={accomp.id}
-                  index={index}
-                  length={length}
-                  setCurrentAccomp={(accomp) => setCurrentAccomp(accomp)}
-                  editing={true}
-                />
+                <div
+                  style={{
+                    border: '1px solid #E5E5E5',
+                    borderRadius: 6,
+                    background: '#F8F8F8 0% 0% no-repeat padding-box',
+                  }}
+                >
+                  <AccomplishmentDetails
+                    accomp={accomp}
+                    key={accomp.id}
+                    index={index}
+                    length={length}
+                    setCurrentAccomp={(accomp) => setCurrentAccomp(accomp)}
+                    editing={true}
+                  />
+                </div>
               )
             })}
           </div>
         ) : (
           <>
-            <p className='no-experience-added'>
+            <p className="no-experience-added">
               You haven’t added any accomplishments… yet! Click the box below to
               add one.
             </p>
-            <div className='m-3 experiences-container d-flex justify-content-center'>
+            <div className="m-3 experiences-container d-flex justify-content-center">
               <FontAwesomeIcon
                 icon={faPlus}
-                className='my-5'
+                className="my-5"
                 style={{
                   height: '56px',
                   width: '56px',
                   cursor: 'pointer',
-                  color: '#BBBDBF'
+                  color: '#BBBDBF',
                 }}
                 onClick={() => setShowAccompModal(true)}
               />
@@ -146,8 +154,8 @@ export const Accomplishment = (props) => {
         currentAccomp={currentAccomp}
       />
       <link
-        href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
-        rel='stylesheet'
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
       />
     </>
   )

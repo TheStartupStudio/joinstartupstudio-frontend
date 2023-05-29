@@ -149,7 +149,7 @@ export const Skills = (props) => {
         {/*    />*/}
         {/*  </span>*/}
         {/*</h4>*/}
-        <div className="w-100 mb-3">
+        <div className="w-100 ">
           <div className="row">
             {userSkill && userSkill.length > 0 ? (
               userSkill.map((data) => (
