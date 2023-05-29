@@ -10,8 +10,9 @@ import '../Experience/style.css'
 import AddCertification from './addCertification'
 import RemoveCertification from './removeCertifications'
 import { toast } from 'react-toastify'
+import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
 
-export default function Licenses_Certification(pr) {
+export default function Licenses_Certification(props) {
   const general = useSelector((state) => state.general)
   const userId = useSelector((state) => state.user.user.user.id)
 
@@ -30,8 +31,8 @@ export default function Licenses_Certification(pr) {
   }, [])
 
   useEffect(() => {
-    pr.user !== undefined && setIsPublished(pr.user?.show_certifications)
-  }, [pr.user])
+    props.user !== undefined && setIsPublished(props.user?.show_certifications)
+  }, [props.user])
 
   const updateShowPreference = async () => {
     const oldPublishValue = isPublished
@@ -129,125 +130,73 @@ export default function Licenses_Certification(pr) {
 
   return (
     <>
-      <div className="my-account rounded mx-0 mt-4">
-        {/*<div className='experiences-container' style={{ border: '0' }}>*/}
-        {/*  <div className='d-flex m-3 experience-header'>*/}
-        {/*    <h4*/}
-        {/*      className='title p-0 my-auto float-start'*/}
-        {/*      style={{ width: '0' }}*/}
-        {/*    >*/}
-        {/*      LICENSES & CERTIFICATIONS*/}
-        {/*    </h4>*/}
-        {/*    <span className='float-end my-auto px-2 ms-auto'>*/}
-        {/*      <FontAwesomeIcon*/}
-        {/*        icon={faPlus}*/}
-        {/*        className='mx-3'*/}
-        {/*        style={{ height: '25px', width: '25px', cursor: 'pointer' }}*/}
-        {/*        onClick={() => setAddCertificateModal(true)}*/}
-        {/*      />*/}
-        {/*    </span>*/}
-        {/*    {userCertification.length > 0 && (*/}
-        {/*      <span className='float-end my-auto pe-1 pe-md-0'>*/}
-        {/*        <FontAwesomeIcon*/}
-        {/*          icon={faPencilAlt}*/}
-        {/*          className='icon'*/}
-        {/*          style={{ height: '25px', width: '25px', cursor: 'pointer' }}*/}
-        {/*          onClick={() => {*/}
-        {/*            setRemoveCertification(true)*/}
-        {/*          }}*/}
-        {/*        />*/}
-        {/*      </span>*/}
-        {/*    )}*/}
-        {/*    <div className='break-experience'></div>*/}
-        {/*    <div className='d-flex show_in_portfolio'>*/}
-        {/*      <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>*/}
-        {/*        Show in My Portfolio*/}
-        {/*      </p>*/}
-
-        {/*      <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>*/}
-        {/*        <input*/}
-        {/*          type='checkbox'*/}
-        {/*          checked={isPublished}*/}
-        {/*          onChange={() => updateShowPreference()}*/}
-        {/*        />*/}
-        {/*        <i className='my-auto'></i>*/}
-        {/*      </label>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
-        {/* <h4 className='m-3'>
-          <IntlMessages id='portfolio.LICENSES_CERTIFICATIONS' />
-          <span className='float-end'>
-            <FontAwesomeIcon
-              icon={faPlus}
-              className='mx-4 icon'
-              onClick={() => setAddCertificateModal(true)}
-            />
-            <FontAwesomeIcon
-              icon={faPencilAlt}
-              className='icon'
-              onClick={() => {
-                setRemoveCertification(true)
-              }}
-            />
-          </span>
-        </h4> */}
-        <div className="mx-3 mt-4 mb-4">
-          {userCertification.length > 0 ? (
-            <div className="row">
-              {userCertification?.map((data, index) => (
-                <div
-                  className="col-md-4 d-flex
+      <PortfolioSection
+        title={'LICENSES & CERTIFICATIONS'}
+        showInMyPortfolio={true}
+        isAdd={true}
+        isEdit={true}
+        handleShowInPortfolio={updateShowPreference}
+        isShownInPortfolio={isPublished}
+        onAdd={() => setAddCertificateModal(true)}
+        onEdit={() => setRemoveCertification(true)}
+      >
+        <div className="my-account rounded mx-0 mt-4">
+          <div className="mx-3 mt-4 mb-4">
+            {userCertification.length > 0 ? (
+              <div className="row">
+                {userCertification?.map((data, index) => (
+                  <div
+                    className="col-md-4 d-flex
 
                   justify-content-center align-items-center"
-                  key={index}
-                >
-                  <Certification data={data} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div
-              className="border rounded px-5"
-              style={{ width: '140px', height: '180px' }}
-              onClick={() => setAddCertificateModal(true)}
-            >
-              <FontAwesomeIcon
-                icon={faPlus}
-                className="w-100 h-100 skills-button"
-                style={{
-                  cursor: 'pointer',
-                  // border: '1px solid #BBBDBF'
-                }}
-              />
-            </div>
-          )}
+                    key={index}
+                  >
+                    <Certification data={data} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div
+                className="border rounded px-5"
+                style={{ width: '140px', height: '180px' }}
+                onClick={() => setAddCertificateModal(true)}
+              >
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  className="w-100 h-100 skills-button"
+                  style={{
+                    cursor: 'pointer',
+                    // border: '1px solid #BBBDBF'
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      <RemoveCertification
-        show={removeCertification}
-        onHide={() => setRemoveCertification(false)}
-        data={userCertification}
-        setCertificatedToRemove={(data) => setCertificatedToRemove(data)}
-        editRevmoveCertification={(id) => editRevmoveCertification(id)}
-        onSave={() => removeCertificate()}
-      />
-      <AddCertification
-        show={addCertficateModal}
-        onHide={() => {
-          // setCertificateImage('')
-          setAddCertificateModal(false)
-        }}
-        // uploadedImage={uploadedImage}
-        // setCertificateImage={(data) => setCertificateImage(data)}
-        // certificateImage={certificateImage}
-        onSave={() => {
-          save()
-        }}
-        loading={loading}
-        setCertifieData={(data) => setCertifieData(data)}
-      />
+        <RemoveCertification
+          show={removeCertification}
+          onHide={() => setRemoveCertification(false)}
+          data={userCertification}
+          setCertificatedToRemove={(data) => setCertificatedToRemove(data)}
+          editRevmoveCertification={(id) => editRevmoveCertification(id)}
+          onSave={() => removeCertificate()}
+        />
+        <AddCertification
+          show={addCertficateModal}
+          onHide={() => {
+            // setCertificateImage('')
+            setAddCertificateModal(false)
+          }}
+          // uploadedImage={uploadedImage}
+          // setCertificateImage={(data) => setCertificateImage(data)}
+          // certificateImage={certificateImage}
+          onSave={() => {
+            save()
+          }}
+          loading={loading}
+          setCertifieData={(data) => setCertifieData(data)}
+        />
+      </PortfolioSection>
     </>
   )
 }

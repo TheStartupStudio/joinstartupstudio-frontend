@@ -21,6 +21,7 @@ import { NavLink } from 'react-router-dom'
 import './index.css'
 import { useSelector } from 'react-redux'
 import { faEdit } from '@fortawesome/free-regular-svg-icons'
+import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
 
 export const IAMR = (props) => {
   const [iamrModal, setIamrModal] = useState(false)
@@ -67,7 +68,6 @@ export const IAMR = (props) => {
   }
 
   const IAMRSubmissionCard = (props) => {
-    console.log(props.submission)
     return (
       <a
         href={
@@ -269,63 +269,77 @@ export const IAMR = (props) => {
     )
   }
 
-  return props?.preview !== 'undefined' ? (
-    <div className={['iamr-section', props.className].join(' ')}>
+  return (
+    <PortfolioSection showLinkToProjects={true}>
       <div
-      // className="my-account rounded  iamr-section mx-0 mt-4"
-      // style={{
-      //   border: props?.preview ? 'none' : '1px solid #bbbdbf',
-      // }}
+        style={{
+          textAlign: 'end',
+          marginRight: 40,
+          textTransform: 'uppercase',
+          font: 'normal normal 600 20px/24px Montserrat',
+          letterSpacing: 0,
+          color: '#51C7DF',
+        }}
       >
-        <div
-        // className="iamr-content"
-        // style={{
-        //   margin: props?.preview ? '40px 0 20px 0' : '40px 20px 20px 20px',
-        // }}
-        >
-          <h4 className="m-3 text-center iamr-title">I AM MARKET-READY</h4>
-
-          <p className="m-3">
-            The components of your portfolio speak to your level of market-ready
-            skills as you introduce the world to who you are, what you can do,
-            and your ability to prove it.
-          </p>
-
-          <div className="iamr-submissions m-3">
+        Edit my projects
+      </div>
+      {props?.preview !== 'undefined' ? (
+        <div className={['iamr-section', props.className].join(' ')}>
+          <div
+          // className="my-account rounded  iamr-section mx-0 mt-4"
+          // style={{
+          //   border: props?.preview ? 'none' : '1px solid #bbbdbf',
+          // }}
+          >
             <div
-              // className="row d-flex justify-content-between"
-              className="row d-flex justify-content-around"
-              style={{ rowGap: 30 }}
+            // className="iamr-content"
+            // style={{
+            //   margin: props?.preview ? '40px 0 20px 0' : '40px 20px 20px 20px',
+            // }}
             >
-              {submissions.map((submission, index) => {
-                return (
-                  <div
-                    className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center"
-                    key={submission.id}
-                  >
-                    <IAMRSubmissionCard
-                      submission={submission}
-                      index={index}
-                      updateSubmission={(submission) =>
-                        updateSubmission(submission)
-                      }
-                      deleteSubmission={(submission) =>
-                        deleteSubmission(submission)
-                      }
-                    />
-                  </div>
-                )
-              })}
-              {!props.preview && props.preview !== '1' && (
-                <div className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center">
-                  <AddSubmissionCard
-                    onOpenIamrModal={() => setIamrModal(true)}
-                  />
-                </div>
-              )}
-              {!props.preview && props.preview !== '1' ? (
-                <div className="col-12">
-                  {/* <div className='d-flex justify-content-end show_in_portfolio'>
+              <h4 className="m-3 text-center iamr-title">I AM MARKET-READY</h4>
+
+              <p className="m-3">
+                The components of your portfolio speak to your level of
+                market-ready skills as you introduce the world to who you are,
+                what you can do, and your ability to prove it.
+              </p>
+
+              <div className="iamr-submissions m-3">
+                <div
+                  // className="row d-flex justify-content-between"
+                  className="row d-flex justify-content-around"
+                  style={{ rowGap: 30 }}
+                >
+                  {submissions.map((submission, index) => {
+                    return (
+                      <div
+                        className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center"
+                        key={submission.id}
+                      >
+                        <IAMRSubmissionCard
+                          submission={submission}
+                          index={index}
+                          updateSubmission={(submission) =>
+                            updateSubmission(submission)
+                          }
+                          deleteSubmission={(submission) =>
+                            deleteSubmission(submission)
+                          }
+                        />
+                      </div>
+                    )
+                  })}
+                  {!props.preview && props.preview !== '1' && (
+                    <div className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center">
+                      <AddSubmissionCard
+                        onOpenIamrModal={() => setIamrModal(true)}
+                      />
+                    </div>
+                  )}
+                  {!props.preview && props.preview !== '1' ? (
+                    <div className="col-12">
+                      {/* <div className='d-flex justify-content-end show_in_portfolio'>
                     <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2 show-portfolio-text'>
                       Show link to My Projects in My Portfolio
                     </p>
@@ -347,77 +361,79 @@ export const IAMR = (props) => {
                       <strong>EDIT MY PROJECT</strong>
                     </NavLink>
                   </div> */}
+                    </div>
+                  ) : (
+                    <div className="col-12 text-end">
+                      <NavLink
+                        to={
+                          props.user.id !== user?.id
+                            ? `/UserProject/${props.user.id}`
+                            : '/MyStartupProfile'
+                        }
+                        className="d-block me-2 mt-2"
+                      >
+                        {isPublished ? <strong>VIEW MY PROJECTS</strong> : ''}
+                      </NavLink>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="col-12 text-end">
-                  <NavLink
-                    to={
-                      props.user.id !== user?.id
-                        ? `/UserProject/${props.user.id}`
-                        : '/MyStartupProfile'
-                    }
-                    className="d-block me-2 mt-2"
-                  >
-                    {isPublished ? <strong>VIEW MY PROJECTS</strong> : ''}
-                  </NavLink>
-                </div>
-              )}
+              </div>
             </div>
           </div>
+
+          {submissions && (
+            <IAMRModal
+              show={iamrModal}
+              user={props.user}
+              onHide={() => {
+                setIamrModal(false)
+              }}
+              loading={savingLoading}
+              setModal={(data) => setIamrModal(data)}
+              onSave={(submission) => {
+                setSubmissions([...submissions, submission])
+              }}
+            />
+          )}
+
+          {activeSubmission && (
+            <div>
+              <EditModal
+                show={editModal}
+                user={props.user}
+                submission={activeSubmission}
+                onHide={() => {
+                  setEditModal(false)
+                }}
+                loading={savingLoading}
+                onSave={(submission) => {
+                  setSubmissions([
+                    ...submissions.filter((s) => s.id != submission.id),
+                    submission,
+                  ])
+                }}
+              />
+
+              <DeleteSubmissionModal
+                show={deleteModal}
+                user={props.user}
+                submissionId={activeSubmission.id}
+                onHide={() => {
+                  setDeleteModal(false)
+                }}
+                setModal={(data) => setDeleteModal(data)}
+                onSave={(submissionId) => {
+                  setSubmissions(
+                    submissions.filter(
+                      (submission) => submission.id !== submissionId
+                    )
+                  )
+                }}
+              />
+            </div>
+          )}
         </div>
-      </div>
-
-      {submissions && (
-        <IAMRModal
-          show={iamrModal}
-          user={props.user}
-          onHide={() => {
-            setIamrModal(false)
-          }}
-          loading={savingLoading}
-          setModal={(data) => setIamrModal(data)}
-          onSave={(submission) => {
-            setSubmissions([...submissions, submission])
-          }}
-        />
-      )}
-
-      {activeSubmission && (
-        <div>
-          <EditModal
-            show={editModal}
-            user={props.user}
-            submission={activeSubmission}
-            onHide={() => {
-              setEditModal(false)
-            }}
-            loading={savingLoading}
-            onSave={(submission) => {
-              setSubmissions([
-                ...submissions.filter((s) => s.id != submission.id),
-                submission,
-              ])
-            }}
-          />
-
-          <DeleteSubmissionModal
-            show={deleteModal}
-            user={props.user}
-            submissionId={activeSubmission.id}
-            onHide={() => {
-              setDeleteModal(false)
-            }}
-            setModal={(data) => setDeleteModal(data)}
-            onSave={(submissionId) => {
-              setSubmissions(
-                submissions.filter(
-                  (submission) => submission.id !== submissionId
-                )
-              )
-            }}
-          />
-        </div>
-      )}
-    </div>
-  ) : null
+      ) : null}
+    </PortfolioSection>
+  )
 }

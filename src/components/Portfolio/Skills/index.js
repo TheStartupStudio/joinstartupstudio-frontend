@@ -8,6 +8,10 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 import SkillBoxButton from './skillBox'
 import { toast } from 'react-toastify'
+import {
+  PortfolioSection,
+  VerifyButton,
+} from '../../../pages/PortfolioNew/editPortfolio'
 
 export const Skills = (props) => {
   const [showSkillBoxModal, setShowSkillBoxModal] = useState(false)
@@ -114,122 +118,154 @@ export const Skills = (props) => {
   }, [])
 
   return (
-    <div>
-      <div
-      // className='my-account rounded  profile-tags-div mx-0 mt-4'
-      // style={{ border: '1px solid #bbbdbf' }}
-      >
-        {/*<h4 className="m-3">*/}
-        {/*  /!*<IntlMessages id="portfolio.skills_title" />*!/*/}
-        {/*  <span className="float-end">*/}
-        {/*    <FontAwesomeIcon*/}
-        {/*      icon={faPlus}*/}
-        {/*      className="mx-4 icon"*/}
-        {/*      style={{ height: '25px', width: '25px' }}*/}
-        {/*      onClick={() => props.openSkillBox()}*/}
-        {/*      // onClick={() => setShowSkillBoxModal(true)}*/}
-        {/*    />*/}
+    <PortfolioSection
+      title={'Market-ready certified skills'}
+      isEdit={true}
+      isAdd={true}
+      onEdit={
+        userSkill && userSkill.length > 0
+          ? () => {
+              setShowRemoveSkill(true)
+            }
+          : () => {
+              setShowRemoveSkill(false)
+              toast.error('You dont have any skills selected!')
+            }
+      }
+      onAdd={() => setShowSkillBoxModal(true)}
+      // onAdd={handleOpenSkillBoxModal}
+      // onEdit={handleOpenRemoveSkillModal}
+    >
+      <div style={{ display: 'flex' }}>
+        <div style={{ width: '85%' }}>
+          {/*<*/}
+          {/*// className='my-account rounded  profile-tags-div mx-0 mt-4'*/}
+          {/*// style={{ border: '1px solid #bbbdbf' }}*/}
+          {/*>*/}
+          {/*<h4 className="m-3">*/}
+          {/*  /!*<IntlMessages id="portfolio.skills_title" />*!/*/}
+          {/*  <span className="float-end">*/}
+          {/*    <FontAwesomeIcon*/}
+          {/*      icon={faPlus}*/}
+          {/*      className="mx-4 icon"*/}
+          {/*      style={{ height: '25px', width: '25px' }}*/}
+          {/*      onClick={() => props.openSkillBox()}*/}
+          {/*      // onClick={() => setShowSkillBoxModal(true)}*/}
+          {/*    />*/}
 
-        {/*    <FontAwesomeIcon*/}
-        {/*      icon={faPencilAlt}*/}
-        {/*      className="icon"*/}
-        {/*      style={{ height: '25px', width: '25px' }}*/}
-        {/*      onClick={*/}
-        {/*        userSkill && userSkill.length > 0*/}
-        {/*          ? () => {*/}
-        {/*              props.openRemoveSkill()*/}
-        {/*              // setShowRemoveSkill(true)*/}
-        {/*            }*/}
-        {/*          : () => {*/}
-        {/*              setShowRemoveSkill(false)*/}
-        {/*              props.closeRemoveSkill()*/}
-        {/*              // toast.error('You dont have any skills selected!')*/}
-        {/*            }*/}
-        {/*      }*/}
-        {/*    />*/}
-        {/*  </span>*/}
-        {/*</h4>*/}
-        <div className="w-100 ">
-          <div className="row">
-            {userSkill && userSkill.length > 0 ? (
-              userSkill.map((data) => (
-                <div className="col-md-3 col-sm-6" key={data.id}>
+          {/*    <FontAwesomeIcon*/}
+          {/*      icon={faPencilAlt}*/}
+          {/*      className="icon"*/}
+          {/*      style={{ height: '25px', width: '25px' }}*/}
+          {/*/!*      onClick={*!/*/}
+          {/*        userSkill && userSkill.length > 0*/}
+          {/*          ? () => {*/}
+          {/*              props.openRemoveSkill()*/}
+          {/*              // setShowRemoveSkill(true)*/}
+          {/*            }*/}
+          {/*          : () => {*/}
+          {/*              setShowRemoveSkill(false)*/}
+          {/*              props.closeRemoveSkill()*/}
+          {/*              // toast.error('You dont have any skills selected!')*/}
+          {/*            }*/}
+          {/*      }*/}
+          {/*    />*/}
+          {/*  </span>*/}
+          {/*</h4>*/}
+          <div className="w-100 ">
+            <div className="row">
+              {userSkill && userSkill.length > 0 ? (
+                userSkill.map((data) => (
+                  <div className="col-md-3 col-sm-6" key={data.id}>
+                    <SkillBoxButton
+                      data={data}
+                      from={'index'}
+                      from0={'public'}
+                      key={data.id}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="col-md-3 col-sm-6">
                   <SkillBoxButton
-                    data={data}
+                    data={{ name: 'add' }}
                     from={'index'}
-                    from0={'public'}
-                    key={data.id}
+                    isEmpty={true}
+                    openModal={() => {
+                      props.openSkillBox()
+                      // setShowSkillBoxModal(true)
+                    }}
                   />
                 </div>
-              ))
-            ) : (
-              <div className="col-md-3 col-sm-6">
-                <SkillBoxButton
-                  data={{ name: 'add' }}
-                  from={'index'}
-                  isEmpty={true}
-                  openModal={() => {
-                    props.openSkillBox()
-                    // setShowSkillBoxModal(true)
-                  }}
-                />
-              </div>
-            )}
+              )}
+            </div>
           </div>
+          <SkillBoxEditModal
+            allSkill={allSkill}
+            show={showSkillBoxModal}
+            onHide={() => {
+              // setNewSkill()
+
+              // props.closeSkillBox()
+              setShowSkillBoxModal(false)
+              setSelectedSkills([])
+            }}
+            setAllSkills={(data) => {
+              setAllSkills(data)
+            }}
+            editAddedSelectedSkill={(data) => editAddedSelectedSkill(data)}
+            selcetedSkills={selcetedSkills}
+            setSelectedSkills={(data) => setSelectedSkills(data)}
+            loading={savingLoading}
+            recomendetSkill={allSkill && allSkill}
+            setLoading={() => setSavingLoading()}
+            onSave={() => {
+              if (selcetedSkills.length == 0) {
+                return toast.error('No skill is selected')
+              }
+              update()
+            }}
+            newSkill={newSkill}
+            setNewSkill={(data) => setNewSkill(data)}
+          />
+          <RemoveSkill
+            show={showRemoveSkill}
+            onHide={() => {
+              setRemoveSkill([])
+              // props.closeRemoveSkill()
+              setShowRemoveSkill(false)
+            }}
+            userSkill={userSkill}
+            selcetedSkills={selcetedSkills}
+            setSelectedSkills={(data) => setSelectedSkills(data)}
+            loading={savingLoading}
+            recomendetSkill={allSkill && allSkill}
+            setRemoveSkill={(data) => setRemoveSkill(data)}
+            setLoading={() => setSavingLoading()}
+            onSave={() => {
+              if (removeSkill.length == 0) {
+                return toast.error('No skill is selected')
+              }
+              remove()
+            }}
+            editRemoveSkill={(skill) => editRemoveSkill(skill)}
+            newSkill={newSkill}
+            setNewSkill={(data) => setNewSkill(data)}
+          />
+        </div>
+        <div
+          className={'py-2'}
+          style={{
+            width: '15%',
+            display: 'flex',
+            alignItems: 'start',
+            justifyContent: 'end',
+          }}
+        >
+          <VerifyButton width={'75%'} />
         </div>
       </div>
-      <SkillBoxEditModal
-        allSkill={allSkill}
-        show={props.showSkillModal}
-        onHide={() => {
-          setNewSkill()
-          props.closeSkillBox()
-          // setShowSkillBoxModal(false)
-          setSelectedSkills([])
-        }}
-        setAllSkills={(data) => {
-          setAllSkills(data)
-        }}
-        editAddedSelectedSkill={(data) => editAddedSelectedSkill(data)}
-        selcetedSkills={selcetedSkills}
-        setSelectedSkills={(data) => setSelectedSkills(data)}
-        loading={savingLoading}
-        recomendetSkill={allSkill && allSkill}
-        setLoading={() => setSavingLoading()}
-        onSave={() => {
-          if (selcetedSkills.length == 0) {
-            return toast.error('No skill is selected')
-          }
-          update()
-        }}
-        newSkill={newSkill}
-        setNewSkill={(data) => setNewSkill(data)}
-      />
-      <RemoveSkill
-        show={props.removeSkillModal}
-        onHide={() => {
-          setRemoveSkill([])
-          props.closeRemoveSkill()
-          // setShowRemoveSkill(false);
-        }}
-        userSkill={userSkill}
-        selcetedSkills={selcetedSkills}
-        setSelectedSkills={(data) => setSelectedSkills(data)}
-        loading={savingLoading}
-        recomendetSkill={allSkill && allSkill}
-        setRemoveSkill={(data) => setRemoveSkill(data)}
-        setLoading={() => setSavingLoading()}
-        onSave={() => {
-          if (removeSkill.length == 0) {
-            return toast.error('No skill is selected')
-          }
-          remove()
-        }}
-        editRemoveSkill={(skill) => editRemoveSkill(skill)}
-        newSkill={newSkill}
-        setNewSkill={(data) => setNewSkill(data)}
-      />
-    </div>
+    </PortfolioSection>
   )
 }
 

@@ -80,7 +80,7 @@ const ActionIcon = (props) => {
   )
 }
 
-const PortfolioSection = (props) => {
+export const PortfolioSection = (props) => {
   const [toggle, setToggle] = useState(0)
   const [showPublishModal, setShowPublishModal] = useState(false)
   const updateStatus = async () => {
@@ -97,7 +97,6 @@ const PortfolioSection = (props) => {
         setToggle(!toggle)
       })
   }
-
   return (
     <div
       style={{
@@ -145,14 +144,8 @@ const PortfolioSection = (props) => {
                 <label className="px-0 ps-sm-1 ps-md-1 form-switch">
                   <input
                     type="checkbox"
-                    checked={toggle}
-                    onChange={() => {
-                      if (toggle) {
-                        updateStatus()
-                      } else {
-                        setShowPublishModal(true)
-                      }
-                    }}
+                    checked={props.isShownInPortfolio}
+                    onChange={props.handleShowInPortfolio}
                   />
                   <i></i>
                 </label>
@@ -275,6 +268,9 @@ function EditPortfolio() {
     setShowRemoveSkill(false)
   }
 
+  const handleIsSectionPublished = (section, isPublished) => {
+    console.log(section, isPublished)
+  }
   return (
     <div style={{ padding: '30px 10px', width: '88%' }}>
       <div>
@@ -355,62 +351,15 @@ function EditPortfolio() {
             {/*</div>*/}
           </div>
         </div>
-        <PortfolioSection
-          isEdit={true}
-          isAdd={false}
-          onEdit={handleOpenEditBioModal}
-        >
-          <PersonalBio
-            showEditBioModal={showEditBioModal}
-            onHide={handleCloseEditBioModal}
-          />
-        </PortfolioSection>
+        <PersonalBio user={user} />
         {user && (
-          <PortfolioSection showLinkToProjects={true}>
-            <div
-              style={{
-                textAlign: 'end',
-                marginRight: 40,
-                textTransform: 'uppercase',
-                font: 'normal normal 600 20px/24px Montserrat',
-                letterSpacing: 0,
-                color: '#51C7DF',
-              }}
-            >
-              Edit my projects
-            </div>
+          <>
             <IAMR user={user} />
-          </PortfolioSection>
+          </>
         )}
-        <PortfolioSection
-          title={'Market-ready certified skills'}
-          isEdit={true}
-          isAdd={true}
-          onAdd={handleOpenSkillBoxModal}
-          onEdit={handleOpenRemoveSkillModal}
-        >
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '85%' }}>
-              <Skills
-                closeRemoveSkill={handleCloseRemoveSkillModal}
-                removeSkillModal={showRemoveSkill}
-                closeSkillBox={handleCloseSkillBoxModal}
-                showSkillModal={showSkillBoxModal}
-              />
-            </div>
-            <div
-              className={'py-2'}
-              style={{
-                width: '15%',
-                display: 'flex',
-                alignItems: 'start',
-                justifyContent: 'end',
-              }}
-            >
-              <VerifyButton width={'75%'} />
-            </div>
-          </div>
-        </PortfolioSection>
+
+        <Skills user={user} />
+
         <div>
           <div
             style={{
@@ -422,16 +371,9 @@ function EditPortfolio() {
           >
             EXPERIENCE
           </div>
-          <PortfolioSection
-            title={'Experience'}
-            isAdd={true}
-            showInMyPortfolio={true}
-          >
-            <Experience />
-          </PortfolioSection>
-          <PortfolioSection title={'RECOMMENDATIONS'} isAdd={true}>
-            <Recommendation />
-          </PortfolioSection>
+
+          <Experience user={user} />
+          <Recommendation user={user} />
         </div>
         <div>
           <div
@@ -444,132 +386,15 @@ function EditPortfolio() {
           >
             EDUCATION AND ACCOMPLISHMENTS
           </div>
-          <PortfolioSection
-            title={'EDUCATION'}
-            isAdd={true}
-            showInMyPortfolio={true}
-          >
-            <Education />
-          </PortfolioSection>
-          <PortfolioSection
-            title={'ACCOMPLISHMENTS'}
-            isAdd={true}
-            showInMyPortfolio={true}
-          >
-            <Accomplishment />
-          </PortfolioSection>
+
+          <Education user={user} />
+
+          <Accomplishment user={user} />
         </div>
-        <PortfolioSection
-          title={'LICENSES & CERTIFICATIONS'}
-          showInMyPortfolio={true}
-          isAdd={true}
-          isEdit={true}
-        >
-          <Licenses_Certification />
-        </PortfolioSection>
+
+        <Licenses_Certification user={user} />
       </div>
     </div>
-
-    // <div id='main-body'>
-    //   <div className='container-fluid'>
-    //     <div className='row'>
-    //       <div className='col-12 col-lg-11 pe-lg-5 gx-0 gx-sm-auto'>
-    //         <div className='page-padding'>
-    //           <div className='row mx-0'>
-    //             <div className='col-12 col-lg-7 col-xl-8 m-0 p-0'>
-    //               <span className='my_portfolio_title'>
-    //                 <IntlMessages
-    //                   id='register.my_portfolio'
-    //                   className='title my_portfolio_title'
-    //                 />
-    //               </span>
-    //               <span className='mx-2 my_portfolio_bar d-sm-inline'>|</span>
-    //               <span className='text-uppercase title_preview_portfolio d-block d-sm-inline'>
-    //                 <Link to={'/preview-portfolio'}>
-    //                   <IntlMessages id='portfolio.preview' />
-    //                 </Link>
-    //               </span>
-    //               <p className='my_portfolio_edit'>
-    //                 <IntlMessages id='portfolio.my_portfolio_edit' />
-    //               </p>
-    //             </div>
-    //             <div className='col-lg-5 col-xl-4 gx-lg-0 m-0 p-0'>
-    //               <div className='col-12 ps-md-0'>
-    //                 <span className='my_portfolio_publish pe-xxl-0 '>
-    //                   <IntlMessages id='portfolio.Publish.My.Portfolio' />
-    //                   <label className='px-0 ps-sm-1 ps-md-1 form-switch'>
-    //                     <input
-    //                       type='checkbox'
-    //                       checked={toggle}
-    //                       onChange={() => {
-    //                         if (toggle) {
-    //                           updateStatus()
-    //                         } else {
-    //                           setShowPublishModal(true)
-    //                         }
-    //                       }}
-    //                     />
-    //                     <i></i>
-    //                   </label>
-    //                 </span>
-    //
-    //                 <span className='ps-xl-0 d-block mt-1 mt-sm-1 publish_checkbox_info'>
-    //                   <IntlMessages id='portfolio.publish_checkbox' />
-    //                 </span>
-    //               </div>
-    //             </div>
-    //           </div>
-    //           <PersonalBio />
-    //           {user && (
-    //             <div>
-    //               <IAMR user={user} />
-    //               <Skills user={user} />
-    //               <div className='box-group-title pt-md-4'>
-    //                 <h3 style={{ fontWeight: 'bold' }}>EXPERIENCE</h3>
-    //                 <Experience user={user} />
-    //               </div>
-    //               {authorizedLevel && (
-    //                 <Recommendation
-    //                   user={user}
-    //                   requestId={recommendationRequestId}
-    //                 />
-    //               )}
-    //               <div className='box-group-title pt-md-4'>
-    //                 <h3 style={{ fontWeight: 'bold' }}>
-    //                   EDUCATION & ACCOMPLISHMENTS
-    //                 </h3>
-    //                 <Education user={user} />
-    //                 <Accomplishment user={user} />
-    //               </div>
-    //             </div>
-    //           )}
-    //           <Licenses_Certification user={user} />
-    //           <DeleteConfirmation
-    //             showModal={showPublishModal}
-    //             onHide={() => setShowPublishModal(false)}
-    //             confirmModal={() => true}
-    //             checkIfAggre={() => {
-    //               updateStatus()
-    //               setLoading(true)
-    //               setAggred(true)
-    //               setTimeout(() => {
-    //                 setLoading(false)
-    //                 setShowPublishModal(false)
-    //               }, 5000)
-    //             }}
-    //             loading={loading}
-    //             setLoading={(data) => setLoading(data)}
-    //             type={true}
-    //             title={<IntlMessages id='portfolio.confirmation_modal' />}
-    //             body={
-    //               <IntlMessages id='portfolio.confirmation_modal_second_part' />
-    //             }
-    //           />
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
   )
 }
 export default EditPortfolio

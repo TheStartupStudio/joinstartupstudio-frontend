@@ -10,6 +10,7 @@ import './style.css'
 import { format } from 'date-fns'
 import { toast } from 'react-toastify'
 import { faGlobe, faFile } from '@fortawesome/free-solid-svg-icons'
+import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
 
 export const Accomplishment = (props) => {
   const [showAccompModal, setShowAccompModal] = useState(false)
@@ -69,34 +70,15 @@ export const Accomplishment = (props) => {
   }
 
   return (
-    <>
+    <PortfolioSection
+      title={'ACCOMPLISHMENTS'}
+      isAdd={true}
+      showInMyPortfolio={true}
+      onAdd={() => setShowAccompModal(true)}
+      isShownInPortfolio={isPublished}
+      handleShowInPortfolio={updateShowPreference}
+    >
       <div className="experiences-container mx-0 mt-4">
-        {/*<div className='d-flex m-3 experience-header'>*/}
-        {/*  <h4 className='title p-0 my-auto float-start'>ACCOMPLISHMENTS</h4>*/}
-        {/*  <span className='float-end my-auto pe-1 pe-md-0'>*/}
-        {/*    <FontAwesomeIcon*/}
-        {/*      icon={faPlus}*/}
-        {/*      className=''*/}
-        {/*      style={{ height: '25px', width: '25px', cursor: 'pointer' }}*/}
-        {/*      onClick={() => setShowAccompModal(true)}*/}
-        {/*    />*/}
-        {/*  </span>*/}
-        {/*  <div className='break-experience'></div>*/}
-        {/*  <div className='d-flex show_in_portfolio'>*/}
-        {/*    <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>*/}
-        {/*      Show in My Portfolio*/}
-        {/*    </p>*/}
-
-        {/*    <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>*/}
-        {/*      <input*/}
-        {/*        type='checkbox'*/}
-        {/*        checked={isPublished}*/}
-        {/*        onChange={() => updateShowPreference()}*/}
-        {/*      />*/}
-        {/*      <i className='my-auto'></i>*/}
-        {/*    </label>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
         {accomps.length !== 0 ? (
           <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row experience-details gap-4">
             {accomps.map((accomp, index, { length }) => {
@@ -157,6 +139,6 @@ export const Accomplishment = (props) => {
         href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
         rel="stylesheet"
       />
-    </>
+    </PortfolioSection>
   )
 }

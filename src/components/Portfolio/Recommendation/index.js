@@ -10,6 +10,7 @@ import { RecommendationDetails } from './recommendationDetails'
 import { AllRcmdRequestsModal } from './allRcmdRequestsModal'
 import '../Experience/style.css'
 import { toast } from 'react-toastify'
+import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
 
 export const Recommendation = (props) => {
   const [showRecommendationModal, setShowRecommendationModal] = useState(false)
@@ -125,196 +126,204 @@ export const Recommendation = (props) => {
 
   return (
     <>
-      <div className="experiences-container mx-0 mt-4">
-        <div className="rcmd-header">
-          <div className="m-3 rcmd-desktop-header">
-            {/*<div className='d-flex experience-header'>*/}
-            {/*  <h4*/}
-            {/*    className='title p-0 float-start'*/}
-            {/*    // style={{ width: '20%' }}*/}
-            {/*  >*/}
-            {/*    RECOMMENDATIONS*/}
-            {/*  </h4>*/}
-            {/*  <div className='break-experience'></div>*/}
-            {/*  <div className='d-flex show_in_portfolio justify-content-end'>*/}
-            {/*    <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>*/}
-            {/*      Show in My Portfolio*/}
-            {/*    </p>*/}
+      <PortfolioSection
+        title={'RECOMMENDATIONS'}
+        isEdit={true}
+        onEdit={() => setShowRecommendationModal(true)}
+      >
+        <div className="experiences-container mx-0 mt-4">
+          <div className="rcmd-header">
+            <div className="m-3 rcmd-desktop-header">
+              {/*<div className='d-flex experience-header'>*/}
+              {/*  <h4*/}
+              {/*    className='title p-0 float-start'*/}
+              {/*    // style={{ width: '20%' }}*/}
+              {/*  >*/}
+              {/*    RECOMMENDATIONS*/}
+              {/*  </h4>*/}
+              {/*  <div className='break-experience'></div>*/}
+              {/*  <div className='d-flex show_in_portfolio justify-content-end'>*/}
+              {/*    <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>*/}
+              {/*      Show in My Portfolio*/}
+              {/*    </p>*/}
 
-            {/*    <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>*/}
-            {/*      <input*/}
-            {/*        type='checkbox'*/}
-            {/*        checked={isPublished}*/}
-            {/*        onChange={() => updateShowPreference()}*/}
-            {/*      />*/}
-            {/*      <i className='my-auto'></i>*/}
-            {/*    </label>*/}
+              {/*    <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>*/}
+              {/*      <input*/}
+              {/*        type='checkbox'*/}
+              {/*        checked={isPublished}*/}
+              {/*        onChange={() => updateShowPreference()}*/}
+              {/*      />*/}
+              {/*      <i className='my-auto'></i>*/}
+              {/*    </label>*/}
 
-            {/*    <span className='float-end my-auto pe-1 pe-md-0 ps-md-4'>*/}
-            {/*      <FontAwesomeIcon*/}
-            {/*        icon={faPencilAlt}*/}
-            {/*        className=''*/}
-            {/*        style={{ height: '25px', width: '25px', cursor: 'pointer' }}*/}
-            {/*        onClick={() => setShowRecommendationModal(true)}*/}
-            {/*      />*/}
-            {/*    </span>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
-            {/*<div className="d-flex experience-header show_in_portfolio justify-content-end">*/}
-            {/*  <p*/}
-            {/*    className="py-3 py-md-0 my-auto px-md-3 p-0 pe-2"*/}
-            {/*    onClick={() => setShowRcmdRequestModal(true)}*/}
-            {/*    style={{ cursor: 'pointer' }}*/}
-            {/*  >*/}
-            {/*    Request a Recommendation*/}
-            {/*  </p>*/}
-            {/*  <p className="my-auto">|</p>*/}
-            {/*  <p*/}
-            {/*    className="py-3 py-md-0 my-auto ps-md-3 p-0"*/}
-            {/*    onClick={() => setShowAllRequestsModal(true)}*/}
-            {/*    style={{ cursor: 'pointer' }}*/}
-            {/*  >*/}
-            {/*    Respond to Requests (*/}
-            {/*    {pendingRecommendations.length > 0*/}
-            {/*      ? pendingRecommendations.length*/}
-            {/*      : 0}*/}
-            {/*    )*/}
-            {/*  </p>*/}
-            {/*</div>*/}
-          </div>
-
-          <div className="d-flex m-3 experience-header rcmd-mobile-header d-none">
-            <div className="d-inline-block w-100">
-              <h4
-                className="title p-0 my-auto float-start"
-                style={{ width: '80%' }}
-              >
-                RECOMMENDATIONS
-              </h4>
-              <span className="float-end my-auto pe-1 pe-md-0">
-                <FontAwesomeIcon
-                  icon={faPencilAlt}
-                  className=""
-                  style={{ height: '25px', width: '25px', cursor: 'pointer' }}
-                  onClick={() => setShowRecommendationModal(true)}
-                />
-              </span>
-            </div>
-            <div className="d-flex show_in_portfolio justify-content-end">
-              <p className="p-0 m-0 my-auto">Show in My Portfolio</p>
-
-              <label className="p-0 m-0 float-end my-auto form-switch d-flex">
-                <input
-                  type="checkbox"
-                  checked={isPublished}
-                  onChange={() => updateShowPreference()}
-                />
-                <i className="my-auto"></i>
-              </label>
+              {/*    <span className='float-end my-auto pe-1 pe-md-0 ps-md-4'>*/}
+              {/*      <FontAwesomeIcon*/}
+              {/*        icon={faPencilAlt}*/}
+              {/*        className=''*/}
+              {/*        style={{ height: '25px', width: '25px', cursor: 'pointer' }}*/}
+              {/*        onClick={() => setShowRecommendationModal(true)}*/}
+              {/*      />*/}
+              {/*    </span>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+              {/*<div className="d-flex experience-header show_in_portfolio justify-content-end">*/}
+              {/*  <p*/}
+              {/*    className="py-3 py-md-0 my-auto px-md-3 p-0 pe-2"*/}
+              {/*    onClick={() => setShowRcmdRequestModal(true)}*/}
+              {/*    style={{ cursor: 'pointer' }}*/}
+              {/*  >*/}
+              {/*    Request a Recommendation*/}
+              {/*  </p>*/}
+              {/*  <p className="my-auto">|</p>*/}
+              {/*  <p*/}
+              {/*    className="py-3 py-md-0 my-auto ps-md-3 p-0"*/}
+              {/*    onClick={() => setShowAllRequestsModal(true)}*/}
+              {/*    style={{ cursor: 'pointer' }}*/}
+              {/*  >*/}
+              {/*    Respond to Requests (*/}
+              {/*    {pendingRecommendations.length > 0*/}
+              {/*      ? pendingRecommendations.length*/}
+              {/*      : 0}*/}
+              {/*    )*/}
+              {/*  </p>*/}
+              {/*</div>*/}
             </div>
 
-            <div className="d-flex justify-content-start mt-2 show_in_portfolio flex-wrap">
-              <p
-                className="p-0 m-0 text-start"
-                onClick={() => setShowRcmdRequestModal(true)}
-                style={{ cursor: 'pointer' }}
-              >
-                Request a Recommendation
-              </p>
-              <p className="my-auto text-center rcmd-seperator">|</p>
-              <p
-                className="p-0 m-0 rmcd-respond-requests"
-                onClick={() => setShowAllRequestsModal(true)}
-                style={{ cursor: 'pointer' }}
-              >
-                Respond to Requests(
-                {pendingRecommendations.length > 0
-                  ? pendingRecommendations.length
-                  : 0}
-                )
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {recommendations.length !== 0 ? (
-          <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
-            {recommendations.map((recommendation, index, { length }) => {
-              return (
-                <div
-                  style={{
-                    border: '1px solid #E5E5E5',
-                    borderRadius: 6,
-                    background: '#F8F8F8 0% 0% no-repeat padding-box',
-                  }}
+            <div className="d-flex m-3 experience-header rcmd-mobile-header d-none">
+              <div className="d-inline-block w-100">
+                <h4
+                  className="title p-0 my-auto float-start"
+                  style={{ width: '80%' }}
                 >
-                  <RecommendationDetails
-                    recommendation={recommendation}
-                    key={recommendation.id}
-                    index={index}
-                    length={length}
+                  RECOMMENDATIONS
+                </h4>
+                <span className="float-end my-auto pe-1 pe-md-0">
+                  <FontAwesomeIcon
+                    icon={faPencilAlt}
+                    className=""
+                    style={{ height: '25px', width: '25px', cursor: 'pointer' }}
+                    onClick={() => setShowRecommendationModal(true)}
                   />
-                </div>
-              )
-            })}
-          </div>
-        ) : (
-          <>
-            <p className="no-experience-added">
-              You don’t have any recommendations… yet! Click the box below to
-              request a recommendation from someone you know.
-            </p>
-            <div className="m-3 experiences-container d-flex justify-content-center">
-              <FontAwesomeIcon
-                icon={faPlus}
-                className="my-5"
-                style={{
-                  height: '56px',
-                  width: '56px',
-                  cursor: 'pointer',
-                  color: '#BBBDBF',
-                }}
-                onClick={() => setShowRcmdRequestModal(true)}
-              />
+                </span>
+              </div>
+              <div className="d-flex show_in_portfolio justify-content-end">
+                <p className="p-0 m-0 my-auto">Show in My Portfolio</p>
+
+                <label className="p-0 m-0 float-end my-auto form-switch d-flex">
+                  <input
+                    type="checkbox"
+                    checked={isPublished}
+                    onChange={() => updateShowPreference()}
+                  />
+                  <i className="my-auto"></i>
+                </label>
+              </div>
+
+              <div className="d-flex justify-content-start mt-2 show_in_portfolio flex-wrap">
+                <p
+                  className="p-0 m-0 text-start"
+                  onClick={() => setShowRcmdRequestModal(true)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Request a Recommendation
+                </p>
+                <p className="my-auto text-center rcmd-seperator">|</p>
+                <p
+                  className="p-0 m-0 rmcd-respond-requests"
+                  onClick={() => setShowAllRequestsModal(true)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Respond to Requests(
+                  {pendingRecommendations.length > 0
+                    ? pendingRecommendations.length
+                    : 0}
+                  )
+                </p>
+              </div>
             </div>
-          </>
-        )}
-      </div>
-      <EditRecommendationModal
-        show={showRecommendationModal}
-        onHide={() => {
-          setShowRecommendationModal(false)
-        }}
-        recommendations={recommendations}
-        givenRecommendations={givenRecommendations}
-        initialValues={{ recommendations, givenRecommendations }}
-        deleteRecommendations={(data) => deleteRecommendations(data)}
-        updateGivenRecommendations={(data) => updateGivenRecommendations(data)}
-        // updateRecommendation={(exp) => updateRecommendation(exp)}
-        // addRecommendation={(exp) => addRecommendation(exp)}
-        // deleteBackground={(id) => deleteBackground(id)}
-      />
-      <RcmdRequestModal
-        show={showRcmdRequestModal}
-        onHide={() => {
-          setShowRcmdRequestModal(false)
-        }}
-        connections={connections}
-      />
-      {/* <RespondRcmdRequestModal show={false} /> */}
-      <AllRcmdRequestsModal
-        allRcmdRequests={pendingRecommendations}
-        show={showAllRequestsModal}
-        userBlocked={(id) => userBlocked(id)}
-        removePendingRcmd={(id) => removePendingRcmd(id)}
-        addGivenRecommendation={(data) => addGivenRecommendation(data)}
-        updatePendingRecommendation={(data) =>
-          updatePendingRecommendation(data)
-        }
-        showRcmdmodal={() => setShowAllRequestsModal(true)}
-        onHide={() => setShowAllRequestsModal(false)}
-        requestId={requestId}
-      />
+          </div>
+
+          {recommendations.length !== 0 ? (
+            <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
+              {recommendations.map((recommendation, index, { length }) => {
+                return (
+                  <div
+                    style={{
+                      border: '1px solid #E5E5E5',
+                      borderRadius: 6,
+                      background: '#F8F8F8 0% 0% no-repeat padding-box',
+                    }}
+                  >
+                    <RecommendationDetails
+                      recommendation={recommendation}
+                      key={recommendation.id}
+                      index={index}
+                      length={length}
+                    />
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <>
+              <p className="no-experience-added">
+                You don’t have any recommendations… yet! Click the box below to
+                request a recommendation from someone you know.
+              </p>
+              <div className="m-3 experiences-container d-flex justify-content-center">
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  className="my-5"
+                  style={{
+                    height: '56px',
+                    width: '56px',
+                    cursor: 'pointer',
+                    color: '#BBBDBF',
+                  }}
+                  onClick={() => setShowRcmdRequestModal(true)}
+                />
+              </div>
+            </>
+          )}
+        </div>
+        <EditRecommendationModal
+          show={showRecommendationModal}
+          onHide={() => {
+            setShowRecommendationModal(false)
+          }}
+          recommendations={recommendations}
+          givenRecommendations={givenRecommendations}
+          initialValues={{ recommendations, givenRecommendations }}
+          deleteRecommendations={(data) => deleteRecommendations(data)}
+          updateGivenRecommendations={(data) =>
+            updateGivenRecommendations(data)
+          }
+          // updateRecommendation={(exp) => updateRecommendation(exp)}
+          // addRecommendation={(exp) => addRecommendation(exp)}
+          // deleteBackground={(id) => deleteBackground(id)}
+        />
+        <RcmdRequestModal
+          show={showRcmdRequestModal}
+          onHide={() => {
+            setShowRcmdRequestModal(false)
+          }}
+          connections={connections}
+        />
+        {/* <RespondRcmdRequestModal show={false} /> */}
+        <AllRcmdRequestsModal
+          allRcmdRequests={pendingRecommendations}
+          show={showAllRequestsModal}
+          userBlocked={(id) => userBlocked(id)}
+          removePendingRcmd={(id) => removePendingRcmd(id)}
+          addGivenRecommendation={(data) => addGivenRecommendation(data)}
+          updatePendingRecommendation={(data) =>
+            updatePendingRecommendation(data)
+          }
+          showRcmdmodal={() => setShowAllRequestsModal(true)}
+          onHide={() => setShowAllRequestsModal(false)}
+          requestId={requestId}
+        />
+      </PortfolioSection>
     </>
   )
 }
