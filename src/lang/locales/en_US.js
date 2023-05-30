@@ -935,6 +935,8 @@ const EnLangs = {
   // CALENDAR TASK-EVENTS
 
   "calendar_task-events.add_a_new_task/event": "Add a new task/event",
+  "calendar_task-events.edit_task": "Edit task",
+  "calendar_task-events.edit_event": "Edit event",
   "calendar_task-events.name_of_task": "Name of task",
   "calendar_task-events.date_of_task": "Date of task",
   "calendar_task-events.description_of_task": "Description of task",
