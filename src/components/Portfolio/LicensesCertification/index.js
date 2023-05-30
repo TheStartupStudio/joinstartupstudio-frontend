@@ -10,9 +10,9 @@ import '../Experience/style.css'
 import AddCertification from './addCertification'
 import RemoveCertification from './removeCertifications'
 import { toast } from 'react-toastify'
-import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
 
-export default function Licenses_Certification(props) {
+export default function LicencesCertification(props) {
   const general = useSelector((state) => state.general)
   const userId = useSelector((state) => state.user.user.user.id)
 
