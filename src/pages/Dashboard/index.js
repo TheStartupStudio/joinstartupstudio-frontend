@@ -16,6 +16,10 @@ import LevelWrapper from '../../components/LevelWrapper'
 
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
+import NotificationBox from '../NotificationSection-dashboard/NotificationBox'
+import { faBell } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
 
 function Dashboard() {
   const dispatch = useDispatch()
@@ -112,7 +116,8 @@ function Dashboard() {
               onEdit={null}
               startDate={null}
             />
-            <CertificationRequestsWidget />
+            <NotificationSection />
+            {/*<CertificationRequestsWidget />*/}
             {/* <Messenger
               chatOpened={(id) => setChatId(id)}
               newMessage={(message) => setNewMessage(message)}

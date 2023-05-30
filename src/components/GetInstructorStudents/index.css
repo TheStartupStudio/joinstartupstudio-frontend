@@ -16,3 +16,9 @@
   color: rgb(81, 199, 223) !important;
   font-weight: 700 !important;
 }
+
+/*//////////////// Notifications /////////////////*/
+
+.remove-notification.btn-close::before{
+  content: '' !important;
+}
