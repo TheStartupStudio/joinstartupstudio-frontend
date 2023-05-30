@@ -9,8 +9,16 @@ import { useHistory } from 'react-router-dom'
 import Notifications from '../Header/notifications'
 import NotificationComponent from './Notification.component'
 import socket from '../../utils/notificationSocket'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import NotificationTypes from '../../utils/notificationTypes'
+import BriefingComponent from './Briefing.component'
+import { changeSidebarState } from '../../redux'
+import { getEventsStart, getPeriodsStart } from '../../redux/dashboard/Actions'
+import {
+  editBriefingStart,
+  getBriefingsStart,
+} from '../../redux/header/Actions'
+import { editBriefing } from '../../redux/header/Service'
 
 const StudentOfInstructors = (props) => {
   const [universities, setUniversities] = useState([])
@@ -83,8 +91,6 @@ const StudentOfInstructors = (props) => {
     },
   ])
 
-  const [receivedNotifications, setReceivedNotifications] = useState([])
-  console.log(receivedNotifications)
   const onAddNewNotification = () => {
     setNotifications([
       ...notifications,
@@ -102,7 +108,6 @@ const StudentOfInstructors = (props) => {
     setNotifications(newNotifications)
   }
 
-  const user = useSelector((state) => state.user.user.user)
   const loggedUser = useSelector((state) => state.user.user.user)
 
   const handleSubmitNotification = () => {
@@ -126,6 +131,21 @@ const StudentOfInstructors = (props) => {
     setNotifications(newNotifications)
   }
 
+  const dispatch = useDispatch()
+
+  const briefings = useSelector((state) => state.header.briefings)
+  const [briefing, setBriefing] = useState(null)
+  useEffect(() => {
+    dispatch(getBriefingsStart())
+  }, [])
+
+  const handleChangeBriefing = (briefing) => {
+    setBriefing(briefing)
+  }
+
+  const onSubmitBriefing = () => {
+    dispatch(editBriefingStart(briefing, briefing.id))
+  }
   return (
     <Modal
       show={props.onShow}
@@ -195,6 +215,21 @@ const StudentOfInstructors = (props) => {
                 }
               >
                 {toShow == 'notifications' ? 'Close' : 'Notifications box'}
+              </button>
+            </div>
+
+            <div className="col-12 col-md-6 px-md-4">
+              <button
+                className={`btn  w-100 brand-button ${
+                  toShow == 'briefing' ? 'brand-button-active' : 'brand-button'
+                }`}
+                onClick={() =>
+                  toShow == 'briefing'
+                    ? setStateToShow('none')
+                    : setStateToShow('briefing')
+                }
+              >
+                {toShow == 'briefing' ? 'Close' : 'Briefing section'}
               </button>
             </div>
           </div>
@@ -559,6 +594,25 @@ const StudentOfInstructors = (props) => {
               <button
                 className="float-end m-0 px-md-5 w-100 save-button add-new-note-button-text"
                 onClick={handleSubmitNotification}
+              >
+                {loading ? 'loading' : 'Submit'}
+              </button>
+            </div>
+          </>
+        )}
+        {toShow === 'briefing' && (
+          <>
+            <BriefingComponent
+              handleChange={(e) => {
+                handleChangeBriefing(e)
+              }}
+              briefing={briefings[0]}
+            />
+
+            <div>
+              <button
+                className="float-end m-0 px-md-5 w-100 save-button add-new-note-button-text"
+                onClick={onSubmitBriefing}
               >
                 {loading ? 'loading' : 'Submit'}
               </button>
