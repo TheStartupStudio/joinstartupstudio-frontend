@@ -10,7 +10,7 @@ import { RecommendationDetails } from './recommendationDetails'
 import { AllRcmdRequestsModal } from './allRcmdRequestsModal'
 import '../Experience/style.css'
 import { toast } from 'react-toastify'
-import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
 
 export const Recommendation = (props) => {
   const [showRecommendationModal, setShowRecommendationModal] = useState(false)

@@ -7,7 +7,8 @@ import { EducationModal } from './educationModal'
 import { EducationDetails } from './educationDetails'
 import '../Experience/style.css'
 import { toast } from 'react-toastify'
-import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import EmptyEducationSection from '../../../pages/PortfolioNew/EmptyEducationSection'
 
 export const Education = (props) => {
   const [showEducationModal, setShowEducationModal] = useState(false)
@@ -16,8 +17,12 @@ export const Education = (props) => {
   const [isPublished, setIsPublished] = useState(false)
 
   useEffect(() => {
-    getUserEducations()
-  }, [])
+    setEducations(props.educations)
+  }, [props.educations])
+
+  // useEffect(() => {
+  //   getUserEducations()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_education)
@@ -75,56 +80,34 @@ export const Education = (props) => {
         isShownInPortfolio={isPublished}
         onAdd={() => setShowEducationModal(true)}
       >
-        <div className="experiences-container mx-0 mt-4">
-          {educations.length !== 0 ? (
-            <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
-              {educations.map((education, index, { length }) => {
-                return (
-                  <div
-                    style={{
-                      border: '1px solid #E5E5E5',
-                      borderRadius: 6,
-                      background: '#F8F8F8 0% 0% no-repeat padding-box',
-                      minHeight: 230,
-                      height: 230,
-                    }}
-                  >
-                    <EducationDetails
-                      education={education}
-                      key={education.id}
-                      index={index}
-                      length={length}
-                      setCurrentEducation={(education) =>
-                        setCurrentEducation(education)
-                      }
-                      editing={true}
-                    />
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <>
-              <p className="no-experience-added">
-                You haven’t added any educational degrees… yet! Click the box
-                below to add one.
-              </p>
-              <div className="m-3 experiences-container d-flex justify-content-center">
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  className="my-5"
+        <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
+          {educations.length > 0 &&
+            educations.map((education, index, { length }) => {
+              return (
+                <div
                   style={{
-                    height: '56px',
-                    width: '56px',
-                    cursor: 'pointer',
-                    color: '#BBBDBF',
+                    border: '1px solid #E5E5E5',
+                    borderRadius: 6,
+                    background: '#F8F8F8 0% 0% no-repeat padding-box',
+                    minHeight: 230,
+                    height: 230,
                   }}
-                  onClick={() => setShowEducationModal(true)}
-                />
-              </div>
-            </>
-          )}
+                >
+                  <EducationDetails
+                    education={education}
+                    key={education.id}
+                    index={index}
+                    length={length}
+                    setCurrentEducation={(education) =>
+                      setCurrentEducation(education)
+                    }
+                    editing={true}
+                  />
+                </div>
+              )
+            })}
         </div>
+
         <EducationModal
           show={showEducationModal}
           onHide={() => {

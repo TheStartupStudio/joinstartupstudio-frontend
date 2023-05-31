@@ -7,52 +7,53 @@ import PortfolioSection from './PortfolioSection'
 import { AccomplishmentModal } from '../../components/Portfolio/Accomplishment/accomplishmentModal'
 import { toast } from 'react-toastify'
 import IntlMessages from '../../utils/IntlMessages'
+import { ExperienceModal } from '../../components/Portfolio/Experience/experienceModal'
 const EmptyEducationSection = () => {
-  const [showAccompModal, setShowAccompModal] = useState(false)
-  const [accomps, setAccomp] = useState([])
-  const [currentAccomp, setCurrentAccomp] = useState([])
+  const [showExperienceModal, setShowExperienceModal] = useState(false)
+  const [experiences, setExperiences] = useState([])
+  const [currentExperience, setCurrentExperience] = useState([])
 
   useEffect(() => {
-    getUserAccomplishments()
+    getUserExperiences()
   }, [])
 
   useEffect(() => {
-    if (currentAccomp.length !== 0) setShowAccompModal(true)
-  }, [currentAccomp])
+    if (currentExperience.length !== 0) setShowExperienceModal(true)
+  }, [currentExperience])
 
-  const getUserAccomplishments = async () => {
+  const getUserExperiences = async () => {
     await axiosInstance
-      .get(`/userBackground/by-type/accomplishments`)
+      .get(`/userBackground/by-type/experience`)
       .then((res) => {
-        setAccomp(res.data)
+        setExperiences(res.data)
       })
   }
 
-  const updateAccomp = async (accomp) => {
-    setAccomp(
-      accomps.map((acmp) => {
-        if (acmp.id === accomp.id) return (acmp = accomp)
-        return acmp
+  const updateExperience = async (experience) => {
+    setExperiences(
+      experiences.map((exp) => {
+        if (exp.id === experience.id) return (exp = experience)
+        return exp
       })
     )
   }
 
   const deleteBackground = (id) => {
-    setAccomp(accomps.filter((accomp) => accomp.id !== id))
+    setExperiences(experiences.filter((exp) => exp.id !== id))
   }
 
-  const addAccomp = async (accomp) => {
-    setAccomp([...accomps, accomp])
+  const addExperience = async (experience) => {
+    setExperiences([...experiences, experience])
   }
 
   return (
     <PortfolioSection title={'Education'}>
-      {!accomps.length && (
+      {!experiences.length && (
         <>
           <>
             <p className="no-experience-added">
-              You haven’t added any accomplishments… yet! Click the box below to
-              add one.
+              You haven’t added any of your experience… yet! Click the box below
+              to add one.
             </p>
             <div className="m-3 experiences-container d-flex justify-content-center">
               <FontAwesomeIcon
@@ -64,20 +65,20 @@ const EmptyEducationSection = () => {
                   cursor: 'pointer',
                   color: '#BBBDBF',
                 }}
-                onClick={() => setShowAccompModal(true)}
+                onClick={() => setShowExperienceModal(true)}
               />
             </div>
           </>
-          <AccomplishmentModal
-            show={showAccompModal}
+          <ExperienceModal
+            show={showExperienceModal}
             onHide={() => {
-              setCurrentAccomp([])
-              setShowAccompModal(false)
+              setCurrentExperience([])
+              setShowExperienceModal(false)
             }}
-            updateAccomp={(accomp) => updateAccomp(accomp)}
+            updateExperience={(exp) => updateExperience(exp)}
+            addExperience={(exp) => addExperience(exp)}
             deleteBackground={(id) => deleteBackground(id)}
-            addAccomp={(accomp) => addAccomp(accomp)}
-            currentAccomp={currentAccomp}
+            currentExperience={currentExperience}
           />
         </>
       )}

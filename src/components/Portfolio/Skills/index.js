@@ -8,10 +8,10 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 import SkillBoxButton from './skillBox'
 import { toast } from 'react-toastify'
-import {
-  PortfolioSection,
-  VerifyButton,
-} from '../../../pages/PortfolioNew/editPortfolio'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import { VerifyButton } from '../../../pages/PortfolioNew/editPortfolio'
+import { useHistory } from 'react-router-dom'
+import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 export const Skills = (props) => {
   const [showSkillBoxModal, setShowSkillBoxModal] = useState(false)
@@ -22,6 +22,10 @@ export const Skills = (props) => {
   const [userSkill, setUserSkill] = useState([])
   const [newSkill, setNewSkill] = useState()
   const [removeSkill, setRemoveSkill] = useState([])
+
+  useEffect(() => {
+    setUserSkill(props.skills)
+  }, [props.skills])
 
   const remove = async () => {
     await axiosInstance
@@ -113,9 +117,41 @@ export const Skills = (props) => {
   }
 
   useEffect(() => {
-    getUserSkills()
+    // getUserSkills()
     GetSkillsFromDB()
   }, [])
+  const history = useHistory()
+  const isPreview = history.location.pathname.includes('preview')
+
+  const windowWidth = useWindowWidth()
+
+  const skillsContainerWidth = () => {
+    if (isPreview) {
+      return '100%'
+    } else {
+      if (windowWidth < 700) {
+        return '70%'
+      } else {
+        return '85%'
+      }
+    }
+  }
+
+  const verifyButtonContainerWidth = () => {
+    if (windowWidth < 700) {
+      return '30%'
+    } else {
+      return '15%'
+    }
+  }
+
+  const verifyButtonWidth = () => {
+    if (windowWidth < 700) {
+      return '100%'
+    } else {
+      return '75%'
+    }
+  }
 
   return (
     <PortfolioSection
@@ -136,8 +172,8 @@ export const Skills = (props) => {
       // onAdd={handleOpenSkillBoxModal}
       // onEdit={handleOpenRemoveSkillModal}
     >
-      <div style={{ display: 'flex' }}>
-        <div style={{ width: '85%' }}>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <div style={{ width: skillsContainerWidth() }}>
           {/*<*/}
           {/*// className='my-account rounded  profile-tags-div mx-0 mt-4'*/}
           {/*// style={{ border: '1px solid #bbbdbf' }}*/}
@@ -253,17 +289,19 @@ export const Skills = (props) => {
             setNewSkill={(data) => setNewSkill(data)}
           />
         </div>
-        <div
-          className={'py-2'}
-          style={{
-            width: '15%',
-            display: 'flex',
-            alignItems: 'start',
-            justifyContent: 'end',
-          }}
-        >
-          <VerifyButton width={'75%'} />
-        </div>
+        {!isPreview && (
+          <div
+            className={'py-2'}
+            style={{
+              width: verifyButtonContainerWidth(),
+              display: 'flex',
+              alignItems: 'start',
+              justifyContent: 'end',
+            }}
+          >
+            <VerifyButton width={verifyButtonWidth()} />
+          </div>
+        )}
       </div>
     </PortfolioSection>
   )

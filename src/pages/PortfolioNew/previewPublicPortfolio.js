@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 import './style/previewPortfolio.css'
 import './style/editPortfolio.css'
 import { toast } from 'react-toastify'
-import Licenses_Certification_Preview from '../../components/Portfolio/Licenses_Certification/Licenses_Certification_Preview'
+import Licenses_Certification_Preview from '../../components/Portfolio/LicensesCertification/Licenses_Certification_Preview'
 import { ExperienceDetails } from '../../components/Portfolio/Experience/experienceDetails'
 import { EducationDetails } from '../../components/Portfolio/Education/educationDetails'
 import { AccomplishmentDetails } from '../../components/Portfolio/Accomplishment/accomplishmentDetails'
@@ -24,7 +24,7 @@ import socket from '../../utils/notificationSocket'
 import NotificationTypes from '../../utils/notificationTypes'
 import {
   IsUserLevelAuthorized,
-  checkLevelAuthorized
+  checkLevelAuthorized,
 } from '../../utils/helpers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
@@ -70,7 +70,7 @@ const PreviewPublicPortfolio = () => {
   const newConnectionRequest = async () => {
     await axiosInstance
       .post('/connect', {
-        toUserId: user.id
+        toUserId: user.id,
       })
       .then((res) => {
         setIsConnected('request')
@@ -80,12 +80,12 @@ const PreviewPublicPortfolio = () => {
             sender: { id: loggedUser.id, name: loggedUser.name },
             receiver: { id: user.id },
             type: NotificationTypes.FRIEND_REQUEST.key,
-            url: `/my-connections/request/${res.data.id}`
+            url: `/my-connections/request/${res.data.id}`,
           })
         }
       })
       .catch((e) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
       })
   }
 
@@ -117,9 +117,9 @@ const PreviewPublicPortfolio = () => {
   return (
     <>
       {!user && loading && (
-        <div className='min-vh-100 min-w-100 mx-auto my-auto text-center d-flex'>
-          <div className='d-flex justify-content-center align-items-center flex-column mx-auto'>
-            <div className='lds-facebook'>
+        <div className="min-vh-100 min-w-100 mx-auto my-auto text-center d-flex">
+          <div className="d-flex justify-content-center align-items-center flex-column mx-auto">
+            <div className="lds-facebook">
               <div></div>
               <div></div>
               <div></div>
@@ -131,18 +131,18 @@ const PreviewPublicPortfolio = () => {
 
       {user && !loading ? (
         <>
-          <div id='main-body'>
-            <div className='container-fluid'>
-              <div className='row preview-portfolio-container'>
+          <div id="main-body">
+            <div className="container-fluid">
+              <div className="row preview-portfolio-container">
                 <div
                   className={`col-12 gx-0 gx-sm-auto account-page-padding page-border ${
                     loggedUser ? 'col-xl-9' : 'col-xl-12'
                   }`}
                 >
-                  <div className='mx-2'>
-                    <div className='row'>
-                      <h3 className='py-0 my-0 gy-0'>
-                        <span className='my_portfolio_bar d-sm-inline py-0 my-0 gy-0'>
+                  <div className="mx-2">
+                    <div className="row">
+                      <h3 className="py-0 my-0 gy-0">
+                        <span className="my_portfolio_bar d-sm-inline py-0 my-0 gy-0">
                           WELCOME TO MY LEARN TO START PORTFOLIO
                         </span>
                       </h3>
@@ -159,8 +159,8 @@ const PreviewPublicPortfolio = () => {
                           {user && (
                             /*user.show_iamr &&*/ <IAMR
                               user={user}
-                              preview='1'
-                              className='px-0'
+                              preview="1"
+                              className="px-0"
                             />
                           )}
                           <div>
@@ -170,7 +170,7 @@ const PreviewPublicPortfolio = () => {
                           </div>
                           {!emptyBackground && (
                             <>
-                              <div className='mt-5 row text-center w-100 pe-0 me-0'>
+                              <div className="mt-5 row text-center w-100 pe-0 me-0">
                                 <div
                                   className={`col-6 text-center px-0 py-2 gx-0 mx-0 ${
                                     selected != 'EXPERIENCE'
@@ -179,7 +179,7 @@ const PreviewPublicPortfolio = () => {
                                   }`}
                                   onClick={() => setSelected('EXPERIENCE')}
                                 >
-                                  <span role='button'>EXPERIENCE</span>
+                                  <span role="button">EXPERIENCE</span>
                                 </div>
                                 <div
                                   className={`col-6 text-center px-0 py-2 gx-0 mx-0 ${
@@ -192,12 +192,12 @@ const PreviewPublicPortfolio = () => {
                                   }
                                 >
                                   <span
-                                    role='button'
-                                    className='d-none d-md-block'
+                                    role="button"
+                                    className="d-none d-md-block"
                                   >
                                     EDUCATION & CERTIFICATIONS
                                   </span>
-                                  <span role='button' className='d-md-none'>
+                                  <span role="button" className="d-md-none">
                                     EDUCATION
                                   </span>
                                 </div>
@@ -205,7 +205,7 @@ const PreviewPublicPortfolio = () => {
                                 {selected === 'EXPERIENCE' ? (
                                   <>
                                     {background?.experience?.length > 0 && (
-                                      <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 row text-start mt-5 preview-container'>
+                                      <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row text-start mt-5 preview-container">
                                         <h4>EXPERIENCE</h4>
 
                                         {background?.experience?.map(
@@ -228,7 +228,7 @@ const PreviewPublicPortfolio = () => {
                                     )}
 
                                     {user?.recommendationsTo.length > 0 && (
-                                      <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 text-start mt-3 preview-container'>
+                                      <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 text-start mt-3 preview-container">
                                         <h4>RECOMMENDATIONS</h4>
 
                                         {user.recommendationsTo.map(
@@ -255,7 +255,7 @@ const PreviewPublicPortfolio = () => {
                                     {(background?.education?.length > 0 ||
                                       background?.accomplishments?.length > 0 ||
                                       background?.certificates?.length > 0) && (
-                                      <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 row text-start mt-5 preview-container'>
+                                      <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row text-start mt-5 preview-container">
                                         {background?.education?.length > 0 && (
                                           <>
                                             <h4>EDUCATION</h4>
@@ -286,7 +286,7 @@ const PreviewPublicPortfolio = () => {
                                           0 && (
                                           <>
                                             <h4>ACCOMPLISHMENTS</h4>
-                                            <div className='experience-details'>
+                                            <div className="experience-details">
                                               {background?.accomplishments?.map(
                                                 (accomp, index, { length }) => {
                                                   return (
@@ -311,7 +311,7 @@ const PreviewPublicPortfolio = () => {
 
                                     {background?.certificates?.length > 0 && (
                                       <>
-                                        <div className='col-12'>
+                                        <div className="col-12">
                                           <EducationCertifications
                                             certificates={
                                               background?.certificates
@@ -327,27 +327,27 @@ const PreviewPublicPortfolio = () => {
                           )}
                         </>
                       ) : (
-                        <div className='mx-auto w-100 my-auto text-center my-5'>
-                          <p className='py-5'>This portfolio is private</p>
+                        <div className="mx-auto w-100 my-auto text-center my-5">
+                          <p className="py-5">This portfolio is private</p>
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
                 {loggedUser && (
-                  <div className='col-12 col-xl-3 account-page-padding mx-2 mx-xl-0'>
-                    <div className='d-flex justify-content-start'>
+                  <div className="col-12 col-xl-3 account-page-padding mx-2 mx-xl-0">
+                    <div className="d-flex justify-content-start">
                       <ShareMyPortfolioWidget user={loggedUser} />
                     </div>
                     {(!checkLevelAuthorized(user.level) ||
                       !loggedUserLevel) && (
-                      <div className='d-flex mt-2 pt-2 not-contactable'>
+                      <div className="d-flex mt-2 pt-2 not-contactable">
                         <FontAwesomeIcon
                           icon={faEnvelope}
-                          className='my-auto'
+                          className="my-auto"
                           style={{ width: '30px', height: '30px' }}
                         />
-                        <p className='my-auto ps-2'>
+                        <p className="my-auto ps-2">
                           To contact this user, please use their social media
                           links.
                         </p>

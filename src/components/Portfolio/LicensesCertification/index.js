@@ -27,8 +27,12 @@ export default function LicencesCertification(props) {
   const [isPublished, setIsPublished] = useState(false)
 
   useEffect(() => {
-    getuserCertification()
-  }, [])
+    setUserCertification(props.certifications)
+  }, [props.certifications])
+
+  // useEffect(() => {
+  //   getuserCertification()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_certifications)
@@ -142,35 +146,33 @@ export default function LicencesCertification(props) {
       >
         <div className="my-account rounded mx-0 mt-4">
           <div className="mx-3 mt-4 mb-4">
-            {userCertification.length > 0 ? (
-              <div className="row">
-                {userCertification?.map((data, index) => (
-                  <div
-                    className="col-md-4 d-flex
-
-                  justify-content-center align-items-center"
-                    key={index}
-                  >
-                    <Certification data={data} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div
-                className="border rounded px-5"
-                style={{ width: '140px', height: '180px' }}
-                onClick={() => setAddCertificateModal(true)}
-              >
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  className="w-100 h-100 skills-button"
-                  style={{
-                    cursor: 'pointer',
-                    // border: '1px solid #BBBDBF'
-                  }}
-                />
-              </div>
-            )}
+            {/*{userCertification.length > 0 ? (*/}
+            <div className="row">
+              {userCertification?.map((data, index) => (
+                <div
+                  className="col-md-4 d-flex justify-content-center align-items-center"
+                  key={index}
+                >
+                  <Certification data={data} />
+                </div>
+              ))}
+            </div>
+            {/*// ) : (*/}
+            {/*//   <div*/}
+            {/*//     className="border rounded px-5"*/}
+            {/*//     style={{ width: '140px', height: '180px' }}*/}
+            {/*//     onClick={() => setAddCertificateModal(true)}*/}
+            {/*//   >*/}
+            {/*//     <FontAwesomeIcon*/}
+            {/*//       icon={faPlus}*/}
+            {/*//       className="w-100 h-100 skills-button"*/}
+            {/*//       style={{*/}
+            {/*//         cursor: 'pointer',*/}
+            {/*//         // border: '1px solid #BBBDBF'*/}
+            {/*//       }}*/}
+            {/*//     />*/}
+            {/*//   </div>*/}
+            {/*// )*/}
           </div>
         </div>
         <RemoveCertification

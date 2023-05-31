@@ -9,7 +9,8 @@ import './style.css'
 import { faGlobe, faFile } from '@fortawesome/free-solid-svg-icons'
 import { format } from 'date-fns'
 import { toast } from 'react-toastify'
-import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import { useHistory } from 'react-router-dom'
 
 export const Experience = (props) => {
   const [showExperienceModal, setShowExperienceModal] = useState(false)
@@ -18,8 +19,12 @@ export const Experience = (props) => {
   const [isPublished, setIsPublished] = useState(false)
 
   useEffect(() => {
-    getUserExperiences()
-  }, [])
+    setExperiences(props.experiences)
+  }, [props.experiences])
+
+  // useEffect(() => {
+  //   getUserExperiences()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_experience)
@@ -84,54 +89,31 @@ export const Experience = (props) => {
         mx-0 mt-4
         "
         >
-          {experiences.length !== 0 ? (
-            <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
-              {experiences.map((experience, index, { length }) => {
-                return (
-                  <div
-                    style={{
-                      border: '1px solid #E5E5E5',
-                      borderRadius: 6,
-                      background: '#F8F8F8 0% 0% no-repeat padding-box',
-                      height: 230,
-                      minHeight: 230,
-                    }}
-                  >
-                    <ExperienceDetails
-                      experience={experience}
-                      key={experience.id}
-                      index={index}
-                      length={length}
-                      setCurrentExperience={(experience) =>
-                        setCurrentExperience(experience)
-                      }
-                      editing={true}
-                    />
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <>
-              <p className="no-experience-added">
-                You haven’t added any of your experience… yet! Click the box
-                below to add one.
-              </p>
-              <div className="m-3 experiences-container d-flex justify-content-center">
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  className="my-5"
+          <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
+            {experiences.map((experience, index, { length }) => {
+              return (
+                <div
                   style={{
-                    height: '56px',
-                    width: '56px',
-                    cursor: 'pointer',
-                    color: '#BBBDBF',
+                    border: '1px solid #E5E5E5',
+                    borderRadius: 6,
+                    background: '#F8F8F8 0% 0% no-repeat padding-box',
+                    minHeight: 230,
                   }}
-                  onClick={() => setShowExperienceModal(true)}
-                />
-              </div>
-            </>
-          )}
+                >
+                  <ExperienceDetails
+                    experience={experience}
+                    key={experience.id}
+                    index={index}
+                    length={length}
+                    setCurrentExperience={(experience) =>
+                      setCurrentExperience(experience)
+                    }
+                    editing={true}
+                  />
+                </div>
+              )
+            })}
+          </div>
         </div>
         <ExperienceModal
           show={showExperienceModal}

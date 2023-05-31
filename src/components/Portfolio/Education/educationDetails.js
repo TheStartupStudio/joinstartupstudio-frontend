@@ -8,6 +8,8 @@ import {
   faUserGraduate,
 } from '@fortawesome/free-solid-svg-icons'
 import { format } from 'date-fns'
+import { useHistory } from 'react-router-dom'
+import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 export const EducationDetails = (props) => {
   const [education, setEducation] = useState()
@@ -16,6 +18,10 @@ export const EducationDetails = (props) => {
     setEducation(props.education)
   }, [props.education])
 
+  const history = useHistory()
+  const isPreview = history.location.pathname.includes('preview')
+
+  const windowWidth = useWindowWidth()
   return (
     <>
       {education && (
@@ -26,19 +32,28 @@ export const EducationDetails = (props) => {
               display: 'flex',
               padding: '20px 10px',
               height: '100%',
+              flexDirection: windowWidth < 500 ? 'column' : 'row',
             }}
           >
             <div
               style={{
-                width: '30%',
+                width: windowWidth < 500 ? '100%' : '30%',
                 display: 'flex',
                 justifyContent: 'space-between',
                 flexDirection: 'column',
-                borderRight: '1px solid #e5e5e5',
-                paddingRight: 40,
+                borderRight: windowWidth < 500 ? '0px' : '1px solid #e5e5e5',
+                borderBottom: windowWidth < 500 ? '1px solid #e5e5e5' : '0px',
+                paddingBottom: windowWidth < 500 ? '4px' : '0px',
+                paddingRight: windowWidth < 500 ? 0 : 40,
               }}
             >
-              <div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: windowWidth < 500 ? 'center' : 'start',
+                  paddingBottom: windowWidth < 500 ? 5 : 0,
+                }}
+              >
                 {education?.image_url ? (
                   <img
                     src={education?.image_url}
@@ -88,8 +103,9 @@ export const EducationDetails = (props) => {
             {/*<div className='break-experience'></div>*/}
             <div
               style={{
-                width: '70%',
-                paddingLeft: 20,
+                width: windowWidth < 500 ? '100%' : '70%',
+                paddingLeft: windowWidth < 500 ? 0 : 20,
+                marginTop: windowWidth < 500 ? 6 : 0,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -109,7 +125,7 @@ export const EducationDetails = (props) => {
                   >
                     {education?.degree} in {education?.field}
                   </div>
-                  {props.editing && (
+                  {!isPreview && props.editing && (
                     <div className=" edit-icon">
                       <span className="text-end text-md-center">
                         <FontAwesomeIcon
@@ -210,11 +226,11 @@ export const EducationDetails = (props) => {
               </div>
             </div>
           </div>
-          {props.length - 1 !== props.index ? (
-            <hr className="d-md-none mx-auto my-3" />
-          ) : (
-            <div className="mb-4"></div>
-          )}
+          {/*{props.length - 1 !== props.index ? (*/}
+          {/*  <hr className="d-md-none mx-auto my-3" />*/}
+          {/*) : (*/}
+          {/*  <div className="mb-4"></div>*/}
+          {/*)}*/}
         </>
       )}
     </>

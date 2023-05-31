@@ -3,7 +3,7 @@ import './style.css'
 import { Image } from 'react-bootstrap'
 import avatar from '../../../assets/images/profile-image.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 export const RecommendationDetails = (props) => {
   const [recommendation, setRecommendation] = useState()
@@ -51,6 +51,46 @@ export const RecommendationDetails = (props) => {
       paddingLeft: '3px',
     },
   }
+  const RecommendationUser = () => {
+    return (
+      <div>
+        {props.isEdit && (
+          <div>
+            <img src={user.profile_image} style={{ width: 75, height: 75 }} />{' '}
+            {/*{user}*/}
+          </div>
+        )}
+        <div
+          style={{
+            textAlign: props.isEdit ? 'center' : 'left',
+            font: props.isEdit
+              ? 'normal normal 500 20px Montserrat'
+              : 'normal normal 400 22px Montserrat',
+            letterSpacing: 0,
+            color: '#707070',
+            textTransform: props.isEdit ? 'capitalize' : 'uppercase',
+          }}
+          // className="mt-2 mb-1"
+        >
+          {rcmd_name[0]} {rcmd_name[1]}
+        </div>
+        <div
+          style={{
+            textAlign: props.isEdit ? 'center' : 'left',
+            font: props.isEdit
+              ? 'normal normal 400 11px Montserrat'
+              : 'normal normal 600 17px Montserrat',
+            letterSpacing: 0.68,
+            color: '#231F20',
+            textTransform: 'capitalize',
+          }}
+          // className="my-0"
+        >
+          {user.profession}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -61,18 +101,19 @@ export const RecommendationDetails = (props) => {
               style={{
                 display: 'flex',
                 padding: '20px 10px',
+                width: '100%',
               }}
               // className="mx-md-2 my-3 recommendation-container d-flex justify-content-center justify-content-md-start"
             >
               <div
                 className="rcmd-user text-center"
                 style={{
-                  width: '30%',
+                  width: props.isEdit ? '15%' : '30%',
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderRight: '1px solid #e5e5e5',
-                  paddingRight: 40,
+                  borderRight: props.isEdit ? '0px ' : '1px solid #e5e5e5',
+                  paddingRight: props.isEdit ? 0 : 40,
                 }}
               >
                 {/*<img*/}
@@ -81,36 +122,12 @@ export const RecommendationDetails = (props) => {
                 {/*  style={{ width: '100px', height: '100px' }}*/}
                 {/*  alt=''*/}
                 {/*/>*/}
-                <div>
-                  <div
-                    style={{
-                      textAlign: 'left',
-                      font: 'normal normal 400 22px Montserrat',
-                      letterSpacing: 0,
-                      color: '#707070',
-                      textTransform: 'uppercase',
-                    }}
-                    // className="mt-2 mb-1"
-                  >
-                    {rcmd_name[0]} {rcmd_name[1]}
-                  </div>
-                  <div
-                    style={{
-                      textAlign: 'left',
-                      font: 'normal normal 600 17px Montserrat',
-                      letterSpacing: 0.68,
-                      color: '#231F20',
-                    }}
-                    // className="my-0"
-                  >
-                    {user.profession}
-                  </div>
-                </div>
+                <RecommendationUser />
               </div>
               {/*<div className="break-rcmd d-none"></div>*/}
               <div
                 className={'d-flex justify-content-between '}
-                style={{ width: '70%' }}
+                style={{ width: props.isEdit ? '85%' : '70%' }}
               >
                 <div
                   className="rcmd-description "
@@ -145,18 +162,32 @@ export const RecommendationDetails = (props) => {
                     )}
                   </span>
                 </div>
-                <FontAwesomeIcon
-                  icon={faPencilAlt}
-                  onClick={() => {
-                    // props.setCurrentExperience(experience)
-                  }}
-                  color={'#707070'}
-                  className="editICO"
-                  style={{
-                    height: '25px',
-                    width: '25px',
-                  }}
-                />
+                {props.isEdit && (
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    style={{
+                      width: '22px',
+                      height: '20px',
+                      color: '#ff2094',
+                      cursor: 'pointer',
+                    }}
+                    className=" rcmd-edit-icon"
+                    onClick={() => props.handleDelete(recommendation?.id)}
+                    // onClick={() => handleDelete(recommendation.id)}
+                  />
+                  // <FontAwesomeIcon
+                  //   icon={faPencilAlt}
+                  //   onClick={() => {
+                  //     // props.setCurrentExperience(experience)
+                  //   }}
+                  //   color={'#707070'}
+                  //   className="editICO"
+                  //   style={{
+                  //     height: '25px',
+                  //     width: '25px',
+                  //   }}
+                  // />
+                )}
               </div>
             </div>
           ) : (
@@ -213,18 +244,32 @@ export const RecommendationDetails = (props) => {
                     )}
                   </span>
                 </div>
-                <FontAwesomeIcon
-                  icon={faPencilAlt}
-                  onClick={() => {
-                    // props.setCurrentExperience(experience)
-                  }}
-                  color={'#707070'}
-                  className="editICO"
-                  style={{
-                    height: '25px',
-                    width: '25px',
-                  }}
-                />
+                {props.containDelete && (
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    style={{
+                      width: '22px',
+                      height: '20px',
+                      color: '#ff2094',
+                      cursor: 'pointer',
+                    }}
+                    className="me-sm-3 mt-sm-3 rcmd-edit-icon"
+                    onClick={() => props.handleDelete(recommendation?.id)}
+                    // onClick={() => handleDelete(recommendation.id)}
+                  />
+                  // <FontAwesomeIcon
+                  //   icon={faPencilAlt}
+                  //   onClick={() => {
+                  //     // props.setCurrentExperience(experience)
+                  //   }}
+                  //   color={'#707070'}
+                  //   className="editICO"
+                  //   style={{
+                  //     height: '25px',
+                  //     width: '25px',
+                  //   }}
+                  // />
+                )}
               </div>
               {props.length - props.index > 1 &&
                 props.modalName !== 'editRcmdModal' && (

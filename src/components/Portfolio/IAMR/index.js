@@ -21,7 +21,7 @@ import { NavLink } from 'react-router-dom'
 import './index.css'
 import { useSelector } from 'react-redux'
 import { faEdit } from '@fortawesome/free-regular-svg-icons'
-import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
 
 export const IAMR = (props) => {
   const [iamrModal, setIamrModal] = useState(false)
@@ -34,28 +34,32 @@ export const IAMR = (props) => {
   const user = useSelector((state) => state?.user?.user?.user)
 
   useEffect(() => {
+    setSubmissions(props.submissions)
+  }, [props.submissions])
+
+  useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_iamr)
   }, [props.user])
 
-  // const updateShowPreference = async () => {
-  //   const oldPublishValue = isPublished
-  //   setIsPublished(!isPublished)
-  //   await axiosInstance
-  //     .put(`/users`, {
-  //       show_iamr: !oldPublishValue
-  //     })
-  //     .then()
-  //     .catch((e) => {
-  //       setIsPublished(!oldPublishValue)
-  //       toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-  //     })
-  // }
+  const updateShowPreference = async () => {
+    const oldPublishValue = isPublished
+    setIsPublished(!isPublished)
+    await axiosInstance
+      .put(`/users`, {
+        show_iamr: !oldPublishValue,
+      })
+      .then()
+      .catch((e) => {
+        setIsPublished(!oldPublishValue)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+      })
+  }
 
-  useEffect(() => {
-    axiosInstance
-      .get(`/submissions/user/${props.user.id}`)
-      .then((data) => setSubmissions(data.data.submissions))
-  }, [])
+  // useEffect(() => {
+  //   axiosInstance
+  //     .get(`/submissions/user/${props.user.id}`)
+  //     .then((data) => setSubmissions(data.data.submissions))
+  // }, [])
 
   const updateSubmission = (submission) => {
     setActiveSubmission(submission)
@@ -66,6 +70,8 @@ export const IAMR = (props) => {
     setActiveSubmission(submission)
     setDeleteModal(true)
   }
+
+  const isPreview = props.isPreview
 
   const IAMRSubmissionCard = (props) => {
     return (
@@ -94,57 +100,59 @@ export const IAMR = (props) => {
             border: '1px solid #e3e3e3',
           }}
         />
-        <div
-          style={{
-            backgroundColor: 'rgba(207, 207, 207, 0.90)',
-            color: '#fff',
-            fontWeight: 500,
-            position: 'absolute',
-            top: 1,
-            right: 1,
-            display: 'flex',
-            height: '30px',
-            paddingRight: 3,
-            zIndex: 1,
-          }}
-        >
+        {!isPreview && (
           <div
             style={{
+              backgroundColor: 'rgba(207, 207, 207, 0.90)',
+              color: '#fff',
+              fontWeight: 500,
+              position: 'absolute',
+              top: 1,
+              right: 1,
               display: 'flex',
-              alignItems: 'center',
-              marginTop: 7,
-              padding: '5px 3px',
-            }}
-            onClick={(e) => {
-              props.updateSubmission(props.submission)
-              e.preventDefault()
+              height: '30px',
+              paddingRight: 3,
+              zIndex: 1,
             }}
           >
-            <FontAwesomeIcon
-              icon={faPencilAlt}
-              className="mb-2 ms-1 icon"
-              style={{ height: '15px', width: '15px' }}
-            />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: 7,
+                padding: '5px 3px',
+              }}
+              onClick={(e) => {
+                props.updateSubmission(props.submission)
+                e.preventDefault()
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                className="mb-2 ms-1 icon"
+                style={{ height: '15px', width: '15px' }}
+              />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: 7,
+                padding: '5px 3px',
+              }}
+              onClick={(e) => {
+                props.deleteSubmission(props.submission)
+                e.preventDefault()
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faTrash}
+                className="mb-2 ms-1 icon"
+                style={{ height: '15px', width: '15px' }}
+              />
+            </div>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: 7,
-              padding: '5px 3px',
-            }}
-            onClick={(e) => {
-              props.deleteSubmission(props.submission)
-              e.preventDefault()
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faTrash}
-              className="mb-2 ms-1 icon"
-              style={{ height: '15px', width: '15px' }}
-            />
-          </div>
-        </div>
+        )}
         <div
           style={{
             backgroundColor: '#51C7DF',
@@ -157,28 +165,10 @@ export const IAMR = (props) => {
             zIndex: 1,
           }}
         >
-          I AM VIDEO
+          {props.submission?.title?.toUpperCase()}
         </div>
-        {props.index == 1 && (
-          <div
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              zIndex: 1,
-              // width: '50px',
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faPlay}
-              className="mb-2 ms-1 "
-              color={'#FFFFFF'}
-              style={{ height: '45px', width: '45px' }}
-            />
-          </div>
-        )}
-        {props.index !== 1 && (
+
+        {
           <div
             style={{
               position: 'absolute',
@@ -186,19 +176,9 @@ export const IAMR = (props) => {
               top: '66%',
               transform: 'translate(-50%, -50%)',
               zIndex: 1,
-              // width: '50px',
             }}
-          >
-            <div
-              style={{
-                font: 'normal normal normal 31px/27px Montserrat',
-                color: '#fff',
-              }}
-            >
-              Description
-            </div>
-          </div>
-        )}
+          ></div>
+        }
 
         <div
           style={{
@@ -207,8 +187,7 @@ export const IAMR = (props) => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor:
-              props.index !== 1 ? 'rgba(0, 0, 0, 0.35)' : 'rgba(0, 0, 0, 0.15)',
+            backgroundColor: 'rgba(0, 0, 0, 0.15)',
           }}
         ></div>
       </a>
@@ -270,19 +249,12 @@ export const IAMR = (props) => {
   }
 
   return (
-    <PortfolioSection showLinkToProjects={true}>
-      <div
-        style={{
-          textAlign: 'end',
-          marginRight: 40,
-          textTransform: 'uppercase',
-          font: 'normal normal 600 20px/24px Montserrat',
-          letterSpacing: 0,
-          color: '#51C7DF',
-        }}
-      >
-        Edit my projects
-      </div>
+    <PortfolioSection
+      showLinkToProjects={true}
+      isShownLinkInPortfolio={isPublished}
+      handleShowLinkInPortfolio={() => updateShowPreference()}
+      isIAMR={true}
+    >
       {props?.preview !== 'undefined' ? (
         <div className={['iamr-section', props.className].join(' ')}>
           <div
@@ -299,7 +271,7 @@ export const IAMR = (props) => {
             >
               <h4 className="m-3 text-center iamr-title">I AM MARKET-READY</h4>
 
-              <p className="m-3">
+              <p className="row m-3" style={{ paddingInline: '4.2%' }}>
                 The components of your portfolio speak to your level of
                 market-ready skills as you introduce the world to who you are,
                 what you can do, and your ability to prove it.
@@ -330,13 +302,18 @@ export const IAMR = (props) => {
                       </div>
                     )
                   })}
-                  {!props.preview && props.preview !== '1' && (
-                    <div className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center">
-                      <AddSubmissionCard
-                        onOpenIamrModal={() => setIamrModal(true)}
-                      />
-                    </div>
+                  {!isPreview && (
+                    <>
+                      {!props.preview && props.preview !== '1' && (
+                        <div className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center">
+                          <AddSubmissionCard
+                            onOpenIamrModal={() => setIamrModal(true)}
+                          />
+                        </div>
+                      )}
+                    </>
                   )}
+
                   {!props.preview && props.preview !== '1' ? (
                     <div className="col-12">
                       {/* <div className='d-flex justify-content-end show_in_portfolio'>

@@ -9,6 +9,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { format } from 'date-fns'
 import { VerifyButton } from '../../../pages/PortfolioNew/editPortfolio'
+import { useHistory } from 'react-router-dom'
+import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 export const ExperienceDetails = (props) => {
   const [experience, setExperience] = useState()
@@ -16,6 +18,11 @@ export const ExperienceDetails = (props) => {
   useEffect(() => {
     setExperience(props.experience)
   }, [props.experience])
+
+  const history = useHistory()
+  const isPreview = history.location.pathname.includes('preview')
+
+  const windowWidth = useWindowWidth()
 
   return (
     <>
@@ -25,38 +32,53 @@ export const ExperienceDetails = (props) => {
             style={{
               width: '100%',
               display: 'flex',
-              height: 230,
+              height: '100%',
               padding: '20px 10px',
+              flexDirection: windowWidth < 500 ? 'column' : 'row',
             }}
             // className="col-12 d-flex ms-0 experience-container"
           >
             <div
               // className='image-container ps-md-1'
               style={{
-                width: '30%',
+                width: windowWidth < 500 ? '100%' : '30%',
                 display: 'flex',
                 justifyContent: 'space-between',
                 flexDirection: 'column',
-                borderRight: '1px solid #e5e5e5',
-                paddingRight: 40,
+                borderRight: windowWidth < 500 ? '0px' : '1px solid #e5e5e5',
+                borderBottom: windowWidth < 500 ? '1px solid #e5e5e5' : '0px',
+                paddingBottom: windowWidth < 500 ? '4px' : '0px',
+                paddingRight: windowWidth < 500 ? 0 : 40,
               }}
             >
-              {experience?.image_url ? (
-                <img
-                  src={experience?.image_url}
-                  alt=""
-                  style={{ width: 90, height: 70, objectFit: 'cover' }}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faBriefcase}
-                  style={{
-                    width: '100px',
-                    height: '80px',
-                    color: '#BBBDBF',
-                  }}
-                />
-              )}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: windowWidth < 500 ? 'center' : 'start',
+                  paddingBottom: windowWidth < 500 ? 5 : 0,
+                }}
+              >
+                {experience?.image_url ? (
+                  <img
+                    src={experience?.image_url}
+                    alt=""
+                    style={{
+                      width: 90,
+                      height: 70,
+                      objectFit: 'cover',
+                    }}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faBriefcase}
+                    style={{
+                      width: '100px',
+                      height: '80px',
+                      color: '#BBBDBF',
+                    }}
+                  />
+                )}
+              </div>
               <div>
                 <div
                   style={{
@@ -97,8 +119,9 @@ export const ExperienceDetails = (props) => {
             {/*<div className='break-experience'></div>*/}
             <div
               style={{
-                width: '70%',
-                paddingLeft: 20,
+                width: windowWidth < 500 ? '100%' : '70%',
+                paddingLeft: windowWidth < 500 ? 0 : 20,
+                marginTop: windowWidth < 500 ? 6 : 0,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -106,7 +129,7 @@ export const ExperienceDetails = (props) => {
               // className='experience-details pt-2 pt-md-0 px-md-4'
             >
               <div style={{ marginBottom: 'auto' }}>
-                <div className={'d-flex justify-content-between'}>
+                <div className={`d-flex justify-content-between `}>
                   <div
                     style={{
                       font: 'normal normal 600 17px/17px Montserrat',
@@ -118,18 +141,20 @@ export const ExperienceDetails = (props) => {
                     {experience?.title}
                   </div>
 
-                  <FontAwesomeIcon
-                    icon={faPencilAlt}
-                    onClick={() => {
-                      props.setCurrentExperience(experience)
-                    }}
-                    color={'#707070'}
-                    className="editICO"
-                    style={{
-                      height: '25px',
-                      width: '25px',
-                    }}
-                  />
+                  {!isPreview && (
+                    <FontAwesomeIcon
+                      icon={faPencilAlt}
+                      onClick={() => {
+                        props.setCurrentExperience(experience)
+                      }}
+                      color={'#707070'}
+                      className="editICO"
+                      style={{
+                        height: '25px',
+                        width: '25px',
+                      }}
+                    />
+                  )}
                 </div>
 
                 <div className="experience-description">
@@ -169,12 +194,16 @@ export const ExperienceDetails = (props) => {
                   experience?.external_links?.link
                     ? ' justify-content-between'
                     : 'justify-content-end'
-                }`}
+                }
+                ${windowWidth < 700 ? 'flex-column' : 'flex-row'}
+                `}
               >
                 {(experience?.external_links?.link ||
                   experience?.external_links?.link) && (
                   <div
-                    className="d-flex justify-content-between external_links gap-3"
+                    className={`d-flex justify-content-between external_links gap-3 ${
+                      windowWidth < 700 ? 'flex-column' : 'flex-row'
+                    }`}
                     style={{ marginTop: 'auto' }}
                   >
                     {experience?.external_links?.link && (
@@ -234,7 +263,15 @@ export const ExperienceDetails = (props) => {
                     )}
                   </div>
                 )}
-                <VerifyButton width={'110px'} />
+                <div
+                  className={`d-flex ${
+                    windowWidth < 700
+                      ? 'justify-content-end'
+                      : 'justify-content-start'
+                  }`}
+                >
+                  {!isPreview && <VerifyButton width={'110px'} />}
+                </div>
               </div>
             </div>
             {/*{props.editing && (*/}
@@ -257,11 +294,11 @@ export const ExperienceDetails = (props) => {
             {/*)}*/}
           </div>
 
-          {props.length - 1 !== props.index ? (
-            <hr className="d-md-none mx-auto mt-3 mb-4" />
-          ) : (
-            <div className="mb-4"></div>
-          )}
+          {/*{props.length - 1 !== props.index ? (*/}
+          {/*  <hr className="d-md-none mx-auto mt-3 mb-4" />*/}
+          {/*) : (*/}
+          {/*  <div className="mb-4"></div>*/}
+          {/*)}*/}
         </>
       )}
     </>

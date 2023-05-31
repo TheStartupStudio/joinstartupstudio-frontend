@@ -18,7 +18,8 @@ import IntlMessages from '../../../utils/IntlMessages'
 import EditBio from './EditBio'
 import Certificate from '../../../assets/images/lts-certifeid-logo.png'
 import { toast } from 'react-toastify'
-import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import { useHistory } from 'react-router-dom'
 
 export default function PersonalBio(props) {
   const userId = useSelector((state) => state.user.user.user.id)
@@ -33,6 +34,13 @@ export default function PersonalBio(props) {
   useEffect(() => {
     getUser()
   }, [])
+
+  // useEffect(() => {
+  //   setUserBio(props.userBiography)
+  // }, [props.userBiography])
+  // useEffect(() => {
+  //   setUser(props.userData)
+  // }, [props.userData])
 
   const getUser = async () => {
     setLoading(true)
@@ -96,15 +104,30 @@ export default function PersonalBio(props) {
       paddingLeft: '3px',
     },
   }
+  const isPreview = props.isPreview
+  // const history = useHistory()
+  // const isPreview = history.location.pathname.includes('preview')
+
   return (
     <PortfolioSection
+      isPreview={isPreview}
       isEdit={true}
-      isAdd={false}
       onEdit={() => setShowEditBioModal(true)}
     >
       <>
-        <div className=" my-account d-flex">
-          <div className="d-flex w-25">
+        <div
+          className="  d-flex personal-bio-container"
+          // className=" my-account d-flex"
+        >
+          <div
+            className="d-flex  personal-bio-image-container"
+            style={{
+              marginRight: 'auto',
+              justifyContent: 'center',
+
+              // paddingRight: !props.isPreview ? '0px' : '10px',
+            }}
+          >
             <div
               style={{
                 border: '2px solid #01C5D1',
@@ -112,7 +135,7 @@ export default function PersonalBio(props) {
                 height: '168px ',
                 boxSizing: 'content-box',
                 borderRadius: '50%',
-                marginTop: -23,
+                marginTop: isPreview ? 0 : -23,
                 display: 'flex',
                 alignItems: 'center',
                 overflow: 'hidden',
@@ -120,12 +143,15 @@ export default function PersonalBio(props) {
             >
               <img
                 src={user?.profile_image ? user?.profile_image : avatar}
-                className=" float-start user-image"
-                style={{ objectFit: 'contain' }}
+                // className=" float-start user-image"
+                className=" user-image"
               />
             </div>
           </div>
-          <div className="w-75">
+          <div
+            className=" personal-bio-info-container"
+            style={{ marginLeft: 'auto' }}
+          >
             <div className="d-flex flex-wrap pb-0 mb-3">
               <div className="portfolio-user-info">
                 <div className="row">
@@ -136,7 +162,10 @@ export default function PersonalBio(props) {
                       <div className="user-info-grid mt-0 mt-md-4 mt-lg-0">
                         <div style={{ flexGrow: 1 }}>
                           <p
-                            className="w-100 d-flex mt-auto ps-0 mb-0 pb-0 pt-3"
+                            className={`w-100 d-flex mt-auto ps-0 mb-0 pb-0 ${
+                              // isPreview ? 'pt-3' : 'pt-3'
+                              'pt-3'
+                            }`}
                             style={style.user_name}
                           >
                             {user?.name}

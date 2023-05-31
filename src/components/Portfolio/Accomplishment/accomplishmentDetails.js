@@ -4,6 +4,8 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import './style.css'
 import { faGlobe, faFile } from '@fortawesome/free-solid-svg-icons'
 import { format } from 'date-fns'
+import { useHistory } from 'react-router-dom'
+import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 export const AccomplishmentDetails = (props) => {
   const [accomp, setAccomp] = useState()
@@ -11,6 +13,11 @@ export const AccomplishmentDetails = (props) => {
   useEffect(() => {
     setAccomp(props.accomp)
   }, [props.accomp])
+
+  const history = useHistory()
+  const isPreview = history.location.pathname.includes('preview')
+
+  const windowWidth = useWindowWidth()
 
   return (
     <>
@@ -20,11 +27,12 @@ export const AccomplishmentDetails = (props) => {
             style={{
               display: 'flex',
               padding: '20px 10px',
+              flexDirection: windowWidth < 500 ? 'column' : 'row',
             }}
           >
             <div
               style={{
-                width: '30%',
+                width: windowWidth < 500 ? '100%' : '30%',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -59,7 +67,7 @@ export const AccomplishmentDetails = (props) => {
             </div>
             <div
               className={'d-flex justify-content-between '}
-              style={{ width: '70%' }}
+              style={{ width: windowWidth < 500 ? '100%' : '70%' }}
             >
               <div
                 style={{
@@ -67,13 +75,19 @@ export const AccomplishmentDetails = (props) => {
                   font: 'normal normal 300 15px/17px Montserrat',
                   letterSpacing: 0.6,
                   color: '#231F20',
-                  paddingLeft: 20,
+                  marginTop: windowWidth < 500 ? 6 : 0,
+                  paddingLeft: windowWidth < 500 ? 0 : 20,
                 }}
               >
                 {accomp?.description}
               </div>
-              {props.editing && (
-                <div className=" edit-icon">
+              {!isPreview && props.editing && (
+                <div
+                  className=" edit-icon"
+                  style={{
+                    paddingRight: windowWidth < 500 ? 0 : 10,
+                  }}
+                >
                   <span className="text-end text-md-center">
                     <FontAwesomeIcon
                       icon={faPencilAlt}
@@ -88,11 +102,11 @@ export const AccomplishmentDetails = (props) => {
             </div>
           </div>
 
-          {props.length - 1 !== props.index ? (
-            <hr className="d-md-none mx-auto my-3" />
-          ) : (
-            <div className="mb-3"></div>
-          )}
+          {/*{props.length - 1 !== props.index ? (*/}
+          {/*  <hr className="d-md-none mx-auto my-3" />*/}
+          {/*) : (*/}
+          {/*  <div className="mb-3"></div>*/}
+          {/*)}*/}
         </>
       )}
     </>

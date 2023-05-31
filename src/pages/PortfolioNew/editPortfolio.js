@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { changeSidebarState } from '../../redux'
 import './style/editPortfolio.css'
 import IntlMessages from '../../utils/IntlMessages'
@@ -12,7 +12,7 @@ import { Education } from '../../components/Portfolio/Education'
 import { Accomplishment } from '../../components/Portfolio/Accomplishment'
 import { Recommendation } from '../../components/Portfolio/Recommendation'
 import { IAMR } from '../../components/Portfolio/IAMR'
-import Licenses_Certification from '../../components/Portfolio/Licenses_Certification'
+import LicencesCertification from '../../components/Portfolio/LicensesCertification'
 import { DeleteConfirmation } from '../../components/Portfolio/Confirm_modal'
 import { toast } from 'react-toastify'
 import './style/previewPortfolio.css'
@@ -20,8 +20,13 @@ import { IsUserLevelAuthorized } from '../../utils/helpers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
 import novaeLogo from '../../assets/images/novae-logo-horz.png'
+import verifyNovae from '../../assets/images/verify-novae.png'
 import avatar from '../../assets/images/profile-image.png'
 import EditBio from '../../components/Portfolio/PersonalBio/EditBio'
+import EmptyEducationSection from './EmptyEducationSection'
+import EmptyAccomplishmentSection from './EmptyAccomplishmentSection'
+import EmptyCertificationSection from './EmptyCertificationSection'
+import EmptyExperienceSection from './EmptyExperienceSection'
 
 export const VerifyButton = (props) => {
   return (
@@ -52,154 +57,23 @@ export const VerifyButton = (props) => {
   )
 }
 
-const ActionIcon = (props) => {
-  return (
-    <div
-      style={{
-        cursor: 'pointer',
-        backgroundColor: 'rgba(229,229,229,0.57)',
-        // borderRadius: '0px 6px 6px 0px',
-        height: '50px',
-        width: '50px',
-        padding: 5,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      onClick={props.handleOnClick}
-    >
-      <FontAwesomeIcon
-        className="edit-pencil "
-        icon={props.icon}
-        style={{
-          height: '25px',
-          width: '25px',
-        }}
-      />
-    </div>
-  )
-}
-
-export const PortfolioSection = (props) => {
-  const [toggle, setToggle] = useState(0)
-  const [showPublishModal, setShowPublishModal] = useState(false)
-  const updateStatus = async () => {
-    await axiosInstance
-      .put(`/portfolio`, {
-        is_published: !toggle,
-      })
-      .then((response) => {
-        toast.success(<IntlMessages id="alerts.success_change" />)
-        setToggle(!toggle)
-      })
-      .catch((err) => {
-        toast.error(<IntlMessages id="alerts.success_change" />)
-        setToggle(!toggle)
-      })
-  }
-  return (
-    <div
-      style={{
-        // height: 100,
-        borderRadius: 6,
-        border: '1px solid #BBBDBF',
-        background: '#FFFFFF 0% 0% no-repeat padding-box',
-        margin: '30px 0',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: props.title ? 'space-between' : 'flex-end',
-          height: 50,
-        }}
-      >
-        {props.title ? (
-          <div
-            style={{
-              textAlign: 'left',
-              font: 'normal normal 600 22px/27px Montserrat',
-              letterSpacing: 0,
-              color: '#231F20',
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: 15,
-            }}
-          >
-            {props.title}
-          </div>
-        ) : null}
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          {props.showInMyPortfolio ? (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span
-                className="my_portfolio_publish pe-xxl-0"
-                style={{
-                  font: 'normal normal 600 17px/20px Montserrat',
-                  color: '#707070',
-                }}
-              >
-                Show in my portfolio
-                {/*<IntlMessages id="portfolio.Publish.My.Portfolio" />*/}
-                <label className="px-0 ps-sm-1 ps-md-1 form-switch">
-                  <input
-                    type="checkbox"
-                    checked={props.isShownInPortfolio}
-                    onChange={props.handleShowInPortfolio}
-                  />
-                  <i></i>
-                </label>
-              </span>
-            </div>
-          ) : null}
-          {props.showLinkToProjects ? (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span
-                className="my_portfolio_publish pe-xxl-0"
-                style={{
-                  font: 'normal normal 600 17px/20px Montserrat',
-                  color: '#707070',
-                }}
-              >
-                Show link to my projects in my portfolio
-                {/*<IntlMessages id="portfolio.Publish.My.Portfolio" />*/}
-                <label className="px-0 ps-sm-1 ps-md-1 form-switch">
-                  <input
-                    type="checkbox"
-                    checked={toggle}
-                    onChange={() => {
-                      if (toggle) {
-                        updateStatus()
-                      } else {
-                        setShowPublishModal(true)
-                      }
-                    }}
-                  />
-                  <i></i>
-                </label>
-              </span>
-            </div>
-          ) : null}
-          {props.isAdd ? (
-            <ActionIcon handleOnClick={props.onAdd} icon={faPlus} />
-          ) : null}
-          {props.isEdit ? (
-            <ActionIcon handleOnClick={props.onEdit} icon={faPencilAlt} />
-          ) : null}
-        </div>
-      </div>
-      <div style={{ padding: '0 15px 15px 15px' }}>{props.children}</div>
-    </div>
-  )
-}
-
 function EditPortfolio() {
   const [toggle, setToggle] = useState(0)
   const [user, setUser] = useState()
   const [showPublishModal, setShowPublishModal] = useState(false)
+  const [recommendationRequestId, setRecommendationRequestId] = useState()
+  const [educations, setEducations] = useState([])
+  const [accomplishments, setAccomplishments] = useState([])
+  const [userCertifications, setUserCertifications] = useState([])
+  const [experiences, setExperiences] = useState([])
+  const [submissions, setSubmissions] = useState([])
+  const [skills, setSkills] = useState([])
+  const [userBiography, setUserBiography] = useState(null)
+  const [userData, setUserData] = useState(null)
   const [aggred, setAggred] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [recommendationRequestId, setRecommendationRequestId] = useState()
+  const userId = useSelector((state) => state.user.user.user.id)
+
   const dispatch = useDispatch()
 
   const authorizedLevel = IsUserLevelAuthorized()
@@ -245,34 +119,72 @@ function EditPortfolio() {
       })
   }
 
-  const [showEditBioModal, setShowEditBioModal] = useState(false)
-  const [showSkillBoxModal, setShowSkillBoxModal] = useState(false)
-  const [showRemoveSkill, setShowRemoveSkill] = useState(false)
-
-  const handleOpenEditBioModal = () => {
-    setShowEditBioModal(true)
-  }
-  const handleCloseEditBioModal = () => {
-    setShowEditBioModal(false)
-  }
-  const handleOpenSkillBoxModal = () => {
-    setShowSkillBoxModal(true)
-  }
-  const handleCloseSkillBoxModal = () => {
-    setShowSkillBoxModal(false)
-  }
-  const handleOpenRemoveSkillModal = () => {
-    setShowRemoveSkill(true)
-  }
-  const handleCloseRemoveSkillModal = () => {
-    setShowRemoveSkill(false)
+  const getUserEducations = async () => {
+    await axiosInstance.get(`/userBackground/by-type/education`).then((res) => {
+      setEducations(res.data)
+    })
   }
 
-  const handleIsSectionPublished = (section, isPublished) => {
-    console.log(section, isPublished)
+  const getUserAccomplishments = async () => {
+    await axiosInstance
+      .get(`/userBackground/by-type/accomplishments`)
+      .then((res) => {
+        setAccomplishments(res.data)
+      })
   }
+  const getUserCertification = async () => {
+    await axiosInstance.get(`/userCertificates/${userId}`).then((res) => {
+      setTimeout(() => {
+        setUserCertifications(res.data.UserCertificates)
+      }, 2000)
+    })
+  }
+
+  const getUserExperiences = async () => {
+    await axiosInstance
+      .get(`/userBackground/by-type/experience`)
+      .then((res) => {
+        setExperiences(res.data)
+      })
+  }
+
+  const getUserBio = async () => {
+    await axiosInstance
+      .get(`/users/${userId}`)
+      .then((response) => {
+        setUserBiography(response.data.bio)
+        setUserData(response.data)
+      })
+      .catch((err) => err)
+  }
+
+  const getSubmissions = () => {
+    axiosInstance.get(`/submissions/user/${user?.id}`).then((data) => {
+      setSubmissions(data.data?.submissions)
+    })
+  }
+
+  const getUserSkills = async () => {
+    await axiosInstance
+      .get('/users')
+      .then((response) => {
+        setSkills(response.data?.Skills)
+      })
+      .catch((err) => err)
+  }
+
+  useEffect(() => {
+    getUserCertification()
+    getUserAccomplishments()
+    getUserEducations()
+    getUserExperiences()
+    getUserSkills()
+    getSubmissions()
+    getUserBio()
+  }, [user])
+
   return (
-    <div style={{ padding: '30px 10px', width: '88%' }}>
+    <div className={'edit-portfolio-container'}>
       <div>
         <div>
           <span className="my_portfolio_title">
@@ -333,32 +245,21 @@ function EditPortfolio() {
             <img
               style={{
                 objectFit: 'contain',
-                width: 170,
-                height: 50,
-                marginRight: -10,
-                marginTop: -15,
+                width: 250,
+                height: 55,
               }}
-              src={novaeLogo}
+              src={verifyNovae}
             />
-            {/*<div*/}
-            {/*  style={{*/}
-            {/*    marginTop: -5,*/}
-            {/*    font: 'normal normal 300 13px/14px Montserrat',*/}
-            {/*    color: '#333D3D83',*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  Verify your portfolio through novae360.*/}
-            {/*</div>*/}
           </div>
         </div>
-        <PersonalBio user={user} />
+        <PersonalBio user={user} isPreview={false} />
         {user && (
           <>
-            <IAMR user={user} />
+            <IAMR user={user} isPreview={false} submissions={submissions} />
           </>
         )}
 
-        <Skills user={user} />
+        <Skills user={user} skills={skills} />
 
         <div>
           <div
@@ -372,8 +273,11 @@ function EditPortfolio() {
             EXPERIENCE
           </div>
 
-          <Experience user={user} />
-          <Recommendation user={user} />
+          {experiences.length ? (
+            <Experience user={user} experiences={experiences} />
+          ) : (
+            <EmptyExperienceSection />
+          )}
         </div>
         <div>
           <div
@@ -387,13 +291,46 @@ function EditPortfolio() {
             EDUCATION AND ACCOMPLISHMENTS
           </div>
 
-          <Education user={user} />
+          {educations.length ? (
+            <Education user={user} educations={educations} />
+          ) : (
+            <EmptyEducationSection />
+          )}
 
-          <Accomplishment user={user} />
+          {accomplishments.length ? (
+            <Accomplishment user={user} accomplishments={accomplishments} />
+          ) : (
+            <EmptyAccomplishmentSection />
+          )}
         </div>
-
-        <Licenses_Certification user={user} />
+        {userCertifications.length ? (
+          <LicencesCertification
+            user={user}
+            certifications={userCertifications}
+          />
+        ) : (
+          <EmptyCertificationSection />
+        )}
       </div>
+      <DeleteConfirmation
+        showModal={showPublishModal}
+        onHide={() => setShowPublishModal(false)}
+        confirmModal={() => true}
+        checkIfAggre={() => {
+          updateStatus()
+          setLoading(true)
+          setAggred(true)
+          setTimeout(() => {
+            setLoading(false)
+            setShowPublishModal(false)
+          }, 5000)
+        }}
+        loading={loading}
+        setLoading={(data) => setLoading(data)}
+        type={true}
+        title={<IntlMessages id="portfolio.confirmation_modal" />}
+        body={<IntlMessages id="portfolio.confirmation_modal_second_part" />}
+      />
     </div>
   )
 }

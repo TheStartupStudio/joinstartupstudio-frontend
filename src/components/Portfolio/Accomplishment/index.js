@@ -10,7 +10,7 @@ import './style.css'
 import { format } from 'date-fns'
 import { toast } from 'react-toastify'
 import { faGlobe, faFile } from '@fortawesome/free-solid-svg-icons'
-import { PortfolioSection } from '../../../pages/PortfolioNew/editPortfolio'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
 
 export const Accomplishment = (props) => {
   const [showAccompModal, setShowAccompModal] = useState(false)
@@ -19,8 +19,12 @@ export const Accomplishment = (props) => {
   const [isPublished, setIsPublished] = useState(false)
 
   useEffect(() => {
-    getUserAccomplishments()
-  }, [])
+    setAccomp(props.accomplishments)
+  }, [props.accomplishments])
+
+  // useEffect(() => {
+  //   getUserAccomplishments()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_accomplishments)
@@ -79,50 +83,28 @@ export const Accomplishment = (props) => {
       handleShowInPortfolio={updateShowPreference}
     >
       <div className="experiences-container mx-0 mt-4">
-        {accomps.length !== 0 ? (
-          <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row experience-details gap-4">
-            {accomps.map((accomp, index, { length }) => {
-              return (
-                <div
-                  style={{
-                    border: '1px solid #E5E5E5',
-                    borderRadius: 6,
-                    background: '#F8F8F8 0% 0% no-repeat padding-box',
-                  }}
-                >
-                  <AccomplishmentDetails
-                    accomp={accomp}
-                    key={accomp.id}
-                    index={index}
-                    length={length}
-                    setCurrentAccomp={(accomp) => setCurrentAccomp(accomp)}
-                    editing={true}
-                  />
-                </div>
-              )
-            })}
-          </div>
-        ) : (
-          <>
-            <p className="no-experience-added">
-              You haven’t added any accomplishments… yet! Click the box below to
-              add one.
-            </p>
-            <div className="m-3 experiences-container d-flex justify-content-center">
-              <FontAwesomeIcon
-                icon={faPlus}
-                className="my-5"
+        <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row experience-details gap-4">
+          {accomps.map((accomp, index, { length }) => {
+            return (
+              <div
                 style={{
-                  height: '56px',
-                  width: '56px',
-                  cursor: 'pointer',
-                  color: '#BBBDBF',
+                  border: '1px solid #E5E5E5',
+                  borderRadius: 6,
+                  background: '#F8F8F8 0% 0% no-repeat padding-box',
                 }}
-                onClick={() => setShowAccompModal(true)}
-              />
-            </div>
-          </>
-        )}
+              >
+                <AccomplishmentDetails
+                  accomp={accomp}
+                  key={accomp.id}
+                  index={index}
+                  length={length}
+                  setCurrentAccomp={(accomp) => setCurrentAccomp(accomp)}
+                  editing={true}
+                />
+              </div>
+            )
+          })}
+        </div>
       </div>
       <AccomplishmentModal
         show={showAccompModal}
