@@ -293,10 +293,10 @@ export default function PersonalBio(props) {
                             </p>
                           )}
                         </div>
-                        <div className="d-lg-flex flex-wrap w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate">
-                          {isCertified && (
+                        <div className="d-lg-flex flex-wrap w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate mx-lg-5 mx-sm-1">
+                          {!isCertified && (
                             <>
-                              <img src={Certificate} className="mt-4" />
+                              <img src={Certificate} />
                               <p className="verified mb-0">
                                 <IntlMessages id="general.verifyWithNova" />
                               </p>
