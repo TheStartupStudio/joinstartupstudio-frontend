@@ -17,6 +17,7 @@ import { getEventsStart, getPeriodsStart } from '../../redux/dashboard/Actions'
 import {
   editBriefingStart,
   getBriefingsStart,
+  postBriefingStart,
 } from '../../redux/header/Actions'
 import { editBriefing } from '../../redux/header/Service'
 
@@ -144,7 +145,11 @@ const StudentOfInstructors = (props) => {
   }
 
   const onSubmitBriefing = () => {
-    dispatch(editBriefingStart(briefing, briefing.id))
+    if (briefings.length) {
+      dispatch(editBriefingStart(briefing, briefing.id))
+    } else {
+      dispatch(postBriefingStart(briefing))
+    }
   }
   return (
     <Modal
