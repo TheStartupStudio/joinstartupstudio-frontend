@@ -15,14 +15,11 @@ export const Education = (props) => {
   const [educations, setEducations] = useState([])
   const [currentEducation, setCurrentEducation] = useState([])
   const [isPublished, setIsPublished] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    setEducations(props.educations)
-  }, [props.educations])
-
-  // useEffect(() => {
-  //   getUserEducations()
-  // }, [])
+    getUserEducations()
+  }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_education)
@@ -48,8 +45,10 @@ export const Education = (props) => {
   }
 
   const getUserEducations = async () => {
+    setIsLoading(true)
     await axiosInstance.get(`/userBackground/by-type/education`).then((res) => {
       setEducations(res.data)
+      setIsLoading(false)
     })
   }
 
@@ -70,8 +69,8 @@ export const Education = (props) => {
     setEducations([...educations, education])
   }
 
-  return (
-    <>
+  return !isLoading ? (
+    educations.length ? (
       <PortfolioSection
         title={'EDUCATION'}
         isAdd={true}
@@ -124,6 +123,10 @@ export const Education = (props) => {
           rel="stylesheet"
         />
       </PortfolioSection>
-    </>
+    ) : (
+      <EmptyEducationSection addEducation={addEducation} />
+    )
+  ) : (
+    <></>
   )
 }

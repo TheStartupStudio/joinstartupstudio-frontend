@@ -11,20 +11,18 @@ import { format } from 'date-fns'
 import { toast } from 'react-toastify'
 import { faGlobe, faFile } from '@fortawesome/free-solid-svg-icons'
 import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import EmptyAccomplishmentSection from '../../../pages/PortfolioNew/EmptyAccomplishmentSection'
 
 export const Accomplishment = (props) => {
   const [showAccompModal, setShowAccompModal] = useState(false)
   const [accomps, setAccomp] = useState([])
   const [currentAccomp, setCurrentAccomp] = useState([])
   const [isPublished, setIsPublished] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    setAccomp(props.accomplishments)
-  }, [props.accomplishments])
-
-  // useEffect(() => {
-  //   getUserAccomplishments()
-  // }, [])
+    getUserAccomplishments()
+  }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_accomplishments)
@@ -49,10 +47,12 @@ export const Accomplishment = (props) => {
   }
 
   const getUserAccomplishments = async () => {
+    setIsLoading(true)
     await axiosInstance
       .get(`/userBackground/by-type/accomplishments`)
       .then((res) => {
         setAccomp(res.data)
+        setIsLoading(false)
       })
   }
 
@@ -73,54 +73,60 @@ export const Accomplishment = (props) => {
     setAccomp([...accomps, accomp])
   }
 
-  return (
-    <PortfolioSection
-      title={'ACCOMPLISHMENTS'}
-      isAdd={true}
-      showInMyPortfolio={true}
-      onAdd={() => setShowAccompModal(true)}
-      isShownInPortfolio={isPublished}
-      handleShowInPortfolio={updateShowPreference}
-    >
-      <div className="experiences-container mx-0 mt-4">
-        <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row experience-details gap-4">
-          {accomps.map((accomp, index, { length }) => {
-            return (
-              <div
-                style={{
-                  border: '1px solid #E5E5E5',
-                  borderRadius: 6,
-                  background: '#F8F8F8 0% 0% no-repeat padding-box',
-                }}
-              >
-                <AccomplishmentDetails
-                  accomp={accomp}
-                  key={accomp.id}
-                  index={index}
-                  length={length}
-                  setCurrentAccomp={(accomp) => setCurrentAccomp(accomp)}
-                  editing={true}
-                />
-              </div>
-            )
-          })}
+  return !isLoading ? (
+    accomps.length ? (
+      <PortfolioSection
+        title={'ACCOMPLISHMENTS'}
+        isAdd={true}
+        showInMyPortfolio={true}
+        onAdd={() => setShowAccompModal(true)}
+        isShownInPortfolio={isPublished}
+        handleShowInPortfolio={updateShowPreference}
+      >
+        <div className="experiences-container mx-0 mt-4">
+          <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row experience-details gap-4">
+            {accomps.map((accomp, index, { length }) => {
+              return (
+                <div
+                  style={{
+                    border: '1px solid #E5E5E5',
+                    borderRadius: 6,
+                    background: '#F8F8F8 0% 0% no-repeat padding-box',
+                  }}
+                >
+                  <AccomplishmentDetails
+                    accomp={accomp}
+                    key={accomp.id}
+                    index={index}
+                    length={length}
+                    setCurrentAccomp={(accomp) => setCurrentAccomp(accomp)}
+                    editing={true}
+                  />
+                </div>
+              )
+            })}
+          </div>
         </div>
-      </div>
-      <AccomplishmentModal
-        show={showAccompModal}
-        onHide={() => {
-          setCurrentAccomp([])
-          setShowAccompModal(false)
-        }}
-        updateAccomp={(accomp) => updateAccomp(accomp)}
-        deleteBackground={(id) => deleteBackground(id)}
-        addAccomp={(accomp) => addAccomp(accomp)}
-        currentAccomp={currentAccomp}
-      />
-      <link
-        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-        rel="stylesheet"
-      />
-    </PortfolioSection>
+        <AccomplishmentModal
+          show={showAccompModal}
+          onHide={() => {
+            setCurrentAccomp([])
+            setShowAccompModal(false)
+          }}
+          updateAccomp={(accomp) => updateAccomp(accomp)}
+          deleteBackground={(id) => deleteBackground(id)}
+          addAccomp={(accomp) => addAccomp(accomp)}
+          currentAccomp={currentAccomp}
+        />
+        <link
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet"
+        />
+      </PortfolioSection>
+    ) : (
+      <EmptyAccomplishmentSection addAccomplishment={addAccomp} />
+    )
+  ) : (
+    <></>
   )
 }

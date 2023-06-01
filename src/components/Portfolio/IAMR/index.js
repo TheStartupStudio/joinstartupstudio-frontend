@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import IntlMessages from '../../../utils/IntlMessages'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faTrash,
-  faPencilAlt,
-  faPlus,
-  faVideo,
-  faVideoSlash,
-  faFileVideo,
-  faPhotoVideo,
-  faPlay,
-} from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
 import IAMRModal from './iamrModal'
 import DeleteSubmissionModal from './deleteSubmissionModal'
 import EditModal from './editModal'
@@ -20,7 +11,6 @@ import { NavLink } from 'react-router-dom'
 
 import './index.css'
 import { useSelector } from 'react-redux'
-import { faEdit } from '@fortawesome/free-regular-svg-icons'
 import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
 
 export const IAMR = (props) => {
@@ -32,10 +22,11 @@ export const IAMR = (props) => {
   const [activeSubmission, setActiveSubmission] = useState(null)
   const [isPublished, setIsPublished] = useState(false)
   const user = useSelector((state) => state?.user?.user?.user)
+  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    setSubmissions(props.submissions)
-  }, [props.submissions])
+  // useEffect(() => {
+  //   setSubmissions(props.submissions)
+  // }, [props.submissions])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_iamr)
@@ -55,11 +46,13 @@ export const IAMR = (props) => {
       })
   }
 
-  // useEffect(() => {
-  //   axiosInstance
-  //     .get(`/submissions/user/${props.user.id}`)
-  //     .then((data) => setSubmissions(data.data.submissions))
-  // }, [])
+  useEffect(() => {
+    setIsLoading(true)
+    axiosInstance.get(`/submissions/user/${props.user?.id}`).then((data) => {
+      setIsLoading(false)
+      setSubmissions(data?.data?.submissions)
+    })
+  }, [])
 
   const updateSubmission = (submission) => {
     setActiveSubmission(submission)
@@ -107,8 +100,8 @@ export const IAMR = (props) => {
               color: '#fff',
               fontWeight: 500,
               position: 'absolute',
-              top: 1,
-              right: 1,
+              top: 0,
+              right: 0,
               display: 'flex',
               height: '30px',
               paddingRight: 3,
@@ -283,7 +276,7 @@ export const IAMR = (props) => {
                   className="row d-flex justify-content-around"
                   style={{ rowGap: 30 }}
                 >
-                  {submissions.map((submission, index) => {
+                  {submissions?.map((submission, index) => {
                     return (
                       <div
                         className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center"

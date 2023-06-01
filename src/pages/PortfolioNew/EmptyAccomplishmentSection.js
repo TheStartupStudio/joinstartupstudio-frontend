@@ -46,7 +46,7 @@ const EmptyEducationSection = () => {
   }
 
   return (
-    <PortfolioSection title={'Education'}>
+    <PortfolioSection title={'Accomplishment'}>
       {!accomps.length && (
         <>
           <>

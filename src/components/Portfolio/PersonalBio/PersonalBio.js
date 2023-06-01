@@ -18,8 +18,8 @@ import IntlMessages from '../../../utils/IntlMessages'
 import EditBio from './EditBio'
 import Certificate from '../../../assets/images/lts-certifeid-logo.png'
 import { toast } from 'react-toastify'
-import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
 import { useHistory } from 'react-router-dom'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
 
 export default function PersonalBio(props) {
   const userId = useSelector((state) => state.user.user.user.id)
@@ -124,8 +124,6 @@ export default function PersonalBio(props) {
             style={{
               marginRight: 'auto',
               justifyContent: 'center',
-
-              // paddingRight: !props.isPreview ? '0px' : '10px',
             }}
           >
             <div
@@ -143,7 +141,6 @@ export default function PersonalBio(props) {
             >
               <img
                 src={user?.profile_image ? user?.profile_image : avatar}
-                // className=" float-start user-image"
                 className=" user-image"
               />
             </div>
@@ -293,7 +290,7 @@ export default function PersonalBio(props) {
                             </p>
                           )}
                         </div>
-                        <div className="d-lg-flex flex-wrap w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate mx-lg-5 mx-sm-1">
+                        <div className="d-lg-flex flex-wrap w-100 w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate mx-lg-5 mx-sm-1">
                           {!isCertified && (
                             <>
                               <img src={Certificate} />
@@ -306,19 +303,6 @@ export default function PersonalBio(props) {
                       </div>
                     </div>
                   </div>
-                  {/*<div className="col-2">*/}
-                  {/*  <div*/}
-                  {/*    className="float-lg-end float-end mx-2 mx-md-0 mt-3"*/}
-                  {/*    onClick={() => setShowEditBioModal(true)}*/}
-                  {/*    style={{ cursor: 'pointer' }}*/}
-                  {/*  >*/}
-                  {/*    <FontAwesomeIcon*/}
-                  {/*      className="edit-pencil float-end me-2"*/}
-                  {/*      style={{ height: '25px', width: '25px' }}*/}
-                  {/*      icon={faPencilAlt}*/}
-                  {/*    />*/}
-                  {/*  </div>*/}
-                  {/*</div>*/}
                 </div>
               </div>
             </div>

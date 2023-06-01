@@ -19,14 +19,14 @@ import './style/previewPortfolio.css'
 import { IsUserLevelAuthorized } from '../../utils/helpers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
-import novaeLogo from '../../assets/images/novae-logo-horz.png'
 import verifyNovae from '../../assets/images/verify-novae.png'
 import avatar from '../../assets/images/profile-image.png'
 import EditBio from '../../components/Portfolio/PersonalBio/EditBio'
 import EmptyEducationSection from './EmptyEducationSection'
 import EmptyAccomplishmentSection from './EmptyAccomplishmentSection'
-import EmptyCertificationSection from './EmptyCertificationSection'
+// import EmptyCertificationSection from './EmptyCertificationSection'
 import EmptyExperienceSection from './EmptyExperienceSection'
+import EmptyCertificationSection from './EmptyCertificationSection'
 
 export const VerifyButton = (props) => {
   return (
@@ -62,14 +62,7 @@ function EditPortfolio() {
   const [user, setUser] = useState()
   const [showPublishModal, setShowPublishModal] = useState(false)
   const [recommendationRequestId, setRecommendationRequestId] = useState()
-  const [educations, setEducations] = useState([])
-  const [accomplishments, setAccomplishments] = useState([])
-  const [userCertifications, setUserCertifications] = useState([])
-  const [experiences, setExperiences] = useState([])
-  const [submissions, setSubmissions] = useState([])
-  const [skills, setSkills] = useState([])
-  const [userBiography, setUserBiography] = useState(null)
-  const [userData, setUserData] = useState(null)
+
   const [aggred, setAggred] = useState(false)
   const [loading, setLoading] = useState(false)
   const userId = useSelector((state) => state.user.user.user.id)
@@ -85,13 +78,8 @@ function EditPortfolio() {
   }, [paramId])
 
   useEffect(() => {
-    getUser()
-  }, [])
-
-  useEffect(() => {
     dispatch(changeSidebarState(false))
   })
-
   const getUser = async () => {
     await axiosInstance
       .get(`/users`)
@@ -103,6 +91,10 @@ function EditPortfolio() {
       })
       .catch((err) => err)
   }
+
+  useEffect(() => {
+    getUser()
+  }, [])
 
   const updateStatus = async () => {
     await axiosInstance
@@ -118,70 +110,6 @@ function EditPortfolio() {
         setToggle(!toggle)
       })
   }
-
-  const getUserEducations = async () => {
-    await axiosInstance.get(`/userBackground/by-type/education`).then((res) => {
-      setEducations(res.data)
-    })
-  }
-
-  const getUserAccomplishments = async () => {
-    await axiosInstance
-      .get(`/userBackground/by-type/accomplishments`)
-      .then((res) => {
-        setAccomplishments(res.data)
-      })
-  }
-  const getUserCertification = async () => {
-    await axiosInstance.get(`/userCertificates/${userId}`).then((res) => {
-      setTimeout(() => {
-        setUserCertifications(res.data.UserCertificates)
-      }, 2000)
-    })
-  }
-
-  const getUserExperiences = async () => {
-    await axiosInstance
-      .get(`/userBackground/by-type/experience`)
-      .then((res) => {
-        setExperiences(res.data)
-      })
-  }
-
-  const getUserBio = async () => {
-    await axiosInstance
-      .get(`/users/${userId}`)
-      .then((response) => {
-        setUserBiography(response.data.bio)
-        setUserData(response.data)
-      })
-      .catch((err) => err)
-  }
-
-  const getSubmissions = () => {
-    axiosInstance.get(`/submissions/user/${user?.id}`).then((data) => {
-      setSubmissions(data.data?.submissions)
-    })
-  }
-
-  const getUserSkills = async () => {
-    await axiosInstance
-      .get('/users')
-      .then((response) => {
-        setSkills(response.data?.Skills)
-      })
-      .catch((err) => err)
-  }
-
-  useEffect(() => {
-    getUserCertification()
-    getUserAccomplishments()
-    getUserEducations()
-    getUserExperiences()
-    getUserSkills()
-    getSubmissions()
-    getUserBio()
-  }, [user])
 
   return (
     <div className={'edit-portfolio-container'}>
@@ -252,64 +180,43 @@ function EditPortfolio() {
             />
           </div>
         </div>
-        <PersonalBio user={user} isPreview={false} />
         {user && (
           <>
-            <IAMR user={user} isPreview={false} submissions={submissions} />
+            <PersonalBio user={user} isPreview={false} />
+
+            <IAMR user={user} isPreview={false} />
+
+            <Skills user={user} />
+
+            <div>
+              <div
+                style={{
+                  font: 'normal normal 600 24px Montserrat',
+                  letterSpacing: 0,
+                  color: '#231F20',
+                  marginLeft: 10,
+                }}
+              >
+                EXPERIENCE
+              </div>
+              <Experience user={user} />
+            </div>
+            <div>
+              <div
+                style={{
+                  font: 'normal normal 600 24px Montserrat',
+                  letterSpacing: 0,
+                  color: '#231F20',
+                  marginLeft: 10,
+                }}
+              >
+                EDUCATION AND ACCOMPLISHMENTS
+              </div>
+              <Education user={user} />
+              <Accomplishment user={user} />
+            </div>
+            <LicencesCertification user={user} />
           </>
-        )}
-
-        <Skills user={user} skills={skills} />
-
-        <div>
-          <div
-            style={{
-              font: 'normal normal 600 24px Montserrat',
-              letterSpacing: 0,
-              color: '#231F20',
-              marginLeft: 10,
-            }}
-          >
-            EXPERIENCE
-          </div>
-
-          {experiences.length ? (
-            <Experience user={user} experiences={experiences} />
-          ) : (
-            <EmptyExperienceSection />
-          )}
-        </div>
-        <div>
-          <div
-            style={{
-              font: 'normal normal 600 24px Montserrat',
-              letterSpacing: 0,
-              color: '#231F20',
-              marginLeft: 10,
-            }}
-          >
-            EDUCATION AND ACCOMPLISHMENTS
-          </div>
-
-          {educations.length ? (
-            <Education user={user} educations={educations} />
-          ) : (
-            <EmptyEducationSection />
-          )}
-
-          {accomplishments.length ? (
-            <Accomplishment user={user} accomplishments={accomplishments} />
-          ) : (
-            <EmptyAccomplishmentSection />
-          )}
-        </div>
-        {userCertifications.length ? (
-          <LicencesCertification
-            user={user}
-            certifications={userCertifications}
-          />
-        ) : (
-          <EmptyCertificationSection />
         )}
       </div>
       <DeleteConfirmation

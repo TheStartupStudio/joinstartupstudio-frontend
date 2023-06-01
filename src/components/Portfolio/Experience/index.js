@@ -11,20 +11,22 @@ import { format } from 'date-fns'
 import { toast } from 'react-toastify'
 import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
 import { useHistory } from 'react-router-dom'
+import EmptyExperienceSection from '../../../pages/PortfolioNew/EmptyExperienceSection'
 
 export const Experience = (props) => {
   const [showExperienceModal, setShowExperienceModal] = useState(false)
   const [experiences, setExperiences] = useState([])
   const [currentExperience, setCurrentExperience] = useState([])
   const [isPublished, setIsPublished] = useState(false)
-
-  useEffect(() => {
-    setExperiences(props.experiences)
-  }, [props.experiences])
+  const [isLoading, setIsLoading] = useState(false)
 
   // useEffect(() => {
-  //   getUserExperiences()
-  // }, [])
+  //   setExperiences(props.experiences)
+  // }, [props.experiences])
+
+  useEffect(() => {
+    getUserExperiences()
+  }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_experience)
@@ -49,14 +51,17 @@ export const Experience = (props) => {
   }
 
   const getUserExperiences = async () => {
+    setIsLoading(true)
     await axiosInstance
       .get(`/userBackground/by-type/experience`)
       .then((res) => {
         setExperiences(res.data)
+        setIsLoading(false)
       })
   }
 
   const updateExperience = async (experience) => {
+    // props.updateExperience(experience)
     setExperiences(
       experiences.map((exp) => {
         if (exp.id === experience.id) return (exp = experience)
@@ -65,16 +70,19 @@ export const Experience = (props) => {
     )
   }
 
-  const deleteBackground = (id) => {
+  const deleteExperience = (id) => {
+    debugger
     setExperiences(experiences.filter((exp) => exp.id !== id))
+    // props.deleteExperience(id)
   }
 
   const addExperience = async (experience) => {
     setExperiences([...experiences, experience])
+    // props.addExperience(experience)
   }
 
-  return (
-    <>
+  const Experiences = () => {
+    return (
       <PortfolioSection
         title={'Experience'}
         isAdd={true}
@@ -123,7 +131,7 @@ export const Experience = (props) => {
           }}
           updateExperience={(exp) => updateExperience(exp)}
           addExperience={(exp) => addExperience(exp)}
-          deleteBackground={(id) => deleteBackground(id)}
+          deleteBackground={(id) => deleteExperience(id)}
           currentExperience={currentExperience}
         />
         <link
@@ -131,6 +139,75 @@ export const Experience = (props) => {
           rel="stylesheet"
         />
       </PortfolioSection>
+    )
+  }
+
+  return (
+    <>
+      {!isLoading ? (
+        experiences.length ? (
+          <PortfolioSection
+            title={'Experience'}
+            isAdd={true}
+            showInMyPortfolio={true}
+            onAdd={() => setShowExperienceModal(true)}
+            isShownInPortfolio={isPublished}
+            handleShowInPortfolio={() => updateShowPreference()}
+          >
+            <div
+              className="
+        experiences-container
+        mx-0 mt-4
+        "
+            >
+              <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
+                {experiences.map((experience, index, { length }) => {
+                  return (
+                    <div
+                      style={{
+                        border: '1px solid #E5E5E5',
+                        borderRadius: 6,
+                        background: '#F8F8F8 0% 0% no-repeat padding-box',
+                        minHeight: 230,
+                      }}
+                    >
+                      <ExperienceDetails
+                        experience={experience}
+                        key={experience.id}
+                        index={index}
+                        length={length}
+                        setCurrentExperience={(experience) =>
+                          setCurrentExperience(experience)
+                        }
+                        editing={true}
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+            <ExperienceModal
+              show={showExperienceModal}
+              onHide={() => {
+                setCurrentExperience([])
+                setShowExperienceModal(false)
+              }}
+              updateExperience={(exp) => updateExperience(exp)}
+              addExperience={(exp) => addExperience(exp)}
+              deleteBackground={(id) => deleteExperience(id)}
+              currentExperience={currentExperience}
+            />
+            <link
+              href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+              rel="stylesheet"
+            />
+          </PortfolioSection>
+        ) : (
+          <EmptyExperienceSection addExperience={addExperience} />
+        )
+      ) : (
+        <></>
+      )}
     </>
   )
 }

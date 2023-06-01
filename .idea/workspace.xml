@@ -5,36 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="246fe45a-6fbe-477c-a96c-dab28c4263e4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/utils/hooks/useWindowWidth.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Accomplishment/accomplishmentDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Accomplishment/accomplishmentDetails.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Accomplishment/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Accomplishment/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Education/educationDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Education/educationDetails.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Education/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Education/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Experience/experienceDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Experience/experienceDetails.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Experience/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Experience/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Portfolio/IAMR/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/IAMR/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/LicensesCertification/Individual_certificate.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/LicensesCertification/Individual_certificate.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Portfolio/LicensesCertification/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/LicensesCertification/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/LicensesCertification/removeCertifications.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/LicensesCertification/removeCertifications.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Portfolio/PersonalBio/PersonalBio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/PersonalBio/PersonalBio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/PersonalBio/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/PersonalBio/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Recommendation/editRecommendationModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Recommendation/editRecommendationModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Recommendation/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Recommendation/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Recommendation/recommendationDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Recommendation/recommendationDetails.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Skills/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Skills/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/preview/PreviewPersonalBio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/preview/PreviewPersonalBio.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/EmptyAccomplishmentSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/EmptyAccomplishmentSection.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/EmptyCertificationSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/EmptyCertificationSection.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/EmptyEducationSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/EmptyEducationSection.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/EmptyExperienceSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/EmptyExperienceSection.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/PortfolioSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/PortfolioSection.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/editPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/editPortfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/educationAndCertification/certification/EducationCertifications.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/educationAndCertification/certification/EducationCertifications.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/oldddddeditPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/oldddddeditPortfolio.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/previewPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/previewPortfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/previewPublicPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/previewPublicPortfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/style/editPortfolio.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/style/editPortfolio.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +56,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685516764017</updated>
-      <workItem from="1685516765990" duration="12621000" />
+      <workItem from="1685516765990" duration="22678000" />
     </task>
     <servers />
   </component>
