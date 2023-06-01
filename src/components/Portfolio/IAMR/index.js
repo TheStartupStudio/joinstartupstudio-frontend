@@ -12,6 +12,7 @@ import { NavLink } from 'react-router-dom'
 import './index.css'
 import { useSelector } from 'react-redux'
 import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 export const IAMR = (props) => {
   const [iamrModal, setIamrModal] = useState(false)
@@ -66,6 +67,21 @@ export const IAMR = (props) => {
 
   const isPreview = props.isPreview
 
+  const windowWidth = useWindowWidth()
+
+  const cardWidth = () => {
+    if (windowWidth > 800) {
+      return '80%'
+    } else if (windowWidth < 800 && windowWidth > 720) {
+      return '55%'
+    } else if (windowWidth < 720 && windowWidth > 640) {
+      return '70%'
+    } else if (windowWidth < 640 && windowWidth > 520) {
+      return '85%'
+    } else if (windowWidth < 520) {
+      return '95%'
+    }
+  }
   const IAMRSubmissionCard = (props) => {
     return (
       <a
@@ -77,7 +93,10 @@ export const IAMR = (props) => {
         target="_blank"
         style={{
           position: 'relative',
-          width: 'calc(100% - 30px)',
+          // width: 'calc(100% - 30px)',
+          // width: 'calc(100% - 110px)',
+          // width: windowWidth < 800 ? '70%' : '80%',
+          width: cardWidth(),
           height: 200,
           border: '1px solid #E5E5E5',
         }}
@@ -192,7 +211,8 @@ export const IAMR = (props) => {
         onClick={props.onOpenIamrModal}
         style={{
           position: 'relative',
-          width: 'calc(100% - 30px)',
+          // width: 'calc(100% - 30px)',
+          width: cardWidth(),
           height: 200,
           border: '1px solid #E5E5E5',
           cursor: 'pointer',
@@ -273,13 +293,19 @@ export const IAMR = (props) => {
               <div className="iamr-submissions m-3">
                 <div
                   // className="row d-flex justify-content-between"
-                  className="row d-flex justify-content-around"
-                  style={{ rowGap: 30 }}
+                  // className={'row d-grid '}
+                  style={{
+                    rowGap: 30,
+                    display: 'grid',
+                    gridTemplateColumns: windowWidth < 800 ? '1fr' : '2fr 2fr',
+                    justifyContent: 'center',
+                  }}
                 >
                   {submissions?.map((submission, index) => {
                     return (
                       <div
-                        className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center"
+                        className={`d-flex justify-content-center`}
+                        // className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center"
                         key={submission.id}
                       >
                         <IAMRSubmissionCard
@@ -298,7 +324,10 @@ export const IAMR = (props) => {
                   {!isPreview && (
                     <>
                       {!props.preview && props.preview !== '1' && (
-                        <div className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center">
+                        <div
+                          className={`d-flex justify-content-center`}
+                          // className="col-12 col-sm-8 col-lg-5 px-0 d-flex justify-content-center"
+                        >
                           <AddSubmissionCard
                             onOpenIamrModal={() => setIamrModal(true)}
                           />

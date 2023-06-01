@@ -32,26 +32,27 @@ export const EducationDetails = (props) => {
               display: 'flex',
               padding: '20px 10px',
               height: '100%',
-              flexDirection: windowWidth < 500 ? 'column' : 'row',
+              flexDirection: windowWidth < 730 ? 'column' : 'row',
+              position: 'relative',
             }}
           >
             <div
               style={{
-                width: windowWidth < 500 ? '100%' : '30%',
+                width: windowWidth < 730 ? '100%' : '30%',
                 display: 'flex',
                 justifyContent: 'space-between',
                 flexDirection: 'column',
-                borderRight: windowWidth < 500 ? '0px' : '1px solid #e5e5e5',
-                borderBottom: windowWidth < 500 ? '1px solid #e5e5e5' : '0px',
-                paddingBottom: windowWidth < 500 ? '4px' : '0px',
-                paddingRight: windowWidth < 500 ? 0 : 40,
+                borderRight: windowWidth < 730 ? '0px' : '1px solid #e5e5e5',
+                borderBottom: windowWidth < 730 ? '1px solid #e5e5e5' : '0px',
+                paddingBottom: windowWidth < 730 ? '4px' : '0px',
+                paddingRight: windowWidth < 730 ? 0 : 40,
               }}
             >
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: windowWidth < 500 ? 'center' : 'start',
-                  paddingBottom: windowWidth < 500 ? 5 : 0,
+                  justifyContent: windowWidth < 730 ? 'center' : 'start',
+                  paddingBottom: windowWidth < 730 ? 5 : 0,
                 }}
               >
                 {education?.image_url ? (
@@ -103,9 +104,9 @@ export const EducationDetails = (props) => {
             {/*<div className='break-experience'></div>*/}
             <div
               style={{
-                width: windowWidth < 500 ? '100%' : '70%',
-                paddingLeft: windowWidth < 500 ? 0 : 20,
-                marginTop: windowWidth < 500 ? 6 : 0,
+                width: windowWidth < 730 ? '100%' : '70%',
+                paddingLeft: windowWidth < 730 ? 0 : 20,
+                marginTop: windowWidth < 730 ? 6 : 0,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -125,7 +126,7 @@ export const EducationDetails = (props) => {
                   >
                     {education?.degree} in {education?.field}
                   </div>
-                  {!isPreview && props.editing && (
+                  {!isPreview && props.editing && windowWidth > 730 && (
                     <div className=" edit-icon">
                       <span className="text-end text-md-center">
                         <FontAwesomeIcon
@@ -225,6 +226,24 @@ export const EducationDetails = (props) => {
                 )}
               </div>
             </div>
+            {windowWidth < 730 && !isPreview && (
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                onClick={() => {
+                  props.setCurrentEducation(education)
+                }}
+                color={'#707070'}
+                className="editICO"
+                style={{
+                  position: 'absolute',
+                  cursor: 'pointer',
+                  top: 12,
+                  right: 0,
+                  height: '25px',
+                  width: '25px',
+                }}
+              />
+            )}
           </div>
           {/*{props.length - 1 !== props.index ? (*/}
           {/*  <hr className="d-md-none mx-auto my-3" />*/}

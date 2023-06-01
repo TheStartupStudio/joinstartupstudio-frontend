@@ -34,28 +34,29 @@ export const ExperienceDetails = (props) => {
               display: 'flex',
               height: '100%',
               padding: '20px 10px',
-              flexDirection: windowWidth < 500 ? 'column' : 'row',
+              flexDirection: windowWidth < 730 ? 'column' : 'row',
+              position: 'relative',
             }}
             // className="col-12 d-flex ms-0 experience-container"
           >
             <div
               // className='image-container ps-md-1'
               style={{
-                width: windowWidth < 500 ? '100%' : '30%',
+                width: windowWidth < 730 ? '100%' : '30%',
                 display: 'flex',
                 justifyContent: 'space-between',
                 flexDirection: 'column',
-                borderRight: windowWidth < 500 ? '0px' : '1px solid #e5e5e5',
-                borderBottom: windowWidth < 500 ? '1px solid #e5e5e5' : '0px',
-                paddingBottom: windowWidth < 500 ? '4px' : '0px',
-                paddingRight: windowWidth < 500 ? 0 : 40,
+                borderRight: windowWidth < 730 ? '0px' : '1px solid #e5e5e5',
+                borderBottom: windowWidth < 730 ? '1px solid #e5e5e5' : '0px',
+                paddingBottom: windowWidth < 730 ? '4px' : '0px',
+                paddingRight: windowWidth < 730 ? 0 : 40,
               }}
             >
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: windowWidth < 500 ? 'center' : 'start',
-                  paddingBottom: windowWidth < 500 ? 5 : 0,
+                  justifyContent: windowWidth < 730 ? 'center' : 'start',
+                  paddingBottom: windowWidth < 730 ? 5 : 0,
                 }}
               >
                 {experience?.image_url ? (
@@ -119,9 +120,9 @@ export const ExperienceDetails = (props) => {
             {/*<div className='break-experience'></div>*/}
             <div
               style={{
-                width: windowWidth < 500 ? '100%' : '70%',
-                paddingLeft: windowWidth < 500 ? 0 : 20,
-                marginTop: windowWidth < 500 ? 6 : 0,
+                width: windowWidth < 730 ? '100%' : '70%',
+                paddingLeft: windowWidth < 730 ? 0 : 20,
+                marginTop: windowWidth < 730 ? 6 : 0,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -141,7 +142,7 @@ export const ExperienceDetails = (props) => {
                     {experience?.title}
                   </div>
 
-                  {!isPreview && (
+                  {windowWidth > 730 && !isPreview && (
                     <FontAwesomeIcon
                       icon={faPencilAlt}
                       onClick={() => {
@@ -195,15 +196,21 @@ export const ExperienceDetails = (props) => {
                     ? ' justify-content-between'
                     : 'justify-content-end'
                 }
-                ${windowWidth < 700 ? 'flex-column' : 'flex-row'}
+                ${windowWidth < 1150 ? 'flex-column' : 'flex-row'}
                 `}
               >
                 {(experience?.external_links?.link ||
                   experience?.external_links?.link) && (
                   <div
-                    className={`d-flex justify-content-between external_links gap-3 ${
-                      windowWidth < 700 ? 'flex-column' : 'flex-row'
-                    }`}
+                    className={`d-flex 
+                    ${
+                      windowWidth < 1150
+                        ? 'justify-content-start'
+                        : 'justify-content-between'
+                    }
+                      external_links gap-3 ${
+                        windowWidth < 730 ? 'flex-column' : 'flex-row'
+                      }`}
                     style={{ marginTop: 'auto' }}
                   >
                     {experience?.external_links?.link && (
@@ -265,10 +272,12 @@ export const ExperienceDetails = (props) => {
                 )}
                 <div
                   className={`d-flex ${
-                    windowWidth < 700
+                    windowWidth < 1150
                       ? 'justify-content-end'
                       : 'justify-content-start'
-                  }`}
+                  }
+                   ${windowWidth < 730 ? 'mt-1' : 'mt-0'}
+                  `}
                 >
                   {!isPreview && <VerifyButton width={'110px'} />}
                 </div>
@@ -292,13 +301,26 @@ export const ExperienceDetails = (props) => {
             {/*    </span>*/}
             {/*  </div>*/}
             {/*)}*/}
-          </div>
 
-          {/*{props.length - 1 !== props.index ? (*/}
-          {/*  <hr className="d-md-none mx-auto mt-3 mb-4" />*/}
-          {/*) : (*/}
-          {/*  <div className="mb-4"></div>*/}
-          {/*)}*/}
+            {windowWidth < 730 && !isPreview && (
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                onClick={() => {
+                  props.setCurrentExperience(experience)
+                }}
+                color={'#707070'}
+                className="editICO"
+                style={{
+                  position: 'absolute',
+                  cursor: 'pointer',
+                  top: 12,
+                  right: 0,
+                  height: '25px',
+                  width: '25px',
+                }}
+              />
+            )}
+          </div>
         </>
       )}
     </>

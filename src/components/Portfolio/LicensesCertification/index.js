@@ -60,7 +60,6 @@ export default function LicencesCertification(props) {
         let data = userCertification.filter(
           (item) => !certificatedToRemove.includes(item.id)
         )
-        console.log(data)
 
         setUserCertification(data)
         setCertificatedToRemove([])
@@ -163,7 +162,12 @@ export default function LicencesCertification(props) {
             <div className="my-account rounded mx-0 mt-4">
               <div className="mx-3 mt-4 mb-4">
                 {/*{userCertification.length > 0 ? (*/}
-                <div className="row">
+                <div
+                  className="row"
+                  style={{
+                    rowGap: 20,
+                  }}
+                >
                   {userCertification?.map((data, index) => (
                     <div
                       className="col-md-4 d-flex justify-content-center align-items-center"

@@ -203,7 +203,7 @@ export const Skills = (props) => {
                   style={{
                     width: verifyButtonContainerWidth(),
                     display: 'flex',
-                    alignItems: 'start',
+                    alignItems: 'end',
                     justifyContent: 'end',
                   }}
                 >

@@ -27,16 +27,18 @@ export const AccomplishmentDetails = (props) => {
             style={{
               display: 'flex',
               padding: '20px 10px',
-              flexDirection: windowWidth < 500 ? 'column' : 'row',
+              flexDirection: windowWidth < 730 ? 'column' : 'row',
+              position: 'relative',
             }}
           >
             <div
               style={{
-                width: windowWidth < 500 ? '100%' : '30%',
+                width: windowWidth < 730 ? '100%' : '30%',
                 display: 'flex',
-                justifyContent: 'center',
+                justifyContent: windowWidth < 730 ? 'start' : 'center',
                 alignItems: 'center',
-                borderRight: '1px solid #e5e5e5',
+                borderRight:
+                  windowWidth < 730 ? '0px solid #e5e5e5' : '1px solid #e5e5e5',
                 paddingRight: 20,
               }}
             >
@@ -67,7 +69,7 @@ export const AccomplishmentDetails = (props) => {
             </div>
             <div
               className={'d-flex justify-content-between '}
-              style={{ width: windowWidth < 500 ? '100%' : '70%' }}
+              style={{ width: windowWidth < 730 ? '100%' : '70%' }}
             >
               <div
                 style={{
@@ -75,17 +77,17 @@ export const AccomplishmentDetails = (props) => {
                   font: 'normal normal 300 15px/17px Montserrat',
                   letterSpacing: 0.6,
                   color: '#231F20',
-                  marginTop: windowWidth < 500 ? 6 : 0,
-                  paddingLeft: windowWidth < 500 ? 0 : 20,
+                  marginTop: windowWidth < 730 ? 6 : 0,
+                  paddingLeft: windowWidth < 730 ? 0 : 20,
                 }}
               >
                 {accomp?.description}
               </div>
-              {!isPreview && props.editing && (
+              {!isPreview && props.editing && windowWidth > 730 && (
                 <div
                   className=" edit-icon"
                   style={{
-                    paddingRight: windowWidth < 500 ? 0 : 10,
+                    paddingRight: windowWidth < 730 ? 0 : 10,
                   }}
                 >
                   <span className="text-end text-md-center">
@@ -100,6 +102,23 @@ export const AccomplishmentDetails = (props) => {
                 </div>
               )}
             </div>
+            {windowWidth < 730 && !isPreview && (
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                onClick={() => {
+                  props.setCurrentAccomp(accomp)
+                }}
+                color={'#707070'}
+                style={{
+                  position: 'absolute',
+                  cursor: 'pointer',
+                  top: 12,
+                  right: 0,
+                  height: '25px',
+                  width: '25px',
+                }}
+              />
+            )}
           </div>
 
           {/*{props.length - 1 !== props.index ? (*/}

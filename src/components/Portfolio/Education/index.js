@@ -84,6 +84,7 @@ export const Education = (props) => {
             educations.map((education, index, { length }) => {
               return (
                 <div
+                  className={'mt-4'}
                   style={{
                     border: '1px solid #E5E5E5',
                     borderRadius: 6,
