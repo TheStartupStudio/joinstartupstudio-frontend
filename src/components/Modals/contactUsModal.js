@@ -13,8 +13,6 @@ const ContactUsModal = (props) => {
   const [message, setMessage] = useState('')
   const [subject, setSubject] = useState('')
 
-  console.log(user)
-
   const handleContactForm = (event) => {
     const { name, value } = event.target
     if (name === 'message') {

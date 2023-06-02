@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { NavLink, useLocation } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { NavLink, useLocation } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faIdCard,
   faTv,
@@ -11,58 +11,189 @@ import {
   faCertificate,
   faClipboardCheck,
   faAngleDown,
-} from "@fortawesome/free-solid-svg-icons";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "jquery/dist/jquery.min.js";
-import "bootstrap/dist/js/bootstrap.min.js";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import "react-perfect-scrollbar/dist/css/styles.css";
-import { setAccordionToggled } from "../../redux";
-import IntlMessages from "../../utils/IntlMessages";
-import SUSLogoStudent from "../../assets/images/LTS-logo.png";
-import sidebarImage from "../../assets/images/side-logo.png";
-import diagramAnimation from "../../assets/json/lts-diagram.json";
-import sidebarImageES from "../../assets/images/side-logo-es.png";
-import $ from "jquery";
-import Lottie from "react-lottie";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import "./index.css";
-import logoImage from "../../assets/images/LearntoStart-Diagram-3D.png";
+} from '@fortawesome/free-solid-svg-icons'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'jquery/dist/jquery.min.js'
+import 'bootstrap/dist/js/bootstrap.min.js'
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import 'react-perfect-scrollbar/dist/css/styles.css'
+import { setAccordionToggled } from '../../redux'
+import IntlMessages from '../../utils/IntlMessages'
+import SUSLogoStudent from '../../assets/images/LTS-logo.png'
+import sidebarImage from '../../assets/images/side-logo.png'
+import diagramAnimation from '../../assets/json/lts-diagram.json'
+import sidebarImageES from '../../assets/images/side-logo-es.png'
+import $ from 'jquery'
+import Lottie from 'react-lottie'
+import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import './index.css'
+import logoImage from '../../assets/images/LearntoStart-Diagram-3D.png'
 
 function Sidebar(props) {
-  const sideBarState = useSelector((state) => state.general.sidebarState);
-  const currentLanguage = useSelector((state) => state.lang.locale);
-  const [animationPlaying, setAnimationPlaying] = useState(false);
-  const dispatch = useDispatch();
-  const location = useLocation();
+  const sideBarState = useSelector((state) => state.general.sidebarState)
+  const currentLanguage = useSelector((state) => state.lang.locale)
+  const [animationPlaying, setAnimationPlaying] = useState(false)
+  const dispatch = useDispatch()
+  const location = useLocation()
 
   useEffect(() => {
-    $(document).on("click", ".dropdownMenuSidebarHover", function () {
-      $(".dropdownMenuSidebarHover").each(function () {
-        const id = $(this).attr("href");
+    $(document).on('click', '.dropdownMenuSidebarHover', function () {
+      $('.dropdownMenuSidebarHover').each(function () {
+        const id = $(this).attr('href')
 
-        if ($(id).hasClass("show") && $(id).find(".active").length < 1) {
-          $(this)[0].click();
+        if ($(id).hasClass('show') && $(id).find('.active').length < 1) {
+          $(this)[0].click()
         }
-      });
-    });
-  }, []);
+      })
+    })
+  }, [])
 
   useEffect(() => {
-    const path = location.pathname.split("/")[1];
-    $(".dropdownMenuSidebarHover").each(function () {
-      const id = $(this).attr("href");
+    const path = location.pathname.split('/')[1]
+    $('.dropdownMenuSidebarHover').each(function () {
+      const id = $(this).attr('href')
 
-      if ($(id).hasClass("show") && !$(id).html().includes(path)) {
-        $(this)[0].click();
+      if ($(id).hasClass('show') && !$(id).html().includes(path)) {
+        $(this)[0].click()
       }
-    });
-  }, [location]);
+    })
+  }, [location])
+
+  const NavListParent = (props) => {
+    const [isOpen, setIsOpen] = useState(false)
+
+    const toggleCollapse = () => {
+      setIsOpen(!isOpen)
+    }
+    return (
+      <>
+        <li
+          className="dropdownMenuSidebarHover"
+          data-bs-toggle="collapse"
+          href={'#' + props.listName}
+          role="button"
+          aria-expanded="true"
+          aria-controls={props.listName}
+          // aria-expanded={isOpen ? 'true' : 'false'}
+          // onClick={toggleCollapse}
+        >
+          <a>
+            <div className="d-flex w-100" style={{ alignItems: 'center' }}>
+              <FontAwesomeIcon
+                className="sidebar-icon me-2"
+                icon={props.icon}
+              />
+              <div className="flex-grow-1 ms-1">
+                <span className={'text-uppercase'}>{props.listTitle}</span>
+              </div>
+              <FontAwesomeIcon
+                icon={faAngleDown}
+                className="me-2 me-md-0"
+                style={{
+                  fontSize: '16px',
+                  color: '#333D3D',
+                }}
+              />
+            </div>
+          </a>
+        </li>
+        <div
+          className="collapse"
+          id={props.listName}
+          data-parent="#side-menu-main"
+        >
+          {props.children}
+        </div>
+      </>
+    )
+  }
+  const NavListChild = (props) => {
+    return (
+      <li>
+        <NavLink to={props.linkToNavigate} activeClassName="sidenav active">
+          <div className="d-flex" style={{ alignItems: 'center' }}>
+            <div
+              className="ms-4 ps-2 py-1 text-uppercase"
+              style={{
+                font: 'normal normal 600 12px/15px Montserrat',
+                letterSpacing: 0.48,
+                color: '#231F20',
+              }}
+            >
+              {props.title}
+            </div>
+          </div>
+        </NavLink>
+      </li>
+    )
+  }
+
+  const RecursiveNavComponent = ({ data }) => {
+    const renderNavItems = (items) => {
+      return items.map((item, index) => {
+        if (item.children) {
+          return (
+            <NavListParent
+              key={index}
+              listName={item.listName}
+              listTitle={item.listTitle}
+              icon={item.icon}
+            >
+              {renderNavItems(item.children)}
+            </NavListParent>
+          )
+        } else {
+          return (
+            <NavListChild
+              key={index}
+              title={item.title}
+              linkToNavigate={item.linkToNavigate}
+            />
+          )
+        }
+      })
+    }
+
+    return <>{renderNavItems(data)}</>
+  }
+
+  const data = [
+    {
+      listName: 'myLTS',
+      listTitle: 'My Learn To Start EDU',
+      icon: faFolder,
+      children: [
+        {
+          listName: 'myLTS2',
+          listTitle: 'My Learn To Start EDU2',
+          icon: faFolder,
+          children: [
+            {
+              title: 'My training2',
+              linkToNavigate: '/my-training2',
+            },
+          ],
+        },
+        {
+          title: 'My curriculum',
+          linkToNavigate: '/my-portfolio',
+        },
+        {
+          title: 'My certification guide',
+          linkToNavigate: '/my-certification-guide',
+        },
+        {
+          title: 'My performance data',
+          linkToNavigate: '/my-performance-data',
+        },
+      ],
+    },
+  ]
 
   return (
     <nav
       id="sidebar"
-      className={`sidebar-area ${sideBarState ? " sidenav active" : ""}`}
+      className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
     >
       <div className="scroll sidebar-sticky sidebar-scroll">
         <PerfectScrollbar
@@ -79,8 +210,8 @@ function Sidebar(props) {
               </NavLink>
               <div
                 style={{
-                  textTransform: "uppercase",
-                  color: "#707070",
+                  textTransform: 'uppercase',
+                  color: '#707070',
                   fontSize: 14,
                 }}
               >
@@ -98,15 +229,15 @@ function Sidebar(props) {
                 ></div>
                 <NavLink
                   onClick={() => {
-                    dispatch(setAccordionToggled(false));
-                    props.hideHeaderIcons();
+                    dispatch(setAccordionToggled(false))
+                    props.hideHeaderIcons()
                   }}
                   to="/dashboard"
                   className={`${
-                    location.pathname.includes("dashboard") ? "active" : ""
+                    location.pathname.includes('dashboard') ? 'active' : ''
                   }`}
                 >
-                  <div className="d-flex" style={{ alignItems: "center" }}>
+                  <div className="d-flex" style={{ alignItems: 'center' }}>
                     <div className="dashboard me-1"></div>
                     <div className="ms-2">
                       <IntlMessages id="navigation.dashboard" />
@@ -127,18 +258,43 @@ function Sidebar(props) {
                   </div>
                 </a> */}
               </li>
+              {/*<RecursiveNavComponent data={data} />*/}
+
+              <NavListParent
+                listName={'myLearnToStartEdu'}
+                listTitle={'My Learn To Start EDU'}
+                icon={faFolder}
+              >
+                <NavListChild
+                  title={'My training'}
+                  linkToNavigate={'/my-training'}
+                />
+                <NavListChild
+                  title={'My curriculum'}
+                  linkToNavigate={'/my-curriculum'}
+                />
+                <NavListChild
+                  title={'My certification guide'}
+                  linkToNavigate={'/my-certification-guide'}
+                />
+                <NavListChild
+                  title={'My performance data'}
+                  linkToNavigate={'/my-performance-data'}
+                />
+              </NavListParent>
+
               <li>
                 <NavLink
                   onClick={() => {
-                    dispatch(setAccordionToggled(false));
-                    props.hideHeaderIcons();
+                    dispatch(setAccordionToggled(false))
+                    props.hideHeaderIcons()
                   }}
                   to="/startup-live"
                   className={`${
-                    location.pathname.includes("startup-live") ? "active" : ""
+                    location.pathname.includes('startup-live') ? 'active' : ''
                   }`}
                 >
-                  <div className="d-flex" style={{ alignItems: "center" }}>
+                  <div className="d-flex" style={{ alignItems: 'center' }}>
                     <FontAwesomeIcon
                       className="sidebar-icon me-1"
                       icon={faTv}
@@ -160,7 +316,7 @@ function Sidebar(props) {
                 <a>
                   <div
                     className="d-flex w-100"
-                    style={{ alignItems: "center" }}
+                    style={{ alignItems: 'center' }}
                   >
                     <FontAwesomeIcon
                       className="sidebar-icon me-2"
@@ -173,8 +329,8 @@ function Sidebar(props) {
                       icon={faAngleDown}
                       className="me-2 me-md-0"
                       style={{
-                        fontSize: "16px",
-                        color: "#333D3D",
+                        fontSize: '16px',
+                        color: '#333D3D',
                       }}
                     />
                   </div>
@@ -186,18 +342,18 @@ function Sidebar(props) {
                 data-parent="#side-menu-main"
               >
                 <li>
-                  <NavLink to={"/my-training"} activeClassName="sidenav active">
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                  <NavLink to={'/my-training'} activeClassName="sidenav active">
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">INTRODUCTION TO LTS</div>
                     </div>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
-                    to={"/edit-portfolio"}
+                    to={'/edit-portfolio'}
                     activeClassName="sidenav active"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">MY PORTFOLIO</div>
                     </div>
                   </NavLink>
@@ -206,23 +362,23 @@ function Sidebar(props) {
                 <li>
                   <NavLink
                     onClick={() => {
-                      dispatch(setAccordionToggled(false));
-                      props.hideHeaderIcons();
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
                     }}
                     to="/resources"
                     activeClassName="sidenav active"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">MY RESOURCES</div>
                     </div>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
-                    to={"/My-Market-Ready-Guide"}
+                    to={'/My-Market-Ready-Guide'}
                     activeClassName="sidenav active"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">
                         MY MARKET-READY GUIDE
                       </div>
@@ -242,7 +398,7 @@ function Sidebar(props) {
                 <a>
                   <div
                     className="d-flex w-100"
-                    style={{ alignItems: "center" }}
+                    style={{ alignItems: 'center' }}
                   >
                     <FontAwesomeIcon
                       className="sidebar-icon me-2"
@@ -255,8 +411,8 @@ function Sidebar(props) {
                       icon={faAngleDown}
                       className="me-2 me-md-0"
                       style={{
-                        fontSize: "16px",
-                        color: "#333D3D",
+                        fontSize: '16px',
+                        color: '#333D3D',
                       }}
                     />
                   </div>
@@ -270,13 +426,13 @@ function Sidebar(props) {
                 <li>
                   <NavLink
                     onClick={() => {
-                      dispatch(setAccordionToggled(false));
-                      props.hideHeaderIcons();
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
                     }}
                     to="/hs1-journal"
                     activeClassName="sidenav active"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">
                         <span>LTS 1</span>
                       </div>
@@ -286,13 +442,13 @@ function Sidebar(props) {
                 <li>
                   <NavLink
                     onClick={() => {
-                      dispatch(setAccordionToggled(false));
-                      props.hideHeaderIcons();
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
                     }}
                     to="/hs2-journal"
                     activeClassName="sidenav active"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">
                         <span>LTS 2</span>
                       </div>
@@ -302,13 +458,13 @@ function Sidebar(props) {
                 <li>
                   <NavLink
                     onClick={() => {
-                      dispatch(setAccordionToggled(false));
-                      props.hideHeaderIcons();
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
                     }}
                     to="/hs3-journal"
                     activeClassName="sidenav active"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">
                         <span>LTS 3</span>
                       </div>
@@ -318,13 +474,13 @@ function Sidebar(props) {
                 <li>
                   <NavLink
                     onClick={() => {
-                      dispatch(setAccordionToggled(false));
-                      props.hideHeaderIcons();
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
                     }}
                     to="/hs4-journal"
                     activeClassName="sidenav active"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">
                         <span>LTS 4</span>
                       </div>
@@ -344,7 +500,7 @@ function Sidebar(props) {
                 <a>
                   <div
                     className="d-flex w-100"
-                    style={{ alignItems: "center" }}
+                    style={{ alignItems: 'center' }}
                   >
                     <FontAwesomeIcon
                       className="sidebar-icon me-2"
@@ -357,8 +513,8 @@ function Sidebar(props) {
                       icon={faAngleDown}
                       className="me-2 me-md-0"
                       style={{
-                        fontSize: "16px",
-                        color: "#333D3D",
+                        fontSize: '16px',
+                        color: '#333D3D',
                       }}
                     />
                   </div>
@@ -384,8 +540,8 @@ function Sidebar(props) {
                       </div>
                     </div>
                   </NavLink> */}
-                  <NavLink to={"/my-students"} activeClassName="sidenav active">
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                  <NavLink to={'/my-students'} activeClassName="sidenav active">
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">MY STUDENTS</div>
                     </div>
                   </NavLink>
@@ -393,13 +549,13 @@ function Sidebar(props) {
                 <li>
                   <NavLink
                     onClick={() => {
-                      dispatch(setAccordionToggled(false));
-                      props.hideHeaderIcons();
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
                     }}
                     to="/iamr-inbox"
                     activeClassName="sidenav"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">MY IAMR INBOX</div>
                     </div>
                   </NavLink>
@@ -417,7 +573,7 @@ function Sidebar(props) {
                 <a>
                   <div
                     className="d-flex w-100"
-                    style={{ alignItems: "center" }}
+                    style={{ alignItems: 'center' }}
                   >
                     <FontAwesomeIcon
                       className="sidebar-icon me-2"
@@ -430,8 +586,8 @@ function Sidebar(props) {
                       icon={faAngleDown}
                       className="me-2 me-md-0"
                       style={{
-                        fontSize: "16px",
-                        color: "#333D3D",
+                        fontSize: '16px',
+                        color: '#333D3D',
                       }}
                     />
                   </div>
@@ -445,13 +601,13 @@ function Sidebar(props) {
                 <li>
                   <NavLink
                     onClick={() => {
-                      dispatch(setAccordionToggled(false));
-                      props.hideHeaderIcons();
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
                     }}
                     to="/beyond-your-course"
                     activeClassName="sidenav active"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">
                         <IntlMessages id="beyond_your_course.master_classes_upper" />
                       </div>
@@ -471,13 +627,13 @@ function Sidebar(props) {
                 <li>
                   <NavLink
                     onClick={() => {
-                      dispatch(setAccordionToggled(false));
-                      props.hideHeaderIcons();
+                      dispatch(setAccordionToggled(false))
+                      props.hideHeaderIcons()
                     }}
                     to="/story-in-motion"
                     activeClassName="sidenav active"
                   >
-                    <div className="d-flex" style={{ alignItems: "center" }}>
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">
                         <IntlMessages id="my_saved.MEDIA_PODCASTS" />
                       </div>
@@ -494,7 +650,7 @@ function Sidebar(props) {
               </div>
             </ul>
             <div className="sidebar-bottom">
-              <div style={{ position: "relative" }}>
+              <div style={{ position: 'relative' }}>
                 <img src={logoImage} alt="logoimage" />
                 {/* {!animationPlaying && (
                   <FontAwesomeIcon
@@ -544,6 +700,6 @@ function Sidebar(props) {
         </PerfectScrollbar>
       </div>
     </nav>
-  );
+  )
 }
-export default Sidebar;
+export default Sidebar
