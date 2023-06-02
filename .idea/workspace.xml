@@ -6,15 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Accomplishment/accomplishmentDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Accomplishment/accomplishmentDetails.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Education/educationDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Education/educationDetails.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Education/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Education/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Experience/experienceDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Experience/experienceDetails.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/IAMR/editModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/IAMR/editModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/IAMR/iamrModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/IAMR/iamrModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/IAMR/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/IAMR/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/LicensesCertification/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/LicensesCertification/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Skills/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Skills/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

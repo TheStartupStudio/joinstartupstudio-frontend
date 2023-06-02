@@ -77,19 +77,19 @@ function Dashboard() {
               />
             </LevelWrapper>
 
-            <div className="my-4">
-              <div className="row">
-                <div className="col-md-12 col-lg-8">
-                  <h3
-                    className="page-title"
-                    style={{ textTransform: 'capitalize' }}
-                  >
-                    Recently Active Students
-                  </h3>
-                </div>
-                <ActiveStudents />
-              </div>
-            </div>
+            {/*<div className="my-4">*/}
+            {/*  <div className="row">*/}
+            {/*    <div className="col-md-12 col-lg-8">*/}
+            {/*      <h3*/}
+            {/*        className="page-title"*/}
+            {/*        style={{ textTransform: 'capitalize' }}*/}
+            {/*      >*/}
+            {/*        Recently Active Students*/}
+            {/*      </h3>*/}
+            {/*    </div>*/}
+            {/*    <ActiveStudents />*/}
+            {/*  </div>*/}
+            {/*</div>*/}
           </div>
         </div>
         <div className="col-12 col-xl-3 px-0">
