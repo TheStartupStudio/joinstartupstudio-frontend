@@ -16,18 +16,22 @@ function InboxTickets() {
   const {
     studentQuestions,
     certificationFeedbackQuestions,
+    approvalRequests,
     questionsMenuSelected,
     setStudentQuestions,
     setCertificationFeedbackQuestions,
+    setApprovalRequests,
     loading,
     setLoading,
-    resetAllQuestions
+    resetAllQuestions,
   } = useIamrInboxContext()
+  // const questionsMenuSelected = 'student-questions'
   const [filterExpanded, setFilterExpanded] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState()
   const [selectedTicket, setSelectedTicket] = useState()
   const [questionsPage, setQuestionsPage] = useState(0)
   const [certificationFeedbackPage, setCertificationFeedbackPage] = useState(0)
+  const [approvalRequestsPage, setApprovalRequestsPage] = useState(0)
   const [userSearchPage, setUserSearchPage] = useState(0)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [isSearching, setIsSearching] = useState(false)
@@ -35,13 +39,16 @@ function InboxTickets() {
 
   const currentPage = isSearching
     ? userSearchPage
-    : questionsMenuSelected
+    : questionsMenuSelected === 'student-questions'
     ? questionsPage
     : certificationFeedbackPage
 
-  const tickets = questionsMenuSelected
-    ? studentQuestions
-    : certificationFeedbackQuestions
+  const tickets =
+    questionsMenuSelected === 'student-questions'
+      ? studentQuestions
+      : questionsMenuSelected === 'certification-feedback-requests'
+      ? certificationFeedbackQuestions
+      : approvalRequests
 
   const PER_PAGE = 5
 
@@ -55,18 +62,21 @@ function InboxTickets() {
 
   const isTicketOpened = useMemo(() => {
     return (
-      (selectedTicket?.type === 'instruction' && questionsMenuSelected) ||
-      (selectedTicket?.type !== undefined &&
-        selectedTicket?.type !== 'instruction' &&
-        !questionsMenuSelected)
+      (selectedTicket?.type === 'instruction' &&
+        questionsMenuSelected === 'student-questions') ||
+      selectedTicket?.type !== undefined ||
+      (selectedTicket?.type !== 'instruction' &&
+        questionsMenuSelected !== 'student-questions')
     )
   }, [questionsMenuSelected, selectedTicket?.type])
 
   const isMenuOpened = useMemo(() => {
     return (
       !selectedTicket?.type ||
-      (questionsMenuSelected && selectedTicket?.type !== 'instruction') ||
-      (!questionsMenuSelected && selectedTicket?.type === 'instruction')
+      (questionsMenuSelected === 'student-questions' &&
+        selectedTicket?.type !== 'instruction') ||
+      (questionsMenuSelected !== 'student-questions' &&
+        selectedTicket?.type === 'instruction')
     )
   }, [questionsMenuSelected, selectedTicket?.type])
 
@@ -90,9 +100,11 @@ function InboxTickets() {
   const handlePageClick = debounce(({ selected }) => {
     isSearching
       ? setUserSearchPage(selected)
-      : questionsMenuSelected
+      : questionsMenuSelected === 'student-questions'
       ? setQuestionsPage(selected)
-      : setCertificationFeedbackPage(selected)
+      : questionsMenuSelected === 'certification-feedback-requests'
+      ? setCertificationFeedbackPage(selected)
+      : setApprovalRequestsPage(selected)
   }, 500)
 
   const handleSearch = debounce(({ target: { value } }) => {
@@ -138,7 +150,7 @@ function InboxTickets() {
 
       setLoading(true)
 
-      await getTicketsByPage(certificationFeedbackPage)
+      await getTicketsByPage(certificationFeedbackPage, 'certification_submit')
         .then(({ data }) => {
           if (canceled) return
           setCertificationFeedbackQuestions(data)
@@ -156,8 +168,29 @@ function InboxTickets() {
     isSearching,
     certificationFeedbackPage,
     setCertificationFeedbackQuestions,
-    setLoading
+    setLoading,
   ])
+  //fetchApprovalRequests
+  useEffect(() => {
+    let canceled = false
+
+    const fetchApprovalRequests = async () => {
+      if (isSearching) return
+      setLoading(true)
+
+      await getTicketsByPage(approvalRequestsPage, 'approval')
+        .then(({ data }) => {
+          if (canceled) return
+          setApprovalRequests(data)
+        })
+        .catch((e) => e)
+      setLoading(false)
+    }
+
+    fetchApprovalRequests()
+
+    return () => (canceled = true)
+  }, [approvalRequestsPage, setApprovalRequests, isSearching, setLoading])
 
   //fetch search results
   useEffect(() => {
@@ -201,7 +234,7 @@ function InboxTickets() {
     setCertificationFeedbackQuestions,
     setStudentQuestions,
     setLoading,
-    resetAllQuestions
+    resetAllQuestions,
   ])
 
   const getTicketsByPage = (page, type) => {
@@ -217,11 +250,11 @@ function InboxTickets() {
   })
 
   return (
-    <div className='col-12 col-lg-9 inbox-tickets-container px-4 d-flex justify-content-between flex-column'>
+    <div className="col-12 col-lg-9 inbox-tickets-container px-4 d-flex justify-content-between flex-column">
       <div>
-        <div className='top-menu mt-3 row m-0'>
+        <div className="top-menu mt-3 row m-0">
           <div
-            className='tickets-filter col-12 col-sm-3 me-sm-2 justify-content-center d-flex align-items-center'
+            className="tickets-filter col-12 col-sm-3 me-sm-2 justify-content-center d-flex align-items-center"
             onClick={() => setFilterExpanded((prev) => !prev)}
             ref={dropdownRef}
           >
@@ -230,26 +263,26 @@ function InboxTickets() {
               style={{
                 color: '#707070',
                 fontSize: '22px',
-                marginRight: '5px'
+                marginRight: '5px',
               }}
             />
-            <p className='m-0'>{selectedFilter ?? 'FILTER'}</p>
+            <p className="m-0">{selectedFilter ?? 'FILTER'}</p>
             {filterExpanded && (
-              <div className='tickets-filter-expanded'>
+              <div className="tickets-filter-expanded">
                 <p
-                  className='my-2 ms-2'
+                  className="my-2 ms-2"
                   onClick={() => setSelectedFilter('all')}
                 >
                   All
                 </p>
                 <p
-                  className='my-2 ms-2'
+                  className="my-2 ms-2"
                   onClick={() => setSelectedFilter('read')}
                 >
                   Read
                 </p>
                 <p
-                  className='my-2 ms-2'
+                  className="my-2 ms-2"
                   onClick={() => setSelectedFilter('unread')}
                 >
                   Unread
@@ -258,32 +291,32 @@ function InboxTickets() {
             )}
           </div>
           <div
-            className='connections-search col-12 col-sm-8 col-lg-6 mt-2 mt-sm-0'
+            className="connections-search col-12 col-sm-8 col-lg-6 mt-2 mt-sm-0"
             style={{ height: '48px' }}
           >
-            <div className='input-group h-100'>
-              <div className='input-group-prepend my-auto'>
+            <div className="input-group h-100">
+              <div className="input-group-prepend my-auto">
                 <button
-                  className='btn btn-outline-secondary my-2 ms-2'
-                  type='button'
-                  id='button-addon1'
+                  className="btn btn-outline-secondary my-2 ms-2"
+                  type="button"
+                  id="button-addon1"
                 >
-                  <img src={searchIcon} alt='#' width='90%' />
+                  <img src={searchIcon} alt="#" width="90%" />
                 </button>
               </div>
 
               <input
-                type='text'
-                className='form-control'
-                name='searchedNote'
+                type="text"
+                className="form-control"
+                name="searchedNote"
                 placeholder={'SEARCH USERS'}
-                aria-describedby='button-addon1'
+                aria-describedby="button-addon1"
                 onChange={handleSearch}
               />
             </div>
           </div>
         </div>
-        <div className='row all-tickets gy-2 m-0 my-3'>
+        <div className="row all-tickets gy-2 m-0 my-3">
           {selectedTicket?.type && (
             <TicketChat
               ticket={selectedTicket}
@@ -300,24 +333,24 @@ function InboxTickets() {
 
       {isMenuOpened && showPagination && (
         <ReactPaginate
-          nextLabel='>'
-          previousLabel='<'
+          nextLabel=">"
+          previousLabel="<"
           onPageChange={handlePageClick}
           forcePage={currentPage}
           pageRangeDisplayed={3}
           marginPagesDisplayed={2}
           pageCount={pageCount}
-          pageClassName='page-item'
-          pageLinkClassName='page-link px-3'
-          previousClassName='page-item me-2'
-          previousLinkClassName='page-link'
-          nextClassName='page-item ms-2'
-          nextLinkClassName='page-link'
-          breakLabel='...'
-          breakClassName='page-item'
-          breakLinkClassName='page-link px-3'
-          containerClassName='pagination custom-pagination mb-3 justify-content-end'
-          activeClassName='active'
+          pageClassName="page-item"
+          pageLinkClassName="page-link px-3"
+          previousClassName="page-item me-2"
+          previousLinkClassName="page-link"
+          nextClassName="page-item ms-2"
+          nextLinkClassName="page-link"
+          breakLabel="..."
+          breakClassName="page-item"
+          breakLinkClassName="page-link px-3"
+          containerClassName="pagination custom-pagination mb-3 justify-content-end"
+          activeClassName="active"
           renderOnZeroPageCount={null}
         />
       )}

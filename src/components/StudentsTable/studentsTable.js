@@ -569,9 +569,19 @@ export default function StudentsTable(props) {
     setCurrentEditingStudent()
     setTooglingActivationStudent()
 
+    console.log('currentEditingStudent', currentEditingStudent)
+
     setBulkEditingStudents(selectedRows)
     setShowBulkEditModal(true)
   }
+
+  const handleBulkNextYearAction = () => {
+    if (!selectedRows.length) return
+    setCurrentEditingStudent()
+    setTooglingActivationStudent()
+  }
+
+  // handleBulkNextYearAction()
 
   const bulkEditStudents = async (options) => {
     setEditLoading(true)
@@ -1051,7 +1061,7 @@ export default function StudentsTable(props) {
               </div>
               <div className="col-12 col-md-5">
                 <div className="row h-100 me-0 align-items-end justify-content-end">
-                  <div className="col-12 col-sm-3 col-xxl-3 mt-2 pe-0">
+                  {/* <div className="col-12 col-sm-3 col-xxl-3 mt-2 pe-0">
                     <Select
                       options={[
                         { label: 'year', value: 'year' },
@@ -1069,21 +1079,22 @@ export default function StudentsTable(props) {
                       autoFocus={false}
                       isSearchable={false}
                     />
-                  </div>
+                  </div> */}
                   <div className="col-12 col-sm-4 col-xxl-4 mt-2 pe-0">
                     <Select
                       options={[
                         { label: 'edit', value: 'edit' },
-                        { label: 'next year', value: 'next year' },
+                        { label: 'nextYear', value: 'nextYear' },
                         { label: 'deactivate', value: 'deactivate' },
                       ]}
                       value={'Bulk Actions'}
                       placeholder={'Bulk Actions'}
-                      onChange={(newValue) =>
+                      onChange={(newValue) => {
+                        console.log('newValue', newValue)
                         newValue.value === 'edit'
                           ? handleBulkEditAction()
                           : handleBulkDeactiveAction()
-                      }
+                      }}
                       className="mb-0 me-0 custom-dropdown"
                       styles={dropDownStyles}
                       autoFocus={false}
