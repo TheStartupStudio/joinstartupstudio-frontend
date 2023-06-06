@@ -1,7 +1,7 @@
-import React from "react";
-import { Modal } from "react-bootstrap";
-import { toast } from "react-toastify";
-import { Controller, useForm } from "react-hook-form";
+import React from 'react'
+import { Modal } from 'react-bootstrap'
+import { toast } from 'react-toastify'
+import { Controller, useForm } from 'react-hook-form'
 
 const DenyUploadModal = ({ upload, show, onHide, editUpload }) => {
   const {
@@ -10,36 +10,35 @@ const DenyUploadModal = ({ upload, show, onHide, editUpload }) => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: { message: "" },
-  });
+    defaultValues: { message: '' },
+  })
 
   const submitTicket = async (values) => {
     await editUpload(
       {
         ...upload,
-        status: "developing",
+        status: 'developing',
         message: values.message,
-        approved_by_instructor: false,
       },
       () => {
-        onHide();
-        toast.success("Upload has been marked as developing.");
-        reset({ message: "" });
+        onHide()
+        toast.success('Upload has been marked as developing.')
+        reset({ message: '' })
       }
-    );
-  };
+    )
+  }
 
   const maxWords = (value) => {
-    return value?.trim()?.split(/\s+/)?.length <= 100;
-  };
+    return value?.trim()?.split(/\s+/)?.length <= 100
+  }
 
   const hideModal = () => {
-    if (isSubmitting) return;
+    if (isSubmitting) return
     reset({
-      message: "",
-    });
-    onHide();
-  };
+      message: '',
+    })
+    onHide()
+  }
 
   return (
     <Modal
@@ -69,15 +68,15 @@ const DenyUploadModal = ({ upload, show, onHide, editUpload }) => {
                 name="message"
                 control={control}
                 rules={{
-                  required: "Feedback is required",
+                  required: 'Feedback is required',
                   validate: {
                     maxWords: (v) =>
-                      maxWords(v) || "Maximum number of words is 100",
+                      maxWords(v) || 'Maximum number of words is 100',
                   },
                 }}
                 render={({ onChange, value, field }) => (
                   <textarea
-                    placeholder={"Add your feedback here. (Max 100 words)"}
+                    placeholder={'Add your feedback here. (Max 100 words)'}
                     value={field.value}
                     onChange={field.onChange}
                   />
@@ -90,12 +89,12 @@ const DenyUploadModal = ({ upload, show, onHide, editUpload }) => {
             </div>
 
             <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "SENDING" : "SEND"}
+              {isSubmitting ? 'SENDING' : 'SEND'}
             </button>
           </div>
         </form>
       </Modal.Body>
     </Modal>
-  );
-};
-export default DenyUploadModal;
+  )
+}
+export default DenyUploadModal

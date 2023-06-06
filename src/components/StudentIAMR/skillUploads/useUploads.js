@@ -50,6 +50,8 @@ export default function useUploads({ skillId, setSelectedUpload }) {
         const type =
           values.status === 'developing'
             ? notificationTypes.FEEDBACK_RECEIVED.key
+            : values.status === 'approved'
+            ? notificationTypes.APPROVED_SKILL.key
             : notificationTypes.PROFICIENT_SKILL.key
 
         const url =
@@ -61,7 +63,7 @@ export default function useUploads({ skillId, setSelectedUpload }) {
           sender: loggedUser,
           receiver: { id: upload.user_id },
           type: type,
-          url: url
+          url: url,
         })
       })
       .catch((e) => {
@@ -73,6 +75,6 @@ export default function useUploads({ skillId, setSelectedUpload }) {
   return {
     uploads,
     loading,
-    editUpload
+    editUpload,
   }
 }

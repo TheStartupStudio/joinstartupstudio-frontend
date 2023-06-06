@@ -80,9 +80,11 @@
   background-color: #ff3399;
 }
 
-.iamr-status-point.proficient,
-.iamr-status-point.approved {
+.iamr-status-point.proficient {
   background-color: #99cc33;
+}
+.iamr-status-point.approved {
+  background-color: gold;
 }
 
 .upload-status {
@@ -100,4 +102,8 @@
 
 .upload-status.proficient {
   color: #99cc33;
+}
+
+.upload-status.approved {
+  color: gold;
 }
