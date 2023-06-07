@@ -28,6 +28,7 @@ import Lottie from 'react-lottie'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import './index.css'
 import logoImage from '../../assets/images/LearntoStart-Diagram-3D.png'
+import { navigate } from 'react-big-calendar/lib/utils/constants'
 
 function Sidebar(props) {
   const sideBarState = useSelector((state) => state.general.sidebarState)
@@ -40,7 +41,6 @@ function Sidebar(props) {
     $(document).on('click', '.dropdownMenuSidebarHover', function () {
       $('.dropdownMenuSidebarHover').each(function () {
         const id = $(this).attr('href')
-
         if ($(id).hasClass('show') && $(id).find('.active').length < 1) {
           $(this)[0].click()
         }
@@ -108,9 +108,23 @@ function Sidebar(props) {
     )
   }
   const NavListChild = (props) => {
+    const handleClick = (event) => {
+      debugger
+      event.stopPropagation() // Stop the event from propagating to the parent li element
+    }
     return (
       <li>
-        <NavLink to={props.linkToNavigate} activeClassName="sidenav active">
+        <NavLink
+          onClick={(e) => {
+            handleClick(e)
+          }}
+          to={props.linkToNavigate}
+          // onClick={() => {
+          //   dispatch(setAccordionToggled(false))
+          //   props.hideHeaderIcons()
+          // }}
+          activeClassName="sidenav active"
+        >
           <div className="d-flex" style={{ alignItems: 'center' }}>
             <div
               className="ms-4 ps-2 py-1 text-uppercase"
@@ -259,29 +273,116 @@ function Sidebar(props) {
                 </a> */}
               </li>
               {/*<RecursiveNavComponent data={data} />*/}
-
-              <NavListParent
-                listName={'myLearnToStartEdu'}
-                listTitle={'My Learn To Start EDU'}
-                icon={faFolder}
+              <li
+                className="dropdownMenuSidebarHover"
+                data-bs-toggle="collapse"
+                href="#myLtsEDU"
+                role="button"
+                aria-expanded="true"
+                aria-controls="myLtsEDU"
               >
-                <NavListChild
-                  title={'My training'}
-                  linkToNavigate={'/my-training'}
-                />
-                <NavListChild
-                  title={'My curriculum'}
-                  linkToNavigate={'/my-curriculum'}
-                />
-                <NavListChild
-                  title={'My certification guide'}
-                  linkToNavigate={'/my-certification-guide'}
-                />
-                <NavListChild
-                  title={'My performance data'}
-                  linkToNavigate={'/my-performance-data'}
-                />
-              </NavListParent>
+                <a>
+                  <div
+                    className="d-flex w-100"
+                    style={{ alignItems: 'center' }}
+                  >
+                    <FontAwesomeIcon
+                      className="sidebar-icon me-2"
+                      icon={faFolder}
+                    />
+                    <div className="flex-grow-1 ms-1">
+                      <span className={'text-uppercase'}>
+                        MY Learn to Start EDU
+                      </span>
+                    </div>
+                    <FontAwesomeIcon
+                      icon={faAngleDown}
+                      className="me-2 me-md-0"
+                      style={{
+                        fontSize: '16px',
+                        color: '#333D3D',
+                      }}
+                    />
+                  </div>
+                </a>
+              </li>
+              <div
+                className="collapse"
+                id="myLtsEDU"
+                data-parent="#side-menu-main"
+              >
+                <li>
+                  <NavLink to={'/my-training'} activeClassName="sidenav active">
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                        My training
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/my-curriculum'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                        My curriculum
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/my-certification-guide'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                        My certification guide
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/my-performance-data'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase ">
+                        My performance data
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+              </div>
+              {/*<NavListParent*/}
+              {/*  listName={'myLearnToStartEdu'}*/}
+              {/*  listTitle={'My Learn To Start EDU'}*/}
+              {/*  icon={faFolder}*/}
+              {/*>*/}
+              {/*  <NavListChild*/}
+              {/*    title={'My training'}*/}
+              {/*    linkToNavigate={'/my-training'}*/}
+              {/*    hideHeaderIcons={props.hideHeaderIcons}*/}
+              {/*  />*/}
+              {/*  <NavListChild*/}
+              {/*    title={'My curriculum'}*/}
+              {/*    linkToNavigate={'/my-curriculum'}*/}
+              {/*    hideHeaderIcons={props.hideHeaderIcons}*/}
+              {/*  />*/}
+              {/*  <NavListChild*/}
+              {/*    title={'My certification guide'}*/}
+              {/*    linkToNavigate={'/my-certification-guide'}*/}
+              {/*    hideHeaderIcons={props.hideHeaderIcons}*/}
+              {/*  />*/}
+              {/*  <NavListChild*/}
+              {/*    title={'My performance data'}*/}
+              {/*    linkToNavigate={'/my-performance-data'}*/}
+              {/*    hideHeaderIcons={props.hideHeaderIcons}*/}
+              {/*  />*/}
+              {/*</NavListParent>*/}
 
               <li>
                 <NavLink
@@ -425,10 +526,10 @@ function Sidebar(props) {
               >
                 <li>
                   <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
+                    // onClick={() => {
+                    //   dispatch(setAccordionToggled(false))
+                    //   props.hideHeaderIcons()
+                    // }}
                     to="/hs1-journal"
                     activeClassName="sidenav active"
                   >

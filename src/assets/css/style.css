@@ -4151,7 +4151,7 @@ ul.sidebar-menu-item .collapse a {
   color: #333d3d;
   opacity: 1;
 }
-.accordion--dark .accordion_button:active 
+.accordion--dark .accordion_button:active
 /* .accordion--dark .accordion_button:focus  */ {
   outline: 0 !important;
 }
@@ -4256,4 +4256,68 @@ ul.sidebar-menu-item .collapse a {
 .no-border-modal .modal-content {
   border: 0px;
   border-radius: 0px !important;
+}
+
+/*/////////////////////// NEW JOURNALS VIEW //////////////////////////*/
+
+.accordion {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  /*background-color: #f5f5f5;*/
+  background: #3C3C3C 0% 0% no-repeat padding-box;
+
+}
+
+.accordion-header-title {
+  font: normal normal 600 14px/22px Montserrat;
+  letter-spacing: 0;
+  color: #FCFCFC;
+  text-transform: uppercase;
+}
+
+/*.accordion-header:hover {*/
+/*    background-color: #eaeaea;*/
+/*}*/
+
+.accordion-icon {
+  margin-left: auto;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.accordion-icon.expanded {
+  transform: rotate(180deg);
+}
+.accordion-icon .arrow {
+  /*background: #3C3C3C 0% 0% no-repeat padding-box;*/
+  color: #fff !important;
+  font: normal normal 500 18px/22px Montserrat;
+}
+
+.accordion-content {
+  padding: 10px;
+  background-color: #ffffff;
+  font-size: 13px;
+  text-align: left;
+  letter-spacing: 0.52px;
+  color: #333D3D;
+}
+
+.accordion-content-image {
+  width: 100%;
+  height: 100px;
+  object-fit: contain
+}
+
+.accordion-content-text{
+  font: normal normal normal 13px/17px Montserrat;
+  letter-spacing: 0.52px;
+  color: #333D3D;
 }

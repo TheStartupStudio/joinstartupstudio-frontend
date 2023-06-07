@@ -16,6 +16,7 @@ import EditProject from './pages/StartupProfile/pages/edit'
 import StudentJournals from './pages/studentJournals'
 import IamrContents from './pages/Iamr/IamrContentsAccordion'
 import ImrContent from './pages/Iamr/ImrContent'
+import TestJournal from './pages/LtsJournal/TestJournal'
 
 const Login = React.lazy(() => import('./pages/Auth/Login'))
 const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
@@ -100,9 +101,13 @@ const PasswordChangeRequired = React.lazy(() =>
 const JournalsManagement = React.lazy(() =>
   import('./pages/JournalsManagement')
 )
+const JournalsManagement2 = React.lazy(() =>
+  import('./pages/JournalsManagement/JournalsManagement2')
+)
 
 const IAMRinbox = React.lazy(() => import('./pages/IAMRinbox'))
 const StudentIAMR = React.lazy(() => import('../src/pages/StudentIAMR'))
+const TestPage = React.lazy(() => import('../src/pages/LtsJournal/TestPage'))
 
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
@@ -212,6 +217,16 @@ function Router(props) {
               /> */}
               {/* Students journals */}
               <Route
+                path="/new-hs1-journal/"
+                component={(props) => (
+                  <TestJournal {...props} category="new-hs1" />
+                )}
+              />
+              <Route
+                path="/new-hs1-journal/:journalId"
+                component={<TestPage />}
+              />
+              <Route
                 path="/hs1-journal/"
                 component={(props) => <LtsJournal {...props} category="hs1" />}
               />
@@ -268,6 +283,11 @@ function Router(props) {
                 exact
                 path="/edit-journals"
                 component={JournalsManagement}
+              />
+              <Route
+                exact
+                path="/edit-journals2"
+                component={JournalsManagement2}
               />
               <Route
                 exact
