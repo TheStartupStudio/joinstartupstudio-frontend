@@ -142,3 +142,28 @@ textarea {
 .portfolio-user-info {
   flex: 1;
 }
+
+.personal-bio-container {
+  display: flex;
+}
+
+.personal-bio-image-container {
+  width: 25%;
+}
+
+.personal-bio-info-container {
+  width: 75%;
+}
+
+@media (max-width: 850px) {
+  .personal-bio-container {
+    flex-direction: column;
+  }
+  .personal-bio-image-container {
+width: 100%;
+  }
+
+  .personal-bio-info-container {
+width: 100%;
+  }
+}

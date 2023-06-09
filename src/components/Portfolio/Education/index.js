@@ -7,12 +7,15 @@ import { EducationModal } from './educationModal'
 import { EducationDetails } from './educationDetails'
 import '../Experience/style.css'
 import { toast } from 'react-toastify'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import EmptyEducationSection from '../../../pages/PortfolioNew/EmptyEducationSection'
 
 export const Education = (props) => {
   const [showEducationModal, setShowEducationModal] = useState(false)
   const [educations, setEducations] = useState([])
   const [currentEducation, setCurrentEducation] = useState([])
   const [isPublished, setIsPublished] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     getUserEducations()
@@ -32,18 +35,20 @@ export const Education = (props) => {
 
     await axiosInstance
       .put(`/users`, {
-        show_education: !oldPublishValue
+        show_education: !oldPublishValue,
       })
       .then()
       .catch((e) => {
         setIsPublished(!oldPublishValue)
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
       })
   }
 
   const getUserEducations = async () => {
+    setIsLoading(true)
     await axiosInstance.get(`/userBackground/by-type/education`).then((res) => {
       setEducations(res.data)
+      setIsLoading(false)
     })
   }
 
@@ -64,90 +69,65 @@ export const Education = (props) => {
     setEducations([...educations, education])
   }
 
-  return (
-    <>
-      <div className='experiences-container mx-0 mt-4'>
-        <div className='d-flex m-3 experience-header'>
-          <h4 className='title p-0 my-auto float-start'>EDUCATION</h4>
-          <span className='float-end my-auto pe-1 pe-md-0'>
-            <FontAwesomeIcon
-              icon={faPlus}
-              className=''
-              style={{ height: '25px', width: '25px', cursor: 'pointer' }}
-              onClick={() => setShowEducationModal(true)}
-            />
-          </span>
-          <div className='break-experience'></div>
-
-          <div className='d-flex show_in_portfolio'>
-            <p className='py-3 py-md-0 my-auto px-md-3 p-0 pe-2'>
-              Show in My Portfolio
-            </p>
-
-            <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>
-              <input
-                type='checkbox'
-                checked={isPublished}
-                onChange={() => updateShowPreference()}
-              />
-              <i className='my-auto'></i>
-            </label>
-          </div>
-        </div>
-        {educations.length !== 0 ? (
-          <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 row'>
-            {educations.map((education, index, { length }) => {
+  return !isLoading ? (
+    educations.length ? (
+      <PortfolioSection
+        title={'EDUCATION'}
+        isAdd={true}
+        showInMyPortfolio={true}
+        handleShowInPortfolio={updateShowPreference}
+        isShownInPortfolio={isPublished}
+        onAdd={() => setShowEducationModal(true)}
+      >
+        <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
+          {educations.length > 0 &&
+            educations.map((education, index, { length }) => {
               return (
-                <EducationDetails
-                  education={education}
-                  key={education.id}
-                  index={index}
-                  length={length}
-                  setCurrentEducation={(education) =>
-                    setCurrentEducation(education)
-                  }
-                  editing={true}
-                />
+                <div
+                  className={'mt-4'}
+                  style={{
+                    border: '1px solid #E5E5E5',
+                    borderRadius: 6,
+                    background: '#F8F8F8 0% 0% no-repeat padding-box',
+                    minHeight: 230,
+                    height: 230,
+                  }}
+                >
+                  <EducationDetails
+                    education={education}
+                    key={education.id}
+                    index={index}
+                    length={length}
+                    setCurrentEducation={(education) =>
+                      setCurrentEducation(education)
+                    }
+                    editing={true}
+                  />
+                </div>
               )
             })}
-          </div>
-        ) : (
-          <>
-            <p className='no-experience-added'>
-              You haven’t added any educational degrees… yet! Click the box
-              below to add one.
-            </p>
-            <div className='m-3 experiences-container d-flex justify-content-center'>
-              <FontAwesomeIcon
-                icon={faPlus}
-                className='my-5'
-                style={{
-                  height: '56px',
-                  width: '56px',
-                  cursor: 'pointer',
-                  color: '#BBBDBF'
-                }}
-                onClick={() => setShowEducationModal(true)}
-              />
-            </div>
-          </>
-        )}
-      </div>
-      <EducationModal
-        show={showEducationModal}
-        onHide={() => {
-          setCurrentEducation([])
-          setShowEducationModal(false)
-        }}
-        updateEducation={(edu) => updateEducation(edu)}
-        addEducation={(edu) => addEducation(edu)}
-        deleteBackground={(id) => deleteBackground(id)}
-        currentEducation={currentEducation}
-      />
-      <link
-        href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
-        rel='stylesheet'
-      />
-    </>
+        </div>
+
+        <EducationModal
+          show={showEducationModal}
+          onHide={() => {
+            setCurrentEducation([])
+            setShowEducationModal(false)
+          }}
+          updateEducation={(edu) => updateEducation(edu)}
+          addEducation={(edu) => addEducation(edu)}
+          deleteBackground={(id) => deleteBackground(id)}
+          currentEducation={currentEducation}
+        />
+        <link
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet"
+        />
+      </PortfolioSection>
+    ) : (
+      <EmptyEducationSection addEducation={addEducation} />
+    )
+  ) : (
+    <></>
   )
 }

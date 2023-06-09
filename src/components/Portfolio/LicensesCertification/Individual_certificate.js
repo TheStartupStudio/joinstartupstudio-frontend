@@ -35,7 +35,10 @@ export default function Individual_certificate(props) {
   // }
   return (
     <>
-      <div className='col-md-3 col-12 pb-2 col-lg-2 col-xl-2 col-xxl-2'>
+      <div
+        // className='col-md-3 col-12 pb-2 col-lg-2 col-xl-2 col-xxl-2'
+        style={{ width: '85%' }}
+      >
         <div
           style={{ minHeight: '224px', overflow: 'hidden' }}
           className={`col-md-12 col-sm-5 col-7 mx-auto rounded text-center ${
@@ -45,7 +48,7 @@ export default function Individual_certificate(props) {
           } `}
         >
           <p
-            className='w-100 float-end me-2 mt-2 text-end'
+            className="w-100 float-end me-2 mt-2 text-end"
             style={{ fontSize: '16px', color: '#BBBDBF', cursor: 'pointer' }}
           >
             <span
@@ -60,13 +63,18 @@ export default function Individual_certificate(props) {
           {props?.data.image ? (
             <img
               src={props.data?.image ? props.data.image : avator}
-              className='img-thumbnail px-md-2 py-md-0 image_of_remove'
-              style={{ borderRadius: '0px', border: '0px' }}
+              className="img-thumbnail px-md-2 py-md-0 image_of_remove"
+              style={{
+                borderRadius: '0px',
+                border: '0px',
+                width: 100,
+                height: 100,
+              }}
             />
           ) : (
             <>
               <div
-                className='d-flex justify-content-center align-items-center img-thumbnail px-md-2 py-md-0 image_of_remove'
+                className="d-flex justify-content-center align-items-center img-thumbnail px-md-2 py-md-0 image_of_remove"
                 style={{ width: '100%' }}
               >
                 <FontAwesomeIcon
@@ -74,7 +82,7 @@ export default function Individual_certificate(props) {
                   style={{
                     width: '52px',
                     height: '72px',
-                    color: '#BBBDBF'
+                    color: '#BBBDBF',
                   }}
                 />
               </div>
@@ -83,7 +91,7 @@ export default function Individual_certificate(props) {
 
           <p
             style={{ wordBreak: 'break-all' }}
-            className='individual_certificate_text px-md-4 pt-md-2'
+            className="individual_certificate_text px-md-4 pt-md-2"
           >
             {props.data?.name}
           </p>

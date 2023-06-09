@@ -13,8 +13,6 @@ const ContactUsModal = (props) => {
   const [message, setMessage] = useState('')
   const [subject, setSubject] = useState('')
 
-  console.log(user)
-
   const handleContactForm = (event) => {
     const { name, value } = event.target
     if (name === 'message') {
@@ -38,7 +36,6 @@ const ContactUsModal = (props) => {
         email: user.email,
         subject: subject,
       }
-      console.log(params)
       axiosInstance
         .post(process.env.REACT_APP_SERVER_BASE_URL + 'users/contact', params)
         .then(() => {

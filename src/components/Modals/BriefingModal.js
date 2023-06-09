@@ -15,8 +15,6 @@ const BriefingModal = (props) => {
 
   const briefing = briefings[0]
 
-  console.log(briefing)
-
   useEffect(() => {
     // dispatch(getPeriodsStart())
   }, [])
