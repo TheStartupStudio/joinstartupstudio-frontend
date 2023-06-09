@@ -10,7 +10,7 @@ import {
   closeTaskModal,
   getEventsStart,
   getPeriodsStart,
-  openTaskModal,
+  openTaskModal
 } from '../../redux/dashboard/Actions'
 import LevelWrapper from '../../components/LevelWrapper'
 
@@ -27,7 +27,7 @@ function Dashboard() {
   const events = useSelector((state) => state.dashboard.events)
 
   const user = {
-    level: 'HS',
+    level: 'HS'
   }
 
   const [newMessage, setNewMessage] = useState([])
@@ -78,7 +78,7 @@ function Dashboard() {
               />
             </LevelWrapper>
 
-            <div className="my-4">
+            {/* <div className="my-4">
               <div className="row">
                 <div className="col-md-12 col-lg-8">
                   <h3
@@ -90,7 +90,7 @@ function Dashboard() {
                 </div>
                 <ActiveStudents />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="col-12 col-xl-3 px-0">
@@ -101,7 +101,7 @@ function Dashboard() {
               style={{
                 backgroundColor: '#51c7df',
                 color: '#fff',
-                fontSize: 14,
+                fontSize: 14
               }}
               onClick={openTaskEventModal}
               className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"

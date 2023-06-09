@@ -53,21 +53,21 @@ function MyStartupProfile() {
     <>
       <Container fluid>
         <Row>
-          <div className='col-12 flex-grow-3 col-xl-9'>
+          <div className="col-12 flex-grow-3 col-xl-9">
             <div
-              className='account-page-padding page-border'
+              className="account-page-padding page-border"
               style={{ borderRight: 'none !important' }}
             >
-              <div className='d-md-flex'>
-                <div className='flex-grow-1'>
-                  <p className='StartupPortfolio_title mb-0'>MY PROJECTS</p>
-                  <h1 className='StartupPortfolio_description'>
+              <div className="d-md-flex">
+                <div className="flex-grow-1">
+                  <p className="StartupPortfolio_title mb-0">MY PROJECTS</p>
+                  <h1 className="StartupPortfolio_description">
                     Sharing my solutions with the global community.
                   </h1>
                 </div>
-                <div className='flex-shrink-0'>
+                <div className="flex-shrink-0">
                   <button
-                    className='lts-button'
+                    className="lts-button"
                     onClick={() => {
                       setCreateStartupProfile(true)
                     }}
@@ -76,10 +76,10 @@ function MyStartupProfile() {
                   </button>
                 </div>
               </div>
-              <div className='mt-5'>
+              <div className="mt-5">
                 <NewestProjectsByTheCommunity width={width} />
               </div>
-              <div className='mt-5'>
+              <div className="mt-5">
                 <MyProjects
                   width={width}
                   onClick={() => setCreateStartupProfile(true)}
@@ -90,10 +90,10 @@ function MyStartupProfile() {
               </div>
             </div>
           </div>
-          <div className='col-12 col-xl-3 px-2'>
-            <ConnectionRequestsBox from='MyProject' type={'no-margin'} />
+          <div className="col-12 col-xl-3 px-2">
+            <ConnectionRequestsBox from="MyProject" type={'no-margin'} />
             <ShowMessenger />
-            <div
+            {/* <div
               className={`community-connect ${
                 !IsUserLevelAuthorized() && 'notAllowed'
               } my-2`}
@@ -114,7 +114,7 @@ function MyStartupProfile() {
               <Link to='/my-connections'>
                 <p className='my-auto ms-2'>Connect with my community</p>
               </Link>
-            </div>
+            </div> */}
           </div>
         </Row>
         <CreateNewStartupProfile

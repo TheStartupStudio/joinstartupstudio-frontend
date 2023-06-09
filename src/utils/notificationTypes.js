@@ -28,6 +28,10 @@ export default {
     key: 'PROFICIENT_SKILL',
     value: ' marked your skill as proficient'
   },
+  DENIED_SKILL: {
+    key: 'DENIED_SKILL',
+    value: ' has denied your skill'
+  },
   APPROVED_SKILL: {
     key: 'APPROVED_SKILL',
     value: ' marked your skill as approved'
@@ -39,6 +43,10 @@ export default {
   REAPPROVAL_REQUEST: {
     key: 'REAPPROVAL_REQUEST',
     value: ' resubmited their uploads for approval'
+  },
+  CERTIFIED: {
+    key: 'CERTIFIED',
+    value: ' has certified you'
   },
   CERTIFICATION_REQUEST: {
     key: 'CERTIFICATION_REQUEST',

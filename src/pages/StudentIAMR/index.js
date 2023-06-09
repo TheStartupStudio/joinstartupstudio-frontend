@@ -1,7 +1,7 @@
 import IAMR from '../../components/StudentIAMR'
 import {
   IamrProvider,
-  useIamrContext,
+  useIamrContext
 } from '../../components/StudentIAMR/iamrContext/context'
 import './index.css'
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
@@ -14,7 +14,7 @@ import {
   closeTaskModal,
   getEventsStart,
   getPeriodsStart,
-  openTaskModal,
+  openTaskModal
 } from '../../redux/dashboard/Actions'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
 import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
@@ -36,7 +36,7 @@ function StudentIamrContainer() {
     setSkills,
     setCertificationOneStatus,
     setCertificationTwoStatus,
-    setLoading,
+    setLoading
   } = useIamrContext()
   const { studentId } = useParams()
   const [error, setError] = useState(false)
@@ -56,7 +56,7 @@ function StudentIamrContainer() {
           skills,
           certificationOneStatus,
           certificationTwoStatus,
-          student,
+          student
         } = data
         setSkills(skills)
         setCertificationOneStatus(certificationOneStatus)
@@ -115,7 +115,7 @@ function StudentIamrContainer() {
                 backgroundColor: '#51c7df',
                 color: '#fff',
                 fontWeight: 'bold',
-                fontSize: 14,
+                fontSize: 14
               }}
               onClick={openTaskEventModal}
               className="px-4 py-2 border-0 rounded color transform text-uppercase font-weight-bold w-100 my-1"
@@ -130,7 +130,7 @@ function StudentIamrContainer() {
               onEdit={null}
               startDate={null}
             />
-            <CertificationRequestsWidget />
+            {/* <CertificationRequestsWidget /> */}
           </div>
         </div>
       </div>

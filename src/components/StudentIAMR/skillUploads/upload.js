@@ -38,7 +38,7 @@ const Upload = ({ upload, skill, editUpload }) => {
     await axiosInstance.patch(
       `/iamr/certifications/status/approval-request/${upload.user_id}/${skill.type}`,
       {
-        status,
+        status
       }
     )
   }
@@ -133,9 +133,9 @@ const Upload = ({ upload, skill, editUpload }) => {
                   className="lts-button float-end mt-2 me-sm-3"
                   style={{ background: '#99cc33' }}
                   onClick={() => setShowConfirmUploadModal(true)}
-                  disabled={upload.status === 'approved'}
+                  // disabled={upload.status === 'approved'}
                 >
-                  APPROVE
+                  {upload.status === 'approved' ? 'APPROVED' : 'APPROVE'}
                 </button>
               </div>
               <div className="col-12 col-sm-6 m-0 p-0">

@@ -50,7 +50,7 @@ const PreviewPortfolio = () => {
         is_published: !toggle
       })
       .then(() => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         setToggle(!toggle)
       })
       .catch((err) => err)
@@ -100,20 +100,20 @@ const PreviewPortfolio = () => {
   }
 
   return (
-    <div id='main-body'>
-      <div className='container-fluid'>
-        <div className='row'>
-          <div className='col-12 col-xl-9 gx-0 gx-sm-auto page-border'>
-            <div className='page-padding'>
-              <div className='row'>
-                <h3 className='py-0 my-0 gy-0 ps-0 ms-0'>
-                  <span className='my_portfolio_bar d-sm-inline py-0 my-0 gy-0'>
+    <div id="main-body">
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-12 col-xl-9 gx-0 gx-sm-auto page-border">
+            <div className="page-padding">
+              <div className="row">
+                <h3 className="py-0 my-0 gy-0 ps-0 ms-0">
+                  <span className="my_portfolio_bar d-sm-inline py-0 my-0 gy-0">
                     MY PORTFOLIO |
                   </span>
-                  <span className='text-uppercase title_preview_portfolio d-sm-inline'>
+                  <span className="text-uppercase title_preview_portfolio d-sm-inline">
                     <Link to={'/edit-portfolio'}> Edit</Link>
                   </span>
-                  <span className='py-0 my-0 my_portfolio_edit d-block'>
+                  <span className="py-0 my-0 my_portfolio_edit d-block">
                     Share your empowerment, wellness, and performance with the
                     global community
                   </span>
@@ -122,13 +122,13 @@ const PreviewPortfolio = () => {
                 {user && (
                   /*user.show_iamr &&*/ <IAMR
                     user={user}
-                    preview='1'
-                    className='px-0'
+                    preview="1"
+                    className="px-0"
                   />
                 )}
                 <PreviewSkill skills={user?.Skills && user?.Skills} />
 
-                <div className='mt-5 row text-center w-100 pe-0 me-0 gx-0'>
+                <div className="mt-5 row text-center w-100 pe-0 me-0 gx-0">
                   <div
                     className={`col-6 text-center px-0 py-2 gx-0 mx-0 ${
                       selected != 'EXPERIENCE'
@@ -137,7 +137,7 @@ const PreviewPortfolio = () => {
                     }`}
                     onClick={() => setSelected('EXPERIENCE')}
                   >
-                    <span role='button'>EXPERIENCE</span>
+                    <span role="button">EXPERIENCE</span>
                   </div>
                   <div
                     className={`col-6 text-center px-0 py-2 gx-0 mx-0 ${
@@ -147,17 +147,17 @@ const PreviewPortfolio = () => {
                     }`}
                     onClick={() => setSelected('EDUCATION & CERTIFICATIONS')}
                   >
-                    <span role='button' className='d-none d-md-block'>
+                    <span role="button" className="d-none d-md-block">
                       EDUCATION & CERTIFICATIONS
                     </span>
-                    <span role='button' className='d-md-none'>
+                    <span role="button" className="d-md-none">
                       EDUCATION
                     </span>
                   </div>
                   {selected === 'EXPERIENCE' ? (
                     <>
                       {experiences.length !== 0 && (
-                        <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 text-start mt-3 preview-container'>
+                        <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 text-start mt-3 preview-container">
                           <h4>EXPERIENCE</h4>
                           {experiences.map((experience, index, { length }) => {
                             return (
@@ -176,7 +176,7 @@ const PreviewPortfolio = () => {
                         </div>
                       )}
                       {authorizedLevel && recommendations.length !== 0 && (
-                        <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 text-start mt-3 preview-container'>
+                        <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 text-start mt-3 preview-container">
                           <h4>RECOMMENDATIONS</h4>
 
                           {recommendations.map(
@@ -196,7 +196,7 @@ const PreviewPortfolio = () => {
                     </>
                   ) : (
                     <>
-                      <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 mt-3 text-start preview-container'>
+                      <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 mt-3 text-start preview-container">
                         {educations.length !== 0 && (
                           <>
                             <h4>EDUCATION</h4>
@@ -219,8 +219,8 @@ const PreviewPortfolio = () => {
                         )}
                         {accomplishments.length !== 0 && (
                           <>
-                            <h4 className='mt-3'>ACCOMPLISHMENTS</h4>
-                            <div className='experience-details'>
+                            <h4 className="mt-3">ACCOMPLISHMENTS</h4>
+                            <div className="experience-details">
                               {accomplishments.map(
                                 (accomp, index, { length }) => {
                                   return (
@@ -256,17 +256,17 @@ const PreviewPortfolio = () => {
             </div>
           </div>
           <div
-            className='col-12 pb-5 py-lg-0 col-xl-3'
+            className="col-12 pb-5 py-lg-0 col-xl-3"
             style={{
               marginTop: '40px'
             }}
           >
-            <div className='col-12 px-3 px-xl-0 d-flex flex-wrap d-flex justify-content-start'>
-              <h3 className='publishMyPortfolio d-flex '>
+            <div className="col-12 px-3 px-xl-0 d-flex flex-wrap d-flex justify-content-start">
+              <h3 className="publishMyPortfolio d-flex ">
                 Publish my portfolio
-                <label className='px-0 ps-sm-1 ms-3 ps-md-1 form-switch  '>
+                <label className="px-0 ps-sm-1 ms-3 ps-md-1 form-switch  ">
                   <input
-                    type='checkbox'
+                    type="checkbox"
                     checked={toggle}
                     onChange={() => {
                       updateStatus()
@@ -281,19 +281,19 @@ const PreviewPortfolio = () => {
                   height: 0
                 }}
               ></div>
-              <p className=' pe-xxl-5 break d-flex previewSpanPublish'>
+              <p className=" pe-xxl-5 break d-flex previewSpanPublish">
                 Publish your portfolio to share your story with the global
                 community.
               </p>
             </div>
-            <div className='d-flex px-3 px-xl-0 justify-content-start'>
+            <div className="d-flex px-3 px-xl-0 justify-content-start">
               <ShareMyPortfolioWidget user={user && user} />
             </div>
 
-            <div className='px-3 px-xl-0'>
+            <div className="px-3 px-xl-0">
               <ConnectionRequestsBox />
               <ShowMessenger />
-              <div
+              {/* <div
                 className={`community-connect px-3 ${
                   !IsUserLevelAuthorized() && 'notAllowed'
                 } my-2`}
@@ -314,7 +314,7 @@ const PreviewPortfolio = () => {
                 <Link to='/my-connections'>
                   <p className='my-auto ms-2'>Connect with my community</p>
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

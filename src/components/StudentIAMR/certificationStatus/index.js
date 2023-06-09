@@ -5,12 +5,16 @@ import './index.css'
 import LoadingAnimation from '../loadingAnimation'
 import { showErrors } from '../../../utils/helpers'
 import { toast } from 'react-toastify'
+import notificationTypes from '../../../utils/notificationTypes'
+import notificationSocket from '../../../utils/notificationSocket'
+import { useSelector } from 'react-redux'
 
 const CertificationStatus = () => {
   const [loading, setLoading] = useState(true)
   const [certificationStatus, setCertificationStatus] = useState()
   const [approvalRequestStatus, setApprovalRequestStatus] = useState()
   const [hasAccess, setHasAccess] = useState(false)
+  const loggedUser = useSelector((state) => state.user.user.user)
 
   const { studentId, id } = useParams()
 
@@ -77,18 +81,34 @@ const CertificationStatus = () => {
   }
 
   const approvalRequestStutusHandler = async (status) => {
-    await axiosInstance
-      .patch(
+    setLoading(true)
+
+    try {
+      const { data } = await axiosInstance.patch(
         `/iamr/certifications/status/approval-request/${studentId}/${certificationType}`,
         {
-          status: status,
+          status: status
         }
       )
-      .then((data) =>
-        toast.success(
-          'Certification Successful: The student has been certified successfully'
-        )
+
+      const type = notificationTypes.CERTIFIED.key
+      setApprovalRequestStatus(data)
+
+      notificationSocket?.emit('sendNotification', {
+        sender: loggedUser,
+        receiver: { id: studentId },
+        type: type,
+        url: `/iamr/${id}/certification-status`
+      })
+
+      toast.success(
+        'Certification Successful: The student has been certified successfully'
       )
+    } catch (error) {
+      toast.danger(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -152,41 +172,38 @@ const CertificationStatus = () => {
                 )
               ))}
 
-            {hasAccess && unCompletedSkills?.length === 0 ? (
-              approvedStatus === 'pending' &&
-              unCompletedSkills?.length === 0 && (
-                <div>
-                  <div className="completed-certification">
-                    <p>
-                      It is time for student to submit their proof of skills to
-                      The Startup Studio to earn the Market-Ready Certification{' '}
-                      {id}:{' '}
-                      <span style={{ color: '#333d3d', fontWeight: 500 }}>
-                        Competitive Entry Level Employability
-                      </span>
-                    </p>
-                    <button
-                      className="lts-button float-end mt-2 me-sm-3"
-                      style={{ background: '#99cc33' }}
-                      onClick={() => approvalRequestStutusHandler('approved')}
-                      disabled={
-                        approvedStatus === 'approved' ||
-                        !approvedStatus ||
-                        unApprovedSkills?.length > 0
-                      }
-                    >
-                      Certify
-                    </button>
+            {hasAccess && unCompletedSkills?.length === 0
+              ? approvedStatus === 'pending' &&
+                unApprovedSkills?.length === 0 && (
+                  <div>
+                    <div className="completed-certification">
+                      <p>
+                        It is time for student to submit their proof of skills
+                        to The Startup Studio to earn the Market-Ready
+                        Certification {id}:{' '}
+                        <span style={{ color: '#333d3d', fontWeight: 500 }}>
+                          Competitive Entry Level Employability
+                        </span>
+                      </p>
+                      <button
+                        className="lts-button float-end mt-2 me-sm-3"
+                        style={{ background: '#99cc33' }}
+                        onClick={() => approvalRequestStutusHandler('approved')}
+                        disabled={
+                          approvedStatus === 'approved' ||
+                          !approvedStatus ||
+                          unApprovedSkills?.length > 0
+                        }
+                      >
+                        {loading ? 'Certifying...' : 'Certify'}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )
-            ) : approvedStatus && approvedStatus === 'pending' ? (
-              <p> Student has a pending approval request! </p>
-            ) : (
-              approvedStatus === 'approved' && (
-                <p> Student approval request has been approved!</p>
-              )
-            )}
+                )
+              : approvedStatus &&
+                approvedStatus === 'pending' && (
+                  <p> Student has a pending approval request! </p>
+                )}
 
             {approvedStatus === 'approved' && (
               <h6 className="certified">

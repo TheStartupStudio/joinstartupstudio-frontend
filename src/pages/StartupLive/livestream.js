@@ -11,7 +11,7 @@ import {
   closeTaskModal,
   getEventsStart,
   getPeriodsStart,
-  openTaskModal,
+  openTaskModal
 } from '../../redux/dashboard/Actions'
 import { useEffect } from 'react'
 
@@ -89,7 +89,7 @@ function LiveStream() {
               backgroundColor: '#51c7df',
               color: '#fff',
               fontWeight: 'bold',
-              fontSize: 14,
+              fontSize: 14
             }}
             onClick={openTaskEventModal}
             className="px-4 py-2 border-0 rounded color transform text-uppercase font-weight-bold w-100 my-1"
@@ -104,7 +104,7 @@ function LiveStream() {
             onEdit={null}
             startDate={null}
           />
-          <CertificationRequestsWidget />
+          {/* <CertificationRequestsWidget /> */}
         </div>
       </Row>
     </Container>
