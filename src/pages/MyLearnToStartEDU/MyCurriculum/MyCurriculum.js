@@ -21,7 +21,7 @@ const MyCurriculum = () => {
         description={`LTS1 curriculum guides students to create their 
           market-ready portfolio through the process of 
           creating a community-based project or startup.`}
-        to="/new-hs1-journal"
+        to="/new-hs1-journal/task"
         itemNumberImage={<NumberImage image={numberOne} />}
       />
       <MyLtsGridItem
@@ -30,6 +30,7 @@ const MyCurriculum = () => {
         for internship and employment opportunities
         as they iterate on their portfolios.`}
         itemNumberImage={<NumberImage image={numberTwo} />}
+        to="/new-hs2-journal/task"
       />
       <MyLtsGridItem
         title={'LTS 3 & 4'}

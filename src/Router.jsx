@@ -221,7 +221,31 @@ function Router(props) {
                 component={(props) => (
                   <TestJournal {...props} category="new-hs1" />
                 )}
+              />{' '}
+              <Route
+                path="/new-hs2-journal/"
+                component={(props) => (
+                  <TestJournal {...props} category="new-hs2" />
+                )}
+              />{' '}
+              <Route
+                path="/new-hs1-journal/:type/"
+                component={(props) => (
+                  <TestJournal {...props} category="new-hs1" />
+                )}
               />
+              <Route
+                path="/new-hs2-journal/:type/"
+                component={(props) => (
+                  <TestJournal {...props} category="new-hs2" />
+                )}
+              />
+              {/*<Route*/}
+              {/*  path="/new-hs1-journal/week/"*/}
+              {/*  component={(props) => (*/}
+              {/*    <TestJournal {...props} category="new-hs1" />*/}
+              {/*  )}*/}
+              {/*/>*/}
               <Route
                 path="/new-hs1-journal/:journalId"
                 component={<TestPage />}

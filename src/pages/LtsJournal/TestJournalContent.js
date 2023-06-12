@@ -11,9 +11,9 @@ import markdown from './markdown'
 import parse from 'html-react-parser'
 import triangleIcon from '../../assets/images/triangle.png'
 import BreakdownTextAccordion from './BreakdownTextAccordion'
+import './BreakdownTextAccordion.css'
 
 function TestJournalContent(props) {
-  console.log(props)
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
   let [videoWatchData, setVideoWatchData] = useState([])
@@ -31,24 +31,63 @@ function TestJournalContent(props) {
 
   async function saveVideoWatched() {
     await axiosInstance.put(
-      `/ltsJournals/${props.match.params.journalId}/watchedVideo`
+      `/ltsJournals/${props.match.params.id}/watchedVideo`
     )
   }
 
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/${props.match.params.journalId}`
+        `/ltsJournals/${+props.match.params.id}`
       )
       return data
     } catch (err) {}
   }
-
+  console.log(props.match.params.weekId)
+  async function getJournalWeek() {
+    try {
+      let { data } = await axiosInstance.get(
+        `/ltsJournals/week/${+props.match.params.weekId}`
+      )
+      debugger
+      return data
+    } catch (err) {}
+  }
+  // useEffect(() => {
+  //   getJournalView()
+  // }, [])
   async function getUserJournalEntries() {
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/${props.match.params.journalId}/userEntries`
+        `/ltsJournals/${+props.match.params.id}/userEntries`
       )
+
+      let groupedByJournalEntry = {}
+
+      if (data) {
+        for (var userJournalEntry of data) {
+          if (groupedByJournalEntry[userJournalEntry.journalEntryId]) {
+            groupedByJournalEntry[userJournalEntry.journalEntryId].push(
+              userJournalEntry
+            )
+          } else {
+            groupedByJournalEntry[userJournalEntry.journalEntryId] = [
+              userJournalEntry,
+            ]
+          }
+        }
+      }
+
+      return groupedByJournalEntry
+    } catch (err) {}
+  }
+
+  async function getUserJournalWeekEntries() {
+    try {
+      let { data } = await axiosInstance.get(
+        `/ltsJournals/${+props.match.params.weekId}/userEntries`
+      )
+
       let groupedByJournalEntry = {}
 
       if (data) {
@@ -98,11 +137,44 @@ function TestJournalContent(props) {
       })
   }
 
+  function loadWeekData() {
+    setLoading(true)
+    Promise.all([getJournalWeek(), getUserJournalWeekEntries()])
+      .then(([journalData, userJournalEntries]) => {
+        setJournal(journalData)
+        if (
+          journalData.userEntry &&
+          journalData.userEntry.length > 0 &&
+          journalData.userEntry[0].videoWatchData
+        ) {
+          try {
+            setVideoWatchData(
+              JSON.parse(journalData.userEntry[0].videoWatchData)
+            )
+          } catch (err) {}
+        }
+        setUserJournalEntries(userJournalEntries)
+
+        if (props.contentContainer && props.contentContainer.current) {
+          props.contentContainer.current.scrollTop = 0
+        }
+
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }
+
   useEffect(
     function () {
-      loadData()
+      if (props.view === 'task') {
+        loadData()
+      } else if (props.view === 'week') {
+        loadWeekData()
+      }
     },
-    [props.match.params.journalId]
+    [props.match.params.id, props.match.params.weekId, props.view]
   )
 
   function deleteReflection(entry, userJournalEntry) {
@@ -214,10 +286,12 @@ function TestJournalContent(props) {
 
             {journal?.breakdowns?.map((breakdown, index) => {
               return (
-                <BreakdownTextAccordion
-                  title={breakdown?.title}
-                  content={breakdown?.content}
-                />
+                <React.Fragment key={index}>
+                  <BreakdownTextAccordion
+                    title={breakdown?.title}
+                    content={breakdown?.content}
+                  />
+                </React.Fragment>
               )
             })}
           </>
@@ -231,10 +305,10 @@ function TestJournalContent(props) {
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
 
-          <h4 className="page-card__content-title">{journal.title}</h4>
+          {/*<h4 className="page-card__content-title">{journal.title}</h4>*/}
 
           {videos &&
-            videos.constructor == Array &&
+            videos.constructor === Array &&
             videos.map((video, index) => (
               <MediaLightbox
                 video={video}
@@ -246,7 +320,7 @@ function TestJournalContent(props) {
                 // onVideoWatched={saveVideoWatched}
               />
             ))}
-          {videos && videos.constructor == Array && videos.length > 0 && (
+          {videos && videos.constructor === Array && videos.length > 0 && (
             <div
               className={`journal-entries__videos journal-entries__videos--${
                 videos.length > 1 ? 'multiple' : 'single'
@@ -279,12 +353,12 @@ function TestJournalContent(props) {
             </div>
           )}
 
-          {journal?.content?.includes('<div') ||
-          journal?.content?.includes('<p') ? (
-            parse(`${journal.content}`)
-          ) : (
-            <p className="page-card__content-description">{journal.content}</p>
-          )}
+          {/*{journal?.content?.includes('<div') ||*/}
+          {/*journal?.content?.includes('<p') ? (*/}
+          {/*  parse(`${journal.content}`)*/}
+          {/*) : (*/}
+          {/*  <p className="page-card__content-description">{journal.content}</p>*/}
+          {/*)}*/}
         </div>
       </div>
 

@@ -65,6 +65,7 @@ export default function EditJournals2(props) {
   useEffect(() => {
     // getJournals()
     getJournals2()
+    getJournals2Weeks()
   }, [])
 
   console.log(journals)
@@ -74,7 +75,13 @@ export default function EditJournals2(props) {
       setJournalOptions(
         journals.map((journal, index) => {
           return {
-            label: journal.category + ' - ' + journal.title,
+            label:
+              `${journal.type ? journal.type : ''}  ${
+                journal.type ? '-' : ''
+              } ` +
+              journal.category +
+              ' - ' +
+              journal.title,
             value: journal,
             key: index,
           }
@@ -84,9 +91,15 @@ export default function EditJournals2(props) {
   }, [journals])
 
   const handleJournalSelect = (e) => {
-    setSelectedJournal({ value: e.value, label: e.label })
+    console.log(e)
+    setSelectedJournal({
+      value: e.value,
+      label: e.label,
+    })
     setBreakdowns(e.value?.breakdowns)
   }
+
+  console.log(selectedJournal)
 
   const getJournals = async () => {
     await axiosInstance
@@ -99,15 +112,30 @@ export default function EditJournals2(props) {
   }
 
   const getJournals2 = async () => {
-    await axiosInstance
-      .get('/ltsJournals/journals-descriptions2')
-      .then(({ data }) => {
-        // setJournals(data.filter((d) => d.category.includes('new')))
-        setJournals(data.filter((d) => d.category.includes('new')))
-        setFetchingJournals(false)
-        // setBreakdowns(data.breakdowns)
-      })
-      .catch((e) => e)
+    try {
+      const response = await axiosInstance.get(
+        '/ltsJournals/journals-descriptions2'
+      )
+      const newData = response.data.filter((d) => d.category.includes('new'))
+      setJournals((prevJournals) => [...prevJournals, ...newData])
+      setFetchingJournals(false)
+      // setBreakdowns(data.breakdowns)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const getJournals2Weeks = async () => {
+    try {
+      const response = await axiosInstance.get(
+        '/ltsJournals/journals-descriptions2-weeks'
+      )
+      setJournals((prevJournals) => [...prevJournals, ...response.data])
+      setFetchingJournals(false)
+      // setBreakdowns(data.breakdowns)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleSubmit = async () => {
@@ -117,6 +145,7 @@ export default function EditJournals2(props) {
         breakdowns: breakdowns,
         paragraph: selectedJournal.value?.paragraph,
         title: selectedJournal?.value?.title,
+        type: selectedJournal?.value?.type,
       })
       .then((res) => {
         setJournals(
