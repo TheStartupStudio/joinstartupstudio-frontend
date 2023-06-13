@@ -1,12 +1,13 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux'
 
-import userReducer from "./user/Reducer";
-import langReducer from "./lang/Reducer";
-import generalReducer from "./general/Reducer";
-import courseReducer from "./course/Reducer";
-import journalReducer from "./journal/Reducer";
-import podcastReducer from "./podcast/Reducer";
-import dashboardReducer from "./dashboard/Reducer";
+import userReducer from './user/Reducer'
+import langReducer from './lang/Reducer'
+import generalReducer from './general/Reducer'
+import courseReducer from './course/Reducer'
+import journalReducer from './journal/Reducer'
+import podcastReducer from './podcast/Reducer'
+import dashboardReducer from './dashboard/Reducer'
+import headerReducer from './header/Reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -16,5 +17,6 @@ const rootReducer = combineReducers({
   journal: journalReducer,
   podcast: podcastReducer,
   dashboard: dashboardReducer,
-});
-export default rootReducer;
+  header: headerReducer,
+})
+export default rootReducer

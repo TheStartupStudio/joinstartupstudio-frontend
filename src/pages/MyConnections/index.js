@@ -191,7 +191,7 @@ function MyConnections() {
           //   (x) => x.connectionId === currentResponseId
           // )
           // updateUserStatus(allUsers[changedUserIndex].id, 'accept')
-          toast.success(<IntlMessages id='connection.accept_request' />)
+          toast.success(<IntlMessages id="connection.accept_request" />)
         }
 
         if (res.data.status === 0) {
@@ -211,7 +211,7 @@ function MyConnections() {
       })
       .catch((e) => {
         setRespondConnectionModal(false)
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
       })
   }
 
@@ -222,10 +222,10 @@ function MyConnections() {
       })
       .then((res) => {
         updateUserStatus(id, 'requested')
-        toast.success(<IntlMessages id='connection.request.successful' />)
+        toast.success(<IntlMessages id="connection.request.successful" />)
       })
       .catch((e) =>
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
       )
   }
 
@@ -255,7 +255,7 @@ function MyConnections() {
         setShowRemoveConnectionModal(false)
         setRemovingLoader(false)
         setConnectiontoBeRemoved()
-        return toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        return toast.error(<IntlMessages id="alerts.something_went_wrong" />)
       })
   }
 
@@ -279,7 +279,7 @@ function MyConnections() {
       })
       .catch(() => {
         setConnectiontoBeRemoved()
-        return toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        return toast.error(<IntlMessages id="alerts.something_went_wrong" />)
       })
   }
 
@@ -497,40 +497,40 @@ function MyConnections() {
   return (
     <Container fluid>
       <Row>
-        <div className='col-12 col-xl-9 px-0'>
-          <div className='account-page-padding page-border'>
-            <div className='row ps-2'>
-              <div className='col-md-6'>
-                <h3 className='page-title mb-0'>
-                  <IntlMessages id='connection.page_title' />
+        <div className="col-12 col-xl-9 px-0">
+          <div className="account-page-padding page-border">
+            <div className="row ps-2">
+              <div className="col-md-6">
+                <h3 className="page-title mb-0">
+                  <IntlMessages id="connection.page_title" />
                 </h3>
-                <p className='page-description mb-0'>
-                  <IntlMessages id='connection.page_description' />
+                <p className="page-description mb-0">
+                  <IntlMessages id="connection.page_description" />
                 </p>
               </div>
-              <div className='col-md-6 mt-3 mt-md-0'>
-                <div className='connections-search h-100'>
-                  <div className='input-group h-100'>
-                    <div className='input-group-prepend my-auto'>
+              <div className="col-md-6 mt-3 mt-md-0">
+                <div className="connections-search h-100">
+                  <div className="input-group h-100">
+                    <div className="input-group-prepend my-auto">
                       <button
-                        className='btn btn-outline-secondary my-2 ms-2'
-                        type='button'
-                        id='button-addon1'
+                        className="btn btn-outline-secondary my-2 ms-2"
+                        type="button"
+                        id="button-addon1"
                       >
-                        <img src={searchIcon} alt='#' width='90%' />
+                        <img src={searchIcon} alt="#" width="90%" />
                       </button>
                     </div>
                     <FormattedMessage
-                      id='connection.search_community'
-                      defaultMessage='connection.search_community'
+                      id="connection.search_community"
+                      defaultMessage="connection.search_community"
                     >
                       {(placeholder) => (
                         <input
-                          type='text'
-                          className='form-control'
-                          name='searchedNote'
+                          type="text"
+                          className="form-control"
+                          name="searchedNote"
                           placeholder={placeholder}
-                          aria-describedby='button-addon1'
+                          aria-describedby="button-addon1"
                           onChange={(e) => {
                             // setLoading(true)
                             handleSearch(e)
@@ -543,8 +543,8 @@ function MyConnections() {
               </div>
             </div>
             {searchingUsers ? (
-              <div className='row mt-5 ps-2'>
-                <h3 className='page-title text-capitalize'>
+              <div className="row mt-5 ps-2">
+                <h3 className="page-title text-capitalize">
                   My search results
                 </h3>
                 {/* <p className='page-description mb-0'>Select tags to filter:</p>
@@ -556,11 +556,11 @@ function MyConnections() {
                       )
                     })}
                 </div> */}
-                <div className='container-fluid content-center'>
-                  <div className='mb-5 row d-flex ps-2'>
+                <div className="container-fluid content-center">
+                  <div className="mb-5 row d-flex ps-2">
                     {loading && (
-                      <h4 className='text-center mt-4'>
-                        <IntlMessages id='general.loading' />
+                      <h4 className="text-center mt-4">
+                        <IntlMessages id="general.loading" />
                       </h4>
                     )}
                     {filteredUsers.length > 0 && (
@@ -581,8 +581,8 @@ function MyConnections() {
                 </div>
               </div>
             ) : (
-              <div className='row ps-2 mx-auto mt-5'>
-                <div className='row mx-auto ms-0 ps-0'>
+              <div className="row ps-2 mx-auto mt-5">
+                {/* <div className='row mx-auto ms-0 ps-0'>
                   <h3 className='my-connection-titles ms-0 ps-0'>
                     <IntlMessages id='connection.my_requests' />
                   </h3>
@@ -600,7 +600,8 @@ function MyConnections() {
                       width={width}
                     />
                   )}
-                </div>
+                </div> */}
+
                 {/* <div className='row mx-auto mt-5 m-0 p-0'>
                   <div className='ms-0 ps-0'>
                     <div className='d-flex'>
@@ -665,7 +666,7 @@ function MyConnections() {
                   </div>
                 </div> */}
 
-                <div className='mb-md-5 mx-auto row mt-5 m-0 p-0'>
+                <div className="mb-md-5 mx-auto row mt-5 m-0 p-0">
                   <ApprovedConnections
                     connections={connections}
                     newConnectionRequest={newConnectionRequest}
@@ -685,7 +686,7 @@ function MyConnections() {
             )}
           </div>
         </div>
-        <div className='col-12 col-xl-3 px-2'>
+        <div className="col-12 col-xl-3 px-2">
           <ConnectionRequestsBox
             count={connectionsCount}
             requests_count={connectionRequests.length}
@@ -704,7 +705,7 @@ function MyConnections() {
           }}
           respondConnection={respondConnection}
           connectionRequestData={connectionRequestData}
-          data='test'
+          data="test"
         />
       )}
 
@@ -721,7 +722,7 @@ function MyConnections() {
         }}
         hideModal={toggleBlockedUserModal}
         status={currentModalStatus}
-        data='test'
+        data="test"
       />
 
       <WarningModal

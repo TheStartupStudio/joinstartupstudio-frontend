@@ -97,7 +97,7 @@ function Profile(props) {
       .then()
       .catch((e) => {
         setIsContactable(!oldContactableValue)
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
       })
   }
 
@@ -147,14 +147,14 @@ function Profile(props) {
         .then(async (res) => {
           if (res.data.message === 'more') {
             toast.error(
-              <IntlMessages id='my_account.add_my_profile_tags_more' />
+              <IntlMessages id="my_account.add_my_profile_tags_more" />
             )
             await getUserTags()
             setLoading(false)
             closeModal('addUserTagModal')
             closeModal('tags')
           } else {
-            toast.success(<IntlMessages id='alerts.success_change' />)
+            toast.success(<IntlMessages id="alerts.success_change" />)
             await getUserTags()
             setLoading(false)
             closeModal('addUserTagModal')
@@ -163,7 +163,7 @@ function Profile(props) {
         })
         .catch((err) => {
           setLoading(false)
-          toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+          toast.error(<IntlMessages id="alerts.something_went_wrong" />)
           closeModal('addUserTagModal')
           setTagName('')
         })
@@ -183,15 +183,15 @@ function Profile(props) {
       phone_number: changedUser.phone_number
     }
     if (editPage == 'phone' && !validateNumber(changedUser.phone_number)) {
-      toast.error(<IntlMessages id='profile.incorrect_number' />)
+      toast.error(<IntlMessages id="profile.incorrect_number" />)
       setLoading(false)
       return
     }
     if (user.email !== changedUser.email) {
       if (!changedUser.email || changedUser.email === '') {
-        toast.error(<IntlMessages id='alerts.email_required' />)
+        toast.error(<IntlMessages id="alerts.email_required" />)
       } else if (editPage == 'email' && !validateEmail(changedUser.email)) {
-        toast.error(<IntlMessages id='alerts.valid_email' />)
+        toast.error(<IntlMessages id="alerts.valid_email" />)
       } else {
         await axiosInstance
           .put(`/users/change-email`, { new_email: changedUser.email })
@@ -238,12 +238,12 @@ function Profile(props) {
           localStorage.setItem('profileImage', res.data.profile_image)
           dispatch(userUpdateProfileImage(res.data.profile_image))
         }
-        toast.success(<IntlMessages id='alert.my_account.success_change' />)
+        toast.success(<IntlMessages id="alert.my_account.success_change" />)
         closeModal('profileModal')
         dispatch(editSocialMedia(params.social_links))
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
       })
   }
@@ -305,12 +305,12 @@ function Profile(props) {
       .post(`/tags/user`, data)
       .then(async (res) => {
         if (res.data.message === 'more') {
-          toast.error(<IntlMessages id='my_account.add_my_profile_tags_more' />)
+          toast.error(<IntlMessages id="my_account.add_my_profile_tags_more" />)
           await getUserTags()
           setLoading(false)
           closeModal('tags')
         } else {
-          toast.success(<IntlMessages id='alerts.success_change' />)
+          toast.success(<IntlMessages id="alerts.success_change" />)
           await getUserTags()
           setLoading(false)
           closeModal('tags')
@@ -324,7 +324,7 @@ function Profile(props) {
       .delete('/tags/', { data })
       .then(async () => {
         if (showToast == true) {
-          toast.success(<IntlMessages id='alerts.success_change' />)
+          toast.success(<IntlMessages id="alerts.success_change" />)
         }
         await getUserTags()
         setLoading(false)
@@ -334,165 +334,165 @@ function Profile(props) {
   }
 
   return (
-    <div className='container-fluid mx-auto'>
-      <div className='row mx-auto'>
-        <div className='col-12 col-xl-9'>
-          <div className='col-12 col-md-12 px-0'>
-            <div className='account-page-padding page-border'>
-              <div className='row pe-0'>
-                <div className='col-md-8 pe-0'>
-                  <h3 className='page-title mb-0'>
-                    <IntlMessages id='my_account.page_title' />
+    <div className="container-fluid mx-auto">
+      <div className="row mx-auto">
+        <div className="col-12 col-xl-9">
+          <div className="col-12 col-md-12 px-0">
+            <div className="account-page-padding page-border">
+              <div className="row pe-0">
+                <div className="col-md-8 pe-0">
+                  <h3 className="page-title mb-0">
+                    <IntlMessages id="my_account.page_title" />
                   </h3>
-                  <p className='page-description'>
-                    <IntlMessages id='my_account.page_description' />
+                  <p className="page-description">
+                    <IntlMessages id="my_account.page_description" />
                   </p>
                 </div>
                 <div
-                  className='col-md-4 update-password'
+                  className="col-md-4 update-password"
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
                     setShowEditPasswordModal(true)
                   }}
                 >
-                  <h3 className='float-md-end'>
-                    <IntlMessages id='my_account.update_password' />
+                  <h3 className="float-md-end">
+                    <IntlMessages id="my_account.update_password" />
                   </h3>
                 </div>
               </div>
-              <div className='my-account mx-0 mt-4'>
-                <div className='row p-sm-3 p-3'>
-                  <div className='col-12 text-center text-md-auto col-md-4 col-lg-3 gx-5'>
-                    <div className='round-image-wrapper'>
+              <div className="my-account mx-0 mt-4">
+                <div className="row p-sm-3 p-3">
+                  <div className="col-12 text-center text-md-auto col-md-4 col-lg-3 gx-5">
+                    <div className="round-image-wrapper">
                       <Image
                         src={
                           user.profile_image ? user.profile_image : defaultImage
                         }
-                        className='editbio-user-image mx-auto my-account'
+                        className="editbio-user-image mx-auto my-account"
                       />
                     </div>
                   </div>
-                  <div className='col-10 col-md-6 col-lg-6 offset-lg-0'>
-                    <h2 className='mt-4 mb-0'>{user.name}</h2>
-                    <h5 className='mb-0'>
+                  <div className="col-10 col-md-6 col-lg-6 offset-lg-0">
+                    <h2 className="mt-4 mb-0">{user.name}</h2>
+                    <h5 className="mb-0">
                       {user.profession ? user.profession : ''}
                     </h5>
-                    <div className='mt-1'>
-                      {socialMedia?.linkedIn && (
-                        <a
-                          className='m-1'
-                          href={
-                            socialMedia.linkedIn.startsWith('https')
-                              ? socialMedia.linkedIn
-                              : `https://${socialMedia.linkedIn}`
-                          }
-                          target='_blank'
-                        >
-                          <FontAwesomeIcon
-                            icon={faLinkedinIn}
-                            className='social-media-icons'
-                          />
-                        </a>
-                      )}
-                      {socialMedia?.twitter && (
-                        <a
-                          className='m-1'
-                          href={
-                            socialMedia.twitter.startsWith('https')
-                              ? socialMedia.twitter
-                              : `https://${socialMedia.twitter}`
-                          }
-                          target='_blank'
-                        >
-                          <FontAwesomeIcon
-                            icon={faTwitterSquare}
-                            className='social-media-icons'
-                          />
-                        </a>
-                      )}
-                      {socialMedia?.instagram && (
-                        <a
-                          className='m-1'
-                          href={
-                            socialMedia.instagram.startsWith('https')
-                              ? socialMedia.instagram
-                              : `https://${socialMedia.instagram}`
-                          }
-                          target='_blank'
-                        >
-                          <FontAwesomeIcon
-                            icon={faInstagram}
-                            className='social-media-icons'
-                          />
-                        </a>
-                      )}
-                      {socialMedia?.facebook && (
-                        <a
-                          className='m-1'
-                          href={
-                            socialMedia.facebook.startsWith('https')
-                              ? socialMedia.facebook
-                              : `https://${socialMedia.facebook}`
-                          }
-                          target='_blank'
-                        >
-                          <FontAwesomeIcon
-                            icon={faFacebookSquare}
-                            className='social-media-icons'
-                          />
-                        </a>
-                      )}
-                      {socialMedia?.website && (
-                        <a
-                          className='m-1'
-                          href={
-                            socialMedia.website.startsWith('https')
-                              ? socialMedia.website
-                              : `https://${socialMedia.website}`
-                          }
-                          target='_blank'
-                        >
-                          <FontAwesomeIcon
-                            icon={faGlobe}
-                            className='social-media-icons'
-                          />
-                        </a>
-                      )}
-                    </div>
+                    {/*<div className='mt-1'>*/}
+                    {/*  {socialMedia?.linkedIn && (*/}
+                    {/*    <a*/}
+                    {/*      className='m-1'*/}
+                    {/*      href={*/}
+                    {/*        socialMedia.linkedIn.startsWith('https')*/}
+                    {/*          ? socialMedia.linkedIn*/}
+                    {/*          : `https://${socialMedia.linkedIn}`*/}
+                    {/*      }*/}
+                    {/*      target='_blank'*/}
+                    {/*    >*/}
+                    {/*      <FontAwesomeIcon*/}
+                    {/*        icon={faLinkedinIn}*/}
+                    {/*        className='social-media-icons'*/}
+                    {/*      />*/}
+                    {/*    </a>*/}
+                    {/*  )}*/}
+                    {/*  {socialMedia?.twitter && (*/}
+                    {/*    <a*/}
+                    {/*      className='m-1'*/}
+                    {/*      href={*/}
+                    {/*        socialMedia.twitter.startsWith('https')*/}
+                    {/*          ? socialMedia.twitter*/}
+                    {/*          : `https://${socialMedia.twitter}`*/}
+                    {/*      }*/}
+                    {/*      target='_blank'*/}
+                    {/*    >*/}
+                    {/*      <FontAwesomeIcon*/}
+                    {/*        icon={faTwitterSquare}*/}
+                    {/*        className='social-media-icons'*/}
+                    {/*      />*/}
+                    {/*    </a>*/}
+                    {/*  )}*/}
+                    {/*  {socialMedia?.instagram && (*/}
+                    {/*    <a*/}
+                    {/*      className='m-1'*/}
+                    {/*      href={*/}
+                    {/*        socialMedia.instagram.startsWith('https')*/}
+                    {/*          ? socialMedia.instagram*/}
+                    {/*          : `https://${socialMedia.instagram}`*/}
+                    {/*      }*/}
+                    {/*      target='_blank'*/}
+                    {/*    >*/}
+                    {/*      <FontAwesomeIcon*/}
+                    {/*        icon={faInstagram}*/}
+                    {/*        className='social-media-icons'*/}
+                    {/*      />*/}
+                    {/*    </a>*/}
+                    {/*  )}*/}
+                    {/*  {socialMedia?.facebook && (*/}
+                    {/*    <a*/}
+                    {/*      className='m-1'*/}
+                    {/*      href={*/}
+                    {/*        socialMedia.facebook.startsWith('https')*/}
+                    {/*          ? socialMedia.facebook*/}
+                    {/*          : `https://${socialMedia.facebook}`*/}
+                    {/*      }*/}
+                    {/*      target='_blank'*/}
+                    {/*    >*/}
+                    {/*      <FontAwesomeIcon*/}
+                    {/*        icon={faFacebookSquare}*/}
+                    {/*        className='social-media-icons'*/}
+                    {/*      />*/}
+                    {/*    </a>*/}
+                    {/*  )}*/}
+                    {/*  {socialMedia?.website && (*/}
+                    {/*    <a*/}
+                    {/*      className='m-1'*/}
+                    {/*      href={*/}
+                    {/*        socialMedia.website.startsWith('https')*/}
+                    {/*          ? socialMedia.website*/}
+                    {/*          : `https://${socialMedia.website}`*/}
+                    {/*      }*/}
+                    {/*      target='_blank'*/}
+                    {/*    >*/}
+                    {/*      <FontAwesomeIcon*/}
+                    {/*        icon={faGlobe}*/}
+                    {/*        className='social-media-icons'*/}
+                    {/*      />*/}
+                    {/*    </a>*/}
+                    {/*  )}*/}
+                    {/*</div>*/}
                   </div>
-                  <div className='col-2 col-md-2 col-lg-3 mt-md-0'>
+                  <div className="col-2 col-md-2 col-lg-3 mt-md-0">
                     <div
-                      className='float-lg-end float-end mx-2 mx-md-0 mt-4 mt-sm-0 pt-md-4 px-md-4'
+                      className="float-lg-end float-end mx-2 mx-md-0 mt-4 mt-sm-0 pt-md-4 px-md-4"
                       onClick={() => openEditProfileModal('profile')}
                       style={{ cursor: 'pointer' }}
                     >
                       <FontAwesomeIcon
-                        className='edit-pencil'
+                        className="edit-pencil"
                         icon={faPencilAlt}
                       />
                     </div>
                   </div>
                 </div>
-                <div className='m-3'>
-                  {user.bio ? (
-                    <p>{user.bio}</p>
-                  ) : (
-                    <>
-                      <p>You can write your biography here.</p>
-                    </>
-                  )}
-                </div>
+                {/*<div className='m-3'>*/}
+                {/*  {user.bio ? (*/}
+                {/*    <p>{user.bio}</p>*/}
+                {/*  ) : (*/}
+                {/*    <>*/}
+                {/*      <p>You can write your biography here.</p>*/}
+                {/*    </>*/}
+                {/*  )}*/}
+                {/*</div>*/}
               </div>
-              <div className='my-account mx-0 mt-4'>
-                <div className='row'>
-                  <div className='row justify-content-between'>
-                    <h4 className='m-3 col-12 col-lg-5'>
-                      <IntlMessages id='my_account.email_address' />
+              <div className="my-account mx-0 mt-4">
+                <div className="row">
+                  <div className="row justify-content-between">
+                    <h4 className="m-3 col-12 col-lg-5">
+                      <IntlMessages id="my_account.email_address" />
                     </h4>
 
-                    <div className='col-12 col-lg-6 my-auto'>
-                      <div className='d-flex show_in_portfolio justify-content-lg-end ms-3 ms-lg-0'>
-                        <p className='my-auto p-0'>
+                    <div className="col-12 col-lg-6 my-auto">
+                      <div className="d-flex show_in_portfolio justify-content-lg-end ms-3 ms-lg-0">
+                        <p className="my-auto p-0">
                           Allow people to contact me
                         </p>
 
@@ -505,28 +505,28 @@ function Profile(props) {
                               platform Contact box.
                             </Tooltip>
                           )}
-                          placement='top'
+                          placement="top"
                         >
                           <FontAwesomeIcon
                             icon={faQuestionCircle}
-                            className='mx-3 my-auto'
+                            className="mx-3 my-auto"
                             style={{ color: '#707070' }}
                           />
                         </OverlayTrigger>
 
-                        <label className='m-0 p-0 float-end my-auto form-switch d-flex'>
+                        <label className="m-0 p-0 float-end my-auto form-switch d-flex">
                           <input
-                            type='checkbox'
+                            type="checkbox"
                             checked={isContactable}
                             onChange={() => updateIsContactable()}
                           />
-                          <i className='my-auto'></i>
+                          <i className="my-auto"></i>
                         </label>
                       </div>
                     </div>
                   </div>
 
-                  <InputGroup className='mt-3 mb-3'>
+                  <InputGroup className="mt-3 mb-3">
                     <InputGroup.Text
                       style={{
                         border: 0,
@@ -534,13 +534,13 @@ function Profile(props) {
                       }}
                     >
                       <FontAwesomeIcon
-                        className='edit-pencil mx-1'
+                        className="edit-pencil mx-1"
                         icon={faEnvelope}
                       />
                     </InputGroup.Text>
                     <Form.Control
-                      className='my-profile-input'
-                      type='text'
+                      className="my-profile-input"
+                      type="text"
                       value={user.email}
                     />
                     <Button
@@ -548,7 +548,7 @@ function Profile(props) {
                       onClick={() => openEditProfileModal('email')}
                     >
                       <FontAwesomeIcon
-                        className='edit-pencil float-end mx-md-4'
+                        className="edit-pencil float-end mx-md-4"
                         icon={faPencilAlt}
                       />
                     </Button>
@@ -593,65 +593,65 @@ function Profile(props) {
                   </p>
                 </div>
               </div> */}
-              <div className='my-account profile-tags-div mx-0 mt-4'>
-                <h4 className='m-3'>
-                  <IntlMessages id='my_account.profile_tags_title' />
-                </h4>
-                {userTags?.length > 0 && (
-                  <Button
-                    style={{ backgroundColor: 'transparent', border: 0 }}
-                    className='float-end mt-2'
-                  >
-                    <FontAwesomeIcon
-                      className='edit-pencil float-end mx-md-4'
-                      icon={faPencilAlt}
-                      onClick={() => setTagsModal(true)}
-                    />
-                    <FontAwesomeIcon
-                      className='edit-pencil float-end mx-4 mx-4'
-                      icon={faPlus}
-                      onClick={() => setAddUserTagsModal(true)}
-                    />
-                  </Button>
-                )}
-                {userTags?.length ? (
-                  <div className='w-100 ms-3'>
-                    {userTags?.map((name) => (
-                      <ProfileTag tags={name.name} key={name.id} />
-                    ))}
-                  </div>
-                ) : (
-                  <>
-                    <FormattedMessage
-                      id='my_account.profile_description'
-                      default='my_account.profile_description'
-                    >
-                      {(message) => (
-                        <p className='mx-auto mt-4 px-5'>{message}</p>
-                      )}
-                    </FormattedMessage>
-                    <div
-                      className='mx-3 my-account my-4 text-center'
-                      onClick={() => setTagsModal(true)}
-                    >
-                      {' '}
-                      <FontAwesomeIcon
-                        icon={faPlus}
-                        className='social-media-icons my-5'
-                        style={{
-                          width: '56px',
-                          height: '56px',
-                          color: '#BBBDBF'
-                        }}
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
+              {/*<div className="my-account profile-tags-div mx-0 mt-4">*/}
+              {/*  <h4 className="m-3">*/}
+              {/*    <IntlMessages id="my_account.profile_tags_title" />*/}
+              {/*  </h4>*/}
+              {/*  {userTags?.length > 0 && (*/}
+              {/*    <Button*/}
+              {/*      style={{ backgroundColor: 'transparent', border: 0 }}*/}
+              {/*      className="float-end mt-2"*/}
+              {/*    >*/}
+              {/*      <FontAwesomeIcon*/}
+              {/*        className="edit-pencil float-end mx-md-4"*/}
+              {/*        icon={faPencilAlt}*/}
+              {/*        onClick={() => setTagsModal(true)}*/}
+              {/*      />*/}
+              {/*      <FontAwesomeIcon*/}
+              {/*        className="edit-pencil float-end mx-4 mx-4"*/}
+              {/*        icon={faPlus}*/}
+              {/*        onClick={() => setAddUserTagsModal(true)}*/}
+              {/*      />*/}
+              {/*    </Button>*/}
+              {/*  )}*/}
+              {/*  {userTags?.length ? (*/}
+              {/*    <div className='w-100 ms-3'>*/}
+              {/*      {userTags?.map((name) => (*/}
+              {/*        <ProfileTag tags={name.name} key={name.id} />*/}
+              {/*      ))}*/}
+              {/*    </div>*/}
+              {/*  ) : (*/}
+              {/*    <>*/}
+              {/*      <FormattedMessage*/}
+              {/*        id='my_account.profile_description'*/}
+              {/*        default='my_account.profile_description'*/}
+              {/*      >*/}
+              {/*        {(message) => (*/}
+              {/*          <p className='mx-auto mt-4 px-5'>{message}</p>*/}
+              {/*        )}*/}
+              {/*      </FormattedMessage>*/}
+              {/*      <div*/}
+              {/*        className='mx-3 my-account my-4 text-center'*/}
+              {/*        onClick={() => setTagsModal(true)}*/}
+              {/*      >*/}
+              {/*        {' '}*/}
+              {/*        <FontAwesomeIcon*/}
+              {/*          icon={faPlus}*/}
+              {/*          className='social-media-icons my-5'*/}
+              {/*          style={{*/}
+              {/*            width: '56px',*/}
+              {/*            height: '56px',*/}
+              {/*            color: '#BBBDBF'*/}
+              {/*          }}*/}
+              {/*        />*/}
+              {/*      </div>*/}
+              {/*    </>*/}
+              {/*  )}*/}
+              {/*</div>*/}
             </div>
           </div>
         </div>
-        <div className='col-12 col-xl-3 border-md-0'>
+        <div className="col-12 col-xl-3 border-md-0">
           {/* <div>
             <span className='link_to_my_portfolio'>
               <IntlMessages id='my_account.link_to_my_Portfolio_text' />
@@ -675,9 +675,9 @@ function Profile(props) {
             </StudentCountProvider>
           </div>
 
-          <ShowMessenger />
-          <div className={'community-connect my-2'}>
-            <Link to='/my-connections'>
+          {/*<ShowMessenger />*/}
+          {/* <div className={'community-connect my-2'}>
+            <Link to="/my-connections">
               <FontAwesomeIcon
                 icon={faUsers}
                 style={{
@@ -686,14 +686,14 @@ function Profile(props) {
                   borderRadius: '50%',
                   height: '25px',
                   width: '36px',
-                  opacity: '1'
+                  opacity: '1',
                 }}
               />
             </Link>
-            <Link to='/my-connections'>
-              <p className='my-auto ms-2'>Connect with my community</p>
+            <Link to="/my-connections">
+              <p className="my-auto ms-2">Connect with my community</p>
             </Link>
-          </div>
+          </div> */}
           {/* {user.payment_type != 'school' && (
             <p
               className='cancel-my-subscription mt-3 text-center'
@@ -728,26 +728,26 @@ function Profile(props) {
         userData={user}
         loading={loading}
       />
-      {tagsModal && (
-        <ProfileTags
-          show={tagsModal}
-          onHide={() => closeModal('tags')}
-          userTags={userTags}
-          allTags={allTags}
-          saveUserTags={saveUserTags}
-          loading={loading}
-        />
-      )}
+      {/*{tagsModal && (*/}
+      {/*  <ProfileTags*/}
+      {/*    show={tagsModal}*/}
+      {/*    onHide={() => closeModal('tags')}*/}
+      {/*    userTags={userTags}*/}
+      {/*    allTags={allTags}*/}
+      {/*    saveUserTags={saveUserTags}*/}
+      {/*    loading={loading}*/}
+      {/*  />*/}
+      {/*)}*/}
       <ShareMyPortfolio
         show={shareMyPortfolioModal}
         onHide={() => closeModal('shareModal')}
         userLink={userPortfolio.url}
       />
-      <CancelSubscriptionModal
-        show={cancelSubscriptionModal}
-        onHide={() => closeModal('subscriptionModal')}
-        cancelSubscription={cancelSubscription}
-      />
+      {/*<CancelSubscriptionModal*/}
+      {/*  show={cancelSubscriptionModal}*/}
+      {/*  onHide={() => closeModal('subscriptionModal')}*/}
+      {/*  cancelSubscription={cancelSubscription}*/}
+      {/*/>*/}
     </div>
   )
 }

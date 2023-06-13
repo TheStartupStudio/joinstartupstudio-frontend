@@ -5,19 +5,21 @@ import Profile from '../../components/Profile'
 import { changeSidebarState } from '../../redux'
 import { ActiveStudents } from '../../components/ActiveStudents'
 import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
-import TaskEventModal from '../../components/Modals/TaskEventModal'
+
 import {
   closeTaskModal,
   getEventsStart,
   getPeriodsStart,
-  openTaskModal,
+  openTaskModal
 } from '../../redux/dashboard/Actions'
 import LevelWrapper from '../../components/LevelWrapper'
 
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
-import NotificationBox from '../NotificationBox-dashboard/NotificationBox'
+import TaskEventModal from '../../components/Modals/TaskEventModal'
+import NotificationBox from '../NotificationSection-dashboard/NotificationBox'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
 
 function Dashboard() {
   const dispatch = useDispatch()
@@ -25,7 +27,7 @@ function Dashboard() {
   const events = useSelector((state) => state.dashboard.events)
 
   const user = {
-    level: 'HS',
+    level: 'HS'
   }
 
   const [newMessage, setNewMessage] = useState([])
@@ -47,15 +49,6 @@ function Dashboard() {
 
   const closeTaskEventModal = () => {
     dispatch(closeTaskModal('create'))
-  }
-  const [sliceIndex, setSliceIndex] = useState(3)
-
-  const handleShowMore = () => {
-    if (typeof sliceIndex === 'undefined') {
-      setSliceIndex(3)
-    } else {
-      setSliceIndex(undefined)
-    }
   }
 
   return (
@@ -85,19 +78,19 @@ function Dashboard() {
               />
             </LevelWrapper>
 
-            <div className="my-4">
-              <div className="row">
-                <div className="col-md-12 col-lg-8">
-                  <h3
-                    className="page-title"
-                    style={{ textTransform: 'capitalize' }}
-                  >
-                    Recently Active Students
-                  </h3>
-                </div>
-                <ActiveStudents />
-              </div>
-            </div>
+            {/*<div className="my-4">*/}
+            {/*  <div className="row">*/}
+            {/*    <div className="col-md-12 col-lg-8">*/}
+            {/*      <h3*/}
+            {/*        className="page-title"*/}
+            {/*        style={{ textTransform: 'capitalize' }}*/}
+            {/*      >*/}
+            {/*        Recently Active Students*/}
+            {/*      </h3>*/}
+            {/*    </div>*/}
+            {/*    <ActiveStudents />*/}
+            {/*  </div>*/}
+            {/*</div>*/}
           </div>
         </div>
         <div className="col-12 col-xl-3 px-0">
@@ -108,7 +101,7 @@ function Dashboard() {
               style={{
                 backgroundColor: '#51c7df',
                 color: '#fff',
-                fontSize: 14,
+                fontSize: 14
               }}
               onClick={openTaskEventModal}
               className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
@@ -123,43 +116,7 @@ function Dashboard() {
               onEdit={null}
               startDate={null}
             />
-            <div className="notifications-section">
-              <div className={'d-flex gap-2 notifications-section-header'}>
-                <div className="notifications-bell-icon-container">
-                  <FontAwesomeIcon
-                    icon={faBell}
-                    style={{
-                      fontSize: '26px',
-                      color: '#333D3D',
-                    }}
-                    className="nav-bell-icon pt-1"
-                  />
-                  <span className={'notification-content-list-item-dot'}></span>
-                </div>
-
-                <div className={'notifications-section-title'}>
-                  THE STARTUP STUDIO’S UPDATES
-                </div>
-              </div>
-              <div className={'position-relative'}>
-                <div className={'triangle'}></div>
-
-                <div className={'notifications-container'}>
-                  <NotificationBox sliceIndex={sliceIndex} />
-                  <div>
-                    <button
-                      className="view-all-button"
-                      onClick={handleShowMore}
-                    >
-                      {typeof sliceIndex !== 'undefined'
-                        ? 'View All'
-                        : 'View less'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+            <NotificationSection />
             {/*<CertificationRequestsWidget />*/}
             {/* <Messenger
               chatOpened={(id) => setChatId(id)}

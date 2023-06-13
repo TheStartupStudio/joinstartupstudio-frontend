@@ -5,18 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Calendar/FullCalendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Calendar/FullCalendar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Calendar/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Calendar/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/DeleteEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/DeleteEventModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TimePicker/TimePicker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TimePicker/TimePicker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GetInstructorStudents/Briefing.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GetInstructorStudents/Briefing.component.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GetInstructorStudents/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GetInstructorStudents/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/header/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/header/Actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/header/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/header/Reducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +19,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="login-page" />
+        <entry key="$PROJECT_DIR$" value="my-portfolio" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -76,6 +69,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.start" />
         <item itemvalue="npm.start" />
         <item itemvalue="npm.start" />
         <item itemvalue="npm.start" />

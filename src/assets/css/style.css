@@ -884,7 +884,7 @@ input[type='file'] {
   margin-left: 1.5rem !important;
 }
 .my-account {
-  border: 1px solid #bbbdbf;
+  /*border: 1px solid #bbbdbf;*/
   border-radius: 6px;
   opacity: 1;
 }
@@ -1020,6 +1020,7 @@ input[type='file'] {
 .edit-pencil {
   font-size: 20px;
   color: #707070;
+
 }
 .edit-modal h3 {
   font-weight: 600;
@@ -4151,7 +4152,7 @@ ul.sidebar-menu-item .collapse a {
   color: #333d3d;
   opacity: 1;
 }
-.accordion--dark .accordion_button:active 
+.accordion--dark .accordion_button:active
 /* .accordion--dark .accordion_button:focus  */ {
   outline: 0 !important;
 }

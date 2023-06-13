@@ -54,16 +54,20 @@
     padding:0px !important;
 }
 
-.notification-content-list {
+.notification-content-list-container {
     list-style: none;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: space-between;
     padding: 10px 6px;
     margin-bottom: 0px;
-
+}
+.notification-content {
+    display: flex;
+    align-items: center;
 
 }
-.notification-content-list:hover {
+.notification-content-list-container:hover {
     background: #F8F7F7;
     cursor: pointer;
 }
@@ -72,7 +76,7 @@
     /*width: 10%;*/
     display: flex;
     position: relative;
-    top: 3px;
+    /*top: 3px;*/
     left: 6px;
 }
 
@@ -120,4 +124,8 @@
 .notifications-box {
     font: normal normal 600 13px/15px Montserrat;
     padding: 10px;
+}
+
+.notification-button {
+    font-size: 10px;
 }

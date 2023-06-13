@@ -3,6 +3,16 @@ a:hover,
   color: #a7ca42;
 }
 
+.edit-portfolio-container {
+  width: 88%;
+  padding: 30px 10px;
+}
+@media (max-width: 1000px) {
+  .edit-portfolio-container {
+    width: 100%;
+  }
+}
+
 .my_portfolio_title span {
   text-align: left;
   font: normal normal 600 24px Montserrat;
@@ -28,8 +38,9 @@ a:hover,
   letter-spacing: 0px;
   color: #333d3d;
   opacity: 1;
-  display: grid;
-  grid-template-columns: auto 50px;
+  display: flex;
+  /*display: grid;*/
+  /*grid-template-columns: auto 50px;*/
 }
 /* Toggle */
 .form-switch {

@@ -120,7 +120,7 @@ const FullCalendarComponent = (props) => {
                   padding: 0,
                 }}
               >
-                {foundedEvent.type == 'task' ? 'Task' : 'Event'}:{' '}
+                {foundedEvent?.type == 'task' ? 'Task' : 'Event'}:{' '}
                 {foundedEvent?.name}
               </span>
               <div
@@ -290,18 +290,20 @@ const FullCalendarComponent = (props) => {
     }
   }
   const handleMouseEnter = (arg) => {
+    const condition =
+      arg?.jsEvent?.target?.classList?.value?.includes('fc-event')
     const event = props.events.find((event) => event.id == arg.event?.id)
-    console.log(event)
-    tippy(arg.el, {
-      theme: 'custom',
-      arrow: true,
-      placement: 'bottom',
+    if (condition) {
+      tippy(arg.el, {
+        theme: 'custom',
+        arrow: true,
+        placement: 'bottom',
 
-      content: () => {
-        const tooltip = document.createElement('div')
-        tooltip.innerHTML =
-          event.type === 'task'
-            ? `<div style="width: 195px">
+        content: () => {
+          const tooltip = document.createElement('div')
+          tooltip.innerHTML =
+            event.type === 'task'
+              ? `<div style="width: 195px">
                                
                                   <div className={"d-flex g-2 w-100  "} style='margin:0px; padding:0px'>
                                        <div>
@@ -361,7 +363,7 @@ const FullCalendarComponent = (props) => {
                                           
                                  
                             </div>`
-            : `<div style="width: 195px">
+              : `<div style="width: 195px">
                                
                                   <div className={"d-flex g-2 w-100  "} style='margin:0px; padding:0px'>
                                         <div
@@ -419,9 +421,10 @@ const FullCalendarComponent = (props) => {
                                           
                                  
                             </div>`
-        return tooltip
-      },
-    })
+          return tooltip
+        },
+      })
+    }
   }
 
   const taskEventModal = useSelector(

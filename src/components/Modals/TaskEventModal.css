@@ -2,7 +2,7 @@
     background-color: #fbfbfb;
 }
 
-.modal-dialog {
+.task-event-modal .modal-dialog {
     width: 50% !important;
 }
 

@@ -59,7 +59,7 @@ const EditProject = (props) => {
         show_tags: !toggle
       })
       .then(() => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         setToggle(!toggle)
       })
       .catch((err) => err)
@@ -209,24 +209,24 @@ const EditProject = (props) => {
   }
 
   return (
-    <div className='row'>
-      <div className='pt-5 px-4 col-lg-9 page-border'>
-        <div className='px-2 rounded mx-3 mx-md-auto row'>
-          <div className='col-12 col-lg-6 row pb-4'>
-            <p className='edit-project-page-title pb-0 mb-0'>
+    <div className="row">
+      <div className="pt-5 px-4 col-lg-9 page-border">
+        <div className="px-2 rounded mx-3 mx-md-auto row">
+          <div className="col-12 col-lg-6 row pb-4">
+            <p className="edit-project-page-title pb-0 mb-0">
               MY PROJECT |{' '}
-              <Link to={`/PreviewMyStartupProfile/${id}`} className='blue-text'>
+              <Link to={`/PreviewMyStartupProfile/${id}`} className="blue-text">
                 PREVIEW
               </Link>
             </p>
-            <p className='delete-project-description pt-0 mt-0'>
+            <p className="delete-project-description pt-0 mt-0">
               Sharing my solutions with the global community.
             </p>
           </div>
-          <div className='col-12 col-lg-6 px-0 mx-0 gx-0 view-button pb-5 pb-lg-0'>
+          <div className="col-12 col-lg-6 px-0 mx-0 gx-0 view-button pb-5 pb-lg-0">
             <Link to={'/MyStartupProfile'}>
               {' '}
-              <span className='float-end px-4 py-3'>VIEW ALL PROJECTS</span>
+              <span className="float-end px-4 py-3">VIEW ALL PROJECTS</span>
             </Link>
           </div>
         </div>
@@ -235,33 +235,33 @@ const EditProject = (props) => {
             project?.description.length == 0 && 'pb-4'
           }`}
         >
-          <div className='d-flex flex-wrap pb-0 mb-3'>
-            <div className='d-flex my-auto'>
+          <div className="d-flex flex-wrap pb-0 mb-3">
+            <div className="d-flex my-auto">
               <img
-                id='myProjectImage'
+                id="myProjectImage"
                 src={project?.image ? project?.image : defaultImage}
                 style={{ objectFit: 'cover' }}
-                className='me-2 rounded-circle float-start user-image'
+                className="me-2 rounded-circle float-start user-image"
               />
             </div>
-            <div className='portfolio-user-info pt-md-4' style={{ flex: 1 }}>
-              <div className='row'>
-                <div className='col-10'>
-                  <div className='ps-md-2'>
-                    <span className='startup_project_name d-block'>
+            <div className="portfolio-user-info pt-md-4" style={{ flex: 1 }}>
+              <div className="row">
+                <div className="col-10">
+                  <div className="ps-md-2">
+                    <span className="startup_project_name d-block">
                       {project?.company_name}
                     </span>
-                    <span className='startup_project_slogane d-block'>
+                    <span className="startup_project_slogane d-block">
                       {project?.company_slogan}
                     </span>
-                    <span className='social_media'>
+                    <span className="social_media">
                       {(project?.social_links?.linkedin ||
                         project?.social_links?.twitter ||
                         project?.social_links?.instagram ||
                         project?.social_links?.facebook ||
                         project?.social_links?.website) && (
                         <div
-                          className='mt-0 d-flex flex-wrap pt-md-auto'
+                          className="mt-0 d-flex flex-wrap pt-md-auto"
                           style={style.social_links}
                         >
                           {project?.social_links?.linkedin && (
@@ -273,9 +273,9 @@ const EditProject = (props) => {
                                   ? project.social_links.linkedin
                                   : `https://${project.social_links.linkedin}`
                               }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link me-1'
+                              rel="noreferrer"
+                              target="_blank"
+                              className="link me-1"
                             >
                               <FontAwesomeIcon icon={faLinkedinIn} />
                             </a>
@@ -289,9 +289,9 @@ const EditProject = (props) => {
                                   ? project.social_links.twitter
                                   : `https://${project.social_links.twitter}`
                               }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link me-1'
+                              rel="noreferrer"
+                              target="_blank"
+                              className="link me-1"
                             >
                               <FontAwesomeIcon icon={faTwitterSquare} />
                             </a>
@@ -305,9 +305,9 @@ const EditProject = (props) => {
                                   ? project.social_links.facebook
                                   : `https://${project.social_links.facebook}`
                               }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link me-1'
+                              rel="noreferrer"
+                              target="_blank"
+                              className="link me-1"
                             >
                               <FontAwesomeIcon icon={faFacebookSquare} />
                             </a>
@@ -321,9 +321,9 @@ const EditProject = (props) => {
                                   ? project.social_links.instagram
                                   : `https://${project.social_links.instagram}`
                               }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link me-1'
+                              rel="noreferrer"
+                              target="_blank"
+                              className="link me-1"
                             >
                               <FontAwesomeIcon icon={faInstagram} />
                             </a>
@@ -337,9 +337,9 @@ const EditProject = (props) => {
                                   ? project.social_links.website
                                   : `https://${project.social_links.website}`
                               }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link me-1'
+                              rel="noreferrer"
+                              target="_blank"
+                              className="link me-1"
                             >
                               <FontAwesomeIcon icon={faGlobe} />
                             </a>
@@ -349,56 +349,56 @@ const EditProject = (props) => {
                     </span>
                   </div>
                 </div>
-                <div className='col-2'>
+                <div className="col-2">
                   <FontAwesomeIcon
                     icon={faPen}
-                    className='float-end startup_project_pen_edit_icon mt-3 mt-md-1 me-3'
+                    className="float-end startup_project_pen_edit_icon mt-3 mt-md-1 me-3"
                     onClick={() => SetCreateStartupProfile(true)}
                   />
                 </div>
               </div>
             </div>
           </div>
-          <div className='mt-3'>
-            <div className='published_company_description mb-4'>
+          <div className="mt-3">
+            <div className="published_company_description mb-4">
               {project?.description}
             </div>
           </div>
         </div>
-        <div className='row mt-4'>
-          <div className='col-12 col-lg-6'>
-            <div className='col-12 border border-2 rounded px-4 py-3 h-100'>
-              <div className='edit_project_video py-2'>
-                <span className='edit_project_video_title d-block pb-3'>
+        <div className="row mt-4">
+          <div className="col-12 col-lg-6">
+            <div className="col-12 border border-2 rounded px-4 py-3 h-100">
+              <div className="edit_project_video py-2">
+                <span className="edit_project_video_title d-block pb-3">
                   PROMO VIDEO
                   <FontAwesomeIcon
                     icon={faImage}
-                    className='float-end ms-2'
+                    className="float-end ms-2"
                     onClick={() => setopenEditVideoImageModal(true)}
                   />
                   <FontAwesomeIcon
                     icon={faPen}
-                    className='ms-auto float-end'
+                    className="ms-auto float-end"
                     onClick={() => setopenEditVideoModal(true)}
                   />
                 </span>
-                <span className='edit_project_video_info mt-3 d-block text-start text-md-end justify-content-between justify-content-md-end d-flex'>
-                  <label className='px-0 ps-sm-1 ps-md-1 float-md-end my-auto form-switch d-flex order-1'>
+                <span className="edit_project_video_info mt-3 d-block text-start text-md-end justify-content-between justify-content-md-end d-flex">
+                  <label className="px-0 ps-sm-1 ps-md-1 float-md-end my-auto form-switch d-flex order-1">
                     <input
-                      type='checkbox'
-                      name='showVideo'
+                      type="checkbox"
+                      name="showVideo"
                       checked={project?.show_company_video}
                       onChange={(e) => updateShowPreference(e)}
                     />
-                    <i className='my-auto me-0'></i>
+                    <i className="my-auto me-0"></i>
                   </label>
-                  <span className='ms-md-auto align-start float-md-end me-2 order-0'>
+                  <span className="ms-md-auto align-start float-md-end me-2 order-0">
                     Show on Project Page
                   </span>
                 </span>
               </div>
-              <div className='vide mx-auto my-auto mb-4 pt-4 col-12 row'>
-                <div className='col-12 w-100' style={{ position: 'relative' }}>
+              <div className="vide mx-auto my-auto mb-4 pt-4 col-12 row">
+                <div className="col-12 w-100" style={{ position: 'relative' }}>
                   <img
                     src={
                       project?.videoImage == null
@@ -406,7 +406,7 @@ const EditProject = (props) => {
                         : project?.videoImage
                     }
                     alt={project?.company_video}
-                    className='w-100'
+                    className="w-100"
                     height={'250px'}
                     style={{ objectFit: 'cover' }}
                     onClick={
@@ -420,7 +420,7 @@ const EditProject = (props) => {
                           }
                     }
                   />
-                  <div className='video-play-icon'>
+                  <div className="video-play-icon">
                     <FontAwesomeIcon
                       icon={faPlay}
                       onClick={
@@ -441,12 +441,12 @@ const EditProject = (props) => {
                   </div>
                 </div>
               </div>
-              <div className='vide mx-auto my-auto mb-4 px-2 col-12 row'>
+              <div className="vide mx-auto my-auto mb-4 px-2 col-12 row">
                 <div
-                  className='border border-1 vimeo-or-youtube my-auto d-flex'
+                  className="border border-1 vimeo-or-youtube my-auto d-flex"
                   style={{ height: '48px' }}
                 >
-                  <span className='my-auto flex-grow-1'>
+                  <span className="my-auto flex-grow-1">
                     {!project?.company_video ? (
                       <>Vimeo or Youtube link</>
                     ) : (
@@ -455,7 +455,7 @@ const EditProject = (props) => {
                   </span>
                   <FontAwesomeIcon
                     icon={faGlobe}
-                    className='float-end my-auto'
+                    className="float-end my-auto"
                   />
                 </div>
               </div>
@@ -469,13 +469,13 @@ const EditProject = (props) => {
           />
         </div>
       </div>
-      <div className='col-12 col-lg-3 px-4'>
-        <div className='col-12 mt-4 d-flex flex-wrap d-flex justify-content-start'>
-          <h3 className='publish-my-project d-flex '>
+      <div className="col-12 col-lg-3 px-4">
+        <div className="col-12 mt-4 d-flex flex-wrap d-flex justify-content-start">
+          <h3 className="publish-my-project d-flex ">
             Publish My Project
-            <label className='px-0 ps-sm-1 ms-3 ps-md-1 form-switch'>
+            <label className="px-0 ps-sm-1 ms-3 ps-md-1 form-switch">
               <input
-                type='checkbox'
+                type="checkbox"
                 checked={toggle}
                 onChange={() => {
                   updateStatus()
@@ -491,13 +491,13 @@ const EditProject = (props) => {
             }}
           ></div>
 
-          <p className=' pe-xxl-5 break d-flex publish-my-project-community'>
+          <p className=" pe-xxl-5 break d-flex publish-my-project-community">
             Set your startup to live and build a powerful network inside your
             community.
           </p>
         </div>
         <div
-          className='col-12 mt-3 d-flex flex-wrap d-flex justify-content-start mx-auto'
+          className="col-12 mt-3 d-flex flex-wrap d-flex justify-content-start mx-auto"
           onClick={() => {
             setOpenShareModal(true)
           }}
@@ -507,28 +507,28 @@ const EditProject = (props) => {
             style={{ fontSize: '35px' }}
             className={'my-auto'}
           />
-          <div className='d-flex flex-column ps-3'>
-            <p className='d-block py-0 my-0 share-widget-share-this-project '>
+          <div className="d-flex flex-column ps-3">
+            <p className="d-block py-0 my-0 share-widget-share-this-project ">
               Share This Project
             </p>
-            <p className='d-block py-0 my-0 share-widget-Startup-must-be-published-first'>
+            <p className="d-block py-0 my-0 share-widget-Startup-must-be-published-first">
               Startup must be published first.
             </p>
           </div>
         </div>
         {/*  */}
-        <div className='col-12 mt-4'>
+        <div className="col-12 mt-4">
           <span
-            className='px-4 py-2 mt-4 pitch_button d-block'
+            className="px-4 py-2 mt-4 pitch_button d-block"
             onClick={() => setPitchApplyModal(true)}
           >
             PITCH APPLICATIONS OPEN 2023
           </span>
         </div>
         {/*  */}
-        <ConnectionRequestsBox from='MyProject' />
+        <ConnectionRequestsBox from="MyProject" />
         <ShowMessenger />
-        <div
+        {/* <div
           className={`community-connect px-3 ${
             !IsUserLevelAuthorized() && 'notAllowed'
           } my-2`}
@@ -549,7 +549,7 @@ const EditProject = (props) => {
           <Link to='/my-connections'>
             <p className='my-auto ms-2'>Connect with my community</p>
           </Link>
-        </div>
+        </div> */}
       </div>
       <EditImageOfVideoModal
         show={OpenEditVideoImageModal}

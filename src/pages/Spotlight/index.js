@@ -123,18 +123,18 @@ function StartupLive() {
   return (
     <Container fluid>
       <Row>
-        <div className='col-12 col-xl-9 pe-0'>
+        <div className="col-12 col-xl-9 pe-0">
           <div
-            className='account-page-padding page-border spotlight-container'
+            className="account-page-padding page-border spotlight-container"
             style={{ minHeight: '100vh' }}
           >
-            <h3 className='page-title'>SPOTLIGHT®</h3>
-            <p className='page-description'>
+            <h3 className="page-title">SPOTLIGHT®</h3>
+            <p className="page-description">
               Pitch your startup to the Learn to Start community.
             </p>
             <Row>
               <div
-                className='col-12'
+                className="col-12"
                 style={{ visibility: showSpotlight ? 'visible' : 'hidden' }}
               >
                 <div
@@ -144,26 +144,26 @@ function StartupLive() {
                   }}
                 >
                   <iframe
-                    src='https://stream.joinstartuplive.com/view/48dc5f73-924a-4b32-8457-1dcca27734e6/?embedded=True'
-                    scrolling='no'
-                    width='100%'
+                    src="https://stream.joinstartuplive.com/view/48dc5f73-924a-4b32-8457-1dcca27734e6/?embedded=True"
+                    scrolling="no"
+                    width="100%"
                     // height='380px'
                     height={width < 700 ? (width + 75) / 2.15 : 380}
-                    className='spl-offline-image-preview'
+                    className="spl-offline-image-preview"
                     style={{
                       border: '1px solid #BBBDBF'
                     }}
                   ></iframe>
-                  <div className='row pitch-apply'>
-                    <div className='col-12 col-md-7 my-2 d-flex'>
-                      <p className='my-auto'>
+                  <div className="row pitch-apply">
+                    <div className="col-12 col-md-7 my-2 d-flex">
+                      <p className="my-auto">
                         NEXT PITCH IS
                         <Countdown date={firstEventTime} renderer={renderer} />
                       </p>
                     </div>
-                    <div className='col-12 col-md-5 my-2'>
+                    <div className="col-12 col-md-5 my-2">
                       <button
-                        className='d-block float-start float-md-end'
+                        className="d-block float-start float-md-end"
                         onClick={(e) => {
                           setPitchApplyModal(true)
                           e.preventDefault()
@@ -178,24 +178,24 @@ function StartupLive() {
             </Row>
             <Row>
               <div>
-                <div className='guidance-videos-top mt-5 guidance-encouragement-page-titles '>
+                <div className="guidance-videos-top mt-5 guidance-encouragement-page-titles ">
                   <h3>SPOTLIGHT® Archive</h3>
                   {/* <Link className='guidance-link' to={`/startup-live/videos`}>
                     <IntMessages id='general.view_all' />
                   </Link> */}
                 </div>
-                <div className='card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start flex-column flex-sm-row'>
+                <div className="card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start flex-column flex-sm-row">
                   {[0, 0].map((item, index) => (
                     <div
-                      className='card-group mt-4 all-videos-beyond-your-course-videos col-12 col-sm-5 col-md-4 me-4'
+                      className="card-group mt-4 all-videos-beyond-your-course-videos col-12 col-sm-5 col-md-4 me-4"
                       key={index}
                     >
                       <div
-                        className='card mobile-card'
+                        className="card mobile-card"
                         // style={{ paddingRight: '20px' }}
                       >
                         <Link to={'#'}>
-                          <div className='beyond-your-course-video-thumb beyound-all-videos-thumb'>
+                          <div className="beyond-your-course-video-thumb beyound-all-videos-thumb">
                             <div
                               style={{
                                 position: 'absolute',
@@ -207,10 +207,10 @@ function StartupLive() {
                               <img
                                 src={SpotlightImg}
                                 // style={{ height: '200px' }}
-                                width='100%'
+                                width="100%"
                                 // height=''
                               />
-                              <div className='beyond-your-course-video-thumb-icon'>
+                              <div className="beyond-your-course-video-thumb-icon">
                                 {/* <FontAwesomeIcon icon={faPlay} /> */}
                               </div>
                             </div>
@@ -224,13 +224,13 @@ function StartupLive() {
             </Row>
           </div>
         </div>
-        <div className='col-12 col-xl-3 px-3'>
-          <div className='msg-widget-startup-live d-none'>
+        <div className="col-12 col-xl-3 px-3">
+          <div className="msg-widget-startup-live d-none">
             {/* <ShowMessenger /> */}
             {/* <Chat room={'spotlight-room'} /> */}
             {/* <NotesButton /> */}
 
-            <div className={'community-connect my-2'}>
+            {/* <div className={'community-connect my-2'}>
               <Link to='/my-connections'>
                 <FontAwesomeIcon
                   icon={faUsers}
@@ -247,7 +247,7 @@ function StartupLive() {
               <Link to='/my-connections'>
                 <p className='my-auto ms-2'>Connect with my community</p>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </Row>
