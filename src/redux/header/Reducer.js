@@ -56,6 +56,8 @@ const headerReducer = (state = initialState, action) => {
       break
 
     case POST_BRIEFING_SUCCESS:
+      toast.success('Briefing posted successfully.')
+
       return {
         ...state,
         briefings: [...state.briefings, payload.briefing],
@@ -65,6 +67,7 @@ const headerReducer = (state = initialState, action) => {
       break
 
     case POST_BRIEFING_ERROR:
+      toast.success('Briefing post failed.')
       return {
         ...state,
         loading: false,

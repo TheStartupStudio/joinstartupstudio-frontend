@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GetInstructorStudents/Briefing.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GetInstructorStudents/Briefing.component.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GetInstructorStudents/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GetInstructorStudents/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/header/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/header/Actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/header/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/header/Reducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,7 +19,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="briefing-section" />
+        <entry key="$PROJECT_DIR$" value="my-portfolio" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

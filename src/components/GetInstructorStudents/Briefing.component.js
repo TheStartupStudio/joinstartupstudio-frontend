@@ -12,12 +12,8 @@ const BriefingComponent = (props) => {
     discussionQuestion: '',
     discussionPoints: '',
   })
-  // const isEdit = () => {
-  //   return !!props.briefing
-  // }
-  // console.log(isEdit())
+
   useEffect(() => {
-    console.log(props.briefing)
     if (props.briefing) {
       setBriefing({
         ...props.briefing,
