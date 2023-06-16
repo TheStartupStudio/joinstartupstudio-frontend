@@ -49,7 +49,7 @@ function TestJournalContent(props) {
       let { data } = await axiosInstance.get(
         `/ltsJournals/week/${+props.match.params.weekId}`
       )
-      debugger
+      // debugger
       return data
     } catch (err) {}
   }
@@ -256,20 +256,70 @@ function TestJournalContent(props) {
             >
               {journal?.title}
             </div>
-            <div className={'d-flex justify-content-between w-100'}>
+            <div
+              className={'d-flex justify-content-between w-100'}
+              style={{ marginTop: 40 }}
+            >
               <div
                 style={{
                   width: '60%',
-                  backgroundColor: '#fff',
+                  // backgroundColor: '#fff',
+                  display: 'flex',
+                  alignItems: 'end',
+                  height: '100%',
                 }}
               >
-                Video
+                {videos &&
+                  videos.constructor == Array &&
+                  videos.map((video, index) => (
+                    <MediaLightbox
+                      video={video}
+                      key={index}
+                      show={showVideo === video.id}
+                      onClose={() => setShowVideo(false)}
+                      // watchData={videoWatchData}
+                      // onVideoData={saveWatchData}
+                      // onVideoWatched={saveVideoWatched}
+                    />
+                  ))}
+                {videos && videos.constructor == Array && videos.length > 0 && (
+                  <div
+                    className={`journal-entries__videos journal-entries__videos--${
+                      videos.length > 1 ? 'multiple' : 'single'
+                    }`}
+                  >
+                    {videos.map((video, index) => (
+                      <div
+                        key={index}
+                        className={`journal-entries__video${
+                          journal.content == '' ? '--welcome-video' : ''
+                        }`}
+                      >
+                        <div
+                          className={`journal-entries__video-thumbnail${
+                            journal.content == '' ? '--welcome-video' : ''
+                          }`}
+                          onClick={() => setShowVideo(video.id)}
+                        >
+                          <img src={video.thumbnail} />
+                          <div
+                            className={`journal-entries__video-thumbnail-icon${
+                              journal.content == '' ? '--welcome-video' : ''
+                            }`}
+                          >
+                            <FontAwesomeIcon icon={faPlay} />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               <div style={{ width: '40%' }}>
                 <img
                   alt={'triangleIcon'}
                   src={triangleIcon}
-                  style={{ width: 200, height: 200 }}
+                  style={{ width: 180, height: 180 }}
                 />
               </div>
             </div>
@@ -306,52 +356,6 @@ function TestJournalContent(props) {
           </div>
 
           {/*<h4 className="page-card__content-title">{journal.title}</h4>*/}
-
-          {videos &&
-            videos.constructor === Array &&
-            videos.map((video, index) => (
-              <MediaLightbox
-                video={video}
-                key={index}
-                show={showVideo === video.id}
-                onClose={() => setShowVideo(false)}
-                // watchData={videoWatchData}
-                // onVideoData={saveWatchData}
-                // onVideoWatched={saveVideoWatched}
-              />
-            ))}
-          {videos && videos.constructor === Array && videos.length > 0 && (
-            <div
-              className={`journal-entries__videos journal-entries__videos--${
-                videos.length > 1 ? 'multiple' : 'single'
-              }`}
-            >
-              {videos.map((video, index) => (
-                <div
-                  key={index}
-                  className={`journal-entries__video${
-                    journal.content == '' ? '--welcome-video' : ''
-                  }`}
-                >
-                  <div
-                    className={`journal-entries__video-thumbnail${
-                      journal.content == '' ? '--welcome-video' : ''
-                    }`}
-                    onClick={() => setShowVideo(video.id)}
-                  >
-                    <img src={video.thumbnail} />
-                    <div
-                      className={`journal-entries__video-thumbnail-icon${
-                        journal.content == '' ? '--welcome-video' : ''
-                      }`}
-                    >
-                      <FontAwesomeIcon icon={faPlay} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
 
           {/*{journal?.content?.includes('<div') ||*/}
           {/*journal?.content?.includes('<p') ? (*/}

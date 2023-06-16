@@ -9,7 +9,8 @@ import { toast } from 'react-toastify'
 import './index.css'
 import searchIcon from '../../assets/images/search-icon.png'
 import copy from '../../assets/images/copy.svg'
-
+import 'react-quill/dist/quill.snow.css'
+import KendoTextEditor from './TextEditor'
 export default function EditJournals2(props) {
   const [journals, setJournals] = useState([])
   const [journalOptions, setJournalOptions] = useState([])
@@ -235,11 +236,26 @@ export default function EditJournals2(props) {
   }
 
   const handleChangeBreakdown = (index, name, value) => {
+    console.log(name, value.html)
     const newBreakdowns = [...breakdowns]
     newBreakdowns[index][name] = value
     setBreakdowns(newBreakdowns)
   }
   console.log(breakdowns)
+
+  const modules = {
+    toolbar: [
+      [{ font: [] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ color: [] }, { background: [] }],
+      [{ script: 'sub' }, { script: 'super' }],
+      ['blockquote', 'code-block'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link', 'image', 'video'],
+      ['clean'],
+    ],
+  }
   return (
     <div>
       {!fetchingJournals ? (
@@ -377,22 +393,23 @@ export default function EditJournals2(props) {
         </div>
       )}
       {selectedJournal && (
-        <div className="mt-2">
-          {/* <ReactQuill
-          theme='snow'
-          name='value'
-          className='mb-5 w-100 p-0 '
-          style={{ height: '400px' }}
-          value={
-            selectedJournal?.value?.content
-              ? selectedJournal?.value?.content
-              : ''
-          }
-          onChange={(e) => handleQuillInput(e)}
-          // modules={quillModules}
-          placeholder={'Write here…'}
-          // formats={quillFormats}
-        /> */}
+        <div style={{ width: 530 }} className="mt-2">
+          {/*<KendoTextEditor />*/}
+          {/*<ReactQuill*/}
+          {/*  theme="snow"*/}
+          {/*  name="value"*/}
+          {/*  className="mb-5 w-100 p-0 "*/}
+          {/*  style={{ height: '400px' }}*/}
+          {/*  value={*/}
+          {/*    selectedJournal?.value?.content*/}
+          {/*      ? selectedJournal?.value?.content*/}
+          {/*      : ''*/}
+          {/*  }*/}
+          {/*  onChange={(e) => console.log(e)}*/}
+          {/*  modules={modules}*/}
+          {/*  placeholder={'Write here…'}*/}
+          {/*  // formats={quillFormats}*/}
+          {/*/>*/}
           <div>Title</div>
           <input
             type="text"
@@ -432,17 +449,23 @@ export default function EditJournals2(props) {
                       // style={{widt}}
                       // placeholder='Title (Example: Copywriter)'
                     />
-                    <textarea
-                      className="p-2 w-100 mt-2"
+                    <KendoTextEditor
                       value={breakdown?.content}
-                      onChange={(e) =>
-                        handleChangeBreakdown(index, 'content', e.target.value)
+                      handleChange={(e) =>
+                        handleChangeBreakdown(index, 'content', e)
                       }
-                      name="content"
-                      id=""
-                      cols="30"
-                      rows="8"
-                    ></textarea>
+                    />
+                    {/*<textarea*/}
+                    {/*  className="p-2 w-100 mt-2"*/}
+                    {/*  value={breakdown?.content}*/}
+                    {/*  onChange={(e) =>*/}
+                    {/*    handleChangeBreakdown(index, 'content', e.target.value)*/}
+                    {/*  }*/}
+                    {/*  name="content"*/}
+                    {/*  id=""*/}
+                    {/*  cols="30"*/}
+                    {/*  rows="8"*/}
+                    {/*></textarea>*/}
                   </div>
                 )
               })}

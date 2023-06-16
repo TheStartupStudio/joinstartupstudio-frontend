@@ -18,7 +18,6 @@ import moment from 'moment/moment'
 const TestJournalType = (props) => {
   const [journals, setJournals] = useState([])
   const [weeks, setWeeks] = useState([])
-  console.log(weeks)
   const match = useRouteMatch()
   const history = useHistory()
   const isWeek = match.path.includes('week')
@@ -95,11 +94,9 @@ const TestJournalType = (props) => {
     props.match.params.type === 'week' && getJournals2Weeks()
   }, [props.match.params.type])
 
-  // console.log(view)
   const onChangeView = (view) => {
     setView(view)
   }
-  console.log(props.match)
   return (
     <div id="main-body">
       <div className="container-fluid">

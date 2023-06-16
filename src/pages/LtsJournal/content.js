@@ -22,7 +22,7 @@ function LtsJournalContent(props) {
     await axiosInstance.put(
       `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
       {
-        videoWatchData: JSON.stringify(data)
+        videoWatchData: JSON.stringify(data),
       }
     )
   }
@@ -57,7 +57,7 @@ function LtsJournalContent(props) {
             )
           } else {
             groupedByJournalEntry[userJournalEntry.journalEntryId] = [
-              userJournalEntry
+              userJournalEntry,
             ]
           }
         }
@@ -70,7 +70,9 @@ function LtsJournalContent(props) {
   function loadData() {
     setLoading(true)
     Promise.all([getJournal(), getUserJournalEntries()])
+
       .then(([journalData, userJournalEntries]) => {
+        debugger
         setJournal(journalData)
         if (
           journalData.userEntry &&
@@ -114,13 +116,13 @@ function LtsJournalContent(props) {
       if (filtered.length) {
         setUserJournalEntries({
           ...userJournalEntries,
-          [entry.id]: filtered
+          [entry.id]: filtered,
         })
       } else {
         delete userJournalEntries[entry.id]
 
         setUserJournalEntries({
-          ...userJournalEntries
+          ...userJournalEntries,
         })
       }
     }
@@ -130,7 +132,7 @@ function LtsJournalContent(props) {
     return (data) => {
       setUserJournalEntries({
         ...userJournalEntries,
-        [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry]
+        [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry],
       })
       setShowAddReflection({ ...showAddReflection, [entry.id]: false })
 
@@ -146,7 +148,7 @@ function LtsJournalContent(props) {
           return mapUserJournalEntry.id === userJournalEntry.id
             ? data.entry
             : mapUserJournalEntry
-        })
+        }),
       })
 
       props.saved && props.saved(data.journal)
@@ -165,13 +167,13 @@ function LtsJournalContent(props) {
 
   return (
     <>
-      <div className='row'>
-        <div className='col-12'>
-          <div className='journal-entries__back'>
+      <div className="row">
+        <div className="col-12">
+          <div className="journal-entries__back">
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
 
-          <h4 className='page-card__content-title'>{journal.title}</h4>
+          <h4 className="page-card__content-title">{journal.title}</h4>
 
           {videos &&
             videos.constructor == Array &&
@@ -223,17 +225,17 @@ function LtsJournalContent(props) {
           journal?.content?.includes('<p') ? (
             parse(`${journal.content}`)
           ) : (
-            <p className='page-card__content-description'>{journal.content}</p>
+            <p className="page-card__content-description">{journal.content}</p>
           )}
         </div>
       </div>
 
-      <div className='row'>
-        <div className='col-12'>
-          <div className='journal-entries'>
+      <div className="row">
+        <div className="col-12">
+          <div className="journal-entries">
             {journal.entries &&
               journal.entries.map((entry) => (
-                <div className='journal-entries__entry' key={entry.id}>
+                <div className="journal-entries__entry" key={entry.id}>
                   <h5
                     className={
                       'journal-entries__entry-title' +
@@ -248,11 +250,11 @@ function LtsJournalContent(props) {
                           : entry.title.replace(
                               new RegExp('\r?\n', 'g'),
                               '<br />'
-                            )
+                            ),
                     }}
                   ></h5>
 
-                  <div className='journal-entries__entry-reflections'>
+                  <div className="journal-entries__entry-reflections">
                     {/* List created reflections */}
                     {userJournalEntries[entry.id] &&
                       userJournalEntries[entry.id].map((userJournalEntry) => (
@@ -278,7 +280,7 @@ function LtsJournalContent(props) {
                         cancel={(e) => {
                           setShowAddReflection({
                             ...showAddReflection,
-                            [entry.id]: false
+                            [entry.id]: false,
                           })
                         }}
                       />
@@ -294,13 +296,13 @@ function LtsJournalContent(props) {
                       }`}
                     >
                       <a
-                        href='#'
-                        className='journal-entries__entry-reflections-action'
+                        href="#"
+                        className="journal-entries__entry-reflections-action"
                         onClick={(e) => {
                           e.preventDefault()
                           setShowAddReflection({
                             ...showAddReflection,
-                            [entry.id]: true
+                            [entry.id]: true,
                           })
                         }}
                       >
@@ -318,5 +320,5 @@ function LtsJournalContent(props) {
 }
 
 export default injectIntl(LtsJournalContent, {
-  withRef: false
+  withRef: false,
 })

@@ -3527,11 +3527,15 @@ wave > wave:first-child {
 }
 
 .journal-entries__video {
-  float: right;
-  margin-left: 13px;
-  margin-bottom: 13px;
+  /*float: right;*/
+  /*margin-left: 13px;*/
+  /*margin-bottom: 13px;*/
 
-  max-width: 60%;
+  /*max-width: 60%;*/
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 @media (max-width: 500px) {
@@ -4263,6 +4267,11 @@ ul.sidebar-menu-item .collapse a {
 .accordion {
   border: 1px solid #ccc;
   margin-bottom: 10px;
+  line-height: 60%;
+  letter-spacing: 0.40px;
+  color: #231f20;
+  font-weight: 500
+
 }
 
 .accordion-header {
@@ -4302,11 +4311,11 @@ ul.sidebar-menu-item .collapse a {
 }
 
 .accordion-content {
-  padding: 10px;
+  padding: 15px 50px;
   background-color: #ffffff;
   font-size: 13px;
   text-align: left;
-  letter-spacing: 0.52px;
+  /*letter-spacing: 0.52px;*/
   color: #333D3D;
 }
 
