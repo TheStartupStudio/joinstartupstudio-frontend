@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Modal } from "react-bootstrap";
-import "react-quill/dist/quill.snow.css";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react'
+import { Modal } from 'react-bootstrap'
+import 'react-quill/dist/quill.snow.css'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   closeTaskModal,
   closeCalendarDeleteEventModal,
@@ -9,71 +9,71 @@ import {
   getPeriodsStart,
   openTaskModal,
   openCalendarDeleteEventModal,
-} from "../../redux/dashboard/Actions";
-import TaskEventModal from "./TaskEventModal";
-import DeleteEventModal from "./DeleteEventModal";
-import IntlMessages from "../../utils/IntlMessages";
-import { FormattedMessage } from "react-intl";
-import "./CalendarEventModal.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+} from '../../redux/dashboard/Actions'
+import TaskEventModal from './TaskEventModal'
+import DeleteEventModal from './DeleteEventModal'
+import IntlMessages from '../../utils/IntlMessages'
+import { FormattedMessage } from 'react-intl'
+import './CalendarEventModal.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faClock,
   faEdit,
   faTrashAlt,
-} from "@fortawesome/free-regular-svg-icons";
+} from '@fortawesome/free-regular-svg-icons'
 
 const CalendarModal = (props) => {
   const taskEventModal = useSelector(
     (state) => state.dashboard.editTaskEventModal
-  );
+  )
   const openTaskEventModal = () => {
-    dispatch(openTaskModal("update"));
-  };
+    dispatch(openTaskModal('update'))
+  }
 
   const closeTaskEventModal = () => {
-    dispatch(closeTaskModal("update"));
-  };
+    dispatch(closeTaskModal('update'))
+  }
 
   const calendarDeleteEventModal = useSelector(
     (state) => state.dashboard.calendarDeleteEventModal
-  );
+  )
   const openDeleteEventModal = () => {
-    dispatch(openCalendarDeleteEventModal());
-  };
+    dispatch(openCalendarDeleteEventModal())
+  }
 
   const closeDeleteEventModal = () => {
-    dispatch(closeCalendarDeleteEventModal());
-  };
-  const periods = useSelector((state) => state.dashboard.periods);
+    dispatch(closeCalendarDeleteEventModal())
+  }
+  const periods = useSelector((state) => state.dashboard.periods)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getPeriodsStart());
-  }, []);
+    dispatch(getPeriodsStart())
+  }, [])
 
   const onDeleteEvent = () => {
-    return dispatch(deleteEventStart(props.event?.id));
-  };
+    return dispatch(deleteEventStart(props.event?.id))
+  }
 
   const convertDate = (date) => {
-    const inputDate = new Date(date);
-    const day = inputDate.getDate();
-    const month = inputDate.toLocaleString("default", { month: "long" });
-    const year = inputDate.getFullYear();
+    const inputDate = new Date(date)
+    const day = inputDate.getDate()
+    const month = inputDate.toLocaleString('default', { month: 'long' })
+    const year = inputDate.getFullYear()
 
-    const formattedDate = `${day} ${month}`;
-    return formattedDate;
-  };
+    const formattedDate = `${day} ${month}`
+    return formattedDate
+  }
 
   function convertToAMPM(time) {
     if (time) {
-      const [hours, minutes] = time.split(":");
-      const date = new Date();
-      date.setHours(hours);
-      date.setMinutes(minutes);
-      const options = { hour: "numeric", minute: "numeric", hour12: true };
-      return date.toLocaleString("en-US", options);
+      const [hours, minutes] = time.split(':')
+      const date = new Date()
+      date.setHours(hours)
+      date.setMinutes(minutes)
+      const options = { hour: 'numeric', minute: 'numeric', hour12: true }
+      return date.toLocaleString('en-US', options)
     }
   }
   const Event = (props) => {
@@ -81,16 +81,16 @@ const CalendarModal = (props) => {
       <div style={{ marginBottom: 4 }}>
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            fontWeight: "bold",
+            display: 'flex',
+            alignItems: 'center',
+            fontWeight: 'bold',
           }}
         >
           <div
             style={{
               width: 7,
               height: 7,
-              backgroundColor: props.type == "event" ? "#ff3399" : "#a7ca42",
+              backgroundColor: props.type == 'event' ? '#ff3399' : '#a7ca42',
               marginRight: 10,
             }}
           ></div>
@@ -101,8 +101,8 @@ const CalendarModal = (props) => {
           dangerouslySetInnerHTML={{ __html: props.eventInfo }}
         />
       </div>
-    );
-  };
+    )
+  }
   return (
     <>
       <Modal
@@ -110,33 +110,33 @@ const CalendarModal = (props) => {
         onHide={props.onHide}
         backdrop="static"
         keyboard={false}
-        style={{ marginTop: "3.9%" }}
+        style={{ marginTop: '3.9%' }}
         className="edit-modal general-modal-header"
       >
         <Modal.Header
           style={{
             backgroundColor:
-              props.event?.type === "task" ? "#A7CA42" : "#FF3399",
-            color: "#fff",
+              props.event?.type === 'task' ? '#A7CA42' : '#FF3399',
+            color: '#fff',
           }}
           className="add-new-note-title general-modal-header my-auto p-2 d-flex flex-column justify-start calendar-modal-header"
         >
           <div
             className={
-              "py-2 w-100 d-flex justify-content-between border-bottom align-items-center"
+              'py-2 w-100 d-flex justify-content-between border-bottom align-items-center'
             }
           >
             <h3
               className="mb-0 pb-0 "
               style={{
-                color: "#fff",
+                color: '#fff',
               }}
             >
-              {props.event?.type === "event" ? (
+              {props.event?.type === 'event' ? (
                 <IntlMessages id="calendar_task-events.event" />
               ) : (
                 <IntlMessages id="calendar_task-events.task" />
-              )}{" "}
+              )}{' '}
               DETAILS
             </h3>
             <button
@@ -144,46 +144,46 @@ const CalendarModal = (props) => {
               className="btn-close mb-1 "
               aria-label="Close"
               onClick={props.onHide}
-              style={{ color: "#fff", opacity: 1 }}
+              style={{ color: '#fff', opacity: 1 }}
             />
           </div>
           <div
             className={
-              "d-flex justify-content-between align-items-center w-100 py-2"
+              'd-flex justify-content-between align-items-center w-100 py-2'
             }
           >
-            <h2 className={"text-white text-center "}>{props.event?.name}</h2>
-            <div style={{ display: "flex", gap: 10 }}>
+            <h2 className={'text-white text-center '}>{props.event?.name}</h2>
+            <div style={{ display: 'flex', gap: 10 }}>
               <div
                 className="float-end  add-new-note-button-text "
                 onClick={openTaskEventModal}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
               >
                 <FontAwesomeIcon icon={faEdit} />
               </div>
               <div
                 className="float-end   add-new-note-button-text "
                 onClick={openDeleteEventModal}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
               >
                 <FontAwesomeIcon icon={faTrashAlt} />
               </div>
             </div>
           </div>
-          <div className={"d-flex align-items-center w-100 "}>
+          <div className={'d-flex align-items-center w-100 '}>
             <div style={{ marginRight: 5 }}>
               <FontAwesomeIcon icon={faClock} />
             </div>
 
-            <div className={"d-flex g-2 w-100 "}>
+            <div className={'d-flex g-2 w-100 '}>
               <div>
                 {convertDate(props.event?.startDate)}
                 {!!props.event?.endDate &&
-                  " - " + convertDate(props.event?.endDate)}
+                  ' - ' + convertDate(props.event?.endDate)}
                 ,
               </div>
-              <div className={"ml-2"}>
-                {convertToAMPM(props.event?.startTime.slice(0, 5))} -{" "}
+              <div className={'ml-2'}>
+                {convertToAMPM(props.event?.startTime.slice(0, 5))} -{' '}
                 {convertToAMPM(props.event?.endTime.slice(0, 5))}
               </div>
             </div>
@@ -194,25 +194,26 @@ const CalendarModal = (props) => {
             eventInfo={props.event?.description}
             type={props.event?.type}
             title={
-              props.event?.type === "event"
-                ? "description_of_event"
-                : "description_of_task"
+              props.event?.type === 'event'
+                ? 'description_of_event'
+                : 'description_of_task'
             }
           />
           <Event
             eventInfo={props.event?.requirements}
             type={props.event?.type}
-            title={"requirements"}
+            title={'requirements'}
           />
           <Event
-            eventInfo={props.event?.period?.name}
+            eventInfo={props.event?.periods?.map((period) => period.name)}
             type={props.event?.type}
-            title={"chosen_classes"}
+            title={'chosen_classes'}
           />
         </Modal.Body>
       </Modal>
       <TaskEventModal
         event={props.event}
+        eventPeriods={props.eventPeriods}
         show={taskEventModal}
         onHide={closeTaskEventModal}
         periods={periods}
@@ -226,6 +227,6 @@ const CalendarModal = (props) => {
         type={props.event?.type}
       />
     </>
-  );
-};
-export default CalendarModal;
+  )
+}
+export default CalendarModal

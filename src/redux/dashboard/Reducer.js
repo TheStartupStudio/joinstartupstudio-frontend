@@ -126,13 +126,10 @@ const dashboardReducer = (state = initialState, action) => {
 
     case EDIT_EVENT_SUCCESS:
       const updatedEvent = payload.event
+
       const updatedEvents = state.events.map((event) => {
         if (event.id === updatedEvent.id) {
-          const foundedPeriod = state.periods.find(
-            (period) => period.id === updatedEvent.period_id
-          )
           const newUpdatedEvent = { ...updatedEvent }
-          newUpdatedEvent.period = foundedPeriod
 
           return newUpdatedEvent
         }

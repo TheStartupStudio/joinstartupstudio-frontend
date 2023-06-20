@@ -174,11 +174,18 @@ const FullCalendarComponent = (props) => {
   }, [props.events])
 
   const [foundedEvent, setFoundedEvent] = useState(null)
-
   useEffect(() => {
     const event = props.events.find((event) => event.id == foundedEvent?.id)
+
     setFoundedEvent(event)
   }, [props.events])
+
+  const [eventPeriods, setEventPeriods] = useState(null)
+
+  const findEventPeriods = (id) => {
+    const eventPeriodsObj = props.eventsPeriods?.find((event) => event.id == id)
+    setEventPeriods(eventPeriodsObj)
+  }
 
   const foundEvent = (event) => {
     return props.events?.find((ev) => ev?.id == +event.event?.id)
@@ -193,6 +200,7 @@ const FullCalendarComponent = (props) => {
   const handleEventClick = (event) => {
     const eventFounded = foundEvent(event)
     setFoundedEvent(eventFounded)
+    findEventPeriods(eventFounded.id)
     openCalendarModal()
   }
 
@@ -292,7 +300,7 @@ const FullCalendarComponent = (props) => {
   const handleMouseEnter = (arg) => {
     const condition =
       arg?.jsEvent?.target?.classList?.value?.includes('fc-event')
-    const event = props.events.find((event) => event.id == arg.event?.id)
+    const event = props.events?.find((event) => event.id == arg.event?.id)
     if (condition) {
       tippy(arg.el, {
         theme: 'custom',
