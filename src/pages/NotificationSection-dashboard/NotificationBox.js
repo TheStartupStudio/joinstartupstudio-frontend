@@ -88,7 +88,7 @@ const NotificationBox = (props) => {
     })
 
     return () => {
-      socket.disconnect()
+      //socket.disconnect()
     }
   }, [])
 

@@ -35,26 +35,26 @@ function MyCourseEntrepreneurship() {
   return (
     <Container fluid>
       <Row>
-        <div className='col-12 col-xl-9'>
+        <div className="col-12 col-xl-9">
           <div
-            className='account-page-padding page-border'
+            className="account-page-padding page-border"
             style={{ minHeight: '100vh' }}
           >
-            <h3 className='page-title'>
+            <h3 className="page-title">
               {/* <IntlMessages id='navigation.startup_live' /> */}
               MY COURSE IN ENTREPRENEURSHIP
             </h3>
-            <p className='page-description'>
+            <p className="page-description">
               {/* <IntlMessages id='startup_live.page_description' /> */}
               Embarking on the Entrepreneurial Journey
             </p>
 
-            <div className='row'>
-              <div className='col-12 col-md-5 mb-4'>
+            <div className="row">
+              <div className="col-12 col-md-5 mb-4">
                 <div style={{ width: '100%' }}>
-                  <div className='responsive-video'>
+                  <div className="responsive-video">
                     <ReactPlayer
-                      className=''
+                      className=""
                       width={'100%'}
                       height={'100%'}
                       url={
@@ -62,7 +62,7 @@ function MyCourseEntrepreneurship() {
                       }
                       controls
                       playing={true}
-                      preload='metadata'
+                      preload="metadata"
                       light={
                         'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg'
                       }
@@ -77,10 +77,10 @@ function MyCourseEntrepreneurship() {
                   </div>
                 </div>
               </div>
-              <div className='col-12 col-md-7'>
-                <p className='mt-0'>
+              <div className="col-12 col-md-7">
+                <p className="mt-0">
                   Entrepreneurship is about building{' '}
-                  <span className='you-href'>YOU</span>. As such, in this course
+                  <span className="you-href">YOU</span>. As such, in this course
                   you will set the pace of your development.
                 </p>
                 <p>
@@ -91,8 +91,8 @@ function MyCourseEntrepreneurship() {
                 </p>
                 <p>
                   <a
-                    href='/my-course-in-entrepreneurship/journal'
-                    className='button button--big'
+                    href="/my-course-in-entrepreneurship/journal"
+                    className="button button--big"
                     onClick={(e) => {
                       e.preventDefault()
                       setShowModal(true)
@@ -104,8 +104,8 @@ function MyCourseEntrepreneurship() {
               </div>
             </div>
 
-            <div className='col-md-12'>
-              <div className='accordion accordion--dark' id='accordionExample'>
+            <div className="col-md-12">
+              <div className="accordion accordion--dark" id="accordionExample">
                 {[
                   {
                     title: 'Introducing the Entrepreneurs',
@@ -117,16 +117,16 @@ function MyCourseEntrepreneurship() {
                     type: 'levels_of_journey'
                   }
                 ].map((data, index) => (
-                  <div className='mt-2' key={index}>
-                    <div className='accordion-item'>
-                      <h2 className='accordion-header' id={`heading-${index}`}>
+                  <div className="mt-2" key={index}>
+                    <div className="accordion-item">
+                      <h2 className="accordion-header" id={`heading-${index}`}>
                         <button
-                          className='accordion-button collapsed accordion-outter button-accordion'
-                          type='button'
+                          className="accordion-button collapsed accordion-outter button-accordion"
+                          type="button"
                           eventKey={`${index}`}
-                          data-bs-toggle='collapse'
+                          data-bs-toggle="collapse"
                           data-bs-target={`#collapse_outer${index}`}
-                          aria-expanded='false'
+                          aria-expanded="false"
                           aria-controls={`collapse_outer${index}`}
                         >
                           {data.title}
@@ -140,31 +140,31 @@ function MyCourseEntrepreneurship() {
                         data-bs-parent={`#accordionExample`}
                       >
                         <div
-                          className='accordion-body py-4'
+                          className="accordion-body py-4"
                           eventKey={`${index}`}
                         >
                           {data.type == 'entrepreneurs' && (
-                            <div className='entrepreneurs row'>
+                            <div className="entrepreneurs row">
                               {LtsCourseIntro['entrepeneurs'].map(
                                 (entData, entIndex) => (
-                                  <div className='entrepreneurs__item col-12 col-md-6'>
-                                    <div className='entrepreneurs__item-inner'>
-                                      <h3 className='entrepreneurs__item-title'>
+                                  <div className="entrepreneurs__item col-12 col-md-6">
+                                    <div className="entrepreneurs__item-inner">
+                                      <h3 className="entrepreneurs__item-title">
                                         {entData.name}
                                       </h3>
-                                      <div className='entrepreneurs__item-position'>
+                                      <div className="entrepreneurs__item-position">
                                         {entData.position}
                                       </div>
-                                      <div className='entrepreneurs__item-video'>
-                                        <div className='responsive-video'>
+                                      <div className="entrepreneurs__item-video">
+                                        <div className="responsive-video">
                                           <ReactPlayer
-                                            className=''
+                                            className=""
                                             width={'100%'}
                                             height={'100%'}
                                             url={entData.video_url}
                                             controls
                                             playing={true}
-                                            preload='metadata'
+                                            preload="metadata"
                                             light={entData.thumbnail}
                                             config={{
                                               file: {
@@ -184,21 +184,21 @@ function MyCourseEntrepreneurship() {
                           )}
 
                           {data.type == 'key_points' && (
-                            <div className='key_points row'>
+                            <div className="key_points row">
                               {LtsCourseIntro['key_points_videos'].map(
                                 (entData, entIndex) => (
-                                  <div className='key_points__item col-12 col-md-3'>
-                                    <div className='key_points__item-inner'>
-                                      <div className='key_points__item-video'>
-                                        <div className='responsive-video'>
+                                  <div className="key_points__item col-12 col-md-3">
+                                    <div className="key_points__item-inner">
+                                      <div className="key_points__item-video">
+                                        <div className="responsive-video">
                                           <ReactPlayer
-                                            className=''
+                                            className=""
                                             width={'100%'}
                                             height={'100%'}
                                             url={entData.url}
                                             controls
                                             playing={true}
-                                            preload='metadata'
+                                            preload="metadata"
                                             config={{
                                               file: {
                                                 attributes: {
@@ -210,7 +210,7 @@ function MyCourseEntrepreneurship() {
                                           />
                                         </div>
                                       </div>
-                                      <h3 className='key_points__item-title'>
+                                      <h3 className="key_points__item-title">
                                         {entData.title}
                                       </h3>
                                     </div>
@@ -221,13 +221,13 @@ function MyCourseEntrepreneurship() {
                           )}
 
                           {data.type == 'levels_of_journey' && (
-                            <div className='levels-of-journey'>
-                              <div className='levels-of-journey__level'>
-                                <h3 className='levels-of-journey__title'>
+                            <div className="levels-of-journey">
+                              <div className="levels-of-journey__level">
+                                <h3 className="levels-of-journey__title">
                                   <span>LEVEL 1 |</span> Entrepreneurship and
                                   You
                                 </h3>
-                                <div className='levels-of-journey__description'>
+                                <div className="levels-of-journey__description">
                                   In the first level of this program, you will
                                   engage in developing this mindset as your
                                   preparation for starting your journey on the
@@ -240,12 +240,12 @@ function MyCourseEntrepreneurship() {
                                   professional identity.
                                 </div>
                               </div>
-                              <div className='levels-of-journey__level'>
-                                <h3 className='levels-of-journey__title'>
+                              <div className="levels-of-journey__level">
+                                <h3 className="levels-of-journey__title">
                                   <span>LEVEL 2 |</span> Understanding Learn to
                                   Start
                                 </h3>
-                                <div className='levels-of-journey__description'>
+                                <div className="levels-of-journey__description">
                                   In the second level, you will immerse yourself
                                   in the LTS model. People want to work with
                                   people they like, respect, and trust. So, you
@@ -259,12 +259,12 @@ function MyCourseEntrepreneurship() {
                                   successful startup.
                                 </div>
                               </div>
-                              <div className='levels-of-journey__level'>
-                                <h3 className='levels-of-journey__title'>
+                              <div className="levels-of-journey__level">
+                                <h3 className="levels-of-journey__title">
                                   <span>LEVEL 3 |</span> The LEARN, DEVELOP,
                                   BRAND, & START Stages
                                 </h3>
-                                <div className='levels-of-journey__description'>
+                                <div className="levels-of-journey__description">
                                   Now that you have a better sense of self and
                                   your professional opportunities for
                                   collaboration, you can move on to creating the
@@ -291,22 +291,22 @@ function MyCourseEntrepreneurship() {
 
             <Modal
               show={showModal}
-              backdrop='static'
+              backdrop="static"
               keyboard={false}
-              className='alert-modal'
+              className="alert-modal"
               centered={true}
-              size='sm'
+              size="sm"
             >
               <Modal.Body>
-                <div className='alert-modal__text'>
+                <div className="alert-modal__text">
                   Would you like to skip this page in the future and go directly
                   to the course?
                 </div>
-                <div className='alert-modal__buttons'>
-                  <a href='#' onClick={goToJournal(true)} className='button'>
+                <div className="alert-modal__buttons">
+                  <a href="#" onClick={goToJournal(true)} className="button">
                     YES, PLEASE!
                   </a>
-                  <a href='#' onClick={goToJournal()} className='button-naked'>
+                  <a href="#" onClick={goToJournal()} className="button-naked">
                     NOT RIGHT NOW
                   </a>
                 </div>
@@ -314,13 +314,13 @@ function MyCourseEntrepreneurship() {
             </Modal>
           </div>
         </div>
-        <div className='col-12 col-xl-3 px-2 mt-3'>
+        <div className="col-12 col-xl-3 px-2 mt-3">
           <ShowMessenger />
           <NotesButton />
 
           {/* <Chat room={'5f96a12568d0c2c580fca9fe'} /> */}
 
-          <div className={'community-connect my-2'}>
+          {/* <div className={'community-connect my-2'}>
             <Link to='/my-connections'>
               <FontAwesomeIcon
                 icon={faUsers}
@@ -337,7 +337,7 @@ function MyCourseEntrepreneurship() {
             <Link to='/my-connections'>
               <p className='my-auto ms-2'>Connect with my community</p>
             </Link>
-          </div>
+          </div> */}
         </div>
       </Row>
     </Container>

@@ -5,16 +5,17 @@ import Profile from '../../components/Profile'
 import { changeSidebarState } from '../../redux'
 import { ActiveStudents } from '../../components/ActiveStudents'
 import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
-import TaskEventModal from '../../components/Modals/TaskEventModal'
+
 import {
   closeTaskModal,
   getEventsStart,
   getPeriodsStart,
-  openTaskModal,
+  openTaskModal
 } from '../../redux/dashboard/Actions'
 import LevelWrapper from '../../components/LevelWrapper'
 
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
+import TaskEventModal from '../../components/Modals/TaskEventModal'
 import NotificationBox from '../NotificationSection-dashboard/NotificationBox'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -26,7 +27,7 @@ function Dashboard() {
   const events = useSelector((state) => state.dashboard.events)
 
   const user = {
-    level: 'HS',
+    level: 'HS'
   }
 
   const [newMessage, setNewMessage] = useState([])
@@ -77,19 +78,19 @@ function Dashboard() {
               />
             </LevelWrapper>
 
-            <div className="my-4">
-              <div className="row">
-                <div className="col-md-12 col-lg-8">
-                  <h3
-                    className="page-title"
-                    style={{ textTransform: 'capitalize' }}
-                  >
-                    Recently Active Students
-                  </h3>
-                </div>
-                <ActiveStudents />
-              </div>
-            </div>
+            {/*<div className="my-4">*/}
+            {/*  <div className="row">*/}
+            {/*    <div className="col-md-12 col-lg-8">*/}
+            {/*      <h3*/}
+            {/*        className="page-title"*/}
+            {/*        style={{ textTransform: 'capitalize' }}*/}
+            {/*      >*/}
+            {/*        Recently Active Students*/}
+            {/*      </h3>*/}
+            {/*    </div>*/}
+            {/*    <ActiveStudents />*/}
+            {/*  </div>*/}
+            {/*</div>*/}
           </div>
         </div>
         <div className="col-12 col-xl-3 px-0">
@@ -100,7 +101,7 @@ function Dashboard() {
               style={{
                 backgroundColor: '#51c7df',
                 color: '#fff',
-                fontSize: 14,
+                fontSize: 14
               }}
               onClick={openTaskEventModal}
               className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"

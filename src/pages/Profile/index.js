@@ -10,7 +10,7 @@ import {
   faLinkedinIn,
   faTwitterSquare,
   faInstagram,
-  faFacebookSquare,
+  faFacebookSquare
 } from '@fortawesome/free-brands-svg-icons'
 import {
   faGlobe,
@@ -18,7 +18,7 @@ import {
   faPencilAlt,
   faMobileAlt,
   faPlus,
-  faUsers,
+  faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -92,7 +92,7 @@ function Profile(props) {
 
     await axiosInstance
       .put(`/users`, {
-        is_contact: !oldContactableValue,
+        is_contact: !oldContactableValue
       })
       .then()
       .catch((e) => {
@@ -180,7 +180,7 @@ function Profile(props) {
       social_links: changedMedias,
       profile_image: changedUser.profile_image,
       language: changedUser.language,
-      phone_number: changedUser.phone_number,
+      phone_number: changedUser.phone_number
     }
     if (editPage == 'phone' && !validateNumber(changedUser.phone_number)) {
       toast.error(<IntlMessages id="profile.incorrect_number" />)
@@ -205,8 +205,8 @@ function Profile(props) {
                 token: localStorage.getItem('access_token'),
                 user: {
                   ...storageUser.user,
-                  email: changedUser.email,
-                },
+                  email: changedUser.email
+                }
               }
               localStorage.setItem('user', JSON.stringify(userObject))
 
@@ -272,7 +272,7 @@ function Profile(props) {
   const cancelSubscription = async () => {
     await axiosInstance
       .post(`/users/cancel-subscription`, {
-        lang: currentLanguage,
+        lang: currentLanguage
       })
       .then(async (res) => {
         userLogout()
@@ -530,7 +530,7 @@ function Profile(props) {
                     <InputGroup.Text
                       style={{
                         border: 0,
-                        backgroundColor: 'transparent',
+                        backgroundColor: 'transparent'
                       }}
                     >
                       <FontAwesomeIcon
@@ -676,7 +676,7 @@ function Profile(props) {
           </div>
 
           {/*<ShowMessenger />*/}
-          <div className={'community-connect my-2'}>
+          {/* <div className={'community-connect my-2'}>
             <Link to="/my-connections">
               <FontAwesomeIcon
                 icon={faUsers}
@@ -693,7 +693,7 @@ function Profile(props) {
             <Link to="/my-connections">
               <p className="my-auto ms-2">Connect with my community</p>
             </Link>
-          </div>
+          </div> */}
           {/* {user.payment_type != 'school' && (
             <p
               className='cancel-my-subscription mt-3 text-center'
@@ -752,5 +752,5 @@ function Profile(props) {
   )
 }
 export default injectIntl(Profile, {
-  withRef: false,
+  withRef: false
 })

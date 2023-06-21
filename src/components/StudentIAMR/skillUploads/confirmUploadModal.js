@@ -1,26 +1,26 @@
-import React, { useState } from "react";
-import { Modal } from "react-bootstrap";
-import { toast } from "react-toastify";
+import React, { useState } from 'react'
+import { Modal } from 'react-bootstrap'
+import { toast } from 'react-toastify'
 const ConfirmUploadModal = ({ upload, show, onHide, editUpload }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const submit = () => {
-    setLoading(true);
+    setLoading(true)
     editUpload(
-      { ...upload, status: "proficient", approved_by_instructor: true },
+      { ...upload, status: 'approved' },
       () => {
-        setLoading(false);
-        toast.success("Skill has been marked as proficient.");
-        onHide();
+        setLoading(false)
+        toast.success('Skill has been marked as approved.')
+        onHide()
       },
       () => setLoading(false)
-    );
-  };
+    )
+  }
 
   const hideModal = () => {
-    if (loading) return;
-    onHide();
-  };
+    if (loading) return
+    onHide()
+  }
 
   return (
     <Modal
@@ -45,7 +45,7 @@ const ConfirmUploadModal = ({ upload, show, onHide, editUpload }) => {
       <Modal.Body>
         <div className="my-2 my-md-4 mx-2 mx-md-5">
           <h3 className="title">
-            Are you sure you want to keep the skill as proficient?
+            Are you sure you want to mark the skill as approved?
           </h3>
           <div className="mt-4 text-center">
             <button disabled={loading} className="confirm-btn" onClick={submit}>
@@ -64,7 +64,7 @@ const ConfirmUploadModal = ({ upload, show, onHide, editUpload }) => {
         </div>
       </Modal.Body>
     </Modal>
-  );
-};
+  )
+}
 
-export default ConfirmUploadModal;
+export default ConfirmUploadModal

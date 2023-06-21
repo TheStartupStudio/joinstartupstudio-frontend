@@ -1,88 +1,86 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Container, Row } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import Select, { components } from "react-select";
-import { Link } from "react-router-dom";
-import CountdownTimer from "react-component-countdown-timer";
-import moment from "moment";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState, useRef } from 'react'
+import { Container, Row } from 'react-bootstrap'
+import { useSelector, useDispatch } from 'react-redux'
+import Select, { components } from 'react-select'
+import { Link } from 'react-router-dom'
+import CountdownTimer from 'react-component-countdown-timer'
+import moment from 'moment'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import IntMessages from "../../utils/IntlMessages";
-import IntlMessages from "../../utils/IntlMessages";
-import axiosInstance from "../../utils/AxiosInstance";
-import { changeSidebarState } from "../../redux";
-import Video from "../../components/Video";
+  faChevronRight
+} from '@fortawesome/free-solid-svg-icons'
+import IntMessages from '../../utils/IntlMessages'
+import IntlMessages from '../../utils/IntlMessages'
+import axiosInstance from '../../utils/AxiosInstance'
+import { changeSidebarState } from '../../redux'
+import Video from '../../components/Video'
 
-import NoteAndChat from "../../components/NoteAndChat/noteAndChat";
-import StartupLiveEn from "../../assets/images/startup-live-logo-new.png";
-import StartupLiveEs from "../../assets/images/startup-live-es.jpg";
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import { ShowMessenger } from "../../utils/helpers";
-import { NotesButton } from "../../components/Notes";
-import Chat from "../../components/NoteAndChat/chat";
-import Countdown from "react-countdown";
-import { EmailToInstructorModal } from "../StartupProfile/components/EmailToInstructorModal";
-import StartupMailer from "../../components/StartupLiveMailer";
+import NoteAndChat from '../../components/NoteAndChat/noteAndChat'
+import StartupLiveEn from '../../assets/images/startup-live-logo-new.png'
+import StartupLiveEs from '../../assets/images/startup-live-es.jpg'
+import { faUsers } from '@fortawesome/free-solid-svg-icons'
+import { ShowMessenger } from '../../utils/helpers'
+import { NotesButton } from '../../components/Notes'
+import Chat from '../../components/NoteAndChat/chat'
+import Countdown from 'react-countdown'
+import { EmailToInstructorModal } from '../StartupProfile/components/EmailToInstructorModal'
+import StartupMailer from '../../components/StartupLiveMailer'
 
 function StartupLive() {
-  const firstEventTime = new Date("2022-08-30T16:30:00").getTime();
-  const [showButton, setShowButton] = useState(false);
+  const firstEventTime = new Date('2022-08-30T16:30:00').getTime()
+  const [showButton, setShowButton] = useState(false)
   const [startStartupLiveVideoIndex, setStartStartupLiveVideoIndex] =
-    useState(0);
-  const [endStartupLiveVideoIndex, setEndStartupLiveVideoIndex] = useState(3);
+    useState(0)
+  const [endStartupLiveVideoIndex, setEndStartupLiveVideoIndex] = useState(3)
   const [endStartupLiveVideoIndexMobile, setEndStartupLiveVideoIndexMobile] =
-    useState(1);
-  const [startupLiveVideos, setStartupLiveVideos] = useState([]);
-  const currentLanguage = useSelector((state) => state.lang.locale);
-  const dispatch = useDispatch();
-  const [showStartuplive, setShowstartuplive] = useState(false);
-  const [state, setState] = useState({});
-  const [connections, setConnections] = useState([]);
-  const [width, setWidth] = useState(window.innerWidth);
-  const [allowedStartupLiveOptions, setAllowedStartupLiveOptions] = useState(
-    []
-  );
-  const [selectedStartupLive, setSelectedStartupLive] = useState();
+    useState(1)
+  const [startupLiveVideos, setStartupLiveVideos] = useState([])
+  const currentLanguage = useSelector((state) => state.lang.locale)
+  const dispatch = useDispatch()
+  const [showStartuplive, setShowstartuplive] = useState(false)
+  const [state, setState] = useState({})
+  const [connections, setConnections] = useState([])
+  const [width, setWidth] = useState(window.innerWidth)
+  const [allowedStartupLiveOptions, setAllowedStartupLiveOptions] = useState([])
+  const [selectedStartupLive, setSelectedStartupLive] = useState()
   const AllStartupLiveOptions = [
     {
-      label: "Instructor Training",
+      label: 'Instructor Training',
       value: {
-        id: "instructors",
-        room: "startup-live-instructors",
+        id: 'instructors',
+        room: 'startup-live-instructors',
         src_link:
-          "https://stream.joinstartuplive.com/view/69fd2f33-c13c-48a6-90b6-52dac364d53c/?embedded=True",
-      },
+          'https://stream.joinstartuplive.com/view/69fd2f33-c13c-48a6-90b6-52dac364d53c/?embedded=True'
+      }
     },
     {
-      label: "Live Events for Elementary School",
+      label: 'Live Events for Elementary School',
       value: {
-        id: "LS",
-        room: "startup-live-l1",
+        id: 'LS',
+        room: 'startup-live-l1',
         src_link:
-          "https://stream.joinstartuplive.com/view/6ced9dec-0baf-4977-ae13-114cd6a7bf8e/?embedded=True",
-      },
+          'https://stream.joinstartuplive.com/view/6ced9dec-0baf-4977-ae13-114cd6a7bf8e/?embedded=True'
+      }
     },
     {
-      label: "Live Events for Middle School",
+      label: 'Live Events for Middle School',
       value: {
-        id: "MS",
-        room: "startup-live-l2",
+        id: 'MS',
+        room: 'startup-live-l2',
         src_link:
-          "https://stream.joinstartuplive.com/view/6abf6fa6-4f1c-4a02-a772-145a711fa2d9/?embedded=True",
-      },
+          'https://stream.joinstartuplive.com/view/6abf6fa6-4f1c-4a02-a772-145a711fa2d9/?embedded=True'
+      }
     },
     {
-      label: "Live Events for HS & EDU",
+      label: 'Live Events for HS & EDU',
       value: {
-        id: "HS",
-        room: "startup-live-l3",
+        id: 'HS',
+        room: 'startup-live-l3',
         src_link:
-          "https://stream.joinstartuplive.com/view/149ff6e6-1771-41f2-898a-fdcf7d35de6e/?embedded=True",
-      },
-    },
+          'https://stream.joinstartuplive.com/view/149ff6e6-1771-41f2-898a-fdcf7d35de6e/?embedded=True'
+      }
+    }
     // {
     //   label: 'Live Events for Adult Participants',
     //   value: {
@@ -92,132 +90,132 @@ function StartupLive() {
     //       'https://stream.joinstartuplive.com/view/7f97514c-0324-4467-bacf-452920edcf3c/?embedded=True'
     //   }
     // }
-  ];
+  ]
 
   useEffect(() => {
-    setSelectedStartupLive(AllStartupLiveOptions[0]);
+    setSelectedStartupLive(AllStartupLiveOptions[0])
 
-    getUserLevels();
-    getStartupLiveVideos();
-    getUserConnections();
+    getUserLevels()
+    getStartupLiveVideos()
+    getUserConnections()
 
     setTimeout(() => {
-      setShowstartuplive(true);
-    }, 3000);
+      setShowstartuplive(true)
+    }, 3000)
 
     return () => {
-      setState({});
-    };
-  }, []);
+      setState({})
+    }
+  }, [])
 
   const resize = () => {
-    setWidth(window.innerWidth);
-  };
+    setWidth(window.innerWidth)
+  }
 
   useEffect(() => {
-    window.addEventListener("resize", resize);
+    window.addEventListener('resize', resize)
     return () => {
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
+      window.removeEventListener('resize', resize)
+    }
+  }, [])
 
   const getUserConnections = async () => {
-    await axiosInstance.get("/connect").then((res) => {
-      setConnections(res.data.data);
-    });
-  };
+    await axiosInstance.get('/connect').then((res) => {
+      setConnections(res.data.data)
+    })
+  }
 
   const getUserLevels = async () => {
-    await axiosInstance.get("/instructor/student-levels").then((res) => {
+    await axiosInstance.get('/instructor/student-levels').then((res) => {
       setAllowedStartupLiveOptions([
         AllStartupLiveOptions[0],
         ...AllStartupLiveOptions.filter((level) =>
           res.data.levels.includes(level.value.id)
-        ),
-      ]);
-    });
-  };
+        )
+      ])
+    })
+  }
 
   const dropDownStyles = {
     control: (provided, state) => ({
       ...provided,
-      boxShadow: "none",
-      border: "1px solid #BBBDBF",
-      borderRadius: "0",
+      boxShadow: 'none',
+      border: '1px solid #BBBDBF',
+      borderRadius: '0',
       height: 15,
-      fontSize: "16px",
-      cursor: "pointer",
-      color: "#707070",
-      fontWeight: "500",
-      ":hover": {
-        border: "1px solid #BBBDBF",
+      fontSize: '16px',
+      cursor: 'pointer',
+      color: '#707070',
+      fontWeight: '500',
+      ':hover': {
+        border: '1px solid #BBBDBF'
       },
-      zIndex: 100,
+      zIndex: 100
     }),
     menu: (base) => ({
       ...base,
-      border: "none",
-      fontSize: "14px",
-      cursor: "pointer",
+      border: 'none',
+      fontSize: '14px',
+      cursor: 'pointer',
       margin: 0,
       paddingTop: 0,
-      boxShadow: "0px 3px 6px #00000029",
-      zIndex: 9999,
+      boxShadow: '0px 3px 6px #00000029',
+      zIndex: 9999
     }),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
     valueContainer: (base) => ({
-      ...base,
+      ...base
     }),
     option: (styles, state) => ({
       ...styles,
-      cursor: "pointer",
+      cursor: 'pointer',
       fontWeight: 600,
-      color: "231F20",
-      fontSize: "14px",
-      paddingTop: "2px",
-      paddingBottom: "2px",
-      ":hover": {
-        backgroundColor: "white",
-        background: "white",
+      color: '231F20',
+      fontSize: '14px',
+      paddingTop: '2px',
+      paddingBottom: '2px',
+      ':hover': {
+        backgroundColor: 'white',
+        background: 'white'
       },
-      backgroundColor: "white",
+      backgroundColor: 'white'
       // textTransform: 'uppercase'
-    }),
-  };
+    })
+  }
 
   useEffect(() => {
-    dispatch(changeSidebarState(false));
-  });
+    dispatch(changeSidebarState(false))
+  })
 
   const getStartupLiveVideos = async () => {
     await axiosInstance
       .get(`/contents/by-type/startup-live`)
       .then((response) => {
-        setStartupLiveVideos(response.data?.slice(0, 3));
+        setStartupLiveVideos(response.data?.slice(0, 3))
       })
-      .catch((err) => err);
-  };
+      .catch((err) => err)
+  }
 
   const handlePreviousVideo = async (page, startIndex, endIndex) => {
     if (startIndex > 0) {
-      setStartStartupLiveVideoIndex(startIndex - 1);
-      setEndStartupLiveVideoIndex(endIndex - 1);
+      setStartStartupLiveVideoIndex(startIndex - 1)
+      setEndStartupLiveVideoIndex(endIndex - 1)
     }
-  };
+  }
 
   const handleNextVideo = async (page, startIndex, endIndex) => {
     if (endIndex < startupLiveVideos.length) {
-      setStartStartupLiveVideoIndex(startIndex + 1);
-      setEndStartupLiveVideoIndex(endIndex + 1);
+      setStartStartupLiveVideoIndex(startIndex + 1)
+      setEndStartupLiveVideoIndex(endIndex + 1)
     }
-  };
+  }
 
   const handleNextVideoMobile = async (page, startIndex, endIndexMobile) => {
     if (endIndexMobile < startupLiveVideos.length) {
-      setStartStartupLiveVideoIndex(startIndex + 1);
-      setEndStartupLiveVideoIndexMobile(endIndexMobile + 1);
+      setStartStartupLiveVideoIndex(startIndex + 1)
+      setEndStartupLiveVideoIndexMobile(endIndexMobile + 1)
     }
-  };
+  }
 
   const handlePreviousVideoMobile = async (
     page,
@@ -225,23 +223,23 @@ function StartupLive() {
     endIndexMobile
   ) => {
     if (startIndex > 0) {
-      setStartStartupLiveVideoIndex(startIndex - 1);
-      setEndStartupLiveVideoIndexMobile(endIndexMobile - 1);
+      setStartStartupLiveVideoIndex(startIndex - 1)
+      setEndStartupLiveVideoIndexMobile(endIndexMobile - 1)
     }
-  };
+  }
 
   const renderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
-      return " SOON";
+      return ' SOON'
     } else {
       return (
         <span>
-          {"IN " + days + " DAYS " + hours + " HOURS " + minutes + " MINUTES "}
-          {minutes === 0 ? seconds + " SECONDS" : ""}
+          {'IN ' + days + ' DAYS ' + hours + ' HOURS ' + minutes + ' MINUTES '}
+          {minutes === 0 ? seconds + ' SECONDS' : ''}
         </span>
-      );
+      )
     }
-  };
+  }
 
   return (
     <Container fluid>
@@ -249,7 +247,7 @@ function StartupLive() {
         <div className="col-12 col-xl-9 pe-0">
           <div
             className="account-page-padding page-border"
-            style={{ minHeight: "100vh" }}
+            style={{ minHeight: '100vh' }}
           >
             <h3 className="page-title">
               <IntlMessages id="navigation.startup_live" />
@@ -264,7 +262,7 @@ function StartupLive() {
                   options={allowedStartupLiveOptions}
                   value={selectedStartupLive}
                   onChange={setSelectedStartupLive}
-                  placeholder={"Select Startup Live"}
+                  placeholder={'Select Startup Live'}
                   className="mb-0 me-0 custom-dropdown"
                   styles={dropDownStyles}
                   autoFocus={false}
@@ -276,7 +274,7 @@ function StartupLive() {
               {selectedStartupLive && (
                 <div
                   className="col-12"
-                  style={{ visibility: showStartuplive ? "visible" : "hidden" }}
+                  style={{ visibility: showStartuplive ? 'visible' : 'hidden' }}
                 >
                   {/* <iframe
                     src={selectedStartupLive.value.src_link}
@@ -297,7 +295,7 @@ function StartupLive() {
                 <div className="row pitch-apply">
                   <div className="col-12 my-2 d-flex">
                     <p className="my-auto">
-                      STARTING{" "}
+                      STARTING{' '}
                       <Countdown date={firstEventTime} renderer={renderer} />
                     </p>
                   </div>
@@ -306,16 +304,16 @@ function StartupLive() {
               <div className="row">
                 <div className="col-12">
                   <h4
-                    style={{ fontSize: "21px", letterSpacing: "0.84px" }}
+                    style={{ fontSize: '21px', letterSpacing: '0.84px' }}
                     className="m-0"
                   >
                     Welcome to StartupLive
                   </h4>
                   <p
                     style={{
-                      fontSize: "14px",
-                      letterSpacing: "0.56px",
-                      fontWeight: "300",
+                      fontSize: '14px',
+                      letterSpacing: '0.56px',
+                      fontWeight: '300'
                     }}
                   >
                     With Our Director of Wellness Jeremy Hall and The Startup
@@ -343,11 +341,11 @@ function StartupLive() {
                         // thumbnail={video.thumbnail}
                         thumbnail={video.thumbnail}
                         title={video.title}
-                        description={" "}
-                        page={"startup-live"}
+                        description={' '}
+                        page={'startup-live'}
                         videoData={video}
                         connections={connections}
-                        type={"view-all"}
+                        type={'view-all'}
                       />
                     ))}
                   </div>
@@ -364,7 +362,7 @@ function StartupLive() {
             )} */}
             <NotesButton />
 
-            <div className={"community-connect my-2"}>
+            {/* <div className={"community-connect my-2"}>
               <Link to="/my-connections">
                 <FontAwesomeIcon
                   icon={faUsers}
@@ -381,12 +379,12 @@ function StartupLive() {
               <Link to="/my-connections">
                 <p className="my-auto ms-2">Connect with my community</p>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </Row>
     </Container>
-  );
+  )
 }
 
-export default StartupLive;
+export default StartupLive

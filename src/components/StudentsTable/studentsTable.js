@@ -118,7 +118,7 @@ export default function StudentsTable(props) {
     await axiosInstance
       .get('/instructor/my-students')
       .then((res) => {
-        debugger
+        console.log('res', res)
         if (res.data.students?.length) {
           let newArrray = []
           res.data.instructorsnew.map((instructor) => {
@@ -290,17 +290,18 @@ export default function StudentsTable(props) {
     }
   }
 
-  const dropDownStyles = {
+  const firstDropDownStyles = {
     control: (provided, state) => ({
       ...provided,
       boxShadow: 'none',
       border: '1px solid #BBBDBF',
       borderRadius: '0',
       height: 15,
-      fontSize: '16px',
+      fontSize: '14px',
       cursor: 'pointer',
       color: '#707070',
       fontWeight: '500',
+
       ':hover': {
         border: '1px solid #BBBDBF',
       },
@@ -311,6 +312,56 @@ export default function StudentsTable(props) {
       border: 'none',
       fontSize: '14px',
       cursor: 'pointer',
+      width: '170%',
+      margin: 0,
+      paddingTop: 0,
+      boxShadow: '0px 3px 6px #00000029',
+      zIndex: 9999,
+    }),
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    valueContainer: (base) => ({
+      ...base,
+    }),
+    option: (styles, state) => ({
+      ...styles,
+      cursor: 'pointer',
+      fontWeight: 600,
+      color: '231F20',
+      fontSize: '14px',
+      paddingTop: '2px',
+      paddingBottom: '2px',
+      ':hover': {
+        backgroundColor: 'white',
+        background: 'white',
+      },
+      backgroundColor: 'white',
+      textTransform: 'uppercase',
+    }),
+  }
+
+  const dropDownStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      boxShadow: 'none',
+      border: '1px solid #BBBDBF',
+      borderRadius: '0',
+      height: 15,
+      fontSize: '14px',
+      cursor: 'pointer',
+      color: '#707070',
+      fontWeight: '500',
+
+      ':hover': {
+        border: '1px solid #BBBDBF',
+      },
+      zIndex: 100,
+    }),
+    menu: (base) => ({
+      ...base,
+      border: 'none',
+      fontSize: '14px',
+      cursor: 'pointer',
+      // width: '150%',
       margin: 0,
       paddingTop: 0,
       boxShadow: '0px 3px 6px #00000029',
@@ -518,9 +569,19 @@ export default function StudentsTable(props) {
     setCurrentEditingStudent()
     setTooglingActivationStudent()
 
+    console.log('currentEditingStudent', currentEditingStudent)
+
     setBulkEditingStudents(selectedRows)
     setShowBulkEditModal(true)
   }
+
+  const handleBulkNextYearAction = () => {
+    if (!selectedRows.length) return
+    setCurrentEditingStudent()
+    setTooglingActivationStudent()
+  }
+
+  // handleBulkNextYearAction()
 
   const bulkEditStudents = async (options) => {
     setEditLoading(true)
@@ -682,6 +743,7 @@ export default function StudentsTable(props) {
         omit: !selectedOptions.includes('year'),
 
         cell: (record) => {
+          console.log('record', record)
           return (
             <>
               <div className="table-edit-dropdown">
@@ -713,22 +775,41 @@ export default function StudentsTable(props) {
         },
       },
       {
-        name: 'School',
-        key: 'school',
-        selector: (row) => `FFFFF`,
-        sortable: true,
-        omit: !selectedOptions.includes('school'),
-      },
-      {
         name: 'Class',
         key: 'class',
         selector: (row) => (row.class ? row.class : 'none'),
         sortable: true,
-        // cell:(record)=>{
-        //   return (
-
-        //   )
-        // }
+        omit: !selectedOptions.includes('class'),
+        cell: (record) => {
+          return (
+            <>
+              <div className="table-edit-dropdown">
+                {currentEditingStudent?.id === record.id ? (
+                  <Select
+                    menuPortalTarget={document.body}
+                    menuPosition={'fixed'}
+                    options={defaultYears}
+                    value={{
+                      label: currentEditingStudent?.class,
+                      value: currentEditingStudent?.class,
+                    }}
+                    onChange={(newValue) =>
+                      handleChange({
+                        target: { name: 'class', value: newValue.value },
+                      })
+                    }
+                    className="my-auto py-auto"
+                    // styles={customStyles}
+                  />
+                ) : (
+                  <p className="my-auto">
+                    {record.class ? record.class : 'None'}{' '}
+                  </p>
+                )}
+              </div>
+            </>
+          )
+        },
       },
       {
         name: 'IAMR Status',
@@ -736,6 +817,7 @@ export default function StudentsTable(props) {
         selector: (row) =>
           row.completedSkills1 ? row.completedSkills1 : 'NONE',
         sortable: true,
+        omit: !selectedOptions.includes('certification'),
         cell: (record) => {
           return (
             <>
@@ -977,33 +1059,56 @@ export default function StudentsTable(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-md-7">
+              <div className="col-12 col-md-5">
                 <div className="row h-100 me-0 align-items-end justify-content-end">
-                  <div className="col-12 col-sm-6 col-xxl-5 mt-2 pe-0">
+                  {/* <div className="col-12 col-sm-3 col-xxl-3 mt-2 pe-0">
+                    <Select
+                      options={[
+                        { label: 'year', value: 'year' },
+                        { label: 'class', value: 'class' },
+                        {
+                          label: 'certification Status',
+                          value: 'CERTIFICATION STATUS',
+                        },
+                      ]}
+                      value={null}
+                      placeholder={'Sort By'}
+                      // onChange={handleSortChange}
+                      className="mb-0 me-0 custom-dropdown"
+                      styles={firstDropDownStyles}
+                      autoFocus={false}
+                      isSearchable={false}
+                    />
+                  </div> */}
+                  <div className="col-12 col-sm-4 col-xxl-4 mt-2 pe-0">
                     <Select
                       options={[
                         { label: 'edit', value: 'edit' },
+                        { label: 'nextYear', value: 'nextYear' },
                         { label: 'deactivate', value: 'deactivate' },
                       ]}
                       value={'Bulk Actions'}
                       placeholder={'Bulk Actions'}
-                      onChange={(newValue) =>
+                      onChange={(newValue) => {
+                        console.log('newValue', newValue)
                         newValue.value === 'edit'
                           ? handleBulkEditAction()
                           : handleBulkDeactiveAction()
-                      }
+                      }}
                       className="mb-0 me-0 custom-dropdown"
                       styles={dropDownStyles}
                       autoFocus={false}
                       isSearchable={false}
                     />
                   </div>
-                  <div className="col-12 col-sm-6 col-xxl-5 mt-2 me-0 pe-0">
+                  <div className="col-12 col-sm-5 col-xxl-5 mt-2 me-0 pe-0">
                     <Select
                       options={[
                         { label: 'level', value: 'level' },
                         { label: 'year', value: 'year' },
-                        { label: 'school', value: 'school' },
+                        { label: 'class', value: 'class' },
+                        { label: 'certification', value: 'certification' },
+                        { label: 'transfers', value: 'transfers' },
                       ]}
                       placeholder={'Show Columns'}
                       // value={'Show Columns'}

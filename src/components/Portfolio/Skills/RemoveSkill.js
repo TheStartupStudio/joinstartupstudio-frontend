@@ -8,53 +8,57 @@ export default function RemoveSkill(props) {
     <Modal
       show={props.show}
       onHide={props.onHide}
-      backdrop='static'
+      backdrop="static"
       keyboard={false}
-      className='edit-modal'
+      className="edit-modal"
     >
-      <Modal.Header className='edit-modal p-0 mx-4 edit-top-title general-modal-header'>
-        <h3 className='mt-4 mb-0'>
-          <IntlMessages id='portfolio.edit_top_skills' />
+      <Modal.Header className="edit-modal p-0 mx-4 edit-top-title general-modal-header">
+        <h3 className="mt-4 mb-0">
+          <IntlMessages id="portfolio.edit_top_skills" />
         </h3>
         <button
-          type='button'
-          className='btn-close me-1'
-          aria-label='Close'
+          type="button"
+          className="btn-close me-1"
+          aria-label="Close"
           onClick={props.onHide}
         />
       </Modal.Header>
-      <Modal.Body className='px-4'>
-        <Form.Label className='edit-modal-box-input-title'>
+      <Modal.Body className="px-4">
+        <Form.Label className="edit-modal-box-input-title">
           <span>Edit Skill</span>
         </Form.Label>
-        <div className='mt-4'>
-          {props?.userSkill &&
-            props.userSkill.map((data) => (
-              <SkillBoxButton
-                from={'removeModal'}
-                key={data.id}
-                data={data}
-                editRemoveSkill={(skill) => props.editRemoveSkill(skill)}
-                setRemoveSkill={(data) => props.setRemoveSkill(data)}
-                selcetedSkills={props.selcetedSkills}
-                setSelectedSkills={(data) => props.setSelectedSkills(data)}
-                onSave={() => props.onSave()}
-              />
-            ))}
+        <div className="mt-4">
+          <div className={'row'}>
+            {props?.userSkill &&
+              props.userSkill.map((data) => (
+                <div className="col-md-3 col-sm-6" key={data.id}>
+                  <SkillBoxButton
+                    from={'removeModal'}
+                    key={data.id}
+                    data={data}
+                    editRemoveSkill={(skill) => props.editRemoveSkill(skill)}
+                    setRemoveSkill={(data) => props.setRemoveSkill(data)}
+                    selcetedSkills={props.selcetedSkills}
+                    setSelectedSkills={(data) => props.setSelectedSkills(data)}
+                    onSave={() => props.onSave()}
+                  />
+                </div>
+              ))}
+          </div>
         </div>
       </Modal.Body>
-      <Modal.Footer className='border-0 py-0 my-0 mb-2 position-relative'>
-        <div className='row p-0 mb-3'>
-          <div className='col-md-11'>
+      <Modal.Footer className="border-0 py-0 my-0 mb-2 position-relative">
+        <div className="row p-0 mb-3">
+          <div className="col-md-11">
             <button
-              className='float-end edit-account mt-4 mb-4'
+              className="float-end edit-account mt-4 mb-4"
               disabled={props.loading}
               onClick={() => props.onSave()}
             >
               {props.loading ? (
-                <IntlMessages id='general.loading' />
+                <IntlMessages id="general.loading" />
               ) : (
-                <IntlMessages id='general.save' />
+                <IntlMessages id="general.save" />
               )}
             </button>
           </div>

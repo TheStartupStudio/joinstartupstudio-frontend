@@ -884,7 +884,7 @@ input[type='file'] {
   margin-left: 1.5rem !important;
 }
 .my-account {
-  border: 1px solid #bbbdbf;
+  /*border: 1px solid #bbbdbf;*/
   border-radius: 6px;
   opacity: 1;
 }
@@ -1020,6 +1020,7 @@ input[type='file'] {
 .edit-pencil {
   font-size: 20px;
   color: #707070;
+
 }
 .edit-modal h3 {
   font-weight: 600;
