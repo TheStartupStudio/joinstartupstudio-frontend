@@ -6,6 +6,48 @@
     width: 50% !important;
 }
 
+@media (max-width: 1200px) {
+    .modal-dialog {
+        width: 55% !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .modal-dialog {
+        width: 80% !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .modal-dialog {
+        width: 90% !important;
+    }
+}
 input .event-input {
     color:#000000 !important;
 }
+
+.event-input {
+    background-color: #fff !important;
+    font-size: 13px !important;
+    color:#000000 !important;
+}
+.event-input-container .event-input::placeholder {
+    background-color: #fff !important;
+    font-size: 13px !important;
+    font-weight: 400;
+}
+
+.ql-editor {
+    background-color: #fff !important;
+    font-size: 14px !important;
+}
+
+.ql-editor::placeholder {
+    font-size: 14px !important;
+}
+
+.ql-blank::placeholder {
+    font-size: 14px !important;
+}
+

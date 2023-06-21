@@ -11,17 +11,62 @@ import DatePicker from 'react-datepicker'
 import 'react-quill/dist/quill.snow.css'
 import PeriodSelector from '../PeriodSelector/PeriodSelector'
 import { useDispatch, useSelector } from 'react-redux'
-import { editEventStart, postEventStart } from '../../redux/dashboard/Actions'
+import {
+  editEventStart,
+  getPeriodsStart,
+  postEventStart,
+} from '../../redux/dashboard/Actions'
 import TimePicker from '../TimePicker/TimePicker'
 import './TaskEventModal.css'
+import MultiSelect from '../MultiSelect/MultiSelect'
+import { toast } from 'react-toastify'
 
 const TaskEventModal = (props) => {
   const [tab, setTab] = useState('task')
   const [periods, setPeriods] = useState(props.periods)
+  const loggedUser = useSelector((state) => state.user.user.user)
 
+  const defaultData = [
+    {
+      name: 'level',
+      value: 'LS',
+      label: 'LS',
+      year: ['K', '1st', '2nd', '3rd', '4th', '5th'],
+    },
+    {
+      name: 'level',
+      value: 'MS',
+      label: 'MS',
+      year: ['ES1', 'ES2', 'ES3'],
+      period: periods
+        ?.filter(
+          (item) =>
+            item.name === 'Period 1' ||
+            item.name === 'Period 2' ||
+            item.name === 'Period 3' ||
+            item.name === 'Period 4' ||
+            item.name === 'Period 5' ||
+            item.name === 'Period 6' ||
+            item.name === 'Period 7'
+        )
+        .map((item) => item.name),
+    },
+    {
+      name: 'level',
+      value: 'HS',
+      label: 'HS',
+      year: ['LTS1', 'LTS2', 'LTS3', 'LTS4'],
+      period: periods?.map((item) => item.name),
+    },
+    { name: 'level', value: 'HE', label: 'HE' },
+  ]
+
+  const userLevel = defaultData.filter(
+    (data) => data.value === loggedUser.level
+  )
   useEffect(() => {
     props.show === false && setState(initialState)
-  }, [props.show])
+  }, [])
 
   useEffect(() => {
     if (isEdit()) {
@@ -34,7 +79,8 @@ const TaskEventModal = (props) => {
         description: props.event?.description,
         type: props.event?.type,
         requirements: props.event?.requirements,
-        chooseClasses: props.event?.period,
+        periods: props.event?.periods,
+        // chooseClasses: props.event?.period,
       }
       setState(newState)
       setTab(props.event?.type)
@@ -62,11 +108,11 @@ const TaskEventModal = (props) => {
     description: '',
     type: '',
     requirements: '',
-    chooseClasses: {},
+    // chooseClasses: {},
+    periods: [],
   }
 
   const [state, setState] = useState(initialState)
-
   useEffect(() => {
     const newState = { ...state }
     newState.type = tab == 'task' ? 'task' : 'event'
@@ -123,12 +169,16 @@ const TaskEventModal = (props) => {
       description: state.description,
       type: state.type,
       requirements: state.requirements,
-      chooseClasses: state.chooseClasses,
+      periods: state.periods,
     }
     if (isAddingOnClick()) {
       setState(initialState)
     }
-    dispatch(postEventStart(newEventObj))
+    if (state.periods.length > 1) {
+      dispatch(postEventStart(newEventObj))
+    } else {
+      toast.error('You must select at least one period')
+    }
   }
 
   const onEditEvent = () => {
@@ -141,10 +191,13 @@ const TaskEventModal = (props) => {
       description: state.description,
       type: state.type,
       requirements: state.requirements,
-      chooseClasses: state.chooseClasses,
+      periods: state.periods,
     }
-
-    dispatch(editEventStart(newEvent, { eventId: props.event.id }))
+    if (state.periods.length > 1) {
+      dispatch(editEventStart(newEvent, { eventId: props.event.id }))
+    } else {
+      toast.error('You must select at least one period')
+    }
   }
   const isEdit = () => {
     return props.event != null
@@ -171,14 +224,21 @@ const TaskEventModal = (props) => {
       setState(newState)
     }
   }, [state.endTime])
+
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    // Add more options as needed
+  ]
+
   return (
     <Modal
       show={props.show}
       onHide={props.onHide}
       backdrop="static"
       keyboard={false}
-      className={'task-event-modal'}
-      // className="edit-modal general-modal-header"
+      className="edit-modal general-modal-header task-event-modal"
     >
       <Modal.Header className="add-new-note-title general-modal-header my-auto p-0 mx-4">
         <h3 className="mb-0 pt-4 mt-2 ">
@@ -195,7 +255,7 @@ const TaskEventModal = (props) => {
           onClick={props.onHide}
         />
       </Modal.Header>
-      <Modal.Body className="mt-4 mb-3 mx-4 add-new-note">
+      <Modal.Body className="mt-4 mb-3 mx-4 add-new-note event-input-container">
         <div className="row w-100 m-0 mb-4">
           <div className="col-md-6">
             <button
@@ -216,7 +276,7 @@ const TaskEventModal = (props) => {
             </button>
           </div>
         </div>
-        <div className="row px-2 add-new-note">
+        <div className="row px-2 add-new-note event-input-container">
           <div className="col-md-12">
             <label
               htmlFor={tab === 'task' ? 'taskName' : 'eventName'}
@@ -244,9 +304,10 @@ const TaskEventModal = (props) => {
               )}
             </FormattedMessage>
           </div>
-
           <div
-            className={isEndTimeBeforeStartTime() ? 'col-md-6' : 'col-md-12'}
+            className={`event-input-container ${
+              isEndTimeBeforeStartTime() ? 'col-md-6' : 'col-md-12'
+            } `}
           >
             <label
               htmlFor="date"
@@ -258,7 +319,7 @@ const TaskEventModal = (props) => {
             <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
               {(placeholder) => (
                 <input
-                  className="my-1 mb-4 py-2 px-2 w-100  "
+                  className="my-1 mb-4 py-2 px-2 w-100 event-input "
                   type="date"
                   name={tab === 'task' ? 'taskDate' : 'eventDate'}
                   style={{
@@ -282,7 +343,7 @@ const TaskEventModal = (props) => {
             </FormattedMessage>
           </div>
           {isEndTimeBeforeStartTime() ? (
-            <div className="col-md-6 ">
+            <div className="col-md-6 event-input-container">
               <label
                 htmlFor="date"
                 style={{ fontSize: '14px', fontWeight: 'bold' }}
@@ -293,17 +354,13 @@ const TaskEventModal = (props) => {
               <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
                 {(placeholder) => (
                   <input
-                    className="my-1 mb-4 py-2 px-2 w-100 "
+                    className="my-1 mb-4 py-2 px-2 w-100 event-input"
                     type="date"
                     name={tab === 'task' ? 'taskDate' : 'eventDate'}
                     style={{
                       height: 48,
                       borderRadius: '0.25rem',
                       backgroundColor: 'white',
-                      '::placeholder': {
-                        color: '#000',
-                        fontWeight: 'bold',
-                      },
                     }}
                     placeholder={placeholder}
                     id={tab === 'task' ? 'taskDate' : 'eventDate'}
@@ -317,7 +374,7 @@ const TaskEventModal = (props) => {
               </FormattedMessage>
             </div>
           ) : null}
-          <div className="col-md-6 ">
+          <div className="col-md-6 event-input-container">
             <label
               htmlFor="date"
               style={{ fontSize: '14px', fontWeight: 'bold' }}
@@ -353,8 +410,7 @@ const TaskEventModal = (props) => {
               )}
             </FormattedMessage>
           </div>
-
-          <div className="col-md-12">
+          <div className="col-md-12 event-input-container">
             <label
               htmlFor="description"
               style={{ fontSize: '14px', fontWeight: 'bold' }}
@@ -369,7 +425,7 @@ const TaskEventModal = (props) => {
                   theme="snow"
                   name={tab === 'task' ? 'taskDescription' : 'eventDescription'}
                   id={tab === 'task' ? 'taskDescription' : 'eventDescription'}
-                  className="my-1 mb-4 py-2 px-0 w-100 rounded-0 scroll-add-new-note-modal"
+                  className="my-1 mb-4 py-2 px-0 w-100 rounded-0 scroll-add-new-note-modal "
                   style={{
                     height: '150px',
                     '::placeholder': {
@@ -385,8 +441,7 @@ const TaskEventModal = (props) => {
               )}
             </FormattedMessage>
           </div>
-
-          <div className="col-md-12">
+          <div className="col-md-12 event-input-container">
             <label
               htmlFor="requirements"
               style={{ fontSize: '14px', fontWeight: 'bold' }}
@@ -396,7 +451,7 @@ const TaskEventModal = (props) => {
             <FormattedMessage id="calendar_task-events.requirements">
               {(placeholder) => (
                 <input
-                  className="my-1 mb-4 py-2 px-2 w-100  "
+                  className="my-1 mb-4 py-2 px-2 w-100 event-input "
                   type="text"
                   name="requirements"
                   style={{
@@ -414,10 +469,22 @@ const TaskEventModal = (props) => {
               )}
             </FormattedMessage>
           </div>
+
           <div className="col-md-12">
-            <PeriodSelector
+            <label
+              htmlFor="chooseClasses"
+              style={{ fontSize: '14px', fontWeight: 'bold' }}
+            >
+              {isEdit() ? (
+                <FormattedMessage id="calendar_task-events.chosen_classes" />
+              ) : (
+                <FormattedMessage id="calendar_task-events.choose_classes" />
+              )}
+            </label>
+            <MultiSelect
               periods={periods}
-              handleChangePeriod={(e) => handleInputChange('chooseClasses', e)}
+              options={props.event?.periods}
+              handleChange={(e) => handleInputChange('periods', e)}
             />
           </div>
         </div>
