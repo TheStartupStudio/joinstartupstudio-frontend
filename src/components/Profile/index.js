@@ -7,7 +7,7 @@ import {
   faFacebookF,
   faLinkedinIn,
   faTwitter,
-  faInstagram,
+  faInstagram
 } from '@fortawesome/free-brands-svg-icons'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -20,6 +20,7 @@ import read from '../../assets/images/read_watch_listen_Read_with typo.png'
 import watch from '../../assets/images/read_watch_listen_Watch_with typo.png'
 import './index.css'
 import BriefingModal from '../Modals/BriefingModal'
+import { Link } from 'react-router-dom'
 
 function Profile(props) {
   const user = useSelector((state) => state.user.user.user)
@@ -79,7 +80,7 @@ function Profile(props) {
     ) {
       setNewMessages([
         ...newMessages,
-        { id: arrivalMessage?.arrivalMessage.room_id },
+        { id: arrivalMessage?.arrivalMessage.room_id }
       ])
     } else if (
       unReadMessageExists &&
@@ -117,7 +118,7 @@ function Profile(props) {
       'September',
       'October',
       'November',
-      'December',
+      'December'
     ]
     const date = new Date(milliseconds)
     const formatedDate =
@@ -151,7 +152,7 @@ function Profile(props) {
         style={{
           backgroundColor: '#F8F7F7',
           borderRadius: 0,
-          minHeight: '166px',
+          minHeight: '166px'
         }}
         className="notification-box"
       >
@@ -244,7 +245,7 @@ function Profile(props) {
       <div
         style={{
           minHeight: '166px',
-          cursor: 'pointer',
+          cursor: 'pointer'
         }}
         onClick={() => redirect(dashboardWidget?.link)}
         className="mx-0 px-0 col-12 col-lg-6 row mt-4 mt-md-0 widget-interesting text-center "
@@ -266,7 +267,7 @@ function Profile(props) {
             style={{
               backgroundColor: 'rgb(81, 199, 223)',
               color: 'rgb(255, 255, 255)',
-              fontSize: 14,
+              fontSize: 14
             }}
             onClick={(event) => {
               event.stopPropagation()
@@ -292,7 +293,7 @@ function Profile(props) {
           marginLeft: '0',
           minHeight: '166px',
           height: '250px',
-          fontWeight: '600',
+          fontWeight: '600'
         }}
         className="notification-box col-lg-6 col-sm-12 mt-4 row position-relative"
       >
@@ -307,20 +308,24 @@ function Profile(props) {
           style={{ marginTop: '-3rem' }}
         >
           <img src={Questions} style={{ width: '180px' }} alt="" />
-          <p className="mb-0 py-0" style={{ marginTop: '-2rem' }}>
+          <a href={`/iamr-inbox`} className="iamr-inbox_link">
             {studentQuestions.unreadCount ? studentQuestions?.unreadCount : 0}
             &nbsp; Questions
-          </p>
+          </a>
         </div>
         <div
           className="col-6 text-center fw-bold"
           style={{ marginTop: '-3rem' }}
         >
           <img src={Feedbacks} style={{ width: '180px' }} alt="" />
-          <p className="mb-0 py-0" style={{ marginTop: '-2rem' }}>
+          <a
+            href="/iamr-inbox"
+            // href={`/iamr-inbox`}
+            className="iamr-inbox_link"
+          >
             {feedbackRequests.unreadCount ? feedbackRequests.unreadCount : 0}
             &nbsp; Requests
-          </p>
+          </a>
         </div>
         {/* <p
           className='overlay-comming-soon position-absolute my-auto mx-auto text-center'
@@ -356,7 +361,7 @@ function Profile(props) {
           backgroundColor: '#F8F7F7',
           minHeight: '166px',
           height: '250px',
-          fontWeight: '600',
+          fontWeight: '600'
         }}
       >
         <div

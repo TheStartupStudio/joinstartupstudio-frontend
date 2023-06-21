@@ -3,84 +3,112 @@ import { Modal } from 'react-bootstrap'
 import Select from 'react-select'
 import IntlMessages from '../../../utils/IntlMessages'
 import '../index.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPeriodsStart } from '../../../redux/dashboard/Actions'
 const EditBulk = (props) => {
   const [toggle, setToggle] = useState(0)
+  const dispatch = useDispatch()
+  const periods = useSelector((state) => state.dashboard.periods)
   const [showPublishModal, setShowPublishModal] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [yearOptions, setYearOptions] = useState([])
+  const [periodOptions, setPeriodOptions] = useState([])
+  const [selectedYear, setSelectedYear] = useState(null)
+  const [selectedPeriod, setSelectedPeriod] = useState(null)
   const [data, setData] = useState()
 
-  const YEAR = [
-    { name: 'year', value: 'LTS1', label: 'LTS1' },
-    { name: 'year', value: 'LTS2', label: 'LTS2' },
-    { name: 'year', value: 'LTS3', label: 'LTS3' },
-    { name: 'year', value: 'LTS4', label: 'LTS4' },
+  useEffect(() => {
+    dispatch(getPeriodsStart())
+  }, [])
+
+  const defaultData = [
+    {
+      name: 'level',
+      value: 'LS',
+      label: 'LS',
+      year: ['K', '1st', '2nd', '3rd', '4th', '5th']
+    },
+    {
+      name: 'level',
+      value: 'MS',
+      label: 'MS',
+      year: ['ES1', 'ES2', 'ES3'],
+      period_id: periods
+        ?.filter(
+          (item) =>
+            item.name === 'Period 1' ||
+            item.name === 'Period 2' ||
+            item.name === 'Period 3' ||
+            item.name === 'Period 4' ||
+            item.name === 'Period 5' ||
+            item.name === 'Period 6' ||
+            item.name === 'Period 7'
+        )
+        .map((item) => item.name)
+    },
+    {
+      name: 'level',
+      value: 'HS',
+      label: 'HS',
+      year: ['LTS1', 'LTS2', 'LTS3', 'LTS4'],
+      period_id: periods?.map((item) => item.name)
+    },
+    { name: 'level', value: 'HE', label: 'HE' }
   ]
 
-  const Level = [
-    { name: 'level', value: 'LS', label: 'LS' },
-    { name: 'level', value: 'MS', label: 'MS' },
-    { name: 'level', value: 'HS', label: 'HS' },
-    { name: 'level', value: 'HE', label: 'HE' },
-  ]
+  useEffect(() => {
+    const getOptions = (value, prop) => {
+      const item = defaultData.find((item) => item.value === value)
+      const elements = item ? item[prop] : []
 
-  // const Level = [
-  //   {
-  //     name: 'level',
-  //     value: 'LS',
-  //     label: 'LS',
-  //     year: ['K', '1st', '2nd', '3rd', '4th', '5th'],
-  //   },
-  //   {
-  //     name: 'level',
-  //     value: 'MS',
-  //     label: 'MS',
-  //     year: ['ES1', 'ES2', 'ES3'],
-  //     class: [
-  //       'ADVISORY',
-  //       'PERIOD 1',
-  //       'PERIOD 2',
-  //       'PERIOD 3',
-  //       'PERIOD 4',
-  //       'PERIOD 5',
-  //       'PERIOD 6',
-  //       'PERIOD 7',
-  //     ],
-  //   },
-  //   {
-  //     name: 'level',
-  //     value: 'HS',
-  //     label: 'HS',
-  //     year: ['LTS1', 'LTS2', 'LTS3', 'LTS4'],
-  //     class: [
-  //       'PERIOD 0',
-  //       'PERIOD 1',
-  //       'PERIOD 2',
-  //       'PERIOD 3',
-  //       'PERIOD 4',
-  //       'PERIOD 4A',
-  //       'PERIOD 4B',
-  //       'PERIOD 4C',
-  //       'PERIOD 5',
-  //       'PERIOD 5A',
-  //       'PERIOD 5B',
-  //       'PERIOD 5C',
-  //       'PERIOD 6',
-  //       'PERIOD 7',
-  //       'PERIOD 8',
-  //     ],
-  //   },
-  //   { name: 'level', value: 'HE', label: 'HE' },
-  // ]
+      console.log('elements', elements)
+
+      if (prop === 'period_id') {
+        const periodIds = elements?.map(
+          (el) => periods.find((period) => period.name === el)?.id
+        )
+
+        return elements?.map((el, index) => ({
+          name: prop,
+          value: periodIds[index], // Assign the period ID as the value
+          label: el
+        }))
+      }
+      return elements?.map((el) => ({
+        name: prop,
+        value: el,
+        label: el
+      }))
+    }
+    const yearOptions = getOptions(data?.level, 'year')
+    const periodOptions = getOptions(data?.level, 'period_id')
+    setYearOptions(yearOptions)
+    setPeriodOptions(periodOptions)
+  }, [data?.level])
 
   const updateData = (e) => {
     const { name, value } = e
+    console.log('name', name)
+
     setData((old) => ({ ...old, [name]: value }))
+
+    console.log('data', data)
+
+    if (name === 'level') {
+      setData((old) => ({
+        ...old,
+        year: '',
+        period_id: null
+      }))
+      setSelectedYear(null)
+      setSelectedPeriod(null)
+    }
   }
 
   const customStyles = {
     option: (provided, state) => ({
-      ...provided,
-    }),
+      ...provided
+    })
   }
 
   return (
@@ -109,14 +137,13 @@ const EditBulk = (props) => {
           <div className="bulk-edit-options row pe-0">
             <Select
               placeholder={'Level'}
-              options={Level}
+              options={defaultData}
               className={`my-auto py-auto add-student-select col-12 col-md-6 col-lg-3 mt-2 px-0 px-md-2`}
               styles={{
                 menu: (provided) => ({
                   ...provided,
-                  //   minHeight: '48px',
-                  zIndex: 9999,
-                }),
+                  zIndex: 9999
+                })
               }}
               name="level"
               onChange={(e) => {
@@ -124,22 +151,47 @@ const EditBulk = (props) => {
               }}
             />
             <Select
-              placeholder={'Year'}
-              options={YEAR}
+              placeholder={selectedYear ? selectedYear : 'Year'}
+              value={selectedYear ? selectedYear : 'None'}
+              options={yearOptions}
+              isDisabled={data?.level === 'HE'}
               name="year"
               styles={{
                 ...customStyles,
                 menu: (provided) => ({
                   ...provided,
-                  //   height: '48px',
-                  zIndex: 9999,
-                }),
+                  zIndex: 9999
+                })
               }}
-              className={`my-auto py-auto add-student-select col-12 col-md-6 col-lg-3 mt-2 px-0 px-md-auto`}
-              // styles={}
+              className={`my-auto py-auto add-student-select col-12 col-md-6 col-lg-3 mt-2 px-0 px-md-2`}
               onChange={(e) => {
                 updateData(e)
-                // props.handleChange(e)
+                setSelectedYear(e.value)
+              }}
+            />
+            <Select
+              placeholder={
+                periods?.find((period) => period.id === selectedPeriod)?.name ||
+                'Class'
+              }
+              value={
+                periods?.find((period) => period.id === selectedPeriod)?.name ||
+                'None'
+              }
+              options={periodOptions}
+              isDisabled={data?.level === 'HE' || data?.level === 'LS'}
+              name="period"
+              styles={{
+                ...customStyles,
+                menu: (provided) => ({
+                  ...provided,
+                  zIndex: 9999
+                })
+              }}
+              className={`my-auto py-auto add-student-select col-12 col-md-6 col-lg-3 mt-2 px-0 px-md-auto`}
+              onChange={(e) => {
+                updateData(e)
+                setSelectedPeriod(e.value)
               }}
             />
             <div className=" col-12 col-md-6 col-lg-3 ms-auto my-auto blunk-activated-div d-flex mt-2">

@@ -17,12 +17,19 @@ import EditStudentModal from '../MyStudents/AddStudentsModal/EditStudentModal'
 import StudentsTransferModal from '../../components/MyStudents/studentsTransferModal'
 import Certification1Badge from '../../assets/images/market-ready-1-badge.png'
 import Certification2Badge from '../../assets/images/market-ready-2-badge.png'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPeriodsStart } from '../../redux/dashboard/Actions'
+import { NextYearModal } from './nextYearModal'
+import { C } from '@fullcalendar/core/internal-common'
 
 export default function StudentsTable(props) {
+  const dispatchRedux = useDispatch()
   const [currentEditingStudent, setCurrentEditingStudent] = useState()
   const [tooglingActivationStudent, setTooglingActivationStudent] = useState()
   const [bulkDeactivatingStudents, setBulkDeactivatingStudents] = useState([])
+  const periods = useSelector((state) => state.dashboard.periods)
   const [bulkEditingStudents, setBulkEditingStudents] = useState([])
+  const [bulkNextYearStudents, setBulkNextYearStudents] = useState([])
   const [students, setStudents] = useState([])
   const [isSearching, setIsSearching] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -33,7 +40,9 @@ export default function StudentsTable(props) {
   const [showBulkDeactivationModal, setShowBulkDeactivationModal] =
     useState(false)
   const [showBulkEditModal, setShowBulkEditModal] = useState(false)
+  const [showBulkNextYearModal, setShowBulkNextYearModal] = useState(false)
   const [deactivateLoading, setDeactivateLoading] = useState(false)
+  const [nextYearLoading, setNextYearLoading] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const [showStudentsOption, setShowStudentsOption] = useState('all')
@@ -50,6 +59,9 @@ export default function StudentsTable(props) {
   const [sentTransferRequests, setSentTransferRequests] = useState([])
   const [receivedTransferRequests, setReceivedTransferRequests] = useState([])
   const [receivedTransfersCount, setReceivedTransfersCount] = useState(0)
+  const [yearOptions, setYearOptions] = useState([])
+  const [periodOptions, setPeriodOptions] = useState([])
+  const [nextYearOptions, setNextYearOptions] = useState([])
 
   const filteringCondition = (student) => {
     return student?.name
@@ -60,6 +72,7 @@ export default function StudentsTable(props) {
   useEffect(() => {
     getStudents()
     getTransferedStudents()
+    dispatchRedux(getPeriodsStart())
   }, [])
 
   useEffect(() => {
@@ -118,13 +131,12 @@ export default function StudentsTable(props) {
     await axiosInstance
       .get('/instructor/my-students')
       .then((res) => {
-        console.log('res', res)
         if (res.data.students?.length) {
           let newArrray = []
           res.data.instructorsnew.map((instructor) => {
             newArrray.push({
               value: instructor.instructorInfo.id,
-              label: instructor.name,
+              label: instructor.name
             })
           })
 
@@ -240,7 +252,7 @@ export default function StudentsTable(props) {
     )
     setSentTransferRequests((sentTransferRequests) => [
       transfer,
-      ...sentTransferRequests,
+      ...sentTransferRequests
     ])
   }
 
@@ -290,55 +302,6 @@ export default function StudentsTable(props) {
     }
   }
 
-  const firstDropDownStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      boxShadow: 'none',
-      border: '1px solid #BBBDBF',
-      borderRadius: '0',
-      height: 15,
-      fontSize: '14px',
-      cursor: 'pointer',
-      color: '#707070',
-      fontWeight: '500',
-
-      ':hover': {
-        border: '1px solid #BBBDBF',
-      },
-      zIndex: 100,
-    }),
-    menu: (base) => ({
-      ...base,
-      border: 'none',
-      fontSize: '14px',
-      cursor: 'pointer',
-      width: '170%',
-      margin: 0,
-      paddingTop: 0,
-      boxShadow: '0px 3px 6px #00000029',
-      zIndex: 9999,
-    }),
-    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-    valueContainer: (base) => ({
-      ...base,
-    }),
-    option: (styles, state) => ({
-      ...styles,
-      cursor: 'pointer',
-      fontWeight: 600,
-      color: '231F20',
-      fontSize: '14px',
-      paddingTop: '2px',
-      paddingBottom: '2px',
-      ':hover': {
-        backgroundColor: 'white',
-        background: 'white',
-      },
-      backgroundColor: 'white',
-      textTransform: 'uppercase',
-    }),
-  }
-
   const dropDownStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -352,9 +315,9 @@ export default function StudentsTable(props) {
       fontWeight: '500',
 
       ':hover': {
-        border: '1px solid #BBBDBF',
+        border: '1px solid #BBBDBF'
       },
-      zIndex: 100,
+      zIndex: 100
     }),
     menu: (base) => ({
       ...base,
@@ -365,11 +328,11 @@ export default function StudentsTable(props) {
       margin: 0,
       paddingTop: 0,
       boxShadow: '0px 3px 6px #00000029',
-      zIndex: 9999,
+      zIndex: 9999
     }),
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
     valueContainer: (base) => ({
-      ...base,
+      ...base
     }),
     option: (styles, state) => ({
       ...styles,
@@ -381,11 +344,11 @@ export default function StudentsTable(props) {
       paddingBottom: '2px',
       ':hover': {
         backgroundColor: 'white',
-        background: 'white',
+        background: 'white'
       },
       backgroundColor: 'white',
-      textTransform: 'uppercase',
-    }),
+      textTransform: 'uppercase'
+    })
   }
 
   const Option = createClass({
@@ -413,7 +376,7 @@ export default function StudentsTable(props) {
           </components.Option>
         </div>
       )
-    },
+    }
   })
 
   const noDataComponent = () => {
@@ -442,10 +405,20 @@ export default function StudentsTable(props) {
   const handleChange = (event) => {
     const { name, value } = event.target
 
-    setCurrentEditingStudent((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }))
+    if (name === 'level') {
+      setCurrentEditingStudent((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+        period_id: null,
+        year: ''
+      }))
+      updateOptions(value)
+    } else {
+      setCurrentEditingStudent((prevValues) => ({
+        ...prevValues,
+        [name]: value
+      }))
+    }
   }
 
   const editSingleStudent = async () => {
@@ -468,46 +441,125 @@ export default function StudentsTable(props) {
     setCurrentEditingStudent()
   }
 
-  const defaultLevels = [
-    { label: 'LS', value: 'LS' },
-    { label: 'MS', value: 'MS' },
-    { label: 'HS', value: 'HS' },
-    { label: 'HE', value: 'HE' },
+  const defaultData = [
+    {
+      name: 'level',
+      value: 'LS',
+      label: 'LS',
+      year: ['K', '1st', '2nd', '3rd', '4th', '5th']
+    },
+    {
+      name: 'level',
+      value: 'MS',
+      label: 'MS',
+      year: ['ES1', 'ES2', 'ES3'],
+      period: periods
+        ?.filter(
+          (item) =>
+            item.name === 'Period 1' ||
+            item.name === 'Period 2' ||
+            item.name === 'Period 3' ||
+            item.name === 'Period 4' ||
+            item.name === 'Period 5' ||
+            item.name === 'Period 6' ||
+            item.name === 'Period 7'
+        )
+        .map((item) => item.name)
+    },
+    {
+      name: 'level',
+      value: 'HS',
+      label: 'HS',
+      year: ['LTS1', 'LTS2', 'LTS3', 'LTS4'],
+      period: periods?.map((item) => item.name)
+    },
+    { name: 'level', value: 'HE', label: 'HE' }
   ]
 
-  const defaultYears = [
-    { label: 'LTS1', value: 'LTS1' },
-    { label: 'LTS2', value: 'LTS2' },
-    { label: 'LTS3', value: 'LTS3' },
-    { label: 'LTS4', value: 'LTS4' },
-  ]
+  // useEffect(() => {
+  //   const getOptions = (value, prop) => {
+  //     const item = defaultData.find((item) => item.value === value)
+  //     const elements = item ? item[prop] : []
+
+  //     if (prop === 'period') {
+  //       const periodIds = elements?.map(
+  //         (el) => periods.find((period) => period.name === el)?.id
+  //       )
+
+  //       return elements?.map((el, index) => ({
+  //         name: prop,
+  //         value: periodIds[index], // Assign the period ID as the value
+  //         label: el,
+  //       }))
+  //     }
+  //     return elements?.map((el) => ({
+  //       name: prop,
+  //       value: el,
+  //       label: el,
+  //     }))
+  //   }
+  //   const yearOptions = getOptions(currentEditingStudent?.level, 'year')
+  //   const periodOptions = getOptions(currentEditingStudent?.level, 'period')
+  //   setYearOptions(yearOptions)
+  //   setPeriodOptions(periodOptions)
+  // }, [currentEditingStudent?.level])
+
+  const updateOptions = (level) => {
+    const getOptions = (value, prop) => {
+      const item = defaultData.find((item) => item.value === value)
+      const elements = item ? item[prop] : []
+
+      if (prop === 'period') {
+        const periodIds = elements?.map(
+          (el) => periods.find((period) => period.name === el)?.id
+        )
+
+        return elements?.map((el, index) => ({
+          name: prop,
+          value: periodIds[index], // Assign the period ID as the value
+          label: el
+        }))
+      }
+      return elements?.map((el) => ({
+        name: prop,
+        value: el,
+        label: el
+      }))
+    }
+
+    const yearOptions = getOptions(level, 'year')
+    const periodOptions = getOptions(level, 'period')
+
+    setYearOptions(yearOptions)
+    setPeriodOptions(periodOptions)
+  }
 
   const customStyles = {
     rows: {
       style: {
-        minHeight: '100px', // override the row height
-      },
+        minHeight: '100px' // override the row height
+      }
     },
     headCells: {
       style: {
         paddingLeft: '8px', // override the cell padding for head cells
-        paddingRight: '8px',
-      },
+        paddingRight: '8px'
+      }
     },
     cells: {
       style: {
         paddingLeft: '8px', // override the cell padding for data cells
         paddingRight: '8px',
-        color: '#231F20',
-      },
-    },
+        color: '#231F20'
+      }
+    }
   }
 
   const handleSingleActivationToggle = async () => {
     setDeactivateLoading(true)
     await axiosInstance
       .put(`/instructor/update-student/${tooglingActivationStudent.data.id}`, {
-        deactivated: !tooglingActivationStudent.data.deactivated,
+        deactivated: !tooglingActivationStudent.data.deactivated
       })
       .then(({ data }) => {
         if (data) {
@@ -538,13 +590,33 @@ export default function StudentsTable(props) {
     setShowBulkDeactivationModal(true)
   }
 
+  const handleBulkEditAction = () => {
+    if (!selectedRows.length) return
+
+    setCurrentEditingStudent()
+    setTooglingActivationStudent()
+
+    setBulkEditingStudents(selectedRows)
+    setShowBulkEditModal(true)
+  }
+
+  const handleBulkNextYearAction = () => {
+    if (!selectedRows.length) return
+
+    setCurrentEditingStudent()
+    setTooglingActivationStudent()
+
+    setBulkNextYearStudents(selectedRows)
+    setShowBulkNextYearModal(true)
+  }
+
   const bulkDeactivateStudents = async () => {
     setDeactivateLoading(true)
 
     await axiosInstance
       .post(`/instructor/bulk-update/`, {
         studentsIds: bulkDeactivatingStudents,
-        bulkDeactivate: true,
+        bulkDeactivate: true
       })
       .then((data) => {
         setStudents(
@@ -564,32 +636,13 @@ export default function StudentsTable(props) {
     setShowBulkDeactivationModal(false)
   }
 
-  const handleBulkEditAction = () => {
-    if (!selectedRows.length) return
-    setCurrentEditingStudent()
-    setTooglingActivationStudent()
-
-    console.log('currentEditingStudent', currentEditingStudent)
-
-    setBulkEditingStudents(selectedRows)
-    setShowBulkEditModal(true)
-  }
-
-  const handleBulkNextYearAction = () => {
-    if (!selectedRows.length) return
-    setCurrentEditingStudent()
-    setTooglingActivationStudent()
-  }
-
-  // handleBulkNextYearAction()
-
   const bulkEditStudents = async (options) => {
     setEditLoading(true)
 
     await axiosInstance
       .post(`/instructor/bulk-update/`, {
         studentsIds: bulkEditingStudents,
-        options: options,
+        options: options
       })
       .then((data) => {
         const updatedStudents = students?.map((student) => {
@@ -604,6 +657,7 @@ export default function StudentsTable(props) {
           }
           return student
         })
+
         setStudents(updatedStudents)
         setShowConfirmationModal(true)
         setShowBulkEditModal(false)
@@ -613,6 +667,86 @@ export default function StudentsTable(props) {
       })
 
     setEditLoading(false)
+    setDeactivateLoading(false)
+    setShowBulkDeactivationModal(false)
+  }
+
+  const bulkNextYear = async () => {
+    setNextYearLoading(true)
+
+    const updatedOptions = await Promise.all(
+      bulkNextYearStudents?.map(async (id) => {
+        const { data } = await axiosInstance.get(`/users/${id}`)
+
+        const selectedUserData = defaultData.find(
+          (item) => item.value === data?.level
+        )
+
+        const currentYearIndex = selectedUserData?.year.indexOf(data?.year)
+        const periodIndexId = periods?.find(
+          (period) => period.id === data?.period_id
+        )?.name
+
+        const currentPeriodIndex =
+          selectedUserData?.period.indexOf(periodIndexId)
+        let nextYearIndex
+        let nextPeriodIndex
+
+        if (selectedUserData?.year.length - 1 === currentYearIndex) {
+          nextYearIndex = currentYearIndex
+          nextPeriodIndex = currentPeriodIndex
+        } else {
+          nextYearIndex = currentYearIndex + 1
+          nextPeriodIndex = 0
+        }
+
+        const nextYear = selectedUserData?.year[nextYearIndex]
+        const nextPeriodName = selectedUserData?.period[nextPeriodIndex]
+
+        const nextPeriod = periods.find(
+          (item) => item.name === nextPeriodName
+        )?.id
+
+        return {
+          studentID: data?.id,
+          year: nextYear,
+          period_id: nextPeriod
+        }
+      })
+    )
+
+    await axiosInstance
+      .post(`/instructor/bulk-update/`, {
+        studentsIds: bulkNextYearStudents,
+        nextYearOptions: updatedOptions
+      })
+      .then((data) => {
+        const updatedStudents = students?.map((student) => {
+          if (bulkNextYearStudents.includes(student.id)) {
+            for (let i = 0; i < updatedOptions.length; i++) {
+              const option = updatedOptions[i]
+              if (option.studentID === student.id) {
+                for (const property in option) {
+                  if (property === 'activated') {
+                    student['deactivated'] = !option[property]
+                  } else {
+                    student[property] = option[property]
+                  }
+                }
+              }
+            }
+          }
+          return student
+        })
+        setStudents(updatedStudents)
+        setShowConfirmationModal(true)
+        setShowBulkNextYearModal(false)
+      })
+      .catch((err) => {
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+      })
+
+    setNextYearLoading(false)
     setDeactivateLoading(false)
     setShowBulkDeactivationModal(false)
   }
@@ -642,6 +776,7 @@ export default function StudentsTable(props) {
                       role="button"
                       onClick={() => {
                         setCurrentEditingStudent(record)
+                        updateOptions(record.level)
                       }}
                     >
                       Quick Edit User
@@ -653,7 +788,7 @@ export default function StudentsTable(props) {
                         onClick={() => {
                           setTooglingActivationStudent({
                             data: record,
-                            action_type: 'deactivate',
+                            action_type: 'deactivate'
                           })
                           setShowToggleActivationModal(true)
                         }}
@@ -666,7 +801,7 @@ export default function StudentsTable(props) {
                         onClick={() => {
                           setTooglingActivationStudent({
                             data: record,
-                            action_type: 'activate',
+                            action_type: 'activate'
                           })
                           setShowToggleActivationModal(true)
                         }}
@@ -696,7 +831,7 @@ export default function StudentsTable(props) {
               )}
             </div>
           </>
-        ),
+        )
       },
       {
         name: 'Level',
@@ -714,14 +849,14 @@ export default function StudentsTable(props) {
                   <Select
                     menuPortalTarget={document.body}
                     menuPosition={'fixed'}
-                    options={defaultLevels}
+                    options={defaultData}
                     value={{
                       label: currentEditingStudent?.level,
-                      value: currentEditingStudent?.level,
+                      value: currentEditingStudent?.level
                     }}
                     onChange={(newValue) =>
                       handleChange({
-                        target: { name: 'level', value: newValue.value },
+                        target: { name: 'level', value: newValue.value }
                       })
                     }
                     className="my-auto py-auto"
@@ -733,7 +868,7 @@ export default function StudentsTable(props) {
               </div>
             </>
           )
-        },
+        }
       },
       {
         name: 'Year',
@@ -741,9 +876,7 @@ export default function StudentsTable(props) {
         selector: (row) => (row.year ? row.year : 'NONE'),
         sortable: true,
         omit: !selectedOptions.includes('year'),
-
         cell: (record) => {
-          console.log('record', record)
           return (
             <>
               <div className="table-edit-dropdown">
@@ -751,14 +884,15 @@ export default function StudentsTable(props) {
                   <Select
                     menuPortalTarget={document.body}
                     menuPosition={'fixed'}
-                    options={defaultYears}
+                    options={yearOptions}
+                    isDisabled={currentEditingStudent?.level === 'HE'}
                     value={{
                       label: currentEditingStudent?.year,
-                      value: currentEditingStudent?.year,
+                      value: currentEditingStudent?.year
                     }}
                     onChange={(newValue) =>
                       handleChange({
-                        target: { name: 'year', value: newValue.value },
+                        target: { name: 'year', value: newValue.value }
                       })
                     }
                     className="my-auto py-auto"
@@ -772,12 +906,12 @@ export default function StudentsTable(props) {
               </div>
             </>
           )
-        },
+        }
       },
       {
         name: 'Class',
         key: 'class',
-        selector: (row) => (row.class ? row.class : 'none'),
+        selector: (row) => (row.period_id ? row.period_id : 'NONE'),
         sortable: true,
         omit: !selectedOptions.includes('class'),
         cell: (record) => {
@@ -788,28 +922,38 @@ export default function StudentsTable(props) {
                   <Select
                     menuPortalTarget={document.body}
                     menuPosition={'fixed'}
-                    options={defaultYears}
+                    options={periodOptions}
+                    isDisabled={
+                      currentEditingStudent.level === 'LS' ||
+                      currentEditingStudent.level === 'HE'
+                    }
                     value={{
-                      label: currentEditingStudent?.class,
-                      value: currentEditingStudent?.class,
+                      label: periods?.find(
+                        (period) =>
+                          period.id === currentEditingStudent?.period_id
+                      )?.name,
+                      value: periods?.find(
+                        (period) =>
+                          period.id === currentEditingStudent?.period_id
+                      )?.name
                     }}
                     onChange={(newValue) =>
                       handleChange({
-                        target: { name: 'class', value: newValue.value },
+                        target: { name: 'period_id', value: newValue.value }
                       })
                     }
                     className="my-auto py-auto"
-                    // styles={customStyles}
                   />
                 ) : (
                   <p className="my-auto">
-                    {record.class ? record.class : 'None'}{' '}
+                    {periods?.find((period) => period.id === record.period_id)
+                      ?.name || 'None'}
                   </p>
                 )}
               </div>
             </>
           )
-        },
+        }
       },
       {
         name: 'IAMR Status',
@@ -878,7 +1022,7 @@ export default function StudentsTable(props) {
               </div>
             </>
           )
-        },
+        }
       },
       {
         key: 'action',
@@ -921,8 +1065,8 @@ export default function StudentsTable(props) {
               </div>
             </>
           )
-        },
-      },
+        }
+      }
     ],
     [currentEditingStudent, loading, selectedOptions, students]
   )
@@ -1061,39 +1205,21 @@ export default function StudentsTable(props) {
               </div>
               <div className="col-12 col-md-5">
                 <div className="row h-100 me-0 align-items-end justify-content-end">
-                  {/* <div className="col-12 col-sm-3 col-xxl-3 mt-2 pe-0">
-                    <Select
-                      options={[
-                        { label: 'year', value: 'year' },
-                        { label: 'class', value: 'class' },
-                        {
-                          label: 'certification Status',
-                          value: 'CERTIFICATION STATUS',
-                        },
-                      ]}
-                      value={null}
-                      placeholder={'Sort By'}
-                      // onChange={handleSortChange}
-                      className="mb-0 me-0 custom-dropdown"
-                      styles={firstDropDownStyles}
-                      autoFocus={false}
-                      isSearchable={false}
-                    />
-                  </div> */}
                   <div className="col-12 col-sm-4 col-xxl-4 mt-2 pe-0">
                     <Select
                       options={[
                         { label: 'edit', value: 'edit' },
                         { label: 'nextYear', value: 'nextYear' },
-                        { label: 'deactivate', value: 'deactivate' },
+                        { label: 'deactivate', value: 'deactivate' }
                       ]}
                       value={'Bulk Actions'}
                       placeholder={'Bulk Actions'}
                       onChange={(newValue) => {
-                        console.log('newValue', newValue)
                         newValue.value === 'edit'
                           ? handleBulkEditAction()
-                          : handleBulkDeactiveAction()
+                          : newValue.value === 'deactivate'
+                          ? handleBulkDeactiveAction()
+                          : handleBulkNextYearAction()
                       }}
                       className="mb-0 me-0 custom-dropdown"
                       styles={dropDownStyles}
@@ -1108,7 +1234,7 @@ export default function StudentsTable(props) {
                         { label: 'year', value: 'year' },
                         { label: 'class', value: 'class' },
                         { label: 'certification', value: 'certification' },
-                        { label: 'transfers', value: 'transfers' },
+                        { label: 'transfers', value: 'transfers' }
                       ]}
                       placeholder={'Show Columns'}
                       // value={'Show Columns'}
@@ -1120,7 +1246,7 @@ export default function StudentsTable(props) {
                       // }
                       defaultValue={[
                         { label: 'level', value: 'level' },
-                        { label: 'year', value: 'year' },
+                        { label: 'year', value: 'year' }
                       ]}
                       value={null}
                       className="mb-0 custom-dropdown"
@@ -1176,6 +1302,20 @@ export default function StudentsTable(props) {
         />
       )}
 
+      {showBulkNextYearModal && (
+        <NextYearModal
+          show={showBulkNextYearModal}
+          onHide={() => {
+            setShowBulkNextYearModal(false)
+            setBulkNextYearStudents([])
+          }}
+          nextYearLoading={nextYearLoading}
+          handleAction={() => {
+            bulkNextYear()
+          }}
+        />
+      )}
+
       {bulkDeactivatingStudents && (
         <>
           <ConfirmationModal
@@ -1188,8 +1328,7 @@ export default function StudentsTable(props) {
           />
         </>
       )}
-
-      {bulkEditingStudents && (
+      {bulkEditingStudents?.length > 0 && (
         <>
           <ConfirmationModal
             show={showConfirmationModal}
@@ -1201,6 +1340,19 @@ export default function StudentsTable(props) {
           />
         </>
       )}
+      {bulkNextYearStudents?.length > 0 && (
+        <>
+          <ConfirmationModal
+            show={showConfirmationModal}
+            onHide={() => {
+              setShowConfirmationModal(false)
+              setBulkNextYearStudents([])
+            }}
+            message={'Student(s) year and period updated.'}
+          />
+        </>
+      )}
+
       <EditStudentModal
         show={openEditUserModal}
         onHide={() => setOpenEditUserModal(false)}
@@ -1256,7 +1408,8 @@ export default function StudentsTable(props) {
             />
           </>
         )}
-      {bulkEditingStudents.length > 0 && (
+
+      {bulkEditingStudents?.length > 0 && (
         <EditBulk
           show={showBulkEditModal}
           students={bulkEditingStudents}
