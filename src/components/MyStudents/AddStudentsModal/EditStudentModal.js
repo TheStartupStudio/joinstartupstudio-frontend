@@ -6,14 +6,19 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import '../index.css'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPeriodsStart } from '../../../redux/dashboard/Actions'
 
 const EditStudentModal = (props) => {
+  const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [resetLoading, setResetLoading] = useState(false)
   const [resetSubmitted, setResetSubmitted] = useState(false)
   const { user } = useSelector((state) => state.user.user)
   const [newInstructorId, setNewInstructorId] = useState(null)
+  const periods = useSelector((state) => state.dashboard.periods)
+  const [yearOptions, setYearOptions] = useState([])
+  const [periodOptions, setPeriodOptions] = useState([])
 
   const defaultData = {
     name: '',
@@ -21,9 +26,16 @@ const EditStudentModal = (props) => {
     user_note: '',
     certificat: false,
     deactivated: false,
+    level: '',
+    year: '',
+    period: '',
   }
 
   const [data, setData] = useState(defaultData)
+
+  useEffect(() => {
+    dispatch(getPeriodsStart())
+  }, [])
 
   useEffect(() => {
     if (!props?.data) {
@@ -46,63 +58,56 @@ const EditStudentModal = (props) => {
       value: 'MS',
       label: 'MS',
       year: ['ES1', 'ES2', 'ES3'],
-      class: [
-        'ADVISORY',
-        'PERIOD 1',
-        'PERIOD 2',
-        'PERIOD 3',
-        'PERIOD 4',
-        'PERIOD 5',
-        'PERIOD 6',
-        'PERIOD 7',
-      ],
+      period: periods
+        ?.filter(
+          (item) =>
+            item.name === 'Period 1' ||
+            item.name === 'Period 2' ||
+            item.name === 'Period 3' ||
+            item.name === 'Period 4' ||
+            item.name === 'Period 5' ||
+            item.name === 'Period 6' ||
+            item.name === 'Period 7'
+        )
+        .map((item) => item.name),
     },
     {
       name: 'level',
       value: 'HS',
       label: 'HS',
       year: ['LTS1', 'LTS2', 'LTS3', 'LTS4'],
-      class: [
-        'PERIOD 0',
-        'PERIOD 1',
-        'PERIOD 2',
-        'PERIOD 3',
-        'PERIOD 4',
-        'PERIOD 4A',
-        'PERIOD 4B',
-        'PERIOD 4C',
-        'PERIOD 5',
-        'PERIOD 5A',
-        'PERIOD 5B',
-        'PERIOD 5C',
-        'PERIOD 6',
-        'PERIOD 7',
-        'PERIOD 8',
-      ],
+      period: periods?.map((item) => item.name),
     },
     { name: 'level', value: 'HE', label: 'HE' },
   ]
 
-  const getOptions = (value, prop) => {
-    const item = defaultValues.find((item) => item.value === value)
-    const elements = item ? item[prop] : []
+  const updateOptions = (level) => {
+    const getOptions = (value, prop) => {
+      const item = defaultValues.find((item) => item.value === value)
+      const elements = item ? item[prop] : []
 
-    return elements?.map((el) => ({
-      name: prop,
-      value: el,
-      label: el,
-    }))
+      if (prop === 'period') {
+        const periodIds = elements?.map(
+          (el) => periods.find((period) => period.name === el)?.id
+        )
+
+        return elements?.map((el, index) => ({
+          name: prop,
+          value: periodIds[index], // Assign the period ID as the value
+          label: el,
+        }))
+      }
+      return elements?.map((el) => ({
+        name: prop,
+        value: el,
+        label: el,
+      }))
+    }
+    const yearOptions = getOptions(level, 'year')
+    const periodOptions = getOptions(level, 'period')
+    setYearOptions(yearOptions)
+    setPeriodOptions(periodOptions)
   }
-
-  const yearsOptions = getOptions(data.level, 'year')
-  const classOptions = getOptions(data.level, 'class')
-
-  const defaultLevels = [
-    { label: 'LS', value: 'LS' },
-    { label: 'MS', value: 'MS' },
-    { label: 'HS', value: 'HS' },
-    { label: 'HE', value: 'HE' },
-  ]
 
   const handleChange = (e) => {
     const { name, value } = e
@@ -115,7 +120,12 @@ const EditStudentModal = (props) => {
         setNewInstructorId(null)
       }
     } else {
-      setData((old) => ({ ...old, [name]: value }))
+      if (name === 'level') {
+        setData((old) => ({ ...old, [name]: value, year: '', period_id: null }))
+        updateOptions(value)
+      } else {
+        setData((old) => ({ ...old, [name]: value }))
+      }
     }
   }
 
@@ -342,20 +352,6 @@ const EditStudentModal = (props) => {
         </div>
         <div className="col-lg-4 col-12">
           <div className="row mx-auto">
-            {/* <div className='col-6 px-0'>
-              <label htmlFor='userId' className='user-id-label'>
-                User ID Number
-              </label>
-              <input
-                type='text'
-                className='form-control text-center'
-                value={data.id}
-                aria-label='Sizing example input'
-                aria-describedby='inputGroup-sizing-default'
-                disabled
-                name='userId'
-              />
-            </div> */}
             <div className="col-12 px-0 text-center mt-2 mt-lg-0">
               <label htmlFor="unit" className="user-id-label">
                 Unit
@@ -384,8 +380,9 @@ const EditStudentModal = (props) => {
                 Level
               </label>
               <Select
-                options={defaultLevels}
+                options={defaultValues}
                 // defaultValue={data?.level}
+                // name="level"
                 placeholder={data?.level}
                 onChange={(newValue) => {
                   handleChange({
@@ -397,8 +394,8 @@ const EditStudentModal = (props) => {
                     value: '',
                   })
                   handleChange({
-                    name: 'class',
-                    value: '',
+                    name: 'period_id',
+                    value: null,
                   })
                 }}
                 className="my-auto py-auto"
@@ -410,7 +407,7 @@ const EditStudentModal = (props) => {
                 Year
               </label>
               <Select
-                options={yearsOptions}
+                options={yearOptions}
                 // defaultValue={data?.year}
                 placeholder={data?.year}
                 onChange={(newValue) => {
@@ -419,6 +416,7 @@ const EditStudentModal = (props) => {
                     value: newValue.value,
                   })
                 }}
+                isDisabled={data?.level === 'HE'}
                 className="my-auto py-auto"
                 // styles={customStyles}
               />
@@ -442,17 +440,20 @@ const EditStudentModal = (props) => {
                 </p>
               ) : (
                 <Select
-                  options={classOptions}
+                  options={periodOptions}
                   // defaultValue={user?.name}
-                  placeholder={data?.class}
+                  placeholder={
+                    periods?.find((period) => period.id === data?.period_id)
+                      ?.name
+                  }
                   onChange={(newValue) => {
                     handleChange({
-                      name: 'class',
+                      name: 'period_id',
                       value: newValue.value,
                     })
                   }}
-                  isDisabled={false}
-                  className="my-auto py-auto"
+                  isDisabled={data?.level === 'LS' || data?.level === 'HE'}
+                  className={`my-auto py-auto `}
                   // styles={customStyles}
                 />
               )}

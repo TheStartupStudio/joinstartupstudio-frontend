@@ -33,31 +33,77 @@ const AddStudentsModal = (props) => {
     'password',
     'level',
     'year',
-    'class',
+    'period',
   ]
 
   let addedUsers = []
+
+  // const handleChange = (e, index) => {
+  //   const { name, value } = e
+  //   console.log('index', index)
+  //   console.log('e handleChange', e)
+  //   var item = users.find((item) => item.id === index)
+
+  //   if (item) {
+  //     users.map((user) => {
+  //       if (user.id === index) {
+  //         user[name] = value
+  //       }
+  //     })
+  //   } else {
+  //     addUser((old) => [...old, { id: index, [name]: value }])
+  //   }
+  // }
 
   const handleChange = (e, index) => {
     const { name, value } = e
     var item = users.find((item) => item.id === index)
 
-    if (item) {
-      users.map((user) => {
-        if (user.id === index) {
-          user[name] = value
-        }
-      })
+    console.log('item', item)
+
+    console.log('[name]:value', name, value)
+
+    if (name === 'level' && (value === 'LS' || value === 'HE')) {
+      // Set period to null if the condition is true
+      if (item) {
+        item.level = value
+        item.period = null
+        item.year = ''
+        console.log('para')
+      } else {
+        addUser((old) => [
+          ...old,
+          { id: index, [name]: value, period: null, year: '' },
+        ])
+        console.log('dyta')
+      }
     } else {
-      addUser((old) => [...old, { id: index, [name]: value }])
+      if (item) {
+        users.map((user) => {
+          if (user.id === index) {
+            user[name] = value
+          }
+        })
+        console.log('3ta')
+      } else {
+        addUser((old) => [...old, { id: index, [name]: value }])
+        console.log('kater')
+      }
     }
+
+    console.log('user', users)
   }
 
   const validateUsersBeforeSubmit = () => {
     let validateError = false
     users.forEach((user) => {
       userRequiredFields.forEach((field) => {
-        if (!user[field]) {
+        console.log('user[field]', user['level'])
+        if (
+          !user[field] &&
+          !(user['level'] === 'LS' && field === 'period') &&
+          !(user['level'] === 'HE' && (field === 'year' || field === 'period'))
+        ) {
           validateError = true
         }
       })
@@ -98,13 +144,13 @@ const AddStudentsModal = (props) => {
       !item['LastName'] ||
       !item['password'] ||
       !item['level'] ||
-      !item['year'] ||
-      !item['class']
+      (item['level'] !== 'HE' && !item['year']) ||
+      (item['level'] !== 'LS' && item['level'] !== 'HE' && !item['period'])
     ) {
       setErrors((old) => [
         ...old,
         {
-          message: `Please fill in all the required fields.`,
+          message: `Please fill in all the required fieldsssss.`,
           code: 400,
           user: item['UserEmail'],
         },
@@ -156,24 +202,6 @@ const AddStudentsModal = (props) => {
 
       return req(results)
     }
-
-    // if (
-    //   item['year'] !== 'LTS1' &&
-    //   item['year'] !== 'LTS2' &&
-    //   item['year'] !== 'LTS3' &&
-    //   item['year'] !== 'LTS4'
-    // ) {
-    //   setErrors((old) => [
-    //     ...old,
-    //     {
-    //       message: `Year must be either: LTS1, LTS2, LTS3 or LTS4.`,
-    //       code: 400,
-    //       user: item['UserEmail'],
-    //     },
-    //   ])
-
-    //   return req(results)
-    // }
 
     await Auth.signUp({
       username: item['UserEmail'],
@@ -250,11 +278,6 @@ const AddStudentsModal = (props) => {
 
     reader.readAsText(input)
   }
-  // const handleSubmit = async () => {
-  //   setLoading(true)
-
-  //   // setLoading(false)
-  // }
   return (
     <>
       <Modal

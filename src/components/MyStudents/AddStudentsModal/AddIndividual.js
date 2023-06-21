@@ -2,8 +2,16 @@ import React, { useEffect, useState } from 'react'
 import Select from 'react-select'
 import '../index.css'
 import { label } from 'aws-amplify'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPeriodsStart } from '../../../redux/dashboard/Actions'
 
 const AddIndividual = (props) => {
+  const dispatch = useDispatch()
+  const periods = useSelector((state) => state.dashboard.periods)
+  const [yearOptions, setYearOptions] = useState([])
+  const [periodOptions, setPeriodOptions] = useState([])
+  const [selectedYear, setSelectedYear] = useState(null)
+  const [selectedPeriod, setSelectedPeriod] = useState(null)
   const [dataValidation, setDataValidation] = useState({
     FirstName: '',
     LastName: '',
@@ -11,11 +19,15 @@ const AddIndividual = (props) => {
     password: '',
     level: '',
     year: '',
-    class: '',
+    period: null,
   })
   const [isChanged, setIsChanged] = useState(false)
 
-  const Level = [
+  useEffect(() => {
+    dispatch(getPeriodsStart())
+  }, [])
+
+  const defaultData = [
     {
       name: 'level',
       value: 'LS',
@@ -27,89 +39,91 @@ const AddIndividual = (props) => {
       value: 'MS',
       label: 'MS',
       year: ['ES1', 'ES2', 'ES3'],
-      class: [
-        'ADVISORY',
-        'PERIOD 1',
-        'PERIOD 2',
-        'PERIOD 3',
-        'PERIOD 4',
-        'PERIOD 5',
-        'PERIOD 6',
-        'PERIOD 7',
-      ],
+      period: periods
+        ?.filter(
+          (item) =>
+            item.name === 'Period 1' ||
+            item.name === 'Period 2' ||
+            item.name === 'Period 3' ||
+            item.name === 'Period 4' ||
+            item.name === 'Period 5' ||
+            item.name === 'Period 6' ||
+            item.name === 'Period 7'
+        )
+        .map((item) => item.name),
     },
     {
       name: 'level',
       value: 'HS',
       label: 'HS',
       year: ['LTS1', 'LTS2', 'LTS3', 'LTS4'],
-      class: [
-        'PERIOD 0',
-        'PERIOD 1',
-        'PERIOD 2',
-        'PERIOD 3',
-        'PERIOD 4',
-        'PERIOD 4A',
-        'PERIOD 4B',
-        'PERIOD 4C',
-        'PERIOD 5',
-        'PERIOD 5A',
-        'PERIOD 5B',
-        'PERIOD 5C',
-        'PERIOD 6',
-        'PERIOD 7',
-        'PERIOD 8',
-      ],
+      period: periods?.map((item) => item.name),
     },
     { name: 'level', value: 'HE', label: 'HE' },
   ]
 
-  const getOptions = (value, prop) => {
-    const item = Level.find((item) => item.value === value)
-    const elements = item ? item[prop] : []
-    return elements?.map((el) => ({
-      name: prop,
-      value: el,
-      label: el,
-    }))
-  }
+  useEffect(() => {
+    const getOptions = (value, prop) => {
+      const item = defaultData.find((item) => item.value === value)
+      const elements = item ? item[prop] : []
 
-  const yearOptions = getOptions(dataValidation.level, 'year')
-  const classOptions = getOptions(dataValidation.level, 'class')
+      if (prop === 'period') {
+        const periodIds = elements?.map(
+          (el) => periods.find((period) => period.name === el)?.id
+        )
 
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-    }),
-  }
+        return elements?.map((el, index) => ({
+          name: prop,
+          value: periodIds[index], // Assign the period ID as the value
+          label: el,
+        }))
+      }
+      return elements?.map((el) => ({
+        name: prop,
+        value: el,
+        label: el,
+      }))
+    }
+    const yearOptions = getOptions(dataValidation.level, 'year')
+    const periodOptions = getOptions(dataValidation.level, 'period')
+    setYearOptions(yearOptions)
+    setPeriodOptions(periodOptions)
+  }, [dataValidation.level])
 
   const handleValidation = (e) => {
     const { name, value } = e
 
     setDataValidation((old) => ({ ...old, [name]: value }))
+
     if (
       dataValidation.FirstName.length === 0 &&
-      dataValidation.FirstName === '' &&
       dataValidation.LastName.length === 0 &&
-      dataValidation.LastName === '' &&
       dataValidation.UserEmail.length === 0 &&
-      dataValidation.UserEmail === '' &&
       dataValidation.password.length === 0 &&
-      dataValidation.password === '' &&
       dataValidation.level.length === 0 &&
-      dataValidation.level === '' &&
-      dataValidation.year === '' &&
       dataValidation.year.length === 0 &&
-      dataValidation.class === '' &&
-      dataValidation.class.length === 0
+      dataValidation.period === null
     ) {
       return setIsChanged(false)
     }
-    setIsChanged(true)
 
-    if (name === 'level' && (value === 'LS' || value === 'HE')) {
-      setDataValidation((old) => ({ ...old, year: '', class: '' }))
+    if (name === 'level') {
+      setDataValidation((old) => ({
+        ...old,
+        year: '',
+        period: null,
+      }))
+      setSelectedYear(null)
+      setSelectedPeriod(null)
     }
+
+    setIsChanged(true)
+  }
+
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+    }),
   }
 
   return (
@@ -185,7 +199,7 @@ const AddIndividual = (props) => {
       <div className="col-6 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div">
         <Select
           placeholder={'Level'}
-          options={Level}
+          options={defaultData}
           className={`my-auto py-auto h-100 add-student-select ${
             dataValidation.level.length === 0 && isChanged
               ? 'border border-danger rounded'
@@ -207,9 +221,10 @@ const AddIndividual = (props) => {
       </div>
       <div className="col-6 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div">
         <Select
-          placeholder={'Year'}
           options={yearOptions}
           name="year"
+          placeholder={selectedYear ? selectedYear : 'Year'}
+          value={selectedYear ? selectedYear : 'None'}
           isDisabled={dataValidation.level === 'HE'}
           styles={{
             ...customStyles,
@@ -220,24 +235,28 @@ const AddIndividual = (props) => {
             }),
           }}
           className={`my-auto py-auto h-100 add-student-select ${
-            dataValidation.year.length === 0 && isChanged
+            dataValidation.year.length === 0 &&
+            isChanged &&
+            dataValidation.level !== 'HE'
               ? 'border border-danger rounded'
               : 'false'
           }`}
           onChange={(e) => {
             handleValidation(e)
+            setSelectedYear(e.value)
             props.handleChange(e)
           }}
         />
       </div>
       <div className="col-6 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div">
         <Select
-          placeholder={'Class'}
-          options={classOptions}
+          options={periodOptions}
+          placeholder={selectedPeriod ? selectedPeriod : 'Class'}
+          value={selectedPeriod ? selectedPeriod : 'None'}
           isDisabled={
             dataValidation.level === 'LS' || dataValidation.level === 'HE'
           }
-          name="class"
+          name="period"
           styles={{
             ...customStyles,
             menu: (provided) => ({
@@ -247,13 +266,16 @@ const AddIndividual = (props) => {
             }),
           }}
           className={`my-auto py-auto h-100 add-student-select ${
-            dataValidation.year.length === 0 && isChanged
+            dataValidation.period === null &&
+            isChanged &&
+            dataValidation.level !== 'LS' &&
+            dataValidation.level !== 'HE'
               ? 'border border-danger rounded'
               : 'false'
           }`}
-          // styles={}
           onChange={(e) => {
             handleValidation(e)
+            setSelectedPeriod(e.value)
             props.handleChange(e)
           }}
         />
