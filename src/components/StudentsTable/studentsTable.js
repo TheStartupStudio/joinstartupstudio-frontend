@@ -131,6 +131,7 @@ export default function StudentsTable(props) {
     await axiosInstance
       .get('/instructor/my-students')
       .then((res) => {
+        debugger
         if (res.data.students?.length) {
           let newArrray = []
           res.data.instructorsnew.map((instructor) => {
@@ -657,7 +658,6 @@ export default function StudentsTable(props) {
           }
           return student
         })
-
         setStudents(updatedStudents)
         setShowConfirmationModal(true)
         setShowBulkEditModal(false)
