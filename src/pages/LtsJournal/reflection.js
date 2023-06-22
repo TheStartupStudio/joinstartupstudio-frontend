@@ -182,8 +182,8 @@ function LtsJournalReflection(props) {
   return (
     <>
       <ToastContainer
-        className='customToast'
-        position='bottom-left'
+        className="customToast"
+        position="bottom-left"
         autoClose={5000}
       />
       <div
@@ -191,14 +191,14 @@ function LtsJournalReflection(props) {
           !entryId ? 'journal-entries__entry-reflection--new' : ''
         } ${editing ? 'journal-entries__entry-reflection--editing' : ''}`}
       >
-        <div className='journal-entries__entry-reflection-header'>
-          <div className='journal-entries__entry-reflection-date'>
+        <div className="journal-entries__entry-reflection-header">
+          <div className="journal-entries__entry-reflection-date">
             {entryId && (
               <>
                 {props.entry?.createdAt && (
                   <span>
                     <strong>
-                      <IntlMessages id='journals.started' />
+                      <IntlMessages id="journals.started" />
                     </strong>
                     {moment(props.entry?.createdAt)
                       .locale(currentLanguage)
@@ -208,7 +208,7 @@ function LtsJournalReflection(props) {
                 {props.entry?.updatedAt && (
                   <span>
                     <strong>
-                      <IntlMessages id='journals.edited' />
+                      <IntlMessages id="journals.edited" />
                     </strong>
                     {moment(props.entry?.updatedAt)
                       .locale(currentLanguage)
@@ -218,7 +218,7 @@ function LtsJournalReflection(props) {
               </>
             )}
           </div>
-          <div className='journal-entries__entry-reflection-actions'>
+          <div className="journal-entries__entry-reflection-actions">
             {entryId && !editing && (
               <FontAwesomeIcon
                 onClick={() => setEditing(true)}
@@ -229,20 +229,20 @@ function LtsJournalReflection(props) {
             {(!entryId || editing) && (
               <>
                 {saving && (
-                  <div className='' style={{ color: '#01c5d1' }}>
-                    <FontAwesomeIcon icon={faSpinner} className='' spin />
+                  <div className="" style={{ color: '#01c5d1' }}>
+                    <FontAwesomeIcon icon={faSpinner} className="" spin />
                   </div>
                 )}
               </>
             )}
           </div>
         </div>
-        <div className='journal-entries__entry-reflection-body'>
+        <div className="journal-entries__entry-reflection-body">
           {!entryId || editing ? (
             <ReactQuill
               placeholder={''}
-              theme='snow'
-              name='textQuillStandart'
+              theme="snow"
+              name="textQuillStandart"
               value={content}
               onChange={handleContentChange}
               modules={quillModules}
@@ -250,31 +250,31 @@ function LtsJournalReflection(props) {
             />
           ) : (
             <div
-              className='journal-entries__entry-reflection-body-content'
+              className="journal-entries__entry-reflection-body-content"
               dangerouslySetInnerHTML={{ __html: content }}
             ></div>
           )}
         </div>
 
         {foulWords && (
-          <div className='p-2 foul-words-notice'>
+          <div className="p-2 foul-words-notice">
             {FoulWords.printMessage(foulWords)}
           </div>
         )}
 
-        <div className='journal-entries__entry-reflection-footer d-flex justify-content-between'>
+        <div className="journal-entries__entry-reflection-footer d-flex justify-content-between">
           {!entryId && props.showCancel === true && (
-            <button className='button' onClick={() => props?.cancel()}>
+            <button className="button" onClick={() => props?.cancel()}>
               <IntlMessages id={'journals.cancel'} />
             </button>
           )}
           {entryId && editing && (
-            <button className='button' onClick={deleteReflection}>
+            <button className="button" onClick={deleteReflection}>
               <IntlMessages id={'journals.delete'} />
             </button>
           )}
           {notSaved && !saving && contentDidUpdate && (
-            <button className='button' onClick={handleSubmit} disabled={saving}>
+            <button className="button" onClick={handleSubmit} disabled={saving}>
               <IntlMessages id={'journals.save'} />
             </button>
           )}

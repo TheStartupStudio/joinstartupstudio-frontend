@@ -4268,7 +4268,8 @@ ul.sidebar-menu-item .collapse a {
 .accordion {
   border: 1px solid #ccc;
   margin-bottom: 10px;
-  line-height: 60%;
+  /*line-height: 60%;*/
+  line-height: 15px;
   letter-spacing: 0.40px;
   color: #231f20;
   font-weight: 500

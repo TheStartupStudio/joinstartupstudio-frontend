@@ -24,7 +24,7 @@ function TestJournalContent(props) {
     await axiosInstance.put(
       `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
       {
-        videoWatchData: JSON.stringify(data),
+        videoWatchData: JSON.stringify(data)
       }
     )
   }
@@ -43,19 +43,28 @@ function TestJournalContent(props) {
       return data
     } catch (err) {}
   }
-  console.log(props.match.params.weekId)
   async function getJournalWeek() {
     try {
       let { data } = await axiosInstance.get(
         `/ltsJournals/week/${+props.match.params.weekId}`
       )
-      // debugger
+      // if (history.location.pathname.includes('week')) {
+      //   if (data.length > 0 && redir) {
+      //     if (data[0].children && data[0].children.length > 0) {
+      //       history.push(`week/${data[0].children[0].id}`)
+      //     } else {
+      //       history.push(`week/${data[0].id}`)
+      //     }
+      //   }
+      // }
       return data
     } catch (err) {}
   }
   // useEffect(() => {
   //   getJournalView()
   // }, [])
+
+  console.log(props.journals)
   async function getUserJournalEntries() {
     try {
       let { data } = await axiosInstance.get(
@@ -72,7 +81,7 @@ function TestJournalContent(props) {
             )
           } else {
             groupedByJournalEntry[userJournalEntry.journalEntryId] = [
-              userJournalEntry,
+              userJournalEntry
             ]
           }
         }
@@ -98,7 +107,7 @@ function TestJournalContent(props) {
             )
           } else {
             groupedByJournalEntry[userJournalEntry.journalEntryId] = [
-              userJournalEntry,
+              userJournalEntry
             ]
           }
         }
@@ -188,13 +197,13 @@ function TestJournalContent(props) {
       if (filtered.length) {
         setUserJournalEntries({
           ...userJournalEntries,
-          [entry.id]: filtered,
+          [entry.id]: filtered
         })
       } else {
         delete userJournalEntries[entry.id]
 
         setUserJournalEntries({
-          ...userJournalEntries,
+          ...userJournalEntries
         })
       }
     }
@@ -204,7 +213,7 @@ function TestJournalContent(props) {
     return (data) => {
       setUserJournalEntries({
         ...userJournalEntries,
-        [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry],
+        [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry]
       })
       setShowAddReflection({ ...showAddReflection, [entry.id]: false })
 
@@ -220,7 +229,7 @@ function TestJournalContent(props) {
           return mapUserJournalEntry.id === userJournalEntry.id
             ? data.entry
             : mapUserJournalEntry
-        }),
+        })
       })
 
       props.saved && props.saved(data.journal)
@@ -251,7 +260,7 @@ function TestJournalContent(props) {
                 textTransform: 'uppercase',
                 font: 'normal normal bold 20px Montserrat',
                 letterSpacing: 0.96,
-                color: '#231F20',
+                color: '#231F20'
               }}
             >
               {journal?.title}
@@ -266,7 +275,7 @@ function TestJournalContent(props) {
                   // backgroundColor: '#fff',
                   display: 'flex',
                   alignItems: 'end',
-                  height: '100%',
+                  height: '100%'
                 }}
               >
                 {videos &&
@@ -328,7 +337,7 @@ function TestJournalContent(props) {
               style={{
                 font: 'normal normal 300 13px/16px Montserrat',
                 letterSpacing: 0.52,
-                color: '#333D3D',
+                color: '#333D3D'
               }}
             >
               {journal?.paragraph}
@@ -340,6 +349,7 @@ function TestJournalContent(props) {
                   <BreakdownTextAccordion
                     title={breakdown?.title}
                     content={breakdown?.content}
+                    breakdown={breakdown}
                   />
                 </React.Fragment>
               )
@@ -386,7 +396,7 @@ function TestJournalContent(props) {
                           : entry.title.replace(
                               new RegExp('\r?\n', 'g'),
                               '<br />'
-                            ),
+                            )
                     }}
                   ></h5>
 
@@ -416,7 +426,7 @@ function TestJournalContent(props) {
                         cancel={(e) => {
                           setShowAddReflection({
                             ...showAddReflection,
-                            [entry.id]: false,
+                            [entry.id]: false
                           })
                         }}
                       />
@@ -438,7 +448,7 @@ function TestJournalContent(props) {
                           e.preventDefault()
                           setShowAddReflection({
                             ...showAddReflection,
-                            [entry.id]: true,
+                            [entry.id]: true
                           })
                         }}
                       >
@@ -456,5 +466,5 @@ function TestJournalContent(props) {
 }
 
 export default injectIntl(TestJournalContent, {
-  withRef: false,
+  withRef: false
 })

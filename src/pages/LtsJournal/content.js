@@ -17,12 +17,13 @@ function LtsJournalContent(props) {
   let [userJournalEntries, setUserJournalEntries] = useState({})
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
+  console.log(userJournalEntries)
 
   async function saveWatchData(data) {
     await axiosInstance.put(
       `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
       {
-        videoWatchData: JSON.stringify(data),
+        videoWatchData: JSON.stringify(data)
       }
     )
   }
@@ -57,7 +58,7 @@ function LtsJournalContent(props) {
             )
           } else {
             groupedByJournalEntry[userJournalEntry.journalEntryId] = [
-              userJournalEntry,
+              userJournalEntry
             ]
           }
         }
@@ -72,7 +73,6 @@ function LtsJournalContent(props) {
     Promise.all([getJournal(), getUserJournalEntries()])
 
       .then(([journalData, userJournalEntries]) => {
-        debugger
         setJournal(journalData)
         if (
           journalData.userEntry &&
@@ -116,13 +116,13 @@ function LtsJournalContent(props) {
       if (filtered.length) {
         setUserJournalEntries({
           ...userJournalEntries,
-          [entry.id]: filtered,
+          [entry.id]: filtered
         })
       } else {
         delete userJournalEntries[entry.id]
 
         setUserJournalEntries({
-          ...userJournalEntries,
+          ...userJournalEntries
         })
       }
     }
@@ -132,7 +132,7 @@ function LtsJournalContent(props) {
     return (data) => {
       setUserJournalEntries({
         ...userJournalEntries,
-        [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry],
+        [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry]
       })
       setShowAddReflection({ ...showAddReflection, [entry.id]: false })
 
@@ -148,7 +148,7 @@ function LtsJournalContent(props) {
           return mapUserJournalEntry.id === userJournalEntry.id
             ? data.entry
             : mapUserJournalEntry
-        }),
+        })
       })
 
       props.saved && props.saved(data.journal)
@@ -164,7 +164,7 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-
+  console.log(journal)
   return (
     <>
       <div className="row">
@@ -250,7 +250,7 @@ function LtsJournalContent(props) {
                           : entry.title.replace(
                               new RegExp('\r?\n', 'g'),
                               '<br />'
-                            ),
+                            )
                     }}
                   ></h5>
 
@@ -280,7 +280,7 @@ function LtsJournalContent(props) {
                         cancel={(e) => {
                           setShowAddReflection({
                             ...showAddReflection,
-                            [entry.id]: false,
+                            [entry.id]: false
                           })
                         }}
                       />
@@ -302,7 +302,7 @@ function LtsJournalContent(props) {
                           e.preventDefault()
                           setShowAddReflection({
                             ...showAddReflection,
-                            [entry.id]: true,
+                            [entry.id]: true
                           })
                         }}
                       >
@@ -320,5 +320,5 @@ function LtsJournalContent(props) {
 }
 
 export default injectIntl(LtsJournalContent, {
-  withRef: false,
+  withRef: false
 })

@@ -5,16 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/MultiSelect/MultiSelect.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MultiSelect/MultiSelect.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Calendar/FullCalendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Calendar/FullCalendar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/StudentsTable/studentsTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/StudentsTable/studentsTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/TextEditor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/TextEditor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/BreakdownTextAccordion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/BreakdownTextAccordion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalType.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalType.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/reflection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/reflection.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -60,6 +60,7 @@
     "react-draggable": "^4.4.4",
     "react-easy-crop": "^3.5.2",
     "react-ga": "^3.3.0",
+    "react-helmet": "^6.1.0",
     "react-hook-form": "^7.27.1",
     "react-intl": "^2.9.0",
     "react-lottie": "^1.2.3",

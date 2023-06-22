@@ -4,7 +4,7 @@ import {
   Route,
   Switch,
   useHistory,
-  useRouteMatch,
+  useRouteMatch
 } from 'react-router-dom'
 import TestJournalContent from './TestJournalContent'
 import searchIcon from '../../assets/images/search-icon.png'
@@ -29,63 +29,44 @@ const TestJournalType = (props) => {
       let { data } = await axiosInstance.get(`/ltsJournals/`, {
         params: {
           category: props.category,
-          platform:
-            props.category === 'market-ready' ? 'student' : 'instructor',
-        },
+
+          platform: props.category === 'market-ready' ? 'student' : 'instructor'
+        }
       })
       setJournals(data)
-
-      // if (data.length > 0 && redir) {
-      //   if (data[0].children && data[0].children.length > 0) {
-      //     history.push(
-      //       `${view === 'task' ? 'task' : 'week'}/${data[0].children[0].id}`
-      //     )
-      //   } else {
-      //     history.push(`${view === 'task' ? 'task' : 'week'}/${data[0].id}`)
+      // if (history.location.pathname.includes('task')) {
+      //   if (data.length > 0 && redir) {
+      //     if (data[0].children && data[0].children.length > 0) {
+      //       history.push(`task/${data[0].children[0].id}`)
+      //     } else {
+      //       history.push(`task/${data[0].id}`)
+      //     }
       //   }
       // }
-
-      // if (journalActive == 'no') activeteFirstJournal()
     } catch (err) {}
   }
+
+  useEffect(() => {
+    if (props.match.params.type === 'task' && journals.length) {
+      const taskId = journals.length > 0 ? journals[0].id : ''
+      history.push(`/new-hs1-journal/task/${taskId}`)
+    } else if (props.match.params.type === 'week' && weeks.length) {
+      const weekId = weeks.length > 0 ? weeks[0].id : ''
+      history.push(`/new-hs1-journal/week/${weekId}`)
+    }
+  }, [props.match.params.type, journals, weeks])
 
   async function getJournals2Weeks(redir = true) {
     try {
       let { data } = await axiosInstance.get(`/ltsJournals/weeks`, {
         params: {
           category: props.category,
-          platform:
-            props.category === 'market-ready' ? 'student' : 'instructor',
-        },
+          platform: props.category === 'market-ready' ? 'student' : 'instructor'
+        }
       })
       setWeeks(data)
-
-      // if (data.length > 0 && redir) {
-      //   if (data[0].children && data[0].children.length > 0) {
-      //     history.push(
-      //       `${view === 'task' ? 'task' : 'week'}/${data[0].children[0].id}`
-      //     )
-      //   } else {
-      //     history.push(`${view === 'task' ? 'task' : 'week'}/${data[0].id}`)
-      //   }
-      // }
-
-      // if (journalActive == 'no') activeteFirstJournal()
     } catch (err) {}
   }
-
-  // useEffect(() => {
-  //   function activateFirstJournal() {
-  //     if (journals.length > 0) {
-  //       // if (journals[0].children && journals[0].children.length > 0) {
-  //       //   history.push(`${props.match.url}/${journals[0].children[0].id}`)
-  //       // } else {
-  //       history.push(`${props.match.url}/${journals[0].id}`)
-  //       // }
-  //     }
-  //   }
-  //   activateFirstJournal()
-  // }, [view])
 
   useEffect(() => {}, [])
 
@@ -192,7 +173,7 @@ const TestJournalType = (props) => {
                       textAlign: 'center',
                       textTransform: 'uppercase',
                       fontSize: 12,
-                      padding: '4px 10px',
+                      padding: '4px 10px'
                     }}
                     onClick={() => {
                       if (props.match.params.type === 'task') {
