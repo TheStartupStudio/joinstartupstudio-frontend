@@ -61,8 +61,6 @@ const EditBulk = (props) => {
       const item = defaultData.find((item) => item.value === value)
       const elements = item ? item[prop] : []
 
-      console.log('elements', elements)
-
       if (prop === 'period_id') {
         const periodIds = elements?.map(
           (el) => periods.find((period) => period.name === el)?.id
@@ -88,11 +86,8 @@ const EditBulk = (props) => {
 
   const updateData = (e) => {
     const { name, value } = e
-    console.log('name', name)
 
     setData((old) => ({ ...old, [name]: value }))
-
-    console.log('data', data)
 
     if (name === 'level') {
       setData((old) => ({

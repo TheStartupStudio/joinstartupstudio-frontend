@@ -96,7 +96,7 @@ const CertificationStatus = () => {
 
       notificationSocket?.emit('sendNotification', {
         sender: loggedUser,
-        receiver: { id: studentId },
+        receivers: [{ id: studentId }],
         type: type,
         url: `/iamr/${id}/certification-status`
       })
@@ -173,7 +173,7 @@ const CertificationStatus = () => {
               ))}
 
             {hasAccess && unCompletedSkills?.length === 0
-              ? approvedStatus === 'pending' &&
+              ? (!approvedStatus || approvedStatus === 'pending') &&
                 unApprovedSkills?.length === 0 && (
                   <div>
                     <div className="completed-certification">

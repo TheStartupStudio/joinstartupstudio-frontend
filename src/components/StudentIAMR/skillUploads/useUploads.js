@@ -61,9 +61,9 @@ export default function useUploads({ skillId, setSelectedUpload }) {
 
         notificationSocket?.emit('sendNotification', {
           sender: loggedUser,
-          receiver: { id: upload.user_id },
+          receivers: { id: upload.user_id },
           type: type,
-          url: url,
+          url: url
         })
       })
       .catch((e) => {
@@ -75,6 +75,6 @@ export default function useUploads({ skillId, setSelectedUpload }) {
   return {
     uploads,
     loading,
-    editUpload,
+    editUpload
   }
 }

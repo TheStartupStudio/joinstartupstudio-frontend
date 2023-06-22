@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import {
   faAngleDoubleRight,
-  faCaretLeft,
+  faCaretLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useIamrInboxContext from './iamrInboxContext'
@@ -76,9 +76,9 @@ function TicketChat({ ticket, close, isTicketOpened }) {
 
         socket?.emit('sendNotification', {
           sender: loggedUser,
-          receiver: ticket.User,
+          receivers: [ticket.User],
           type: type,
-          url: url,
+          url: url
         })
       })
       .catch((e) => {
@@ -158,7 +158,7 @@ function TicketChat({ ticket, close, isTicketOpened }) {
             style={{
               // color: 'white',
               height: '20px',
-              width: '20px',
+              width: '20px'
             }}
           />
           <p className="p-0 m-0 my-auto"> INBOX</p>
@@ -221,7 +221,7 @@ function TicketChat({ ticket, close, isTicketOpened }) {
                 style={{
                   color: 'white',
                   height: '15px',
-                  width: '15px',
+                  width: '15px'
                 }}
                 onClick={handleSubmitMobile}
               />

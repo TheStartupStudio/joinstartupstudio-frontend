@@ -33,35 +33,14 @@ const AddStudentsModal = (props) => {
     'password',
     'level',
     'year',
-    'period',
+    'period'
   ]
 
   let addedUsers = []
 
-  // const handleChange = (e, index) => {
-  //   const { name, value } = e
-  //   console.log('index', index)
-  //   console.log('e handleChange', e)
-  //   var item = users.find((item) => item.id === index)
-
-  //   if (item) {
-  //     users.map((user) => {
-  //       if (user.id === index) {
-  //         user[name] = value
-  //       }
-  //     })
-  //   } else {
-  //     addUser((old) => [...old, { id: index, [name]: value }])
-  //   }
-  // }
-
   const handleChange = (e, index) => {
     const { name, value } = e
     var item = users.find((item) => item.id === index)
-
-    console.log('item', item)
-
-    console.log('[name]:value', name, value)
 
     if (name === 'level' && (value === 'LS' || value === 'HE')) {
       // Set period to null if the condition is true
@@ -69,13 +48,11 @@ const AddStudentsModal = (props) => {
         item.level = value
         item.period = null
         item.year = ''
-        console.log('para')
       } else {
         addUser((old) => [
           ...old,
-          { id: index, [name]: value, period: null, year: '' },
+          { id: index, [name]: value, period: null, year: '' }
         ])
-        console.log('dyta')
       }
     } else {
       if (item) {
@@ -84,21 +61,16 @@ const AddStudentsModal = (props) => {
             user[name] = value
           }
         })
-        console.log('3ta')
       } else {
         addUser((old) => [...old, { id: index, [name]: value }])
-        console.log('kater')
       }
     }
-
-    console.log('user', users)
   }
 
   const validateUsersBeforeSubmit = () => {
     let validateError = false
     users.forEach((user) => {
       userRequiredFields.forEach((field) => {
-        console.log('user[field]', user['level'])
         if (
           !user[field] &&
           !(user['level'] === 'LS' && field === 'period') &&
@@ -150,10 +122,10 @@ const AddStudentsModal = (props) => {
       setErrors((old) => [
         ...old,
         {
-          message: `Please fill in all the required fieldsssss.`,
+          message: `Please fill in all the required fields.`,
           code: 400,
-          user: item['UserEmail'],
-        },
+          user: item['UserEmail']
+        }
       ])
 
       return req(results)
@@ -165,8 +137,8 @@ const AddStudentsModal = (props) => {
         {
           message: `Please provide a valid email.`,
           code: 400,
-          user: item['UserEmail'],
-        },
+          user: item['UserEmail']
+        }
       ])
 
       return req(results)
@@ -178,8 +150,8 @@ const AddStudentsModal = (props) => {
         {
           message: `Password must contain at least 8 characters and it should have at least one number, lowercase & uppercase character.`,
           code: 400,
-          user: item['UserEmail'],
-        },
+          user: item['UserEmail']
+        }
       ])
 
       return req(results)
@@ -196,8 +168,8 @@ const AddStudentsModal = (props) => {
         {
           message: `Level must be either: LS, MS, HS or HE.`,
           code: 400,
-          user: item['UserEmail'],
-        },
+          user: item['UserEmail']
+        }
       ])
 
       return req(results)
@@ -212,8 +184,8 @@ const AddStudentsModal = (props) => {
         'custom:language': 'en',
         'custom:email': item['UserEmail'],
         'custom:password': item['password'],
-        name: item.FirstName + ' ' + item.LastName,
-      },
+        name: item.FirstName + ' ' + item.LastName
+      }
     })
       .then(async (res) => {
         await axiosInstance
@@ -224,8 +196,8 @@ const AddStudentsModal = (props) => {
               cognito_Id: res.userSub,
               stripe_subscription_id: 'true',
               payment_type: 'school',
-              is_active: 1,
-            },
+              is_active: 1
+            }
           })
           .then((response) => {
             const addedUser = response.data.user
@@ -239,8 +211,8 @@ const AddStudentsModal = (props) => {
               ...old,
               {
                 message: 'Something went wrong!',
-                user: item['UserEmail'],
-              },
+                user: item['UserEmail']
+              }
             ])
             req(results)
           })
@@ -250,8 +222,8 @@ const AddStudentsModal = (props) => {
           ...old,
           {
             message: err.message,
-            user: item['UserEmail'],
-          },
+            user: item['UserEmail']
+          }
         ])
         req(results)
       })
@@ -428,7 +400,7 @@ const AddStudentsModal = (props) => {
         finishedReport={{
           total: successfullyAdded + errors.length,
           added: successfullyAdded,
-          failed: errors.length,
+          failed: errors.length
         }}
       />
     </>
