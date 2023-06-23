@@ -1,18 +1,122 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../utils/AxiosInstance'
 import Select, { components } from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserPlus, faFileUpload } from '@fortawesome/free-solid-svg-icons'
-import ReactQuill from 'react-quill'
-import parse from 'html-react-parser'
+import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import { toast } from 'react-toastify'
 import './index.css'
 import searchIcon from '../../assets/images/search-icon.png'
 import copy from '../../assets/images/copy.svg'
 import 'react-quill/dist/quill.snow.css'
 import KendoTextEditor from './TextEditor'
-import { Editor, EditorTools } from '@progress/kendo-react-editor'
+import { EditorTools } from '@progress/kendo-react-editor'
 import '@progress/kendo-theme-default/dist/all.css'
+
+const TextEditor = () => {}
+const CheckboxData = (props) => {
+  return (
+    <>
+      <div>
+        <div>Checkboxes Title:</div>
+        <input
+          type="text"
+          key="title"
+          className="w-100 p-2"
+          name="title"
+          value={props.checkbox?.title}
+          // onChange={(e) =>
+          //   props.handleChange(
+          //     'title',
+          //     e.target.value,
+          //     index,
+          //     props.breakdownIndex
+          //   )
+          // }
+        />
+      </div>
+      {props.checkbox?.checkboxes?.map((data, index) => {
+        return (
+          <div>
+            <div>#{index + 1} Checkbox </div>
+            <input
+              type="text"
+              className="w-100 p-2"
+              name="checkboxLabel"
+              value={data?.label}
+              // onChange={(e) =>
+              //   props.handleChange(
+              //     'title',
+              //     e.target.value,
+              //     index,
+              //     props.breakdownIndex
+              //   )
+              // }
+            />
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
+const CustomContent = (props) => {
+  return (
+    <>
+      {props.breakdown?.customContent?.textEditorData?.map((data, index) => (
+        <React.Fragment key={index}>
+          <div>Title</div>
+          <input
+            type="text"
+            key="title"
+            className="w-100 p-2"
+            name="title"
+            value={data?.title}
+            onChange={(e) =>
+              props.handleChange(
+                'title',
+                e.target.value,
+                index,
+                props.breakdownIndex
+              )
+            }
+          />
+          <KendoTextEditor
+            key="content"
+            value={data?.content}
+            minHeight={200}
+            handleChange={(e) =>
+              props.handleChange('content', e, index, props.breakdownIndex)
+            }
+          />
+        </React.Fragment>
+      ))}
+      {props.breakdown?.customContent?.checkboxesData?.map(
+        (checkbox, index) => (
+          <CheckboxData checkbox={checkbox} key={index} />
+        )
+      )}
+      <div className={'d-flex justify-content-end gap-2'}>
+        <div
+          className={'d-flex justify-content-end mb-4'}
+          onClick={() => {
+            props.handleAddTextEditor()
+          }}
+        >
+          <div class={'btn btn-secondary '}>Add a text editor</div>
+        </div>
+        <div
+          className={'d-flex justify-content-end mb-4'}
+          onClick={() => {
+            // props.handleAddTextEditor()
+          }}
+        >
+          <div class={'btn btn-secondary '}>Add a checkbox</div>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export default function EditJournals2(props) {
   const [journals, setJournals] = useState([])
   const [journalOptions, setJournalOptions] = useState([])
@@ -23,7 +127,8 @@ export default function EditJournals2(props) {
   const [selectedImage, setSelectedImage] = useState(null)
   const [imageUploadingLoader, setImageUploadingLoader] = useState(false)
   const [uploadedImageUrl, setUploadedImageUrl] = useState(false)
-  const [breakdowns, setBreakdowns] = useState([
+
+  const breakdownInitialState = [
     {
       id: '',
       content: '',
@@ -35,19 +140,45 @@ export default function EditJournals2(props) {
           description: '',
           breakdownId: ''
         }
-      ]
+      ],
+      customContent: {
+        textEditorData: [
+          {
+            title: '',
+            content: ``
+          }
+        ],
+        checkboxesData: [
+          {
+            title: 'In completing this task did you:',
+            checkboxes: [
+              {
+                checked: false,
+                label: 'Give each student an opportunity to use their voice.'
+              },
+              {
+                checked: false,
+                label: 'Conduct at least one news briefing to start class.'
+              },
+              {
+                checked: false,
+                label:
+                  'Give students adequate time to complete work inside of their Journal or Portfolio.'
+              }
+            ]
+          }
+        ]
+      }
     }
-  ])
+  ]
 
-  console.log(breakdowns)
+  const [breakdowns, setBreakdowns] = useState(breakdownInitialState)
 
   useEffect(() => {
     // getJournals()
     getJournals2()
     getJournals2Weeks()
   }, [])
-
-  console.log(journals)
 
   useEffect(() => {
     if (journals?.length) {
@@ -70,15 +201,12 @@ export default function EditJournals2(props) {
   }, [journals])
 
   const handleJournalSelect = (e) => {
-    console.log(e)
     setSelectedJournal({
       value: e.value,
       label: e.label
     })
     setBreakdowns(e.value?.breakdowns)
   }
-
-  console.log(selectedJournal)
 
   const getJournals = async () => {
     await axiosInstance
@@ -168,14 +296,13 @@ export default function EditJournals2(props) {
 
   const handleJournalUpdate = (event) => {
     const { name, value } = event.target
-    console.log(name, value)
 
     setSelectedJournal((prevState) => ({
       ...prevState,
       value: { ...prevState.value, [name]: value }
     }))
   }
-  console.log(selectedJournal)
+
   const ValueContainer = ({ children, ...props }) => {
     return (
       components.ValueContainer && (
@@ -206,19 +333,6 @@ export default function EditJournals2(props) {
     setBreakdowns(newBreakdowns)
   }
 
-  const [breakdownImages, setBreakdownImages] = useState([
-    {
-      breakDownImage: '',
-      description: '',
-      breakdownId: ''
-    }
-  ])
-
-  // useEffect(()=>{
-  //   const newBreakdowns = [...breakdowns];
-  //   newBreakdowns
-  //   setBreakdowns()
-  // },[])
   const handleSetImages = (breakdownImages, index) => {
     const newBreakdowns = [...breakdowns]
     newBreakdowns[index].breakdownImages = breakdownImages
@@ -231,7 +345,6 @@ export default function EditJournals2(props) {
     breakdownIndex,
     imageIndex
   ) => {
-    console.log(name, value, breakdownIndex, imageIndex)
     const newBreakdowns = [...breakdowns]
     const newBreakdown = newBreakdowns[breakdownIndex]
     const breakdownImages = [...newBreakdown.breakdownImages]
@@ -244,8 +357,6 @@ export default function EditJournals2(props) {
   const {
     Bold,
     Italic,
-    Underline,
-    Strikethrough,
     AlignLeft,
     AlignCenter,
     AlignRight,
@@ -264,6 +375,64 @@ export default function EditJournals2(props) {
     InsertImage,
     ViewHtml
   } = EditorTools
+
+  const [checkboxValues, setCheckboxValues] = useState([
+    {
+      title: 'In completing this task did you:',
+      checkboxes: [
+        {
+          checked: false,
+          label: 'Give each student an opportunity to use their voice.'
+        },
+        {
+          checked: false,
+          label: 'Conduct at least one news briefing to start class.'
+        },
+        {
+          checked: false,
+          label:
+            'Give students adequate time to complete work inside of their Journal or Portfolio.'
+        }
+      ]
+    }
+  ])
+
+  const handleChangeEditorData = (name, value, dataIndex, breakdownIndex) => {
+    setBreakdowns((prevBreakdowns) => {
+      return prevBreakdowns.map((data, bindex) => {
+        if (bindex === breakdownIndex) {
+          const updatedCustomContent = data.customContent?.textEditorData?.map(
+            (editorData, eIndex) => {
+              if (eIndex === dataIndex) {
+                return { ...editorData, [name]: value }
+              }
+              return editorData
+            }
+          )
+          return {
+            ...data,
+            customContent: { textEditorData: updatedCustomContent }
+          }
+        }
+        return data
+      })
+    })
+  }
+
+  const addTextEditorData = (breakdownIndex) => {
+    const newTextEditorData = {
+      title: '',
+      content: ''
+    }
+
+    setBreakdowns((prevState) => {
+      const updatedBreakdowns = [...prevState]
+      updatedBreakdowns[breakdownIndex].customContent.textEditorData.push(
+        newTextEditorData
+      )
+      return updatedBreakdowns
+    })
+  }
 
   return (
     <div>
@@ -306,7 +475,6 @@ export default function EditJournals2(props) {
                   ...provided,
                   boxShadow: 'none',
                   border: 'none',
-                  height: 15,
                   fontSize: '14px',
                   height: '50px'
                 }),
@@ -487,20 +655,6 @@ export default function EditJournals2(props) {
                                       )
                                     }
                                   />
-                                  {/*<input*/}
-                                  {/*  type="text"*/}
-                                  {/*  className="w-100 p-2 "*/}
-                                  {/*  name="breakDownImage"*/}
-                                  {/*  value={breakdownImage.breakDownImage}*/}
-                                  {/*  onChange={(e) =>*/}
-                                  {/*    handleChangeBreakdownImages(*/}
-                                  {/*      'breakDownImage',*/}
-                                  {/*      e.target.value,*/}
-                                  {/*      breakdownIndex,*/}
-                                  {/*      imageIndex*/}
-                                  {/*    )*/}
-                                  {/*  }*/}
-                                  {/*/>{' '}*/}
                                   <div>Description</div>
                                   <div>
                                     <KendoTextEditor
@@ -532,20 +686,6 @@ export default function EditJournals2(props) {
                                       }
                                     />
                                   </div>
-                                  {/*<textarea*/}
-                                  {/*  className="w-100 p-2 "*/}
-                                  {/*  name="description"*/}
-                                  {/*  rows="2"*/}
-                                  {/*  value={breakdownImage.description}*/}
-                                  {/*  onChange={(e) =>*/}
-                                  {/*    handleChangeBreakdownImages(*/}
-                                  {/*      'description',*/}
-                                  {/*      e.target.value,*/}
-                                  {/*      breakdownIndex,*/}
-                                  {/*      imageIndex*/}
-                                  {/*    )*/}
-                                  {/*  }*/}
-                                  {/*/>*/}
                                 </div>
                               </>
                             )
@@ -574,6 +714,20 @@ export default function EditJournals2(props) {
                         </div>
                       </>
                     )}
+
+                    {breakdown.type === 'type-3' && (
+                      <>
+                        <CustomContent
+                          breakdown={breakdown}
+                          breakdownIndex={breakdownIndex}
+                          handleChange={handleChangeEditorData}
+                          handleAddCheckbox={() => {}}
+                          handleAddTextEditor={() => {
+                            addTextEditorData(breakdownIndex)
+                          }}
+                        />
+                      </>
+                    )}
                   </div>
                 )
               })}
@@ -582,16 +736,8 @@ export default function EditJournals2(props) {
                 onClick={() => {
                   let newBreakdowns = [...breakdowns]
                   newBreakdowns.push({
-                    content: '',
-                    title: '',
-                    type: 'type-1',
-                    breakdownImages: [
-                      {
-                        breakDownImage: '',
-                        description: '',
-                        breakdownId: ''
-                      }
-                    ]
+                    ...breakdownInitialState[0],
+                    type: 'type-1'
                   })
                   setBreakdowns(newBreakdowns)
                 }}
@@ -603,21 +749,26 @@ export default function EditJournals2(props) {
                 onClick={() => {
                   let newBreakdowns = [...breakdowns]
                   newBreakdowns.push({
-                    content: '',
-                    title: '',
-                    type: 'type-2',
-                    breakdownImages: [
-                      {
-                        breakDownImage: '',
-                        description: '',
-                        breakdownId: ''
-                      }
-                    ]
+                    ...breakdownInitialState[0],
+                    type: 'type-2'
                   })
                   setBreakdowns(newBreakdowns)
                 }}
               >
                 <div class={'btn btn-secondary '}>Add breakdown 2</div>
+              </div>{' '}
+              <div
+                className={'d-flex justify-content-end mb-4'}
+                onClick={() => {
+                  let newBreakdowns = [...breakdowns]
+                  newBreakdowns.push({
+                    ...breakdownInitialState[0],
+                    type: 'type-3'
+                  })
+                  setBreakdowns(newBreakdowns)
+                }}
+              >
+                <div class={'btn btn-secondary '}>Add breakdown 3</div>
               </div>
             </>
           }
