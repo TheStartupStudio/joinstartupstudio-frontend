@@ -42,26 +42,51 @@ const BreakdownTextAccordion = (props) => {
       setActiveIndex(index)
     }
 
-    const [checkboxValues, setCheckboxValues] = useState([
-      {
-        title: 'In completing this task did you:',
-        checkboxes: [
-          {
-            checked: false,
-            label: 'Give each student an opportunity to use their voice.'
-          },
-          {
-            checked: false,
-            label: 'Conduct at least one news briefing to start class.'
-          },
-          {
-            checked: false,
-            label:
-              'Give students adequate time to complete work inside of their Journal or Portfolio.'
-          }
-        ]
-      }
-    ])
+    return (
+      <div className={'accordion-content'}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            paddingTop: '1rem',
+            gap: '20px'
+          }}
+        >
+          {imagesData.map((image, index) => (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                filter:
+                  activeIndex !== -1
+                    ? index !== activeIndex
+                      ? 'grayscale(100%)'
+                      : 'grayscale(0%)'
+                    : 'grayscale(0%)'
+              }}
+              key={index}
+              dangerouslySetInnerHTML={{ __html: image.breakDownImage }}
+              alt={image.alt}
+              onClick={() => {
+                handleImageClick(image, index)
+                // makeImageWhiteAndBlack
+              }}
+            />
+          ))}
+        </div>
+        {selectedImage && (
+          <div
+            style={{ fontFamily: 'Montserrat' }}
+            dangerouslySetInnerHTML={{ __html: selectedImage.description }}
+          />
+        )}
+      </div>
+    )
+  }
+  const CustomContent = (props) => {
+    console.log(props.customContent)
+    const [checkboxValues, setCheckboxValues] = useState([])
 
     const handleChangeCheckboxes = (e, checkboxIndex, index) => {
       const newValues = checkboxValues?.map((checkbox, i) => {
@@ -115,8 +140,6 @@ const BreakdownTextAccordion = (props) => {
     const {
       Bold,
       Italic,
-      Underline,
-      Strikethrough,
       AlignLeft,
       AlignCenter,
       AlignRight,
@@ -136,26 +159,15 @@ const BreakdownTextAccordion = (props) => {
       ViewHtml
     } = EditorTools
 
-    const [textEditorData, setTextEditorData] = useState([
-      {
-        title:
-          'Please submit any questions or feedback regarding this task in the curriculum to the LTS team.',
-        value: `"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, 
-                 totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                 Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui 
-                 ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, 
-                 sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam,
-                 quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? 
-                 Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, 
-                 vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"`
-      }
-    ])
-    const newData = {
-      checkboxes: checkboxValues,
-      textEditorData: textEditorData
-    }
+    const [textEditorData, setTextEditorData] = useState([])
+    const [paragraphs, setParagraphs] = useState([])
 
-    console.log(newData)
+    useEffect(() => {
+      setCheckboxValues(props.customContent?.checkboxesData)
+      setTextEditorData(props.customContent?.textEditorData)
+      setParagraphs(props.customContent?.paragraphs)
+    }, [props.customContent])
+
     const handleChangeEditorValue = (e, dataIndex) => {
       const newValues = textEditorData.map((data, index) => {
         if (dataIndex === index) {
@@ -169,27 +181,45 @@ const BreakdownTextAccordion = (props) => {
 
       setTextEditorData(newValues)
     }
+
+    const sortedComponents = [
+      ...props.customContent.checkboxesData,
+      ...props.customContent.textEditorData,
+      ...props.customContent.paragraphs
+    ].sort((a, b) => a.order - b.order)
+
+    console.log(sortedComponents)
+
     return (
       <div className={'accordion-content'}>
-        <>
-          {checkboxValues.map((checkbox, index) => {
-            return (
-              <BreakdownCheckboxes
-                data={checkbox}
-                handleChange={(e, checkboxValue) =>
-                  handleChangeCheckboxes(e, checkboxValue, index)
-                }
-              />
-            )
-          })}
-          <>
-            {textEditorData.map((data, index) => {
-              return (
+        {sortedComponents.map((data, index) => {
+          // const checkboxData = data.
+          return (
+            <>
+              <>
+                {data.type === 'paragraph' && (
+                  <div
+                    key={index}
+                    style={{ fontFamily: 'Montserrat' }}
+                    dangerouslySetInnerHTML={{ __html: data.paragraph }}
+                  />
+                )}
+              </>
+              {data.type === 'checkbox' && (
+                <BreakdownCheckboxes
+                  data={data}
+                  handleChange={(e, checkboxValue) =>
+                    handleChangeCheckboxes(e, checkboxValue, index)
+                  }
+                />
+              )}
+              {data.type === 'textEditor' && (
                 <>
                   <div>{data.title}</div>
                   <KendoTextEditor
+                    minHeight={150}
                     key={index}
-                    value={data?.value}
+                    value={data?.content}
                     handleChange={(e) => handleChangeEditorValue(e, index)}
                     tools={[
                       [Bold, Italic],
@@ -204,48 +234,58 @@ const BreakdownTextAccordion = (props) => {
                     ]}
                   />
                 </>
-              )
-            })}
-          </>
-        </>
+              )}
+            </>
+          )
+        })}
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr 1fr',
-            paddingTop: '1rem',
-            gap: '20px'
-          }}
-        >
-          {imagesData.map((image, index) => (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                filter:
-                  activeIndex !== -1
-                    ? index !== activeIndex
-                      ? 'grayscale(100%)'
-                      : 'grayscale(0%)'
-                    : 'grayscale(0%)'
-              }}
-              key={index}
-              dangerouslySetInnerHTML={{ __html: image.breakDownImage }}
-              alt={image.alt}
-              onClick={() => {
-                handleImageClick(image, index)
-                // makeImageWhiteAndBlack
-              }}
-            />
-          ))}
-        </div>
-        {selectedImage && (
-          <div
-            style={{ fontFamily: 'Montserrat' }}
-            dangerouslySetInnerHTML={{ __html: selectedImage.description }}
-          />
-        )}
+        {/*<>*/}
+        {/*  {paragraphs?.map((data, index) => {*/}
+        {/*    return (*/}
+        {/*      <>*/}
+        {/*        <div*/}
+        {/*          key={index}*/}
+        {/*          style={{ fontFamily: 'Montserrat' }}*/}
+        {/*          dangerouslySetInnerHTML={{ __html: data.paragraph }}*/}
+        {/*        />*/}
+        {/*      </>*/}
+        {/*    )*/}
+        {/*  })}*/}
+        {/*  {checkboxValues?.map((checkbox, index) => {*/}
+        {/*    return (*/}
+        {/*      <BreakdownCheckboxes*/}
+        {/*        data={checkbox}*/}
+        {/*        handleChange={(e, checkboxValue) =>*/}
+        {/*          handleChangeCheckboxes(e, checkboxValue, index)*/}
+        {/*        }*/}
+        {/*      />*/}
+        {/*    )*/}
+        {/*  })}*/}
+        {/*  {textEditorData?.map((data, index) => {*/}
+        {/*    return (*/}
+        {/*      <>*/}
+        {/*        <div>{data.title}</div>*/}
+        {/*        <KendoTextEditor*/}
+        {/*          minHeight={150}*/}
+        {/*          key={index}*/}
+        {/*          value={data?.content}*/}
+        {/*          handleChange={(e) => handleChangeEditorValue(e, index)}*/}
+        {/*          tools={[*/}
+        {/*            [Bold, Italic],*/}
+        {/*            [AlignLeft, AlignCenter, AlignRight, AlignJustify],*/}
+        {/*            [Indent, Outdent],*/}
+        {/*            [OrderedList, UnorderedList],*/}
+        {/*            FontSize,*/}
+        {/*            FontName,*/}
+        {/*            FormatBlock,*/}
+        {/*            [Undo, Redo],*/}
+        {/*            [Link, Unlink, InsertImage, ViewHtml]*/}
+        {/*          ]}*/}
+        {/*        />*/}
+        {/*      </>*/}
+        {/*    )*/}
+        {/*  })}*/}
+        {/*</>*/}
       </div>
     )
   }
@@ -276,6 +316,9 @@ const BreakdownTextAccordion = (props) => {
           />
         )}
         {isExpanded && props.breakdown.type === 'type-2' && <ImageGallery />}
+        {isExpanded && props.breakdown.type === 'type-3' && (
+          <CustomContent customContent={props.breakdown?.customContent} />
+        )}
       </div>
     </>
   )

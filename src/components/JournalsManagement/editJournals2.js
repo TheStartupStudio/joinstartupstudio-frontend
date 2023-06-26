@@ -14,6 +14,30 @@ import '@progress/kendo-theme-default/dist/all.css'
 
 const TextEditor = () => {}
 const CheckboxData = (props) => {
+  const [checkboxes, setCheckboxes] = useState(props.checkbox)
+
+  useEffect(() => {
+    setCheckboxes(props.checkbox)
+  }, [props.checkbox])
+
+  useEffect(() => {
+    props.handleChange(checkboxes)
+  }, [checkboxes])
+  const handleChangeCheckboxes =
+    (...value) =>
+    (name) => {
+      const [checkboxValue, checkboxLabelIndex] = value
+      if (typeof checkboxLabelIndex === 'undefined') {
+        const newCheckboxes = { ...checkboxes }
+        newCheckboxes[name] = checkboxValue
+        return setCheckboxes(newCheckboxes)
+      } else {
+        const newCheckboxes = { ...checkboxes }
+        let newCheckboxLabels = [...newCheckboxes.checkboxes]
+        newCheckboxLabels[checkboxLabelIndex][name] = checkboxValue
+        setCheckboxes(newCheckboxes)
+      }
+    }
   return (
     <>
       <div>
@@ -23,43 +47,62 @@ const CheckboxData = (props) => {
           key="title"
           className="w-100 p-2"
           name="title"
-          value={props.checkbox?.title}
-          // onChange={(e) =>
-          //   props.handleChange(
-          //     'title',
-          //     e.target.value,
-          //     index,
-          //     props.breakdownIndex
-          //   )
-          // }
+          value={checkboxes?.title}
+          onChange={(e) => handleChangeCheckboxes(e.target.value)('title')}
         />
       </div>
-      {props.checkbox?.checkboxes?.map((data, index) => {
+      {checkboxes?.checkboxes?.map((data, index) => {
+        const checkboxLabelIndex = index
         return (
-          <div>
-            <div>#{index + 1} Checkbox </div>
-            <input
-              type="text"
-              className="w-100 p-2"
-              name="checkboxLabel"
-              value={data?.label}
-              // onChange={(e) =>
-              //   props.handleChange(
-              //     'title',
-              //     e.target.value,
-              //     index,
-              //     props.breakdownIndex
-              //   )
-              // }
-            />
-          </div>
+          <>
+            <div>
+              <div>#{index + 1} Checkbox </div>
+              <input
+                type="text"
+                className="w-100 p-2"
+                name="checkboxLabel"
+                value={data?.label}
+                onChange={(e) =>
+                  handleChangeCheckboxes(
+                    e.target.value,
+                    checkboxLabelIndex
+                  )('label')
+                }
+              />
+            </div>
+          </>
         )
       })}
+      <div
+        className={'d-flex justify-content-end mb-4'}
+        onClick={() => {
+          let newCheckboxes = [...checkboxes.checkboxes]
+          newCheckboxes.push({
+            isChecked: false,
+            label: ''
+          })
+          setCheckboxes({ ...checkboxes, checkboxes: newCheckboxes })
+        }}
+      >
+        <div class={'btn btn-primary '}>Add new checkbox</div>
+      </div>
     </>
   )
 }
 
 const CustomContent = (props) => {
+  const handleEditCheckboxes = (e, checkBoxIndex) => {
+    // console.log(e, checkBoxIndex);
+    props.handleChangeCheckboxes(
+      'checkboxesData',
+      e,
+      checkBoxIndex,
+      props.breakdownIndex
+    )
+    // props.handleChange('checkboxesData',e.target.value,index,props.breakdownIndex)
+  }
+
+  console.log(props.breakdown?.customContent)
   return (
     <>
       {props.breakdown?.customContent?.textEditorData?.map((data, index) => (
@@ -72,7 +115,7 @@ const CustomContent = (props) => {
             name="title"
             value={data?.title}
             onChange={(e) =>
-              props.handleChange(
+              props.handleChangeTextEditor(
                 'title',
                 e.target.value,
                 index,
@@ -85,17 +128,54 @@ const CustomContent = (props) => {
             value={data?.content}
             minHeight={200}
             handleChange={(e) =>
-              props.handleChange('content', e, index, props.breakdownIndex)
+              props.handleChangeTextEditor(
+                'content',
+                e,
+                index,
+                props.breakdownIndex
+              )
             }
           />
         </React.Fragment>
       ))}
       {props.breakdown?.customContent?.checkboxesData?.map(
         (checkbox, index) => (
-          <CheckboxData checkbox={checkbox} key={index} />
+          <CheckboxData
+            checkbox={checkbox}
+            key={index}
+            index={index}
+            breakdownIndex={props.breakdownIndex}
+            handleChange={(e) => handleEditCheckboxes(e, index)}
+          />
         )
       )}
+      {props.breakdown?.customContent?.paragraphs?.map((data, index) => {
+        return (
+          <KendoTextEditor
+            key="paragraph"
+            value={data?.paragraph}
+            minHeight={200}
+            handleChange={(e) =>
+              props.handleChangeParagraph(
+                'paragraph',
+                e,
+                index,
+                props.breakdownIndex
+              )
+            }
+          />
+        )
+      })}
+
       <div className={'d-flex justify-content-end gap-2'}>
+        <div
+          className={'d-flex justify-content-end mb-4'}
+          onClick={() => {
+            props.handleAddParagraph()
+          }}
+        >
+          <div class={'btn btn-secondary '}>Add a paragraph</div>
+        </div>
         <div
           className={'d-flex justify-content-end mb-4'}
           onClick={() => {
@@ -107,7 +187,7 @@ const CustomContent = (props) => {
         <div
           className={'d-flex justify-content-end mb-4'}
           onClick={() => {
-            // props.handleAddTextEditor()
+            props.handleAddCheckbox()
           }}
         >
           <div class={'btn btn-secondary '}>Add a checkbox</div>
@@ -130,7 +210,7 @@ export default function EditJournals2(props) {
 
   const breakdownInitialState = [
     {
-      id: '',
+      // id: '',
       content: '',
       title: '',
       type: '',
@@ -142,6 +222,11 @@ export default function EditJournals2(props) {
         }
       ],
       customContent: {
+        paragraphs: [
+          {
+            paragraph: ''
+          }
+        ],
         textEditorData: [
           {
             title: '',
@@ -173,7 +258,7 @@ export default function EditJournals2(props) {
   ]
 
   const [breakdowns, setBreakdowns] = useState(breakdownInitialState)
-
+  console.log(breakdowns)
   useEffect(() => {
     // getJournals()
     getJournals2()
@@ -251,7 +336,8 @@ export default function EditJournals2(props) {
         breakdowns: breakdowns,
         paragraph: selectedJournal.value?.paragraph,
         title: selectedJournal?.value?.title,
-        type: selectedJournal?.value?.type
+        type: selectedJournal?.value?.type,
+        customContent: selectedJournal?.value?.customContent
       })
       .then((res) => {
         setJournals(
@@ -376,28 +462,12 @@ export default function EditJournals2(props) {
     ViewHtml
   } = EditorTools
 
-  const [checkboxValues, setCheckboxValues] = useState([
-    {
-      title: 'In completing this task did you:',
-      checkboxes: [
-        {
-          checked: false,
-          label: 'Give each student an opportunity to use their voice.'
-        },
-        {
-          checked: false,
-          label: 'Conduct at least one news briefing to start class.'
-        },
-        {
-          checked: false,
-          label:
-            'Give students adequate time to complete work inside of their Journal or Portfolio.'
-        }
-      ]
-    }
-  ])
-
-  const handleChangeEditorData = (name, value, dataIndex, breakdownIndex) => {
+  const handleChangeTextEditorData = (
+    name,
+    value,
+    dataIndex,
+    breakdownIndex
+  ) => {
     setBreakdowns((prevBreakdowns) => {
       return prevBreakdowns.map((data, bindex) => {
         if (bindex === breakdownIndex) {
@@ -411,7 +481,59 @@ export default function EditJournals2(props) {
           )
           return {
             ...data,
-            customContent: { textEditorData: updatedCustomContent }
+            customContent: {
+              ...data.customContent,
+              textEditorData: updatedCustomContent
+            }
+          }
+        }
+        return data
+      })
+    })
+  }
+
+  const handleChangeParagraph = (name, value, dataIndex, breakdownIndex) => {
+    setBreakdowns((prevBreakdowns) => {
+      return prevBreakdowns.map((data, bindex) => {
+        if (bindex === breakdownIndex) {
+          const updatedCustomContent = data.customContent?.paragraphs?.map(
+            (paragraph, eIndex) => {
+              if (eIndex === dataIndex) {
+                return { ...paragraph, [name]: value }
+              }
+              return paragraph
+            }
+          )
+          return {
+            ...data,
+            customContent: {
+              ...data.customContent,
+              paragraphs: updatedCustomContent
+            }
+          }
+        }
+        return data
+      })
+    })
+  }
+  const handleChangeCheckboxes = (name, value, dataIndex, breakdownIndex) => {
+    setBreakdowns((prevBreakdowns) => {
+      return prevBreakdowns.map((data, bindex) => {
+        if (bindex === breakdownIndex) {
+          const updatedCheckboxesData = data.customContent?.checkboxesData?.map(
+            (editorData, eIndex) => {
+              if (eIndex === dataIndex) {
+                return { ...editorData, [name]: value }
+              }
+              return editorData
+            }
+          )
+          return {
+            ...data,
+            customContent: {
+              ...data.customContent,
+              checkboxesData: updatedCheckboxesData
+            }
           }
         }
         return data
@@ -427,8 +549,59 @@ export default function EditJournals2(props) {
 
     setBreakdowns((prevState) => {
       const updatedBreakdowns = [...prevState]
-      updatedBreakdowns[breakdownIndex].customContent.textEditorData.push(
+      updatedBreakdowns[breakdownIndex]?.customContent?.textEditorData?.push(
         newTextEditorData
+      )
+      return updatedBreakdowns
+    })
+  }
+
+  const addParagraph = (breakdownIndex) => {
+    const newParagraph = {
+      paragraph: ''
+    }
+
+    setBreakdowns((prevState) => {
+      const updatedBreakdowns = [...prevState]
+      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
+        updatedBreakdowns[breakdownIndex].customContent = {}
+      }
+      const newParagraphs =
+        updatedBreakdowns[breakdownIndex]?.customContent?.paragraphs
+
+      if (!newParagraphs) {
+        updatedBreakdowns[breakdownIndex].customContent.paragraphs = [
+          { newParagraph }
+        ]
+      }
+      newParagraphs?.push(newParagraph)
+
+      return updatedBreakdowns
+    })
+  }
+  const addCheckbox = (breakdownIndex) => {
+    const newCheckbox = {
+      title: '',
+      checkboxes: [
+        {
+          checked: false,
+          label: ''
+        },
+        {
+          checked: false,
+          label: ''
+        },
+        {
+          checked: false,
+          label: ''
+        }
+      ]
+    }
+
+    setBreakdowns((prevState) => {
+      const updatedBreakdowns = [...prevState]
+      updatedBreakdowns[breakdownIndex]?.customContent?.checkboxesData?.push(
+        newCheckbox
       )
       return updatedBreakdowns
     })
@@ -720,10 +893,19 @@ export default function EditJournals2(props) {
                         <CustomContent
                           breakdown={breakdown}
                           breakdownIndex={breakdownIndex}
-                          handleChange={handleChangeEditorData}
-                          handleAddCheckbox={() => {}}
+                          handleChangeTextEditor={handleChangeTextEditorData}
+                          handleChangeParagraph={handleChangeParagraph}
+                          handleChangeCheckboxes={(...e) =>
+                            handleChangeCheckboxes(e)
+                          }
+                          handleAddCheckbox={() => {
+                            addCheckbox(breakdownIndex)
+                          }}
                           handleAddTextEditor={() => {
                             addTextEditorData(breakdownIndex)
+                          }}
+                          handleAddParagraph={() => {
+                            addParagraph(breakdownIndex)
                           }}
                         />
                       </>
@@ -731,44 +913,46 @@ export default function EditJournals2(props) {
                   </div>
                 )
               })}
-              <div
-                className={'d-flex justify-content-end mb-4'}
-                onClick={() => {
-                  let newBreakdowns = [...breakdowns]
-                  newBreakdowns.push({
-                    ...breakdownInitialState[0],
-                    type: 'type-1'
-                  })
-                  setBreakdowns(newBreakdowns)
-                }}
-              >
-                <div class={'btn btn-secondary '}>Add breakdown 1</div>
-              </div>
-              <div
-                className={'d-flex justify-content-end mb-4'}
-                onClick={() => {
-                  let newBreakdowns = [...breakdowns]
-                  newBreakdowns.push({
-                    ...breakdownInitialState[0],
-                    type: 'type-2'
-                  })
-                  setBreakdowns(newBreakdowns)
-                }}
-              >
-                <div class={'btn btn-secondary '}>Add breakdown 2</div>
-              </div>{' '}
-              <div
-                className={'d-flex justify-content-end mb-4'}
-                onClick={() => {
-                  let newBreakdowns = [...breakdowns]
-                  newBreakdowns.push({
-                    ...breakdownInitialState[0],
-                    type: 'type-3'
-                  })
-                  setBreakdowns(newBreakdowns)
-                }}
-              >
-                <div class={'btn btn-secondary '}>Add breakdown 3</div>
+              <div className={'d-flex justify-content-between gap-2'}>
+                <div
+                  className={'d-flex justify-content-end mb-4'}
+                  onClick={() => {
+                    let newBreakdowns = [...breakdowns]
+                    newBreakdowns.push({
+                      ...breakdownInitialState[0],
+                      type: 'type-1'
+                    })
+                    setBreakdowns(newBreakdowns)
+                  }}
+                >
+                  <div class={'btn btn-secondary '}>Add breakdown 1</div>
+                </div>
+                <div
+                  className={'d-flex justify-content-end mb-4'}
+                  onClick={() => {
+                    let newBreakdowns = [...breakdowns]
+                    newBreakdowns.push({
+                      ...breakdownInitialState[0],
+                      type: 'type-2'
+                    })
+                    setBreakdowns(newBreakdowns)
+                  }}
+                >
+                  <div class={'btn btn-secondary '}>Add breakdown 2</div>
+                </div>{' '}
+                <div
+                  className={'d-flex justify-content-end mb-4'}
+                  onClick={() => {
+                    let newBreakdowns = [...breakdowns]
+                    newBreakdowns.push({
+                      ...breakdownInitialState[0],
+                      type: 'type-3'
+                    })
+                    setBreakdowns(newBreakdowns)
+                  }}
+                >
+                  <div class={'btn btn-secondary '}>Add breakdown 3</div>
+                </div>
               </div>
             </>
           }
