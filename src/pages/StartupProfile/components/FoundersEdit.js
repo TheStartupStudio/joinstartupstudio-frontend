@@ -47,7 +47,7 @@ const FoundersEdit = (props) => {
           if (item.hasOwnProperty('newFounder') && loggedUser.id !== item.id) {
             socket?.emit('sendNotification', {
               sender: loggedUser,
-              receiver: item,
+              receivers: [item],
               type: NotificationTypes.ADDED_TO_PROJECT.key,
               url: `/PublishedProject/${item.id}`
             })
@@ -198,36 +198,36 @@ const FoundersEdit = (props) => {
   // }, [width])
 
   return (
-    <div className='col-12 col-lg-6 mt-4 mt-lg-0'>
-      <div className='col-12 border border-2 rounded py-3 px-4 h-100'>
-        <div className='edit_project_video py-2'>
-          <span className='edit_project_video_title d-block pb-3'>
+    <div className="col-12 col-lg-6 mt-4 mt-lg-0">
+      <div className="col-12 border border-2 rounded py-3 px-4 h-100">
+        <div className="edit_project_video py-2">
+          <span className="edit_project_video_title d-block pb-3">
             FOUNDERS
             <FontAwesomeIcon
               icon={faPen}
-              className='ms-auto float-end'
+              className="ms-auto float-end"
               onClick={() => {
                 setopenEditFounderModal(true)
               }}
             />
           </span>
-          <span className='edit_project_video_info mt-3 d-block'>
-            <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>
+          <span className="edit_project_video_info mt-3 d-block">
+            <label className="px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex">
               <input
-                type='checkbox'
-                name='showFounders'
+                type="checkbox"
+                name="showFounders"
                 checked={props.data?.show_founders}
                 onChange={(e) =>
                   props.updateShowPreference(e, 0, !props.data?.show_founders)
                 }
               />
-              <i className='my-auto'></i>
+              <i className="my-auto"></i>
             </label>
-            <span className='ms-auto float-end me-2'>Show on Project Page</span>
+            <span className="ms-auto float-end me-2">Show on Project Page</span>
           </span>
         </div>
-        <div className='mx-auto my-auto mb-4 col-12 row gx-0 px-0 mx-0'>
-          <div className='mx-auto row gx-0 px-0 mt-2'>
+        <div className="mx-auto my-auto mb-4 col-12 row gx-0 px-0 mx-0">
+          <div className="mx-auto row gx-0 px-0 mt-2">
             <div
               className={`card-group desktop-menu mt-3 
         ${
@@ -235,14 +235,14 @@ const FoundersEdit = (props) => {
         }`}
             >
               {founder.length >= 2 && (
-                <div className='my-auto'>
+                <div className="my-auto">
                   <button
-                    className='videos-track'
+                    className="videos-track"
                     onClick={handlePreviousConnection}
                   >
                     <FontAwesomeIcon
                       icon={faChevronLeft}
-                      className='videos-track-icon'
+                      className="videos-track-icon"
                     />
                   </button>
                 </div>
@@ -262,34 +262,34 @@ const FoundersEdit = (props) => {
                     />
                   ))}
               {founder.length >= 2 && (
-                <div className='my-auto'>
+                <div className="my-auto">
                   <button
-                    className='videos-track'
+                    className="videos-track"
                     onClick={handleNextConnection}
                   >
                     <FontAwesomeIcon
                       icon={faChevronRight}
-                      className='videos-track-icon'
+                      className="videos-track-icon"
                     />
                   </button>
                 </div>
               )}
             </div>
-            <div className='card-group mobile-menu justify-content-center'>
+            <div className="card-group mobile-menu justify-content-center">
               {founder.length > 1 && (
-                <div className='my-auto'>
+                <div className="my-auto">
                   <button
-                    className='videos-track'
+                    className="videos-track"
                     onClick={handlePreviousConnection}
                   >
                     <FontAwesomeIcon
                       icon={faChevronLeft}
-                      className='videos-track-icon'
+                      className="videos-track-icon"
                     />
                   </button>
                 </div>
               )}
-              <div className='mx-3 d-flex justify-content-between'>
+              <div className="mx-3 d-flex justify-content-between">
                 {founder?.slice(startIndex, endIndex).map((data, index) => (
                   <ConnectionBox
                     data={data}
@@ -303,14 +303,14 @@ const FoundersEdit = (props) => {
                 ))}
               </div>
               {founder.length > 1 && (
-                <div className='my-auto'>
+                <div className="my-auto">
                   <button
-                    className='videos-track'
+                    className="videos-track"
                     onClick={handleNextConnection}
                   >
                     <FontAwesomeIcon
                       icon={faChevronRight}
-                      className='videos-track-icon'
+                      className="videos-track-icon"
                     />
                   </button>
                 </div>

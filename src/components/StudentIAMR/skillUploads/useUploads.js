@@ -61,7 +61,7 @@ export default function useUploads({ skillId, setSelectedUpload }) {
 
         notificationSocket?.emit('sendNotification', {
           sender: loggedUser,
-          receivers: { id: upload.user_id },
+          receivers: [{ id: upload.user_id }],
           type: type,
           url: url
         })
