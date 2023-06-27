@@ -11,9 +11,11 @@ import 'react-quill/dist/quill.snow.css'
 import KendoTextEditor from './TextEditor'
 import { EditorTools } from '@progress/kendo-react-editor'
 import '@progress/kendo-theme-default/dist/all.css'
+import { v4 as uuidv4 } from 'uuid'
 
 const TextEditor = () => {}
 const CheckboxData = (props) => {
+  const randomUUID = uuidv4()
   const [checkboxes, setCheckboxes] = useState(props.checkbox)
 
   useEffect(() => {
@@ -79,7 +81,8 @@ const CheckboxData = (props) => {
           let newCheckboxes = [...checkboxes.checkboxes]
           newCheckboxes.push({
             isChecked: false,
-            label: ''
+            label: '',
+            uuid: randomUUID
           })
           setCheckboxes({ ...checkboxes, checkboxes: newCheckboxes })
         }}
@@ -91,6 +94,26 @@ const CheckboxData = (props) => {
 }
 
 const CustomContent = (props) => {
+  console.log(props.breakdown.customContent)
+  const randomUUID = uuidv4()
+  const [breakdown, setBreakdown] = useState(props.breakdown)
+  const [sortedComponents, setSortedComponents] = useState([])
+  console.log(sortedComponents)
+  useEffect(() => {
+    setBreakdown(props.breakdown)
+  }, [props.breakdown])
+
+  useEffect(() => {
+    let highestOrder = 0
+
+    sortedComponents.forEach((item) => {
+      if (item.order > highestOrder) {
+        highestOrder = item.order
+      }
+    })
+    props.handleSetHighestOrder(highestOrder)
+  }, [sortedComponents])
+
   const handleEditCheckboxes = (e, checkBoxIndex) => {
     // console.log(e, checkBoxIndex);
     props.handleChangeCheckboxes(
@@ -99,74 +122,157 @@ const CustomContent = (props) => {
       checkBoxIndex,
       props.breakdownIndex
     )
-    // props.handleChange('checkboxesData',e.target.value,index,props.breakdownIndex)
   }
 
-  console.log(props.breakdown?.customContent)
+  useEffect(() => {
+    if (props.breakdown?.customContent) {
+      const checkboxesDataCopy =
+        props.breakdown?.customContent?.checkboxesData.slice()
+      const textEditorDataCopy =
+        props.breakdown?.customContent?.textEditorData.slice()
+      const paragraphsCopy = props.breakdown?.customContent?.paragraphs.slice()
+
+      setSortedComponents(
+        [...checkboxesDataCopy, ...textEditorDataCopy, ...paragraphsCopy].sort(
+          (a, b) => a.order - b.order
+        )
+      )
+    }
+  }, [
+    props.breakdown?.customContent?.paragraphs?.length,
+    props.breakdown?.customContent?.checkboxesData?.length,
+    props.breakdown?.customContent?.textEditorData?.length
+  ])
+
+  const handleOrderChange = (index, newOrder) => {
+    const selectedItem = sortedComponents[index]
+    const newData = [...sortedComponents]
+    newData.splice(index, 1)
+    newData.splice(newOrder - 1, 0, selectedItem)
+    const updatedData = newData.map((item, index) => {
+      item.order = index + 1
+      return item
+    })
+    setSortedComponents(updatedData)
+  }
+
   return (
     <>
-      {props.breakdown?.customContent?.textEditorData?.map((data, index) => (
-        <React.Fragment key={index}>
-          <div>Title</div>
-          <input
-            type="text"
-            key="title"
-            className="w-100 p-2"
-            name="title"
-            value={data?.title}
-            onChange={(e) =>
-              props.handleChangeTextEditor(
-                'title',
-                e.target.value,
-                index,
-                props.breakdownIndex
-              )
-            }
-          />
-          <KendoTextEditor
-            key="content"
-            value={data?.content}
-            minHeight={200}
-            handleChange={(e) =>
-              props.handleChangeTextEditor(
-                'content',
-                e,
-                index,
-                props.breakdownIndex
-              )
-            }
-          />
-        </React.Fragment>
-      ))}
-      {props.breakdown?.customContent?.checkboxesData?.map(
-        (checkbox, index) => (
-          <CheckboxData
-            checkbox={checkbox}
-            key={index}
-            index={index}
-            breakdownIndex={props.breakdownIndex}
-            handleChange={(e) => handleEditCheckboxes(e, index)}
-          />
-        )
-      )}
-      {props.breakdown?.customContent?.paragraphs?.map((data, index) => {
+      {sortedComponents.map((data, index) => {
         return (
-          <KendoTextEditor
-            key="paragraph"
-            value={data?.paragraph}
-            minHeight={200}
-            handleChange={(e) =>
-              props.handleChangeParagraph(
-                'paragraph',
-                e,
-                index,
-                props.breakdownIndex
-              )
-            }
-          />
+          <>
+            <>
+              {data.type === 'paragraph' && (
+                <React.Fragment key={index}>
+                  <div className="d-flex justify-content-end">
+                    <div className="input-group mb-3" style={{ width: 150 }}>
+                      <span className="input-group-text">Order:</span>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={data.order}
+                        onChange={(e) =>
+                          handleOrderChange(index, Number(e.target.value))
+                        }
+                      />
+                    </div>
+                  </div>
+                  <KendoTextEditor
+                    key="paragraph"
+                    value={data?.paragraph}
+                    minHeight={200}
+                    handleChange={(e) => {
+                      const uuid = data?.uuid
+                      return props.handleChangeParagraph(
+                        'paragraph',
+                        e,
+                        index,
+                        props.breakdownIndex,
+                        uuid
+                      )
+                    }}
+                  />
+                </React.Fragment>
+              )}
+            </>
+            {data.type === 'checkbox' && (
+              <React.Fragment>
+                <div className={'d-flex justify-content-end'}>
+                  <div className="input-group mb-3" style={{ width: 150 }}>
+                    <span className="input-group-text">Order:</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={data.order}
+                      onChange={(e) =>
+                        handleOrderChange(index, Number(e.target.value))
+                      }
+                    />
+                  </div>
+                </div>
+                <CheckboxData
+                  checkbox={data}
+                  key={index}
+                  index={index}
+                  breakdownIndex={props.breakdownIndex}
+                  handleChange={(e) => handleEditCheckboxes(e, index)}
+                />
+              </React.Fragment>
+            )}
+            {data.type === 'textEditor' && (
+              <React.Fragment key={index}>
+                <div className={'d-flex justify-content-end'}>
+                  <div className="input-group mb-3" style={{ width: 150 }}>
+                    <span className="input-group-text">Order:</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={data.order}
+                      onChange={(e) =>
+                        handleOrderChange(index, Number(e.target.value))
+                      }
+                    />
+                  </div>
+                </div>
+                <div>Title</div>
+                <input
+                  type="text"
+                  key="title"
+                  className="w-100 p-2"
+                  name="title"
+                  value={data?.title}
+                  onChange={(e) => {
+                    const uuid = data?.uuid
+                    return props.handleChangeTextEditor(
+                      'title',
+                      e.target.value,
+                      index,
+                      props.breakdownIndex,
+                      uuid
+                    )
+                  }}
+                />
+
+                <KendoTextEditor
+                  key="content"
+                  value={data?.content}
+                  minHeight={200}
+                  handleChange={(e) => {
+                    const uuid = data?.uuid
+                    return props.handleChangeTextEditor(
+                      'content',
+                      e,
+                      index,
+                      props.breakdownIndex,
+                      uuid
+                    )
+                  }}
+                />
+              </React.Fragment>
+            )}
+          </>
         )
       })}
-
       <div className={'d-flex justify-content-end gap-2'}>
         <div
           className={'d-flex justify-content-end mb-4'}
@@ -207,6 +313,15 @@ export default function EditJournals2(props) {
   const [selectedImage, setSelectedImage] = useState(null)
   const [imageUploadingLoader, setImageUploadingLoader] = useState(false)
   const [uploadedImageUrl, setUploadedImageUrl] = useState(false)
+  const [highestOrder, setHighestOrder] = useState(null)
+  const [nextOrder, setNextOrder] = useState(null)
+  console.log(nextOrder)
+  const randomUUID = uuidv4()
+
+  const handleSetHighestOrder = (order) => {
+    // setHighestOrder(order)
+    setNextOrder(+order + 1)
+  }
 
   const breakdownInitialState = [
     {
@@ -222,43 +337,14 @@ export default function EditJournals2(props) {
         }
       ],
       customContent: {
-        paragraphs: [
-          {
-            paragraph: ''
-          }
-        ],
-        textEditorData: [
-          {
-            title: '',
-            content: ``
-          }
-        ],
-        checkboxesData: [
-          {
-            title: 'In completing this task did you:',
-            checkboxes: [
-              {
-                checked: false,
-                label: 'Give each student an opportunity to use their voice.'
-              },
-              {
-                checked: false,
-                label: 'Conduct at least one news briefing to start class.'
-              },
-              {
-                checked: false,
-                label:
-                  'Give students adequate time to complete work inside of their Journal or Portfolio.'
-              }
-            ]
-          }
-        ]
+        paragraphs: [],
+        textEditorData: [],
+        checkboxesData: []
       }
     }
   ]
 
   const [breakdowns, setBreakdowns] = useState(breakdownInitialState)
-  console.log(breakdowns)
   useEffect(() => {
     // getJournals()
     getJournals2()
@@ -466,14 +552,19 @@ export default function EditJournals2(props) {
     name,
     value,
     dataIndex,
-    breakdownIndex
+    breakdownIndex,
+    uuid
   ) => {
     setBreakdowns((prevBreakdowns) => {
       return prevBreakdowns.map((data, bindex) => {
         if (bindex === breakdownIndex) {
           const updatedCustomContent = data.customContent?.textEditorData?.map(
             (editorData, eIndex) => {
-              if (eIndex === dataIndex) {
+              const foundedIndex =
+                data.customContent?.textEditorData?.findIndex(
+                  (paragraph, index) => paragraph.uuid === uuid
+                )
+              if (eIndex === foundedIndex) {
                 return { ...editorData, [name]: value }
               }
               return editorData
@@ -492,13 +583,24 @@ export default function EditJournals2(props) {
     })
   }
 
-  const handleChangeParagraph = (name, value, dataIndex, breakdownIndex) => {
+  const handleChangeParagraph = (
+    name,
+    value,
+    dataIndex,
+    breakdownIndex,
+    uuid
+  ) => {
+    console.log(name, value, dataIndex, breakdownIndex, uuid)
+
     setBreakdowns((prevBreakdowns) => {
       return prevBreakdowns.map((data, bindex) => {
         if (bindex === breakdownIndex) {
           const updatedCustomContent = data.customContent?.paragraphs?.map(
             (paragraph, eIndex) => {
-              if (eIndex === dataIndex) {
+              const foundedIndex = data.customContent?.paragraphs?.findIndex(
+                (paragraph, index) => paragraph.uuid === uuid
+              )
+              if (eIndex === foundedIndex) {
                 return { ...paragraph, [name]: value }
               }
               return paragraph
@@ -516,13 +618,23 @@ export default function EditJournals2(props) {
       })
     })
   }
-  const handleChangeCheckboxes = (name, value, dataIndex, breakdownIndex) => {
+  const handleChangeCheckboxes = (
+    name,
+    value,
+    dataIndex,
+    breakdownIndex,
+    uuid
+  ) => {
     setBreakdowns((prevBreakdowns) => {
       return prevBreakdowns.map((data, bindex) => {
         if (bindex === breakdownIndex) {
           const updatedCheckboxesData = data.customContent?.checkboxesData?.map(
             (editorData, eIndex) => {
-              if (eIndex === dataIndex) {
+              const foundedIndex =
+                data.customContent?.checkboxesData?.findIndex(
+                  (paragraph, index) => paragraph.uuid === uuid
+                )
+              if (eIndex === foundedIndex) {
                 return { ...editorData, [name]: value }
               }
               return editorData
@@ -541,14 +653,33 @@ export default function EditJournals2(props) {
     })
   }
 
+  // const highestOrder = sortedComponents.find((sc)=>Math.max(sc.order))
+
   const addTextEditorData = (breakdownIndex) => {
     const newTextEditorData = {
       title: '',
-      content: ''
+      content: '',
+      type: 'textEditor',
+      order: nextOrder,
+      uuid: randomUUID
     }
+
+    setNextOrder((prev) => prev + 1)
 
     setBreakdowns((prevState) => {
       const updatedBreakdowns = [...prevState]
+      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
+        updatedBreakdowns[breakdownIndex].customContent = {}
+      }
+
+      const textEditorData =
+        updatedBreakdowns[breakdownIndex]?.customContent?.textEditorData
+
+      if (!textEditorData) {
+        updatedBreakdowns[breakdownIndex].customContent.textEditorData = [
+          { newTextEditorData }
+        ]
+      }
       updatedBreakdowns[breakdownIndex]?.customContent?.textEditorData?.push(
         newTextEditorData
       )
@@ -557,9 +688,14 @@ export default function EditJournals2(props) {
   }
 
   const addParagraph = (breakdownIndex) => {
+    console.log(nextOrder)
     const newParagraph = {
-      paragraph: ''
+      paragraph: '',
+      type: 'paragraph',
+      order: +nextOrder,
+      uuid: randomUUID
     }
+    setNextOrder((prev) => prev + 1)
 
     setBreakdowns((prevState) => {
       const updatedBreakdowns = [...prevState]
@@ -575,13 +711,16 @@ export default function EditJournals2(props) {
         ]
       }
       newParagraphs?.push(newParagraph)
-
+      debugger
       return updatedBreakdowns
     })
   }
   const addCheckbox = (breakdownIndex) => {
     const newCheckbox = {
       title: '',
+      type: 'checkbox',
+      order: nextOrder,
+      uuid: randomUUID,
       checkboxes: [
         {
           checked: false,
@@ -597,14 +736,45 @@ export default function EditJournals2(props) {
         }
       ]
     }
-
+    setNextOrder((prev) => prev + 1)
     setBreakdowns((prevState) => {
       const updatedBreakdowns = [...prevState]
+      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
+        updatedBreakdowns[breakdownIndex].customContent = {}
+      }
+
+      const checkboxesData =
+        updatedBreakdowns[breakdownIndex]?.customContent?.checkboxesData
+
+      if (!checkboxesData) {
+        updatedBreakdowns[breakdownIndex].customContent.checkboxesData = [
+          { newCheckbox }
+        ]
+      }
       updatedBreakdowns[breakdownIndex]?.customContent?.checkboxesData?.push(
         newCheckbox
       )
       return updatedBreakdowns
     })
+  }
+
+  const [sortedComponents, setSortedComponents] = useState([])
+  console.log(sortedComponents)
+  const addNewComponent = (breakdown) => {
+    if (breakdown?.customContent) {
+      const checkboxesDataCopy =
+        breakdown?.customContent?.checkboxesData.slice()
+      const textEditorDataCopy =
+        breakdown?.customContent?.textEditorData.slice()
+      const paragraphsCopy = breakdown?.customContent?.paragraphs.slice()
+      debugger
+
+      setSortedComponents(
+        [...checkboxesDataCopy, ...textEditorDataCopy, ...paragraphsCopy].sort(
+          (a, b) => a.order - b.order
+        )
+      )
+    }
   }
 
   return (
@@ -891,7 +1061,17 @@ export default function EditJournals2(props) {
                     {breakdown.type === 'type-3' && (
                       <>
                         <CustomContent
+                          handleSetHighestOrder={handleSetHighestOrder}
                           breakdown={breakdown}
+                          breakdownTextEditor={
+                            breakdown?.customContent?.textEditorData
+                          }
+                          breakdownParagraph={
+                            breakdown?.customContent?.paragraphs
+                          }
+                          breakdownCheckboxes={
+                            breakdown?.customContent?.checkboxesData
+                          }
                           breakdownIndex={breakdownIndex}
                           handleChangeTextEditor={handleChangeTextEditorData}
                           handleChangeParagraph={handleChangeParagraph}
