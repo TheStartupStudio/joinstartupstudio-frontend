@@ -13,7 +13,6 @@ import { EditorTools } from '@progress/kendo-react-editor'
 import '@progress/kendo-theme-default/dist/all.css'
 import { v4 as uuidv4 } from 'uuid'
 
-const TextEditor = () => {}
 const CheckboxData = (props) => {
   const randomUUID = uuidv4()
   const [checkboxes, setCheckboxes] = useState(props.checkbox)
@@ -94,11 +93,9 @@ const CheckboxData = (props) => {
 }
 
 const CustomContent = (props) => {
-  console.log(props.breakdown.customContent)
   const randomUUID = uuidv4()
   const [breakdown, setBreakdown] = useState(props.breakdown)
   const [sortedComponents, setSortedComponents] = useState([])
-  console.log(sortedComponents)
   useEffect(() => {
     setBreakdown(props.breakdown)
   }, [props.breakdown])
@@ -115,7 +112,6 @@ const CustomContent = (props) => {
   }, [sortedComponents])
 
   const handleEditCheckboxes = (e, checkBoxIndex) => {
-    // console.log(e, checkBoxIndex);
     props.handleChangeCheckboxes(
       'checkboxesData',
       e,
@@ -123,27 +119,50 @@ const CustomContent = (props) => {
       props.breakdownIndex
     )
   }
-
+  // const condition = props.breakdown?.customContent?.images?.map(
+  //   (image) => image.button
+  // )
   useEffect(() => {
     if (props.breakdown?.customContent) {
       const checkboxesDataCopy =
-        props.breakdown?.customContent?.checkboxesData.slice()
+        props.breakdown?.customContent?.checkboxesData?.slice() || []
       const textEditorDataCopy =
-        props.breakdown?.customContent?.textEditorData.slice()
-      const paragraphsCopy = props.breakdown?.customContent?.paragraphs.slice()
-
+        props.breakdown?.customContent?.textEditorData?.slice() || []
+      const paragraphsCopy =
+        props.breakdown?.customContent?.paragraphs?.slice() || []
+      const buttonsCopy = props.breakdown?.customContent?.buttons?.slice() || []
+      const imagesCopy = props.breakdown?.customContent?.images?.slice() || []
       setSortedComponents(
-        [...checkboxesDataCopy, ...textEditorDataCopy, ...paragraphsCopy].sort(
-          (a, b) => a.order - b.order
-        )
+        [
+          ...checkboxesDataCopy,
+          ...textEditorDataCopy,
+          ...paragraphsCopy,
+          ...buttonsCopy,
+          ...imagesCopy
+        ].sort((a, b) => a.order - b.order)
       )
     }
   }, [
     props.breakdown?.customContent?.paragraphs?.length,
     props.breakdown?.customContent?.checkboxesData?.length,
-    props.breakdown?.customContent?.textEditorData?.length
+    props.breakdown?.customContent?.textEditorData?.length,
+    props.breakdown?.customContent?.buttons?.length,
+    props.breakdown?.customContent?.images?.length,
+    props.breakdown?.customContent?.paragraphs,
+    props.breakdown?.customContent?.checkboxesData,
+    props.breakdown?.customContent?.textEditorData,
+    props.breakdown?.customContent?.buttons,
+    props.breakdown?.customContent?.images,
+    JSON.stringify(
+      props.breakdown?.customContent?.images?.map((image) => image.button)
+    )
+
+    // condition
   ])
 
+  // useEffect(() => {
+  //   debugger
+  // }, [condition])
   const handleOrderChange = (index, newOrder) => {
     const selectedItem = sortedComponents[index]
     const newData = [...sortedComponents]
@@ -155,6 +174,29 @@ const CustomContent = (props) => {
     })
     setSortedComponents(updatedData)
   }
+
+  const [gridColumns, setGridColumns] = useState(4)
+  const [imageGalleryUUID, setImageGalleryIndexUUID] = useState(null)
+
+  const handleChangeGridValues = (value, uuid) => {
+    setGridColumns(value)
+    setImageGalleryIndexUUID(uuid)
+  }
+
+  useEffect(() => {
+    props.handleChangeGridColumns(gridColumns, imageGalleryUUID)
+  }, [gridColumns])
+
+  const firstImageUUID = sortedComponents?.filter(
+    (sc) => sc?.type === 'image'
+  )[0]?.uuid
+  const firstImageUUIDIndex = sortedComponents?.findIndex(
+    (sc) => sc?.uuid === firstImageUUID
+  )
+
+  const uuid2 = sortedComponents?.filter((sc) => sc?.type === 'image')[0]?.uuid
+
+  const findGC = sortedComponents?.find((sc) => sc.uuid === uuid2)
 
   return (
     <>
@@ -270,33 +312,282 @@ const CustomContent = (props) => {
                 />
               </React.Fragment>
             )}
+            {data.type === 'button' && (
+              <React.Fragment key={index}>
+                <div className={'d-flex justify-content-end'}>
+                  <div className="input-group mb-3" style={{ width: 150 }}>
+                    <span className="input-group-text">Order:</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={data.order}
+                      onChange={(e) =>
+                        handleOrderChange(index, Number(e.target.value))
+                      }
+                    />
+                  </div>
+                </div>
+                <div>Title</div>
+                <input
+                  type="text"
+                  key="title"
+                  className="w-100 p-2"
+                  name="title"
+                  value={data?.title}
+                  onChange={(e) => {
+                    const uuid = data?.uuid
+                    return props.handleChangeButtons(
+                      'title',
+                      e.target.value,
+                      index,
+                      props.breakdownIndex,
+                      uuid
+                    )
+                  }}
+                />
+
+                <div>Popup Content</div>
+                <KendoTextEditor
+                  key="content"
+                  value={data?.popupContent}
+                  minHeight={200}
+                  handleChange={(e) => {
+                    const uuid = data?.uuid
+                    return props.handleChangeButtons(
+                      'popupContent',
+                      e,
+                      index,
+                      props.breakdownIndex,
+                      uuid
+                    )
+                  }}
+                />
+
+                <div>Position</div>
+                <input
+                  type="text"
+                  key="position"
+                  className="w-100 p-2"
+                  name="position"
+                  value={data?.position}
+                  onChange={(e) => {
+                    const uuid = data?.uuid
+                    return props.handleChangeButtons(
+                      'position',
+                      e.target.value,
+                      index,
+                      props.breakdownIndex,
+                      uuid
+                    )
+                  }}
+                />
+              </React.Fragment>
+            )}
+            {data.type === 'image' && (
+              <React.Fragment key={index}>
+                {/*<div className={'d-flex justify-content-end'}>*/}
+                {/*  <div className="input-group mb-3" style={{ width: 150 }}>*/}
+                {/*    <span className="input-group-text">Order:</span>*/}
+                {/*    <input*/}
+                {/*      type="number"*/}
+                {/*      className="form-control"*/}
+                {/*      value={data.order}*/}
+                {/*      onChange={(e) =>*/}
+                {/*        handleOrderChange(index, Number(e.target.value))*/}
+                {/*      }*/}
+                {/*    />*/}
+                {/*  </div>*/}
+                {/*</div>*/}
+                {firstImageUUIDIndex === index && (
+                  <div className={'d-flex justify-content-start'}>
+                    <div className="input-group mb-3" style={{ width: 200 }}>
+                      <span className="input-group-text">Grid column:</span>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={+findGC.gridColumns}
+                        onChange={(e) => {
+                          const uuid = data?.uuid
+                          return handleChangeGridValues(
+                            e.target.value,
+                            firstImageUUID
+                          )
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+                <div>Image</div>
+                <KendoTextEditor
+                  key="image"
+                  value={data?.image}
+                  minHeight={200}
+                  handleChange={(e) => {
+                    const uuid = data?.uuid
+                    return props.handleChangeImages(
+                      'image',
+                      e,
+                      index,
+                      props.breakdownIndex,
+                      uuid
+                    )
+                  }}
+                />
+
+                <div>Popup Content</div>
+                <KendoTextEditor
+                  key="content"
+                  value={data?.description}
+                  minHeight={200}
+                  handleChange={(e) => {
+                    const uuid = data?.uuid
+                    return props.handleChangeImages(
+                      'description',
+                      e,
+                      index,
+                      props.breakdownIndex,
+                      uuid
+                    )
+                  }}
+                />
+
+                <div>Button</div>
+                {Object.keys(data.button).length > 0 && (
+                  <React.Fragment key={index}>
+                    <div>Title</div>
+                    <input
+                      type="text"
+                      key="title"
+                      className="w-100 p-2"
+                      name="title"
+                      value={data?.button?.title}
+                      onChange={(e) => {
+                        const uuid = data?.uuid
+                        return props.handleChangeImages(
+                          'title',
+                          e.target.value,
+                          index,
+                          props.breakdownIndex,
+                          uuid,
+                          'button'
+                        )
+                      }}
+                    />
+
+                    <div>Popup Content</div>
+                    <KendoTextEditor
+                      key="content"
+                      value={data?.button?.popupContent}
+                      minHeight={200}
+                      handleChange={(e) => {
+                        const uuid = data?.uuid
+                        return props.handleChangeImages(
+                          'popupContent',
+                          e,
+                          index,
+                          props.breakdownIndex,
+                          uuid,
+                          'button'
+                        )
+                      }}
+                    />
+
+                    <div>Position</div>
+                    <input
+                      type="text"
+                      key="position"
+                      className="w-100 p-2"
+                      name="position"
+                      value={data?.button?.position}
+                      onChange={(e) => {
+                        const uuid = data?.uuid
+                        return props.handleChangeImages(
+                          'position',
+                          e.target.value,
+                          index,
+                          props.breakdownIndex,
+                          uuid,
+                          'button'
+                        )
+                      }}
+                    />
+                  </React.Fragment>
+                )}
+                <div
+                  className={
+                    'd-flex justify-content-center align-items-center '
+                  }
+                  onClick={() => {
+                    const uuid = data?.uuid
+                    props.handleAddButtonImage(uuid)
+                  }}
+                >
+                  <div class={'btn btn-secondary d-flex align-items-center'}>
+                    Add a button
+                  </div>
+                </div>
+              </React.Fragment>
+            )}
           </>
         )
       })}
-      <div className={'d-flex justify-content-end gap-2'}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr 1fr',
+          gap: 6,
+          padding: 10
+        }}
+      >
         <div
-          className={'d-flex justify-content-end mb-4'}
+          className={'d-flex justify-content-center align-items-center '}
           onClick={() => {
             props.handleAddParagraph()
           }}
         >
-          <div class={'btn btn-secondary '}>Add a paragraph</div>
+          <div class={'btn btn-secondary d-flex align-items-center '}>
+            Add a paragraph
+          </div>
         </div>
         <div
-          className={'d-flex justify-content-end mb-4'}
+          className={'d-flex justify-content-center align-items-center '}
           onClick={() => {
             props.handleAddTextEditor()
           }}
         >
-          <div class={'btn btn-secondary '}>Add a text editor</div>
+          <div class={'btn btn-secondary d-flex align-items-center'}>
+            Add a text editor
+          </div>
         </div>
         <div
-          className={'d-flex justify-content-end mb-4'}
+          className={'d-flex justify-content-center align-items-center '}
           onClick={() => {
             props.handleAddCheckbox()
           }}
         >
-          <div class={'btn btn-secondary '}>Add a checkbox</div>
+          <div class={'btn btn-secondary d-flex align-items-center'}>
+            Add a checkbox
+          </div>
+        </div>
+        <div
+          className={'d-flex justify-content-center align-items-center '}
+          onClick={() => {
+            props.handleAddButton()
+          }}
+        >
+          <div class={'btn btn-secondary d-flex align-items-center'}>
+            Add a button
+          </div>
+        </div>
+        <div
+          className={'d-flex justify-content-center align-items-center '}
+          onClick={() => {
+            props.handleAddImage()
+          }}
+        >
+          <div class={'btn btn-secondary d-flex align-items-center'}>
+            Add image component
+          </div>
         </div>
       </div>
     </>
@@ -315,7 +606,6 @@ export default function EditJournals2(props) {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(false)
   const [highestOrder, setHighestOrder] = useState(null)
   const [nextOrder, setNextOrder] = useState(null)
-  console.log(nextOrder)
   const randomUUID = uuidv4()
 
   const handleSetHighestOrder = (order) => {
@@ -339,7 +629,15 @@ export default function EditJournals2(props) {
       customContent: {
         paragraphs: [],
         textEditorData: [],
-        checkboxesData: []
+        checkboxesData: [],
+        buttons: [],
+        images: [
+          {
+            image: '',
+            description: '',
+            button: {}
+          }
+        ]
       }
     }
   ]
@@ -590,8 +888,6 @@ export default function EditJournals2(props) {
     breakdownIndex,
     uuid
   ) => {
-    console.log(name, value, dataIndex, breakdownIndex, uuid)
-
     setBreakdowns((prevBreakdowns) => {
       return prevBreakdowns.map((data, bindex) => {
         if (bindex === breakdownIndex) {
@@ -653,6 +949,60 @@ export default function EditJournals2(props) {
     })
   }
 
+  const handleChangeButtons = (
+    name,
+    value,
+    dataIndex,
+    breakdownIndex,
+    uuid
+  ) => {
+    setBreakdowns((prevBreakdowns) => {
+      const newBreakdowns = [...prevBreakdowns]
+      const newBreakdown = { ...newBreakdowns[breakdownIndex] }
+      const newButtons = [...newBreakdown.customContent.buttons]
+
+      const buttonIndex = newButtons.findIndex((button) => button.uuid === uuid)
+      if (buttonIndex !== -1) {
+        const newButton = { ...newButtons[buttonIndex], [name]: value }
+        newButtons[buttonIndex] = newButton
+        newBreakdown.customContent.buttons = newButtons
+        newBreakdowns[breakdownIndex] = newBreakdown
+      }
+
+      return newBreakdowns
+    })
+  }
+
+  const handleChangeImages = (
+    name,
+    value,
+    dataIndex,
+    breakdownIndex,
+    uuid,
+    button
+  ) => {
+    setBreakdowns((prevBreakdowns) => {
+      const newBreakdowns = [...prevBreakdowns]
+      const newBreakdown = { ...newBreakdowns[breakdownIndex] }
+      const newImages = [...newBreakdown.customContent.images]
+
+      const imageIndex = newImages.findIndex((image) => image.uuid === uuid)
+      if (imageIndex !== -1) {
+        const newImage = { ...newImages[imageIndex] }
+        if (button) {
+          newImage.button = { ...newImage.button, [name]: value }
+        } else {
+          newImage[name] = value
+        }
+        newImages[imageIndex] = newImage
+        newBreakdown.customContent.images = newImages
+        newBreakdowns[breakdownIndex] = newBreakdown
+      }
+
+      return newBreakdowns
+    })
+  }
+
   // const highestOrder = sortedComponents.find((sc)=>Math.max(sc.order))
 
   const addTextEditorData = (breakdownIndex) => {
@@ -688,7 +1038,6 @@ export default function EditJournals2(props) {
   }
 
   const addParagraph = (breakdownIndex) => {
-    console.log(nextOrder)
     const newParagraph = {
       paragraph: '',
       type: 'paragraph',
@@ -758,23 +1107,124 @@ export default function EditJournals2(props) {
     })
   }
 
-  const [sortedComponents, setSortedComponents] = useState([])
-  console.log(sortedComponents)
-  const addNewComponent = (breakdown) => {
-    if (breakdown?.customContent) {
-      const checkboxesDataCopy =
-        breakdown?.customContent?.checkboxesData.slice()
-      const textEditorDataCopy =
-        breakdown?.customContent?.textEditorData.slice()
-      const paragraphsCopy = breakdown?.customContent?.paragraphs.slice()
-      debugger
-
-      setSortedComponents(
-        [...checkboxesDataCopy, ...textEditorDataCopy, ...paragraphsCopy].sort(
-          (a, b) => a.order - b.order
-        )
-      )
+  const addButton = (breakdownIndex) => {
+    const newButton = {
+      title: '',
+      popupContent: '',
+      position: '',
+      type: 'button',
+      order: nextOrder,
+      uuid: randomUUID
     }
+    setNextOrder((prev) => prev + 1)
+
+    setBreakdowns((prevState) => {
+      const updatedBreakdowns = [...prevState]
+      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
+        updatedBreakdowns[breakdownIndex].customContent = {
+          buttons: []
+        }
+      }
+
+      const buttons = updatedBreakdowns[breakdownIndex]?.customContent?.buttons
+
+      if (!buttons) {
+        updatedBreakdowns[breakdownIndex].customContent.buttons = [newButton]
+      } else {
+        updatedBreakdowns[breakdownIndex].customContent.buttons.push(newButton)
+      }
+      return updatedBreakdowns
+    })
+  }
+
+  const [gridColumns, setGridColumns] = useState()
+  const [imageGalleryUUID, setImageGalleryUUID] = useState()
+
+  const handleChangeGridColumns = (value, uuid, breakdownIndex) => {
+    setGridColumns(value)
+    setImageGalleryUUID(uuid)
+
+    let newBreakdowns = [...breakdowns]
+    let newBreakdown = { ...newBreakdowns[breakdownIndex] }
+
+    let newImages = [...newBreakdown.customContent.images]
+
+    newImages = newImages.map((image) => {
+      return { ...image, gridColumns: value }
+    })
+
+    newBreakdown.customContent.images = newImages
+    newBreakdowns[breakdownIndex] = newBreakdown
+
+    setBreakdowns(newBreakdowns)
+  }
+
+  const addImage = (breakdownIndex) => {
+    const newImage = {
+      image: '',
+      description: '',
+      button: {},
+      type: 'image',
+      order: nextOrder,
+      uuid: randomUUID,
+      gridColumns: gridColumns
+    }
+
+    setNextOrder((prev) => prev + 1)
+
+    setBreakdowns((prevState) => {
+      const updatedBreakdowns = [...prevState]
+
+      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
+        updatedBreakdowns[breakdownIndex].customContent = {
+          images: []
+        }
+      }
+
+      const images = updatedBreakdowns[breakdownIndex]?.customContent?.images
+
+      if (!images) {
+        updatedBreakdowns[breakdownIndex].customContent.images = [newImage]
+      } else {
+        updatedBreakdowns[breakdownIndex].customContent.images = [
+          ...images,
+          newImage
+        ]
+      }
+      return updatedBreakdowns
+    })
+  }
+
+  const addButtonImage = (breakdownIndex, uuid) => {
+    const newButton = {
+      title: '',
+      popupContent: '',
+      position: '',
+      type: 'button',
+      order: nextOrder,
+      uuid: randomUUID
+    }
+
+    setBreakdowns((prevState) => {
+      const updatedBreakdowns = [...prevState]
+
+      // Get the index of the breakdown where you want to add the new button
+      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
+        updatedBreakdowns[breakdownIndex].customContent = {
+          images: []
+        }
+      }
+
+      const images = updatedBreakdowns[breakdownIndex]?.customContent?.images
+      const foundedIndex = images.findIndex((image) => image.uuid === uuid)
+
+      if (foundedIndex !== -1) {
+        const foundedButton = images[foundedIndex]
+        foundedButton.button = newButton
+      }
+
+      return updatedBreakdowns
+    })
   }
 
   return (
@@ -1063,6 +1513,9 @@ export default function EditJournals2(props) {
                         <CustomContent
                           handleSetHighestOrder={handleSetHighestOrder}
                           breakdown={breakdown}
+                          handleChangeGridColumns={(value, uuid) =>
+                            handleChangeGridColumns(value, uuid, breakdownIndex)
+                          }
                           breakdownTextEditor={
                             breakdown?.customContent?.textEditorData
                           }
@@ -1075,11 +1528,22 @@ export default function EditJournals2(props) {
                           breakdownIndex={breakdownIndex}
                           handleChangeTextEditor={handleChangeTextEditorData}
                           handleChangeParagraph={handleChangeParagraph}
+                          handleChangeButtons={handleChangeButtons}
+                          handleChangeImages={handleChangeImages}
                           handleChangeCheckboxes={(...e) =>
                             handleChangeCheckboxes(e)
                           }
                           handleAddCheckbox={() => {
                             addCheckbox(breakdownIndex)
+                          }}
+                          handleAddButton={() => {
+                            addButton(breakdownIndex)
+                          }}
+                          handleAddImage={() => {
+                            addImage(breakdownIndex)
+                          }}
+                          handleAddButtonImage={(uuid) => {
+                            addButtonImage(breakdownIndex, uuid)
                           }}
                           handleAddTextEditor={() => {
                             addTextEditorData(breakdownIndex)
