@@ -385,19 +385,19 @@ const CustomContent = (props) => {
             )}
             {data.type === 'image' && (
               <React.Fragment key={index}>
-                {/*<div className={'d-flex justify-content-end'}>*/}
-                {/*  <div className="input-group mb-3" style={{ width: 150 }}>*/}
-                {/*    <span className="input-group-text">Order:</span>*/}
-                {/*    <input*/}
-                {/*      type="number"*/}
-                {/*      className="form-control"*/}
-                {/*      value={data.order}*/}
-                {/*      onChange={(e) =>*/}
-                {/*        handleOrderChange(index, Number(e.target.value))*/}
-                {/*      }*/}
-                {/*    />*/}
-                {/*  </div>*/}
-                {/*</div>*/}
+                <div className={'d-flex justify-content-end'}>
+                  <div className="input-group mb-3" style={{ width: 150 }}>
+                    <span className="input-group-text">Order:</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={data.order}
+                      onChange={(e) =>
+                        handleOrderChange(index, Number(e.target.value))
+                      }
+                    />
+                  </div>
+                </div>
                 {firstImageUUIDIndex === index && (
                   <div className={'d-flex justify-content-start'}>
                     <div className="input-group mb-3" style={{ width: 200 }}>
@@ -631,13 +631,7 @@ export default function EditJournals2(props) {
         textEditorData: [],
         checkboxesData: [],
         buttons: [],
-        images: [
-          {
-            image: '',
-            description: '',
-            button: {}
-          }
-        ]
+        images: []
       }
     }
   ]
@@ -713,8 +707,11 @@ export default function EditJournals2(props) {
       console.error(error)
     }
   }
+
+  console.log(breakdowns)
   const handleSubmit = async () => {
     setLoading(true)
+    console.log(selectedJournal.value.id)
     await axiosInstance
       .put(`LtsJournals/${selectedJournal.value.id}/editJournal2`, {
         breakdowns: breakdowns,
@@ -1299,6 +1296,18 @@ export default function EditJournals2(props) {
     // setBreakdowns(newBreakdowns)
   }
 
+  const [breakdownOrder, setBreakdownOrder] = useState(1)
+  useEffect(() => {
+    let highestOrder = 0
+
+    breakdowns.forEach((item) => {
+      if (item.breakdownOrder > highestOrder) {
+        highestOrder = item.breakdownOrder
+      }
+    })
+    setBreakdownOrder(highestOrder)
+  }, [breakdowns])
+
   return (
     <div>
       {!fetchingJournals ? (
@@ -1679,34 +1688,25 @@ export default function EditJournals2(props) {
                     let newBreakdowns = [...breakdowns]
                     newBreakdowns.push({
                       ...breakdownInitialState[0],
-                      type: 'type-1'
+                      type: 'type-1',
+                      breakdownOrder: breakdownOrder + 1
                     })
+                    setBreakdownOrder((prev) => prev + 1)
                     setBreakdowns(newBreakdowns)
                   }}
                 >
                   <div class={'btn btn-warning '}>Add breakdown 1</div>
                 </div>
-                {/*<div*/}
-                {/*  className={'d-flex justify-content-end mb-4'}*/}
-                {/*  onClick={() => {*/}
-                {/*    let newBreakdowns = [...breakdowns]*/}
-                {/*    newBreakdowns.push({*/}
-                {/*      ...breakdownInitialState[0],*/}
-                {/*      type: 'type-2'*/}
-                {/*    })*/}
-                {/*    setBreakdowns(newBreakdowns)*/}
-                {/*  }}*/}
-                {/*>*/}
-                {/*  <div class={'btn btn-secondary '}>Add breakdown 2</div>*/}
-                {/*</div>{' '}*/}
                 <div
                   className={'d-flex justify-content-end mb-4'}
                   onClick={() => {
                     let newBreakdowns = [...breakdowns]
                     newBreakdowns.push({
                       ...breakdownInitialState[0],
-                      type: 'type-3'
+                      type: 'type-3',
+                      breakdownOrder: breakdownOrder + 1
                     })
+                    setBreakdownOrder((prev) => prev + 1)
                     setBreakdowns(newBreakdowns)
                   }}
                 >
