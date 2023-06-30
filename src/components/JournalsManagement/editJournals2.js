@@ -959,7 +959,7 @@ export default function EditJournals2(props) {
     setBreakdowns((prevBreakdowns) => {
       const newBreakdowns = [...prevBreakdowns]
       const newBreakdown = { ...newBreakdowns[breakdownIndex] }
-      const newButtons = [...newBreakdown.customContent.buttons]
+      const newButtons = [...newBreakdown?.customContent?.buttons]
 
       const buttonIndex = newButtons.findIndex((button) => button.uuid === uuid)
       if (buttonIndex !== -1) {
@@ -984,7 +984,7 @@ export default function EditJournals2(props) {
     setBreakdowns((prevBreakdowns) => {
       const newBreakdowns = [...prevBreakdowns]
       const newBreakdown = { ...newBreakdowns[breakdownIndex] }
-      const newImages = [...newBreakdown.customContent.images]
+      const newImages = [...newBreakdown?.customContent?.images]
 
       const imageIndex = newImages.findIndex((image) => image.uuid === uuid)
       if (imageIndex !== -1) {
@@ -1126,7 +1126,8 @@ export default function EditJournals2(props) {
         }
       }
 
-      const buttons = updatedBreakdowns[breakdownIndex]?.customContent?.buttons
+      const buttons =
+        updatedBreakdowns[breakdownIndex]?.customContent?.buttons ?? []
 
       if (!buttons) {
         updatedBreakdowns[breakdownIndex].customContent.buttons = [newButton]
@@ -1147,9 +1148,13 @@ export default function EditJournals2(props) {
     let newBreakdowns = [...breakdowns]
     let newBreakdown = { ...newBreakdowns[breakdownIndex] }
 
-    let newImages = [...newBreakdown.customContent.images]
+    let newImages = [...(newBreakdown?.customContent?.images ?? [])]
 
-    newImages = newImages.map((image) => {
+    if (newBreakdown.customContent === null) {
+      newBreakdown.customContent = {}
+    }
+
+    newImages = newImages?.map((image) => {
       return { ...image, gridColumns: value }
     })
 
@@ -1225,6 +1230,73 @@ export default function EditJournals2(props) {
 
       return updatedBreakdowns
     })
+  }
+
+  const handleOrderChange = (index, newOrder) => {
+    const selectedItem = breakdowns[index]
+    const newData = [...breakdowns]
+    newData.splice(index, 1)
+    newData.splice(newOrder - 1, 0, selectedItem)
+    const updatedData = newData.map((item, index) => {
+      item.breakdownOrder = index + 1
+      return item
+    })
+    setBreakdowns(updatedData)
+  }
+
+  const deleteBreakdown = async (id) => {
+    await axiosInstance
+      .delete(`LtsJournals/${id}/editJournal2`)
+      .then(async (res) => {
+        const newBreakdowns = [...breakdowns]
+        const findBreakdownIndex = newBreakdowns.findIndex(
+          (breakdown) => breakdown.id === id
+        )
+        newBreakdowns.splice(findBreakdownIndex, 1)
+        const updatedBreakdowns = newBreakdowns.map((item, index) => {
+          if (item.breakdownOrder > findBreakdownIndex + 1) {
+            item.breakdownOrder = item.breakdownOrder - 1
+          }
+          return item
+        })
+
+        await axiosInstance
+          .put(`LtsJournals/${selectedJournal.value.id}/editJournal2`, {
+            breakdowns: updatedBreakdowns
+          })
+          .then((res) => {
+            setJournals(
+              journals.map((journal) =>
+                res.data.id === journal.id ? res.data : journal
+              )
+            )
+            setSelectedJournal((prevState) => ({
+              ...prevState,
+              value: res.data
+            }))
+            toast.success('Journal modified successfully!')
+            setLoading(false)
+          })
+          .catch((err) => {
+            toast.error('An error occurred, please try again!')
+            setLoading(false)
+          })
+
+        setBreakdowns(updatedBreakdowns)
+        toast.success('Breakdown deleted successfully!')
+        setLoading(false)
+      })
+      .catch((err) => {
+        toast.error('An error occurred, please try again!')
+        setLoading(false)
+      })
+  }
+
+  const handleDeleteBreakdown = (breakdownIndex) => {
+    const newBreakdowns = [...breakdowns]
+    const breakdownId = newBreakdowns[breakdownIndex].id
+    deleteBreakdown(breakdownId)
+    // setBreakdowns(newBreakdowns)
   }
 
   return (
@@ -1386,177 +1458,220 @@ export default function EditJournals2(props) {
           {
             <>
               <div>BREAKDOWNS</div>
-              {breakdowns?.map((breakdown, breakdownIndex) => {
-                return (
-                  <div>
-                    <div style={{ fontWeight: 600 }}>
-                      Breakdown {breakdownIndex + 1}
-                    </div>
-                    <div>Breakdown title</div>
-                    <input
-                      type="text"
-                      className="w-100 p-2"
-                      name="title"
-                      value={breakdown?.title}
-                      onChange={(e) =>
-                        handleChangeBreakdown(
-                          breakdownIndex,
-                          'title',
-                          e.target.value
-                        )
-                      }
-                    />
-                    {breakdown.type === 'type-1' && (
-                      <>
-                        <div>Breakdown content</div>
-                        <KendoTextEditor
-                          value={breakdown?.content}
-                          handleChange={(e) =>
-                            handleChangeBreakdown(breakdownIndex, 'content', e)
-                          }
-                        />
-                      </>
-                    )}
-                    {breakdown.type === 'type-2' && (
-                      <>
-                        {breakdown?.breakdownImages?.map(
-                          (breakdownImage, imageIndex) => {
-                            return (
-                              <>
-                                <div>`Image {imageIndex + 1}`</div>
-                                <div className={'bg-white'}>
-                                  <div>Image</div>
-                                  <KendoTextEditor
-                                    tools={[
-                                      [
-                                        AlignLeft,
-                                        AlignCenter,
-                                        AlignRight,
-                                        AlignJustify
-                                      ],
 
-                                      [Link, Unlink, InsertImage, ViewHtml]
-                                    ]}
-                                    minHeight={200}
-                                    value={breakdownImage.breakDownImage}
-                                    handleChange={(e) =>
-                                      handleChangeBreakdownImages(
-                                        'breakDownImage',
-                                        e,
-                                        breakdownIndex,
-                                        imageIndex
-                                      )
-                                    }
-                                  />
-                                  <div>Description</div>
-                                  <div>
+              {breakdowns
+                ?.slice()
+                ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
+                ?.map((breakdown, breakdownIndex) => {
+                  return (
+                    <div>
+                      <div style={{ fontWeight: 600 }}>
+                        Breakdown {breakdownIndex + 1}
+                      </div>
+                      <div className="d-flex justify-content-between align-items-center mb-3">
+                        <div
+                          className="input-group  d-flex align-items-center"
+                          style={{ width: 260 }}
+                        >
+                          <span className="input-group-text">
+                            Breakdown Order:
+                          </span>
+                          <input
+                            type="number"
+                            className="form-control"
+                            value={breakdown.breakdownOrder}
+                            onChange={(e) =>
+                              handleOrderChange(
+                                breakdownIndex,
+                                Number(e.target.value)
+                              )
+                            }
+                          />
+                        </div>
+                        <div className={'d-flex align-items-center '}>
+                          <button
+                            className={'btn btn-danger'}
+                            onClick={() => {
+                              return handleDeleteBreakdown(breakdownIndex)
+                            }}
+                          >
+                            Delete breakdown
+                          </button>
+                        </div>
+                      </div>
+                      <div>Breakdown title</div>
+                      <input
+                        type="text"
+                        className="w-100 p-2"
+                        name="title"
+                        value={breakdown?.title}
+                        onChange={(e) =>
+                          handleChangeBreakdown(
+                            breakdownIndex,
+                            'title',
+                            e.target.value
+                          )
+                        }
+                      />
+                      {breakdown.type === 'type-1' && (
+                        <>
+                          <div>Breakdown content</div>
+                          <KendoTextEditor
+                            value={breakdown?.content}
+                            handleChange={(e) =>
+                              handleChangeBreakdown(
+                                breakdownIndex,
+                                'content',
+                                e
+                              )
+                            }
+                          />
+                        </>
+                      )}
+                      {breakdown.type === 'type-2' && (
+                        <>
+                          {breakdown?.breakdownImages?.map(
+                            (breakdownImage, imageIndex) => {
+                              return (
+                                <>
+                                  <div>`Image {imageIndex + 1}`</div>
+                                  <div className={'bg-white'}>
+                                    <div>Image</div>
                                     <KendoTextEditor
                                       tools={[
-                                        [Bold, Italic],
                                         [
                                           AlignLeft,
                                           AlignCenter,
                                           AlignRight,
                                           AlignJustify
                                         ],
-                                        [Indent, Outdent],
-                                        [OrderedList, UnorderedList],
-                                        FontSize,
-                                        FontName,
-                                        FormatBlock,
-                                        [Undo, Redo],
+
                                         [Link, Unlink, InsertImage, ViewHtml]
                                       ]}
                                       minHeight={200}
-                                      value={breakdownImage.description}
+                                      value={breakdownImage.breakDownImage}
                                       handleChange={(e) =>
                                         handleChangeBreakdownImages(
-                                          'description',
+                                          'breakDownImage',
                                           e,
                                           breakdownIndex,
                                           imageIndex
                                         )
                                       }
                                     />
+                                    <div>Description</div>
+                                    <div>
+                                      <KendoTextEditor
+                                        tools={[
+                                          [Bold, Italic],
+                                          [
+                                            AlignLeft,
+                                            AlignCenter,
+                                            AlignRight,
+                                            AlignJustify
+                                          ],
+                                          [Indent, Outdent],
+                                          [OrderedList, UnorderedList],
+                                          FontSize,
+                                          FontName,
+                                          FormatBlock,
+                                          [Undo, Redo],
+                                          [Link, Unlink, InsertImage, ViewHtml]
+                                        ]}
+                                        minHeight={200}
+                                        value={breakdownImage.description}
+                                        handleChange={(e) =>
+                                          handleChangeBreakdownImages(
+                                            'description',
+                                            e,
+                                            breakdownIndex,
+                                            imageIndex
+                                          )
+                                        }
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                              </>
-                            )
-                          }
-                        )}
-                        <div
-                          className={'d-flex justify-content-end mb-4'}
-                          onClick={() => {
-                            let newBreakdownImages = [
-                              ...breakdown.breakdownImages
-                            ]
-                            const breakdownImage = {
-                              breakDownImage: '',
-                              breakdownId: '',
-                              description: ''
+                                </>
+                              )
                             }
-                            newBreakdownImages.push(breakdownImage)
+                          )}
+                          <div
+                            className={'d-flex justify-content-end mb-4'}
+                            onClick={() => {
+                              let newBreakdownImages = [
+                                ...breakdown.breakdownImages
+                              ]
+                              const breakdownImage = {
+                                breakDownImage: '',
+                                breakdownId: '',
+                                description: ''
+                              }
+                              newBreakdownImages.push(breakdownImage)
 
-                            return handleSetImages(
-                              newBreakdownImages,
-                              breakdownIndex
-                            )
-                          }}
-                        >
-                          <div class={'btn btn-secondary '}>Add image</div>
-                        </div>
-                      </>
-                    )}
+                              return handleSetImages(
+                                newBreakdownImages,
+                                breakdownIndex
+                              )
+                            }}
+                          >
+                            <div class={'btn btn-secondary '}>Add image</div>
+                          </div>
+                        </>
+                      )}
 
-                    {breakdown.type === 'type-3' && (
-                      <>
-                        <CustomContent
-                          handleSetHighestOrder={handleSetHighestOrder}
-                          breakdown={breakdown}
-                          handleChangeGridColumns={(value, uuid) =>
-                            handleChangeGridColumns(value, uuid, breakdownIndex)
-                          }
-                          breakdownTextEditor={
-                            breakdown?.customContent?.textEditorData
-                          }
-                          breakdownParagraph={
-                            breakdown?.customContent?.paragraphs
-                          }
-                          breakdownCheckboxes={
-                            breakdown?.customContent?.checkboxesData
-                          }
-                          breakdownIndex={breakdownIndex}
-                          handleChangeTextEditor={handleChangeTextEditorData}
-                          handleChangeParagraph={handleChangeParagraph}
-                          handleChangeButtons={handleChangeButtons}
-                          handleChangeImages={handleChangeImages}
-                          handleChangeCheckboxes={(...e) =>
-                            handleChangeCheckboxes(e)
-                          }
-                          handleAddCheckbox={() => {
-                            addCheckbox(breakdownIndex)
-                          }}
-                          handleAddButton={() => {
-                            addButton(breakdownIndex)
-                          }}
-                          handleAddImage={() => {
-                            addImage(breakdownIndex)
-                          }}
-                          handleAddButtonImage={(uuid) => {
-                            addButtonImage(breakdownIndex, uuid)
-                          }}
-                          handleAddTextEditor={() => {
-                            addTextEditorData(breakdownIndex)
-                          }}
-                          handleAddParagraph={() => {
-                            addParagraph(breakdownIndex)
-                          }}
-                        />
-                      </>
-                    )}
-                  </div>
-                )
-              })}
+                      {breakdown.type === 'type-3' && (
+                        <>
+                          <CustomContent
+                            handleSetHighestOrder={handleSetHighestOrder}
+                            breakdown={breakdown}
+                            handleChangeGridColumns={(value, uuid) =>
+                              handleChangeGridColumns(
+                                value,
+                                uuid,
+                                breakdownIndex
+                              )
+                            }
+                            breakdownTextEditor={
+                              breakdown?.customContent?.textEditorData
+                            }
+                            breakdownParagraph={
+                              breakdown?.customContent?.paragraphs
+                            }
+                            breakdownCheckboxes={
+                              breakdown?.customContent?.checkboxesData
+                            }
+                            breakdownIndex={breakdownIndex}
+                            handleChangeTextEditor={handleChangeTextEditorData}
+                            handleChangeParagraph={handleChangeParagraph}
+                            handleChangeButtons={handleChangeButtons}
+                            handleChangeImages={handleChangeImages}
+                            handleChangeCheckboxes={(...e) =>
+                              handleChangeCheckboxes(e)
+                            }
+                            handleAddCheckbox={() => {
+                              addCheckbox(breakdownIndex)
+                            }}
+                            handleAddButton={() => {
+                              addButton(breakdownIndex)
+                            }}
+                            handleAddImage={() => {
+                              addImage(breakdownIndex)
+                            }}
+                            handleAddButtonImage={(uuid) => {
+                              addButtonImage(breakdownIndex, uuid)
+                            }}
+                            handleAddTextEditor={() => {
+                              addTextEditorData(breakdownIndex)
+                            }}
+                            handleAddParagraph={() => {
+                              addParagraph(breakdownIndex)
+                            }}
+                          />
+                        </>
+                      )}
+                    </div>
+                  )
+                })}
               <div className={'d-flex justify-content-between gap-2'}>
                 <div
                   className={'d-flex justify-content-end mb-4'}
@@ -1569,21 +1684,21 @@ export default function EditJournals2(props) {
                     setBreakdowns(newBreakdowns)
                   }}
                 >
-                  <div class={'btn btn-secondary '}>Add breakdown 1</div>
+                  <div class={'btn btn-warning '}>Add breakdown 1</div>
                 </div>
-                <div
-                  className={'d-flex justify-content-end mb-4'}
-                  onClick={() => {
-                    let newBreakdowns = [...breakdowns]
-                    newBreakdowns.push({
-                      ...breakdownInitialState[0],
-                      type: 'type-2'
-                    })
-                    setBreakdowns(newBreakdowns)
-                  }}
-                >
-                  <div class={'btn btn-secondary '}>Add breakdown 2</div>
-                </div>{' '}
+                {/*<div*/}
+                {/*  className={'d-flex justify-content-end mb-4'}*/}
+                {/*  onClick={() => {*/}
+                {/*    let newBreakdowns = [...breakdowns]*/}
+                {/*    newBreakdowns.push({*/}
+                {/*      ...breakdownInitialState[0],*/}
+                {/*      type: 'type-2'*/}
+                {/*    })*/}
+                {/*    setBreakdowns(newBreakdowns)*/}
+                {/*  }}*/}
+                {/*>*/}
+                {/*  <div class={'btn btn-secondary '}>Add breakdown 2</div>*/}
+                {/*</div>{' '}*/}
                 <div
                   className={'d-flex justify-content-end mb-4'}
                   onClick={() => {
@@ -1595,7 +1710,7 @@ export default function EditJournals2(props) {
                     setBreakdowns(newBreakdowns)
                   }}
                 >
-                  <div class={'btn btn-secondary '}>Add breakdown 3</div>
+                  <div class={'btn btn-warning '}>Add breakdown 2</div>
                 </div>
               </div>
             </>

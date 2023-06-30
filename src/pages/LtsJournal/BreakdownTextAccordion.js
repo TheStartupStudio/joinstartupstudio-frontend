@@ -221,13 +221,13 @@ const BreakdownTextAccordion = (props) => {
 
       setTextEditorData(newValues)
     }
-    const images = props.customContent.images
+    const images = props.customContent?.images || []
 
     const sortedComponents = [
-      ...props.customContent.checkboxesData,
-      ...props.customContent.textEditorData,
-      ...props.customContent.paragraphs,
-      ...props.customContent.buttons,
+      ...(props.customContent?.checkboxesData || []),
+      ...(props.customContent?.textEditorData || []),
+      ...(props.customContent?.paragraphs || []),
+      ...(props.customContent?.buttons || []),
       { type: 'image', images }
     ].sort((a, b) => a.order - b.order)
 

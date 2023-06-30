@@ -64,7 +64,6 @@ function TestJournalContent(props) {
   //   getJournalView()
   // }, [])
 
-  console.log(props.journals)
   async function getUserJournalEntries() {
     try {
       let { data } = await axiosInstance.get(
@@ -245,7 +244,6 @@ function TestJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-
   return (
     <>
       <>
@@ -343,17 +341,20 @@ function TestJournalContent(props) {
               {journal?.paragraph}
             </div>
 
-            {journal?.breakdowns?.map((breakdown, index) => {
-              return (
-                <React.Fragment key={index}>
-                  <BreakdownTextAccordion
-                    title={breakdown?.title}
-                    content={breakdown?.content}
-                    breakdown={breakdown}
-                  />
-                </React.Fragment>
-              )
-            })}
+            {journal?.breakdowns
+              ?.slice()
+              ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
+              ?.map((breakdown, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <BreakdownTextAccordion
+                      title={breakdown?.title}
+                      content={breakdown?.content}
+                      breakdown={breakdown}
+                    />
+                  </React.Fragment>
+                )
+              })}
           </>
         }
         {/*// )*/}
