@@ -12,6 +12,7 @@ import KendoTextEditor from './TextEditor'
 import { EditorTools } from '@progress/kendo-react-editor'
 import '@progress/kendo-theme-default/dist/all.css'
 import { v4 as uuidv4 } from 'uuid'
+import { useHistory, useParams } from 'react-router-dom'
 
 const CheckboxData = (props) => {
   const randomUUID = uuidv4()
@@ -131,14 +132,20 @@ const CustomContent = (props) => {
       const paragraphsCopy =
         props.breakdown?.customContent?.paragraphs?.slice() || []
       const buttonsCopy = props.breakdown?.customContent?.buttons?.slice() || []
+      const popupButtonsCopy =
+        props.breakdown?.customContent?.popupButtons?.slice() || []
       const imagesCopy = props.breakdown?.customContent?.images?.slice() || []
+      const imageGalleryCopy =
+        props.breakdown?.customContent?.imageGallery || {}
       setSortedComponents(
         [
           ...checkboxesDataCopy,
           ...textEditorDataCopy,
           ...paragraphsCopy,
           ...buttonsCopy,
-          ...imagesCopy
+          ...imagesCopy,
+          ...popupButtonsCopy,
+          imageGalleryCopy
         ].sort((a, b) => a.order - b.order)
       )
     }
@@ -147,14 +154,24 @@ const CustomContent = (props) => {
     props.breakdown?.customContent?.checkboxesData?.length,
     props.breakdown?.customContent?.textEditorData?.length,
     props.breakdown?.customContent?.buttons?.length,
+    props.breakdown?.customContent?.popupButtons?.length,
     props.breakdown?.customContent?.images?.length,
+    props.breakdown?.customContent?.imageGallery?.images?.length,
     props.breakdown?.customContent?.paragraphs,
     props.breakdown?.customContent?.checkboxesData,
     props.breakdown?.customContent?.textEditorData,
     props.breakdown?.customContent?.buttons,
+    props.breakdown?.customContent?.popupButtons,
     props.breakdown?.customContent?.images,
+    props.breakdown?.customContent?.imageGallery?.images,
+
     JSON.stringify(
       props.breakdown?.customContent?.images?.map((image) => image.button)
+    ),
+    JSON.stringify(
+      props.breakdown?.customContent?.imageGallery?.images?.map(
+        (image) => image.button
+      )
     )
 
     // condition
@@ -383,6 +400,65 @@ const CustomContent = (props) => {
                 />
               </React.Fragment>
             )}
+            {data.type === 'popupButton' && (
+              <React.Fragment key={index}>
+                <>
+                  <div>Popup Button Title</div>
+                  <input
+                    type="text"
+                    key="title"
+                    className="w-100 p-2"
+                    name="title"
+                    value={data?.title}
+                    onChange={(e) => {
+                      const uuid = data?.uuid
+                      return props.handleChangePopupButtons(
+                        'title',
+                        e.target.value,
+                        index,
+                        props.breakdownIndex,
+                        uuid
+                      )
+                    }}
+                  />
+                  <div>Popup Content</div>
+                  <KendoTextEditor
+                    key="content"
+                    value={data?.popupContent}
+                    minHeight={200}
+                    handleChange={(e) => {
+                      const uuid = data?.uuid
+                      return props.handleChangePopupButtons(
+                        'popupContent',
+                        e,
+                        index,
+                        props.breakdownIndex,
+                        uuid
+                      )
+                    }}
+                  />
+
+                  <div>Position</div>
+                  <input
+                    type="text"
+                    key="position"
+                    className="w-100 p-2"
+                    name="position"
+                    value={data?.position}
+                    onChange={(e) => {
+                      const uuid = data?.uuid
+                      return props.handleChangePopupButtons(
+                        'position',
+                        e.target.value,
+                        index,
+                        props.breakdownIndex,
+                        uuid
+                      )
+                    }}
+                  />
+                </>
+              </React.Fragment>
+            )}
             {data.type === 'image' && (
               <React.Fragment key={index}>
                 <div className={'d-flex justify-content-end'}>
@@ -398,136 +474,285 @@ const CustomContent = (props) => {
                     />
                   </div>
                 </div>
-                {firstImageUUIDIndex === index && (
-                  <div className={'d-flex justify-content-start'}>
-                    <div className="input-group mb-3" style={{ width: 200 }}>
-                      <span className="input-group-text">Grid column:</span>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={+findGC.gridColumns}
-                        onChange={(e) => {
-                          const uuid = data?.uuid
-                          return handleChangeGridValues(
-                            e.target.value,
-                            firstImageUUID
+                <div className={'d-flex justify-content-start'}>
+                  <div className="input-group mb-3" style={{ width: 200 }}>
+                    <span className="input-group-text">Grid column:</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={data.gridColumns}
+                      onChange={(e) => {
+                        const uuid = data?.uuid
+                        return handleChangeGridValues(
+                          e.target.value
+                          // firstImageUUID
+                        )
+                      }}
+                    />
+                  </div>
+                </div>
+                {data.images?.map((image, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <div>Image</div>
+                      <KendoTextEditor
+                        key="image"
+                        value={image?.image}
+                        minHeight={200}
+                        handleChange={(e) => {
+                          const uuid = image?.uuid
+                          return props.handleChangeImages(
+                            'image',
+                            e,
+                            index,
+                            props.breakdownIndex,
+                            uuid
                           )
                         }}
                       />
-                    </div>
-                  </div>
-                )}
-                <div>Image</div>
-                <KendoTextEditor
-                  key="image"
-                  value={data?.image}
-                  minHeight={200}
-                  handleChange={(e) => {
-                    const uuid = data?.uuid
-                    return props.handleChangeImages(
-                      'image',
-                      e,
-                      index,
-                      props.breakdownIndex,
-                      uuid
-                    )
-                  }}
-                />
 
-                <div>Popup Content</div>
-                <KendoTextEditor
-                  key="content"
-                  value={data?.description}
-                  minHeight={200}
-                  handleChange={(e) => {
-                    const uuid = data?.uuid
-                    return props.handleChangeImages(
-                      'description',
-                      e,
-                      index,
-                      props.breakdownIndex,
-                      uuid
-                    )
-                  }}
-                />
+                      <div>Image Content</div>
+                      <KendoTextEditor
+                        key="content"
+                        value={image?.description}
+                        minHeight={200}
+                        handleChange={(e) => {
+                          const uuid = image?.uuid
+                          return props.handleChangeImages(
+                            'description',
+                            e,
+                            index,
+                            props.breakdownIndex,
+                            uuid
+                          )
+                        }}
+                      />
+                      <div>Button</div>
+                      {Object.keys(image?.button)?.length > 0 && (
+                        <>
+                          <div>Title</div>
+                          <input
+                            type="text"
+                            key="title"
+                            className="w-100 p-2"
+                            name="title"
+                            value={image?.button?.title}
+                            onChange={(e) => {
+                              const uuid = image?.uuid
+                              return props.handleChangeImages(
+                                'title',
+                                e.target.value,
+                                index,
+                                props.breakdownIndex,
+                                uuid,
+                                'button'
+                              )
+                            }}
+                          />
+                          <div>Popup Content</div>
+                          <KendoTextEditor
+                            key="content"
+                            value={image?.button?.popupContent}
+                            minHeight={200}
+                            handleChange={(e) => {
+                              const uuid = image?.uuid
+                              return props.handleChangeImages(
+                                'popupContent',
+                                e,
+                                index,
+                                props.breakdownIndex,
+                                uuid,
+                                'button'
+                              )
+                            }}
+                          />
 
-                <div>Button</div>
-                {Object.keys(data.button).length > 0 && (
-                  <React.Fragment key={index}>
-                    <div>Title</div>
-                    <input
-                      type="text"
-                      key="title"
-                      className="w-100 p-2"
-                      name="title"
-                      value={data?.button?.title}
-                      onChange={(e) => {
-                        const uuid = data?.uuid
-                        return props.handleChangeImages(
-                          'title',
-                          e.target.value,
-                          index,
-                          props.breakdownIndex,
-                          uuid,
-                          'button'
-                        )
-                      }}
-                    />
-
-                    <div>Popup Content</div>
-                    <KendoTextEditor
-                      key="content"
-                      value={data?.button?.popupContent}
-                      minHeight={200}
-                      handleChange={(e) => {
-                        const uuid = data?.uuid
-                        return props.handleChangeImages(
-                          'popupContent',
-                          e,
-                          index,
-                          props.breakdownIndex,
-                          uuid,
-                          'button'
-                        )
-                      }}
-                    />
-
-                    <div>Position</div>
-                    <input
-                      type="text"
-                      key="position"
-                      className="w-100 p-2"
-                      name="position"
-                      value={data?.button?.position}
-                      onChange={(e) => {
-                        const uuid = data?.uuid
-                        return props.handleChangeImages(
-                          'position',
-                          e.target.value,
-                          index,
-                          props.breakdownIndex,
-                          uuid,
-                          'button'
-                        )
-                      }}
-                    />
-                  </React.Fragment>
-                )}
-                <div
-                  className={
-                    'd-flex justify-content-center align-items-center '
-                  }
-                  onClick={() => {
-                    const uuid = data?.uuid
-                    props.handleAddButtonImage(uuid)
-                  }}
-                >
-                  <div class={'btn btn-secondary d-flex align-items-center'}>
-                    Add a button
-                  </div>
-                </div>
+                          <div>Position</div>
+                          <input
+                            type="text"
+                            key="position"
+                            className="w-100 p-2"
+                            name="position"
+                            value={image?.button?.position}
+                            onChange={(e) => {
+                              const uuid = image?.uuid
+                              return props.handleChangeImages(
+                                'position',
+                                e.target.value,
+                                index,
+                                props.breakdownIndex,
+                                uuid,
+                                'button'
+                              )
+                            }}
+                          />
+                        </>
+                      )}
+                      <div
+                        className={
+                          'd-flex justify-content-center align-items-center '
+                        }
+                        onClick={() => {
+                          const uuid = image?.uuid
+                          props.handleAddButtonImage(uuid)
+                        }}
+                      >
+                        <div
+                          class={'btn btn-secondary d-flex align-items-center'}
+                        >
+                          Add a button
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  )
+                })}
               </React.Fragment>
             )}
+            {/*{data.type === 'image' && (*/}
+            {/*  <React.Fragment key={index}>*/}
+            {/*    <div className={'d-flex justify-content-end'}>*/}
+            {/*      <div className="input-group mb-3" style={{ width: 150 }}>*/}
+            {/*        <span className="input-group-text">Order:</span>*/}
+            {/*        <input*/}
+            {/*          type="number"*/}
+            {/*          className="form-control"*/}
+            {/*          value={data.order}*/}
+            {/*          onChange={(e) =>*/}
+            {/*            handleOrderChange(index, Number(e.target.value))*/}
+            {/*          }*/}
+            {/*        />*/}
+            {/*      </div>*/}
+            {/*    </div>*/}
+            {/*    {firstImageUUIDIndex === index && (*/}
+            {/*      <div className={'d-flex justify-content-start'}>*/}
+            {/*        <div className="input-group mb-3" style={{ width: 200 }}>*/}
+            {/*          <span className="input-group-text">Grid column:</span>*/}
+            {/*          <input*/}
+            {/*            type="number"*/}
+            {/*            className="form-control"*/}
+            {/*            value={+findGC.gridColumns}*/}
+            {/*            onChange={(e) => {*/}
+            {/*              const uuid = data?.uuid*/}
+            {/*              return handleChangeGridValues(*/}
+            {/*                e.target.value,*/}
+            {/*                firstImageUUID*/}
+            {/*              )*/}
+            {/*            }}*/}
+            {/*          />*/}
+            {/*        </div>*/}
+            {/*      </div>*/}
+            {/*    )}*/}
+            {/*    <div>Image</div>*/}
+            {/*    <KendoTextEditor*/}
+            {/*      key="image"*/}
+            {/*      value={data?.image}*/}
+            {/*      minHeight={200}*/}
+            {/*      handleChange={(e) => {*/}
+            {/*        const uuid = data?.uuid*/}
+            {/*        return props.handleChangeImages(*/}
+            {/*          'image',*/}
+            {/*          e,*/}
+            {/*          index,*/}
+            {/*          props.breakdownIndex,*/}
+            {/*          uuid*/}
+            {/*        )*/}
+            {/*      }}*/}
+            {/*    />*/}
+
+            {/*    <div>Popup Content</div>*/}
+            {/*    <KendoTextEditor*/}
+            {/*      key="content"*/}
+            {/*      value={data?.description}*/}
+            {/*      minHeight={200}*/}
+            {/*      handleChange={(e) => {*/}
+            {/*        const uuid = data?.uuid*/}
+            {/*        return props.handleChangeImages(*/}
+            {/*          'description',*/}
+            {/*          e,*/}
+            {/*          index,*/}
+            {/*          props.breakdownIndex,*/}
+            {/*          uuid*/}
+            {/*        )*/}
+            {/*      }}*/}
+            {/*    />*/}
+
+            {/*<div>Button</div>*/}
+            {/*/!*{Object.keys(data?.button)?.length > 0 && (*!/*/}
+            {/*/!*  <React.Fragment key={index}>*!/*/}
+            {/*/!*    <div>Title</div>*!/*/}
+            {/*/!*    <input*!/*/}
+            {/*/!*      type="text"*!/*/}
+            {/*/!*      key="title"*!/*/}
+            {/*/!*      className="w-100 p-2"*!/*/}
+            {/*/!*      name="title"*!/*/}
+            {/*/!*      value={data?.button?.title}*!/*/}
+            {/*/!*      onChange={(e) => {*!/*/}
+            {/*/!*        const uuid = data?.uuid*!/*/}
+            {/*/!*        return props.handleChangeImages(*!/*/}
+            {/*/!*          'title',*!/*/}
+            {/*/!*          e.target.value,*!/*/}
+            {/*/!*          index,*!/*/}
+            {/*/!*          props.breakdownIndex,*!/*/}
+            {/*/!*          uuid,*!/*/}
+            {/*/!*          'button'*!/*/}
+            {/*/!*        )*!/*/}
+            {/*/!*      }}*!/*/}
+            {/*/!*    />*!/*/}
+
+            {/*    /!*    <div>Popup Content</div>*!/*/}
+            {/*    /!*    <KendoTextEditor*!/*/}
+            {/*    /!*      key="content"*!/*/}
+            {/*    /!*      value={data?.button?.popupContent}*!/*/}
+            {/*    /!*      minHeight={200}*!/*/}
+            {/*    /!*      handleChange={(e) => {*!/*/}
+            {/*    /!*        const uuid = data?.uuid*!/*/}
+            {/*    /!*        return props.handleChangeImages(*!/*/}
+            {/*    /!*          'popupContent',*!/*/}
+            {/*    /!*          e,*!/*/}
+            {/*    /!*          index,*!/*/}
+            {/*    /!*          props.breakdownIndex,*!/*/}
+            {/*    /!*          uuid,*!/*/}
+            {/*    /!*          'button'*!/*/}
+            {/*    /!*        )*!/*/}
+            {/*    /!*      }}*!/*/}
+            {/*    /!*    />*!/*/}
+
+            {/*    /!*    <div>Position</div>*!/*/}
+            {/*    /!*    <input*!/*/}
+            {/*    /!*      type="text"*!/*/}
+            {/*    /!*      key="position"*!/*/}
+            {/*    /!*      className="w-100 p-2"*!/*/}
+            {/*    /!*      name="position"*!/*/}
+            {/*    /!*      value={data?.button?.position}*!/*/}
+            {/*    /!*      onChange={(e) => {*!/*/}
+            {/*    /!*        const uuid = data?.uuid*!/*/}
+            {/*    /!*        return props.handleChangeImages(*!/*/}
+            {/*    /!*          'position',*!/*/}
+            {/*    /!*          e.target.value,*!/*/}
+            {/*    /!*          index,*!/*/}
+            {/*    /!*          props.breakdownIndex,*!/*/}
+            {/*    /!*          uuid,*!/*/}
+            {/*    /!*          'button'*!/*/}
+            {/*    /!*        )*!/*/}
+            {/*    /!*      }}*!/*/}
+            {/*    /!*    />*!/*/}
+            {/*    /!*  </React.Fragment>*!/*/}
+            {/*    /!*)}*!/*/}
+            {/*    <div*/}
+            {/*      className={*/}
+            {/*        'd-flex justify-content-center align-items-center '*/}
+            {/*      }*/}
+            {/*      onClick={() => {*/}
+            {/*        const uuid = data?.uuid*/}
+            {/*        props.handleAddButtonImage(uuid)*/}
+            {/*      }}*/}
+            {/*    >*/}
+            {/*      <div class={'btn btn-secondary d-flex align-items-center'}>*/}
+            {/*        Add a button*/}
+            {/*      </div>*/}
+            {/*    </div>*/}
+            {/*  </React.Fragment>*/}
+            {/*)}*/}
           </>
         )
       })}
@@ -577,6 +802,16 @@ const CustomContent = (props) => {
         >
           <div class={'btn btn-secondary d-flex align-items-center'}>
             Add a button
+          </div>
+        </div>{' '}
+        <div
+          className={'d-flex justify-content-center align-items-center '}
+          onClick={() => {
+            props.handleAddPopupButton()
+          }}
+        >
+          <div class={'btn btn-secondary d-flex align-items-center'}>
+            Add popup button
           </div>
         </div>
         <div
@@ -631,7 +866,8 @@ export default function EditJournals2(props) {
         textEditorData: [],
         checkboxesData: [],
         buttons: [],
-        images: []
+        popupButtons: [],
+        imageGallery: {}
       }
     }
   ]
@@ -668,8 +904,23 @@ export default function EditJournals2(props) {
       value: e.value,
       label: e.label
     })
-    setBreakdowns(e.value?.breakdowns)
+
+    setBreakdowns(
+      e.value?.breakdowns
+        ?.slice()
+        ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
+    )
   }
+
+  const history = useHistory()
+
+  useEffect(() => {
+    const journalId = selectedJournal?.value?.id
+    if (journalId) {
+      const url = `/edit-journals2/${journalId}`
+      history.push(url)
+    }
+  }, [selectedJournal?.value?.id])
 
   const getJournals = async () => {
     await axiosInstance
@@ -708,12 +959,11 @@ export default function EditJournals2(props) {
     }
   }
 
-  console.log(breakdowns)
+  const { journalId } = useParams()
   const handleSubmit = async () => {
     setLoading(true)
-    console.log(selectedJournal.value.id)
     await axiosInstance
-      .put(`LtsJournals/${selectedJournal.value.id}/editJournal2`, {
+      .put(`LtsJournals/${journalId}/editJournal2`, {
         breakdowns: breakdowns,
         paragraph: selectedJournal.value?.paragraph,
         title: selectedJournal?.value?.title,
@@ -946,6 +1196,29 @@ export default function EditJournals2(props) {
     })
   }
 
+  const handleChangePopupButtons = (
+    name,
+    value,
+    dataIndex,
+    breakdownIndex,
+    uuid
+  ) => {
+    setBreakdowns((prevBreakdowns) => {
+      const newBreakdowns = [...prevBreakdowns]
+      const newBreakdown = { ...newBreakdowns[breakdownIndex] }
+      const newButtons = [...newBreakdown?.customContent?.popupButtons]
+
+      const buttonIndex = newButtons.findIndex((button) => button.uuid === uuid)
+      if (buttonIndex !== -1) {
+        const newButton = { ...newButtons[buttonIndex], [name]: value }
+        newButtons[buttonIndex] = newButton
+        newBreakdown.customContent.popupButtons = newButtons
+        newBreakdowns[breakdownIndex] = newBreakdown
+      }
+
+      return newBreakdowns
+    })
+  }
   const handleChangeButtons = (
     name,
     value,
@@ -981,18 +1254,26 @@ export default function EditJournals2(props) {
     setBreakdowns((prevBreakdowns) => {
       const newBreakdowns = [...prevBreakdowns]
       const newBreakdown = { ...newBreakdowns[breakdownIndex] }
-      const newImages = [...newBreakdown?.customContent?.images]
+      const customContent = newBreakdown?.customContent
 
-      const imageIndex = newImages.findIndex((image) => image.uuid === uuid)
+      if (!customContent || !customContent?.imageGallery) {
+        // If imageGallery or customContent doesn't exist, return the previous state
+        return prevBreakdowns
+      }
+
+      const newImages = [...customContent?.imageGallery?.images]
+      const imageIndex = newImages?.findIndex((image) => image?.uuid === uuid)
+
       if (imageIndex !== -1) {
         const newImage = { ...newImages[imageIndex] }
         if (button) {
-          newImage.button = { ...newImage.button, [name]: value }
+          newImage.button = { ...newImage?.button, [name]: value }
         } else {
           newImage[name] = value
         }
         newImages[imageIndex] = newImage
-        newBreakdown.customContent.images = newImages
+        customContent.imageGallery.images = newImages
+        newBreakdown.customContent = customContent
         newBreakdowns[breakdownIndex] = newBreakdown
       }
 
@@ -1000,14 +1281,48 @@ export default function EditJournals2(props) {
     })
   }
 
+  // const handleChangeImages = (
+  //   name,
+  //   value,
+  //   dataIndex,
+  //   breakdownIndex,
+  //   uuid,
+  //   button
+  // ) => {
+  //   setBreakdowns((prevBreakdowns) => {
+  //     const newBreakdowns = [...prevBreakdowns]
+  //     const newBreakdown = { ...newBreakdowns[breakdownIndex] }
+  //     const newImages = [...newBreakdown?.customContent?.images]
+  //
+  //     const imageIndex = newImages.findIndex((image) => image.uuid === uuid)
+  //     if (imageIndex !== -1) {
+  //       const newImage = { ...newImages[imageIndex] }
+  //       if (button) {
+  //         newImage.button = { ...newImage.button, [name]: value }
+  //       } else {
+  //         newImage[name] = value
+  //       }
+  //       newImages[imageIndex] = newImage
+  //       newBreakdown.customContent.images = newImages
+  //       newBreakdowns[breakdownIndex] = newBreakdown
+  //     }
+  //
+  //     return newBreakdowns
+  //   })
+  // }
+
   // const highestOrder = sortedComponents.find((sc)=>Math.max(sc.order))
 
   const addTextEditorData = (breakdownIndex) => {
+    const highestOrder = getHighestOrder(
+      breakdowns[breakdownIndex].customContent
+    )
     const newTextEditorData = {
       title: '',
       content: '',
       type: 'textEditor',
-      order: nextOrder,
+      // order: nextOrder,
+      order: highestOrder,
       uuid: randomUUID
     }
 
@@ -1034,11 +1349,41 @@ export default function EditJournals2(props) {
     })
   }
 
+  const getHighestOrder = (customContent) => {
+    let flattenedArray = []
+
+    for (let key in customContent) {
+      if (Array.isArray(customContent[key])) {
+        flattenedArray = flattenedArray.concat(customContent[key])
+      }
+    }
+
+    let highestOrder = 0
+
+    flattenedArray.forEach((item) => {
+      if (item.order > highestOrder) {
+        highestOrder = item.order
+      }
+    })
+
+    let order = null
+    if (highestOrder === 0) {
+      order = 1
+    } else {
+      order = highestOrder + 1
+    }
+    return order
+  }
   const addParagraph = (breakdownIndex) => {
+    const highestOrder = getHighestOrder(
+      breakdowns[breakdownIndex].customContent
+    )
+
     const newParagraph = {
       paragraph: '',
       type: 'paragraph',
-      order: +nextOrder,
+      // order: +nextOrder,
+      order: highestOrder,
       uuid: randomUUID
     }
     setNextOrder((prev) => prev + 1)
@@ -1057,15 +1402,19 @@ export default function EditJournals2(props) {
         ]
       }
       newParagraphs?.push(newParagraph)
-      debugger
+      // debugger
       return updatedBreakdowns
     })
   }
   const addCheckbox = (breakdownIndex) => {
+    const highestOrder = getHighestOrder(
+      breakdowns[breakdownIndex].customContent
+    )
     const newCheckbox = {
       title: '',
       type: 'checkbox',
-      order: nextOrder,
+      // order: nextOrder,
+      order: highestOrder,
       uuid: randomUUID,
       checkboxes: [
         {
@@ -1104,13 +1453,60 @@ export default function EditJournals2(props) {
     })
   }
 
+  const addPopupButton = (breakdownIndex) => {
+    const highestOrder = getHighestOrder(
+      breakdowns[breakdownIndex].customContent
+    )
+    const newButton = {
+      title: '',
+      popupContent: '',
+      position: '',
+      type: 'popupButton',
+      // order: nextOrder,
+      order: highestOrder,
+      uuid: randomUUID
+    }
+    setNextOrder((prev) => prev + 1)
+
+    setBreakdowns((prevState) => {
+      const updatedBreakdowns = [...prevState]
+      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
+        updatedBreakdowns[breakdownIndex].customContent = {
+          popupButtons: []
+        }
+      }
+
+      const buttons =
+        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons ?? []
+
+      if (!buttons) {
+        updatedBreakdowns[breakdownIndex].customContent.popupButtons = [
+          newButton
+        ]
+      } else {
+        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons?.push(
+          newButton
+        )
+      }
+
+      console.log(
+        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons
+      )
+      return updatedBreakdowns
+    })
+  }
+
   const addButton = (breakdownIndex) => {
+    const highestOrder = getHighestOrder(
+      breakdowns[breakdownIndex].customContent
+    )
     const newButton = {
       title: '',
       popupContent: '',
       position: '',
       type: 'button',
-      order: nextOrder,
+      // order: nextOrder,
+      order: highestOrder,
       uuid: randomUUID
     }
     setNextOrder((prev) => prev + 1)
@@ -1129,7 +1525,9 @@ export default function EditJournals2(props) {
       if (!buttons) {
         updatedBreakdowns[breakdownIndex].customContent.buttons = [newButton]
       } else {
-        updatedBreakdowns[breakdownIndex].customContent.buttons.push(newButton)
+        updatedBreakdowns[breakdownIndex]?.customContent?.buttons?.push(
+          newButton
+        )
       }
       return updatedBreakdowns
     })
@@ -1162,40 +1560,93 @@ export default function EditJournals2(props) {
   }
 
   const addImage = (breakdownIndex) => {
+    const highestOrder = getHighestOrder(
+      breakdowns[breakdownIndex].customContent
+    )
     const newImage = {
       image: '',
       description: '',
       button: {},
-      type: 'image',
-      order: nextOrder,
       uuid: randomUUID,
-      gridColumns: gridColumns
+      order: highestOrder
     }
 
     setNextOrder((prev) => prev + 1)
 
     setBreakdowns((prevState) => {
       const updatedBreakdowns = [...prevState]
-
       if (!updatedBreakdowns[breakdownIndex]?.customContent) {
         updatedBreakdowns[breakdownIndex].customContent = {
-          images: []
+          imageGallery: {
+            type: 'image',
+            uuid: randomUUID,
+            gridColumns: 4,
+            images: [newImage]
+          }
         }
-      }
-
-      const images = updatedBreakdowns[breakdownIndex]?.customContent?.images
-
-      if (!images) {
-        updatedBreakdowns[breakdownIndex].customContent.images = [newImage]
       } else {
-        updatedBreakdowns[breakdownIndex].customContent.images = [
-          ...images,
-          newImage
-        ]
+        const customContent = updatedBreakdowns[breakdownIndex].customContent
+        if (!customContent.imageGallery) {
+          customContent.imageGallery = {
+            type: 'image',
+            uuid: randomUUID,
+            gridColumns: 4,
+            images: [newImage]
+          }
+        } else {
+          if (!customContent.imageGallery.images) {
+            customContent.imageGallery.images = []
+            customContent.imageGallery.type = 'image'
+            customContent.imageGallery.uuid = randomUUID
+            customContent.imageGallery.gridColumns = 4
+            customContent.imageGallery.order = highestOrder
+          }
+          customContent.imageGallery.images.push(newImage)
+        }
       }
       return updatedBreakdowns
     })
   }
+
+  // const addImage = (breakdownIndex) => {
+  //   const highestOrder = getHighestOrder(
+  //     breakdowns[breakdownIndex].customContent
+  //   )
+  //   const newImage = {
+  //     image: '',
+  //     description: '',
+  //     button: {},
+  //     type: 'image',
+  //     order: highestOrder,
+  //     // order: nextOrder,
+  //     uuid: randomUUID,
+  //     gridColumns: gridColumns
+  //   }
+  //
+  //   setNextOrder((prev) => prev + 1)
+  //
+  //   setBreakdowns((prevState) => {
+  //     const updatedBreakdowns = [...prevState]
+  //
+  //     if (!updatedBreakdowns[breakdownIndex]?.customContent) {
+  //       updatedBreakdowns[breakdownIndex].customContent = {
+  //         images: []
+  //       }
+  //     }
+  //
+  //     const images = updatedBreakdowns[breakdownIndex]?.customContent?.images
+  //
+  //     if (!images) {
+  //       updatedBreakdowns[breakdownIndex].customContent.images = [newImage]
+  //     } else {
+  //       updatedBreakdowns[breakdownIndex].customContent.images = [
+  //         ...images,
+  //         newImage
+  //       ]
+  //     }
+  //     return updatedBreakdowns
+  //   })
+  // }
 
   const addButtonImage = (breakdownIndex, uuid) => {
     const newButton = {
@@ -1210,14 +1661,19 @@ export default function EditJournals2(props) {
     setBreakdowns((prevState) => {
       const updatedBreakdowns = [...prevState]
 
-      // Get the index of the breakdown where you want to add the new button
       if (!updatedBreakdowns[breakdownIndex]?.customContent) {
         updatedBreakdowns[breakdownIndex].customContent = {
-          images: []
+          imageGallery: {
+            type: 'image',
+            uuid: randomUUID,
+            gridColumns: 4,
+            images: []
+          }
         }
       }
 
-      const images = updatedBreakdowns[breakdownIndex]?.customContent?.images
+      const images =
+        updatedBreakdowns[breakdownIndex]?.customContent?.imageGallery?.images
       const foundedIndex = images.findIndex((image) => image.uuid === uuid)
 
       if (foundedIndex !== -1) {
@@ -1228,6 +1684,38 @@ export default function EditJournals2(props) {
       return updatedBreakdowns
     })
   }
+
+  // const addButtonImage = (breakdownIndex, uuid) => {
+  //   const newButton = {
+  //     title: '',
+  //     popupContent: '',
+  //     position: '',
+  //     type: 'button',
+  //     order: nextOrder,
+  //     uuid: randomUUID
+  //   }
+  //
+  //   setBreakdowns((prevState) => {
+  //     const updatedBreakdowns = [...prevState]
+  //
+  //     // Get the index of the breakdown where you want to add the new button
+  //     if (!updatedBreakdowns[breakdownIndex]?.customContent) {
+  //       updatedBreakdowns[breakdownIndex].customContent = {
+  //         images: []
+  //       }
+  //     }
+  //
+  //     const images = updatedBreakdowns[breakdownIndex]?.customContent?.images
+  //     const foundedIndex = images.findIndex((image) => image.uuid === uuid)
+  //
+  //     if (foundedIndex !== -1) {
+  //       const foundedButton = images[foundedIndex]
+  //       foundedButton.button = newButton
+  //     }
+  //
+  //     return updatedBreakdowns
+  //   })
+  // }
 
   const handleOrderChange = (index, newOrder) => {
     const selectedItem = breakdowns[index]
@@ -1241,62 +1729,78 @@ export default function EditJournals2(props) {
     setBreakdowns(updatedData)
   }
 
-  const deleteBreakdown = async (id) => {
-    await axiosInstance
-      .delete(`LtsJournals/${id}/editJournal2`)
-      .then(async (res) => {
-        const newBreakdowns = [...breakdowns]
-        const findBreakdownIndex = newBreakdowns.findIndex(
-          (breakdown) => breakdown.id === id
-        )
-        newBreakdowns.splice(findBreakdownIndex, 1)
-        const updatedBreakdowns = newBreakdowns.map((item, index) => {
-          if (item.breakdownOrder > findBreakdownIndex + 1) {
+  const deleteBreakdown = async (id, breakdownIndex) => {
+    const newBreakdowns = [...breakdowns]
+
+    if (id) {
+      await axiosInstance
+        .delete(`LtsJournals/${id}/editJournal2`)
+        .then(async (res) => {
+          const findBreakdownIndex = newBreakdowns.findIndex(
+            (breakdown) => breakdown.id === id
+          )
+
+          newBreakdowns.splice(findBreakdownIndex, 1)
+          let updatedBreakdowns = newBreakdowns.map((item, index) => {
+            if (item.breakdownOrder > findBreakdownIndex + 1) {
+              item.breakdownOrder = item.breakdownOrder - 1
+            }
+            return item
+          })
+
+          if (updatedBreakdowns) {
+            await axiosInstance
+              .put(`LtsJournals/${selectedJournal.value.id}/editJournal2`, {
+                breakdowns: updatedBreakdowns
+              })
+              .then((res) => {
+                setJournals(
+                  journals.map((journal) =>
+                    res.data.id === journal.id ? res.data : journal
+                  )
+                )
+                setSelectedJournal((prevState) => ({
+                  ...prevState,
+                  value: res.data
+                }))
+                toast.success('Journal modified successfully!')
+                setLoading(false)
+              })
+              .catch((err) => {
+                toast.error('An error occurred, please try again!')
+                setLoading(false)
+              })
+          }
+
+          setBreakdowns(updatedBreakdowns)
+          toast.success('Breakdown deleted successfully!')
+          setLoading(false)
+        })
+        .catch((err) => {
+          toast.error('An error occurred, please try again!')
+          setLoading(false)
+        })
+    } else {
+      newBreakdowns.splice(breakdownIndex, 1)
+      setBreakdowns(
+        newBreakdowns.map((item, index) => {
+          if (item.breakdownOrder > breakdownIndex + 1) {
             item.breakdownOrder = item.breakdownOrder - 1
           }
           return item
         })
-
-        await axiosInstance
-          .put(`LtsJournals/${selectedJournal.value.id}/editJournal2`, {
-            breakdowns: updatedBreakdowns
-          })
-          .then((res) => {
-            setJournals(
-              journals.map((journal) =>
-                res.data.id === journal.id ? res.data : journal
-              )
-            )
-            setSelectedJournal((prevState) => ({
-              ...prevState,
-              value: res.data
-            }))
-            toast.success('Journal modified successfully!')
-            setLoading(false)
-          })
-          .catch((err) => {
-            toast.error('An error occurred, please try again!')
-            setLoading(false)
-          })
-
-        setBreakdowns(updatedBreakdowns)
-        toast.success('Breakdown deleted successfully!')
-        setLoading(false)
-      })
-      .catch((err) => {
-        toast.error('An error occurred, please try again!')
-        setLoading(false)
-      })
+      )
+    }
   }
 
   const handleDeleteBreakdown = (breakdownIndex) => {
     const newBreakdowns = [...breakdowns]
     const breakdownId = newBreakdowns[breakdownIndex].id
-    deleteBreakdown(breakdownId)
+    deleteBreakdown(breakdownId, breakdownIndex)
     // setBreakdowns(newBreakdowns)
   }
 
-  const [breakdownOrder, setBreakdownOrder] = useState(1)
+  const [breakdownOrder, setBreakdownOrder] = useState(null)
   useEffect(() => {
     let highestOrder = 0
 
@@ -1468,219 +1972,212 @@ export default function EditJournals2(props) {
             <>
               <div>BREAKDOWNS</div>
 
-              {breakdowns
-                ?.slice()
-                ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
-                ?.map((breakdown, breakdownIndex) => {
-                  return (
-                    <div>
-                      <div style={{ fontWeight: 600 }}>
-                        Breakdown {breakdownIndex + 1}
+              {breakdowns?.map((breakdown, breakdownIndex) => {
+                return (
+                  <div>
+                    <div style={{ fontWeight: 600 }}>
+                      Breakdown {breakdownIndex + 1}
+                    </div>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div
+                        className="input-group  d-flex align-items-center"
+                        style={{ width: 260 }}
+                      >
+                        <span className="input-group-text">
+                          Breakdown Order:
+                        </span>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={breakdown.breakdownOrder}
+                          onChange={(e) =>
+                            handleOrderChange(
+                              breakdownIndex,
+                              Number(e.target.value)
+                            )
+                          }
+                        />
                       </div>
-                      <div className="d-flex justify-content-between align-items-center mb-3">
-                        <div
-                          className="input-group  d-flex align-items-center"
-                          style={{ width: 260 }}
+                      <div className={'d-flex align-items-center '}>
+                        <button
+                          className={'btn btn-danger'}
+                          onClick={() => {
+                            return handleDeleteBreakdown(breakdownIndex)
+                          }}
                         >
-                          <span className="input-group-text">
-                            Breakdown Order:
-                          </span>
-                          <input
-                            type="number"
-                            className="form-control"
-                            value={breakdown.breakdownOrder}
-                            onChange={(e) =>
-                              handleOrderChange(
-                                breakdownIndex,
-                                Number(e.target.value)
-                              )
-                            }
-                          />
-                        </div>
-                        <div className={'d-flex align-items-center '}>
-                          <button
-                            className={'btn btn-danger'}
-                            onClick={() => {
-                              return handleDeleteBreakdown(breakdownIndex)
-                            }}
-                          >
-                            Delete breakdown
-                          </button>
-                        </div>
+                          Delete breakdown
+                        </button>
                       </div>
-                      <div>Breakdown title</div>
-                      <input
-                        type="text"
-                        className="w-100 p-2"
-                        name="title"
-                        value={breakdown?.title}
-                        onChange={(e) =>
-                          handleChangeBreakdown(
-                            breakdownIndex,
-                            'title',
-                            e.target.value
-                          )
-                        }
-                      />
-                      {breakdown.type === 'type-1' && (
-                        <>
-                          <div>Breakdown content</div>
-                          <KendoTextEditor
-                            value={breakdown?.content}
-                            handleChange={(e) =>
-                              handleChangeBreakdown(
-                                breakdownIndex,
-                                'content',
-                                e
-                              )
-                            }
-                          />
-                        </>
-                      )}
-                      {breakdown.type === 'type-2' && (
-                        <>
-                          {breakdown?.breakdownImages?.map(
-                            (breakdownImage, imageIndex) => {
-                              return (
-                                <>
-                                  <div>`Image {imageIndex + 1}`</div>
-                                  <div className={'bg-white'}>
-                                    <div>Image</div>
+                    </div>
+                    <div>Breakdown title</div>
+                    <input
+                      type="text"
+                      className="w-100 p-2"
+                      name="title"
+                      value={breakdown?.title}
+                      onChange={(e) =>
+                        handleChangeBreakdown(
+                          breakdownIndex,
+                          'title',
+                          e.target.value
+                        )
+                      }
+                    />
+                    {breakdown.type === 'type-1' && (
+                      <>
+                        <div>Breakdown content</div>
+                        <KendoTextEditor
+                          value={breakdown?.content}
+                          handleChange={(e) =>
+                            handleChangeBreakdown(breakdownIndex, 'content', e)
+                          }
+                        />
+                      </>
+                    )}
+                    {breakdown.type === 'type-2' && (
+                      <>
+                        {breakdown?.breakdownImages?.map(
+                          (breakdownImage, imageIndex) => {
+                            return (
+                              <>
+                                <div>`Image {imageIndex + 1}`</div>
+                                <div className={'bg-white'}>
+                                  <div>Image</div>
+                                  <KendoTextEditor
+                                    tools={[
+                                      [
+                                        AlignLeft,
+                                        AlignCenter,
+                                        AlignRight,
+                                        AlignJustify
+                                      ],
+
+                                      [Link, Unlink, InsertImage, ViewHtml]
+                                    ]}
+                                    minHeight={200}
+                                    value={breakdownImage.breakDownImage}
+                                    handleChange={(e) =>
+                                      handleChangeBreakdownImages(
+                                        'breakDownImage',
+                                        e,
+                                        breakdownIndex,
+                                        imageIndex
+                                      )
+                                    }
+                                  />
+                                  <div>Description</div>
+                                  <div>
                                     <KendoTextEditor
                                       tools={[
+                                        [Bold, Italic],
                                         [
                                           AlignLeft,
                                           AlignCenter,
                                           AlignRight,
                                           AlignJustify
                                         ],
-
+                                        [Indent, Outdent],
+                                        [OrderedList, UnorderedList],
+                                        FontSize,
+                                        FontName,
+                                        FormatBlock,
+                                        [Undo, Redo],
                                         [Link, Unlink, InsertImage, ViewHtml]
                                       ]}
                                       minHeight={200}
-                                      value={breakdownImage.breakDownImage}
+                                      value={breakdownImage.description}
                                       handleChange={(e) =>
                                         handleChangeBreakdownImages(
-                                          'breakDownImage',
+                                          'description',
                                           e,
                                           breakdownIndex,
                                           imageIndex
                                         )
                                       }
                                     />
-                                    <div>Description</div>
-                                    <div>
-                                      <KendoTextEditor
-                                        tools={[
-                                          [Bold, Italic],
-                                          [
-                                            AlignLeft,
-                                            AlignCenter,
-                                            AlignRight,
-                                            AlignJustify
-                                          ],
-                                          [Indent, Outdent],
-                                          [OrderedList, UnorderedList],
-                                          FontSize,
-                                          FontName,
-                                          FormatBlock,
-                                          [Undo, Redo],
-                                          [Link, Unlink, InsertImage, ViewHtml]
-                                        ]}
-                                        minHeight={200}
-                                        value={breakdownImage.description}
-                                        handleChange={(e) =>
-                                          handleChangeBreakdownImages(
-                                            'description',
-                                            e,
-                                            breakdownIndex,
-                                            imageIndex
-                                          )
-                                        }
-                                      />
-                                    </div>
                                   </div>
-                                </>
-                              )
+                                </div>
+                              </>
+                            )
+                          }
+                        )}
+                        <div
+                          className={'d-flex justify-content-end mb-4'}
+                          onClick={() => {
+                            let newBreakdownImages = [
+                              ...breakdown.breakdownImages
+                            ]
+                            const breakdownImage = {
+                              breakDownImage: '',
+                              breakdownId: '',
+                              description: ''
                             }
-                          )}
-                          <div
-                            className={'d-flex justify-content-end mb-4'}
-                            onClick={() => {
-                              let newBreakdownImages = [
-                                ...breakdown.breakdownImages
-                              ]
-                              const breakdownImage = {
-                                breakDownImage: '',
-                                breakdownId: '',
-                                description: ''
-                              }
-                              newBreakdownImages.push(breakdownImage)
+                            newBreakdownImages.push(breakdownImage)
 
-                              return handleSetImages(
-                                newBreakdownImages,
-                                breakdownIndex
-                              )
-                            }}
-                          >
-                            <div class={'btn btn-secondary '}>Add image</div>
-                          </div>
-                        </>
-                      )}
+                            return handleSetImages(
+                              newBreakdownImages,
+                              breakdownIndex
+                            )
+                          }}
+                        >
+                          <div class={'btn btn-secondary '}>Add image</div>
+                        </div>
+                      </>
+                    )}
 
-                      {breakdown.type === 'type-3' && (
-                        <>
-                          <CustomContent
-                            handleSetHighestOrder={handleSetHighestOrder}
-                            breakdown={breakdown}
-                            handleChangeGridColumns={(value, uuid) =>
-                              handleChangeGridColumns(
-                                value,
-                                uuid,
-                                breakdownIndex
-                              )
-                            }
-                            breakdownTextEditor={
-                              breakdown?.customContent?.textEditorData
-                            }
-                            breakdownParagraph={
-                              breakdown?.customContent?.paragraphs
-                            }
-                            breakdownCheckboxes={
-                              breakdown?.customContent?.checkboxesData
-                            }
-                            breakdownIndex={breakdownIndex}
-                            handleChangeTextEditor={handleChangeTextEditorData}
-                            handleChangeParagraph={handleChangeParagraph}
-                            handleChangeButtons={handleChangeButtons}
-                            handleChangeImages={handleChangeImages}
-                            handleChangeCheckboxes={(...e) =>
-                              handleChangeCheckboxes(e)
-                            }
-                            handleAddCheckbox={() => {
-                              addCheckbox(breakdownIndex)
-                            }}
-                            handleAddButton={() => {
-                              addButton(breakdownIndex)
-                            }}
-                            handleAddImage={() => {
-                              addImage(breakdownIndex)
-                            }}
-                            handleAddButtonImage={(uuid) => {
-                              addButtonImage(breakdownIndex, uuid)
-                            }}
-                            handleAddTextEditor={() => {
-                              addTextEditorData(breakdownIndex)
-                            }}
-                            handleAddParagraph={() => {
-                              addParagraph(breakdownIndex)
-                            }}
-                          />
-                        </>
-                      )}
-                    </div>
-                  )
-                })}
+                    {breakdown.type === 'type-3' && (
+                      <>
+                        <CustomContent
+                          handleSetHighestOrder={handleSetHighestOrder}
+                          breakdown={breakdown}
+                          handleChangeGridColumns={(value, uuid) =>
+                            handleChangeGridColumns(value, uuid, breakdownIndex)
+                          }
+                          breakdownTextEditor={
+                            breakdown?.customContent?.textEditorData
+                          }
+                          breakdownParagraph={
+                            breakdown?.customContent?.paragraphs
+                          }
+                          breakdownCheckboxes={
+                            breakdown?.customContent?.checkboxesData
+                          }
+                          breakdownIndex={breakdownIndex}
+                          handleChangeTextEditor={handleChangeTextEditorData}
+                          handleChangeParagraph={handleChangeParagraph}
+                          handleChangeButtons={handleChangeButtons}
+                          handleChangePopupButtons={handleChangePopupButtons}
+                          handleChangeImages={handleChangeImages}
+                          handleChangeCheckboxes={(...e) =>
+                            handleChangeCheckboxes(e)
+                          }
+                          handleAddCheckbox={() => {
+                            addCheckbox(breakdownIndex)
+                          }}
+                          handleAddPopupButton={() => {
+                            addPopupButton(breakdownIndex)
+                          }}
+                          handleAddButton={() => {
+                            addButton(breakdownIndex)
+                          }}
+                          handleAddImage={() => {
+                            addImage(breakdownIndex)
+                          }}
+                          handleAddButtonImage={(uuid) => {
+                            addButtonImage(breakdownIndex, uuid)
+                          }}
+                          handleAddTextEditor={() => {
+                            addTextEditorData(breakdownIndex)
+                          }}
+                          handleAddParagraph={() => {
+                            addParagraph(breakdownIndex)
+                          }}
+                        />
+                      </>
+                    )}
+                  </div>
+                )
+              })}
               <div className={'d-flex justify-content-between gap-2'}>
                 <div
                   className={'d-flex justify-content-end mb-4'}

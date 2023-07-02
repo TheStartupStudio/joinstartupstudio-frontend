@@ -127,6 +127,17 @@ const BreakdownTextAccordion = (props) => {
   }
   const CustomContent = (props) => {
     const [checkboxValues, setCheckboxValues] = useState([])
+    const [openPopup, setOpenPopup] = useState(false)
+    const [selectedImage, setSelectedImage] = useState(null)
+    const [activeIndex, setActiveIndex] = useState(-1)
+
+    const handleOpenPopup = () => {
+      setOpenPopup(true)
+    }
+
+    const handleClosePopup = () => {
+      setOpenPopup(false)
+    }
 
     const handleChangeCheckboxes = (e, checkboxIndex, index) => {
       const newValues = checkboxValues?.map((checkbox, i) => {
@@ -228,6 +239,8 @@ const BreakdownTextAccordion = (props) => {
       ...(props.customContent?.textEditorData || []),
       ...(props.customContent?.paragraphs || []),
       ...(props.customContent?.buttons || []),
+      ...(props.customContent?.popupButtons || []),
+      props.customContent?.imageGallery || {},
       { type: 'image', images }
     ].sort((a, b) => a.order - b.order)
 
@@ -383,6 +396,30 @@ const BreakdownTextAccordion = (props) => {
                 </div>
               )}
               {data?.type === 'image' && <NewComponent images={data?.images} />}
+              {data?.type === 'popupButton' && (
+                <>
+                  <div className={'d-flex justify-content-end'}>
+                    <button
+                      style={{
+                        backgroundColor: '#51c7df',
+                        color: '#fff',
+                        fontSize: 14
+                      }}
+                      onClick={() => {
+                        handleOpenPopup()
+                      }}
+                      className="px-4 py-2 border-0 color transform text-uppercase my-1"
+                    >
+                      {data?.title}
+                    </button>
+                  </div>
+                  <BreakdownPopup
+                    show={openPopup}
+                    onHide={handleClosePopup}
+                    popupContent={data?.popupContent}
+                  />
+                </>
+              )}
             </>
           )
         })}

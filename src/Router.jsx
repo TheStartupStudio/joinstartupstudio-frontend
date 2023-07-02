@@ -315,6 +315,11 @@ function Router(props) {
               />
               <Route
                 exact
+                path="/edit-journals2/:journalId"
+                component={JournalsManagement2}
+              />
+              <Route
+                exact
                 path="/my-connections/request/:id"
                 component={MyConnections}
               />
