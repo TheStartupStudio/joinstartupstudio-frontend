@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
-import { faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faPlay, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import LtsJournalReflection from './reflection'
@@ -12,6 +12,8 @@ import parse from 'html-react-parser'
 import triangleIcon from '../../assets/images/triangle.png'
 import BreakdownTextAccordion from './BreakdownTextAccordion'
 import './BreakdownTextAccordion.css'
+import KendoTextEditor from '../../components/JournalsManagement/TextEditor'
+import { EditorTools } from '@progress/kendo-react-editor'
 
 function TestJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -20,6 +22,8 @@ function TestJournalContent(props) {
   let [userJournalEntries, setUserJournalEntries] = useState({})
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+
   async function saveWatchData(data) {
     await axiosInstance.put(
       `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
@@ -244,6 +248,54 @@ function TestJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
+
+  const toggleAccordion = () => {
+    setIsExpanded(!isExpanded)
+  }
+
+  const instructorDebriefData = {
+    checkboxesLabel: 'In completing this task did you:',
+    checkboxes: [
+      {
+        label: 'Give each student an opportunity to use their voice.',
+        isChecked: false
+      },
+      {
+        label: 'Conduct at least one news briefing to start class.',
+        isChecked: false
+      },
+      {
+        label:
+          'Give students adequate time to complete work inside of their Journal or Portfolio.',
+        isChecked: false
+      }
+    ],
+    textEditorLabel:
+      'Please submit any questions or feedback regarding this task in the curriculum to the LTS team.',
+    textEditorContent:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl purus in mollis nunc sed id semper risus in. Venenatis a condimentum vitae sapien pellentesque habitant morbi tristique. Nullam ac tortor vitae purus faucibus ornare suspendisse sed. Aliquet sagittis id consectetur purus.'
+  }
+  const {
+    Bold,
+    Italic,
+    AlignLeft,
+    AlignCenter,
+    AlignRight,
+    AlignJustify,
+    Indent,
+    Outdent,
+    OrderedList,
+    UnorderedList,
+    Undo,
+    Redo,
+    FontSize,
+    FontName,
+    FormatBlock,
+    Link,
+    Unlink,
+    InsertImage,
+    ViewHtml
+  } = EditorTools
   return (
     <>
       <>
@@ -355,6 +407,81 @@ function TestJournalContent(props) {
                   </React.Fragment>
                 )
               })}
+            <div className="accordion">
+              <div className="accordion-header" onClick={toggleAccordion}>
+                <div className={'accordion-header-title'}>
+                  {'Instructor debrief'}
+                </div>
+                <span
+                  className={`accordion-icon ${isExpanded ? 'expanded' : ''}`}
+                >
+                  {isExpanded ? (
+                    <FontAwesomeIcon
+                      icon={faAngleDown}
+                      className="me-2 me-md-0 arrow"
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faAngleDown}
+                      className="me-2 me-md-0 arrow"
+                    />
+                  )}
+                </span>
+              </div>
+              {isExpanded && (
+                <div className="accordion-content">
+                  Welcome to the instructor debrief section of this task. This
+                  tool is designed to help you use the LTS program and platform
+                  to their maximum potential, and to provide LTS with feedback
+                  so we can continue to meet your needs.
+                  <>
+                    <div>{instructorDebriefData.checkboxesLabel}</div>
+                    {instructorDebriefData?.checkboxes?.map((data, index) => {
+                      return (
+                        <div class="form-check  ">
+                          <input
+                            className="form-check-input "
+                            type="checkbox"
+                            checked={data.checked}
+                            id="flexCheckDefault"
+                            onChange={(e) =>
+                              props.handleChange(e.target.checked, index)
+                            }
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="flexCheckDefault"
+                            style={{ marginTop: '0.125rem' }}
+                          >
+                            {data.label}
+                          </label>
+                        </div>
+                      )
+                    })}
+                  </>
+                  <>
+                    <div>{instructorDebriefData?.textEditorLabel}</div>
+                    <KendoTextEditor
+                      minHeight={150}
+                      value={instructorDebriefData?.textEditorContent}
+                      handleChange={() => {}}
+                      // handleChange={(e) => handleChangeEditorValue(e, index)}
+                      tools={[
+                        [Bold, Italic],
+                        [AlignLeft, AlignCenter, AlignRight, AlignJustify],
+                        [Indent, Outdent],
+                        [OrderedList, UnorderedList],
+                        FontSize,
+                        FontName,
+                        FormatBlock,
+                        [Undo, Redo],
+                        [Link, Unlink, InsertImage, ViewHtml]
+                      ]}
+                    />
+                  </>
+                </div>
+              )}
+            </div>
           </>
         }
         {/*// )*/}

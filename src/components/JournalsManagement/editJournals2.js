@@ -13,821 +13,8 @@ import { EditorTools } from '@progress/kendo-react-editor'
 import '@progress/kendo-theme-default/dist/all.css'
 import { v4 as uuidv4 } from 'uuid'
 import { useHistory, useParams } from 'react-router-dom'
-
-const CheckboxData = (props) => {
-  const randomUUID = uuidv4()
-  const [checkboxes, setCheckboxes] = useState(props.checkbox)
-
-  useEffect(() => {
-    setCheckboxes(props.checkbox)
-  }, [props.checkbox])
-
-  useEffect(() => {
-    props.handleChange(checkboxes)
-  }, [checkboxes])
-  const handleChangeCheckboxes =
-    (...value) =>
-    (name) => {
-      const [checkboxValue, checkboxLabelIndex] = value
-      if (typeof checkboxLabelIndex === 'undefined') {
-        const newCheckboxes = { ...checkboxes }
-        newCheckboxes[name] = checkboxValue
-        return setCheckboxes(newCheckboxes)
-      } else {
-        const newCheckboxes = { ...checkboxes }
-        let newCheckboxLabels = [...newCheckboxes.checkboxes]
-        newCheckboxLabels[checkboxLabelIndex][name] = checkboxValue
-        setCheckboxes(newCheckboxes)
-      }
-    }
-  return (
-    <>
-      <div>
-        <div>Checkboxes Title:</div>
-        <input
-          type="text"
-          key="title"
-          className="w-100 p-2"
-          name="title"
-          value={checkboxes?.title}
-          onChange={(e) => handleChangeCheckboxes(e.target.value)('title')}
-        />
-      </div>
-      {checkboxes?.checkboxes?.map((data, index) => {
-        const checkboxLabelIndex = index
-        return (
-          <>
-            <div>
-              <div>#{index + 1} Checkbox </div>
-              <input
-                type="text"
-                className="w-100 p-2"
-                name="checkboxLabel"
-                value={data?.label}
-                onChange={(e) =>
-                  handleChangeCheckboxes(
-                    e.target.value,
-                    checkboxLabelIndex
-                  )('label')
-                }
-              />
-            </div>
-          </>
-        )
-      })}
-      <div
-        className={'d-flex justify-content-end mb-4'}
-        onClick={() => {
-          let newCheckboxes = [...checkboxes.checkboxes]
-          newCheckboxes.push({
-            isChecked: false,
-            label: '',
-            uuid: randomUUID
-          })
-          setCheckboxes({ ...checkboxes, checkboxes: newCheckboxes })
-        }}
-      >
-        <div class={'btn btn-primary '}>Add new checkbox</div>
-      </div>
-    </>
-  )
-}
-
-const CustomContent = (props) => {
-  const randomUUID = uuidv4()
-  const [breakdown, setBreakdown] = useState(props.breakdown)
-  const [sortedComponents, setSortedComponents] = useState([])
-  useEffect(() => {
-    setBreakdown(props.breakdown)
-  }, [props.breakdown])
-
-  useEffect(() => {
-    let highestOrder = 0
-
-    sortedComponents.forEach((item) => {
-      if (item.order > highestOrder) {
-        highestOrder = item.order
-      }
-    })
-    props.handleSetHighestOrder(highestOrder)
-  }, [sortedComponents])
-
-  const handleEditCheckboxes = (e, checkBoxIndex) => {
-    props.handleChangeCheckboxes(
-      'checkboxesData',
-      e,
-      checkBoxIndex,
-      props.breakdownIndex
-    )
-  }
-  // const condition = props.breakdown?.customContent?.images?.map(
-  //   (image) => image.button
-  // )
-  useEffect(() => {
-    if (props.breakdown?.customContent) {
-      const checkboxesDataCopy =
-        props.breakdown?.customContent?.checkboxesData?.slice() || []
-      const textEditorDataCopy =
-        props.breakdown?.customContent?.textEditorData?.slice() || []
-      const paragraphsCopy =
-        props.breakdown?.customContent?.paragraphs?.slice() || []
-      const buttonsCopy = props.breakdown?.customContent?.buttons?.slice() || []
-      const popupButtonsCopy =
-        props.breakdown?.customContent?.popupButtons?.slice() || []
-      const imagesCopy = props.breakdown?.customContent?.images?.slice() || []
-      const imageGalleryCopy =
-        props.breakdown?.customContent?.imageGallery || {}
-      setSortedComponents(
-        [
-          ...checkboxesDataCopy,
-          ...textEditorDataCopy,
-          ...paragraphsCopy,
-          ...buttonsCopy,
-          ...imagesCopy,
-          ...popupButtonsCopy,
-          imageGalleryCopy
-        ].sort((a, b) => a.order - b.order)
-      )
-    }
-  }, [
-    props.breakdown?.customContent?.paragraphs?.length,
-    props.breakdown?.customContent?.checkboxesData?.length,
-    props.breakdown?.customContent?.textEditorData?.length,
-    props.breakdown?.customContent?.buttons?.length,
-    props.breakdown?.customContent?.popupButtons?.length,
-    props.breakdown?.customContent?.images?.length,
-    props.breakdown?.customContent?.imageGallery?.images?.length,
-    props.breakdown?.customContent?.paragraphs,
-    props.breakdown?.customContent?.checkboxesData,
-    props.breakdown?.customContent?.textEditorData,
-    props.breakdown?.customContent?.buttons,
-    props.breakdown?.customContent?.popupButtons,
-    props.breakdown?.customContent?.images,
-    props.breakdown?.customContent?.imageGallery?.images,
-
-    JSON.stringify(
-      props.breakdown?.customContent?.images?.map((image) => image.button)
-    ),
-    JSON.stringify(
-      props.breakdown?.customContent?.imageGallery?.images?.map(
-        (image) => image.button
-      )
-    )
-
-    // condition
-  ])
-
-  // useEffect(() => {
-  //   debugger
-  // }, [condition])
-  const handleOrderChange = (index, newOrder) => {
-    const selectedItem = sortedComponents[index]
-    const newData = [...sortedComponents]
-    newData.splice(index, 1)
-    newData.splice(newOrder - 1, 0, selectedItem)
-    const updatedData = newData.map((item, index) => {
-      item.order = index + 1
-      return item
-    })
-    setSortedComponents(updatedData)
-  }
-
-  const [gridColumns, setGridColumns] = useState(4)
-  const [imageGalleryUUID, setImageGalleryIndexUUID] = useState(null)
-
-  const handleChangeGridValues = (value, uuid) => {
-    setGridColumns(value)
-    setImageGalleryIndexUUID(uuid)
-  }
-
-  useEffect(() => {
-    props.handleChangeGridColumns(gridColumns, imageGalleryUUID)
-  }, [gridColumns])
-
-  const firstImageUUID = sortedComponents?.filter(
-    (sc) => sc?.type === 'image'
-  )[0]?.uuid
-  const firstImageUUIDIndex = sortedComponents?.findIndex(
-    (sc) => sc?.uuid === firstImageUUID
-  )
-
-  const uuid2 = sortedComponents?.filter((sc) => sc?.type === 'image')[0]?.uuid
-
-  const findGC = sortedComponents?.find((sc) => sc.uuid === uuid2)
-
-  return (
-    <>
-      {sortedComponents.map((data, index) => {
-        return (
-          <>
-            <>
-              {data.type === 'paragraph' && (
-                <React.Fragment key={index}>
-                  <div className="d-flex justify-content-end">
-                    <div className="input-group mb-3" style={{ width: 150 }}>
-                      <span className="input-group-text">Order:</span>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={data.order}
-                        onChange={(e) =>
-                          handleOrderChange(index, Number(e.target.value))
-                        }
-                      />
-                    </div>
-                  </div>
-                  <KendoTextEditor
-                    key="paragraph"
-                    value={data?.paragraph}
-                    minHeight={200}
-                    handleChange={(e) => {
-                      const uuid = data?.uuid
-                      return props.handleChangeParagraph(
-                        'paragraph',
-                        e,
-                        index,
-                        props.breakdownIndex,
-                        uuid
-                      )
-                    }}
-                  />
-                </React.Fragment>
-              )}
-            </>
-            {data.type === 'checkbox' && (
-              <React.Fragment>
-                <div className={'d-flex justify-content-end'}>
-                  <div className="input-group mb-3" style={{ width: 150 }}>
-                    <span className="input-group-text">Order:</span>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={data.order}
-                      onChange={(e) =>
-                        handleOrderChange(index, Number(e.target.value))
-                      }
-                    />
-                  </div>
-                </div>
-                <CheckboxData
-                  checkbox={data}
-                  key={index}
-                  index={index}
-                  breakdownIndex={props.breakdownIndex}
-                  handleChange={(e) => handleEditCheckboxes(e, index)}
-                />
-              </React.Fragment>
-            )}
-            {data.type === 'textEditor' && (
-              <React.Fragment key={index}>
-                <div className={'d-flex justify-content-end'}>
-                  <div className="input-group mb-3" style={{ width: 150 }}>
-                    <span className="input-group-text">Order:</span>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={data.order}
-                      onChange={(e) =>
-                        handleOrderChange(index, Number(e.target.value))
-                      }
-                    />
-                  </div>
-                </div>
-                <div>Title</div>
-                <input
-                  type="text"
-                  key="title"
-                  className="w-100 p-2"
-                  name="title"
-                  value={data?.title}
-                  onChange={(e) => {
-                    const uuid = data?.uuid
-                    return props.handleChangeTextEditor(
-                      'title',
-                      e.target.value,
-                      index,
-                      props.breakdownIndex,
-                      uuid
-                    )
-                  }}
-                />
-
-                <KendoTextEditor
-                  key="content"
-                  value={data?.content}
-                  minHeight={200}
-                  handleChange={(e) => {
-                    const uuid = data?.uuid
-                    return props.handleChangeTextEditor(
-                      'content',
-                      e,
-                      index,
-                      props.breakdownIndex,
-                      uuid
-                    )
-                  }}
-                />
-              </React.Fragment>
-            )}
-            {data.type === 'button' && (
-              <React.Fragment key={index}>
-                <div className={'d-flex justify-content-end'}>
-                  <div className="input-group mb-3" style={{ width: 150 }}>
-                    <span className="input-group-text">Order:</span>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={data.order}
-                      onChange={(e) =>
-                        handleOrderChange(index, Number(e.target.value))
-                      }
-                    />
-                  </div>
-                </div>
-                <div>Title</div>
-                <input
-                  type="text"
-                  key="title"
-                  className="w-100 p-2"
-                  name="title"
-                  value={data?.title}
-                  onChange={(e) => {
-                    const uuid = data?.uuid
-                    return props.handleChangeButtons(
-                      'title',
-                      e.target.value,
-                      index,
-                      props.breakdownIndex,
-                      uuid
-                    )
-                  }}
-                />
-
-                <div>Popup Content</div>
-                <KendoTextEditor
-                  key="content"
-                  value={data?.popupContent}
-                  minHeight={200}
-                  handleChange={(e) => {
-                    const uuid = data?.uuid
-                    return props.handleChangeButtons(
-                      'popupContent',
-                      e,
-                      index,
-                      props.breakdownIndex,
-                      uuid
-                    )
-                  }}
-                />
-
-                <div>Position</div>
-                <input
-                  type="text"
-                  key="position"
-                  className="w-100 p-2"
-                  name="position"
-                  value={data?.position}
-                  onChange={(e) => {
-                    const uuid = data?.uuid
-                    return props.handleChangeButtons(
-                      'position',
-                      e.target.value,
-                      index,
-                      props.breakdownIndex,
-                      uuid
-                    )
-                  }}
-                />
-              </React.Fragment>
-            )}
-            {data.type === 'popupButton' && (
-              <React.Fragment key={index}>
-                <>
-                  <div>Popup Button Title</div>
-                  <input
-                    type="text"
-                    key="title"
-                    className="w-100 p-2"
-                    name="title"
-                    value={data?.title}
-                    onChange={(e) => {
-                      const uuid = data?.uuid
-                      return props.handleChangePopupButtons(
-                        'title',
-                        e.target.value,
-                        index,
-                        props.breakdownIndex,
-                        uuid
-                      )
-                    }}
-                  />
-                  <div>Popup Content</div>
-                  <KendoTextEditor
-                    key="content"
-                    value={data?.popupContent}
-                    minHeight={200}
-                    handleChange={(e) => {
-                      const uuid = data?.uuid
-                      return props.handleChangePopupButtons(
-                        'popupContent',
-                        e,
-                        index,
-                        props.breakdownIndex,
-                        uuid
-                      )
-                    }}
-                  />
-
-                  <div>Position</div>
-                  <input
-                    type="text"
-                    key="position"
-                    className="w-100 p-2"
-                    name="position"
-                    value={data?.position}
-                    onChange={(e) => {
-                      const uuid = data?.uuid
-                      return props.handleChangePopupButtons(
-                        'position',
-                        e.target.value,
-                        index,
-                        props.breakdownIndex,
-                        uuid
-                      )
-                    }}
-                  />
-                </>
-              </React.Fragment>
-            )}
-            {data.type === 'image' && (
-              <React.Fragment key={index}>
-                <div className={'d-flex justify-content-end'}>
-                  <div className="input-group mb-3" style={{ width: 150 }}>
-                    <span className="input-group-text">Order:</span>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={data.order}
-                      onChange={(e) =>
-                        handleOrderChange(index, Number(e.target.value))
-                      }
-                    />
-                  </div>
-                </div>
-                <div className={'d-flex justify-content-start'}>
-                  <div className="input-group mb-3" style={{ width: 200 }}>
-                    <span className="input-group-text">Grid column:</span>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={data.gridColumns}
-                      onChange={(e) => {
-                        const uuid = data?.uuid
-                        return handleChangeGridValues(
-                          e.target.value
-                          // firstImageUUID
-                        )
-                      }}
-                    />
-                  </div>
-                </div>
-                {data.images?.map((image, index) => {
-                  return (
-                    <React.Fragment key={index}>
-                      <div>Image</div>
-                      <KendoTextEditor
-                        key="image"
-                        value={image?.image}
-                        minHeight={200}
-                        handleChange={(e) => {
-                          const uuid = image?.uuid
-                          return props.handleChangeImages(
-                            'image',
-                            e,
-                            index,
-                            props.breakdownIndex,
-                            uuid
-                          )
-                        }}
-                      />
-
-                      <div>Image Content</div>
-                      <KendoTextEditor
-                        key="content"
-                        value={image?.description}
-                        minHeight={200}
-                        handleChange={(e) => {
-                          const uuid = image?.uuid
-                          return props.handleChangeImages(
-                            'description',
-                            e,
-                            index,
-                            props.breakdownIndex,
-                            uuid
-                          )
-                        }}
-                      />
-                      <div>Button</div>
-                      {Object.keys(image?.button)?.length > 0 && (
-                        <>
-                          <div>Title</div>
-                          <input
-                            type="text"
-                            key="title"
-                            className="w-100 p-2"
-                            name="title"
-                            value={image?.button?.title}
-                            onChange={(e) => {
-                              const uuid = image?.uuid
-                              return props.handleChangeImages(
-                                'title',
-                                e.target.value,
-                                index,
-                                props.breakdownIndex,
-                                uuid,
-                                'button'
-                              )
-                            }}
-                          />
-                          <div>Popup Content</div>
-                          <KendoTextEditor
-                            key="content"
-                            value={image?.button?.popupContent}
-                            minHeight={200}
-                            handleChange={(e) => {
-                              const uuid = image?.uuid
-                              return props.handleChangeImages(
-                                'popupContent',
-                                e,
-                                index,
-                                props.breakdownIndex,
-                                uuid,
-                                'button'
-                              )
-                            }}
-                          />
-
-                          <div>Position</div>
-                          <input
-                            type="text"
-                            key="position"
-                            className="w-100 p-2"
-                            name="position"
-                            value={image?.button?.position}
-                            onChange={(e) => {
-                              const uuid = image?.uuid
-                              return props.handleChangeImages(
-                                'position',
-                                e.target.value,
-                                index,
-                                props.breakdownIndex,
-                                uuid,
-                                'button'
-                              )
-                            }}
-                          />
-                        </>
-                      )}
-                      <div
-                        className={
-                          'd-flex justify-content-center align-items-center '
-                        }
-                        onClick={() => {
-                          const uuid = image?.uuid
-                          props.handleAddButtonImage(uuid)
-                        }}
-                      >
-                        <div
-                          class={'btn btn-secondary d-flex align-items-center'}
-                        >
-                          Add a button
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  )
-                })}
-              </React.Fragment>
-            )}
-            {/*{data.type === 'image' && (*/}
-            {/*  <React.Fragment key={index}>*/}
-            {/*    <div className={'d-flex justify-content-end'}>*/}
-            {/*      <div className="input-group mb-3" style={{ width: 150 }}>*/}
-            {/*        <span className="input-group-text">Order:</span>*/}
-            {/*        <input*/}
-            {/*          type="number"*/}
-            {/*          className="form-control"*/}
-            {/*          value={data.order}*/}
-            {/*          onChange={(e) =>*/}
-            {/*            handleOrderChange(index, Number(e.target.value))*/}
-            {/*          }*/}
-            {/*        />*/}
-            {/*      </div>*/}
-            {/*    </div>*/}
-            {/*    {firstImageUUIDIndex === index && (*/}
-            {/*      <div className={'d-flex justify-content-start'}>*/}
-            {/*        <div className="input-group mb-3" style={{ width: 200 }}>*/}
-            {/*          <span className="input-group-text">Grid column:</span>*/}
-            {/*          <input*/}
-            {/*            type="number"*/}
-            {/*            className="form-control"*/}
-            {/*            value={+findGC.gridColumns}*/}
-            {/*            onChange={(e) => {*/}
-            {/*              const uuid = data?.uuid*/}
-            {/*              return handleChangeGridValues(*/}
-            {/*                e.target.value,*/}
-            {/*                firstImageUUID*/}
-            {/*              )*/}
-            {/*            }}*/}
-            {/*          />*/}
-            {/*        </div>*/}
-            {/*      </div>*/}
-            {/*    )}*/}
-            {/*    <div>Image</div>*/}
-            {/*    <KendoTextEditor*/}
-            {/*      key="image"*/}
-            {/*      value={data?.image}*/}
-            {/*      minHeight={200}*/}
-            {/*      handleChange={(e) => {*/}
-            {/*        const uuid = data?.uuid*/}
-            {/*        return props.handleChangeImages(*/}
-            {/*          'image',*/}
-            {/*          e,*/}
-            {/*          index,*/}
-            {/*          props.breakdownIndex,*/}
-            {/*          uuid*/}
-            {/*        )*/}
-            {/*      }}*/}
-            {/*    />*/}
-
-            {/*    <div>Popup Content</div>*/}
-            {/*    <KendoTextEditor*/}
-            {/*      key="content"*/}
-            {/*      value={data?.description}*/}
-            {/*      minHeight={200}*/}
-            {/*      handleChange={(e) => {*/}
-            {/*        const uuid = data?.uuid*/}
-            {/*        return props.handleChangeImages(*/}
-            {/*          'description',*/}
-            {/*          e,*/}
-            {/*          index,*/}
-            {/*          props.breakdownIndex,*/}
-            {/*          uuid*/}
-            {/*        )*/}
-            {/*      }}*/}
-            {/*    />*/}
-
-            {/*<div>Button</div>*/}
-            {/*/!*{Object.keys(data?.button)?.length > 0 && (*!/*/}
-            {/*/!*  <React.Fragment key={index}>*!/*/}
-            {/*/!*    <div>Title</div>*!/*/}
-            {/*/!*    <input*!/*/}
-            {/*/!*      type="text"*!/*/}
-            {/*/!*      key="title"*!/*/}
-            {/*/!*      className="w-100 p-2"*!/*/}
-            {/*/!*      name="title"*!/*/}
-            {/*/!*      value={data?.button?.title}*!/*/}
-            {/*/!*      onChange={(e) => {*!/*/}
-            {/*/!*        const uuid = data?.uuid*!/*/}
-            {/*/!*        return props.handleChangeImages(*!/*/}
-            {/*/!*          'title',*!/*/}
-            {/*/!*          e.target.value,*!/*/}
-            {/*/!*          index,*!/*/}
-            {/*/!*          props.breakdownIndex,*!/*/}
-            {/*/!*          uuid,*!/*/}
-            {/*/!*          'button'*!/*/}
-            {/*/!*        )*!/*/}
-            {/*/!*      }}*!/*/}
-            {/*/!*    />*!/*/}
-
-            {/*    /!*    <div>Popup Content</div>*!/*/}
-            {/*    /!*    <KendoTextEditor*!/*/}
-            {/*    /!*      key="content"*!/*/}
-            {/*    /!*      value={data?.button?.popupContent}*!/*/}
-            {/*    /!*      minHeight={200}*!/*/}
-            {/*    /!*      handleChange={(e) => {*!/*/}
-            {/*    /!*        const uuid = data?.uuid*!/*/}
-            {/*    /!*        return props.handleChangeImages(*!/*/}
-            {/*    /!*          'popupContent',*!/*/}
-            {/*    /!*          e,*!/*/}
-            {/*    /!*          index,*!/*/}
-            {/*    /!*          props.breakdownIndex,*!/*/}
-            {/*    /!*          uuid,*!/*/}
-            {/*    /!*          'button'*!/*/}
-            {/*    /!*        )*!/*/}
-            {/*    /!*      }}*!/*/}
-            {/*    /!*    />*!/*/}
-
-            {/*    /!*    <div>Position</div>*!/*/}
-            {/*    /!*    <input*!/*/}
-            {/*    /!*      type="text"*!/*/}
-            {/*    /!*      key="position"*!/*/}
-            {/*    /!*      className="w-100 p-2"*!/*/}
-            {/*    /!*      name="position"*!/*/}
-            {/*    /!*      value={data?.button?.position}*!/*/}
-            {/*    /!*      onChange={(e) => {*!/*/}
-            {/*    /!*        const uuid = data?.uuid*!/*/}
-            {/*    /!*        return props.handleChangeImages(*!/*/}
-            {/*    /!*          'position',*!/*/}
-            {/*    /!*          e.target.value,*!/*/}
-            {/*    /!*          index,*!/*/}
-            {/*    /!*          props.breakdownIndex,*!/*/}
-            {/*    /!*          uuid,*!/*/}
-            {/*    /!*          'button'*!/*/}
-            {/*    /!*        )*!/*/}
-            {/*    /!*      }}*!/*/}
-            {/*    /!*    />*!/*/}
-            {/*    /!*  </React.Fragment>*!/*/}
-            {/*    /!*)}*!/*/}
-            {/*    <div*/}
-            {/*      className={*/}
-            {/*        'd-flex justify-content-center align-items-center '*/}
-            {/*      }*/}
-            {/*      onClick={() => {*/}
-            {/*        const uuid = data?.uuid*/}
-            {/*        props.handleAddButtonImage(uuid)*/}
-            {/*      }}*/}
-            {/*    >*/}
-            {/*      <div class={'btn btn-secondary d-flex align-items-center'}>*/}
-            {/*        Add a button*/}
-            {/*      </div>*/}
-            {/*    </div>*/}
-            {/*  </React.Fragment>*/}
-            {/*)}*/}
-          </>
-        )
-      })}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr',
-          gap: 6,
-          padding: 10
-        }}
-      >
-        <div
-          className={'d-flex justify-content-center align-items-center '}
-          onClick={() => {
-            props.handleAddParagraph()
-          }}
-        >
-          <div class={'btn btn-secondary d-flex align-items-center '}>
-            Add a paragraph
-          </div>
-        </div>
-        <div
-          className={'d-flex justify-content-center align-items-center '}
-          onClick={() => {
-            props.handleAddTextEditor()
-          }}
-        >
-          <div class={'btn btn-secondary d-flex align-items-center'}>
-            Add a text editor
-          </div>
-        </div>
-        <div
-          className={'d-flex justify-content-center align-items-center '}
-          onClick={() => {
-            props.handleAddCheckbox()
-          }}
-        >
-          <div class={'btn btn-secondary d-flex align-items-center'}>
-            Add a checkbox
-          </div>
-        </div>
-        <div
-          className={'d-flex justify-content-center align-items-center '}
-          onClick={() => {
-            props.handleAddButton()
-          }}
-        >
-          <div class={'btn btn-secondary d-flex align-items-center'}>
-            Add a button
-          </div>
-        </div>{' '}
-        <div
-          className={'d-flex justify-content-center align-items-center '}
-          onClick={() => {
-            props.handleAddPopupButton()
-          }}
-        >
-          <div class={'btn btn-secondary d-flex align-items-center'}>
-            Add popup button
-          </div>
-        </div>
-        <div
-          className={'d-flex justify-content-center align-items-center '}
-          onClick={() => {
-            props.handleAddImage()
-          }}
-        >
-          <div class={'btn btn-secondary d-flex align-items-center'}>
-            Add image component
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
+import PositionSelector from '../PositionSelector/PositionSelector'
+import CustomContent from './CustomContent/CustomContent'
 
 export default function EditJournals2(props) {
   const [journals, setJournals] = useState([])
@@ -1257,22 +444,26 @@ export default function EditJournals2(props) {
       const customContent = newBreakdown?.customContent
 
       if (!customContent || !customContent?.imageGallery) {
-        // If imageGallery or customContent doesn't exist, return the previous state
         return prevBreakdowns
       }
-
       const newImages = [...customContent?.imageGallery?.images]
       const imageIndex = newImages?.findIndex((image) => image?.uuid === uuid)
 
       if (imageIndex !== -1) {
         const newImage = { ...newImages[imageIndex] }
-        if (button) {
+        if (button === 'button') {
           newImage.button = { ...newImage?.button, [name]: value }
         } else {
           newImage[name] = value
         }
         newImages[imageIndex] = newImage
         customContent.imageGallery.images = newImages
+        if (name === 'gridColumns' || name === 'position') {
+          customContent.imageGallery = {
+            ...customContent?.imageGallery,
+            [name]: value
+          }
+        }
         newBreakdown.customContent = customContent
         newBreakdowns[breakdownIndex] = newBreakdown
       }
@@ -1280,38 +471,6 @@ export default function EditJournals2(props) {
       return newBreakdowns
     })
   }
-
-  // const handleChangeImages = (
-  //   name,
-  //   value,
-  //   dataIndex,
-  //   breakdownIndex,
-  //   uuid,
-  //   button
-  // ) => {
-  //   setBreakdowns((prevBreakdowns) => {
-  //     const newBreakdowns = [...prevBreakdowns]
-  //     const newBreakdown = { ...newBreakdowns[breakdownIndex] }
-  //     const newImages = [...newBreakdown?.customContent?.images]
-  //
-  //     const imageIndex = newImages.findIndex((image) => image.uuid === uuid)
-  //     if (imageIndex !== -1) {
-  //       const newImage = { ...newImages[imageIndex] }
-  //       if (button) {
-  //         newImage.button = { ...newImage.button, [name]: value }
-  //       } else {
-  //         newImage[name] = value
-  //       }
-  //       newImages[imageIndex] = newImage
-  //       newBreakdown.customContent.images = newImages
-  //       newBreakdowns[breakdownIndex] = newBreakdown
-  //     }
-  //
-  //     return newBreakdowns
-  //   })
-  // }
-
-  // const highestOrder = sortedComponents.find((sc)=>Math.max(sc.order))
 
   const addTextEditorData = (breakdownIndex) => {
     const highestOrder = getHighestOrder(
@@ -1460,7 +619,7 @@ export default function EditJournals2(props) {
     const newButton = {
       title: '',
       popupContent: '',
-      position: '',
+      position: 'end',
       type: 'popupButton',
       // order: nextOrder,
       order: highestOrder,
@@ -1475,9 +634,8 @@ export default function EditJournals2(props) {
           popupButtons: []
         }
       }
-
       const buttons =
-        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons ?? []
+        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons
 
       if (!buttons) {
         updatedBreakdowns[breakdownIndex].customContent.popupButtons = [
@@ -1489,9 +647,6 @@ export default function EditJournals2(props) {
         )
       }
 
-      console.log(
-        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons
-      )
       return updatedBreakdowns
     })
   }
@@ -1503,7 +658,7 @@ export default function EditJournals2(props) {
     const newButton = {
       title: '',
       popupContent: '',
-      position: '',
+      position: 'end',
       type: 'button',
       // order: nextOrder,
       order: highestOrder,
@@ -1533,13 +688,7 @@ export default function EditJournals2(props) {
     })
   }
 
-  const [gridColumns, setGridColumns] = useState()
-  const [imageGalleryUUID, setImageGalleryUUID] = useState()
-
   const handleChangeGridColumns = (value, uuid, breakdownIndex) => {
-    setGridColumns(value)
-    setImageGalleryUUID(uuid)
-
     let newBreakdowns = [...breakdowns]
     let newBreakdown = { ...newBreakdowns[breakdownIndex] }
 
@@ -1563,12 +712,13 @@ export default function EditJournals2(props) {
     const highestOrder = getHighestOrder(
       breakdowns[breakdownIndex].customContent
     )
+
     const newImage = {
       image: '',
       description: '',
       button: {},
-      uuid: randomUUID,
-      order: highestOrder
+      uuid: randomUUID
+      // order: highestOrder
     }
 
     setNextOrder((prev) => prev + 1)
@@ -1591,7 +741,8 @@ export default function EditJournals2(props) {
             type: 'image',
             uuid: randomUUID,
             gridColumns: 4,
-            images: [newImage]
+            images: [newImage],
+            order: highestOrder
           }
         } else {
           if (!customContent.imageGallery.images) {
@@ -1608,54 +759,16 @@ export default function EditJournals2(props) {
     })
   }
 
-  // const addImage = (breakdownIndex) => {
-  //   const highestOrder = getHighestOrder(
-  //     breakdowns[breakdownIndex].customContent
-  //   )
-  //   const newImage = {
-  //     image: '',
-  //     description: '',
-  //     button: {},
-  //     type: 'image',
-  //     order: highestOrder,
-  //     // order: nextOrder,
-  //     uuid: randomUUID,
-  //     gridColumns: gridColumns
-  //   }
-  //
-  //   setNextOrder((prev) => prev + 1)
-  //
-  //   setBreakdowns((prevState) => {
-  //     const updatedBreakdowns = [...prevState]
-  //
-  //     if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-  //       updatedBreakdowns[breakdownIndex].customContent = {
-  //         images: []
-  //       }
-  //     }
-  //
-  //     const images = updatedBreakdowns[breakdownIndex]?.customContent?.images
-  //
-  //     if (!images) {
-  //       updatedBreakdowns[breakdownIndex].customContent.images = [newImage]
-  //     } else {
-  //       updatedBreakdowns[breakdownIndex].customContent.images = [
-  //         ...images,
-  //         newImage
-  //       ]
-  //     }
-  //     return updatedBreakdowns
-  //   })
-  // }
-
   const addButtonImage = (breakdownIndex, uuid) => {
+    const buttonImageRandomUUID = uuidv4()
+    const imageGalleryRandomUUID = uuidv4()
     const newButton = {
       title: '',
       popupContent: '',
-      position: '',
+      position: 'end',
       type: 'button',
-      order: nextOrder,
-      uuid: randomUUID
+      order: nextOrder
+      // uuid: buttonImageRandomUUID
     }
 
     setBreakdowns((prevState) => {
@@ -1665,7 +778,7 @@ export default function EditJournals2(props) {
         updatedBreakdowns[breakdownIndex].customContent = {
           imageGallery: {
             type: 'image',
-            uuid: randomUUID,
+            uuid: imageGalleryRandomUUID,
             gridColumns: 4,
             images: []
           }
@@ -1684,38 +797,6 @@ export default function EditJournals2(props) {
       return updatedBreakdowns
     })
   }
-
-  // const addButtonImage = (breakdownIndex, uuid) => {
-  //   const newButton = {
-  //     title: '',
-  //     popupContent: '',
-  //     position: '',
-  //     type: 'button',
-  //     order: nextOrder,
-  //     uuid: randomUUID
-  //   }
-  //
-  //   setBreakdowns((prevState) => {
-  //     const updatedBreakdowns = [...prevState]
-  //
-  //     // Get the index of the breakdown where you want to add the new button
-  //     if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-  //       updatedBreakdowns[breakdownIndex].customContent = {
-  //         images: []
-  //       }
-  //     }
-  //
-  //     const images = updatedBreakdowns[breakdownIndex]?.customContent?.images
-  //     const foundedIndex = images.findIndex((image) => image.uuid === uuid)
-  //
-  //     if (foundedIndex !== -1) {
-  //       const foundedButton = images[foundedIndex]
-  //       foundedButton.button = newButton
-  //     }
-  //
-  //     return updatedBreakdowns
-  //   })
-  // }
 
   const handleOrderChange = (index, newOrder) => {
     const selectedItem = breakdowns[index]
@@ -2132,15 +1213,6 @@ export default function EditJournals2(props) {
                           breakdown={breakdown}
                           handleChangeGridColumns={(value, uuid) =>
                             handleChangeGridColumns(value, uuid, breakdownIndex)
-                          }
-                          breakdownTextEditor={
-                            breakdown?.customContent?.textEditorData
-                          }
-                          breakdownParagraph={
-                            breakdown?.customContent?.paragraphs
-                          }
-                          breakdownCheckboxes={
-                            breakdown?.customContent?.checkboxesData
                           }
                           breakdownIndex={breakdownIndex}
                           handleChangeTextEditor={handleChangeTextEditorData}

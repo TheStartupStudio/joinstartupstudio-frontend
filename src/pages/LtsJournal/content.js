@@ -49,7 +49,7 @@ function LtsJournalContent(props) {
         `/ltsJournals/${props.match.params.journalId}/userEntries`
       )
       let groupedByJournalEntry = {}
-
+      console.log(data)
       if (data) {
         for (var userJournalEntry of data) {
           if (groupedByJournalEntry[userJournalEntry.journalEntryId]) {
@@ -73,6 +73,7 @@ function LtsJournalContent(props) {
     Promise.all([getJournal(), getUserJournalEntries()])
 
       .then(([journalData, userJournalEntries]) => {
+        console.log(journalData, userJournalEntries)
         setJournal(journalData)
         if (
           journalData.userEntry &&
