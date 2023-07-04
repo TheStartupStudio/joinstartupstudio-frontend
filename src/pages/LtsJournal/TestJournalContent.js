@@ -23,6 +23,65 @@ function TestJournalContent(props) {
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [instructorDebrief, setInstructorDebrief] = useState({
+    checkbox1: null,
+    checkbox2: null,
+    checkbox3: null,
+    textEditorContent: null,
+    journalId: props.match.params.id
+  })
+
+  const newInstructorBriefData = {
+    checkbox1: instructorDebrief.checkbox1,
+    checkbox2: instructorDebrief.checkbox2,
+    checkbox3: instructorDebrief.checkbox3,
+    textEditorContent: instructorDebrief.textEditorContent
+  }
+  const onSubmitInstructorDebrief = (data) => {
+    axiosInstance
+      .post(`/ltsJournals/${props.match.params.id}/instructor-debrief`, {
+        ...data
+      })
+      .then((res) => {
+        const updatedInstructorDebriefData = res.data
+        updateInstructorDebriefCheckboxes(updatedInstructorDebriefData)
+      })
+  }
+
+  const [instructorDebriefData, setInstructorDebriefData] = useState({})
+  const updateInstructorDebriefCheckboxes = (instructorDebrief) => {
+    const instructorDebriefDataInitial = {
+      description:
+        'Welcome to the instructor debrief section of this task. This tool is designed to help you use the LTS program and platform to their maximum potential, and to provide LTS with feedback so we can continue to meet your needs.',
+      checkboxesLabel: 'In completing this task did you:',
+      checkboxes: [
+        {
+          label: 'Give each student an opportunity to use their voice.',
+          isChecked: instructorDebrief?.checkbox1
+        },
+        {
+          label: 'Conduct at least one news briefing to start class.',
+          isChecked: instructorDebrief?.checkbox2
+        },
+        {
+          label:
+            'Give students adequate time to complete work inside of their Journal or Portfolio.',
+          isChecked: instructorDebrief?.checkbox3
+        }
+      ],
+      textEditorLabel:
+        'Please submit any questions or feedback regarding this task in the curriculum to the LTS team.',
+      textEditorContent: instructorDebrief?.textEditorContent
+    }
+    setInstructorDebriefData(instructorDebriefDataInitial)
+    setInstructorDebrief({
+      ...instructorDebrief,
+      checkbox1: instructorDebrief?.checkbox1,
+      checkbox2: instructorDebrief?.checkbox2,
+      checkbox3: instructorDebrief?.checkbox3,
+      textEditorContent: instructorDebrief?.textEditorContent
+    })
+  }
 
   async function saveWatchData(data) {
     await axiosInstance.put(
@@ -120,10 +179,23 @@ function TestJournalContent(props) {
     } catch (err) {}
   }
 
+  const getInstructorDebriefData = async () => {
+    try {
+      let { data } = await axiosInstance.get(
+        `/ltsJournals/${+props.match.params.id}/instructor-debrief`
+      )
+      return data
+    } catch (e) {}
+  }
+
   function loadData() {
     setLoading(true)
-    Promise.all([getJournal(), getUserJournalEntries()])
-      .then(([journalData, userJournalEntries]) => {
+    Promise.all([
+      getJournal(),
+      getUserJournalEntries(),
+      getInstructorDebriefData()
+    ])
+      .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
         if (
           journalData.userEntry &&
@@ -140,6 +212,21 @@ function TestJournalContent(props) {
 
         if (props.contentContainer && props.contentContainer.current) {
           props.contentContainer.current.scrollTop = 0
+        }
+        if (journalData?.hasInstructorDebrief) {
+          const isInstructorDebrief =
+            Object.keys(instructorDebriefData)?.length > 1
+          if (isInstructorDebrief) {
+            updateInstructorDebriefCheckboxes(instructorDebriefData)
+          } else {
+            const defaultInstructorDebriefData = {
+              checkbox1: false,
+              checkbox2: false,
+              checkbox3: false,
+              textEditorContent: ''
+            }
+            onSubmitInstructorDebrief(defaultInstructorDebriefData)
+          }
         }
 
         setLoading(false)
@@ -177,6 +264,10 @@ function TestJournalContent(props) {
         setLoading(false)
       })
   }
+
+  useEffect(() => {
+    setIsExpanded(false)
+  }, [props.match.params.id])
 
   useEffect(
     function () {
@@ -253,27 +344,33 @@ function TestJournalContent(props) {
     setIsExpanded(!isExpanded)
   }
 
-  const instructorDebriefData = {
-    checkboxesLabel: 'In completing this task did you:',
-    checkboxes: [
-      {
-        label: 'Give each student an opportunity to use their voice.',
-        isChecked: false
-      },
-      {
-        label: 'Conduct at least one news briefing to start class.',
-        isChecked: false
-      },
-      {
-        label:
-          'Give students adequate time to complete work inside of their Journal or Portfolio.',
-        isChecked: false
-      }
-    ],
-    textEditorLabel:
-      'Please submit any questions or feedback regarding this task in the curriculum to the LTS team.',
-    textEditorContent:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl purus in mollis nunc sed id semper risus in. Venenatis a condimentum vitae sapien pellentesque habitant morbi tristique. Nullam ac tortor vitae purus faucibus ornare suspendisse sed. Aliquet sagittis id consectetur purus.'
+  const handleChangeInstructorDebrief = (name, value, index) => {
+    if (name === 'checkboxes') {
+      const updatedInstructorDebriefCheckboxes =
+        instructorDebriefData?.checkboxes?.map((checkboxKey, checkboxIndex) => {
+          if (checkboxIndex === index) {
+            checkboxKey.isChecked = value
+          }
+          return checkboxKey
+        })
+      setInstructorDebriefData({
+        ...instructorDebriefData,
+        checkboxes: updatedInstructorDebriefCheckboxes
+      })
+      setInstructorDebrief((prevState) => ({
+        ...prevState,
+        [`checkbox${index + 1}`]: value
+      }))
+    } else if (name === 'textEditorContent') {
+      setInstructorDebriefData({
+        ...instructorDebriefData,
+        textEditorContent: value
+      })
+      setInstructorDebrief((prevState) => ({
+        ...prevState,
+        textEditorContent: value
+      }))
+    }
   }
   const {
     Bold,
@@ -393,95 +490,108 @@ function TestJournalContent(props) {
               {journal?.paragraph}
             </div>
 
-            {journal?.breakdowns
-              ?.slice()
-              ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
-              ?.map((breakdown, index) => {
-                return (
-                  <React.Fragment key={index}>
-                    <BreakdownTextAccordion
-                      title={breakdown?.title}
-                      content={breakdown?.content}
-                      breakdown={breakdown}
-                    />
-                  </React.Fragment>
-                )
-              })}
-            <div className="accordion">
-              <div className="accordion-header" onClick={toggleAccordion}>
-                <div className={'accordion-header-title'}>
-                  {'Instructor debrief'}
+            {!loading &&
+              journal?.breakdowns
+                ?.slice()
+                ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
+                ?.map((breakdown, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <BreakdownTextAccordion
+                        title={breakdown?.title}
+                        content={breakdown?.content}
+                        breakdown={breakdown}
+                      />
+                    </React.Fragment>
+                  )
+                })}
+            {!loading && journal?.hasInstructorDebrief && (
+              <div className="accordion">
+                <div className="accordion-header" onClick={toggleAccordion}>
+                  <div className={'accordion-header-title'}>
+                    {'Instructor debrief'}
+                  </div>
+                  <span
+                    className={`accordion-icon ${isExpanded ? 'expanded' : ''}`}
+                  >
+                    {isExpanded ? (
+                      <FontAwesomeIcon
+                        icon={faAngleDown}
+                        className="me-2 me-md-0 arrow"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faAngleDown}
+                        className="me-2 me-md-0 arrow"
+                      />
+                    )}
+                  </span>
                 </div>
-                <span
-                  className={`accordion-icon ${isExpanded ? 'expanded' : ''}`}
-                >
-                  {isExpanded ? (
-                    <FontAwesomeIcon
-                      icon={faAngleDown}
-                      className="me-2 me-md-0 arrow"
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={faAngleDown}
-                      className="me-2 me-md-0 arrow"
-                    />
-                  )}
-                </span>
+                {isExpanded && (
+                  <div className="accordion-content">
+                    {instructorDebriefData.description}
+                    <>
+                      <div>{instructorDebriefData.checkboxesLabel}</div>
+                      {instructorDebriefData?.checkboxes?.map((data, index) => {
+                        return (
+                          <div class="form-check  ">
+                            <input
+                              className="form-check-input "
+                              type="checkbox"
+                              checked={data.isChecked}
+                              id="flexCheckDefault"
+                              onChange={(e) =>
+                                handleChangeInstructorDebrief(
+                                  'checkboxes',
+                                  e.target.checked,
+                                  index
+                                )
+                              }
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="flexCheckDefault"
+                              style={{ marginTop: '0.125rem' }}
+                            >
+                              {data.label}
+                            </label>
+                          </div>
+                        )
+                      })}
+                    </>
+                    <>
+                      <div>{instructorDebriefData?.textEditorLabel}</div>
+                      <KendoTextEditor
+                        minHeight={150}
+                        value={instructorDebriefData?.textEditorContent}
+                        handleChange={(e) => {
+                          handleChangeInstructorDebrief('textEditorContent', e)
+                        }}
+                        tools={[
+                          [Bold, Italic],
+                          [AlignLeft, AlignCenter, AlignRight, AlignJustify],
+                          [Indent, Outdent],
+                          [OrderedList, UnorderedList],
+                          FontSize,
+                          FontName,
+                          FormatBlock,
+                          [Undo, Redo],
+                          [Link, Unlink, InsertImage, ViewHtml]
+                        ]}
+                      />
+                    </>
+                    <button
+                      className={'btn btn-warning'}
+                      onClick={() =>
+                        onSubmitInstructorDebrief(newInstructorBriefData)
+                      }
+                    >
+                      Submit
+                    </button>
+                  </div>
+                )}
               </div>
-              {isExpanded && (
-                <div className="accordion-content">
-                  Welcome to the instructor debrief section of this task. This
-                  tool is designed to help you use the LTS program and platform
-                  to their maximum potential, and to provide LTS with feedback
-                  so we can continue to meet your needs.
-                  <>
-                    <div>{instructorDebriefData.checkboxesLabel}</div>
-                    {instructorDebriefData?.checkboxes?.map((data, index) => {
-                      return (
-                        <div class="form-check  ">
-                          <input
-                            className="form-check-input "
-                            type="checkbox"
-                            checked={data.checked}
-                            id="flexCheckDefault"
-                            onChange={(e) =>
-                              props.handleChange(e.target.checked, index)
-                            }
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexCheckDefault"
-                            style={{ marginTop: '0.125rem' }}
-                          >
-                            {data.label}
-                          </label>
-                        </div>
-                      )
-                    })}
-                  </>
-                  <>
-                    <div>{instructorDebriefData?.textEditorLabel}</div>
-                    <KendoTextEditor
-                      minHeight={150}
-                      value={instructorDebriefData?.textEditorContent}
-                      handleChange={() => {}}
-                      // handleChange={(e) => handleChangeEditorValue(e, index)}
-                      tools={[
-                        [Bold, Italic],
-                        [AlignLeft, AlignCenter, AlignRight, AlignJustify],
-                        [Indent, Outdent],
-                        [OrderedList, UnorderedList],
-                        FontSize,
-                        FontName,
-                        FormatBlock,
-                        [Undo, Redo],
-                        [Link, Unlink, InsertImage, ViewHtml]
-                      ]}
-                    />
-                  </>
-                </div>
-              )}
-            </div>
+            )}
           </>
         }
         {/*// )*/}
