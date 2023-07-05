@@ -1,30 +1,15 @@
-import { v4 as uuidv4 } from 'uuid'
 import React, { useEffect, useState } from 'react'
 import KendoTextEditor from '../TextEditor'
 import PositionSelector from '../../PositionSelector/PositionSelector'
-import Checkboxes from '../Checkboxes'
 import ParagraphInputs from './ParagraphInputs'
 import OrderInput from './OrderInput'
-import TextEditorInputs from './TextEditorInputs'
 import PopupButtonInputs from './PopupButtonInputs'
 
 const CustomContent = (props) => {
   const [sortedComponents, setSortedComponents] = useState([])
 
-  const handleEditCheckboxes = (e, checkBoxIndex) => {
-    props.handleChangeCheckboxes(
-      'checkboxesData',
-      e,
-      checkBoxIndex,
-      props.breakdownIndex
-    )
-  }
   useEffect(() => {
     if (props.breakdown?.customContent) {
-      const checkboxesDataCopy =
-        props.breakdown?.customContent?.checkboxesData?.slice() || []
-      const textEditorDataCopy =
-        props.breakdown?.customContent?.textEditorData?.slice() || []
       const paragraphsCopy =
         props.breakdown?.customContent?.paragraphs?.slice() || []
       const buttonsCopy = props.breakdown?.customContent?.buttons?.slice() || []
@@ -35,8 +20,6 @@ const CustomContent = (props) => {
         props.breakdown?.customContent?.imageGallery || {}
       setSortedComponents(
         [
-          ...checkboxesDataCopy,
-          ...textEditorDataCopy,
           ...paragraphsCopy,
           ...buttonsCopy,
           ...imagesCopy,
@@ -47,15 +30,11 @@ const CustomContent = (props) => {
     }
   }, [
     props.breakdown?.customContent?.paragraphs?.length,
-    props.breakdown?.customContent?.checkboxesData?.length,
-    props.breakdown?.customContent?.textEditorData?.length,
     props.breakdown?.customContent?.buttons?.length,
     props.breakdown?.customContent?.popupButtons?.length,
     props.breakdown?.customContent?.images?.length,
     props.breakdown?.customContent?.imageGallery?.images?.length,
     props.breakdown?.customContent?.paragraphs,
-    props.breakdown?.customContent?.checkboxesData,
-    props.breakdown?.customContent?.textEditorData,
     props.breakdown?.customContent?.buttons,
     props.breakdown?.customContent?.popupButtons,
     props.breakdown?.customContent?.images,
@@ -97,19 +76,6 @@ const CustomContent = (props) => {
     props.handleChangeGridColumns(gridColumns, imageGalleryUUID)
   }, [gridColumns])
 
-  const firstImageUUID = sortedComponents?.filter(
-    (sc) => sc?.type === 'image'
-  )[0]?.uuid
-  const firstImageUUIDIndex = sortedComponents?.findIndex(
-    (sc) => sc?.uuid === firstImageUUID
-  )
-
-  // const [buttonImage, setButtonImage] = useState()
-  // console.log(buttonImage)
-  // const handleSetButtonImage = (button) => {
-  //   setButtonImage(button)
-  // }
-
   return (
     <>
       {sortedComponents.map((data, index) => {
@@ -135,39 +101,7 @@ const CustomContent = (props) => {
                 </>
               )}
             </>
-            {data.type === 'checkbox' && (
-              <React.Fragment>
-                <OrderInput
-                  data={data}
-                  index={index}
-                  handleOrderChange={handleOrderChange}
-                />
-                <Checkboxes
-                  checkbox={data}
-                  key={index}
-                  index={index}
-                  breakdownIndex={props.breakdownIndex}
-                  handleChange={(e) => handleEditCheckboxes(e, index)}
-                />
-              </React.Fragment>
-            )}
-            {data.type === 'textEditor' && (
-              <React.Fragment key={index}>
-                <OrderInput
-                  data={data}
-                  index={index}
-                  handleOrderChange={handleOrderChange}
-                />
-                <TextEditorInputs
-                  data={data}
-                  index={index}
-                  breakdownIndex={props.breakdownIndex}
-                  handleChangeTextEditor={(e) => {
-                    props.handleChangeTextEditor(...e)
-                  }}
-                />
-              </React.Fragment>
-            )}
+
             {data.type === 'button' && (
               <React.Fragment key={index}>
                 <OrderInput
@@ -429,26 +363,7 @@ const CustomContent = (props) => {
             Add a paragraph
           </div>
         </div>
-        {/*<div*/}
-        {/*  className={'d-flex justify-content-center align-items-center '}*/}
-        {/*  onClick={() => {*/}
-        {/*    props.handleAddTextEditor()*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <div class={'btn btn-secondary d-flex align-items-center'}>*/}
-        {/*    Add a text editor*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-        {/*<div*/}
-        {/*  className={'d-flex justify-content-center align-items-center '}*/}
-        {/*  onClick={() => {*/}
-        {/*    props.handleAddCheckbox()*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <div class={'btn btn-secondary d-flex align-items-center'}>*/}
-        {/*    Add a checkbox*/}
-        {/*  </div>*/}
-        {/*</div>*/}
+
         {/*<div*/}
         {/*  className={'d-flex justify-content-center align-items-center '}*/}
         {/*  onClick={() => {*/}

@@ -5,20 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/JournalsManagement/Checkboxes.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/JournalsManagement/CustomContent/CustomContent.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/JournalsManagement/CustomContent/OrderInput.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/JournalsManagement/CustomContent/ParagraphInputs.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/JournalsManagement/CustomContent/PopupButtonInputs.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/JournalsManagement/CustomContent/TextEditorInputs.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/PositionSelector/PositionSelector.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/BreakdownCheckboxes.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/BreakdownCustomContent.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/JournalsManagement/TextEditor.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/Checkboxes.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/CustomContent/CustomContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/CustomContent/CustomContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/CustomContent/TextEditorInputs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/TextEditor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/TextEditor.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/BreakdownTextAccordion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/BreakdownTextAccordion.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +101,7 @@
       <workItem from="1683529563402" duration="25237000" />
       <workItem from="1683702324579" duration="67480000" />
       <workItem from="1684134188258" duration="19780000" />
-      <workItem from="1687761748633" duration="129813000" />
+      <workItem from="1687761748633" duration="163080000" />
     </task>
     <servers />
   </component>

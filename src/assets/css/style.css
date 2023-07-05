@@ -4314,6 +4314,7 @@ ul.sidebar-menu-item .collapse a {
 
 .accordion-content {
   padding: 15px 50px;
+  padding: 30px 30px;
   background-color: #ffffff;
   font-size: 13px;
   text-align: left;

@@ -24,18 +24,18 @@ function TestJournalContent(props) {
   let [showVideo, setShowVideo] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [instructorDebrief, setInstructorDebrief] = useState({
-    checkbox1: null,
-    checkbox2: null,
-    checkbox3: null,
-    textEditorContent: null,
+    checkbox1: false,
+    checkbox2: false,
+    checkbox3: false,
+    textEditorContent: '',
     journalId: props.match.params.id
   })
 
   const newInstructorBriefData = {
-    checkbox1: instructorDebrief.checkbox1,
-    checkbox2: instructorDebrief.checkbox2,
-    checkbox3: instructorDebrief.checkbox3,
-    textEditorContent: instructorDebrief.textEditorContent
+    checkbox1: instructorDebrief?.checkbox1,
+    checkbox2: instructorDebrief?.checkbox2,
+    checkbox3: instructorDebrief?.checkbox3,
+    textEditorContent: instructorDebrief?.textEditorContent
   }
   const onSubmitInstructorDebrief = (data) => {
     axiosInstance
@@ -44,43 +44,14 @@ function TestJournalContent(props) {
       })
       .then((res) => {
         const updatedInstructorDebriefData = res.data
-        updateInstructorDebriefCheckboxes(updatedInstructorDebriefData)
+        setInstructorDebrief({
+          ...instructorDebrief,
+          checkbox1: updatedInstructorDebriefData.checkbox1,
+          checkbox2: updatedInstructorDebriefData.checkbox2,
+          checkbox3: updatedInstructorDebriefData.checkbox3,
+          textEditorContent: updatedInstructorDebriefData.textEditorContent
+        })
       })
-  }
-
-  const [instructorDebriefData, setInstructorDebriefData] = useState({})
-  const updateInstructorDebriefCheckboxes = (instructorDebrief) => {
-    const instructorDebriefDataInitial = {
-      description:
-        'Welcome to the instructor debrief section of this task. This tool is designed to help you use the LTS program and platform to their maximum potential, and to provide LTS with feedback so we can continue to meet your needs.',
-      checkboxesLabel: 'In completing this task did you:',
-      checkboxes: [
-        {
-          label: 'Give each student an opportunity to use their voice.',
-          isChecked: instructorDebrief?.checkbox1
-        },
-        {
-          label: 'Conduct at least one news briefing to start class.',
-          isChecked: instructorDebrief?.checkbox2
-        },
-        {
-          label:
-            'Give students adequate time to complete work inside of their Journal or Portfolio.',
-          isChecked: instructorDebrief?.checkbox3
-        }
-      ],
-      textEditorLabel:
-        'Please submit any questions or feedback regarding this task in the curriculum to the LTS team.',
-      textEditorContent: instructorDebrief?.textEditorContent
-    }
-    setInstructorDebriefData(instructorDebriefDataInitial)
-    setInstructorDebrief({
-      ...instructorDebrief,
-      checkbox1: instructorDebrief?.checkbox1,
-      checkbox2: instructorDebrief?.checkbox2,
-      checkbox3: instructorDebrief?.checkbox3,
-      textEditorContent: instructorDebrief?.textEditorContent
-    })
   }
 
   async function saveWatchData(data) {
@@ -217,15 +188,13 @@ function TestJournalContent(props) {
           const isInstructorDebrief =
             Object.keys(instructorDebriefData)?.length > 1
           if (isInstructorDebrief) {
-            updateInstructorDebriefCheckboxes(instructorDebriefData)
-          } else {
-            const defaultInstructorDebriefData = {
-              checkbox1: false,
-              checkbox2: false,
-              checkbox3: false,
-              textEditorContent: ''
-            }
-            onSubmitInstructorDebrief(defaultInstructorDebriefData)
+            setInstructorDebrief({
+              ...instructorDebrief,
+              checkbox1: instructorDebriefData.checkbox1,
+              checkbox2: instructorDebriefData.checkbox2,
+              checkbox3: instructorDebriefData.checkbox3,
+              textEditorContent: instructorDebriefData.textEditorContent
+            })
           }
         }
 
@@ -344,33 +313,12 @@ function TestJournalContent(props) {
     setIsExpanded(!isExpanded)
   }
 
-  const handleChangeInstructorDebrief = (name, value, index) => {
-    if (name === 'checkboxes') {
-      const updatedInstructorDebriefCheckboxes =
-        instructorDebriefData?.checkboxes?.map((checkboxKey, checkboxIndex) => {
-          if (checkboxIndex === index) {
-            checkboxKey.isChecked = value
-          }
-          return checkboxKey
-        })
-      setInstructorDebriefData({
-        ...instructorDebriefData,
-        checkboxes: updatedInstructorDebriefCheckboxes
-      })
-      setInstructorDebrief((prevState) => ({
-        ...prevState,
-        [`checkbox${index + 1}`]: value
-      }))
-    } else if (name === 'textEditorContent') {
-      setInstructorDebriefData({
-        ...instructorDebriefData,
-        textEditorContent: value
-      })
-      setInstructorDebrief((prevState) => ({
-        ...prevState,
-        textEditorContent: value
-      }))
+  const handleChangeInstructorDebrief2 = (name, value) => {
+    const newInstructorDebrief = {
+      ...instructorDebrief,
+      [name]: value
     }
+    setInstructorDebrief(newInstructorDebrief)
   }
   const {
     Bold,
@@ -529,65 +477,164 @@ function TestJournalContent(props) {
                 </div>
                 {isExpanded && (
                   <div className="accordion-content">
-                    {instructorDebriefData.description}
-                    <>
-                      <div>{instructorDebriefData.checkboxesLabel}</div>
-                      {instructorDebriefData?.checkboxes?.map((data, index) => {
-                        return (
-                          <div class="form-check  ">
-                            <input
-                              className="form-check-input "
-                              type="checkbox"
-                              checked={data.isChecked}
-                              id="flexCheckDefault"
-                              onChange={(e) =>
-                                handleChangeInstructorDebrief(
-                                  'checkboxes',
-                                  e.target.checked,
-                                  index
-                                )
-                              }
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="flexCheckDefault"
-                              style={{ marginTop: '0.125rem' }}
-                            >
-                              {data.label}
-                            </label>
-                          </div>
-                        )
-                      })}
-                    </>
-                    <>
-                      <div>{instructorDebriefData?.textEditorLabel}</div>
-                      <KendoTextEditor
-                        minHeight={150}
-                        value={instructorDebriefData?.textEditorContent}
-                        handleChange={(e) => {
-                          handleChangeInstructorDebrief('textEditorContent', e)
-                        }}
-                        tools={[
-                          [Bold, Italic],
-                          [AlignLeft, AlignCenter, AlignRight, AlignJustify],
-                          [Indent, Outdent],
-                          [OrderedList, UnorderedList],
-                          FontSize,
-                          FontName,
-                          FormatBlock,
-                          [Undo, Redo],
-                          [Link, Unlink, InsertImage, ViewHtml]
-                        ]}
-                      />
-                    </>
-                    <button
-                      className={'btn btn-warning'}
-                      onClick={() =>
-                        onSubmitInstructorDebrief(newInstructorBriefData)
-                      }
+                    <div
+                      style={{
+                        font: 'normal normal 500 10.2px/17px Montserrat',
+                        letterSpacing: 0.18,
+                        color: '#333D3D'
+                      }}
                     >
-                      Submit
-                    </button>
+                      Welcome to the instructor debrief section of this task.
+                      This tool is designed to help you use the LTS program and
+                      platform to their maximum potential, and to provide LTS
+                      with feedback so we can continue to meet your needs.
+                    </div>
+
+                    <>
+                      <div
+                        style={{
+                          font: 'normal normal 600 10.2px/17px Montserrat',
+                          letterSpacing: 0.18,
+                          color: '#000000',
+                          paddingTop: '20px',
+                          paddingBottom: '10px'
+                        }}
+                      >
+                        In completing this task did you:
+                      </div>
+                      <div class="form-check  ">
+                        <input
+                          className="form-check-input "
+                          type="checkbox"
+                          checked={instructorDebrief.checkbox1}
+                          id="flexCheckDefault"
+                          onChange={(e) =>
+                            handleChangeInstructorDebrief2(
+                              'checkbox1',
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexCheckDefault"
+                          style={{
+                            font: 'normal normal 500 10.6px/18px Montserrat',
+                            letterSpacing: 0.24,
+                            color: '#231F20',
+                            marginTop: '0.125rem'
+                          }}
+                        >
+                          Give each student an opportunity to use their voice.
+                        </label>
+                      </div>
+                      <div class="form-check  ">
+                        <input
+                          className="form-check-input "
+                          type="checkbox"
+                          checked={instructorDebrief.checkbox2}
+                          id="flexCheckDefault"
+                          onChange={(e) =>
+                            handleChangeInstructorDebrief2(
+                              'checkbox2',
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexCheckDefault"
+                          style={{
+                            font: 'normal normal 500 10.6px/18px Montserrat',
+                            letterSpacing: 0.24,
+                            color: '#231F20',
+                            marginTop: '0.125rem'
+                          }}
+                        >
+                          Conduct at least one news briefing to start class.
+                        </label>
+                      </div>
+                      <div class="form-check  ">
+                        <input
+                          className="form-check-input "
+                          type="checkbox"
+                          checked={instructorDebrief.checkbox3}
+                          id="flexCheckDefault"
+                          onChange={(e) =>
+                            handleChangeInstructorDebrief2(
+                              'checkbox3',
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexCheckDefault"
+                          style={{
+                            font: 'normal normal 500 10.6px/18px Montserrat',
+                            letterSpacing: 0.24,
+                            color: '#231F20',
+                            marginTop: '0.125rem'
+                          }}
+                        >
+                          Give students adequate time to complete work inside of
+                          their Journal or Portfolio.
+                        </label>
+                      </div>
+                    </>
+                    <>
+                      <>
+                        <div
+                          style={{
+                            font: 'normal normal 600 10.2px/17px Montserrat',
+                            letterSpacing: 0.18,
+                            color: '#000000',
+                            paddingTop: '15px',
+                            paddingBottom: '6px'
+                          }}
+                        >
+                          Please submit any questions or feedback regarding this
+                          task in the curriculum to the LTS team.
+                        </div>
+                        <KendoTextEditor
+                          minHeight={150}
+                          value={instructorDebrief?.textEditorContent}
+                          handleChange={(e) => {
+                            handleChangeInstructorDebrief2(
+                              'textEditorContent',
+                              e
+                            )
+                          }}
+                          tools={[
+                            [Bold, Italic],
+                            [AlignLeft, AlignCenter, AlignRight, AlignJustify],
+                            [Indent, Outdent],
+                            [OrderedList, UnorderedList],
+                            FontSize,
+                            FontName,
+                            FormatBlock,
+                            [Undo, Redo],
+                            [Link, Unlink, InsertImage, ViewHtml]
+                          ]}
+                        />
+                      </>
+                    </>
+                    <div className={'d-flex justify-content-end mt-3'}>
+                      <button
+                        style={{
+                          backgroundColor: '#51c7df',
+                          color: '#fff',
+                          fontSize: 12,
+                          fontWeight: 600
+                        }}
+                        className="px-4 py-2 border-0 color transform my-1"
+                        onClick={() =>
+                          onSubmitInstructorDebrief(newInstructorBriefData)
+                        }
+                      >
+                        Submit
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

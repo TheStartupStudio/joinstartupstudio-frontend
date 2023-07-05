@@ -37,21 +37,11 @@ export default function EditJournals2(props) {
 
   const breakdownInitialState = [
     {
-      // id: '',
       content: '',
       title: '',
       type: '',
-      breakdownImages: [
-        {
-          breakDownImage: '',
-          description: '',
-          breakdownId: ''
-        }
-      ],
       customContent: {
         paragraphs: [],
-        textEditorData: [],
-        checkboxesData: [],
         buttons: [],
         popupButtons: [],
         imageGallery: {}
@@ -237,84 +227,6 @@ export default function EditJournals2(props) {
     setBreakdowns(newBreakdowns)
   }
 
-  const handleSetImages = (breakdownImages, index) => {
-    const newBreakdowns = [...breakdowns]
-    newBreakdowns[index].breakdownImages = breakdownImages
-    setBreakdowns(newBreakdowns)
-  }
-
-  const handleChangeBreakdownImages = (
-    name,
-    value,
-    breakdownIndex,
-    imageIndex
-  ) => {
-    const newBreakdowns = [...breakdowns]
-    const newBreakdown = newBreakdowns[breakdownIndex]
-    const breakdownImages = [...newBreakdown.breakdownImages]
-    breakdownImages[imageIndex][name] = value
-    newBreakdown.breakdownImages = breakdownImages
-    newBreakdowns[breakdownIndex] = newBreakdown
-    setBreakdowns(newBreakdowns)
-  }
-
-  const {
-    Bold,
-    Italic,
-    AlignLeft,
-    AlignCenter,
-    AlignRight,
-    AlignJustify,
-    Indent,
-    Outdent,
-    OrderedList,
-    UnorderedList,
-    Undo,
-    Redo,
-    FontSize,
-    FontName,
-    FormatBlock,
-    Link,
-    Unlink,
-    InsertImage,
-    ViewHtml
-  } = EditorTools
-
-  const handleChangeTextEditorData = (
-    name,
-    value,
-    dataIndex,
-    breakdownIndex,
-    uuid
-  ) => {
-    setBreakdowns((prevBreakdowns) => {
-      return prevBreakdowns.map((data, bindex) => {
-        if (bindex === breakdownIndex) {
-          const updatedCustomContent = data.customContent?.textEditorData?.map(
-            (editorData, eIndex) => {
-              const foundedIndex =
-                data.customContent?.textEditorData?.findIndex(
-                  (paragraph, index) => paragraph.uuid === uuid
-                )
-              if (eIndex === foundedIndex) {
-                return { ...editorData, [name]: value }
-              }
-              return editorData
-            }
-          )
-          return {
-            ...data,
-            customContent: {
-              ...data.customContent,
-              textEditorData: updatedCustomContent
-            }
-          }
-        }
-        return data
-      })
-    })
-  }
-
   const handleChangeParagraph = (
     name,
     value,
@@ -341,40 +253,6 @@ export default function EditJournals2(props) {
             customContent: {
               ...data.customContent,
               paragraphs: updatedCustomContent
-            }
-          }
-        }
-        return data
-      })
-    })
-  }
-  const handleChangeCheckboxes = (
-    name,
-    value,
-    dataIndex,
-    breakdownIndex,
-    uuid
-  ) => {
-    setBreakdowns((prevBreakdowns) => {
-      return prevBreakdowns.map((data, bindex) => {
-        if (bindex === breakdownIndex) {
-          const updatedCheckboxesData = data.customContent?.checkboxesData?.map(
-            (editorData, eIndex) => {
-              const foundedIndex =
-                data.customContent?.checkboxesData?.findIndex(
-                  (paragraph, index) => paragraph.uuid === uuid
-                )
-              if (eIndex === foundedIndex) {
-                return { ...editorData, [name]: value }
-              }
-              return editorData
-            }
-          )
-          return {
-            ...data,
-            customContent: {
-              ...data.customContent,
-              checkboxesData: updatedCheckboxesData
             }
           }
         }
@@ -565,52 +443,6 @@ export default function EditJournals2(props) {
       return updatedBreakdowns
     })
   }
-  const addCheckbox = (breakdownIndex) => {
-    const highestOrder = getHighestOrder(
-      breakdowns[breakdownIndex].customContent
-    )
-    const newCheckbox = {
-      title: '',
-      type: 'checkbox',
-      // order: nextOrder,
-      order: highestOrder,
-      uuid: randomUUID,
-      checkboxes: [
-        {
-          checked: false,
-          label: ''
-        },
-        {
-          checked: false,
-          label: ''
-        },
-        {
-          checked: false,
-          label: ''
-        }
-      ]
-    }
-    setNextOrder((prev) => prev + 1)
-    setBreakdowns((prevState) => {
-      const updatedBreakdowns = [...prevState]
-      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-        updatedBreakdowns[breakdownIndex].customContent = {}
-      }
-
-      const checkboxesData =
-        updatedBreakdowns[breakdownIndex]?.customContent?.checkboxesData
-
-      if (!checkboxesData) {
-        updatedBreakdowns[breakdownIndex].customContent.checkboxesData = [
-          { newCheckbox }
-        ]
-      }
-      updatedBreakdowns[breakdownIndex]?.customContent?.checkboxesData?.push(
-        newCheckbox
-      )
-      return updatedBreakdowns
-    })
-  }
 
   const addPopupButton = (breakdownIndex) => {
     const highestOrder = getHighestOrder(
@@ -709,6 +541,9 @@ export default function EditJournals2(props) {
   }
 
   const addImage = (breakdownIndex) => {
+    const randomImageUUID = uuidv4()
+    const randomImageGalleryUUID = uuidv4()
+    // const randomUUID = uuidv4()
     const highestOrder = getHighestOrder(
       breakdowns[breakdownIndex].customContent
     )
@@ -717,7 +552,7 @@ export default function EditJournals2(props) {
       image: '',
       description: '',
       button: {},
-      uuid: randomUUID
+      uuid: randomImageUUID
       // order: highestOrder
     }
 
@@ -729,7 +564,7 @@ export default function EditJournals2(props) {
         updatedBreakdowns[breakdownIndex].customContent = {
           imageGallery: {
             type: 'image',
-            uuid: randomUUID,
+            uuid: randomImageGalleryUUID,
             gridColumns: 4,
             images: [newImage]
           }
@@ -739,7 +574,7 @@ export default function EditJournals2(props) {
         if (!customContent.imageGallery) {
           customContent.imageGallery = {
             type: 'image',
-            uuid: randomUUID,
+            uuid: randomImageGalleryUUID,
             gridColumns: 4,
             images: [newImage],
             order: highestOrder
@@ -793,7 +628,6 @@ export default function EditJournals2(props) {
         const foundedButton = images[foundedIndex]
         foundedButton.button = newButton
       }
-
       return updatedBreakdowns
     })
   }
@@ -1115,96 +949,6 @@ export default function EditJournals2(props) {
                         />
                       </>
                     )}
-                    {breakdown.type === 'type-2' && (
-                      <>
-                        {breakdown?.breakdownImages?.map(
-                          (breakdownImage, imageIndex) => {
-                            return (
-                              <>
-                                <div>`Image {imageIndex + 1}`</div>
-                                <div className={'bg-white'}>
-                                  <div>Image</div>
-                                  <KendoTextEditor
-                                    tools={[
-                                      [
-                                        AlignLeft,
-                                        AlignCenter,
-                                        AlignRight,
-                                        AlignJustify
-                                      ],
-
-                                      [Link, Unlink, InsertImage, ViewHtml]
-                                    ]}
-                                    minHeight={200}
-                                    value={breakdownImage.breakDownImage}
-                                    handleChange={(e) =>
-                                      handleChangeBreakdownImages(
-                                        'breakDownImage',
-                                        e,
-                                        breakdownIndex,
-                                        imageIndex
-                                      )
-                                    }
-                                  />
-                                  <div>Description</div>
-                                  <div>
-                                    <KendoTextEditor
-                                      tools={[
-                                        [Bold, Italic],
-                                        [
-                                          AlignLeft,
-                                          AlignCenter,
-                                          AlignRight,
-                                          AlignJustify
-                                        ],
-                                        [Indent, Outdent],
-                                        [OrderedList, UnorderedList],
-                                        FontSize,
-                                        FontName,
-                                        FormatBlock,
-                                        [Undo, Redo],
-                                        [Link, Unlink, InsertImage, ViewHtml]
-                                      ]}
-                                      minHeight={200}
-                                      value={breakdownImage.description}
-                                      handleChange={(e) =>
-                                        handleChangeBreakdownImages(
-                                          'description',
-                                          e,
-                                          breakdownIndex,
-                                          imageIndex
-                                        )
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                              </>
-                            )
-                          }
-                        )}
-                        <div
-                          className={'d-flex justify-content-end mb-4'}
-                          onClick={() => {
-                            let newBreakdownImages = [
-                              ...breakdown.breakdownImages
-                            ]
-                            const breakdownImage = {
-                              breakDownImage: '',
-                              breakdownId: '',
-                              description: ''
-                            }
-                            newBreakdownImages.push(breakdownImage)
-
-                            return handleSetImages(
-                              newBreakdownImages,
-                              breakdownIndex
-                            )
-                          }}
-                        >
-                          <div class={'btn btn-secondary '}>Add image</div>
-                        </div>
-                      </>
-                    )}
 
                     {breakdown.type === 'type-3' && (
                       <>
@@ -1215,17 +959,10 @@ export default function EditJournals2(props) {
                             handleChangeGridColumns(value, uuid, breakdownIndex)
                           }
                           breakdownIndex={breakdownIndex}
-                          handleChangeTextEditor={handleChangeTextEditorData}
                           handleChangeParagraph={handleChangeParagraph}
                           handleChangeButtons={handleChangeButtons}
                           handleChangePopupButtons={handleChangePopupButtons}
                           handleChangeImages={handleChangeImages}
-                          handleChangeCheckboxes={(...e) =>
-                            handleChangeCheckboxes(e)
-                          }
-                          handleAddCheckbox={() => {
-                            addCheckbox(breakdownIndex)
-                          }}
                           handleAddPopupButton={() => {
                             addPopupButton(breakdownIndex)
                           }}
@@ -1237,9 +974,6 @@ export default function EditJournals2(props) {
                           }}
                           handleAddButtonImage={(uuid) => {
                             addButtonImage(breakdownIndex, uuid)
-                          }}
-                          handleAddTextEditor={() => {
-                            addTextEditorData(breakdownIndex)
                           }}
                           handleAddParagraph={() => {
                             addParagraph(breakdownIndex)
