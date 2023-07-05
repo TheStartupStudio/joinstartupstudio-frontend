@@ -304,13 +304,14 @@ function Profile(props) {
           IAMR Inbox
         </p>
         <div
-          className="col-6 text-center fw-bold "
+          className="col-6 text-center fw-bold"
           style={{ marginTop: '-3rem' }}
         >
           <img src={Questions} style={{ width: '180px' }} alt="" />
-          <a href={`/iamr-inbox`} className="iamr-inbox_link">
+
+          <a href={`/iamr-inbox`} className="iamr-inbox_link m-0">
             {studentQuestions.unreadCount ? studentQuestions?.unreadCount : 0}
-            &nbsp; Questions
+            <span className="ml-2">Questions</span>
           </a>
         </div>
         <div
@@ -318,13 +319,9 @@ function Profile(props) {
           style={{ marginTop: '-3rem' }}
         >
           <img src={Feedbacks} style={{ width: '180px' }} alt="" />
-          <a
-            href="/iamr-inbox"
-            // href={`/iamr-inbox`}
-            className="iamr-inbox_link"
-          >
+          <a href="/iamr-inbox" className="iamr-inbox_link">
             {feedbackRequests.unreadCount ? feedbackRequests.unreadCount : 0}
-            &nbsp; Requests
+            <span className="ml-2">Requests</span>
           </a>
         </div>
         {/* <p

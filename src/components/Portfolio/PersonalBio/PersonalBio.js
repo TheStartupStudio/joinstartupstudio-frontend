@@ -10,7 +10,7 @@ import {
   faTwitter,
   faInstagram,
   faTwitterSquare,
-  faFacebookSquare,
+  faFacebookSquare
 } from '@fortawesome/free-brands-svg-icons'
 import { faGlobe, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import './index.css'
@@ -20,6 +20,8 @@ import Certificate from '../../../assets/images/lts-certifeid-logo.png'
 import { toast } from 'react-toastify'
 import { useHistory } from 'react-router-dom'
 import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import CertificationBadge1 from '../../../assets/images/market-ready-1-badge.jpg'
+import CertificationBadge2 from '../../../assets/images/market-ready-2-badge.jpg'
 
 export default function PersonalBio(props) {
   const userId = useSelector((state) => state.user.user.user.id)
@@ -68,7 +70,7 @@ export default function PersonalBio(props) {
     setUpdateBio(true)
     await axiosInstance
       .put(`/users`, {
-        bio: userBio,
+        bio: userBio
       })
       .then((response) => {
         toast.success(<IntlMessages id="alerts.success_change" />)
@@ -91,18 +93,18 @@ export default function PersonalBio(props) {
       letterSpacing: '0.48px',
       color: '#707070',
       paddingLeft: '1px',
-      opacity: '1',
+      opacity: '1'
     },
     user_name: {
       textAlign: 'left',
       font: 'normal normal 500 21px/17px Montserrat',
       letterSpacing: '0.84px',
       color: '#333D3D',
-      opacity: '1',
+      opacity: '1'
     },
     social_links: {
-      paddingLeft: '3px',
-    },
+      paddingLeft: '3px'
+    }
   }
   const isPreview = props.isPreview
   // const history = useHistory()
@@ -123,7 +125,7 @@ export default function PersonalBio(props) {
             className="d-flex  personal-bio-image-container"
             style={{
               marginRight: 'auto',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
           >
             <div
@@ -136,7 +138,7 @@ export default function PersonalBio(props) {
                 marginTop: isPreview ? 0 : -23,
                 display: 'flex',
                 alignItems: 'center',
-                overflow: 'hidden',
+                overflow: 'hidden'
               }}
             >
               <img
@@ -171,7 +173,7 @@ export default function PersonalBio(props) {
                             className="mb-0 pt-1"
                             style={{
                               ...style.user_proffesion,
-                              display: 'block',
+                              display: 'block'
                             }}
                           >
                             {user?.profession ? user?.profession : ''}
@@ -179,7 +181,7 @@ export default function PersonalBio(props) {
                           <div
                             style={{
                               flexBasis: '100%',
-                              height: 0,
+                              height: 0
                             }}
                           ></div>
                           {(user?.social_links?.linkedIn ||
@@ -292,12 +294,17 @@ export default function PersonalBio(props) {
                         </div>
                         <div className="d-lg-flex flex-wrap w-100 w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate mx-lg-5 mx-sm-1">
                           {!isCertified && (
-                            <>
-                              <img src={Certificate} />
-                              <p className="verified mb-0">
-                                <IntlMessages id="general.verifyWithNova" />
-                              </p>
-                            </>
+                            <span className="d-flex">
+                              <img
+                                src={CertificationBadge1}
+                                className="w-100 h-100 "
+                                alt="Certification badge 1"
+                              />
+                              <img
+                                src={CertificationBadge2}
+                                alt="Certification badge 1"
+                              />
+                            </span>
                           )}
                         </div>
                       </div>

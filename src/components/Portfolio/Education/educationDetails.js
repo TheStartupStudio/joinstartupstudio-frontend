@@ -5,7 +5,7 @@ import {
   faGlobe,
   faFile,
   faPencilAlt,
-  faUserGraduate,
+  faUserGraduate
 } from '@fortawesome/free-solid-svg-icons'
 import { format } from 'date-fns'
 import { useHistory } from 'react-router-dom'
@@ -33,7 +33,7 @@ export const EducationDetails = (props) => {
               padding: '20px 10px',
               height: '100%',
               flexDirection: windowWidth < 730 ? 'column' : 'row',
-              position: 'relative',
+              position: 'relative'
             }}
           >
             <div
@@ -45,14 +45,14 @@ export const EducationDetails = (props) => {
                 borderRight: windowWidth < 730 ? '0px' : '1px solid #e5e5e5',
                 borderBottom: windowWidth < 730 ? '1px solid #e5e5e5' : '0px',
                 paddingBottom: windowWidth < 730 ? '4px' : '0px',
-                paddingRight: windowWidth < 730 ? 0 : 40,
+                paddingRight: windowWidth < 730 ? 0 : 40
               }}
             >
               <div
                 style={{
                   display: 'flex',
                   justifyContent: windowWidth < 730 ? 'center' : 'start',
-                  paddingBottom: windowWidth < 730 ? 5 : 0,
+                  paddingBottom: windowWidth < 730 ? 5 : 0
                 }}
               >
                 {education?.image_url ? (
@@ -67,7 +67,7 @@ export const EducationDetails = (props) => {
                     style={{
                       width: '100px',
                       height: '80px',
-                      color: '#BBBDBF',
+                      color: '#BBBDBF'
                     }}
                   />
                 )}
@@ -79,7 +79,7 @@ export const EducationDetails = (props) => {
                     font: 'normal normal 600 15px Montserrat',
                     letterSpacing: 0.6,
                     color: '#231F20',
-                    marginBottom: 6,
+                    marginBottom: 6
                   }}
                 >
                   {education.college}
@@ -88,7 +88,7 @@ export const EducationDetails = (props) => {
                   style={{
                     font: 'normal normal 300 15px Montserrat',
                     letterSpacing: 0.6,
-                    color: '#231F20',
+                    color: '#231F20'
                   }}
                 >
                   {}
@@ -109,7 +109,7 @@ export const EducationDetails = (props) => {
                 marginTop: windowWidth < 730 ? 6 : 0,
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between',
+                justifyContent: 'space-between'
               }}
               className="experience-details "
             >
@@ -121,7 +121,7 @@ export const EducationDetails = (props) => {
                       font: 'normal normal 600 17px/17px Montserrat',
                       letterSpacing: '0.6px',
                       color: '#231F20',
-                      paddingBottom: 10,
+                      paddingBottom: 10
                     }}
                   >
                     {education?.degree} in {education?.field}
@@ -152,22 +152,21 @@ export const EducationDetails = (props) => {
                 {education.description && (
                   <div className="experience-description mt-2">
                     <ul style={{ paddingLeft: '0px' }} className="m-0">
-                      {education.description.split('\n').map((line, index) => (
-                        <li
-                          key={index}
-                          style={{
-                            font: 'normal normal 300 15px/17px Montserrat',
-                            letterSpacing: '0.6px',
-                            color: '#231F20',
-                            listStyleType: 'none', // Remove default disc bullet
-                          }}
-                        >
-                          * {line} {/* Add asterisk before each line */}
-                        </li>
-                        // <li key={index} style={{ lineHeight: 1 }}>
-                        //   {line}
-                        // </li>
-                      ))}
+                      {education.description.split('\n').map((line, index) =>
+                        line.trim() ? (
+                          <li
+                            key={index}
+                            style={{
+                              font: 'normal normal 300 15px/17px Montserrat',
+                              letterSpacing: '0.6px',
+                              color: '#231F20',
+                              listStyleType: 'none' // Remove default disc bullet
+                            }}
+                          >
+                            * {line} {/* Add asterisk before each line */}
+                          </li>
+                        ) : null
+                      )}
                     </ul>
                   </div>
                 )}
@@ -183,7 +182,7 @@ export const EducationDetails = (props) => {
                           style={{
                             width: '20px',
                             height: '20px',
-                            color: '#707070',
+                            color: '#707070'
                           }}
                         />
                         <a
@@ -206,7 +205,7 @@ export const EducationDetails = (props) => {
                           style={{
                             width: '20px',
                             height: '20px',
-                            color: '#707070',
+                            color: '#707070'
                           }}
                         />
                         <a
@@ -240,7 +239,7 @@ export const EducationDetails = (props) => {
                   top: 12,
                   right: 0,
                   height: '25px',
-                  width: '25px',
+                  width: '25px'
                 }}
               />
             )}

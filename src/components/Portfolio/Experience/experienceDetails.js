@@ -5,7 +5,7 @@ import {
   faGlobe,
   faFile,
   faPencilAlt,
-  faBriefcase,
+  faBriefcase
 } from '@fortawesome/free-solid-svg-icons'
 import { format } from 'date-fns'
 import { VerifyButton } from '../../../pages/PortfolioNew/editPortfolio'
@@ -35,7 +35,7 @@ export const ExperienceDetails = (props) => {
               height: '100%',
               padding: '20px 10px',
               flexDirection: windowWidth < 730 ? 'column' : 'row',
-              position: 'relative',
+              position: 'relative'
             }}
             // className="col-12 d-flex ms-0 experience-container"
           >
@@ -49,14 +49,14 @@ export const ExperienceDetails = (props) => {
                 borderRight: windowWidth < 730 ? '0px' : '1px solid #e5e5e5',
                 borderBottom: windowWidth < 730 ? '1px solid #e5e5e5' : '0px',
                 paddingBottom: windowWidth < 730 ? '4px' : '0px',
-                paddingRight: windowWidth < 730 ? 0 : 40,
+                paddingRight: windowWidth < 730 ? 0 : 40
               }}
             >
               <div
                 style={{
                   display: 'flex',
                   justifyContent: windowWidth < 730 ? 'center' : 'start',
-                  paddingBottom: windowWidth < 730 ? 5 : 0,
+                  paddingBottom: windowWidth < 730 ? 5 : 0
                 }}
               >
                 {experience?.image_url ? (
@@ -65,8 +65,8 @@ export const ExperienceDetails = (props) => {
                     alt=""
                     style={{
                       width: 90,
-                      height: 70,
-                      objectFit: 'cover',
+                      height: 80,
+                      objectFit: 'cover'
                     }}
                   />
                 ) : (
@@ -75,7 +75,7 @@ export const ExperienceDetails = (props) => {
                     style={{
                       width: '100px',
                       height: '80px',
-                      color: '#BBBDBF',
+                      color: '#BBBDBF'
                     }}
                   />
                 )}
@@ -86,7 +86,7 @@ export const ExperienceDetails = (props) => {
                     marginBottom: 0,
                     font: 'normal normal 500 15px/16px Montserrat',
                     letterSpacing: '0.6px',
-                    color: '#231F20',
+                    color: '#231F20'
                   }}
                 >
                   {experience?.company}
@@ -96,7 +96,7 @@ export const ExperienceDetails = (props) => {
                     marginBottom: 0,
                     font: 'normal normal light 15px/16px Montserrat',
                     letterSpacing: '0.6px',
-                    color: '#231F20',
+                    color: '#231F20'
                   }}
                 >
                   {experience?.location}
@@ -106,7 +106,7 @@ export const ExperienceDetails = (props) => {
                     marginBottom: 0,
                     font: 'normal normal light 15px/16px Montserrat',
                     letterSpacing: '0.6px',
-                    color: '#231F20',
+                    color: '#231F20'
                   }}
                 >
                   {format(new Date(experience?.start_date), 'MMM yyyy')}
@@ -125,7 +125,7 @@ export const ExperienceDetails = (props) => {
                 marginTop: windowWidth < 730 ? 6 : 0,
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between',
+                justifyContent: 'space-between'
               }}
               // className='experience-details pt-2 pt-md-0 px-md-4'
             >
@@ -136,7 +136,7 @@ export const ExperienceDetails = (props) => {
                       font: 'normal normal 600 17px/17px Montserrat',
                       letterSpacing: '0.6px',
                       color: '#231F20',
-                      paddingBottom: 10,
+                      paddingBottom: 10
                     }}
                   >
                     {experience?.title}
@@ -152,7 +152,7 @@ export const ExperienceDetails = (props) => {
                       className="editICO"
                       style={{
                         height: '25px',
-                        width: '25px',
+                        width: '25px'
                       }}
                     />
                   )}
@@ -181,7 +181,7 @@ export const ExperienceDetails = (props) => {
                           font: 'normal normal 300 15px/17px Montserrat',
                           letterSpacing: '0.6px',
                           color: '#231F20',
-                          listStyleType: 'none', // Remove default disc bullet
+                          listStyleType: 'none' // Remove default disc bullet
                         }}
                       >
                         * {line} {/* Add asterisk before each line */}
@@ -220,7 +220,7 @@ export const ExperienceDetails = (props) => {
                           style={{
                             width: '20px',
                             height: '20px',
-                            color: '#51C7DF',
+                            color: '#51C7DF'
                           }}
                         />
                         <a
@@ -232,7 +232,7 @@ export const ExperienceDetails = (props) => {
                           style={{
                             font: 'normal normal 600 15px/16px Montserrat',
                             letterSpacing: '0.6px',
-                            color: '#51C7DF',
+                            color: '#51C7DF'
                           }}
                           target={'_blank'}
                           className="my-auto ms-2"
@@ -252,7 +252,7 @@ export const ExperienceDetails = (props) => {
                           style={{
                             width: '20px',
                             height: '20px',
-                            color: '#51C7DF',
+                            color: '#51C7DF'
                           }}
                         />
                         <a
@@ -270,7 +270,7 @@ export const ExperienceDetails = (props) => {
                     )}
                   </div>
                 )}
-                <div
+                {/* <div
                   className={`d-flex ${
                     windowWidth < 1150
                       ? 'justify-content-end'
@@ -280,7 +280,7 @@ export const ExperienceDetails = (props) => {
                   `}
                 >
                   {!isPreview && <VerifyButton width={'110px'} />}
-                </div>
+                </div> */}
               </div>
             </div>
             {/*{props.editing && (*/}
@@ -316,7 +316,7 @@ export const ExperienceDetails = (props) => {
                   top: 12,
                   right: 0,
                   height: '25px',
-                  width: '25px',
+                  width: '25px'
                 }}
               />
             )}

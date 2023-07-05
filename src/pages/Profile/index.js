@@ -490,7 +490,7 @@ function Profile(props) {
                       <IntlMessages id="my_account.email_address" />
                     </h4>
 
-                    <div className="col-12 col-lg-6 my-auto">
+                    {/* <div className="col-12 col-lg-6 my-auto">
                       <div className="d-flex show_in_portfolio justify-content-lg-end ms-3 ms-lg-0">
                         <p className="my-auto p-0">
                           Allow people to contact me
@@ -523,7 +523,7 @@ function Profile(props) {
                           <i className="my-auto"></i>
                         </label>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                   <InputGroup className="mt-3 mb-3">

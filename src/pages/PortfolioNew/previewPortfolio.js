@@ -228,7 +228,7 @@ const PreviewPortfolio = () => {
               <IntlMessages id="portfolio.publish_checkbox" />
             </span>
           </div>
-          <div
+          {/* <div
             style={{
               display: 'flex',
               alignItems: 'flex-end',
@@ -243,7 +243,7 @@ const PreviewPortfolio = () => {
               }}
               src={verifyNovae}
             />
-          </div>
+          </div> */}
         </div>
         <PersonalBio
           user={user}

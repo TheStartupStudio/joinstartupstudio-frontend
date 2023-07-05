@@ -6,9 +6,9 @@ import { toast } from 'react-toastify'
 const NotificationComponent = (props) => {
   const [notification, setNotification] = useState(props.notification)
 
-  // useEffect(() => {
-  //   if (props.notification) setNotification(props.notification)
-  // }, [props.notification])
+  useEffect(() => {
+    setNotification(props.notification)
+  }, [props.notification])
 
   useEffect(() => {
     props.handleChange(notification)
@@ -17,6 +17,10 @@ const NotificationComponent = (props) => {
   const onChangeNotification = (name, value) => {
     setNotification({ ...notification, [name]: value })
   }
+
+  useEffect(() => {
+    setNotification(props.notification || {})
+  }, [props.notification])
   return (
     <>
       <>
@@ -41,7 +45,7 @@ const NotificationComponent = (props) => {
                 name="title"
                 className="mt-2 mb-2 col-12  p-md-2 w-100"
                 placeholder={'Title'}
-                value={notification.title}
+                value={notification.title || ''}
                 onChange={(e) => onChangeNotification('title', e.target.value)}
               />
             </Col>
@@ -54,7 +58,7 @@ const NotificationComponent = (props) => {
                 className="mt-2 mb-2 col-12  p-md-2 w-100"
                 placeholder={'Description'}
                 style={{ resize: 'none' }}
-                value={notification.description}
+                value={notification.description || ''}
                 onChange={(e) =>
                   onChangeNotification('description', e.target.value)
                 }
@@ -70,7 +74,7 @@ const NotificationComponent = (props) => {
                 type="text"
                 name="link"
                 placeholder={'Link'}
-                value={notification.url}
+                value={notification.url || ''}
                 onChange={(e) => onChangeNotification('url', e.target.value)}
               />
             </Col>

@@ -38,7 +38,7 @@ export const IAMR = (props) => {
     setIsPublished(!isPublished)
     await axiosInstance
       .put(`/users`, {
-        show_iamr: !oldPublishValue,
+        show_iamr: !oldPublishValue
       })
       .then()
       .catch((e) => {
@@ -98,7 +98,7 @@ export const IAMR = (props) => {
           // width: windowWidth < 800 ? '70%' : '80%',
           width: cardWidth(),
           height: 200,
-          border: '1px solid #E5E5E5',
+          border: '1px solid #E5E5E5'
         }}
       >
         <img
@@ -109,7 +109,7 @@ export const IAMR = (props) => {
             height: '100%',
             display: 'flex',
             alignItems: 'flex-end',
-            border: '1px solid #e3e3e3',
+            border: '1px solid #e3e3e3'
           }}
         />
         {!isPreview && (
@@ -124,7 +124,7 @@ export const IAMR = (props) => {
               display: 'flex',
               height: '30px',
               paddingRight: 3,
-              zIndex: 1,
+              zIndex: 1
             }}
           >
             <div
@@ -132,7 +132,7 @@ export const IAMR = (props) => {
                 display: 'flex',
                 alignItems: 'center',
                 marginTop: 7,
-                padding: '5px 3px',
+                padding: '5px 3px'
               }}
               onClick={(e) => {
                 props.updateSubmission(props.submission)
@@ -150,7 +150,7 @@ export const IAMR = (props) => {
                 display: 'flex',
                 alignItems: 'center',
                 marginTop: 7,
-                padding: '5px 3px',
+                padding: '5px 3px'
               }}
               onClick={(e) => {
                 props.deleteSubmission(props.submission)
@@ -174,7 +174,7 @@ export const IAMR = (props) => {
             width: '100%',
             position: 'absolute',
             bottom: 0,
-            zIndex: 1,
+            zIndex: 1
           }}
         >
           {props.submission?.title?.toUpperCase()}
@@ -187,7 +187,7 @@ export const IAMR = (props) => {
               left: '33%',
               top: '66%',
               transform: 'translate(-50%, -50%)',
-              zIndex: 1,
+              zIndex: 1
             }}
           ></div>
         }
@@ -199,7 +199,7 @@ export const IAMR = (props) => {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.15)',
+            backgroundColor: 'rgba(0, 0, 0, 0.15)'
           }}
         ></div>
       </a>
@@ -215,7 +215,7 @@ export const IAMR = (props) => {
           width: cardWidth(),
           height: 200,
           border: '1px solid #E5E5E5',
-          cursor: 'pointer',
+          cursor: 'pointer'
         }}
       >
         <div
@@ -227,7 +227,7 @@ export const IAMR = (props) => {
             width: '100%',
             position: 'absolute',
             bottom: 0,
-            zIndex: 1,
+            zIndex: 1
           }}
         >
           Add Another Submission
@@ -238,7 +238,7 @@ export const IAMR = (props) => {
             left: '50%',
             top: '50%',
             transform: 'translate(-50%, -50%)',
-            zIndex: 1,
+            zIndex: 1
             // width: '50px',
           }}
         >
@@ -284,11 +284,11 @@ export const IAMR = (props) => {
             >
               <h4 className="m-3 text-center iamr-title">I AM MARKET-READY</h4>
 
-              <p className="row m-3" style={{ paddingInline: '4.2%' }}>
+              {/* <p className="row m-3" style={{ paddingInline: '4.2%' }}>
                 The components of your portfolio speak to your level of
                 market-ready skills as you introduce the world to who you are,
                 what you can do, and your ability to prove it.
-              </p>
+              </p> */}
 
               <div className="iamr-submissions m-3">
                 <div
@@ -298,7 +298,7 @@ export const IAMR = (props) => {
                     rowGap: 30,
                     display: 'grid',
                     gridTemplateColumns: windowWidth < 800 ? '1fr' : '2fr 2fr',
-                    justifyContent: 'center',
+                    justifyContent: 'center'
                   }}
                 >
                   {submissions?.map((submission, index) => {
@@ -408,7 +408,7 @@ export const IAMR = (props) => {
                 onSave={(submission) => {
                   setSubmissions([
                     ...submissions.filter((s) => s.id != submission.id),
-                    submission,
+                    submission
                   ])
                 }}
               />

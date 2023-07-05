@@ -19,13 +19,28 @@ const BriefingModal = (props) => {
     // dispatch(getPeriodsStart())
   }, [])
 
+  // const ContentItem = (contentData) => {
+  //   return (
+  //     <div className={'content-item-container'}>
+  //       <span className={'content-item-title'}>
+  //         {contentData?.content?.title}:
+  //       </span>
+  //       <span className={'content-item-description'}>
+  //         {contentData?.content?.description}
+  //       </span>
+  //     </div>
+  //   )
+  // }
   const ContentItem = (contentData) => {
     return (
       <div className={'content-item-container'}>
         <span className={'content-item-title'}>
           {contentData?.content?.title}:
         </span>
-        <span className={'content-item-description'}>
+        <span
+          className={'content-item-description'}
+          style={{ whiteSpace: 'pre-line' }}
+        >
           {contentData?.content?.description}
         </span>
       </div>
@@ -39,7 +54,7 @@ const BriefingModal = (props) => {
         onHide={props.onHide}
         backdrop="static"
         keyboard={false}
-        id="subscription-modal"
+        id="briefing-modal"
         className="briefing-modal"
       >
         <Modal.Header>
@@ -59,7 +74,7 @@ const BriefingModal = (props) => {
                 description: new Date(briefing?.date).toLocaleDateString(
                   'en-US',
                   { month: 'long', day: 'numeric', year: 'numeric' }
-                ),
+                )
                 // description: 'January 1, 2023',
               }}
             />
@@ -67,31 +82,31 @@ const BriefingModal = (props) => {
           <ContentItem
             content={{
               title: 'Source',
-              description: briefing?.source,
+              description: briefing?.source
             }}
           />
           <ContentItem
             content={{
               title: 'Title',
-              description: briefing?.title,
+              description: briefing?.title
             }}
           />
           <ContentItem
             content={{
               title: 'Synopsis',
-              description: briefing?.synopsis,
+              description: briefing?.synopsis
             }}
           />
           <ContentItem
             content={{
               title: 'Discussion Question',
-              description: briefing?.discussionQuestion,
+              description: briefing?.discussionQuestion
             }}
           />
           <ContentItem
             content={{
               title: 'Discussion Points',
-              description: briefing?.discussionPoints,
+              description: briefing?.discussionPoints
             }}
           />
         </Modal.Body>

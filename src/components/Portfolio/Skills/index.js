@@ -163,7 +163,7 @@ export const Skills = (props) => {
           <PortfolioSection
             title={'Market-ready certified skills'}
             isEdit={true}
-            isAdd={true}
+            isAdd={false}
             onEdit={
               userSkill && userSkill.length > 0
                 ? () => {
@@ -204,7 +204,7 @@ export const Skills = (props) => {
                     width: verifyButtonContainerWidth(),
                     display: 'flex',
                     alignItems: 'end',
-                    justifyContent: 'end',
+                    justifyContent: 'end'
                   }}
                 >
                   <VerifyButton width={verifyButtonWidth()} />
@@ -215,20 +215,21 @@ export const Skills = (props) => {
         ) : (
           <PortfolioSection
             title={'Market-ready certified skills'}
-            isAdd={true}
+            isAdd={false}
             onAdd={() => {
               setShowSkillBoxModal(true)
             }}
           >
-            <div className="col-md-3 col-sm-6">
-              <SkillBoxButton
+            <div className="col-xl-12 col-md-3 col-sm-6">
+              {/* <SkillBoxButton
                 data={{ name: 'add' }}
                 from={'index'}
                 isEmpty={true}
                 openModal={() => {
                   setShowSkillBoxModal(true)
                 }}
-              />
+              /> */}
+              <h6 className="text-center">No certified skills</h6>
             </div>
           </PortfolioSection>
         )

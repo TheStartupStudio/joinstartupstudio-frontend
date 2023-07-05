@@ -136,8 +136,13 @@ const TaskEventModal = (props) => {
       setTab('task')
     }
   }, [])
+
   const handleInputChange = (name, value) => {
-    setState({ ...state, [name]: value })
+    console.log('name', name, value)
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
   }
 
   const activeTabStyle = {
@@ -159,6 +164,8 @@ const TaskEventModal = (props) => {
     setTab(tab)
   }
 
+  console.log('state', state)
+
   const onPostEvent = () => {
     let newEventObj = {
       name: state.name,
@@ -174,8 +181,9 @@ const TaskEventModal = (props) => {
     if (isAddingOnClick()) {
       setState(initialState)
     }
-    if (state.periods.length > 1) {
+    if (state.periods.length > 0) {
       dispatch(postEventStart(newEventObj))
+      setState(initialState)
     } else {
       toast.error('You must select at least one period')
     }
@@ -423,8 +431,10 @@ const TaskEventModal = (props) => {
               {(placeholder) => (
                 <ReactQuill
                   theme="snow"
-                  name={tab === 'task' ? 'taskDescription' : 'eventDescription'}
-                  id={tab === 'task' ? 'taskDescription' : 'eventDescription'}
+                  name={'description'}
+                  id={'description'}
+                  // name={tab === 'task' ? 'taskDescription' : 'eventDescription'}
+                  // id={tab === 'task' ? 'taskDescription' : 'eventDescription'}
                   className="my-1 mb-4 py-2 px-0 w-100 rounded-0 scroll-add-new-note-modal "
                   style={{
                     height: '150px',
@@ -450,20 +460,21 @@ const TaskEventModal = (props) => {
             </label>
             <FormattedMessage id="calendar_task-events.requirements">
               {(placeholder) => (
-                <input
-                  className="my-1 mb-4 py-2 px-2 w-100 event-input "
-                  type="text"
+                <ReactQuill
+                  theme="snow"
+                  className="my-1 mb-4 py-2 w-100 rounded-0 scroll-add-new-note-modal "
                   name="requirements"
                   style={{
-                    height: 48,
-                    borderRadius: '0.25rem',
-                    backgroundColor: 'white'
+                    height: '150px',
+                    '::placeholder': {
+                      color: '#000',
+                      fontWeight: 'bold',
+                      fontSize: 16
+                    }
                   }}
                   placeholder={placeholder}
                   id="requirements"
-                  onChange={(e) =>
-                    handleInputChange('requirements', e.target.value)
-                  }
+                  onChange={(e) => handleInputChange('requirements', e)}
                   value={state.requirements}
                 />
               )}

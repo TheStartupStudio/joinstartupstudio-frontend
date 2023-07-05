@@ -131,7 +131,6 @@ export default function StudentsTable(props) {
     await axiosInstance
       .get('/instructor/my-students')
       .then((res) => {
-        debugger
         if (res.data.students?.length) {
           let newArrray = []
           res.data.instructorsnew.map((instructor) => {
@@ -1029,6 +1028,7 @@ export default function StudentsTable(props) {
         className: 'action',
         sortable: false,
         cell: (record) => {
+          console.log('record', record)
           return (
             <>
               <div className="d-flex justify-content-end w-100 text-end me-3">
@@ -1042,6 +1042,7 @@ export default function StudentsTable(props) {
                     onClick={() => {
                       setStudentToEdit(record)
                       setOpenEditUserModal(true)
+                      updateOptions(record.level)
                     }}
                     style={{ color: '#51C7DF' }}
                   >
