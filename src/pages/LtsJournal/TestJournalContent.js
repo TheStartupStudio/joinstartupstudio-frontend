@@ -23,6 +23,15 @@ function TestJournalContent(props) {
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [openAccordion, setOpenAccordion] = useState(null)
+  const handleAccordionClick = (accordion) => {
+    if (openAccordion === accordion) {
+      setOpenAccordion(null)
+    } else {
+      setOpenAccordion(accordion)
+    }
+  }
+
   const [instructorDebrief, setInstructorDebrief] = useState({
     checkbox1: false,
     checkbox2: false,
@@ -341,6 +350,10 @@ function TestJournalContent(props) {
     InsertImage,
     ViewHtml
   } = EditorTools
+
+  const closeOthers = () => {
+    setOpenAccordion(null)
+  }
   return (
     <>
       <>
@@ -449,18 +462,30 @@ function TestJournalContent(props) {
                         title={breakdown?.title}
                         content={breakdown?.content}
                         breakdown={breakdown}
+                        isOpen={openAccordion === index}
+                        toggleAccordion={() => handleAccordionClick(index)}
+                        closeOthers={closeOthers}
                       />
                     </React.Fragment>
                   )
                 })}
             {!loading && journal?.hasInstructorDebrief && (
-              <div className="accordion">
-                <div className="accordion-header" onClick={toggleAccordion}>
+              <div
+                className={`accordion ${
+                  openAccordion === 'instructor' ? 'expanded' : ''
+                }`}
+              >
+                <div
+                  className="accordion-header"
+                  onClick={() => handleAccordionClick('instructor')}
+                >
                   <div className={'accordion-header-title'}>
                     {'Instructor debrief'}
                   </div>
                   <span
-                    className={`accordion-icon ${isExpanded ? 'expanded' : ''}`}
+                    className={`accordion-icon ${
+                      openAccordion === 'instructor' ? 'expanded' : ''
+                    }`}
                   >
                     {isExpanded ? (
                       <FontAwesomeIcon
@@ -475,7 +500,7 @@ function TestJournalContent(props) {
                     )}
                   </span>
                 </div>
-                {isExpanded && (
+                {openAccordion === 'instructor' && (
                   <div className="accordion-content">
                     <div
                       style={{

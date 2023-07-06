@@ -112,6 +112,16 @@ const BreakdownCustomContent = (props) => {
       setActiveIndex(index)
     }
 
+    const justifyContent = (index, gridColumns) => {
+      if (index % gridColumns === 0) {
+        return 'start'
+      } else if (index % gridColumns === gridColumns - 1) {
+        return 'end'
+      } else {
+        return 'center'
+      }
+    }
+
     return (
       <>
         <div
@@ -128,7 +138,7 @@ const BreakdownCustomContent = (props) => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: justifyContent(index, props.gridColumns),
                 overflow: 'hidden',
                 height: '150px'
               }}
@@ -194,9 +204,11 @@ const BreakdownCustomContent = (props) => {
     )
   }
 
-  console.log(sortedComponents)
   return (
-    <div className={'accordion-content'}>
+    <div
+      className={'accordion-content'}
+      style={{ padding: '30px 55px !important' }}
+    >
       {sortedComponents.map((data, index) => {
         return (
           <>

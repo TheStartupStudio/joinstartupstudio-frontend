@@ -62,11 +62,11 @@ export default function EditJournals2(props) {
         journals.map((journal, index) => {
           return {
             label:
+              journal.category +
+              ' - ' +
               `${journal.type ? journal.type : ''}  ${
                 journal.type ? '-' : ''
               } ` +
-              journal.category +
-              ' - ' +
               journal.title,
             value: journal,
             key: index
@@ -114,7 +114,11 @@ export default function EditJournals2(props) {
       const response = await axiosInstance.get(
         '/ltsJournals/journals-descriptions2'
       )
-      const newData = response.data.filter((d) => d.category.includes('new'))
+      const newData = response.data.map((data) => ({
+        ...data,
+        type: 'task'
+      }))
+      console.log(newData)
       setJournals((prevJournals) => [...prevJournals, ...newData])
       setFetchingJournals(false)
       // setBreakdowns(data.breakdowns)
@@ -128,7 +132,11 @@ export default function EditJournals2(props) {
       const response = await axiosInstance.get(
         '/ltsJournals/journals-descriptions2-weeks'
       )
-      setJournals((prevJournals) => [...prevJournals, ...response.data])
+      const newData = response.data.map((data) => ({
+        ...data,
+        type: 'week'
+      }))
+      setJournals((prevJournals) => [...prevJournals, ...newData])
       setFetchingJournals(false)
       // setBreakdowns(data.breakdowns)
     } catch (error) {

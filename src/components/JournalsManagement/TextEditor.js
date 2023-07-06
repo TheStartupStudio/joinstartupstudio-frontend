@@ -48,6 +48,7 @@ const {
 
 const paletteSettings = {
   palette: [
+    '#333D3D',
     '#f0d0c9',
     '#e2a293',
     '#d4735e',
@@ -97,6 +98,7 @@ const fontSizeToolSettings = {
   items: [
     { text: '10', value: '10px' },
     { text: '10.2', value: '10.2px' },
+    { text: '11', value: '11px' },
     { text: '12', value: '12px' },
     { text: '14', value: '14px' },
     { text: '18', value: '18px' },
@@ -135,7 +137,6 @@ const KendoTextEditor = (props) => {
     FontFamilyCustom,
     CustomFontSize,
     FormatBlock,
-    CustomFontWeight,
     [Undo, Redo],
     [Link, Unlink, InsertImage, ViewHtml]
   ]
