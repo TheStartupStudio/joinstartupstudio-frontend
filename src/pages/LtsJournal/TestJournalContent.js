@@ -443,7 +443,7 @@ function TestJournalContent(props) {
             <div
               className={'my-4'}
               style={{
-                font: 'normal normal 300 13px/16px Montserrat',
+                font: 'normal normal 500 10.2px/16px Montserrat',
                 letterSpacing: 0.52,
                 color: '#333D3D'
               }}

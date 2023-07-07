@@ -146,11 +146,12 @@ export default function EditJournals2(props) {
 
   const { journalId } = useParams()
   const handleSubmit = async () => {
+    console.log(selectedJournal?.value?.paragraph)
     setLoading(true)
     await axiosInstance
       .put(`LtsJournals/${journalId}/editJournal2`, {
         breakdowns: breakdowns,
-        paragraph: selectedJournal.value?.paragraph,
+        paragraph: selectedJournal?.value?.paragraph,
         title: selectedJournal?.value?.title,
         type: selectedJournal?.value?.type,
         customContent: selectedJournal?.value?.customContent
@@ -344,12 +345,16 @@ export default function EditJournals2(props) {
         }
         newImages[imageIndex] = newImage
         customContent.imageGallery.images = newImages
-        if (name === 'gridColumns' || name === 'position') {
-          customContent.imageGallery = {
-            ...customContent?.imageGallery,
-            [name]: value
-          }
-        }
+        // if (
+        //   name === 'gridColumns' ||
+        //   name === 'position' ||
+        //   name === 'borderBottom'
+        // ) {
+        //   customContent.imageGallery = {
+        //     ...customContent?.imageGallery,
+        //     [name]: value
+        //   }
+        // }
         newBreakdown.customContent = customContent
         newBreakdowns[breakdownIndex] = newBreakdown
       }
@@ -548,6 +553,40 @@ export default function EditJournals2(props) {
     setBreakdowns(newBreakdowns)
   }
 
+  const handleChangeImageGallery = (name, value, breakdownIndex, uuid) => {
+    let newBreakdowns = [...breakdowns]
+    let newBreakdown = { ...newBreakdowns[breakdownIndex] }
+
+    if (newBreakdown?.customContent === null) {
+      newBreakdown.customContent = {}
+    }
+
+    const customContent = newBreakdown?.customContent || {}
+
+    if (!customContent.imageGallery) {
+      customContent.imageGallery = {}
+    }
+
+    if (!customContent.imageGallery.borderBottom) {
+      customContent.imageGallery.borderBottom = ''
+    }
+    if (!customContent.imageGallery.position) {
+      customContent.imageGallery.position = ''
+    }
+    if (!customContent.imageGallery.gridColumns) {
+      customContent.imageGallery.gridColumns = 0
+    }
+
+    customContent.imageGallery = {
+      ...customContent?.imageGallery,
+      [name]: value
+    }
+
+    newBreakdowns[breakdownIndex] = newBreakdown
+
+    setBreakdowns(newBreakdowns)
+  }
+
   const addImage = (breakdownIndex) => {
     const randomImageUUID = uuidv4()
     const randomImageGalleryUUID = uuidv4()
@@ -574,7 +613,8 @@ export default function EditJournals2(props) {
             type: 'image',
             uuid: randomImageGalleryUUID,
             gridColumns: 4,
-            images: [newImage]
+            images: [newImage],
+            borderBottom: false
           }
         }
       } else {
@@ -585,7 +625,8 @@ export default function EditJournals2(props) {
             uuid: randomImageGalleryUUID,
             gridColumns: 4,
             images: [newImage],
-            order: highestOrder
+            order: highestOrder,
+            borderBottom: false
           }
         } else {
           if (!customContent.imageGallery.images) {
@@ -594,6 +635,7 @@ export default function EditJournals2(props) {
             customContent.imageGallery.uuid = randomUUID
             customContent.imageGallery.gridColumns = 4
             customContent.imageGallery.order = highestOrder
+            customContent.imageGallery.borderBottom = false
           }
           customContent.imageGallery.images.push(newImage)
         }
@@ -963,8 +1005,12 @@ export default function EditJournals2(props) {
                         <CustomContent
                           handleSetHighestOrder={handleSetHighestOrder}
                           breakdown={breakdown}
-                          handleChangeGridColumns={(value, uuid) =>
-                            handleChangeGridColumns(value, uuid, breakdownIndex)
+                          handleChangeImageGallery={(value, uuid) =>
+                            handleChangeImageGallery(
+                              value,
+                              uuid,
+                              breakdownIndex
+                            )
                           }
                           breakdownIndex={breakdownIndex}
                           handleChangeParagraph={handleChangeParagraph}
@@ -1030,7 +1076,9 @@ export default function EditJournals2(props) {
           <button
             className="float-end mt-2 px-md-5 save-button add-new-note-button-text"
             style={{ fontSize: '16px', height: 'auto' }}
-            onClick={() => handleSubmit()}
+            onClick={() => {
+              return handleSubmit()
+            }}
             disabled={loading}
           >
             {loading ? 'SAVING..' : 'SAVE'}

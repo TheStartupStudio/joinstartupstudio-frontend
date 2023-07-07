@@ -49,6 +49,8 @@ const {
 const paletteSettings = {
   palette: [
     '#333D3D',
+    '#231F20',
+    '#FF3399',
     '#f0d0c9',
     '#e2a293',
     '#d4735e',
@@ -101,7 +103,11 @@ const fontSizeToolSettings = {
     { text: '11', value: '11px' },
     { text: '12', value: '12px' },
     { text: '14', value: '14px' },
+    { text: '15', value: '15px' },
+    { text: '16', value: '16px' },
     { text: '18', value: '18px' },
+    { text: '19', value: '19px' },
+    { text: '20', value: '20px' },
     { text: '22', value: '22px' },
     { text: '36', value: '36px' }
   ]

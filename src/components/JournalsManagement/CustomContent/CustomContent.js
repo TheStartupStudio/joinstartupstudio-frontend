@@ -40,6 +40,7 @@ const CustomContent = (props) => {
     props.breakdown?.customContent?.images,
     props.breakdown?.customContent?.imageGallery?.images,
     props.breakdown?.customContent?.imageGallery?.position,
+    props.breakdown?.customContent?.imageGallery?.borderBottom,
     props.breakdown?.customContent?.imageGallery,
 
     JSON.stringify(
@@ -63,18 +64,6 @@ const CustomContent = (props) => {
     })
     setSortedComponents(updatedData)
   }
-
-  const [gridColumns, setGridColumns] = useState(4)
-  const [imageGalleryUUID, setImageGalleryIndexUUID] = useState(null)
-
-  const handleChangeGridValues = (value, uuid) => {
-    setGridColumns(value)
-    setImageGalleryIndexUUID(uuid)
-  }
-
-  useEffect(() => {
-    props.handleChangeGridColumns(gridColumns, imageGalleryUUID)
-  }, [gridColumns])
 
   return (
     <>
@@ -203,16 +192,32 @@ const CustomContent = (props) => {
                       value={data.gridColumns}
                       onChange={(e) => {
                         const uuid = data?.uuid
-                        return props.handleChangeImages(
+                        return props.handleChangeImageGallery(
                           'gridColumns',
                           e.target.value,
-                          index,
                           props.breakdownIndex,
                           uuid
                         )
                       }}
                     />
                   </div>
+                  <label className="px-0 ps-sm-1 ps-lg-1 form-switch my-auto d-flex">
+                    <input
+                      type="checkbox"
+                      checked={data.borderBottom}
+                      onChange={(e) => {
+                        const uuid = data?.uuid
+                        return props.handleChangeImageGallery(
+                          'borderBottom',
+                          e.target.checked,
+                          props.breakdownIndex,
+                          uuid
+                        )
+                      }}
+                    />
+                    Has bottom border?
+                    <i className="ms-auto"></i>
+                  </label>
                 </div>
                 {data.images?.map((image, index) => {
                   return (

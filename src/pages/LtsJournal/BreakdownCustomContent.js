@@ -129,7 +129,11 @@ const BreakdownCustomContent = (props) => {
             display: 'grid',
             gridTemplateColumns: props.gridColumns
               ? `repeat(${props.gridColumns}, 1fr)`
-              : '1fr 1fr 1fr 1fr'
+              : '1fr 1fr 1fr 1fr',
+            borderBottom:
+              selectedImage && props.hasBorderBottom
+                ? '1px solid #efefef'
+                : '0px solid #fff'
           }}
         >
           {props.images?.map((image, index) => (
@@ -140,7 +144,7 @@ const BreakdownCustomContent = (props) => {
                 alignItems: 'center',
                 justifyContent: justifyContent(index, props.gridColumns),
                 overflow: 'hidden',
-                height: '150px'
+                maxHeight: '150px'
               }}
             >
               <div
@@ -186,10 +190,10 @@ const BreakdownCustomContent = (props) => {
                 style={{
                   backgroundColor: '#51c7df',
                   color: '#fff',
-                  fontSize: 14
+                  fontSize: 11
                 }}
                 onClick={() => handleOpenPopup()}
-                className="px-4 py-2 border-0 color transform text-uppercase my-1"
+                className="px-5 py-3 border-0 color transform text-uppercase my-1"
               >
                 {selectedImage?.button?.title}
               </button>
@@ -270,6 +274,7 @@ const BreakdownCustomContent = (props) => {
               <ImageGallery
                 images={data?.images}
                 gridColumns={data?.gridColumns}
+                hasBorderBottom={data?.borderBottom}
               />
             )}
             {data?.type === 'popupButton' && (

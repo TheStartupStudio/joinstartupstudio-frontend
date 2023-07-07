@@ -4317,9 +4317,15 @@ ul.sidebar-menu-item .collapse a {
   padding: 30px 55px;
   background-color: #ffffff;
   font-size: 13px;
+  font-weight:500;
   text-align: left;
   /*letter-spacing: 0.52px;*/
   color: #333D3D;
+}
+@media (max-width: 1024px) {
+  .accordion-content {
+    padding: 20px 30px;
+  }
 }
 
 .accordion-content-image {
