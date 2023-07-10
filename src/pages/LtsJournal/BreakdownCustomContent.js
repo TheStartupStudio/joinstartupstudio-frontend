@@ -65,8 +65,6 @@ const BreakdownCustomContent = (props) => {
   const [paragraphs, setParagraphs] = useState([])
 
   useEffect(() => {
-    setCheckboxValues(props.customContent?.checkboxesData)
-    setTextEditorData(props.customContent?.textEditorData)
     setParagraphs(props.customContent?.paragraphs)
   }, [props.customContent])
 
@@ -133,7 +131,8 @@ const BreakdownCustomContent = (props) => {
             borderBottom:
               selectedImage && props.hasBorderBottom
                 ? '1px solid #efefef'
-                : '0px solid #fff'
+                : '0px solid #fff',
+            marginBottom: 20
           }}
         >
           {props.images?.map((image, index) => (
@@ -184,16 +183,16 @@ const BreakdownCustomContent = (props) => {
                 selectedImage?.button?.position
                   ? selectedImage?.button?.position
                   : 'end'
-              }`}
+              } mt-2`}
             >
               <button
                 style={{
                   backgroundColor: '#51c7df',
                   color: '#fff',
-                  fontSize: 11
+                  fontSize: 9
                 }}
                 onClick={() => handleOpenPopup()}
-                className="px-5 py-3 border-0 color transform text-uppercase my-1"
+                className="px-4 py-3 border-0 color transform text-uppercase my-1"
               >
                 {selectedImage?.button?.title}
               </button>

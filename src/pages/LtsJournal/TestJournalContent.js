@@ -14,6 +14,11 @@ import BreakdownTextAccordion from './BreakdownTextAccordion'
 import './BreakdownTextAccordion.css'
 import KendoTextEditor from '../../components/JournalsManagement/TextEditor'
 import { EditorTools } from '@progress/kendo-react-editor'
+import StepOne from '../../assets/images/step-1.PNG'
+import StepTwo from '../../assets/images/step-2.PNG'
+import StepThree from '../../assets/images/step-3.PNG'
+import StepFour from '../../assets/images/step-4.PNG'
+import BreakdownPopup from '../../components/Modals/BreakdownPopup'
 
 function TestJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -24,6 +29,12 @@ function TestJournalContent(props) {
   let [showVideo, setShowVideo] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
+  const [step, setStep] = useState('step-0')
+  const [openPopup, setOpenPopup] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [activeIndex, setActiveIndex] = useState(-1)
+  const [stepData, setStepData] = useState({})
+
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -81,7 +92,7 @@ function TestJournalContent(props) {
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/${+props.match.params.id}`
+        `/ltsJournals/tasks/${+props.match.params.id}`
       )
       return data
     } catch (err) {}
@@ -168,6 +179,11 @@ function TestJournalContent(props) {
     } catch (e) {}
   }
 
+  const [stepOneData, setStepOneData] = useState(null)
+  const [stepTwoData, setStepTwoData] = useState(null)
+  const [stepThreeData, setStepThreeData] = useState(null)
+  const [stepFourData, setStepFourData] = useState(null)
+
   function loadData() {
     setLoading(true)
     Promise.all([
@@ -177,6 +193,7 @@ function TestJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
+
         if (
           journalData.userEntry &&
           journalData.userEntry.length > 0 &&
@@ -206,7 +223,13 @@ function TestJournalContent(props) {
             })
           }
         }
-
+        if (journalData?.steps?.length) {
+          console.log(journalData?.steps)
+          setStepOneData(journalData.steps.find((s) => s.type === 'step-1'))
+          setStepTwoData(journalData.steps.find((s) => s.type === 'step-2'))
+          setStepThreeData(journalData.steps.find((s) => s.type === 'step-3'))
+          setStepFourData(journalData.steps.find((s) => s.type === 'step-4'))
+        }
         setLoading(false)
       })
       .catch(() => {
@@ -243,6 +266,18 @@ function TestJournalContent(props) {
       })
   }
 
+  // console.log(journal)
+  // useEffect(() => {
+  //   console.log(journal)
+  //   console.log(step)
+  //   if (step) {
+  //     const stepData = journal?.steps?.find((s) => s?.type === 'step-1')
+  //     console.log(stepData)
+  //     setStepData(stepData)
+  //   }
+  // }, [step])
+  // console.log(stepData)
+  // const stepDataOne = journal?.steps?.find((s) => s?.type === 'step-1')
   useEffect(() => {
     setIsExpanded(false)
   }, [props.match.params.id])
@@ -354,6 +389,31 @@ function TestJournalContent(props) {
   const closeOthers = () => {
     setOpenAccordion(null)
   }
+
+  const selectedStep = (step) => {
+    setStep(step)
+  }
+
+  const handleOpenPopup = () => {
+    setOpenPopup(true)
+  }
+
+  const handleClosePopup = () => {
+    setOpenPopup(false)
+  }
+
+  const handleRenderStepContent = () => {
+    if (step === 'step-1') {
+      return stepOneData
+    } else if (step === 'step-2') {
+      return stepTwoData
+    } else if (step === 'step-3') {
+      return stepThreeData
+    } else if (step === 'step-4') {
+      return stepFourData
+    }
+  }
+
   return (
     <>
       <>
@@ -469,6 +529,182 @@ function TestJournalContent(props) {
                     </React.Fragment>
                   )
                 })}
+            {!loading && journal?.hasInstructorDebrief && (
+              <div
+                className={`accordion ${
+                  openAccordion === 'steps' ? 'expanded' : ''
+                }`}
+              >
+                <div
+                  className="accordion-header"
+                  onClick={() => handleAccordionClick('steps')}
+                >
+                  <div className={'accordion-header-title'}>
+                    {'Task breakdown'}
+                  </div>
+                  <span
+                    className={`accordion-icon ${
+                      openAccordion === 'steps' ? 'expanded' : ''
+                    }`}
+                  >
+                    {isExpanded ? (
+                      <FontAwesomeIcon
+                        icon={faAngleDown}
+                        className="me-2 me-md-0 arrow"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faAngleDown}
+                        className="me-2 me-md-0 arrow"
+                      />
+                    )}
+                  </span>
+                </div>
+                {openAccordion === 'steps' && (
+                  <>
+                    <div className="accordion-content">
+                      <div
+                        style={{
+                          font: 'normal normal 500 10.2px/17px Montserrat',
+                          letterSpacing: 0.18,
+                          color: '#333D3D',
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(4,1fr)'
+                        }}
+                      >
+                        <img
+                          src={StepOne}
+                          style={{
+                            width: 100,
+                            height: 100,
+                            objectFit: 'contain',
+                            filter:
+                              step !== null && typeof step !== 'undefined'
+                                ? step !== 'step-1'
+                                  ? 'grayscale(100%)'
+                                  : 'grayscale(0%)'
+                                : 'grayscale(0%)'
+                          }}
+                          onClick={() => selectedStep('step-1')}
+                          alt={'step-1'}
+                        />
+                        <img
+                          src={StepTwo}
+                          style={{
+                            width: 100,
+                            height: 100,
+                            objectFit: 'contain',
+                            filter:
+                              step !== null && typeof step !== 'undefined'
+                                ? step !== 'step-2'
+                                  ? 'grayscale(100%)'
+                                  : 'grayscale(0%)'
+                                : 'grayscale(0%)'
+                          }}
+                          onClick={() => selectedStep('step-2')}
+                          alt={'step-2'}
+                        />
+                        <img
+                          src={StepThree}
+                          style={{
+                            width: 100,
+                            height: 100,
+                            objectFit: 'contain',
+                            filter:
+                              step !== null && typeof step !== 'undefined'
+                                ? step !== 'step-3'
+                                  ? 'grayscale(100%)'
+                                  : 'grayscale(0%)'
+                                : 'grayscale(0%)'
+                          }}
+                          onClick={() => selectedStep('step-3')}
+                          alt={'step-3'}
+                        />
+
+                        <img
+                          src={StepFour}
+                          style={{
+                            width: 100,
+                            height: 100,
+                            objectFit: 'contain',
+                            filter:
+                              step !== null && typeof step !== 'undefined'
+                                ? step !== 'step-4'
+                                  ? 'grayscale(100%)'
+                                  : 'grayscale(0%)'
+                                : 'grayscale(0%)'
+                          }}
+                          onClick={() => selectedStep('step-4')}
+                          alt={'step-4'}
+                        />
+                      </div>
+                    </div>
+                    {step === 'step-1' && (
+                      <div
+                        style={{
+                          fontFamily: 'Montserrat',
+                          backgroundColor: '#fff'
+                        }}
+                        dangerouslySetInnerHTML={{
+                          __html: stepOneData && stepOneData?.stepContent
+                        }}
+                      />
+                    )}{' '}
+                    {step === 'step-2' && (
+                      <div
+                        style={{
+                          fontFamily: 'Montserrat',
+                          backgroundColor: '#fff'
+                        }}
+                        dangerouslySetInnerHTML={{
+                          __html: stepTwoData && stepTwoData?.stepContent
+                        }}
+                      />
+                    )}
+                    {step === 'step-3' && (
+                      <div
+                        style={{
+                          fontFamily: 'Montserrat',
+                          backgroundColor: '#fff'
+                        }}
+                        dangerouslySetInnerHTML={{
+                          __html: stepThreeData && stepThreeData?.stepContent
+                        }}
+                      />
+                    )}
+                    {step === 'step-4' && (
+                      <div
+                        style={{
+                          fontFamily: 'Montserrat',
+                          backgroundColor: '#fff'
+                        }}
+                        dangerouslySetInnerHTML={{
+                          __html: stepFourData && stepFourData?.stepContent
+                        }}
+                      />
+                    )}
+                    {step !== 'step-0' && (
+                      <div
+                        className={`d-flex justify-content-start
+                          mt-2`}
+                      >
+                        <button
+                          style={{
+                            backgroundColor: '#51c7df',
+                            color: '#fff',
+                            fontSize: 9
+                          }}
+                          onClick={() => handleOpenPopup()}
+                          className="px-4 py-3 border-0 color transform text-uppercase my-1"
+                        >
+                          WHAT TO EXPECT FROM STUDENTS
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
             {!loading && journal?.hasInstructorDebrief && (
               <div
                 className={`accordion ${
@@ -664,6 +900,11 @@ function TestJournalContent(props) {
                 )}
               </div>
             )}
+            <BreakdownPopup
+              show={openPopup}
+              onHide={handleClosePopup}
+              popupContent={handleRenderStepContent()?.popupContent}
+            />
           </>
         }
         {/*// )*/}

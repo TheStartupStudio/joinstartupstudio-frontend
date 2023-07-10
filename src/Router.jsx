@@ -218,9 +218,7 @@ function Router(props) {
               {/* Students journals */}
               <Route
                 path="/new-hs1-journal/"
-                component={(props) => (
-                  <TestJournal {...props} category="new-hs1" />
-                )}
+                component={(props) => <TestJournal {...props} category="hs1" />}
               />{' '}
               <Route
                 path="/new-hs2-journal/"

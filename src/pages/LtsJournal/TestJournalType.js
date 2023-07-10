@@ -24,16 +24,17 @@ const TestJournalType = (props) => {
   const isTask = match.path.includes('task')
   let [journalActive, setJournalActive] = useState(false)
   const [view, setView] = useState('task')
+
   async function getJournals2(redir = true) {
     try {
-      let { data } = await axiosInstance.get(`/ltsJournals/`, {
+      let { data } = await axiosInstance.get(`/ltsJournals/tasks`, {
         params: {
           category: props.category,
 
           platform: props.category === 'market-ready' ? 'student' : 'instructor'
         }
       })
-      setJournals(data)
+      setJournals([...data].sort((a, b) => a.id - b.id))
       // if (history.location.pathname.includes('task')) {
       //   if (data.length > 0 && redir) {
       //     if (data[0].children && data[0].children.length > 0) {
@@ -138,7 +139,10 @@ const TestJournalType = (props) => {
                   )}
                 </div>{' '}
                 {/* page-card__content */}
-                <div className="page-card__sidebar col-lg-4 col-md-5">
+                <div
+                  className="page-card__sidebar col-lg-4 col-md-5"
+                  style={{ overflow: 'auto' }}
+                >
                   <div className="page-card__sidebar-header">
                     <label className="search-input">
                       <img
