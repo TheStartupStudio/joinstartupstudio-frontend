@@ -510,396 +510,460 @@ function TestJournalContent(props) {
             >
               {journal?.paragraph}
             </div>
-
-            {!loading &&
-              journal?.breakdowns
-                ?.slice()
-                ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
-                ?.map((breakdown, index) => {
-                  return (
-                    <React.Fragment key={index}>
-                      <BreakdownTextAccordion
-                        title={breakdown?.title}
-                        content={breakdown?.content}
-                        breakdown={breakdown}
-                        isOpen={openAccordion === index}
-                        toggleAccordion={() => handleAccordionClick(index)}
-                        closeOthers={closeOthers}
-                      />
-                    </React.Fragment>
-                  )
-                })}
-            {!loading && journal?.hasInstructorDebrief && (
-              <div
-                className={`accordion ${
-                  openAccordion === 'steps' ? 'expanded' : ''
-                }`}
-              >
-                <div
-                  className="accordion-header"
-                  onClick={() => handleAccordionClick('steps')}
-                >
-                  <div className={'accordion-header-title'}>
-                    {'Task breakdown'}
-                  </div>
-                  <span
-                    className={`accordion-icon ${
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ order: 2 }}>
+                {!loading &&
+                  journal?.breakdowns
+                    ?.slice()
+                    ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
+                    ?.map((breakdown, index) => {
+                      return (
+                        <React.Fragment key={index}>
+                          <BreakdownTextAccordion
+                            title={breakdown?.title}
+                            content={breakdown?.content}
+                            breakdown={breakdown}
+                            isOpen={openAccordion === index}
+                            toggleAccordion={() => handleAccordionClick(index)}
+                            closeOthers={closeOthers}
+                          />
+                        </React.Fragment>
+                      )
+                    })}
+              </div>
+              <div style={{ order: 1 }}>
+                {!loading && journal?.hasInstructorDebrief && (
+                  <div
+                    className={`accordion ${
                       openAccordion === 'steps' ? 'expanded' : ''
                     }`}
                   >
-                    {isExpanded ? (
-                      <FontAwesomeIcon
-                        icon={faAngleDown}
-                        className="me-2 me-md-0 arrow"
-                      />
-                    ) : (
-                      <FontAwesomeIcon
-                        icon={faAngleDown}
-                        className="me-2 me-md-0 arrow"
-                      />
-                    )}
-                  </span>
-                </div>
-                {openAccordion === 'steps' && (
-                  <>
-                    <div className="accordion-content">
-                      <div
-                        style={{
-                          font: 'normal normal 500 10.2px/17px Montserrat',
-                          letterSpacing: 0.18,
-                          color: '#333D3D',
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(4,1fr)'
-                        }}
-                      >
-                        <img
-                          src={StepOne}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            objectFit: 'contain',
-                            filter:
-                              step !== null && typeof step !== 'undefined'
-                                ? step !== 'step-1'
-                                  ? 'grayscale(100%)'
-                                  : 'grayscale(0%)'
-                                : 'grayscale(0%)'
-                          }}
-                          onClick={() => selectedStep('step-1')}
-                          alt={'step-1'}
-                        />
-                        <img
-                          src={StepTwo}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            objectFit: 'contain',
-                            filter:
-                              step !== null && typeof step !== 'undefined'
-                                ? step !== 'step-2'
-                                  ? 'grayscale(100%)'
-                                  : 'grayscale(0%)'
-                                : 'grayscale(0%)'
-                          }}
-                          onClick={() => selectedStep('step-2')}
-                          alt={'step-2'}
-                        />
-                        <img
-                          src={StepThree}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            objectFit: 'contain',
-                            filter:
-                              step !== null && typeof step !== 'undefined'
-                                ? step !== 'step-3'
-                                  ? 'grayscale(100%)'
-                                  : 'grayscale(0%)'
-                                : 'grayscale(0%)'
-                          }}
-                          onClick={() => selectedStep('step-3')}
-                          alt={'step-3'}
-                        />
-
-                        <img
-                          src={StepFour}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            objectFit: 'contain',
-                            filter:
-                              step !== null && typeof step !== 'undefined'
-                                ? step !== 'step-4'
-                                  ? 'grayscale(100%)'
-                                  : 'grayscale(0%)'
-                                : 'grayscale(0%)'
-                          }}
-                          onClick={() => selectedStep('step-4')}
-                          alt={'step-4'}
-                        />
+                    <div
+                      className="accordion-header"
+                      onClick={() => handleAccordionClick('steps')}
+                    >
+                      <div className={'accordion-header-title'}>
+                        {'Task breakdown'}
                       </div>
+                      <span
+                        className={`accordion-icon ${
+                          openAccordion === 'steps' ? 'expanded' : ''
+                        }`}
+                      >
+                        {isExpanded ? (
+                          <FontAwesomeIcon
+                            icon={faAngleDown}
+                            className="me-2 me-md-0 arrow"
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faAngleDown}
+                            className="me-2 me-md-0 arrow"
+                          />
+                        )}
+                      </span>
                     </div>
-                    {step === 'step-1' && (
-                      <div
-                        style={{
-                          fontFamily: 'Montserrat',
-                          backgroundColor: '#fff'
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: stepOneData && stepOneData?.stepContent
-                        }}
-                      />
-                    )}{' '}
-                    {step === 'step-2' && (
-                      <div
-                        style={{
-                          fontFamily: 'Montserrat',
-                          backgroundColor: '#fff'
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: stepTwoData && stepTwoData?.stepContent
-                        }}
-                      />
-                    )}
-                    {step === 'step-3' && (
-                      <div
-                        style={{
-                          fontFamily: 'Montserrat',
-                          backgroundColor: '#fff'
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: stepThreeData && stepThreeData?.stepContent
-                        }}
-                      />
-                    )}
-                    {step === 'step-4' && (
-                      <div
-                        style={{
-                          fontFamily: 'Montserrat',
-                          backgroundColor: '#fff'
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: stepFourData && stepFourData?.stepContent
-                        }}
-                      />
-                    )}
-                    {step !== 'step-0' && (
-                      <div
-                        className={`d-flex justify-content-start
+                    {openAccordion === 'steps' && (
+                      <>
+                        <div className="accordion-content">
+                          <div
+                            style={{
+                              font: 'normal normal 500 10.2px/17px Montserrat',
+                              letterSpacing: 0.18,
+                              color: '#333D3D',
+                              // display: 'grid',
+                              gridTemplateColumns: 'repeat(4,1fr)',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              padding: '20px 0',
+                              marginBottom: '20px',
+                              borderBottom:
+                                step !== 'step-0'
+                                  ? '1px solid #dfdfdf'
+                                  : '0px solid #dfdfdf'
+                            }}
+                          >
+                            <img
+                              src={StepOne}
+                              style={{
+                                width: 70,
+                                height: 70,
+                                objectFit: 'contain',
+                                filter:
+                                  step !== null &&
+                                  typeof step !== 'undefined' &&
+                                  step !== 'step-0'
+                                    ? step !== 'step-1'
+                                      ? 'grayscale(100%)'
+                                      : 'grayscale(0%)'
+                                    : 'grayscale(0%)'
+                              }}
+                              onClick={() => selectedStep('step-1')}
+                              alt={'step-1'}
+                            />
+                            <img
+                              src={StepTwo}
+                              style={{
+                                width: 70,
+                                height: 70,
+                                objectFit: 'contain',
+                                filter:
+                                  step !== null &&
+                                  typeof step !== 'undefined' &&
+                                  step !== 'step-0'
+                                    ? step !== 'step-2'
+                                      ? 'grayscale(100%)'
+                                      : 'grayscale(0%)'
+                                    : 'grayscale(0%)'
+                              }}
+                              onClick={() => selectedStep('step-2')}
+                              alt={'step-2'}
+                            />
+                            <img
+                              src={StepThree}
+                              style={{
+                                width: 70,
+                                height: 70,
+                                objectFit: 'contain',
+                                filter:
+                                  step !== null &&
+                                  typeof step !== 'undefined' &&
+                                  step !== 'step-0'
+                                    ? step !== 'step-3'
+                                      ? 'grayscale(100%)'
+                                      : 'grayscale(0%)'
+                                    : 'grayscale(0%)'
+                              }}
+                              onClick={() => selectedStep('step-3')}
+                              alt={'step-3'}
+                            />
+
+                            <img
+                              src={StepFour}
+                              style={{
+                                width: 70,
+                                height: 70,
+                                objectFit: 'contain',
+                                filter:
+                                  step !== null &&
+                                  typeof step !== 'undefined' &&
+                                  step !== 'step-0'
+                                    ? step !== 'step-4'
+                                      ? 'grayscale(100%)'
+                                      : 'grayscale(0%)'
+                                    : 'grayscale(0%)'
+                              }}
+                              onClick={() => selectedStep('step-4')}
+                              alt={'step-4'}
+                            />
+                          </div>
+                          {step === 'step-1' && (
+                            <div
+                              style={{
+                                fontFamily: 'Montserrat',
+                                backgroundColor: '#fff'
+                              }}
+                              dangerouslySetInnerHTML={{
+                                __html: stepOneData && stepOneData?.stepContent
+                              }}
+                            />
+                          )}{' '}
+                          {step === 'step-2' && (
+                            <div
+                              style={{
+                                fontFamily: 'Montserrat',
+                                backgroundColor: '#fff'
+                              }}
+                              dangerouslySetInnerHTML={{
+                                __html: stepTwoData && stepTwoData?.stepContent
+                              }}
+                            />
+                          )}
+                          {step === 'step-3' && (
+                            <div
+                              style={{
+                                fontFamily: 'Montserrat',
+                                backgroundColor: '#fff'
+                              }}
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  stepThreeData && stepThreeData?.stepContent
+                              }}
+                            />
+                          )}
+                          {step === 'step-4' && (
+                            <div
+                              style={{
+                                fontFamily: 'Montserrat',
+                                backgroundColor: '#fff'
+                              }}
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  stepFourData && stepFourData?.stepContent
+                              }}
+                            />
+                          )}
+                          {step !== 'step-0' && (
+                            <div
+                              className={`d-flex justify-content-start
                           mt-2`}
-                      >
-                        <button
-                          style={{
-                            backgroundColor: '#51c7df',
-                            color: '#fff',
-                            fontSize: 9
-                          }}
-                          onClick={() => handleOpenPopup()}
-                          className="px-4 py-3 border-0 color transform text-uppercase my-1"
-                        >
-                          WHAT TO EXPECT FROM STUDENTS
-                        </button>
-                      </div>
+                            >
+                              <button
+                                style={{
+                                  backgroundColor: '#51c7df',
+                                  color: '#fff',
+                                  fontSize: 9
+                                }}
+                                onClick={() => handleOpenPopup()}
+                                className="px-4 py-3 border-0 color transform text-uppercase my-1"
+                              >
+                                WHAT TO EXPECT FROM STUDENTS
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </>
                     )}
-                  </>
+                  </div>
                 )}
               </div>
-            )}
-            {!loading && journal?.hasInstructorDebrief && (
-              <div
-                className={`accordion ${
-                  openAccordion === 'instructor' ? 'expanded' : ''
-                }`}
-              >
-                <div
-                  className="accordion-header"
-                  onClick={() => handleAccordionClick('instructor')}
-                >
-                  <div className={'accordion-header-title'}>
-                    {'Instructor debrief'}
-                  </div>
-                  <span
-                    className={`accordion-icon ${
+              <div style={{ order: 3 }}>
+                {!loading && journal?.hasInstructorDebrief && (
+                  <div
+                    className={`accordion ${
                       openAccordion === 'instructor' ? 'expanded' : ''
                     }`}
                   >
-                    {isExpanded ? (
-                      <FontAwesomeIcon
-                        icon={faAngleDown}
-                        className="me-2 me-md-0 arrow"
-                      />
-                    ) : (
-                      <FontAwesomeIcon
-                        icon={faAngleDown}
-                        className="me-2 me-md-0 arrow"
-                      />
-                    )}
-                  </span>
-                </div>
-                {openAccordion === 'instructor' && (
-                  <div className="accordion-content">
                     <div
-                      style={{
-                        font: 'normal normal 500 10.2px/17px Montserrat',
-                        letterSpacing: 0.18,
-                        color: '#333D3D'
-                      }}
+                      className="accordion-header"
+                      onClick={() => handleAccordionClick('instructor')}
                     >
-                      Welcome to the instructor debrief section of this task.
-                      This tool is designed to help you use the LTS program and
-                      platform to their maximum potential, and to provide LTS
-                      with feedback so we can continue to meet your needs.
-                    </div>
-
-                    <>
-                      <div
-                        style={{
-                          font: 'normal normal 600 10.2px/17px Montserrat',
-                          letterSpacing: 0.18,
-                          color: '#000000',
-                          paddingTop: '20px',
-                          paddingBottom: '10px'
-                        }}
+                      <div className={'accordion-header-title'}>
+                        {'Instructor debrief'}
+                      </div>
+                      <span
+                        className={`accordion-icon ${
+                          openAccordion === 'instructor' ? 'expanded' : ''
+                        }`}
                       >
-                        In completing this task did you:
-                      </div>
-                      <div class="form-check  ">
-                        <input
-                          className="form-check-input "
-                          type="checkbox"
-                          checked={instructorDebrief.checkbox1}
-                          id="flexCheckDefault"
-                          onChange={(e) =>
-                            handleChangeInstructorDebrief2(
-                              'checkbox1',
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
-                          style={{
-                            font: 'normal normal 500 10.6px/18px Montserrat',
-                            letterSpacing: 0.24,
-                            color: '#231F20',
-                            marginTop: '0.125rem'
-                          }}
-                        >
-                          Give each student an opportunity to use their voice.
-                        </label>
-                      </div>
-                      <div class="form-check  ">
-                        <input
-                          className="form-check-input "
-                          type="checkbox"
-                          checked={instructorDebrief.checkbox2}
-                          id="flexCheckDefault"
-                          onChange={(e) =>
-                            handleChangeInstructorDebrief2(
-                              'checkbox2',
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
-                          style={{
-                            font: 'normal normal 500 10.6px/18px Montserrat',
-                            letterSpacing: 0.24,
-                            color: '#231F20',
-                            marginTop: '0.125rem'
-                          }}
-                        >
-                          Conduct at least one news briefing to start class.
-                        </label>
-                      </div>
-                      <div class="form-check  ">
-                        <input
-                          className="form-check-input "
-                          type="checkbox"
-                          checked={instructorDebrief.checkbox3}
-                          id="flexCheckDefault"
-                          onChange={(e) =>
-                            handleChangeInstructorDebrief2(
-                              'checkbox3',
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
-                          style={{
-                            font: 'normal normal 500 10.6px/18px Montserrat',
-                            letterSpacing: 0.24,
-                            color: '#231F20',
-                            marginTop: '0.125rem'
-                          }}
-                        >
-                          Give students adequate time to complete work inside of
-                          their Journal or Portfolio.
-                        </label>
-                      </div>
-                    </>
-                    <>
-                      <>
+                        {isExpanded ? (
+                          <FontAwesomeIcon
+                            icon={faAngleDown}
+                            className="me-2 me-md-0 arrow"
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faAngleDown}
+                            className="me-2 me-md-0 arrow"
+                          />
+                        )}
+                      </span>
+                    </div>
+                    {openAccordion === 'instructor' && (
+                      <div className="accordion-content">
                         <div
                           style={{
-                            font: 'normal normal 600 10.2px/17px Montserrat',
+                            font: 'normal normal 500 11px/17px Montserrat',
                             letterSpacing: 0.18,
-                            color: '#000000',
-                            paddingTop: '15px',
-                            paddingBottom: '6px'
+                            color: '#333D3D'
                           }}
                         >
-                          Please submit any questions or feedback regarding this
-                          task in the curriculum to the LTS team.
+                          Welcome to the instructor debrief section of this
+                          task. This tool is designed to help you use the LTS
+                          program and platform to their maximum potential, and
+                          to provide LTS with feedback so we can continue to
+                          meet your needs.
                         </div>
-                        <KendoTextEditor
-                          minHeight={150}
-                          value={instructorDebrief?.textEditorContent}
-                          handleChange={(e) => {
-                            handleChangeInstructorDebrief2(
-                              'textEditorContent',
-                              e
-                            )
-                          }}
-                          tools={[
-                            [Bold, Italic],
-                            [AlignLeft, AlignCenter, AlignRight, AlignJustify],
-                            [Indent, Outdent],
-                            [OrderedList, UnorderedList],
-                            FontSize,
-                            FontName,
-                            FormatBlock,
-                            [Undo, Redo],
-                            [Link, Unlink, InsertImage, ViewHtml]
-                          ]}
-                        />
-                      </>
-                    </>
-                    <div className={'d-flex justify-content-end mt-3'}>
-                      <button
-                        style={{
-                          backgroundColor: '#51c7df',
-                          color: '#fff',
-                          fontSize: 12,
-                          fontWeight: 600
-                        }}
-                        className="px-4 py-2 border-0 color transform my-1"
-                        onClick={() =>
-                          onSubmitInstructorDebrief(newInstructorBriefData)
-                        }
-                      >
-                        Submit
-                      </button>
-                    </div>
+
+                        <>
+                          <div
+                            style={{
+                              font: 'normal normal 600 11px/17px Montserrat',
+                              letterSpacing: 0.18,
+                              color: '#000000',
+                              paddingTop: '20px',
+                              paddingBottom: '10px'
+                            }}
+                          >
+                            In completing this task did you:
+                          </div>
+                          <div class="d-flex mb-1 ">
+                            <div
+                              style={{
+                                width: '25px',
+                                flexShrink: 0,
+                                marginRight: 5
+                              }}
+                            >
+                              <input
+                                style={{ width: '15px', height: '15px' }}
+                                className="form-check-input "
+                                type="checkbox"
+                                checked={instructorDebrief.checkbox1}
+                                id="flexCheckDefault"
+                                onChange={(e) =>
+                                  handleChangeInstructorDebrief2(
+                                    'checkbox1',
+                                    e.target.checked
+                                  )
+                                }
+                              />
+                            </div>
+                            <div
+                              className="form-check-label"
+                              htmlFor="flexCheckDefault"
+                              style={{
+                                font: 'normal normal 500 12px/18px Montserrat !important',
+                                letterSpacing: 0.24,
+                                color: '#231F20',
+                                marginTop: '0.250rem',
+                                fontSize: 12
+                              }}
+                            >
+                              Give each student an opportunity to use their
+                              voice.
+                            </div>
+                          </div>
+                          <div class="d-flex mb-1">
+                            <div
+                              style={{
+                                width: '25px',
+                                flexShrink: 0,
+                                marginRight: 5
+                              }}
+                            >
+                              <input
+                                style={{ width: '15px', height: '15px' }}
+                                className="form-check-input "
+                                type="checkbox"
+                                checked={instructorDebrief.checkbox2}
+                                id="flexCheckDefault"
+                                onChange={(e) =>
+                                  handleChangeInstructorDebrief2(
+                                    'checkbox2',
+                                    e.target.checked
+                                  )
+                                }
+                              />
+                            </div>
+                            <div
+                              className="form-check-label"
+                              htmlFor="flexCheckDefault"
+                              style={{
+                                font: 'normal normal 500 12px/18px Montserrat !important',
+                                letterSpacing: 0.24,
+                                color: '#231F20',
+                                marginTop: '0.250rem',
+                                fontSize: 12
+                              }}
+                            >
+                              Conduct at least one news briefing to start class.
+                            </div>
+                          </div>
+                          <div class="d-flex mb-1 ">
+                            <div
+                              style={{
+                                width: '25px',
+                                flexShrink: 0,
+                                marginRight: 5
+                              }}
+                            >
+                              <input
+                                style={{ width: '15px', height: '15px' }}
+                                className="form-check-input "
+                                type="checkbox"
+                                checked={instructorDebrief.checkbox3}
+                                id="flexCheckDefault"
+                                onChange={(e) =>
+                                  handleChangeInstructorDebrief2(
+                                    'checkbox3',
+                                    e.target.checked
+                                  )
+                                }
+                              />
+                            </div>
+
+                            <div
+                              className="form-check-label"
+                              htmlFor="flexCheckDefault"
+                              style={{
+                                font: 'normal normal 500 12px/18px Montserrat !important',
+                                letterSpacing: 0.24,
+                                color: '#231F20',
+                                marginTop: '0.250rem',
+                                fontSize: 12
+                              }}
+                            >
+                              Give students adequate time to complete work
+                              inside of their Journal or Portfolio.
+                            </div>
+                          </div>
+                        </>
+                        <>
+                          <>
+                            <div
+                              style={{
+                                font: 'normal normal 600 11px/17px Montserrat !important',
+                                letterSpacing: 0.18,
+                                color: '#000000',
+                                paddingTop: '15px',
+                                paddingBottom: '6px'
+                              }}
+                            >
+                              Please submit any questions or feedback regarding
+                              this task in the curriculum to the LTS team.
+                            </div>
+                            <KendoTextEditor
+                              minHeight={150}
+                              value={instructorDebrief?.textEditorContent}
+                              handleChange={(e) => {
+                                handleChangeInstructorDebrief2(
+                                  'textEditorContent',
+                                  e
+                                )
+                              }}
+                              tools={[
+                                [Bold, Italic],
+                                [
+                                  AlignLeft,
+                                  AlignCenter,
+                                  AlignRight,
+                                  AlignJustify
+                                ],
+                                [Indent, Outdent],
+                                [OrderedList, UnorderedList],
+                                FontSize,
+                                FontName,
+                                FormatBlock,
+                                [Undo, Redo],
+                                [Link, Unlink, InsertImage, ViewHtml]
+                              ]}
+                            />
+                          </>
+                        </>
+                        <div className={'d-flex justify-content-end mt-3'}>
+                          <button
+                            style={{
+                              backgroundColor: '#51c7df',
+                              color: '#fff',
+                              fontSize: 12,
+                              fontWeight: 600
+                            }}
+                            className="px-4 py-2 border-0 color transform my-1"
+                            onClick={() =>
+                              onSubmitInstructorDebrief(newInstructorBriefData)
+                            }
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
+            </div>
+
             <BreakdownPopup
               show={openPopup}
               onHide={handleClosePopup}

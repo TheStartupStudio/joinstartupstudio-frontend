@@ -143,6 +143,16 @@ const KendoTextEditor = (props) => {
     FontFamilyCustom,
     CustomFontSize,
     FormatBlock,
+    InsertTable,
+    AddRowBefore,
+    AddRowAfter,
+    AddColumnBefore,
+    AddColumnAfter,
+    DeleteRow,
+    DeleteColumn,
+    DeleteTable,
+    MergeCells,
+    SplitCell,
     [Undo, Redo],
     [Link, Unlink, InsertImage, ViewHtml]
   ]
