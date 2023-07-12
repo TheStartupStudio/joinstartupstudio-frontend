@@ -4,11 +4,13 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import './style.css'
 import { faGlobe, faFile } from '@fortawesome/free-solid-svg-icons'
 import { format, parse } from 'date-fns'
+import { formatDate } from '../../../utils/helpers'
 
 export const AccomplishmentDetails = (props) => {
   const [accomp, setAccomp] = useState()
 
   useEffect(() => {
+    console.log(props.accomp.date_issued)
     setAccomp(props.accomp)
   }, [props.accomp])
 
