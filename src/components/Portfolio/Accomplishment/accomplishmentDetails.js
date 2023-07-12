@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import './style.css'
 import { faGlobe, faFile } from '@fortawesome/free-solid-svg-icons'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 
 export const AccomplishmentDetails = (props) => {
   const [accomp, setAccomp] = useState()
@@ -26,7 +26,8 @@ export const AccomplishmentDetails = (props) => {
                 {accomp.title} : {accomp.company}
               </h4>
               <h4 style={{ fontWeight: '500' }}>
-                {format(new Date(accomp.date_issued), 'MMMM yyyy')}
+                { 
+                format((parse(props.accomp.date_issued, 'yyyy-MM-dd', new Date())), 'MMMM yyyy')}
               </h4>
               <p className='my-2'>{accomp.description}</p>
             </div>

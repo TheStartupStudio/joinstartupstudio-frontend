@@ -7,7 +7,7 @@ import {
   faPencilAlt,
   faUserGraduate
 } from '@fortawesome/free-solid-svg-icons'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 
 export const EducationDetails = (props) => {
   const [education, setEducation] = useState()
@@ -43,11 +43,11 @@ export const EducationDetails = (props) => {
               </h4>
               <p>
                 {}
-                {format(new Date(education.start_date), 'yyyy')}
+                {format((parse(education.start_date, 'yyyy-MM-dd', new Date())), 'yyyy')}
                 <span style={{ fontSize: '16px' }}> - </span>
 
                 {education.end_date
-                  ? format(new Date(education.end_date), 'yyyy')
+                  ? format((parse(education.end_date, 'yyyy-MM-dd', new Date())), 'yyyy')
                   : 'Present'}
               </p>
               {education.description && (

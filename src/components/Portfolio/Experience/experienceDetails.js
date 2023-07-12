@@ -7,7 +7,7 @@ import {
   faPencilAlt,
   faBriefcase
 } from '@fortawesome/free-solid-svg-icons'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 
 export const ExperienceDetails = (props) => {
   const [experience, setExperience] = useState()
@@ -41,10 +41,10 @@ export const ExperienceDetails = (props) => {
               <h5>{experience.company}</h5>
               <p>{experience.location}</p>
               <p>
-                {format(new Date(experience.start_date), 'MMMM yyyy')}
+                {format((parse(experience.start_date, 'yyyy-MM-dd', new Date())), 'MMMM yyyy')}
                 <span style={{ fontSize: '16px' }}> - </span>
                 {experience.end_date
-                  ? format(new Date(experience.end_date), 'MMMM yyyy')
+                  ? format((parse(experience.end_date, 'yyyy-MM-dd', new Date())), 'MMMM yyyy')
                   : 'Present'}
               </p>
               <div className='experience-description'>
