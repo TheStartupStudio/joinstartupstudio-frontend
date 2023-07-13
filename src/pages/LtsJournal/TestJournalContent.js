@@ -18,7 +18,10 @@ import StepOne from '../../assets/images/step-1.PNG'
 import StepTwo from '../../assets/images/step-2.PNG'
 import StepThree from '../../assets/images/step-3.PNG'
 import StepFour from '../../assets/images/step-4.PNG'
+import LtsDiagram from '../../assets/images/LearntoStart-Diagram-3D.png'
+import LtsCertification from '../../assets/images/Certified-L1-800px.png'
 import BreakdownPopup from '../../components/Modals/BreakdownPopup'
+import './TestJournalContent.css'
 
 function TestJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -29,11 +32,13 @@ function TestJournalContent(props) {
   let [showVideo, setShowVideo] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
-  const [step, setStep] = useState('step-0')
+  const [selectedStep, setSelectedStep] = useState(null)
   const [openPopup, setOpenPopup] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
   const [activeIndex, setActiveIndex] = useState(-1)
   const [stepData, setStepData] = useState({})
+  const [selectedTask, setSelectedTask] = useState(null)
+  const [selectedStepIndex, setSelectedStepIndex] = useState(null)
 
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
@@ -224,12 +229,20 @@ function TestJournalContent(props) {
           }
         }
         if (journalData?.steps?.length) {
-          console.log(journalData?.steps)
-          setStepOneData(journalData.steps.find((s) => s.type === 'step-1'))
-          setStepTwoData(journalData.steps.find((s) => s.type === 'step-2'))
-          setStepThreeData(journalData.steps.find((s) => s.type === 'step-3'))
-          setStepFourData(journalData.steps.find((s) => s.type === 'step-4'))
+          setStepOneData(
+            journalData.steps.find((s) => s.type === 'selectStep-1')
+          )
+          setStepTwoData(
+            journalData.steps.find((s) => s.type === 'selectStep-2')
+          )
+          setStepThreeData(
+            journalData.steps.find((s) => s.type === 'selectStep-3')
+          )
+          setStepFourData(
+            journalData.steps.find((s) => s.type === 'selectStep-4')
+          )
         }
+
         setLoading(false)
       })
       .catch(() => {
@@ -239,8 +252,12 @@ function TestJournalContent(props) {
 
   function loadWeekData() {
     setLoading(true)
-    Promise.all([getJournalWeek(), getUserJournalWeekEntries()])
-      .then(([journalData, userJournalEntries]) => {
+    Promise.all([
+      getJournalWeek(),
+      getUserJournalWeekEntries(),
+      getInstructorDebriefData()
+    ])
+      .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
         if (
           journalData.userEntry &&
@@ -254,7 +271,19 @@ function TestJournalContent(props) {
           } catch (err) {}
         }
         setUserJournalEntries(userJournalEntries)
-
+        if (journalData?.hasInstructorDebrief) {
+          const isInstructorDebrief =
+            Object.keys(instructorDebriefData)?.length > 1
+          if (isInstructorDebrief) {
+            setInstructorDebrief({
+              ...instructorDebrief,
+              checkbox1: instructorDebriefData.checkbox1,
+              checkbox2: instructorDebriefData.checkbox2,
+              checkbox3: instructorDebriefData.checkbox3,
+              textEditorContent: instructorDebriefData.textEditorContent
+            })
+          }
+        }
         if (props.contentContainer && props.contentContainer.current) {
           props.contentContainer.current.scrollTop = 0
         }
@@ -266,18 +295,6 @@ function TestJournalContent(props) {
       })
   }
 
-  // console.log(journal)
-  // useEffect(() => {
-  //   console.log(journal)
-  //   console.log(step)
-  //   if (step) {
-  //     const stepData = journal?.steps?.find((s) => s?.type === 'step-1')
-  //     console.log(stepData)
-  //     setStepData(stepData)
-  //   }
-  // }, [step])
-  // console.log(stepData)
-  // const stepDataOne = journal?.steps?.find((s) => s?.type === 'step-1')
   useEffect(() => {
     setIsExpanded(false)
   }, [props.match.params.id])
@@ -390,8 +407,9 @@ function TestJournalContent(props) {
     setOpenAccordion(null)
   }
 
-  const selectedStep = (step) => {
-    setStep(step)
+  const selectStep = (step, index) => {
+    setSelectedStep(step)
+    setSelectedStepIndex(index)
   }
 
   const handleOpenPopup = () => {
@@ -403,15 +421,265 @@ function TestJournalContent(props) {
   }
 
   const handleRenderStepContent = () => {
-    if (step === 'step-1') {
+    if (selectStep === 'selectStep-1') {
       return stepOneData
-    } else if (step === 'step-2') {
+    } else if (selectStep === 'selectStep-2') {
       return stepTwoData
-    } else if (step === 'step-3') {
+    } else if (selectStep === 'selectStep-3') {
       return stepThreeData
-    } else if (step === 'step-4') {
+    } else if (selectStep === 'selectStep-4') {
       return stepFourData
     }
+  }
+
+  const StepsComponent = (props) => {
+    return (
+      <div
+        className={`accordion ${
+          props.openAccordion === 'steps' ? 'expanded' : ''
+        }`}
+      >
+        <div
+          className="accordion-header"
+          onClick={() => props.handleAccordionClick('steps')}
+        >
+          <div className={'accordion-header-title'}>{'Task breakdown'}</div>
+          <span
+            className={`accordion-icon ${
+              props.openAccordion === 'steps' ? 'expanded' : ''
+            }`}
+          >
+            {props.isExpanded ? (
+              <FontAwesomeIcon
+                icon={faAngleDown}
+                className="me-2 me-md-0 arrow"
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faAngleDown}
+                className="me-2 me-md-0 arrow"
+              />
+            )}
+          </span>
+        </div>
+        {props.openAccordion === 'steps' && (
+          <>
+            <div className="accordion-content">
+              <div
+                style={{
+                  font: 'normal normal 500 10.2px/17px Montserrat',
+                  letterSpacing: 0.18,
+                  color: '#333D3D',
+                  // display: 'grid',
+                  gridTemplateColumns: 'repeat(4,1fr)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  padding: '20px 0',
+                  marginBottom: '20px',
+                  borderBottom:
+                    props.step !== 'selectStep-0'
+                      ? '1px solid #dfdfdf'
+                      : '0px solid #dfdfdf'
+                }}
+              >
+                <img
+                  src={props.index + 1 && StepOne}
+                  style={{
+                    width: 70,
+                    height: 70,
+                    objectFit: 'contain',
+                    filter:
+                      props.step !== null &&
+                      typeof props.step !== 'undefined' &&
+                      props.step !== 'selectStep-0'
+                        ? props.step !== 'selectStep-1'
+                          ? 'grayscale(100%)'
+                          : 'grayscale(0%)'
+                        : 'grayscale(0%)'
+                  }}
+                  onClick={() => props.selectedStep('selectStep-1')}
+                  alt={'selectStep-1'}
+                />
+                <img
+                  src={StepTwo}
+                  style={{
+                    width: 70,
+                    height: 70,
+                    objectFit: 'contain',
+                    filter:
+                      props.step !== null &&
+                      typeof props.step !== 'undefined' &&
+                      props.step !== 'selectStep-0'
+                        ? props.step !== 'selectStep-2'
+                          ? 'grayscale(100%)'
+                          : 'grayscale(0%)'
+                        : 'grayscale(0%)'
+                  }}
+                  onClick={() => props.selectedStep('selectStep-2')}
+                  alt={'selectStep-2'}
+                />
+                <img
+                  src={StepThree}
+                  style={{
+                    width: 70,
+                    height: 70,
+                    objectFit: 'contain',
+                    filter:
+                      props.step !== null &&
+                      typeof selectStep !== 'undefined' &&
+                      props.step !== 'selectStep-0'
+                        ? props.step !== 'selectStep-3'
+                          ? 'grayscale(100%)'
+                          : 'grayscale(0%)'
+                        : 'grayscale(0%)'
+                  }}
+                  onClick={() => props.selectedStep('selectStep-3')}
+                  alt={'selectStep-3'}
+                />
+
+                <img
+                  src={StepFour}
+                  style={{
+                    width: 70,
+                    height: 70,
+                    objectFit: 'contain',
+                    filter:
+                      props.step !== null &&
+                      typeof props.step !== 'undefined' &&
+                      props.step !== 'selectStep-0'
+                        ? props.step !== 'selectStep-4'
+                          ? 'grayscale(100%)'
+                          : 'grayscale(0%)'
+                        : 'grayscale(0%)'
+                  }}
+                  onClick={() => props.selectedStep('selectStep-4')}
+                  alt={'selectStep-4'}
+                />
+              </div>
+              {props.step === 'selectStep-1' && (
+                <div
+                  style={{
+                    fontFamily: 'Montserrat',
+                    backgroundColor: '#fff'
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: props.stepOneData && props.stepOneData?.stepContent
+                  }}
+                />
+              )}{' '}
+              {props.step === 'selectStep-2' && (
+                <div
+                  style={{
+                    fontFamily: 'Montserrat',
+                    backgroundColor: '#fff'
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: props.stepTwoData && props.stepTwoData?.stepContent
+                  }}
+                />
+              )}
+              {props.step === 'selectStep-3' && (
+                <div
+                  style={{
+                    fontFamily: 'Montserrat',
+                    backgroundColor: '#fff'
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      props.stepThreeData && props.stepThreeData?.stepContent
+                  }}
+                />
+              )}
+              {props.step === 'selectStep-4' && (
+                <div
+                  style={{
+                    fontFamily: 'Montserrat',
+                    backgroundColor: '#fff'
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      props.stepFourData && props.stepFourData?.stepContent
+                  }}
+                />
+              )}
+              {props.step !== 'selectStep-0' && (
+                <div
+                  className={`d-flex justify-content-start
+                          mt-2`}
+                >
+                  <button
+                    style={{
+                      backgroundColor: '#51c7df',
+                      color: '#fff',
+                      fontSize: 9
+                    }}
+                    onClick={() => props.handleOpenPopup()}
+                    className="px-4 py-3 border-0 color transform text-uppercase my-1"
+                  >
+                    WHAT TO EXPECT FROM STUDENTS
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    )
+  }
+
+  const Step = (props) => {
+    let imageSource = ''
+
+    switch (props.index) {
+      case 0:
+        imageSource = StepOne
+        break
+      case 1:
+        imageSource = StepTwo
+        break
+      case 2:
+        imageSource = StepThree
+        break
+      case 3:
+        imageSource = StepFour
+        break
+      default:
+        imageSource = ''
+        break
+    }
+
+    const filterImage = () => {
+      if (props.selectedStepIndex === null) {
+        return 'grayscale(0%)'
+      } else {
+        if (props.selectedStepIndex === props.index) {
+          return 'grayscale(0%)'
+        } else {
+          return 'grayscale(100%)'
+        }
+      }
+    }
+
+    return (
+      <>
+        <img
+          src={imageSource}
+          style={{
+            width: 70,
+            height: 70,
+            objectFit: 'contain',
+            filter: filterImage(),
+            cursor: 'pointer'
+          }}
+          onClick={() => props.selectedStep(props.step)}
+          alt={`${imageSource}`}
+        />
+      </>
+    )
+  }
+
+  const handleSelectTask = (task, index) => {
+    setSelectedTask({ task, index })
   }
 
   return (
@@ -511,7 +779,7 @@ function TestJournalContent(props) {
               {journal?.paragraph}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ order: 2 }}>
+              <div style={{ order: 0 }}>
                 {!loading &&
                   journal?.breakdowns
                     ?.slice()
@@ -532,7 +800,7 @@ function TestJournalContent(props) {
                     })}
               </div>
               <div style={{ order: 1 }}>
-                {!loading && journal?.hasInstructorDebrief && (
+                {journal?.steps && !journal?.tasks && props.view === 'task' && (
                   <div
                     className={`accordion ${
                       openAccordion === 'steps' ? 'expanded' : ''
@@ -564,163 +832,456 @@ function TestJournalContent(props) {
                       </span>
                     </div>
                     {openAccordion === 'steps' && (
+                      <div className="accordion-content">
+                        <div
+                          style={{
+                            font: 'normal normal 500 10.2px/17px Montserrat',
+                            letterSpacing: 0.18,
+                            color: '#333D3D',
+                            // display: 'grid',
+                            gridTemplateColumns: 'repeat(4,1fr)',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            padding: '20px 0',
+                            marginBottom: '20px'
+                          }}
+                        >
+                          {!loading && journal?.hasInstructorDebrief && (
+                            <>
+                              {journal?.steps?.map((step, index) => (
+                                <Step
+                                  index={index}
+                                  step={step}
+                                  selectedStep={(step) => selectStep(step)}
+                                />
+                              ))}
+                            </>
+                          )}
+                        </div>
+                        {selectedStep != null && (
+                          <div
+                            style={{
+                              fontFamily: 'Montserrat',
+                              backgroundColor: '#fff'
+                            }}
+                            dangerouslySetInnerHTML={{
+                              __html: selectedStep?.stepContent
+                            }}
+                          />
+                        )}
+                        {selectedStep != null && (
+                          <div
+                            className={`d-flex justify-content-start
+                          mt-2`}
+                          >
+                            <button
+                              style={{
+                                backgroundColor: '#51c7df',
+                                color: '#fff',
+                                fontSize: 9
+                              }}
+                              onClick={() => handleOpenPopup()}
+                              className="px-4 py-3 border-0 color transform text-uppercase my-1"
+                            >
+                              WHAT TO EXPECT FROM STUDENTS
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+                {journal?.tasks &&
+                  props.view === 'week' &&
+                  journal?.hasInstructorDebrief && (
+                    <>
+                      <div
+                        className={`accordion ${
+                          openAccordion === 'steps' ? 'expanded' : ''
+                        }`}
+                      >
+                        <div
+                          className="accordion-header"
+                          onClick={() => handleAccordionClick('steps')}
+                        >
+                          <div className={'accordion-header-title'}>
+                            {'Task breakdown'}
+                          </div>
+                          <span
+                            className={`accordion-icon ${
+                              openAccordion === 'steps' ? 'expanded' : ''
+                            }`}
+                          >
+                            {isExpanded ? (
+                              <FontAwesomeIcon
+                                icon={faAngleDown}
+                                className="me-2 me-md-0 arrow"
+                              />
+                            ) : (
+                              <FontAwesomeIcon
+                                icon={faAngleDown}
+                                className="me-2 me-md-0 arrow"
+                              />
+                            )}
+                          </span>
+                        </div>
+                        {openAccordion === 'steps' && (
+                          <div>
+                            {journal?.tasks?.length === 1 &&
+                              journal?.tasks &&
+                              props.view === 'week' &&
+                              journal?.tasks?.map((task) => {
+                                return (
+                                  <div
+                                    key={task.id}
+                                    className={'accordion-content'}
+                                  >
+                                    <div
+                                      style={{
+                                        font: 'normal normal 500 10.2px/17px Montserrat',
+                                        letterSpacing: 0.18,
+                                        color: '#333D3D',
+                                        gridTemplateColumns: 'repeat(4,1fr)',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        padding: '20px 0',
+                                        marginBottom: '20px'
+                                      }}
+                                    >
+                                      {!loading && (
+                                        <>
+                                          {task?.steps?.map((step, index) => {
+                                            return (
+                                              <Step
+                                                key={index}
+                                                index={index}
+                                                selectedStepIndex={
+                                                  selectedStepIndex
+                                                }
+                                                step={step}
+                                                selectedStep={(step) =>
+                                                  selectStep(step, index)
+                                                }
+                                              />
+                                            )
+                                          })}
+                                        </>
+                                      )}
+                                    </div>
+                                    {selectedStep != null && (
+                                      <div
+                                        style={{
+                                          fontFamily: 'Montserrat',
+                                          backgroundColor: '#fff'
+                                        }}
+                                        dangerouslySetInnerHTML={{
+                                          __html: selectedStep?.stepContent
+                                        }}
+                                      />
+                                    )}
+                                    {selectedStep != null && (
+                                      <div
+                                        className={`d-flex justify-content-start
+                                                         mt-2`}
+                                      >
+                                        <button
+                                          style={{
+                                            backgroundColor: '#51c7df',
+                                            color: '#fff',
+                                            fontSize: 9
+                                          }}
+                                          onClick={() => handleOpenPopup()}
+                                          className="px-4 py-3 border-0 color transform text-uppercase my-1"
+                                        >
+                                          WHAT TO EXPECT FROM STUDENTS
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+                                )
+                              })}
+                            {journal?.tasks?.length > 1 && (
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  gap: 30,
+                                  padding: '35px 10px',
+                                  backgroundColor: selectedTask
+                                    ? '#f8f7f7'
+                                    : '#fff'
+                                }}
+                              >
+                                {journal?.tasks?.length > 1 &&
+                                  journal?.tasks &&
+                                  journal?.tasks?.map((task, index) => {
+                                    return (
+                                      <div key={index}>
+                                        <div
+                                          className={'days-of-task-box'}
+                                          style={{
+                                            width: 150,
+                                            height: 80,
+                                            border: '1px solid #d8d9d9',
+                                            padding: 15,
+                                            textAlign: 'center',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            flexDirection: 'column',
+                                            gap: 6
+                                          }}
+                                          onClick={() =>
+                                            handleSelectTask(task, index)
+                                          }
+                                        >
+                                          <div>{task?.days}</div>
+                                          <div>Task</div>
+                                        </div>
+                                        <div
+                                          style={{
+                                            textAlign: 'center',
+                                            fontSize: '16px',
+                                            marginTop: 10,
+                                            fontWeight: 600
+                                          }}
+                                        >
+                                          <div>
+                                            {task?.title
+                                              ?.split(' ')[1]
+                                              ?.toUpperCase()}
+                                          </div>{' '}
+                                          <div>
+                                            {task?.title
+                                              ?.split(' ')[2]
+                                              ?.toUpperCase()}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )
+                                  })}
+                              </div>
+                            )}
+
+                            {journal?.tasks?.length > 1 &&
+                              journal?.tasks &&
+                              props.view === 'week' &&
+                              journal?.tasks?.map((task) => {
+                                if (task?.id === selectedTask?.task?.id) {
+                                  return (
+                                    <div
+                                      key={task.id}
+                                      className={'accordion-content'}
+                                    >
+                                      <div
+                                        style={{
+                                          textAlign: 'center',
+                                          fontSize: 11,
+                                          textTransform: 'uppercase',
+                                          fontWeight: 600
+                                        }}
+                                      >
+                                        <span>{task?.days}</span>{' '}
+                                        <span>{task?.title}</span>
+                                      </div>
+                                      <div
+                                        style={{
+                                          font: 'normal normal 500 10.2px/17px Montserrat',
+                                          letterSpacing: 0.18,
+                                          color: '#333D3D',
+                                          gridTemplateColumns: 'repeat(4,1fr)',
+                                          display: 'flex',
+                                          justifyContent: 'space-between',
+                                          padding: '20px 0',
+                                          marginBottom: '20px'
+                                        }}
+                                      >
+                                        {!loading && (
+                                          <>
+                                            {task?.steps?.map((step, index) => {
+                                              return (
+                                                <Step
+                                                  key={index}
+                                                  index={index}
+                                                  selectedStepIndex={
+                                                    selectedStepIndex
+                                                  }
+                                                  step={step}
+                                                  selectedStep={(step) =>
+                                                    selectStep(step, index)
+                                                  }
+                                                />
+                                              )
+                                            })}
+                                          </>
+                                        )}
+                                      </div>
+                                      {selectedStep != null && (
+                                        <div
+                                          style={{
+                                            fontFamily: 'Montserrat',
+                                            backgroundColor: '#fff'
+                                          }}
+                                          dangerouslySetInnerHTML={{
+                                            __html: selectedStep?.stepContent
+                                          }}
+                                        />
+                                      )}
+                                      {selectedStep != null && (
+                                        <div
+                                          className={`d-flex justify-content-start
+                                                         mt-2`}
+                                        >
+                                          <button
+                                            style={{
+                                              backgroundColor: '#51c7df',
+                                              color: '#fff',
+                                              fontSize: 9
+                                            }}
+                                            onClick={() => handleOpenPopup()}
+                                            className="px-4 py-3 border-0 color transform text-uppercase my-1"
+                                          >
+                                            WHAT TO EXPECT FROM STUDENTS
+                                          </button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )
+                                }
+                              })}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+              </div>
+              <div style={{ order: 2 }}>
+                {!loading && journal?.hasInstructorDebrief && (
+                  <div
+                    className={`accordion ${
+                      openAccordion === 'connection' ? 'expanded' : ''
+                    }`}
+                  >
+                    <div
+                      className="accordion-header"
+                      onClick={() => handleAccordionClick('connection')}
+                    >
+                      <div className={'accordion-header-title'}>
+                        {'CONNECTION TO LTS MODEL AND OUTCOMES'}
+                      </div>
+                      <span
+                        className={`accordion-icon ${
+                          openAccordion === 'connection' ? 'expanded' : ''
+                        }`}
+                      >
+                        {isExpanded ? (
+                          <FontAwesomeIcon
+                            icon={faAngleDown}
+                            className="me-2 me-md-0 arrow"
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faAngleDown}
+                            className="me-2 me-md-0 arrow"
+                          />
+                        )}
+                      </span>
+                    </div>
+                    {openAccordion === 'connection' && (
                       <>
                         <div className="accordion-content">
                           <div
                             style={{
-                              font: 'normal normal 500 10.2px/17px Montserrat',
-                              letterSpacing: 0.18,
-                              color: '#333D3D',
-                              // display: 'grid',
-                              gridTemplateColumns: 'repeat(4,1fr)',
                               display: 'flex',
-                              justifyContent: 'space-between',
-                              padding: '20px 0',
-                              marginBottom: '20px',
-                              borderBottom:
-                                step !== 'step-0'
-                                  ? '1px solid #dfdfdf'
-                                  : '0px solid #dfdfdf'
+                              justifyContent: 'center',
+                              flexDirection: 'column',
+                              alignItems: 'center'
                             }}
                           >
-                            <img
-                              src={StepOne}
+                            <div
                               style={{
-                                width: 70,
-                                height: 70,
-                                objectFit: 'contain',
-                                filter:
-                                  step !== null &&
-                                  typeof step !== 'undefined' &&
-                                  step !== 'step-0'
-                                    ? step !== 'step-1'
-                                      ? 'grayscale(100%)'
-                                      : 'grayscale(0%)'
-                                    : 'grayscale(0%)'
+                                display: 'flex',
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                alignItems: 'center'
                               }}
-                              onClick={() => selectedStep('step-1')}
-                              alt={'step-1'}
-                            />
-                            <img
-                              src={StepTwo}
+                            >
+                              <div
+                                style={{
+                                  font: 'normal normal 600 17px/17px Montserrat',
+                                  letterSpacing: 0.68,
+                                  color: '#333D3D',
+                                  textAlign: 'center'
+                                }}
+                              >
+                                THE LEARN TO START MODEL
+                              </div>
+                              <img
+                                style={{
+                                  width: 340,
+                                  height: 300,
+                                  objectFit: 'contain'
+                                }}
+                                alt={'lts-triangle'}
+                                src={LtsDiagram}
+                              />
+                            </div>
+                            <div
                               style={{
-                                width: 70,
-                                height: 70,
-                                objectFit: 'contain',
-                                filter:
-                                  step !== null &&
-                                  typeof step !== 'undefined' &&
-                                  step !== 'step-0'
-                                    ? step !== 'step-2'
-                                      ? 'grayscale(100%)'
-                                      : 'grayscale(0%)'
-                                    : 'grayscale(0%)'
+                                fontFamily: 'Montserrat',
+                                backgroundColor: '#fff',
+                                marginBottom: 20,
+                                textAlign: 'start',
+                                width: '100%'
                               }}
-                              onClick={() => selectedStep('step-2')}
-                              alt={'step-2'}
-                            />
-                            <img
-                              src={StepThree}
-                              style={{
-                                width: 70,
-                                height: 70,
-                                objectFit: 'contain',
-                                filter:
-                                  step !== null &&
-                                  typeof step !== 'undefined' &&
-                                  step !== 'step-0'
-                                    ? step !== 'step-3'
-                                      ? 'grayscale(100%)'
-                                      : 'grayscale(0%)'
-                                    : 'grayscale(0%)'
+                              dangerouslySetInnerHTML={{
+                                __html: journal?.ltsConnection?.firstParagraph
                               }}
-                              onClick={() => selectedStep('step-3')}
-                              alt={'step-3'}
                             />
 
-                            <img
-                              src={StepFour}
+                            <div
                               style={{
-                                width: 70,
-                                height: 70,
-                                objectFit: 'contain',
-                                filter:
-                                  step !== null &&
-                                  typeof step !== 'undefined' &&
-                                  step !== 'step-0'
-                                    ? step !== 'step-4'
-                                      ? 'grayscale(100%)'
-                                      : 'grayscale(0%)'
-                                    : 'grayscale(0%)'
+                                display: 'flex',
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                alignItems: 'center'
                               }}
-                              onClick={() => selectedStep('step-4')}
-                              alt={'step-4'}
+                            >
+                              <div
+                                style={{
+                                  font: 'normal normal 600 17px/17px Montserrat',
+                                  letterSpacing: 0.68,
+                                  color: '#333D3D',
+                                  textAlign: 'center'
+                                }}
+                              >
+                                MARKET-READY OUTCOMES
+                              </div>
+                              <img
+                                style={{
+                                  width: 180,
+                                  height: 180,
+                                  objectFit: 'contain',
+                                  marginBottom: 20
+                                }}
+                                alt={'lts-triangle'}
+                                src={LtsCertification}
+                              />
+                            </div>
+
+                            <div
+                              style={{
+                                fontFamily: 'Montserrat',
+                                backgroundColor: '#fff',
+                                display: 'flex',
+                                justifyContent: 'start',
+                                width: '100%'
+                              }}
+                              dangerouslySetInnerHTML={{
+                                __html: journal?.ltsConnection?.secondParagraph
+                              }}
                             />
                           </div>
-                          {step === 'step-1' && (
-                            <div
-                              style={{
-                                fontFamily: 'Montserrat',
-                                backgroundColor: '#fff'
-                              }}
-                              dangerouslySetInnerHTML={{
-                                __html: stepOneData && stepOneData?.stepContent
-                              }}
-                            />
-                          )}{' '}
-                          {step === 'step-2' && (
-                            <div
-                              style={{
-                                fontFamily: 'Montserrat',
-                                backgroundColor: '#fff'
-                              }}
-                              dangerouslySetInnerHTML={{
-                                __html: stepTwoData && stepTwoData?.stepContent
-                              }}
-                            />
-                          )}
-                          {step === 'step-3' && (
-                            <div
-                              style={{
-                                fontFamily: 'Montserrat',
-                                backgroundColor: '#fff'
-                              }}
-                              dangerouslySetInnerHTML={{
-                                __html:
-                                  stepThreeData && stepThreeData?.stepContent
-                              }}
-                            />
-                          )}
-                          {step === 'step-4' && (
-                            <div
-                              style={{
-                                fontFamily: 'Montserrat',
-                                backgroundColor: '#fff'
-                              }}
-                              dangerouslySetInnerHTML={{
-                                __html:
-                                  stepFourData && stepFourData?.stepContent
-                              }}
-                            />
-                          )}
-                          {step !== 'step-0' && (
-                            <div
-                              className={`d-flex justify-content-start
-                          mt-2`}
-                            >
-                              <button
-                                style={{
-                                  backgroundColor: '#51c7df',
-                                  color: '#fff',
-                                  fontSize: 9
-                                }}
-                                onClick={() => handleOpenPopup()}
-                                className="px-4 py-3 border-0 color transform text-uppercase my-1"
-                              >
-                                WHAT TO EXPECT FROM STUDENTS
-                              </button>
-                            </div>
-                          )}
                         </div>
                       </>
                     )}
@@ -967,12 +1528,10 @@ function TestJournalContent(props) {
             <BreakdownPopup
               show={openPopup}
               onHide={handleClosePopup}
-              popupContent={handleRenderStepContent()?.popupContent}
+              popupContent={selectedStep?.popupContent}
             />
           </>
         }
-        {/*// )*/}
-        {/*// })}*/}
       </>
       <div className="row">
         <div className="col-12">
@@ -994,85 +1553,85 @@ function TestJournalContent(props) {
       <div className="row">
         <div className="col-12">
           <div className="journal-entries">
-            {journal.entries &&
-              journal.entries.map((entry) => (
-                <div className="journal-entries__entry" key={entry.id}>
-                  <h5
-                    className={
-                      'journal-entries__entry-title' +
-                      (entry.title.indexOf('**') !== -1
-                        ? ' journal-entries__entry-title--md'
-                        : '')
-                    }
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        entry.title.indexOf('<h2>') === -1
-                          ? markdown(entry.title)
-                          : entry.title.replace(
-                              new RegExp('\r?\n', 'g'),
-                              '<br />'
-                            )
-                    }}
-                  ></h5>
+            {/*{journal.entries &&*/}
+            {/*  journal.entries.map((entry) => (*/}
+            {/*    <div className="journal-entries__entry" key={entry.id}>*/}
+            {/*      <h5*/}
+            {/*        className={*/}
+            {/*          'journal-entries__entry-title' +*/}
+            {/*          (entry.title.indexOf('**') !== -1*/}
+            {/*            ? ' journal-entries__entry-title--md'*/}
+            {/*            : '')*/}
+            {/*        }*/}
+            {/*        dangerouslySetInnerHTML={{*/}
+            {/*          __html:*/}
+            {/*            entry.title.indexOf('<h2>') === -1*/}
+            {/*              ? markdown(entry.title)*/}
+            {/*              : entry.title.replace(*/}
+            {/*                  new RegExp('\r?\n', 'g'),*/}
+            {/*                  '<br />'*/}
+            {/*                )*/}
+            {/*        }}*/}
+            {/*      ></h5>*/}
 
-                  <div className="journal-entries__entry-reflections">
-                    {/* List created reflections */}
-                    {userJournalEntries[entry.id] &&
-                      userJournalEntries[entry.id].map((userJournalEntry) => (
-                        <LtsJournalReflection
-                          key={userJournalEntry.id}
-                          journal={journal}
-                          journalEntry={entry}
-                          entry={userJournalEntry}
-                          deleted={deleteReflection(entry, userJournalEntry)}
-                          saved={updateReflection(entry, userJournalEntry)}
-                        />
-                      ))}
+            {/*      <div className="journal-entries__entry-reflections">*/}
+            {/*        /!* List created reflections *!/*/}
+            {/*        {userJournalEntries[entry.id] &&*/}
+            {/*          userJournalEntries[entry.id].map((userJournalEntry) => (*/}
+            {/*            <LtsJournalReflection*/}
+            {/*              key={userJournalEntry.id}*/}
+            {/*              journal={journal}*/}
+            {/*              journalEntry={entry}*/}
+            {/*              entry={userJournalEntry}*/}
+            {/*              deleted={deleteReflection(entry, userJournalEntry)}*/}
+            {/*              saved={updateReflection(entry, userJournalEntry)}*/}
+            {/*            />*/}
+            {/*          ))}*/}
 
-                    {/* Add new reflection */}
-                    {(!userJournalEntries[entry.id] ||
-                      showAddReflection[entry.id]) && (
-                      <LtsJournalReflection
-                        journal={journal}
-                        journalEntry={entry}
-                        entry={null}
-                        saved={addReflection(entry)}
-                        showCancel={!!userJournalEntries[entry.id]}
-                        cancel={(e) => {
-                          setShowAddReflection({
-                            ...showAddReflection,
-                            [entry.id]: false
-                          })
-                        }}
-                      />
-                    )}
+            {/*        /!* Add new reflection *!/*/}
+            {/*        {(!userJournalEntries[entry.id] ||*/}
+            {/*          showAddReflection[entry.id]) && (*/}
+            {/*          <LtsJournalReflection*/}
+            {/*            journal={journal}*/}
+            {/*            journalEntry={entry}*/}
+            {/*            entry={null}*/}
+            {/*            saved={addReflection(entry)}*/}
+            {/*            showCancel={!!userJournalEntries[entry.id]}*/}
+            {/*            cancel={(e) => {*/}
+            {/*              setShowAddReflection({*/}
+            {/*                ...showAddReflection,*/}
+            {/*                [entry.id]: false*/}
+            {/*              })*/}
+            {/*            }}*/}
+            {/*          />*/}
+            {/*        )}*/}
 
-                    {/* Show add new reflection */}
-                    <div
-                      className={`journal-entries__entry-reflections-actions ${
-                        userJournalEntries[entry.id] &&
-                        !showAddReflection[entry.id]
-                          ? 'active'
-                          : ''
-                      }`}
-                    >
-                      <a
-                        href="#"
-                        className="journal-entries__entry-reflections-action"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          setShowAddReflection({
-                            ...showAddReflection,
-                            [entry.id]: true
-                          })
-                        }}
-                      >
-                        Add reflection <FontAwesomeIcon icon={faPlus} />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            {/*        /!* Show add new reflection *!/*/}
+            {/*        <div*/}
+            {/*          className={`journal-entries__entry-reflections-actions ${*/}
+            {/*            userJournalEntries[entry.id] &&*/}
+            {/*            !showAddReflection[entry.id]*/}
+            {/*              ? 'active'*/}
+            {/*              : ''*/}
+            {/*          }`}*/}
+            {/*        >*/}
+            {/*          <a*/}
+            {/*            href="#"*/}
+            {/*            className="journal-entries__entry-reflections-action"*/}
+            {/*            onClick={(e) => {*/}
+            {/*              e.preventDefault()*/}
+            {/*              setShowAddReflection({*/}
+            {/*                ...showAddReflection,*/}
+            {/*                [entry.id]: true*/}
+            {/*              })*/}
+            {/*            }}*/}
+            {/*          >*/}
+            {/*            Add reflection <FontAwesomeIcon icon={faPlus} />*/}
+            {/*          </a>*/}
+            {/*        </div>*/}
+            {/*      </div>*/}
+            {/*    </div>*/}
+            {/*  ))}*/}
           </div>
         </div>
       </div>

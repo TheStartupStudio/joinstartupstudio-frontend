@@ -1,0 +1,10 @@
+.days-of-task-box {
+    background: #fff;
+    color: #231F20;
+    border-radius: 6px;
+    cursor:pointer;
+}
+.days-of-task-box:hover {
+    background: #51C7DF;
+    color: #fff
+}

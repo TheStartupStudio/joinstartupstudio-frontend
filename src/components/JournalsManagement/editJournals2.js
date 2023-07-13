@@ -19,7 +19,7 @@ import CustomContent from './CustomContent/CustomContent'
 export default function EditJournals2(props) {
   const [journals, setJournals] = useState([])
   const [journalOptions, setJournalOptions] = useState([])
-  const [selectedJournal, setSelectedJournal] = useState(null)
+  const [selectedJournal, setSelectedJournal] = useState({})
   const [updatedJournal, setUpdatedJournal] = useState()
   const [loading, setLoading] = useState(false)
   const [fetchingJournals, setFetchingJournals] = useState(true)
@@ -40,28 +40,7 @@ export default function EditJournals2(props) {
       content: '',
       title: '',
       type: '',
-      steps: [
-        {
-          popupContent: '',
-          stepContent: '',
-          type: 'step-1'
-        },
-        {
-          popupContent: '',
-          stepContent: '',
-          type: 'step-2'
-        },
-        {
-          popupContent: '',
-          stepContent: '',
-          type: 'step-3'
-        },
-        {
-          popupContent: '',
-          stepContent: '',
-          type: 'step-4'
-        }
-      ],
+
       customContent: {
         paragraphs: [],
         buttons: [],
@@ -176,7 +155,8 @@ export default function EditJournals2(props) {
         title: selectedJournal?.value?.title,
         type: selectedJournal?.value?.type,
         customContent: selectedJournal?.value?.customContent,
-        steps: selectedJournal?.value?.steps
+        steps: selectedJournal?.value?.steps,
+        ltsConnection: selectedJournal?.value?.ltsConnection
       })
       .then((res) => {
         setJournals(
@@ -800,14 +780,21 @@ export default function EditJournals2(props) {
   }, [breakdowns])
 
   const handleChangeSteps = (index, name, value) => {
-    let newJournals = { ...selectedJournal }
+    let newJournal = { ...selectedJournal }
     let newSteps = [...selectedJournal?.value?.steps]
     let newStep = newSteps[index]
     newStep[name] = value
     newSteps[index] = newStep
-    console.log(newSteps)
-    newJournals.steps = newSteps
-    setSelectedJournal(newJournals)
+    newJournal.steps = newSteps
+    setSelectedJournal(newJournal)
+  }
+
+  const handleChangeLtsConnection = (name, value) => {
+    let newJournal = { ...selectedJournal }
+    let newLtsConnection = { ...newJournal?.value?.ltsConnection }
+    newLtsConnection[name] = value
+    newJournal.value.ltsConnection = newLtsConnection
+    setSelectedJournal(newJournal)
   }
   return (
     <div>
@@ -964,27 +951,52 @@ export default function EditJournals2(props) {
             cols="30"
             rows="4"
           ></textarea>
-          {selectedJournal?.value?.steps?.map((step, index) => {
-            return (
+          {selectedJournal?.value &&
+            selectedJournal?.value?.steps?.map((step, index) => {
+              return (
+                <>
+                  <h2>{step?.type.split('-').join(' ')}</h2>
+                  <div>Step content</div>
+                  <KendoTextEditor
+                    value={step?.stepContent}
+                    handleChange={(e) =>
+                      handleChangeSteps(index, 'stepContent', e)
+                    }
+                  />
+                  <div>Popup content</div>
+                  <KendoTextEditor
+                    value={step?.popupContent}
+                    handleChange={(e) =>
+                      handleChangeSteps(index, 'popupContent', e)
+                    }
+                    minHeight={200}
+                  />
+                </>
+              )
+            })}
+          <>
+            <h2>Lts Connection Model</h2>
+            {selectedJournal?.value?.ltsConnection && (
               <>
-                <h2>{step?.type.split('-').join(' ')}</h2>
-                <div>Step content</div>
+                <div># First paragraph</div>
                 <KendoTextEditor
-                  value={step?.stepContent}
+                  value={selectedJournal?.value?.ltsConnection?.firstParagraph}
                   handleChange={(e) =>
-                    handleChangeSteps(index, 'stepContent', e)
+                    handleChangeLtsConnection('firstParagraph', e)
                   }
+                  minHeight={150}
                 />
-                <div>Popup content</div>
+                <div># Second paragraph</div>
                 <KendoTextEditor
-                  value={step?.popupContent}
+                  value={selectedJournal?.value?.ltsConnection?.secondParagraph}
                   handleChange={(e) =>
-                    handleChangeSteps(index, 'popupContent', e)
+                    handleChangeLtsConnection('secondParagraph', e)
                   }
+                  minHeight={150}
                 />
               </>
-            )
-          })}
+            )}
+          </>
 
           {
             <>

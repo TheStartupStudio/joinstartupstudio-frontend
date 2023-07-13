@@ -65,7 +65,7 @@ const TestJournalType = (props) => {
           platform: props.category === 'market-ready' ? 'student' : 'instructor'
         }
       })
-      setWeeks(data)
+      setWeeks([...data].sort((a, b) => a.id - b.id))
     } catch (err) {}
   }
 
