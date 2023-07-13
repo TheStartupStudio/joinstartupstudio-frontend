@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { formatDate } from '../../../utils/helpers'
 // import './style.css'
 import {
   faGlobe,
@@ -92,11 +93,11 @@ export const EducationDetails = (props) => {
                   }}
                 >
                   {}
-                  {format((parse(education.start_date, 'yyyy-MM-dd', new Date())), 'yyyy')}
+                  {format((parse(formatDate(education.start_date), 'yyyy-MM', new Date())), 'yyyy')}
                   <span style={{ fontSize: '16px' }}> - </span>
 
                   {education.end_date
-                    ? format((parse(education.end_date, 'yyyy-MM-dd', new Date())), 'yyyy')
+                    ? format((parse(formatDate(education.end_date), 'yyyy-MM', new Date())), 'yyyy')
                     : 'Present'}
                 </div>
               </div>

@@ -66,7 +66,7 @@ export const AccomplishmentDetails = (props) => {
                   }}
                 >
                   { 
-                format((parse(props.accomp.date_issued, 'yyyy-MM-dd', new Date())), 'MMMM yyyy')}
+                format((parse(formatDate(props.accomp.date_issued), 'yyyy-MM', new Date())), 'MMMM yyyy')}
                 </div>
               </div>
             </div>
