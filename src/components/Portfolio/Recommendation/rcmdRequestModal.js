@@ -79,7 +79,7 @@ export const RcmdRequestModal = (props) => {
         if (selectedConnection.value.id !== loggedUser.id) {
           socket?.emit('sendNotification', {
             sender: loggedUser,
-            receiver: { id: selectedConnection.value.id },
+            receivers: [{ id: selectedConnection.value.id }],
             type: NotificationTypes.RECOMMENDATION_REQUEST.key,
             url: `/edit-portfolio/recommendation/${res.data.id}`
           })
@@ -89,7 +89,7 @@ export const RcmdRequestModal = (props) => {
       })
       .catch((err) => {
         closeModal()
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
       })
   }
@@ -98,22 +98,22 @@ export const RcmdRequestModal = (props) => {
     <Modal
       show={props.show}
       onHide={() => closeModal()}
-      backdrop='static'
+      backdrop="static"
       keyboard={false}
       style={{ marginTop: '3rem' }}
     >
-      <Modal.Header className='contact-us-title my-auto p-0 mx-4 general-modal-header'>
-        <h3 className='mb-0 pt-4 mt-2 '>EDIT RECOMMENDATIONS</h3>
+      <Modal.Header className="contact-us-title my-auto p-0 mx-4 general-modal-header">
+        <h3 className="mb-0 pt-4 mt-2 ">EDIT RECOMMENDATIONS</h3>
         <button
-          type='button'
-          className='btn-close me-1'
-          aria-label='Close'
+          type="button"
+          className="btn-close me-1"
+          aria-label="Close"
           onClick={() => closeModal()}
         />
       </Modal.Header>
-      <Modal.Body className='misconduct-modal mx-2'>
+      <Modal.Body className="misconduct-modal mx-2">
         <h3>Request a Recommendation</h3>
-        <div className='mt-3'>
+        <div className="mt-3">
           <Select
             value={
               selectedConnection?.label
@@ -166,39 +166,39 @@ export const RcmdRequestModal = (props) => {
               DropdownIndicator: () => null,
               IndicatorSeparator: () => null
             }}
-            classNamePrefix='vyrill'
+            classNamePrefix="vyrill"
             // autoFocus={false}
           />
         </div>
 
-        <div className='contact-us'>
+        <div className="contact-us">
           <input
-            className='my-2'
-            type='text'
-            name='relationship'
+            className="my-2"
+            type="text"
+            name="relationship"
             value={rcmdRequestData?.relationship}
             onChange={handleChange}
-            placeholder='Relationship to _________ (name of person in first box goes here)*'
+            placeholder="Relationship to _________ (name of person in first box goes here)*"
           />
           <input
-            className='my-2'
-            type='text'
-            name='position'
+            className="my-2"
+            type="text"
+            name="position"
             value={rcmdRequestData?.position}
             onChange={handleChange}
-            placeholder='Position at the time*'
+            placeholder="Position at the time*"
           />
           <input
-            className='my-2'
-            type='text'
-            name='message'
+            className="my-2"
+            type="text"
+            name="message"
             value={rcmdRequestData?.message}
             onChange={handleChange}
-            placeholder='Add a personal message to your request'
+            placeholder="Add a personal message to your request"
           />
-          <button onClick={() => submitRequest()} className='mt-2 my-auto'>
+          <button onClick={() => submitRequest()} className="mt-2 my-auto">
             {loading ? (
-              <span className='spinner-border spinner-border-sm' />
+              <span className="spinner-border spinner-border-sm" />
             ) : (
               'SEND'
             )}

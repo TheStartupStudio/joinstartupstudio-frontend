@@ -1,0 +1,15 @@
+.notification-modal .modal-dialog {
+    width: 50% !important;
+}
+
+@media (max-width: 770px) {
+    .notification-modal .modal-dialog {
+        width: 70% !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .notification-modal .modal-dialog {
+        width: 90% !important;
+    }
+}

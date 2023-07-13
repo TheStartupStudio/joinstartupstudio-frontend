@@ -1,0 +1,131 @@
+.notifications-section {
+    border: 1.5px solid #51C7DF;
+    padding: 9.5px;
+    background: #FFFFFF 0% 0% no-repeat padding-box
+}
+.notifications-section-header {
+    font-size: 12.5px;
+    letter-spacing: 0px;
+    color: #231F20;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.notifications-bell-icon-container {
+    position: relative;
+    /*width: 10%;*/
+}
+
+.notifications-bell-icon-container .notification-content-list-item-dot {
+    position: absolute;
+    top: 4px;
+    right: -1px;
+
+}
+.notifications-section-title {
+    /*width: 90%;*/
+    margin: auto;
+    font: normal normal 600 12px/15px Montserrat;
+    text-align: start;
+    width: 100%;
+}
+
+.notifications-container {
+    box-shadow: 0px 3px 6px #00000029;
+    z-index:2;
+    margin-top: 8px;
+
+}
+
+/*.triangle {*/
+/*    width: 10px;*/
+/*    height: 10px;*/
+/*    !*background-color: #3c3c3c;*!*/
+/*    transform: rotate(45deg);*/
+/*    margin-left: 6px;*/
+/*    margin-bottom: -5px;*/
+/*    z-index: 1;*/
+/*    background: #FFFFFF 0% 0% no-repeat padding-box;*/
+/*    box-shadow: 0px 3px 6px #00000029;*/
+/*}*/
+
+
+.notification-list {
+    padding:0px !important;
+}
+
+.notification-content-list-container {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 6px;
+    margin-bottom: 0px;
+}
+.notification-content {
+    display: flex;
+    align-items: center;
+
+}
+.notification-content-list-container:hover {
+    background: #F8F7F7;
+    cursor: pointer;
+}
+
+.dot-container {
+    /*width: 10%;*/
+    display: flex;
+    position: relative;
+    /*top: 3px;*/
+    left: 6px;
+}
+
+
+.notification-content-list-item-dot {
+    background-color: #99CC33;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 2px;
+    /*font-size: 20px;*/
+}
+
+
+.notification-content-title {
+    font-style: italic;
+    font-size: 12px;
+    color: #000;
+    overflow-wrap: anywhere;
+    font: normal normal 300 12px/14px Montserrat;
+    /*width: 90%;*/
+    margin-left: 10px;
+
+}
+
+.notification-content-description{
+    font-weight: bold;
+    font-style: normal;
+    overflow-wrap: anywhere;
+    font: normal normal normal 12px/14px Montserrat;
+
+}
+
+.view-all-button{
+    border: none;
+    padding: 6px 8px;
+    margin-left: 10px;
+    margin-bottom: 2px;
+    font-size: 12px;
+    background-color: #fff;
+    color:#51C7DF;
+    font: normal normal normal 12px/15px Montserrat;
+}
+
+.notifications-box {
+    font: normal normal 600 13px/15px Montserrat;
+    padding: 10px;
+}
+
+.notification-button {
+    font-size: 10px;
+}

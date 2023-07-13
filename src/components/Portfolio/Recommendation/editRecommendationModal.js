@@ -62,7 +62,7 @@ export const EditRecommendationModal = (props) => {
       )
       setUpdateActions((oldValues) => [
         ...oldValues,
-        { id: data.id, description: data.description }
+        { id: data.id, description: data.description },
       ])
     }
   }
@@ -78,7 +78,7 @@ export const EditRecommendationModal = (props) => {
     if (deleteActions.length)
       await axiosInstance
         .post('recommendations/multiple-delete', {
-          deleteRows: deleteActions
+          deleteRows: deleteActions,
         })
         .then((res) =>
           props.deleteRecommendations({ values: deleteActions, errors: false })
@@ -91,12 +91,12 @@ export const EditRecommendationModal = (props) => {
     if (updateActions.length)
       await axiosInstance
         .post('recommendations/multiple-update', {
-          updatedRows: updateActions
+          updatedRows: updateActions,
         })
         .then((res) => {
           props.updateGivenRecommendations({
             values: givenRcmd,
-            errors: false
+            errors: false,
           })
         })
         .catch((e) => {
@@ -108,7 +108,7 @@ export const EditRecommendationModal = (props) => {
       toast.error('Update finished with some errors!')
       props.onHide()
     } else {
-      toast.success(<IntlMessages id='alert.my_account.success_change' />)
+      toast.success(<IntlMessages id="alert.my_account.success_change" />)
       props.onHide()
     }
 
@@ -121,28 +121,28 @@ export const EditRecommendationModal = (props) => {
     <Modal
       show={props.show}
       onHide={() => closeModal()}
-      backdrop='static'
+      backdrop="static"
       keyboard={false}
-      className='edit-modal'
+      className="edit-modal"
     >
-      <Modal.Header className='contact-us-title my-auto p-0 mx-4 general-modal-header'>
-        <h3 className='mb-0 pt-4 mt-2 '>Edit Recommendations</h3>
+      <Modal.Header className="contact-us-title my-auto p-0 mx-4 general-modal-header">
+        <h3 className="mb-0 pt-4 mt-2 ">Edit Recommendations</h3>
         <button
-          type='button'
-          className='btn-close me-1'
-          aria-label='Close'
+          type="button"
+          className="btn-close me-1"
+          aria-label="Close"
           onClick={() => closeModal()}
         />
       </Modal.Header>
-      <Modal.Body className='misconduct-modal mx-2'>
+      <Modal.Body className="misconduct-modal mx-2">
         <div
-          className='d-flex justify-content-between flex-wrap'
+          className="d-flex justify-content-between flex-wrap"
           style={{ borderBottom: '1px solid #dee2e6' }}
         >
-          <h3 className='my-auto'>Recommendations</h3>
-          <div className='break-rcmd d-none'></div>
+          <h3 className="my-auto">Recommendations</h3>
+          <div className="break-rcmd d-none"></div>
           <div
-            className='d-flex float-end my-md-auto mt-2 '
+            className="d-flex float-end my-md-auto mt-2 "
             style={{ cursor: 'pointer' }}
           >
             <p
@@ -162,17 +162,17 @@ export const EditRecommendationModal = (props) => {
           </div>
         </div>
 
-        <div className='edit-rcmd-container'>
+        <div className="edit-rcmd-container">
           {isReceivedSelected ? (
             <>
               {receivedRcmd.length > 0 ? (
                 receivedRcmd.map((recommendation, index, { length }) => {
                   return (
                     <div
-                      className='edit-rcmd-responsive my-3 p-3 pb-0 p-md-0'
+                      className="edit-rcmd-responsive my-3 p-3 pb-0 p-md-0"
                       style={{
                         border: '1px solid #bbbdbf',
-                        borderRadius: '6px'
+                        borderRadius: '6px',
                       }}
                       key={recommendation.id}
                     >
@@ -182,23 +182,25 @@ export const EditRecommendationModal = (props) => {
                         index={index}
                         length={length}
                         modalName={'editRcmdModal'}
+                        isEdit={true}
+                        handleDelete={handleDelete}
                       />
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        style={{
-                          width: '22px',
-                          height: '20px',
-                          color: '#ff2094',
-                          cursor: 'pointer'
-                        }}
-                        className='me-sm-3 mt-sm-3 rcmd-edit-icon'
-                        onClick={() => handleDelete(recommendation.id)}
-                      />
+                      {/*<FontAwesomeIcon*/}
+                      {/*  icon={faTrashAlt}*/}
+                      {/*  style={{*/}
+                      {/*    width: '22px',*/}
+                      {/*    height: '20px',*/}
+                      {/*    color: '#ff2094',*/}
+                      {/*    cursor: 'pointer',*/}
+                      {/*  }}*/}
+                      {/*  className="me-sm-3 mt-sm-3 rcmd-edit-icon"*/}
+                      {/*  onClick={() => handleDelete(recommendation.id)}*/}
+                      {/*/>*/}
                     </div>
                   )
                 })
               ) : (
-                <div className='no-rcmd-yet px-2 my-auto'>
+                <div className="no-rcmd-yet px-2 my-auto">
                   <p>You don’t have any recommendations… yet!</p>
                   <p>You can request a recommendation from someone you know.</p>
                 </div>
@@ -220,7 +222,7 @@ export const EditRecommendationModal = (props) => {
                   )
                 })
               ) : (
-                <div className='no-rcmd-yet px-2 my-auto'>
+                <div className="no-rcmd-yet px-2 my-auto">
                   <p>You don’t have any recommendations… yet!</p>
                   <p>You can request a recommendation from someone you know.</p>
                 </div>
@@ -229,11 +231,11 @@ export const EditRecommendationModal = (props) => {
           )}
         </div>
 
-        <div className='contact-us'>
+        <div className="contact-us">
           {(updateActions.length > 0 || deleteActions.length > 0) && (
-            <button onClick={() => submitRequest()} className='mt-2 my-auto'>
+            <button onClick={() => submitRequest()} className="mt-2 my-auto">
               {loading ? (
-                <span className='spinner-border spinner-border-sm' />
+                <span className="spinner-border spinner-border-sm" />
               ) : (
                 'SAVE CHANGES'
               )}

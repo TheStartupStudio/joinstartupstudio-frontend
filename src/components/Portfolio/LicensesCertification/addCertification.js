@@ -71,42 +71,42 @@ const AddCertification = (props) => {
     <Modal
       show={props.show}
       onHide={props.onHide}
-      backdrop='static'
+      backdrop="static"
       keyboard={false}
-      dialogClassName='my-modal'
-      className='edit_modal mt-md-5'
+      dialogClassName="my-modal"
+      className="edit_modal mt-md-5"
     >
-      <Modal.Header className='edit-modal p-0 mx-4 general-modal-header'>
-        <h3 className='mt-4 mb-0 edit-modal-box-title'>
-          <IntlMessages id='portfolio.EDIT_LICENSES_CERTIFICATIONS' />
+      <Modal.Header className="edit-modal p-0 mx-4 general-modal-header">
+        <h3 className="mt-4 mb-0 edit-modal-box-title">
+          <IntlMessages id="portfolio.EDIT_LICENSES_CERTIFICATIONS" />
         </h3>
         <button
-          type='button'
-          className='btn-close me-1'
-          aria-label='Close'
+          type="button"
+          className="btn-close me-1"
+          aria-label="Close"
           onClick={() => {
             setIsType(false)
             props.onHide()
           }}
         />
       </Modal.Header>
-      <ModalBody className='px-4 pb-0 '>
-        <div className='row'>
-          <h4 className='mx-sm-auto'>
-            <IntlMessages id='portfolio.Add_Licenses_or_Certifications' />
+      <ModalBody className="px-4 pb-0 ">
+        <div className="row">
+          <h4 className="mx-sm-auto">
+            <IntlMessages id="portfolio.Add_Licenses_or_Certifications" />
           </h4>
-          <div className='col-12 col-sm-4 col-lg-4 col-xxl-3 text-start text-md-center pe-sm-2'>
+          <div className="col-12 col-sm-4 col-lg-4 col-xxl-3 text-start text-md-center pe-sm-2">
             <div>
               {loading ? (
-                <div className='image-box my-auto mx-auto border'>
-                  <span className='loading-image loading-image-sm mt-auto' />
+                <div className="image-box my-auto mx-auto border">
+                  <span className="loading-image loading-image-sm mt-auto" />
                 </div>
               ) : (
                 <>
                   {imageUrl !== '' ? (
                     <div
-                      className='position-relative'
-                      style={{ height: '200px' }}
+                      className="img-placeholder position-relative"
+                      style={{ height: '200px', width: '182px' }}
                     >
                       <ImageCropper
                         width={150}
@@ -117,26 +117,26 @@ const AddCertification = (props) => {
                     </div>
                   ) : (
                     <img
-                      id='img'
+                      id="img"
                       src={defaultImage}
-                      className='mt-2 image-box border'
+                      className="mt-2 image-box border"
                     />
                   )}
                 </>
               )}
-              <div className='input-group mt-3 mx-auto text-center'>
-                <div className='profile-image text-center mx-auto'>
+              <div className="input-group mt-3 mx-auto text-center">
+                <div className="profile-image text-center mx-auto">
                   <label
-                    className='edit-label text-center mx-md-auto'
+                    className="edit-label text-center mx-md-auto"
                     style={{ width: '182px' }}
                   >
                     <input
-                      type='file'
-                      id='inputGroupFile'
-                      name='profile_image'
-                      accept='image/jpg, image/jpeg, image/png'
+                      type="file"
+                      id="inputGroupFile"
+                      name="profile_image"
+                      accept="image/jpg, image/jpeg, image/png"
                       ref={inputImage}
-                      className='d-none'
+                      className="d-none"
                       style={{ width: '182px' }}
                       onChange={(e) => {
                         imageChange(e)
@@ -144,35 +144,35 @@ const AddCertification = (props) => {
                     />
 
                     <div
-                      className='mt-md-1 d-flex justify-content-center'
+                      className="mt-md-1 d-flex justify-content-center"
                       style={{ alignItems: 'center' }}
                     >
-                      <IntlMessages id='portfolio.upload_new_license_image' />
+                      <IntlMessages id="portfolio.upload_new_license_image" />
                       <FontAwesomeIcon
                         icon={faFileUpload}
-                        className='edit-modal-sm ml-2'
+                        className="edit-modal-sm ml-2"
                       />
                     </div>
                   </label>
                 </div>
               </div>
-              <div className='col-12 d-flex justify-content-start justify-content-md-center'>
+              <div className="col-12 d-flex justify-content-start justify-content-md-center">
                 <p
-                  className=' image-text-file mt-3 px-1 text-start'
+                  className=" image-text-file mt-3 px-1 text-start"
                   style={{ width: '171px' }}
                 >
-                  <IntlMessages id='portfolio.file_type' />
+                  <IntlMessages id="portfolio.file_type" />
                 </p>
               </div>
             </div>
           </div>
-          <div className='col-12 col-sm-8 add-modal mt-md-0 col-lg-8 col-xxl-9 px-lg-5'>
-            <FormattedMessage id='portfolio.add_new_Certified'>
+          <div className="col-12 col-sm-8 add-modal mt-md-0 col-lg-8 col-xxl-9 px-lg-5">
+            <FormattedMessage id="portfolio.add_new_Certified">
               {(placeholder) => (
                 <input
-                  className='my-2 w-100 py-3  ps-2'
-                  type='text'
-                  name='name'
+                  className="my-2 w-100 py-3  ps-2"
+                  type="text"
+                  name="name"
                   placeholder={placeholder}
                   onChange={(data) => {
                     setName(data.target.value)
@@ -181,12 +181,12 @@ const AddCertification = (props) => {
                 />
               )}
             </FormattedMessage>
-            <FormattedMessage id='portfolio.add_new_Certified_Issuing_Authority'>
+            <FormattedMessage id="portfolio.add_new_Certified_Issuing_Authority">
               {(placeholder) => (
                 <input
-                  className='my-2 w-100 py-3  ps-2'
-                  type='text'
-                  name='issuing_authority'
+                  className="my-2 w-100 py-3  ps-2"
+                  type="text"
+                  name="issuing_authority"
                   placeholder={placeholder}
                   onChange={(data) => {
                     setIssuing_authority(data.target.value)
@@ -195,16 +195,16 @@ const AddCertification = (props) => {
                 />
               )}
             </FormattedMessage>
-            <div className='d-flex flex-grow-1'>
-              <div className='d-flex w-100 date_issued_div'>
-                <FormattedMessage id='portfolio.add_new_Certified_Date_Issued'>
+            <div className="d-flex flex-grow-1">
+              <div className="d-flex w-100 date_issued_div">
+                <FormattedMessage id="portfolio.add_new_Certified_Date_Issued">
                   {(placeholder) => (
                     <input
-                      className='my-2 py-3 col-12 col-md-11 ps-2 pe-2 data'
+                      className="my-2 py-3 col-12 col-md-11 ps-2 pe-2 data"
                       type={isType ? 'date' : 'text'}
-                      name='date_issued'
+                      name="date_issued"
                       placeholder={placeholder}
-                      min='2000-03'
+                      min="2000-03"
                       max={new Date().toLocaleDateString('fr-CA', {
                         year: 'numeric',
                         month: '2-digit',
@@ -220,13 +220,13 @@ const AddCertification = (props) => {
                   )}
                 </FormattedMessage>
               </div>
-              <div className='d-flex w-100'>
-                <FormattedMessage id='portfolio.add_new_Certified_Credential_ID'>
+              <div className="d-flex w-100">
+                <FormattedMessage id="portfolio.add_new_Certified_Credential_ID">
                   {(placeholder) => (
                     <input
-                      className='my-2 py-3 w-100 float-end ps-2'
-                      type='text'
-                      name='credential_id'
+                      className="my-2 py-3 w-100 float-end ps-2"
+                      type="text"
+                      name="credential_id"
                       placeholder={placeholder}
                       onChange={(data) => {
                         setCredential_id(data.target.value)
@@ -237,13 +237,13 @@ const AddCertification = (props) => {
                 </FormattedMessage>
               </div>
             </div>
-            <FormattedMessage id='portfolio.add_new_Certified_Credential URL'>
+            <FormattedMessage id="portfolio.add_new_Certified_Credential URL">
               {(placeholder) => (
                 <input
-                  className='my-2 w-100 py-3  ps-2'
-                  type='text'
+                  className="my-2 w-100 py-3  ps-2"
+                  type="text"
                   required
-                  name='credential_url'
+                  name="credential_url"
                   placeholder={placeholder}
                   onChange={(data) => {
                     setCredential_url(data.target.value)
@@ -255,9 +255,9 @@ const AddCertification = (props) => {
           </div>
         </div>
       </ModalBody>
-      <Modal.Footer className='border-0 py-0 my-0 mb-2 position-relative'>
-        <div className='row p-0 mb-3'>
-          <div className='col-md-11'>
+      <Modal.Footer className="border-0 py-0 my-0 mb-2 position-relative">
+        <div className="row p-0 mb-3">
+          <div className="col-md-11">
             <button
               className={`float-end edit-account ${
                 props.loading && 'disabled '
@@ -267,11 +267,10 @@ const AddCertification = (props) => {
                   inputName.length == 0 ||
                   issuing_authority.length == 0 ||
                   date_issued.length == 0 ||
-                  credential_id.length == 0 ||
                   credential_url.length == 0
                 ) {
                   return toast.error(
-                    <IntlMessages id='portfolio.all_field_needet' />
+                    <IntlMessages id="portfolio.all_field_needet" />
                   )
                 } else {
                   !props.loading && props.onSave()
@@ -279,9 +278,9 @@ const AddCertification = (props) => {
               }}
             >
               {props.loading ? (
-                <IntlMessages id='general.loading' />
+                <IntlMessages id="general.loading" />
               ) : (
-                <IntlMessages id='general.save' />
+                <IntlMessages id="general.save" />
               )}
             </button>
           </div>

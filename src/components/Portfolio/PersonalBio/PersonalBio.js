@@ -18,8 +18,12 @@ import IntlMessages from '../../../utils/IntlMessages'
 import EditBio from './EditBio'
 import Certificate from '../../../assets/images/lts-certifeid-logo.png'
 import { toast } from 'react-toastify'
+import { useHistory } from 'react-router-dom'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import CertificationBadge1 from '../../../assets/images/market-ready-1-badge.jpg'
+import CertificationBadge2 from '../../../assets/images/market-ready-2-badge.jpg'
 
-export default function PersonalBio() {
+export default function PersonalBio(props) {
   const userId = useSelector((state) => state.user.user.user.id)
   const [user, setUser] = useState()
   const [userBio, setUserBio] = useState()
@@ -29,10 +33,16 @@ export default function PersonalBio() {
   const [updateBio, setUpdateBio] = useState(false)
   const [showEditBioModal, setShowEditBioModal] = useState(false)
   const [isCertified, setIsCertified] = useState(false)
-
   useEffect(() => {
     getUser()
   }, [])
+
+  // useEffect(() => {
+  //   setUserBio(props.userBiography)
+  // }, [props.userBiography])
+  // useEffect(() => {
+  //   setUser(props.userData)
+  // }, [props.userData])
 
   const getUser = async () => {
     setLoading(true)
@@ -63,7 +73,7 @@ export default function PersonalBio() {
         bio: userBio
       })
       .then((response) => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         setUserBio(response.data.bio)
 
         onClose()
@@ -96,200 +106,248 @@ export default function PersonalBio() {
       paddingLeft: '3px'
     }
   }
+  const isPreview = props.isPreview
+  // const history = useHistory()
+  // const isPreview = history.location.pathname.includes('preview')
+
   return (
-    <>
-      <div className='mx-0 mt-4 my-account p-3'>
-        <div className='d-flex flex-wrap pb-0 mb-3'>
-          <div className='d-flex my-auto'>
-            <Image
-              src={user?.profile_image ? user?.profile_image : avatar}
-              className='me-2 rounded-circle float-start user-image'
-            />
+    <PortfolioSection
+      isPreview={isPreview}
+      isEdit={true}
+      onEdit={() => setShowEditBioModal(true)}
+    >
+      <>
+        <div
+          className="  d-flex personal-bio-container"
+          // className=" my-account d-flex"
+        >
+          <div
+            className="d-flex  personal-bio-image-container"
+            style={{
+              marginRight: 'auto',
+              justifyContent: 'center'
+            }}
+          >
+            <div
+              style={{
+                border: '2px solid #01C5D1',
+                width: '168px ',
+                height: '168px ',
+                boxSizing: 'content-box',
+                borderRadius: '50%',
+                marginTop: isPreview ? 0 : -23,
+                display: 'flex',
+                alignItems: 'center',
+                overflow: 'hidden'
+              }}
+            >
+              <img
+                src={user?.profile_image ? user?.profile_image : avatar}
+                className=" user-image"
+              />
+            </div>
           </div>
-          <div className='portfolio-user-info'>
-            <div className='row'>
-              <div className='col-10'>
-                <div className='d-flex flex-wrap ps-0 flex-grow-1 justify-content-between'>
-                  <div className='user-info-grid mt-0 mt-md-4 mt-lg-0'>
-                    <div
-                      className='ps-md-2 pt-md-5 pb-md-3'
-                      style={{ flexGrow: 1 }}
-                    >
-                      <p
-                        className='w-100 d-flex mt-auto ps-0 mb-0 pb-0 pt-3'
-                        style={style.user_name}
-                      >
-                        {user?.name}
-                      </p>
-                      <p
-                        className='mb-0 pt-1'
-                        style={{ ...style.user_proffesion, display: 'block' }}
-                      >
-                        {user?.profession ? user?.profession : ''}
-                      </p>
-                      <div
-                        style={{
-                          flexBasis: '100%',
-                          height: 0
-                        }}
-                      ></div>
-                      {(user?.social_links?.linkedIn ||
-                        user?.social_links?.twitter ||
-                        user?.social_links?.instagram ||
-                        user?.social_links?.facebook ||
-                        user?.social_links?.website) && (
-                        <div
-                          className='mt-0 ps-1 d-flex flex-wrap pt-1 pt-md-auto'
-                          style={style.social_links}
-                        >
-                          {user?.social_links?.linkedIn && (
-                            <a
-                              href={
-                                user.social_links.linkedIn?.startsWith('https')
-                                  ? user.social_links.linkedIn
-                                  : `https://${user.social_links.linkedIn}`
-                              }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link me-1'
+          <div
+            className=" personal-bio-info-container"
+            style={{ marginLeft: 'auto' }}
+          >
+            <div className="d-flex flex-wrap pb-0 mb-3">
+              <div className="portfolio-user-info">
+                <div className="row">
+                  <div
+                  // className="col-10"
+                  >
+                    <div className="d-flex flex-wrap ps-0 flex-grow-1 justify-content-between">
+                      <div className="user-info-grid mt-0 mt-md-4 mt-lg-0">
+                        <div style={{ flexGrow: 1 }}>
+                          <p
+                            className={`w-100 d-flex mt-auto ps-0 mb-0 pb-0 ${
+                              // isPreview ? 'pt-3' : 'pt-3'
+                              'pt-3'
+                            }`}
+                            style={style.user_name}
+                          >
+                            {user?.name}
+                          </p>
+                          <p
+                            className="mb-0 pt-1"
+                            style={{
+                              ...style.user_proffesion,
+                              display: 'block'
+                            }}
+                          >
+                            {user?.profession ? user?.profession : ''}
+                          </p>
+                          <div
+                            style={{
+                              flexBasis: '100%',
+                              height: 0
+                            }}
+                          ></div>
+                          {(user?.social_links?.linkedIn ||
+                            user?.social_links?.twitter ||
+                            user?.social_links?.instagram ||
+                            user?.social_links?.facebook ||
+                            user?.social_links?.website) && (
+                            <div
+                              className="mt-0 ps-1 d-flex flex-wrap pt-1 pt-md-auto"
+                              style={style.social_links}
                             >
-                              <FontAwesomeIcon icon={faLinkedinIn} />
-                            </a>
-                          )}
-                          {user?.social_links?.twitter && (
-                            <a
-                              href={
-                                user.social_links.twitter?.startsWith('https')
-                                  ? user.social_links.twitter
-                                  : `https://${user.social_links.twitter}`
-                              }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link mx-1'
-                            >
-                              <FontAwesomeIcon icon={faTwitter} />
-                            </a>
-                          )}
-                          {user?.social_links?.instagram && (
-                            <a
-                              href={
-                                user.social_links.instagram?.startsWith('https')
-                                  ? user.social_links.instagram
-                                  : `https://${user.social_links.instagram}`
-                              }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link mx-1'
-                            >
-                              <FontAwesomeIcon icon={faInstagram} />
-                            </a>
+                              {user?.social_links?.linkedIn && (
+                                <a
+                                  href={
+                                    user.social_links.linkedIn?.startsWith(
+                                      'https'
+                                    )
+                                      ? user.social_links.linkedIn
+                                      : `https://${user.social_links.linkedIn}`
+                                  }
+                                  rel="noreferrer"
+                                  target="_blank"
+                                  className="link me-1"
+                                >
+                                  <FontAwesomeIcon icon={faLinkedinIn} />
+                                </a>
+                              )}
+                              {user?.social_links?.twitter && (
+                                <a
+                                  href={
+                                    user.social_links.twitter?.startsWith(
+                                      'https'
+                                    )
+                                      ? user.social_links.twitter
+                                      : `https://${user.social_links.twitter}`
+                                  }
+                                  rel="noreferrer"
+                                  target="_blank"
+                                  className="link mx-1"
+                                >
+                                  <FontAwesomeIcon icon={faTwitter} />
+                                </a>
+                              )}
+                              {user?.social_links?.instagram && (
+                                <a
+                                  href={
+                                    user.social_links.instagram?.startsWith(
+                                      'https'
+                                    )
+                                      ? user.social_links.instagram
+                                      : `https://${user.social_links.instagram}`
+                                  }
+                                  rel="noreferrer"
+                                  target="_blank"
+                                  className="link mx-1"
+                                >
+                                  <FontAwesomeIcon icon={faInstagram} />
+                                </a>
+                              )}
+
+                              {user?.social_links?.website && (
+                                <a
+                                  href={
+                                    user.social_links.website?.startsWith(
+                                      'https'
+                                    )
+                                      ? user.social_links.website
+                                      : `https://${user.social_links.website}`
+                                  }
+                                  rel="noreferrer"
+                                  target="_blank"
+                                  className="link mx-1"
+                                >
+                                  <FontAwesomeIcon icon={faGlobe} />
+                                </a>
+                              )}
+                              {user?.social_links?.facebook && (
+                                <a
+                                  href={
+                                    user.social_links.facebook?.startsWith(
+                                      'https'
+                                    )
+                                      ? user.social_links.facebook
+                                      : `https://${user.social_links.facebook}`
+                                  }
+                                  rel="noreferrer"
+                                  target="_blank"
+                                  className="link mx-1"
+                                >
+                                  <FontAwesomeIcon icon={faFacebookF} />
+                                </a>
+                              )}
+                            </div>
                           )}
 
-                          {user?.social_links?.website && (
-                            <a
-                              href={
-                                user.social_links.website?.startsWith('https')
-                                  ? user.social_links.website
-                                  : `https://${user.social_links.website}`
-                              }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link mx-1'
-                            >
-                              <FontAwesomeIcon icon={faGlobe} />
-                            </a>
-                          )}
-                          {user?.social_links?.facebook && (
-                            <a
-                              href={
-                                user.social_links.facebook?.startsWith('https')
-                                  ? user.social_links.facebook
-                                  : `https://${user.social_links.facebook}`
-                              }
-                              rel='noreferrer'
-                              target='_blank'
-                              className='link mx-1'
-                            >
-                              <FontAwesomeIcon icon={faFacebookF} />
-                            </a>
+                          {user && (
+                            <p className="connections px-0 pt-1 pt-sm-auto">
+                              {userConnections > 500 ? (
+                                <>
+                                  500+ <IntlMessages id="connection.title" />
+                                </>
+                              ) : (
+                                <>
+                                  <span> {userConnections} </span>
+                                  <IntlMessages id="connection.title" />
+                                </>
+                              )}
+                            </p>
                           )}
                         </div>
-                      )}
-
-                      {user && (
-                        <p className='connections px-0 pt-1 pt-sm-auto'>
-                          {userConnections > 500 ? (
-                            <>
-                              500+ <IntlMessages id='connection.title' />
-                            </>
-                          ) : (
-                            <>
-                              <span> {userConnections} </span>
-                              <IntlMessages id='connection.title' />
-                            </>
+                        <div className="d-lg-flex flex-wrap w-100 w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate mx-lg-5 mx-sm-1">
+                          {!isCertified && (
+                            <span className="d-flex">
+                              <img
+                                src={CertificationBadge1}
+                                className="w-100 h-100 "
+                                alt="Certification badge 1"
+                              />
+                              <img
+                                src={CertificationBadge2}
+                                alt="Certification badge 1"
+                              />
+                            </span>
                           )}
-                        </p>
-                      )}
-                    </div>
-                    <div className='d-lg-flex flex-wrap w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate'>
-                      {isCertified && (
-                        <>
-                          <img src={Certificate} className='mt-4' />
-                          <p className='verified mb-0'>
-                            <IntlMessages id='general.verifyWithNova' />
-                          </p>
-                        </>
-                      )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className='col-2'>
-                <div
-                  className='float-lg-end float-end mx-2 mx-md-0 mt-3'
-                  onClick={() => setShowEditBioModal(true)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <FontAwesomeIcon
-                    className='edit-pencil float-end me-2'
-                    style={{ height: '25px', width: '25px' }}
-                    icon={faPencilAlt}
-                  />
-                </div>
-              </div>
+            </div>
+            <div className="my-0">
+              {user && (
+                <>
+                  <span className="user-bio">
+                    {userBio && userBio.slice(0, charset)}
+                    {userBio?.length >= charset && '...'}
+                  </span>
+                  {userBio?.length > charset && (
+                    <p className="user-bio-read-more pe-auto p-0 mt-1 mb-0">
+                      <span
+                        onClick={() => setCharset(charset + userBio.length)}
+                      >
+                        <IntlMessages id="general.readMore" />
+                      </span>
+                    </p>
+                  )}
+                </>
+              )}
             </div>
           </div>
+
+          <EditBio
+            show={showEditBioModal}
+            onHide={() => setShowEditBioModal(false)}
+            user={user}
+            userBio={userBio}
+            userConnections={userConnections}
+            handleChange={(event) => handleChange(event)}
+            avatar={avatar}
+            onSubmit={() => submit()}
+            loading={loading}
+            updateBio={updateBio}
+          />
         </div>
-        <div className='my-0'>
-          {user && (
-            <>
-              <span className='user-bio'>
-                {userBio && userBio.slice(0, charset)}
-                {userBio?.length >= charset && '...'}
-              </span>
-              {userBio?.length > charset && (
-                <p className='user-bio-read-more pe-auto p-0 mt-1 mb-0'>
-                  <span onClick={() => setCharset(charset + userBio.length)}>
-                    <IntlMessages id='general.readMore' />
-                  </span>
-                </p>
-              )}
-            </>
-          )}
-        </div>
-        <EditBio
-          show={showEditBioModal}
-          onHide={() => onClose()}
-          user={user}
-          userBio={userBio}
-          userConnections={userConnections}
-          handleChange={(event) => handleChange(event)}
-          avatar={avatar}
-          onSubmit={() => submit()}
-          loading={loading}
-          updateBio={updateBio}
-        />
-      </div>
-    </>
+      </>
+    </PortfolioSection>
   )
 }

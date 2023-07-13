@@ -17,3 +17,10 @@
 .lts-button[disabled] {
   opacity: 0.5;
 }
+.certified {
+  font-size: 14px;
+  font-weight: normal;
+}
+.certified span {
+  font-size: 15px;
+}

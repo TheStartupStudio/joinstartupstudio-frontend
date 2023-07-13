@@ -81,6 +81,11 @@ select {
 .Add-Student-Modal > modal-content {
   width: 90vw;
 }
+@media (min-width: 900px) {
+  .myCustomModal .modal-dialog {
+    max-width: 1200px;
+  }
+}
 
 .add-student-select .css-1s2u09g-control {
   height: 100%;
@@ -312,6 +317,9 @@ select {
 
 .reset-student-password .reset-button {
   width: 50%;
+}
+.disabled-select {
+  opacity: 0.5;
 }
 
 @media (max-width: 768px) {

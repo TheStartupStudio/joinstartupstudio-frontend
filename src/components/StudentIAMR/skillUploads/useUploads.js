@@ -50,6 +50,8 @@ export default function useUploads({ skillId, setSelectedUpload }) {
         const type =
           values.status === 'developing'
             ? notificationTypes.FEEDBACK_RECEIVED.key
+            : values.status === 'approved'
+            ? notificationTypes.APPROVED_SKILL.key
             : notificationTypes.PROFICIENT_SKILL.key
 
         const url =
@@ -59,7 +61,7 @@ export default function useUploads({ skillId, setSelectedUpload }) {
 
         notificationSocket?.emit('sendNotification', {
           sender: loggedUser,
-          receiver: { id: upload.user_id },
+          receivers: [{ id: upload.user_id }],
           type: type,
           url: url
         })

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { changeSidebarState } from '../../redux'
 import './style/editPortfolio.css'
 import IntlMessages from '../../utils/IntlMessages'
@@ -12,19 +12,61 @@ import { Education } from '../../components/Portfolio/Education'
 import { Accomplishment } from '../../components/Portfolio/Accomplishment'
 import { Recommendation } from '../../components/Portfolio/Recommendation'
 import { IAMR } from '../../components/Portfolio/IAMR'
-import Licenses_Certification from '../../components/Portfolio/Licenses_Certification'
+import LicencesCertification from '../../components/Portfolio/LicensesCertification'
 import { DeleteConfirmation } from '../../components/Portfolio/Confirm_modal'
 import { toast } from 'react-toastify'
 import './style/previewPortfolio.css'
 import { IsUserLevelAuthorized } from '../../utils/helpers'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
+import verifyNovae from '../../assets/images/verify-novae.png'
+import avatar from '../../assets/images/profile-image.png'
+import EditBio from '../../components/Portfolio/PersonalBio/EditBio'
+import EmptyEducationSection from './EmptyEducationSection'
+import EmptyAccomplishmentSection from './EmptyAccomplishmentSection'
+// import EmptyCertificationSection from './EmptyCertificationSection'
+import EmptyExperienceSection from './EmptyExperienceSection'
+import EmptyCertificationSection from './EmptyCertificationSection'
+
+export const VerifyButton = (props) => {
+  return (
+    <div
+      style={{
+        border: '1px solid #F2359D',
+        borderRadius: 3,
+        color: '#F2359D',
+        width: props.width ? props.width : '100%',
+        textAlign: 'center',
+        padding: '10px 4px',
+        height: 35,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+      onMouseEnter={(e) => {
+        e.target.style.backgroundColor = '#F2359D' // Change background color on hover
+        e.target.style.color = '#FFFFFF' // Change text color on hover
+      }}
+      onMouseLeave={(e) => {
+        e.target.style.backgroundColor = 'transparent' // Revert background color on mouse leave
+        e.target.style.color = '#F2359D' // Revert text color on mouse leave
+      }}
+    >
+      Verify
+    </div>
+  )
+}
 
 function EditPortfolio() {
   const [toggle, setToggle] = useState(0)
   const [user, setUser] = useState()
   const [showPublishModal, setShowPublishModal] = useState(false)
+  const [recommendationRequestId, setRecommendationRequestId] = useState()
+
   const [aggred, setAggred] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [recommendationRequestId, setRecommendationRequestId] = useState()
+  const userId = useSelector((state) => state.user.user.user.id)
+
   const dispatch = useDispatch()
 
   const authorizedLevel = IsUserLevelAuthorized()
@@ -36,13 +78,8 @@ function EditPortfolio() {
   }, [paramId])
 
   useEffect(() => {
-    getUser()
-  }, [])
-
-  useEffect(() => {
     dispatch(changeSidebarState(false))
   })
-
   const getUser = async () => {
     await axiosInstance
       .get(`/users`)
@@ -55,121 +92,152 @@ function EditPortfolio() {
       .catch((err) => err)
   }
 
+  useEffect(() => {
+    getUser()
+  }, [])
+
   const updateStatus = async () => {
     await axiosInstance
       .put(`/portfolio`, {
         is_published: !toggle
       })
       .then((response) => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         setToggle(!toggle)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.success_change' />)
+        toast.error(<IntlMessages id="alerts.success_change" />)
         setToggle(!toggle)
       })
   }
 
   return (
-    <div id='main-body'>
-      <div className='container-fluid'>
-        <div className='row'>
-          <div className='col-12 col-lg-11 pe-lg-5 gx-0 gx-sm-auto'>
-            <div className='page-padding'>
-              <div className='row mx-0'>
-                <div className='col-12 col-lg-7 col-xl-8 m-0 p-0'>
-                  <span className='my_portfolio_title'>
-                    <IntlMessages
-                      id='register.my_portfolio'
-                      className='title my_portfolio_title'
-                    />
-                  </span>
-                  <span className='mx-2 my_portfolio_bar d-sm-inline'>|</span>
-                  <span className='text-uppercase title_preview_portfolio d-block d-sm-inline'>
-                    <Link to={'/preview-portfolio'}>
-                      <IntlMessages id='portfolio.preview' />
-                    </Link>
-                  </span>
-                  <p className='my_portfolio_edit'>
-                    <IntlMessages id='portfolio.my_portfolio_edit' />
-                  </p>
-                </div>
-                <div className='col-lg-5 col-xl-4 gx-lg-0 m-0 p-0'>
-                  <div className='col-12 ps-md-0'>
-                    <span className='my_portfolio_publish pe-xxl-0 '>
-                      <IntlMessages id='portfolio.Publish.My.Portfolio' />
-                      <label className='px-0 ps-sm-1 ps-md-1 form-switch'>
-                        <input
-                          type='checkbox'
-                          checked={toggle}
-                          onChange={() => {
-                            if (toggle) {
-                              updateStatus()
-                            } else {
-                              setShowPublishModal(true)
-                            }
-                          }}
-                        />
-                        <i></i>
-                      </label>
-                    </span>
-
-                    <span className='ps-xl-0 d-block mt-1 mt-sm-1 publish_checkbox_info'>
-                      <IntlMessages id='portfolio.publish_checkbox' />
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <PersonalBio />
-              {user && (
-                <div>
-                  <IAMR user={user} />
-                  <Skills user={user} />
-                  <div className='box-group-title pt-md-4'>
-                    <h3 style={{ fontWeight: 'bold' }}>EXPERIENCE</h3>
-                    <Experience user={user} />
-                  </div>
-                  {authorizedLevel && (
-                    <Recommendation
-                      user={user}
-                      requestId={recommendationRequestId}
-                    />
-                  )}
-                  <div className='box-group-title pt-md-4'>
-                    <h3 style={{ fontWeight: 'bold' }}>
-                      EDUCATION & ACCOMPLISHMENTS
-                    </h3>
-                    <Education user={user} />
-                    <Accomplishment user={user} />
-                  </div>
-                </div>
-              )}
-              <Licenses_Certification user={user} />
-              <DeleteConfirmation
-                showModal={showPublishModal}
-                onHide={() => setShowPublishModal(false)}
-                confirmModal={() => true}
-                checkIfAggre={() => {
-                  updateStatus()
-                  setLoading(true)
-                  setAggred(true)
-                  setTimeout(() => {
-                    setLoading(false)
-                    setShowPublishModal(false)
-                  }, 5000)
-                }}
-                loading={loading}
-                setLoading={(data) => setLoading(data)}
-                type={true}
-                title={<IntlMessages id='portfolio.confirmation_modal' />}
-                body={
-                  <IntlMessages id='portfolio.confirmation_modal_second_part' />
-                }
-              />
-            </div>
-          </div>
+    <div className={'edit-portfolio-container'}>
+      <div>
+        <div>
+          <span className="my_portfolio_title">
+            <IntlMessages
+              id="register.my_portfolio"
+              className="title my_portfolio_title"
+            />
+          </span>
+          <span className="mx-2 my_portfolio_bar d-sm-inline">|</span>
+          <span className="text-uppercase title_preview_portfolio d-block d-sm-inline">
+            <Link to={'/preview-portfolio'}>
+              <IntlMessages id="portfolio.preview" />
+            </Link>
+          </span>
+          <p className="my_portfolio_edit">
+            <IntlMessages id="portfolio.my_portfolio_edit" />
+          </p>
         </div>
       </div>
+      <div
+        style={{
+          background: '#F8F7F7 0% 0% no-repeat padding-box',
+          opacity: 1,
+          padding: 20
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ width: '30%' }}>
+            <span className="my_portfolio_publish pe-xxl-0 ">
+              <IntlMessages id="portfolio.Publish.My.Portfolio" />
+              <label className="px-0 ps-sm-1 ps-md-1 form-switch">
+                <input
+                  type="checkbox"
+                  checked={toggle}
+                  onChange={() => {
+                    if (toggle) {
+                      updateStatus()
+                    } else {
+                      setShowPublishModal(true)
+                    }
+                  }}
+                />
+                <i></i>
+              </label>
+            </span>
+
+            <span className="ps-xl-0 d-block mt-1 mt-sm-1 publish_checkbox_info">
+              <IntlMessages id="portfolio.publish_checkbox" />
+            </span>
+          </div>
+          {/* <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              flexDirection: 'column',
+            }}
+          >
+            <img
+              style={{
+                objectFit: 'contain',
+                width: 250,
+                height: 55,
+              }}
+              src={verifyNovae}
+            />
+          </div> */}
+        </div>
+        {user && (
+          <>
+            <PersonalBio user={user} isPreview={false} />
+
+            <IAMR user={user} isPreview={false} />
+
+            <Skills user={user} />
+
+            <div>
+              <div
+                style={{
+                  font: 'normal normal 600 24px Montserrat',
+                  letterSpacing: 0,
+                  color: '#231F20',
+                  marginLeft: 10
+                }}
+              >
+                EXPERIENCE
+              </div>
+              <Experience user={user} />
+            </div>
+            <div>
+              <div
+                style={{
+                  font: 'normal normal 600 24px Montserrat',
+                  letterSpacing: 0,
+                  color: '#231F20',
+                  marginLeft: 10
+                }}
+              >
+                EDUCATION AND ACCOMPLISHMENTS
+              </div>
+              <Education user={user} />
+              <Accomplishment user={user} />
+            </div>
+            <LicencesCertification user={user} />
+          </>
+        )}
+      </div>
+      <DeleteConfirmation
+        showModal={showPublishModal}
+        onHide={() => setShowPublishModal(false)}
+        confirmModal={() => true}
+        checkIfAggre={() => {
+          updateStatus()
+          setLoading(true)
+          setAggred(true)
+          setTimeout(() => {
+            setLoading(false)
+            setShowPublishModal(false)
+          }, 5000)
+        }}
+        loading={loading}
+        setLoading={(data) => setLoading(data)}
+        type={true}
+        title={<IntlMessages id="portfolio.confirmation_modal" />}
+        body={<IntlMessages id="portfolio.confirmation_modal_second_part" />}
+      />
     </div>
   )
 }

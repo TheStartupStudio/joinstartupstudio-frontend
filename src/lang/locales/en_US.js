@@ -46,11 +46,13 @@ const EnLangs = {
   'login.email': 'Email address',
   'login.password': 'Password',
   'login.title': 'Login To Your Account',
+  'login.title2': 'Login',
   'login.security': 'The security of your information is important.',
   'login.protect_data': 'Learn how we protect you.',
   'login.forgot_password': ' Forgot your password?',
   'login.register': 'Don’t have an account?',
   'login.register_link': 'Register',
+  'login.next': 'Next',
 
   //LTS Secure
   'lts_secure.partnership_for': 'A partnership for',
@@ -796,7 +798,10 @@ const EnLangs = {
   //Modals
   'modal.contact_us': 'Contact Support',
   'modal.contact_us_email': 'Your email',
-  'modal.contact_us_message': 'Add your message here…',
+  'modal.contact_us_subject_label': 'Subject',
+  'modal.contact_us_subject_placeholder': 'Subject',
+  'modal.contact_us_message_label': 'Message',
+  'modal.contact_us_message_placeholder': 'Add your message here…',
   'modal.contact_us_send_message': 'Send message',
   'modal.Public_Portfolio_link_will_automatically_appear_here':
     '(Public Portfolio link will automatically appear here)',
@@ -869,6 +874,7 @@ const EnLangs = {
   'alerts.name_required': 'Name is required',
   'alerts.email_required': 'Email is required',
   'alerts.password_required': 'Password is required',
+  'alerts.subject_required': 'Please enter a subject',
   'alerts.valid_email': 'Please enter a valid email address',
   'alerts.contact_message': 'Please enter a message.',
   'alerts.email_password_incorrect': 'Your email and/or password is incorrect',
@@ -928,7 +934,32 @@ const EnLangs = {
   'my_saved.alredy_saved_PODCASTS': 'Podcast is alredy saved',
   'my_saved.alredy_saved_PODCASTS_note': 'Note podcast page',
   'foul_words.notice':
-    'We have detected foul words in your writing, please revise your text before submitting. Your account can be suspended if foul words are used. Contact us if you have any questions!'
+    'We have detected foul words in your writing, please revise your text before submitting. Your account can be suspended if foul words are used. Contact us if you have any questions!',
+
+  // CALENDAR TASK-EVENTS
+
+  'calendar_task-events.add_a_new_task/event': 'Add a new task/event',
+  'calendar_task-events.edit_task': 'Edit task',
+  'calendar_task-events.edit_event': 'Edit event',
+  'calendar_task-events.name_of_task': 'Name of task',
+  'calendar_task-events.date_of_task': 'Date of task',
+  'calendar_task-events.description_of_task': 'Description of task',
+  'calendar_task-events.name_of_event': 'Name of event',
+  'calendar_task-events.date_of_event': 'Date of event',
+  'calendar_task-events.description_of_event': 'Description of event',
+  'calendar_task-events.requirements': 'Requirements',
+  'calendar_task-events.choose_classes': 'Choose classes',
+  'calendar_task-events.chosen_classes': 'Chosen classes',
+  'calendar_task-events.event': 'Event',
+  'calendar_task-events.task': 'Task',
+  'calendar_task-events.start_date_of_task': 'Start date of task',
+  'calendar_task-events.end_date_of_task': 'End date of task',
+  'calendar_task-events.start_time_of_task': 'Start time of task',
+  'calendar_task-events.end_time_of_task': 'End time of task',
+  'calendar_task-events.start_date_of_event': 'Start date of event',
+  'calendar_task-events.end_date_of_event': 'End date of event',
+  'calendar_task-events.start_time_of_event': 'Start time of event',
+  'calendar_task-events.end_time_of_event': 'End time of event',
 }
 
 export default EnLangs
