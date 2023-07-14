@@ -313,7 +313,7 @@ export default function StudentsTable(props) {
       cursor: 'pointer',
       color: '#707070',
       fontWeight: '500',
-
+      padding: '2px 2px',
       ':hover': {
         border: '1px solid #BBBDBF'
       },
@@ -322,7 +322,7 @@ export default function StudentsTable(props) {
     menu: (base) => ({
       ...base,
       border: 'none',
-      fontSize: '14px',
+      fontSize: '10px',
       cursor: 'pointer',
       // width: '150%',
       margin: 0,
@@ -1204,13 +1204,13 @@ export default function StudentsTable(props) {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-md-5">
+              <div className="col-12 col-xxl-5 col-lg-5 col-md-7">
                 <div className="row h-100 me-0 align-items-end justify-content-end">
-                  <div className="col-12 col-sm-4 col-xxl-4 mt-2 pe-0">
+                  <div className="col-12 col-sm-4 col-xxl-5 col-lg-5 mt-2 col-md-6 pe-0">
                     <Select
                       options={[
                         { label: 'edit', value: 'edit' },
-                        { label: 'nextYear', value: 'nextYear' },
+                        { label: 'next Year', value: 'next Year' },
                         { label: 'deactivate', value: 'deactivate' }
                       ]}
                       value={'Bulk Actions'}
@@ -1228,7 +1228,7 @@ export default function StudentsTable(props) {
                       isSearchable={false}
                     />
                   </div>
-                  <div className="col-12 col-sm-5 col-xxl-5 mt-2 me-0 pe-0">
+                  <div className="col-12 col-sm-5 col-xxl-5 col-lg-6 col-md-6 mt-2 me-0 pe-0">
                     <Select
                       options={[
                         { label: 'level', value: 'level' },
@@ -1251,7 +1251,6 @@ export default function StudentsTable(props) {
                       ]}
                       value={null}
                       className="mb-0 custom-dropdown"
-                      style={{ width: '200px', maxWidth: '200px' }}
                       styles={dropDownStyles}
                       autoFocus={false}
                       isSearchable={false}

@@ -14,7 +14,6 @@ const InstructorNotes = () => {
   const [instructorNotes, setInstructorNotes] = useState(false)
   const [receivedNotes, setReceivedNotes] = useState([])
   const [sliceIndex, setSliceIndex] = useState(3)
-
   const { id } = useParams()
 
   useEffect(() => {
@@ -71,7 +70,10 @@ const InstructorNotes = () => {
         {instructorNotes && (
           <div className="my-account mt-4 mb-2 mx-3 intructor-notes">
             <h4 className="mt-5">INSTRUCTOR NOTES</h4>
-            <InstructorNotesBox sliceIndex={sliceIndex} />
+            <InstructorNotesBox
+              receivedNotes={receivedNotes}
+              sliceIndex={sliceIndex}
+            />
 
             {receivedNotes?.length > 3 && (
               <div className="d-flex justify-content-end">

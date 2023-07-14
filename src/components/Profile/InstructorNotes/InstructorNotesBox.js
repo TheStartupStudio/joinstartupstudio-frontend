@@ -15,10 +15,7 @@ const InstructorNotesBox = (props) => {
   const [studentNote, setStudentNote] = useState([])
   const [deleteNoteModal, setDeleteNoteModal] = useState(false)
   const [editNoteModal, setEditNoteModal] = useState(false)
-  const userProfile = useSelector((state) => state.users.selectedUser)
   const { id } = useParams()
-
-  console.log('studentNote', studentNote)
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -57,22 +54,12 @@ const InstructorNotesBox = (props) => {
   useEffect(() => {
     if (receivedNotes.length) {
       notificationSocket?.on('deletedNote', (data) => {
-        console.log('data', data)
         let newReceivedNote = receivedNotes.filter((n) => n.id !== data.noteId)
         setReceivedNotes(newReceivedNote)
       })
       handleCloseDeleteNoteModal()
     }
   }, [receivedNotes])
-
-  //   const handleOpenNewNotificationModal = (index) => {
-  //     const notificationFounded = [...receivedNotes].find((n, i) => i === index)
-  //     setStudentNote(notificationFounded)
-  //     setDeleteNoteModal(true)
-  //   }
-  //   const handleCloseNewNoteModal = () => {
-  //     setDeleteNoteModal(false)
-  //   }
 
   const handleOpenNoteModal = (index) => {
     const notificationFounded = [...receivedNotes].find((n, i) => i === index)
