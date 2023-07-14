@@ -280,7 +280,7 @@ const EditStudentModal = (props) => {
             alt="#"
           />
         </div>
-        <div className="col-12 col-lg-6 pe-lg-4">
+        <div className="col-12 h-100 col-lg-6 pe-lg-4">
           <div className="input-group mb-1">
             <label htmlFor=" w-100">User Name</label>
 
@@ -325,21 +325,6 @@ const EditStudentModal = (props) => {
               name="UserEmail"
             />
           </div>
-          {/* <div className="mt-2">
-            <textarea
-              className="form-control"
-              id="exampleFormControlTextarea1"
-              // defaultValue={data.user_note}
-              value={data?.user_note ? data?.user_note : ''}
-              name="user_note"
-              onChange={(e) =>
-                handleChange({ name: 'user_note', value: e.target.value })
-              }
-              placeholder="Add user notes here..."
-              rows="4"
-            ></textarea>
-          </div> */}
-
           <div className="mt-2 mb-1 reset-student-password d-flex flex-column">
             <button
               className="lts-button reset-button"
@@ -367,8 +352,19 @@ const EditStudentModal = (props) => {
               </p>
             )}
           </div>
-          <div className=" col-12 d-flex align-items-end" style={{}}>
-            <button className="btn btn-secondary">View student account</button>
+
+          <div className="">
+            <a
+              href={`/account/${data.id}`}
+              className="btn btn-secondary w-100"
+              style={{
+                position: 'absolute',
+                bottom: '16px',
+                maxWidth: '361px'
+              }}
+            >
+              View student account
+            </a>
           </div>
         </div>
         <div className="col-lg-4 col-12">

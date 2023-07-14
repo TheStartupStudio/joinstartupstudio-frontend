@@ -10,7 +10,7 @@ import {
   faFolder,
   faCertificate,
   faClipboardCheck,
-  faAngleDown,
+  faAngleDown
 } from '@fortawesome/free-solid-svg-icons'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'jquery/dist/jquery.min.js'
@@ -19,7 +19,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import { setAccordionToggled } from '../../redux'
 import IntlMessages from '../../utils/IntlMessages'
-import SUSLogoStudent from '../../assets/images/LTS-logo.png'
+import SUSLogoStudent from '../../assets/images/LTS-logo-horizontal.png'
 import sidebarImage from '../../assets/images/side-logo.png'
 import diagramAnimation from '../../assets/json/lts-diagram.json'
 import sidebarImageES from '../../assets/images/side-logo-es.png'
@@ -205,7 +205,7 @@ function Sidebar(props) {
               className="me-2 me-md-0"
               style={{
                 fontSize: '16px',
-                color: '#333D3D',
+                color: '#333D3D'
               }}
             />
           </div>
@@ -254,7 +254,7 @@ function Sidebar(props) {
                 style={{
                   textTransform: 'uppercase',
                   color: '#707070',
-                  fontSize: 14,
+                  fontSize: 14
                 }}
               >
                 Instructor platform
@@ -348,7 +348,7 @@ function Sidebar(props) {
                         className="me-2 me-md-0"
                         style={{
                           fontSize: '16px',
-                          color: '#333D3D',
+                          color: '#333D3D'
                         }}
                       />
                     </div>
@@ -436,7 +436,7 @@ function Sidebar(props) {
                         className="me-2 me-md-0"
                         style={{
                           fontSize: '16px',
-                          color: '#333D3D',
+                          color: '#333D3D'
                         }}
                       />
                     </div>
@@ -539,7 +539,7 @@ function Sidebar(props) {
                       className="me-2 me-md-0"
                       style={{
                         fontSize: '16px',
-                        color: '#333D3D',
+                        color: '#333D3D'
                       }}
                     />
                   </div>
@@ -612,7 +612,7 @@ function Sidebar(props) {
                       className="me-2 me-md-0"
                       style={{
                         fontSize: '16px',
-                        color: '#333D3D',
+                        color: '#333D3D'
                       }}
                     />
                   </div>

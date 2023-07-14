@@ -1,115 +1,114 @@
 /* Top Level Route file */
 
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
-import { useSelector, connect } from "react-redux";
-import { IntlProvider } from "react-intl";
-import AppLocale from "./lang";
-import Layout from "./pages/Layout";
-import PublicLayout from "./pages/Layout/publicLayout";
-import CSVUpload from "./components/CSVUpload";
-import VerifyEmailByCode from "./pages/Register/verifyEmailByCode";
-import LtsJournal from "./pages/LtsJournal";
-import MyCourseEntrepreneurship from "./pages/MyCourseEntrepreneurship";
-import PublishedProject from "./pages/StartupProfile/components/published";
-import EditProject from "./pages/StartupProfile/pages/edit";
-import StudentJournals from "./pages/studentJournals";
-import IamrContents from "./pages/Iamr/IamrContentsAccordion";
-import ImrContent from "./pages/Iamr/ImrContent";
+import React from 'react'
+import { Switch, Route, Redirect } from 'react-router-dom'
+import { useSelector, connect } from 'react-redux'
+import { IntlProvider } from 'react-intl'
+import AppLocale from './lang'
+import Layout from './pages/Layout'
+import PublicLayout from './pages/Layout/publicLayout'
+import CSVUpload from './components/CSVUpload'
+import VerifyEmailByCode from './pages/Register/verifyEmailByCode'
+import LtsJournal from './pages/LtsJournal'
+import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
+import PublishedProject from './pages/StartupProfile/components/published'
+import EditProject from './pages/StartupProfile/pages/edit'
+import StudentJournals from './pages/studentJournals'
+import IamrContents from './pages/Iamr/IamrContentsAccordion'
+import ImrContent from './pages/Iamr/ImrContent'
+import UserProfile from './pages/Profile/userProfile'
 
-const Login = React.lazy(() => import("./pages/Auth/Login"));
-const ChooseLogin = React.lazy(() => import("./pages/Auth/Login/ChooseLogin"));
-const SecurePage = React.lazy(() => import("../src/pages/Secure"));
+const Login = React.lazy(() => import('./pages/Auth/Login'))
+const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
+const SecurePage = React.lazy(() => import('../src/pages/Secure'))
 const ForgotPassword = React.lazy(() =>
-  import("./pages/Auth/Login/forgotPassword")
-);
+  import('./pages/Auth/Login/forgotPassword')
+)
 const ResetPassword = React.lazy(() =>
-  import("./pages/Auth/Login/resetPassword")
-);
+  import('./pages/Auth/Login/resetPassword')
+)
 const CreateAccount = React.lazy(() =>
-  import("./pages/Auth/Login/createAccount")
-);
-const NotFound = React.lazy(() => import("../src/pages/NotFound"));
+  import('./pages/Auth/Login/createAccount')
+)
+const NotFound = React.lazy(() => import('../src/pages/NotFound'))
 
-const Terms = React.lazy(() => import("./pages/Terms"));
-const Register = React.lazy(() => import("./pages/Register"));
-const Dashboard = React.lazy(() => import("./pages/Dashboard"));
-const Portfolio = React.lazy(() => import("./pages/Portfolio"));
+const Terms = React.lazy(() => import('./pages/Terms'))
+const Register = React.lazy(() => import('./pages/Register'))
+const Dashboard = React.lazy(() => import('./pages/Dashboard'))
+const Portfolio = React.lazy(() => import('./pages/Portfolio'))
 const EditPortfolio = React.lazy(() =>
-  import("./pages/Portfolio/editPortfolio")
-);
-const MyStudents = React.lazy(() => import("./pages/MyStudents"));
-const Resources = React.lazy(() => import("./pages/Resources"));
-const Preview = React.lazy(() => import("./pages/StartupProfile/preview"));
+  import('./pages/Portfolio/editPortfolio')
+)
+const MyStudents = React.lazy(() => import('./pages/MyStudents'))
+const Resources = React.lazy(() => import('./pages/Resources'))
+const Preview = React.lazy(() => import('./pages/StartupProfile/preview'))
 
-const SavedMedia = React.lazy(() => import("./pages/Saved"));
-const Resubscribe = React.lazy(() => import("./pages/Resubscribe"));
-const StartupLive = React.lazy(() => import("./pages/StartupLive"));
-const Spotlight = React.lazy(() => import("./pages/Spotlight"));
-const LiveStream = React.lazy(() => import("./pages/StartupLive/livestream"));
-const AllVideos = React.lazy(() =>
-  import("./pages/BeyondYourCourse/allVideos")
-);
-const BeyondYourCourse = React.lazy(() => import("./pages/BeyondYourCourse"));
+const SavedMedia = React.lazy(() => import('./pages/Saved'))
+const Resubscribe = React.lazy(() => import('./pages/Resubscribe'))
+const StartupLive = React.lazy(() => import('./pages/StartupLive'))
+const Spotlight = React.lazy(() => import('./pages/Spotlight'))
+const LiveStream = React.lazy(() => import('./pages/StartupLive/livestream'))
+const AllVideos = React.lazy(() => import('./pages/BeyondYourCourse/allVideos'))
+const BeyondYourCourse = React.lazy(() => import('./pages/BeyondYourCourse'))
 const BeyondYourCourseVideo = React.lazy(() =>
-  import("../src/pages/BeyondYourCourse/beyondYourCourseVideo")
-);
-const Profile = React.lazy(() => import("./pages/Profile/index"));
+  import('../src/pages/BeyondYourCourse/beyondYourCourseVideo')
+)
+const Profile = React.lazy(() => import('./pages/Profile/index'))
 const ProfilePreview = React.lazy(() =>
-  import("./pages/Profile/profilePreview")
-);
+  import('./pages/Profile/profilePreview')
+)
 const MyMarketReadyGuide = React.lazy(() =>
-  import("./pages/MyMarketReadyGuide")
-);
-const PublicProfile = React.lazy(() => import("./pages/Profile/publicProfile"));
+  import('./pages/MyMarketReadyGuide')
+)
+const PublicProfile = React.lazy(() => import('./pages/Profile/publicProfile'))
 const PublicPortfolio = React.lazy(() =>
-  import("./pages/Portfolio/publicPortfolio")
-);
+  import('./pages/Portfolio/publicPortfolio')
+)
 
 const PreviewPublicPortfolio = React.lazy(() =>
-  import("./pages/PortfolioNew/previewPublicPortfolio")
-);
+  import('./pages/PortfolioNew/previewPublicPortfolio')
+)
 const UserPortfolioProj = React.lazy(() =>
-  import("./pages/StartupProfile/userProjects")
-);
-const Iamr = React.lazy(() => import("../src/pages/Iamr"));
+  import('./pages/StartupProfile/userProjects')
+)
+const Iamr = React.lazy(() => import('../src/pages/Iamr'))
 
-const MyNotes = React.lazy(() => import("../src/pages/MyNotes"));
-const SampleNote = React.lazy(() => import("../src/pages/MyNotes/sampleNote"));
-const MyJournals = React.lazy(() => import("../src/pages/MyJournals"));
-const Logout = React.lazy(() => import("./pages/Auth/LogOut"));
-const VerifyEmail = React.lazy(() => import("./pages/Verify"));
-const MyConnections = React.lazy(() => import("./pages/MyConnections"));
-const StoryInMotion = React.lazy(() => import("./pages/StoryInMotion"));
-const MyStartupProfile = React.lazy(() => import("./pages/StartupProfile"));
+const MyNotes = React.lazy(() => import('../src/pages/MyNotes'))
+const SampleNote = React.lazy(() => import('../src/pages/MyNotes/sampleNote'))
+const MyJournals = React.lazy(() => import('../src/pages/MyJournals'))
+const Logout = React.lazy(() => import('./pages/Auth/LogOut'))
+const VerifyEmail = React.lazy(() => import('./pages/Verify'))
+const MyConnections = React.lazy(() => import('./pages/MyConnections'))
+const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
+const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
 const PreviewPortfolioNew = React.lazy(() =>
-  import("./pages/PortfolioNew/previewPortfolio")
-);
+  import('./pages/PortfolioNew/previewPortfolio')
+)
 const EditPortfolioNew = React.lazy(() =>
-  import("./pages/PortfolioNew/editPortfolio")
-);
+  import('./pages/PortfolioNew/editPortfolio')
+)
 
 const PasswordChangeRequired = React.lazy(() =>
-  import("./pages/Auth/Login/passwordChangeRequired")
-);
+  import('./pages/Auth/Login/passwordChangeRequired')
+)
 
 const JournalsManagement = React.lazy(() =>
-  import("./pages/JournalsManagement")
-);
+  import('./pages/JournalsManagement')
+)
 
-const IAMRinbox = React.lazy(() => import("./pages/IAMRinbox"));
-const StudentIAMR = React.lazy(() => import("../src/pages/StudentIAMR"));
+const IAMRinbox = React.lazy(() => import('./pages/IAMRinbox'))
+const StudentIAMR = React.lazy(() => import('../src/pages/StudentIAMR'))
 
 function Router(props) {
-  const currentAppLocale = AppLocale[props.locale];
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  const clientBaseURL = `${process.env.REACT_APP_CLIENT_BASE_URL}`;
+  const currentAppLocale = AppLocale[props.locale]
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
+  const clientBaseURL = `${process.env.REACT_APP_CLIENT_BASE_URL}`
 
   return (
     <IntlProvider
       locale={currentAppLocale.locale}
       messages={currentAppLocale.messages}
-      onError={() => ""}
+      onError={() => ''}
     >
       <React.Fragment>
         {isAuthenticated ? (
@@ -161,6 +160,7 @@ function Router(props) {
               <Route exact path="/spotlight" component={Spotlight} />
               <Route exact path="/startup-livestream" component={LiveStream} />
               <Route exact path="/account" component={Profile} />
+              <Route exact path="/account/:id" component={UserProfile} />
               <Route exact path="/profile-preview" component={ProfilePreview} />
               <Route
                 path="/my-training/"
@@ -307,12 +307,12 @@ function Router(props) {
         )}
       </React.Fragment>
     </IntlProvider>
-  );
+  )
 }
 
 const mapStateToProps = ({ lang }) => {
-  const { locale } = lang;
-  return { locale };
-};
+  const { locale } = lang
+  return { locale }
+}
 
-export default connect(mapStateToProps, {})(Router);
+export default connect(mapStateToProps, {})(Router)
