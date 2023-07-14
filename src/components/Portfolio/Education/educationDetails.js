@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { formatDate } from '../../../utils/helpers'
 // import './style.css'
 import {
   faGlobe,
@@ -7,7 +8,7 @@ import {
   faPencilAlt,
   faUserGraduate
 } from '@fortawesome/free-solid-svg-icons'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 import { useHistory } from 'react-router-dom'
 import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
@@ -92,11 +93,11 @@ export const EducationDetails = (props) => {
                   }}
                 >
                   {}
-                  {format(new Date(education.start_date), 'yyyy')}
+                  {format((parse(formatDate(education.start_date), 'yyyy-MM', new Date())), 'yyyy')}
                   <span style={{ fontSize: '16px' }}> - </span>
 
                   {education.end_date
-                    ? format(new Date(education.end_date), 'yyyy')
+                    ? format((parse(formatDate(education.end_date), 'yyyy-MM', new Date())), 'yyyy')
                     : 'Present'}
                 </div>
               </div>

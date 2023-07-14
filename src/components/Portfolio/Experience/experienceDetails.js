@@ -7,9 +7,9 @@ import {
   faPencilAlt,
   faBriefcase
 } from '@fortawesome/free-solid-svg-icons'
-import { format } from 'date-fns'
-import { VerifyButton } from '../../../pages/PortfolioNew/editPortfolio'
+import { format, parse } from 'date-fns'
 import { useHistory } from 'react-router-dom'
+import { formatDate } from '../../../utils/helpers'
 import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 export const ExperienceDetails = (props) => {
@@ -109,10 +109,10 @@ export const ExperienceDetails = (props) => {
                     color: '#231F20'
                   }}
                 >
-                  {format(new Date(experience?.start_date), 'MMM yyyy')}
+                  {format((parse(formatDate(experience.start_date), 'yyyy-MM', new Date())), 'MMMM yyyy')}
                   <span style={{ fontSize: '16px' }}> - </span>
                   {experience?.end_date
-                    ? format(new Date(experience?.end_date), 'MMM yyyy')
+                    ? format((parse(formatDate(experience.end_date), 'yyyy-MM', new Date())), 'MMMM yyyy')
                     : 'Present'}
                 </div>
               </div>

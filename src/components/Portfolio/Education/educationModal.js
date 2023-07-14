@@ -50,8 +50,8 @@ export const EducationModal = (props) => {
     if (props.currentEducation.length === 0) return
     setEducationData({
       ...props.currentEducation,
-      start_date: formatDate(props.currentEducation.start_date),
-      end_date: formatDate(props.currentEducation.end_date)
+      // start_date: formatDate(props.currentEducation.start_date),
+      // end_date: formatDate(props.currentEducation.end_date)
     })
     setSelectedImage(props.currentEducation.image_url)
     setIsUpdating(true)
@@ -407,7 +407,7 @@ export const EducationModal = (props) => {
                       year: 'numeric',
                       month: '2-digit'
                     })}
-                    value={educationData?.start_date}
+                    value={formatDate(educationData?.start_date)}
                     onChange={handleChange}
                   />
                 </div>
@@ -422,7 +422,7 @@ export const EducationModal = (props) => {
                       month: '2-digit'
                     })}
                     value={
-                      educationData?.end_date ? educationData.end_date : ''
+                      formatDate(educationData?.end_date ? educationData.end_date : '')
                     }
                     ref={endDateRef}
                     id="end_date"

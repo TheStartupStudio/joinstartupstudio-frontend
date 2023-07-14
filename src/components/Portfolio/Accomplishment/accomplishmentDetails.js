@@ -3,14 +3,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import './style.css'
 import { faGlobe, faFile } from '@fortawesome/free-solid-svg-icons'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 import { useHistory } from 'react-router-dom'
 import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import { formatDate } from '../../../utils/helpers'
 
 export const AccomplishmentDetails = (props) => {
   const [accomp, setAccomp] = useState()
 
   useEffect(() => {
+    console.log(props.accomp.date_issued)
     setAccomp(props.accomp)
   }, [props.accomp])
 
@@ -63,7 +65,8 @@ export const AccomplishmentDetails = (props) => {
                     color: '#231F20',
                   }}
                 >
-                  {format(new Date(accomp.date_issued), 'MMMM yyyy')}
+                  { 
+                format((parse(formatDate(props.accomp.date_issued), 'yyyy-MM', new Date())), 'MMMM yyyy')}
                 </div>
               </div>
             </div>
