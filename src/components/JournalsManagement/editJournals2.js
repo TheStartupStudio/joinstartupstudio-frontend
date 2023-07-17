@@ -127,7 +127,7 @@ export default function EditJournals2(props) {
       console.error(error)
     }
   }
-
+  console.log(selectedJournal)
   const getJournals2Weeks = async () => {
     try {
       const response = await axiosInstance.get(
@@ -156,7 +156,10 @@ export default function EditJournals2(props) {
         type: selectedJournal?.value?.type,
         customContent: selectedJournal?.value?.customContent,
         steps: selectedJournal?.value?.steps,
-        ltsConnection: selectedJournal?.value?.ltsConnection
+        ltsConnection: selectedJournal?.value?.ltsConnection,
+        curriculumOverview: selectedJournal?.value?.curriculumOverview,
+        programOpportunities: selectedJournal?.value?.programOpportunities,
+        expectedOutcomes: selectedJournal?.value?.expectedOutcomes
       })
       .then((res) => {
         setJournals(
@@ -796,6 +799,37 @@ export default function EditJournals2(props) {
     newJournal.value.ltsConnection = newLtsConnection
     setSelectedJournal(newJournal)
   }
+
+  const handleChangeProgramOpportunities = (index, name, value) => {
+    let newJournal = { ...selectedJournal }
+    let newProgramOpportunities = [
+      ...selectedJournal?.value?.programOpportunities
+    ]
+    let newProgramOpportunity = newProgramOpportunities[index]
+    newProgramOpportunity[name] = value
+    newProgramOpportunities[index] = newProgramOpportunity
+    newJournal.programOpportunities = newProgramOpportunities
+    setSelectedJournal(newJournal)
+  }
+  const handleChangeCurriculumOverview = (index, name, value) => {
+    let newJournal = { ...selectedJournal }
+    let newCurriculumOverviews = [...selectedJournal?.value?.curriculumOverview]
+    let newCurriculumOverview = newCurriculumOverviews[index]
+    newCurriculumOverview[name] = value
+    newCurriculumOverviews[index] = newCurriculumOverview
+    newJournal.curriculumOverview = newCurriculumOverviews
+    setSelectedJournal(newJournal)
+  }
+  const handleChangeExpectedOutcomes = (index, name, value) => {
+    let newJournal = { ...selectedJournal }
+    let newExpectedOutcomes = [...selectedJournal?.value?.expectedOutcomes]
+    let newExpectedOutcome = newExpectedOutcomes[index]
+    newExpectedOutcome[name] = value
+    newExpectedOutcomes[index] = newExpectedOutcome
+    newJournal.expectedOutcomes = newExpectedOutcomes
+    setSelectedJournal(newJournal)
+  }
+
   return (
     <div>
       {!fetchingJournals ? (
@@ -997,145 +1031,256 @@ export default function EditJournals2(props) {
               </>
             )}
           </>
-
-          {
+          {selectedJournal?.value?.programOpportunities && (
             <>
-              <div>BREAKDOWNS</div>
+              <h1>Program Opportunities</h1>
 
-              {breakdowns?.map((breakdown, breakdownIndex) => {
+              {selectedJournal?.value?.programOpportunities?.map((x, i) => {
                 return (
                   <div>
-                    <div style={{ fontWeight: 600 }}>
-                      Breakdown {breakdownIndex + 1}
+                    <div>
+                      <h3>Image Url {i + 1}</h3>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={x?.imageUrl}
+                        onChange={(e) =>
+                          handleChangeProgramOpportunities(
+                            i,
+                            'imageUrl',
+                            e.target.value
+                          )
+                        }
+                      />
                     </div>
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <div
-                        className="input-group  d-flex align-items-center"
-                        style={{ width: 260 }}
-                      >
-                        <span className="input-group-text">
-                          Breakdown Order:
-                        </span>
-                        <input
-                          type="number"
-                          className="form-control"
-                          value={breakdown.breakdownOrder}
-                          onChange={(e) =>
-                            handleOrderChange(
-                              breakdownIndex,
-                              Number(e.target.value)
-                            )
-                          }
-                        />
-                      </div>
-                      <div className={'d-flex align-items-center '}>
-                        <button
-                          className={'btn btn-danger'}
-                          onClick={() => {
-                            return handleDeleteBreakdown(breakdownIndex)
-                          }}
-                        >
-                          Delete breakdown
-                        </button>
-                      </div>
+                    <div>
+                      <h3>Content {i + 1}</h3>
+                      <KendoTextEditor
+                        value={x?.content}
+                        handleChange={(e) =>
+                          handleChangeProgramOpportunities(i, 'content', e)
+                        }
+                        minHeight={150}
+                      />
                     </div>
-                    <div>Breakdown title</div>
-                    <input
-                      type="text"
-                      className="w-100 p-2"
-                      name="title"
-                      value={breakdown?.title}
-                      onChange={(e) =>
-                        handleChangeBreakdown(
-                          breakdownIndex,
-                          'title',
-                          e.target.value
-                        )
-                      }
-                    />
-
-                    {breakdown.type === 'type-1' && (
-                      <>
-                        <div>Breakdown content</div>
-                        <KendoTextEditor
-                          value={breakdown?.content}
-                          handleChange={(e) =>
-                            handleChangeBreakdown(breakdownIndex, 'content', e)
-                          }
-                        />
-                      </>
-                    )}
-
-                    {breakdown.type === 'type-3' && (
-                      <>
-                        <CustomContent
-                          handleSetHighestOrder={handleSetHighestOrder}
-                          breakdown={breakdown}
-                          handleChangeImageGallery={(value, uuid) =>
-                            handleChangeImageGallery(
-                              value,
-                              uuid,
-                              breakdownIndex
-                            )
-                          }
-                          breakdownIndex={breakdownIndex}
-                          handleChangeParagraph={handleChangeParagraph}
-                          handleChangeButtons={handleChangeButtons}
-                          handleChangePopupButtons={handleChangePopupButtons}
-                          handleChangeImages={handleChangeImages}
-                          handleAddPopupButton={() => {
-                            addPopupButton(breakdownIndex)
-                          }}
-                          handleAddButton={() => {
-                            addButton(breakdownIndex)
-                          }}
-                          handleAddImage={() => {
-                            addImage(breakdownIndex)
-                          }}
-                          handleAddButtonImage={(uuid) => {
-                            addButtonImage(breakdownIndex, uuid)
-                          }}
-                          handleAddParagraph={() => {
-                            addParagraph(breakdownIndex)
-                          }}
-                        />
-                      </>
-                    )}
                   </div>
                 )
               })}
-              <div className={'d-flex justify-content-between gap-2'}>
-                <div
-                  className={'d-flex justify-content-end mb-4'}
-                  onClick={() => {
-                    let newBreakdowns = [...breakdowns]
-                    newBreakdowns.push({
-                      ...breakdownInitialState[0],
-                      type: 'type-1',
-                      breakdownOrder: breakdownOrder + 1
-                    })
-                    setBreakdownOrder((prev) => prev + 1)
-                    setBreakdowns(newBreakdowns)
-                  }}
-                >
-                  <div class={'btn btn-warning '}>Add breakdown 1</div>
-                </div>
-                <div
-                  className={'d-flex justify-content-end mb-4'}
-                  onClick={() => {
-                    let newBreakdowns = [...breakdowns]
-                    newBreakdowns.push({
-                      ...breakdownInitialState[0],
-                      type: 'type-3',
-                      breakdownOrder: breakdownOrder + 1
-                    })
-                    setBreakdownOrder((prev) => prev + 1)
-                    setBreakdowns(newBreakdowns)
-                  }}
-                >
-                  <div class={'btn btn-warning '}>Add breakdown 2</div>
-                </div>
-              </div>
+            </>
+          )}
+          {selectedJournal?.value?.curriculumOverview && (
+            <>
+              <h1>Curriculum Overview</h1>
+
+              {selectedJournal?.value?.curriculumOverview?.map((x, i) => {
+                return (
+                  <div>
+                    <div>
+                      <h3>Image Url {i + 1}</h3>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={x?.imageUrl}
+                        onChange={(e) =>
+                          handleChangeCurriculumOverview(
+                            i,
+                            'imageUrl',
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                    <div>
+                      <h3>Content {i + 1}</h3>
+                      <KendoTextEditor
+                        value={x?.content}
+                        handleChange={(e) =>
+                          handleChangeCurriculumOverview(i, 'content', e)
+                        }
+                        minHeight={150}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </>
+          )}
+          {selectedJournal?.value?.expectedOutcomes && (
+            <>
+              <h1>Expected Outcomes</h1>
+
+              {selectedJournal?.value?.expectedOutcomes?.map((x, i) => {
+                return (
+                  <div>
+                    <div>
+                      <h3>Image Url {i + 1}</h3>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={x?.imageUrl}
+                        onChange={(e) =>
+                          handleChangeExpectedOutcomes(
+                            i,
+                            'imageUrl',
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                    <div>
+                      <h3>Content {i + 1}</h3>
+                      <KendoTextEditor
+                        value={x?.content}
+                        handleChange={(e) =>
+                          handleChangeExpectedOutcomes(i, 'content', e)
+                        }
+                        minHeight={150}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </>
+          )}
+
+          {
+            <>
+              {/*<div>BREAKDOWNS</div>*/}
+
+              {/*{breakdowns?.map((breakdown, breakdownIndex) => {*/}
+              {/*  return (*/}
+              {/*    <div>*/}
+              {/*      <div style={{ fontWeight: 600 }}>*/}
+              {/*        Breakdown {breakdownIndex + 1}*/}
+              {/*      </div>*/}
+              {/*      <div className="d-flex justify-content-between align-items-center mb-3">*/}
+              {/*        <div*/}
+              {/*          className="input-group  d-flex align-items-center"*/}
+              {/*          style={{ width: 260 }}*/}
+              {/*        >*/}
+              {/*          <span className="input-group-text">*/}
+              {/*            Breakdown Order:*/}
+              {/*          </span>*/}
+              {/*          <input*/}
+              {/*            type="number"*/}
+              {/*            className="form-control"*/}
+              {/*            value={breakdown.breakdownOrder}*/}
+              {/*            onChange={(e) =>*/}
+              {/*              handleOrderChange(*/}
+              {/*                breakdownIndex,*/}
+              {/*                Number(e.target.value)*/}
+              {/*              )*/}
+              {/*            }*/}
+              {/*          />*/}
+              {/*        </div>*/}
+              {/*        <div className={'d-flex align-items-center '}>*/}
+              {/*          <button*/}
+              {/*            className={'btn btn-danger'}*/}
+              {/*            onClick={() => {*/}
+              {/*              return handleDeleteBreakdown(breakdownIndex)*/}
+              {/*            }}*/}
+              {/*          >*/}
+              {/*            Delete breakdown*/}
+              {/*          </button>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*      <div>Breakdown title</div>*/}
+              {/*      <input*/}
+              {/*        type="text"*/}
+              {/*        className="w-100 p-2"*/}
+              {/*        name="title"*/}
+              {/*        value={breakdown?.title}*/}
+              {/*        onChange={(e) =>*/}
+              {/*          handleChangeBreakdown(*/}
+              {/*            breakdownIndex,*/}
+              {/*            'title',*/}
+              {/*            e.target.value*/}
+              {/*          )*/}
+              {/*        }*/}
+              {/*      />*/}
+
+              {/*      {breakdown.type === 'type-1' && (*/}
+              {/*        <>*/}
+              {/*          <div>Breakdown content</div>*/}
+              {/*          <KendoTextEditor*/}
+              {/*            value={breakdown?.content}*/}
+              {/*            handleChange={(e) =>*/}
+              {/*              handleChangeBreakdown(breakdownIndex, 'content', e)*/}
+              {/*            }*/}
+              {/*          />*/}
+              {/*        </>*/}
+              {/*      )}*/}
+
+              {/*      /!*{breakdown.type === 'type-3' && (*!/*/}
+              {/*      /!*  <>*!/*/}
+              {/*      /!*    <CustomContent*!/*/}
+              {/*      /!*      handleSetHighestOrder={handleSetHighestOrder}*!/*/}
+              {/*      /!*      breakdown={breakdown}*!/*/}
+              {/*      /!*      handleChangeImageGallery={(value, uuid) =>*!/*/}
+              {/*      /!*        handleChangeImageGallery(*!/*/}
+              {/*      /!*          value,*!/*/}
+              {/*      /!*          uuid,*!/*/}
+              {/*      /!*          breakdownIndex*!/*/}
+              {/*      /!*        )*!/*/}
+              {/*      /!*      }*!/*/}
+              {/*      /!*      breakdownIndex={breakdownIndex}*!/*/}
+              {/*      /!*      handleChangeParagraph={handleChangeParagraph}*!/*/}
+              {/*      /!*      handleChangeButtons={handleChangeButtons}*!/*/}
+              {/*      /!*      handleChangePopupButtons={handleChangePopupButtons}*!/*/}
+              {/*      /!*      handleChangeImages={handleChangeImages}*!/*/}
+              {/*      /!*      handleAddPopupButton={() => {*!/*/}
+              {/*      /!*        addPopupButton(breakdownIndex)*!/*/}
+              {/*      /!*      }}*!/*/}
+              {/*      /!*      handleAddButton={() => {*!/*/}
+              {/*      /!*        addButton(breakdownIndex)*!/*/}
+              {/*      /!*      }}*!/*/}
+              {/*      /!*      handleAddImage={() => {*!/*/}
+              {/*      /!*        addImage(breakdownIndex)*!/*/}
+              {/*      /!*      }}*!/*/}
+              {/*      /!*      handleAddButtonImage={(uuid) => {*!/*/}
+              {/*      /!*        addButtonImage(breakdownIndex, uuid)*!/*/}
+              {/*      /!*      }}*!/*/}
+              {/*      /!*      handleAddParagraph={() => {*!/*/}
+              {/*      /!*        addParagraph(breakdownIndex)*!/*/}
+              {/*      /!*      }}*!/*/}
+              {/*      /!*    />*!/*/}
+              {/*      /!*  </>*!/*/}
+              {/*      /!*)}*!/*/}
+              {/*    </div>*/}
+              {/*  )*/}
+              {/*})}*/}
+              {/*<div className={'d-flex justify-content-between gap-2'}>*/}
+              {/*  <div*/}
+              {/*    className={'d-flex justify-content-end mb-4'}*/}
+              {/*    onClick={() => {*/}
+              {/*      let newBreakdowns = [...breakdowns]*/}
+              {/*      newBreakdowns.push({*/}
+              {/*        ...breakdownInitialState[0],*/}
+              {/*        type: 'type-1',*/}
+              {/*        breakdownOrder: breakdownOrder + 1*/}
+              {/*      })*/}
+              {/*      setBreakdownOrder((prev) => prev + 1)*/}
+              {/*      setBreakdowns(newBreakdowns)*/}
+              {/*    }}*/}
+              {/*  >*/}
+              {/*    <div class={'btn btn-warning '}>Add breakdown 1</div>*/}
+              {/*  </div>*/}
+              {/*  <div*/}
+              {/*    className={'d-flex justify-content-end mb-4'}*/}
+              {/*    onClick={() => {*/}
+              {/*      let newBreakdowns = [...breakdowns]*/}
+              {/*      newBreakdowns.push({*/}
+              {/*        ...breakdownInitialState[0],*/}
+              {/*        type: 'type-3',*/}
+              {/*        breakdownOrder: breakdownOrder + 1*/}
+              {/*      })*/}
+              {/*      setBreakdownOrder((prev) => prev + 1)*/}
+              {/*      setBreakdowns(newBreakdowns)*/}
+              {/*    }}*/}
+              {/*  >*/}
+              {/*    <div class={'btn btn-warning '}>Add breakdown 2</div>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
             </>
           }
 

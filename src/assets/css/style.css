@@ -4268,11 +4268,11 @@ ul.sidebar-menu-item .collapse a {
 .accordion {
   border: 1px solid #ccc;
   margin-bottom: 10px;
-  /*line-height: 60%;*/
   line-height: 15px;
   letter-spacing: 0.40px;
   color: #231f20;
-  font-weight: 500
+  font-weight: 500;
+  background-color:#fff
 
 }
 
@@ -4305,6 +4305,7 @@ ul.sidebar-menu-item .collapse a {
 
 .accordion-icon.expanded {
   transform: rotate(180deg);
+
 }
 .accordion-icon .arrow {
   /*background: #3C3C3C 0% 0% no-repeat padding-box;*/

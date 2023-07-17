@@ -46,14 +46,14 @@ const TestJournalType = (props) => {
       // }
     } catch (err) {}
   }
-
+  console.log()
   useEffect(() => {
     if (props.match.params.type === 'task' && journals.length) {
       const taskId = journals.length > 0 ? journals[0].id : ''
-      history.push(`/new-hs1-journal/task/${taskId}`)
+      history.push(`/${props.match?.url?.split('/')[1]}/task/${taskId}`)
     } else if (props.match.params.type === 'week' && weeks.length) {
       const weekId = weeks.length > 0 ? weeks[0].id : ''
-      history.push(`/new-hs1-journal/week/${weekId}`)
+      history.push(`/${props.match?.url?.split('/')[1]}/week/${weekId}`)
     }
   }, [props.match.params.type, journals, weeks])
 

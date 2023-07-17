@@ -44,6 +44,7 @@ const MyCurriculum = () => {
         through research-based tasks that prepare
         them for post-graduation and beyond.`}
         itemNumberImage={<NumberImage image={numberFour} />}
+        to="/financial-literacy/task"
       />{' '}
       {/*<EmptyGridItem />*/}
     </MyLearnToStartEDU>

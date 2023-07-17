@@ -5,12 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/assets/images/Certified-L1-800px.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/AccordionItemWrapper.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/CurriculumOverview.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ExpectedOutcomes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ProgramOpportunities.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/SelectTaskButton.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/Step.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/StepContent.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/Steps.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/StepsBox.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Router.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Router.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalType.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalType.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyCurriculum/MyCurriculum.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyCurriculum/MyCurriculum.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +52,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/assets/images",
+    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/LtsJournal",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -54,12 +65,14 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\NoteAndChat" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\Steps" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\JournalsManagement\CustomContent" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
     </key>
@@ -101,6 +114,7 @@
       <workItem from="1687761748633" duration="184832000" />
       <workItem from="1688713293918" duration="16152000" />
       <workItem from="1688973170084" duration="61926000" />
+      <workItem from="1689317962596" duration="25113000" />
     </task>
     <servers />
   </component>

@@ -221,11 +221,17 @@ function Router(props) {
                 component={(props) => <TestJournal {...props} category="hs1" />}
               />{' '}
               <Route
+                path="/financial-literacy/"
+                component={(props) => (
+                  <TestJournal {...props} category="financial-literacy" />
+                )}
+              />{' '}
+              <Route
                 path="/new-hs2-journal/"
                 component={(props) => (
                   <TestJournal {...props} category="new-hs2" />
                 )}
-              />{' '}
+              />
               <Route
                 path="/new-hs1-journal/:type/"
                 component={(props) => (
