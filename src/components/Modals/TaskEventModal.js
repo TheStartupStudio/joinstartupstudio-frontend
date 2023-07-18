@@ -82,15 +82,19 @@ const TaskEventModal = (props) => {
         periods: props.event?.periods
         // chooseClasses: props.event?.period,
       }
+      debugger
+
       setState(newState)
       setTab(props.event?.type)
     }
   }, [props.event])
 
+
   useEffect(() => {
     if (isAddingOnClick()) {
       setState({ ...state, startDate: props.startDate })
     }
+
   }, [props.startDate])
 
   const dispatch = useDispatch()
@@ -113,6 +117,7 @@ const TaskEventModal = (props) => {
   }
 
   const [state, setState] = useState(initialState)
+  console.log(state)
   useEffect(() => {
     const newState = { ...state }
     newState.type = tab == 'task' ? 'task' : 'event'
@@ -138,11 +143,13 @@ const TaskEventModal = (props) => {
   }, [])
 
   const handleInputChange = (name, value) => {
-    console.log('name', name, value)
+    if(value !== 'NaN:NaN') {
     setState((prevState) => ({
       ...prevState,
       [name]: value
     }))
+    }
+
   }
 
   const activeTabStyle = {
@@ -201,7 +208,7 @@ const TaskEventModal = (props) => {
       requirements: state.requirements,
       periods: state.periods
     }
-    if (state.periods.length > 1) {
+    if (state.periods.length) {
       dispatch(editEventStart(newEvent, { eventId: props.event.id }))
     } else {
       toast.error('You must select at least one period')
