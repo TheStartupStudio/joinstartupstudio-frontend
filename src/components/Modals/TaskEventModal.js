@@ -171,7 +171,6 @@ const TaskEventModal = (props) => {
     setTab(tab)
   }
 
-  console.log('state', state)
 
   const onPostEvent = () => {
     let newEventObj = {
@@ -320,9 +319,8 @@ const TaskEventModal = (props) => {
             </FormattedMessage>
           </div>
           <div
-            className={`event-input-container ${
-              isEndTimeBeforeStartTime() ? 'col-md-6' : 'col-md-12'
-            } `}
+            className={`event-input-container col-md-6
+            `}
           >
             <label
               htmlFor="date"
@@ -357,7 +355,7 @@ const TaskEventModal = (props) => {
               )}
             </FormattedMessage>
           </div>
-          {isEndTimeBeforeStartTime() ? (
+          {(
             <div className="col-md-6 event-input-container">
               <label
                 htmlFor="date"
@@ -388,7 +386,7 @@ const TaskEventModal = (props) => {
                 )}
               </FormattedMessage>
             </div>
-          ) : null}
+          ) }
           <div className="col-md-6 event-input-container">
             <label
               htmlFor="date"
