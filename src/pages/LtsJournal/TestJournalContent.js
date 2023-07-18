@@ -395,6 +395,8 @@ function TestJournalContent(props) {
     setSelectedTaskIndex(index)
   }
 
+  console.log(journal)
+
   return (
     <>
       <>
@@ -599,25 +601,20 @@ function TestJournalContent(props) {
             )}
           </div>
 
-          <div style={{ order: 2 }}>
-            {!loading && journal?.hasInstructorDebrief && (
-              <AccordionItemWrapper
-                isOpened={openAccordion === 'connection'}
-                handleAccordionClick={() => handleAccordionClick('connection')}
-                isExanded={isExpanded}
-                title={'Connection to lts model and outcomes'}
-              >
-                {openAccordion === 'connection' && (
-                  <>
-                    <div className="accordion-content">
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          flexDirection: 'column',
-                          alignItems: 'center'
-                        }}
-                      >
+          {journal?.category !== 'financial-literacy' && (
+            <div style={{ order: 2 }}>
+              {!loading && journal?.hasInstructorDebrief && (
+                <AccordionItemWrapper
+                  isOpened={openAccordion === 'connection'}
+                  handleAccordionClick={() =>
+                    handleAccordionClick('connection')
+                  }
+                  isExanded={isExpanded}
+                  title={'Connection to lts model and outcomes'}
+                >
+                  {openAccordion === 'connection' && (
+                    <>
+                      <div className="accordion-content">
                         <div
                           style={{
                             display: 'flex',
@@ -628,86 +625,137 @@ function TestJournalContent(props) {
                         >
                           <div
                             style={{
-                              font: 'normal normal 600 17px/17px Montserrat',
-                              letterSpacing: 0.68,
-                              color: '#333D3D',
-                              textAlign: 'center'
+                              display: 'flex',
+                              justifyContent: 'center',
+                              flexDirection: 'column',
+                              alignItems: 'center'
                             }}
                           >
-                            THE LEARN TO START MODEL
+                            <div
+                              style={{
+                                font: 'normal normal 600 17px/17px Montserrat',
+                                letterSpacing: 0.68,
+                                color: '#333D3D',
+                                textAlign: 'center'
+                              }}
+                            >
+                              THE LEARN TO START MODEL
+                            </div>
+                            <img
+                              style={{
+                                width: 340,
+                                height: 300,
+                                objectFit: 'contain'
+                              }}
+                              alt={'lts-triangle'}
+                              src={LtsDiagram}
+                            />
                           </div>
-                          <img
-                            style={{
-                              width: 340,
-                              height: 300,
-                              objectFit: 'contain'
-                            }}
-                            alt={'lts-triangle'}
-                            src={LtsDiagram}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            fontFamily: 'Montserrat',
-                            backgroundColor: '#fff',
-                            marginBottom: 20,
-                            textAlign: 'start',
-                            width: '100%'
-                          }}
-                          dangerouslySetInnerHTML={{
-                            __html: journal?.ltsConnection?.firstParagraph
-                          }}
-                        />
-
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            alignItems: 'center'
-                          }}
-                        >
                           <div
                             style={{
-                              font: 'normal normal 600 17px/17px Montserrat',
-                              letterSpacing: 0.68,
-                              color: '#333D3D',
-                              textAlign: 'center'
+                              fontFamily: 'Montserrat',
+                              backgroundColor: '#fff',
+                              marginBottom: 20,
+                              textAlign: 'start',
+                              width: '100%'
+                            }}
+                            dangerouslySetInnerHTML={{
+                              __html: journal?.ltsConnection?.firstParagraph
+                            }}
+                          />
+
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              flexDirection: 'column',
+                              alignItems: 'center'
                             }}
                           >
-                            MARKET-READY OUTCOMES
+                            <div
+                              style={{
+                                font: 'normal normal 600 17px/17px Montserrat',
+                                letterSpacing: 0.68,
+                                color: '#333D3D',
+                                textAlign: 'center'
+                              }}
+                            >
+                              MARKET-READY OUTCOMES
+                            </div>
+                            <img
+                              style={{
+                                width: 180,
+                                height: 180,
+                                objectFit: 'contain',
+                                marginBottom: 20
+                              }}
+                              alt={'lts-triangle'}
+                              src={LtsCertification}
+                            />
                           </div>
-                          <img
+
+                          <div
                             style={{
-                              width: 180,
-                              height: 180,
-                              objectFit: 'contain',
-                              marginBottom: 20
+                              fontFamily: 'Montserrat',
+                              backgroundColor: '#fff',
+                              display: 'flex',
+                              justifyContent: 'start',
+                              width: '100%'
                             }}
-                            alt={'lts-triangle'}
-                            src={LtsCertification}
+                            dangerouslySetInnerHTML={{
+                              __html: journal?.ltsConnection?.secondParagraph
+                            }}
                           />
                         </div>
-
-                        <div
-                          style={{
-                            fontFamily: 'Montserrat',
-                            backgroundColor: '#fff',
-                            display: 'flex',
-                            justifyContent: 'start',
-                            width: '100%'
-                          }}
-                          dangerouslySetInnerHTML={{
-                            __html: journal?.ltsConnection?.secondParagraph
-                          }}
-                        />
                       </div>
-                    </div>
-                  </>
-                )}
-              </AccordionItemWrapper>
-            )}
-          </div>
+                    </>
+                  )}
+                </AccordionItemWrapper>
+              )}
+            </div>
+          )}
+          {journal?.category === 'financial-literacy' && (
+            <div style={{ order: 2 }}>
+              {!loading && journal?.hasInstructorDebrief && (
+                <AccordionItemWrapper
+                  isOpened={openAccordion === 'connection'}
+                  handleAccordionClick={() =>
+                    handleAccordionClick('connection')
+                  }
+                  isExanded={isExpanded}
+                  title={'Extending task'}
+                >
+                  {openAccordion === 'connection' && (
+                    <>
+                      <div className="accordion-content">
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            flexDirection: 'column',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontFamily: 'Montserrat',
+                              backgroundColor: '#fff',
+                              marginBottom: 20,
+                              textAlign: 'start',
+                              width: '100%'
+                            }}
+                            dangerouslySetInnerHTML={{
+                              __html: journal?.ltsConnection?.firstParagraph
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </AccordionItemWrapper>
+              )}
+            </div>
+          )}
           <div style={{ order: 3 }}>
             {!loading && journal?.hasInstructorDebrief && (
               <AccordionItemWrapper

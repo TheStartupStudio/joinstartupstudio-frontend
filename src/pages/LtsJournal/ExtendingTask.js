@@ -2,7 +2,7 @@ import React from 'react'
 import AccordionItemWrapper from './AccordionItemWrapper'
 import StepsBox from './Steps/StepsBox'
 
-const ExpectedOutcomes = (props) => {
+const ExtendingTask = (props) => {
   return (
     <AccordionItemWrapper
       isOpened={props.isOpened}
@@ -63,4 +63,4 @@ const ExpectedOutcomes = (props) => {
   )
 }
 
-export default ExpectedOutcomes
+export default ExtendingTask

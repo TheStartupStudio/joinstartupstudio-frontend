@@ -79,6 +79,22 @@ const TestJournalType = (props) => {
   const onChangeView = (view) => {
     setView(view)
   }
+
+  const dataByClass = {}
+
+  // Group the filtered data by class using forEach
+  journals.forEach((journalItem) => {
+    const { id, title, class: journalClass } = journalItem
+
+    if (!dataByClass[journalClass]) {
+      dataByClass[journalClass] = []
+    }
+
+    dataByClass[journalClass].push({ id, title })
+  })
+
+  console.log(props)
+
   return (
     <div id="main-body">
       <div className="container-fluid">
@@ -191,7 +207,9 @@ const TestJournalType = (props) => {
                   >
                     Change view
                   </div>
+
                   {props.match.params.type === 'task' &&
+                    props.category !== 'financial-literacy' &&
                     journals.map((journalItem, journalItemIdx) => (
                       <div
                         key={journalItem.id}
@@ -202,6 +220,51 @@ const TestJournalType = (props) => {
                         </NavLink>
                       </div>
                     ))}
+                  {props.match.params.type === 'task' &&
+                    props.category === 'financial-literacy' &&
+                    Object.entries(dataByClass).map(
+                      ([journalClass, items], index) => (
+                        <div key={journalClass}>
+                          {journalClass !== 'null' ? (
+                            <div
+                              className={`accordion-menu__item text-uppercase`}
+                              style={{
+                                font: 'normal normal 600 14px/14px Montserrat',
+                                letterSpacing: 0.56,
+                                color: '#231F20',
+                                padding: '10px 0 15px 0'
+                              }}
+                            >
+                              {journalClass !== 'null' ? journalClass : ''}
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+                          {items?.map((item, index) => (
+                            <div
+                              key={item.id}
+                              className={`accordion-menu__item`}
+                            >
+                              <NavLink to={`${props.match.url}/${item.id}`}>
+                                {item?.title &&
+                                !item.title.toLowerCase().includes('task') ? (
+                                  <span className="text-uppercase ml-1">
+                                    {item.title}
+                                  </span>
+                                ) : (
+                                  <span
+                                    className={'ml-1'}
+                                    style={{ marginLeft: 13 }}
+                                  >
+                                    {item.title}
+                                  </span>
+                                )}
+                              </NavLink>
+                            </div>
+                          ))}
+                        </div>
+                      )
+                    )}
                   {props.match.params.type === 'week' &&
                     weeks?.map((journalItem, journalItemIdx) => (
                       <div

@@ -1020,14 +1020,20 @@ export default function EditJournals2(props) {
                   }
                   minHeight={150}
                 />
-                <div># Second paragraph</div>
-                <KendoTextEditor
-                  value={selectedJournal?.value?.ltsConnection?.secondParagraph}
-                  handleChange={(e) =>
-                    handleChangeLtsConnection('secondParagraph', e)
-                  }
-                  minHeight={150}
-                />
+                {selectedJournal?.value?.ltsConnection?.secondParagraph && (
+                  <>
+                    <div># Second paragraph</div>
+                    <KendoTextEditor
+                      value={
+                        selectedJournal?.value?.ltsConnection?.secondParagraph
+                      }
+                      handleChange={(e) =>
+                        handleChangeLtsConnection('secondParagraph', e)
+                      }
+                      minHeight={150}
+                    />
+                  </>
+                )}
               </>
             )}
           </>
