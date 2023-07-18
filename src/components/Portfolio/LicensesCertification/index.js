@@ -108,7 +108,7 @@ export default function LicencesCertification(props) {
       formData.append('img', general.croppedImage)
 
       await axiosInstance
-        .post('/upload/img', formData, {
+        .post('/upload/img-transform', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

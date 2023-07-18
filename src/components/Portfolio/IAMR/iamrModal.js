@@ -55,7 +55,7 @@ const IAMRModal = (props) => {
     formData.append('img', image)
 
     axiosInstance
-      .post('/upload/img', formData, {
+      .post('/upload/img-transform', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

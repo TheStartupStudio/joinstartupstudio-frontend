@@ -61,7 +61,7 @@ const EditModal = (props) => {
       let imageAws = null
 
       if (image) {
-        imageAws = await axiosInstance.post('/upload/img', formData, {
+        imageAws = await axiosInstance.post('/upload/img-transform', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

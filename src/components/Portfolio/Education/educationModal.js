@@ -159,7 +159,7 @@ export const EducationModal = (props) => {
       const formData = new FormData()
       formData.append('img', general.croppedImage)
       await axiosInstance
-        .post('/upload/img', formData, {
+        .post('/upload/img-transform', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -213,7 +213,7 @@ export const EducationModal = (props) => {
       const formData = new FormData()
       formData.append('img', general.croppedImage)
       await axiosInstance
-        .post('/upload/img', formData, {
+        .post('/upload/img-transform', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
