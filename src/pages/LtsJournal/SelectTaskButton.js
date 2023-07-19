@@ -1,13 +1,11 @@
-import React from 'react'
-import './TestJournalContent.css'
-
 const SelectTaskButton = (props) => {
   return (
-    <div>
+    <div style={{ width: 150 }}>
       <div
         className={'days-of-task-box'}
         style={{
-          width: 150,
+          // width: 'fit-content', // Adjusted width to fit the content
+
           height: 80,
           border: '1px solid #d8d9d9',
           padding: 15,
@@ -31,11 +29,18 @@ const SelectTaskButton = (props) => {
           textAlign: 'center',
           fontSize: '16px',
           marginTop: 10,
-          fontWeight: 600
+          fontWeight: 600,
+          whiteSpace: 'normal',
+          lineHeight: 1.4
         }}
       >
-        <div>{props.task?.title?.split(' ')[1]?.toUpperCase()}</div>{' '}
-        <div>{props.task?.title?.split(' ')[2]?.toUpperCase()}</div>
+        <span>
+          {`${props.task?.title?.split(' ')[1]?.toUpperCase()} ${
+            props.task?.title?.split(' ')[2]?.toUpperCase() ?? ''
+          } ${props.task?.title?.split(' ')[3]?.toUpperCase() ?? ''} ${
+            props.task?.title?.split(' ')[4]?.toUpperCase() ?? ''
+          }`}
+        </span>
       </div>
     </div>
   )

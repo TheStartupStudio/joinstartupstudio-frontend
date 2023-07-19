@@ -127,7 +127,6 @@ export default function EditJournals2(props) {
       console.error(error)
     }
   }
-  console.log(selectedJournal)
   const getJournals2Weeks = async () => {
     try {
       const response = await axiosInstance.get(
@@ -1020,20 +1019,23 @@ export default function EditJournals2(props) {
                   }
                   minHeight={150}
                 />
-                {selectedJournal?.value?.ltsConnection?.secondParagraph && (
-                  <>
-                    <div># Second paragraph</div>
-                    <KendoTextEditor
-                      value={
-                        selectedJournal?.value?.ltsConnection?.secondParagraph
-                      }
-                      handleChange={(e) =>
-                        handleChangeLtsConnection('secondParagraph', e)
-                      }
-                      minHeight={150}
-                    />
-                  </>
-                )}
+                {selectedJournal?.value?.ltsConnection?.secondParagraph !=
+                  null &&
+                  typeof selectedJournal?.value?.ltsConnection
+                    ?.secondParagraph !== 'undefined' && (
+                    <>
+                      <div># Second paragraph</div>
+                      <KendoTextEditor
+                        value={
+                          selectedJournal?.value?.ltsConnection?.secondParagraph
+                        }
+                        handleChange={(e) =>
+                          handleChangeLtsConnection('secondParagraph', e)
+                        }
+                        minHeight={150}
+                      />
+                    </>
+                  )}
               </>
             )}
           </>

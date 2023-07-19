@@ -395,8 +395,6 @@ function TestJournalContent(props) {
     setSelectedTaskIndex(index)
   }
 
-  console.log(journal)
-
   return (
     <>
       <>
@@ -482,7 +480,7 @@ function TestJournalContent(props) {
           {/*        )*/}
           {/*      })}*/}
           {/*</div>*/}
-          {!journal?.hasInstructorDebrief && (
+          {!journal?.hasInstructorDebrief && !journal?.tasks?.length && (
             <>
               <CurriculumOverview
                 title={'curriculum overview'}
@@ -513,6 +511,41 @@ function TestJournalContent(props) {
               />
             </>
           )}
+          {!journal?.hasInstructorDebrief &&
+            journal?.tasks?.length &&
+            journal?.tasks?.map((task, index) => {
+              return (
+                <>
+                  <CurriculumOverview
+                    title={'curriculum overview'}
+                    isExanded={isExpanded}
+                    isOpened={openAccordion === 'curriculumOverview'}
+                    handleAccordionClick={() =>
+                      handleAccordionClick('curriculumOverview')
+                    }
+                    data={task?.curriculumOverview}
+                  />{' '}
+                  <ExpectedOutcomes
+                    title={'expected outcomes'}
+                    isExanded={isExpanded}
+                    isOpened={openAccordion === 'expectedOutcomes'}
+                    handleAccordionClick={() =>
+                      handleAccordionClick('expectedOutcomes')
+                    }
+                    data={task?.expectedOutcomes}
+                  />
+                  <ProgramOpportunities
+                    title={'program opportunities'}
+                    isExanded={isExpanded}
+                    isOpened={openAccordion === 'programOpportunities'}
+                    handleAccordionClick={() =>
+                      handleAccordionClick('programOpportunities')
+                    }
+                    data={task?.programOpportunities}
+                  />
+                </>
+              )
+            })}
           <div style={{ order: 1 }}>
             {props.view === 'task' && journal?.hasInstructorDebrief && (
               <AccordionItemWrapper
@@ -657,7 +690,8 @@ function TestJournalContent(props) {
                               backgroundColor: '#fff',
                               marginBottom: 20,
                               textAlign: 'start',
-                              width: '100%'
+                              width: '100%',
+                              flexDirection: 'column'
                             }}
                             dangerouslySetInnerHTML={{
                               __html: journal?.ltsConnection?.firstParagraph
@@ -700,7 +734,8 @@ function TestJournalContent(props) {
                               backgroundColor: '#fff',
                               display: 'flex',
                               justifyContent: 'start',
-                              width: '100%'
+                              width: '100%',
+                              flexDirection: 'column'
                             }}
                             dangerouslySetInnerHTML={{
                               __html: journal?.ltsConnection?.secondParagraph

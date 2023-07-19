@@ -216,7 +216,14 @@ const TestJournalType = (props) => {
                         className={`accordion-menu__item`}
                       >
                         <NavLink to={`${props.match.url}/${journalItem.id}`}>
-                          <span>{journalItem.title}</span>
+                          <span
+                            style={{
+                              font: 'normal normal 600 14px/16px Montserrat',
+                              letterSpacing: 0.56
+                            }}
+                          >
+                            {journalItem.title}
+                          </span>
                         </NavLink>
                       </div>
                     ))}
@@ -254,7 +261,11 @@ const TestJournalType = (props) => {
                                 ) : (
                                   <span
                                     className={'ml-1'}
-                                    style={{ marginLeft: 13 }}
+                                    style={{
+                                      marginLeft: 13,
+                                      display: 'flex',
+                                      flexWrap: 'wrap'
+                                    }}
                                   >
                                     {item.title}
                                   </span>
@@ -272,7 +283,15 @@ const TestJournalType = (props) => {
                         className={`accordion-menu__item`}
                       >
                         <NavLink to={`${props.match.url}/${journalItem.id}`}>
-                          <span>{journalItem.title}</span>
+                          <span
+                            className={'text-uppercase'}
+                            style={{
+                              font: 'normal normal 600 14px/16px Montserrat',
+                              letterSpacing: 0.56
+                            }}
+                          >
+                            {journalItem.title}
+                          </span>
                         </NavLink>
                       </div>
                     ))}
