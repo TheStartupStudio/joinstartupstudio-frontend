@@ -284,6 +284,16 @@ function TestJournalContent(props) {
     [props.match.params.id, props.match.params.weekId, props.view]
   )
 
+  useEffect(() => {
+    setOpenAccordion(null)
+    setSelectedStep(null)
+    setSelectedStepIndex(null)
+  }, [props.match.params.id, props.match.params.weekId, props.view])
+
+  useEffect(() => {
+    setSelectedStep(null)
+    setSelectedStepIndex(null)
+  }, [openAccordion])
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
       let filtered = userJournalEntries[entry.id].filter(
@@ -546,93 +556,98 @@ function TestJournalContent(props) {
                 </>
               )
             })}
-          <div style={{ order: 1 }}>
-            {props.view === 'task' && journal?.hasInstructorDebrief && (
-              <AccordionItemWrapper
-                isOpened={openAccordion === 'steps'}
-                handleAccordionClick={() => handleAccordionClick('steps')}
-                isExanded={isExpanded}
-                title={'task breakdown'}
-              >
-                {openAccordion === 'steps' && (
-                  <div className="accordion-content">
-                    <StepsBox
-                      containsTitle={false}
-                      steps={journal?.steps}
-                      selectStep={selectStep}
-                      selectedStepIndex={selectedStepIndex}
-                      handleOpenPopup={handleOpenPopup}
-                      selectedStep={selectedStep}
-                    />
-                  </div>
-                )}
-              </AccordionItemWrapper>
-            )}
-            {props.view === 'week' && journal?.hasInstructorDebrief && (
-              <AccordionItemWrapper
-                isOpened={openAccordion === 'steps'}
-                handleAccordionClick={() => handleAccordionClick('steps')}
-                isExanded={isExpanded}
-                title={'weeks and their breakdowns'}
-              >
-                {openAccordion === 'steps' && (
-                  <div>
-                    {journal?.tasks?.length === 1 && (
-                      <div className="accordion-content">
-                        <StepsBox
-                          task={journal?.tasks[0]}
-                          steps={journal?.tasks[0]?.steps}
-                          selectStep={selectStep}
-                          selectedStepIndex={selectedStepIndex}
-                          handleOpenPopup={handleOpenPopup}
-                          selectedStep={selectedStep}
-                        />
-                      </div>
-                    )}
-                    {journal?.tasks?.length > 1 && (
-                      <>
-                        <div
-                          className={'select-task-buttons'}
-                          style={{
-                            backgroundColor: selectedTask ? '#f8f7f7' : '#fff'
-                          }}
-                        >
-                          {journal?.tasks.map((task, index) => (
-                            <SelectTaskButton
-                              key={index}
-                              handleSelectTask={() =>
-                                handleSelectTask(task, index)
-                              }
-                              task={task}
-                              index={index}
-                              selectedTaskIndex={selectedTaskIndex}
-                            />
-                          ))}
+          {!loading && journal?.hasInstructorDebrief && (
+            <div style={{ order: 1 }}>
+              {props.view === 'task' && (
+                <AccordionItemWrapper
+                  isOpened={openAccordion === 'steps'}
+                  handleAccordionClick={() => handleAccordionClick('steps')}
+                  isExanded={isExpanded}
+                  title={'task breakdown'}
+                >
+                  {openAccordion === 'steps' && (
+                    <div className="accordion-content">
+                      <StepsBox
+                        containsTitle={false}
+                        steps={journal?.steps}
+                        selectStep={selectStep}
+                        selectedStepIndex={selectedStepIndex}
+                        handleOpenPopup={handleOpenPopup}
+                        selectedStep={selectedStep}
+                      />
+                    </div>
+                  )}
+                </AccordionItemWrapper>
+              )}
+              {props.view === 'week' && (
+                <AccordionItemWrapper
+                  isOpened={openAccordion === 'steps'}
+                  handleAccordionClick={() => handleAccordionClick('steps')}
+                  isExanded={isExpanded}
+                  title={'weeks and their breakdowns'}
+                >
+                  {openAccordion === 'steps' && (
+                    <div>
+                      {journal?.tasks?.length === 1 && (
+                        <div className="accordion-content">
+                          <StepsBox
+                            task={journal?.tasks[0]}
+                            steps={journal?.tasks[0]?.steps}
+                            selectStep={selectStep}
+                            selectedStepIndex={selectedStepIndex}
+                            handleOpenPopup={handleOpenPopup}
+                            selectedStep={selectedStep}
+                          />
                         </div>
-                        {journal?.tasks.map((task) => {
-                          if (task?.id === selectedTask?.task?.id) {
-                            return (
-                              <div key={task.id} className="accordion-content">
-                                <StepsBox
-                                  task={task}
-                                  steps={task?.steps}
-                                  selectStep={selectStep}
-                                  selectedStepIndex={selectedStepIndex}
-                                  handleOpenPopup={handleOpenPopup}
-                                  selectedStep={selectedStep}
-                                />
-                              </div>
-                            )
-                          }
-                          return null
-                        })}
-                      </>
-                    )}
-                  </div>
-                )}
-              </AccordionItemWrapper>
-            )}
-          </div>
+                      )}
+                      {journal?.tasks?.length > 1 && (
+                        <>
+                          <div
+                            className={'select-task-buttons'}
+                            style={{
+                              backgroundColor: selectedTask ? '#f8f7f7' : '#fff'
+                            }}
+                          >
+                            {journal?.tasks.map((task, index) => (
+                              <SelectTaskButton
+                                key={index}
+                                handleSelectTask={() =>
+                                  handleSelectTask(task, index)
+                                }
+                                task={task}
+                                index={index}
+                                selectedTaskIndex={selectedTaskIndex}
+                              />
+                            ))}
+                          </div>
+                          {journal?.tasks.map((task) => {
+                            if (task?.id === selectedTask?.task?.id) {
+                              return (
+                                <div
+                                  key={task.id}
+                                  className="accordion-content"
+                                >
+                                  <StepsBox
+                                    task={task}
+                                    steps={task?.steps}
+                                    selectStep={selectStep}
+                                    selectedStepIndex={selectedStepIndex}
+                                    handleOpenPopup={handleOpenPopup}
+                                    selectedStep={selectedStep}
+                                  />
+                                </div>
+                              )
+                            }
+                            return null
+                          })}
+                        </>
+                      )}
+                    </div>
+                  )}
+                </AccordionItemWrapper>
+              )}
+            </div>
+          )}
 
           {journal?.category !== 'financial-literacy' && (
             <div style={{ order: 2 }}>
