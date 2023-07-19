@@ -1,9 +1,9 @@
 .briefing-modal .modal-dialog {
-  max-width: 1405px !important;
+  max-width: 710px !important;
 }
 
-.close-briefing-modal .btn-close {
-  color: #231f20;
+.close-briefing-modal .btn-close  {
+  color: #231F20;
 }
 
 .briefing-modal .modal-header {
@@ -18,23 +18,23 @@
   text-align: left;
   font: normal normal bold 18px/15px Montserrat;
   letter-spacing: 0.88px;
-  color: #231f20;
+  color: #231F20;
   opacity: 1;
-  margin-top: 10px;
+  margin-top:10px
 }
 
 .close-briefing-modal {
   margin-bottom: 23px !important;
   color: #000;
-  opacity: 1;
+  opacity: 1
 }
 
 .briefing-modal .modal-content {
   border-radius: 0px !important;
   padding: 10px 35px !important;
   background-color: #fbfbfb !important;
-  width: 100%;
 }
+
 
 .briefing-modal .briefing-modal-body {
   background-color: inherit;

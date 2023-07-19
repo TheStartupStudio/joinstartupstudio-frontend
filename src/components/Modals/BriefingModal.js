@@ -8,7 +8,7 @@ import { getBriefingsStart } from '../../redux/header/Actions'
 const BriefingModal = (props) => {
   const dispatch = useDispatch()
 
-  const briefings = useSelector((state) => state.header.briefings)
+  const briefings = useSelector((state) => state?.header?.briefings)
   useEffect(() => {
     dispatch(getBriefingsStart())
   }, [])
@@ -19,28 +19,13 @@ const BriefingModal = (props) => {
     // dispatch(getPeriodsStart())
   }, [])
 
-  // const ContentItem = (contentData) => {
-  //   return (
-  //     <div className={'content-item-container'}>
-  //       <span className={'content-item-title'}>
-  //         {contentData?.content?.title}:
-  //       </span>
-  //       <span className={'content-item-description'}>
-  //         {contentData?.content?.description}
-  //       </span>
-  //     </div>
-  //   )
-  // }
   const ContentItem = (contentData) => {
     return (
       <div className={'content-item-container'}>
         <span className={'content-item-title'}>
           {contentData?.content?.title}:
         </span>
-        <span
-          className={'content-item-description'}
-          style={{ whiteSpace: 'pre-line' }}
-        >
+        <span className={'content-item-description'}>
           {contentData?.content?.description}
         </span>
       </div>
