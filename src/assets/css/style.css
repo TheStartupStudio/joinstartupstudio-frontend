@@ -1020,7 +1020,6 @@ input[type='file'] {
 .edit-pencil {
   font-size: 20px;
   color: #707070;
-
 }
 .edit-modal h3 {
   font-weight: 600;
@@ -1183,6 +1182,10 @@ input[type='file'] {
 #subscription-modal {
   /* margin-top: 15%; */
   top: 20%;
+}
+#briefing-modal {
+  /* margin-top: 15%; */
+  top: 10%;
 }
 /* #password-modal {
   width: 50%;
@@ -4176,13 +4179,13 @@ ul.sidebar-menu-item .collapse a {
 }
 
 .Certificate {
-  max-width: 105px;
+  max-width: 155px;
 }
 
 .user-info-grid .Certificate img {
-  width: 83px !important;
-  height: 73px !important;
-  margin: 0 auto;
+  width: 100% !important;
+  height: 100% !important;
+  margin-right: 1rem;
 }
 
 .user-info-grid {

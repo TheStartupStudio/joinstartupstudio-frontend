@@ -318,6 +318,9 @@ select {
 .reset-student-password .reset-button {
   width: 50%;
 }
+.disabled-select {
+  opacity: 0.5;
+}
 
 @media (max-width: 768px) {
   .students-transfer-modal .transfer-dialog p {

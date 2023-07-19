@@ -1,89 +1,89 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import IntlMessages from "../../../utils/IntlMessages";
-import SUSLogo from "../../../assets/images/LTS-logo.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import instructorNormal from "../../../assets/images/instructor-normal.png";
-import learnerNormal from "../../../assets/images/learner-normal.png";
-import instructorHover from "../../../assets/images/instructor-hover.png";
-import learnerHover from "../../../assets/images/learner-hover.png";
-import "./index.css";
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import IntlMessages from '../../../utils/IntlMessages'
+import SUSLogo from '../../../assets/images/LTS-logo-horizontal.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import instructorNormal from '../../../assets/images/instructor-normal.png'
+import learnerNormal from '../../../assets/images/learner-normal.png'
+import instructorHover from '../../../assets/images/instructor-hover.png'
+import learnerHover from '../../../assets/images/learner-hover.png'
+import './index.css'
 import {
   faTwitter,
   faFacebook,
   faInstagram,
   faVimeo,
   faLinkedin,
-  faSpotify,
-} from "@fortawesome/free-brands-svg-icons";
+  faSpotify
+} from '@fortawesome/free-brands-svg-icons'
 
 const ChooseLogin = () => {
-  const [loginRole, setLoginRole] = useState(null);
+  const [loginRole, setLoginRole] = useState(null)
 
-  const history = useHistory();
+  const history = useHistory()
 
   const handleLoginRole = (role) => {
-    setLoginRole(role);
-  };
+    setLoginRole(role)
+  }
 
   const LoginRole = (props) => {
-    const [hover, setHover] = useState(false);
+    const [hover, setHover] = useState(false)
 
     const handleMouseEnter = () => {
-      setHover(true);
-    };
+      setHover(true)
+    }
 
     const handleMouseLeave = () => {
-      setHover(false);
-    };
+      setHover(false)
+    }
 
     const icon = () => {
       if (hover) {
-        return props.hoverIcon;
+        return props.hoverIcon
       } else if (!hover) {
-        return props.normalIcon;
+        return props.normalIcon
       }
-    };
+    }
 
     return (
       <div
         onClick={() => {
-          props.handleLoginRole(props.role);
+          props.handleLoginRole(props.role)
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: "50%",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: '50%',
           width: 150,
           height: 150,
-          overflow: "hidden",
+          overflow: 'hidden'
         }}
       >
-        <img src={icon()} style={{ width: "100%", objectFit: "contain" }} />
+        <img src={icon()} style={{ width: '100%', objectFit: 'contain' }} />
       </div>
-    );
-  };
+    )
+  }
   const navigateToLogin = () => {
     if (loginRole) {
-      if (loginRole === "ims") {
-        return history.push("/ims-login");
-      } else if (loginRole === "main") {
+      if (loginRole === 'ims') {
+        return history.push('/ims-login')
+      } else if (loginRole === 'main') {
         return window.location.replace(
-          "https://mainplatform-dev.learntostart.com/"
-        );
+          'https://mainplatform-dev.learntostart.com/'
+        )
       }
     }
-  };
+  }
 
   return (
     <div
       className="container-fluid md-px-5 ps-md-5"
       style={{
-        backgroundColor: "#F8F7F7",
-        minHeight: " calc(100vh - 90px)",
+        backgroundColor: '#F8F7F7',
+        minHeight: ' calc(100vh - 90px)'
       }}
     >
       <div className="row center-content">
@@ -142,51 +142,51 @@ const ChooseLogin = () => {
           <div
             className="col-lg-9 mx-auto public-page-form px-4 pb-3 pt-4 "
             style={{
-              backgroundColor: "#F2F5FC",
+              backgroundColor: '#F2F5FC'
             }}
           >
             <h3
               className="text-center"
               style={{
-                textTransform: "uppercase",
-                color: "#51C7DF",
-                fontSize: 20,
+                textTransform: 'uppercase',
+                color: '#51C7DF',
+                fontSize: 20
               }}
             >
               <IntlMessages id="login.title2" />
             </h3>
-            <h4 style={{ color: "#707070", textAlign: "center", fontSize: 12 }}>
+            <h4 style={{ color: '#707070', textAlign: 'center', fontSize: 12 }}>
               Choose your Role
             </h4>
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
               >
-                <div style={{ marginRight: "-5px" }}>
+                <div style={{ marginRight: '-5px' }}>
                   <LoginRole
-                    role={"ims"}
+                    role={'ims'}
                     normalIcon={
-                      loginRole == "ims" ? instructorHover : instructorNormal
+                      loginRole == 'ims' ? instructorHover : instructorNormal
                     }
                     hoverIcon={instructorHover}
                     handleLoginRole={(role) => {
-                      handleLoginRole(role);
+                      handleLoginRole(role)
                     }}
                   />
                 </div>
                 <div>
                   <LoginRole
-                    role={"main"}
+                    role={'main'}
                     normalIcon={
-                      loginRole == "main" ? learnerHover : learnerNormal
+                      loginRole == 'main' ? learnerHover : learnerNormal
                     }
                     hoverIcon={learnerHover}
                     handleLoginRole={(role) => {
-                      handleLoginRole(role);
+                      handleLoginRole(role)
                     }}
                   />
                 </div>
@@ -207,7 +207,7 @@ const ChooseLogin = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ChooseLogin;
+export default ChooseLogin

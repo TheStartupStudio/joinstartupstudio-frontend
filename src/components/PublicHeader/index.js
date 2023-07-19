@@ -1,39 +1,39 @@
-import React from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import React from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 // import Language from '../Language'
-import IntlMessages from "../../utils/IntlMessages";
-import SUSLogo from "../../assets/images/sus-institute-logo.png";
-import SUSLogoStudent from "../../assets/images/LTS-logo.png";
-import { Nav, Navbar, NavDropdown } from "react-bootstrap";
+import IntlMessages from '../../utils/IntlMessages'
+import SUSLogo from '../../assets/images/sus-institute-logo.png'
+import SUSLogoStudent from '../../assets/images/LTS-logo-horizontal.png'
+import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
 
 function PublicHeader() {
-  const showMenuMobile = window.location.href.includes("lts-secure");
-  const location = useLocation();
+  const showMenuMobile = window.location.href.includes('lts-secure')
+  const location = useLocation()
   return (
     <div>
       <nav
         className={`navbar navbar-expand-lg justify-content-between py-4 px-4 px-md-5 ${
-          showMenuMobile && "desktop-menu mt-lg-5"
+          showMenuMobile && 'desktop-menu mt-lg-5'
         }  px-xl-2`}
         style={
-          window.location.href.includes("lts-secure") ||
-          window.location.href.includes("register")
+          window.location.href.includes('lts-secure') ||
+          window.location.href.includes('register')
             ? null
-            : { backgroundColor: " #F8F7F7" }
+            : { backgroundColor: ' #F8F7F7' }
         }
       >
-        <div className={`sidebar-header ${showMenuMobile && "ms-md-5"}`}>
+        <div className={`sidebar-header ${showMenuMobile && 'ms-md-5'}`}>
           <NavLink to="/">
-            {location.pathname !== "/" && (
+            {location.pathname !== '/' && (
               <img src={SUSLogoStudent} alt="logo" className="ms-md-5" />
             )}
           </NavLink>
-          {location.pathname == "/ims-login" && (
+          {location.pathname == '/ims-login' && (
             <div
               style={{
-                textTransform: "uppercase",
-                color: "#707070",
-                fontSize: 18,
+                textTransform: 'uppercase',
+                color: '#707070',
+                fontSize: 18
               }}
               className="ms-md-5"
             >
@@ -42,34 +42,34 @@ function PublicHeader() {
           )}
         </div>
         <ul className="navbar-nav navbar-expand-lg public-nav">
-          {window.location.href.includes("terms") ||
-          window.location.href.includes("lts-secure") ? (
+          {window.location.href.includes('terms') ||
+          window.location.href.includes('lts-secure') ? (
             <li className="nav-item">
               {/* <a className='nav-link' href='/create-account'>
                 <IntlMessages id='navigation.create_your_account' />
               </a> */}
             </li>
-          ) : window.location.href.includes("register") ? (
+          ) : window.location.href.includes('register') ? (
             <li className="nav-item">
               <a className="nav-link mx-auto" href="/logout">
                 <IntlMessages id="navigation.logout" />
               </a>
             </li>
           ) : null}
-          {window.location.href.includes("create-account") ||
-          window.location.href.includes("lts-secure") ||
-          window.location.href.includes("subscription-ended") ||
-          window.location.href.includes("register") ||
-          window.location.href.includes("reset-password") ||
-          window.location.href.includes("forgot-password") ||
-          window.location.href.includes("trial-ended") ? (
+          {window.location.href.includes('create-account') ||
+          window.location.href.includes('lts-secure') ||
+          window.location.href.includes('subscription-ended') ||
+          window.location.href.includes('register') ||
+          window.location.href.includes('reset-password') ||
+          window.location.href.includes('forgot-password') ||
+          window.location.href.includes('trial-ended') ? (
             <li className="nav-item">
               <a className="nav-link" href="/">
                 <IntlMessages id="navigation.login" />
               </a>
             </li>
           ) : null}
-          {location.pathname === "/" && (
+          {location.pathname === '/' && (
             <li className="nav-item">
               {/* <Link className='nav-link' to='/create-account'>
                 <IntlMessages id='navigation.create_your_account' />
@@ -91,7 +91,7 @@ function PublicHeader() {
             className="border-0"
           >
             <Navbar.Brand href="#home">
-              <img src={SUSLogo} alt="logo" style={{ width: "200px" }} />
+              <img src={SUSLogo} alt="logo" style={{ width: '200px' }} />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse
@@ -124,7 +124,7 @@ function PublicHeader() {
         </nav>
       )}
     </div>
-  );
+  )
 }
 
-export default PublicHeader;
+export default PublicHeader

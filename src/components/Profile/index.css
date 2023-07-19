@@ -83,11 +83,17 @@
   background-size: contain;
 }
 .listen-bg__img {
-  background-image: url("../../assets/images/read_watch_listen_Listen_with typo1.png");
+  background-image: url('../../assets/images/read_watch_listen_Listen_with typo1.png');
 }
 .read-bg__img {
-  background-image: url("../../assets/images/read_watch_listen_Read_with\ typo2.png");
+  background-image: url('../../assets/images/read_watch_listen_Read_with\ typo2.png');
 }
 .watch-bg__img {
-  background-image: url("../../assets/images/read_watch_listen_Watch_with\ typo1.png");
+  background-image: url('../../assets/images/read_watch_listen_Watch_with\ typo1.png');
+}
+.iamr-inbox_link {
+  color: #000;
+}
+.iamr-inbox_link:hover {
+  color: #99cc33;
 }

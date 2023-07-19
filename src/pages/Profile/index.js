@@ -360,137 +360,143 @@ function Profile(props) {
                   </h3>
                 </div>
               </div>
-              <div className="my-account mx-0 mt-4">
-                <div className="row p-sm-3 p-3">
-                  <div className="col-12 text-center text-md-auto col-md-4 col-lg-3 gx-5">
-                    <div className="round-image-wrapper">
-                      <Image
-                        src={
-                          user.profile_image ? user.profile_image : defaultImage
-                        }
-                        className="editbio-user-image mx-auto my-account"
-                      />
+              <div style={{ backgroundColor: '#f8f7f7' }} className="pb-3">
+                <div className="my-account mx-0 mt-4">
+                  <div className="row p-sm-3 p-3">
+                    <div className="col-12 text-center text-md-auto col-md-4 col-lg-3 gx-5">
+                      <div className="round-image-wrapper">
+                        <Image
+                          src={
+                            user.profile_image
+                              ? user.profile_image
+                              : defaultImage
+                          }
+                          className="editbio-user-image mx-auto my-account"
+                        />
+                      </div>
+                    </div>
+                    <div className="col-10 col-md-6 col-lg-6 offset-lg-0">
+                      <h2 className="mt-4 mb-0">{user.name}</h2>
+                      <h5 className="mb-0">
+                        {user.profession ? user.profession : ''}
+                      </h5>
+                      {/*<div className='mt-1'>*/}
+                      {/*  {socialMedia?.linkedIn && (*/}
+                      {/*    <a*/}
+                      {/*      className='m-1'*/}
+                      {/*      href={*/}
+                      {/*        socialMedia.linkedIn.startsWith('https')*/}
+                      {/*          ? socialMedia.linkedIn*/}
+                      {/*          : `https://${socialMedia.linkedIn}`*/}
+                      {/*      }*/}
+                      {/*      target='_blank'*/}
+                      {/*    >*/}
+                      {/*      <FontAwesomeIcon*/}
+                      {/*        icon={faLinkedinIn}*/}
+                      {/*        className='social-media-icons'*/}
+                      {/*      />*/}
+                      {/*    </a>*/}
+                      {/*  )}*/}
+                      {/*  {socialMedia?.twitter && (*/}
+                      {/*    <a*/}
+                      {/*      className='m-1'*/}
+                      {/*      href={*/}
+                      {/*        socialMedia.twitter.startsWith('https')*/}
+                      {/*          ? socialMedia.twitter*/}
+                      {/*          : `https://${socialMedia.twitter}`*/}
+                      {/*      }*/}
+                      {/*      target='_blank'*/}
+                      {/*    >*/}
+                      {/*      <FontAwesomeIcon*/}
+                      {/*        icon={faTwitterSquare}*/}
+                      {/*        className='social-media-icons'*/}
+                      {/*      />*/}
+                      {/*    </a>*/}
+                      {/*  )}*/}
+                      {/*  {socialMedia?.instagram && (*/}
+                      {/*    <a*/}
+                      {/*      className='m-1'*/}
+                      {/*      href={*/}
+                      {/*        socialMedia.instagram.startsWith('https')*/}
+                      {/*          ? socialMedia.instagram*/}
+                      {/*          : `https://${socialMedia.instagram}`*/}
+                      {/*      }*/}
+                      {/*      target='_blank'*/}
+                      {/*    >*/}
+                      {/*      <FontAwesomeIcon*/}
+                      {/*        icon={faInstagram}*/}
+                      {/*        className='social-media-icons'*/}
+                      {/*      />*/}
+                      {/*    </a>*/}
+                      {/*  )}*/}
+                      {/*  {socialMedia?.facebook && (*/}
+                      {/*    <a*/}
+                      {/*      className='m-1'*/}
+                      {/*      href={*/}
+                      {/*        socialMedia.facebook.startsWith('https')*/}
+                      {/*          ? socialMedia.facebook*/}
+                      {/*          : `https://${socialMedia.facebook}`*/}
+                      {/*      }*/}
+                      {/*      target='_blank'*/}
+                      {/*    >*/}
+                      {/*      <FontAwesomeIcon*/}
+                      {/*        icon={faFacebookSquare}*/}
+                      {/*        className='social-media-icons'*/}
+                      {/*      />*/}
+                      {/*    </a>*/}
+                      {/*  )}*/}
+                      {/*  {socialMedia?.website && (*/}
+                      {/*    <a*/}
+                      {/*      className='m-1'*/}
+                      {/*      href={*/}
+                      {/*        socialMedia.website.startsWith('https')*/}
+                      {/*          ? socialMedia.website*/}
+                      {/*          : `https://${socialMedia.website}`*/}
+                      {/*      }*/}
+                      {/*      target='_blank'*/}
+                      {/*    >*/}
+                      {/*      <FontAwesomeIcon*/}
+                      {/*        icon={faGlobe}*/}
+                      {/*        className='social-media-icons'*/}
+                      {/*      />*/}
+                      {/*    </a>*/}
+                      {/*  )}*/}
+                      {/*</div>*/}
+                    </div>
+                    <div className="col-2 col-md-2 col-lg-3 mt-md-0">
+                      <div
+                        className="float-lg-end float-end mx-2 mx-md-0 mt-4 mt-sm-0 pt-md-4 px-md-4"
+                        onClick={() => openEditProfileModal('profile')}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <FontAwesomeIcon
+                          className="edit-pencil"
+                          icon={faPencilAlt}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="col-10 col-md-6 col-lg-6 offset-lg-0">
-                    <h2 className="mt-4 mb-0">{user.name}</h2>
-                    <h5 className="mb-0">
-                      {user.profession ? user.profession : ''}
-                    </h5>
-                    {/*<div className='mt-1'>*/}
-                    {/*  {socialMedia?.linkedIn && (*/}
-                    {/*    <a*/}
-                    {/*      className='m-1'*/}
-                    {/*      href={*/}
-                    {/*        socialMedia.linkedIn.startsWith('https')*/}
-                    {/*          ? socialMedia.linkedIn*/}
-                    {/*          : `https://${socialMedia.linkedIn}`*/}
-                    {/*      }*/}
-                    {/*      target='_blank'*/}
-                    {/*    >*/}
-                    {/*      <FontAwesomeIcon*/}
-                    {/*        icon={faLinkedinIn}*/}
-                    {/*        className='social-media-icons'*/}
-                    {/*      />*/}
-                    {/*    </a>*/}
-                    {/*  )}*/}
-                    {/*  {socialMedia?.twitter && (*/}
-                    {/*    <a*/}
-                    {/*      className='m-1'*/}
-                    {/*      href={*/}
-                    {/*        socialMedia.twitter.startsWith('https')*/}
-                    {/*          ? socialMedia.twitter*/}
-                    {/*          : `https://${socialMedia.twitter}`*/}
-                    {/*      }*/}
-                    {/*      target='_blank'*/}
-                    {/*    >*/}
-                    {/*      <FontAwesomeIcon*/}
-                    {/*        icon={faTwitterSquare}*/}
-                    {/*        className='social-media-icons'*/}
-                    {/*      />*/}
-                    {/*    </a>*/}
-                    {/*  )}*/}
-                    {/*  {socialMedia?.instagram && (*/}
-                    {/*    <a*/}
-                    {/*      className='m-1'*/}
-                    {/*      href={*/}
-                    {/*        socialMedia.instagram.startsWith('https')*/}
-                    {/*          ? socialMedia.instagram*/}
-                    {/*          : `https://${socialMedia.instagram}`*/}
-                    {/*      }*/}
-                    {/*      target='_blank'*/}
-                    {/*    >*/}
-                    {/*      <FontAwesomeIcon*/}
-                    {/*        icon={faInstagram}*/}
-                    {/*        className='social-media-icons'*/}
-                    {/*      />*/}
-                    {/*    </a>*/}
-                    {/*  )}*/}
-                    {/*  {socialMedia?.facebook && (*/}
-                    {/*    <a*/}
-                    {/*      className='m-1'*/}
-                    {/*      href={*/}
-                    {/*        socialMedia.facebook.startsWith('https')*/}
-                    {/*          ? socialMedia.facebook*/}
-                    {/*          : `https://${socialMedia.facebook}`*/}
-                    {/*      }*/}
-                    {/*      target='_blank'*/}
-                    {/*    >*/}
-                    {/*      <FontAwesomeIcon*/}
-                    {/*        icon={faFacebookSquare}*/}
-                    {/*        className='social-media-icons'*/}
-                    {/*      />*/}
-                    {/*    </a>*/}
-                    {/*  )}*/}
-                    {/*  {socialMedia?.website && (*/}
-                    {/*    <a*/}
-                    {/*      className='m-1'*/}
-                    {/*      href={*/}
-                    {/*        socialMedia.website.startsWith('https')*/}
-                    {/*          ? socialMedia.website*/}
-                    {/*          : `https://${socialMedia.website}`*/}
-                    {/*      }*/}
-                    {/*      target='_blank'*/}
-                    {/*    >*/}
-                    {/*      <FontAwesomeIcon*/}
-                    {/*        icon={faGlobe}*/}
-                    {/*        className='social-media-icons'*/}
-                    {/*      />*/}
-                    {/*    </a>*/}
-                    {/*  )}*/}
-                    {/*</div>*/}
-                  </div>
-                  <div className="col-2 col-md-2 col-lg-3 mt-md-0">
-                    <div
-                      className="float-lg-end float-end mx-2 mx-md-0 mt-4 mt-sm-0 pt-md-4 px-md-4"
-                      onClick={() => openEditProfileModal('profile')}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <FontAwesomeIcon
-                        className="edit-pencil"
-                        icon={faPencilAlt}
-                      />
-                    </div>
-                  </div>
+                  {/*<div className='m-3'>*/}
+                  {/*  {user.bio ? (*/}
+                  {/*    <p>{user.bio}</p>*/}
+                  {/*  ) : (*/}
+                  {/*    <>*/}
+                  {/*      <p>You can write your biography here.</p>*/}
+                  {/*    </>*/}
+                  {/*  )}*/}
+                  {/*</div>*/}
                 </div>
-                {/*<div className='m-3'>*/}
-                {/*  {user.bio ? (*/}
-                {/*    <p>{user.bio}</p>*/}
-                {/*  ) : (*/}
-                {/*    <>*/}
-                {/*      <p>You can write your biography here.</p>*/}
-                {/*    </>*/}
-                {/*  )}*/}
-                {/*</div>*/}
-              </div>
-              <div className="my-account mx-0 mt-4">
-                <div className="row">
-                  <div className="row justify-content-between">
-                    <h4 className="m-3 col-12 col-lg-5">
-                      <IntlMessages id="my_account.email_address" />
-                    </h4>
+                <div
+                  className="my-account mt-4 mb-2 mx-3 pr-2"
+                  style={{ border: '2px solid #bbbdbf' }}
+                >
+                  <div className="row">
+                    <div className="row justify-content-between">
+                      <h4 className="m-3 col-12 col-lg-5">
+                        <IntlMessages id="my_account.email_address" />
+                      </h4>
 
-                    <div className="col-12 col-lg-6 my-auto">
+                      {/* <div className="col-12 col-lg-6 my-auto">
                       <div className="d-flex show_in_portfolio justify-content-lg-end ms-3 ms-lg-0">
                         <p className="my-auto p-0">
                           Allow people to contact me
@@ -523,36 +529,37 @@ function Profile(props) {
                           <i className="my-auto"></i>
                         </label>
                       </div>
+                    </div> */}
                     </div>
-                  </div>
 
-                  <InputGroup className="mt-3 mb-3">
-                    <InputGroup.Text
-                      style={{
-                        border: 0,
-                        backgroundColor: 'transparent'
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        className="edit-pencil mx-1"
-                        icon={faEnvelope}
+                    <InputGroup className="mt-3 mb-3">
+                      <InputGroup.Text
+                        style={{
+                          border: 0,
+                          backgroundColor: 'transparent'
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          className="edit-pencil mx-1"
+                          icon={faEnvelope}
+                        />
+                      </InputGroup.Text>
+                      <Form.Control
+                        className="my-profile-input"
+                        type="text"
+                        value={user.email}
                       />
-                    </InputGroup.Text>
-                    <Form.Control
-                      className="my-profile-input"
-                      type="text"
-                      value={user.email}
-                    />
-                    <Button
-                      style={{ backgroundColor: 'transparent', border: 0 }}
-                      onClick={() => openEditProfileModal('email')}
-                    >
-                      <FontAwesomeIcon
-                        className="edit-pencil float-end mx-md-4"
-                        icon={faPencilAlt}
-                      />
-                    </Button>
-                  </InputGroup>
+                      <Button
+                        style={{ backgroundColor: 'transparent', border: 0 }}
+                        onClick={() => openEditProfileModal('email')}
+                      >
+                        <FontAwesomeIcon
+                          className="edit-pencil float-end mx-md-4"
+                          icon={faPencilAlt}
+                        />
+                      </Button>
+                    </InputGroup>
+                  </div>
                 </div>
               </div>
               {/* <div className='my-account mx-0 mt-4'>

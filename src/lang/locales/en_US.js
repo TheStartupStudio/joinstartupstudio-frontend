@@ -599,6 +599,12 @@ const EnLangs = {
   'my_notes.note_description_needet': 'Note description needet',
   'my_notes.add_a_new_note': 'Add a new note',
 
+  // Instructor notes
+  'instructor_notes.success_added': 'Your note has been saved successfully',
+  'instructor_notes.notes_title': 'Add a subject',
+  'instructor_notes.notes_title_neddet': 'You must insert a title',
+  'instructor_notes.notes_title_text': 'Notes Text needet',
+
   //My journals
   'my_journal.lts_title': 'MY LEARN TO START JOURNAL',
   'my_journal.lts_description':
@@ -959,7 +965,7 @@ const EnLangs = {
   'calendar_task-events.start_date_of_event': 'Start date of event',
   'calendar_task-events.end_date_of_event': 'End date of event',
   'calendar_task-events.start_time_of_event': 'Start time of event',
-  'calendar_task-events.end_time_of_event': 'End time of event',
+  'calendar_task-events.end_time_of_event': 'End time of event'
 }
 
 export default EnLangs

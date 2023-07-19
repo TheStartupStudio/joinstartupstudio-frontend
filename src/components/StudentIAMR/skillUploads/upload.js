@@ -125,34 +125,33 @@ const Upload = ({ upload, skill, editUpload }) => {
             </div>
           </div>
         )}
-        {hasAccess &&
-          (upload.status === 'proficient' || upload.status === 'approved') && (
-            <div className="row m-0 my-4">
-              <div className="col-12 col-sm-6 m-0 p-0">
-                <button
-                  className="lts-button float-end mt-2 me-sm-3"
-                  style={{ background: '#99cc33' }}
-                  onClick={() => setShowConfirmUploadModal(true)}
-                  // disabled={upload.status === 'approved'}
-                >
-                  {upload.status === 'approved' ? 'APPROVED' : 'APPROVE'}
-                </button>
-              </div>
-              <div className="col-12 col-sm-6 m-0 p-0">
-                <button
-                  className="lts-button float-start mt-2 ms-sm-3"
-                  style={{ background: '#ff3399' }}
-                  onClick={() => {
-                    setShowDenyUploadModal(true)
-                    denyApprovalRequest('denied')
-                  }}
-                  disabled={upload.status === 'approved'}
-                >
-                  DENY
-                </button>
-              </div>
+        {hasAccess && upload.status === 'proficient' && (
+          <div className="row m-0 my-4">
+            <div className="col-12 col-sm-6 m-0 p-0">
+              <button
+                className="lts-button float-end mt-2 me-sm-3"
+                style={{ background: '#99cc33' }}
+                onClick={() => setShowConfirmUploadModal(true)}
+                disabled={upload.status === 'approved'}
+              >
+                {upload.status === 'approved' ? 'APPROVED' : 'APPROVE'}
+              </button>
             </div>
-          )}
+            <div className="col-12 col-sm-6 m-0 p-0">
+              <button
+                className="lts-button float-start mt-2 ms-sm-3"
+                style={{ background: '#ff3399' }}
+                onClick={() => {
+                  setShowDenyUploadModal(true)
+                  denyApprovalRequest('denied')
+                }}
+                disabled={upload.status === 'approved'}
+              >
+                DENY
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <ApproveUploadModal

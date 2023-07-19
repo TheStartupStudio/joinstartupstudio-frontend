@@ -24,7 +24,7 @@ import socket from '../../utils/notificationSocket'
 import NotificationTypes from '../../utils/notificationTypes'
 import {
   IsUserLevelAuthorized,
-  checkLevelAuthorized,
+  checkLevelAuthorized
 } from '../../utils/helpers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
@@ -70,7 +70,7 @@ const PreviewPublicPortfolio = () => {
   const newConnectionRequest = async () => {
     await axiosInstance
       .post('/connect', {
-        toUserId: user.id,
+        toUserId: user.id
       })
       .then((res) => {
         setIsConnected('request')
@@ -78,9 +78,9 @@ const PreviewPublicPortfolio = () => {
         if (loggedUser.id !== user.id) {
           socket?.emit('sendNotification', {
             sender: { id: loggedUser.id, name: loggedUser.name },
-            receiver: { id: user.id },
+            receivers: [{ id: user.id }],
             type: NotificationTypes.FRIEND_REQUEST.key,
-            url: `/my-connections/request/${res.data.id}`,
+            url: `/my-connections/request/${res.data.id}`
           })
         }
       })

@@ -46,46 +46,46 @@
 }
 
 .public-page-form .register-btn {
-	display: block;
-	width: auto;
-	padding-right: 20px;
-	padding-left: 20px;
-	margin-left: auto;
+  display: block;
+  width: auto;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-left: auto;
 }
 
 .radio-wrapper {
-	display: grid;
-	grid-template-columns: 25px auto;
+  display: grid;
+  grid-template-columns: 25px auto;
 }
 
 .radio-wrapper > div {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .radio-wrapper * {
-	font-size: 10px;
-	text-align: left;
+  font-size: 10px;
+  text-align: left;
 }
 
 .radio-wrapper input[type='radio'] {
-	width: 20px;
-	height: 20px;
-	background-clip: content-box;
-	border: 2px solid #01c5d1;
-	background-color: #fff;
-	border-radius: 50%;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	padding: 3px;
+  width: 20px;
+  height: 20px;
+  background-clip: content-box;
+  border: 2px solid #01c5d1;
+  background-color: #fff;
+  border-radius: 50%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 3px;
 }
 .radio-wrapper input[type='radio']:checked {
-	background-color: #01c5d1;
+  background-color: #01c5d1;
 }
 
 .create-account-title {
-	margin-left: 100px;
+  margin-left: 100px;
 }
 
 @media (min-width: 767.98px) {
@@ -99,53 +99,44 @@
 }
 
 @media (max-width: 767.98px) {
-	.create-account-title {
-		margin-left: 0;
-	}
+  .create-account-title {
+    margin-left: 0;
+  }
 }
 
 .ims-login-role {
-
 }
 
 .ims-login-role:hover {
-background-color: #51C7DF;
+  background-color: #51c7df;
 }
-.main-login-role{
-
+.main-login-role {
 }
-
 
 .main-login-role:hover {
-    background-color: #ff3399;
+  background-color: #ff3399;
 }
 
 svg {
-    width: 70%;
+  width: 70%;
 }
 
 .learner-logo:hover * {
-    fill:white
+  fill: white;
 }
 .learner-logo-clicked {
-    fill:white
+  fill: white;
 }
-.learner-logo-clicked [class^="st"] {
-    fill: white;
+.learner-logo-clicked [class^='st'] {
+  fill: white;
 }
-
 
 .instructor-logo:hover * {
-    /*fill:white*/
+  /*fill:white*/
 }
 .instructor-logo-clicked {
-    /*fill:white*/
+  /*fill:white*/
 }
-.instructor-logo-clicked [class^="st"] {
-    /*fill: white;*/
+.instructor-logo-clicked [class^='st'] {
+  /*fill: white;*/
 }
-
-
-
-
-

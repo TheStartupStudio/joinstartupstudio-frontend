@@ -28,7 +28,7 @@ import Lottie from 'react-lottie'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import './index.css'
 import logoImage from '../../assets/images/LearntoStart-Diagram-3D.png'
-import { navigate } from 'react-big-calendar/lib/utils/constants'
+import materialCollectionsBookmark from '../../assets/icons/material-collections-bookmark.svg'
 
 function Sidebar(props) {
   const sideBarState = useSelector((state) => state.general.sidebarState)
@@ -59,150 +59,177 @@ function Sidebar(props) {
     })
   }, [location])
 
-  const NavListParent = (props) => {
-    const [isOpen, setIsOpen] = useState(false)
+  // const ParentDropdownItem = (props) => {
+  //   const hasChildren = props.children && props.children.length > 0
+  //
+  //   return (
+  //     <li
+  //       className="dropdownMenuSidebarHover"
+  //       data-bs-toggle={hasChildren ? 'collapse' : ''}
+  //       href={hasChildren ? '#' + props.href : ''}
+  //       role="button"
+  //       aria-expanded={hasChildren ? 'false' : 'true'}
+  //       aria-controls={hasChildren ? props.href : ''}
+  //     >
+  //       <a>
+  //         <div className="d-flex w-100" style={{ alignItems: 'center' }}>
+  //           {props?.icon?.startsWith('/') && (
+  //             <img src={props.icon} style={{ width: 20, marginRight: 10 }} />
+  //           )}
+  //           {!props?.icon?.startsWith('/') && (
+  //             <FontAwesomeIcon
+  //               className="sidebar-icon me-2"
+  //               icon={props.icon}
+  //             />
+  //           )}
+  //           <div className="ms-1 flex-grow-1">{props.title}</div>
+  //           {hasChildren && (
+  //             <FontAwesomeIcon
+  //               icon={faAngleDown}
+  //               className="me-2 me-md-0"
+  //               style={{
+  //                 fontSize: '16px',
+  //                 color: '#333D3D',
+  //               }}
+  //             />
+  //           )}
+  //         </div>
+  //       </a>
+  //       {hasChildren && (
+  //         <DropdownChildItems id={props.href}>
+  //           {props.children}
+  //         </DropdownChildItems>
+  //       )}
+  //     </li>
+  //   )
+  // }
+  //
+  // const DropdownChildItems = (props) => {
+  //   return (
+  //     <div className="collapse" id={props.id} data-parent="#side-menu-main">
+  //       <ul className="nav">{props.children}</ul>
+  //     </div>
+  //   )
+  // }
+  //
+  // const menuData = [
+  //   {
+  //     id: 'parent1',
+  //     title: 'Parent 1',
+  //     icon: materialCollectionsBookmark,
+  //     children: [
+  //       {
+  //         id: 'child1',
+  //         title: 'Child 1',
+  //         path: '/child1',
+  //       },
+  //       {
+  //         id: 'child2-parent',
+  //         title: 'Child 2 Parent',
+  //         icon: materialCollectionsBookmark,
+  //         children: [
+  //           {
+  //             id: 'child2',
+  //             title: 'Child 2',
+  //             path: '/child2',
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   // Add more menu items as needed
+  // ]
+  //
+  // const renderMenuItems = (data) => {
+  //   return data.map((item) => {
+  //     if (item.children && item.children.length > 0) {
+  //       return (
+  //         <ParentDropdownItem
+  //           key={item.id}
+  //           title={item.title}
+  //           icon={item.icon}
+  //           href={item.id}
+  //         >
+  //           {renderMenuItems(item.children)}
+  //         </ParentDropdownItem>
+  //       )
+  //     } else {
+  //       return (
+  //         <li key={item.id}>
+  //           <NavLink
+  //             onClick={() => {
+  //               // dispatch(setAccordionToggled(false))
+  //               // props.hideHeaderIcons()
+  //             }}
+  //             to={item.path}
+  //             activeClassName="sidenav active"
+  //           >
+  //             <div className="d-flex" style={{ alignItems: 'center' }}>
+  //               <div className="ms-4 ps-2 py-1">{item.title}</div>
+  //             </div>
+  //           </NavLink>
+  //         </li>
+  //       )
+  //     }
+  //   })
+  // }
 
-    const toggleCollapse = () => {
-      setIsOpen(!isOpen)
-    }
+  const ParentDropdownItem = (props) => {
     return (
-      <>
-        <li
-          className="dropdownMenuSidebarHover"
-          data-bs-toggle="collapse"
-          href={'#' + props.listName}
-          role="button"
-          aria-expanded="true"
-          aria-controls={props.listName}
-          // aria-expanded={isOpen ? 'true' : 'false'}
-          // onClick={toggleCollapse}
-        >
-          <a>
-            <div className="d-flex w-100" style={{ alignItems: 'center' }}>
+      <li
+        className="dropdownMenuSidebarHover"
+        data-bs-toggle="collapse"
+        href={'#' + props.href}
+        role="button"
+        aria-expanded="true"
+        aria-controls={props.ariaControls}
+      >
+        <a>
+          <div className="d-flex w-100" style={{ alignItems: 'center' }}>
+            {props?.icon?.startsWith('/') && (
+              <img src={props.icon} style={{ width: 20, marginRight: 10 }} />
+            )}
+            {!props?.icon?.startsWith('/') && (
               <FontAwesomeIcon
                 className="sidebar-icon me-2"
                 icon={props.icon}
               />
-              <div className="flex-grow-1 ms-1">
-                <span className={'text-uppercase'}>{props.listTitle}</span>
-              </div>
-              <FontAwesomeIcon
-                icon={faAngleDown}
-                className="me-2 me-md-0"
-                style={{
-                  fontSize: '16px',
-                  color: '#333D3D',
-                }}
-              />
-            </div>
-          </a>
-        </li>
-        <div
-          className="collapse"
-          id={props.listName}
-          data-parent="#side-menu-main"
-        >
-          {props.children}
-        </div>
-      </>
-    )
-  }
-  const NavListChild = (props) => {
-    const handleClick = (event) => {
-      debugger
-      event.stopPropagation() // Stop the event from propagating to the parent li element
-    }
-    return (
-      <li>
-        <NavLink
-          onClick={(e) => {
-            handleClick(e)
-          }}
-          to={props.linkToNavigate}
-          // onClick={() => {
-          //   dispatch(setAccordionToggled(false))
-          //   props.hideHeaderIcons()
-          // }}
-          activeClassName="sidenav active"
-        >
-          <div className="d-flex" style={{ alignItems: 'center' }}>
-            <div
-              className="ms-4 ps-2 py-1 text-uppercase"
-              style={{
-                font: 'normal normal 600 12px/15px Montserrat',
-                letterSpacing: 0.48,
-                color: '#231F20',
-              }}
-            >
+            )}
+            <div className="ms-1 flex-grow-1">
               {props.title}
+              {/*<IntlMessages id="navigation.beyond_your_course" />*/}
             </div>
+            <FontAwesomeIcon
+              icon={faAngleDown}
+              className="me-2 me-md-0"
+              style={{
+                fontSize: '16px',
+                color: '#333D3D',
+              }}
+            />
           </div>
-        </NavLink>
+        </a>
       </li>
     )
   }
 
-  const RecursiveNavComponent = ({ data }) => {
-    const renderNavItems = (items) => {
-      return items.map((item, index) => {
-        if (item.children) {
-          return (
-            <NavListParent
-              key={index}
-              listName={item.listName}
-              listTitle={item.listTitle}
-              icon={item.icon}
-            >
-              {renderNavItems(item.children)}
-            </NavListParent>
-          )
-        } else {
-          return (
-            <NavListChild
-              key={index}
-              title={item.title}
-              linkToNavigate={item.linkToNavigate}
-            />
-          )
-        }
-      })
-    }
-
-    return <>{renderNavItems(data)}</>
+  const DropdownChildItems = (props) => {
+    return (
+      <div className="collapse" id={props.id} data-parent="#side-menu-main">
+        {props.children}
+      </div>
+    )
   }
 
-  const data = [
-    {
-      listName: 'myLTS',
-      listTitle: 'My Learn To Start EDU',
-      icon: faFolder,
-      children: [
-        {
-          listName: 'myLTS2',
-          listTitle: 'My Learn To Start EDU2',
-          icon: faFolder,
-          children: [
-            {
-              title: 'My training2',
-              linkToNavigate: '/my-training2',
-            },
-          ],
-        },
-        {
-          title: 'My curriculum',
-          linkToNavigate: '/my-portfolio',
-        },
-        {
-          title: 'My certification guide',
-          linkToNavigate: '/my-certification-guide',
-        },
-        {
-          title: 'My performance data',
-          linkToNavigate: '/my-performance-data',
-        },
-      ],
-    },
-  ]
+  const NavListItem = ({ onClick, to, activeClassName, text }) => (
+    <li>
+      <NavLink onClick={onClick} to={to} activeClassName={activeClassName}>
+        <div className="d-flex" style={{ alignItems: 'center' }}>
+          <div className="ms-4 ps-2 py-1">{text}</div>
+        </div>
+      </NavLink>
+    </li>
+  )
 
   return (
     <nav

@@ -17,7 +17,7 @@ import { getEventsStart, getPeriodsStart } from '../../redux/dashboard/Actions'
 import {
   editBriefingStart,
   getBriefingsStart,
-  postBriefingStart,
+  postBriefingStart
 } from '../../redux/header/Actions'
 import { editBriefing } from '../../redux/header/Service'
 
@@ -43,8 +43,8 @@ const StudentOfInstructors = (props) => {
 
   const customStyles = {
     option: (provided, state) => ({
-      ...provided,
-    }),
+      ...provided
+    })
   }
 
   const submit = async () => {
@@ -70,7 +70,7 @@ const StudentOfInstructors = (props) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors }
   } = useForm()
 
   const changeDashboard = (value) => {
@@ -88,8 +88,8 @@ const StudentOfInstructors = (props) => {
     {
       title: '',
       description: '',
-      url: '',
-    },
+      url: ''
+    }
   ])
 
   const onAddNewNotification = () => {
@@ -98,8 +98,8 @@ const StudentOfInstructors = (props) => {
       {
         title: '',
         description: '',
-        link: '',
-      },
+        link: ''
+      }
     ])
   }
 
@@ -118,8 +118,9 @@ const StudentOfInstructors = (props) => {
         sender: loggedUser,
         receiver: null,
         from: 'manual',
-        type: NotificationTypes.DEFAULT_NOTIFICATION.key,
+        type: NotificationTypes.DEFAULT_NOTIFICATION.key
       })
+      setNotifications([{ title: '', description: '', link: '' }])
       toast.success('Notification added successfully!')
     } catch (e) {
       toast.error('Notification adding error!')
@@ -258,7 +259,7 @@ const StudentOfInstructors = (props) => {
                     onChange={(e) =>
                       setDashboardData((old) => ({
                         ...old,
-                        description: e.target.value,
+                        description: e.target.value
                       }))
                     }
                   />
@@ -276,7 +277,7 @@ const StudentOfInstructors = (props) => {
                     onChange={(e) =>
                       setDashboardData((old) => ({
                         ...old,
-                        link: e.target.value,
+                        link: e.target.value
                       }))
                     }
                   />
@@ -303,8 +304,8 @@ const StudentOfInstructors = (props) => {
                           ...old,
                           read: {
                             ...old.read,
-                            title: e.target.value,
-                          },
+                            title: e.target.value
+                          }
                         }))
                       }
                     />
@@ -324,8 +325,8 @@ const StudentOfInstructors = (props) => {
                           ...old,
                           read: {
                             ...old.read,
-                            author: e.target.value,
-                          },
+                            author: e.target.value
+                          }
                         }))
                       }
                     />
@@ -353,8 +354,8 @@ const StudentOfInstructors = (props) => {
                           ...old,
                           watch: {
                             ...old.watch,
-                            title: e.target.value,
-                          },
+                            title: e.target.value
+                          }
                         }))
                       }
                     />
@@ -374,8 +375,8 @@ const StudentOfInstructors = (props) => {
                           ...old,
                           watch: {
                             ...old.watch,
-                            author: e.target.value,
-                          },
+                            author: e.target.value
+                          }
                         }))
                       }
                     />
@@ -403,8 +404,8 @@ const StudentOfInstructors = (props) => {
                           ...old,
                           listen: {
                             ...old.listen,
-                            title: e.target.value,
-                          },
+                            title: e.target.value
+                          }
                         }))
                       }
                     />
@@ -424,8 +425,8 @@ const StudentOfInstructors = (props) => {
                           ...old,
                           listen: {
                             ...old.listen,
-                            author: e.target.value,
-                          },
+                            author: e.target.value
+                          }
                         }))
                       }
                     />
@@ -453,8 +454,8 @@ const StudentOfInstructors = (props) => {
                     ...customStyles,
                     menu: (provided) => ({
                       ...provided,
-                      zIndex: 9999,
-                    }),
+                      zIndex: 9999
+                    })
                   }}
                   className={`my-auto py-auto add-student-select col-12 mt-2 px-0 px-md-auto mb-4`}
                   onChange={(e) => {
@@ -510,20 +511,20 @@ const StudentOfInstructors = (props) => {
                                 selectedInstructorsName.splice(indexName, 1) // 2nd parameter means remove one item only
                               }
                               setSelectedInstructorsName((old) => [
-                                ...selectedInstructorsName,
+                                ...selectedInstructorsName
                               ])
                               setSelectedInstructors((old) => [
                                 ...old,
-                                selectedInstructors,
+                                selectedInstructors
                               ])
                             } else {
                               setSelectedInstructorsName((old) => [
                                 ...old,
-                                e.target.name,
+                                e.target.name
                               ])
                               setSelectedInstructors((old) => [
                                 ...old,
-                                e.target.value,
+                                e.target.value
                               ])
                             }
                           }}

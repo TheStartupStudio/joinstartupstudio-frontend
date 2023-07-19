@@ -41,7 +41,7 @@ export const VerifyButton = (props) => {
         height: 35,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
       }}
       onMouseEnter={(e) => {
         e.target.style.backgroundColor = '#F2359D' // Change background color on hover
@@ -99,7 +99,7 @@ function EditPortfolio() {
   const updateStatus = async () => {
     await axiosInstance
       .put(`/portfolio`, {
-        is_published: !toggle,
+        is_published: !toggle
       })
       .then((response) => {
         toast.success(<IntlMessages id="alerts.success_change" />)
@@ -136,7 +136,7 @@ function EditPortfolio() {
         style={{
           background: '#F8F7F7 0% 0% no-repeat padding-box',
           opacity: 1,
-          padding: 20,
+          padding: 20
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -163,7 +163,7 @@ function EditPortfolio() {
               <IntlMessages id="portfolio.publish_checkbox" />
             </span>
           </div>
-          <div
+          {/* <div
             style={{
               display: 'flex',
               alignItems: 'flex-end',
@@ -178,7 +178,7 @@ function EditPortfolio() {
               }}
               src={verifyNovae}
             />
-          </div>
+          </div> */}
         </div>
         {user && (
           <>
@@ -194,7 +194,7 @@ function EditPortfolio() {
                   font: 'normal normal 600 24px Montserrat',
                   letterSpacing: 0,
                   color: '#231F20',
-                  marginLeft: 10,
+                  marginLeft: 10
                 }}
               >
                 EXPERIENCE
@@ -207,7 +207,7 @@ function EditPortfolio() {
                   font: 'normal normal 600 24px Montserrat',
                   letterSpacing: 0,
                   color: '#231F20',
-                  marginLeft: 10,
+                  marginLeft: 10
                 }}
               >
                 EDUCATION AND ACCOMPLISHMENTS

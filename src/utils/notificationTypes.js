@@ -56,6 +56,14 @@ export default {
     key: 'CERTIFICATION_SUBMIT',
     value: ' submitted their certification'
   },
+  IAMR_STUDENT_QUESTION: {
+    key: 'IAMR_STUDENT_QUESTION',
+    value: ' asked you a instruction quesion'
+  },
+  IAMR_STUDENT_QUESTION_UPDATE: {
+    key: 'IAMR_STUDENT_QUESTION_UPDATE',
+    value: ' updated questions'
+  },
   DEFAULT_NOTIFICATION: {
     key: 'DEFAULT_NOTIFICATION',
     value: ' sent you a notifications'

@@ -10,14 +10,14 @@ const BriefingComponent = (props) => {
     source: '',
     synopsis: '',
     discussionQuestion: '',
-    discussionPoints: '',
+    discussionPoints: ''
   })
 
   useEffect(() => {
     if (props.briefing) {
       setBriefing({
         ...props.briefing,
-        date: new Date(props?.briefing?.date).toISOString().substring(0, 10),
+        date: new Date(props?.briefing?.date).toISOString().substring(0, 10)
       })
     }
   }, [props.briefing])
@@ -77,13 +77,22 @@ const BriefingComponent = (props) => {
               <label htmlFor="link" className="brand-text">
                 Synopsis
               </label>
-              <input
+              {/* <input
                 className="mt-2 mb-2 col-12 p-md-2"
                 type="text"
                 name="synopsis"
                 placeholder={'Synopsis'}
                 value={briefing.synopsis}
                 onChange={(e) => onChangeBriefing('synopsis', e.target.value)}
+              /> */}
+              <textarea
+                className="mt-2 mb-2 col-12 p-md-2"
+                name="synopsis"
+                placeholder={'Synopsis'}
+                value={briefing.synopsis}
+                onChange={(e) => onChangeBriefing('synopsis', e.target.value)}
+                cols={50}
+                rows={7}
               />
             </Col>
             <Col sm={12} md={6}>
@@ -105,7 +114,7 @@ const BriefingComponent = (props) => {
               <label htmlFor="link" className="brand-text">
                 Discussion points
               </label>
-              <input
+              {/* <input
                 className="mt-2 mb-2 col-12 p-md-2"
                 type="text"
                 name="discussionPoints"
@@ -114,6 +123,17 @@ const BriefingComponent = (props) => {
                 onChange={(e) =>
                   onChangeBriefing('discussionPoints', e.target.value)
                 }
+              /> */}
+              <textarea
+                className="mt-2 mb-2 col-12 p-md-2"
+                name="discussionPoints"
+                placeholder={'Discussion points'}
+                value={briefing.discussionPoints}
+                onChange={(e) =>
+                  onChangeBriefing('discussionPoints', e.target.value)
+                }
+                cols={50}
+                rows={7}
               />
             </Col>
           </div>

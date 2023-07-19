@@ -1,33 +1,32 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { NavLink } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faIdCard,
   faTv,
   faMapSigns,
-  faChild,
-} from "@fortawesome/free-solid-svg-icons";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import "react-perfect-scrollbar/dist/css/styles.css";
-import { setAccordionToggled } from "../../redux";
-import IntlMessages from "../../utils/IntlMessages";
-import SUSLogo from "../../assets/images/LTS-logo.png";
-import sidebarImage from "../../assets/images/side-logo.png";
-import sidebarImageES from "../../assets/images/side-logo-es.png";
-import SUSLogoStudent from "../../../assets/images/LTS-logo.png";
+  faChild
+} from '@fortawesome/free-solid-svg-icons'
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import 'react-perfect-scrollbar/dist/css/styles.css'
+import { setAccordionToggled } from '../../redux'
+import IntlMessages from '../../utils/IntlMessages'
+import SUSLogo from '../../assets/images/LTS-logo-horizontal.png'
+import sidebarImage from '../../assets/images/side-logo.png'
+import sidebarImageES from '../../assets/images/side-logo-es.png'
 
 function Sidebar() {
-  const sideBarState = useSelector((state) => state.general.sidebarState);
+  const sideBarState = useSelector((state) => state.general.sidebarState)
 
-  const currentLanguage = useSelector((state) => state.lang.locale);
+  const currentLanguage = useSelector((state) => state.lang.locale)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   return (
     <nav
       id="sidebar"
-      className={`sidebar-area ${sideBarState ? " sidenav active" : ""}`}
+      className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
     >
       <div className="scroll sidebar-sticky sidebar-scroll">
         <PerfectScrollbar
@@ -47,11 +46,11 @@ function Sidebar() {
               <li>
                 <NavLink
                   onClick={() => dispatch(setAccordionToggled(false))}
-                  to={"/dashboard"}
+                  to={'/dashboard'}
                   className="mt-md-1"
                   activeclassname="sidenav active"
                 >
-                  <div className="d-flex" style={{ alignItems: "center" }}>
+                  <div className="d-flex" style={{ alignItems: 'center' }}>
                     <div className="dashboard me-1"></div>
                     <div className="ms-2">
                       <IntlMessages id="navigation.dashboard" />
@@ -65,7 +64,7 @@ function Sidebar() {
                   to="/startup-live"
                   activeclassname="sidenav active"
                 >
-                  <div className="d-flex" style={{ alignItems: "center" }}>
+                  <div className="d-flex" style={{ alignItems: 'center' }}>
                     <FontAwesomeIcon
                       className="sidebar-icon me-1"
                       icon={faTv}
@@ -82,7 +81,7 @@ function Sidebar() {
                   to="/portfolio"
                   activeclassname="sidenav active"
                 >
-                  <div className="d-flex" style={{ alignItems: "center" }}>
+                  <div className="d-flex" style={{ alignItems: 'center' }}>
                     <FontAwesomeIcon
                       className="sidebar-icon me-1 me-4"
                       icon={faIdCard}
@@ -97,7 +96,7 @@ function Sidebar() {
                   activeclassname="active"
                   onClick={() => dispatch(setAccordionToggled(false))}
                 >
-                  <div className="d-flex" style={{ alignItems: "center" }}>
+                  <div className="d-flex" style={{ alignItems: 'center' }}>
                     <FontAwesomeIcon
                       className="sidebar-icon me-1"
                       icon={faMapSigns}
@@ -114,7 +113,7 @@ function Sidebar() {
                   activeclassname="sidenav active"
                   onClick={() => dispatch(setAccordionToggled(false))}
                 >
-                  <div className="d-flex" style={{ alignItems: "center" }}>
+                  <div className="d-flex" style={{ alignItems: 'center' }}>
                     <FontAwesomeIcon
                       className="sidebar-icon me-1"
                       icon={faChild}
@@ -127,7 +126,7 @@ function Sidebar() {
               </li>
             </ul>
             <div className="sidebar-bottom">
-              {currentLanguage === "en" ? (
+              {currentLanguage === 'en' ? (
                 <img src={sidebarImage} alt="sidebar" />
               ) : (
                 <img src={sidebarImageES} alt="sidebar" />
@@ -137,7 +136,7 @@ function Sidebar() {
         </PerfectScrollbar>
       </div>
     </nav>
-  );
+  )
 }
 
-export default Sidebar;
+export default Sidebar

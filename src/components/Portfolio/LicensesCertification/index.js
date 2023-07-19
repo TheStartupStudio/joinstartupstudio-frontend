@@ -26,6 +26,7 @@ export default function LicencesCertification(props) {
   const [certificatedToRemove, setCertificatedToRemove] = useState([])
   console.log(certificatedToRemove)
   console.log(userCertification)
+  console.log('certificateData', certificateData)
   // const [uploadedImage, setUploadedImage] = useState()
   const [loading, setLoading] = useState(false)
   const [isPublished, setIsPublished] = useState(false)
@@ -44,7 +45,7 @@ export default function LicencesCertification(props) {
     setIsPublished(!isPublished)
     await axiosInstance
       .put(`/users`, {
-        show_certifications: !oldPublishValue,
+        show_certifications: !oldPublishValue
       })
       .then()
       .catch((e) => {
@@ -107,10 +108,10 @@ export default function LicencesCertification(props) {
       formData.append('img', general.croppedImage)
 
       await axiosInstance
-        .post('/upload/img', formData, {
+        .post('/upload/img-transform', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+            'Content-Type': 'multipart/form-data'
+          }
         })
         .then(async (response) => {
           image = response.data.fileLocation
@@ -121,7 +122,7 @@ export default function LicencesCertification(props) {
       await axiosInstance
         .post('/userCertificates', {
           ...certificateData,
-          image: image,
+          image: image
         })
         .then((res) => {
           toast.success(<IntlMessages id="alerts.success_change" />)
@@ -165,7 +166,7 @@ export default function LicencesCertification(props) {
                 <div
                   className="row"
                   style={{
-                    rowGap: 20,
+                    rowGap: 20
                   }}
                 >
                   {userCertification?.map((data, index) => (
@@ -209,7 +210,7 @@ export default function LicencesCertification(props) {
                     icon={faPlus}
                     className="w-100 h-100 skills-button"
                     style={{
-                      cursor: 'pointer',
+                      cursor: 'pointer'
                       // border: '1px solid #BBBDBF'
                     }}
                   />

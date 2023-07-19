@@ -165,9 +165,39 @@ const PreviewPortfolio = () => {
   const isPreview = history.location.pathname.includes('preview')
   const windowWidth = useWindowWidth()
 
-  // console.log('accomplishments',accomplishments,)
-  // console.log('userCertifications',userCertifications,)
-
+  const SwitchButton = (props) =>{
+    return       <div
+      onClick={props.handleSelectSection}
+      style={{
+        background: `${
+          props.selectedSection ? '#51C7DF' : '#fff'
+        } 0% 0% no-repeat padding-box`,
+        border: '1px solid #BBBDBF',
+        borderRadius: 6,
+        width: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'all 0.5s',
+      }}
+    > <div
+      style={{
+        font: `normal normal 600 ${
+          windowWidth < 700 ? '15px/27px' : '22px/27px'
+        } Montserrat`,
+        letterSpacing: 0,
+        color: '#231F20',
+        textAlign: 'center',
+        padding: windowWidth < 600 ? '5px 15px' : '20px 30px',
+        textTransform: 'uppercase',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      {props.title}
+    </div></div>
+  }
   return (
     <div style={{ padding: '30px 10px', width: isPreview ? '100%' : '88%' }}>
       <div>
@@ -228,7 +258,7 @@ const PreviewPortfolio = () => {
               <IntlMessages id="portfolio.publish_checkbox" />
             </span>
           </div>
-          <div
+          {/* <div
             style={{
               display: 'flex',
               alignItems: 'flex-end',
@@ -243,7 +273,7 @@ const PreviewPortfolio = () => {
               }}
               src={verifyNovae}
             />
-          </div>
+          </div> */}
         </div>
         <PersonalBio
           user={user}
@@ -258,71 +288,10 @@ const PreviewPortfolio = () => {
             {skills.length < 1 ? null : <Skills user={user} />}
 
             {isPreview && (
-              <div style={{ display: 'flex', gap: 20, width: '100%' }}>
-                <div
-                  onClick={handleSelectExperience}
-                  style={{
-                    background: `${
-                      selected === 'experience' ? '#51C7DF' : '#fff'
-                    } 0% 0% no-repeat padding-box`,
-                    border: '1px solid #BBBDBF',
-                    borderRadius: 6,
-                    width: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <div
-                    style={{
-                      font: `normal normal 600 ${
-                        windowWidth < 700 ? '15px/27px' : '22px/27px'
-                      } Montserrat`,
-                      letterSpacing: 0,
-                      color: '#231F20',
-                      textAlign: 'center',
-                      padding: windowWidth < 600 ? '5px 15px' : '20px 30px',
-                      textTransform: 'uppercase',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    Experience
-                  </div>
-                </div>
-                <div
-                  onClick={handleSelectEducation}
-                  style={{
-                    background: `${
-                      selected === 'education' ? '#51C7DF' : '#fff'
-                    } 0% 0% no-repeat padding-box`,
-                    border: '1px solid #BBBDBF',
-                    borderRadius: 6,
-                    width: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <div
-                    style={{
-                      font: `normal normal 600 ${
-                        windowWidth < 700 ? '15px/27px' : '22px/27px'
-                      } Montserrat`,
-                      letterSpacing: 0,
-                      color: '#231F20',
-                      textAlign: 'center',
-                      padding: windowWidth < 600 ? '5px 15px' : '20px 30px',
-                      textTransform: 'uppercase',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    Education & Certifications
-                  </div>
-                </div>
+              <div style={{ display: 'flex', gap: 20, width: '100%',transition: 'all 0.5s' }}>
+                <SwitchButton handleSelectSection={handleSelectExperience} selectedSection={selected === 'experience'} title={'experience'}/>
+                <SwitchButton handleSelectSection={handleSelectEducation} selectedSection={selected === 'education'} title={'education'}/>
+
               </div>
             )}
 
