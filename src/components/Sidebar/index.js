@@ -674,106 +674,103 @@ function Sidebar(props) {
                 </li>
               </div>
               {/*<>{renderMenuItems(menuData)}</>*/}
-              <li
-                className="dropdownMenuSidebarHover"
-                data-bs-toggle="collapse"
-                href="#student-journals-collapse"
-                role="button"
-                aria-expanded="true"
-                aria-controls="student-journals-collapse"
-              >
-                <a>
-                  <div
-                    className="d-flex w-100"
-                    style={{ alignItems: 'center' }}
-                  >
-                    <FontAwesomeIcon
-                      className="sidebar-icon me-2"
-                      icon={materialCollectionsBookmark}
-                    />
-                    <div className="ms-1 flex-grow-1">
-                      <span>STUDENT JOURNALS</span>
-                    </div>
-                    <FontAwesomeIcon
-                      icon={faAngleDown}
-                      className="me-2 me-md-0"
-                      style={{
-                        fontSize: '16px',
-                        color: '#333D3D'
-                      }}
-                    />
-                  </div>
-                </a>
-              </li>
-              <div
-                className="collapse"
-                id="student-journals-collapse"
-                data-parent="#side-menu-main"
-              >
-                <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to="/beyond-your-course"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">
-                        <span>LTS JOURNAL</span>
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to="/beyond-your-course"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">
-                        <span>WELLNESS JOURNAL</span>
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to="/beyond-your-course"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">
-                        <span>PERSONAL FINANCE JOURNAL</span>
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>    <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to="/beyond-your-course"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">
-                        <span>LEADERSHIP JOURNAL</span>
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-              </div>
+              {/*<li*/}
+              {/*  className="dropdownMenuSidebarHover"*/}
+              {/*  data-bs-toggle="collapse"*/}
+              {/*  href="#student-journals-collapse"*/}
+              {/*  role="button"*/}
+              {/*  aria-expanded="true"*/}
+              {/*  aria-controls="student-journals-collapse"*/}
+              {/*>*/}
+              {/*  <a>*/}
+              {/*    <div*/}
+              {/*      className="d-flex w-100"*/}
+              {/*      style={{ alignItems: 'center' }}*/}
+              {/*    >*/}
+              {/*      <img src={materialCollectionsBookmark} style={{width: 20, height: 20}}/>*/}
+              {/*      <div className="ms-1 flex-grow-1">*/}
+              {/*        <span>STUDENT JOURNALS</span>*/}
+              {/*      </div>*/}
+              {/*      <FontAwesomeIcon*/}
+              {/*        icon={faAngleDown}*/}
+              {/*        className="me-2 me-md-0"*/}
+              {/*        style={{*/}
+              {/*          fontSize: '16px',*/}
+              {/*          color: '#333D3D'*/}
+              {/*        }}*/}
+              {/*      />*/}
+              {/*    </div>*/}
+              {/*  </a>*/}
+              {/*</li>*/}
+              {/*<div*/}
+              {/*  className="collapse"*/}
+              {/*  id="student-journals-collapse"*/}
+              {/*  data-parent="#side-menu-main"*/}
+              {/*>*/}
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      onClick={() => {*/}
+              {/*        dispatch(setAccordionToggled(false))*/}
+              {/*        props.hideHeaderIcons()*/}
+              {/*      }}*/}
+              {/*      to="/beyond-your-course"*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">*/}
+              {/*          <span>LTS JOURNAL</span>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      onClick={() => {*/}
+              {/*        dispatch(setAccordionToggled(false))*/}
+              {/*        props.hideHeaderIcons()*/}
+              {/*      }}*/}
+              {/*      to="/beyond-your-course"*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">*/}
+              {/*          <span>WELLNESS JOURNAL</span>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      onClick={() => {*/}
+              {/*        dispatch(setAccordionToggled(false))*/}
+              {/*        props.hideHeaderIcons()*/}
+              {/*      }}*/}
+              {/*      to="/beyond-your-course"*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">*/}
+              {/*          <span>PERSONAL FINANCE JOURNAL</span>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>    <li>*/}
+              {/*    <NavLink*/}
+              {/*      onClick={() => {*/}
+              {/*        dispatch(setAccordionToggled(false))*/}
+              {/*        props.hideHeaderIcons()*/}
+              {/*      }}*/}
+              {/*      to="/beyond-your-course"*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">*/}
+              {/*          <span>LEADERSHIP JOURNAL</span>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*</div>*/}
             </ul>
             <div className="sidebar-bottom">
               <div style={{ position: 'relative' }}>
