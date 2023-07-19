@@ -54,7 +54,7 @@ const Messenger = (props) => {
       setShowWarningModal(true)
 
     return () => {
-      socket.current.disconnect()
+      // socket.current.disconnect()
     }
   }, [])
 

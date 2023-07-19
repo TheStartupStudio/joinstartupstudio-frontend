@@ -32,7 +32,7 @@ const InstructorNotesBox = (props) => {
     })
 
     return () => {
-      notificationSocket.disconnect()
+      // notificationSocket.disconnect()
     }
   }, [])
 

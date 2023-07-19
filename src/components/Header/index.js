@@ -139,7 +139,7 @@ function Header(props) {
     })
 
     return () => {
-      socket.disconnect()
+      // socket.disconnect()
     }
   }, [])
 
