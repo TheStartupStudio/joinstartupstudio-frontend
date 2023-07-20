@@ -10,6 +10,7 @@ import TestJournalContent from './TestJournalContent'
 import searchIcon from '../../assets/images/search-icon.png'
 import { FormattedMessage } from 'react-intl'
 import axiosInstance from '../../utils/AxiosInstance'
+import LtsEduLogo from '../../assets/images/LTS-EDU-logo.png'
 import Accordion from 'react-bootstrap/Accordion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown, faFileAlt } from '@fortawesome/free-solid-svg-icons'
@@ -94,6 +95,24 @@ const TestJournalType = (props) => {
   })
 
   console.log(props)
+  const journalTitle = () => {
+    let journalData
+
+    if (props.category === 'hs1') {
+      journalData = {
+        title: 'LTS YEAR ONE CURRICULUM',
+        description: `Welcome to Year One of the LTS Program.
+       Here you will find support and guidance as you deliver the curriculum and mentor students.`
+      }
+    } else if (props.category === 'financial-literacy') {
+      journalData = {
+        title: 'FINANCIAL LITERACY CURRICULUM',
+        description: `Welcome to the course in Financial Literacy. 
+        Here you will find support and guidance as you deliver the curriculum and mentor students.`
+      }
+    }
+    return journalData
+  }
 
   return (
     <div id="main-body">
@@ -101,6 +120,40 @@ const TestJournalType = (props) => {
         <div className="row">
           <div className="col-12 col-md-11 px-0">
             <div className="page-padding">
+              <div className="d-flex justify-content-between">
+                <div>
+                  <div
+                    style={{
+                      fontSize: 27,
+                      font: 'normal normal 600 30px/30px Montserrat',
+                      letterSpacing: 0,
+                      color: '#231F20',
+                      marginBottom: 4
+                    }}
+                  >
+                    {journalTitle().title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      font: 'normal normal 600 13px/16px Montserrat',
+                      letterSpacing: 0,
+                      color: '#333D3D83',
+                      width: '80%'
+                    }}
+                  >
+                    {journalTitle().description}
+                  </div>
+                </div>
+                <div>
+                  <img
+                    src={LtsEduLogo}
+                    style={{ width: 200, objectFit: 'contain' }}
+                    alt={'learn-to-start-edu'}
+                  />
+                </div>
+              </div>
+
               <div className="page-header">
                 <h3 className="page-header__title">
                   {/*<IntlMessages id={titleMapping[props.category]} />*/}
@@ -109,7 +162,6 @@ const TestJournalType = (props) => {
                   {/*<IntlMessages id={descriptionMapping[props.category]} />*/}
                 </p>
               </div>
-
               <div className="page-card page-card--reverse">
                 <div
                   className="page-card__content styled-scrollbar col-lg-8 col-md-7"
@@ -193,7 +245,8 @@ const TestJournalType = (props) => {
                       textAlign: 'center',
                       textTransform: 'uppercase',
                       fontSize: 12,
-                      padding: '4px 10px'
+                      padding: '4px 10px',
+                      marginBottom: 10
                     }}
                     onClick={() => {
                       if (props.match.params.type === 'task') {
@@ -213,12 +266,12 @@ const TestJournalType = (props) => {
                     journals.map((journalItem, journalItemIdx) => (
                       <div
                         key={journalItem.id}
-                        className={`accordion-menu__item`}
+                        className={`accordion-menu__item text-uppercase`}
                       >
                         <NavLink to={`${props.match.url}/${journalItem.id}`}>
                           <span
                             style={{
-                              font: 'normal normal 600 14px/16px Montserrat',
+                              font: 'normal normal 500 14px/16px Montserrat',
                               letterSpacing: 0.56
                             }}
                           >
@@ -236,7 +289,7 @@ const TestJournalType = (props) => {
                             <div
                               className={`accordion-menu__item text-uppercase`}
                               style={{
-                                font: 'normal normal 600 14px/14px Montserrat',
+                                font: 'normal normal 500 14px/14px Montserrat',
                                 letterSpacing: 0.56,
                                 color: '#231F20',
                                 padding: '10px 0 15px 0'
@@ -286,7 +339,7 @@ const TestJournalType = (props) => {
                           <span
                             className={'text-uppercase'}
                             style={{
-                              font: 'normal normal 600 14px/16px Montserrat',
+                              font: 'normal normal 500 14px/16px Montserrat',
                               letterSpacing: 0.56
                             }}
                           >

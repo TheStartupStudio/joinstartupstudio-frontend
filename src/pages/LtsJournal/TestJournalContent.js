@@ -404,14 +404,14 @@ function TestJournalContent(props) {
     setSelectedTask({ task, index })
     setSelectedTaskIndex(index)
   }
-
+  console.log(journal?.content)
   return (
     <>
       <>
         <div className={'journal-title'}>{journal?.title}</div>
         <div
           className={'d-flex justify-content-between w-100'}
-          style={{ marginTop: 40 }}
+          style={{ marginTop: 40, gap: 4 }}
         >
           <div className={'video-container'}>
             {videos &&
