@@ -5,13 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/assets/images/LTS-EDU-logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/2D-Pyramid_White background.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/LTS 1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/LTS 2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/LTS 3&amp;4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/images/LTS FINANCIAL LITERACY.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/AccordionItemWrapper.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/AccordionItemWrapper.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalType.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalType.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ExpectedOutcomes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ExpectedOutcomes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ProgramOpportunities.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ProgramOpportunities.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyCurriculum/MyCurriculum.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyCurriculum/MyCurriculum.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyLtsGridItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyLtsGridItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/NumberImage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/NumberImage.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

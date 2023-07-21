@@ -4269,7 +4269,8 @@ ul.sidebar-menu-item .collapse a {
 /*/////////////////////// NEW JOURNALS VIEW //////////////////////////*/
 
 .accordion {
-  border: 1px solid #ccc;
+  /*border: 1px solid #ccc;*/
+  border: 1px solid #3C3C3C;
   margin-bottom: 10px;
   line-height: 15px;
   letter-spacing: 0.40px;

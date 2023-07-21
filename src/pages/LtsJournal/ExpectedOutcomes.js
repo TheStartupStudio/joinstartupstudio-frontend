@@ -14,9 +14,11 @@ const ExpectedOutcomes = (props) => {
         <div style={{ backgroundColor: '#fff' }}>
           <div
             style={{
-              padding: '0px 20px',
-              marginBottom: 20,
-              backgroundColor: '#e4e9f4'
+              // padding: '0px 20px',
+              // marginBottom: 20,
+              backgroundColor: '#e4e9f4',
+              minHeight: 260,
+              marginBottom: 10
             }}
           >
             {props.data?.map((data, index) => {
@@ -27,8 +29,8 @@ const ExpectedOutcomes = (props) => {
                     style={{
                       width: '100%',
                       // height: 100,
-                      objectFit: 'contain',
-                      marginBottom: 10
+                      objectFit: 'contain'
+                      // marginBottom: 10
                     }}
                   />
                 </React.Fragment>

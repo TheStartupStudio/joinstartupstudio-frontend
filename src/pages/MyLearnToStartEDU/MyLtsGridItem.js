@@ -10,14 +10,14 @@ const MyLtsGridItem = (props) => {
         style={{
           width: '100%',
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         <div
           class="row py-4 px-3 w-100"
           style={{
             background: '#F8F7F7 0% 0% no-repeat padding-box',
-            minHeight: 150,
+            minHeight: 150
           }}
         >
           <div
@@ -27,23 +27,25 @@ const MyLtsGridItem = (props) => {
           >
             {props.itemNumberImage}
           </div>
-          <div className={'col-md-9 col-sm-12 px-0 py-2'}>
-            <div
-              style={{
-                font: 'normal normal 500 16px/22px Montserrat',
-                letterSpacing: 0.64,
-                color: '#231F20',
-                textTransform: 'uppercase',
-                marginBottom: 10,
-              }}
-            >
-              {props.title}
-            </div>
+          <div
+            className={'col-md-9 col-sm-12 px-0 py-2 d-flex align-items-center'}
+          >
+            {/*<div*/}
+            {/*  style={{*/}
+            {/*    font: 'normal normal 500 16px/22px Montserrat',*/}
+            {/*    letterSpacing: 0.64,*/}
+            {/*    color: '#231F20',*/}
+            {/*    textTransform: 'uppercase',*/}
+            {/*    marginBottom: 10,*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  {props.title}*/}
+            {/*</div>*/}
             <div
               style={{
                 font: 'normal normal normal 13px/17px Montserrat',
                 letterSpacing: 0.52,
-                color: '#333D3D',
+                color: '#333D3D'
               }}
             >
               {props.description}

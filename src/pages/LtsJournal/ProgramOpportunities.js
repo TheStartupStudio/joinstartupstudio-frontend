@@ -42,7 +42,8 @@ const ProgramOpportunities = (props) => {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(3,1fr)',
-              paddingBottom: 0
+              paddingBottom: 0,
+              gap: 25
             }}
           >
             {props.data?.map((data, index) => {
