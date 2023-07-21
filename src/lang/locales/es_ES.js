@@ -1118,7 +1118,7 @@ const EsLangs = {
   'portfolio.add_new_Certified_Credential ID': 'Credential ID',
   'portfolio.add_new_Certified_Credential URL': 'Credential URL',
   'portfolio.Add_Licenses_or_Certifications': 'Add Licenses or Certifications',
-  'portfolio.all_field_needet': 'All fields are needed',
+  'portfolio.all_field_needed': 'All fields are needed',
   'portfolio.EDIT_LICENSES_CERTIFICATIONS': 'EDIT LICENSES & CERTIFICATIONS',
   'portfolio.file_type':
     'File Types: .png or .jpg only Dimensions: 150 x 150px Size: 500KB max.',
@@ -1217,10 +1217,10 @@ const EsLangs = {
   'my_notes.add_button': 'ADD NEW NOTE',
   'my_notes.notes_title': 'Note Title',
   'my_notes.notes_title_neddet': 'You must insert a title',
-  'my_notes.notes_title_text': 'Notes Text needet',
+  'my_notes.notes_title_text': 'Notes Text needed',
   'my_notes.notes_modal_body': 'Write your note here ...',
-  'my_notes.note_title_needet': 'Note title needet',
-  'my_notes.note_description_needet': 'Note description needet',
+  'my_notes.note_title_needed': 'Note title needed',
+  'my_notes.note_description_needed': 'Note description needed',
   'my_notes.add_a_new_note': 'Add a new note',
 
   //My journals

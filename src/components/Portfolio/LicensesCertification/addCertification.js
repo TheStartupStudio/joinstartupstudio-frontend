@@ -270,7 +270,7 @@ const AddCertification = (props) => {
                   credential_url.length == 0
                 ) {
                   return toast.error(
-                    <IntlMessages id="portfolio.all_field_needet" />
+                    <IntlMessages id="portfolio.all_field_needed" />
                   )
                 } else {
                   !props.loading && props.onSave()

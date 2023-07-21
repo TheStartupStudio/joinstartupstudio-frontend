@@ -120,9 +120,8 @@ const NewNoteModal = (props) => {
     let newNote = {
       id: props.note.id,
       subject: subject,
-      noteText: noteText
+      note_text: noteText
     }
-    console.log('newNote', newNote)
     props.handleUpdateNote(newNote)
   }
 

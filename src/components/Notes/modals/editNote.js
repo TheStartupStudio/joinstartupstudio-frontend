@@ -91,7 +91,7 @@ const EditNote = (props) => {
     //   note.value == '<p><br></p>' ||
     //   note.value == ''
     // ) {
-    //   return toast.error('Note is needet')
+    //   return toast.error('Note is needed')
     // }
     // //setNote({})
     handleSubmit()

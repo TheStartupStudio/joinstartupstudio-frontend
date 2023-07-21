@@ -8,7 +8,7 @@ import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 const InstructorNoteItem = ({
   subject,
   createdAt,
-  note_text,
+  noteText,
   onEdit,
   onDelete
 }) => {
@@ -57,7 +57,7 @@ const InstructorNoteItem = ({
         </div>
       </div>
       <div className="message-text mt-1 mt-lg-2">
-        <p>{parse(note_text)}</p>
+        <p>{parse(noteText)}</p>
         <p>
           {beautifulDateFormat(createdAt, {
             format: 'hh:mm a',
