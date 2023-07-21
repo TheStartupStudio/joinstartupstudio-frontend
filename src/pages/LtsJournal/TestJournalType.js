@@ -148,7 +148,7 @@ const TestJournalType = (props) => {
                 <div>
                   <img
                     src={LtsEduLogo}
-                    style={{ width: 200, objectFit: 'contain' }}
+                    style={{ width: 180, objectFit: 'contain' }}
                     alt={'learn-to-start-edu'}
                   />
                 </div>
