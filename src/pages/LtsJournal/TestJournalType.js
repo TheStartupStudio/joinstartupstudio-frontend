@@ -131,7 +131,7 @@ const TestJournalType = (props) => {
                       marginBottom: 4
                     }}
                   >
-                    {journalTitle().title}
+                    {journalTitle()?.title}
                   </div>
                   <div
                     style={{
@@ -142,7 +142,7 @@ const TestJournalType = (props) => {
                       width: '80%'
                     }}
                   >
-                    {journalTitle().description}
+                    {journalTitle()?.description}
                   </div>
                 </div>
                 <div>

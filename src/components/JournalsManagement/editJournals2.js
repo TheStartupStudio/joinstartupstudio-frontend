@@ -52,7 +52,6 @@ export default function EditJournals2(props) {
 
   const [breakdowns, setBreakdowns] = useState(breakdownInitialState)
   useEffect(() => {
-    // getJournals()
     getJournals2()
     getJournals2Weeks()
   }, [])
@@ -60,24 +59,27 @@ export default function EditJournals2(props) {
   useEffect(() => {
     if (journals?.length) {
       setJournalOptions(
-        journals.map((journal, index) => {
-          return {
-            label:
-              journal.category +
-              ' - ' +
-              `${journal.type ? journal.type : ''}  ${
-                journal.type ? '-' : ''
-              } ` +
-              journal.title,
-            value: journal,
-            key: index
-          }
-        })
+        journals
+          .map((journal, index) => {
+            return {
+              label:
+                journal.category +
+                ' - ' +
+                `${journal.type ? journal.type : ''}  ${
+                  journal.type ? '-' : ''
+                } ` +
+                journal.title,
+              value: journal,
+              key: index
+            }
+          })
+          .sort((a, b) => a.value.category.localeCompare(b.value.category))
       )
     }
   }, [journals])
 
   const handleJournalSelect = (e) => {
+    console.log(e)
     setSelectedJournal({
       value: e.value,
       label: e.label
@@ -95,7 +97,7 @@ export default function EditJournals2(props) {
   useEffect(() => {
     const journalId = selectedJournal?.value?.id
     if (journalId) {
-      const url = `/edit-journals2/${journalId}`
+      const url = `/edit-journals2/${selectedJournal?.value?.type}/${journalId}`
       history.push(url)
     }
   }, [selectedJournal?.value?.id])
@@ -119,7 +121,6 @@ export default function EditJournals2(props) {
         ...data,
         type: 'task'
       }))
-      console.log(newData)
       setJournals((prevJournals) => [...prevJournals, ...newData])
       setFetchingJournals(false)
       // setBreakdowns(data.breakdowns)
@@ -143,7 +144,7 @@ export default function EditJournals2(props) {
       console.error(error)
     }
   }
-  const { journalId } = useParams()
+  const { journalId, type } = useParams()
 
   const handleSubmit = async () => {
     setLoading(true)
@@ -168,7 +169,7 @@ export default function EditJournals2(props) {
         )
         setSelectedJournal((prevState) => ({
           ...prevState,
-          value: res.data
+          value: res.data?.updatedJournal?.journal
         }))
         toast.success('Journal modified successfully!')
         setLoading(false)
@@ -1135,6 +1136,39 @@ export default function EditJournals2(props) {
                         }
                       />
                     </div>
+                    <div className="row">
+                      <div className={'col-sm-6'}>
+                        <h6>Padding of image {i + 1}</h6>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={x?.padding}
+                          onChange={(e) =>
+                            handleChangeExpectedOutcomes(
+                              i,
+                              'padding',
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                      <div className={'col-sm-6'}>
+                        <h6>Width of image {i + 1}</h6>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={x?.width}
+                          onChange={(e) =>
+                            handleChangeExpectedOutcomes(
+                              i,
+                              'width',
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+
                     <div>
                       <h3>Content {i + 1}</h3>
                       <KendoTextEditor
