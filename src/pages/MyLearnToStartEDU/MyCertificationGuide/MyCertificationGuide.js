@@ -17,6 +17,7 @@ const MyCertificationGuide = () => {
         title={'IAMR CERTIFICATION GUIDE'}
         description={`This guide explains the certification process and your role in it.`}
         itemNumberImage={<NumberImage image={numberOne} />}
+        to={'/iamr-certification-guide'}
       />
       <MyLtsGridItem
         title={'IAMR CERTIFICATION SYSTEM'}

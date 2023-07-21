@@ -43,6 +43,9 @@ const MyCurriculum = React.lazy(() =>
 const MyCertificationGuide = React.lazy(() =>
   import('./pages/MyLearnToStartEDU/MyCertificationGuide/MyCertificationGuide')
 )
+const IamrCertificationGuide = React.lazy(() =>
+  import('./pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationGuide')
+)
 const EditPortfolio = React.lazy(() =>
   import("./pages/Portfolio/editPortfolio")
 );
@@ -135,6 +138,10 @@ function Router(props) {
               <Route
                 path="/my-certification-guide"
                 component={MyCertificationGuide}
+              />
+              <Route
+                path="/iamr-certification-guide"
+                component={IamrCertificationGuide}
               />
               <Route path="/my-students" component={MyStudents} />
               <Route path="/resources" component={Resources} />
