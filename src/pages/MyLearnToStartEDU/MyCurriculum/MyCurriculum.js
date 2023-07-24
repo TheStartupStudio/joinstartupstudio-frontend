@@ -34,6 +34,7 @@ const MyCurriculum = () => {
         description={`LTS3&4 are autonomous years for students 
         to complete the IAMR Certification system.`}
         itemNumberImage={<NumberImage image={lts3} />}
+        to="/hs3-hs4-journal/task"
       />
       <MyLtsGridItem
         title={'FINANCIAL LITERACY'}

@@ -19,19 +19,19 @@ import ImrContent from './pages/Iamr/ImrContent'
 import TestJournal from './pages/LtsJournal/TestJournal'
 import UserProfile from './pages/Profile/userProfile'
 
-const Login = React.lazy(() => import("./pages/Auth/Login"));
-const ChooseLogin = React.lazy(() => import("./pages/Auth/Login/ChooseLogin"));
-const SecurePage = React.lazy(() => import("../src/pages/Secure"));
+const Login = React.lazy(() => import('./pages/Auth/Login'))
+const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
+const SecurePage = React.lazy(() => import('../src/pages/Secure'))
 const ForgotPassword = React.lazy(() =>
-  import("./pages/Auth/Login/forgotPassword")
-);
+  import('./pages/Auth/Login/forgotPassword')
+)
 const ResetPassword = React.lazy(() =>
-  import("./pages/Auth/Login/resetPassword")
-);
+  import('./pages/Auth/Login/resetPassword')
+)
 const CreateAccount = React.lazy(() =>
-  import("./pages/Auth/Login/createAccount")
-);
-const NotFound = React.lazy(() => import("../src/pages/NotFound"));
+  import('./pages/Auth/Login/createAccount')
+)
+const NotFound = React.lazy(() => import('../src/pages/NotFound'))
 
 const Terms = React.lazy(() => import('./pages/Terms'))
 const Register = React.lazy(() => import('./pages/Register'))
@@ -47,62 +47,60 @@ const IamrCertificationGuide = React.lazy(() =>
   import('./pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationGuide')
 )
 const EditPortfolio = React.lazy(() =>
-  import("./pages/Portfolio/editPortfolio")
-);
-const MyStudents = React.lazy(() => import("./pages/MyStudents"));
-const Resources = React.lazy(() => import("./pages/Resources"));
-const Preview = React.lazy(() => import("./pages/StartupProfile/preview"));
+  import('./pages/Portfolio/editPortfolio')
+)
+const MyStudents = React.lazy(() => import('./pages/MyStudents'))
+const Resources = React.lazy(() => import('./pages/Resources'))
+const Preview = React.lazy(() => import('./pages/StartupProfile/preview'))
 
-const SavedMedia = React.lazy(() => import("./pages/Saved"));
-const Resubscribe = React.lazy(() => import("./pages/Resubscribe"));
-const StartupLive = React.lazy(() => import("./pages/StartupLive"));
-const Spotlight = React.lazy(() => import("./pages/Spotlight"));
-const LiveStream = React.lazy(() => import("./pages/StartupLive/livestream"));
-const AllVideos = React.lazy(() =>
-  import("./pages/BeyondYourCourse/allVideos")
-);
-const BeyondYourCourse = React.lazy(() => import("./pages/BeyondYourCourse"));
+const SavedMedia = React.lazy(() => import('./pages/Saved'))
+const Resubscribe = React.lazy(() => import('./pages/Resubscribe'))
+const StartupLive = React.lazy(() => import('./pages/StartupLive'))
+const Spotlight = React.lazy(() => import('./pages/Spotlight'))
+const LiveStream = React.lazy(() => import('./pages/StartupLive/livestream'))
+const AllVideos = React.lazy(() => import('./pages/BeyondYourCourse/allVideos'))
+const BeyondYourCourse = React.lazy(() => import('./pages/BeyondYourCourse'))
 const BeyondYourCourseVideo = React.lazy(() =>
-  import("../src/pages/BeyondYourCourse/beyondYourCourseVideo")
-);
-const Profile = React.lazy(() => import("./pages/Profile/index"));
+  import('../src/pages/BeyondYourCourse/beyondYourCourseVideo')
+)
+const Profile = React.lazy(() => import('./pages/Profile/index'))
 const ProfilePreview = React.lazy(() =>
-  import("./pages/Profile/profilePreview")
-);
+  import('./pages/Profile/profilePreview')
+)
 const MyMarketReadyGuide = React.lazy(() =>
-  import("./pages/MyMarketReadyGuide")
-);
-const PublicProfile = React.lazy(() => import("./pages/Profile/publicProfile"));
+  import('./pages/MyMarketReadyGuide')
+)
+const PublicProfile = React.lazy(() => import('./pages/Profile/publicProfile'))
 const PublicPortfolio = React.lazy(() =>
-  import("./pages/Portfolio/publicPortfolio")
-);
+  import('./pages/Portfolio/publicPortfolio')
+)
 
 const PreviewPublicPortfolio = React.lazy(() =>
-  import("./pages/PortfolioNew/previewPublicPortfolio")
-);
+  import('./pages/PortfolioNew/previewPublicPortfolio')
+)
 const UserPortfolioProj = React.lazy(() =>
-  import("./pages/StartupProfile/userProjects")
-);
-const Iamr = React.lazy(() => import("../src/pages/Iamr"));
+  import('./pages/StartupProfile/userProjects')
+)
+const Iamr = React.lazy(() => import('../src/pages/Iamr'))
 
-const MyNotes = React.lazy(() => import("../src/pages/MyNotes"));
-const SampleNote = React.lazy(() => import("../src/pages/MyNotes/sampleNote"));
-const MyJournals = React.lazy(() => import("../src/pages/MyJournals"));
-const Logout = React.lazy(() => import("./pages/Auth/LogOut"));
-const VerifyEmail = React.lazy(() => import("./pages/Verify"));
-const MyConnections = React.lazy(() => import("./pages/MyConnections"));
-const StoryInMotion = React.lazy(() => import("./pages/StoryInMotion"));
-const MyStartupProfile = React.lazy(() => import("./pages/StartupProfile"));
+const MyNotes = React.lazy(() => import('../src/pages/MyNotes'))
+const SampleNote = React.lazy(() => import('../src/pages/MyNotes/sampleNote'))
+const MyJournals = React.lazy(() => import('../src/pages/MyJournals'))
+const Logout = React.lazy(() => import('./pages/Auth/LogOut'))
+const VerifyEmail = React.lazy(() => import('./pages/Verify'))
+const MyConnections = React.lazy(() => import('./pages/MyConnections'))
+const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
+const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
 const PreviewPortfolioNew = React.lazy(() =>
-  import("./pages/PortfolioNew/previewPortfolio")
-);
+  import('./pages/PortfolioNew/previewPortfolio')
+)
 const EditPortfolioNew = React.lazy(() =>
-  import("./pages/PortfolioNew/editPortfolio")
-);
+  import('./pages/PortfolioNew/editPortfolio')
+)
 
 const PasswordChangeRequired = React.lazy(() =>
-  import("./pages/Auth/Login/passwordChangeRequired")
-);
+  import('./pages/Auth/Login/passwordChangeRequired')
+)
 
 const JournalsManagement = React.lazy(() =>
   import('./pages/JournalsManagement')
@@ -124,7 +122,7 @@ function Router(props) {
     <IntlProvider
       locale={currentAppLocale.locale}
       messages={currentAppLocale.messages}
-      onError={() => ""}
+      onError={() => ''}
     >
       <React.Fragment>
         {isAuthenticated ? (
@@ -232,17 +230,21 @@ function Router(props) {
                 component={(props) => <TestJournal {...props} category="hs1" />}
               />{' '}
               <Route
+                path="/new-hs2-journal/"
+                component={(props) => <TestJournal {...props} category="hs2" />}
+              />{' '}
+              <Route
+                path="/hs3-hs4-journal/"
+                component={(props) => (
+                  <TestJournal {...props} category="hs3&hs4" />
+                )}
+              />
+              <Route
                 path="/financial-literacy/"
                 component={(props) => (
                   <TestJournal {...props} category="financial-literacy" />
                 )}
               />{' '}
-              <Route
-                path="/new-hs2-journal/"
-                component={(props) => (
-                  <TestJournal {...props} category="new-hs2" />
-                )}
-              />
               <Route
                 path="/new-hs1-journal/:type/"
                 component={(props) => (
@@ -330,7 +332,7 @@ function Router(props) {
               />
               <Route
                 exact
-                path="/edit-journals2/:journalId"
+                path="/edit-journals2/:type/:journalId"
                 component={JournalsManagement2}
               />
               <Route
@@ -380,12 +382,12 @@ function Router(props) {
         )}
       </React.Fragment>
     </IntlProvider>
-  );
+  )
 }
 
 const mapStateToProps = ({ lang }) => {
-  const { locale } = lang;
-  return { locale };
-};
+  const { locale } = lang
+  return { locale }
+}
 
-export default connect(mapStateToProps, {})(Router);
+export default connect(mapStateToProps, {})(Router)

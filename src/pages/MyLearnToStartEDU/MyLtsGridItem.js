@@ -28,19 +28,25 @@ const MyLtsGridItem = (props) => {
             {props.itemNumberImage}
           </div>
           <div
-            className={'col-md-9 col-sm-12 px-0 py-2 d-flex align-items-center'}
+            className={
+              'col-md-9 col-sm-12 px-0 py-2 d-flex align-items-center flex-column justify-content-center'
+            }
           >
-            {/*<div*/}
-            {/*  style={{*/}
-            {/*    font: 'normal normal 500 16px/22px Montserrat',*/}
-            {/*    letterSpacing: 0.64,*/}
-            {/*    color: '#231F20',*/}
-            {/*    textTransform: 'uppercase',*/}
-            {/*    marginBottom: 10,*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  {props.title}*/}
-            {/*</div>*/}
+            {props.title?.toLowerCase()?.includes('certification') && (
+              <div
+                style={{
+                  font: 'normal normal 500 16px/22px Montserrat',
+                  letterSpacing: 0.64,
+                  color: '#231F20',
+                  textTransform: 'uppercase',
+                  marginBottom: 10,
+                  textAlign: 'start',
+                  width: '100%'
+                }}
+              >
+                {props.title}
+              </div>
+            )}
             <div
               style={{
                 font: 'normal normal normal 13px/17px Montserrat',
