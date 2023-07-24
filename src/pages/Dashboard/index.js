@@ -32,6 +32,7 @@ function Dashboard() {
 
   const [newMessage, setNewMessage] = useState([])
   const [chatId, setChatId] = useState('')
+  const [startDate, setStartDate] = useState(null)
   useEffect(() => {
     dispatch(changeSidebarState(false))
   }, [])
@@ -39,11 +40,21 @@ function Dashboard() {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
   }, [])
+  function getFormattedDate() {
+    const today = new Date()
+    const year = today.getFullYear().toString()
+    let month = (today.getMonth() + 1).toString().padStart(2, '0')
+    let day = today.getDate().toString().padStart(2, '0')
+
+    return `${year}-${month}-${day}`
+  }
 
   const taskEventModal = useSelector(
     (state) => state.dashboard.addTaskEventModal
   )
   const openTaskEventModal = () => {
+    // const formattedDate = getFormattedDate()
+    // setStartDate(formattedDate)
     dispatch(openTaskModal('create'))
   }
 
@@ -95,7 +106,11 @@ function Dashboard() {
         </div>
         <div className="col-12 col-xl-3 px-0">
           <div className="account-page-padding" style={{ paddingLeft: '20px' }}>
-            <FullCalendarComponent events={events} periods={periods} />
+            <FullCalendarComponent
+              events={events}
+              periods={periods}
+              // startDate={getFormattedDate()}
+            />
 
             <button
               style={{
@@ -112,9 +127,7 @@ function Dashboard() {
               show={taskEventModal}
               onHide={closeTaskEventModal}
               periods={periods}
-              event={null}
-              onEdit={null}
-              startDate={null}
+              startDate={getFormattedDate()}
             />
             <NotificationSection />
             {/*<CertificationRequestsWidget />*/}

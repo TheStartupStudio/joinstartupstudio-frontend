@@ -5,8 +5,8 @@ const NumberImage = (props) => {
     <img
       src={props.image}
       style={{
-        width: 115,
-        height: 115
+        width: props.width ?? 115,
+        height: props.height ?? 115
       }}
       alt={'number'}
     />
