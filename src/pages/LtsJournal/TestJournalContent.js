@@ -112,6 +112,7 @@ function TestJournalContent(props) {
       //     }
       //   }
       // }
+      console.log(data)
       return data
     } catch (err) {}
   }
@@ -186,6 +187,7 @@ function TestJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
+        console.log(journalData)
 
         if (
           journalData.userEntry &&
@@ -233,6 +235,7 @@ function TestJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
+        console.log(journalData)
         if (
           journalData.userEntry &&
           journalData.userEntry.length > 0 &&

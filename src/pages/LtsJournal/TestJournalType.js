@@ -47,7 +47,6 @@ const TestJournalType = (props) => {
       // }
     } catch (err) {}
   }
-  console.log()
   useEffect(() => {
     if (props.match.params.type === 'task' && journals.length) {
       const taskId = journals.length > 0 ? journals[0].id : ''
@@ -94,7 +93,7 @@ const TestJournalType = (props) => {
     dataByClass[journalClass].push({ id, title })
   })
 
-  console.log(props)
+  console.log(dataByClass)
   const journalTitle = () => {
     let journalData
 
@@ -104,6 +103,16 @@ const TestJournalType = (props) => {
         description: `Welcome to Year One of the LTS Program.
        Here you will find support and guidance as you deliver the curriculum and mentor students.`
       }
+    } else if (props.category === 'hs2') {
+      journalData = {
+        title: 'LTS YEAR TWO CURRICULUM',
+        description: `Welcome to Year Two of the LTS Program.`
+      }
+    } else if (props.category === 'hs3&hs4') {
+      journalData = {
+        title: 'LTS YEAR THREE & FOUR CURRICULUM',
+        description: `Welcome to Years Three & Four of the LTS Program.`
+      }
     } else if (props.category === 'financial-literacy') {
       journalData = {
         title: 'FINANCIAL LITERACY CURRICULUM',
@@ -112,6 +121,52 @@ const TestJournalType = (props) => {
       }
     }
     return journalData
+  }
+
+  const [filteredWeeks, setFilteredWeeks] = useState(weeks)
+  const [filteredJournals, setFilteredJournals] = useState(journals)
+
+  useEffect(() => {
+    setFilteredWeeks(weeks)
+  }, [weeks])
+  useEffect(() => {
+    setFilteredJournals(journals)
+  }, [journals])
+
+  // useEffect(())
+  // const [dataByClass, setDataByClass] = useState({})
+  const handleJournalSearch = (e) => {
+    e.preventDefault()
+    const keyword = e.target.value.toLowerCase()
+    let filteredData = []
+
+    if (props.match.params.type === 'week') {
+      filteredData = weeks.filter((week) =>
+        week.title.toLowerCase().includes(keyword)
+      )
+      setFilteredWeeks(filteredData) // Update the filtered weeks state variable.
+    } else if (props.match.params.type === 'task') {
+      filteredData = journals.filter((task) =>
+        task.title.toLowerCase().includes(keyword)
+      )
+      setFilteredJournals(filteredData) // Update the filtered journals state variable.
+    }
+
+    // Additional search logic without losing previous functionality:
+    const dataByClass = {}
+
+    // Group the filtered data by class using forEach
+    filteredData.forEach((journalItem) => {
+      const { id, title, class: journalClass } = journalItem
+
+      if (!dataByClass[journalClass]) {
+        dataByClass[journalClass] = []
+      }
+
+      dataByClass[journalClass].push({ id, title })
+    })
+
+    // setDataByClass(dataByClass)
   }
 
   return (
@@ -230,7 +285,7 @@ const TestJournalType = (props) => {
                             name="searchedNote"
                             placeholder={placeholder}
                             onChange={(e) => {
-                              // handleJournalSearch(e)
+                              handleJournalSearch(e)
                             }}
                           />
                         )}
@@ -263,7 +318,7 @@ const TestJournalType = (props) => {
 
                   {props.match.params.type === 'task' &&
                     props.category !== 'financial-literacy' &&
-                    journals.map((journalItem, journalItemIdx) => (
+                    filteredJournals.map((journalItem, journalItemIdx) => (
                       <div
                         key={journalItem.id}
                         className={`accordion-menu__item text-uppercase`}
@@ -330,7 +385,7 @@ const TestJournalType = (props) => {
                       )
                     )}
                   {props.match.params.type === 'week' &&
-                    weeks?.map((journalItem, journalItemIdx) => (
+                    filteredWeeks?.map((journalItem, journalItemIdx) => (
                       <div
                         key={journalItem.id}
                         className={`accordion-menu__item`}
