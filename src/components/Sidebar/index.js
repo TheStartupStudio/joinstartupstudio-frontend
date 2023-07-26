@@ -339,16 +339,31 @@ function Sidebar(props) {
                 data-parent="#side-menu-main"
               >
                 <li>
-                  <NavLink
-                    to={'/not-found-route'}
-                    activeClassName="sidenav active"
+                  {/*<NavLink*/}
+                  {/*  to={'/not-found-route'}*/}
+                  {/*  activeClassName="sidenav active"*/}
+                  {/*>*/}
+                  {/*  <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+                  {/*    <div className="ms-4 ps-2 py-1 text-uppercase">*/}
+                  {/*      My training*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*</NavLink>*/}
+                  <div
+                    className="sidenav"
+                    style={{
+                      marginLeft: '24px !important',
+                      fontSize: 12,
+                      marginTop: 6,
+                      cursor: 'pointer'
+                    }}
                   >
                     <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                      <div className="ms-4 ps-2 py-1 text-uppercase ">
                         My training
                       </div>
                     </div>
-                  </NavLink>
+                  </div>
                 </li>
                 <li>
                   <NavLink
@@ -375,16 +390,31 @@ function Sidebar(props) {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
-                    to={'/my-performance-data'}
-                    activeClassName="sidenav active"
+                  {/*<NavLink*/}
+                  {/*  to={'/my-performance-data'}*/}
+                  {/*  activeClassName="sidenav active"*/}
+                  {/*>*/}
+                  {/*  <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+                  {/*    <div className="ms-4 ps-2 py-1 text-uppercase ">*/}
+                  {/*      My performance data*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*</NavLink>*/}
+                  <div
+                    className="sidenav"
+                    style={{
+                      marginLeft: '24px !important',
+                      fontSize: 12,
+                      marginTop: 6,
+                      cursor: 'pointer'
+                    }}
                   >
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1 text-uppercase ">
                         My performance data
                       </div>
                     </div>
-                  </NavLink>
+                  </div>
                 </li>
               </div>
               {/*<NavListParent*/}
