@@ -284,6 +284,22 @@ function Router(props) {
                 component={(props) => <LtsJournal {...props} category="hs4" />}
               />
               <Route
+                path="/student-lts/"
+                component={(props) => <LtsJournal {...props} category="student-lts" />}
+              />
+              <Route
+                path="/student-wellnes/"
+                component={(props) => <LtsJournal {...props} category="student-wellnes" />}
+              />
+              <Route
+                path="/student-personal-finance/"
+                component={(props) => <LtsJournal {...props} category="student-personal-finance" />}
+              />
+              <Route
+                path="/student-leadership/"
+                component={(props) => <LtsJournal {...props} category="student-leadership" />}
+              />
+              <Route
                 path="/market-ready/"
                 component={(props) => (
                   <LtsJournal {...props} category="market-ready" />

@@ -30,7 +30,7 @@ function LtsJournal(props) {
   const [journalsData, setJournalsData] = useState()
   const currentLanguage = useSelector((state) => state.lang.locale)
   let contentContainer = useRef()
-  console.log(journals)
+
   async function getJournals(redir = true) {
     try {
       let { data } = await axiosInstance.get(`/ltsJournals/`, {
@@ -110,6 +110,10 @@ function LtsJournal(props) {
     hs4: 'my_journal.hs4_title',
     'market-ready': 'my_journal.market-ready_title',
     'my-training': 'my_journal.my-training_title',
+    'student-lts': 'student_journals.student-lts_title',
+    'student-wellnes': 'student_journals.student-wellnes_title',
+    'student-personal-finance': 'student_journals.student-personal-finance_title',
+    'student-leadership': 'student_journals.student-leadership_title',
   }
   let descriptionMapping = {
     hs1: 'my_journal.hs1_description',
@@ -118,6 +122,10 @@ function LtsJournal(props) {
     hs4: 'my_journal.hs4_description',
     'market-ready': 'my_journal.market-ready_description',
     'my-training': 'my_journal.my-training_description',
+    'student-lts': 'student_journals.student-lts_description',
+    'student-wellnes': 'student_journals.student-wellnes_description',
+    'student-personal-finance': 'student_journals.student-personal-finance_description',
+    'student-leadership': 'student_journals.student-leadership_description',
   }
   const handleJournalSearch = (e) => {
     e.preventDefault()
