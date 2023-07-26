@@ -47,7 +47,6 @@ const TestJournalType = (props) => {
       // }
     } catch (err) {}
   }
-  console.log()
   useEffect(() => {
     if (props.match.params.type === 'task' && journals.length) {
       const taskId = journals.length > 0 ? journals[0].id : ''
@@ -83,7 +82,6 @@ const TestJournalType = (props) => {
 
   const dataByClass = {}
 
-  // Group the filtered data by class using forEach
   journals.forEach((journalItem) => {
     const { id, title, class: journalClass } = journalItem
 
@@ -94,7 +92,6 @@ const TestJournalType = (props) => {
     dataByClass[journalClass].push({ id, title })
   })
 
-  console.log(props)
   const journalTitle = () => {
     let journalData
 
@@ -104,6 +101,16 @@ const TestJournalType = (props) => {
         description: `Welcome to Year One of the LTS Program.
        Here you will find support and guidance as you deliver the curriculum and mentor students.`
       }
+    } else if (props.category === 'hs2') {
+      journalData = {
+        title: 'LTS YEAR TWO CURRICULUM',
+        description: `Welcome to Year Two of the LTS Program.`
+      }
+    } else if (props.category === 'hs3&hs4') {
+      journalData = {
+        title: 'LTS YEAR THREE & FOUR CURRICULUM',
+        description: `Welcome to Years Three & Four of the LTS Program.`
+      }
     } else if (props.category === 'financial-literacy') {
       journalData = {
         title: 'FINANCIAL LITERACY CURRICULUM',
@@ -112,6 +119,36 @@ const TestJournalType = (props) => {
       }
     }
     return journalData
+  }
+
+  const [filteredWeeks, setFilteredWeeks] = useState(weeks)
+  const [filteredJournals, setFilteredJournals] = useState(journals)
+
+  useEffect(() => {
+    setFilteredWeeks(weeks)
+  }, [weeks])
+  useEffect(() => {
+    setFilteredJournals(journals)
+  }, [journals])
+
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const handleJournalSearch = (e) => {
+    e.preventDefault()
+    const keyword = e.target.value.toLowerCase()
+    setSearchKeyword(keyword)
+    let filteredData = []
+
+    if (props.match.params.type === 'week') {
+      filteredData = weeks.filter((week) =>
+        week.title.toLowerCase().includes(keyword)
+      )
+      setFilteredWeeks(filteredData) // Update the filtered weeks state variable.
+    } else if (props.match.params.type === 'task') {
+      filteredData = journals.filter((task) =>
+        task.title.toLowerCase().includes(keyword)
+      )
+      setFilteredJournals(filteredData)
+    }
   }
 
   return (
@@ -230,7 +267,7 @@ const TestJournalType = (props) => {
                             name="searchedNote"
                             placeholder={placeholder}
                             onChange={(e) => {
-                              // handleJournalSearch(e)
+                              handleJournalSearch(e)
                             }}
                           />
                         )}
@@ -263,7 +300,7 @@ const TestJournalType = (props) => {
 
                   {props.match.params.type === 'task' &&
                     props.category !== 'financial-literacy' &&
-                    journals.map((journalItem, journalItemIdx) => (
+                    filteredJournals.map((journalItem, journalItemIdx) => (
                       <div
                         key={journalItem.id}
                         className={`accordion-menu__item text-uppercase`}
@@ -283,54 +320,66 @@ const TestJournalType = (props) => {
                   {props.match.params.type === 'task' &&
                     props.category === 'financial-literacy' &&
                     Object.entries(dataByClass).map(
-                      ([journalClass, items], index) => (
-                        <div key={journalClass}>
-                          {journalClass !== 'null' ? (
-                            <div
-                              className={`accordion-menu__item text-uppercase`}
-                              style={{
-                                font: 'normal normal 500 14px/14px Montserrat',
-                                letterSpacing: 0.56,
-                                color: '#231F20',
-                                padding: '10px 0 15px 0'
-                              }}
-                            >
-                              {journalClass !== 'null' ? journalClass : ''}
-                            </div>
-                          ) : (
-                            <></>
-                          )}
-                          {items?.map((item, index) => (
-                            <div
-                              key={item.id}
-                              className={`accordion-menu__item`}
-                            >
-                              <NavLink to={`${props.match.url}/${item.id}`}>
-                                {item?.title &&
-                                !item.title.toLowerCase().includes('task') ? (
-                                  <span className="text-uppercase ml-1">
-                                    {item.title}
-                                  </span>
-                                ) : (
-                                  <span
-                                    className={'ml-1'}
-                                    style={{
-                                      marginLeft: 13,
-                                      display: 'flex',
-                                      flexWrap: 'wrap'
-                                    }}
-                                  >
-                                    {item.title}
-                                  </span>
-                                )}
-                              </NavLink>
-                            </div>
-                          ))}
-                        </div>
-                      )
+                      ([journalClass, items], index) => {
+                        const filteredItems = items.filter((item) =>
+                          item.title
+                            .toLowerCase()
+                            .includes(searchKeyword.toLowerCase())
+                        )
+
+                        if (filteredItems.length === 0) {
+                          return null
+                        }
+
+                        return (
+                          <div key={journalClass}>
+                            {journalClass !== 'null' && (
+                              <div
+                                className={`accordion-menu__item text-uppercase`}
+                                style={{
+                                  font: 'normal normal 500 14px/14px Montserrat',
+                                  letterSpacing: 0.56,
+                                  color: '#231F20',
+                                  padding: '10px 0 15px 0'
+                                }}
+                              >
+                                {journalClass}
+                              </div>
+                            )}
+                            {filteredItems.map((item, index) => (
+                              <div
+                                key={item.id}
+                                className={`accordion-menu__item`}
+                              >
+                                <NavLink to={`${props.match.url}/${item.id}`}>
+                                  {!item.title
+                                    .toLowerCase()
+                                    .includes('task') ? (
+                                    <span className="text-uppercase ml-1">
+                                      {item.title}
+                                    </span>
+                                  ) : (
+                                    <span
+                                      className={'ml-1'}
+                                      style={{
+                                        marginLeft: 13,
+                                        display: 'flex',
+                                        flexWrap: 'wrap'
+                                      }}
+                                    >
+                                      {item.title}
+                                    </span>
+                                  )}
+                                </NavLink>
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      }
                     )}
+
                   {props.match.params.type === 'week' &&
-                    weeks?.map((journalItem, journalItemIdx) => (
+                    filteredWeeks?.map((journalItem, journalItemIdx) => (
                       <div
                         key={journalItem.id}
                         className={`accordion-menu__item`}
