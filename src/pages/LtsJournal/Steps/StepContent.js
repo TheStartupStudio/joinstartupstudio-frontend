@@ -14,7 +14,7 @@ const StepContent = (props) => {
           }}
         />
       )}
-      {props.selectedStep != null && (
+      {props.selectedStep != null && props.selectedStep?.popupContent && (
         <div
           className={`d-flex justify-content-start
                                                          mt-2`}

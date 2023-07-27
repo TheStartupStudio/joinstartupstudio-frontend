@@ -3,14 +3,14 @@ import React from 'react'
 const BoxContent = (props) => {
   return (
     <>
-      {props.selectedStep != null && (
+      {props.selectedPedagogy != null && (
         <div
           style={{
             fontFamily: 'Montserrat',
             backgroundColor: '#fff'
           }}
           dangerouslySetInnerHTML={{
-            __html: props.selectedStep?.boxContent
+            __html: props.selectedPedagogy?.content
           }}
         />
       )}

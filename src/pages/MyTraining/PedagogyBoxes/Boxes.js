@@ -1,5 +1,5 @@
 import React from 'react'
-import Step from './Box'
+import Box from './Box'
 
 const Boxes = (props) => {
   return (
@@ -8,7 +8,7 @@ const Boxes = (props) => {
         font: 'normal normal 500 10.2px/17px Montserrat',
         letterSpacing: 0.18,
         color: '#333D3D',
-        gridTemplateColumns: 'repeat(4,1fr)',
+        // gridTemplateColumns: 'repeat(4,1fr)',
         display: 'flex',
         justifyContent: 'space-between',
         padding: '20px 0',
@@ -17,12 +17,12 @@ const Boxes = (props) => {
     >
       <>
         {props.boxes?.map((box, index) => (
-          <Step
+          <Box
             key={index}
             index={index}
-            selectedStepIndex={props.selectedStepIndex}
+            selectedPedagogyIndex={props.selectedPedagogyIndex}
             box={box}
-            selectedBox={(box) => props.selectBox(box, index)}
+            selectedBox={(box) => props.selectPedagogy(box, index)}
           />
         ))}
       </>

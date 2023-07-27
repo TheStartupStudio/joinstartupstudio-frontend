@@ -18,13 +18,18 @@ const Steps = (props) => {
       {/*{!loading && journal?.hasInstructorDebrief && (*/}
       <>
         {props.steps?.map((step, index) => (
-          <Step
-            key={index}
-            index={index}
-            selectedStepIndex={props.selectedStepIndex}
-            step={step}
-            selectedStep={(step) => props.selectStep(step, index)}
-          />
+          <div>
+            <Step
+              key={index}
+              index={index}
+              selectedStepIndex={props.selectedStepIndex}
+              step={step}
+              selectedStep={(step) => props.selectStep(step, index)}
+            />
+            {step?.title && (
+              <div style={{ textAlign: 'center' }}>{step?.title}</div>
+            )}
+          </div>
         ))}
       </>
       {/*)}*/}
