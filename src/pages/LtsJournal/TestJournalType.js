@@ -17,6 +17,7 @@ import { faAngleDown, faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment/moment'
 
 const TestJournalType = (props) => {
+  console.log('props', props)
   const [journals, setJournals] = useState([])
   const [weeks, setWeeks] = useState([])
   const match = useRouteMatch()

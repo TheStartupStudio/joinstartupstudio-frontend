@@ -99,6 +99,8 @@ function LtsJournalContent(props) {
       })
   }
 
+  console.log('journal', journal)
+
   useEffect(
     function () {
       loadData()

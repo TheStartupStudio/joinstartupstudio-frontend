@@ -404,7 +404,7 @@ function TestJournalContent(props) {
     setSelectedTask({ task, index })
     setSelectedTaskIndex(index)
   }
-  console.log(journal?.content)
+  console.log(journal)
   return (
     <>
       <>
