@@ -120,6 +120,10 @@ const TaskEventModal = (props) => {
     setState(newState)
   }, [tab])
 
+  useEffect(() => {
+    setState({ ...state, startDate: props.startDate })
+  }, [props.startDate])
+
   const isEndTimeBeforeStartTime = () => {
     const startTimeArray = state.startTime.split(':')
     const endTimeArray = state.endTime.split(':')

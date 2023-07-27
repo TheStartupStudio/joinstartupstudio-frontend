@@ -6,20 +6,11 @@ import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MediaLightbox from '../../components/MediaLightbox'
 import triangleIcon from '../../assets/images/triangle.png'
-import BreakdownTextAccordion from './BreakdownTextAccordion'
-import './BreakdownTextAccordion.css'
-import KendoTextEditor from '../../components/JournalsManagement/TextEditor'
 import { EditorTools } from '@progress/kendo-react-editor'
-import LtsDiagram from '../../assets/images/LearntoStart-Diagram-3D.png'
-import LtsCertification from '../../assets/images/Certified-L1-800px.png'
-import BreakdownPopup from '../../components/Modals/BreakdownPopup'
 import './MyTrainingContent.css'
-import AccordionItemWrapper from './AccordionItemWrapper'
-import SelectTaskButton from './SelectTaskButton'
-import StepsBox from './Steps/StepsBox'
-import CurriculumOverview from './CurriculumOverview'
-import ExpectedOutcomes from './ExpectedOutcomes'
-import ProgramOpportunities from './ProgramOpportunities'
+import PedagogyBoxes from './PedagogyBoxes/PedagogyBoxes'
+import AccordionItemWrapper from '../LtsJournal/AccordionItemWrapper'
+import StepsBox from '../LtsJournal/Steps/StepsBox'
 
 function MyTrainingContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -95,24 +86,6 @@ function MyTrainingContent(props) {
       let { data } = await axiosInstance.get(
         `/ltsJournals/tasks/${+props.match.params.id}`
       )
-      return data
-    } catch (err) {}
-  }
-  async function getJournalWeek() {
-    try {
-      let { data } = await axiosInstance.get(
-        `/ltsJournals/week/${+props.match.params.weekId}`
-      )
-      // if (history.location.pathname.includes('week')) {
-      //   if (data.length > 0 && redir) {
-      //     if (data[0].children && data[0].children.length > 0) {
-      //       history.push(`week/${data[0].children[0].id}`)
-      //     } else {
-      //       history.push(`week/${data[0].id}`)
-      //     }
-      //   }
-      // }
-      console.log(data)
       return data
     } catch (err) {}
   }
@@ -228,11 +201,7 @@ function MyTrainingContent(props) {
 
   function loadWeekData() {
     setLoading(true)
-    Promise.all([
-      getJournalWeek(),
-      getUserJournalWeekEntries(),
-      getInstructorDebriefData()
-    ])
+    Promise.all([getUserJournalWeekEntries(), getInstructorDebriefData()])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
         console.log(journalData)
@@ -407,7 +376,6 @@ function MyTrainingContent(props) {
     setSelectedTask({ task, index })
     setSelectedTaskIndex(index)
   }
-  console.log(journal?.content)
   return (
     <>
       <>
@@ -493,82 +461,44 @@ function MyTrainingContent(props) {
           {/*        )*/}
           {/*      })}*/}
           {/*</div>*/}
-          {!journal?.hasInstructorDebrief && !journal?.tasks?.length && (
-            <>
-              <CurriculumOverview
-                title={'curriculum overview'}
-                isExanded={isExpanded}
-                isOpened={openAccordion === 'curriculumOverview'}
-                handleAccordionClick={() =>
-                  handleAccordionClick('curriculumOverview')
-                }
-                data={journal?.curriculumOverview}
-              />{' '}
-              <ExpectedOutcomes
-                title={'expected outcomes'}
-                isExanded={isExpanded}
-                isOpened={openAccordion === 'expectedOutcomes'}
-                handleAccordionClick={() =>
-                  handleAccordionClick('expectedOutcomes')
-                }
-                data={journal?.expectedOutcomes}
-              />
-              <ProgramOpportunities
-                title={'program opportunities'}
-                isExanded={isExpanded}
-                isOpened={openAccordion === 'programOpportunities'}
-                handleAccordionClick={() =>
-                  handleAccordionClick('programOpportunities')
-                }
-                data={journal?.programOpportunities}
-              />
-            </>
-          )}
-          {!journal?.hasInstructorDebrief &&
-            journal?.tasks?.length &&
-            journal?.tasks?.map((task, index) => {
-              return (
-                <>
-                  <CurriculumOverview
-                    title={'curriculum overview'}
-                    isExanded={isExpanded}
-                    isOpened={openAccordion === 'curriculumOverview'}
-                    handleAccordionClick={() =>
-                      handleAccordionClick('curriculumOverview')
-                    }
-                    data={task?.curriculumOverview}
-                  />{' '}
-                  <ExpectedOutcomes
-                    title={'expected outcomes'}
-                    isExanded={isExpanded}
-                    isOpened={openAccordion === 'expectedOutcomes'}
-                    handleAccordionClick={() =>
-                      handleAccordionClick('expectedOutcomes')
-                    }
-                    data={task?.expectedOutcomes}
-                  />
-                  <ProgramOpportunities
-                    title={'program opportunities'}
-                    isExanded={isExpanded}
-                    isOpened={openAccordion === 'programOpportunities'}
-                    handleAccordionClick={() =>
-                      handleAccordionClick('programOpportunities')
-                    }
-                    data={task?.programOpportunities}
-                  />
-                </>
-              )
-            })}
-          {!loading && journal?.hasInstructorDebrief && (
+
+          {!loading && (
             <div style={{ order: 1 }}>
-              {props.view === 'task' && (
+              {
                 <AccordionItemWrapper
-                  isOpened={openAccordion === 'steps'}
-                  handleAccordionClick={() => handleAccordionClick('steps')}
+                  isOpened={openAccordion === 'pedagogy'}
+                  handleAccordionClick={() => handleAccordionClick('pedagogy')}
                   isExanded={isExpanded}
                   title={'task breakdown'}
                 >
-                  {openAccordion === 'steps' && (
+                  {openAccordion === 'pedagogy' && (
+                    <div className="accordion-content">
+                      <PedagogyBoxes
+                        containsTitle={false}
+                        boxes={journal?.pedagogy}
+                        selectStep={selectStep}
+                        selectedStepIndex={selectedStepIndex}
+                        handleOpenPopup={handleOpenPopup}
+                        selectedStep={selectedStep}
+                      />
+                    </div>
+                  )}
+                </AccordionItemWrapper>
+              }
+            </div>
+          )}
+          {!loading && (
+            <div style={{ order: 2 }}>
+              {
+                <AccordionItemWrapper
+                  isOpened={openAccordion === 'implementationSteps'}
+                  handleAccordionClick={() =>
+                    handleAccordionClick('implementationSteps')
+                  }
+                  isExanded={isExpanded}
+                  title={'task breakdown'}
+                >
+                  {openAccordion === 'implementationSteps' && (
                     <div className="accordion-content">
                       <StepsBox
                         containsTitle={false}
@@ -581,445 +511,10 @@ function MyTrainingContent(props) {
                     </div>
                   )}
                 </AccordionItemWrapper>
-              )}
-              {props.view === 'week' && (
-                <AccordionItemWrapper
-                  isOpened={openAccordion === 'steps'}
-                  handleAccordionClick={() => handleAccordionClick('steps')}
-                  isExanded={isExpanded}
-                  title={'weeks and their breakdowns'}
-                >
-                  {openAccordion === 'steps' && (
-                    <div>
-                      {journal?.tasks?.length === 1 && (
-                        <div className="accordion-content">
-                          <StepsBox
-                            task={journal?.tasks[0]}
-                            steps={journal?.tasks[0]?.steps}
-                            selectStep={selectStep}
-                            selectedStepIndex={selectedStepIndex}
-                            handleOpenPopup={handleOpenPopup}
-                            selectedStep={selectedStep}
-                          />
-                        </div>
-                      )}
-                      {journal?.tasks?.length > 1 && (
-                        <>
-                          <div
-                            className={'select-task-buttons'}
-                            style={{
-                              backgroundColor: selectedTask ? '#f8f7f7' : '#fff'
-                            }}
-                          >
-                            {journal?.tasks.map((task, index) => (
-                              <SelectTaskButton
-                                key={index}
-                                handleSelectTask={() =>
-                                  handleSelectTask(task, index)
-                                }
-                                task={task}
-                                index={index}
-                                selectedTaskIndex={selectedTaskIndex}
-                              />
-                            ))}
-                          </div>
-                          {journal?.tasks.map((task) => {
-                            if (task?.id === selectedTask?.task?.id) {
-                              return (
-                                <div
-                                  key={task.id}
-                                  className="accordion-content"
-                                >
-                                  <StepsBox
-                                    task={task}
-                                    steps={task?.steps}
-                                    selectStep={selectStep}
-                                    selectedStepIndex={selectedStepIndex}
-                                    handleOpenPopup={handleOpenPopup}
-                                    selectedStep={selectedStep}
-                                  />
-                                </div>
-                              )
-                            }
-                            return null
-                          })}
-                        </>
-                      )}
-                    </div>
-                  )}
-                </AccordionItemWrapper>
-              )}
+              }
             </div>
           )}
-
-          {journal?.category !== 'financial-literacy' && (
-            <div style={{ order: 2 }}>
-              {!loading && journal?.hasInstructorDebrief && (
-                <AccordionItemWrapper
-                  isOpened={openAccordion === 'connection'}
-                  handleAccordionClick={() =>
-                    handleAccordionClick('connection')
-                  }
-                  isExanded={isExpanded}
-                  title={'Connection to lts model and outcomes'}
-                >
-                  {openAccordion === 'connection' && (
-                    <>
-                      <div className="accordion-content">
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              flexDirection: 'column',
-                              alignItems: 'center'
-                            }}
-                          >
-                            <div
-                              style={{
-                                font: 'normal normal 600 17px/17px Montserrat',
-                                letterSpacing: 0.68,
-                                color: '#333D3D',
-                                textAlign: 'center'
-                              }}
-                            >
-                              THE LEARN TO START MODEL
-                            </div>
-                            <img
-                              style={{
-                                width: 340,
-                                height: 300,
-                                objectFit: 'contain'
-                              }}
-                              alt={'lts-triangle'}
-                              src={LtsDiagram}
-                            />
-                          </div>
-                          <div
-                            style={{
-                              fontFamily: 'Montserrat',
-                              backgroundColor: '#fff',
-                              marginBottom: 20,
-                              textAlign: 'start',
-                              width: '100%',
-                              flexDirection: 'column'
-                            }}
-                            dangerouslySetInnerHTML={{
-                              __html: journal?.ltsConnection?.firstParagraph
-                            }}
-                          />
-
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              flexDirection: 'column',
-                              alignItems: 'center'
-                            }}
-                          >
-                            <div
-                              style={{
-                                font: 'normal normal 600 17px/17px Montserrat',
-                                letterSpacing: 0.68,
-                                color: '#333D3D',
-                                textAlign: 'center'
-                              }}
-                            >
-                              MARKET-READY OUTCOMES
-                            </div>
-                            <img
-                              style={{
-                                width: 180,
-                                height: 180,
-                                objectFit: 'contain',
-                                marginBottom: 20
-                              }}
-                              alt={'lts-triangle'}
-                              src={LtsCertification}
-                            />
-                          </div>
-
-                          <div
-                            style={{
-                              fontFamily: 'Montserrat',
-                              backgroundColor: '#fff',
-                              display: 'flex',
-                              justifyContent: 'start',
-                              width: '100%',
-                              flexDirection: 'column'
-                            }}
-                            dangerouslySetInnerHTML={{
-                              __html: journal?.ltsConnection?.secondParagraph
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </AccordionItemWrapper>
-              )}
-            </div>
-          )}
-          {journal?.category === 'financial-literacy' && (
-            <div style={{ order: 2 }}>
-              {!loading && journal?.hasInstructorDebrief && (
-                <AccordionItemWrapper
-                  isOpened={openAccordion === 'connection'}
-                  handleAccordionClick={() =>
-                    handleAccordionClick('connection')
-                  }
-                  isExanded={isExpanded}
-                  title={'Extending task'}
-                >
-                  {openAccordion === 'connection' && (
-                    <>
-                      <div className="accordion-content">
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <div
-                            style={{
-                              fontFamily: 'Montserrat',
-                              backgroundColor: '#fff',
-                              marginBottom: 20,
-                              textAlign: 'start',
-                              width: '100%'
-                            }}
-                            dangerouslySetInnerHTML={{
-                              __html: journal?.ltsConnection?.firstParagraph
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </AccordionItemWrapper>
-              )}
-            </div>
-          )}
-          <div style={{ order: 3 }}>
-            {!loading && journal?.hasInstructorDebrief && (
-              <AccordionItemWrapper
-                isOpened={openAccordion === 'instructor'}
-                handleAccordionClick={() => handleAccordionClick('instructor')}
-                isExanded={isExpanded}
-                title={'Instructor debrief'}
-              >
-                {openAccordion === 'instructor' && (
-                  <div className="accordion-content">
-                    <div
-                      style={{
-                        font: 'normal normal 500 11px/17px Montserrat',
-                        letterSpacing: 0.18,
-                        color: '#333D3D'
-                      }}
-                    >
-                      Welcome to the instructor debrief section of this task.
-                      This tool is designed to help you use the LTS program and
-                      platform to their maximum potential, and to provide LTS
-                      with feedback so we can continue to meet your needs.
-                    </div>
-
-                    <>
-                      <div
-                        style={{
-                          font: 'normal normal 600 11px/17px Montserrat',
-                          letterSpacing: 0.18,
-                          color: '#000000',
-                          paddingTop: '20px',
-                          paddingBottom: '10px'
-                        }}
-                      >
-                        In completing this task did you:
-                      </div>
-                      <div class="d-flex mb-1 ">
-                        <div
-                          style={{
-                            width: '25px',
-                            flexShrink: 0,
-                            marginRight: 5
-                          }}
-                        >
-                          <input
-                            style={{ width: '15px', height: '15px' }}
-                            className="form-check-input "
-                            type="checkbox"
-                            checked={instructorDebrief.checkbox1}
-                            id="flexCheckDefault"
-                            onChange={(e) =>
-                              handleChangeInstructorDebrief2(
-                                'checkbox1',
-                                e.target.checked
-                              )
-                            }
-                          />
-                        </div>
-                        <div
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
-                          style={{
-                            font: 'normal normal 500 12px/18px Montserrat !important',
-                            letterSpacing: 0.24,
-                            color: '#231F20',
-                            marginTop: '0.250rem',
-                            fontSize: 12
-                          }}
-                        >
-                          Give each student an opportunity to use their voice.
-                        </div>
-                      </div>
-                      <div class="d-flex mb-1">
-                        <div
-                          style={{
-                            width: '25px',
-                            flexShrink: 0,
-                            marginRight: 5
-                          }}
-                        >
-                          <input
-                            style={{ width: '15px', height: '15px' }}
-                            className="form-check-input "
-                            type="checkbox"
-                            checked={instructorDebrief.checkbox2}
-                            id="flexCheckDefault"
-                            onChange={(e) =>
-                              handleChangeInstructorDebrief2(
-                                'checkbox2',
-                                e.target.checked
-                              )
-                            }
-                          />
-                        </div>
-                        <div
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
-                          style={{
-                            font: 'normal normal 500 12px/18px Montserrat !important',
-                            letterSpacing: 0.24,
-                            color: '#231F20',
-                            marginTop: '0.250rem',
-                            fontSize: 12
-                          }}
-                        >
-                          Conduct at least one news briefing to start class.
-                        </div>
-                      </div>
-                      <div class="d-flex mb-1 ">
-                        <div
-                          style={{
-                            width: '25px',
-                            flexShrink: 0,
-                            marginRight: 5
-                          }}
-                        >
-                          <input
-                            style={{ width: '15px', height: '15px' }}
-                            className="form-check-input "
-                            type="checkbox"
-                            checked={instructorDebrief.checkbox3}
-                            id="flexCheckDefault"
-                            onChange={(e) =>
-                              handleChangeInstructorDebrief2(
-                                'checkbox3',
-                                e.target.checked
-                              )
-                            }
-                          />
-                        </div>
-
-                        <div
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
-                          style={{
-                            font: 'normal normal 500 12px/18px Montserrat !important',
-                            letterSpacing: 0.24,
-                            color: '#231F20',
-                            marginTop: '0.250rem',
-                            fontSize: 12
-                          }}
-                        >
-                          Give students adequate time to complete work inside of
-                          their Journal or Portfolio.
-                        </div>
-                      </div>
-                    </>
-                    <>
-                      <>
-                        <div
-                          style={{
-                            font: 'normal normal 600 11px/17px Montserrat !important',
-                            letterSpacing: 0.18,
-                            color: '#000000',
-                            paddingTop: '15px',
-                            paddingBottom: '6px'
-                          }}
-                        >
-                          Please submit any questions or feedback regarding this
-                          task in the curriculum to the LTS team.
-                        </div>
-                        <KendoTextEditor
-                          minHeight={150}
-                          value={instructorDebrief?.textEditorContent}
-                          handleChange={(e) => {
-                            handleChangeInstructorDebrief2(
-                              'textEditorContent',
-                              e
-                            )
-                          }}
-                          tools={[
-                            [Bold, Italic],
-                            [AlignLeft, AlignCenter, AlignRight, AlignJustify],
-                            [Indent, Outdent],
-                            [OrderedList, UnorderedList],
-                            FontSize,
-                            FontName,
-                            FormatBlock,
-                            [Undo, Redo],
-                            [Link, Unlink, InsertImage, ViewHtml]
-                          ]}
-                        />
-                      </>
-                    </>
-                    <div className={'d-flex justify-content-end mt-3'}>
-                      <button
-                        style={{
-                          backgroundColor: '#51c7df',
-                          color: '#fff',
-                          fontSize: 12,
-                          fontWeight: 600
-                        }}
-                        className="px-4 py-2 border-0 color transform my-1"
-                        onClick={() =>
-                          onSubmitInstructorDebrief(newInstructorBriefData)
-                        }
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </AccordionItemWrapper>
-            )}
-          </div>
         </div>
-
-        <BreakdownPopup
-          show={openPopup}
-          onHide={handleClosePopup}
-          popupContent={selectedStep?.popupContent}
-        />
       </>
       <div className="row">
         <div className="col-12">
@@ -1035,92 +530,6 @@ function MyTrainingContent(props) {
           {/*) : (*/}
           {/*  <p className="page-card__content-description">{journal.content}</p>*/}
           {/*)}*/}
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-12">
-          <div className="journal-entries">
-            {/*{journal.entries &&*/}
-            {/*  journal.entries.map((entry) => (*/}
-            {/*    <div className="journal-entries__entry" key={entry.id}>*/}
-            {/*      <h5*/}
-            {/*        className={*/}
-            {/*          'journal-entries__entry-title' +*/}
-            {/*          (entry.title.indexOf('**') !== -1*/}
-            {/*            ? ' journal-entries__entry-title--md'*/}
-            {/*            : '')*/}
-            {/*        }*/}
-            {/*        dangerouslySetInnerHTML={{*/}
-            {/*          __html:*/}
-            {/*            entry.title.indexOf('<h2>') === -1*/}
-            {/*              ? markdown(entry.title)*/}
-            {/*              : entry.title.replace(*/}
-            {/*                  new RegExp('\r?\n', 'g'),*/}
-            {/*                  '<br />'*/}
-            {/*                )*/}
-            {/*        }}*/}
-            {/*      ></h5>*/}
-
-            {/*      <div className="journal-entries__entry-reflections">*/}
-            {/*        /!* List created reflections *!/*/}
-            {/*        {userJournalEntries[entry.id] &&*/}
-            {/*          userJournalEntries[entry.id].map((userJournalEntry) => (*/}
-            {/*            <LtsJournalReflection*/}
-            {/*              key={userJournalEntry.id}*/}
-            {/*              journal={journal}*/}
-            {/*              journalEntry={entry}*/}
-            {/*              entry={userJournalEntry}*/}
-            {/*              deleted={deleteReflection(entry, userJournalEntry)}*/}
-            {/*              saved={updateReflection(entry, userJournalEntry)}*/}
-            {/*            />*/}
-            {/*          ))}*/}
-
-            {/*        /!* Add new reflection *!/*/}
-            {/*        {(!userJournalEntries[entry.id] ||*/}
-            {/*          showAddReflection[entry.id]) && (*/}
-            {/*          <LtsJournalReflection*/}
-            {/*            journal={journal}*/}
-            {/*            journalEntry={entry}*/}
-            {/*            entry={null}*/}
-            {/*            saved={addReflection(entry)}*/}
-            {/*            showCancel={!!userJournalEntries[entry.id]}*/}
-            {/*            cancel={(e) => {*/}
-            {/*              setShowAddReflection({*/}
-            {/*                ...showAddReflection,*/}
-            {/*                [entry.id]: false*/}
-            {/*              })*/}
-            {/*            }}*/}
-            {/*          />*/}
-            {/*        )}*/}
-
-            {/*        /!* Show add new reflection *!/*/}
-            {/*        <div*/}
-            {/*          className={`journal-entries__entry-reflections-actions ${*/}
-            {/*            userJournalEntries[entry.id] &&*/}
-            {/*            !showAddReflection[entry.id]*/}
-            {/*              ? 'active'*/}
-            {/*              : ''*/}
-            {/*          }`}*/}
-            {/*        >*/}
-            {/*          <a*/}
-            {/*            href="#"*/}
-            {/*            className="journal-entries__entry-reflections-action"*/}
-            {/*            onClick={(e) => {*/}
-            {/*              e.preventDefault()*/}
-            {/*              setShowAddReflection({*/}
-            {/*                ...showAddReflection,*/}
-            {/*                [entry.id]: true*/}
-            {/*              })*/}
-            {/*            }}*/}
-            {/*          >*/}
-            {/*            Add reflection <FontAwesomeIcon icon={faPlus} />*/}
-            {/*          </a>*/}
-            {/*        </div>*/}
-            {/*      </div>*/}
-            {/*    </div>*/}
-            {/*  ))}*/}
-          </div>
         </div>
       </div>
     </>

@@ -19,6 +19,7 @@ import ImrContent from './pages/Iamr/ImrContent'
 import TestJournal from './pages/LtsJournal/TestJournal'
 import UserProfile from './pages/Profile/userProfile'
 
+const MyTraining = React.lazy(()=>import('./pages/MyTraining/MyTraining'))
 const Login = React.lazy(() => import('./pages/Auth/Login'))
 const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
 const SecurePage = React.lazy(() => import('../src/pages/Secure'))
@@ -188,7 +189,7 @@ function Router(props) {
               <Route
                 path="/my-training/"
                 component={(props) => (
-                  <LtsJournal {...props} category="my-training" />
+                  <MyTraining {...props} category="my-training" />
                 )}
               />
               {/* Students journals */}
