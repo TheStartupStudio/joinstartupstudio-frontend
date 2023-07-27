@@ -18,9 +18,9 @@ import IamrContents from './pages/Iamr/IamrContentsAccordion'
 import ImrContent from './pages/Iamr/ImrContent'
 import TestJournal from './pages/LtsJournal/TestJournal'
 import UserProfile from './pages/Profile/userProfile'
-import MyTraining from './pages/LtsJournal/MyTraining'
+// import MyTraining from './pages/LtsJournal/MyTraining'
 
-const MyTraining = React.lazy(()=>import('./pages/MyTraining/MyTraining'))
+const MyTraining = React.lazy(() => import('./pages/MyTraining/MyTraining'))
 const Login = React.lazy(() => import('./pages/Auth/Login'))
 const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
 const SecurePage = React.lazy(() => import('../src/pages/Secure'))
@@ -289,19 +289,27 @@ function Router(props) {
               />
               <Route
                 path="/student-lts/"
-                component={(props) => <LtsJournal {...props} category="student-lts" />}
+                component={(props) => (
+                  <LtsJournal {...props} category="student-lts" />
+                )}
               />
               <Route
                 path="/student-wellnes/"
-                component={(props) => <LtsJournal {...props} category="student-wellnes" />}
+                component={(props) => (
+                  <LtsJournal {...props} category="student-wellnes" />
+                )}
               />
               <Route
                 path="/student-personal-finance/"
-                component={(props) => <LtsJournal {...props} category="student-personal-finance" />}
+                component={(props) => (
+                  <LtsJournal {...props} category="student-personal-finance" />
+                )}
               />
               <Route
                 path="/student-leadership/"
-                component={(props) => <LtsJournal {...props} category="student-leadership" />}
+                component={(props) => (
+                  <LtsJournal {...props} category="student-leadership" />
+                )}
               />
               <Route
                 path="/market-ready/"
