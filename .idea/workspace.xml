@@ -6,15 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/StepContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/StepContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/Steps.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/Steps.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/MyTraining.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/MyTraining.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/TextEditor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/TextEditor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/MyTrainingContent.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/MyTrainingContent.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/MyTrainingContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/MyTrainingContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/Box.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/Box.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/BoxContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/BoxContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/Boxes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/Boxes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/PedagogyBoxes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/PedagogyBoxes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
