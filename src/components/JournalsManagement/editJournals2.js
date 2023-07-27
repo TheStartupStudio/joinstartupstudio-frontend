@@ -20,20 +20,11 @@ export default function EditJournals2(props) {
   const [journals, setJournals] = useState([])
   const [journalOptions, setJournalOptions] = useState([])
   const [selectedJournal, setSelectedJournal] = useState({})
-  const [updatedJournal, setUpdatedJournal] = useState()
   const [loading, setLoading] = useState(false)
   const [fetchingJournals, setFetchingJournals] = useState(true)
-  const [selectedImage, setSelectedImage] = useState(null)
   const [imageUploadingLoader, setImageUploadingLoader] = useState(false)
   const [uploadedImageUrl, setUploadedImageUrl] = useState(false)
-  const [highestOrder, setHighestOrder] = useState(null)
-  const [nextOrder, setNextOrder] = useState(null)
   const randomUUID = uuidv4()
-
-  const handleSetHighestOrder = (order) => {
-    // setHighestOrder(order)
-    setNextOrder(+order + 1)
-  }
 
   const breakdownInitialState = [
     {
@@ -54,6 +45,7 @@ export default function EditJournals2(props) {
   useEffect(() => {
     getJournals2()
     getJournals2Weeks()
+    getTrainings()
   }, [])
 
   useEffect(() => {
@@ -63,7 +55,7 @@ export default function EditJournals2(props) {
           .map((journal, index) => {
             return {
               label:
-                journal.category +
+                `${journal.category ? journal.category : ''}` +
                 ' - ' +
                 `${journal.type ? journal.type : ''}  ${
                   journal.type ? '-' : ''
@@ -73,13 +65,16 @@ export default function EditJournals2(props) {
               key: index
             }
           })
-          .sort((a, b) => a.value.category.localeCompare(b.value.category))
+          .sort((a, b) => {
+            if (a.value.category && b.value.category) {
+              return a.value.category.localeCompare(b.value.category)
+            }
+          })
       )
     }
   }, [journals])
 
   const handleJournalSelect = (e) => {
-    console.log(e)
     setSelectedJournal({
       value: e.value,
       label: e.label
@@ -88,7 +83,7 @@ export default function EditJournals2(props) {
     setBreakdowns(
       e.value?.breakdowns
         ?.slice()
-        ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
+        ?.sort((a, b) => a?.breakdownOrder - b?.breakdownOrder)
     )
   }
 
@@ -96,8 +91,11 @@ export default function EditJournals2(props) {
 
   useEffect(() => {
     const journalId = selectedJournal?.value?.id
-    if (journalId) {
+    if (journalId && selectedJournal?.value?.type) {
       const url = `/edit-journals2/${selectedJournal?.value?.type}/${journalId}`
+      history.push(url)
+    } else if (journalId) {
+      const url = `/edit-journals2/my-training/${journalId}`
       history.push(url)
     }
   }, [selectedJournal?.value?.id])
@@ -110,6 +108,16 @@ export default function EditJournals2(props) {
         setFetchingJournals(false)
       })
       .catch((e) => e)
+  }
+
+  const getTrainings = async () => {
+    try {
+      const response = await axiosInstance.get('/my-training/')
+      setJournals((prevJournals) => [...prevJournals, ...response.data.data])
+      setFetchingJournals(false)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const getJournals2 = async () => {
@@ -148,36 +156,64 @@ export default function EditJournals2(props) {
 
   const handleSubmit = async () => {
     setLoading(true)
-    await axiosInstance
-      .put(`LtsJournals/${journalId}/editJournal2`, {
-        breakdowns: breakdowns,
-        paragraph: selectedJournal?.value?.paragraph,
-        title: selectedJournal?.value?.title,
-        type: selectedJournal?.value?.type,
-        customContent: selectedJournal?.value?.customContent,
-        steps: selectedJournal?.value?.steps,
-        ltsConnection: selectedJournal?.value?.ltsConnection,
-        curriculumOverview: selectedJournal?.value?.curriculumOverview,
-        programOpportunities: selectedJournal?.value?.programOpportunities,
-        expectedOutcomes: selectedJournal?.value?.expectedOutcomes
-      })
-      .then((res) => {
-        setJournals(
-          journals.map((journal) =>
-            res.data.id === journal.id ? res.data : journal
+    if (!type.includes('my-training')) {
+      await axiosInstance
+        .put(`LtsJournals/${journalId}/editJournal2`, {
+          breakdowns: breakdowns,
+          paragraph: selectedJournal?.value?.paragraph,
+          title: selectedJournal?.value?.title,
+          type: selectedJournal?.value?.type,
+          customContent: selectedJournal?.value?.customContent,
+          steps: selectedJournal?.value?.steps,
+          ltsConnection: selectedJournal?.value?.ltsConnection,
+          curriculumOverview: selectedJournal?.value?.curriculumOverview,
+          programOpportunities: selectedJournal?.value?.programOpportunities,
+          expectedOutcomes: selectedJournal?.value?.expectedOutcomes
+        })
+        .then((res) => {
+          setJournals(
+            journals.map((journal) =>
+              res.data.id === journal.id ? res.data : journal
+            )
           )
-        )
-        setSelectedJournal((prevState) => ({
-          ...prevState,
-          value: res.data?.updatedJournal?.journal
-        }))
-        toast.success('Journal modified successfully!')
-        setLoading(false)
-      })
-      .catch((err) => {
-        toast.error('An error occurred, please try again!')
-        setLoading(false)
-      })
+          setSelectedJournal((prevState) => ({
+            ...prevState,
+            value: res.data?.updatedJournal?.journal
+          }))
+          toast.success('Journal modified successfully!')
+          setLoading(false)
+        })
+        .catch((err) => {
+          toast.error('An error occurred, please try again!')
+          setLoading(false)
+        })
+    } else {
+      await axiosInstance
+        .put(`my-training/${journalId}`, {
+          openingText: selectedJournal?.value?.paragraph,
+          title: selectedJournal?.value?.title,
+          implementationSteps: selectedJournal?.value?.implementationSteps,
+          pedagogyOptions: selectedJournal?.value?.pedagogyOptions
+          // type: selectedJournal?.value?.type,
+        })
+        .then((res) => {
+          setJournals(
+            journals.map((journal) =>
+              res.data.id === journal.id ? res.data : journal
+            )
+          )
+          setSelectedJournal((prevState) => ({
+            ...prevState,
+            value: res.data?.updatedJournal?.journal
+          }))
+          toast.success('Journal modified successfully!')
+          setLoading(false)
+        })
+        .catch((err) => {
+          toast.error('An error occurred, please try again!')
+          setLoading(false)
+        })
+    }
   }
 
   const imageUpload = async (image) => {
@@ -235,553 +271,6 @@ export default function EditJournals2(props) {
     )
   }
 
-  const handleChangeBreakdown = (index, name, value) => {
-    const newBreakdowns = [...breakdowns]
-    newBreakdowns[index][name] = value
-    setBreakdowns(newBreakdowns)
-  }
-
-  const handleChangeParagraph = (
-    name,
-    value,
-    dataIndex,
-    breakdownIndex,
-    uuid
-  ) => {
-    setBreakdowns((prevBreakdowns) => {
-      return prevBreakdowns.map((data, bindex) => {
-        if (bindex === breakdownIndex) {
-          const updatedCustomContent = data.customContent?.paragraphs?.map(
-            (paragraph, eIndex) => {
-              const foundedIndex = data.customContent?.paragraphs?.findIndex(
-                (paragraph, index) => paragraph.uuid === uuid
-              )
-              if (eIndex === foundedIndex) {
-                return { ...paragraph, [name]: value }
-              }
-              return paragraph
-            }
-          )
-          return {
-            ...data,
-            customContent: {
-              ...data.customContent,
-              paragraphs: updatedCustomContent
-            }
-          }
-        }
-        return data
-      })
-    })
-  }
-
-  const handleChangePopupButtons = (
-    name,
-    value,
-    dataIndex,
-    breakdownIndex,
-    uuid
-  ) => {
-    setBreakdowns((prevBreakdowns) => {
-      const newBreakdowns = [...prevBreakdowns]
-      const newBreakdown = { ...newBreakdowns[breakdownIndex] }
-      const newButtons = [...newBreakdown?.customContent?.popupButtons]
-
-      const buttonIndex = newButtons.findIndex((button) => button.uuid === uuid)
-      if (buttonIndex !== -1) {
-        const newButton = { ...newButtons[buttonIndex], [name]: value }
-        newButtons[buttonIndex] = newButton
-        newBreakdown.customContent.popupButtons = newButtons
-        newBreakdowns[breakdownIndex] = newBreakdown
-      }
-
-      return newBreakdowns
-    })
-  }
-  const handleChangeButtons = (
-    name,
-    value,
-    dataIndex,
-    breakdownIndex,
-    uuid
-  ) => {
-    setBreakdowns((prevBreakdowns) => {
-      const newBreakdowns = [...prevBreakdowns]
-      const newBreakdown = { ...newBreakdowns[breakdownIndex] }
-      const newButtons = [...newBreakdown?.customContent?.buttons]
-
-      const buttonIndex = newButtons.findIndex((button) => button.uuid === uuid)
-      if (buttonIndex !== -1) {
-        const newButton = { ...newButtons[buttonIndex], [name]: value }
-        newButtons[buttonIndex] = newButton
-        newBreakdown.customContent.buttons = newButtons
-        newBreakdowns[breakdownIndex] = newBreakdown
-      }
-
-      return newBreakdowns
-    })
-  }
-
-  const handleChangeImages = (
-    name,
-    value,
-    dataIndex,
-    breakdownIndex,
-    uuid,
-    button
-  ) => {
-    setBreakdowns((prevBreakdowns) => {
-      const newBreakdowns = [...prevBreakdowns]
-      const newBreakdown = { ...newBreakdowns[breakdownIndex] }
-      const customContent = newBreakdown?.customContent
-
-      if (!customContent || !customContent?.imageGallery) {
-        return prevBreakdowns
-      }
-      const newImages = [...customContent?.imageGallery?.images]
-      const imageIndex = newImages?.findIndex((image) => image?.uuid === uuid)
-
-      if (imageIndex !== -1) {
-        const newImage = { ...newImages[imageIndex] }
-        if (button === 'button') {
-          newImage.button = { ...newImage?.button, [name]: value }
-        } else {
-          newImage[name] = value
-        }
-        newImages[imageIndex] = newImage
-        customContent.imageGallery.images = newImages
-        // if (
-        //   name === 'gridColumns' ||
-        //   name === 'position' ||
-        //   name === 'borderBottom'
-        // ) {
-        //   customContent.imageGallery = {
-        //     ...customContent?.imageGallery,
-        //     [name]: value
-        //   }
-        // }
-        newBreakdown.customContent = customContent
-        newBreakdowns[breakdownIndex] = newBreakdown
-      }
-
-      return newBreakdowns
-    })
-  }
-
-  const addTextEditorData = (breakdownIndex) => {
-    const highestOrder = getHighestOrder(
-      breakdowns[breakdownIndex].customContent
-    )
-    const newTextEditorData = {
-      title: '',
-      content: '',
-      type: 'textEditor',
-      // order: nextOrder,
-      order: highestOrder,
-      uuid: randomUUID
-    }
-
-    setNextOrder((prev) => prev + 1)
-
-    setBreakdowns((prevState) => {
-      const updatedBreakdowns = [...prevState]
-      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-        updatedBreakdowns[breakdownIndex].customContent = {}
-      }
-
-      const textEditorData =
-        updatedBreakdowns[breakdownIndex]?.customContent?.textEditorData
-
-      if (!textEditorData) {
-        updatedBreakdowns[breakdownIndex].customContent.textEditorData = [
-          { newTextEditorData }
-        ]
-      }
-      updatedBreakdowns[breakdownIndex]?.customContent?.textEditorData?.push(
-        newTextEditorData
-      )
-      return updatedBreakdowns
-    })
-  }
-
-  const getHighestOrder = (customContent) => {
-    let flattenedArray = []
-
-    for (let key in customContent) {
-      if (Array.isArray(customContent[key])) {
-        flattenedArray = flattenedArray.concat(customContent[key])
-      }
-    }
-
-    let highestOrder = 0
-
-    flattenedArray.forEach((item) => {
-      if (item.order > highestOrder) {
-        highestOrder = item.order
-      }
-    })
-
-    let order = null
-    if (highestOrder === 0) {
-      order = 1
-    } else {
-      order = highestOrder + 1
-    }
-    return order
-  }
-  const addParagraph = (breakdownIndex) => {
-    const highestOrder = getHighestOrder(
-      breakdowns[breakdownIndex].customContent
-    )
-
-    const newParagraph = {
-      paragraph: '',
-      type: 'paragraph',
-      // order: +nextOrder,
-      order: highestOrder,
-      uuid: randomUUID
-    }
-    setNextOrder((prev) => prev + 1)
-
-    setBreakdowns((prevState) => {
-      const updatedBreakdowns = [...prevState]
-      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-        updatedBreakdowns[breakdownIndex].customContent = {}
-      }
-      const newParagraphs =
-        updatedBreakdowns[breakdownIndex]?.customContent?.paragraphs
-
-      if (!newParagraphs) {
-        updatedBreakdowns[breakdownIndex].customContent.paragraphs = [
-          { newParagraph }
-        ]
-      }
-      newParagraphs?.push(newParagraph)
-      // debugger
-      return updatedBreakdowns
-    })
-  }
-
-  const addPopupButton = (breakdownIndex) => {
-    const highestOrder = getHighestOrder(
-      breakdowns[breakdownIndex].customContent
-    )
-    const newButton = {
-      title: '',
-      popupContent: '',
-      position: 'end',
-      type: 'popupButton',
-      // order: nextOrder,
-      order: highestOrder,
-      uuid: randomUUID
-    }
-    setNextOrder((prev) => prev + 1)
-
-    setBreakdowns((prevState) => {
-      const updatedBreakdowns = [...prevState]
-      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-        updatedBreakdowns[breakdownIndex].customContent = {
-          popupButtons: []
-        }
-      }
-      const buttons =
-        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons
-
-      if (!buttons) {
-        updatedBreakdowns[breakdownIndex].customContent.popupButtons = [
-          newButton
-        ]
-      } else {
-        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons?.push(
-          newButton
-        )
-      }
-
-      return updatedBreakdowns
-    })
-  }
-
-  const addButton = (breakdownIndex) => {
-    const highestOrder = getHighestOrder(
-      breakdowns[breakdownIndex].customContent
-    )
-    const newButton = {
-      title: '',
-      popupContent: '',
-      position: 'end',
-      type: 'button',
-      // order: nextOrder,
-      order: highestOrder,
-      uuid: randomUUID
-    }
-    setNextOrder((prev) => prev + 1)
-
-    setBreakdowns((prevState) => {
-      const updatedBreakdowns = [...prevState]
-      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-        updatedBreakdowns[breakdownIndex].customContent = {
-          buttons: []
-        }
-      }
-
-      const buttons =
-        updatedBreakdowns[breakdownIndex]?.customContent?.buttons ?? []
-
-      if (!buttons) {
-        updatedBreakdowns[breakdownIndex].customContent.buttons = [newButton]
-      } else {
-        updatedBreakdowns[breakdownIndex]?.customContent?.buttons?.push(
-          newButton
-        )
-      }
-      return updatedBreakdowns
-    })
-  }
-
-  const handleChangeGridColumns = (value, uuid, breakdownIndex) => {
-    let newBreakdowns = [...breakdowns]
-    let newBreakdown = { ...newBreakdowns[breakdownIndex] }
-
-    let newImages = [...(newBreakdown?.customContent?.images ?? [])]
-
-    if (newBreakdown.customContent === null) {
-      newBreakdown.customContent = {}
-    }
-
-    newImages = newImages?.map((image) => {
-      return { ...image, gridColumns: value }
-    })
-
-    newBreakdown.customContent.images = newImages
-    newBreakdowns[breakdownIndex] = newBreakdown
-
-    setBreakdowns(newBreakdowns)
-  }
-
-  const handleChangeImageGallery = (name, value, breakdownIndex, uuid) => {
-    let newBreakdowns = [...breakdowns]
-    let newBreakdown = { ...newBreakdowns[breakdownIndex] }
-
-    if (newBreakdown?.customContent === null) {
-      newBreakdown.customContent = {}
-    }
-
-    const customContent = newBreakdown?.customContent || {}
-
-    if (!customContent.imageGallery) {
-      customContent.imageGallery = {}
-    }
-
-    if (!customContent.imageGallery.borderBottom) {
-      customContent.imageGallery.borderBottom = ''
-    }
-    if (!customContent.imageGallery.position) {
-      customContent.imageGallery.position = ''
-    }
-    if (!customContent.imageGallery.gridColumns) {
-      customContent.imageGallery.gridColumns = 0
-    }
-
-    customContent.imageGallery = {
-      ...customContent?.imageGallery,
-      [name]: value
-    }
-
-    newBreakdowns[breakdownIndex] = newBreakdown
-
-    setBreakdowns(newBreakdowns)
-  }
-
-  const addImage = (breakdownIndex) => {
-    const randomImageUUID = uuidv4()
-    const randomImageGalleryUUID = uuidv4()
-    // const randomUUID = uuidv4()
-    const highestOrder = getHighestOrder(
-      breakdowns[breakdownIndex].customContent
-    )
-
-    const newImage = {
-      image: '',
-      description: '',
-      button: {},
-      uuid: randomImageUUID
-      // order: highestOrder
-    }
-
-    setNextOrder((prev) => prev + 1)
-
-    setBreakdowns((prevState) => {
-      const updatedBreakdowns = [...prevState]
-      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-        updatedBreakdowns[breakdownIndex].customContent = {
-          imageGallery: {
-            type: 'image',
-            uuid: randomImageGalleryUUID,
-            gridColumns: 4,
-            images: [newImage],
-            borderBottom: false
-          }
-        }
-      } else {
-        const customContent = updatedBreakdowns[breakdownIndex].customContent
-        if (!customContent.imageGallery) {
-          customContent.imageGallery = {
-            type: 'image',
-            uuid: randomImageGalleryUUID,
-            gridColumns: 4,
-            images: [newImage],
-            order: highestOrder,
-            borderBottom: false
-          }
-        } else {
-          if (!customContent.imageGallery.images) {
-            customContent.imageGallery.images = []
-            customContent.imageGallery.type = 'image'
-            customContent.imageGallery.uuid = randomUUID
-            customContent.imageGallery.gridColumns = 4
-            customContent.imageGallery.order = highestOrder
-            customContent.imageGallery.borderBottom = false
-          }
-          customContent.imageGallery.images.push(newImage)
-        }
-      }
-      return updatedBreakdowns
-    })
-  }
-
-  const addButtonImage = (breakdownIndex, uuid) => {
-    const buttonImageRandomUUID = uuidv4()
-    const imageGalleryRandomUUID = uuidv4()
-    const newButton = {
-      title: '',
-      popupContent: '',
-      position: 'end',
-      type: 'button',
-      order: nextOrder
-      // uuid: buttonImageRandomUUID
-    }
-
-    setBreakdowns((prevState) => {
-      const updatedBreakdowns = [...prevState]
-
-      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-        updatedBreakdowns[breakdownIndex].customContent = {
-          imageGallery: {
-            type: 'image',
-            uuid: imageGalleryRandomUUID,
-            gridColumns: 4,
-            images: []
-          }
-        }
-      }
-
-      const images =
-        updatedBreakdowns[breakdownIndex]?.customContent?.imageGallery?.images
-      const foundedIndex = images.findIndex((image) => image.uuid === uuid)
-
-      if (foundedIndex !== -1) {
-        const foundedButton = images[foundedIndex]
-        foundedButton.button = newButton
-      }
-      return updatedBreakdowns
-    })
-  }
-
-  const handleOrderChange = (index, newOrder) => {
-    const selectedItem = breakdowns[index]
-    const newData = [...breakdowns]
-    newData.splice(index, 1)
-    newData.splice(newOrder - 1, 0, selectedItem)
-    const updatedData = newData.map((item, index) => {
-      item.breakdownOrder = index + 1
-      return item
-    })
-    setBreakdowns(updatedData)
-  }
-
-  const deleteBreakdown = async (id, breakdownIndex) => {
-    const newBreakdowns = [...breakdowns]
-
-    if (id) {
-      await axiosInstance
-        .delete(`LtsJournals/${id}/editJournal2`)
-        .then(async (res) => {
-          const findBreakdownIndex = newBreakdowns.findIndex(
-            (breakdown) => breakdown.id === id
-          )
-
-          newBreakdowns.splice(findBreakdownIndex, 1)
-          let updatedBreakdowns = newBreakdowns.map((item, index) => {
-            if (item.breakdownOrder > findBreakdownIndex + 1) {
-              item.breakdownOrder = item.breakdownOrder - 1
-            }
-            return item
-          })
-
-          if (updatedBreakdowns) {
-            await axiosInstance
-              .put(`LtsJournals/${selectedJournal.value.id}/editJournal2`, {
-                breakdowns: updatedBreakdowns
-              })
-              .then((res) => {
-                setJournals(
-                  journals.map((journal) =>
-                    res.data.id === journal.id ? res.data : journal
-                  )
-                )
-                setSelectedJournal((prevState) => ({
-                  ...prevState,
-                  value: res.data
-                }))
-                toast.success('Journal modified successfully!')
-                setLoading(false)
-              })
-              .catch((err) => {
-                toast.error('An error occurred, please try again!')
-                setLoading(false)
-              })
-          }
-
-          setBreakdowns(updatedBreakdowns)
-          toast.success('Breakdown deleted successfully!')
-          setLoading(false)
-        })
-        .catch((err) => {
-          toast.error('An error occurred, please try again!')
-          setLoading(false)
-        })
-    } else {
-      newBreakdowns.splice(breakdownIndex, 1)
-      setBreakdowns(
-        newBreakdowns.map((item, index) => {
-          if (item.breakdownOrder > breakdownIndex + 1) {
-            item.breakdownOrder = item.breakdownOrder - 1
-          }
-          return item
-        })
-      )
-    }
-  }
-
-  const handleDeleteBreakdown = (breakdownIndex) => {
-    const newBreakdowns = [...breakdowns]
-    const breakdownId = newBreakdowns[breakdownIndex].id
-    deleteBreakdown(breakdownId, breakdownIndex)
-    // setBreakdowns(newBreakdowns)
-  }
-
-  const [breakdownOrder, setBreakdownOrder] = useState(null)
-  useEffect(() => {
-    let highestOrder = 0
-
-    breakdowns.forEach((item) => {
-      if (item.breakdownOrder > highestOrder) {
-        highestOrder = item.breakdownOrder
-      }
-    })
-    setBreakdownOrder(highestOrder)
-  }, [breakdowns])
-
   const handleChangeSteps = (index, name, value) => {
     let newJournal = { ...selectedJournal }
     let newSteps = [...selectedJournal?.value?.steps]
@@ -789,6 +278,24 @@ export default function EditJournals2(props) {
     newStep[name] = value
     newSteps[index] = newStep
     newJournal.steps = newSteps
+    setSelectedJournal(newJournal)
+  }
+  const handleChangeImplementationSteps = (index, name, value) => {
+    let newJournal = { ...selectedJournal }
+    let newSteps = [...selectedJournal?.value?.implementationSteps]
+    let newStep = newSteps[index]
+    newStep[name] = value
+    newSteps[index] = newStep
+    newJournal.implementationSteps = newSteps
+    setSelectedJournal(newJournal)
+  }
+  const handleChangePedagogyOptions = (index, name, value) => {
+    let newJournal = { ...selectedJournal }
+    let newSteps = [...selectedJournal?.value?.pedagogyOptions]
+    let newStep = newSteps[index]
+    newStep[name] = value
+    newSteps[index] = newStep
+    newJournal.pedagogyOptions = newSteps
     setSelectedJournal(newJournal)
   }
 
@@ -1007,6 +514,62 @@ export default function EditJournals2(props) {
                   />
                 </>
               )
+            })}{' '}
+          {selectedJournal?.value?.implementationSteps &&
+            selectedJournal?.value?.implementationSteps?.map((step, index) => {
+              return (
+                <>
+                  <h2>Step {index + 1}</h2>
+                  <div>Step title</div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={step?.title}
+                    onChange={(e) =>
+                      handleChangeImplementationSteps(
+                        index,
+                        'title',
+                        e.target.value
+                      )
+                    }
+                  />
+                  <div>Step content</div>
+                  <KendoTextEditor
+                    value={step?.stepContent}
+                    handleChange={(e) =>
+                      handleChangeImplementationSteps(index, 'stepContent', e)
+                    }
+                  />
+                </>
+              )
+            })}
+          {selectedJournal?.value?.pedagogyOptions &&
+            selectedJournal?.value?.pedagogyOptions?.map((step, index) => {
+              return (
+                <>
+                  <h2>Pedagogy Option {index + 1}</h2>
+                  <div>Pedagogy box title</div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={step?.title}
+                    onChange={(e) =>
+                      handleChangePedagogyOptions(
+                        index,
+                        'title',
+                        e.target.value
+                      )
+                    }
+                  />
+                  <div>Step box content</div>
+                  <KendoTextEditor
+                    value={step?.content}
+                    handleChange={(e) =>
+                      handleChangePedagogyOptions(index, 'content', e)
+                    }
+                  />
+                </>
+              )
             })}
           <>
             <h2>Lts Connection Model</h2>
@@ -1184,148 +747,6 @@ export default function EditJournals2(props) {
               })}
             </>
           )}
-
-          {
-            <>
-              {/*<div>BREAKDOWNS</div>*/}
-
-              {/*{breakdowns?.map((breakdown, breakdownIndex) => {*/}
-              {/*  return (*/}
-              {/*    <div>*/}
-              {/*      <div style={{ fontWeight: 600 }}>*/}
-              {/*        Breakdown {breakdownIndex + 1}*/}
-              {/*      </div>*/}
-              {/*      <div className="d-flex justify-content-between align-items-center mb-3">*/}
-              {/*        <div*/}
-              {/*          className="input-group  d-flex align-items-center"*/}
-              {/*          style={{ width: 260 }}*/}
-              {/*        >*/}
-              {/*          <span className="input-group-text">*/}
-              {/*            Breakdown Order:*/}
-              {/*          </span>*/}
-              {/*          <input*/}
-              {/*            type="number"*/}
-              {/*            className="form-control"*/}
-              {/*            value={breakdown.breakdownOrder}*/}
-              {/*            onChange={(e) =>*/}
-              {/*              handleOrderChange(*/}
-              {/*                breakdownIndex,*/}
-              {/*                Number(e.target.value)*/}
-              {/*              )*/}
-              {/*            }*/}
-              {/*          />*/}
-              {/*        </div>*/}
-              {/*        <div className={'d-flex align-items-center '}>*/}
-              {/*          <button*/}
-              {/*            className={'btn btn-danger'}*/}
-              {/*            onClick={() => {*/}
-              {/*              return handleDeleteBreakdown(breakdownIndex)*/}
-              {/*            }}*/}
-              {/*          >*/}
-              {/*            Delete breakdown*/}
-              {/*          </button>*/}
-              {/*        </div>*/}
-              {/*      </div>*/}
-              {/*      <div>Breakdown title</div>*/}
-              {/*      <input*/}
-              {/*        type="text"*/}
-              {/*        className="w-100 p-2"*/}
-              {/*        name="title"*/}
-              {/*        value={breakdown?.title}*/}
-              {/*        onChange={(e) =>*/}
-              {/*          handleChangeBreakdown(*/}
-              {/*            breakdownIndex,*/}
-              {/*            'title',*/}
-              {/*            e.target.value*/}
-              {/*          )*/}
-              {/*        }*/}
-              {/*      />*/}
-
-              {/*      {breakdown.type === 'type-1' && (*/}
-              {/*        <>*/}
-              {/*          <div>Breakdown content</div>*/}
-              {/*          <KendoTextEditor*/}
-              {/*            value={breakdown?.content}*/}
-              {/*            handleChange={(e) =>*/}
-              {/*              handleChangeBreakdown(breakdownIndex, 'content', e)*/}
-              {/*            }*/}
-              {/*          />*/}
-              {/*        </>*/}
-              {/*      )}*/}
-
-              {/*      /!*{breakdown.type === 'type-3' && (*!/*/}
-              {/*      /!*  <>*!/*/}
-              {/*      /!*    <CustomContent*!/*/}
-              {/*      /!*      handleSetHighestOrder={handleSetHighestOrder}*!/*/}
-              {/*      /!*      breakdown={breakdown}*!/*/}
-              {/*      /!*      handleChangeImageGallery={(value, uuid) =>*!/*/}
-              {/*      /!*        handleChangeImageGallery(*!/*/}
-              {/*      /!*          value,*!/*/}
-              {/*      /!*          uuid,*!/*/}
-              {/*      /!*          breakdownIndex*!/*/}
-              {/*      /!*        )*!/*/}
-              {/*      /!*      }*!/*/}
-              {/*      /!*      breakdownIndex={breakdownIndex}*!/*/}
-              {/*      /!*      handleChangeParagraph={handleChangeParagraph}*!/*/}
-              {/*      /!*      handleChangeButtons={handleChangeButtons}*!/*/}
-              {/*      /!*      handleChangePopupButtons={handleChangePopupButtons}*!/*/}
-              {/*      /!*      handleChangeImages={handleChangeImages}*!/*/}
-              {/*      /!*      handleAddPopupButton={() => {*!/*/}
-              {/*      /!*        addPopupButton(breakdownIndex)*!/*/}
-              {/*      /!*      }}*!/*/}
-              {/*      /!*      handleAddButton={() => {*!/*/}
-              {/*      /!*        addButton(breakdownIndex)*!/*/}
-              {/*      /!*      }}*!/*/}
-              {/*      /!*      handleAddImage={() => {*!/*/}
-              {/*      /!*        addImage(breakdownIndex)*!/*/}
-              {/*      /!*      }}*!/*/}
-              {/*      /!*      handleAddButtonImage={(uuid) => {*!/*/}
-              {/*      /!*        addButtonImage(breakdownIndex, uuid)*!/*/}
-              {/*      /!*      }}*!/*/}
-              {/*      /!*      handleAddParagraph={() => {*!/*/}
-              {/*      /!*        addParagraph(breakdownIndex)*!/*/}
-              {/*      /!*      }}*!/*/}
-              {/*      /!*    />*!/*/}
-              {/*      /!*  </>*!/*/}
-              {/*      /!*)}*!/*/}
-              {/*    </div>*/}
-              {/*  )*/}
-              {/*})}*/}
-              {/*<div className={'d-flex justify-content-between gap-2'}>*/}
-              {/*  <div*/}
-              {/*    className={'d-flex justify-content-end mb-4'}*/}
-              {/*    onClick={() => {*/}
-              {/*      let newBreakdowns = [...breakdowns]*/}
-              {/*      newBreakdowns.push({*/}
-              {/*        ...breakdownInitialState[0],*/}
-              {/*        type: 'type-1',*/}
-              {/*        breakdownOrder: breakdownOrder + 1*/}
-              {/*      })*/}
-              {/*      setBreakdownOrder((prev) => prev + 1)*/}
-              {/*      setBreakdowns(newBreakdowns)*/}
-              {/*    }}*/}
-              {/*  >*/}
-              {/*    <div class={'btn btn-warning '}>Add breakdown 1</div>*/}
-              {/*  </div>*/}
-              {/*  <div*/}
-              {/*    className={'d-flex justify-content-end mb-4'}*/}
-              {/*    onClick={() => {*/}
-              {/*      let newBreakdowns = [...breakdowns]*/}
-              {/*      newBreakdowns.push({*/}
-              {/*        ...breakdownInitialState[0],*/}
-              {/*        type: 'type-3',*/}
-              {/*        breakdownOrder: breakdownOrder + 1*/}
-              {/*      })*/}
-              {/*      setBreakdownOrder((prev) => prev + 1)*/}
-              {/*      setBreakdowns(newBreakdowns)*/}
-              {/*    }}*/}
-              {/*  >*/}
-              {/*    <div class={'btn btn-warning '}>Add breakdown 2</div>*/}
-              {/*  </div>*/}
-              {/*</div>*/}
-            </>
-          }
-
           <button
             className="float-end mt-2 px-md-5 save-button add-new-note-button-text"
             style={{ fontSize: '16px', height: 'auto' }}

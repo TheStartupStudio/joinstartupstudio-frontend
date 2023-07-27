@@ -5,3 +5,22 @@
   color: #707070;
   opacity: 1;
 }
+
+.sidenav {
+  color: #333d3d;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 10px 10px;
+  display: flex;
+  transition: 0.3s ease;
+  background: transparent;
+  position: relative;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  line-height: 1;
+}
+.sidenav:hover {
+  color: #fff;
+  background: #21c5d0;
+}

@@ -20,6 +20,7 @@ import TestJournal from './pages/LtsJournal/TestJournal'
 import UserProfile from './pages/Profile/userProfile'
 import MyTraining from './pages/LtsJournal/MyTraining'
 
+const MyTraining = React.lazy(()=>import('./pages/MyTraining/MyTraining'))
 const Login = React.lazy(() => import('./pages/Auth/Login'))
 const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
 const SecurePage = React.lazy(() => import('../src/pages/Secure'))
