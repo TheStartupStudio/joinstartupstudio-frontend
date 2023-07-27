@@ -10,7 +10,7 @@ import {
   faFolder,
   faCertificate,
   faClipboardCheck,
-  faAngleDown,
+  faAngleDown
 } from '@fortawesome/free-solid-svg-icons'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'jquery/dist/jquery.min.js'
@@ -204,7 +204,7 @@ function Sidebar(props) {
               className="me-2 me-md-0"
               style={{
                 fontSize: '16px',
-                color: '#333D3D',
+                color: '#333D3D'
               }}
             />
           </div>
@@ -253,7 +253,7 @@ function Sidebar(props) {
                 style={{
                   textTransform: 'uppercase',
                   color: '#707070',
-                  fontSize: 14,
+                  fontSize: 14
                 }}
               >
                 Instructor platform
@@ -327,7 +327,7 @@ function Sidebar(props) {
                       className="me-2 me-md-0"
                       style={{
                         fontSize: '16px',
-                        color: '#333D3D',
+                        color: '#333D3D'
                       }}
                     />
                   </div>
@@ -339,7 +339,10 @@ function Sidebar(props) {
                 data-parent="#side-menu-main"
               >
                 <li>
-                  <NavLink to={'/my-training'} activeClassName="sidenav active">
+                  <NavLink
+                    to={'/not-found-route'}
+                    activeClassName="sidenav active"
+                  >
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1 text-uppercase">
                         My training
@@ -379,6 +382,93 @@ function Sidebar(props) {
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1 text-uppercase ">
                         My performance data
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+              </div>
+              <li
+                className="dropdownMenuSidebarHover"
+                data-bs-toggle="collapse"
+                href="#studentJournals"
+                role="button"
+                aria-expanded="true"
+                aria-controls="studentJournals"
+              >
+                <a>
+                  <div
+                    className="d-flex w-100"
+                    style={{ alignItems: 'center' }}
+                  >
+                    <FontAwesomeIcon
+                      className="sidebar-icon me-2"
+                      icon={faFolder}
+                    />
+                    <div className="flex-grow-1 ms-1">
+                      <span className={'text-uppercase'}>
+                        STUDENT JOURNALS
+                      </span>
+                    </div>
+                    <FontAwesomeIcon
+                      icon={faAngleDown}
+                      className="me-2 me-md-0"
+                      style={{
+                        fontSize: '16px',
+                        color: '#333D3D'
+                      }}
+                    />
+                  </div>
+                </a>
+              </li>
+              <div
+                className="collapse"
+                id="studentJournals"
+                data-parent="#side-menu-main"
+              >
+                <li>
+                  <NavLink
+                    to={'/student-lts'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                        LTS JOURNAL
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/student-wellnes'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                        WELLNES JOURNAL
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/student-personal-finance'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                        PERSONAL FINANCE JOURNAL
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/student-leadership'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase ">
+                        LEADERSHIP JOURNAL
                       </div>
                     </div>
                   </NavLink>
@@ -433,189 +523,189 @@ function Sidebar(props) {
                   </div>
                 </NavLink>
               </li>
-              <li
-                className="dropdownMenuSidebarHover"
-                data-bs-toggle="collapse"
-                href="#collapseTraining"
-                role="button"
-                aria-expanded="true"
-                aria-controls="collapseTraining"
-              >
-                <a>
-                  <div
-                    className="d-flex w-100"
-                    style={{ alignItems: 'center' }}
-                  >
-                    <FontAwesomeIcon
-                      className="sidebar-icon me-2"
-                      icon={faIdCard}
-                    />
-                    <div className="flex-grow-1 ms-1">
-                      <span>MY TRAINING</span>
-                    </div>
-                    <FontAwesomeIcon
-                      icon={faAngleDown}
-                      className="me-2 me-md-0"
-                      style={{
-                        fontSize: '16px',
-                        color: '#333D3D',
-                      }}
-                    />
-                  </div>
-                </a>
-              </li>
-              <div
-                className="collapse"
-                id="collapseTraining"
-                data-parent="#side-menu-main"
-              >
-                <li>
-                  <NavLink to={'/my-training'} activeClassName="sidenav active">
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">INTRODUCTION TO LTS</div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={'/edit-portfolio'}
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">MY PORTFOLIO</div>
-                    </div>
-                  </NavLink>
-                </li>
+              {/*<li*/}
+              {/*  className="dropdownMenuSidebarHover"*/}
+              {/*  data-bs-toggle="collapse"*/}
+              {/*  href="#collapseTraining"*/}
+              {/*  role="button"*/}
+              {/*  aria-expanded="true"*/}
+              {/*  aria-controls="collapseTraining"*/}
+              {/*>*/}
+              {/*  <a>*/}
+              {/*    <div*/}
+              {/*      className="d-flex w-100"*/}
+              {/*      style={{ alignItems: 'center' }}*/}
+              {/*    >*/}
+              {/*      <FontAwesomeIcon*/}
+              {/*        className="sidebar-icon me-2"*/}
+              {/*        icon={faIdCard}*/}
+              {/*      />*/}
+              {/*      <div className="flex-grow-1 ms-1">*/}
+              {/*        <span>MY TRAINING</span>*/}
+              {/*      </div>*/}
+              {/*      <FontAwesomeIcon*/}
+              {/*        icon={faAngleDown}*/}
+              {/*        className="me-2 me-md-0"*/}
+              {/*        style={{*/}
+              {/*          fontSize: '16px',*/}
+              {/*          color: '#333D3D'*/}
+              {/*        }}*/}
+              {/*      />*/}
+              {/*    </div>*/}
+              {/*  </a>*/}
+              {/*</li>*/}
+              {/*<div*/}
+              {/*  className="collapse"*/}
+              {/*  id="collapseTraining"*/}
+              {/*  data-parent="#side-menu-main"*/}
+              {/*>*/}
+              {/*  <li>*/}
+              {/*    <NavLink to={'/my-training'} activeClassName="sidenav active">*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">INTRODUCTION TO LTS</div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      to={'/edit-portfolio'}*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">MY PORTFOLIO</div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
 
-                <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to="/resources"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">MY RESOURCES</div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to={'/My-Market-Ready-Guide'}
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">
-                        MY MARKET-READY GUIDE
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-              </div>
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      onClick={() => {*/}
+              {/*        dispatch(setAccordionToggled(false))*/}
+              {/*        props.hideHeaderIcons()*/}
+              {/*      }}*/}
+              {/*      to="/resources"*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">MY RESOURCES</div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      to={'/My-Market-Ready-Guide'}*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">*/}
+              {/*          MY MARKET-READY GUIDE*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*</div>*/}
 
-              <li
-                className="dropdownMenuSidebarHover"
-                data-bs-toggle="collapse"
-                href="#learn-to-start-collapse"
-                role="button"
-                aria-expanded="true"
-                aria-controls="learn-to-start-collapse"
-              >
-                <a>
-                  <div
-                    className="d-flex w-100"
-                    style={{ alignItems: 'center' }}
-                  >
-                    <FontAwesomeIcon
-                      className="sidebar-icon me-2"
-                      icon={faFolder}
-                    />
-                    <div className="ms-1 flex-grow-1">
-                      <span>MY CURRICULUM</span>
-                    </div>
-                    <FontAwesomeIcon
-                      icon={faAngleDown}
-                      className="me-2 me-md-0"
-                      style={{
-                        fontSize: '16px',
-                        color: '#333D3D',
-                      }}
-                    />
-                  </div>
-                </a>
-              </li>
-              <div
-                className="collapse"
-                id="learn-to-start-collapse"
-                data-parent="#side-menu-main"
-              >
-                <li>
-                  <NavLink
-                    // onClick={() => {
-                    //   dispatch(setAccordionToggled(false))
-                    //   props.hideHeaderIcons()
-                    // }}
-                    to="/hs1-journal"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">
-                        <span>LTS 1</span>
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to="/hs2-journal"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">
-                        <span>LTS 2</span>
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to="/hs3-journal"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">
-                        <span>LTS 3</span>
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to="/hs4-journal"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">
-                        <span>LTS 4</span>
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
-              </div>
+              {/*<li*/}
+              {/*  className="dropdownMenuSidebarHover"*/}
+              {/*  data-bs-toggle="collapse"*/}
+              {/*  href="#learn-to-start-collapse"*/}
+              {/*  role="button"*/}
+              {/*  aria-expanded="true"*/}
+              {/*  aria-controls="learn-to-start-collapse"*/}
+              {/*>*/}
+              {/*  <a>*/}
+              {/*    <div*/}
+              {/*      className="d-flex w-100"*/}
+              {/*      style={{ alignItems: 'center' }}*/}
+              {/*    >*/}
+              {/*      <FontAwesomeIcon*/}
+              {/*        className="sidebar-icon me-2"*/}
+              {/*        icon={faFolder}*/}
+              {/*      />*/}
+              {/*      <div className="ms-1 flex-grow-1">*/}
+              {/*        <span>MY CURRICULUM</span>*/}
+              {/*      </div>*/}
+              {/*      <FontAwesomeIcon*/}
+              {/*        icon={faAngleDown}*/}
+              {/*        className="me-2 me-md-0"*/}
+              {/*        style={{*/}
+              {/*          fontSize: '16px',*/}
+              {/*          color: '#333D3D'*/}
+              {/*        }}*/}
+              {/*      />*/}
+              {/*    </div>*/}
+              {/*  </a>*/}
+              {/*</li>*/}
+              {/*<div*/}
+              {/*  className="collapse"*/}
+              {/*  id="learn-to-start-collapse"*/}
+              {/*  data-parent="#side-menu-main"*/}
+              {/*>*/}
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      // onClick={() => {*/}
+              {/*      //   dispatch(setAccordionToggled(false))*/}
+              {/*      //   props.hideHeaderIcons()*/}
+              {/*      // }}*/}
+              {/*      to="/hs1-journal"*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">*/}
+              {/*          <span>LTS 1</span>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      onClick={() => {*/}
+              {/*        dispatch(setAccordionToggled(false))*/}
+              {/*        props.hideHeaderIcons()*/}
+              {/*      }}*/}
+              {/*      to="/hs2-journal"*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">*/}
+              {/*          <span>LTS 2</span>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      onClick={() => {*/}
+              {/*        dispatch(setAccordionToggled(false))*/}
+              {/*        props.hideHeaderIcons()*/}
+              {/*      }}*/}
+              {/*      to="/hs3-journal"*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">*/}
+              {/*          <span>LTS 3</span>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*  <li>*/}
+              {/*    <NavLink*/}
+              {/*      onClick={() => {*/}
+              {/*        dispatch(setAccordionToggled(false))*/}
+              {/*        props.hideHeaderIcons()*/}
+              {/*      }}*/}
+              {/*      to="/hs4-journal"*/}
+              {/*      activeClassName="sidenav active"*/}
+              {/*    >*/}
+              {/*      <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+              {/*        <div className="ms-4 ps-2 py-1">*/}
+              {/*          <span>LTS 4</span>*/}
+              {/*        </div>*/}
+              {/*      </div>*/}
+              {/*    </NavLink>*/}
+              {/*  </li>*/}
+              {/*</div>*/}
 
               <li
                 className="dropdownMenuSidebarHover"
@@ -642,7 +732,7 @@ function Sidebar(props) {
                       className="me-2 me-md-0"
                       style={{
                         fontSize: '16px',
-                        color: '#333D3D',
+                        color: '#333D3D'
                       }}
                     />
                   </div>
@@ -715,7 +805,7 @@ function Sidebar(props) {
                       className="me-2 me-md-0"
                       style={{
                         fontSize: '16px',
-                        color: '#333D3D',
+                        color: '#333D3D'
                       }}
                     />
                   </div>

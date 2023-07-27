@@ -18,7 +18,7 @@ import {
   closeTaskModal,
   editEventStart,
   openCalendarEventModal,
-  openTaskModal,
+  openTaskModal
 } from '../../redux/dashboard/Actions'
 import TaskEventModal from '../Modals/TaskEventModal'
 
@@ -29,23 +29,23 @@ export const INITIAL_EVENTS = [
   {
     id: createEventId(),
     title: 'All-day event',
-    start: todayStr,
+    start: todayStr
   },
   {
     id: createEventId(),
     title: 'All-day event2',
-    start: todayStr,
+    start: todayStr
   },
   {
     id: createEventId(),
     title: 'All-day event3',
-    start: todayStr,
+    start: todayStr
   },
   {
     id: createEventId(),
     title: 'All-day event4',
-    start: todayStr,
-  },
+    start: todayStr
+  }
 ]
 
 export function createEventId() {
@@ -98,7 +98,7 @@ const FullCalendarComponent = (props) => {
               width: '100%',
               margin: 0,
               paddingLeft: '1rem',
-              fontSize: '14px',
+              fontSize: '14px'
             }}
           >
             <li
@@ -108,7 +108,7 @@ const FullCalendarComponent = (props) => {
                 listStyleType: 'square',
                 fontSize: '20px',
                 margin: 0,
-                padding: 0,
+                padding: 0
               }}
             >
               <span
@@ -117,7 +117,7 @@ const FullCalendarComponent = (props) => {
                   fontSize: '12.5px',
                   fontWeight: 400,
                   margin: 0,
-                  padding: 0,
+                  padding: 0
                 }}
               >
                 {foundedEvent?.type == 'task' ? 'Task' : 'Event'}:{' '}
@@ -129,7 +129,7 @@ const FullCalendarComponent = (props) => {
                   fontSize: '12px',
                   fontWeight: 500,
                   color: '#231F20',
-                  fontFamily: 'Montserrat',
+                  fontFamily: 'Montserrat'
                 }}
               >
                 {foundedEvent?.user?.name}
@@ -139,7 +139,7 @@ const FullCalendarComponent = (props) => {
                 style={{
                   fontSize: '10px',
                   color: '#231F20',
-                  fontWeight: 'normal',
+                  fontWeight: 'normal'
                 }}
               >
                 {convertToAMPM(foundedEvent?.startTime.slice(0, 5))} -{' '}
@@ -166,7 +166,7 @@ const FullCalendarComponent = (props) => {
         start,
         end,
         className,
-        title,
+        title
       }
     })
 
@@ -192,6 +192,11 @@ const FullCalendarComponent = (props) => {
   }
 
   const [startDate, setStartDate] = useState(null)
+
+  // useEffect(() => {
+  //   debugger
+  //   // setStartDate(props.startDate)
+  // }, [props.startDate])
 
   const addOnDayClick = (event) => {
     setStartDate(event.startStr)
@@ -263,7 +268,7 @@ const FullCalendarComponent = (props) => {
       changeEventDateStart(
         {
           startDate: formattedStartDate,
-          endDate: isValidDate(formattedEndDate) ? formattedEndDate : null,
+          endDate: isValidDate(formattedEndDate) ? formattedEndDate : null
         },
         { eventId: eventFounded.id }
       )
@@ -430,9 +435,18 @@ const FullCalendarComponent = (props) => {
                                  
                             </div>`
           return tooltip
-        },
+        }
       })
     }
+  }
+
+  function getFormattedDate() {
+    const today = new Date()
+    const year = today.getFullYear().toString()
+    let month = (today.getMonth() + 1).toString().padStart(2, '0')
+    let day = today.getDate().toString().padStart(2, '0')
+
+    return `${year}-${month}-${day}`
   }
 
   const taskEventModal = useSelector(
@@ -461,7 +475,7 @@ const FullCalendarComponent = (props) => {
         headerToolbar={{
           left: 'title',
           center: '',
-          right: 'prev,next',
+          right: 'prev,next'
         }}
         initialEvents={currentEvents}
         select={(event) => addOnDayClick(event)}
@@ -482,7 +496,7 @@ const FullCalendarComponent = (props) => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              fontSize: 6,
+              fontSize: 6
             }}
           >
             {n.num} more
@@ -502,7 +516,7 @@ const FullCalendarComponent = (props) => {
         periods={props.periods}
         event={null}
         onEdit={null}
-        startDate={startDate}
+        startDate={props.startDate ? props.startDate : startDate}
       />
     </>
   )

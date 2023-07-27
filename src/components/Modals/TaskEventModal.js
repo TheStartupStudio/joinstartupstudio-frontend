@@ -88,12 +88,10 @@ const TaskEventModal = (props) => {
     }
   }, [props.event])
 
-
   useEffect(() => {
     if (isAddingOnClick()) {
       setState({ ...state, startDate: props.startDate })
     }
-
   }, [props.startDate])
 
   const dispatch = useDispatch()
@@ -116,7 +114,6 @@ const TaskEventModal = (props) => {
   }
 
   const [state, setState] = useState(initialState)
-  console.log(state)
   useEffect(() => {
     const newState = { ...state }
     newState.type = tab == 'task' ? 'task' : 'event'
@@ -142,13 +139,12 @@ const TaskEventModal = (props) => {
   }, [])
 
   const handleInputChange = (name, value) => {
-    if(value !== 'NaN:NaN') {
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
+    if (value !== 'NaN:NaN') {
+      setState((prevState) => ({
+        ...prevState,
+        [name]: value
+      }))
     }
-
   }
 
   const activeTabStyle = {
@@ -169,7 +165,6 @@ const TaskEventModal = (props) => {
   const toggleTab = (tab) => {
     setTab(tab)
   }
-
 
   const onPostEvent = () => {
     let newEventObj = {
@@ -354,7 +349,7 @@ const TaskEventModal = (props) => {
               )}
             </FormattedMessage>
           </div>
-          {(
+          {
             <div className="col-md-6 event-input-container">
               <label
                 htmlFor="date"
@@ -385,7 +380,7 @@ const TaskEventModal = (props) => {
                 )}
               </FormattedMessage>
             </div>
-          ) }
+          }
           <div className="col-md-6 event-input-container">
             <label
               htmlFor="date"

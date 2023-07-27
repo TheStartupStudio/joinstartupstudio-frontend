@@ -16,14 +16,18 @@ const MyCertificationGuide = () => {
       <MyLtsGridItem
         title={'IAMR CERTIFICATION GUIDE'}
         description={`This guide explains the certification process and your role in it.`}
-        itemNumberImage={<NumberImage image={numberOne} />}
         to={'/iamr-certification-guide'}
+        itemNumberImage={
+          <NumberImage image={numberOne} width={80} height={80} />
+        }
       />
       <MyLtsGridItem
         title={'IAMR CERTIFICATION SYSTEM'}
         description={`This is the complete certification system
         that you can use as a model in your classroom.`}
-        itemNumberImage={<NumberImage image={numberTwo} />}
+        itemNumberImage={
+          <NumberImage image={numberTwo} width={80} height={80} />
+        }
       />
     </MyLearnToStartEDU>
   )

@@ -1477,7 +1477,15 @@ const EsLangs = {
   'my_saved.alredy_saved_PODCASTS': 'Podcast is alredy saved',
   'my_saved.alredy_saved_PODCASTS_note': 'Note podcast page',
   'foul_words.notice':
-    'We have detected foul words in your writing, please revise your text before submitting. Your account can be suspended if foul words are used. Contact us if you have any questions!'
+    'We have detected foul words in your writing, please revise your text before submitting. Your account can be suspended if foul words are used. Contact us if you have any questions!',
+  'student_journals.student-lts_title': 'LEARN TO START JOURNAL',
+  'student_journals.student-lts_description': 'The Learn to Start Model is a guide in the lifelong process of developing the answers to the only three questions that matter: Who am I? What can I do? How do I prove it? You will use this journal to guide your development to those answers.',
+  'student_journals.student-wellnes_title': 'WELLNESS JOURNAL',
+  'student_journals.student-wellnes_description': 'Wellness is planning, acting, and responding with self-awareness with the intent of becoming your best self. Use this journal to reflect on your wellness journey and treat it as a lifelong process.',
+  'student_journals.student-personal-finance_title': 'PERSONAL FINANCE JOURNAL',
+  'student_journals.student-personal-finance_description': 'In order to be market-ready, you must be financially literate. This journal will help you gain the knowledge and skills you need to make informed financial decisions.',
+  'student_journals.student-leadership_title': 'LEADERSHIP JOURNAL',
+  'student_journals.student-leadership_description': 'Leadership comes in many forms but the foundation is leading yourself first. Use this journal to inspire your development as a leader.',
 }
 
 export default EsLangs

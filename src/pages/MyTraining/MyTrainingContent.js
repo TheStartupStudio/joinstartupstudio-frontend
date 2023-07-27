@@ -13,7 +13,7 @@ import { EditorTools } from '@progress/kendo-react-editor'
 import LtsDiagram from '../../assets/images/LearntoStart-Diagram-3D.png'
 import LtsCertification from '../../assets/images/Certified-L1-800px.png'
 import BreakdownPopup from '../../components/Modals/BreakdownPopup'
-import './TestJournalContent.css'
+import './MyTrainingContent.css'
 import AccordionItemWrapper from './AccordionItemWrapper'
 import SelectTaskButton from './SelectTaskButton'
 import StepsBox from './Steps/StepsBox'
@@ -21,7 +21,7 @@ import CurriculumOverview from './CurriculumOverview'
 import ExpectedOutcomes from './ExpectedOutcomes'
 import ProgramOpportunities from './ProgramOpportunities'
 
-function TestJournalContent(props) {
+function MyTrainingContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
   let [videoWatchData, setVideoWatchData] = useState([])
@@ -407,7 +407,7 @@ function TestJournalContent(props) {
     setSelectedTask({ task, index })
     setSelectedTaskIndex(index)
   }
-  console.log(journal)
+  console.log(journal?.content)
   return (
     <>
       <>
@@ -1127,6 +1127,6 @@ function TestJournalContent(props) {
   )
 }
 
-export default injectIntl(TestJournalContent, {
+export default injectIntl(MyTrainingContent, {
   withRef: false
 })

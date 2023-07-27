@@ -39,7 +39,7 @@ const SelectTaskButton = (props) => {
             props.task?.title?.split(' ')[2]?.toUpperCase() ?? ''
           } ${props.task?.title?.split(' ')[3]?.toUpperCase() ?? ''} ${
             props.task?.title?.split(' ')[4]?.toUpperCase() ?? ''
-          }`}
+          } ${props.task?.title?.split(' ')[5]?.toUpperCase() ?? ''}`}
         </span>
       </div>
     </div>

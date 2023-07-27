@@ -6,7 +6,7 @@ import {
   useHistory,
   useRouteMatch
 } from 'react-router-dom'
-import TestJournalContent from './TestJournalContent'
+import TestJournalContent from './MyTrainingContent'
 import searchIcon from '../../assets/images/search-icon.png'
 import { FormattedMessage } from 'react-intl'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -16,8 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown, faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment/moment'
 
-const TestJournalType = (props) => {
-  console.log('props', props)
+const MyTrainingType = (props) => {
   const [journals, setJournals] = useState([])
   const [weeks, setWeeks] = useState([])
   const match = useRouteMatch()
@@ -409,4 +408,4 @@ const TestJournalType = (props) => {
   )
 }
 
-export default TestJournalType
+export default MyTrainingType

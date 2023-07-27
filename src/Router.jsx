@@ -233,17 +233,21 @@ function Router(props) {
                 component={(props) => <TestJournal {...props} category="hs1" />}
               />{' '}
               <Route
+                path="/new-hs2-journal/"
+                component={(props) => <TestJournal {...props} category="hs2" />}
+              />{' '}
+              <Route
+                path="/hs3-hs4-journal/"
+                component={(props) => (
+                  <TestJournal {...props} category="hs3&hs4" />
+                )}
+              />
+              <Route
                 path="/financial-literacy/"
                 component={(props) => (
                   <TestJournal {...props} category="financial-literacy" />
                 )}
               />{' '}
-              <Route
-                path="/new-hs2-journal/"
-                component={(props) => (
-                  <TestJournal {...props} category="new-hs2" />
-                )}
-              />
               <Route
                 path="/new-hs1-journal/:type/"
                 component={(props) => (
@@ -281,6 +285,22 @@ function Router(props) {
               <Route
                 path="/hs4-journal/"
                 component={(props) => <LtsJournal {...props} category="hs4" />}
+              />
+              <Route
+                path="/student-lts/"
+                component={(props) => <LtsJournal {...props} category="student-lts" />}
+              />
+              <Route
+                path="/student-wellnes/"
+                component={(props) => <LtsJournal {...props} category="student-wellnes" />}
+              />
+              <Route
+                path="/student-personal-finance/"
+                component={(props) => <LtsJournal {...props} category="student-personal-finance" />}
+              />
+              <Route
+                path="/student-leadership/"
+                component={(props) => <LtsJournal {...props} category="student-leadership" />}
               />
               <Route
                 path="/market-ready/"
@@ -331,7 +351,7 @@ function Router(props) {
               />
               <Route
                 exact
-                path="/edit-journals2/:journalId"
+                path="/edit-journals2/:type/:journalId"
                 component={JournalsManagement2}
               />
               <Route

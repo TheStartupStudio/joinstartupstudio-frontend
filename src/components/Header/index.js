@@ -9,7 +9,7 @@ import {
   changeSidebarState,
   getAllNotes,
   getAllPodcast,
-  updateTnC,
+  updateTnC
 } from '../../redux'
 // import Language from '../Language'
 import ContactUsModal from '../Modals/contactUsModal'
@@ -122,16 +122,16 @@ function Header(props) {
   useEffect(() => {
     socket?.emit('newNotificationUser', {
       name: user.name,
-      id: user.id,
+      id: user.id
     })
 
     socket?.on('getNotification', (data) => {
       setNotifications((notifications) => [
         {
           ...data.notification,
-          Sender: { ...data.Sender },
+          Sender: { ...data.Sender }
         },
-        ...notifications,
+        ...notifications
       ])
       setUnreadNotifications(
         (unreadNotifications) => Number(unreadNotifications) + 1
@@ -164,7 +164,7 @@ function Header(props) {
       // dispatch(getAllPodcast({}))
       dispatch(
         getAllNotes({
-          userId: user.sub,
+          userId: user.sub
         })
       )
     },
@@ -219,7 +219,7 @@ function Header(props) {
     let params = {
       email: currentUser.attributes.email,
       universityCode: currentUser.attributes['custom:universityCode'],
-      language: currentLanguage,
+      language: currentLanguage
     }
     setUserMessage('user.sending_verification_email')
     await axiosInstance
@@ -281,7 +281,7 @@ function Header(props) {
             id="sidebarCollapse"
             className="btn"
             style={{
-              backgroundColor: '#01c5d1',
+              backgroundColor: '#01c5d1'
             }}
             onClick={() => {
               handleMobileNavBar()
@@ -304,7 +304,7 @@ function Header(props) {
                     icon={faBell}
                     style={{
                       fontSize: '26px',
-                      color: '#333D3D',
+                      color: '#333D3D'
                     }}
                     className="nav-bell-icon pt-1"
                   />
@@ -328,20 +328,20 @@ function Header(props) {
                 onClick={() => setShowNotifications(false)}
                 style={{ display: 'inherit' }}
               >
-                <li className="nav-item my-auto">
-                  <NavLink
-                    className={`nav-link icon-menu px-2 me-2 my-auto`}
-                    to={'/my-connections'}
-                  >
-                    <FontAwesomeIcon
-                      icon={faUsers}
-                      style={{
-                        fontSize: '26px',
-                      }}
-                      className="pt-1"
-                    />
-                  </NavLink>
-                </li>
+                {/*<li className="nav-item my-auto">*/}
+                {/*  <NavLink*/}
+                {/*    className={`nav-link icon-menu px-2 me-2 my-auto`}*/}
+                {/*    to={'/my-connections'}*/}
+                {/*  >*/}
+                {/*    <FontAwesomeIcon*/}
+                {/*      icon={faUsers}*/}
+                {/*      style={{*/}
+                {/*        fontSize: '26px',*/}
+                {/*      }}*/}
+                {/*      className="pt-1"*/}
+                {/*    />*/}
+                {/*  </NavLink>*/}
+                {/*</li>*/}
                 <li className="nav-item spotlight-nav my-auto">
                   <NavLink
                     className={`nav-link icon-menu px-2 my-auto`}
@@ -523,7 +523,7 @@ function Header(props) {
             id="sidebarCollapse"
             className="btn"
             style={{
-              backgroundColor: '#01c5d1',
+              backgroundColor: '#01c5d1'
             }}
             onClick={() => {
               dispatch(changeSidebarState(!sideBarState))
@@ -559,7 +559,7 @@ function Header(props) {
                     icon={faBell}
                     style={{
                       fontSize: '26px',
-                      color: '#333D3D',
+                      color: '#333D3D'
                     }}
                     className="nav-bell-icon pt-1"
                   />
