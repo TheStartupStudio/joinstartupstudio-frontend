@@ -237,6 +237,9 @@ function LtsJournalContent(props) {
             {journal.entries &&
               journal.entries.map((entry) => (
                 <div className="journal-entries__entry" key={entry.id}>
+                  {entry.parentTitle && <div className="journal-entry__parent-title">
+                    <h5>{entry.parentTitle}</h5>  
+                  </div>}
                   <h5
                     className={
                       'journal-entries__entry-title' +
@@ -311,6 +314,8 @@ function LtsJournalContent(props) {
                       </a>
                     </div>
                   </div>
+                  {entry.contentAfter && <div className='page-card__content-description journal-entry__content-after' dangerouslySetInnerHTML={{
+                      __html: entry.contentAfter}}></div>}
                 </div>
               ))}
           </div>
