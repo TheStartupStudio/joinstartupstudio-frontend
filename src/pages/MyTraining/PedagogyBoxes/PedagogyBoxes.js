@@ -22,14 +22,16 @@ const PedagogyBoxes = (props) => {
       {/*{props.containsTitle ?? <StepsTitle task={props.task} />}*/}
 
       <Boxes
-        selectedStepIndex={props.selectedStepIndex}
-        steps={props?.boxes}
-        selectStep={(step, index) => props.selectStep(step, index)}
+        selectedPedagogyIndex={props.selectedPedagogyIndex}
+        boxes={props?.boxes}
+        selectPedagogy={(pedagogy, index) =>
+          props.selectPedagogy(pedagogy, index)
+        }
       />
 
       <BoxContent
         handleOpenPopup={() => props.handleOpenPopup()}
-        selectedStep={props.selectedStep}
+        selectedPedagogy={props.selectedPedagogy}
       />
     </>
   )

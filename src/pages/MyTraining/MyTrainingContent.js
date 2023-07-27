@@ -11,6 +11,105 @@ import './MyTrainingContent.css'
 import PedagogyBoxes from './PedagogyBoxes/PedagogyBoxes'
 import AccordionItemWrapper from '../LtsJournal/AccordionItemWrapper'
 import StepsBox from '../LtsJournal/Steps/StepsBox'
+import CoreVectorsImage from '../../assets/images/CoreVectors - LTS-1200px.png'
+
+const WelcomeToTraining = () => {
+  return (
+    <div
+      style={{
+        backgroundColor: '#fff',
+        padding: '40px 20px'
+      }}
+    >
+      <div
+        style={{
+          borderBottom: '1px solid #e3e3e3',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 15,
+          paddingBottom: 30
+        }}
+      >
+        <div
+          style={{
+            textAlign: 'center',
+            font: 'normal normal normal 25px/17px Montserrat',
+            letterSpacing: 1,
+            color: '#333D3D'
+          }}
+        >
+          Understanding{' '}
+          <span
+            style={{
+              textAlign: 'center',
+              font: 'normal normal bold 25px/17px Montserrat',
+              letterSpacing: 1,
+              color: '#51C7DF'
+            }}
+          >
+            OUR MISSION
+          </span>
+        </div>
+        <div
+          style={{
+            textAlign: 'center',
+            font: 'normal normal normal 14px/17px Montserrat',
+            letterSpacing: 0.56,
+            color: '#333D3D'
+          }}
+        >
+          Our mission is to provide education a solution capable of transforming
+          classrooms so students can discover who they are, what they can do,
+          and how they can prove it.
+        </div>
+        <div
+          style={{
+            textAlign: 'center',
+            font: 'normal normal normal 16px/17px Montserrat',
+            letterSpacing: 0.64,
+            color: '#FF3399'
+          }}
+        >
+          Learn to Start has been built{' '}
+          <span style={{ fontWeight: 'bold' }}>FROM</span> the markets,{' '}
+          <span style={{ fontWeight: 'bold' }}>FOR</span> education.
+        </div>
+      </div>
+      <div
+        style={{
+          padding: '30px 0',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 15
+        }}
+      >
+        <div
+          style={{
+            textAlign: 'center',
+            font: 'normal normal bold 25px/17px Montserrat',
+            letterSpacing: 1,
+            color: '#51C7DF'
+          }}
+        >
+          ONE POWERFUL SOLUTION
+        </div>
+        <div
+          style={{
+            textAlign: 'center',
+            font: 'normal normal normal 20px/17px Montserrat',
+            letterSpacing: 0.8,
+            color: '#333D3D'
+          }}
+        >
+          Five Critical Parts
+        </div>
+        <div>
+          <img style={{ width: '100%' }} src={CoreVectorsImage} />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function MyTrainingContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -22,48 +121,20 @@ function MyTrainingContent(props) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
   const [selectedStep, setSelectedStep] = useState(null)
+  const [selectedPedagogy, setSelectedPedagogy] = useState(null)
+  const [selectedPedagogyIndex, setSelectedPedagogyIndex] = useState(null)
   const [openPopup, setOpenPopup] = useState(false)
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
 
+  console.log(selectedPedagogy)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
     } else {
       setOpenAccordion(accordion)
     }
-  }
-
-  const [instructorDebrief, setInstructorDebrief] = useState({
-    checkbox1: false,
-    checkbox2: false,
-    checkbox3: false,
-    textEditorContent: '',
-    journalId: props.match.params.id
-  })
-
-  const newInstructorBriefData = {
-    checkbox1: instructorDebrief?.checkbox1,
-    checkbox2: instructorDebrief?.checkbox2,
-    checkbox3: instructorDebrief?.checkbox3,
-    textEditorContent: instructorDebrief?.textEditorContent
-  }
-  const onSubmitInstructorDebrief = (data) => {
-    axiosInstance
-      .post(`/ltsJournals/${props.match.params.id}/instructor-debrief`, {
-        ...data
-      })
-      .then((res) => {
-        const updatedInstructorDebriefData = res.data
-        setInstructorDebrief({
-          ...instructorDebrief,
-          checkbox1: updatedInstructorDebriefData.checkbox1,
-          checkbox2: updatedInstructorDebriefData.checkbox2,
-          checkbox3: updatedInstructorDebriefData.checkbox3,
-          textEditorContent: updatedInstructorDebriefData.textEditorContent
-        })
-      })
   }
 
   async function saveWatchData(data) {
@@ -84,7 +155,7 @@ function MyTrainingContent(props) {
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/tasks/${+props.match.params.id}`
+        `/my-training/${+props.match.params.id}`
       )
       return data
     } catch (err) {}
@@ -142,25 +213,11 @@ function MyTrainingContent(props) {
     } catch (err) {}
   }
 
-  const getInstructorDebriefData = async () => {
-    try {
-      let { data } = await axiosInstance.get(
-        `/ltsJournals/${+props.match.params.id}/instructor-debrief`
-      )
-      return data
-    } catch (e) {}
-  }
-
   function loadData() {
     setLoading(true)
-    Promise.all([
-      getJournal(),
-      getUserJournalEntries(),
-      getInstructorDebriefData()
-    ])
-      .then(([journalData, userJournalEntries, instructorDebriefData]) => {
+    Promise.all([getJournal(), getUserJournalEntries()])
+      .then(([journalData, userJournalEntries]) => {
         setJournal(journalData)
-        console.log(journalData)
 
         if (
           journalData.userEntry &&
@@ -178,19 +235,6 @@ function MyTrainingContent(props) {
         if (props.contentContainer && props.contentContainer.current) {
           props.contentContainer.current.scrollTop = 0
         }
-        if (journalData?.hasInstructorDebrief) {
-          const isInstructorDebrief =
-            Object.keys(instructorDebriefData)?.length > 1
-          if (isInstructorDebrief) {
-            setInstructorDebrief({
-              ...instructorDebrief,
-              checkbox1: instructorDebriefData.checkbox1,
-              checkbox2: instructorDebriefData.checkbox2,
-              checkbox3: instructorDebriefData.checkbox3,
-              textEditorContent: instructorDebriefData.textEditorContent
-            })
-          }
-        }
 
         setLoading(false)
       })
@@ -201,10 +245,9 @@ function MyTrainingContent(props) {
 
   function loadWeekData() {
     setLoading(true)
-    Promise.all([getUserJournalWeekEntries(), getInstructorDebriefData()])
-      .then(([journalData, userJournalEntries, instructorDebriefData]) => {
+    Promise.all([getUserJournalWeekEntries()])
+      .then(([journalData, userJournalEntries]) => {
         setJournal(journalData)
-        console.log(journalData)
         if (
           journalData.userEntry &&
           journalData.userEntry.length > 0 &&
@@ -217,19 +260,7 @@ function MyTrainingContent(props) {
           } catch (err) {}
         }
         setUserJournalEntries(userJournalEntries)
-        if (journalData?.hasInstructorDebrief) {
-          const isInstructorDebrief =
-            Object.keys(instructorDebriefData)?.length > 1
-          if (isInstructorDebrief) {
-            setInstructorDebrief({
-              ...instructorDebrief,
-              checkbox1: instructorDebriefData.checkbox1,
-              checkbox2: instructorDebriefData.checkbox2,
-              checkbox3: instructorDebriefData.checkbox3,
-              textEditorContent: instructorDebriefData.textEditorContent
-            })
-          }
-        }
+
         if (props.contentContainer && props.contentContainer.current) {
           props.contentContainer.current.scrollTop = 0
         }
@@ -326,13 +357,6 @@ function MyTrainingContent(props) {
       : [journal.video]
   ).filter(Boolean)
 
-  const handleChangeInstructorDebrief2 = (name, value) => {
-    const newInstructorDebrief = {
-      ...instructorDebrief,
-      [name]: value
-    }
-    setInstructorDebrief(newInstructorDebrief)
-  }
   const {
     Bold,
     Italic,
@@ -364,6 +388,11 @@ function MyTrainingContent(props) {
     setSelectedStepIndex(index)
   }
 
+  const selectPedagogyOption = (option, index) => {
+    setSelectedPedagogy(option)
+    setSelectedPedagogyIndex(index)
+  }
+
   const handleOpenPopup = () => {
     setOpenPopup(true)
   }
@@ -376,6 +405,11 @@ function MyTrainingContent(props) {
     setSelectedTask({ task, index })
     setSelectedTaskIndex(index)
   }
+
+  const trainingIndex = props.trainings.findIndex(
+    (training) => training.id === journal.id
+  )
+
   return (
     <>
       <>
@@ -469,19 +503,22 @@ function MyTrainingContent(props) {
                   isOpened={openAccordion === 'pedagogy'}
                   handleAccordionClick={() => handleAccordionClick('pedagogy')}
                   isExanded={isExpanded}
-                  title={'task breakdown'}
+                  title={'Lts Pedagogy'}
                 >
                   {openAccordion === 'pedagogy' && (
-                    <div className="accordion-content">
-                      <PedagogyBoxes
-                        containsTitle={false}
-                        boxes={journal?.pedagogy}
-                        selectStep={selectStep}
-                        selectedStepIndex={selectedStepIndex}
-                        handleOpenPopup={handleOpenPopup}
-                        selectedStep={selectedStep}
-                      />
-                    </div>
+                    <>
+                      {trainingIndex === 0 && <WelcomeToTraining />}
+                      <div className="accordion-content">
+                        <PedagogyBoxes
+                          containsTitle={false}
+                          boxes={journal?.pedagogyOptions}
+                          selectPedagogy={selectPedagogyOption}
+                          selectedPedagogyIndex={selectedPedagogyIndex}
+                          handleOpenPopup={handleOpenPopup}
+                          selectedPedagogy={selectedPedagogy}
+                        />
+                      </div>
+                    </>
                   )}
                 </AccordionItemWrapper>
               }
@@ -496,13 +533,13 @@ function MyTrainingContent(props) {
                     handleAccordionClick('implementationSteps')
                   }
                   isExanded={isExpanded}
-                  title={'task breakdown'}
+                  title={'Lts Implementation'}
                 >
                   {openAccordion === 'implementationSteps' && (
                     <div className="accordion-content">
                       <StepsBox
                         containsTitle={false}
-                        steps={journal?.steps}
+                        steps={journal?.implementationSteps}
                         selectStep={selectStep}
                         selectedStepIndex={selectedStepIndex}
                         handleOpenPopup={handleOpenPopup}

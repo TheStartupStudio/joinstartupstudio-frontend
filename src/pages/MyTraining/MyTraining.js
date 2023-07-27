@@ -22,16 +22,18 @@ const MyTraining = (props) => {
   const history = useHistory()
   let [journalActive, setJournalActive] = useState(false)
 
-  async function getJournals2(redir = true) {
+  async function getTrainings(redir = true) {
     try {
-      let { data } = await axiosInstance.get(`/ltsJournals/tasks`, {
+      // const response = await axiosInstance.get('/my-training/')
+      // setTrainings((prevJournals) => [...prevJournals, ...response.data.data])
+      let { data } = await axiosInstance.get(`/my-training/`, {
         params: {
           category: props.category,
 
           platform: props.category === 'market-ready' ? 'student' : 'instructor'
         }
       })
-      setTrainings([...data].sort((a, b) => a.id - b.id))
+      setTrainings([...data.data].sort((a, b) => a.id - b.id))
       // if (history.location.pathname.includes('task')) {
       //   if (data.length > 0 && redir) {
       //     if (data[0].children && data[0].children.length > 0) {
@@ -48,11 +50,11 @@ const MyTraining = (props) => {
       const taskId = trainings.length > 0 ? trainings[0].id : ''
       history.push(`/${props.match?.url?.split('/')[1]}/${taskId}`)
     }
-  }, [props.match.params.type, trainings])
+  }, [trainings])
 
-  // useEffect(() => {
-  //   getJournals2()
-  // }, [props.match.params.type])
+  useEffect(() => {
+    getTrainings()
+  }, [])
 
   const [filteredJournals, setFilteredJournals] = useState(trainings)
 
@@ -125,7 +127,7 @@ const MyTraining = (props) => {
                   className="page-card__content styled-scrollbar col-lg-8 col-md-7"
                   // ref={contentContainer}
                 >
-                  {props.match.params.type === 'task' && (
+                  {
                     <Switch>
                       <Route
                         path={`${props.match.url}/:id`}
@@ -133,7 +135,7 @@ const MyTraining = (props) => {
                           <>
                             <MyTrainingContent
                               {...renderprops}
-                              journals={trainings}
+                              trainings={trainings}
                               backRoute={props.match.url}
                               view={'task'}
                             />
@@ -141,7 +143,7 @@ const MyTraining = (props) => {
                         )}
                       />
                     </Switch>
-                  )}
+                  }
                 </div>{' '}
                 {/* page-card__content */}
                 <div

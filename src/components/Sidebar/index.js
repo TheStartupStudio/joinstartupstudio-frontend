@@ -339,31 +339,28 @@ function Sidebar(props) {
                 data-parent="#side-menu-main"
               >
                 <li>
-                  {/*<NavLink*/}
-                  {/*  to={'/not-found-route'}*/}
-                  {/*  activeClassName="sidenav active"*/}
-                  {/*>*/}
-                  {/*  <div className="d-flex" style={{ alignItems: 'center' }}>*/}
-                  {/*    <div className="ms-4 ps-2 py-1 text-uppercase">*/}
-                  {/*      My training*/}
-                  {/*    </div>*/}
-                  {/*  </div>*/}
-                  {/*</NavLink>*/}
-                  <div
-                    className="sidenav"
-                    style={{
-                      marginLeft: '24px !important',
-                      fontSize: 12,
-                      marginTop: 6,
-                      cursor: 'pointer'
-                    }}
-                  >
+                  <NavLink to={'/my-training'} activeClassName="sidenav active">
                     <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1 text-uppercase ">
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
                         My training
                       </div>
                     </div>
-                  </div>
+                  </NavLink>
+                  {/*<div*/}
+                  {/*  className="sidenav"*/}
+                  {/*  style={{*/}
+                  {/*    marginLeft: '24px !important',*/}
+                  {/*    fontSize: 12,*/}
+                  {/*    marginTop: 6,*/}
+                  {/*    cursor: 'pointer'*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+                  {/*    <div className="ms-4 ps-2 py-1 text-uppercase ">*/}
+                  {/*      My training*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*</div>*/}
                 </li>
                 <li>
                   <NavLink
@@ -435,9 +432,7 @@ function Sidebar(props) {
                       icon={faFolder}
                     />
                     <div className="flex-grow-1 ms-1">
-                      <span className={'text-uppercase'}>
-                        STUDENT JOURNALS
-                      </span>
+                      <span className={'text-uppercase'}>STUDENT JOURNALS</span>
                     </div>
                     <FontAwesomeIcon
                       icon={faAngleDown}
@@ -456,10 +451,7 @@ function Sidebar(props) {
                 data-parent="#side-menu-main"
               >
                 <li>
-                  <NavLink
-                    to={'/student-lts'}
-                    activeClassName="sidenav active"
-                  >
+                  <NavLink to={'/student-lts'} activeClassName="sidenav active">
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1 text-uppercase">
                         LTS JOURNAL
