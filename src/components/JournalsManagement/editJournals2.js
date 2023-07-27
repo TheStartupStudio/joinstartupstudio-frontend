@@ -20,20 +20,11 @@ export default function EditJournals2(props) {
   const [journals, setJournals] = useState([])
   const [journalOptions, setJournalOptions] = useState([])
   const [selectedJournal, setSelectedJournal] = useState({})
-  const [updatedJournal, setUpdatedJournal] = useState()
   const [loading, setLoading] = useState(false)
   const [fetchingJournals, setFetchingJournals] = useState(true)
-  const [selectedImage, setSelectedImage] = useState(null)
   const [imageUploadingLoader, setImageUploadingLoader] = useState(false)
   const [uploadedImageUrl, setUploadedImageUrl] = useState(false)
-  const [highestOrder, setHighestOrder] = useState(null)
-  const [nextOrder, setNextOrder] = useState(null)
   const randomUUID = uuidv4()
-  console.log(selectedJournal?.value?.implementationSteps)
-  const handleSetHighestOrder = (order) => {
-    // setHighestOrder(order)
-    setNextOrder(+order + 1)
-  }
 
   const breakdownInitialState = [
     {
@@ -92,7 +83,7 @@ export default function EditJournals2(props) {
     setBreakdowns(
       e.value?.breakdowns
         ?.slice()
-        ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)
+        ?.sort((a, b) => a?.breakdownOrder - b?.breakdownOrder)
     )
   }
 
@@ -162,6 +153,7 @@ export default function EditJournals2(props) {
     }
   }
   const { journalId, type } = useParams()
+  const params = useParams()
 
   const handleSubmit = async () => {
     setLoading(true)
@@ -195,6 +187,34 @@ export default function EditJournals2(props) {
         toast.error('An error occurred, please try again!')
         setLoading(false)
       })
+
+    {
+      await axiosInstance
+        .put(`my-training/${journalId}`, {
+          openingText: selectedJournal?.value?.paragraph,
+          title: selectedJournal?.value?.title,
+          implementationSteps: selectedJournal?.value?.implementationSteps,
+          pedagogyOptions: selectedJournal?.value?.pedagogyOptions
+          // type: selectedJournal?.value?.type,
+        })
+        .then((res) => {
+          setJournals(
+            journals.map((journal) =>
+              res.data.id === journal.id ? res.data : journal
+            )
+          )
+          setSelectedJournal((prevState) => ({
+            ...prevState,
+            value: res.data?.updatedJournal?.journal
+          }))
+          toast.success('Journal modified successfully!')
+          setLoading(false)
+        })
+        .catch((err) => {
+          toast.error('An error occurred, please try again!')
+          setLoading(false)
+        })
+    }
   }
 
   const imageUpload = async (image) => {
@@ -252,103 +272,6 @@ export default function EditJournals2(props) {
     )
   }
 
-  const getHighestOrder = (customContent) => {
-    let flattenedArray = []
-
-    for (let key in customContent) {
-      if (Array.isArray(customContent[key])) {
-        flattenedArray = flattenedArray.concat(customContent[key])
-      }
-    }
-
-    let highestOrder = 0
-
-    flattenedArray.forEach((item) => {
-      if (item.order > highestOrder) {
-        highestOrder = item.order
-      }
-    })
-
-    let order = null
-    if (highestOrder === 0) {
-      order = 1
-    } else {
-      order = highestOrder + 1
-    }
-    return order
-  }
-  const addParagraph = (breakdownIndex) => {
-    const highestOrder = getHighestOrder(
-      breakdowns[breakdownIndex].customContent
-    )
-
-    const newParagraph = {
-      paragraph: '',
-      type: 'paragraph',
-      // order: +nextOrder,
-      order: highestOrder,
-      uuid: randomUUID
-    }
-    setNextOrder((prev) => prev + 1)
-
-    setBreakdowns((prevState) => {
-      const updatedBreakdowns = [...prevState]
-      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-        updatedBreakdowns[breakdownIndex].customContent = {}
-      }
-      const newParagraphs =
-        updatedBreakdowns[breakdownIndex]?.customContent?.paragraphs
-
-      if (!newParagraphs) {
-        updatedBreakdowns[breakdownIndex].customContent.paragraphs = [
-          { newParagraph }
-        ]
-      }
-      newParagraphs?.push(newParagraph)
-      // debugger
-      return updatedBreakdowns
-    })
-  }
-
-  const addPopupButton = (breakdownIndex) => {
-    const highestOrder = getHighestOrder(
-      breakdowns[breakdownIndex].customContent
-    )
-    const newButton = {
-      title: '',
-      popupContent: '',
-      position: 'end',
-      type: 'popupButton',
-      // order: nextOrder,
-      order: highestOrder,
-      uuid: randomUUID
-    }
-    setNextOrder((prev) => prev + 1)
-
-    setBreakdowns((prevState) => {
-      const updatedBreakdowns = [...prevState]
-      if (!updatedBreakdowns[breakdownIndex]?.customContent) {
-        updatedBreakdowns[breakdownIndex].customContent = {
-          popupButtons: []
-        }
-      }
-      const buttons =
-        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons
-
-      if (!buttons) {
-        updatedBreakdowns[breakdownIndex].customContent.popupButtons = [
-          newButton
-        ]
-      } else {
-        updatedBreakdowns[breakdownIndex]?.customContent?.popupButtons?.push(
-          newButton
-        )
-      }
-
-      return updatedBreakdowns
-    })
-  }
-
   const handleChangeSteps = (index, name, value) => {
     let newJournal = { ...selectedJournal }
     let newSteps = [...selectedJournal?.value?.steps]
@@ -356,6 +279,24 @@ export default function EditJournals2(props) {
     newStep[name] = value
     newSteps[index] = newStep
     newJournal.steps = newSteps
+    setSelectedJournal(newJournal)
+  }
+  const handleChangeImplementationSteps = (index, name, value) => {
+    let newJournal = { ...selectedJournal }
+    let newSteps = [...selectedJournal?.value?.implementationSteps]
+    let newStep = newSteps[index]
+    newStep[name] = value
+    newSteps[index] = newStep
+    newJournal.implementationSteps = newSteps
+    setSelectedJournal(newJournal)
+  }
+  const handleChangePedagogyOptions = (index, name, value) => {
+    let newJournal = { ...selectedJournal }
+    let newSteps = [...selectedJournal?.value?.pedagogyOptions]
+    let newStep = newSteps[index]
+    newStep[name] = value
+    newSteps[index] = newStep
+    newJournal.pedagogyOptions = newSteps
     setSelectedJournal(newJournal)
   }
 
@@ -585,20 +526,48 @@ export default function EditJournals2(props) {
                     type="text"
                     className="form-control"
                     value={step?.title}
-                    // onChange={(e) =>
-                    //   handleChangeProgramOpportunities(
-                    //     index,
-                    //     'title',
-                    //     e.target.value
-                    //   )
-                    // }
+                    onChange={(e) =>
+                      handleChangeImplementationSteps(
+                        index,
+                        'title',
+                        e.target.value
+                      )
+                    }
                   />
                   <div>Step content</div>
                   <KendoTextEditor
                     value={step?.stepContent}
-                    // handleChange={(e) =>
-                    //   handleChangeSteps(index, 'stepContent', e)
-                    // }
+                    handleChange={(e) =>
+                      handleChangeImplementationSteps(index, 'stepContent', e)
+                    }
+                  />
+                </>
+              )
+            })}
+          {selectedJournal?.value?.pedagogyOptions &&
+            selectedJournal?.value?.pedagogyOptions?.map((step, index) => {
+              return (
+                <>
+                  <h2>Pedagogy Option {index + 1}</h2>
+                  <div>Pedagogy box title</div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={step?.title}
+                    onChange={(e) =>
+                      handleChangePedagogyOptions(
+                        index,
+                        'title',
+                        e.target.value
+                      )
+                    }
+                  />
+                  <div>Step box content</div>
+                  <KendoTextEditor
+                    value={step?.content}
+                    handleChange={(e) =>
+                      handleChangePedagogyOptions(index, 'content', e)
+                    }
                   />
                 </>
               )
