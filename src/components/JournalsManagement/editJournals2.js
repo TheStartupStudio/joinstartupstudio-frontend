@@ -153,42 +153,41 @@ export default function EditJournals2(props) {
     }
   }
   const { journalId, type } = useParams()
-  const params = useParams()
 
   const handleSubmit = async () => {
     setLoading(true)
-    await axiosInstance
-      .put(`LtsJournals/${journalId}/editJournal2`, {
-        breakdowns: breakdowns,
-        paragraph: selectedJournal?.value?.paragraph,
-        title: selectedJournal?.value?.title,
-        type: selectedJournal?.value?.type,
-        customContent: selectedJournal?.value?.customContent,
-        steps: selectedJournal?.value?.steps,
-        ltsConnection: selectedJournal?.value?.ltsConnection,
-        curriculumOverview: selectedJournal?.value?.curriculumOverview,
-        programOpportunities: selectedJournal?.value?.programOpportunities,
-        expectedOutcomes: selectedJournal?.value?.expectedOutcomes
-      })
-      .then((res) => {
-        setJournals(
-          journals.map((journal) =>
-            res.data.id === journal.id ? res.data : journal
+    if (!type.includes('my-training')) {
+      await axiosInstance
+        .put(`LtsJournals/${journalId}/editJournal2`, {
+          breakdowns: breakdowns,
+          paragraph: selectedJournal?.value?.paragraph,
+          title: selectedJournal?.value?.title,
+          type: selectedJournal?.value?.type,
+          customContent: selectedJournal?.value?.customContent,
+          steps: selectedJournal?.value?.steps,
+          ltsConnection: selectedJournal?.value?.ltsConnection,
+          curriculumOverview: selectedJournal?.value?.curriculumOverview,
+          programOpportunities: selectedJournal?.value?.programOpportunities,
+          expectedOutcomes: selectedJournal?.value?.expectedOutcomes
+        })
+        .then((res) => {
+          setJournals(
+            journals.map((journal) =>
+              res.data.id === journal.id ? res.data : journal
+            )
           )
-        )
-        setSelectedJournal((prevState) => ({
-          ...prevState,
-          value: res.data?.updatedJournal?.journal
-        }))
-        toast.success('Journal modified successfully!')
-        setLoading(false)
-      })
-      .catch((err) => {
-        toast.error('An error occurred, please try again!')
-        setLoading(false)
-      })
-
-    {
+          setSelectedJournal((prevState) => ({
+            ...prevState,
+            value: res.data?.updatedJournal?.journal
+          }))
+          toast.success('Journal modified successfully!')
+          setLoading(false)
+        })
+        .catch((err) => {
+          toast.error('An error occurred, please try again!')
+          setLoading(false)
+        })
+    } else {
       await axiosInstance
         .put(`my-training/${journalId}`, {
           openingText: selectedJournal?.value?.paragraph,
