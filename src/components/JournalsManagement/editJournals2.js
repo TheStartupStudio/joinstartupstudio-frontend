@@ -190,7 +190,7 @@ export default function EditJournals2(props) {
     } else {
       await axiosInstance
         .put(`my-training/${journalId}`, {
-          openingText: selectedJournal?.value?.paragraph,
+          openingText: selectedJournal?.value?.openingText,
           title: selectedJournal?.value?.title,
           implementationSteps: selectedJournal?.value?.implementationSteps,
           pedagogyOptions: selectedJournal?.value?.pedagogyOptions
@@ -239,6 +239,14 @@ export default function EditJournals2(props) {
   }
 
   const handleJournalUpdate = (event) => {
+    const { name, value } = event.target
+
+    setSelectedJournal((prevState) => ({
+      ...prevState,
+      value: { ...prevState.value, [name]: value }
+    }))
+  }
+  const handleTrainingsUpdate = (event) => {
     const { name, value } = event.target
 
     setSelectedJournal((prevState) => ({
@@ -482,16 +490,36 @@ export default function EditJournals2(props) {
             value={selectedJournal?.value?.title}
             onChange={handleJournalUpdate}
           />
-          <div>Paragraph</div>
-          <textarea
-            className="p-2 w-100 mt-2"
-            value={selectedJournal?.value?.paragraph}
-            onChange={handleJournalUpdate}
-            name="paragraph"
-            id=""
-            cols="30"
-            rows="4"
-          ></textarea>
+          {selectedJournal?.value?.paragraph && (
+            <>
+              <div>Paragraph</div>
+
+              <textarea
+                className="p-2 w-100 mt-2"
+                value={selectedJournal?.value?.paragraph}
+                onChange={handleJournalUpdate}
+                name="paragraph"
+                id=""
+                cols="30"
+                rows="4"
+              ></textarea>
+            </>
+          )}{' '}
+          {selectedJournal?.value?.openingText && (
+            <>
+              <div>Opening text</div>
+
+              <textarea
+                className="p-2 w-100 mt-2"
+                value={selectedJournal?.value?.openingText}
+                onChange={handleTrainingsUpdate}
+                name="openingText"
+                id=""
+                cols="30"
+                rows="4"
+              ></textarea>
+            </>
+          )}
           {selectedJournal?.value &&
             selectedJournal?.value?.steps?.map((step, index) => {
               return (
@@ -567,6 +595,7 @@ export default function EditJournals2(props) {
                     handleChange={(e) =>
                       handleChangePedagogyOptions(index, 'content', e)
                     }
+                    minHeight={100}
                   />
                 </>
               )

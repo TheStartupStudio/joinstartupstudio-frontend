@@ -473,7 +473,7 @@ function MyTrainingContent(props) {
             />
           </div>
         </div>
-        <div className={'journal-paragraph my-4'}>{journal?.paragraph}</div>
+        <div className={'journal-paragraph my-4'}>{journal?.openingText}</div>
         <div className={'custom-breakdowns-container'}>
           {/*<div style={{ order: 0 }}>*/}
           {/*  {!loading &&*/}
