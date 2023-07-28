@@ -18,7 +18,7 @@ const WelcomeToTraining = () => {
     <div
       style={{
         backgroundColor: '#fff',
-        padding: '40px 20px'
+        padding: '40px 20px 10px 20px'
       }}
     >
       <div
@@ -35,7 +35,8 @@ const WelcomeToTraining = () => {
             textAlign: 'center',
             font: 'normal normal normal 25px/17px Montserrat',
             letterSpacing: 1,
-            color: '#333D3D'
+            color: '#333D3D',
+            lineHeight: 1
           }}
         >
           Understanding{' '}
@@ -77,7 +78,7 @@ const WelcomeToTraining = () => {
       </div>
       <div
         style={{
-          padding: '30px 0',
+          padding: '30px 0 0 0',
           display: 'flex',
           flexDirection: 'column',
           gap: 15
@@ -88,7 +89,8 @@ const WelcomeToTraining = () => {
             textAlign: 'center',
             font: 'normal normal bold 25px/17px Montserrat',
             letterSpacing: 1,
-            color: '#51C7DF'
+            color: '#51C7DF',
+            lineHeight: 1
           }}
         >
           ONE POWERFUL SOLUTION
@@ -128,7 +130,6 @@ function MyTrainingContent(props) {
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
 
-  console.log(selectedPedagogy)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -508,7 +509,12 @@ function MyTrainingContent(props) {
                   {openAccordion === 'pedagogy' && (
                     <>
                       {trainingIndex === 0 && <WelcomeToTraining />}
-                      <div className="accordion-content">
+                      <div
+                        className="accordion-content"
+                        style={{
+                          padding: trainingIndex === 0 ? '0 20px' : '30px 55px'
+                        }}
+                      >
                         <PedagogyBoxes
                           containsTitle={false}
                           boxes={journal?.pedagogyOptions}

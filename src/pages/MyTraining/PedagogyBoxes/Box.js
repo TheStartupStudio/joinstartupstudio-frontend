@@ -1,11 +1,22 @@
 import React from 'react'
+import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 const Box = (props) => {
+  const windowWidth = useWindowWidth()
+  const boxWidth = () => {
+    if (windowWidth > 1150) {
+      return '85%'
+    } else if (windowWidth > 800 && windowWidth < 1150) {
+      return '95%'
+    } else if (windowWidth < 800) {
+      return '95%'
+    }
+  }
   return (
     <>
       <div
         style={{
-          width: 95,
+          width: boxWidth() ?? 95,
           height: 50,
           objectFit: 'contain',
           cursor: 'pointer',
@@ -14,6 +25,8 @@ const Box = (props) => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          textAlign: 'center',
+          fontWeight: 600,
           backgroundColor:
             props.index === props.selectedPedagogyIndex ? '#51C7DF' : '#fff',
           color:
