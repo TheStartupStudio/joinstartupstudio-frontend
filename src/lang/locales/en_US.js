@@ -485,7 +485,7 @@ const EnLangs = {
   'portfolio.add_new_Certified_Credential_ID': 'Credential ID',
   'portfolio.add_new_Certified_Credential URL': 'Credential URL',
   'portfolio.Add_Licenses_or_Certifications': 'Add Licenses or Certifications',
-  'portfolio.all_field_needet': 'All fields are needed',
+  'portfolio.all_field_needed': 'All fields are needed',
   'portfolio.EDIT_LICENSES_CERTIFICATIONS': 'EDIT LICENSES & CERTIFICATIONS',
   'portfolio.file_type':
     'File Types: .png or .jpg only Dimensions: 150 x 150px Size: 500KB max.',
@@ -593,17 +593,17 @@ const EnLangs = {
   'my_notes.add_button': 'ADD NEW NOTE',
   'my_notes.notes_title': 'Note Title',
   'my_notes.notes_title_neddet': 'You must insert a title',
-  'my_notes.notes_title_text': 'Notes Text needet',
+  'my_notes.notes_title_text': 'Notes Text needed',
   'my_notes.notes_modal_body': 'Write your note here ...',
-  'my_notes.note_title_needet': 'Note title needet',
-  'my_notes.note_description_needet': 'Note description needet',
+  'my_notes.note_title_needed': 'Note title needed',
+  'my_notes.note_description_needed': 'Note description needed',
   'my_notes.add_a_new_note': 'Add a new note',
 
   // Instructor notes
   'instructor_notes.success_added': 'Your note has been saved successfully',
   'instructor_notes.notes_title': 'Add a subject',
   'instructor_notes.notes_title_neddet': 'You must insert a title',
-  'instructor_notes.notes_title_text': 'Notes Text needet',
+  'instructor_notes.notes_title_text': 'Notes Text needed',
 
   //My journals
   'my_journal.lts_title': 'MY LEARN TO START JOURNAL',
@@ -965,7 +965,15 @@ const EnLangs = {
   'calendar_task-events.start_date_of_event': 'Start date of event',
   'calendar_task-events.end_date_of_event': 'End date of event',
   'calendar_task-events.start_time_of_event': 'Start time of event',
-  'calendar_task-events.end_time_of_event': 'End time of event'
+  'calendar_task-events.end_time_of_event': 'End time of event',
+  'student_journals.student-lts_title': 'LEARN TO START JOURNAL',
+  'student_journals.student-lts_description': 'The Learn to Start Model is a guide in the lifelong process of developing the answers to the only three questions that matter: Who am I? What can I do? How do I prove it? You will use this journal to guide your development to those answers.',
+  'student_journals.student-wellnes_title': 'WELLNESS JOURNAL',
+  'student_journals.student-wellnes_description': 'Wellness is planning, acting, and responding with self-awareness with the intent of becoming your best self. Use this journal to reflect on your wellness journey and treat it as a lifelong process.',
+  'student_journals.student-personal-finance_title': 'PERSONAL FINANCE JOURNAL',
+  'student_journals.student-personal-finance_description': 'In order to be market-ready, you must be financially literate. This journal will help you gain the knowledge and skills you need to make informed financial decisions.',
+  'student_journals.student-leadership_title': 'LEADERSHIP JOURNAL',
+  'student_journals.student-leadership_description': 'Leadership comes in many forms but the foundation is leading yourself first. Use this journal to inspire your development as a leader.',
 }
 
 export default EnLangs

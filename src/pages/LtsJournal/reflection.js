@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
-import { faPencilAlt, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faInfo, faInfoCircle, faPencilAlt, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import IntlMessages from '../../utils/IntlMessages'
@@ -15,6 +15,7 @@ import { JOURNALS } from '../../utils/constants'
 import { useHistory } from 'react-router-dom'
 import NotSavedModal from '../../components/Modals/notSavedNoteModal'
 import _ from 'lodash'
+import { ReflectionInfoBox } from '../../components/Modals/ReflectionInfoBox'
 
 function LtsJournalReflection(props) {
   const journalId = props.journal.id
@@ -34,6 +35,9 @@ function LtsJournalReflection(props) {
   const [showNotSavedModal, setShowNotSavedModal] = useState(false)
   const [nextTarget, setNextTarget] = useState(null)
   const [contentDidUpdate, setContentDidUpdate] = useState(false)
+  const [showInfoBoxModal, setShowInfoBoxModal] = useState(false)
+  const [infoBoxTitle, setInfoBoxTitle] = useState(null)
+  const [infoBoxContent, setInfoBoxContent] = useState(null)
 
   const closeModal = () => setShowNotSavedModal(false)
 
@@ -238,6 +242,13 @@ function LtsJournalReflection(props) {
           </div>
         </div>
         <div className="journal-entries__entry-reflection-body">
+          <span className='journal-entries__entry-reflection-body_info-btn' onClick={() => {
+            setInfoBoxTitle(props.journalEntry.title);
+            setInfoBoxContent(props.journalEntry.popupContent)
+            setShowInfoBoxModal(true)
+          }}>
+            <FontAwesomeIcon icon={faInfoCircle} />
+          </span>
           {!entryId || editing ? (
             <ReactQuill
               placeholder={''}
@@ -285,6 +296,12 @@ function LtsJournalReflection(props) {
         onHide={closeModal}
         continue={() => continueWithoutSaving(nextTarget)}
       />{' '}
+      {showInfoBoxModal && <ReflectionInfoBox
+        show={showInfoBoxModal}
+        onHide={() => setShowInfoBoxModal(false)}
+        title={infoBoxTitle}
+        content={infoBoxContent}
+      />}
     </>
   )
 }

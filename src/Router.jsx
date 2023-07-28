@@ -43,6 +43,9 @@ const MyCurriculum = React.lazy(() =>
 const MyCertificationGuide = React.lazy(() =>
   import('./pages/MyLearnToStartEDU/MyCertificationGuide/MyCertificationGuide')
 )
+const IamrCertificationGuide = React.lazy(() =>
+  import('./pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationGuide')
+)
 const EditPortfolio = React.lazy(() =>
   import('./pages/Portfolio/editPortfolio')
 )
@@ -133,6 +136,10 @@ function Router(props) {
               <Route
                 path="/my-certification-guide"
                 component={MyCertificationGuide}
+              />
+              <Route
+                path="/iamr-certification-guide"
+                component={IamrCertificationGuide}
               />
               <Route path="/my-students" component={MyStudents} />
               <Route path="/resources" component={Resources} />
@@ -275,6 +282,22 @@ function Router(props) {
               <Route
                 path="/hs4-journal/"
                 component={(props) => <LtsJournal {...props} category="hs4" />}
+              />
+              <Route
+                path="/student-lts/"
+                component={(props) => <LtsJournal {...props} category="student-lts" />}
+              />
+              <Route
+                path="/student-wellnes/"
+                component={(props) => <LtsJournal {...props} category="student-wellnes" />}
+              />
+              <Route
+                path="/student-personal-finance/"
+                component={(props) => <LtsJournal {...props} category="student-personal-finance" />}
+              />
+              <Route
+                path="/student-leadership/"
+                component={(props) => <LtsJournal {...props} category="student-leadership" />}
               />
               <Route
                 path="/market-ready/"

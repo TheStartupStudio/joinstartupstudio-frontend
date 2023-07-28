@@ -417,6 +417,93 @@ function Sidebar(props) {
                   </div>
                 </li>
               </div>
+              <li
+                className="dropdownMenuSidebarHover"
+                data-bs-toggle="collapse"
+                href="#studentJournals"
+                role="button"
+                aria-expanded="true"
+                aria-controls="studentJournals"
+              >
+                <a>
+                  <div
+                    className="d-flex w-100"
+                    style={{ alignItems: 'center' }}
+                  >
+                    <FontAwesomeIcon
+                      className="sidebar-icon me-2"
+                      icon={faFolder}
+                    />
+                    <div className="flex-grow-1 ms-1">
+                      <span className={'text-uppercase'}>
+                        STUDENT JOURNALS
+                      </span>
+                    </div>
+                    <FontAwesomeIcon
+                      icon={faAngleDown}
+                      className="me-2 me-md-0"
+                      style={{
+                        fontSize: '16px',
+                        color: '#333D3D'
+                      }}
+                    />
+                  </div>
+                </a>
+              </li>
+              <div
+                className="collapse"
+                id="studentJournals"
+                data-parent="#side-menu-main"
+              >
+                <li>
+                  <NavLink
+                    to={'/student-lts'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                        LTS JOURNAL
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/student-wellnes'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                        WELLNES JOURNAL
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/student-personal-finance'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase">
+                        PERSONAL FINANCE JOURNAL
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/student-leadership'}
+                    activeClassName="sidenav active"
+                  >
+                    <div className="d-flex" style={{ alignItems: 'center' }}>
+                      <div className="ms-4 ps-2 py-1 text-uppercase ">
+                        LEADERSHIP JOURNAL
+                      </div>
+                    </div>
+                  </NavLink>
+                </li>
+              </div>
               {/*<NavListParent*/}
               {/*  listName={'myLearnToStartEdu'}*/}
               {/*  listTitle={'My Learn To Start EDU'}*/}

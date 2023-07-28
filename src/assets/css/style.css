@@ -3531,15 +3531,20 @@ wave > wave:first-child {
 }
 
 .journal-entries__video {
-  /*float: right;*/
-  /*margin-left: 13px;*/
-  /*margin-bottom: 13px;*/
+  float: right;
+  margin-left: 13px;
+  margin-bottom: 13px;
 
-  /*max-width: 60%;*/
+  max-width: 60%;
   width: 100%;
   height: 100%;
-  max-width: 100%;
-  max-height: 100%;
+  /* max-width: 100%;
+  max-height: 100%; */
+}
+
+b,
+strong {
+  font-weight: bold !important;
 }
 
 @media (max-width: 500px) {
@@ -3706,6 +3711,7 @@ wave > wave:first-child {
   margin-left: 10px;
 }
 .journal-entries__entry-reflection-body {
+  position: relative;
 }
 .journal-entries__entry-reflection-body textarea,
 .journal-entries__entry-reflection-body-content {
@@ -3789,6 +3795,31 @@ wave > wave:first-child {
   display: none;
 }
 
+.journal-entry__parent-title {
+  padding: 6px;
+  margin: 20px 0 10px 0;
+  background: #51c7df;
+}
+.journal-entry__parent-title > * {
+  color: white;
+  margin: 0;
+}
+.journal-entry__content-after {
+  margin: 10px 0 20px 0;
+}
+.journal-entries__entry-reflection-body_info-btn {
+  position: absolute;
+  top: 4px;
+  right: 7px;
+  cursor: pointer;
+  color: #f764ae;
+}
+.reflection-infobox-modal h4 {
+  color: #f764ae;
+}
+.reflection-infobox-modal .accept-request-button {
+  margin-top: 20px;
+}
 /*
   Media Lightbox
 */
@@ -4270,14 +4301,16 @@ ul.sidebar-menu-item .collapse a {
 
 .accordion {
   /*border: 1px solid #ccc;*/
-  border: 1px solid #3C3C3C;
   margin-bottom: 10px;
   line-height: 15px;
   letter-spacing: 0.40px;
   color: #231f20;
   font-weight: 500;
-  background-color:#fff
+  /* background-color:#fff */
+}
 
+.accordion-borde {
+  border: 1px solid #3C3C3C;
 }
 
 .accordion-header {

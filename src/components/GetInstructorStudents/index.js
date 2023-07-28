@@ -113,7 +113,7 @@ const StudentOfInstructors = (props) => {
 
   const handleSubmitNotification = () => {
     try {
-      socket?.emit('sendNotifications', {
+      socket?.emit('sendNotification', {
         notifications: notifications,
         sender: loggedUser,
         receiver: null,

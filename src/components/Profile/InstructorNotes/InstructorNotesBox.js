@@ -118,7 +118,7 @@ const InstructorNotesBox = (props) => {
                   <InstructorNoteItem
                     key={index}
                     subject={note?.subject}
-                    note_text={note?.note_text}
+                    noteText={note?.note_text}
                     createdAt={note?.createdAt}
                     onEdit={() => handleOpenNoteModal(index)}
                     onDelete={() => handleOpenDeleteNotificationModal(index)}

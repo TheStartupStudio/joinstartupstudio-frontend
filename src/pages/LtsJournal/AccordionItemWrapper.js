@@ -4,7 +4,7 @@ import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
 const AccordionItemWrapper = (props) => {
   return (
-    <div className={`accordion ${props.isOpened ? 'expanded' : ''}`}>
+    <div className={`accordion accordion-border ${props.isOpened ? 'expanded' : ''}`}>
       <div
         className="accordion-header-box"
         onClick={() => props.handleAccordionClick()}
