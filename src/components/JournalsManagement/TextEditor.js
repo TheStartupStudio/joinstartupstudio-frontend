@@ -70,7 +70,8 @@ const paletteSettings = {
     '#c6d9f0',
     '#8db3e2',
     '#548dd4',
-    '#17365d'
+    '#17365d',
+    '#99CC33'
   ],
   columns: 5,
   tileSize: 30

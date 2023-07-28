@@ -55,3 +55,20 @@
     background: #51C7DF !important;
     color: #fff !important;
 }
+@media (max-width: 767.98px) {
+    .editor-table-data {
+        width: 100% !important;
+    }
+
+    .editor-table-row {
+display:flex;
+        flex-direction:column
+    }
+
+    .editor-table {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+}
+

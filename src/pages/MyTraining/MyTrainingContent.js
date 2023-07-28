@@ -473,7 +473,7 @@ function MyTrainingContent(props) {
             />
           </div>
         </div>
-        <div className={'journal-paragraph my-4'}>{journal?.paragraph}</div>
+        <div className={'journal-paragraph my-4'}>{journal?.openingText}</div>
         <div className={'custom-breakdowns-container'}>
           {/*<div style={{ order: 0 }}>*/}
           {/*  {!loading &&*/}
@@ -536,7 +536,17 @@ function MyTrainingContent(props) {
                   title={'Lts Implementation'}
                 >
                   {openAccordion === 'implementationSteps' && (
-                    <div className="accordion-content">
+                    <div
+                      // className="accordion-content"
+                      style={{
+                        padding: '10px 20px ',
+                        backgroundColor: '#ffffff',
+                        fontSize: 13,
+                        fontWeight: 500,
+                        textAlign: 'left',
+                        color: '#333D3D'
+                      }}
+                    >
                       <StepsBox
                         containsTitle={false}
                         steps={journal?.implementationSteps}
