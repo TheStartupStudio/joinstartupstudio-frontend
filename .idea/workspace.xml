@@ -6,12 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/Steps.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/Steps/Steps.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/MyTraining.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/MyTraining.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/MyTrainingContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/MyTrainingContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/Box.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/Box.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/Boxes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/PedagogyBoxes/Boxes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +16,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev" />
+        <entry key="$PROJECT_DIR$" value="new-journals-view" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -37,20 +32,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.path.for.package.tslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2023.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\MyTraining" />
@@ -134,17 +121,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/pages/MyTraining/MyTrainingContent.js</url>
-          <line>480</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

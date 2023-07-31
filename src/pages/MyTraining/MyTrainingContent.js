@@ -561,7 +561,7 @@ function MyTrainingContent(props) {
                         handleAccordionClick('valueProposition')
                       }
                       isExanded={isExpanded}
-                      title={'INDIVIDUAL VALUE PROPOOSITION'}
+                      title={'INDIVIDUAL VALUE PROPOSITION'}
                     >
                       {openAccordion === 'valueProposition' && (
                         <div
