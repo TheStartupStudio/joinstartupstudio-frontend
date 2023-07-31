@@ -18,7 +18,7 @@ const EntriesBox = (props) => {
   } = props
 
   return (
-    entries.length > 1 && (
+    entries && entries.length > 1 ? (
       <div style={{ border: '1px solid #BBBDBF' }}>
         {journal.title && (
           <div
@@ -132,7 +132,7 @@ const EntriesBox = (props) => {
             </div>
           ))}
       </div>
-    )
+    ) : <></>
   )
 }
 
