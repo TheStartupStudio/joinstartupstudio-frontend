@@ -108,15 +108,11 @@ function LtsJournal(props) {
     hs3: 'my_journal.hs3_title',
     hs4: 'my_journal.hs4_title',
     'market-ready': 'my_journal.market-ready_title',
-<<<<<<< HEAD
     'my-training': 'my_journal.my-training_title',
     'student-lts': 'student_journals.student-lts_title',
     'student-wellnes': 'student_journals.student-wellnes_title',
     'student-personal-finance': 'student_journals.student-personal-finance_title',
     'student-leadership': 'student_journals.student-leadership_title',
-=======
-    'my-training': 'my_journal.my-training_title'
->>>>>>> origin/My-training
   }
   let descriptionMapping = {
     hs1: 'my_journal.hs1_description',
