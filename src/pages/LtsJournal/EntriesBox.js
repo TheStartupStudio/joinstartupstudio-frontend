@@ -20,7 +20,7 @@ const EntriesBox = (props) => {
   return (
     entries && entries.length > 1 ? (
       <div style={{ border: '1px solid #BBBDBF' }}>
-        {journal.title && (
+        {/* {journal.title && (
           <div
             className="journal-entry__parent-title"
             style={{
@@ -32,7 +32,7 @@ const EntriesBox = (props) => {
           >
             <h5 style={{ fontSize: 14, padding: 6 }}>{journal.title}</h5>
           </div>
-        )}
+        )} */}
         {entries &&
           entries?.map((entry, index) => (
             <div

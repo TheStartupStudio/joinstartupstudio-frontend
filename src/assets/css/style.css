@@ -3809,7 +3809,7 @@ strong {
 
 .journal-entry__parent-title {
   padding: 6px;
-  margin: 20px 0 10px 0;
+  margin: 0 0 10px 0;
   background: #51c7df;
 }
 .journal-entry__parent-title > * {
