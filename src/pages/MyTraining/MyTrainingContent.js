@@ -12,6 +12,8 @@ import PedagogyBoxes from './PedagogyBoxes/PedagogyBoxes'
 import AccordionItemWrapper from '../LtsJournal/AccordionItemWrapper'
 import StepsBox from '../LtsJournal/Steps/StepsBox'
 import CoreVectorsImage from '../../assets/images/CoreVectors - LTS-1200px.png'
+import LtsJournalReflection from '../LtsJournal/reflection'
+import markdown from '../LtsJournal/markdown'
 
 const WelcomeToTraining = () => {
   return (
@@ -297,6 +299,9 @@ function MyTrainingContent(props) {
     setSelectedStep(null)
     setSelectedStepIndex(null)
   }, [openAccordion])
+
+  console.log('journal', journal)
+
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
       let filtered = userJournalEntries[entry.id].filter(
@@ -496,70 +501,309 @@ function MyTrainingContent(props) {
           {/*      })}*/}
           {/*</div>*/}
 
-          {!loading && (
-            <div style={{ order: 1 }}>
-              {
-                <AccordionItemWrapper
-                  isOpened={openAccordion === 'pedagogy'}
-                  handleAccordionClick={() => handleAccordionClick('pedagogy')}
-                  isExanded={isExpanded}
-                  title={'Lts Pedagogy'}
-                >
-                  {openAccordion === 'pedagogy' && (
-                    <>
-                      {trainingIndex === 0 && <WelcomeToTraining />}
-                      <div className="accordion-content">
-                        <PedagogyBoxes
-                          containsTitle={false}
-                          boxes={journal?.pedagogyOptions}
-                          selectPedagogy={selectPedagogyOption}
-                          selectedPedagogyIndex={selectedPedagogyIndex}
-                          handleOpenPopup={handleOpenPopup}
-                          selectedPedagogy={selectedPedagogy}
-                        />
-                      </div>
-                    </>
-                  )}
-                </AccordionItemWrapper>
-              }
-            </div>
-          )}
-          {!loading && (
-            <div style={{ order: 2 }}>
-              {
-                <AccordionItemWrapper
-                  isOpened={openAccordion === 'implementationSteps'}
-                  handleAccordionClick={() =>
-                    handleAccordionClick('implementationSteps')
-                  }
-                  isExanded={isExpanded}
-                  title={'Lts Implementation'}
-                >
-                  {openAccordion === 'implementationSteps' && (
-                    <div
-                      // className="accordion-content"
-                      style={{
-                        padding: '10px 20px ',
-                        backgroundColor: '#ffffff',
-                        fontSize: 13,
-                        fontWeight: 500,
-                        textAlign: 'left',
-                        color: '#333D3D'
-                      }}
+          {!journal?.hasValueProposition ? (
+            <>
+              {!loading && (
+                <div style={{ order: 1 }}>
+                  {
+                    <AccordionItemWrapper
+                      isOpened={openAccordion === 'pedagogy'}
+                      handleAccordionClick={() =>
+                        handleAccordionClick('pedagogy')
+                      }
+                      isExanded={isExpanded}
+                      title={'Lts Pedagogy'}
                     >
-                      <StepsBox
-                        containsTitle={false}
-                        steps={journal?.implementationSteps}
-                        selectStep={selectStep}
-                        selectedStepIndex={selectedStepIndex}
-                        handleOpenPopup={handleOpenPopup}
-                        selectedStep={selectedStep}
-                      />
-                    </div>
-                  )}
-                </AccordionItemWrapper>
-              }
-            </div>
+                      {openAccordion === 'pedagogy' && (
+                        <>
+                          {trainingIndex === 0 && <WelcomeToTraining />}
+                          <div className="accordion-content">
+                            <PedagogyBoxes
+                              containsTitle={false}
+                              boxes={journal?.pedagogyOptions}
+                              selectPedagogy={selectPedagogyOption}
+                              selectedPedagogyIndex={selectedPedagogyIndex}
+                              handleOpenPopup={handleOpenPopup}
+                              selectedPedagogy={selectedPedagogy}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </AccordionItemWrapper>
+                  }
+                </div>
+              )}
+              {!loading && (
+                <div style={{ order: 2 }}>
+                  {
+                    <AccordionItemWrapper
+                      isOpened={openAccordion === 'implementationSteps'}
+                      handleAccordionClick={() =>
+                        handleAccordionClick('implementationSteps')
+                      }
+                      isExanded={isExpanded}
+                      title={'Lts Implementation'}
+                    >
+                      {openAccordion === 'implementationSteps' && (
+                        <div
+                          // className="accordion-content"
+                          style={{
+                            padding: '10px 20px ',
+                            backgroundColor: '#ffffff',
+                            fontSize: 13,
+                            fontWeight: 500,
+                            textAlign: 'left',
+                            color: '#333D3D'
+                          }}
+                        >
+                          <StepsBox
+                            containsTitle={false}
+                            steps={journal?.implementationSteps}
+                            selectStep={selectStep}
+                            selectedStepIndex={selectedStepIndex}
+                            handleOpenPopup={handleOpenPopup}
+                            selectedStep={selectedStep}
+                          />
+                        </div>
+                      )}
+                    </AccordionItemWrapper>
+                  }
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              {!loading && (
+                <div style={{ order: 2 }}>
+                  {
+                    <AccordionItemWrapper
+                      isOpened={openAccordion === 'valueProposition'}
+                      handleAccordionClick={() =>
+                        handleAccordionClick('valueProposition')
+                      }
+                      isExanded={isExpanded}
+                      title={'INDIVIDUAL VALUE PROPOOSITION'}
+                    >
+                      {openAccordion === 'valueProposition' && (
+                        <div
+                          // className="accordion-content"
+                          style={{
+                            padding: '30px 20px ',
+                            backgroundColor: '#ffffff',
+                            fontSize: 11,
+                            fontWeight: 500,
+                            textAlign: 'left',
+                            color: '#333D3D'
+                          }}
+                        >
+                          <div>
+                            <p>
+                              Your value proposition consists of three parts:
+                              your passions/interests, your skill(s), and the
+                              outcomes you can create consistently. In other
+                              words, the answers to the three program questions:
+                              Who are you? What can you do? How do you prove it?
+                            </p>
+                            <p>
+                              The table below is the same one inside of the
+                              students’ LTS Journal. Once you complete it for
+                              yourself, you now have a model to use when giving
+                              this task to students. You will have an
+                              understanding of the experience and be able to
+                              speak to how you took all of your data and turned
+                              it into this unique statement of value.
+                            </p>
+
+                            <div className="journal-entries">
+                              {journal.entries &&
+                                journal.entries.map((entry) => (
+                                  <div
+                                    className="journal-entries__entry"
+                                    key={entry.id}
+                                  >
+                                    <h5
+                                      className={
+                                        'journal-entries__entry-title' +
+                                        (entry.title.indexOf('**') !== -1
+                                          ? ' journal-entries__entry-title--md'
+                                          : '')
+                                      }
+                                      dangerouslySetInnerHTML={{
+                                        __html:
+                                          entry.title.indexOf('<h2>') === -1
+                                            ? markdown(entry.title)
+                                            : entry.title.replace(
+                                                new RegExp('\r?\n', 'g'),
+                                                '<br />'
+                                              )
+                                      }}
+                                    ></h5>
+
+                                    <div className="journal-entries__entry-reflections">
+                                      {/* List created reflections */}
+                                      {userJournalEntries[entry.id] &&
+                                        userJournalEntries[entry.id].map(
+                                          (userJournalEntry) => (
+                                            <LtsJournalReflection
+                                              key={userJournalEntry.id}
+                                              journal={journal}
+                                              journalEntry={entry}
+                                              entry={userJournalEntry}
+                                              deleted={deleteReflection(
+                                                entry,
+                                                userJournalEntry
+                                              )}
+                                              saved={updateReflection(
+                                                entry,
+                                                userJournalEntry
+                                              )}
+                                            />
+                                          )
+                                        )}
+
+                                      {/* Add new reflection */}
+                                      {(!userJournalEntries[entry.id] ||
+                                        showAddReflection[entry.id]) && (
+                                        <LtsJournalReflection
+                                          journal={journal}
+                                          journalEntry={entry}
+                                          entry={null}
+                                          saved={addReflection(entry)}
+                                          showCancel={
+                                            !!userJournalEntries[entry.id]
+                                          }
+                                          cancel={(e) => {
+                                            setShowAddReflection({
+                                              ...showAddReflection,
+                                              [entry.id]: false
+                                            })
+                                          }}
+                                        />
+                                      )}
+
+                                      {/* Show add new reflection */}
+                                      <div
+                                        className={`journal-entries__entry-reflections-actions ${
+                                          userJournalEntries[entry.id] &&
+                                          !showAddReflection[entry.id]
+                                            ? 'active'
+                                            : ''
+                                        }`}
+                                      >
+                                        {/* <a
+                        href='#'
+                        className='journal-entries__entry-reflections-action'
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setShowAddReflection({
+                            ...showAddReflection,
+                            [entry.id]: true
+                          })
+                        }}
+                      >
+                        Add reflection <FontAwesomeIcon icon={faPlus} />
+                      </a> */}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </AccordionItemWrapper>
+                  }
+                </div>
+              )}
+              {!loading && (
+                <div style={{ order: 2 }}>
+                  {
+                    <AccordionItemWrapper
+                      isOpened={openAccordion === 'portfolio'}
+                      handleAccordionClick={() =>
+                        handleAccordionClick('portfolio')
+                      }
+                      isExanded={isExpanded}
+                      title={'PORTFOLIO'}
+                    >
+                      {openAccordion === 'portfolio' && (
+                        <div
+                          // className="accordion-content"
+                          style={{
+                            padding: '30px 20px ',
+                            backgroundColor: '#ffffff',
+                            fontSize: 11,
+                            fontWeight: 500,
+                            textAlign: 'left',
+                            color: '#333D3D'
+                          }}
+                        >
+                          
+                            <p>
+                              Your portfolio represents the full communication
+                              of your value proposition. It tells the world:
+                              this is who I am, this is what I can do, and this
+                              is how I prove it. It includes a biography,
+                              market-ready content, and your resume. The button
+                              below will take you to the My Portfolio section of
+                              this platform. You should complete the biography
+                              section - you will be able to use it as a model
+                              for the first task students do when you introduce
+                              them to the platform. Then, add at least two
+                              pieces of content to the portfolio. Some examples
+                              of content are: lesson plans, slide decks, social
+                              media content, articles you have written. Finally,
+                              complete your work and education experiences so
+                              the students can see your resume.
+                            </p>
+                            <a className="btn btn-info text-light default-btn" href={`/preview-portfolio`}>
+                              MY PORTFOLIO
+                            </a>
+                          
+                        </div>
+                      )}
+                    </AccordionItemWrapper>
+                  }
+                </div>
+              )}
+              {!loading && (
+                <div style={{ order: 2 }}>
+                  {
+                    <AccordionItemWrapper
+                      isOpened={openAccordion === 'certificate'}
+                      handleAccordionClick={() =>
+                        handleAccordionClick('certificate')
+                      }
+                      isExanded={isExpanded}
+                      title={'CERTIFICATE'}
+                    >
+                      {openAccordion === 'certificate' && (
+                        <div
+                          // className="accordion-content"
+                          style={{
+                            padding: '30px 20px ',
+                            backgroundColor: '#ffffff',
+                            fontSize: 11,
+                            fontWeight: 500,
+                            textAlign: 'left',
+                            color: '#333D3D',
+
+                          }}
+                        >
+                            <p>
+                            The Certification Process allows students to prove they have specific employability skills that can transcend industries. You already have these skills, that’s why you’re in the position you are in. You need to understand the Certification Process from the student perspective and be able to guide them to earning proficiency in each skill. 
+                            Click the My Certification button below and choose two of the skills to complete. Upload one or more of your portfolio items, and complete the explanation portion for each. Now, you have a model for students.
+                            </p>
+                            <button className="default-btn">
+                              MY CERTIFICATION
+                            </button>
+                        </div>
+                      )}
+                    </AccordionItemWrapper>
+                  }
+                </div>
+              )}
+            </>
           )}
         </div>
       </>
