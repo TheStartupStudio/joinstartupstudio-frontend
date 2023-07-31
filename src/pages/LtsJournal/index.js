@@ -7,7 +7,7 @@ import {
   useHistory,
   Switch,
   Route,
-  useLocation,
+  useLocation
 } from 'react-router-dom'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
@@ -36,9 +36,8 @@ function LtsJournal(props) {
       let { data } = await axiosInstance.get(`/ltsJournals/`, {
         params: {
           category: props.category,
-          platform:
-            props.category === 'market-ready' ? 'student' : 'instructor',
-        },
+          platform: props.category === 'market-ready' ? 'student' : 'instructor'
+        }
       })
       setJournalsData(data)
       setJournals(data)
@@ -90,7 +89,7 @@ function LtsJournal(props) {
         ...(item.id == journal.journalId ? { userEntry: [journal] } : {}),
         ...(item.children
           ? { children: updateJournalEntry(item.children, journal) }
-          : {}),
+          : {})
       }
     })
   }
@@ -109,11 +108,15 @@ function LtsJournal(props) {
     hs3: 'my_journal.hs3_title',
     hs4: 'my_journal.hs4_title',
     'market-ready': 'my_journal.market-ready_title',
+<<<<<<< HEAD
     'my-training': 'my_journal.my-training_title',
     'student-lts': 'student_journals.student-lts_title',
     'student-wellnes': 'student_journals.student-wellnes_title',
     'student-personal-finance': 'student_journals.student-personal-finance_title',
     'student-leadership': 'student_journals.student-leadership_title',
+=======
+    'my-training': 'my_journal.my-training_title'
+>>>>>>> origin/My-training
   }
   let descriptionMapping = {
     hs1: 'my_journal.hs1_description',
@@ -142,7 +145,7 @@ function LtsJournal(props) {
           journal.children.some((child) =>
             child.title.toLowerCase().includes(keyword)
           )
-        ),
+        )
       ])
     }
     // else {
@@ -232,6 +235,7 @@ function LtsJournal(props) {
                           key={journalItem.id}
                           className={`accordion-menu__item`}
                         >
+                          {console.log('journalItem', journalItem)}
                           {journalItem.children &&
                           journalItem.children.length ? (
                             <>
@@ -328,5 +332,5 @@ function LtsJournal(props) {
 }
 
 export default injectIntl(LtsJournal, {
-  withRef: false,
+  withRef: false
 })

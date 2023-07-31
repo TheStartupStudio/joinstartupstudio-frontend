@@ -18,6 +18,7 @@ import IamrContents from './pages/Iamr/IamrContentsAccordion'
 import ImrContent from './pages/Iamr/ImrContent'
 import TestJournal from './pages/LtsJournal/TestJournal'
 import UserProfile from './pages/Profile/userProfile'
+import MyTraining from './pages/LtsJournal/MyTraining'
 
 const Login = React.lazy(() => import('./pages/Auth/Login'))
 const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
@@ -44,7 +45,9 @@ const MyCertificationGuide = React.lazy(() =>
   import('./pages/MyLearnToStartEDU/MyCertificationGuide/MyCertificationGuide')
 )
 const IamrCertificationGuide = React.lazy(() =>
-  import('./pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationGuide')
+  import(
+    './pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationGuide'
+  )
 )
 const EditPortfolio = React.lazy(() =>
   import('./pages/Portfolio/editPortfolio')
@@ -186,9 +189,9 @@ function Router(props) {
               <Route exact path="/account/:id" component={UserProfile} />
               <Route exact path="/profile-preview" component={ProfilePreview} />
               <Route
-                path="/my-training/"
+                path="/my-training"
                 component={(props) => (
-                  <LtsJournal {...props} category="my-training" />
+                  <MyTraining {...props} category="my-training" />
                 )}
               />
               {/* Students journals */}
