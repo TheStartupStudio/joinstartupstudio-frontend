@@ -14,6 +14,7 @@ import StepsBox from '../LtsJournal/Steps/StepsBox'
 import CoreVectorsImage from '../../assets/images/CoreVectors - LTS-1200px.png'
 import LtsJournalReflection from '../LtsJournal/reflection'
 import markdown from '../LtsJournal/markdown'
+import EntriesBox from '../LtsJournal/EntriesBox'
 
 const WelcomeToTraining = () => {
   return (
@@ -130,8 +131,9 @@ function MyTrainingContent(props) {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
+  // let [showAddReflection, setShowAddReflection] = useState({})
 
-  console.log(selectedPedagogy)
+  // console.log(selectedPedagogy)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -398,6 +400,9 @@ function MyTrainingContent(props) {
     setSelectedPedagogyIndex(index)
   }
 
+  const handleShowAddReflection = (showAddReflection) => {
+    setShowAddReflection(showAddReflection)
+  }
   const handleOpenPopup = () => {
     setOpenPopup(true)
   }
@@ -593,100 +598,23 @@ function MyTrainingContent(props) {
                               it into this unique statement of value.
                             </p>
 
-                            <div className="journal-entries">
-                              {journal.entries &&
-                                journal.entries.map((entry) => (
-                                  <div
-                                    className="journal-entries__entry"
-                                    key={entry.id}
-                                  >
-                                    <h5
-                                      className={
-                                        'journal-entries__entry-title' +
-                                        (entry.title.indexOf('**') !== -1
-                                          ? ' journal-entries__entry-title--md'
-                                          : '')
-                                      }
-                                      dangerouslySetInnerHTML={{
-                                        __html:
-                                          entry.title.indexOf('<h2>') === -1
-                                            ? markdown(entry.title)
-                                            : entry.title.replace(
-                                                new RegExp('\r?\n', 'g'),
-                                                '<br />'
-                                              )
-                                      }}
-                                    ></h5>
-
-                                    <div className="journal-entries__entry-reflections">
-                                      {/* List created reflections */}
-                                      {userJournalEntries[entry.id] &&
-                                        userJournalEntries[entry.id].map(
-                                          (userJournalEntry) => (
-                                            <LtsJournalReflection
-                                              key={userJournalEntry.id}
-                                              journal={journal}
-                                              journalEntry={entry}
-                                              entry={userJournalEntry}
-                                              deleted={deleteReflection(
-                                                entry,
-                                                userJournalEntry
-                                              )}
-                                              saved={updateReflection(
-                                                entry,
-                                                userJournalEntry
-                                              )}
-                                            />
-                                          )
-                                        )}
-
-                                      {/* Add new reflection */}
-                                      {(!userJournalEntries[entry.id] ||
-                                        showAddReflection[entry.id]) && (
-                                        <LtsJournalReflection
-                                          journal={journal}
-                                          journalEntry={entry}
-                                          entry={null}
-                                          saved={addReflection(entry)}
-                                          showCancel={
-                                            !!userJournalEntries[entry.id]
-                                          }
-                                          cancel={(e) => {
-                                            setShowAddReflection({
-                                              ...showAddReflection,
-                                              [entry.id]: false
-                                            })
-                                          }}
-                                        />
-                                      )}
-
-                                      {/* Show add new reflection */}
-                                      <div
-                                        className={`journal-entries__entry-reflections-actions ${
-                                          userJournalEntries[entry.id] &&
-                                          !showAddReflection[entry.id]
-                                            ? 'active'
-                                            : ''
-                                        }`}
-                                      >
-                                        {/* <a
-                        href='#'
-                        className='journal-entries__entry-reflections-action'
-                        onClick={(e) => {
-                          e.preventDefault()
-                          setShowAddReflection({
-                            ...showAddReflection,
-                            [entry.id]: true
-                          })
-                        }}
-                      >
-                        Add reflection <FontAwesomeIcon icon={faPlus} />
-                      </a> */}
-                                      </div>
-                                    </div>
-                                  </div>
-                                ))}
-                            </div>
+                            <EntriesBox
+                              entries={journal.entries}
+                              entryBoxTitle={journal?.title}
+                              journal={journal}
+                              userJournalEntries={userJournalEntries}
+                              deleteReflection={(entry, userJournalEntry) =>
+                                deleteReflection(entry, userJournalEntry)
+                              }
+                              updateReflection={(entry, userJournalEntry) =>
+                                updateReflection(entry, userJournalEntry)
+                              }
+                              addReflection={(entry) => addReflection(entry)}
+                              handleShowAddReflection={(reflection) =>
+                                handleShowAddReflection(reflection)
+                              }
+                              showAddReflection={showAddReflection}
+                            />
                           </div>
                         </div>
                       )}

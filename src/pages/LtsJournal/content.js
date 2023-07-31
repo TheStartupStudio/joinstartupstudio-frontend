@@ -21,7 +21,6 @@ function LtsJournalContent(props) {
   // console.log(userJournalEntries);
 
   const handleShowAddReflection = (showAddReflection) => {
-    debugger
     setShowAddReflection(showAddReflection)
   }
   async function saveWatchData(data) {
@@ -244,8 +243,6 @@ function LtsJournalContent(props) {
             {/*{journal.entries &&*/}
             {/*  journal.entries.map((entry, index) => (*/}
             <EntriesBox
-              // key={index}
-              // entry={entry}
               entries={journal.entries}
               entryBoxTitle={journal?.title}
               journal={journal}
