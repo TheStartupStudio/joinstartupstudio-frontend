@@ -74,6 +74,18 @@ const MyTraining = (props) => {
     setFilteredJournals(filteredData)
   }
 
+  const journalTitle = () => {
+    let journalData
+
+    if (props.category === 'my-training') {
+      journalData = {
+        title: 'MY TRAINING',
+        description: `Welcome to your LTS Training. Here you will find support and guidance as you enter into this new type of classroom.`
+      }
+    }
+    return journalData
+  }
+
   return (
     <div id="main-body">
       <div className="container-fluid">
@@ -91,7 +103,7 @@ const MyTraining = (props) => {
                       marginBottom: 4
                     }}
                   >
-                    {/*{journalTitle()?.title}*/}
+                    {journalTitle()?.title}
                   </div>
                   <div
                     style={{
@@ -102,7 +114,7 @@ const MyTraining = (props) => {
                       width: '80%'
                     }}
                   >
-                    {/*{journalTitle()?.description}*/}
+                    {journalTitle()?.description}
                   </div>
                 </div>
                 <div>

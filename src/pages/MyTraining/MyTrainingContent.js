@@ -20,7 +20,7 @@ const WelcomeToTraining = () => {
     <div
       style={{
         backgroundColor: '#fff',
-        padding: '40px 20px'
+        padding: '40px 20px 10px 20px'
       }}
     >
       <div
@@ -79,7 +79,7 @@ const WelcomeToTraining = () => {
       </div>
       <div
         style={{
-          padding: '30px 0',
+          padding: '30px 0 0 0',
           display: 'flex',
           flexDirection: 'column',
           gap: 15
@@ -90,7 +90,8 @@ const WelcomeToTraining = () => {
             textAlign: 'center',
             font: 'normal normal bold 25px/17px Montserrat',
             letterSpacing: 1,
-            color: '#51C7DF'
+            color: '#51C7DF',
+            lineHeight: 1
           }}
         >
           ONE POWERFUL SOLUTION
@@ -299,9 +300,6 @@ function MyTrainingContent(props) {
     setSelectedStep(null)
     setSelectedStepIndex(null)
   }, [openAccordion])
-
-  console.log('journal', journal)
-
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
       let filtered = userJournalEntries[entry.id].filter(
@@ -361,6 +359,8 @@ function MyTrainingContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
+
+  console.log('journal', journal)
 
   const {
     Bold,
@@ -480,27 +480,6 @@ function MyTrainingContent(props) {
         </div>
         <div className={'journal-paragraph my-4'}>{journal?.openingText}</div>
         <div className={'custom-breakdowns-container'}>
-          {/*<div style={{ order: 0 }}>*/}
-          {/*  {!loading &&*/}
-          {/*    journal?.breakdowns*/}
-          {/*      ?.slice()*/}
-          {/*      ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)*/}
-          {/*      ?.map((breakdown, index) => {*/}
-          {/*        return (*/}
-          {/*          <React.Fragment key={index}>*/}
-          {/*            <BreakdownTextAccordion*/}
-          {/*              title={breakdown?.title}*/}
-          {/*              content={breakdown?.content}*/}
-          {/*              breakdown={breakdown}*/}
-          {/*              isOpen={openAccordion === index}*/}
-          {/*              toggleAccordion={() => handleAccordionClick(index)}*/}
-          {/*              closeOthers={closeOthers}*/}
-          {/*            />*/}
-          {/*          </React.Fragment>*/}
-          {/*        )*/}
-          {/*      })}*/}
-          {/*</div>*/}
-
           {!journal?.hasValueProposition ? (
             <>
               {!loading && (
@@ -738,28 +717,29 @@ function MyTrainingContent(props) {
                             color: '#333D3D'
                           }}
                         >
-                          
-                            <p>
-                              Your portfolio represents the full communication
-                              of your value proposition. It tells the world:
-                              this is who I am, this is what I can do, and this
-                              is how I prove it. It includes a biography,
-                              market-ready content, and your resume. The button
-                              below will take you to the My Portfolio section of
-                              this platform. You should complete the biography
-                              section - you will be able to use it as a model
-                              for the first task students do when you introduce
-                              them to the platform. Then, add at least two
-                              pieces of content to the portfolio. Some examples
-                              of content are: lesson plans, slide decks, social
-                              media content, articles you have written. Finally,
-                              complete your work and education experiences so
-                              the students can see your resume.
-                            </p>
-                            <a className="btn btn-info text-light default-btn" href={`/preview-portfolio`}>
-                              MY PORTFOLIO
-                            </a>
-                          
+                          <p>
+                            Your portfolio represents the full communication of
+                            your value proposition. It tells the world: this is
+                            who I am, this is what I can do, and this is how I
+                            prove it. It includes a biography, market-ready
+                            content, and your resume. The button below will take
+                            you to the My Portfolio section of this platform.
+                            You should complete the biography section - you will
+                            be able to use it as a model for the first task
+                            students do when you introduce them to the platform.
+                            Then, add at least two pieces of content to the
+                            portfolio. Some examples of content are: lesson
+                            plans, slide decks, social media content, articles
+                            you have written. Finally, complete your work and
+                            education experiences so the students can see your
+                            resume.
+                          </p>
+                          <a
+                            className="btn btn-info text-light default-btn"
+                            href={`/preview-portfolio`}
+                          >
+                            MY PORTFOLIO
+                          </a>
                         </div>
                       )}
                     </AccordionItemWrapper>
@@ -786,17 +766,26 @@ function MyTrainingContent(props) {
                             fontSize: 11,
                             fontWeight: 500,
                             textAlign: 'left',
-                            color: '#333D3D',
-
+                            color: '#333D3D'
                           }}
                         >
-                            <p>
-                            The Certification Process allows students to prove they have specific employability skills that can transcend industries. You already have these skills, that’s why you’re in the position you are in. You need to understand the Certification Process from the student perspective and be able to guide them to earning proficiency in each skill. 
-                            Click the My Certification button below and choose two of the skills to complete. Upload one or more of your portfolio items, and complete the explanation portion for each. Now, you have a model for students.
-                            </p>
-                            <button className="default-btn">
-                              MY CERTIFICATION
-                            </button>
+                          <p>
+                            The Certification Process allows students to prove
+                            they have specific employability skills that can
+                            transcend industries. You already have these skills,
+                            that’s why you’re in the position you are in. You
+                            need to understand the Certification Process from
+                            the student perspective and be able to guide them to
+                            earning proficiency in each skill. Click the My
+                            Certification button below and choose two of the
+                            skills to complete. Upload one or more of your
+                            portfolio items, and complete the explanation
+                            portion for each. Now, you have a model for
+                            students.
+                          </p>
+                          <button className="default-btn">
+                            MY CERTIFICATION
+                          </button>
                         </div>
                       )}
                     </AccordionItemWrapper>

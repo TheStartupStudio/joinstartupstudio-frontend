@@ -543,34 +543,6 @@ export default function EditJournals2(props) {
                 </>
               )
             })}{' '}
-          {selectedJournal?.value?.implementationSteps &&
-            selectedJournal?.value?.implementationSteps?.map((step, index) => {
-              return (
-                <>
-                  <h2>Step {index + 1}</h2>
-                  <div>Step title</div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={step?.title}
-                    onChange={(e) =>
-                      handleChangeImplementationSteps(
-                        index,
-                        'title',
-                        e.target.value
-                      )
-                    }
-                  />
-                  <div>Step content</div>
-                  <KendoTextEditor
-                    value={step?.stepContent}
-                    handleChange={(e) =>
-                      handleChangeImplementationSteps(index, 'stepContent', e)
-                    }
-                  />
-                </>
-              )
-            })}
           {selectedJournal?.value?.pedagogyOptions &&
             selectedJournal?.value?.pedagogyOptions?.map((step, index) => {
               return (
@@ -596,6 +568,34 @@ export default function EditJournals2(props) {
                       handleChangePedagogyOptions(index, 'content', e)
                     }
                     minHeight={100}
+                  />
+                </>
+              )
+            })}
+          {selectedJournal?.value?.implementationSteps &&
+            selectedJournal?.value?.implementationSteps?.map((step, index) => {
+              return (
+                <>
+                  <h2>Step {index + 1}</h2>
+                  <div>Step title</div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={step?.title}
+                    onChange={(e) =>
+                      handleChangeImplementationSteps(
+                        index,
+                        'title',
+                        e.target.value
+                      )
+                    }
+                  />
+                  <div>Step content</div>
+                  <KendoTextEditor
+                    value={step?.stepContent}
+                    handleChange={(e) =>
+                      handleChangeImplementationSteps(index, 'stepContent', e)
+                    }
                   />
                 </>
               )
