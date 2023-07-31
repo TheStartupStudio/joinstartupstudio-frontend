@@ -242,6 +242,7 @@ function LtsJournal(props) {
                                 href="#"
                                 className={'accordion-menu__item-toggle'}
                                 eventKey={`${journalItemIdx}`}
+                                onClick={() => journalItem.content ? history.push(`${props.match.url}/${journalItem.id}`) : null}
                               >
                                 <span>{journalItem.title}</span>
                                 <FontAwesomeIcon icon={faAngleDown} />
