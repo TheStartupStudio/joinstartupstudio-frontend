@@ -1,0 +1,13 @@
+.table-wrapper {
+    border: 1px solid rgb(187, 189, 191);
+}
+.table-wrapper__title {
+    padding: 6px;
+    margin: 0;
+    background: #51c7df;
+}
+
+.table-wrapper__title h5 {
+    color: white;
+    margin: 0;
+}
