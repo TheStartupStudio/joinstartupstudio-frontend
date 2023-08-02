@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import LtsJournalReflection from './reflection'
 import ReactPlayer from 'react-player'
@@ -12,6 +12,7 @@ import parse from 'html-react-parser'
 import EntriesBox from './EntriesBox'
 import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections.js'
+import { Table } from 'react-bootstrap'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -20,6 +21,8 @@ function LtsJournalContent(props) {
   let [userJournalEntries, setUserJournalEntries] = useState({})
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
+  const [meeting, setMeeting] = useState({})
+
   // console.log(userJournalEntries);
 
   const handleShowAddReflection = (showAddReflection) => {
@@ -40,6 +43,18 @@ function LtsJournalContent(props) {
     )
   }
 
+  useEffect(() => {
+    axiosInstance
+      .put(
+        `/teamMeetings/${meeting.id}/journal/${+props.match.params.journalId}`,
+        {
+          meeting
+        }
+      )
+      .then((res) => {
+        setJournal({ ...journal, meeting: res.data })
+      })
+  }, [meeting])
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
@@ -173,7 +188,88 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-  console.log(journal)
+  const JournalTableRow = (props) => {
+    return (
+      <tr
+        style={{
+          borderTopColor: '#f0f0f0',
+          borderBottomColor: '#f0f0f0',
+          borderWidth: 2
+        }}
+      >
+        {props.children}
+      </tr>
+    )
+  }
+  const JournalTableCell = (props) => {
+    const { isGray, colSpan, additionalStyling } = props
+    return (
+      <td
+        colSpan={colSpan}
+        style={{
+          ...additionalStyling,
+          backgroundColor: isGray ? '#dfdfdf' : '#fff'
+        }}
+      >
+        {props.children}
+      </td>
+    )
+  }
+
+  const JournalTableCellInput = (props) => {
+    const { title, type, value, handleChange, width } = props
+    return (
+      <div
+        style={{
+          display: 'flex',
+          gap: 20
+        }}
+      >
+        <div
+          style={{ display: 'flex', alignItems: 'center', textWrap: 'nowrap' }}
+        >
+          {title}
+        </div>
+        <div className={` ${width ? '' : 'w-100'}`}>
+          <input
+            className={`my-1  py-2 px-2 text-dark `}
+            type={type}
+            style={{
+              borderRadius: '0.25rem',
+              backgroundColor: 'white',
+              color: '#000',
+              width: width ?? '100%',
+              border: '1px solid #e3e3e3'
+            }}
+            name={'meetingDate'}
+            value={value}
+            onChange={(e) => handleChange(e.target.value)}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  const handleDeleteMeeting = (meeting) => {
+    console.log(meeting)
+  }
+
+  const handleChangeMeeting = (name, value, meetingIndex) => {
+    let newJournal = { ...journal }
+    let newMeetings = newJournal?.meetings
+    newMeetings.map((meeting, index) => {
+      if (index === meetingIndex) {
+        return (meeting[name] = value)
+      } else {
+        return meeting
+      }
+    })
+    const newMeeting = newMeetings[meetingIndex]
+    setMeeting(newMeeting)
+    newJournal.meetings = newMeetings
+    setJournal(newJournal)
+  }
+
   return (
     <>
       <div className="row">
@@ -242,8 +338,6 @@ function LtsJournalContent(props) {
       <div className="row">
         <div className="col-12">
           <div className="journal-entries">
-            {/*{journal.entries &&*/}
-            {/*  journal.entries.map((entry, index) => (*/}
             <EntriesBox
               entries={journal.entries}
               entryBoxTitle={journal?.title}
@@ -263,19 +357,144 @@ function LtsJournalContent(props) {
             />
           </div>
         </div>
-        {journal.reflectionsTable && journal.reflectionsTable.length ? <>
-          {journal.reflectionsTable.map(reflectionTable => <div className='col-12' key={reflectionTable.id}>
-            <TableWrapper title={reflectionTable.title}>
-              <TableReflections
-                start={reflectionTable.startDate}
-                end={reflectionTable.endDate}
-                reflectionTable={reflectionTable}
-                reflectionTableEntries={reflectionTable.reflectionsTableEntries}
-                userReflectionTableEntries={reflectionTable.userReflectionsTableEntries}
-              />
-            </TableWrapper>
-          </div>)}
-        </> : null}
+        {journal.reflectionsTable && journal.reflectionsTable.length ? (
+          <>
+            {journal.reflectionsTable.map((reflectionTable) => (
+              <div className="col-12" key={reflectionTable.id}>
+                <TableWrapper title={reflectionTable.title}>
+                  <TableReflections
+                    start={reflectionTable.startDate}
+                    end={reflectionTable.endDate}
+                    reflectionTable={reflectionTable}
+                    reflectionTableEntries={
+                      reflectionTable.reflectionsTableEntries
+                    }
+                    userReflectionTableEntries={
+                      reflectionTable.userReflectionsTableEntries
+                    }
+                  />
+                </TableWrapper>
+              </div>
+            ))}
+          </>
+        ) : null}
+        {journal?.meetings && journal.meetings.length ? (
+          <>
+            {journal?.meetings?.map((meeting, meetingIndex) => (
+              <div className="col-12" key={meeting.id}>
+                <TableWrapper
+                  title={meeting.title}
+                  isDelete
+                  onDelete={() => handleDeleteMeeting(meeting)}
+                >
+                  <Table bordered hover style={{ marginBottom: 0 }}>
+                    <tbody>
+                      <JournalTableRow>
+                        <JournalTableCell isGray colSpan={2}>
+                          <JournalTableCellInput
+                            title={'Meeting date:'}
+                            type={'date'}
+                            value={new Date(
+                              meeting.meetingDate
+                            ).toLocaleDateString('en-CA')}
+                            handleChange={(value) =>
+                              handleChangeMeeting(
+                                'meetingDate',
+                                value,
+                                meetingIndex
+                              )
+                            }
+                          />
+                        </JournalTableCell>
+                      </JournalTableRow>
+                      <JournalTableRow>
+                        <JournalTableCell
+                          isGray
+                          additionalStyling={{
+                            borderRightColor: '#f0f0f0',
+                            borderWidth: 2
+                          }}
+                        >
+                          <JournalTableCellInput
+                            title={'Purpose:'}
+                            type={'text'}
+                            value={meeting.purpose}
+                            handleChange={(value) =>
+                              handleChangeMeeting(
+                                'purpose',
+                                value,
+                                meetingIndex
+                              )
+                            }
+                          />
+                        </JournalTableCell>
+                        <JournalTableCell isGray>
+                          <JournalTableCellInput
+                            title={'Attendance:'}
+                            type={'text'}
+                            value={meeting.attendance}
+                            handleChange={(value) =>
+                              handleChangeMeeting(
+                                'attendance',
+                                value,
+                                meetingIndex
+                              )
+                            }
+                          />
+                        </JournalTableCell>
+                      </JournalTableRow>
+
+                      <JournalTableRow>
+                        <JournalTableCell colSpan={2}>
+                          <JournalTableCellInput
+                            title={'Meeting Agenda:'}
+                            type={'text'}
+                            value={meeting.meetingAgenda}
+                            handleChange={(value) =>
+                              handleChangeMeeting(
+                                'meetingAgenda',
+                                value,
+                                meetingIndex
+                              )
+                            }
+                          />
+                        </JournalTableCell>
+                      </JournalTableRow>
+                      <JournalTableRow>
+                        <JournalTableCell colSpan={2}>
+                          <JournalTableCellInput
+                            title={'Notes:'}
+                            type={'text'}
+                            value={meeting.notes}
+                            handleChange={(value) =>
+                              handleChangeMeeting('notes', value, meetingIndex)
+                            }
+                          />
+                        </JournalTableCell>
+                      </JournalTableRow>
+                      <JournalTableRow>
+                        <JournalTableCell colSpan={2}>
+                          <JournalTableCellInput
+                            title={'Results of meeting:'}
+                            type={'text'}
+                            value={meeting.resultsOfMeeting}
+                            handleChange={(value) =>
+                              handleChangeMeeting(
+                                'resultsOfMeeting',
+                                value,
+                                meetingIndex
+                              )
+                            }
+                          />
+                        </JournalTableCell>
+                      </JournalTableRow>
+                    </tbody>
+                  </Table>
+                </TableWrapper>
+              </div>
+            ))}
+          </>
+        ) : null}
       </div>
     </>
   )
