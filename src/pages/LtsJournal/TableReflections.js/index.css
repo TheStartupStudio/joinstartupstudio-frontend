@@ -1,0 +1,28 @@
+.table-reflections p {
+    font-size: 13px;
+}
+
+.table-reflections__entries {
+    margin-top: 10px;
+}
+
+.table-reflections__date {
+    font-size: 13px;
+    padding: 12px;
+    background-color: rgb(229, 229, 229);
+    margin-bottom: 0px;
+    letter-spacing: 0.68px;
+    color: #333d3d;
+}
+
+.table-reflections__entry {
+    position: relative;
+    padding: 7px 20px 20px 5px;
+    border-bottom: 2px solid rgb(229, 229, 229);
+}
+.table-reflections__entry-icon {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+}

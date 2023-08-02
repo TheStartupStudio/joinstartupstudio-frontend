@@ -10,6 +10,8 @@ import MediaLightbox from '../../components/MediaLightbox'
 import markdown from './markdown'
 import parse from 'html-react-parser'
 import EntriesBox from './EntriesBox'
+import TableWrapper from './TableWrapper/index'
+import TableReflections from './TableReflections.js'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -261,6 +263,19 @@ function LtsJournalContent(props) {
             />
           </div>
         </div>
+        {journal.reflectionsTable && journal.reflectionsTable.length ? <>
+          {journal.reflectionsTable.map(reflectionTable => <div className='col-12' key={reflectionTable.id}>
+            <TableWrapper title={reflectionTable.title}>
+              <TableReflections
+                start={reflectionTable.startDate}
+                end={reflectionTable.endDate}
+                reflectionTable={reflectionTable}
+                reflectionTableEntries={reflectionTable.reflectionsTableEntries}
+                userReflectionTableEntries={reflectionTable.userReflectionsTableEntries}
+              />
+            </TableWrapper>
+          </div>)}
+        </> : null}
       </div>
     </>
   )
