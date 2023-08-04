@@ -438,7 +438,7 @@ const TaskEventModal = (props) => {
                   id={'description'}
                   // name={tab === 'task' ? 'taskDescription' : 'eventDescription'}
                   // id={tab === 'task' ? 'taskDescription' : 'eventDescription'}
-                  className="my-1 mb-4 py-2 px-0 w-100 rounded-0 scroll-add-new-note-modal "
+                  className="my-1 mb-5 py-2 px-0 w-100 rounded-0 scroll-add-new-note-modal "
                   style={{
                     height: '150px',
                     '::placeholder': {
@@ -465,7 +465,7 @@ const TaskEventModal = (props) => {
               {(placeholder) => (
                 <ReactQuill
                   theme="snow"
-                  className="my-1 mb-4 py-2 w-100 rounded-0 scroll-add-new-note-modal "
+                  className="my-1 mb-5 py-2 w-100 rounded-0 scroll-add-new-note-modal "
                   name="requirements"
                   style={{
                     height: '150px',
