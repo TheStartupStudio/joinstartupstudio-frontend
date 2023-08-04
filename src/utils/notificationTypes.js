@@ -28,8 +28,44 @@ export default {
     key: 'PROFICIENT_SKILL',
     value: ' marked your skill as proficient'
   },
+  DENIED_SKILL: {
+    key: 'DENIED_SKILL',
+    value: ' has denied your skill'
+  },
+  APPROVED_SKILL: {
+    key: 'APPROVED_SKILL',
+    value: ' marked your skill as approved'
+  },
+  APPROVAL_REQUEST: {
+    key: 'APPROVAL_REQUEST',
+    value: ' submited their uploads for approval'
+  },
+  REAPPROVAL_REQUEST: {
+    key: 'REAPPROVAL_REQUEST',
+    value: ' resubmited their uploads for approval'
+  },
+  CERTIFIED: {
+    key: 'CERTIFIED',
+    value: ' has certified you'
+  },
   CERTIFICATION_REQUEST: {
     key: 'CERTIFICATION_REQUEST',
     value: ' submitted their upload for certification'
+  },
+  CERTIFICATION_SUBMIT: {
+    key: 'CERTIFICATION_SUBMIT',
+    value: ' submitted their certification'
+  },
+  IAMR_STUDENT_QUESTION: {
+    key: 'IAMR_STUDENT_QUESTION',
+    value: ' asked you a instruction quesion'
+  },
+  IAMR_STUDENT_QUESTION_UPDATE: {
+    key: 'IAMR_STUDENT_QUESTION_UPDATE',
+    value: ' updated questions'
+  },
+  DEFAULT_NOTIFICATION: {
+    key: 'DEFAULT_NOTIFICATION',
+    value: ' sent you a notifications'
   }
 }

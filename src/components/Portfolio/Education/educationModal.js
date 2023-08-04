@@ -50,8 +50,8 @@ export const EducationModal = (props) => {
     if (props.currentEducation.length === 0) return
     setEducationData({
       ...props.currentEducation,
-      start_date: formatDate(props.currentEducation.start_date),
-      end_date: formatDate(props.currentEducation.end_date)
+      // start_date: formatDate(props.currentEducation.start_date),
+      // end_date: formatDate(props.currentEducation.end_date)
     })
     setSelectedImage(props.currentEducation.image_url)
     setIsUpdating(true)
@@ -159,7 +159,7 @@ export const EducationModal = (props) => {
       const formData = new FormData()
       formData.append('img', general.croppedImage)
       await axiosInstance
-        .post('/upload/img', formData, {
+        .post('/upload/img-transform', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -179,14 +179,14 @@ export const EducationModal = (props) => {
       .post(`/userBackground`, newEducation)
       .then((res) => {
         setLoading(false)
-        toast.success(<IntlMessages id='alert.my_account.success_change' />)
+        toast.success(<IntlMessages id="alert.my_account.success_change" />)
         props.addEducation(res.data)
         props.onHide()
         setSelectedImage()
         setEducationData(defaultEducationData)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
       })
   }
@@ -213,7 +213,7 @@ export const EducationModal = (props) => {
       const formData = new FormData()
       formData.append('img', general.croppedImage)
       await axiosInstance
-        .post('/upload/img', formData, {
+        .post('/upload/img-transform', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -234,7 +234,7 @@ export const EducationModal = (props) => {
       .put(`/userBackground/${newEducation.id}`, newEducation)
       .then((res) => {
         setLoading(false)
-        toast.success(<IntlMessages id='alert.my_account.success_change' />)
+        toast.success(<IntlMessages id="alert.my_account.success_change" />)
         props.updateEducation(newEducation)
         props.onHide()
         setSelectedImage()
@@ -242,7 +242,7 @@ export const EducationModal = (props) => {
         setIsUpdating(false)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
       })
   }
@@ -264,7 +264,7 @@ export const EducationModal = (props) => {
         setIsUpdating(false)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
         props.onHide()
         setShowDeleteDialogModal(false)
@@ -280,18 +280,18 @@ export const EducationModal = (props) => {
       <Modal
         show={props.show}
         onHide={props.onHide}
-        backdrop='static'
+        backdrop="static"
         keyboard={false}
-        className='edit-modal edit-profile-modal edit-experience-modal'
+        className="edit-modal edit-profile-modal edit-experience-modal"
       >
-        <Modal.Header className='pb-0 mx-4 general-modal-header'>
-          <h3 className='mt-4 mb-0 contact-bio'>
+        <Modal.Header className="pb-0 mx-4 general-modal-header">
+          <h3 className="mt-4 mb-0 contact-bio">
             {!isUpdating ? 'ADD NEW EDUCATION' : 'EDIT EDUCATION'}
           </h3>
           <button
-            type='button'
-            className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
-            aria-label='Close'
+            type="button"
+            className="btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto"
+            aria-label="Close"
             onClick={() => {
               props.onHide()
               setSelectedImage()
@@ -300,21 +300,21 @@ export const EducationModal = (props) => {
             }}
           />
         </Modal.Header>
-        <Modal.Body className='px-4'>
-          <div className='row'>
-            <div className='col-12'>
+        <Modal.Body className="px-4">
+          <div className="row">
+            <div className="col-12">
               <h4>EDUCATION</h4>
             </div>
-            <div className='col-12 col-lg-3 upload-container my-2'>
-              <div className='upload-image me-2 mb-1'>
+            <div className="col-12 col-lg-3 upload-container my-2">
+              <div className="upload-image me-2 mb-1">
                 {general.imageCropperData ? (
                   <div
-                    className='img-placeholder position-relative'
+                    className="img-placeholder position-relative"
                     style={{ height: '150px' }}
                   >
                     <ImageCropper
-                      width={120}
-                      height={100}
+                      width={150}
+                      height={150}
                       setImageUrl={setSelectedImage}
                       imageUrl={selectedImage}
                     />
@@ -329,12 +329,12 @@ export const EducationModal = (props) => {
                             : selectedImage
                         }
                         style={{ width: '100%', height: '100%' }}
-                        alt='Thumb'
+                        alt="Thumb"
                       />
                     ) : (
                       <FontAwesomeIcon
                         icon={faPlus}
-                        className=''
+                        className=""
                         style={{
                           width: '56px',
                           height: '56px',
@@ -348,94 +348,94 @@ export const EducationModal = (props) => {
                 )}
               </div>
               {/* <p>Max image width: 85px</p> */}
-              <p className='mt-2'>Max image size: 512KB</p>
-              <p className='mb-1'>Max image width: 85px</p>
-              <label className='text-center py-2'>
+              <p className="mt-2">Max image size: 512KB</p>
+              <p className="mb-1">Max image width: 85px</p>
+              <label className="text-center py-2">
                 <input
-                  type='file'
-                  id='inputGroupFile'
-                  name='profile_image'
-                  accept='image/*'
-                  className='d-none'
+                  type="file"
+                  id="inputGroupFile"
+                  name="profile_image"
+                  accept="image/*"
+                  className="d-none"
                   ref={inputImage}
                   onChange={imageChange}
                 />
-                <div className='image-upload d-flex'>
+                <div className="image-upload d-flex">
                   <p>Choose Image</p>
                   <FontAwesomeIcon
                     icon={faFileUpload}
-                    className='edit-modal-sm ms-4'
+                    className="edit-modal-sm ms-4"
                     style={{ height: '27px', width: '20px' }}
                   />
                 </div>
               </label>
             </div>
-            <div className='col-lg-9 col-12'>
+            <div className="col-lg-9 col-12">
               <input
-                className='my-2'
-                type='text'
-                name='college'
+                className="my-2"
+                type="text"
+                name="college"
                 value={educationData?.college}
                 onChange={handleChange}
-                placeholder='University or College Name'
+                placeholder="University or College Name"
               />
               <input
-                className='my-2'
-                type='text'
-                name='degree'
+                className="my-2"
+                type="text"
+                name="degree"
                 value={educationData?.degree}
                 onChange={handleChange}
-                placeholder='Degree Earned (Example: Bachelor`s)'
+                placeholder="Degree Earned (Example: Bachelor`s)"
               />
               <input
-                className='my-2'
-                type='text'
-                name='field'
+                className="my-2"
+                type="text"
+                name="field"
                 value={educationData?.field}
                 onChange={handleChange}
-                placeholder='Field of Study (Example: Marketing)'
+                placeholder="Field of Study (Example: Marketing)"
               />
-              <div className='row mt-2'>
-                <div className='col-12 col-lg-4'>
-                  <label htmlFor='start_date'>Start Date</label>
+              <div className="row mt-2">
+                <div className="col-12 col-lg-4">
+                  <label htmlFor="start_date">Start Date</label>
                   <input
-                    className='my-2'
-                    type='month'
-                    name='start_date'
-                    id='start_date'
+                    className="my-2"
+                    type="month"
+                    name="start_date"
+                    id="start_date"
                     max={new Date().toLocaleDateString('fr-CA', {
                       year: 'numeric',
                       month: '2-digit'
                     })}
-                    value={educationData?.start_date}
+                    value={formatDate(educationData?.start_date)}
                     onChange={handleChange}
                   />
                 </div>
-                <div className='col-12 col-lg-4'>
-                  <label htmlFor='end_date'>End Date</label>
+                <div className="col-12 col-lg-4">
+                  <label htmlFor="end_date">End Date</label>
                   <input
-                    className='my-2'
-                    type='month'
-                    name='end_date'
+                    className="my-2"
+                    type="month"
+                    name="end_date"
                     max={new Date().toLocaleDateString('fr-CA', {
                       year: 'numeric',
                       month: '2-digit'
                     })}
                     value={
-                      educationData?.end_date ? educationData.end_date : ''
+                      formatDate(educationData?.end_date ? educationData.end_date : '')
                     }
                     ref={endDateRef}
-                    id='end_date'
+                    id="end_date"
                     onChange={handleChange}
                     disabled={educationData?.present}
                   />
                 </div>
-                <div className='col-12 col-lg-4 my-auto pt-lg-4'>
+                <div className="col-12 col-lg-4 my-auto pt-lg-4">
                   <input
-                    className='my-2'
-                    type='checkbox'
-                    name='present'
-                    id='present'
+                    className="my-2"
+                    type="checkbox"
+                    name="present"
+                    id="present"
                     value={educationData?.present}
                     checked={educationData?.present}
                     // disabled={educationData?.end_date}
@@ -444,69 +444,69 @@ export const EducationModal = (props) => {
                       handleChange(e)
                     }}
                   />
-                  <label htmlFor='present'>Current Position</label>
+                  <label htmlFor="present">Current Position</label>
                 </div>
               </div>
             </div>
-            <div className='col-12'>
+            <div className="col-12">
               <textarea
-                className='mt-2'
-                type='text'
-                name='description'
-                placeholder='Activities, Societies, Awards, etc.'
+                className="mt-2"
+                type="text"
+                name="description"
+                placeholder="Activities, Societies, Awards, etc."
                 value={educationData?.description}
                 onChange={handleChange}
               />
             </div>
-            <div className='row w-100 m-0 p-0 mt-2 attach-link'>
-              <div className='col-12'>
+            <div className="row w-100 m-0 p-0 mt-2 attach-link">
+              <div className="col-12">
                 <h5>Upload Media</h5>
               </div>
-              <div className='col-12'>
+              <div className="col-12">
                 <p>Link to photos, document, presentations, or websites.</p>
               </div>
-              <div className='col-12 col-lg-6'>
+              <div className="col-12 col-lg-6">
                 <FontAwesomeIcon
                   icon={faLink}
-                  className='linkIcons'
+                  className="linkIcons"
                   style={{ width: '22px', height: '22px', color: '#707070' }}
                 />
                 <input
-                  type='text'
-                  name='file'
+                  type="text"
+                  name="file"
                   value={
                     educationData?.external_links?.file
                       ? educationData?.external_links.file
                       : ''
                   }
                   onChange={handleChange}
-                  placeholder='Link to File'
+                  placeholder="Link to File"
                 />
               </div>
-              <div className='col-12 col-lg-6 my-4 my-3 my-lg-0'>
+              <div className="col-12 col-lg-6 my-4 my-3 my-lg-0">
                 <input
-                  type='text'
-                  name='link'
+                  type="text"
+                  name="link"
                   value={
                     educationData?.external_links?.link
                       ? educationData?.external_links?.link
                       : ''
                   }
                   onChange={handleChange}
-                  placeholder='http://yourwebsitelink.com'
+                  placeholder="http://yourwebsitelink.com"
                 />
                 <FontAwesomeIcon
                   icon={faGlobe}
-                  className='linkIcons'
+                  className="linkIcons"
                   style={{ width: '22px', height: '22px', color: '#707070' }}
                 />
               </div>
             </div>
-            <div className='row mx-0'>
-              <div className='col-6 p-0'>
+            <div className="row mx-0">
+              <div className="col-6 p-0">
                 {isUpdating && (
                   <button
-                    className='float-start edit-account mt-4'
+                    className="float-start edit-account mt-4"
                     style={{ background: '#BBBDBF' }}
                     disabled={loading}
                     onClick={() => {
@@ -518,16 +518,16 @@ export const EducationModal = (props) => {
                   </button>
                 )}
               </div>
-              <div className='col-6 p-0'>
+              <div className="col-6 p-0">
                 <button
-                  className='float-end edit-account mt-4'
+                  className="float-end edit-account mt-4"
                   disabled={loading}
                   onClick={() =>
                     !isUpdating ? addEducation() : updateEducation()
                   }
                 >
                   {loading ? (
-                    <span className='spinner-border spinner-border-sm' />
+                    <span className="spinner-border spinner-border-sm" />
                   ) : (
                     'SAVE'
                   )}

@@ -1,0 +1,99 @@
+.multiselect-dropdown {
+    position: relative;
+}
+
+
+
+
+.dropdown-input {
+    display: flex;
+    flex-wrap: wrap; /* Added property */
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    min-height: 40px; /* Adjust height as needed */
+    background-color: #fff;
+}
+
+.chip {
+    display: flex;
+    align-items: center;
+    background-color: #e0e0e0;
+    border-radius: 16px;
+    padding: 4px 8px;
+    margin: 4px; /* Increased margin */
+}
+
+
+.dropdown-input.open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.dropdown-input .placeholder {
+    color: #bbbdbf;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+
+.delete-all-options {
+    color: #999;
+    margin-right: 4px;
+    cursor: pointer;
+}
+
+.dropdown-arrow {
+    /*position: absolute;*/
+    /*top: 50%;*/
+    /*right: 8px; !* Adjust the value according to your needs *!*/
+    transform: translateY(-50%);
+    font-size: 12px;
+}
+
+.dropdown-arrow.up {
+    transform: translateY(-50%) rotate(180deg);
+}
+.chip-remove {
+    border: none;
+    background-color: transparent;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 4px;
+}
+
+.dropdown-options {
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.option-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px !important;
+}
+
+.option-label input {
+    margin-right: 4px;
+    width: 14px !important;
+    justify-content: center;
+    display: flex;
+
+}
+

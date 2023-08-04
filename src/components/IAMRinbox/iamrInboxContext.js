@@ -3,7 +3,7 @@ import {
   useReducer,
   useContext,
   useMemo,
-  useCallback
+  useCallback,
 } from 'react'
 import iamrInboxReducer, { initialState } from './iamrInboxReducer'
 
@@ -16,7 +16,7 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_STUDENT_QUESTIONS',
-        payload
+        payload,
       })
     },
     [dispatch]
@@ -26,7 +26,17 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_CERTIFICATION_FEEDBACK_QUESTIONS',
-        payload
+        payload,
+      })
+    },
+    [dispatch]
+  )
+
+  const setApprovalRequests = useCallback(
+    (payload) => {
+      dispatch({
+        type: 'SET_APPROVAL_REQUESTS',
+        payload,
       })
     },
     [dispatch]
@@ -38,7 +48,7 @@ export const IamrInboxProvider = ({ children }) => {
 
       dispatch({
         type: 'SET_QUESTIONS_MENU_SELECTED',
-        payload: payload
+        payload: payload,
       })
     },
     [state, dispatch]
@@ -48,7 +58,7 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_LOADING',
-        payload: payload
+        payload: payload,
       })
     },
     [dispatch]
@@ -58,7 +68,7 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_REPLYING',
-        payload: payload
+        payload: payload,
       })
     },
     [dispatch]
@@ -67,18 +77,28 @@ export const IamrInboxProvider = ({ children }) => {
   const newMessage = useCallback(
     ({ message, ticket }) => {
       //prettier-ignore
-      const questions = ticket.type === 'instruction' ? state.studentQuestions : state.certificationFeedbackQuestions
+      const questions =
+        ticket.type === 'instruction'
+          ? state.studentQuestions
+          : ticket.type === 'feedback' || ticket.type === 'certification_submit'
+          ? state.certificationFeedbackQuestions
+          : state.approvalRequests;
 
       const newRows = questions.rows.map((x) =>
         x.id === ticket.id ? { ...x, TicketAnswers: message } : x
       )
 
       //prettier-ignore
-      const type = ticket.type === 'instruction' ? 'UPDATE_STUDENT_QUESTIONS' : 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS'
+      const type =
+          ticket.type === 'instruction'
+            ? 'UPDATE_STUDENT_QUESTIONS'
+            : ticket.type === 'feedback' || ticket.type === 'certification_submit'
+            ? 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS'
+            : 'UPDATE_APPROVAL_REQUEST';
 
       dispatch({
         type: type,
-        payload: { ...questions, rows: newRows }
+        payload: { ...questions, rows: newRows },
       })
     },
     [dispatch, state]
@@ -87,7 +107,12 @@ export const IamrInboxProvider = ({ children }) => {
   const ticketOpened = useCallback(
     (ticket) => {
       //prettier-ignore
-      const questions = ticket.type === 'instruction' ? state.studentQuestions : state.certificationFeedbackQuestions
+      const questions =
+        ticket.type === 'instruction'
+          ? state.studentQuestions
+          : ticket.type === 'feedback' || ticket.type === 'certification_submit'
+          ? state.certificationFeedbackQuestions
+          : state.approvalRequests;
 
       const foundIndex = questions.rows.find(
         (row) => row.id === ticket.id && !row.read_by_instructor
@@ -100,23 +125,32 @@ export const IamrInboxProvider = ({ children }) => {
       )
 
       //prettier-ignore
-      const type = ticket.type === 'instruction' ? 'UPDATE_STUDENT_QUESTIONS' : 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS'
+      const type =
+        ticket.type === 'instruction'
+          ? 'UPDATE_STUDENT_QUESTIONS'
+          : ticket.type === 'feedback' || ticket.type === 'certification_submit'
+          ? 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS'
+          : 'UPDATE_APPROVAL_REQUEST';
 
       dispatch({
         type: type,
         payload: {
           ...questions,
           unreadCount: questions.unreadCount - 1,
-          rows: newRows
-        }
+          rows: newRows,
+        },
       })
     },
-    [state.certificationFeedbackQuestions, state.studentQuestions]
+    [
+      state.certificationFeedbackQuestions,
+      state.studentQuestions,
+      state.approvalRequests,
+    ]
   )
 
   const resetAllQuestions = useCallback(() => {
     dispatch({
-      type: 'RESET_ALL_QUESTIONS'
+      type: 'RESET_ALL_QUESTIONS',
     })
   }, [dispatch])
 
@@ -124,29 +158,32 @@ export const IamrInboxProvider = ({ children }) => {
     return {
       studentQuestions: state.studentQuestions,
       certificationFeedbackQuestions: state.certificationFeedbackQuestions,
+      approvalRequests: state.approvalRequests,
       questionsMenuSelected: state.questionsMenuSelected,
       loading: state.loading,
       replying: state.replying,
       setStudentQuestions,
       setCertificationFeedbackQuestions,
+      setApprovalRequests,
       selectQuestionsMenu,
       setLoading,
       setReplying,
       newMessage,
       resetAllQuestions,
       ticketOpened,
-      dispatch
+      dispatch,
     }
   }, [
     state,
     setStudentQuestions,
     selectQuestionsMenu,
     setCertificationFeedbackQuestions,
+    setApprovalRequests,
     setLoading,
     setReplying,
     newMessage,
     resetAllQuestions,
-    ticketOpened
+    ticketOpened,
   ])
 
   return (

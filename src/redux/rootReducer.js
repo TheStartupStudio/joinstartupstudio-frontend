@@ -6,6 +6,9 @@ import generalReducer from './general/Reducer'
 import courseReducer from './course/Reducer'
 import journalReducer from './journal/Reducer'
 import podcastReducer from './podcast/Reducer'
+import dashboardReducer from './dashboard/Reducer'
+import headerReducer from './header/Reducer'
+import usersReducer from './users/Reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -13,6 +16,9 @@ const rootReducer = combineReducers({
   general: generalReducer,
   course: courseReducer,
   journal: journalReducer,
-  podcast: podcastReducer
+  podcast: podcastReducer,
+  dashboard: dashboardReducer,
+  header: headerReducer,
+  users: usersReducer
 })
 export default rootReducer

@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
-import { faPencilAlt, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import {
+  faInfo,
+  faInfoCircle,
+  faPencilAlt,
+  faSpinner
+} from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import IntlMessages from '../../utils/IntlMessages'
@@ -15,17 +20,19 @@ import { JOURNALS } from '../../utils/constants'
 import { useHistory } from 'react-router-dom'
 import NotSavedModal from '../../components/Modals/notSavedNoteModal'
 import _ from 'lodash'
+import { ReflectionInfoBox } from '../../components/Modals/ReflectionInfoBox'
 
 function LtsJournalReflection(props) {
   const journalId = props.journal.id
   const journalEntryId = props.journalEntry.id
   const entryId = props.entry?.id
+
   const history = useHistory()
 
   const currentLanguage = useSelector((state) => state.lang.locale)
 
   let [content, setContent] = useState(props.entry?.content || '')
-  let [editing, setEditing] = useState(true)
+  let [editing, setEditing] = useState(false)
   let [saving, setSaving] = useState(false)
   const [notSaved, setNotSaved] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
@@ -34,7 +41,10 @@ function LtsJournalReflection(props) {
   const [showNotSavedModal, setShowNotSavedModal] = useState(false)
   const [nextTarget, setNextTarget] = useState(null)
   const [contentDidUpdate, setContentDidUpdate] = useState(false)
-
+  const [showInfoBoxModal, setShowInfoBoxModal] = useState(false)
+  const [infoBoxTitle, setInfoBoxTitle] = useState(null)
+  const [infoBoxContent, setInfoBoxContent] = useState(null)
+  // console.log(editing)
   const closeModal = () => setShowNotSavedModal(false)
 
   const continueWithoutSaving = (location) => {
@@ -134,6 +144,7 @@ function LtsJournalReflection(props) {
       }
     } finally {
       setSaving(false)
+      setEditing(false)
     }
   }
 
@@ -141,7 +152,7 @@ function LtsJournalReflection(props) {
     setContent(value)
     setNotSaved(true)
     setContentDidUpdate(false)
-    debounce(handleSubmit, value)
+    // debounce(handleSubmit, value)
     detectFoulWords(removeHtmlFromString(value), (data) => {
       setFoulWords(data)
     })
@@ -178,106 +189,215 @@ function LtsJournalReflection(props) {
     }, 5000),
     []
   )
-
+  console.log(props)
   return (
     <>
       <ToastContainer
-        className='customToast'
-        position='bottom-left'
+        className="customToast"
+        position="bottom-left"
         autoClose={5000}
       />
       <div
+        style={{ marginBottom: 0, position: 'relative' }}
         className={`journal-entries__entry-reflection ${
           !entryId ? 'journal-entries__entry-reflection--new' : ''
         } ${editing ? 'journal-entries__entry-reflection--editing' : ''}`}
       >
-        <div className='journal-entries__entry-reflection-header'>
-          <div className='journal-entries__entry-reflection-date'>
-            {entryId && (
-              <>
-                {props.entry?.createdAt && (
-                  <span>
-                    <strong>
-                      <IntlMessages id='journals.started' />
-                    </strong>
-                    {moment(props.entry?.createdAt)
-                      .locale(currentLanguage)
-                      .format('MMM DD, YYYY HH:mm')}
-                  </span>
-                )}
-                {props.entry?.updatedAt && (
-                  <span>
-                    <strong>
-                      <IntlMessages id='journals.edited' />
-                    </strong>
-                    {moment(props.entry?.updatedAt)
-                      .locale(currentLanguage)
-                      .format('MMM DD, YYYY HH:mm')}
-                  </span>
-                )}
-              </>
-            )}
-          </div>
-          <div className='journal-entries__entry-reflection-actions'>
-            {entryId && !editing && (
-              <FontAwesomeIcon
-                onClick={() => setEditing(true)}
-                icon={faPencilAlt}
-              />
-            )}
+        {/*<div className="journal-entries__entry-reflection-header">*/}
+        {/*  <div className="journal-entries__entry-reflection-date">*/}
+        {/*    {entryId && (*/}
+        {/*      <>*/}
+        {/*        {props.entry?.createdAt && (*/}
+        {/*          <span>*/}
+        {/*            <strong>*/}
+        {/*              <IntlMessages id="journals.started" />*/}
+        {/*            </strong>*/}
+        {/*            {moment(props.entry?.createdAt)*/}
+        {/*              .locale(currentLanguage)*/}
+        {/*              .format('MMM DD, YYYY HH:mm')}*/}
+        {/*          </span>*/}
+        {/*        )}*/}
+        {/*        {props.entry?.updatedAt && (*/}
+        {/*          <span>*/}
+        {/*            <strong>*/}
+        {/*              <IntlMessages id="journals.edited" />*/}
+        {/*            </strong>*/}
+        {/*            {moment(props.entry?.updatedAt)*/}
+        {/*              .locale(currentLanguage)*/}
+        {/*              .format('MMM DD, YYYY HH:mm')}*/}
+        {/*          </span>*/}
+        {/*        )}*/}
+        {/*      </>*/}
+        {/*    )}*/}
+        {/*  </div>*/}
+        {/*  <div className="journal-entries__entry-reflection-actions">*/}
+        {/*    {entryId && !editing && (*/}
+        {/*      <FontAwesomeIcon*/}
+        {/*        onClick={() => setEditing(true)}*/}
+        {/*        icon={faPencilAlt}*/}
+        {/*      />*/}
+        {/*    )}*/}
 
-            {(!entryId || editing) && (
-              <>
-                {saving && (
-                  <div className='' style={{ color: '#01c5d1' }}>
-                    <FontAwesomeIcon icon={faSpinner} className='' spin />
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-        <div className='journal-entries__entry-reflection-body'>
-          {!entryId || editing ? (
-            <ReactQuill
-              placeholder={''}
-              theme='snow'
-              name='textQuillStandart'
-              value={content}
-              onChange={handleContentChange}
-              modules={quillModules}
-              formats={quillFormats}
-            />
-          ) : (
-            <div
-              className='journal-entries__entry-reflection-body-content'
-              dangerouslySetInnerHTML={{ __html: content }}
-            ></div>
-          )}
+        {/*    {(!entryId || editing) && (*/}
+        {/*      <>*/}
+        {/*        {saving && (*/}
+        {/*          <div className="" style={{ color: '#01c5d1' }}>*/}
+        {/*            <FontAwesomeIcon icon={faSpinner} className="" spin />*/}
+        {/*          </div>*/}
+        {/*        )}*/}
+        {/*      </>*/}
+        {/*    )}*/}
+        {/*  </div>*/}
+        {/*</div>*/}
+        <div
+          className="journal-entries__entry-reflection-body"
+          style={{ borderRadius: 0, border: '0px' }}
+        >
+          <span
+            className="journal-entries__entry-reflection-body_info-btn"
+            onClick={() => {
+              setInfoBoxTitle(props.journalEntry.title)
+              setInfoBoxContent(props.journalEntry.popupContent)
+              setShowInfoBoxModal(true)
+            }}
+          >
+            <FontAwesomeIcon icon={faInfo} />
+          </span>
+          {
+            // !entryId ||
+            editing ? (
+              <ReactQuill
+                placeholder={''}
+                theme="snow"
+                name="textQuillStandart"
+                value={content}
+                onChange={handleContentChange}
+                modules={quillModules}
+                formats={quillFormats}
+              />
+            ) : (
+              <div
+                className="journal-entries__entry-reflection-body-content"
+                dangerouslySetInnerHTML={{ __html: content }}
+                style={{ border: 0 }}
+              ></div>
+            )
+          }
         </div>
 
         {foulWords && (
-          <div className='p-2 foul-words-notice'>
+          <div className="p-2 foul-words-notice">
             {FoulWords.printMessage(foulWords)}
           </div>
         )}
 
-        <div className='journal-entries__entry-reflection-footer d-flex justify-content-between'>
-          {!entryId && props.showCancel === true && (
-            <button className='button' onClick={() => props?.cancel()}>
-              <IntlMessages id={'journals.cancel'} />
-            </button>
-          )}
-          {entryId && editing && (
-            <button className='button' onClick={deleteReflection}>
-              <IntlMessages id={'journals.delete'} />
-            </button>
-          )}
-          {notSaved && !saving && contentDidUpdate && (
-            <button className='button' onClick={handleSubmit} disabled={saving}>
-              <IntlMessages id={'journals.save'} />
-            </button>
-          )}
+        <div
+          style={{ marginTop: 0, padding: '0 8px', backgroundColor: '#fff' }}
+          className="journal-entries__entry-reflection-footer d-flex justify-content-between"
+        >
+          <div
+            className="journal-entries__entry-reflection-header"
+            style={{
+              width: '100%',
+              padding: props.entry?.createdAt || !editing ? 6 : 0,
+              borderTop:
+                props.entry?.createdAt || !editing
+                  ? '2px solid rgb(229, 229, 229)'
+                  : '0px'
+            }}
+          >
+            <div className="journal-entries__entry-reflection-date">
+              {entryId && (
+                <>
+                  {props.entry?.createdAt && (
+                    <span>
+                      <strong>
+                        <IntlMessages id="journals.started" />
+                      </strong>
+                      {moment(props.entry?.createdAt)
+                        .locale(currentLanguage)
+                        .format('MMM DD, YYYY HH:mm')}
+                    </span>
+                  )}
+                  {props.entry?.updatedAt && (
+                    <span>
+                      <strong>
+                        <IntlMessages id="journals.edited" />
+                      </strong>
+                      {moment(props.entry?.updatedAt)
+                        .locale(currentLanguage)
+                        .format('MMM DD, YYYY HH:mm')}
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+            <div className="journal-entries__entry-reflection-actions">
+              {editing && (
+                <button
+                  className="button"
+                  onClick={handleSubmit}
+                  disabled={saving}
+                  style={{
+                    position: 'absolute',
+                    bottom: props.entry?.createdAt || !editing ? 35 : 10,
+                    right: 10
+                  }}
+                >
+                  <IntlMessages id={'journals.save'} />
+                </button>
+              )}
+              {!editing && (
+                <div>
+                  <FontAwesomeIcon
+                    onClick={() => setEditing(true)}
+                    icon={faPencilAlt}
+                  />
+                </div>
+              )}
+
+              {(!entryId || editing) && (
+                <>
+                  {saving && (
+                    <div className="" style={{ color: '#01c5d1' }}>
+                      <FontAwesomeIcon icon={faSpinner} className="" spin />
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+          {/*{*/}
+          {/*  <div style={{ display: 'flex', gap: 20 }}>*/}
+          {/*    <div>*/}
+          {/*      Started: <span>date</span>*/}
+          {/*    </div>*/}
+          {/*    <div>*/}
+          {/*      Edited: <span>date</span>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*}*/}
+
+          {/*{!editing && (*/}
+          {/*  <div onClick={() => setEditing(true)}>*/}
+          {/*    <FontAwesomeIcon icon={faPencilAlt} />*/}
+          {/*  </div>*/}
+          {/*)}*/}
+          {/*{!entryId && props.showCancel === true && (*/}
+          {/*  <button className="button" onClick={() => props?.cancel()}>*/}
+          {/*    <IntlMessages id={'journals.cancel'} />*/}
+          {/*  </button>*/}
+          {/*)}*/}
+          {/*{entryId && editing && (*/}
+          {/*  <button className="button" onClick={deleteReflection}>*/}
+          {/*    <IntlMessages id={'journals.delete'} />*/}
+          {/*  </button>*/}
+          {/*)}*/}
+          {/*{notSaved && !saving && contentDidUpdate && (*/}
+          {/*  <button className="button" onClick={handleSubmit} disabled={saving}>*/}
+          {/*    <IntlMessages id={'journals.save'} />*/}
+          {/*  </button>*/}
+          {/*)}*/}
         </div>
       </div>
       <NotSavedModal
@@ -285,6 +405,14 @@ function LtsJournalReflection(props) {
         onHide={closeModal}
         continue={() => continueWithoutSaving(nextTarget)}
       />{' '}
+      {showInfoBoxModal && (
+        <ReflectionInfoBox
+          show={showInfoBoxModal}
+          onHide={() => setShowInfoBoxModal(false)}
+          title={infoBoxTitle}
+          content={infoBoxContent}
+        />
+      )}
     </>
   )
 }

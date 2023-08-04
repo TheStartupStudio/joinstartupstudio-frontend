@@ -16,8 +16,13 @@ import EditProject from './pages/StartupProfile/pages/edit'
 import StudentJournals from './pages/studentJournals'
 import IamrContents from './pages/Iamr/IamrContentsAccordion'
 import ImrContent from './pages/Iamr/ImrContent'
+import TestJournal from './pages/LtsJournal/TestJournal'
+import UserProfile from './pages/Profile/userProfile'
+// import MyTraining from './pages/LtsJournal/MyTraining'
 
+const MyTraining = React.lazy(() => import('./pages/MyTraining/MyTraining'))
 const Login = React.lazy(() => import('./pages/Auth/Login'))
+const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
 const SecurePage = React.lazy(() => import('../src/pages/Secure'))
 const ForgotPassword = React.lazy(() =>
   import('./pages/Auth/Login/forgotPassword')
@@ -34,6 +39,17 @@ const Terms = React.lazy(() => import('./pages/Terms'))
 const Register = React.lazy(() => import('./pages/Register'))
 const Dashboard = React.lazy(() => import('./pages/Dashboard'))
 const Portfolio = React.lazy(() => import('./pages/Portfolio'))
+const MyCurriculum = React.lazy(() =>
+  import('./pages/MyLearnToStartEDU/MyCurriculum/MyCurriculum')
+)
+const MyCertificationGuide = React.lazy(() =>
+  import('./pages/MyLearnToStartEDU/MyCertificationGuide/MyCertificationGuide')
+)
+const IamrCertificationGuide = React.lazy(() =>
+  import(
+    './pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationGuide'
+  )
+)
 const EditPortfolio = React.lazy(() =>
   import('./pages/Portfolio/editPortfolio')
 )
@@ -43,7 +59,7 @@ const Preview = React.lazy(() => import('./pages/StartupProfile/preview'))
 
 const SavedMedia = React.lazy(() => import('./pages/Saved'))
 const Resubscribe = React.lazy(() => import('./pages/Resubscribe'))
-const StartupLive = React.lazy(() => import('./pages/StartupLive'))
+// const StartupLive = React.lazy(() => import('./pages/StartupLive'))
 const Spotlight = React.lazy(() => import('./pages/Spotlight'))
 const LiveStream = React.lazy(() => import('./pages/StartupLive/livestream'))
 const AllVideos = React.lazy(() => import('./pages/BeyondYourCourse/allVideos'))
@@ -93,9 +109,13 @@ const PasswordChangeRequired = React.lazy(() =>
 const JournalsManagement = React.lazy(() =>
   import('./pages/JournalsManagement')
 )
+const JournalsManagement2 = React.lazy(() =>
+  import('./pages/JournalsManagement/JournalsManagement2')
+)
 
 const IAMRinbox = React.lazy(() => import('./pages/IAMRinbox'))
 const StudentIAMR = React.lazy(() => import('../src/pages/StudentIAMR'))
+const TestPage = React.lazy(() => import('../src/pages/LtsJournal/TestPage'))
 
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
@@ -112,57 +132,67 @@ function Router(props) {
         {isAuthenticated ? (
           <Layout>
             <Switch>
-              <Route path='/dashboard' component={Dashboard} />
-              <Route path='/savedMedia' component={SavedMedia} />
-              <Route path='/csv-upload' component={CSVUpload} />
-              <Route path='/portfolio' component={Portfolio} />
-              <Route path='/my-students' component={MyStudents} />
-              <Route path='/resources' component={Resources} />
+              <Route path="/dashboard" component={Dashboard} />
+              <Route path="/savedMedia" component={SavedMedia} />
+              <Route path="/csv-upload" component={CSVUpload} />
+              <Route path="/portfolio" component={Portfolio} />
+              <Route path="/my-curriculum" component={MyCurriculum} />
+              <Route
+                path="/my-certification-guide"
+                component={MyCertificationGuide}
+              />
+              <Route
+                path="/iamr-certification-guide"
+                component={IamrCertificationGuide}
+              />
+              <Route path="/my-students" component={MyStudents} />
+              <Route path="/resources" component={Resources} />
               <Route
                 exact
-                path='/edit-portfolio'
+                path="/edit-portfolio"
                 component={EditPortfolioNew}
               />
               <Route
                 exact
-                path='/edit-portfolio/recommendation/:id'
+                path="/edit-portfolio/recommendation/:id"
                 component={EditPortfolioNew}
               />
               <Route
-                path='/preview-portfolio'
+                path="/preview-portfolio"
                 component={PreviewPortfolioNew}
               />
-              <Route exact path='/terms' component={Terms} />
+              <Route exact path="/terms" component={Terms} />
               <Route
                 exact
-                path='/user-portfolio/:username'
+                path="/user-portfolio/:username"
                 component={PreviewPublicPortfolio}
               />
               <Route
                 exact
-                path='/beyond-your-course'
+                path="/beyond-your-course"
                 component={BeyondYourCourse}
               />
               <Route
                 exact
-                path='/beyond-your-course/:id'
+                path="/beyond-your-course/:id"
                 component={BeyondYourCourse}
               />
-              <Route path='/story-in-motion' component={StoryInMotion} />
+              <Route path="/story-in-motion" component={StoryInMotion} />
               {/* <Route path='/PrivateProject' component={PrivateProject} /> */}
-              <Route path='/UserProject/:uid' component={UserPortfolioProj} />
+              <Route path="/UserProject/:uid" component={UserPortfolioProj} />
               {/* <Route path='/MyStartupProfile' component={MyProjects} /> */}
-              <Route path='/PreviewMyStartupProfile/:id' component={Preview} />
-              <Route path='/:page/videos' component={AllVideos} />
-              <Route exact path='/startup-live' component={StartupLive} />
-              <Route exact path='/spotlight' component={Spotlight} />
-              <Route exact path='/startup-livestream' component={LiveStream} />
-              <Route exact path='/account' component={Profile} />
-              <Route exact path='/profile-preview' component={ProfilePreview} />
+              <Route path="/PreviewMyStartupProfile/:id" component={Preview} />
+              <Route path="/:page/videos" component={AllVideos} />
+              {/* <Route exact path="/startup-live" component={StartupLive} /> */}
+              <Route exact path="/spotlight" component={Spotlight} />
+              <Route exact path="/startup-livestream" component={LiveStream} />
+              <Route exact path="/account" component={Profile} />
+              <Route exact path="/account/:id" component={UserProfile} />
+              <Route exact path="/profile-preview" component={ProfilePreview} />
               <Route
-                path='/my-training/'
+                path="/my-training"
                 component={(props) => (
-                  <LtsJournal {...props} category='my-training' />
+                  <MyTraining {...props} category="my-training" />
                 )}
               />
               {/* Students journals */}
@@ -171,9 +201,9 @@ function Router(props) {
                 component={StudentJournals}
               /> */}
               <Route
-                path='/students-journals/:studentId'
+                path="/students-journals/:studentId"
                 component={(props) => (
-                  <StudentJournals {...props} category='my-training' />
+                  <StudentJournals {...props} category="my-training" />
                 )}
               />
               {/* <Route
@@ -200,30 +230,96 @@ function Router(props) {
               /> */}
               {/* Students journals */}
               <Route
-                path='/hs1-journal/'
-                component={(props) => <LtsJournal {...props} category='hs1' />}
-              />
+                path="/new-hs1-journal/"
+                component={(props) => <TestJournal {...props} category="hs1" />}
+              />{' '}
               <Route
-                path='/hs2-journal/'
-                component={(props) => <LtsJournal {...props} category='hs2' />}
-              />
+                path="/new-hs2-journal/"
+                component={(props) => <TestJournal {...props} category="hs2" />}
+              />{' '}
               <Route
-                path='/hs3-journal/'
-                component={(props) => <LtsJournal {...props} category='hs3' />}
-              />
-              <Route
-                path='/hs4-journal/'
-                component={(props) => <LtsJournal {...props} category='hs4' />}
-              />
-              <Route
-                path='/market-ready/'
+                path="/hs3-hs4-journal/"
                 component={(props) => (
-                  <LtsJournal {...props} category='market-ready' />
+                  <TestJournal {...props} category="hs3&hs4" />
+                )}
+              />
+              <Route
+                path="/financial-literacy/"
+                component={(props) => (
+                  <TestJournal {...props} category="financial-literacy" />
+                )}
+              />{' '}
+              <Route
+                path="/new-hs1-journal/:type/"
+                component={(props) => (
+                  <TestJournal {...props} category="new-hs1" />
+                )}
+              />
+              <Route
+                path="/new-hs2-journal/:type/"
+                component={(props) => (
+                  <TestJournal {...props} category="new-hs2" />
+                )}
+              />
+              {/*<Route*/}
+              {/*  path="/new-hs1-journal/week/"*/}
+              {/*  component={(props) => (*/}
+              {/*    <TestJournal {...props} category="new-hs1" />*/}
+              {/*  )}*/}
+              {/*/>*/}
+              <Route
+                path="/new-hs1-journal/:journalId"
+                component={<TestPage />}
+              />
+              <Route
+                path="/hs1-journal/"
+                component={(props) => <LtsJournal {...props} category="hs1" />}
+              />
+              <Route
+                path="/hs2-journal/"
+                component={(props) => <LtsJournal {...props} category="hs2" />}
+              />
+              <Route
+                path="/hs3-journal/"
+                component={(props) => <LtsJournal {...props} category="hs3" />}
+              />
+              <Route
+                path="/hs4-journal/"
+                component={(props) => <LtsJournal {...props} category="hs4" />}
+              />
+              <Route
+                path="/student-lts/"
+                component={(props) => (
+                  <LtsJournal {...props} category="student-lts" />
+                )}
+              />
+              <Route
+                path="/student-wellnes/"
+                component={(props) => (
+                  <LtsJournal {...props} category="student-wellnes" />
+                )}
+              />
+              <Route
+                path="/student-personal-finance/"
+                component={(props) => (
+                  <LtsJournal {...props} category="student-personal-finance" />
+                )}
+              />
+              <Route
+                path="/student-leadership/"
+                component={(props) => (
+                  <LtsJournal {...props} category="student-leadership" />
+                )}
+              />
+              <Route
+                path="/market-ready/"
+                component={(props) => (
+                  <LtsJournal {...props} category="market-ready" />
                 )}
               />
               <Route
                 exact
-                path='/My-Market-Ready-Guide'
+                path="/My-Market-Ready-Guide"
                 component={MyMarketReadyGuide}
               />
               {/* <Route
@@ -238,63 +334,74 @@ function Router(props) {
                 component={PublishedProject}
               /> */}
               <Route
-                path='/:page/video/:id'
+                path="/:page/video/:id"
                 component={BeyondYourCourseVideo}
               />
-              <Route path='/sample-note' component={SampleNote} />
-              <Route exact path='/my-notes/:id?' component={MyNotes} />
+              <Route path="/sample-note" component={SampleNote} />
+              <Route exact path="/my-notes/:id?" component={MyNotes} />
               <Route
                 exact
-                path='/my-journal/:month/:id'
+                path="/my-journal/:month/:id"
                 component={MyJournals}
               />
-              <Route exact path='/my-account' component={Profile} />
-              <Route path='/verify' component={VerifyEmail} />
-              <Route path='/logout' component={Logout} />
-              <Route exact path='/my-connections' component={MyConnections} />
+              <Route exact path="/my-account" component={Profile} />
+              <Route path="/verify" component={VerifyEmail} />
+              <Route path="/logout" component={Logout} />
+              <Route exact path="/my-connections" component={MyConnections} />
               <Route
                 exact
-                path='/edit-journals'
+                path="/edit-journals"
                 component={JournalsManagement}
               />
               <Route
                 exact
-                path='/my-connections/request/:id'
+                path="/edit-journals2"
+                component={JournalsManagement2}
+              />
+              <Route
+                exact
+                path="/edit-journals2/:type/:journalId"
+                component={JournalsManagement2}
+              />
+              <Route
+                exact
+                path="/my-connections/request/:id"
                 component={MyConnections}
               />
-              <Route path='/iamr-inbox' component={IAMRinbox} />
+              <Route path="/iamr-inbox" component={IAMRinbox} />
               <Route
-                path='/student-iamr/:studentId/:id?/:type?'
+                path="/student-iamr/:studentId/:id?/:type?"
                 component={StudentIAMR}
               />
-              <Redirect from='/register' exact to='/dashboard' />
-              <Redirect from='/' exact to='/dashboard' />
-              <Route path='/iamr' component={Iamr} />
+              <Redirect from="/register" exact to="/dashboard" />
+              <Redirect from="/ims-login" exact to="/dashboard" />
+              <Route path="/iamr" component={Iamr} />
               <Route component={NotFound} />
             </Switch>
           </Layout>
         ) : (
           <PublicLayout>
             <Switch>
-              <Route path='/verify-email' component={VerifyEmailByCode} />
-              <Route exact path='/lts-secure' component={SecurePage} />
-              <Route exact path='/forgot-password' component={ForgotPassword} />
-              <Route exact path='/reset-password' component={ResetPassword} />
-              <Route exact path='/create-account' component={CreateAccount} />
-              <Route exact path='/terms' component={Terms} />
-              <Route path='/register' component={Register} />
-              <Route exact path='/trial-ended' component={Resubscribe} />
-              <Route exact path='/subscription-ended' component={Resubscribe} />
-              <Route path='/logout' component={Logout} />
-              <Route exact path='/' component={Login} />
-              <Route path='/verify' component={VerifyEmail} />
+              <Route path="/verify-email" component={VerifyEmailByCode} />
+              <Route exact path="/lts-secure" component={SecurePage} />
+              <Route exact path="/forgot-password" component={ForgotPassword} />
+              <Route exact path="/reset-password" component={ResetPassword} />
+              <Route exact path="/create-account" component={CreateAccount} />
+              <Route exact path="/terms" component={Terms} />
+              <Route path="/register" component={Register} />
+              <Route exact path="/trial-ended" component={Resubscribe} />
+              <Route exact path="/subscription-ended" component={Resubscribe} />
+              <Route path="/logout" component={Logout} />
+              <Route exact path="/" component={ChooseLogin} />
+              <Route path="/ims-login" component={Login} />
+              <Route path="/verify" component={VerifyEmail} />
               <Route
                 exact
-                path='/user-portfolio/:username'
+                path="/user-portfolio/:username"
                 component={PreviewPublicPortfolio}
               />
               <Route
-                path='/password-change-required'
+                path="/password-change-required"
                 component={PasswordChangeRequired}
               />
               <Route component={NotFound} />

@@ -1,124 +1,205 @@
-import React, { useEffect, useState } from "react";
-import { Modal } from "react-bootstrap";
-import Select from "react-select";
-import defaultImage from "../../../assets/images/profile-image.png";
-import axiosInstance from "../../../utils/AxiosInstance";
-import { toast } from "react-toastify";
-import "../index.css";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react'
+import { Modal } from 'react-bootstrap'
+import Select from 'react-select'
+import defaultImage from '../../../assets/images/profile-image.png'
+import axiosInstance from '../../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
+import '../index.css'
+import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPeriodsStart } from '../../../redux/dashboard/Actions'
 
 const EditStudentModal = (props) => {
-  const [loading, setLoading] = useState(false);
-  const [resetLoading, setResetLoading] = useState(false);
-  const [resetSubmitted, setResetSubmitted] = useState(false);
-  const { user } = useSelector((state) => state.user.user);
-  const [newInstructorId, setNewInstructorId] = useState(null);
+  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
+  const [resetLoading, setResetLoading] = useState(false)
+  const [resetSubmitted, setResetSubmitted] = useState(false)
+  const { user } = useSelector((state) => state.user.user)
+  const [newInstructorId, setNewInstructorId] = useState(null)
+  const periods = useSelector((state) => state.dashboard.periods)
+  const [yearOptions, setYearOptions] = useState([])
+  const [periodOptions, setPeriodOptions] = useState([])
+  const [selectedYear, setSelectedYear] = useState(null)
+  const [selectedPeriod, setSelectedPeriod] = useState(null)
 
   const defaultData = {
-    name: "",
-    email: "",
-    user_note: "",
+    name: '',
+    email: '',
+    user_note: '',
     certificat: false,
     deactivated: false,
-  };
+    level: '',
+    year: '',
+    period: ''
+  }
 
-  const [data, setData] = useState(defaultData);
+  const [data, setData] = useState(defaultData)
+  console.log('data', data)
+  console.log('props', props)
+
+  useEffect(() => {
+    dispatch(getPeriodsStart())
+  }, [])
+
+  useEffect(() => {
+    setSelectedPeriod(data?.period_id)
+    setSelectedYear(data?.year)
+  }, [data?.period_id, data?.year])
 
   useEffect(() => {
     if (!props?.data) {
-      setData(defaultData);
+      setData(defaultData)
     } else {
-      setData(props.data);
+      setData(props.data)
     }
-    setResetSubmitted(false);
-  }, [props.data]);
+    setResetSubmitted(false)
+  }, [props.data])
 
-  const defaultLevels = [
-    { label: "LS", value: "LS" },
-    { label: "MS", value: "MS" },
-    { label: "HS", value: "HS" },
-    { label: "HE", value: "HE" },
-  ];
+  const defaultValues = [
+    {
+      name: 'level',
+      value: 'LS',
+      label: 'LS',
+      year: ['K', '1st', '2nd', '3rd', '4th', '5th']
+    },
+    {
+      name: 'level',
+      value: 'MS',
+      label: 'MS',
+      year: ['ES1', 'ES2', 'ES3'],
+      period: periods
+        ?.filter(
+          (item) =>
+            item.name === 'Period 1' ||
+            item.name === 'Period 2' ||
+            item.name === 'Period 3' ||
+            item.name === 'Period 4' ||
+            item.name === 'Period 5' ||
+            item.name === 'Period 6' ||
+            item.name === 'Period 7'
+        )
+        .map((item) => item.name)
+    },
+    {
+      name: 'level',
+      value: 'HS',
+      label: 'HS',
+      year: ['LTS1', 'LTS2', 'LTS3', 'LTS4'],
+      period: periods?.map((item) => item.name)
+    },
+    { name: 'level', value: 'HE', label: 'HE' }
+  ]
 
-  const defaultYears = [
-    { label: "LTS1", value: "LTS1" },
-    { label: "LTS2", value: "LTS2" },
-    { label: "LTS3", value: "LTS3" },
-    { label: "LTS4", value: "LTS4" },
-  ];
+  useEffect(() => {
+    updateOptions(data?.level)
+  }, [data?.level])
+
+  const updateOptions = (level) => {
+    const getOptions = (value, prop) => {
+      const item = defaultValues.find((item) => item.value === value)
+      const elements = item ? item[prop] : []
+
+      if (prop === 'period') {
+        const periodIds = elements?.map(
+          (el) => periods.find((period) => period.name === el)?.id
+        )
+
+        return elements?.map((el, index) => ({
+          name: prop,
+          value: periodIds[index], // Assign the period ID as the value
+          label: el
+        }))
+      }
+      return elements?.map((el) => ({
+        name: prop,
+        value: el,
+        label: el
+      }))
+    }
+    const yearOptions = getOptions(level ? level : data?.level, 'year')
+    const periodOptions = getOptions(level ? level : data?.level, 'period')
+    setYearOptions(yearOptions)
+    setPeriodOptions(periodOptions)
+  }
 
   const handleChange = (e) => {
-    const { name, value } = e;
-    if (name === "instructor_id") {
+    const { name, value } = e
+    if (name === 'instructor_id') {
       if (props.data.instructor_id !== value) {
-        setNewInstructorId(value);
+        setNewInstructorId(value)
       }
 
       if (newInstructorId !== null && props.data.instructor_id === value) {
-        setNewInstructorId(null);
+        setNewInstructorId(null)
       }
     } else {
-      setData((old) => ({ ...old, [name]: value }));
+      if (name === 'level') {
+        setData((old) => ({ ...old, [name]: value, year: '', period_id: null }))
+        updateOptions(value)
+        setSelectedYear(null)
+        setSelectedPeriod(null)
+      } else {
+        setData((old) => ({ ...old, [name]: value }))
+      }
     }
-  };
+  }
 
   const handleSubmit = async () => {
-    let newStudentData = data;
+    let newStudentData = data
 
     if (newInstructorId) {
-      setLoading(true);
+      setLoading(true)
       await axiosInstance
-        .post("/instructor/transfers", {
+        .post('/instructor/transfers', {
           userId: props.data.id,
-          toInstructor: newInstructorId,
+          toInstructor: newInstructorId
         })
         .then((transfer) => {
-          props.addNewTransferRequest(transfer.data);
-          newStudentData.transferHistory[0] = transfer.data;
-          toast.success("New transfer request submitted!");
+          props.addNewTransferRequest(transfer.data)
+          newStudentData.transferHistory[0] = transfer.data
+          toast.success('New transfer request submitted!')
         })
-        .catch((e) => toast.error("Transfer failed!"));
-      setNewInstructorId(null);
+        .catch((e) => toast.error('Transfer failed!'))
+      setNewInstructorId(null)
     }
 
     if (JSON.stringify(props.data) === JSON.stringify(data)) {
-      setLoading(false);
-      return;
+      setLoading(false)
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
 
     await axiosInstance
       .put(`/instructor/update-student/${data.id}`, {
-        ...data,
+        ...data
       })
       .then(async (response) => {
-        props.updateState(data?.id, newStudentData);
-        props.setStudentToEdit({});
-        props.onHide();
-        toast.success("Data was successfully updated!");
+        props.updateState(data?.id, newStudentData)
+        props.setStudentToEdit({})
+        props.onHide()
+        toast.success('Data was successfully updated!')
       })
       .catch((err) => {
-        toast.error(err.response.data);
-      });
-    setNewInstructorId(null);
-    setLoading(false);
-  };
+        toast.error(err.response.data)
+      })
+    setNewInstructorId(null)
+    setLoading(false)
+  }
 
   const handlePasswordReset = async () => {
-    setResetLoading(true);
+    setResetLoading(true)
 
     await axiosInstance
       .put(`/instructor/change-student-password/${data.id}`)
       .then(async () => {
-        setResetSubmitted(true);
+        setResetSubmitted(true)
       })
       .catch((err) => {
-        toast.error("Something went wrong, please try again!");
-      });
-    setResetLoading(false);
-  };
+        toast.error('Something went wrong, please try again!')
+      })
+    setResetLoading(false)
+  }
 
   return data?.id ? (
     <Modal
@@ -137,9 +218,9 @@ const EditStudentModal = (props) => {
             <div className="col-12 col-sm-7 col-lg-5 certification-status d-flex align-items-end justify-content-lg-end p-0">
               <p className="p-0 m-0">CERTIFICATION STATUS</p>
               <span
-                style={{ cursor: "pointer", paddingBottom: "3px" }}
+                style={{ cursor: 'pointer', paddingBottom: '3px' }}
                 className={`ms-1 ${
-                  props.data.certificat ? "statusOk" : "statusFalse"
+                  props.data.certificat ? 'statusOk' : 'statusFalse'
                 }`}
               >
                 ●
@@ -154,7 +235,7 @@ const EditStudentModal = (props) => {
               </Link>
               <span
                 className="px-1 my-auto fw-normal"
-                style={{ color: "#707070" }}
+                style={{ color: '#707070' }}
               >
                 |
               </span>
@@ -166,7 +247,7 @@ const EditStudentModal = (props) => {
               </Link>
               <span
                 className="px-1 my-auto fw-normal"
-                style={{ color: "#707070" }}
+                style={{ color: '#707070' }}
               >
                 |
               </span>
@@ -179,10 +260,10 @@ const EditStudentModal = (props) => {
         <button
           type="button"
           className="btn-close edit-student-close"
-          style={{ position: "absolute", top: "0px", right: 0 }}
+          style={{ position: 'absolute', top: '0px', right: 0 }}
           aria-label="Close"
           onClick={() => {
-            props.onHide();
+            props.onHide()
           }}
         />
         {/* <div className='col-1 px-0'>
@@ -194,12 +275,12 @@ const EditStudentModal = (props) => {
           <img
             src={data.profile_image ? data.profile_image : defaultImage}
             className="border border-1 rounded-circle border border-dark text-center mx-auto"
-            width={"101px"}
-            height={"101px"}
+            width={'101px'}
+            height={'101px'}
             alt="#"
           />
         </div>
-        <div className="col-12 col-lg-6 pe-lg-4">
+        <div className="col-12 h-100 col-lg-6 pe-lg-4">
           <div className="input-group mb-1">
             <label htmlFor=" w-100">User Name</label>
 
@@ -210,7 +291,7 @@ const EditStudentModal = (props) => {
               // defaultValue={data?.name}
               value={data?.name}
               onChange={(e) =>
-                handleChange({ name: "name", value: e.target.value })
+                handleChange({ name: 'name', value: e.target.value })
               }
             />
           </div>
@@ -224,82 +305,70 @@ const EditStudentModal = (props) => {
               // defaultValue={data?.email}
               value={data?.email}
               onChange={(e) =>
-                handleChange({ name: "email", value: e.target.value })
+                handleChange({ name: 'email', value: e.target.value })
               }
               name="UserEmail"
             />
           </div>
-          {/* <div className='input-group mb-3'>
-            <label htmlFor='userName w-100'>User Chosen Role</label>
+          <div className="input-group mb-1">
+            <label htmlFor="userName w-100">User Chosen Role</label>
             <input
-              type='text'
-              className='form-control w-100'
-              aria-label='Sizing example input'
-              aria-describedby='inputGroup-sizing-default'
-              disabled
-              name='UserChosenRole'
-            />
-          </div> */}
-          <div className="mt-2">
-            <textarea
-              className="form-control"
-              id="exampleFormControlTextarea1"
-              // defaultValue={data.user_note}
-              value={data?.user_note ? data?.user_note : ""}
-              name="user_note"
+              type="text"
+              className="form-control w-100"
+              aria-label="Sizing example input"
+              aria-describedby="inputGroup-sizing-default"
+              // defaultValue={data?.email}
+              value={data?.email}
               onChange={(e) =>
-                handleChange({ name: "user_note", value: e.target.value })
+                handleChange({ name: 'email', value: e.target.value })
               }
-              placeholder="Add user notes here..."
-              rows="4"
-            ></textarea>
+              name="UserEmail"
+            />
           </div>
-          <div className="mt-2 reset-student-password d-flex flex-column">
+          <div className="mt-2 mb-1 reset-student-password d-flex flex-column">
             <button
               className="lts-button reset-button"
               style={{
-                background: !resetSubmitted ? "#ea3b97" : "rgb(187, 189, 191)",
+                background: !resetSubmitted ? '#ea3b97' : 'rgb(187, 189, 191)',
                 hover: {
-                  background: !resetSubmitted
-                    ? "#a7ca42"
-                    : "rgb(187, 189, 191)",
-                },
+                  background: !resetSubmitted ? '#a7ca42' : 'rgb(187, 189, 191)'
+                }
               }}
               onClick={() => {
-                handlePasswordReset();
+                handlePasswordReset()
               }}
               disabled={resetLoading || resetSubmitted}
             >
               {resetLoading ? (
                 <span className="spinner-border spinner-border-sm" />
               ) : (
-                "RESET PASSWORD"
+                'RESET PASSWORD'
               )}
             </button>
             {resetSubmitted && (
               <p className="user-id-label mt-1">
-                Default password was set to:{" "}
-                <span style={{ color: "#01c5d1" }}> Learntostart1! </span>
+                Default password was set to:{' '}
+                <span style={{ color: '#01c5d1' }}> Learntostart1! </span>
               </p>
             )}
+          </div>
+
+          <div className="">
+            <a
+              href={`/account/${data.id}`}
+              className="btn btn-secondary w-100"
+              style={{
+                position: 'absolute',
+                bottom: '16px',
+                maxWidth: '361px'
+              }}
+            >
+              View student account
+            </a>
           </div>
         </div>
         <div className="col-lg-4 col-12">
           <div className="row mx-auto">
-            {/* <div className='col-6 px-0'>
-              <label htmlFor='userId' className='user-id-label'>
-                User ID Number
-              </label>
-              <input
-                type='text'
-                className='form-control text-center'
-                value={data.id}
-                aria-label='Sizing example input'
-                aria-describedby='inputGroup-sizing-default'
-                disabled
-                name='userId'
-              />
-            </div> */}
             <div className="col-12 px-0 text-center mt-2 mt-lg-0">
               <label htmlFor="unit" className="user-id-label">
                 Unit
@@ -328,14 +397,26 @@ const EditStudentModal = (props) => {
                 Level
               </label>
               <Select
-                options={defaultLevels}
+                options={defaultValues}
                 // defaultValue={data?.level}
+                // name="level"
                 placeholder={data?.level}
                 onChange={(newValue) => {
+                  console.log('newValue', newValue)
                   handleChange({
-                    name: "level",
-                    value: newValue.value,
-                  });
+                    name: 'level',
+                    value: newValue.value
+                  })
+                  handleChange({
+                    name: 'year',
+                    value: ''
+                  })
+                  handleChange({
+                    name: 'period_id',
+                    value: null
+                  })
+                  setSelectedYear(null)
+                  setSelectedPeriod(null)
                 }}
                 className="my-auto py-auto"
                 // styles={customStyles}
@@ -346,18 +427,61 @@ const EditStudentModal = (props) => {
                 Year
               </label>
               <Select
-                options={defaultYears}
-                // defaultValue={data?.year}
-                placeholder={data?.year}
+                options={yearOptions}
+                placeholder={selectedYear ? selectedYear : 'Year'}
+                value={selectedYear ? selectedYear : 'None'}
                 onChange={(newValue) => {
                   handleChange({
-                    name: "year",
-                    value: newValue.value,
-                  });
+                    name: 'year',
+                    value: newValue.value
+                  })
+                  setSelectedYear(newValue.value)
                 }}
+                disabled={data?.level === 'HE'}
+                isDisabled={data?.level === 'HE'}
                 className="my-auto py-auto"
                 // styles={customStyles}
               />
+            </div>
+          </div>
+          <div className="row mx-auto">
+            <div className="col-12 px-0 text-center">
+              <label htmlFor="userId" className="user-id-label">
+                Class
+              </label>
+              {data?.transferHistory[0]?.transferTo?.User?.name ? (
+                <p
+                  className="text-center text-warning p-0 m-0"
+                  style={{
+                    // color: '#ff894d',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}
+                >
+                  Pending transfer
+                </p>
+              ) : (
+                <Select
+                  options={periodOptions}
+                  // defaultValue={user?.name}
+                  placeholder={
+                    periods?.find((period) => period.id === data?.period_id)
+                      ?.name
+                  }
+                  // placeholder={selectedPeriod ? selectedPeriod : 'Class'}
+                  value={selectedPeriod ? selectedPeriod : 'None'}
+                  onChange={(newValue) => {
+                    handleChange({
+                      name: 'period_id',
+                      value: newValue.value
+                    })
+                    setSelectedPeriod(newValue.value)
+                  }}
+                  isDisabled={data?.level === 'LS' || data?.level === 'HE'}
+                  className={`my-auto py-auto `}
+                  // styles={customStyles}
+                />
+              )}
             </div>
           </div>
           <div className="row mx-auto">
@@ -370,8 +494,8 @@ const EditStudentModal = (props) => {
                   className="text-center text-warning p-0 m-0"
                   style={{
                     // color: '#ff894d',
-                    fontSize: "14px",
-                    fontWeight: "600",
+                    fontSize: '14px',
+                    fontWeight: '600'
                   }}
                 >
                   Pending transfer
@@ -383,9 +507,9 @@ const EditStudentModal = (props) => {
                   placeholder={user?.name}
                   onChange={(newValue) => {
                     handleChange({
-                      name: "instructor_id",
-                      value: newValue.value,
-                    });
+                      name: 'instructor_id',
+                      value: newValue.value
+                    })
                   }}
                   isDisabled={false}
                   className="my-auto py-auto"
@@ -403,9 +527,9 @@ const EditStudentModal = (props) => {
                   checked={data?.deactivated == true ? false : true}
                   onChange={(e) => {
                     handleChange({
-                      name: "deactivated",
-                      value: data?.deactivated == true ? false : true,
-                    });
+                      name: 'deactivated',
+                      value: data?.deactivated == true ? false : true
+                    })
                   }}
                 />
                 <i className="ms-auto"></i>
@@ -416,21 +540,21 @@ const EditStudentModal = (props) => {
             <button
               className="lts-button w-100"
               onClick={() => {
-                handleSubmit();
+                handleSubmit()
               }}
               disabled={loading ? true : false}
             >
               {loading ? (
                 <span className="spinner-border spinner-border-sm" />
               ) : (
-                "SAVE"
+                'SAVE'
               )}
             </button>
           </div>
         </div>
       </Modal.Body>
     </Modal>
-  ) : null;
-};
+  ) : null
+}
 
-export default EditStudentModal;
+export default EditStudentModal

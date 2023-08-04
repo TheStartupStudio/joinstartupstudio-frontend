@@ -29,7 +29,7 @@ export const AccomplishmentModal = (props) => {
     if (props.currentAccomp.length === 0) return
     setAccompData({
       ...props.currentAccomp,
-      date_issued: formatDate(props.currentAccomp.date_issued)
+      // date_issued: formatDate(props.currentAccomp.date_issued)
     })
     setIsUpdating(true)
   }, [props.currentAccomp])
@@ -182,7 +182,7 @@ export const AccomplishmentModal = (props) => {
                       year: 'numeric',
                       month: '2-digit'
                     })}
-                    value={accompData?.date_issued}
+                    value={formatDate(accompData?.date_issued)}
                     onChange={handleChange}
                   />
                 </div>

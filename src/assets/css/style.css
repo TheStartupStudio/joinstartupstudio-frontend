@@ -884,7 +884,7 @@ input[type='file'] {
   margin-left: 1.5rem !important;
 }
 .my-account {
-  border: 1px solid #bbbdbf;
+  /*border: 1px solid #bbbdbf;*/
   border-radius: 6px;
   opacity: 1;
 }
@@ -1182,6 +1182,10 @@ input[type='file'] {
 #subscription-modal {
   /* margin-top: 15%; */
   top: 20%;
+}
+#briefing-modal {
+  /* margin-top: 15%; */
+  /*top: 10%;*/
 }
 /* #password-modal {
   width: 50%;
@@ -3532,6 +3536,15 @@ wave > wave:first-child {
   margin-bottom: 13px;
 
   max-width: 60%;
+  width: 100%;
+  height: 100%;
+  /* max-width: 100%;
+  max-height: 100%; */
+}
+
+b,
+strong {
+  font-weight: bold !important;
 }
 
 @media (max-width: 500px) {
@@ -3544,7 +3557,7 @@ wave > wave:first-child {
 
 .journal-entries__video-thumbnail {
   position: relative;
-  max-width: 300px;
+  /*max-width: 300px;*/
   margin: 0 auto;
   cursor: pointer;
 }
@@ -3608,7 +3621,9 @@ wave > wave:first-child {
   font: normal normal 600 17px/17px Montserrat;
   letter-spacing: 0.68px;
   color: #333d3d;
-  padding: 0 6px;
+  padding: 0px 6px;
+  /*padding: 6px 6px;*/
+  /*background-color: #e5e5e5;*/
 }
 .journal-entries__entry-title--md {
   font-weight: normal;
@@ -3649,7 +3664,8 @@ wave > wave:first-child {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  /*margin-bottom: 6px;*/
+  margin-bottom: 0px;
   padding-left: 12px;
 }
 .journal-entries__entry-reflection-date {
@@ -3698,6 +3714,7 @@ wave > wave:first-child {
   margin-left: 10px;
 }
 .journal-entries__entry-reflection-body {
+  position: relative;
 }
 .journal-entries__entry-reflection-body textarea,
 .journal-entries__entry-reflection-body-content {
@@ -3742,6 +3759,13 @@ wave > wave:first-child {
   height: 22px;
   width: 22px;
 }
+.ql-container.ql-snow,
+.ql-toolbar.ql-snow {
+  border: 0 !important;
+}
+.quill .ql-container.ql-snow {
+  border: 0 !important;
+}
 .journal-entries__entry-reflection-body .ql-container {
   background: #ffffff;
   border: 2px solid #d9dadb;
@@ -3781,6 +3805,46 @@ wave > wave:first-child {
   display: none;
 }
 
+.journal-entry__parent-title {
+  padding: 10px;
+  margin: 0 0 10px 0;
+  background: #51c7df;
+}
+.journal-entry__parent-title h5 {
+  font-family: 'montserrat';
+  font-weight: 700;
+  font-size: 12px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.journal-entry__parent-title > * {
+  color: white;
+  margin: 0;
+}
+.journal-entry__content-after {
+  margin: 10px 0 20px 0;
+}
+.journal-entries__entry-reflection-body_info-btn {
+  position: absolute;
+  top: -34px;
+  right: 8px;
+  cursor: pointer;
+  color: #f764ae;
+  font-size: 16px;
+  border: 2px solid #f764ae;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reflection-infobox-modal h4 {
+  color: #f764ae;
+}
+.reflection-infobox-modal .accept-request-button {
+  margin-top: 20px;
+}
 /*
   Media Lightbox
 */
@@ -4151,7 +4215,7 @@ ul.sidebar-menu-item .collapse a {
   color: #333d3d;
   opacity: 1;
 }
-.accordion--dark .accordion_button:active 
+.accordion--dark .accordion_button:active
 /* .accordion--dark .accordion_button:focus  */ {
   outline: 0 !important;
 }
@@ -4171,13 +4235,13 @@ ul.sidebar-menu-item .collapse a {
 }
 
 .Certificate {
-  max-width: 105px;
+  max-width: 155px;
 }
 
 .user-info-grid .Certificate img {
-  width: 83px !important;
-  height: 73px !important;
-  margin: 0 auto;
+  width: 100% !important;
+  height: 100% !important;
+  margin-right: 1rem;
 }
 
 .user-info-grid {
@@ -4256,4 +4320,86 @@ ul.sidebar-menu-item .collapse a {
 .no-border-modal .modal-content {
   border: 0px;
   border-radius: 0px !important;
+}
+
+/*/////////////////////// NEW JOURNALS VIEW //////////////////////////*/
+
+.accordion {
+  /*border: 1px solid #ccc;*/
+  margin-bottom: 10px;
+  line-height: 15px;
+  letter-spacing: 0.4px;
+  color: #231f20;
+  font-weight: 500;
+  /* background-color:#fff */
+}
+
+.accordion-borde {
+  border: 1px solid #3c3c3c;
+}
+
+.accordion-header {
+  background-color: #f5f5f5;
+}
+.accordion-header-box {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  background: #3c3c3c 0% 0% no-repeat padding-box;
+}
+
+.accordion-header-title {
+  font: normal normal 600 14px/22px Montserrat;
+  letter-spacing: 0;
+  color: #fcfcfc;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+/*.accordion-header:hover {*/
+/*    background-color: #eaeaea;*/
+/*}*/
+
+.accordion-icon {
+  margin-left: auto;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.accordion-icon.expanded {
+  transform: rotate(180deg);
+}
+.accordion-icon .arrow {
+  /*background: #3C3C3C 0% 0% no-repeat padding-box;*/
+  color: #fff !important;
+  font: normal normal 500 18px/22px Montserrat;
+}
+
+.accordion-content {
+  padding: 15px 50px;
+  padding: 30px 55px;
+  background-color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  /*letter-spacing: 0.52px;*/
+  color: #333d3d;
+}
+@media (max-width: 1024px) {
+  .accordion-content {
+    padding: 20px 30px;
+  }
+}
+
+.accordion-content-image {
+  width: 100%;
+  height: 100px;
+  object-fit: contain;
+}
+
+.accordion-content-text {
+  font: normal normal normal 13px/17px Montserrat;
+  letter-spacing: 0.52px;
+  color: #333d3d;
 }

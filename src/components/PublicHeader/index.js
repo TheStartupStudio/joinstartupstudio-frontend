@@ -3,12 +3,12 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 // import Language from '../Language'
 import IntlMessages from '../../utils/IntlMessages'
 import SUSLogo from '../../assets/images/sus-institute-logo.png'
+import SUSLogoStudent from '../../assets/images/LTS-logo-horizontal.png'
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
 
 function PublicHeader() {
   const showMenuMobile = window.location.href.includes('lts-secure')
   const location = useLocation()
-
   return (
     <div>
       <nav
@@ -23,24 +23,36 @@ function PublicHeader() {
         }
       >
         <div className={`sidebar-header ${showMenuMobile && 'ms-md-5'}`}>
-          <NavLink to='/'>
+          <NavLink to="/">
             {location.pathname !== '/' && (
-              <img src={SUSLogo} alt='logo' className='ms-md-5' />
+              <img src={SUSLogoStudent} alt="logo" className="ms-md-5" />
             )}
           </NavLink>
+          {location.pathname == '/ims-login' && (
+            <div
+              style={{
+                textTransform: 'uppercase',
+                color: '#707070',
+                fontSize: 18
+              }}
+              className="ms-md-5"
+            >
+              Instructor platform
+            </div>
+          )}
         </div>
-        <ul className='navbar-nav navbar-expand-lg public-nav'>
+        <ul className="navbar-nav navbar-expand-lg public-nav">
           {window.location.href.includes('terms') ||
           window.location.href.includes('lts-secure') ? (
-            <li className='nav-item'>
+            <li className="nav-item">
               {/* <a className='nav-link' href='/create-account'>
                 <IntlMessages id='navigation.create_your_account' />
               </a> */}
             </li>
           ) : window.location.href.includes('register') ? (
-            <li className='nav-item'>
-              <a className='nav-link mx-auto' href='/logout'>
-                <IntlMessages id='navigation.logout' />
+            <li className="nav-item">
+              <a className="nav-link mx-auto" href="/logout">
+                <IntlMessages id="navigation.logout" />
               </a>
             </li>
           ) : null}
@@ -51,14 +63,14 @@ function PublicHeader() {
           window.location.href.includes('reset-password') ||
           window.location.href.includes('forgot-password') ||
           window.location.href.includes('trial-ended') ? (
-            <li className='nav-item'>
-              <a className='nav-link' href='/'>
-                <IntlMessages id='navigation.login' />
+            <li className="nav-item">
+              <a className="nav-link" href="/">
+                <IntlMessages id="navigation.login" />
               </a>
             </li>
           ) : null}
           {location.pathname === '/' && (
-            <li className='nav-item'>
+            <li className="nav-item">
               {/* <Link className='nav-link' to='/create-account'>
                 <IntlMessages id='navigation.create_your_account' />
               </Link> */}
@@ -70,27 +82,27 @@ function PublicHeader() {
         </ul>
       </nav>
       {showMenuMobile && (
-        <nav className='mobile-menu'>
+        <nav className="mobile-menu">
           <Navbar
             collapseOnSelect
-            expand='lg'
-            bg='light'
-            variant='light'
-            className='border-0'
+            expand="lg"
+            bg="light"
+            variant="light"
+            className="border-0"
           >
-            <Navbar.Brand href='#home'>
-              <img src={SUSLogo} alt='logo' style={{ width: '200px' }} />
+            <Navbar.Brand href="#home">
+              <img src={SUSLogo} alt="logo" style={{ width: '200px' }} />
             </Navbar.Brand>
-            <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse
-              id='responsive-navbar-nav'
-              className='border-bottom nav-item'
+              id="responsive-navbar-nav"
+              className="border-bottom nav-item"
             >
-              <Nav className='mr-auto d-inline text-end font-weight-bold public-nav'>
-                <Nav.Link className='me-auto' href='/'>
+              <Nav className="mr-auto d-inline text-end font-weight-bold public-nav">
+                <Nav.Link className="me-auto" href="/">
                   LOGIN
                 </Nav.Link>
-                <Nav.Link className='me-auto' href='/create-account'>
+                <Nav.Link className="me-auto" href="/create-account">
                   CREATE YOUR ACCOUNT
                 </Nav.Link>
                 {/* <NavDropdown title='Dropdown' id='collasible-nav-dropdown'>

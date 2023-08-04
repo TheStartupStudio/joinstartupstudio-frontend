@@ -8,6 +8,10 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 import SkillBoxButton from './skillBox'
 import { toast } from 'react-toastify'
+import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
+import { VerifyButton } from '../../../pages/PortfolioNew/editPortfolio'
+import { useHistory } from 'react-router-dom'
+import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 export const Skills = (props) => {
   const [showSkillBoxModal, setShowSkillBoxModal] = useState(false)
@@ -18,12 +22,17 @@ export const Skills = (props) => {
   const [userSkill, setUserSkill] = useState([])
   const [newSkill, setNewSkill] = useState()
   const [removeSkill, setRemoveSkill] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  // useEffect(() => {
+  //   setUserSkill(props.skills)
+  // }, [props.skills])
 
   const remove = async () => {
     await axiosInstance
       .delete('/skills/multiple', { data: removeSkill })
       .then((data) => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
 
         setShowRemoveSkill(false)
 
@@ -37,7 +46,7 @@ export const Skills = (props) => {
       })
       .catch(() => {
         setShowRemoveSkill(false)
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         getUserSkills()
         GetSkillsFromDB()
       })
@@ -65,7 +74,7 @@ export const Skills = (props) => {
     await axiosInstance
       .post('/skills/multiple', { data: selcetedSkills })
       .then((data) => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         selcetedSkills.map((skill) => {
           setUserSkill((old) => [...old, { name: skill }])
         })
@@ -77,7 +86,7 @@ export const Skills = (props) => {
         setSelectedSkills([])
       })
       .catch(() => {
-        toast.success(<IntlMessages id='alerts.success_change' />)
+        toast.success(<IntlMessages id="alerts.success_change" />)
         // setTimeout(() => {
         selcetedSkills.map((skill) => {
           setUserSkill((old) => [...old, { name: skill }])
@@ -91,10 +100,12 @@ export const Skills = (props) => {
   }
 
   const getUserSkills = async () => {
+    setIsLoading(true)
     await axiosInstance
       .get('/users')
       .then((response) => {
         setUserSkill(response.data.Skills)
+        setIsLoading(false)
       })
       .catch((err) => err)
   }
@@ -112,68 +123,126 @@ export const Skills = (props) => {
     getUserSkills()
     GetSkillsFromDB()
   }, [])
+  const history = useHistory()
+  const isPreview = history.location.pathname.includes('preview')
+
+  const windowWidth = useWindowWidth()
+
+  const skillsContainerWidth = () => {
+    if (isPreview) {
+      return '100%'
+    } else {
+      if (windowWidth < 700) {
+        return '70%'
+      } else {
+        return '85%'
+      }
+    }
+  }
+
+  const verifyButtonContainerWidth = () => {
+    if (windowWidth < 700) {
+      return '30%'
+    } else {
+      return '15%'
+    }
+  }
+
+  const verifyButtonWidth = () => {
+    if (windowWidth < 700) {
+      return '100%'
+    } else {
+      return '75%'
+    }
+  }
 
   return (
-    <div>
-      <div
-        className='my-account rounded  profile-tags-div mx-0 mt-4'
-        style={{ border: '1px solid #bbbdbf' }}
-      >
-        <h4 className='m-3'>
-          <IntlMessages id='portfolio.skills_title' />
-          <span className='float-end'>
-            <FontAwesomeIcon
-              icon={faPlus}
-              className='mx-4 icon'
-              style={{ height: '25px', width: '25px' }}
-              onClick={() => setShowSkillBoxModal(true)}
-            />
+    <>
+      {!isLoading ? (
+        userSkill?.length ? (
+          <PortfolioSection
+            title={'Market-ready certified skills'}
+            isEdit={true}
+            isAdd={false}
+            onEdit={
+              userSkill && userSkill.length > 0
+                ? () => {
+                    setShowRemoveSkill(true)
+                  }
+                : () => {
+                    setShowRemoveSkill(false)
+                    toast.error('You dont have any skills selected!')
+                  }
+            }
+            onAdd={() => setShowSkillBoxModal(true)}
+          >
+            <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ width: skillsContainerWidth() }}>
+                <div className="w-100 ">
+                  <div className="row">
+                    {/*{userSkill && userSkill.length > 0 ? (*/}
+                    {userSkill.map((data) => (
+                      <div className="col-md-3 col-sm-6" key={data.id}>
+                        <SkillBoxButton
+                          data={data}
+                          from={'index'}
+                          from0={'public'}
+                          key={data.id}
+                        />
+                      </div>
+                    ))}
+                    {/*) : (*/}
 
-            <FontAwesomeIcon
-              icon={faPencilAlt}
-              className='icon'
-              style={{ height: '25px', width: '25px' }}
-              onClick={
-                userSkill && userSkill.length > 0
-                  ? () => {
-                      setShowRemoveSkill(true)
-                    }
-                  : () => {
-                      setShowRemoveSkill(false)
-                      toast.error('You dont have any skills selected!')
-                    }
-              }
-            />
-          </span>
-        </h4>
-        <div className='w-100 ms-3 mb-3'>
-          {userSkill && userSkill.length > 0 ? (
-            userSkill.map((data) => (
-              <SkillBoxButton
-                data={data}
+                    {/*)}*/}
+                  </div>
+                </div>
+              </div>
+              {!isPreview && (
+                <div
+                  className={'py-2'}
+                  style={{
+                    width: verifyButtonContainerWidth(),
+                    display: 'flex',
+                    alignItems: 'end',
+                    justifyContent: 'end'
+                  }}
+                >
+                  <VerifyButton width={verifyButtonWidth()} />
+                </div>
+              )}
+            </div>
+          </PortfolioSection>
+        ) : (
+          <PortfolioSection
+            title={'Market-ready certified skills'}
+            isAdd={false}
+            onAdd={() => {
+              setShowSkillBoxModal(true)
+            }}
+          >
+            <div className="col-xl-12 col-md-3 col-sm-6">
+              {/* <SkillBoxButton
+                data={{ name: 'add' }}
                 from={'index'}
-                from0={'public'}
-                key={data.id}
-              />
-            ))
-          ) : (
-            <SkillBoxButton
-              data={{ name: 'add' }}
-              from={'index'}
-              isEmpty={true}
-              openModal={() => {
-                setShowSkillBoxModal(true)
-              }}
-            />
-          )}
-          {/* {userSkill && userSkill.map(<SkillBoxButton data={userSkill} />)} */}
-        </div>
-      </div>
+                isEmpty={true}
+                openModal={() => {
+                  setShowSkillBoxModal(true)
+                }}
+              /> */}
+              <h6 className="text-center">No certified skills</h6>
+            </div>
+          </PortfolioSection>
+        )
+      ) : (
+        <></>
+      )}
       <SkillBoxEditModal
         allSkill={allSkill}
         show={showSkillBoxModal}
         onHide={() => {
-          setNewSkill()
+          // setNewSkill()
+
+          // props.closeSkillBox()
           setShowSkillBoxModal(false)
           setSelectedSkills([])
         }}
@@ -199,6 +268,7 @@ export const Skills = (props) => {
         show={showRemoveSkill}
         onHide={() => {
           setRemoveSkill([])
+          // props.closeRemoveSkill()
           setShowRemoveSkill(false)
         }}
         userSkill={userSkill}
@@ -218,11 +288,11 @@ export const Skills = (props) => {
         newSkill={newSkill}
         setNewSkill={(data) => setNewSkill(data)}
       />
-    </div>
+    </>
   )
 }
 
 /*
      te all skills jon te gjitha skill perveq skill qe i ka useri
-     to all skills only skills than 
+     to all skills only skills than
      not are in is the skill that user have */

@@ -95,7 +95,7 @@ const MisconductModal = (props) => {
       const formData = new FormData()
       formData.append('img', selectedImage)
       await axiosInstance
-        .post('/upload/img', formData, {
+        .post('/upload/img-transform', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

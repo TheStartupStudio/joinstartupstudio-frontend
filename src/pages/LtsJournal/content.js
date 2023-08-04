@@ -9,6 +9,9 @@ import ReactPlayer from 'react-player'
 import MediaLightbox from '../../components/MediaLightbox'
 import markdown from './markdown'
 import parse from 'html-react-parser'
+import EntriesBox from './EntriesBox'
+import TableWrapper from './TableWrapper/index'
+import TableReflections from './TableReflections.js'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -17,7 +20,11 @@ function LtsJournalContent(props) {
   let [userJournalEntries, setUserJournalEntries] = useState({})
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
+  // console.log(userJournalEntries);
 
+  const handleShowAddReflection = (showAddReflection) => {
+    setShowAddReflection(showAddReflection)
+  }
   async function saveWatchData(data) {
     await axiosInstance.put(
       `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
@@ -48,7 +55,7 @@ function LtsJournalContent(props) {
         `/ltsJournals/${props.match.params.journalId}/userEntries`
       )
       let groupedByJournalEntry = {}
-
+      console.log(data)
       if (data) {
         for (var userJournalEntry of data) {
           if (groupedByJournalEntry[userJournalEntry.journalEntryId]) {
@@ -70,7 +77,9 @@ function LtsJournalContent(props) {
   function loadData() {
     setLoading(true)
     Promise.all([getJournal(), getUserJournalEntries()])
+
       .then(([journalData, userJournalEntries]) => {
+        console.log(journalData, userJournalEntries)
         setJournal(journalData)
         if (
           journalData.userEntry &&
@@ -95,6 +104,8 @@ function LtsJournalContent(props) {
         setLoading(false)
       })
   }
+
+  console.log('journal', journal)
 
   useEffect(
     function () {
@@ -162,16 +173,16 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-
+  console.log(journal)
   return (
     <>
-      <div className='row'>
-        <div className='col-12'>
-          <div className='journal-entries__back'>
+      <div className="row">
+        <div className="col-12">
+          <div className="journal-entries__back">
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
 
-          <h4 className='page-card__content-title'>{journal.title}</h4>
+          <h4 className="page-card__content-title">{journal.title}</h4>
 
           {videos &&
             videos.constructor == Array &&
@@ -223,95 +234,48 @@ function LtsJournalContent(props) {
           journal?.content?.includes('<p') ? (
             parse(`${journal.content}`)
           ) : (
-            <p className='page-card__content-description'>{journal.content}</p>
+            <p className="page-card__content-description">{journal.content}</p>
           )}
         </div>
       </div>
 
-      <div className='row'>
-        <div className='col-12'>
-          <div className='journal-entries'>
-            {journal.entries &&
-              journal.entries.map((entry) => (
-                <div className='journal-entries__entry' key={entry.id}>
-                  <h5
-                    className={
-                      'journal-entries__entry-title' +
-                      (entry.title.indexOf('**') !== -1
-                        ? ' journal-entries__entry-title--md'
-                        : '')
-                    }
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        entry.title.indexOf('<h2>') === -1
-                          ? markdown(entry.title)
-                          : entry.title.replace(
-                              new RegExp('\r?\n', 'g'),
-                              '<br />'
-                            )
-                    }}
-                  ></h5>
-
-                  <div className='journal-entries__entry-reflections'>
-                    {/* List created reflections */}
-                    {userJournalEntries[entry.id] &&
-                      userJournalEntries[entry.id].map((userJournalEntry) => (
-                        <LtsJournalReflection
-                          key={userJournalEntry.id}
-                          journal={journal}
-                          journalEntry={entry}
-                          entry={userJournalEntry}
-                          deleted={deleteReflection(entry, userJournalEntry)}
-                          saved={updateReflection(entry, userJournalEntry)}
-                        />
-                      ))}
-
-                    {/* Add new reflection */}
-                    {(!userJournalEntries[entry.id] ||
-                      showAddReflection[entry.id]) && (
-                      <LtsJournalReflection
-                        journal={journal}
-                        journalEntry={entry}
-                        entry={null}
-                        saved={addReflection(entry)}
-                        showCancel={!!userJournalEntries[entry.id]}
-                        cancel={(e) => {
-                          setShowAddReflection({
-                            ...showAddReflection,
-                            [entry.id]: false
-                          })
-                        }}
-                      />
-                    )}
-
-                    {/* Show add new reflection */}
-                    <div
-                      className={`journal-entries__entry-reflections-actions ${
-                        userJournalEntries[entry.id] &&
-                        !showAddReflection[entry.id]
-                          ? 'active'
-                          : ''
-                      }`}
-                    >
-                      <a
-                        href='#'
-                        className='journal-entries__entry-reflections-action'
-                        onClick={(e) => {
-                          e.preventDefault()
-                          setShowAddReflection({
-                            ...showAddReflection,
-                            [entry.id]: true
-                          })
-                        }}
-                      >
-                        Add reflection <FontAwesomeIcon icon={faPlus} />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
+      <div className="row">
+        <div className="col-12">
+          <div className="journal-entries">
+            {/*{journal.entries &&*/}
+            {/*  journal.entries.map((entry, index) => (*/}
+            <EntriesBox
+              entries={journal.entries}
+              entryBoxTitle={journal?.title}
+              journal={journal}
+              userJournalEntries={userJournalEntries}
+              deleteReflection={(entry, userJournalEntry) =>
+                deleteReflection(entry, userJournalEntry)
+              }
+              updateReflection={(entry, userJournalEntry) =>
+                updateReflection(entry, userJournalEntry)
+              }
+              addReflection={(entry) => addReflection(entry)}
+              handleShowAddReflection={(reflection) =>
+                handleShowAddReflection(reflection)
+              }
+              showAddReflection={showAddReflection}
+            />
           </div>
         </div>
+        {journal.reflectionsTable && journal.reflectionsTable.length ? <>
+          {journal.reflectionsTable.map(reflectionTable => <div className='col-12' key={reflectionTable.id}>
+            <TableWrapper title={reflectionTable.title}>
+              <TableReflections
+                start={reflectionTable.startDate}
+                end={reflectionTable.endDate}
+                reflectionTable={reflectionTable}
+                reflectionTableEntries={reflectionTable.reflectionsTableEntries}
+                userReflectionTableEntries={reflectionTable.userReflectionsTableEntries}
+              />
+            </TableWrapper>
+          </div>)}
+        </> : null}
       </div>
     </>
   )

@@ -89,12 +89,12 @@ export async function getCroppedImg(
   return new Promise((resolve, reject) => {
     canvas.toBlob((file) => {
       resolve(
-        new File([file], generateString() + '.jpg', {
-          type: 'image/jpeg',
+        new File([file], generateString() + '.png', {
+          type: 'image/png',
           lastModified: new Date()
         })
       )
-    }, 'image/jpeg')
+    }, 'image/png')
   })
 }
 
