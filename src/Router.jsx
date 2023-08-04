@@ -59,7 +59,7 @@ const Preview = React.lazy(() => import('./pages/StartupProfile/preview'))
 
 const SavedMedia = React.lazy(() => import('./pages/Saved'))
 const Resubscribe = React.lazy(() => import('./pages/Resubscribe'))
-const StartupLive = React.lazy(() => import('./pages/StartupLive'))
+// const StartupLive = React.lazy(() => import('./pages/StartupLive'))
 const Spotlight = React.lazy(() => import('./pages/Spotlight'))
 const LiveStream = React.lazy(() => import('./pages/StartupLive/livestream'))
 const AllVideos = React.lazy(() => import('./pages/BeyondYourCourse/allVideos'))
@@ -183,7 +183,7 @@ function Router(props) {
               {/* <Route path='/MyStartupProfile' component={MyProjects} /> */}
               <Route path="/PreviewMyStartupProfile/:id" component={Preview} />
               <Route path="/:page/videos" component={AllVideos} />
-              <Route exact path="/startup-live" component={StartupLive} />
+              {/* <Route exact path="/startup-live" component={StartupLive} /> */}
               <Route exact path="/spotlight" component={Spotlight} />
               <Route exact path="/startup-livestream" component={LiveStream} />
               <Route exact path="/account" component={Profile} />

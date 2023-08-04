@@ -3806,13 +3806,8 @@ strong {
 }
 
 .journal-entry__parent-title {
-<<<<<<< Updated upstream
-  padding: 6px;
-  margin: 0;
-=======
   padding: 10px;
   margin: 0 0 10px 0;
->>>>>>> Stashed changes
   background: #51c7df;
 }
 .journal-entry__parent-title h5 {

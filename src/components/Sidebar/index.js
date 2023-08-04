@@ -523,7 +523,7 @@ function Sidebar(props) {
               {/*  />*/}
               {/*</NavListParent>*/}
 
-              <li>
+              {/* <li>
                 <NavLink
                   onClick={() => {
                     dispatch(setAccordionToggled(false))
@@ -544,7 +544,7 @@ function Sidebar(props) {
                     </div>
                   </div>
                 </NavLink>
-              </li>
+              </li> */}
               {/*<li*/}
               {/*  className="dropdownMenuSidebarHover"*/}
               {/*  data-bs-toggle="collapse"*/}

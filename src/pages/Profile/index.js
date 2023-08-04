@@ -380,6 +380,7 @@ function Profile(props) {
                       <h5 className="mb-0">
                         {user.profession ? user.profession : ''}
                       </h5>
+                  
                       {/*<div className='mt-1'>*/}
                       {/*  {socialMedia?.linkedIn && (*/}
                       {/*    <a*/}
@@ -475,16 +476,18 @@ function Profile(props) {
                         />
                       </div>
                     </div>
+
+                    <div className='mt-3'>
+                   {user.bio ? (
+                     <p>{user.bio}</p>
+                   ) : (
+                     <>
+                       <p>You can write your biography here.</p>
+                     </>
+                   )}
                   </div>
-                  {/*<div className='m-3'>*/}
-                  {/*  {user.bio ? (*/}
-                  {/*    <p>{user.bio}</p>*/}
-                  {/*  ) : (*/}
-                  {/*    <>*/}
-                  {/*      <p>You can write your biography here.</p>*/}
-                  {/*    </>*/}
-                  {/*  )}*/}
-                  {/*</div>*/}
+                  </div>
+                 
                 </div>
                 <div
                   className="my-account mt-4 mb-2 mx-3 pr-2"
