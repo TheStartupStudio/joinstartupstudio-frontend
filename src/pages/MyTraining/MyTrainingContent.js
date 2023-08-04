@@ -301,6 +301,8 @@ function MyTrainingContent(props) {
   useEffect(() => {
     setSelectedStep(null)
     setSelectedStepIndex(null)
+    setSelectedPedagogy(null)
+    setSelectedPedagogyIndex(null)
   }, [openAccordion])
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
