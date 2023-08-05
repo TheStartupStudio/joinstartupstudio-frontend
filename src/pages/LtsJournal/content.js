@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
@@ -13,7 +13,71 @@ import EntriesBox from './EntriesBox'
 import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections.js'
 import { Table } from 'react-bootstrap'
+import ArchiveSelector from '../../components/Modals/ArchiveSelector/ArchiveSelector'
+import { MeetingModal } from '../../components/Modals/MeetingModal'
+import _, { debounce, isEqual } from 'lodash'
+import { DeleteArchiveModal } from '../../components/Modals/DeleteArchiveModal'
+const JournalTableRow = (props) => {
+  return (
+    <tr
+      style={{
+        borderTopColor: '#f0f0f0',
+        borderBottomColor: '#f0f0f0',
+        borderWidth: 2
+      }}
+    >
+      {props.children}
+    </tr>
+  )
+}
+const JournalTableCell = (props) => {
+  const { isGray, colSpan, additionalStyling } = props
+  return (
+    <td
+      colSpan={colSpan}
+      style={{
+        ...additionalStyling,
+        backgroundColor: isGray ? '#dfdfdf' : '#fff'
+      }}
+    >
+      {props.children}
+    </td>
+  )
+}
 
+const JournalTableCellInput = (props) => {
+  const { title, type, value, handleChange, width } = props
+  return (
+    <div
+      style={{
+        display: 'flex',
+        gap: 20
+      }}
+    >
+      <div
+        style={{ display: 'flex', alignItems: 'center', textWrap: 'nowrap' }}
+      >
+        {title}
+      </div>
+      <div className={` ${width ? '' : 'w-100'}`}>
+        <input
+          className={`my-1  py-2 px-2 text-dark `}
+          type={type}
+          style={{
+            borderRadius: '0.25rem',
+            backgroundColor: 'white',
+            color: '#000',
+            width: width ?? '100%',
+            border: '1px solid #e3e3e3'
+          }}
+          name={'meetingDate'}
+          value={value}
+          onChange={(e) => handleChange(e.target.value)}
+        />
+      </div>
+    </div>
+  )
+}
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
@@ -22,8 +86,55 @@ function LtsJournalContent(props) {
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
   const [meeting, setMeeting] = useState({})
+  const [selectedMeeting, setSelectedMeeting] = useState({})
+  const [unChangedMeeting, setUnChangedMeeting] = useState({})
+  const [showMeetingModal, setShowMeetingModal] = useState(false)
+  const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
 
-  // console.log(userJournalEntries);
+  // console.log('unChangedMeeting', unChangedMeeting)
+
+  const handleCloseMeetingModal = () => {
+    setShowMeetingModal(false)
+  }
+  const handleCloseDeleteArchiveModal = () => {
+    setShowDeleteArchiveModal(false)
+  }
+  const handleOpenDeleteArchiveModal = () => {
+    setShowDeleteArchiveModal(true)
+  }
+
+  const saveUnChanged = () => {
+    const meeting = unChangedMeeting
+    axiosInstance
+      .put(
+        `/teamMeetings/${selectedMeeting.id}/journal/${+props.match.params
+          .journalId}`,
+        {
+          meeting
+        }
+      )
+      .then((res) => {
+        let newJournal = { ...journal }
+        let newMeetings = newJournal.meetings
+        const foundedIndex = newMeetings.findIndex(
+          (meet) => meet.id === res.data.id
+        )
+        newMeetings[foundedIndex] = res.data
+        newJournal.meetings = newMeetings
+        setSelectedMeeting({ ...selectedMeeting, ...res.data })
+        setJournal({ ...newJournal, meetings: newMeetings })
+        setShowMeetingModal(false)
+        handleAddMeeting()
+      })
+  }
+
+  const saveChanged = () => {
+    setShowMeetingModal(false)
+    handleAddMeeting()
+  }
+  const handleOpenMeetingModal = () => {
+    setShowMeetingModal(true)
+  }
 
   const handleShowAddReflection = (showAddReflection) => {
     setShowAddReflection(showAddReflection)
@@ -43,18 +154,52 @@ function LtsJournalContent(props) {
     )
   }
 
-  useEffect(() => {
-    axiosInstance
-      .put(
-        `/teamMeetings/${meeting.id}/journal/${+props.match.params.journalId}`,
-        {
-          meeting
-        }
-      )
-      .then((res) => {
-        setJournal({ ...journal, meeting: res.data })
+  const debounce = useCallback(
+    _.debounce(async (func, value) => {
+      func('debounce', value)
+    }, 1000),
+    []
+  )
+
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const handleChangeMeeting = (name, value) => {
+    let newSelectedMeeting = { ...selectedMeeting }
+    newSelectedMeeting[name] = value
+    setSelectedMeeting(newSelectedMeeting)
+    const hasChanged = !isEqual(newSelectedMeeting, selectedMeeting)
+    setHasUnsavedChanges(hasChanged)
+
+    debounce(updateMeeting, newSelectedMeeting)
+  }
+
+  const updateMeeting = async (name, value) => {
+    try {
+      await axiosInstance
+        .put(
+          `/teamMeetings/${selectedMeeting?.id}/journal/${+props.match.params
+            .journalId}`,
+          {
+            meeting: value
+          }
+        )
+        .then((res) => console.log(res.data))
+
+      setJournal((prevJournal) => {
+        const newJournal = { ...prevJournal }
+        const newMeetings = [...newJournal.meetings]
+        const meetingIndex = newMeetings.findIndex(
+          (meet) => meet.id === selectedMeeting?.id
+        )
+        newMeetings[meetingIndex] = value
+        newJournal.meetings = newMeetings
+        return newJournal
       })
-  }, [meeting])
+    } catch (error) {
+      // Handle errors
+      console.error('Error updating meeting:', error)
+    }
+  }
+
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
@@ -64,13 +209,29 @@ function LtsJournalContent(props) {
     } catch (err) {}
   }
 
+  function getMeetings() {
+    try {
+      axiosInstance
+        .get(`/ltsJournals/${props.match.params.journalId}`)
+        .then((res) => {
+          const data = res.data
+          if (data?.meetings && data?.meetings?.length) {
+            const latestMeeting = getLatestUpdatedElement(data?.meetings)
+            if (latestMeeting) {
+              setUnChangedMeeting(latestMeeting)
+              setSelectedMeeting(latestMeeting)
+            }
+          }
+        })
+    } catch (err) {}
+  }
+
   async function getUserJournalEntries() {
     try {
       let { data } = await axiosInstance.get(
         `/ltsJournals/${props.match.params.journalId}/userEntries`
       )
       let groupedByJournalEntry = {}
-      console.log(data)
       if (data) {
         for (var userJournalEntry of data) {
           if (groupedByJournalEntry[userJournalEntry.journalEntryId]) {
@@ -94,8 +255,8 @@ function LtsJournalContent(props) {
     Promise.all([getJournal(), getUserJournalEntries()])
 
       .then(([journalData, userJournalEntries]) => {
-        console.log(journalData, userJournalEntries)
         setJournal(journalData)
+
         if (
           journalData.userEntry &&
           journalData.userEntry.length > 0 &&
@@ -120,14 +281,23 @@ function LtsJournalContent(props) {
       })
   }
 
-  console.log('journal', journal)
-
   useEffect(
     function () {
       loadData()
+      getMeetings()
     },
     [props.match.params.journalId]
   )
+
+  const getLatestUpdatedElement = (array) => {
+    const latestUpdatedElement = array?.reduce((latest, current) => {
+      if (!latest || new Date(current.updatedAt) > new Date(latest.updatedAt)) {
+        return current
+      }
+      return latest
+    }, null)
+    return latestUpdatedElement
+  }
 
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
@@ -188,88 +358,61 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-  const JournalTableRow = (props) => {
-    return (
-      <tr
-        style={{
-          borderTopColor: '#f0f0f0',
-          borderBottomColor: '#f0f0f0',
-          borderWidth: 2
-        }}
-      >
-        {props.children}
-      </tr>
-    )
-  }
-  const JournalTableCell = (props) => {
-    const { isGray, colSpan, additionalStyling } = props
-    return (
-      <td
-        colSpan={colSpan}
-        style={{
-          ...additionalStyling,
-          backgroundColor: isGray ? '#dfdfdf' : '#fff'
-        }}
-      >
-        {props.children}
-      </td>
-    )
-  }
 
-  const JournalTableCellInput = (props) => {
-    const { title, type, value, handleChange, width } = props
-    return (
-      <div
-        style={{
-          display: 'flex',
-          gap: 20
-        }}
-      >
-        <div
-          style={{ display: 'flex', alignItems: 'center', textWrap: 'nowrap' }}
-        >
-          {title}
-        </div>
-        <div className={` ${width ? '' : 'w-100'}`}>
-          <input
-            className={`my-1  py-2 px-2 text-dark `}
-            type={type}
-            style={{
-              borderRadius: '0.25rem',
-              backgroundColor: 'white',
-              color: '#000',
-              width: width ?? '100%',
-              border: '1px solid #e3e3e3'
-            }}
-            name={'meetingDate'}
-            value={value}
-            onChange={(e) => handleChange(e.target.value)}
-          />
-        </div>
-      </div>
-    )
+  const handleAddMeeting = () => {
+    const meeting = {
+      title: '',
+      journalId: props.match.params.journalId,
+      meetingDate: '',
+      purpose: '',
+      attendance: '',
+      meetingAgenda: '',
+      notes: '',
+      resultsOfMeeting: ''
+    }
+    axiosInstance
+      .post(`/teamMeetings/`, {
+        meeting
+      })
+      .then((res) => {
+        const newMeetings = [...journal.meetings, res.data]
+        setJournal({ ...journal, meetings: newMeetings })
+        const latestMeeting = getLatestUpdatedElement(newMeetings)
+        setSelectedMeeting(latestMeeting)
+        setShowMeetingModal(false)
+      })
   }
 
   const handleDeleteMeeting = (meeting) => {
-    console.log(meeting)
+    axiosInstance
+      .delete(`/teamMeetings/${meeting.id}`)
+      .then((res) => {
+        const deletedMeetingId = res.data.existingMeeting.id
+        setJournal((prevJournal) => {
+          const newJournal = { ...prevJournal }
+          const newMeetings = newJournal.meetings.filter(
+            (meet) => meet.id !== deletedMeetingId
+          )
+          newJournal.meetings = newMeetings
+          const latestMeeting = getLatestUpdatedElement(newMeetings)
+          setSelectedMeeting(latestMeeting)
+          handleCloseDeleteArchiveModal()
+          return newJournal
+        })
+      })
+      .catch((error) => {
+        // Handle error if needed
+        console.error('Error deleting meeting:', error)
+      })
   }
 
-  const handleChangeMeeting = (name, value, meetingIndex) => {
-    let newJournal = { ...journal }
-    let newMeetings = newJournal?.meetings
-    newMeetings.map((meeting, index) => {
-      if (index === meetingIndex) {
-        return (meeting[name] = value)
-      } else {
-        return meeting
-      }
-    })
-    const newMeeting = newMeetings[meetingIndex]
-    setMeeting(newMeeting)
-    newJournal.meetings = newMeetings
-    setJournal(newJournal)
+  const handleSelectedArchive = (value) => {
+    if (value) {
+      setSelectedMeeting(value)
+      setUnChangedMeeting(value)
+    }
+    // setUnChangedMeeting(value)
   }
-
   return (
     <>
       <div className="row">
@@ -357,7 +500,7 @@ function LtsJournalContent(props) {
             />
           </div>
         </div>
-        {journal.reflectionsTable && journal.reflectionsTable.length ? (
+        {journal?.reflectionsTable && journal?.reflectionsTable?.length ? (
           <>
             {journal.reflectionsTable.map((reflectionTable) => (
               <div className="col-12" key={reflectionTable.id}>
@@ -378,121 +521,143 @@ function LtsJournalContent(props) {
             ))}
           </>
         ) : null}
-        {journal?.meetings && journal.meetings.length ? (
+        {journal?.meetings?.length ? (
           <>
-            {journal?.meetings?.map((meeting, meetingIndex) => (
-              <div className="col-12" key={meeting.id}>
-                <TableWrapper
-                  title={meeting.title}
-                  isDelete
-                  onDelete={() => handleDeleteMeeting(meeting)}
-                >
-                  <Table bordered hover style={{ marginBottom: 0 }}>
-                    <tbody>
-                      <JournalTableRow>
-                        <JournalTableCell isGray colSpan={2}>
-                          <JournalTableCellInput
-                            title={'Meeting date:'}
-                            type={'date'}
-                            value={new Date(
-                              meeting.meetingDate
-                            ).toLocaleDateString('en-CA')}
-                            handleChange={(value) =>
-                              handleChangeMeeting(
-                                'meetingDate',
-                                value,
-                                meetingIndex
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
-                      <JournalTableRow>
-                        <JournalTableCell
-                          isGray
-                          additionalStyling={{
-                            borderRightColor: '#f0f0f0',
-                            borderWidth: 2
-                          }}
-                        >
-                          <JournalTableCellInput
-                            title={'Purpose:'}
-                            type={'text'}
-                            value={meeting.purpose}
-                            handleChange={(value) =>
-                              handleChangeMeeting(
-                                'purpose',
-                                value,
-                                meetingIndex
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                        <JournalTableCell isGray>
-                          <JournalTableCellInput
-                            title={'Attendance:'}
-                            type={'text'}
-                            value={meeting.attendance}
-                            handleChange={(value) =>
-                              handleChangeMeeting(
-                                'attendance',
-                                value,
-                                meetingIndex
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
+            <div className="col-12">
+              <TableWrapper
+                title={selectedMeeting.title}
+                isDelete
+                onDelete={() => handleOpenDeleteArchiveModal()}
+              >
+                <Table bordered hover style={{ marginBottom: 0 }}>
+                  <tbody>
+                    <JournalTableRow>
+                      <JournalTableCell isGray colSpan={2}>
+                        <JournalTableCellInput
+                          title={'Meeting date:'}
+                          type={'date'}
+                          value={new Date(
+                            selectedMeeting.meetingDate
+                          ).toLocaleDateString('en-CA')}
+                          handleChange={(value) =>
+                            handleChangeMeeting('meetingDate', value)
+                          }
+                        />
+                      </JournalTableCell>
+                    </JournalTableRow>
+                    <JournalTableRow>
+                      <JournalTableCell
+                        isGray
+                        additionalStyling={{
+                          borderRightColor: '#f0f0f0',
+                          borderWidth: 2
+                        }}
+                      >
+                        <JournalTableCellInput
+                          title={'Purpose:'}
+                          type={'text'}
+                          value={selectedMeeting.purpose}
+                          handleChange={(value) =>
+                            handleChangeMeeting('purpose', value)
+                          }
+                        />
+                      </JournalTableCell>
+                      <JournalTableCell isGray>
+                        <JournalTableCellInput
+                          title={'Attendance:'}
+                          type={'text'}
+                          value={selectedMeeting.attendance}
+                          handleChange={(value) =>
+                            handleChangeMeeting('attendance', value)
+                          }
+                        />
+                      </JournalTableCell>
+                    </JournalTableRow>
 
-                      <JournalTableRow>
-                        <JournalTableCell colSpan={2}>
-                          <JournalTableCellInput
-                            title={'Meeting Agenda:'}
-                            type={'text'}
-                            value={meeting.meetingAgenda}
-                            handleChange={(value) =>
-                              handleChangeMeeting(
-                                'meetingAgenda',
-                                value,
-                                meetingIndex
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
-                      <JournalTableRow>
-                        <JournalTableCell colSpan={2}>
-                          <JournalTableCellInput
-                            title={'Notes:'}
-                            type={'text'}
-                            value={meeting.notes}
-                            handleChange={(value) =>
-                              handleChangeMeeting('notes', value, meetingIndex)
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
-                      <JournalTableRow>
-                        <JournalTableCell colSpan={2}>
-                          <JournalTableCellInput
-                            title={'Results of meeting:'}
-                            type={'text'}
-                            value={meeting.resultsOfMeeting}
-                            handleChange={(value) =>
-                              handleChangeMeeting(
-                                'resultsOfMeeting',
-                                value,
-                                meetingIndex
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
-                    </tbody>
-                  </Table>
-                </TableWrapper>
+                    <JournalTableRow>
+                      <JournalTableCell colSpan={2}>
+                        <JournalTableCellInput
+                          title={'Meeting Agenda:'}
+                          type={'text'}
+                          value={selectedMeeting.meetingAgenda}
+                          handleChange={(value) =>
+                            handleChangeMeeting('meetingAgenda', value)
+                          }
+                        />
+                      </JournalTableCell>
+                    </JournalTableRow>
+                    <JournalTableRow>
+                      <JournalTableCell colSpan={2}>
+                        <JournalTableCellInput
+                          title={'Notes:'}
+                          type={'text'}
+                          value={selectedMeeting.notes}
+                          handleChange={(value) =>
+                            handleChangeMeeting('notes', value)
+                          }
+                        />
+                      </JournalTableCell>
+                    </JournalTableRow>
+                    <JournalTableRow>
+                      <JournalTableCell colSpan={2}>
+                        <JournalTableCellInput
+                          title={'Results of meeting:'}
+                          type={'text'}
+                          value={selectedMeeting.resultsOfMeeting}
+                          handleChange={(value) =>
+                            handleChangeMeeting('resultsOfMeeting', value)
+                          }
+                        />
+                      </JournalTableCell>
+                    </JournalTableRow>
+                  </tbody>
+                </Table>
+              </TableWrapper>
+              <div className={'d-flex justify-content-between py-1'}>
+                <div className="col-md-6 px-1">
+                  <ArchiveSelector
+                    archives={journal.meetings}
+                    selectedArchive={selectedMeeting}
+                    handleSelectedArchive={(value) =>
+                      handleSelectedArchive(value)
+                    }
+                  />
+                </div>
+                <div className="col-md-6 px-1">
+                  <button
+                    style={{
+                      backgroundColor: '#51c7df',
+                      color: '#fff',
+                      fontSize: 14
+                    }}
+                    onClick={
+                      hasUnsavedChanges
+                        ? handleOpenMeetingModal
+                        : handleAddMeeting
+                    }
+                    className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
+                  >
+                    Add a new team meeting
+                  </button>
+                </div>
+                {showMeetingModal && hasUnsavedChanges && (
+                  <MeetingModal
+                    show={showMeetingModal}
+                    onHide={handleCloseMeetingModal}
+                    saveChanged={saveChanged}
+                    saveUnChanged={saveUnChanged}
+                    onSave={() => handleAddMeeting()}
+                  />
+                )}
+                {showDeleteArchiveModal && (
+                  <DeleteArchiveModal
+                    show={showDeleteArchiveModal}
+                    onHide={handleCloseDeleteArchiveModal}
+                    onDelete={() => handleDeleteMeeting(selectedMeeting)}
+                  />
+                )}
               </div>
-            ))}
+            </div>
           </>
         ) : null}
       </div>
