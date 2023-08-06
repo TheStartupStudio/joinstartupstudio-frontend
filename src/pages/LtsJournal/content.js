@@ -14,9 +14,11 @@ import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections.js'
 import { Table } from 'react-bootstrap'
 import ArchiveSelector from '../../components/Modals/ArchiveSelector/ArchiveSelector'
-import { MeetingModal } from '../../components/Modals/MeetingModal'
+import MeetingModal from '../../components/Modals/MeetingModal'
 import _, { debounce, isEqual } from 'lodash'
-import { DeleteArchiveModal } from '../../components/Modals/DeleteArchiveModal'
+import DeleteArchiveModal from '../../components/Modals/DeleteArchiveModal'
+import MeetingManager from './ArchiveManager/MeetingManager'
+import FeedbackManager from './ArchiveManager/FeedbackManager'
 const JournalTableRow = (props) => {
   return (
     <tr
@@ -96,6 +98,11 @@ function LtsJournalContent(props) {
   const handleCloseMeetingModal = () => {
     setShowMeetingModal(false)
   }
+
+  const handleOpenMeetingModal = () => {
+    setShowMeetingModal(true)
+  }
+
   const handleCloseDeleteArchiveModal = () => {
     setShowDeleteArchiveModal(false)
   }
@@ -131,9 +138,6 @@ function LtsJournalContent(props) {
   const saveChanged = () => {
     setShowMeetingModal(false)
     handleAddMeeting()
-  }
-  const handleOpenMeetingModal = () => {
-    setShowMeetingModal(true)
   }
 
   const handleShowAddReflection = (showAddReflection) => {
@@ -521,144 +525,150 @@ function LtsJournalContent(props) {
             ))}
           </>
         ) : null}
-        {journal?.meetings?.length ? (
-          <>
-            <div className="col-12">
-              <TableWrapper
-                title={selectedMeeting.title}
-                isDelete
-                onDelete={() => handleOpenDeleteArchiveModal()}
-              >
-                <Table bordered hover style={{ marginBottom: 0 }}>
-                  <tbody>
-                    <JournalTableRow>
-                      <JournalTableCell isGray colSpan={2}>
-                        <JournalTableCellInput
-                          title={'Meeting date:'}
-                          type={'date'}
-                          value={new Date(
-                            selectedMeeting.meetingDate
-                          ).toLocaleDateString('en-CA')}
-                          handleChange={(value) =>
-                            handleChangeMeeting('meetingDate', value)
-                          }
-                        />
-                      </JournalTableCell>
-                    </JournalTableRow>
-                    <JournalTableRow>
-                      <JournalTableCell
-                        isGray
-                        additionalStyling={{
-                          borderRightColor: '#f0f0f0',
-                          borderWidth: 2
-                        }}
-                      >
-                        <JournalTableCellInput
-                          title={'Purpose:'}
-                          type={'text'}
-                          value={selectedMeeting.purpose}
-                          handleChange={(value) =>
-                            handleChangeMeeting('purpose', value)
-                          }
-                        />
-                      </JournalTableCell>
-                      <JournalTableCell isGray>
-                        <JournalTableCellInput
-                          title={'Attendance:'}
-                          type={'text'}
-                          value={selectedMeeting.attendance}
-                          handleChange={(value) =>
-                            handleChangeMeeting('attendance', value)
-                          }
-                        />
-                      </JournalTableCell>
-                    </JournalTableRow>
+        {/*{journal?.meetings?.length ? (*/}
+        {/*  <>*/}
+        {/*    <div className="col-12">*/}
+        {/*      <TableWrapper*/}
+        {/*        title={selectedMeeting.title}*/}
+        {/*        isDelete*/}
+        {/*        onDelete={() => handleOpenDeleteArchiveModal()}*/}
+        {/*      >*/}
+        {/*        <Table bordered hover style={{ marginBottom: 0 }}>*/}
+        {/*          <tbody>*/}
+        {/*            <JournalTableRow>*/}
+        {/*              <JournalTableCell isGray colSpan={2}>*/}
+        {/*                <JournalTableCellInput*/}
+        {/*                  title={'Meeting date:'}*/}
+        {/*                  type={'date'}*/}
+        {/*                  value={new Date(*/}
+        {/*                    selectedMeeting.meetingDate*/}
+        {/*                  ).toLocaleDateString('en-CA')}*/}
+        {/*                  handleChange={(value) =>*/}
+        {/*                    handleChangeMeeting('meetingDate', value)*/}
+        {/*                  }*/}
+        {/*                />*/}
+        {/*              </JournalTableCell>*/}
+        {/*            </JournalTableRow>*/}
+        {/*            <JournalTableRow>*/}
+        {/*              <JournalTableCell*/}
+        {/*                isGray*/}
+        {/*                additionalStyling={{*/}
+        {/*                  borderRightColor: '#f0f0f0',*/}
+        {/*                  borderWidth: 2*/}
+        {/*                }}*/}
+        {/*              >*/}
+        {/*                <JournalTableCellInput*/}
+        {/*                  title={'Purpose:'}*/}
+        {/*                  type={'text'}*/}
+        {/*                  value={selectedMeeting.purpose}*/}
+        {/*                  handleChange={(value) =>*/}
+        {/*                    handleChangeMeeting('purpose', value)*/}
+        {/*                  }*/}
+        {/*                />*/}
+        {/*              </JournalTableCell>*/}
+        {/*              <JournalTableCell isGray>*/}
+        {/*                <JournalTableCellInput*/}
+        {/*                  title={'Attendance:'}*/}
+        {/*                  type={'text'}*/}
+        {/*                  value={selectedMeeting.attendance}*/}
+        {/*                  handleChange={(value) =>*/}
+        {/*                    handleChangeMeeting('attendance', value)*/}
+        {/*                  }*/}
+        {/*                />*/}
+        {/*              </JournalTableCell>*/}
+        {/*            </JournalTableRow>*/}
 
-                    <JournalTableRow>
-                      <JournalTableCell colSpan={2}>
-                        <JournalTableCellInput
-                          title={'Meeting Agenda:'}
-                          type={'text'}
-                          value={selectedMeeting.meetingAgenda}
-                          handleChange={(value) =>
-                            handleChangeMeeting('meetingAgenda', value)
-                          }
-                        />
-                      </JournalTableCell>
-                    </JournalTableRow>
-                    <JournalTableRow>
-                      <JournalTableCell colSpan={2}>
-                        <JournalTableCellInput
-                          title={'Notes:'}
-                          type={'text'}
-                          value={selectedMeeting.notes}
-                          handleChange={(value) =>
-                            handleChangeMeeting('notes', value)
-                          }
-                        />
-                      </JournalTableCell>
-                    </JournalTableRow>
-                    <JournalTableRow>
-                      <JournalTableCell colSpan={2}>
-                        <JournalTableCellInput
-                          title={'Results of meeting:'}
-                          type={'text'}
-                          value={selectedMeeting.resultsOfMeeting}
-                          handleChange={(value) =>
-                            handleChangeMeeting('resultsOfMeeting', value)
-                          }
-                        />
-                      </JournalTableCell>
-                    </JournalTableRow>
-                  </tbody>
-                </Table>
-              </TableWrapper>
-              <div className={'d-flex justify-content-between py-1'}>
-                <div className="col-md-6 px-1">
-                  <ArchiveSelector
-                    archives={journal.meetings}
-                    selectedArchive={selectedMeeting}
-                    handleSelectedArchive={(value) =>
-                      handleSelectedArchive(value)
-                    }
-                  />
-                </div>
-                <div className="col-md-6 px-1">
-                  <button
-                    style={{
-                      backgroundColor: '#51c7df',
-                      color: '#fff',
-                      fontSize: 14
-                    }}
-                    onClick={
-                      hasUnsavedChanges
-                        ? handleOpenMeetingModal
-                        : handleAddMeeting
-                    }
-                    className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
-                  >
-                    Add a new team meeting
-                  </button>
-                </div>
-                {showMeetingModal && hasUnsavedChanges && (
-                  <MeetingModal
-                    show={showMeetingModal}
-                    onHide={handleCloseMeetingModal}
-                    saveChanged={saveChanged}
-                    saveUnChanged={saveUnChanged}
-                    onSave={() => handleAddMeeting()}
-                  />
-                )}
-                {showDeleteArchiveModal && (
-                  <DeleteArchiveModal
-                    show={showDeleteArchiveModal}
-                    onHide={handleCloseDeleteArchiveModal}
-                    onDelete={() => handleDeleteMeeting(selectedMeeting)}
-                  />
-                )}
-              </div>
-            </div>
-          </>
+        {/*            <JournalTableRow>*/}
+        {/*              <JournalTableCell colSpan={2}>*/}
+        {/*                <JournalTableCellInput*/}
+        {/*                  title={'Meeting Agenda:'}*/}
+        {/*                  type={'text'}*/}
+        {/*                  value={selectedMeeting.meetingAgenda}*/}
+        {/*                  handleChange={(value) =>*/}
+        {/*                    handleChangeMeeting('meetingAgenda', value)*/}
+        {/*                  }*/}
+        {/*                />*/}
+        {/*              </JournalTableCell>*/}
+        {/*            </JournalTableRow>*/}
+        {/*            <JournalTableRow>*/}
+        {/*              <JournalTableCell colSpan={2}>*/}
+        {/*                <JournalTableCellInput*/}
+        {/*                  title={'Notes:'}*/}
+        {/*                  type={'text'}*/}
+        {/*                  value={selectedMeeting.notes}*/}
+        {/*                  handleChange={(value) =>*/}
+        {/*                    handleChangeMeeting('notes', value)*/}
+        {/*                  }*/}
+        {/*                />*/}
+        {/*              </JournalTableCell>*/}
+        {/*            </JournalTableRow>*/}
+        {/*            <JournalTableRow>*/}
+        {/*              <JournalTableCell colSpan={2}>*/}
+        {/*                <JournalTableCellInput*/}
+        {/*                  title={'Results of meeting:'}*/}
+        {/*                  type={'text'}*/}
+        {/*                  value={selectedMeeting.resultsOfMeeting}*/}
+        {/*                  handleChange={(value) =>*/}
+        {/*                    handleChangeMeeting('resultsOfMeeting', value)*/}
+        {/*                  }*/}
+        {/*                />*/}
+        {/*              </JournalTableCell>*/}
+        {/*            </JournalTableRow>*/}
+        {/*          </tbody>*/}
+        {/*        </Table>*/}
+        {/*      </TableWrapper>*/}
+        {/*      <div className={'d-flex justify-content-between py-1'}>*/}
+        {/*        <div className="col-md-6 px-1">*/}
+        {/*          <ArchiveSelector*/}
+        {/*            archives={journal.meetings}*/}
+        {/*            selectedArchive={selectedMeeting}*/}
+        {/*            handleSelectedArchive={(value) =>*/}
+        {/*              handleSelectedArchive(value)*/}
+        {/*            }*/}
+        {/*          />*/}
+        {/*        </div>*/}
+        {/*        <div className="col-md-6 px-1">*/}
+        {/*          <button*/}
+        {/*            style={{*/}
+        {/*              backgroundColor: '#51c7df',*/}
+        {/*              color: '#fff',*/}
+        {/*              fontSize: 14*/}
+        {/*            }}*/}
+        {/*            onClick={*/}
+        {/*              hasUnsavedChanges*/}
+        {/*                ? handleOpenMeetingModal*/}
+        {/*                : handleAddMeeting*/}
+        {/*            }*/}
+        {/*            className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"*/}
+        {/*          >*/}
+        {/*            Add a new team meeting*/}
+        {/*          </button>*/}
+        {/*        </div>*/}
+        {/*        {showMeetingModal && hasUnsavedChanges && (*/}
+        {/*          <MeetingModal*/}
+        {/*            show={showMeetingModal}*/}
+        {/*            onHide={handleCloseMeetingModal}*/}
+        {/*            saveChanged={saveChanged}*/}
+        {/*            saveUnChanged={saveUnChanged}*/}
+        {/*            onSave={() => handleAddMeeting()}*/}
+        {/*          />*/}
+        {/*        )}*/}
+        {/*        {showDeleteArchiveModal && (*/}
+        {/*          <DeleteArchiveModal*/}
+        {/*            show={showDeleteArchiveModal}*/}
+        {/*            onHide={handleCloseDeleteArchiveModal}*/}
+        {/*            onDelete={() => handleDeleteMeeting(selectedMeeting)}*/}
+        {/*          />*/}
+        {/*        )}*/}
+        {/*      </div>*/}
+        {/*    </div>*/}
+        {/*  </>*/}
+        {/*) : null}*/}
+        {journal?.meetings?.length ? (
+          <MeetingManager journal={journal} />
+        ) : null}
+        {journal?.feedbacks && journal?.feedbacks?.length ? (
+          <FeedbackManager journal={journal} />
         ) : null}
       </div>
     </>

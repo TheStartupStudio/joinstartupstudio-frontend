@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 
-export const DeleteArchiveModal = (props) => {
+const DeleteArchiveModal = (props) => {
   const navigate = useHistory()
 
   return (
@@ -72,3 +72,4 @@ export const DeleteArchiveModal = (props) => {
     </Modal>
   )
 }
+export default DeleteArchiveModal

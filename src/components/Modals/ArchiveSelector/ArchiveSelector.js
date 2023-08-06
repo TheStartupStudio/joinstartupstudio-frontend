@@ -5,8 +5,8 @@ import './ArchiveSelector.css'
 const ArchiveSelector = (props) => {
   const [archives, setArchives] = useState(props.archives)
   const [selectArchive, setSelectArchive] = useState({})
-  const [selectedCheckboxes, setSelectedCheckboxes] = useState({}) // State variable to hold selected checkboxes
-  const [dropdownOpen, setDropdownOpen] = useState(false) // State variable to control the dropdown visibility
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState({})
+  const [dropdownOpen, setDropdownOpen] = useState(false)
   const [selectedArchives, setSelectedArchives] = useState([])
   const [selectedValue, setSelectedValue] = useState('')
 
@@ -15,18 +15,25 @@ const ArchiveSelector = (props) => {
   }, [selectArchive])
 
   useEffect(() => {
-    const foundedArchiveIndex = archives.findIndex(
+    const foundedArchiveIndex = archives?.findIndex(
       (a) => a.id === props.selectedArchive.id
     )
-    const value = `Mentor ${foundedArchiveIndex + 1}`
+    const value = `${archiveOptionTitle()} ${foundedArchiveIndex + 1}`
     setSelectedValue(value)
   }, [props.selectedArchive])
   const handleChangeArchive = (value) => {
     setSelectArchive(value)
   }
+  const archiveOptionTitle = () => {
+    if (props.archiveTitle === 'meetingTeam') {
+      return 'Mentor'
+    } else if (props.archiveTitle === 'feedback') {
+      return 'Feedback'
+    }
+  }
   const handleSelectArchive = (archive) => {
-    const foundedArchiveIndex = archives.findIndex((a) => a.id === archive.id)
-    const value = `Mentor ${foundedArchiveIndex + 1}`
+    const foundedArchiveIndex = archives?.findIndex((a) => a.id === archive.id)
+    const value = `${archiveOptionTitle()} ${foundedArchiveIndex + 1}`
     setSelectedValue(value)
     setSelectArchive(archive)
   }
@@ -63,10 +70,10 @@ const ArchiveSelector = (props) => {
               >
                 <input
                   type="checkbox"
-                  checked={selectedArchives.includes(archive.title)}
+                  checked={archive.id === props.selectedArchive.id}
                   onChange={() => handleCheckboxChange(archive.title)}
                 />
-                {archive.title}
+                {archiveOptionTitle()} {index + 1} name
               </div>
             ))}
           </div>

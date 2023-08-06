@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/Modals/ArchiveSelector/ArchiveSelector.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Modals/ArchiveSelector/ArchiveSelector.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Modals/DeleteArchiveModal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Modals/MeetingModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/ArchiveManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/FeedbackManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/ArchiveSelector/ArchiveSelector.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/ArchiveSelector/ArchiveSelector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/DeleteArchiveModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/DeleteArchiveModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/MeetingModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/MeetingModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +43,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/components/Modals",
+    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/LtsJournal/ArchiveManager",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -58,11 +58,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\NoteAndChat" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\Steps" />
@@ -110,7 +110,7 @@
       <workItem from="1688973170084" duration="61926000" />
       <workItem from="1689317962596" duration="25113000" />
       <workItem from="1690182262462" duration="15650000" />
-      <workItem from="1691077287358" duration="32099000" />
+      <workItem from="1691077287358" duration="46970000" />
     </task>
     <servers />
   </component>

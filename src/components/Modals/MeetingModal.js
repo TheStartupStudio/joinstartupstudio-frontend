@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
 
-export const MeetingModal = (props) => {
+const MeetingModal = (props) => {
   const navigate = useHistory()
 
   return (
@@ -72,3 +72,4 @@ export const MeetingModal = (props) => {
     </Modal>
   )
 }
+export default MeetingModal
