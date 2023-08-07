@@ -19,7 +19,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import { setAccordionToggled } from '../../redux'
 import IntlMessages from '../../utils/IntlMessages'
-import SUSLogoStudent from '../../assets/images/LTS-logo.png'
+import SUSLogoStudent from '../../assets/images/LTS-logo-horizontal.png'
 import sidebarImage from '../../assets/images/side-logo.png'
 import diagramAnimation from '../../assets/json/lts-diagram.json'
 import sidebarImageES from '../../assets/images/side-logo-es.png'
@@ -523,7 +523,7 @@ function Sidebar(props) {
               {/*  />*/}
               {/*</NavListParent>*/}
 
-              <li>
+              {/* <li>
                 <NavLink
                   onClick={() => {
                     dispatch(setAccordionToggled(false))
@@ -544,7 +544,7 @@ function Sidebar(props) {
                     </div>
                   </div>
                 </NavLink>
-              </li>
+              </li> */}
               {/*<li*/}
               {/*  className="dropdownMenuSidebarHover"*/}
               {/*  data-bs-toggle="collapse"*/}

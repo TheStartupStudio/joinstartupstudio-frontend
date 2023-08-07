@@ -27,8 +27,8 @@ const Steps = (props) => {
         // display: windowWidth < 750 ? 'grid' : 'flex',
         // flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '20px 0',
-        marginBottom: '20px',
+        padding: '20px 0 30px 0',
+        marginBottom: '30px',
         borderBottom:
           isTraining && props.selectedStepIndex !== null
             ? '1px solid #e3e3e3'

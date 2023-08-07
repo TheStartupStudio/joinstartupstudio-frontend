@@ -3236,7 +3236,6 @@ wave > wave:first-child {
   border: 1px solid #51c7df;
   opacity: 1;
   transition: all 0.2s;
-
 }
 .button:hover {
   color: white;
@@ -3741,8 +3740,6 @@ strong {
   font-weight: bold;
 }
 
-
-
 .journal-entries__entry-reflection-body .ql-toolbar.ql-snow {
   padding-top: 2px;
   padding-bottom: 2px;
@@ -3762,7 +3759,8 @@ strong {
   height: 22px;
   width: 22px;
 }
-.ql-container.ql-snow, .ql-toolbar.ql-snow {
+.ql-container.ql-snow,
+.ql-toolbar.ql-snow {
   border: 0 !important;
 }
 .quill .ql-container.ql-snow {
@@ -3808,9 +3806,16 @@ strong {
 }
 
 .journal-entry__parent-title {
-  padding: 6px;
-  margin: 0;
+  padding: 10px;
+  margin: 0 0 10px 0;
   background: #51c7df;
+}
+.journal-entry__parent-title h5 {
+  font-family: 'montserrat';
+  font-weight: 700;
+  font-size: 12px;
+  color: #ffffff;
+  text-transform: uppercase;
 }
 .journal-entry__parent-title > * {
   color: white;
@@ -3830,9 +3835,9 @@ strong {
   border-radius: 50%;
   width: 26px;
   height: 26px;
-  display:flex;
-  justify-content:center;
-  align-items:center
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .reflection-infobox-modal h4 {
   color: #f764ae;
@@ -4323,14 +4328,14 @@ ul.sidebar-menu-item .collapse a {
   /*border: 1px solid #ccc;*/
   margin-bottom: 10px;
   line-height: 15px;
-  letter-spacing: 0.40px;
+  letter-spacing: 0.4px;
   color: #231f20;
   font-weight: 500;
   /* background-color:#fff */
 }
 
 .accordion-borde {
-  border: 1px solid #3C3C3C;
+  border: 1px solid #3c3c3c;
 }
 
 .accordion-header {
@@ -4341,14 +4346,14 @@ ul.sidebar-menu-item .collapse a {
   align-items: center;
   padding: 10px;
   cursor: pointer;
-  background: #3C3C3C 0% 0% no-repeat padding-box;
-
+  background: #3c3c3c 0% 0% no-repeat padding-box;
 }
 
 .accordion-header-title {
   font: normal normal 600 14px/22px Montserrat;
   letter-spacing: 0;
-  color: #FCFCFC;
+  color: #fcfcfc;
+  font-size: 16px;
   text-transform: uppercase;
 }
 
@@ -4364,7 +4369,6 @@ ul.sidebar-menu-item .collapse a {
 
 .accordion-icon.expanded {
   transform: rotate(180deg);
-
 }
 .accordion-icon .arrow {
   /*background: #3C3C3C 0% 0% no-repeat padding-box;*/
@@ -4377,10 +4381,10 @@ ul.sidebar-menu-item .collapse a {
   padding: 30px 55px;
   background-color: #ffffff;
   font-size: 13px;
-  font-weight:500;
+  font-weight: 500;
   text-align: left;
   /*letter-spacing: 0.52px;*/
-  color: #333D3D;
+  color: #333d3d;
 }
 @media (max-width: 1024px) {
   .accordion-content {
@@ -4391,11 +4395,11 @@ ul.sidebar-menu-item .collapse a {
 .accordion-content-image {
   width: 100%;
   height: 100px;
-  object-fit: contain
+  object-fit: contain;
 }
 
-.accordion-content-text{
+.accordion-content-text {
   font: normal normal normal 13px/17px Montserrat;
   letter-spacing: 0.52px;
-  color: #333D3D;
+  color: #333d3d;
 }
