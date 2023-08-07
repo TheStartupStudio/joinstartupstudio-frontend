@@ -9,6 +9,7 @@ import podcastReducer from './podcast/Reducer'
 import dashboardReducer from './dashboard/Reducer'
 import headerReducer from './header/Reducer'
 import usersReducer from './users/Reducer'
+import reflectionsTableReducer from './reflectionsTable/Reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   podcast: podcastReducer,
   dashboard: dashboardReducer,
   header: headerReducer,
-  users: usersReducer
+  users: usersReducer,
+  reflectionsTable: reflectionsTableReducer
 })
 export default rootReducer
