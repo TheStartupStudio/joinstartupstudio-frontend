@@ -111,8 +111,9 @@ function LtsJournal(props) {
     'my-training': 'my_journal.my-training_title',
     'student-lts': 'student_journals.student-lts_title',
     'student-wellnes': 'student_journals.student-wellnes_title',
-    'student-personal-finance': 'student_journals.student-personal-finance_title',
-    'student-leadership': 'student_journals.student-leadership_title',
+    'student-personal-finance':
+      'student_journals.student-personal-finance_title',
+    'student-leadership': 'student_journals.student-leadership_title'
   }
   let descriptionMapping = {
     hs1: 'my_journal.hs1_description',
@@ -123,8 +124,9 @@ function LtsJournal(props) {
     'my-training': 'my_journal.my-training_description',
     'student-lts': 'student_journals.student-lts_description',
     'student-wellnes': 'student_journals.student-wellnes_description',
-    'student-personal-finance': 'student_journals.student-personal-finance_description',
-    'student-leadership': 'student_journals.student-leadership_description',
+    'student-personal-finance':
+      'student_journals.student-personal-finance_description',
+    'student-leadership': 'student_journals.student-leadership_description'
   }
   const handleJournalSearch = (e) => {
     e.preventDefault()
@@ -231,7 +233,6 @@ function LtsJournal(props) {
                           key={journalItem.id}
                           className={`accordion-menu__item`}
                         >
-                          {console.log('journalItem', journalItem)}
                           {journalItem.children &&
                           journalItem.children.length ? (
                             <>
@@ -240,7 +241,13 @@ function LtsJournal(props) {
                                 href="#"
                                 className={'accordion-menu__item-toggle'}
                                 eventKey={`${journalItemIdx}`}
-                                onClick={() => journalItem.content ? history.push(`${props.match.url}/${journalItem.id}`) : null}
+                                onClick={() =>
+                                  journalItem.content
+                                    ? history.push(
+                                        `${props.match.url}/${journalItem.id}`
+                                      )
+                                    : null
+                                }
                               >
                                 <span>{journalItem.title}</span>
                                 <FontAwesomeIcon icon={faAngleDown} />

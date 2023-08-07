@@ -6,6 +6,9 @@
     padding: 6px;
     margin: 0;
     background: #51c7df;
+    display:flex;
+    justify-content:space-between;
+    align-items:center
 }
 
 .table-wrapper__title h5 {
