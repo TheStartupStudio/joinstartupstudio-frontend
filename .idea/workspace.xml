@@ -5,17 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/TableComponents.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/ArchiveSelector/ArchiveSelector.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArchiveSelector/ArchiveSelector.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/ArchiveSelector/ArchiveSelector.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArchiveSelector/ArchiveSelector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/DeleteArchiveModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/DeleteArchiveModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/MeetingModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/ArchiveModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/ArchiveManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/ArchiveManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/FeedbackManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/FeedbackManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +110,7 @@
       <workItem from="1688973170084" duration="61926000" />
       <workItem from="1689317962596" duration="25113000" />
       <workItem from="1690182262462" duration="15650000" />
-      <workItem from="1691077287358" duration="56923000" />
+      <workItem from="1691077287358" duration="61461000" />
     </task>
     <servers />
   </component>

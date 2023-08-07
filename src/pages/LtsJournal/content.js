@@ -14,7 +14,7 @@ import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections/index.js'
 import { Table } from 'react-bootstrap'
 import ArchiveSelector from '../../components/ArchiveSelector/ArchiveSelector'
-import MeetingModal from '../../components/Modals/MeetingModal'
+import ArchiveModal from '../../components/Modals/ArchiveModal'
 import _, { debounce, isEqual } from 'lodash'
 import DeleteArchiveModal from '../../components/Modals/DeleteArchiveModal'
 import MeetingManager from './ArchiveManager/MeetingManager'
@@ -505,20 +505,28 @@ function LtsJournalContent(props) {
             />
           </div>
         </div>
-        {journal.reflectionsTable && journal.reflectionsTable.length ? <>
-          {journal.reflectionsTable.map(reflectionTable => <div className='col-12' key={reflectionTable.id}>
-            <TableWrapper title={reflectionTable.title}>
-              <TableReflections
-                loadData={loadData}
-                start={reflectionTable.startDate}
-                end={reflectionTable.endDate}
-                reflectionTable={reflectionTable}
-                reflectionTableEntries={reflectionTable.reflectionsTableEntries}
-                userReflectionTableEntries={reflectionTable.userReflectionsTableEntries}
-              />
-            </TableWrapper>
-          </div>)}
-        </> : null}
+        {journal.reflectionsTable && journal.reflectionsTable.length ? (
+          <>
+            {journal.reflectionsTable.map((reflectionTable) => (
+              <div className="col-12" key={reflectionTable.id}>
+                <TableWrapper title={reflectionTable.title}>
+                  <TableReflections
+                    loadData={loadData}
+                    start={reflectionTable.startDate}
+                    end={reflectionTable.endDate}
+                    reflectionTable={reflectionTable}
+                    reflectionTableEntries={
+                      reflectionTable.reflectionsTableEntries
+                    }
+                    userReflectionTableEntries={
+                      reflectionTable.userReflectionsTableEntries
+                    }
+                  />
+                </TableWrapper>
+              </div>
+            ))}
+          </>
+        ) : null}
 
         {journal?.meetings && journal?.meetings?.length ? (
           <MeetingManager journal={journal} />

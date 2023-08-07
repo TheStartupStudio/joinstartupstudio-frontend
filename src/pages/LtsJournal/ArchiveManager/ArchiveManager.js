@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ArchiveSelector from '../../../components/ArchiveSelector/ArchiveSelector'
-import MeetingModal from '../../../components/Modals/MeetingModal'
+import ArchiveModal from '../../../components/Modals/ArchiveModal'
 import DeleteArchiveModal from '../../../components/Modals/DeleteArchiveModal'
 
 const ArchiveManager = (props) => {
@@ -59,12 +59,13 @@ const ArchiveManager = (props) => {
             </button>
           </div>
           {props.showArchiveModal && props.hasUnsavedChanges && (
-            <MeetingModal
+            <ArchiveModal
               show={props.showArchiveModal}
               onHide={props.onCloseArchiveModal}
               saveChanged={props.saveChanged}
               saveUnChanged={props.saveUnChanged}
               onSave={props.onAdd}
+              title={props.title}
             />
           )}
           {props.showDeleteArchiveModal && (
@@ -72,6 +73,7 @@ const ArchiveManager = (props) => {
               show={props.showDeleteArchiveModal}
               onHide={props.onCloseDeleteArchiveModal}
               onDelete={props.onDelete}
+              title={props.title}
             />
           )}
         </div>
