@@ -1,6 +1,7 @@
 import { FormattedMessage } from 'react-intl'
 import React, { useEffect, useState } from 'react'
 import './ArchiveSelector.css'
+import moment from 'moment'
 
 const ArchiveSelector = (props) => {
   const [archives, setArchives] = useState(props.archives)
@@ -73,7 +74,17 @@ const ArchiveSelector = (props) => {
                   checked={archive.id === props.selectedArchive.id}
                   onChange={() => handleCheckboxChange(archive.title)}
                 />
-                {archiveOptionTitle()} {index + 1} name
+                <div className={'d-flex flex-column'}>
+                  <div>
+                    {archiveOptionTitle()} {index + 1} name
+                  </div>
+                  <div>
+                    Date:
+                    {archive.updatedAt
+                      ? moment(archive.updatedAt).format('DD-MM-YYYY')
+                      : moment(archive.createdAt).format('DD-MM-YYYY')}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

@@ -106,6 +106,10 @@ const MeetingManager = (props) => {
     setShowDeleteArchiveModal(true)
   }
 
+  useEffect(() => {
+    setJournal(props.journal)
+  }, [props.journal])
+
   const saveUnChanged = () => {
     const meeting = unChangedMeeting
     axiosInstance
@@ -232,7 +236,7 @@ const MeetingManager = (props) => {
 
   useEffect(
     function () {
-      loadData()
+      // loadData()
       getMeetings()
     },
     [params.journalId]

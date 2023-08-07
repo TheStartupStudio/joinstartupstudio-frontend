@@ -186,6 +186,10 @@ const FeedbackManager = (props) => {
     } catch (err) {}
   }
 
+  useEffect(() => {
+    setJournal(props.journal)
+  }, [props.journal])
+
   function loadData() {
     setLoading(true)
     Promise.all([getJournal()])
@@ -219,7 +223,7 @@ const FeedbackManager = (props) => {
 
   useEffect(
     function () {
-      loadData()
+      // loadData()
       getFeedbacks()
     },
     [params.journalId]
