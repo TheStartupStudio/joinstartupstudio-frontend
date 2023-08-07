@@ -13,12 +13,13 @@ import EntriesBox from './EntriesBox'
 import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections.js'
 import { Table } from 'react-bootstrap'
-import ArchiveSelector from '../../components/Modals/ArchiveSelector/ArchiveSelector'
+import ArchiveSelector from '../../components/ArchiveSelector/ArchiveSelector'
 import MeetingModal from '../../components/Modals/MeetingModal'
 import _, { debounce, isEqual } from 'lodash'
 import DeleteArchiveModal from '../../components/Modals/DeleteArchiveModal'
 import MeetingManager from './ArchiveManager/MeetingManager'
 import FeedbackManager from './ArchiveManager/FeedbackManager'
+import MentorMeetingManager from './ArchiveManager/MentorMeetingManager'
 const JournalTableRow = (props) => {
   return (
     <tr
@@ -527,16 +528,13 @@ function LtsJournalContent(props) {
         ) : null}
 
         {journal?.meetings && journal?.meetings?.length ? (
-          <MeetingManager
-            journal={journal}
-            handleSetJournal={(journal) => setJournal(journal)}
-          />
+          <MeetingManager journal={journal} />
         ) : null}
         {journal?.feedbacks && journal?.feedbacks?.length ? (
-          <FeedbackManager
-            journal={journal}
-            handleSetJournal={(journal) => setJournal(journal)}
-          />
+          <FeedbackManager journal={journal} />
+        ) : null}
+        {journal?.mentorMeetings && journal?.mentorMeetings?.length ? (
+          <MentorMeetingManager journal={journal} />
         ) : null}
       </div>
     </>
