@@ -1,13 +1,8 @@
 import React from 'react'
 
-const ContentUploadBox = ({
-  title,
-  isEnabled,
-  onSelectContent,
-  isSelected
-}) => {
+const ContentUploadBox = ({ title, isAdded, onSelectContent, isSelected }) => {
   const boxBackgroundColor = () => {
-    if (isEnabled) {
+    if (isAdded) {
       // if value is true
       // set backgroundColor to sky blue color
       return '#51C7DF'
@@ -23,7 +18,7 @@ const ContentUploadBox = ({
     }
   }
   const boxTextColor = () => {
-    if (isEnabled) {
+    if (isAdded) {
       // if value is true
       // set color to white
       return 'white'
