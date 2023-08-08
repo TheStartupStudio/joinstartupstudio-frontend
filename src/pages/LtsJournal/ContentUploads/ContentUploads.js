@@ -35,7 +35,6 @@ const ContentUploads = ({ journal }) => {
       [name]: value
     }
 
-    console.log(contentUploadsBody)
     axiosInstance
       .put(
         `/contentUploads/${contentUploads.id}/userContentUploads/${
@@ -72,25 +71,12 @@ const ContentUploads = ({ journal }) => {
     return selectedContent.find((content) => content === contentType)
   }
   const updateContentSelection = (contentType) => {
-    if (isSelectedContent(contentType)) {
-      // if content is selected then set it to true
-      handleToggleContent(contentType, true) // first argument type ex: 'article', second argument value ex: false or true
-      handleDeselectContent(contentType)
-    } else {
-      // if content is not selected
-      if (contentUploads[contentType] === true) {
-        // contentUploads['article'] - gives article
-        // if content is not selected and content has true value, ex: 'article': true
-        // then deselect it
-
-        handleDeselectContent(contentType)
-        // and also toggle it to false: 'article': false
-        handleToggleContent(contentType, false)
-      } else {
-        // if content is not selected and content has false value, ex: 'article': false,
-        // then select it
-        handleSelectContent(contentType)
-      }
+    if (contentUploads[contentType] === 'selected') {
+      handleToggleContent(contentType, 'added')
+    } else if (contentUploads[contentType] === 'not_selected') {
+      handleToggleContent(contentType, 'selected')
+    } else if (contentUploads[contentType] === 'added') {
+      handleToggleContent(contentType, 'not_selected')
     }
   }
 
@@ -106,150 +92,152 @@ const ContentUploads = ({ journal }) => {
         >
           <ContentUploadBox
             title="Article"
-            isEnabled={contentUploads?.article}
             onSelectContent={() => updateContentSelection('article')}
-            isSelected={isSelectedContent('article')}
+            isEnabled={contentUploads?.article === 'added'}
+            isSelected={contentUploads?.article === 'selected'}
           />
 
           <ContentUploadBox
             title="Brand Chapter"
-            isEnabled={contentUploads?.brandChapter}
             onSelectContent={() => updateContentSelection('brandChapter')}
-            isSelected={isSelectedContent('brandChapter')}
+            isEnabled={contentUploads?.brandChapter === 'added'}
+            isSelected={contentUploads?.brandChapter === 'selected'}
           />
 
           <ContentUploadBox
             title="Brand Guidelines Booklet"
-            isEnabled={contentUploads?.brandGuidelinesBooklet}
             onSelectContent={() =>
               updateContentSelection('brandGuidelinesBooklet')
             }
-            isSelected={isSelectedContent('brandGuidelinesBooklet')}
+            isEnabled={contentUploads?.brandGuidelinesBooklet === 'added'}
+            isSelected={contentUploads?.brandGuidelinesBooklet === 'selected'}
           />
 
           <ContentUploadBox
             title="Branded Material"
-            isEnabled={contentUploads?.brandedMaterial}
             onSelectContent={() => updateContentSelection('brandedMaterial')}
-            isSelected={isSelectedContent('brandedMaterial')}
+            isEnabled={contentUploads?.brandedMaterial === 'added'}
+            isSelected={contentUploads?.brandedMaterial === 'selected'}
           />
 
           <ContentUploadBox
             title="Brand Vehicle"
-            isEnabled={contentUploads?.brandVehicle}
             onSelectContent={() => updateContentSelection('brandVehicle')}
-            isSelected={isSelectedContent('brandVehicle')}
+            isEnabled={contentUploads?.brandVehicle === 'added'}
+            isSelected={contentUploads?.brandVehicle === 'selected'}
           />
 
           <ContentUploadBox
             title="Brand Video"
-            isEnabled={contentUploads?.brandVideo}
             onSelectContent={() => updateContentSelection('brandVideo')}
-            isSelected={isSelectedContent('brandVideo')}
+            isEnabled={contentUploads?.brandVideo === 'added'}
+            isSelected={contentUploads?.brandVideo === 'selected'}
           />
 
           <ContentUploadBox
             title="Business Plan"
-            isEnabled={contentUploads?.businessPlan}
             onSelectContent={() => updateContentSelection('businessPlan')}
-            isSelected={isSelectedContent('businessPlan')}
+            isEnabled={contentUploads?.businessPlan === 'added'}
+            isSelected={contentUploads?.businessPlan === 'selected'}
           />
 
           <ContentUploadBox
             title="Concept Plan"
-            isEnabled={contentUploads?.conceptPlan}
             onSelectContent={() => updateContentSelection('conceptPlan')}
-            isSelected={isSelectedContent('conceptPlan')}
+            isEnabled={contentUploads?.conceptPlan === 'added'}
+            isSelected={contentUploads?.conceptPlan === 'selected'}
           />
 
           <ContentUploadBox
             title="Course Certification"
-            isEnabled={contentUploads?.courseCertification}
             onSelectContent={() =>
               updateContentSelection('courseCertification')
             }
-            isSelected={isSelectedContent('courseCertification')}
+            isEnabled={contentUploads?.courseCertification === 'added'}
+            isSelected={contentUploads?.courseCertification === 'selected'}
           />
 
           <ContentUploadBox
             title="Culture Charter"
-            isEnabled={contentUploads?.cultureCharter}
             onSelectContent={() => updateContentSelection('cultureCharter')}
-            isSelected={isSelectedContent('cultureCharter')}
+            isEnabled={contentUploads?.cultureCharter === 'added'}
+            isSelected={contentUploads?.cultureCharter === 'selected'}
           />
 
           <ContentUploadBox
             title="Data Set"
-            isEnabled={contentUploads?.dataSet}
             onSelectContent={() => updateContentSelection('dataSet')}
-            isSelected={isSelectedContent('dataSet')}
+            isEnabled={contentUploads?.dataSet === 'added'}
+            isSelected={contentUploads?.dataSet === 'selected'}
           />
 
           <ContentUploadBox
             title="Financial Document"
-            isEnabled={contentUploads?.financialDocument}
             onSelectContent={() => updateContentSelection('financialDocument')}
-            isSelected={isSelectedContent('financialDocument')}
+            isEnabled={contentUploads?.financialDocument === 'added'}
+            isSelected={contentUploads?.financialDocument === 'selected'}
           />
 
           <ContentUploadBox
             title="Focus Group Agenda and Results"
-            isEnabled={contentUploads?.focusGroupAgendaAndResults}
             onSelectContent={() =>
               updateContentSelection('focusGroupAgendaAndResults')
             }
-            isSelected={isSelectedContent('focusGroupAgendaAndResults')}
+            isEnabled={contentUploads?.focusGroupAgendaAndResults === 'added'}
+            isSelected={
+              contentUploads?.focusGroupAgendaAndResults === 'selected'
+            }
           />
 
           <ContentUploadBox
             title="Form of Communication"
-            isEnabled={contentUploads?.formOfCommunication}
             onSelectContent={() =>
               updateContentSelection('formOfCommunication')
             }
-            isSelected={isSelectedContent('formOfCommunication')}
+            isEnabled={contentUploads?.formOfCommunication === 'added'}
+            isSelected={contentUploads?.formOfCommunication === 'selected'}
           />
 
           <ContentUploadBox
             title="I Am Video"
-            isEnabled={contentUploads?.iAmVideo}
             onSelectContent={() => updateContentSelection('iAmVideo')}
-            isSelected={isSelectedContent('iAmVideo')}
+            isEnabled={contentUploads?.iAmVideo === 'added'}
+            isSelected={contentUploads?.iAmVideo === 'selected'}
           />
 
           <ContentUploadBox
             title="Industry Analysis"
-            isEnabled={contentUploads?.industryAnalysis}
             onSelectContent={() => updateContentSelection('industryAnalysis')}
-            isSelected={isSelectedContent('industryAnalysis')}
+            isEnabled={contentUploads?.industryAnalysis === 'added'}
+            isSelected={contentUploads?.industryAnalysis === 'selected'}
           />
 
           <ContentUploadBox
             title="Interview Template"
-            isEnabled={contentUploads?.interviewTemplate}
             onSelectContent={() => updateContentSelection('interviewTemplate')}
-            isSelected={isSelectedContent('interviewTemplate')}
+            isEnabled={contentUploads?.interviewTemplate === 'added'}
+            isSelected={contentUploads?.interviewTemplate === 'selected'}
           />
 
           <ContentUploadBox
             title="Journal Entry"
-            isEnabled={contentUploads?.journalEntry}
             onSelectContent={() => updateContentSelection('journalEntry')}
-            isSelected={isSelectedContent('journalEntry')}
+            isEnabled={contentUploads?.journalEntry === 'added'}
+            isSelected={contentUploads?.journalEntry === 'selected'}
           />
 
           <ContentUploadBox
             title="Market Analysis"
-            isEnabled={contentUploads?.marketAnalysis}
             onSelectContent={() => updateContentSelection('marketAnalysis')}
-            isSelected={isSelectedContent('marketAnalysis')}
+            isEnabled={contentUploads?.marketAnalysis === 'added'}
+            isSelected={contentUploads?.marketAnalysis === 'selected'}
           />
 
           <ContentUploadBox
             title="Meeting Agenda"
-            isEnabled={contentUploads?.meetingAgenda}
             onSelectContent={() => updateContentSelection('meetingAgenda')}
-            isSelected={isSelectedContent('meetingAgenda')}
+            isEnabled={contentUploads?.meetingAgenda === 'added'}
+            isSelected={contentUploads?.meetingAgenda === 'selected'}
           />
 
           <ContentUploadBox
