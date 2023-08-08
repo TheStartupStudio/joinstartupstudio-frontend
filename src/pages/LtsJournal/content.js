@@ -178,7 +178,6 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-  console.log(journal)
   return (
     <>
       <div className="row">
