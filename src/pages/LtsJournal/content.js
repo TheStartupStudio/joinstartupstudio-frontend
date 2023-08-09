@@ -15,6 +15,7 @@ import FeedbackManager from './ArchiveManager/FeedbackManager'
 import AccordionItemWrapper from './AccordionItemWrapper'
 import MentorMeetingManager from './ArchiveManager/MentorMeetingManager'
 import ContentUploads from './ContentUploads/ContentUploads'
+import AccordionItems from './MyGoals/AccordionItems'
 
 const JournalTableRow = (props) => {
   return (
@@ -56,9 +57,23 @@ function LtsJournalContent(props) {
   const [unChangedMeeting, setUnChangedMeeting] = useState({})
   const [showMeetingModal, setShowMeetingModal] = useState(false)
   const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
+  const [testAcc, setTestAcc] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   // console.log('unChangedMeeting', unChangedMeeting)
+
+  const handleAccordionClick = (accordion) => {
+    if (openAccordion === accordion) {
+      setOpenAccordion(null)
+    } else {
+      setOpenAccordion(accordion)
+    }
+  }
+
+  useEffect(() => {
+    setIsExpanded(false)
+  }, [props.match.params.id])
 
   const handleCloseMeetingModal = () => {
     setShowMeetingModal(false)
@@ -326,14 +341,6 @@ function LtsJournalContent(props) {
     // setUnChangedMeeting(value)
   }
 
-  const handleAccordionClick = (accordion) => {
-    if (openAccordion === accordion) {
-      setOpenAccordion(null)
-    } else {
-      setOpenAccordion(accordion)
-    }
-  }
-
   return (
     <>
       <div className="row">
@@ -421,6 +428,30 @@ function LtsJournalContent(props) {
             />
           </div>
         </div>
+        <div className="col-12">
+          <div className={'custom-breakdowns-container'}>
+            {journal.hasAccordion ? (
+              <div>
+                {!loading && (
+                  <div style={{ order: 1 }}>
+                    {
+                      <AccordionItemWrapper
+                        isOpened={openAccordion === 'evaluation'}
+                        handleAccordionClick={() =>
+                          handleAccordionClick('evaluation')
+                        }
+                        isExanded={isExpanded}
+                        title={'EVALUATION SYSTEM'}
+                      >
+                        {openAccordion === 'evaluation' && <AccordionItems />}
+                      </AccordionItemWrapper>
+                    }
+                  </div>
+                )}
+              </div>
+            ) : null}
+          </div>
+        </div>
         {journal.accordions && journal.accordions.length && journal.accordions.map(accordion => (
         <div className="col-12">
           <AccordionItemWrapper
@@ -444,34 +475,43 @@ function LtsJournalContent(props) {
                     >
                       <div
                         style={{
-                          fontFamily: 'Montserrat',
-                          backgroundColor: '#fff',
-                          marginBottom: 20,
-                          textAlign: 'start',
-                          width: '100%'
+                          display: 'flex',
+                          justifyContent: 'center',
+                          flexDirection: 'column',
+                          alignItems: 'center'
                         }}
                       >
-                        <div className="col-12">
-                          <div className="">
-                            <EntriesBox
-                              entries={accordion.ltsJournalAccordionEntries}
-                              entryBoxTitle={journal?.title}
-                              journal={journal}
-                              userJournalEntries={userJournalEntries}
-                              deleteReflection={(entry, userJournalEntry) =>
-                                deleteReflection(entry, userJournalEntry)
-                              }
-                              updateReflection={(entry, userJournalEntry) =>
-                                updateReflection(entry, userJournalEntry)
-                              }
-                              addReflection={(entry) => addReflection(entry)}
-                              handleShowAddReflection={(reflection) =>
-                                handleShowAddReflection(reflection)
-                              }
-                              showAddReflection={showAddReflection}
-                            />
+                        <div
+                          style={{
+                            fontFamily: 'Montserrat',
+                            backgroundColor: '#fff',
+                            marginBottom: 20,
+                            textAlign: 'start',
+                            width: '100%'
+                          }}
+                        >
+                          <div className="col-12">
+                            <div className="">
+                              <EntriesBox
+                                entries={accordion.ltsJournalAccordionEntries}
+                                entryBoxTitle={journal?.title}
+                                journal={journal}
+                                userJournalEntries={userJournalEntries}
+                                deleteReflection={(entry, userJournalEntry) =>
+                                  deleteReflection(entry, userJournalEntry)
+                                }
+                                updateReflection={(entry, userJournalEntry) =>
+                                  updateReflection(entry, userJournalEntry)
+                                }
+                                addReflection={(entry) => addReflection(entry)}
+                                handleShowAddReflection={(reflection) =>
+                                  handleShowAddReflection(reflection)
+                                }
+                                showAddReflection={showAddReflection}
+                              />
+                            </div>
+                          </div>
                         </div>
-                      </div>
                       </div>
                     </div>
                   </div>
