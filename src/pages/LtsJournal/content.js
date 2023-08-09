@@ -400,6 +400,27 @@ function LtsJournalContent(props) {
       </div>
 
       <div className="row">
+        <div className="col-12">
+          <div className="journal-entries">
+            <EntriesBox
+              entries={journal.entries}
+              entryBoxTitle={journal?.title}
+              journal={journal}
+              userJournalEntries={userJournalEntries}
+              deleteReflection={(entry, userJournalEntry) =>
+                deleteReflection(entry, userJournalEntry)
+              }
+              updateReflection={(entry, userJournalEntry) =>
+                updateReflection(entry, userJournalEntry)
+              }
+              addReflection={(entry) => addReflection(entry)}
+              handleShowAddReflection={(reflection) =>
+                handleShowAddReflection(reflection)
+              }
+              showAddReflection={showAddReflection}
+            />
+          </div>
+        </div>
         {journal.accordions && journal.accordions.length && journal.accordions.map(accordion => (
         <div className="col-12">
           <AccordionItemWrapper
