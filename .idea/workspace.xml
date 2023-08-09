@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/Modals/SkillExplanationModal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/CertificationSkills/CertificationSkillBox.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/CertificationSkills/CertificationSkills.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/CertificationSkills/CertificationSkills.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploadBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploadBox.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploads.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploads.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +42,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/LtsJournal/ArchiveManager",
+    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/LtsJournal/CertificationSkills",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -53,11 +57,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\CertificationSkills" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
@@ -106,7 +110,7 @@
       <workItem from="1688973170084" duration="61926000" />
       <workItem from="1689317962596" duration="25113000" />
       <workItem from="1690182262462" duration="15650000" />
-      <workItem from="1691077287358" duration="87986000" />
+      <workItem from="1691077287358" duration="105216000" />
     </task>
     <servers />
   </component>

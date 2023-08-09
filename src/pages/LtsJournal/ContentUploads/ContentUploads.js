@@ -55,21 +55,6 @@ const ContentUploads = ({ journal }) => {
     }))
   }
 
-  const handleSelectContent = (name) => {
-    const newSelectedContent = [...selectedContent]
-    newSelectedContent.push(name)
-    setSelectedContent(newSelectedContent)
-  }
-  const handleDeselectContent = (contentType) => {
-    const newSelectedContent = selectedContent.filter(
-      (content) => content !== contentType
-    )
-    setSelectedContent(newSelectedContent)
-  }
-
-  const isSelectedContent = (contentType) => {
-    return selectedContent.find((content) => content === contentType)
-  }
   const updateContentSelection = (contentType) => {
     if (contentUploads[contentType] === 'selected') {
       handleToggleContent(contentType, 'added')

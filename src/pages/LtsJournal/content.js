@@ -14,6 +14,7 @@ import MeetingManager from './ArchiveManager/MeetingManager'
 import FeedbackManager from './ArchiveManager/FeedbackManager'
 import MentorMeetingManager from './ArchiveManager/MentorMeetingManager'
 import ContentUploads from './ContentUploads/ContentUploads'
+import CertificationSkills from './CertificationSkills/CertificationSkills'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -299,6 +300,9 @@ function LtsJournalContent(props) {
         ) : null}
 
         {journal?.contentUploads ? <ContentUploads journal={journal} /> : null}
+        {journal?.certificationSkills ? (
+          <CertificationSkills journal={journal} />
+        ) : null}
       </div>
     </>
   )
