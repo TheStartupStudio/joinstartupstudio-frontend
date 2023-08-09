@@ -465,31 +465,9 @@ function LtsJournalContent(props) {
               {openAccordion === `accordion-${accordion.id}` && (
                 <>
                   <div className="accordion-content">
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        flexDirection: 'column',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          flexDirection: 'column',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontFamily: 'Montserrat',
-                            backgroundColor: '#fff',
-                            marginBottom: 20,
-                            textAlign: 'start',
-                            width: '100%'
-                          }}
-                        >
+                    <div>
+                      <div>
+                        <div>
                           <div className="col-12">
                             <div className="">
                               <EntriesBox
