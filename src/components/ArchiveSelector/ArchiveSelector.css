@@ -7,22 +7,23 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 14px
 }
 
 .options-container {
     position: absolute;
-    top: calc(100% + 5px); /* Align the options container to the top of the selected option */
+    top: calc(100% + 5px);
     left: 0;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1; /* Ensure the options are displayed above other elements */
+    z-index: 1;
 }
 
 .options {
-    max-height: 200px; /* Add a max-height to limit the dropdown height */
-    overflow-y: auto; /* Enable vertical scrolling for long lists of options */
+    max-height: 200px;
+    overflow-y: auto;
     /*padding: 4px;*/
     position:absolute;
     width: 100%
