@@ -422,7 +422,7 @@ function Sidebar(props) {
                 aria-expanded="true"
                 aria-controls="studentJournals"
               >
-                <a>
+                {/* <a>
                   <div
                     className="d-flex w-100"
                     style={{ alignItems: 'center' }}
@@ -443,7 +443,7 @@ function Sidebar(props) {
                       }}
                     />
                   </div>
-                </a>
+                </a> */}
               </li>
               <div
                 className="collapse"

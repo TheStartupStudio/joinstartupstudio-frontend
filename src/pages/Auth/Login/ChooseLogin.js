@@ -72,7 +72,7 @@ const ChooseLogin = () => {
         return history.push('/ims-login')
       } else if (loginRole === 'main') {
         return window.location.replace(
-          'https://main.learntostart.com/dashboard'
+          'https://main.learntostart.com/main-login'
         )
       }
     }

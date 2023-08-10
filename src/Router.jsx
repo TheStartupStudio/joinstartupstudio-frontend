@@ -375,6 +375,7 @@ function Router(props) {
               />
               <Redirect from="/register" exact to="/dashboard" />
               <Redirect from="/ims-login" exact to="/dashboard" />
+              <Redirect from="/" exact to="/dashboard" />
               <Route path="/iamr" component={Iamr} />
               <Route component={NotFound} />
             </Switch>
