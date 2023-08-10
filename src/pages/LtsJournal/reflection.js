@@ -189,7 +189,6 @@ function LtsJournalReflection(props) {
     }, 5000),
     []
   )
-  console.log(props)
   return (
     <>
       <ToastContainer

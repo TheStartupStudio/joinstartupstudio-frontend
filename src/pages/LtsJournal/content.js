@@ -88,7 +88,6 @@ function LtsJournalContent(props) {
 
       .then(([journalData, userJournalEntries]) => {
         setJournal(journalData)
-
         if (
           journalData.userEntry &&
           journalData.userEntry.length > 0 &&

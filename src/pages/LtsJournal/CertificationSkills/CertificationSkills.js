@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import CertificationSkillBox from './CertificationSkillBox'
 import axiosInstance from '../../../utils/AxiosInstance'
-import { useParams } from 'react-router-dom'
-import certificationAccordionItem from '../../../components/StudentIAMR/skillsAccordion/certificationAccordionItem'
-import DeleteArchiveModal from '../../../components/Modals/DeleteArchiveModal'
 import SkillExplanationModal from '../../../components/Modals/SkillExplanationModal'
 import './CertificationSkills.css'
 const CertificationSkills = ({ journal }) => {
-  const [certificationSkills, setCertificationSkills] = useState([])
-
-  const [selectedContent, setSelectedContent] = useState([])
-
-  const [userCertificationSkills, setUserCertificationSkills] = useState([])
-
-  const [userContentUploadsId, setUserContentUploadsId] = useState(0)
+  const [skills, setSkills] = useState([])
 
   const [showExplanationModal, setShowExplanationModal] = useState(false)
 
@@ -24,104 +15,65 @@ const CertificationSkills = ({ journal }) => {
   const handleCloseExplanationModal = () => {
     setShowExplanationModal(false)
   }
-  function isObject(obj) {
-    return !!obj
-  }
 
   useEffect(() => {
-    if (
-      journal.certificationSkills &&
-      journal.userCertificationSkills.length === 0
-    ) {
-      setCertificationSkills(
-        journal.certificationSkills.slice().sort((a, b) => a.order - b.order)
-      )
-    }
-  }, [journal.certificationSkills])
-  useEffect(() => {
-    if (journal.userCertificationSkills.length !== 0) {
-      let newCertificationSkills = []
+    const ids = journal.userCertificationSkills.map(
+      (item1) => item1.certificationSkillId
+    )
 
-      setCertificationSkills(
-        journal.certificationSkills.slice().sort((a, b) => a.order - b.order)
-      )
-      setUserCertificationSkills(
-        journal.userCertificationSkills
-          .slice()
-          .sort((a, b) => a.order - b.order)
-      )
-    }
-  }, [journal.userCertificationSkills])
+    const differentCertificationSkills = journal.certificationSkills.filter(
+      (item1) => !ids.includes(item1.id)
+    )
+    setSkills(
+      [...differentCertificationSkills, ...journal.userCertificationSkills]
+        .slice()
+        .sort((a, b) => a.order - b.order)
+    )
+  }, [journal.userCertificationSkills, journal.certificationSkills])
 
-  const params = useParams()
-  const handleToggleSkill = (skillId, status) => {
-    let newCertificationSkills
-    if (userCertificationSkills.length !== 0) {
-      newCertificationSkills = userCertificationSkills?.map((skill) => {
-        if (skill.id === skillId) {
-          return {
-            ...skill,
-            status: status
-          }
-        }
-        return skill
-      })
+  const handleToggleSkill = (skill, status) => {
+    if (skill.hasOwnProperty('certificationSkillId')) {
+      axiosInstance
+        .put(`/certificationSkills/updateUserCertificationSkill/`, {
+          skill: { ...skill, status: status }
+        })
+        .then(({ data }) => {
+          const updatedSkills = skills.map((s) => (s.id === data.id ? data : s))
+          setSkills(updatedSkills)
+        })
     } else {
-      const skills = certificationSkills?.map((skill) => {
-        let newSkill
-        if (skill.id === skillId) {
-          newSkill = {
-            journalId: skill.journalId,
-            order: skill.order,
-            status: status,
-            title: skill.title,
-            content: skill.content,
-            certificationSkillId: skill.id
-          }
-        } else {
-          newSkill = {
-            journalId: skill.journalId,
-            order: skill.order,
-            status: skill.status,
-            title: skill.title,
-            content: skill.content,
-            certificationSkillId: skill.id
-          }
-        }
+      const newSkill = {
+        journalId: skill.journalId,
+        order: skill.order,
+        status: status,
+        title: skill.title,
+        content: skill.content,
+        certificationSkillId: skill.id
+      }
 
-        return newSkill
-      })
-      newCertificationSkills = skills
+      axiosInstance
+        .post(`/certificationSkills/createUserCertificationSkill/`, {
+          skill: newSkill
+        })
+        .then(({ data }) => {
+          const foundedSkillIndex = skills.findIndex((s) => s.id === skill.id)
+          const newSkills = [...skills]
+          newSkills.splice(foundedSkillIndex, 1, data)
+          setSkills(newSkills)
+        })
     }
-
-    axiosInstance
-      .put(`/certificationSkills/updateUserCertificationSkills/`, {
-        certificationSkills: newCertificationSkills
-      })
-      .then(({ data }) => {
-        if (data) {
-          const newData = [...data]?.slice()?.sort((a, b) => a.order - b.order)
-          setUserCertificationSkills(newData)
-        }
-      })
   }
 
   const updateContentSelection = (skill) => {
     if (skill.status === 'undeclared') {
-      handleToggleSkill(skill.id, 'proficient')
+      handleToggleSkill(skill, 'proficient')
     } else if (skill.status === 'proficient') {
-      handleToggleSkill(skill.id, 'needs_improvement')
+      handleToggleSkill(skill, 'needs_improvement')
     } else if (skill.status === 'needs_improvement') {
-      handleToggleSkill(skill.id, 'undeclared')
+      handleToggleSkill(skill, 'undeclared')
     }
   }
 
-  const ids = userCertificationSkills.map((item1) => item1.certificationSkillId)
-
-  const differentElements = certificationSkills.filter(
-    (item1) => !ids.includes(item1.id)
-  )
-  // console.log(differentElements)
   return (
     <div>
       {journal?.certificationSkills?.length ? (
@@ -132,47 +84,18 @@ const CertificationSkills = ({ journal }) => {
             gap: '20px'
           }}
         >
-          {userCertificationSkills?.length === 0 &&
-            certificationSkills.map((skill) => {
-              return (
-                <div
-                  className={
-                    'd-flex flex-column justify-content-center align-items-center'
-                  }
-                >
-                  <CertificationSkillBox
-                    title={skill.title}
-                    onSelectContent={() => updateContentSelection(skill)}
-                    proficient={skill?.status === 'proficient'}
-                    needsImprovement={skill?.status === 'needs_improvement'}
-                  />
-                  <button
-                    className={'explanation-button'}
-                    onClick={() => {
-                      handleOpenExplanationModal()
-                      setSelectedSkill(skill)
-                    }}
-                  >
-                    Explanation
-                  </button>
-                </div>
-              )
-            })}
-
-          {userCertificationSkills &&
-            userCertificationSkills.length !== 0 &&
-            userCertificationSkills.map((skill) => (
+          {skills.map((skill) => {
+            return (
               <div
                 className={
-                  'd-flex flex-column justify-content-center align-items-center w-100'
+                  'd-flex flex-column justify-content-center align-items-center'
                 }
               >
                 <CertificationSkillBox
-                  key={skill.title}
                   title={skill.title}
                   onSelectContent={() => updateContentSelection(skill)}
-                  proficient={skill.status === 'proficient'}
-                  needsImprovement={skill.status === 'needs_improvement'}
+                  proficient={skill?.status === 'proficient'}
+                  needsImprovement={skill?.status === 'needs_improvement'}
                 />
                 <button
                   className={'explanation-button'}
@@ -184,7 +107,9 @@ const CertificationSkills = ({ journal }) => {
                   Explanation
                 </button>
               </div>
-            ))}
+            )
+          })}
+
           <SkillExplanationModal
             show={showExplanationModal}
             onHide={handleCloseExplanationModal}

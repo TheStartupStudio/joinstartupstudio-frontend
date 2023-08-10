@@ -50,7 +50,8 @@ const ContentUploadBox = ({ title, isAdded, onSelectContent, isSelected }) => {
         fontSize: 14,
         letterSpacing: 1,
         textTransform: 'uppercase',
-        fontWeight: 600
+        fontWeight: 600,
+        width: '100%'
       }}
       onClick={onSelectContent}
     >
