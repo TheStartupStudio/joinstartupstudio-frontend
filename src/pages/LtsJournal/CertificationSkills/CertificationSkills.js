@@ -40,7 +40,6 @@ const CertificationSkills = ({ journal }) => {
         .then(({ data }) => {
           const updatedSkills = skills.map((s) => {
             if (s.hasOwnProperty('certificationSkillId')) {
-              debugger
               return s.id === data.id ? data : s
             }
           })
