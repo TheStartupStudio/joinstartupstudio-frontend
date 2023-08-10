@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux'
 import useIamrInboxContext from './iamrInboxContext'
 
 import './index.css'
@@ -8,8 +9,13 @@ function InboxMenu() {
     selectQuestionsMenu,
     studentQuestions,
     certificationFeedbackQuestions,
-    approvalRequests,
+    approvalRequests
   } = useIamrInboxContext()
+
+  const loggedUser = useSelector((state) => state.user.user.user)
+
+  const allowedUsers = [122, 933, 128]
+
   return (
     <div className="col-12 col-lg-3 inbox-menu">
       <h4>INBOX</h4>
@@ -37,17 +43,19 @@ function InboxMenu() {
           {certificationFeedbackQuestions.unreadCount}
         </div>
       </div>
-      <div
-        className={`menu-option d-flex justify-content-between ${
-          questionsMenuSelected === 'approval-requests' ? 'selected' : ''
-        }`}
-        onClick={() => selectQuestionsMenu('approval-requests')}
-      >
-        <h5 className="my-auto">APPROVAL REQUESTS</h5>
-        <div className="unread-tickets-number my-auto">
-          {approvalRequests.unreadCount}
+      {allowedUsers.includes(loggedUser.id) && (
+        <div
+          className={`menu-option d-flex justify-content-between ${
+            questionsMenuSelected === 'approval-requests' ? 'selected' : ''
+          }`}
+          onClick={() => selectQuestionsMenu('approval-requests')}
+        >
+          <h5 className="my-auto">APPROVAL REQUESTS</h5>
+          <div className="unread-tickets-number my-auto">
+            {approvalRequests.unreadCount}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

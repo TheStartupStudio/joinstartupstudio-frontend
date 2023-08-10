@@ -33,15 +33,15 @@ const PasswordChangeRequired = () => {
     }
 
     if (userInput.new_password == '') {
-      toast.error(<IntlMessages id='reset.password_field_empty' />)
+      toast.error(<IntlMessages id="reset.password_field_empty" />)
     } else if (userInput.new_password === old_password) {
       toast.error('New password cannot be the same as your old password!')
     } else if (userInput.new_password != userInput.confirm_new_password) {
-      toast.error(<IntlMessages id='reset.password_not_match' />)
+      toast.error(<IntlMessages id="reset.password_not_match" />)
     } else if (userInput.new_password && userInput.new_password.length < 8) {
-      toast.error(<IntlMessages id='reset.password_conform_policy' />)
+      toast.error(<IntlMessages id="reset.password_conform_policy" />)
     } else if (!validatePassword(userInput.new_password)) {
-      toast.error(<IntlMessages id='reset.password_conform_policy' />)
+      toast.error(<IntlMessages id="reset.password_conform_policy" />)
     } else {
       setLoading(true)
       const currentUser = await Auth.currentAuthenticatedUser()
@@ -55,15 +55,15 @@ const PasswordChangeRequired = () => {
             .put(`/users/lastlogin`)
             .then(() => {
               toast.success(
-                <IntlMessages id='alert.my_account.password_change_success' />
+                <IntlMessages id="alert.my_account.password_change_success" />
               )
               setLoading(false)
               setTimeout(() => {
-                window.location.href = `/`
+                window.location.href = `/dashboard`
               }, 1500)
             })
             .catch((e) => {
-              toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+              toast.error(<IntlMessages id="alerts.something_went_wrong" />)
               setLoading(false)
             })
         })
@@ -74,7 +74,7 @@ const PasswordChangeRequired = () => {
             err.code === 'LimitExceededException'
           )
             toast.error(err.message)
-          else toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+          else toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         })
     }
   }
@@ -82,35 +82,35 @@ const PasswordChangeRequired = () => {
   return (
     <div>
       <div
-        className='container-fluid my-auto px-5 d-flex align-items-center justify-content-center'
+        className="container-fluid my-auto px-5 d-flex align-items-center justify-content-center"
         style={{
           backgroundColor: '#F8F7F7',
           minHeight: 'calc(100vh - 150px)'
         }}
       >
-        <div className='w-100' style={{ marginTop: '-150px' }}>
-          <div className='row my-auto'>
+        <div className="w-100" style={{ marginTop: '-150px' }}>
+          <div className="row my-auto">
             <div
-              className='col-md-8 col-lg-4 mx-auto p-4 public-page-form'
+              className="col-md-8 col-lg-4 mx-auto p-4 public-page-form"
               style={{ backgroundColor: '#ffff' }}
             >
-              <h3 className='text-center fw-bold'>
-                <IntlMessages id='reset_password.title' />
+              <h3 className="text-center fw-bold">
+                <IntlMessages id="reset_password.title" />
               </h3>
-              <p className='mb-3 mt-4 public-page-text4'>
+              <p className="mb-3 mt-4 public-page-text4">
                 Enter your new password below. Your password must include at
                 least one lower case letter, one upper case letter, and one
                 number.
               </p>
               <FormattedMessage
-                id='reset.new_password'
-                defaultMessage='New Password'
+                id="reset.new_password"
+                defaultMessage="New Password"
               >
                 {(placeholder) => (
                   <input
-                    className='mb-3 w-100 pl-5'
-                    type='password'
-                    name='new_password'
+                    className="mb-3 w-100 pl-5"
+                    type="password"
+                    name="new_password"
                     placeholder={placeholder}
                     style={{ padding: '8px' }}
                     onChange={(event) => handleChange(event)}
@@ -118,14 +118,14 @@ const PasswordChangeRequired = () => {
                 )}
               </FormattedMessage>
               <FormattedMessage
-                id='reset.confirm_new_password'
-                defaultMessage='Confirm New Password'
+                id="reset.confirm_new_password"
+                defaultMessage="Confirm New Password"
               >
                 {(placeholder) => (
                   <input
-                    className=' w-100 pl-5'
-                    type='password'
-                    name='confirm_new_password'
+                    className=" w-100 pl-5"
+                    type="password"
+                    name="confirm_new_password"
                     placeholder={placeholder}
                     style={{ padding: '8px' }}
                     onChange={(event) => handleChange(event)}
@@ -133,12 +133,12 @@ const PasswordChangeRequired = () => {
                 )}
               </FormattedMessage>
               <button
-                className='mt-3 float-end'
+                className="mt-3 float-end"
                 onClick={(event) => handleSubmit(event)}
                 style={{ width: '136px', height: '44px' }}
               >
                 {loading ? (
-                  <span className='spinner-border spinner-border-sm' />
+                  <span className="spinner-border spinner-border-sm" />
                 ) : (
                   'SAVE'
                 )}
@@ -148,8 +148,8 @@ const PasswordChangeRequired = () => {
         </div>
       </div>
       <ToastContainer
-        className='customToast'
-        position='bottom-left'
+        className="customToast"
+        position="bottom-left"
         autoClose={5000}
       />
     </div>
