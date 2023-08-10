@@ -4,22 +4,19 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import LtsJournalReflection from './reflection'
-import ReactPlayer from 'react-player'
 import MediaLightbox from '../../components/MediaLightbox'
-import markdown from './markdown'
 import parse from 'html-react-parser'
 import EntriesBox from './EntriesBox'
 import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections/index.js'
-import { Table } from 'react-bootstrap'
-import ArchiveSelector from '../../components/Modals/ArchiveSelector/ArchiveSelector'
-import MeetingModal from '../../components/Modals/MeetingModal'
 import _, { debounce, isEqual } from 'lodash'
-import DeleteArchiveModal from '../../components/Modals/DeleteArchiveModal'
 import MeetingManager from './ArchiveManager/MeetingManager'
 import FeedbackManager from './ArchiveManager/FeedbackManager'
 import AccordionItemWrapper from './AccordionItemWrapper'
+import MentorMeetingManager from './ArchiveManager/MentorMeetingManager'
+import ContentUploads from './ContentUploads/ContentUploads'
+import AccordionItems from './MyGoals/AccordionItems'
+
 const JournalTableRow = (props) => {
   return (
     <tr
@@ -48,39 +45,6 @@ const JournalTableCell = (props) => {
   )
 }
 
-const JournalTableCellInput = (props) => {
-  const { title, type, value, handleChange, width } = props
-  return (
-    <div
-      style={{
-        display: 'flex',
-        gap: 20
-      }}
-    >
-      <div
-        style={{ display: 'flex', alignItems: 'center', textWrap: 'nowrap' }}
-      >
-        {title}
-      </div>
-      <div className={` ${width ? '' : 'w-100'}`}>
-        <input
-          className={`my-1  py-2 px-2 text-dark `}
-          type={type}
-          style={{
-            borderRadius: '0.25rem',
-            backgroundColor: 'white',
-            color: '#000',
-            width: width ?? '100%',
-            border: '1px solid #e3e3e3'
-          }}
-          name={'meetingDate'}
-          value={value}
-          onChange={(e) => handleChange(e.target.value)}
-        />
-      </div>
-    </div>
-  )
-}
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
@@ -93,9 +57,23 @@ function LtsJournalContent(props) {
   const [unChangedMeeting, setUnChangedMeeting] = useState({})
   const [showMeetingModal, setShowMeetingModal] = useState(false)
   const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
+  const [testAcc, setTestAcc] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   // console.log('unChangedMeeting', unChangedMeeting)
+
+  const handleAccordionClick = (accordion) => {
+    if (openAccordion === accordion) {
+      setOpenAccordion(null)
+    } else {
+      setOpenAccordion(accordion)
+    }
+  }
+
+  useEffect(() => {
+    setIsExpanded(false)
+  }, [props.match.params.id])
 
   const handleCloseMeetingModal = () => {
     setShowMeetingModal(false)
@@ -167,68 +145,12 @@ function LtsJournalContent(props) {
     []
   )
 
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const handleChangeMeeting = (name, value) => {
-    let newSelectedMeeting = { ...selectedMeeting }
-    newSelectedMeeting[name] = value
-    setSelectedMeeting(newSelectedMeeting)
-    const hasChanged = !isEqual(newSelectedMeeting, selectedMeeting)
-    setHasUnsavedChanges(hasChanged)
-
-    debounce(updateMeeting, newSelectedMeeting)
-  }
-
-  const updateMeeting = async (name, value) => {
-    try {
-      await axiosInstance
-        .put(
-          `/teamMeetings/${selectedMeeting?.id}/journal/${+props.match.params
-            .journalId}`,
-          {
-            meeting: value
-          }
-        )
-        .then((res) => console.log(res.data))
-
-      setJournal((prevJournal) => {
-        const newJournal = { ...prevJournal }
-        const newMeetings = [...newJournal.meetings]
-        const meetingIndex = newMeetings.findIndex(
-          (meet) => meet.id === selectedMeeting?.id
-        )
-        newMeetings[meetingIndex] = value
-        newJournal.meetings = newMeetings
-        return newJournal
-      })
-    } catch (error) {
-      // Handle errors
-      console.error('Error updating meeting:', error)
-    }
-  }
-
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
         `/ltsJournals/${props.match.params.journalId}`
       )
       return data
-    } catch (err) {}
-  }
-
-  function getMeetings() {
-    try {
-      axiosInstance
-        .get(`/ltsJournals/${props.match.params.journalId}`)
-        .then((res) => {
-          const data = res.data
-          if (data?.meetings && data?.meetings?.length) {
-            const latestMeeting = getLatestUpdatedElement(data?.meetings)
-            if (latestMeeting) {
-              setUnChangedMeeting(latestMeeting)
-              setSelectedMeeting(latestMeeting)
-            }
-          }
-        })
     } catch (err) {}
   }
 
@@ -290,20 +212,9 @@ function LtsJournalContent(props) {
   useEffect(
     function () {
       loadData()
-      getMeetings()
     },
     [props.match.params.journalId]
   )
-
-  const getLatestUpdatedElement = (array) => {
-    const latestUpdatedElement = array?.reduce((latest, current) => {
-      if (!latest || new Date(current.updatedAt) > new Date(latest.updatedAt)) {
-        return current
-      }
-      return latest
-    }, null)
-    return latestUpdatedElement
-  }
 
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
@@ -389,6 +300,16 @@ function LtsJournalContent(props) {
       })
   }
 
+  const getLatestUpdatedElement = (array) => {
+    const latestUpdatedElement = array?.reduce((latest, current) => {
+      if (!latest || new Date(current.updatedAt) > new Date(latest.updatedAt)) {
+        return current
+      }
+      return latest
+    }, null)
+    return latestUpdatedElement
+  }
+
   const handleDeleteMeeting = (meeting) => {
     axiosInstance
       .delete(`/teamMeetings/${meeting.id}`)
@@ -418,14 +339,6 @@ function LtsJournalContent(props) {
       setUnChangedMeeting(value)
     }
     // setUnChangedMeeting(value)
-  }
-
-  const handleAccordionClick = (accordion) => {
-    if (openAccordion === accordion) {
-      setOpenAccordion(null)
-    } else {
-      setOpenAccordion(accordion)
-    }
   }
 
   return (
@@ -494,6 +407,51 @@ function LtsJournalContent(props) {
       </div>
 
       <div className="row">
+        <div className="col-12">
+          <div className="journal-entries">
+            <EntriesBox
+              entries={journal.entries}
+              entryBoxTitle={journal?.title}
+              journal={journal}
+              userJournalEntries={userJournalEntries}
+              deleteReflection={(entry, userJournalEntry) =>
+                deleteReflection(entry, userJournalEntry)
+              }
+              updateReflection={(entry, userJournalEntry) =>
+                updateReflection(entry, userJournalEntry)
+              }
+              addReflection={(entry) => addReflection(entry)}
+              handleShowAddReflection={(reflection) =>
+                handleShowAddReflection(reflection)
+              }
+              showAddReflection={showAddReflection}
+            />
+          </div>
+        </div>
+        <div className="col-12">
+          <div className={'custom-breakdowns-container'}>
+            {journal.hasAccordion ? (
+              <div>
+                {!loading && (
+                  <div style={{ order: 1 }}>
+                    {
+                      <AccordionItemWrapper
+                        isOpened={openAccordion === 'evaluation'}
+                        handleAccordionClick={() =>
+                          handleAccordionClick('evaluation')
+                        }
+                        isExanded={isExpanded}
+                        title={'EVALUATION SYSTEM'}
+                      >
+                        {openAccordion === 'evaluation' && <AccordionItems />}
+                      </AccordionItemWrapper>
+                    }
+                  </div>
+                )}
+              </div>
+            ) : null}
+          </div>
+        </div>
         {journal.accordions && journal.accordions.length && journal.accordions.map(accordion => (
         <div className="col-12">
           <AccordionItemWrapper
@@ -507,44 +465,31 @@ function LtsJournalContent(props) {
               {openAccordion === `accordion-${accordion.id}` && (
                 <>
                   <div className="accordion-content">
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        flexDirection: 'column',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontFamily: 'Montserrat',
-                          backgroundColor: '#fff',
-                          marginBottom: 20,
-                          textAlign: 'start',
-                          width: '100%'
-                        }}
-                      >
-                        <div className="col-12">
-                          <div className="">
-                            <EntriesBox
-                              entries={accordion.ltsJournalAccordionEntries}
-                              entryBoxTitle={journal?.title}
-                              journal={journal}
-                              userJournalEntries={userJournalEntries}
-                              deleteReflection={(entry, userJournalEntry) =>
-                                deleteReflection(entry, userJournalEntry)
-                              }
-                              updateReflection={(entry, userJournalEntry) =>
-                                updateReflection(entry, userJournalEntry)
-                              }
-                              addReflection={(entry) => addReflection(entry)}
-                              handleShowAddReflection={(reflection) =>
-                                handleShowAddReflection(reflection)
-                              }
-                              showAddReflection={showAddReflection}
-                            />
+                    <div>
+                      <div>
+                        <div>
+                          <div className="col-12">
+                            <div className="">
+                              <EntriesBox
+                                entries={accordion.ltsJournalAccordionEntries}
+                                entryBoxTitle={journal?.title}
+                                journal={journal}
+                                userJournalEntries={userJournalEntries}
+                                deleteReflection={(entry, userJournalEntry) =>
+                                  deleteReflection(entry, userJournalEntry)
+                                }
+                                updateReflection={(entry, userJournalEntry) =>
+                                  updateReflection(entry, userJournalEntry)
+                                }
+                                addReflection={(entry) => addReflection(entry)}
+                                handleShowAddReflection={(reflection) =>
+                                  handleShowAddReflection(reflection)
+                                }
+                                showAddReflection={showAddReflection}
+                              />
+                            </div>
+                          </div>
                         </div>
-                      </div>
                       </div>
                     </div>
                   </div>
@@ -553,33 +498,40 @@ function LtsJournalContent(props) {
             </AccordionItemWrapper>
           </div>
         ))}
-        {journal.reflectionsTable && journal.reflectionsTable.length ? <>
-          {journal.reflectionsTable.map(reflectionTable => <div className='col-12' key={reflectionTable.id}>
-            <TableWrapper title={reflectionTable.title}>
-              <TableReflections
-                loadData={loadData}
-                start={reflectionTable.startDate}
-                end={reflectionTable.endDate}
-                reflectionTable={reflectionTable}
-                reflectionTableEntries={reflectionTable.reflectionsTableEntries}
-                userReflectionTableEntries={reflectionTable.userReflectionsTableEntries}
-              />
-            </TableWrapper>
-          </div>)}
-        </> : null}
+        {journal.reflectionsTable && journal.reflectionsTable.length ? (
+          <>
+            {journal.reflectionsTable.map((reflectionTable) => (
+              <div className="col-12" key={reflectionTable.id}>
+                <TableWrapper title={reflectionTable.title}>
+                  <TableReflections
+                    loadData={loadData}
+                    start={reflectionTable.startDate}
+                    end={reflectionTable.endDate}
+                    reflectionTable={reflectionTable}
+                    reflectionTableEntries={
+                      reflectionTable.reflectionsTableEntries
+                    }
+                    userReflectionTableEntries={
+                      reflectionTable.userReflectionsTableEntries
+                    }
+                  />
+                </TableWrapper>
+              </div>
+            ))}
+          </>
+        ) : null}
 
         {journal?.meetings && journal?.meetings?.length ? (
-          <MeetingManager
-            journal={journal}
-            handleSetJournal={(journal) => setJournal(journal)}
-          />
+          <MeetingManager journal={journal} />
         ) : null}
         {journal?.feedbacks && journal?.feedbacks?.length ? (
-          <FeedbackManager
-            journal={journal}
-            handleSetJournal={(journal) => setJournal(journal)}
-          />
+          <FeedbackManager journal={journal} />
         ) : null}
+        {journal?.mentorMeetings && journal?.mentorMeetings?.length ? (
+          <MentorMeetingManager journal={journal} />
+        ) : null}
+
+        {journal?.contentUploads ? <ContentUploads journal={journal} /> : null}
       </div>
     </>
   )

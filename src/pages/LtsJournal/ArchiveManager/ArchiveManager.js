@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import ArchiveSelector from '../../../components/Modals/ArchiveSelector/ArchiveSelector'
-import MeetingModal from '../../../components/Modals/MeetingModal'
+import ArchiveSelector from '../../../components/ArchiveSelector/ArchiveSelector'
+import ArchiveModal from '../../../components/Modals/ArchiveModal'
 import DeleteArchiveModal from '../../../components/Modals/DeleteArchiveModal'
 
 const ArchiveManager = (props) => {
@@ -25,14 +25,16 @@ const ArchiveManager = (props) => {
       return 'Meeting'
     } else if (props.title === 'feedback') {
       return 'Feedback'
+    } else if (props.title === 'mentorMeeting') {
+      return 'Mentor Meeting'
     }
   }
   return (
     <>
       <div className="col-12">
         <div>{props.tableContent}</div>
-        <div className={'d-flex justify-content-between py-1'}>
-          <div className="col-md-6 px-1">
+        <div className={'d-flex justify-content-between py-1 mt-2'}>
+          <div className="col-md-6 px-1 d-flex justify-content-center align-items-center">
             <ArchiveSelector
               archiveTitle={props.title}
               archives={props.archives}
@@ -45,7 +47,8 @@ const ArchiveManager = (props) => {
               style={{
                 backgroundColor: '#51c7df',
                 color: '#fff',
-                fontSize: 14
+                fontSize: 14,
+                padding: 10
               }}
               onClick={
                 props.hasUnsavedChanges ? props.onOpenArchiveModal : props.onAdd
@@ -56,12 +59,13 @@ const ArchiveManager = (props) => {
             </button>
           </div>
           {props.showArchiveModal && props.hasUnsavedChanges && (
-            <MeetingModal
+            <ArchiveModal
               show={props.showArchiveModal}
               onHide={props.onCloseArchiveModal}
               saveChanged={props.saveChanged}
               saveUnChanged={props.saveUnChanged}
               onSave={props.onAdd}
+              title={props.title}
             />
           )}
           {props.showDeleteArchiveModal && (
@@ -69,6 +73,7 @@ const ArchiveManager = (props) => {
               show={props.showDeleteArchiveModal}
               onHide={props.onCloseDeleteArchiveModal}
               onDelete={props.onDelete}
+              title={props.title}
             />
           )}
         </div>

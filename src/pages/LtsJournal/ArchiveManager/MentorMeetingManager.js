@@ -3,6 +3,7 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import _, { isEqual } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import ArchiveManager from './ArchiveManager'
+
 import { Table } from 'react-bootstrap'
 import TableWrapper from '../TableWrapper/index'
 import {
@@ -11,14 +12,13 @@ import {
   JournalTableRow
 } from '../TableWrapper/TableComponents'
 
-const MeetingManager = (props) => {
+const MentorMeetingManager = (props) => {
+  const [loading, setLoading] = useState(false)
   let [journal, setJournal] = useState({})
-  let [loading, setLoading] = useState(true)
-  const [selectedMeeting, setSelectedMeeting] = useState({})
-  const [unChangedMeeting, setUnChangedMeeting] = useState({})
+  const [selectedMentorMeeting, setSelectedMentorMeeting] = useState({})
+  const [unChangedMentorMeeting, setUnChangedMentorMeeting] = useState({})
   const [showArchiveModal, setShowArchiveModal] = useState(false)
   const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
-
   const handleCloseArchiveModal = () => {
     setShowArchiveModal(false)
   }
@@ -39,29 +39,34 @@ const MeetingManager = (props) => {
   }, [props.journal])
 
   const saveUnChanged = () => {
-    const meeting = unChangedMeeting
+    const mentorMeeting = unChangedMentorMeeting
     axiosInstance
-      .put(`/teamMeetings/${selectedMeeting.id}/journal/${+params.journalId}`, {
-        meeting
-      })
+      .put(
+        `/mentorMeetings/${
+          selectedMentorMeeting.id
+        }/journal/${+params.journalId}`,
+        {
+          mentorMeeting
+        }
+      )
       .then((res) => {
         let newJournal = { ...journal }
-        let newMeetings = newJournal.meetings
-        const foundedIndex = newMeetings.findIndex(
+        let newMentorMeetings = newJournal.mentorMeetings
+        const foundedIndex = newMentorMeetings.findIndex(
           (meet) => meet.id === res.data.id
         )
-        newMeetings[foundedIndex] = res.data
-        newJournal.meetings = newMeetings
-        setSelectedMeeting({ ...selectedMeeting, ...res.data })
-        setJournal({ ...newJournal, meetings: newMeetings })
+        newMentorMeetings[foundedIndex] = res.data
+        newJournal.mentorMeetings = newMentorMeetings
+        setSelectedMentorMeeting({ ...selectedMentorMeeting, ...res.data })
+        setJournal({ ...newJournal, mentorMeetings: newMentorMeetings })
         handleCloseArchiveModal()
-        handleAddMeeting()
+        handleAddMentorMeeting()
       })
   }
 
   const saveChanged = () => {
     handleCloseArchiveModal()
-    handleAddMeeting()
+    handleAddMentorMeeting()
   }
 
   const debounce = useCallback(
@@ -72,52 +77,56 @@ const MeetingManager = (props) => {
   )
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const handleChangeMeeting = (name, value) => {
-    let newSelectedMeeting = { ...selectedMeeting }
-    newSelectedMeeting[name] = value
-    setSelectedMeeting(newSelectedMeeting)
-    const hasChanged = !isEqual(newSelectedMeeting, selectedMeeting)
+  const handleChangeMentorMeeting = (name, value) => {
+    let newSelectedMentorMeeting = { ...selectedMentorMeeting }
+    newSelectedMentorMeeting[name] = value
+    setSelectedMentorMeeting(newSelectedMentorMeeting)
+    const hasChanged = !isEqual(newSelectedMentorMeeting, selectedMentorMeeting)
     setHasUnsavedChanges(hasChanged)
 
-    debounce(updateMeeting, newSelectedMeeting)
+    debounce(updateMentorMeeting, newSelectedMentorMeeting)
   }
 
-  const updateMeeting = async (name, value) => {
+  const updateMentorMeeting = async (name, value) => {
     try {
       await axiosInstance
         .put(
-          `/teamMeetings/${selectedMeeting?.id}/journal/${+params.journalId}`,
+          `/mentorMeetings/${
+            selectedMentorMeeting?.id
+          }/journal/${+params.journalId}`,
           {
-            meeting: value
+            mentorMeeting: value
           }
         )
         .then((res) => console.log(res.data))
 
       setJournal((prevJournal) => {
         const newJournal = { ...prevJournal }
-        const newMeetings = [...newJournal.meetings]
-        const meetingIndex = newMeetings.findIndex(
-          (meet) => meet.id === selectedMeeting?.id
+        const newMentorMeetings = [...newJournal.mentorMeetings]
+        const mentorMeetingIndex = newMentorMeetings.findIndex(
+          (meet) => meet.id === selectedMentorMeeting?.id
         )
-        newMeetings[meetingIndex] = value
-        newJournal.meetings = newMeetings
+        newMentorMeetings[mentorMeetingIndex] = value
+        newJournal.mentorMeetings = newMentorMeetings
         return newJournal
       })
     } catch (error) {
       // Handle errors
-      console.error('Error updating meeting:', error)
+      console.error('Error updating mentorMeeting:', error)
     }
   }
 
-  function getMeetings() {
+  function getMentorMeetings() {
     try {
       axiosInstance.get(`/ltsJournals/${params.journalId}`).then((res) => {
         const data = res.data
-        if (data?.meetings && data?.meetings?.length) {
-          const latestMeeting = getLatestUpdatedElement(data?.meetings)
-          if (latestMeeting) {
-            setUnChangedMeeting(latestMeeting)
-            setSelectedMeeting(latestMeeting)
+        if (data?.mentorMeetings && data?.mentorMeetings?.length) {
+          const latestMentorMeeting = getLatestUpdatedElement(
+            data?.mentorMeetings
+          )
+          if (latestMentorMeeting) {
+            setUnChangedMentorMeeting(latestMentorMeeting)
+            setSelectedMentorMeeting(latestMentorMeeting)
           }
         }
       })
@@ -126,7 +135,7 @@ const MeetingManager = (props) => {
 
   useEffect(
     function () {
-      getMeetings()
+      getMentorMeetings()
     },
     [params.journalId]
   )
@@ -141,69 +150,70 @@ const MeetingManager = (props) => {
     return latestUpdatedElement
   }
 
-  const handleAddMeeting = () => {
-    const meeting = {
+  const handleAddMentorMeeting = () => {
+    const mentorMeeting = {
       title: '',
       journalId: params.journalId,
       meetingDate: '',
-      purpose: '',
-      attendance: '',
-      meetingAgenda: '',
-      notes: '',
-      resultsOfMeeting: ''
+      mentorName: '',
+      expertiseArea: '',
+      preMeeting1: '',
+      preMeeting2: '',
+      duringMeeting: '',
+      postMeeting: ''
     }
     axiosInstance
-      .post(`/teamMeetings/`, {
-        meeting
+      .post(`/mentorMeetings/`, {
+        mentorMeeting
       })
       .then((res) => {
-        const newMeetings = [...journal.meetings, res.data]
-        setJournal({ ...journal, meetings: newMeetings })
-        const latestMeeting = getLatestUpdatedElement(newMeetings)
-        setSelectedMeeting(latestMeeting)
+        const newMentorMeetings = [...journal.mentorMeetings, res.data]
+        setJournal({ ...journal, mentorMeetings: newMentorMeetings })
+        const latestMentorMeeting = getLatestUpdatedElement(newMentorMeetings)
+        setSelectedMentorMeeting(latestMentorMeeting)
         handleCloseArchiveModal()
       })
   }
 
-  const handleDeleteMeeting = (meeting) => {
+  const handleDeleteMentorMeeting = (mentorMeeting) => {
     axiosInstance
-      .delete(`/teamMeetings/${meeting.id}`)
+      .delete(`/mentorMeetings/${mentorMeeting.id}`)
       .then((res) => {
-        const deletedMeetingId = res.data.existingMeeting.id
+        const deletedMentorMeetingId = res.data.existingMeeting.id
         setJournal((prevJournal) => {
           const newJournal = { ...prevJournal }
-          const newMeetings = newJournal.meetings.filter(
-            (meet) => meet.id !== deletedMeetingId
+          const newMentorMeetings = newJournal.mentorMeetings.filter(
+            (meet) => meet.id !== deletedMentorMeetingId
           )
-          newJournal.meetings = newMeetings
-          const latestMeeting = getLatestUpdatedElement(newMeetings)
-          setSelectedMeeting(latestMeeting)
+          newJournal.mentorMeetings = newMentorMeetings
+          const latestMentorMeeting = getLatestUpdatedElement(newMentorMeetings)
+          setSelectedMentorMeeting(latestMentorMeeting)
           handleCloseDeleteArchiveModal()
           return newJournal
         })
       })
       .catch((error) => {
         // Handle error if needed
-        console.error('Error deleting meeting:', error)
+        console.error('Error deleting mentorMeeting:', error)
       })
   }
 
   const handleSelectedArchive = (value) => {
     if (value) {
-      setSelectedMeeting(value)
-      setUnChangedMeeting(value)
+      setSelectedMentorMeeting(value)
+      setUnChangedMentorMeeting(value)
     }
   }
   return (
     <>
       <ArchiveManager
-        title={'meetingTeam'}
-        archives={journal?.meetings}
-        selectedArchive={selectedMeeting}
+        title={'mentorMeeting'}
+        archives={journal?.mentorMeetings}
+        selectedArchive={selectedMentorMeeting}
         handleSelectedArchive={handleSelectedArchive}
         hasUnsavedChanges={hasUnsavedChanges}
-        onAdd={handleAddMeeting}
-        onDelete={() => handleDeleteMeeting(selectedMeeting)}
+        onAdd={handleAddMentorMeeting}
+        onDelete={() => handleDeleteMentorMeeting(selectedMentorMeeting)}
         saveChanged={saveChanged}
         saveUnChanged={saveUnChanged}
         onOpenArchiveModal={handleOpenArchiveModal}
@@ -214,8 +224,8 @@ const MeetingManager = (props) => {
         showDeleteArchiveModal={showDeleteArchiveModal}
         tableContent={
           <TableWrapper
-            title={selectedMeeting.title}
-            isDelete={journal?.meetings?.length > 1}
+            title={selectedMentorMeeting.title}
+            isDelete={journal?.mentorMeetings?.length > 1}
             onDelete={() => handleOpenDeleteArchiveModal()}
           >
             <Table bordered hover style={{ marginBottom: 0 }}>
@@ -226,10 +236,10 @@ const MeetingManager = (props) => {
                       title={'Meeting date:'}
                       type={'date'}
                       value={new Date(
-                        selectedMeeting.meetingDate
+                        selectedMentorMeeting.meetingDate
                       ).toLocaleDateString('en-CA')}
                       handleChange={(value) =>
-                        handleChangeMeeting('meetingDate', value)
+                        handleChangeMentorMeeting('meetingDate', value)
                       }
                     />
                   </JournalTableCell>
@@ -243,21 +253,21 @@ const MeetingManager = (props) => {
                     }}
                   >
                     <JournalTableCellInput
-                      title={'Purpose:'}
+                      title={'Mentor name:'}
                       type={'text'}
-                      value={selectedMeeting.purpose}
+                      value={selectedMentorMeeting.mentorName}
                       handleChange={(value) =>
-                        handleChangeMeeting('purpose', value)
+                        handleChangeMentorMeeting('mentorName', value)
                       }
                     />
                   </JournalTableCell>
                   <JournalTableCell isGray>
                     <JournalTableCellInput
-                      title={'Attendance:'}
+                      title={'Area of expertise:'}
                       type={'text'}
-                      value={selectedMeeting.attendance}
+                      value={selectedMentorMeeting.expertiseArea}
                       handleChange={(value) =>
-                        handleChangeMeeting('attendance', value)
+                        handleChangeMentorMeeting('expertiseArea', value)
                       }
                     />
                   </JournalTableCell>
@@ -267,11 +277,11 @@ const MeetingManager = (props) => {
                   <JournalTableCell colSpan={2}>
                     <JournalTableCellInput
                       isBold={true}
-                      title={'Meeting Agenda:'}
+                      title={'Pre-meeting:'}
                       type={'text'}
-                      value={selectedMeeting.meetingAgenda}
+                      value={selectedMentorMeeting.preMeeting1}
                       handleChange={(value) =>
-                        handleChangeMeeting('meetingAgenda', value)
+                        handleChangeMentorMeeting('preMeeting1', value)
                       }
                     />
                   </JournalTableCell>
@@ -280,11 +290,11 @@ const MeetingManager = (props) => {
                   <JournalTableCell colSpan={2}>
                     <JournalTableCellInput
                       isBold={true}
-                      title={'Notes:'}
+                      title={'Pre-meeting:'}
                       type={'text'}
-                      value={selectedMeeting.notes}
+                      value={selectedMentorMeeting.preMeeting2}
                       handleChange={(value) =>
-                        handleChangeMeeting('notes', value)
+                        handleChangeMentorMeeting('preMeeting2', value)
                       }
                     />
                   </JournalTableCell>
@@ -293,11 +303,24 @@ const MeetingManager = (props) => {
                   <JournalTableCell colSpan={2}>
                     <JournalTableCellInput
                       isBold={true}
-                      title={'Results of meeting:'}
+                      title={'During the meeting:'}
                       type={'text'}
-                      value={selectedMeeting.resultsOfMeeting}
+                      value={selectedMentorMeeting.duringMeeting}
                       handleChange={(value) =>
-                        handleChangeMeeting('resultsOfMeeting', value)
+                        handleChangeMentorMeeting('duringMeeting', value)
+                      }
+                    />
+                  </JournalTableCell>
+                </JournalTableRow>
+                <JournalTableRow>
+                  <JournalTableCell colSpan={2}>
+                    <JournalTableCellInput
+                      isBold={true}
+                      title={'Post-meeting:'}
+                      type={'text'}
+                      value={selectedMentorMeeting.postMeeting}
+                      handleChange={(value) =>
+                        handleChangeMentorMeeting('postMeeting', value)
                       }
                     />
                   </JournalTableCell>
@@ -311,4 +334,4 @@ const MeetingManager = (props) => {
   )
 }
 
-export default MeetingManager
+export default MentorMeetingManager

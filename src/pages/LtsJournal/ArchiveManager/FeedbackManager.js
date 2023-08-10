@@ -6,76 +6,15 @@ import ArchiveManager from './ArchiveManager'
 
 import { Table } from 'react-bootstrap'
 import TableWrapper from '../TableWrapper/index'
-
-const JournalTableRow = (props) => {
-  return (
-    <tr
-      style={{
-        borderTopColor: '#f0f0f0',
-        borderBottomColor: '#f0f0f0',
-        borderWidth: 2
-      }}
-    >
-      {props.children}
-    </tr>
-  )
-}
-const JournalTableCell = (props) => {
-  const { isGray, colSpan, additionalStyling } = props
-  return (
-    <td
-      colSpan={colSpan}
-      style={{
-        ...additionalStyling,
-        backgroundColor: isGray ? '#dfdfdf' : '#fff'
-      }}
-    >
-      {props.children}
-    </td>
-  )
-}
-
-const JournalTableCellInput = (props) => {
-  const { title, type, value, handleChange, width, inputName } = props
-  return (
-    <div
-      style={{
-        display: 'flex',
-        gap: 20
-      }}
-    >
-      <div
-        style={{ display: 'flex', alignItems: 'center', textWrap: 'nowrap' }}
-      >
-        {title}
-      </div>
-      <div className={` ${width ? '' : 'w-100'}`}>
-        <input
-          className={`my-1  py-2 px-2 text-dark `}
-          type={type}
-          style={{
-            borderRadius: '0.25rem',
-            backgroundColor: 'white',
-            color: '#000',
-            width: width ?? '100%',
-            border: '1px solid #e3e3e3'
-          }}
-          name={inputName ?? ''}
-          value={value}
-          onChange={(e) => handleChange(e.target.value)}
-        />
-      </div>
-    </div>
-  )
-}
+import {
+  JournalTableCell,
+  JournalTableCellInput,
+  JournalTableRow
+} from '../TableWrapper/TableComponents'
 
 const FeedbackManager = (props) => {
-  let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
-  let [videoWatchData, setVideoWatchData] = useState([])
-  let [userJournalEntries, setUserJournalEntries] = useState({})
   let [loading, setLoading] = useState(true)
-  let [showVideo, setShowVideo] = useState(false)
   const [selectedArchive, setSelectedArchive] = useState({})
   const [unChangedArchive, setUnChangedArchive] = useState({})
   const [showArchiveModal, setShowArchiveModal] = useState(false)
@@ -190,40 +129,8 @@ const FeedbackManager = (props) => {
     setJournal(props.journal)
   }, [props.journal])
 
-  function loadData() {
-    setLoading(true)
-    Promise.all([getJournal()])
-
-      .then(([journalData, userJournalEntries]) => {
-        setJournal(journalData)
-
-        if (
-          journalData.userEntry &&
-          journalData.userEntry.length > 0 &&
-          journalData.userEntry[0].videoWatchData
-        ) {
-          try {
-            setVideoWatchData(
-              JSON.parse(journalData.userEntry[0].videoWatchData)
-            )
-          } catch (err) {}
-        }
-        setUserJournalEntries(userJournalEntries)
-
-        if (props.contentContainer && props.contentContainer.current) {
-          props.contentContainer.current.scrollTop = 0
-        }
-
-        setLoading(false)
-      })
-      .catch(() => {
-        setLoading(false)
-      })
-  }
-
   useEffect(
     function () {
-      // loadData()
       getFeedbacks()
     },
     [params.journalId]
@@ -312,7 +219,7 @@ const FeedbackManager = (props) => {
         tableContent={
           <TableWrapper
             title={selectedArchive.title}
-            isDelete
+            isDelete={journal?.feedbacks?.length > 1}
             onDelete={() => handleOpenDeleteArchiveModal()}
           >
             <Table bordered hover style={{ marginBottom: 0 }}>
@@ -353,6 +260,7 @@ const FeedbackManager = (props) => {
                 <JournalTableRow>
                   <JournalTableCell colSpan={2}>
                     <JournalTableCellInput
+                      isBold={true}
                       title={'Feedback you received:'}
                       type={'text'}
                       value={selectedArchive.receivedFeedback}
@@ -365,6 +273,7 @@ const FeedbackManager = (props) => {
                 <JournalTableRow>
                   <JournalTableCell colSpan={2}>
                     <JournalTableCellInput
+                      isBold={true}
                       title={'Which feedback is relevant:'}
                       type={'text'}
                       value={selectedArchive.relevantFeedback}
@@ -377,6 +286,7 @@ const FeedbackManager = (props) => {
                 <JournalTableRow>
                   <JournalTableCell colSpan={2}>
                     <JournalTableCellInput
+                      isBold={true}
                       title={'How will you act on this relevant feedback:'}
                       type={'text'}
                       value={selectedArchive.relevantFeedbackAct}

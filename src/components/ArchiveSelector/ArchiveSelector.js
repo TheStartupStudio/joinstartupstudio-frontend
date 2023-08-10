@@ -27,9 +27,11 @@ const ArchiveSelector = (props) => {
   }
   const archiveOptionTitle = () => {
     if (props.archiveTitle === 'meetingTeam') {
-      return 'Mentor'
+      return 'Meeting'
     } else if (props.archiveTitle === 'feedback') {
       return 'Feedback'
+    } else if (props.archiveTitle === 'mentorMeeting') {
+      return 'Mentor'
     }
   }
   const handleSelectArchive = (archive) => {
@@ -76,7 +78,7 @@ const ArchiveSelector = (props) => {
                 />
                 <div className={'d-flex flex-column'}>
                   <div>
-                    {archiveOptionTitle()} {index + 1} name
+                    {archiveOptionTitle()} {index + 1}
                   </div>
                   <div>
                     Date:
