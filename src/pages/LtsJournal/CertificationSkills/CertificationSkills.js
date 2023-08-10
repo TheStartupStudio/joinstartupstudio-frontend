@@ -38,7 +38,12 @@ const CertificationSkills = ({ journal }) => {
           skill: { ...skill, status: status }
         })
         .then(({ data }) => {
-          const updatedSkills = skills.map((s) => (s.id === data.id ? data : s))
+          const updatedSkills = skills.map((s) => {
+            if (s.hasOwnProperty('certificationSkillId')) {
+              debugger
+              return s.id === data.id ? data : s
+            }
+          })
           setSkills(updatedSkills)
         })
     } else {
@@ -56,7 +61,11 @@ const CertificationSkills = ({ journal }) => {
           skill: newSkill
         })
         .then(({ data }) => {
-          const foundedSkillIndex = skills.findIndex((s) => s.id === skill.id)
+          const foundedSkillIndex = skills.findIndex((s) => {
+            if (!s.hasOwnProperty('certificationSkillId')) {
+              return s.id === skill.id
+            }
+          })
           const newSkills = [...skills]
           newSkills.splice(foundedSkillIndex, 1, data)
           setSkills(newSkills)
