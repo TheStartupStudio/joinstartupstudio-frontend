@@ -61,10 +61,13 @@ function Login() {
             response.attributes["custom:language"]
           );
           localStorage.setItem("email", user.email);
+          
           dispatch(userLogin(user.password)).then((res) => {
             if (res === "passwordResetRequired") {
               history.push("/password-change-required");
             }
+              history.push('/dashboard')
+            
           });
         })
         .catch((err) => {

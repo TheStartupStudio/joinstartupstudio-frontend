@@ -421,7 +421,10 @@ const TaskEventModal = (props) => {
               )}
             </FormattedMessage>
           </div>
-          <div className="col-md-12 event-input-container">
+          <div
+            className="col-md-12 event-input-container"
+            style={{ minHeight: 260 }}
+          >
             <label
               htmlFor="description"
               style={{ fontSize: '14px', fontWeight: 'bold' }}
@@ -438,13 +441,14 @@ const TaskEventModal = (props) => {
                   id={'description'}
                   // name={tab === 'task' ? 'taskDescription' : 'eventDescription'}
                   // id={tab === 'task' ? 'taskDescription' : 'eventDescription'}
-                  className="my-1 mb-5 py-2 px-0 w-100 rounded-0 scroll-add-new-note-modal "
+                  className="my-1 mb-4 py-0 px-0 w-100 rounded-0 scroll-add-new-note-modal "
                   style={{
                     height: '150px',
                     '::placeholder': {
                       color: '#000',
                       fontWeight: 'bold',
-                      fontSize: 16
+                      fontSize: 16,
+                      minHeight: 260
                     }
                   }}
                   placeholder={placeholder}
@@ -454,7 +458,10 @@ const TaskEventModal = (props) => {
               )}
             </FormattedMessage>
           </div>
-          <div className="col-md-12 event-input-container">
+          <div
+            className="col-md-12 event-input-container"
+            style={{ minHeight: 260 }}
+          >
             <label
               htmlFor="requirements"
               style={{ fontSize: '14px', fontWeight: 'bold' }}
@@ -465,7 +472,7 @@ const TaskEventModal = (props) => {
               {(placeholder) => (
                 <ReactQuill
                   theme="snow"
-                  className="my-1 mb-5 py-2 w-100 rounded-0 scroll-add-new-note-modal "
+                  className="my-1 mb-4 py-0 w-100 rounded-0 scroll-add-new-note-modal "
                   name="requirements"
                   style={{
                     height: '150px',

@@ -1,0 +1,80 @@
+import React, { useState } from 'react'
+import ArchiveSelector from '../../../components/Modals/ArchiveSelector/ArchiveSelector'
+import MeetingModal from '../../../components/Modals/MeetingModal'
+import DeleteArchiveModal from '../../../components/Modals/DeleteArchiveModal'
+
+const ArchiveManager = (props) => {
+  const [showArchiveModal, setShowArchiveModal] = useState(false)
+  const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
+
+  const handleCloseArchiveModal = () => {
+    setShowArchiveModal(false)
+  }
+  const handleOpenArchiveModal = () => {
+    setShowArchiveModal(true)
+  }
+  const handleCloseDeleteArchiveModal = () => {
+    setShowDeleteArchiveModal(false)
+  }
+  const handleOpenDeleteArchiveModal = () => {
+    setShowDeleteArchiveModal(true)
+  }
+
+  const archiveOptionTitle = () => {
+    if (props.title === 'meetingTeam') {
+      return 'Meeting'
+    } else if (props.title === 'feedback') {
+      return 'Feedback'
+    }
+  }
+  return (
+    <>
+      <div className="col-12">
+        <div>{props.tableContent}</div>
+        <div className={'d-flex justify-content-between py-1'}>
+          <div className="col-md-6 px-1">
+            <ArchiveSelector
+              archiveTitle={props.title}
+              archives={props.archives}
+              selectedArchive={props.selectedArchive}
+              handleSelectedArchive={props.handleSelectedArchive}
+            />
+          </div>
+          <div className="col-md-6 px-1">
+            <button
+              style={{
+                backgroundColor: '#51c7df',
+                color: '#fff',
+                fontSize: 14
+              }}
+              onClick={
+                props.hasUnsavedChanges ? props.onOpenArchiveModal : props.onAdd
+              }
+              className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
+            >
+              Add a new {archiveOptionTitle()}
+            </button>
+          </div>
+          {props.showArchiveModal && props.hasUnsavedChanges && (
+            <MeetingModal
+              show={props.showArchiveModal}
+              onHide={props.onCloseArchiveModal}
+              saveChanged={props.saveChanged}
+              saveUnChanged={props.saveUnChanged}
+              onSave={props.onAdd}
+            />
+          )}
+          {props.showDeleteArchiveModal && (
+            <DeleteArchiveModal
+              show={props.showDeleteArchiveModal}
+              onHide={props.onCloseDeleteArchiveModal}
+              onDelete={props.onDelete}
+            />
+          )}
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default ArchiveManager

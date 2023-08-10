@@ -1,0 +1,39 @@
+.custom-dropdown {
+    position: relative;
+}
+
+.selected-option {
+    cursor: pointer;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.options-container {
+    position: absolute;
+    top: calc(100% + 5px); /* Align the options container to the top of the selected option */
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* Ensure the options are displayed above other elements */
+}
+
+.options {
+    max-height: 200px; /* Add a max-height to limit the dropdown height */
+    overflow-y: auto; /* Enable vertical scrolling for long lists of options */
+    /*padding: 4px;*/
+    position:absolute;
+    width: 100%
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.option input {
+    margin-right: 8px;
+}
