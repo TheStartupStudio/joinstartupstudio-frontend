@@ -1,14 +1,19 @@
 import React from 'react'
 
-const ContentUploadBox = ({ title, isAdded, onSelectContent, isSelected }) => {
+const CertificationSkillBox = ({
+  title,
+  proficient,
+  onSelectContent,
+  needsImprovement
+}) => {
   const boxBackgroundColor = () => {
-    if (isAdded) {
+    if (proficient) {
       // if value is true
       // set backgroundColor to sky blue color
-      return '#51C7DF'
+      return '#99CC33'
     } else {
       // if value is false
-      if (isSelected) {
+      if (needsImprovement) {
         // if value is false and if is selected set to rose
         return '#FF3399'
       } else {
@@ -18,13 +23,13 @@ const ContentUploadBox = ({ title, isAdded, onSelectContent, isSelected }) => {
     }
   }
   const boxTextColor = () => {
-    if (isAdded) {
+    if (proficient) {
       // if value is true
       // set color to white
-      return 'white'
+      return '#231F20'
     } else {
       // if value is false
-      if (isSelected) {
+      if (needsImprovement) {
         // if value is false and if is selected set to white
         return 'white'
       } else {
@@ -60,4 +65,4 @@ const ContentUploadBox = ({ title, isAdded, onSelectContent, isSelected }) => {
   )
 }
 
-export default ContentUploadBox
+export default CertificationSkillBox

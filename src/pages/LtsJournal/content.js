@@ -15,35 +15,10 @@ import FeedbackManager from './ArchiveManager/FeedbackManager'
 import AccordionItemWrapper from './AccordionItemWrapper'
 import MentorMeetingManager from './ArchiveManager/MentorMeetingManager'
 import ContentUploads from './ContentUploads/ContentUploads'
+import CertificationSkills from './CertificationSkills/CertificationSkills'
 import AccordionItems from './MyGoals/AccordionItems'
 
-const JournalTableRow = (props) => {
-  return (
-    <tr
-      style={{
-        borderTopColor: '#f0f0f0',
-        borderBottomColor: '#f0f0f0',
-        borderWidth: 2
-      }}
-    >
-      {props.children}
-    </tr>
-  )
-}
-const JournalTableCell = (props) => {
-  const { isGray, colSpan, additionalStyling } = props
-  return (
-    <td
-      colSpan={colSpan}
-      style={{
-        ...additionalStyling,
-        backgroundColor: isGray ? '#dfdfdf' : '#fff'
-      }}
-    >
-      {props.children}
-    </td>
-  )
-}
+
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -75,50 +50,8 @@ function LtsJournalContent(props) {
     setIsExpanded(false)
   }, [props.match.params.id])
 
-  const handleCloseMeetingModal = () => {
-    setShowMeetingModal(false)
-  }
 
-  const handleOpenMeetingModal = () => {
-    setShowMeetingModal(true)
-  }
 
-  const handleCloseDeleteArchiveModal = () => {
-    setShowDeleteArchiveModal(false)
-  }
-  const handleOpenDeleteArchiveModal = () => {
-    setShowDeleteArchiveModal(true)
-  }
-
-  const saveUnChanged = () => {
-    const meeting = unChangedMeeting
-    axiosInstance
-      .put(
-        `/teamMeetings/${selectedMeeting.id}/journal/${+props.match.params
-          .journalId}`,
-        {
-          meeting
-        }
-      )
-      .then((res) => {
-        let newJournal = { ...journal }
-        let newMeetings = newJournal.meetings
-        const foundedIndex = newMeetings.findIndex(
-          (meet) => meet.id === res.data.id
-        )
-        newMeetings[foundedIndex] = res.data
-        newJournal.meetings = newMeetings
-        setSelectedMeeting({ ...selectedMeeting, ...res.data })
-        setJournal({ ...newJournal, meetings: newMeetings })
-        setShowMeetingModal(false)
-        handleAddMeeting()
-      })
-  }
-
-  const saveChanged = () => {
-    setShowMeetingModal(false)
-    handleAddMeeting()
-  }
 
   const handleShowAddReflection = (showAddReflection) => {
     setShowAddReflection(showAddReflection)
@@ -275,72 +208,6 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-
-  const handleAddMeeting = () => {
-    const meeting = {
-      title: '',
-      journalId: props.match.params.journalId,
-      meetingDate: '',
-      purpose: '',
-      attendance: '',
-      meetingAgenda: '',
-      notes: '',
-      resultsOfMeeting: ''
-    }
-    axiosInstance
-      .post(`/teamMeetings/`, {
-        meeting
-      })
-      .then((res) => {
-        const newMeetings = [...journal.meetings, res.data]
-        setJournal({ ...journal, meetings: newMeetings })
-        const latestMeeting = getLatestUpdatedElement(newMeetings)
-        setSelectedMeeting(latestMeeting)
-        setShowMeetingModal(false)
-      })
-  }
-
-  const getLatestUpdatedElement = (array) => {
-    const latestUpdatedElement = array?.reduce((latest, current) => {
-      if (!latest || new Date(current.updatedAt) > new Date(latest.updatedAt)) {
-        return current
-      }
-      return latest
-    }, null)
-    return latestUpdatedElement
-  }
-
-  const handleDeleteMeeting = (meeting) => {
-    axiosInstance
-      .delete(`/teamMeetings/${meeting.id}`)
-      .then((res) => {
-        const deletedMeetingId = res.data.existingMeeting.id
-        setJournal((prevJournal) => {
-          const newJournal = { ...prevJournal }
-          const newMeetings = newJournal.meetings.filter(
-            (meet) => meet.id !== deletedMeetingId
-          )
-          newJournal.meetings = newMeetings
-          const latestMeeting = getLatestUpdatedElement(newMeetings)
-          setSelectedMeeting(latestMeeting)
-          handleCloseDeleteArchiveModal()
-          return newJournal
-        })
-      })
-      .catch((error) => {
-        // Handle error if needed
-        console.error('Error deleting meeting:', error)
-      })
-  }
-
-  const handleSelectedArchive = (value) => {
-    if (value) {
-      setSelectedMeeting(value)
-      setUnChangedMeeting(value)
-    }
-    // setUnChangedMeeting(value)
-  }
-
   return (
     <>
       <div className="row">
@@ -532,6 +399,9 @@ function LtsJournalContent(props) {
         ) : null}
 
         {journal?.contentUploads ? <ContentUploads journal={journal} /> : null}
+        {journal?.certificationSkills ? (
+          <CertificationSkills journal={journal} />
+        ) : null}
       </div>
     </>
   )
