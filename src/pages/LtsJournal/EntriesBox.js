@@ -17,7 +17,7 @@ const EntriesBox = (props) => {
     entries
   } = props
 
-  return entries && entries.length > 1 ? (
+  return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
       {/* {journal.title && (
           <div
@@ -46,7 +46,7 @@ const EntriesBox = (props) => {
             )}{' '}
             <h4
               style={{
-                padding: 12,
+                padding: '12px 40px 12px 12px',
                 backgroundColor: '#e5e5e5',
                 marginBottom: 0,
                 fontSize: 12,

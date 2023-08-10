@@ -25,7 +25,6 @@ const ContentUploads = ({ journal }) => {
           contentUpload: { ...contentUpload, status: status }
         })
         .then(({ data }) => {
-          debugger
           const updatedContents = contentUploads.map((s) =>
             s.id === data.id ? data : s
           )

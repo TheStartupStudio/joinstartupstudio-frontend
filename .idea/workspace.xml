@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/CertificationSkills/CertificationSkills.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/CertificationSkills/CertificationSkills.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploadBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploadBox.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyGoals/AccordionItem.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyGoals/AccordionItems.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploads.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploads.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/EntriesBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/EntriesBox.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/reflection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/reflection.js" afterDir="false" />
     </list>
@@ -109,7 +110,7 @@
       <workItem from="1688973170084" duration="61926000" />
       <workItem from="1689317962596" duration="25113000" />
       <workItem from="1690182262462" duration="15650000" />
-      <workItem from="1691077287358" duration="113705000" />
+      <workItem from="1691077287358" duration="114098000" />
     </task>
     <servers />
   </component>
