@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/ArchiveSelector/ArchiveSelector.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/ArchiveSelector/ArchiveSelector.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/FeedbackManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/FeedbackManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
-    </list>
+    <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,6 +28,10 @@
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -95,5 +93,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
