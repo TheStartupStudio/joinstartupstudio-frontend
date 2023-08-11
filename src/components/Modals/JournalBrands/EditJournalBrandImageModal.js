@@ -16,24 +16,25 @@ import { setImageCropperData, setCroppedImage } from '../../../redux'
 import '../../Portfolio/Experience/style.css'
 import IntlMessages from '../../../utils/IntlMessages'
 
-export const NewJournalBrandModal = (props) => {
+export const EditJournalBrandImageModal = (props) => {
   const defaultData = {
-    type: '',
-    action: '',
-    narration: '',
-    music: '',
     image: '',
-    hasAccordion: props.hasAccordion,
+    id: props.id,
     journalId: props.journalId
   }
 
   const [data, setData] = useState(defaultData)
   const [loading, setLoading] = useState(false)
   const [selectedImage, setSelectedImage] = useState('')
+  const [imageChanged, setImageChanged] = useState(false)
   const inputImage = React.useRef(null)
 
   const general = useSelector((state) => state.general)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    setSelectedImage(props.image)
+  }, [props.image])
 
   const handleChange = (event) => {
     const { name, value, checked } = event.target
@@ -51,6 +52,7 @@ export const NewJournalBrandModal = (props) => {
       if (fileSize > 0.5) {
         return toast.error('Image size exceeds 512KB.')
       }
+      setImageChanged(true)
 
       setData((prevValues) => ({
         ...prevValues,
@@ -75,17 +77,12 @@ export const NewJournalBrandModal = (props) => {
   }
 
   const addExperience = async () => {
-    setLoading(true)
-    const newExperience = data
-    for (var key in data) {
-      if (key === 'image' || key === 'hasAccordion')
-        continue
-      if (data[key] === null || data[key] == '') {
-        setLoading(false)
-        return toast.error('Please fill in all the fields.')
-      }
+    if(!imageChanged){
+        props.onHide();
+        return;
     }
-
+    setLoading(true)
+    const newExperience = {...data, id: defaultData.id}
     if (general.croppedImage) {
       const formData = new FormData()
       formData.append('img', general.croppedImage)
@@ -105,10 +102,10 @@ export const NewJournalBrandModal = (props) => {
     }
 
     await axiosInstance
-      .post('/LtsJournals/journal-brand', newExperience)
+      .patch('/LtsJournals/journal-brand-image', newExperience)
       .then(() => {
         setLoading(false)
-        props.onShow()
+        props.onSave()
         toast.success(<IntlMessages id='alert.my_account.success_change' />)
         setSelectedImage()
         setData(defaultData)
@@ -126,11 +123,11 @@ export const NewJournalBrandModal = (props) => {
         onHide={props.onHide}
         backdrop='static'
         keyboard={false}
-        className='edit-modal edit-profile-modal edit-experience-modal'
+        className='edit-modal add-journal-brand-image'
       >
         <Modal.Header className='pb-0 mx-4 general-modal-header'>
           <h3 className='mt-4 mb-0 contact-bio'>
-            ADD FULL SECTION
+            ADD IMAGE
           </h3>
           <button
             type='button'
@@ -145,12 +142,12 @@ export const NewJournalBrandModal = (props) => {
         </Modal.Header>
         <Modal.Body className='px-4'>
           <div className='row'>
-            <div className='col-12 col-lg-3 upload-container my-2'>
+            <div className='col-12 upload-container my-2'>
               <div className='upload-image me-2 mb-1'>
                 {general.imageCropperData ? (
                   <div
                     className='img-placeholder position-relative'
-                    style={{ height: '150px' }}
+                    style={{ height: '300px' }}
                   >
                     <ImageCropper
                       width={150}
@@ -188,9 +185,6 @@ export const NewJournalBrandModal = (props) => {
                 )}
               </div>
               {/* <p>Max image width: 85px</p> */}
-              <p className='mt-2'>File Types: .png or .jpg only</p>
-              <p className='mb-1'>Dimensions: 150x150px</p>
-              <p className='mt-2'>Size: 512KB max.</p>
               <label className='text-center py-2'>
                 <input
                   type='file'
@@ -211,40 +205,6 @@ export const NewJournalBrandModal = (props) => {
                 </div>
               </label>
             </div>
-            <div className='col-lg-9 col-12'>
-              <input
-                className='my-2'
-                type='text'
-                name='type'
-                value={data?.type}
-                onChange={handleChange}
-                placeholder='Type of Shot'
-              />
-              <input
-                className='my-2'
-                type='text'
-                name='action'
-                value={data?.action}
-                onChange={handleChange}
-                placeholder='Action'
-              />
-              <input
-                className='my-2'
-                type='text'
-                name='narration'
-                value={data?.narration}
-                onChange={handleChange}
-                placeholder='Narration'
-              />
-              <input
-                className='my-2'
-                type='text'
-                name='music'
-                value={data?.music}
-                onChange={handleChange}
-                placeholder='Music'
-              />
-            </div>
             <div className='row mx-0'>
               <div className='col-12 text-end'>
                 <button
@@ -255,7 +215,7 @@ export const NewJournalBrandModal = (props) => {
                   {loading ? (
                     <span className='spinner-border spinner-border-sm' />
                   ) : (
-                    'SAVE'
+                    'UPLOAD'
                   )}
                 </button>
               </div>

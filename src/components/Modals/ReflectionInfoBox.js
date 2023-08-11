@@ -24,7 +24,7 @@ export const ReflectionInfoBox = (props) => {
       </Modal.Header>
       <Modal.Body>
         <div className='mt-4 mb-5 blocked-user-modal px-md-3 text-center'>
-          <h4>{props.title}</h4>
+          <h4 style={{marginBottom: '40px'}}>{props.title}</h4>
           <div dangerouslySetInnerHTML={{ __html: props.content }}></div>
           <button
             className='cancel-subscription-button accept-request-button'
