@@ -17,8 +17,8 @@ const csvToArray = (str, delimiter = ',') => {
     headers[1] !== 'LastName' ||
     headers[2] !== 'UserEmail' ||
     headers[3] !== 'password' ||
-    headers[4] !== 'level' ||
-    !headers[5].includes('year')
+    headers[4] !== 'level' 
+    || headers[5] !== 'year' || headers[6] !== 'period'
   ) {
     throw new Error('Invalid CSV Format')
   }
