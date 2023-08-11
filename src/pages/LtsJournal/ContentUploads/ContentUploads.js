@@ -18,26 +18,30 @@ const ContentUploads = ({ journal }) => {
   }, [journal.userContentUploads, journal.contentUploads])
 
   const handleToggleContentUpload = (contentUpload, status) => {
-    if (contentUpload.hasOwnProperty('contentUploadId')) {
+    if (contentUpload?.hasOwnProperty('contentUploadId')) {
       debugger
       axiosInstance
         .put(`/contentUploads/updateUserContentUpload/`, {
           contentUpload: { ...contentUpload, status: status }
         })
         .then(({ data }) => {
-          const updatedContents = contentUploads.map((s) =>
-            s.hasOwnProperty('contentUploadId') && s.id === data.id ? data : s
+          const foundedContentUploadIndex = contentUploads?.findIndex(
+            (s) =>
+              s?.hasOwnProperty('contentUploadId') &&
+              s?.id === contentUpload?.id
           )
-          setContentUploads(updatedContents)
+          const newContentUploads = [...contentUploads]
+          newContentUploads.splice(foundedContentUploadIndex, 1, data)
+          setContentUploads(newContentUploads)
         })
     } else {
       const newContentUpload = {
-        journalId: contentUpload.journalId,
-        order: contentUpload.order,
+        journalId: contentUpload?.journalId,
+        order: contentUpload?.order,
         status: status,
-        title: contentUpload.title,
-        content: contentUpload.content,
-        contentUploadId: contentUpload.id
+        title: contentUpload?.title,
+        content: contentUpload?.content,
+        contentUploadId: contentUpload?.id
       }
 
       axiosInstance
@@ -47,7 +51,8 @@ const ContentUploads = ({ journal }) => {
         .then(({ data }) => {
           const foundedContentUploadIndex = contentUploads.findIndex(
             (s) =>
-              s.hasOwnProperty('contentUploadId') && s.id === contentUpload.id
+              !s?.hasOwnProperty('contentUploadId') &&
+              s?.id === contentUpload?.id
           )
           const newContentUploads = [...contentUploads]
           newContentUploads.splice(foundedContentUploadIndex, 1, data)
@@ -57,11 +62,11 @@ const ContentUploads = ({ journal }) => {
   }
 
   const updateContentSelection = (skill) => {
-    if (skill.status === 'not_selected') {
+    if (skill?.status === 'not_selected') {
       handleToggleContentUpload(skill, 'selected')
-    } else if (skill.status === 'selected') {
+    } else if (skill?.status === 'selected') {
       handleToggleContentUpload(skill, 'added')
-    } else if (skill.status === 'added') {
+    } else if (skill?.status === 'added') {
       handleToggleContentUpload(skill, 'not_selected')
     }
   }
@@ -76,7 +81,7 @@ const ContentUploads = ({ journal }) => {
             gap: '20px'
           }}
         >
-          {contentUploads.map((contentUpload) => {
+          {contentUploads?.map((contentUpload) => {
             return (
               <div
                 className={
@@ -84,7 +89,7 @@ const ContentUploads = ({ journal }) => {
                 }
               >
                 <ContentUploadBox
-                  title={contentUpload.title}
+                  title={contentUpload?.title}
                   onSelectContent={() => updateContentSelection(contentUpload)}
                   isAdded={contentUpload?.status === 'added'}
                   isSelected={contentUpload?.status === 'selected'}
