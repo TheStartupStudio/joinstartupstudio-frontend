@@ -1,0 +1,28 @@
+.journal__image {
+    max-width: 100%;
+}
+.journal_brands--wrapper {
+    margin-bottom: 20px;
+}
+.brand__item {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.brand__box {
+    background: #333D3D29;
+    padding: 10px;
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+.add-new-brand {
+    color: #707070;
+    cursor: pointer;
+}
+.add-new-brand:hover {
+    color: #707070;
+}
+.add-new-brand svg {
+    margin-right: 5px;
+}

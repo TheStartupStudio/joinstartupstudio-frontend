@@ -17,8 +17,7 @@ import MentorMeetingManager from './ArchiveManager/MentorMeetingManager'
 import ContentUploads from './ContentUploads/ContentUploads'
 import CertificationSkills from './CertificationSkills/CertificationSkills'
 import AccordionItems from './MyGoals/AccordionItems'
-
-
+import JournalBrands from './JournalBrands/index'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -402,6 +401,10 @@ function LtsJournalContent(props) {
         {journal?.certificationSkills ? (
           <CertificationSkills journal={journal} />
         ) : null}
+
+        {journal.brandsJournal && journal.brandsJournal.length ?
+          <JournalBrands loadData={loadData} brands={journal.brandsJournal} journalId={props.match.params.journalId} />
+        : null}
       </div>
     </>
   )
