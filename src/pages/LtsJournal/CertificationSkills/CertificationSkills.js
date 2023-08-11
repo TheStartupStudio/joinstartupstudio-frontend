@@ -32,27 +32,29 @@ const CertificationSkills = ({ journal }) => {
   }, [journal.userCertificationSkills, journal.certificationSkills])
 
   const handleToggleSkill = (skill, status) => {
-    if (skill.hasOwnProperty('certificationSkillId')) {
+    if (skill?.hasOwnProperty('certificationSkillId')) {
       axiosInstance
         .put(`/certificationSkills/updateUserCertificationSkill/`, {
           skill: { ...skill, status: status }
         })
         .then(({ data }) => {
-          const updatedSkills = skills.map((s) => {
-            if (s.hasOwnProperty('certificationSkillId')) {
-              return s.id === data.id ? data : s
+          const foundedSkillIndex = skills?.findIndex((s) => {
+            if (s?.hasOwnProperty('certificationSkillId')) {
+              return s.id === skill?.id
             }
           })
-          setSkills(updatedSkills)
+          const newSkills = [...skills]
+          newSkills.splice(foundedSkillIndex, 1, data)
+          setSkills(newSkills)
         })
     } else {
       const newSkill = {
-        journalId: skill.journalId,
-        order: skill.order,
+        journalId: skill?.journalId,
+        order: skill?.order,
         status: status,
-        title: skill.title,
-        content: skill.content,
-        certificationSkillId: skill.id
+        title: skill?.title,
+        content: skill?.content,
+        certificationSkillId: skill?.id
       }
 
       axiosInstance
@@ -60,9 +62,9 @@ const CertificationSkills = ({ journal }) => {
           skill: newSkill
         })
         .then(({ data }) => {
-          const foundedSkillIndex = skills.findIndex((s) => {
-            if (!s.hasOwnProperty('certificationSkillId')) {
-              return s.id === skill.id
+          const foundedSkillIndex = skills?.findIndex((s) => {
+            if (!s?.hasOwnProperty('certificationSkillId')) {
+              return s.id === skill?.id
             }
           })
           const newSkills = [...skills]
@@ -73,11 +75,11 @@ const CertificationSkills = ({ journal }) => {
   }
 
   const updateContentSelection = (skill) => {
-    if (skill.status === 'undeclared') {
+    if (skill?.status === 'undeclared') {
       handleToggleSkill(skill, 'proficient')
-    } else if (skill.status === 'proficient') {
+    } else if (skill?.status === 'proficient') {
       handleToggleSkill(skill, 'needs_improvement')
-    } else if (skill.status === 'needs_improvement') {
+    } else if (skill?.status === 'needs_improvement') {
       handleToggleSkill(skill, 'undeclared')
     }
   }
@@ -100,7 +102,7 @@ const CertificationSkills = ({ journal }) => {
                 }
               >
                 <CertificationSkillBox
-                  title={skill.title}
+                  title={skill?.title}
                   onSelectContent={() => updateContentSelection(skill)}
                   proficient={skill?.status === 'proficient'}
                   needsImprovement={skill?.status === 'needs_improvement'}

@@ -25,10 +25,13 @@ const ContentUploads = ({ journal }) => {
           contentUpload: { ...contentUpload, status: status }
         })
         .then(({ data }) => {
-          const updatedContents = contentUploads.map((s) =>
-            s.hasOwnProperty('contentUploadId') && s.id === data.id ? data : s
+          const foundedContentUploadIndex = contentUploads.findIndex(
+            (s) =>
+              s.hasOwnProperty('contentUploadId') && s.id === contentUpload.id
           )
-          setContentUploads(updatedContents)
+          const newContentUploads = [...contentUploads]
+          newContentUploads.splice(foundedContentUploadIndex, 1, data)
+          setContentUploads(newContentUploads)
         })
     } else {
       const newContentUpload = {
@@ -47,7 +50,7 @@ const ContentUploads = ({ journal }) => {
         .then(({ data }) => {
           const foundedContentUploadIndex = contentUploads.findIndex(
             (s) =>
-              s.hasOwnProperty('contentUploadId') && s.id === contentUpload.id
+              !s.hasOwnProperty('contentUploadId') && s.id === contentUpload.id
           )
           const newContentUploads = [...contentUploads]
           newContentUploads.splice(foundedContentUploadIndex, 1, data)
