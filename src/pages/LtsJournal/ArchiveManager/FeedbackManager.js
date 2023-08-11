@@ -19,7 +19,6 @@ const FeedbackManager = (props) => {
   const [unChangedArchive, setUnChangedArchive] = useState({})
   const [showArchiveModal, setShowArchiveModal] = useState(false)
   const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
-  const [feedbacks, setFeedbacks] = useState([])
 
   const handleCloseArchiveModal = () => {
     setShowArchiveModal(false)
@@ -70,46 +69,36 @@ const FeedbackManager = (props) => {
   )
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const handleChangeFeedback = (name, value, feedbackIndex, fb) => {
-    const feedback = {
-      journalId: fb.journalId,
-      feedbackDate: fb.feedbackDate,
-      feedbackGiver: fb.feedbackGiver,
-      receivedFeedback: fb.receivedFeedback,
-      relevantFeedback: fb.relevantFeedback,
-      relevantFeedbackAct: fb.relevantFeedbackAct,
-      feedbackId: +fb?.id
-    }
-    let newSelectedFeedback = { ...feedback }
+  const handleChangeFeedback = (name, value) => {
+    let newSelectedFeedback = { ...selectedArchive }
     newSelectedFeedback[name] = value
+    setSelectedArchive(newSelectedFeedback)
+    const hasChanged = !isEqual(newSelectedFeedback, selectedArchive)
+    setHasUnsavedChanges(hasChanged)
 
-    // _.debounce(async (func,value) => updateFeedback(newSelectedFeedback), 5000)
-    _.debounce(async (func, value) => {
-      func('debounce', value)
-    }, 1000)
+    debounce(updateFeedback, newSelectedFeedback)
   }
 
-  const updateFeedback = async (value) => {
-    // console.log(value)
-
-    // debugger
-
+  const updateFeedback = async (name, value) => {
     try {
       await axiosInstance
         .put(`/feedbacks/${selectedArchive?.id}/journal/${+params.journalId}`, {
           feedback: value
         })
-        .then((res) => {
-          const newFeedbacks = [...feedbacks]
-          const foundedIndex = newFeedbacks.findIndex(
-            (feedback) =>
-              feedback.hasOwnProperty('feedbackId') &&
-              feedback.id === res.data.id
-          )
-          newFeedbacks[foundedIndex] = res.data
-          setFeedbacks(newFeedbacks)
-        })
+        .then((res) => console.log(res.data))
+
+      setJournal((prevJournal) => {
+        const newJournal = { ...prevJournal }
+        const newFeedbacks = [...newJournal.feedbacks]
+        const feedbackIndex = newFeedbacks.findIndex(
+          (feedback) => feedback.id === selectedArchive?.id
+        )
+        newFeedbacks[feedbackIndex] = value
+        newJournal.feedbacks = newFeedbacks
+        return newJournal
+      })
     } catch (error) {
+      // Handle errors
       console.error('Error updating feedback:', error)
     }
   }
@@ -121,45 +110,32 @@ const FeedbackManager = (props) => {
     } catch (err) {}
   }
 
-  // function getFeedbacks() {
-  //   try {
-  //     axiosInstance.get(`/ltsJournals/${params.journalId}`).then((res) => {
-  //       const data = res.data
-  //       if (data?.feedbacks && data?.feedbacks?.length) {
-  //         const latestFeedback = getLatestUpdatedElement(data?.feedbacks)
-  //         if (latestFeedback) {
-  //           setUnChangedArchive(latestFeedback)
-  //           setSelectedArchive(latestFeedback)
-  //         }
-  //       }
-  //     })
-  //   } catch (err) {}
-  // }
+  function getFeedbacks() {
+    try {
+      axiosInstance.get(`/ltsJournals/${params.journalId}`).then((res) => {
+        const data = res.data
+        if (data?.feedbacks && data?.feedbacks?.length) {
+          const latestFeedback = getLatestUpdatedElement(data?.feedbacks)
+          if (latestFeedback) {
+            setUnChangedArchive(latestFeedback)
+            setSelectedArchive(latestFeedback)
+          }
+        }
+      })
+    } catch (err) {}
+  }
 
-  // useEffect(() => {
-  //   if (props.journal.feedbacks && props.journal.userFeedbacks.length === 0) {
-  //     setFeedbacks(props.journal.feedbacks)
-  //   } else if (props.journal.userFeedbacks) {
-  //     setFeedbacks(props.journal.userFeedbacks)
-  //   }
-  //   // setJournal(props.journal)
-  // }, [props.journal])
-  // console.log(selectedArchive)
+  useEffect(() => {
+    setJournal(props.journal)
+  }, [props.journal])
+
   useEffect(
     function () {
-      // getFeedbacks()
+      getFeedbacks()
     },
     [params.journalId]
   )
 
-  useEffect(() => {
-    const ids = props.journal.userFeedbacks.map((item1) => item1.feedbackId)
-
-    const differentFeedbacks = props.journal.feedbacks.filter(
-      (item1) => !ids.includes(item1.id)
-    )
-    setFeedbacks([...differentFeedbacks, ...props.journal.userFeedbacks])
-  }, [props.journal.userFeedbacks, props.journal.feedbacks])
   const getLatestUpdatedElement = (array) => {
     const latestUpdatedElement = array?.reduce((latest, current) => {
       if (!latest || new Date(current.updatedAt) > new Date(latest.updatedAt)) {
@@ -222,146 +198,109 @@ const FeedbackManager = (props) => {
       setUnChangedArchive(value)
     }
   }
-
   return (
     <>
-      {feedbacks.map((feedback, feedbackIndex, feedbacks) => {
-        return (
-          <ArchiveManager
-            title={'feedback'}
-            archives={feedbacks}
-            selectedArchive={selectedArchive}
-            handleSelectedArchive={handleSelectedArchive}
-            hasUnsavedChanges={hasUnsavedChanges}
-            onAdd={handleAddFeedback}
-            onDelete={() => handleDeleteFeedback(selectedArchive)}
-            saveChanged={saveChanged}
-            saveUnChanged={saveUnChanged}
-            onOpenArchiveModal={handleOpenArchiveModal}
-            onCloseArchiveModal={handleCloseArchiveModal}
-            onOpenDeleteArchiveModal={handleOpenDeleteArchiveModal}
-            onCloseDeleteArchiveModal={handleCloseDeleteArchiveModal}
-            showArchiveModal={showArchiveModal}
-            showDeleteArchiveModal={showDeleteArchiveModal}
-            tableContent={
-              <>
-                <TableWrapper
-                  title={feedback.title}
-                  isDelete={
-                    feedback?.feedbacks?.length > 1 ||
-                    feedback?.userFeedbacks?.length > 1
-                  }
-                  onDelete={() => handleOpenDeleteArchiveModal()}
-                >
-                  <Table bordered hover style={{ marginBottom: 0 }}>
-                    <tbody>
-                      <JournalTableRow>
-                        <JournalTableCell isGray>
-                          <JournalTableCellInput
-                            title={'Feedback date:'}
-                            type={'date'}
-                            value={new Date(
-                              feedback.feedbackDate
-                            ).toLocaleDateString('en-CA')}
-                            handleChange={(value) =>
-                              handleChangeFeedback(
-                                'feedbackDate',
-                                value,
-                                feedbackIndex,
-                                feedback
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
-                      <JournalTableRow>
-                        <JournalTableCell
-                          isGray
-                          additionalStyling={{
-                            borderRightColor: '#f0f0f0',
-                            borderWidth: 2
-                          }}
-                        >
-                          <JournalTableCellInput
-                            title={'Who gave you feedback:'}
-                            type={'text'}
-                            value={feedback.feedbackGiver}
-                            handleChange={(value) =>
-                              handleChangeFeedback(
-                                'feedbackGiver',
-                                value,
-                                feedbackIndex,
-                                feedback
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
+      <ArchiveManager
+        title={'feedback'}
+        archives={journal?.feedbacks}
+        selectedArchive={selectedArchive}
+        handleSelectedArchive={handleSelectedArchive}
+        hasUnsavedChanges={hasUnsavedChanges}
+        onAdd={handleAddFeedback}
+        onDelete={() => handleDeleteFeedback(selectedArchive)}
+        saveChanged={saveChanged}
+        saveUnChanged={saveUnChanged}
+        onOpenArchiveModal={handleOpenArchiveModal}
+        onCloseArchiveModal={handleCloseArchiveModal}
+        onOpenDeleteArchiveModal={handleOpenDeleteArchiveModal}
+        onCloseDeleteArchiveModal={handleCloseDeleteArchiveModal}
+        showArchiveModal={showArchiveModal}
+        showDeleteArchiveModal={showDeleteArchiveModal}
+        tableContent={
+          <TableWrapper
+            title={selectedArchive.title}
+            isDelete={journal?.feedbacks?.length > 1}
+            onDelete={() => handleOpenDeleteArchiveModal()}
+          >
+            <Table bordered hover style={{ marginBottom: 0 }}>
+              <tbody>
+                <JournalTableRow>
+                  <JournalTableCell isGray>
+                    <JournalTableCellInput
+                      title={'Feedback date:'}
+                      type={'date'}
+                      value={new Date(
+                        selectedArchive.feedbackDate
+                      ).toLocaleDateString('en-CA')}
+                      handleChange={(value) =>
+                        handleChangeFeedback('feedbackDate', value)
+                      }
+                    />
+                  </JournalTableCell>
+                </JournalTableRow>
+                <JournalTableRow>
+                  <JournalTableCell
+                    isGray
+                    additionalStyling={{
+                      borderRightColor: '#f0f0f0',
+                      borderWidth: 2
+                    }}
+                  >
+                    <JournalTableCellInput
+                      title={'Who gave you feedback:'}
+                      type={'text'}
+                      value={selectedArchive.feedbackGiver}
+                      handleChange={(value) =>
+                        handleChangeFeedback('feedbackGiver', value)
+                      }
+                    />
+                  </JournalTableCell>
+                </JournalTableRow>
 
-                      <JournalTableRow>
-                        <JournalTableCell colSpan={2}>
-                          <JournalTableCellInput
-                            isBold={true}
-                            title={'Feedback you received:'}
-                            type={'text'}
-                            value={feedback.receivedFeedback}
-                            handleChange={(value) =>
-                              handleChangeFeedback(
-                                'receivedFeedback',
-                                value,
-                                feedbackIndex,
-                                feedback
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
-                      <JournalTableRow>
-                        <JournalTableCell colSpan={2}>
-                          <JournalTableCellInput
-                            isBold={true}
-                            title={'Which feedback is relevant:'}
-                            type={'text'}
-                            value={feedback.relevantFeedback}
-                            handleChange={(value) =>
-                              handleChangeFeedback(
-                                'relevantFeedback',
-                                value,
-                                feedbackIndex,
-                                feedback
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
-                      <JournalTableRow>
-                        <JournalTableCell colSpan={2}>
-                          <JournalTableCellInput
-                            isBold={true}
-                            title={
-                              'How will you act on this relevant feedback:'
-                            }
-                            type={'text'}
-                            value={feedback.relevantFeedbackAct}
-                            handleChange={(value) =>
-                              handleChangeFeedback(
-                                'relevantFeedbackAct',
-                                value,
-                                feedbackIndex,
-                                feedback
-                              )
-                            }
-                          />
-                        </JournalTableCell>
-                      </JournalTableRow>
-                    </tbody>
-                  </Table>
-                </TableWrapper>
-              </>
-            }
-          />
-        )
-      })}
+                <JournalTableRow>
+                  <JournalTableCell colSpan={2}>
+                    <JournalTableCellInput
+                      isBold={true}
+                      title={'Feedback you received:'}
+                      type={'text'}
+                      value={selectedArchive.receivedFeedback}
+                      handleChange={(value) =>
+                        handleChangeFeedback('receivedFeedback', value)
+                      }
+                    />
+                  </JournalTableCell>
+                </JournalTableRow>
+                <JournalTableRow>
+                  <JournalTableCell colSpan={2}>
+                    <JournalTableCellInput
+                      isBold={true}
+                      title={'Which feedback is relevant:'}
+                      type={'text'}
+                      value={selectedArchive.relevantFeedback}
+                      handleChange={(value) =>
+                        handleChangeFeedback('relevantFeedback', value)
+                      }
+                    />
+                  </JournalTableCell>
+                </JournalTableRow>
+                <JournalTableRow>
+                  <JournalTableCell colSpan={2}>
+                    <JournalTableCellInput
+                      isBold={true}
+                      title={'How will you act on this relevant feedback:'}
+                      type={'text'}
+                      value={selectedArchive.relevantFeedbackAct}
+                      handleChange={(value) =>
+                        handleChangeFeedback('relevantFeedbackAct', value)
+                      }
+                    />
+                  </JournalTableCell>
+                </JournalTableRow>
+              </tbody>
+            </Table>
+          </TableWrapper>
+        }
+      />
     </>
   )
 }
