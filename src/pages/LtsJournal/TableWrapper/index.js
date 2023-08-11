@@ -15,8 +15,8 @@ const TableWrapper = ({ title, children, isDelete, onDelete }) => {
               icon={faTrashAlt}
               className="plus-icon float-end "
               style={{
-                width: '22px',
-                height: '22px',
+                width: '18px',
+                height: '18px',
                 color: '#fff'
               }}
             />

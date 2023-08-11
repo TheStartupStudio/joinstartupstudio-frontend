@@ -3763,9 +3763,9 @@ strong {
 .ql-toolbar.ql-snow {
   border: 0 !important;
 }
-.quill .ql-container.ql-snow {
+/* .quill .ql-container.ql-snow {
   border: 0 !important;
-}
+} */
 .journal-entries__entry-reflection-body .ql-container {
   background: #ffffff;
   border: 2px solid #d9dadb;
@@ -4402,4 +4402,11 @@ ul.sidebar-menu-item .collapse a {
   font: normal normal normal 13px/17px Montserrat;
   letter-spacing: 0.52px;
   color: #333d3d;
+}
+
+.archive-modal .modal-dialog {
+  height: 100% !important;
+  display:flex;
+  justify-content: center;
+  align-items: center;
 }

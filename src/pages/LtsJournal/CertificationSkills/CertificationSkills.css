@@ -1,0 +1,13 @@
+.explanation-button {
+    color: #51c7df;
+    background-color: inherit;
+    font-size: 14px;
+    border: 0;
+    width: 50%;
+    padding: 10px;
+    font-weight: 500
+}
+
+.explanation-button:hover {
+    font-weight: 600
+}

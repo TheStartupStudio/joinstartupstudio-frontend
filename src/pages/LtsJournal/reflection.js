@@ -189,7 +189,6 @@ function LtsJournalReflection(props) {
     }, 5000),
     []
   )
-  console.log(props)
   return (
     <>
       <ToastContainer
@@ -253,7 +252,7 @@ function LtsJournalReflection(props) {
           className="journal-entries__entry-reflection-body"
           style={{ borderRadius: 0, border: '0px' }}
         >
-          <span
+          {props.journalEntry.popupContent ? <span
             className="journal-entries__entry-reflection-body_info-btn"
             onClick={() => {
               setInfoBoxTitle(props.journalEntry.title)
@@ -262,7 +261,7 @@ function LtsJournalReflection(props) {
             }}
           >
             <FontAwesomeIcon icon={faInfo} />
-          </span>
+          </span> : null}
           {
             // !entryId ||
             editing ? (

@@ -302,21 +302,38 @@ function LtsJournal(props) {
                               </Accordion.Collapse>
                             </>
                           ) : (
-                            <NavLink
-                              className={
-                                window.location.pathname.includes(
-                                  'lts-journal'
-                                ) ||
-                                window.location.pathname.includes(
-                                  'personal-finance-journal'
-                                )
-                                  ? 'accordion-menu__item-toggle'
-                                  : ''
+                            <Accordion.Toggle
+                              as={'a'}
+                              className={'accordion-menu__item-toggle'}
+                              eventKey={`${journalItemIdx}`}
+                              onClick={() =>
+                                journalItem.content
+                                  ? history.push(
+                                      `${props.match.url}/${journalItem.id}`
+                                    )
+                                  : null
                               }
-                              to={`${props.match.url}/${journalItem.id}`}
                             >
                               <span>{journalItem.title}</span>
-                            </NavLink>
+                            </Accordion.Toggle>
+                            // <NavLink
+                            //   className={
+                            //     window.location.pathname.includes(
+                            //       'lts-journal'
+                            //     ) ||
+                            //     window.location.pathname.includes(
+                            //       'personal-finance-journal'
+                            //     )
+                            //       ? 'accordion-menu__item-toggle'
+                            //       : ''
+                            //   }
+                            //   to={`${props.match.url}/${journalItem.id}`}
+                            // >
+                            //   <span
+                            //   >
+                            //     {journalItem.title}
+                            //   </span>
+                            // </NavLink>
                           )}
                         </div>
                       ))}
