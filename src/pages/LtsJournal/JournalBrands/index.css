@@ -1,0 +1,67 @@
+.journal__image {
+    max-width: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+.journal_brands--wrapper {
+    margin-bottom: 20px;
+}
+.brand__item {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    position: relative;
+}
+.brand__item:hover .remove-brand-item {
+    display: block;
+}
+
+.remove-brand-item {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    display: none;
+}
+.remove-brand-item svg {
+    color: red;
+}
+
+.brand__box {
+    background: #333D3D29;
+    padding: 10px;
+    margin-top: 15px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.add-new-brand {
+    color: #707070;
+    cursor: pointer;
+}
+.add-new-brand:hover {
+    color: #707070;
+}
+.add-new-brand svg {
+    margin-right: 5px;
+}
+.upload-image {
+    display: block !important;
+    position: relative;
+}
+.upload-image img {
+    border-radius: 0 !important;
+}
+.upload-image-plus {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.add-journal-brand-image .upload-image {
+    width: 300px !important;
+    height: 300px !important;
+}
+.add-journal-brand-image .modal-dialog {
+    max-width: 350px;
+}

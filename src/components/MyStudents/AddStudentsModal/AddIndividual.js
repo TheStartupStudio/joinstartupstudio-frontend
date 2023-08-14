@@ -121,6 +121,7 @@ const AddIndividual = (props) => {
   }
 
   const customStyles = {
+    // control: styles => ({ ...styles,fontSize:'13px' }),
     option: (provided, state) => ({
       ...provided,
     }),
@@ -206,6 +207,7 @@ const AddIndividual = (props) => {
               : 'false'
           }`}
           styles={{
+            ...customStyles,
             menu: (provided) => ({
               ...provided,
               zIndex: 9999,
@@ -248,17 +250,20 @@ const AddIndividual = (props) => {
           }}
         />
       </div>
-      <div className="col-6 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div">
+      <div className="col-7 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div">
         <Select
           options={periodOptions}
-          placeholder={selectedPeriod ? selectedPeriod : 'Class'}
-          value={selectedPeriod ? selectedPeriod : 'None'}
+          placeholder={
+            periods?.find((period) => period.id === selectedPeriod)?.name
+          }
+          value={periods?.find((period) => period.id === selectedPeriod)?.name}
           isDisabled={
             dataValidation.level === 'LS' || dataValidation.level === 'HE'
           }
           name="period"
           styles={{
             ...customStyles,
+            control: styles => ({ ...styles,padding:'1px 2px',fontSize:'13px' }),
             menu: (provided) => ({
               ...provided,
               zIndex: 9999,

@@ -17,8 +17,7 @@ import MentorMeetingManager from './ArchiveManager/MentorMeetingManager'
 import ContentUploads from './ContentUploads/ContentUploads'
 import CertificationSkills from './CertificationSkills/CertificationSkills'
 import AccordionItems from './MyGoals/AccordionItems'
-
-
+import JournalBrands from './JournalBrands/index'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -319,7 +318,7 @@ function LtsJournalContent(props) {
             ) : null}
           </div>
         </div>
-        {journal.accordions && journal.accordions.length && journal.accordions.map(accordion => (
+        {journal.accordions && journal.accordions.length ? journal.accordions.map(accordion => (
         <div className="col-12">
           <AccordionItemWrapper
               isOpened={openAccordion === `accordion-${accordion.id}`}
@@ -364,7 +363,37 @@ function LtsJournalContent(props) {
               )}
             </AccordionItemWrapper>
           </div>
-        ))}
+        )) : null}
+        {journal.brandsJournal && journal.brandsJournal.length && journal.brandsJournal.find(item => item.hasAccordion) ?
+        <div className="col-12">
+          <AccordionItemWrapper
+              isOpened={openAccordion === `accordion-brand`}
+              handleAccordionClick={() =>
+                handleAccordionClick(`accordion-brand`)
+              }
+              isExanded={false}
+              title={'BRAND VIDEO SPRINT'}
+            >
+              {openAccordion === `accordion-brand` && (
+                <>
+                  <div className="accordion-content">
+                    <div>
+                      <div>
+                        <div>
+                          <div className="col-12">
+                            <div className="">
+                              <JournalBrands hasAccordion={1} loadData={loadData} brands={journal.brandsJournal} journalId={props.match.params.journalId} />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </AccordionItemWrapper>
+          </div>
+          : null}
         {journal.reflectionsTable && journal.reflectionsTable.length ? (
           <>
             {journal.reflectionsTable.map((reflectionTable) => (
@@ -402,6 +431,10 @@ function LtsJournalContent(props) {
         {journal?.certificationSkills ? (
           <CertificationSkills journal={journal} />
         ) : null}
+
+        {journal.brandsJournal && journal.brandsJournal.length && !journal.brandsJournal.find(item => item.hasAccordion) ?
+          <JournalBrands hasAccordion={0} loadData={loadData} brands={journal.brandsJournal} journalId={props.match.params.journalId} />
+        : null}
       </div>
     </>
   )

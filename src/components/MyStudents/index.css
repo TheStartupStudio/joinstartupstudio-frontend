@@ -75,19 +75,19 @@
 select {
   border: 1px solid #bbbdbf;
   border-radius: 1px;
+
 }
-/* .add-individual-inputs-div input::placeholder {
-} */
 .Add-Student-Modal > modal-content {
   width: 90vw;
 }
 @media (min-width: 900px) {
   .myCustomModal .modal-dialog {
-    max-width: 1200px;
+    max-width: 1300px;
   }
 }
 
 .add-student-select .css-1s2u09g-control {
+  /* max-height:41px !important; */
   height: 100%;
 }
 .add-new-input-for-user {
