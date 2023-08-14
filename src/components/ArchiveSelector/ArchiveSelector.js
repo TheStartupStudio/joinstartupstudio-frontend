@@ -17,7 +17,7 @@ const ArchiveSelector = (props) => {
 
   useEffect(() => {
     const foundedArchiveIndex = archives?.findIndex(
-      (a) => a.id === props.selectedArchive.id
+      (a) => a.id === props.selectedArchive?.id
     )
     const value = `${archiveOptionTitle()} ${foundedArchiveIndex + 1}`
     setSelectedValue(value)
@@ -26,11 +26,11 @@ const ArchiveSelector = (props) => {
     setSelectArchive(value)
   }
   const archiveOptionTitle = () => {
-    if (props.archiveTitle === 'meetingTeam') {
+    if (props?.archiveTitle === 'meetingTeam') {
       return 'Meeting'
-    } else if (props.archiveTitle === 'feedback') {
+    } else if (props?.archiveTitle === 'feedback') {
       return 'Feedback'
-    } else if (props.archiveTitle === 'mentorMeeting') {
+    } else if (props?.archiveTitle === 'mentorMeeting') {
       return 'Mentor'
     }
   }
@@ -65,7 +65,7 @@ const ArchiveSelector = (props) => {
         </div>
         {dropdownOpen && (
           <div className="options">
-            {archives.map((archive, index) => (
+            {archives?.map((archive, index) => (
               <div
                 onClick={() => handleSelectArchive(archive)}
                 key={archive.id}
