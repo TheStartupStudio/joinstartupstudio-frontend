@@ -19,8 +19,9 @@ const ArchiveSelector = (props) => {
     const foundedArchiveIndex = archives?.findIndex(
       (a) => a.id === props.selectedArchive?.id
     )
-    const value = `${archiveOptionTitle()} ${foundedArchiveIndex + 1}`
-    setSelectedValue(value)
+    const selectedValue = `${archiveOptionTitle()} ${foundedArchiveIndex + 1}`
+    const selectArchive = `Select ${archiveOptionTitle()} `
+    setSelectedValue(foundedArchiveIndex > -1 ?  selectedValue : selectArchive)
   }, [props.selectedArchive])
   const handleChangeArchive = (value) => {
     setSelectArchive(value)
@@ -49,6 +50,7 @@ const ArchiveSelector = (props) => {
       }
     })
   }
+
 
   useEffect(() => {
     setArchives(props.archives)

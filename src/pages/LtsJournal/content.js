@@ -11,7 +11,7 @@ import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections/index.js'
 import _, { debounce, isEqual } from 'lodash'
 import MeetingManager from './ArchiveManager/MeetingManager'
-import FeedbackManager from './ArchiveManager/FeedbackManager'
+import FeedbackManager from './ArchiveManager/FeedbackManager/FeedbackManager'
 import AccordionItemWrapper from './AccordionItemWrapper'
 import MentorMeetingManager from './ArchiveManager/MentorMeetingManager'
 import ContentUploads from './ContentUploads/ContentUploads'
@@ -420,7 +420,7 @@ function LtsJournalContent(props) {
         {journal?.meetings && journal?.meetings?.length ? (
           <MeetingManager journal={journal} />
         ) : null}
-        {journal?.feedbacks && journal?.feedbacks?.length ? (
+        {journal?.feedbacks ? (
           <FeedbackManager journal={journal} />
         ) : null}
         {journal?.mentorMeetings && journal?.mentorMeetings?.length ? (
