@@ -21,15 +21,14 @@ const ArchiveManager = (props) => {
   }
 
   const archiveOptionTitle = () => {
-    if (props.title === 'meetingTeam') {
-      return 'Meeting'
+    if (props.title === 'teamMeeting') {
+      return 'Team Meeting'
     } else if (props.title === 'feedback') {
       return 'Feedback'
     } else if (props.title === 'mentorMeeting') {
       return 'Mentor Meeting'
     }
   }
-
 
   return (
     <>

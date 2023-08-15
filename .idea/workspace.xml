@@ -5,12 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/FeedbackManager/FeedbackManager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/FeedbackManager/FeedbackTable.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager/MeetingManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager/MeetingTable.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingTable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/ArchiveSelector/ArchiveSelector.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArchiveSelector/ArchiveSelector.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/ArchiveManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/ArchiveManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/FeedbackManager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,7 +39,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims",
+    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager",
     "node.js.selected.package.tslint": "(autodetect)",
     "prettierjs.PrettierConfiguration.Package": "C:\\Program Files\\nodejs\\node_modules\\prettier",
     "settings.editor.selected.configurable": "settings.javascript.prettier"
@@ -44,6 +47,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager\MentorMeetingManager" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">

@@ -21,13 +21,13 @@ const ArchiveSelector = (props) => {
     )
     const selectedValue = `${archiveOptionTitle()} ${foundedArchiveIndex + 1}`
     const selectArchive = `Select ${archiveOptionTitle()} `
-    setSelectedValue(foundedArchiveIndex > -1 ?  selectedValue : selectArchive)
+    setSelectedValue(foundedArchiveIndex > -1 ? selectedValue : selectArchive)
   }, [props.selectedArchive])
   const handleChangeArchive = (value) => {
     setSelectArchive(value)
   }
   const archiveOptionTitle = () => {
-    if (props?.archiveTitle === 'meetingTeam') {
+    if (props?.archiveTitle === 'teamMeeting') {
       return 'Meeting'
     } else if (props?.archiveTitle === 'feedback') {
       return 'Feedback'
@@ -50,7 +50,6 @@ const ArchiveSelector = (props) => {
       }
     })
   }
-
 
   useEffect(() => {
     setArchives(props.archives)
