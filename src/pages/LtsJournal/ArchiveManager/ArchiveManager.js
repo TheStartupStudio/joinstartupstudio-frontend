@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ArchiveSelector from '../../../components/ArchiveSelector/ArchiveSelector'
 import ArchiveModal from '../../../components/Modals/ArchiveModal'
 import DeleteArchiveModal from '../../../components/Modals/DeleteArchiveModal'
@@ -21,14 +21,15 @@ const ArchiveManager = (props) => {
   }
 
   const archiveOptionTitle = () => {
-    if (props.title === 'meetingTeam') {
-      return 'Meeting'
+    if (props.title === 'teamMeeting') {
+      return 'Team Meeting'
     } else if (props.title === 'feedback') {
       return 'Feedback'
     } else if (props.title === 'mentorMeeting') {
       return 'Mentor Meeting'
     }
   }
+
   return (
     <>
       <div className="col-12">

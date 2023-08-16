@@ -10,10 +10,10 @@ import EntriesBox from './EntriesBox'
 import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections/index.js'
 import _, { debounce, isEqual } from 'lodash'
-import MeetingManager from './ArchiveManager/MeetingManager'
-import FeedbackManager from './ArchiveManager/FeedbackManager'
+import MeetingManager from './ArchiveManager/MeetingManager/MeetingManager'
+import FeedbackManager from './ArchiveManager/FeedbackManager/FeedbackManager'
 import AccordionItemWrapper from './AccordionItemWrapper'
-import MentorMeetingManager from './ArchiveManager/MentorMeetingManager'
+import MentorMeetingManager from './ArchiveManager/MentorMeetingManager/MentorMeetingManager'
 import ContentUploads from './ContentUploads/ContentUploads'
 import CertificationSkills from './CertificationSkills/CertificationSkills'
 import AccordionItems from './MyGoals/AccordionItems'
@@ -35,8 +35,6 @@ function LtsJournalContent(props) {
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
 
-  // console.log('unChangedMeeting', unChangedMeeting)
-
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -48,9 +46,6 @@ function LtsJournalContent(props) {
   useEffect(() => {
     setIsExpanded(false)
   }, [props.match.params.id])
-
-
-
 
   const handleShowAddReflection = (showAddReflection) => {
     setShowAddReflection(showAddReflection)
@@ -207,6 +202,7 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
+
   return (
     <>
       <div className="row">
@@ -318,55 +314,69 @@ function LtsJournalContent(props) {
             ) : null}
           </div>
         </div>
-        {journal.accordions && journal.accordions.length ? journal.accordions.map(accordion => (
-        <div className="col-12">
-          <AccordionItemWrapper
-              isOpened={openAccordion === `accordion-${accordion.id}`}
-              handleAccordionClick={() =>
-                handleAccordionClick(`accordion-${accordion.id}`)
-              }
-              isExanded={false}
-              title={accordion.title}
-            >
-              {openAccordion === `accordion-${accordion.id}` && (
-                <>
-                  <div className="accordion-content">
-                    <div>
-                      <div>
+        {journal.accordions && journal.accordions.length
+          ? journal.accordions.map((accordion) => (
+              <div className="col-12">
+                <AccordionItemWrapper
+                  isOpened={openAccordion === `accordion-${accordion.id}`}
+                  handleAccordionClick={() =>
+                    handleAccordionClick(`accordion-${accordion.id}`)
+                  }
+                  isExanded={false}
+                  title={accordion.title}
+                >
+                  {openAccordion === `accordion-${accordion.id}` && (
+                    <>
+                      <div className="accordion-content">
                         <div>
-                          <div className="col-12">
-                            <div className="">
-                              <EntriesBox
-                                entries={accordion.ltsJournalAccordionEntries}
-                                entryBoxTitle={journal?.title}
-                                journal={journal}
-                                userJournalEntries={userJournalEntries}
-                                deleteReflection={(entry, userJournalEntry) =>
-                                  deleteReflection(entry, userJournalEntry)
-                                }
-                                updateReflection={(entry, userJournalEntry) =>
-                                  updateReflection(entry, userJournalEntry)
-                                }
-                                addReflection={(entry) => addReflection(entry)}
-                                handleShowAddReflection={(reflection) =>
-                                  handleShowAddReflection(reflection)
-                                }
-                                showAddReflection={showAddReflection}
-                              />
+                          <div>
+                            <div>
+                              <div className="col-12">
+                                <div className="">
+                                  <EntriesBox
+                                    entries={
+                                      accordion.ltsJournalAccordionEntries
+                                    }
+                                    entryBoxTitle={journal?.title}
+                                    journal={journal}
+                                    userJournalEntries={userJournalEntries}
+                                    deleteReflection={(
+                                      entry,
+                                      userJournalEntry
+                                    ) =>
+                                      deleteReflection(entry, userJournalEntry)
+                                    }
+                                    updateReflection={(
+                                      entry,
+                                      userJournalEntry
+                                    ) =>
+                                      updateReflection(entry, userJournalEntry)
+                                    }
+                                    addReflection={(entry) =>
+                                      addReflection(entry)
+                                    }
+                                    handleShowAddReflection={(reflection) =>
+                                      handleShowAddReflection(reflection)
+                                    }
+                                    showAddReflection={showAddReflection}
+                                  />
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </>
-              )}
-            </AccordionItemWrapper>
-          </div>
-        )) : null}
-        {journal.brandsJournal && journal.brandsJournal.length && journal.brandsJournal.find(item => item.hasAccordion) ?
-        <div className="col-12">
-          <AccordionItemWrapper
+                    </>
+                  )}
+                </AccordionItemWrapper>
+              </div>
+            ))
+          : null}
+        {journal.brandsJournal &&
+        journal.brandsJournal.length &&
+        journal.brandsJournal.find((item) => item.hasAccordion) ? (
+          <div className="col-12">
+            <AccordionItemWrapper
               isOpened={openAccordion === `accordion-brand`}
               handleAccordionClick={() =>
                 handleAccordionClick(`accordion-brand`)
@@ -382,7 +392,12 @@ function LtsJournalContent(props) {
                         <div>
                           <div className="col-12">
                             <div className="">
-                              <JournalBrands hasAccordion={1} loadData={loadData} brands={journal.brandsJournal} journalId={props.match.params.journalId} />
+                              <JournalBrands
+                                hasAccordion={1}
+                                loadData={loadData}
+                                brands={journal.brandsJournal}
+                                journalId={props.match.params.journalId}
+                              />
                             </div>
                           </div>
                         </div>
@@ -393,7 +408,7 @@ function LtsJournalContent(props) {
               )}
             </AccordionItemWrapper>
           </div>
-          : null}
+        ) : null}
         {journal.reflectionsTable && journal.reflectionsTable.length ? (
           <>
             {journal.reflectionsTable.map((reflectionTable) => (
@@ -417,13 +432,9 @@ function LtsJournalContent(props) {
           </>
         ) : null}
 
-        {journal?.meetings && journal?.meetings?.length ? (
-          <MeetingManager journal={journal} />
-        ) : null}
-        {journal?.feedbacks && journal?.feedbacks?.length ? (
-          <FeedbackManager journal={journal} />
-        ) : null}
-        {journal?.mentorMeetings && journal?.mentorMeetings?.length ? (
+        {journal?.teamMeetings ? <MeetingManager journal={journal} /> : null}
+        {journal?.feedbacks ? <FeedbackManager journal={journal} /> : null}
+        {journal?.mentorMeetings ? (
           <MentorMeetingManager journal={journal} />
         ) : null}
 
@@ -432,9 +443,16 @@ function LtsJournalContent(props) {
           <CertificationSkills journal={journal} />
         ) : null}
 
-        {journal.brandsJournal && journal.brandsJournal.length && !journal.brandsJournal.find(item => item.hasAccordion) ?
-          <JournalBrands hasAccordion={0} loadData={loadData} brands={journal.brandsJournal} journalId={props.match.params.journalId} />
-        : null}
+        {journal.brandsJournal &&
+        journal.brandsJournal.length &&
+        !journal.brandsJournal.find((item) => item.hasAccordion) ? (
+          <JournalBrands
+            hasAccordion={0}
+            loadData={loadData}
+            brands={journal.brandsJournal}
+            journalId={props.match.params.journalId}
+          />
+        ) : null}
       </div>
     </>
   )
