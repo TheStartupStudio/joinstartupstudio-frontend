@@ -5,15 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager/MeetingManager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager/MeetingTable.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingManager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingTable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ArchiveSelector/ArchiveSelector.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArchiveSelector/ArchiveSelector.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/ArchiveManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/ArchiveManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/TableReflectionModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/TableReflectionModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,10 +33,15 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "prettierjs.PrettierConfiguration.Package": "C:\\Program Files\\nodejs\\node_modules\\prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier"
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -90,6 +89,7 @@
       <workItem from="1683702324579" duration="67480000" />
       <workItem from="1684134188258" duration="19780000" />
       <workItem from="1691782945101" duration="95000" />
+      <workItem from="1692256296782" duration="751000" />
     </task>
     <servers />
   </component>
