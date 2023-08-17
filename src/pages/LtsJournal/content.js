@@ -416,6 +416,7 @@ function LtsJournalContent(props) {
                 <TableWrapper title={reflectionTable.title}>
                   <TableReflections
                     loadData={loadData}
+                    tableTitle={reflectionTable.title}
                     start={reflectionTable.startDate}
                     end={reflectionTable.endDate}
                     reflectionTable={reflectionTable}
