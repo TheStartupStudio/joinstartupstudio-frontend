@@ -18,6 +18,8 @@ import ContentUploads from './ContentUploads/ContentUploads'
 import CertificationSkills from './CertificationSkills/CertificationSkills'
 import AccordionItems from './MyGoals/AccordionItems'
 import JournalBrands from './JournalBrands/index'
+import * as actions from '../../redux/reflectionsTable/Actions'
+import { useDispatch } from 'react-redux'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -34,6 +36,7 @@ function LtsJournalContent(props) {
   const [testAcc, setTestAcc] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
+  const dispatch = useDispatch()
 
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
@@ -202,6 +205,28 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
+  console.log(journal)
+  const updateUserReflectionsTable = (updatedTable, index) => {
+    const updatedJournal = { ...journal }
+
+    const foundedReflectionsTable = updatedJournal?.reflectionsTable[index]
+
+    if (foundedReflectionsTable) {
+      const updatedUserReflectionsTable = [
+        ...foundedReflectionsTable.userReflectionsTable
+      ]
+
+      updatedUserReflectionsTable.push(updatedTable)
+
+      foundedReflectionsTable.userReflectionsTable = updatedUserReflectionsTable
+
+      updatedJournal.reflectionsTable[index] = foundedReflectionsTable
+
+      setJournal(updatedJournal)
+    }
+  }
+
+  console.log(journal)
 
   return (
     <>
@@ -411,27 +436,118 @@ function LtsJournalContent(props) {
         ) : null}
         {journal.reflectionsTable && journal.reflectionsTable.length ? (
           <>
-            {journal.reflectionsTable.map((reflectionTable) => (
+            {journal.reflectionsTable.map((reflectionTable, tableIndex) => (
               <div className="col-12" key={reflectionTable.id}>
-                <TableWrapper title={reflectionTable.title}>
-                  <TableReflections
-                    loadData={loadData}
-                    tableTitle={reflectionTable.title}
-                    start={reflectionTable.startDate}
-                    end={reflectionTable.endDate}
-                    reflectionTable={reflectionTable}
-                    reflectionTableEntries={
-                      reflectionTable.reflectionsTableEntries
-                    }
-                    userReflectionTableEntries={
-                      reflectionTable.userReflectionsTableEntries
-                    }
-                  />
-                </TableWrapper>
+                {reflectionTable.userReflectionsTable.length === 0 ? (
+                  <TableWrapper title={reflectionTable.title}>
+                    <TableReflections
+                      name={'reflectionsTable'}
+                      loadData={loadData}
+                      tableTitle={reflectionTable.title}
+                      start={reflectionTable.startDate}
+                      end={reflectionTable.endDate}
+                      reflectionTable={reflectionTable}
+                      userReflectionsTable={
+                        reflectionTable.userReflectionsTable
+                      }
+                      reflectionTableEntries={
+                        reflectionTable.reflectionsTableEntries
+                      }
+                      userReflectionTableEntries={
+                        reflectionTable.userReflectionsTableEntries
+                      }
+                      updateUserReflectionsTable={(data) =>
+                        updateUserReflectionsTable(data, tableIndex)
+                      }
+                    />
+                  </TableWrapper>
+                ) : (
+                  <>
+                    {reflectionTable.userReflectionsTable.map(
+                      (userReflectionTable) => (
+                        <TableWrapper title={userReflectionTable.title}>
+                          <TableReflections
+                            name={'userReflectionsTable'}
+                            loadData={() => {
+                              loadData()
+                            }}
+                            tableTitle={userReflectionTable.title}
+                            start={userReflectionTable.startDate}
+                            end={userReflectionTable.endDate}
+                            reflectionTable={userReflectionTable}
+                            userReflectionsTable={[
+                              ...reflectionTable.userReflectionsTable
+                            ]}
+                            reflectionTableEntries={[
+                              ...(userReflectionTable?.userReflectionsTableEntries ||
+                                []),
+                              ...reflectionTable.reflectionsTableEntries
+                            ]}
+                            userReflectionTableEntries={
+                              reflectionTable.userReflectionsTableEntries
+                            }
+                          />
+                        </TableWrapper>
+                      )
+                    )}
+                  </>
+                )}
               </div>
             ))}
           </>
         ) : null}
+
+        {/*{journal.reflectionsTable && journal.reflectionsTable.length  ? (*/}
+        {/*  <>*/}
+        {/*    {journal.reflectionsTable.map((reflectionTable) => (*/}
+        {/*     <div className="col-12" key={reflectionTable.id}>*/}
+        {/*        <TableWrapper title={reflectionTable.title}>*/}
+        {/*          <TableReflections*/}
+        {/*            loadData={loadData}*/}
+        {/*            tableTitle={reflectionTable.title}*/}
+        {/*            start={reflectionTable.startDate}*/}
+        {/*            end={reflectionTable.endDate}*/}
+        {/*            reflectionTable={reflectionTable}*/}
+        {/*            reflectionTableEntries={*/}
+        {/*              reflectionTable.reflectionsTableEntries*/}
+        {/*            }*/}
+        {/*            userReflectionTableEntries={*/}
+        {/*              reflectionTable.userReflectionsTableEntries*/}
+        {/*            }*/}
+        {/*          />*/}
+        {/*        </TableWrapper>*/}
+        {/*      </div>}*/}
+        {/*    ))}*/}
+        {/*  </>*/}
+        {/*) : null}*/}
+        {/*{journal.reflectionsTable && journal.reflectionsTable.length && journal.reflectionsTable?.userReflectionsTable?.length ? (*/}
+        {/*  <>*/}
+        {/*    {journal.reflectionsTable.map((reflectionTable) => (*/}
+        {/*      {*/}
+        {/*        reflectionTable.userReflectionsTable.map(()=>{*/}
+        {/*          <div className="col-12" key={reflectionTable.id}>*/}
+        {/*            <TableWrapper title={reflectionTable.title}>*/}
+        {/*              <TableReflections*/}
+        {/*                loadData={loadData}*/}
+        {/*                tableTitle={reflectionTable.title}*/}
+        {/*                start={reflectionTable.startDate}*/}
+        {/*                end={reflectionTable.endDate}*/}
+        {/*                reflectionTable={reflectionTable}*/}
+        {/*                reflectionTableEntries={*/}
+        {/*                  reflectionTable.reflectionsTableEntries*/}
+        {/*                }*/}
+        {/*                userReflectionTableEntries={*/}
+        {/*                  reflectionTable.userReflectionsTableEntries*/}
+        {/*                }*/}
+        {/*              />*/}
+        {/*            </TableWrapper>*/}
+        {/*          </div>*/}
+        {/*        })*/}
+        {/*      }*/}
+
+        {/*    ))}*/}
+        {/*  </>*/}
+        {/*) : null}*/}
 
         {journal?.teamMeetings ? <MeetingManager journal={journal} /> : null}
         {journal?.feedbacks ? <FeedbackManager journal={journal} /> : null}
