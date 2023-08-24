@@ -10,7 +10,8 @@ const MeetingTable = ({
   handleChangeTeamMeeting,
   teamMeetings,
   selectedArchive,
-  handleOpenDeleteArchiveModal
+  handleOpenDeleteArchiveModal,
+  isEditable
 }) => {
   return (
     <TableWrapper
@@ -31,6 +32,7 @@ const MeetingTable = ({
                 handleChange={(value) =>
                   handleChangeTeamMeeting('meetingDate', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -49,6 +51,7 @@ const MeetingTable = ({
                 handleChange={(value) =>
                   handleChangeTeamMeeting('purpose', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
             <JournalTableCell isGray>
@@ -59,6 +62,7 @@ const MeetingTable = ({
                 handleChange={(value) =>
                   handleChangeTeamMeeting('attendance', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -73,6 +77,7 @@ const MeetingTable = ({
                 handleChange={(value) =>
                   handleChangeTeamMeeting('meetingAgenda', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -86,6 +91,7 @@ const MeetingTable = ({
                 handleChange={(value) =>
                   handleChangeTeamMeeting('notes', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -99,6 +105,7 @@ const MeetingTable = ({
                 handleChange={(value) =>
                   handleChangeTeamMeeting('resultsOfMeeting', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>

@@ -26,11 +26,8 @@ function LtsJournalReflection(props) {
   const journalId = props.journal.id
   const journalEntryId = props.journalEntry.id
   const entryId = props.entry?.id
-
   const history = useHistory()
-
   const currentLanguage = useSelector((state) => state.lang.locale)
-
   let [content, setContent] = useState(props.entry?.content || '')
   let [editing, setEditing] = useState(false)
   let [saving, setSaving] = useState(false)
@@ -44,7 +41,6 @@ function LtsJournalReflection(props) {
   const [showInfoBoxModal, setShowInfoBoxModal] = useState(false)
   const [infoBoxTitle, setInfoBoxTitle] = useState(null)
   const [infoBoxContent, setInfoBoxContent] = useState(null)
-  // console.log(editing)
   const closeModal = () => setShowNotSavedModal(false)
 
   const continueWithoutSaving = (location) => {
@@ -252,16 +248,18 @@ function LtsJournalReflection(props) {
           className="journal-entries__entry-reflection-body"
           style={{ borderRadius: 0, border: '0px' }}
         >
-          {props.journalEntry.popupContent ? <span
-            className="journal-entries__entry-reflection-body_info-btn"
-            onClick={() => {
-              setInfoBoxTitle(props.journalEntry.title)
-              setInfoBoxContent(props.journalEntry.popupContent)
-              setShowInfoBoxModal(true)
-            }}
-          >
-            <FontAwesomeIcon icon={faInfo} />
-          </span> : null}
+          {props.journalEntry.popupContent ? (
+            <span
+              className="journal-entries__entry-reflection-body_info-btn"
+              onClick={() => {
+                setInfoBoxTitle(props.journalEntry.title)
+                setInfoBoxContent(props.journalEntry.popupContent)
+                setShowInfoBoxModal(true)
+              }}
+            >
+              <FontAwesomeIcon icon={faInfo} />
+            </span>
+          ) : null}
           {
             // !entryId ||
             editing ? (
@@ -332,7 +330,7 @@ function LtsJournalReflection(props) {
               )}
             </div>
             <div className="journal-entries__entry-reflection-actions">
-              {editing && (
+              {props.isEditable && editing && (
                 <button
                   className="button"
                   onClick={handleSubmit}
@@ -346,7 +344,7 @@ function LtsJournalReflection(props) {
                   <IntlMessages id={'journals.save'} />
                 </button>
               )}
-              {!editing && (
+              {props.isEditable && !editing && (
                 <div>
                   <FontAwesomeIcon
                     onClick={() => setEditing(true)}
@@ -355,7 +353,7 @@ function LtsJournalReflection(props) {
                 </div>
               )}
 
-              {(!entryId || editing) && (
+              {props.isEditable && (!entryId || editing) && (
                 <>
                   {saving && (
                     <div className="" style={{ color: '#01c5d1' }}>

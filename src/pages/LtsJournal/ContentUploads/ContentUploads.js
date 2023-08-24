@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
 import ContentUploadBox from './ContentUploadBox'
-const ContentUploads = ({ journal }) => {
+const ContentUploads = ({ journal, isEditable }) => {
   const [contentUploads, setContentUploads] = useState([])
   console.log(contentUploads)
   useEffect(() => {
@@ -90,6 +90,7 @@ const ContentUploads = ({ journal }) => {
               >
                 <ContentUploadBox
                   title={contentUpload?.title}
+                  isEditable={isEditable}
                   onSelectContent={() => updateContentSelection(contentUpload)}
                   isAdded={contentUpload?.status === 'added'}
                   isSelected={contentUpload?.status === 'selected'}

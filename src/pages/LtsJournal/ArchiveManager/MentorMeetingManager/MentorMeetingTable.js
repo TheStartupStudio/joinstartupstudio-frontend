@@ -11,7 +11,8 @@ const MentorMeetingTable = ({
   handleChangeMentorMeeting,
   mentorMeetings,
   selectedArchive,
-  handleOpenDeleteArchiveModal
+  handleOpenDeleteArchiveModal,
+  isEditable
 }) => {
   return (
     <TableWrapper
@@ -32,6 +33,7 @@ const MentorMeetingTable = ({
                 handleChange={(value) =>
                   handleChangeMentorMeeting('meetingDate', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -50,6 +52,7 @@ const MentorMeetingTable = ({
                 handleChange={(value) =>
                   handleChangeMentorMeeting('mentorName', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
             <JournalTableCell isGray>
@@ -60,6 +63,7 @@ const MentorMeetingTable = ({
                 handleChange={(value) =>
                   handleChangeMentorMeeting('expertiseArea', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -74,6 +78,7 @@ const MentorMeetingTable = ({
                 handleChange={(value) =>
                   handleChangeMentorMeeting('preMeeting1', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -87,6 +92,7 @@ const MentorMeetingTable = ({
                 handleChange={(value) =>
                   handleChangeMentorMeeting('preMeeting2', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -100,6 +106,7 @@ const MentorMeetingTable = ({
                 handleChange={(value) =>
                   handleChangeMentorMeeting('duringMeeting', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -113,6 +120,7 @@ const MentorMeetingTable = ({
                 handleChange={(value) =>
                   handleChangeMentorMeeting('postMeeting', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>

@@ -43,22 +43,26 @@ const ArchiveManager = (props) => {
               handleSelectedArchive={props.handleSelectedArchive}
             />
           </div>
-          <div className="col-md-6 px-1">
-            <button
-              style={{
-                backgroundColor: '#51c7df',
-                color: '#fff',
-                fontSize: 14,
-                padding: 10
-              }}
-              onClick={
-                props.hasUnsavedChanges ? props.onOpenArchiveModal : props.onAdd
-              }
-              className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
-            >
-              Add a new {archiveOptionTitle()}
-            </button>
-          </div>
+          {props.isEditable && (
+            <div className="col-md-6 px-1">
+              <button
+                style={{
+                  backgroundColor: '#51c7df',
+                  color: '#fff',
+                  fontSize: 14,
+                  padding: 10
+                }}
+                onClick={
+                  props.hasUnsavedChanges
+                    ? props.onOpenArchiveModal
+                    : props.onAdd
+                }
+                className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
+              >
+                Add a new {archiveOptionTitle()}
+              </button>
+            </div>
+          )}
           {props.showArchiveModal && props.hasUnsavedChanges && (
             <ArchiveModal
               show={props.showArchiveModal}

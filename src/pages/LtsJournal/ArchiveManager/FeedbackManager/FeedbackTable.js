@@ -10,7 +10,8 @@ const FeedbackTable = ({
   handleChangeFeedback,
   feedbacks,
   selectedArchive,
-  handleOpenDeleteArchiveModal
+  handleOpenDeleteArchiveModal,
+  isEditable
 }) => {
   return (
     <TableWrapper
@@ -31,6 +32,7 @@ const FeedbackTable = ({
                 handleChange={(value) =>
                   handleChangeFeedback('feedbackDate', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -49,6 +51,7 @@ const FeedbackTable = ({
                 handleChange={(value) =>
                   handleChangeFeedback('feedbackGiver', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -62,6 +65,7 @@ const FeedbackTable = ({
                 handleChange={(value) =>
                   handleChangeFeedback('receivedFeedback', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -75,6 +79,7 @@ const FeedbackTable = ({
                 handleChange={(value) =>
                   handleChangeFeedback('relevantFeedback', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -88,6 +93,7 @@ const FeedbackTable = ({
                 handleChange={(value) =>
                   handleChangeFeedback('relevantFeedbackAct', value)
                 }
+                isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>

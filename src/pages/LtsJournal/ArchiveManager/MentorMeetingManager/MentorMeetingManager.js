@@ -316,10 +316,12 @@ const MentorMeetingManager = (props) => {
           onCloseDeleteArchiveModal={handleCloseDeleteArchiveModal}
           showArchiveModal={showArchiveModal}
           showDeleteArchiveModal={showDeleteArchiveModal}
+          isEditable={props.isEditable}
           tableContent={
             <MentorMeetingTable
               handleOpenDeleteArchiveModal={handleOpenDeleteArchiveModal}
               mentorMeetings={mentorMeetings}
+              isEditable={props.isEditable}
               selectedArchive={selectedArchive}
               handleChangeMentorMeeting={(name, value) =>
                 handleChangeMentorMeeting(name, value)
@@ -346,10 +348,12 @@ const MentorMeetingManager = (props) => {
           onCloseDeleteArchiveModal={handleCloseDeleteArchiveModal}
           showArchiveModal={showArchiveModal}
           showDeleteArchiveModal={showDeleteArchiveModal}
+          isEditable={props.isEditable}
           tableContent={
             <MentorMeetingTable
               handleOpenDeleteArchiveModal={handleOpenDeleteArchiveModal}
               mentorMeetings={mentorMeetings}
+              isEditable={props.isEditable}
               selectedArchive={selectedArchive}
               handleChangeMentorMeeting={(name, value) =>
                 handleChangeMentorMeeting(name, value)

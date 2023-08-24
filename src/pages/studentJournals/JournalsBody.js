@@ -30,6 +30,7 @@ function JournalsBody(props) {
   const history = useHistory()
   let [journals, setJournals] = useState([])
   let [loaded, setLoaded] = useState(false)
+  let [journalActive, setJournalActive] = useState(false)
   const [journalsData, setJournalsData] = useState()
   const [fetchingUserData, setFetchingUserData] = useState(true)
   const [notAllowed, setNotAllowed] = useState(false)
@@ -38,28 +39,22 @@ function JournalsBody(props) {
   const [globalCategory, setGlobalCategory] = useState('lts')
 
   let contentContainer = useRef()
-  async function getJournals(category = 'lts', redir = true) {
+  async function getJournals(category = 'student-lts', redir = true) {
     setGlobalCategory(category)
     try {
-      let { data } = await axiosInstance
-        .get(`/ltsJournals/fromInstructor/`, {
-          params: {
-            category,
-            platform:
-              props.category === 'market-ready' ? 'student' : 'instructor',
-            studentId,
-            from: true
-          }
-        })
-        .then((data) => {
-          return data
-        })
-        .catch((err) => {
-          if (err.response.status == 403) {
-            setFetchingUserData(false)
-            setNotAllowed(true)
-          }
-        })
+      let { data } = await axiosInstance.get(`/ltsJournals/fromInstructor/`, {
+        params: {
+          category,
+          platform:
+            category === 'market-ready' ||
+            category === 'personal-finance' ||
+            category === 'entrepreneurship'
+              ? 'student'
+              : 'instructor',
+          studentId,
+          from: true
+        }
+      })
 
       setUser(data.user)
       setJournalsData(data.journals)
@@ -74,7 +69,42 @@ function JournalsBody(props) {
           history.push(`${props.match.url}/${data.journals[0].id}`)
         }
       }
+
+      if (journalActive == 'no') activeteFirstJournal()
+
+      //   .then((data) => {
+      //     return data
+      //   })
+      //   .catch((err) => {
+      //     if (err.response.status == 403) {
+      //       setFetchingUserData(false)
+      //       setNotAllowed(true)
+      //     }
+      //   })
+
+      // setUser(data.user)
+      // setJournalsData(data)
+      // setJournals(data)
+      // setLoaded(true)
+      // setFetchingUserData(false)
     } catch (err) {}
+  }
+
+  function noJournalSelected() {
+    setJournalActive('no')
+    if (loaded) {
+      activeteFirstJournal()
+    }
+  }
+
+  function activeteFirstJournal() {
+    if (journals.length > 0) {
+      if (journals[0].children && journals[0].children.length > 0) {
+        history.push(`${props.match.url}/${journals[0].children[0].id}`)
+      } else {
+        history.push(`${props.match.url}/${journals[0].id}`)
+      }
+    }
   }
 
   function journalChanged(journal) {
@@ -107,8 +137,8 @@ function JournalsBody(props) {
   })
 
   const options = [
-    { value: 'lts', label: 'MY LEARN TO START JOURNAL' },
-    { value: 'wellness', label: 'MY WELLNESS JOURNAL' },
+    { value: 'student-lts', label: 'MY LEARN TO START JOURNAL' },
+    { value: 'student-wellnes', label: 'MY WELLNESS JOURNAL' },
     { value: 'personal-finance', label: 'MY PERSONAL FINANCE JOURNAL' },
     { value: 'market-ready', label: 'MY MARKET-READY JOURNAL' },
     { value: 'entrepreneurship', label: 'MY COURSE IN ENTREPRENEURSHIP' }
@@ -156,10 +186,10 @@ function JournalsBody(props) {
     })
   }
   return (
-    <div id='main-body'>
+    <div id="main-body">
       {fetchingUserData ? (
-        <div className='d-flex justify-content-center align-items-center flex-column mt-5 pt-5'>
-          <div className='lds-facebook'>
+        <div className="d-flex justify-content-center align-items-center flex-column mt-5 pt-5">
+          <div className="lds-facebook">
             <div></div>
             <div></div>
             <div></div>
@@ -171,22 +201,22 @@ function JournalsBody(props) {
       ) : notAllowed ? (
         <NotAllowed />
       ) : (
-        <div id='main-body'>
-          <div className='container-fluid'>
-            <div className='row'>
-              <div className='col-12 col-md-11 px-0'>
-                <div className='page-padding'>
-                  <div className='row pb-2'>
-                    <div className='col-12'>
-                      <h3 className='page-title-inner'>STUDENT JOURNAL VIEW</h3>
-                      <span className='title-description'>
+        <div id="main-body">
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-12 col-md-11 px-0">
+                <div className="page-padding">
+                  <div className="row pb-2">
+                    <div className="col-12">
+                      <h3 className="page-title-inner">STUDENT JOURNAL VIEW</h3>
+                      <span className="title-description">
                         View your student journals.
                       </span>
                     </div>
-                    <div className='mt-2 col-12 justify-content-lg-end row m-0 p-0'>
-                      <div className='user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 d-flex justify-content-md-end'>
+                    <div className="mt-2 col-12 justify-content-lg-end row m-0 p-0">
+                      <div className="user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 d-flex justify-content-md-end">
                         <img
-                          className='rounded-circle user-image'
+                          className="rounded-circle user-image"
                           src={
                             user?.profile_image
                               ? user?.profile_image
@@ -198,11 +228,11 @@ function JournalsBody(props) {
                               : 'no image'
                           }
                         />
-                        <span className='user-name ps-2 my-auto'>
+                        <span className="user-name ps-2 my-auto">
                           {user?.name}
                         </span>
                       </div>
-                      <div className='col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0'>
+                      <div className="col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0">
                         <Select
                           defaultValue={options[0]}
                           tabSelectsValue={(data) => alert(data)}
@@ -215,11 +245,11 @@ function JournalsBody(props) {
                       </div>
                     </div>
                   </div>
-                  <div className='page-bottom-border'></div>
-                  <div className='row my-notes mt-2'>
-                    <div className='page-card page-card--reverse'>
+                  <div className="page-bottom-border"></div>
+                  <div className="row my-notes mt-2">
+                    <div className="page-card page-card--reverse">
                       <div
-                        className='page-card__content styled-scrollbar col-lg-8 col-md-7'
+                        className="page-card__content styled-scrollbar col-lg-8 col-md-7"
                         ref={contentContainer}
                       >
                         <Switch>
@@ -245,24 +275,24 @@ function JournalsBody(props) {
                     /> */}
                         </Switch>
                       </div>
-                      <div className='page-card__sidebar col-lg-4 col-md-5'>
-                        <div className='page-card__sidebar-header'>
-                          <label className='search-input'>
+                      <div className="page-card__sidebar col-lg-4 col-md-5">
+                        <div className="page-card__sidebar-header">
+                          <label className="search-input">
                             <img
-                              className='search-input__icon'
+                              className="search-input__icon"
                               src={searchIcon}
-                              alt='#'
+                              alt="#"
                             />
 
                             <FormattedMessage
-                              id='my_journal.search_journals'
-                              defaultMessage='my_journal.search_journals'
+                              id="my_journal.search_journals"
+                              defaultMessage="my_journal.search_journals"
                             >
                               {(placeholder) => (
                                 <input
-                                  type='text'
-                                  className='search-input__input'
-                                  name='searchedNote'
+                                  type="text"
+                                  className="search-input__input"
+                                  name="searchedNote"
                                   placeholder={placeholder}
                                   onChange={(e) => {
                                     handleJournalSearch(e)
@@ -273,10 +303,10 @@ function JournalsBody(props) {
                           </label>
                         </div>
 
-                        <div className='page-card__sidebar-content styled-scrollbar'>
+                        <div className="page-card__sidebar-content styled-scrollbar">
                           <Accordion
-                            defaultActiveKey='0'
-                            className='accordion-menu'
+                            defaultActiveKey="0"
+                            className="accordion-menu"
                           >
                             {journals.map((journalItem, journalItemIdx) => (
                               <div
@@ -292,9 +322,16 @@ function JournalsBody(props) {
                                   <>
                                     <Accordion.Toggle
                                       as={'a'}
-                                      href='#'
+                                      href="#"
                                       className={'accordion-menu__item-toggle'}
                                       eventKey={`${journalItemIdx}`}
+                                      onClick={() =>
+                                        journalItem.content
+                                          ? history.push(
+                                              `${props.match.url}/${journalItem.id}`
+                                            )
+                                          : null
+                                      }
                                     >
                                       <span>{journalItem.title}</span>
                                       <FontAwesomeIcon icon={faAngleDown} />
@@ -303,23 +340,23 @@ function JournalsBody(props) {
                                     <Accordion.Collapse
                                       eventKey={`${journalItemIdx}`}
                                     >
-                                      <ul className='accordion-menu__submenu'>
+                                      <ul className="accordion-menu__submenu">
                                         {journalItem.children.map(
                                           (journalChildren) => (
                                             <li
                                               key={journalChildren.id}
-                                              className='accordion-menu__submenu-item'
+                                              className="accordion-menu__submenu-item"
                                             >
                                               <NavLink
                                                 to={`${props.match.url}/${journalChildren.id}`}
                                               >
-                                                <div className='accordion-menu__submenu-item-icon'>
+                                                <div className="accordion-menu__submenu-item-icon">
                                                   <FontAwesomeIcon
                                                     icon={faFileAlt}
                                                   />
                                                 </div>
-                                                <div className='accordion-menu__submenu-item-details'>
-                                                  <h5 className='accordion-menu__submenu-item-title'>
+                                                <div className="accordion-menu__submenu-item-details">
+                                                  <h5 className="accordion-menu__submenu-item-title">
                                                     {journalChildren.title}
                                                   </h5>
                                                   {journalChildren.userEntry &&
@@ -327,7 +364,7 @@ function JournalsBody(props) {
                                                     .length &&
                                                   !!journalChildren.userEntry[0]
                                                     .createdAt ? (
-                                                    <div className='accordion-menu__submenu-item-subtitle'>
+                                                    <div className="accordion-menu__submenu-item-subtitle">
                                                       {moment(
                                                         journalChildren
                                                           .userEntry[0]
@@ -339,7 +376,7 @@ function JournalsBody(props) {
                                                         )}
                                                     </div>
                                                   ) : (
-                                                    <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
+                                                    <div className="accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started">
                                                       NOT STARTED
                                                     </div>
                                                   )}
@@ -352,18 +389,32 @@ function JournalsBody(props) {
                                     </Accordion.Collapse>
                                   </>
                                 ) : (
-                                  <NavLink
-                                    className={
-                                      globalCategory == 'lts' ||
-                                      globalCategory ==
-                                        'personal-finance-journal'
-                                        ? 'accordion-menu__item-toggle'
-                                        : ''
+                                  <Accordion.Toggle
+                                    as={'a'}
+                                    className={'accordion-menu__item-toggle'}
+                                    eventKey={`${journalItemIdx}`}
+                                    onClick={() =>
+                                      journalItem.content
+                                        ? history.push(
+                                            `${props.match.url}/${journalItem.id}`
+                                          )
+                                        : null
                                     }
-                                    to={`${props.match.url}/${journalItem.id}`}
                                   >
                                     <span>{journalItem.title}</span>
-                                  </NavLink>
+                                  </Accordion.Toggle>
+                                  // <NavLink
+                                  //   className={
+                                  //     globalCategory == 'lts' ||
+                                  //     globalCategory ==
+                                  //       'personal-finance-journal'
+                                  //       ? 'accordion-menu__item-toggle'
+                                  //       : ''
+                                  //   }
+                                  //   to={`${props.match.url}/${journalItem.id}`}
+                                  // >
+                                  //   <span>{journalItem.title}</span>
+                                  // </NavLink>
                                 )}
                               </div>
                             ))}
