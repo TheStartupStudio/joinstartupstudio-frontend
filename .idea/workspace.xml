@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MonthlyBudget.component.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/TableComponents.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/TableComponents.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,7 +96,7 @@
       <workItem from="1692256296782" duration="751000" />
       <workItem from="1692342525796" duration="11774000" />
       <workItem from="1692602073130" duration="8172000" />
-      <workItem from="1692619216438" duration="34943000" />
+      <workItem from="1692619216438" duration="57253000" />
     </task>
     <servers />
   </component>

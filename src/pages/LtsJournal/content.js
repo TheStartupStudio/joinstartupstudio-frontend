@@ -20,6 +20,13 @@ import AccordionItems from './MyGoals/AccordionItems'
 import JournalBrands from './JournalBrands/index'
 import * as actions from '../../redux/reflectionsTable/Actions'
 import { useDispatch } from 'react-redux'
+import { Table } from 'react-bootstrap'
+import {
+  JournalTableCell,
+  JournalTableCellInput,
+  JournalTableRow
+} from './TableWrapper/TableComponents'
+import MonthlyBudgetComponent from './MonthlyBudget.component'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -28,16 +35,19 @@ function LtsJournalContent(props) {
   let [userJournalEntries, setUserJournalEntries] = useState({})
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
-  const [meeting, setMeeting] = useState({})
-  const [selectedMeeting, setSelectedMeeting] = useState({})
-  const [unChangedMeeting, setUnChangedMeeting] = useState({})
-  const [showMeetingModal, setShowMeetingModal] = useState(false)
-  const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
-  const [testAcc, setTestAcc] = useState(false)
+
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const dispatch = useDispatch()
+  const [filteredNullFinancialSnapshots, setFilteredNullFinancialSnapshots] =
+    useState([])
+  const [expenseTable, setExpenseTable] = useState([])
+  const [incomeTable, setIncomeTable] = useState([])
+  const [monthlyIncome, setMonthlyIncome] = useState([])
+  const [monthlyFixedExpense, setMonthlyFixedExpense] = useState([])
+  const [monthlyVariableExpense, setMonthlyVariableExpense] = useState([])
 
+  console.log(monthlyIncome, monthlyVariableExpense, monthlyFixedExpense)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -108,11 +118,40 @@ function LtsJournalContent(props) {
     } catch (err) {}
   }
 
+  const filterFinancialSnapshots = (
+    journalData,
+    type,
+    setFinancialSnapshotData
+  ) => {
+    const financialSnapshotData = journalData?.financialSnapshots?.filter(
+      (fs) => fs.transactionType === type
+    )
+    setFinancialSnapshotData(financialSnapshotData)
+  }
+
   function loadData() {
     setLoading(true)
     Promise.all([getJournal(), getUserJournalEntries()])
 
       .then(([journalData, userJournalEntries]) => {
+        filterFinancialSnapshots(journalData, 'expense', setExpenseTable)
+        filterFinancialSnapshots(journalData, 'income', setIncomeTable)
+        filterFinancialSnapshots(
+          journalData,
+          'monthly_income',
+          setMonthlyIncome
+        )
+        filterFinancialSnapshots(
+          journalData,
+          'monthly_fixed_expense',
+          setMonthlyFixedExpense
+        )
+        filterFinancialSnapshots(
+          journalData,
+          'monthly_variable_expense',
+          setMonthlyVariableExpense
+        )
+
         setJournal(journalData)
 
         if (
@@ -205,7 +244,7 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-  console.log(journal)
+
   const updateUserReflectionsTable = (updatedTable, index) => {
     const updatedJournal = { ...journal }
 
@@ -226,7 +265,121 @@ function LtsJournalContent(props) {
     }
   }
 
-  console.log(journal)
+  const updateTableData = (tableData, index, newObj, setTableData) => {
+    let foundedItem = tableData?.find((item, itemIndex) => itemIndex === index)
+
+    if (foundedItem) {
+      foundedItem.userFinancialSnapshot = newObj
+    }
+
+    const newTableData = tableData?.map((item) =>
+      item.id === foundedItem?.id ? foundedItem : item
+    )
+
+    setTableData(newTableData)
+  }
+
+  const handleChangeAmount = async (obj, value, isEdit, index, name) => {
+    const newValue = +value
+    // isEdit
+    const editAmount = {
+      amount: newValue,
+      financialSnapshotId: obj.financialSnapshotId,
+      journalId: obj.journalId,
+      id: obj.id
+    }
+    // isCreate
+    const createAmount = {
+      amount: newValue,
+      financialSnapshotId: obj.id,
+      journalId: obj.journalId
+    }
+
+    const newAmountObj = isEdit ? editAmount : createAmount
+    if (name === 'expense') {
+      updateTableData(expenseTable, index, newAmountObj, setExpenseTable)
+    }
+    if (name === 'income') {
+      updateTableData(incomeTable, index, newAmountObj, setIncomeTable)
+    }
+    if (name === 'monthly_income') {
+      updateTableData(monthlyIncome, index, newAmountObj, setMonthlyIncome)
+    }
+    if (name === 'monthly_fixed_expense') {
+      updateTableData(
+        monthlyFixedExpense,
+        index,
+        newAmountObj,
+        setMonthlyFixedExpense
+      )
+    }
+    if (name === 'monthly_variable_expense') {
+      updateTableData(
+        monthlyVariableExpense,
+        index,
+        newAmountObj,
+        setMonthlyVariableExpense
+      )
+    }
+    debounce(updateAmount, newAmountObj)
+  }
+
+  const updateTableWithFinancialSnapshot = (
+    tableData,
+    updatedItem,
+    setTableData
+  ) => {
+    const foundedItem = tableData?.find((item) => item.id === updatedItem.id)
+
+    if (foundedItem) {
+      foundedItem.userFinancialSnapshot = updatedItem.userFinancialSnapshot
+    }
+
+    const newTableData = tableData?.map((item) =>
+      item.id === foundedItem?.id ? foundedItem : item
+    )
+
+    setTableData(newTableData)
+  }
+  const updateAmount = async (obj, value, isEdit) => {
+    console.log(obj, value)
+
+    await axiosInstance
+      .put(`/ltsJournals/user-financial-snapshots`, {
+        ...value
+      })
+      .then(({ data }) => {
+        const updatedData = {
+          id: data.financialSnapshotId,
+          userFinancialSnapshot: data
+        }
+        updateTableWithFinancialSnapshot(
+          expenseTable,
+          updatedData,
+          setExpenseTable
+        )
+        updateTableWithFinancialSnapshot(
+          incomeTable,
+          updatedData,
+          setIncomeTable
+        )
+        updateTableWithFinancialSnapshot(
+          monthlyIncome,
+          updatedData,
+          setMonthlyIncome
+        )
+        updateTableWithFinancialSnapshot(
+          monthlyFixedExpense,
+          updatedData,
+          setMonthlyFixedExpense
+        )
+        updateTableWithFinancialSnapshot(
+          monthlyVariableExpense,
+          updatedData,
+          setMonthlyVariableExpense
+        )
+      })
+  }
 
   return (
     <>
@@ -497,57 +650,155 @@ function LtsJournalContent(props) {
           </>
         ) : null}
 
-        {/*{journal.reflectionsTable && journal.reflectionsTable.length  ? (*/}
-        {/*  <>*/}
-        {/*    {journal.reflectionsTable.map((reflectionTable) => (*/}
-        {/*     <div className="col-12" key={reflectionTable.id}>*/}
-        {/*        <TableWrapper title={reflectionTable.title}>*/}
-        {/*          <TableReflections*/}
-        {/*            loadData={loadData}*/}
-        {/*            tableTitle={reflectionTable.title}*/}
-        {/*            start={reflectionTable.startDate}*/}
-        {/*            end={reflectionTable.endDate}*/}
-        {/*            reflectionTable={reflectionTable}*/}
-        {/*            reflectionTableEntries={*/}
-        {/*              reflectionTable.reflectionsTableEntries*/}
-        {/*            }*/}
-        {/*            userReflectionTableEntries={*/}
-        {/*              reflectionTable.userReflectionsTableEntries*/}
-        {/*            }*/}
-        {/*          />*/}
-        {/*        </TableWrapper>*/}
-        {/*      </div>}*/}
-        {/*    ))}*/}
-        {/*  </>*/}
-        {/*) : null}*/}
-        {/*{journal.reflectionsTable && journal.reflectionsTable.length && journal.reflectionsTable?.userReflectionsTable?.length ? (*/}
-        {/*  <>*/}
-        {/*    {journal.reflectionsTable.map((reflectionTable) => (*/}
-        {/*      {*/}
-        {/*        reflectionTable.userReflectionsTable.map(()=>{*/}
-        {/*          <div className="col-12" key={reflectionTable.id}>*/}
-        {/*            <TableWrapper title={reflectionTable.title}>*/}
-        {/*              <TableReflections*/}
-        {/*                loadData={loadData}*/}
-        {/*                tableTitle={reflectionTable.title}*/}
-        {/*                start={reflectionTable.startDate}*/}
-        {/*                end={reflectionTable.endDate}*/}
-        {/*                reflectionTable={reflectionTable}*/}
-        {/*                reflectionTableEntries={*/}
-        {/*                  reflectionTable.reflectionsTableEntries*/}
-        {/*                }*/}
-        {/*                userReflectionTableEntries={*/}
-        {/*                  reflectionTable.userReflectionsTableEntries*/}
-        {/*                }*/}
-        {/*              />*/}
-        {/*            </TableWrapper>*/}
-        {/*          </div>*/}
-        {/*        })*/}
-        {/*      }*/}
-
-        {/*    ))}*/}
-        {/*  </>*/}
-        {/*) : null}*/}
+        {journal?.financialSnapshots ? (
+          <>
+            {expenseTable.length > 0 && (
+              <div className="col-12">
+                <Table bordered hover style={{ marginBottom: 0 }}>
+                  <thead>
+                    <JournalTableRow>
+                      <JournalTableCell isGray>
+                        Expense Category
+                      </JournalTableCell>
+                      <JournalTableCell isGray>
+                        What's included
+                      </JournalTableCell>
+                      <JournalTableCell isGray>Amount</JournalTableCell>
+                    </JournalTableRow>
+                  </thead>
+                  <tbody>
+                    {expenseTable.map((cell, index) => {
+                      return (
+                        <JournalTableRow key={cell.transactionName}>
+                          <JournalTableCell isGray>
+                            {cell.transactionName}
+                          </JournalTableCell>
+                          <JournalTableCell isGray>
+                            {cell.includedItem}
+                          </JournalTableCell>
+                          <JournalTableCell>
+                            {cell.userFinancialSnapshot ? (
+                              <JournalTableCellInput
+                                type={'number'}
+                                value={cell.userFinancialSnapshot?.amount}
+                                handleChange={(value) => {
+                                  const isEdit = cell.userFinancialSnapshot
+                                  return handleChangeAmount(
+                                    cell.userFinancialSnapshot,
+                                    value,
+                                    isEdit,
+                                    index,
+                                    'expense'
+                                  )
+                                }}
+                              />
+                            ) : (
+                              <JournalTableCellInput
+                                type={'number'}
+                                handleChange={(value) => {
+                                  const isEdit = cell.userFinancialSnapshot
+                                  return handleChangeAmount(
+                                    cell,
+                                    value,
+                                    isEdit,
+                                    index,
+                                    'expense'
+                                  )
+                                }}
+                              />
+                            )}
+                          </JournalTableCell>
+                        </JournalTableRow>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+            <div style={{ padding: '10px 0' }}></div>
+            {incomeTable.length > 0 && (
+              <div className="col-12">
+                <Table bordered hover style={{ marginBottom: 0 }}>
+                  <thead>
+                    <JournalTableRow>
+                      <JournalTableCell isGray>
+                        Income Category
+                      </JournalTableCell>
+                      <JournalTableCell isGray>Amount</JournalTableCell>
+                    </JournalTableRow>
+                  </thead>
+                  <tbody>
+                    {incomeTable.map((cell, index) => {
+                      return (
+                        <JournalTableRow key={cell.transactionName}>
+                          <JournalTableCell isGray>
+                            {cell.transactionName}
+                          </JournalTableCell>
+                          <JournalTableCell>
+                            {cell.userFinancialSnapshot ? (
+                              <JournalTableCellInput
+                                type={'number'}
+                                value={cell.userFinancialSnapshot?.amount}
+                                handleChange={(value) => {
+                                  const isEdit = cell.userFinancialSnapshot
+                                  return handleChangeAmount(
+                                    cell.userFinancialSnapshot,
+                                    value,
+                                    isEdit,
+                                    index,
+                                    'income'
+                                  )
+                                }}
+                              />
+                            ) : (
+                              <JournalTableCellInput
+                                type={'number'}
+                                // value={value?.amount}
+                                handleChange={(value) => {
+                                  const isEdit = cell.userFinancialSnapshot
+                                  return handleChangeAmount(
+                                    cell,
+                                    value,
+                                    isEdit,
+                                    index,
+                                    'income'
+                                  )
+                                }}
+                              />
+                            )}
+                          </JournalTableCell>
+                        </JournalTableRow>
+                      )
+                    })}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+            {(monthlyFixedExpense.length > 0 ||
+              monthlyVariableExpense.length > 0 ||
+              monthlyIncome.length > 0) && (
+              <div className="col-12">
+                <TableWrapper title={'Monthly budget'}>
+                  <MonthlyBudgetComponent
+                    monthlyTransaction={monthlyIncome}
+                    handleChangeAmount={handleChangeAmount}
+                    financialType={'monthly_income'}
+                  />{' '}
+                  <MonthlyBudgetComponent
+                    monthlyTransaction={monthlyFixedExpense}
+                    handleChangeAmount={handleChangeAmount}
+                    financialType={'monthly_fixed_expense'}
+                  />
+                  <MonthlyBudgetComponent
+                    monthlyTransaction={monthlyVariableExpense}
+                    handleChangeAmount={handleChangeAmount}
+                    financialType={'monthly_variable_expense'}
+                  />
+                </TableWrapper>
+              </div>
+            )}
+          </>
+        ) : null}
 
         {journal?.teamMeetings ? <MeetingManager journal={journal} /> : null}
         {journal?.feedbacks ? <FeedbackManager journal={journal} /> : null}

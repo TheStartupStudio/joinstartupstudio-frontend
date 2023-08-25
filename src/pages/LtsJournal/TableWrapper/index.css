@@ -27,7 +27,9 @@
 .journal_table-data {
     padding: 2px 10px !important
 }
-
+.fixed-width-cell {
+    width: calc(100% / 3);
+}
 .journal_table-input__container {
     display: flex;
     gap: 20px

@@ -31,8 +31,6 @@ const TableReflections = (props) => {
     reflectionTableId: 1
   })
 
-  console.log(props)
-
   useEffect(() => {
     if (props.name === 'userReflectionsTable') {
       setIsEdit(true)
@@ -146,14 +144,13 @@ const TableReflections = (props) => {
           props.updateUserReflectionsTable(newObj)
         }
         if (!isSaving) {
-          // Check isSaving before making the request
           axiosInstance[method](url, newObj).then((data) => {
             props.loadData()
             setShowModal(false)
             setIsSaving(false)
           })
         } else {
-          setIsSaving(false) // Reset isSaving if the request is blocked
+          setIsSaving(false)
         }
       })
   }
@@ -223,8 +220,6 @@ const TableReflections = (props) => {
         setTableReflections(data)
       })
   }
-
-  console.log(reflectionTableEntries)
 
   return (
     <div className="table-reflections">
