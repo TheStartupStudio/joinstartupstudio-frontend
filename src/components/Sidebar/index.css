@@ -24,3 +24,10 @@
   color: #fff;
   background: #21c5d0;
 }
+
+.disabledd {
+  pointer-events: none;
+  /* You can also add additional styles to indicate a disabled state */
+  color: gray;
+  cursor: not-allowed;
+}

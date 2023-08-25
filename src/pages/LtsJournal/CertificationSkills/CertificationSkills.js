@@ -3,7 +3,7 @@ import CertificationSkillBox from './CertificationSkillBox'
 import axiosInstance from '../../../utils/AxiosInstance'
 import SkillExplanationModal from '../../../components/Modals/SkillExplanationModal'
 import './CertificationSkills.css'
-const CertificationSkills = ({ journal }) => {
+const CertificationSkills = ({ journal, isEditable }) => {
   const [skills, setSkills] = useState([])
 
   const [showExplanationModal, setShowExplanationModal] = useState(false)
@@ -103,6 +103,7 @@ const CertificationSkills = ({ journal }) => {
               >
                 <CertificationSkillBox
                   title={skill?.title}
+                  isEditable={isEditable}
                   onSelectContent={() => updateContentSelection(skill)}
                   proficient={skill?.status === 'proficient'}
                   needsImprovement={skill?.status === 'needs_improvement'}

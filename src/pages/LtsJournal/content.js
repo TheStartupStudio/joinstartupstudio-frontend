@@ -47,7 +47,6 @@ function LtsJournalContent(props) {
   const [monthlyFixedExpense, setMonthlyFixedExpense] = useState([])
   const [monthlyVariableExpense, setMonthlyVariableExpense] = useState([])
 
-  console.log(monthlyIncome, monthlyVariableExpense, monthlyFixedExpense)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -132,7 +131,6 @@ function LtsJournalContent(props) {
   function loadData() {
     setLoading(true)
     Promise.all([getJournal(), getUserJournalEntries()])
-
       .then(([journalData, userJournalEntries]) => {
         filterFinancialSnapshots(journalData, 'expense', setExpenseTable)
         filterFinancialSnapshots(journalData, 'income', setIncomeTable)
@@ -453,6 +451,8 @@ function LtsJournalContent(props) {
               entries={journal.entries}
               entryBoxTitle={journal?.title}
               journal={journal}
+              isEditable={true}
+              isDeletable={true}
               userJournalEntries={userJournalEntries}
               deleteReflection={(entry, userJournalEntry) =>
                 deleteReflection(entry, userJournalEntry)
@@ -506,9 +506,7 @@ function LtsJournalContent(props) {
                   {openAccordion === `accordion-${accordion.id}` && (
                     <>
                       <div className="accordion-content">
-                        <div>
-                          <div>
-                            <div>
+
                               <div className="col-12">
                                 <div className="">
                                   <EntriesBox
@@ -540,9 +538,7 @@ function LtsJournalContent(props) {
                                   />
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                        </div>
+
                       </div>
                     </>
                   )}
@@ -563,26 +559,17 @@ function LtsJournalContent(props) {
               title={'BRAND VIDEO SPRINT'}
             >
               {openAccordion === `accordion-brand` && (
-                <>
-                  <div className="accordion-content">
-                    <div>
-                      <div>
-                        <div>
-                          <div className="col-12">
-                            <div className="">
-                              <JournalBrands
-                                hasAccordion={1}
-                                loadData={loadData}
-                                brands={journal.brandsJournal}
-                                journalId={props.match.params.journalId}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                <div className="accordion-content">
+                  <div className="col-12">
+                    <JournalBrands
+                      hasAccordion={1}
+                      loadData={loadData}
+                      brands={journal.brandsJournal}
+                      journalId={props.match.params.journalId}
+                      hasActions={false}
+                    />
                   </div>
-                </>
+                </div>
               )}
             </AccordionItemWrapper>
           </div>
@@ -595,6 +582,7 @@ function LtsJournalContent(props) {
                   <TableWrapper title={reflectionTable.title}>
                     <TableReflections
                       name={'reflectionsTable'}
+                      isEditable={true}
                       loadData={loadData}
                       tableTitle={reflectionTable.title}
                       start={reflectionTable.startDate}
@@ -624,6 +612,7 @@ function LtsJournalContent(props) {
                             loadData={() => {
                               loadData()
                             }}
+                            isEditable={true}
                             tableTitle={userReflectionTable.title}
                             start={userReflectionTable.startDate}
                             end={userReflectionTable.endDate}
@@ -802,13 +791,23 @@ function LtsJournalContent(props) {
 
         {journal?.teamMeetings ? <MeetingManager journal={journal} /> : null}
         {journal?.feedbacks ? <FeedbackManager journal={journal} /> : null}
+
+
+        {journal?.teamMeetings ? (
+          <MeetingManager journal={journal} isEditable={true} />
+        ) : null}
+        {journal?.feedbacks ? (
+          <FeedbackManager journal={journal} isEditable={true} />
+        ) : null}
         {journal?.mentorMeetings ? (
-          <MentorMeetingManager journal={journal} />
+          <MentorMeetingManager journal={journal} isEditable={true} />
         ) : null}
 
-        {journal?.contentUploads ? <ContentUploads journal={journal} /> : null}
+        {journal?.contentUploads ? (
+          <ContentUploads journal={journal} isEditable={true} />
+        ) : null}
         {journal?.certificationSkills ? (
-          <CertificationSkills journal={journal} />
+          <CertificationSkills journal={journal} isEditable={true} />
         ) : null}
 
         {journal.brandsJournal &&
@@ -819,6 +818,7 @@ function LtsJournalContent(props) {
             loadData={loadData}
             brands={journal.brandsJournal}
             journalId={props.match.params.journalId}
+            hasActions={true}
           />
         ) : null}
       </div>

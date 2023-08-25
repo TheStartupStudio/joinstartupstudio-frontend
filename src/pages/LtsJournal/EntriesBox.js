@@ -14,8 +14,13 @@ const EntriesBox = (props) => {
     addReflection,
     handleShowAddReflection,
     showAddReflection,
-    entries
+    entries,
+    isEditable,
+    isDeletable
   } = props
+
+  console.log('isEditable', isEditable)
+  console.log('isDeletable', isDeletable)
 
   return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
@@ -75,6 +80,8 @@ const EntriesBox = (props) => {
                     journalEntry={entry}
                     userEntry={journal.userEntry}
                     entry={userJournalEntry}
+                    isEditable={isEditable}
+                    isDeletable={isDeletable}
                     deleted={deleteReflection(entry, userJournalEntry)}
                     saved={updateReflection(entry, userJournalEntry)}
                   />
@@ -89,6 +96,8 @@ const EntriesBox = (props) => {
                   entry={null}
                   saved={addReflection(entry)}
                   showCancel={!!userJournalEntries[entry.id]}
+                  isEditable={isEditable}
+                  isDeletable={isDeletable}
                   cancel={(e) => {
                     handleShowAddReflection({
                       ...showAddReflection,

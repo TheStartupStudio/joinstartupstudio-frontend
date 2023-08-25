@@ -204,7 +204,6 @@ const FeedbackManager = (props) => {
     }
   }, [props.journal.userFeedbacks, props.journal.feedbacks])
   const getLatestUpdatedElement = (array) => {
-    // console.log(array)
     if (array) {
       const latestUpdatedElement = array?.reduce((latest, current) => {
         if (
@@ -288,10 +287,12 @@ const FeedbackManager = (props) => {
           onCloseDeleteArchiveModal={handleCloseDeleteArchiveModal}
           showArchiveModal={showArchiveModal}
           showDeleteArchiveModal={showDeleteArchiveModal}
+          isEditable={props.isEditable}
           tableContent={
             <FeedbackTable
               handleOpenDeleteArchiveModal={handleOpenDeleteArchiveModal}
               feedbacks={feedbacks}
+              isEditable={props.isEditable}
               selectedArchive={selectedArchive}
               handleChangeFeedback={(name, value) =>
                 handleChangeFeedback(name, value)
@@ -318,10 +319,12 @@ const FeedbackManager = (props) => {
           onCloseDeleteArchiveModal={handleCloseDeleteArchiveModal}
           showArchiveModal={showArchiveModal}
           showDeleteArchiveModal={showDeleteArchiveModal}
+          isEditable={props.isEditable}
           tableContent={
             <FeedbackTable
               handleOpenDeleteArchiveModal={handleOpenDeleteArchiveModal}
               feedbacks={feedbacks}
+              isEditable={props.isEditable}
               selectedArchive={selectedArchive}
               handleChangeFeedback={(name, value) =>
                 handleChangeFeedback(name, value)

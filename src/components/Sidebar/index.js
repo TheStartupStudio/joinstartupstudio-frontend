@@ -471,7 +471,7 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li>
+                <li className="disabledd">
                   <NavLink
                     to={'/student-personal-finance'}
                     activeClassName="sidenav active"
@@ -483,7 +483,8 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li>
+                <li className="disabledd">
+
                   <NavLink
                     to={'/student-leadership'}
                     activeClassName="sidenav active"

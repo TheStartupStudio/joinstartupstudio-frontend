@@ -1,6 +1,12 @@
 import React from 'react'
 
-const ContentUploadBox = ({ title, isAdded, onSelectContent, isSelected }) => {
+const ContentUploadBox = ({
+  title,
+  isAdded,
+  onSelectContent,
+  isSelected,
+  isEditable
+}) => {
   const boxBackgroundColor = () => {
     if (isAdded) {
       // if value is true
@@ -34,26 +40,39 @@ const ContentUploadBox = ({ title, isAdded, onSelectContent, isSelected }) => {
     }
   }
 
+  const commonStyles = {
+    background: boxBackgroundColor(),
+    color: boxTextColor(),
+    padding: '8px',
+    marginBottom: '5px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    height: 100,
+    font: 'normal normal medium 12px/12px Montserrat',
+    fontSize: 14,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    fontWeight: 600,
+    width: '100%'
+  }
+
+  const editableStyles = {
+    cursor: 'pointer'
+  }
+
+  const nonEditableStyles = {
+    opacity: 1
+  }
+
   return (
     <div
       style={{
-        background: boxBackgroundColor(),
-        color: boxTextColor(),
-        padding: '8px',
-        marginBottom: '5px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-        height: 100,
-        font: 'normal normal medium 12px/12px Montserrat',
-        fontSize: 14,
-        letterSpacing: 1,
-        textTransform: 'uppercase',
-        fontWeight: 600,
-        width: '100%'
+        ...commonStyles,
+        ...(isEditable ? editableStyles : nonEditableStyles)
       }}
-      onClick={onSelectContent}
+      onClick={isEditable ? onSelectContent : undefined}
     >
       {title}
     </div>

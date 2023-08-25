@@ -245,6 +245,7 @@ const TableReflections = (props) => {
                       e.target.value
                     )
                   }
+                  disabled={!props.isEditable}
                 />
               </div>
               {/*{moment(props.start).format('DD-MM-YYYY')}*/}
@@ -267,6 +268,7 @@ const TableReflections = (props) => {
                   onChange={(e) =>
                     handleChangeTableReflectionsEntry('endDate', e.target.value)
                   }
+                  disabled={!props.isEditable}
                 />
               </div>
             </div>
@@ -290,31 +292,33 @@ const TableReflections = (props) => {
                     }
                   </p>
                 </p>
-                <span
-                  className="table-reflections__entry-icon"
-                  onClick={() => {
-                    const userReflection =
-                      props.userReflectionTableEntries?.find(
-                        (item) =>
-                          item.reflectionsTableEntriesId === entry.id &&
-                          item.reflectionsTableId ===
-                            props.reflectionTable.reflectionsTableId
+                {props.isEditable && (
+                  <span
+                    className="table-reflections__entry-icon"
+                    onClick={() => {
+                      const userReflection =
+                        props.userReflectionTableEntries?.find(
+                          (item) =>
+                            item.reflectionsTableEntriesId === entry.id &&
+                            item.reflectionsTableId ===
+                              props.reflectionTable.reflectionsTableId
+                        )
+                      dispatch(actions.setActiveItem(userReflection))
+                      dispatch(actions.setIsEdit(true))
+                      dispatch(
+                        actions.setContent(
+                          userReflection ? userReflection.content : ''
+                        )
                       )
-                    dispatch(actions.setActiveItem(userReflection))
-                    dispatch(actions.setIsEdit(true))
-                    dispatch(
-                      actions.setContent(
-                        userReflection ? userReflection.content : ''
-                      )
-                    )
-                    dispatch(actions.setSubtitle(entry.title))
-                    dispatch(actions.setReflectionsTableEntry(entry))
+                      dispatch(actions.setSubtitle(entry.title))
+                      dispatch(actions.setReflectionsTableEntry(entry))
 
-                    setShowModal(true)
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPencilAlt} />
-                </span>
+                      setShowModal(true)
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPencilAlt} />
+                  </span>
+                )}
               </div>
             ))
           : null}
@@ -334,64 +338,70 @@ const TableReflections = (props) => {
                     }
                   </p>
                 </p>
-                <span
-                  className="table-reflections__entry-icon"
-                  onClick={() => {
-                    // const userReflection = userReflectionTableEntries.find(
-                    //   (item) =>
-                    //     item.reflectionsTableEntriesId == entry.id &&
-                    //     item.reflectionsTableId == props.reflectionTable.id
-                    // )
+                {props.isEditable && (
+                  <span
+                    className="table-reflections__entry-icon"
+                    onClick={() => {
+                      // const userReflection = userReflectionTableEntries.find(
+                      //   (item) =>
+                      //     item.reflectionsTableEntriesId == entry.id &&
+                      //     item.reflectionsTableId == props.reflectionTable.id
+                      // )
 
-                    const activeItem = {
-                      ...entry,
-                      reflectionsTableEntriesId: null
-                    }
-                    const newReflectionsTableEntries = {
-                      createdAt: entry.createdAt,
-                      id: entry.id,
-                      order: entry.order,
-                      reflectionsTableId: null,
-                      title: entry.title,
-                      updatedAt: entry.updatedAt
-                    }
-                    dispatch(actions.setActiveItem(activeItem))
-                    dispatch(actions.setIsEdit(true))
-                    dispatch(actions.setContent(entry ? entry.content : ''))
-                    dispatch(actions.setSubtitle(entry.title))
-
-                    dispatch(
-                      actions.setReflectionsTableEntry({
+                      const activeItem = {
                         ...entry,
                         reflectionsTableEntriesId: null
-                      })
-                    )
+                      }
+                      const newReflectionsTableEntries = {
+                        createdAt: entry.createdAt,
+                        id: entry.id,
+                        order: entry.order,
+                        reflectionsTableId: null,
+                        title: entry.title,
+                        updatedAt: entry.updatedAt
+                      }
+                      dispatch(actions.setActiveItem(activeItem))
+                      dispatch(actions.setIsEdit(true))
+                      dispatch(actions.setContent(entry ? entry.content : ''))
+                      dispatch(actions.setSubtitle(entry.title))
 
-                    setShowModal(true)
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPencilAlt} />
-                </span>
+                      dispatch(
+                        actions.setReflectionsTableEntry({
+                          ...entry,
+                          reflectionsTableEntriesId: null
+                        })
+                      )
+
+                      setShowModal(true)
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPencilAlt} />
+                  </span>
+                )}
               </div>
             ))
           : null}
         <div className="table-reflections__entry">
-          <p>
-            <b>Add another team member to this table</b>
-          </p>
-          <span
-            className="table-reflections__entry-icon"
-            onClick={() => {
-              dispatch(actions.setActiveItem(null))
-              dispatch(actions.setReflectionsTableEntry(null))
-              dispatch(actions.setIsEdit(false))
-              dispatch(actions.setContent(''))
-              dispatch(actions.setSubtitle('New Team Member'))
-              setShowModal(true)
-            }}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </span>
+          {props.isEditable && (
+            <>
+              <p>
+                <b>Add another team member to this table</b>
+              </p>
+              <span
+                className="table-reflections__entry-icon"
+                onClick={() => {
+                  dispatch(actions.setActiveItem(null))
+                  dispatch(actions.setReflectionsTableEntry(null))
+                  dispatch(actions.setIsEdit(false))
+                  dispatch(actions.setContent(''))
+                  dispatch(actions.setSubtitle('New Team Member'))
+                  setShowModal(true)
+                }}
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </span>
+            </>
+          )}
         </div>
       </div>
       <TableReflectionModal

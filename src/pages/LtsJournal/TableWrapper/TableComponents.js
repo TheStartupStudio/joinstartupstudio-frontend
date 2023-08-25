@@ -20,7 +20,16 @@ export const JournalTableCell = (props) => {
 }
 
 export const JournalTableCellInput = (props) => {
-  const { title, type, value, handleChange, width, inputName, isBold } = props
+  const {
+    title,
+    type,
+    value,
+    handleChange,
+    width,
+    inputName,
+    isBold,
+    isDisabled
+  } = props
   return (
     <div className={'journal_table-input__container'}>
       {title ? (
@@ -34,6 +43,7 @@ export const JournalTableCellInput = (props) => {
       <div className={` ${width ? '' : 'w-100'}`}>
         <input
           className={`journal_table-input my-1 py-2 px-2 text-dark `}
+          disabled={isDisabled}
           type={type}
           style={{
             width: width ?? '100%'

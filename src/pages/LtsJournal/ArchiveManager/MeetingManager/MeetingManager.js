@@ -293,10 +293,12 @@ const MeetingManager = (props) => {
           onCloseDeleteArchiveModal={handleCloseDeleteArchiveModal}
           showArchiveModal={showArchiveModal}
           showDeleteArchiveModal={showDeleteArchiveModal}
+          isEditable={props.isEditable}
           tableContent={
             <MeetingTable
               handleOpenDeleteArchiveModal={handleOpenDeleteArchiveModal}
               teamMeetings={teamMeetings}
+              isEditable={props.isEditable}
               selectedArchive={selectedArchive}
               handleChangeTeamMeeting={(name, value) =>
                 handleChangeTeamMeeting(name, value)
@@ -323,10 +325,12 @@ const MeetingManager = (props) => {
           onCloseDeleteArchiveModal={handleCloseDeleteArchiveModal}
           showArchiveModal={showArchiveModal}
           showDeleteArchiveModal={showDeleteArchiveModal}
+          isEditable={props.isEditable}
           tableContent={
             <MeetingTable
               handleOpenDeleteArchiveModal={handleOpenDeleteArchiveModal}
               teamMeetings={teamMeetings}
+              isEditable={props.isEditable}
               selectedArchive={selectedArchive}
               handleChangeTeamMeeting={(name, value) =>
                 handleChangeTeamMeeting(name, value)
