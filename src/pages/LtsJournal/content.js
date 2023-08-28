@@ -149,7 +149,6 @@ function LtsJournalContent(props) {
           'monthly_variable_expense',
           setMonthlyVariableExpense
         )
-
         setJournal(journalData)
 
         if (
@@ -339,9 +338,7 @@ function LtsJournalContent(props) {
 
     setTableData(newTableData)
   }
-  const updateAmount = async (obj, value, isEdit) => {
-    console.log(obj, value)
-
+  const updateAmount = async (obj, value) => {
     await axiosInstance
       .put(`/ltsJournals/user-financial-snapshots`, {
         ...value
@@ -376,6 +373,46 @@ function LtsJournalContent(props) {
           updatedData,
           setMonthlyVariableExpense
         )
+      })
+  }
+
+  const handleChangeBudgetAllocation = (name, value, isEdit) => {
+    const userBudgetAllocationId = journal?.userBudgetAllocation?.id
+
+    const baseBudgetAllocation = {
+      needs: journal?.userBudgetAllocation?.needs ?? '',
+      wants: journal?.userBudgetAllocation?.wants ?? '',
+      savingsInvestments:
+        journal?.userBudgetAllocation?.savingsInvestments ?? '',
+      journalId: props.match.params.journalId
+    }
+
+    let createBudgetAllocation = { ...baseBudgetAllocation }
+    let editBudgetAllocation = {
+      ...baseBudgetAllocation,
+      id: userBudgetAllocationId
+    }
+
+    let newBudgetAllocation = userBudgetAllocationId
+      ? { ...editBudgetAllocation }
+      : { ...createBudgetAllocation }
+
+    newBudgetAllocation[name] = value
+
+    const newJournal = { ...journal, userBudgetAllocation: newBudgetAllocation }
+    setJournal(newJournal)
+    debounce(updateBudgetAllocation, newBudgetAllocation)
+  }
+
+  const updateBudgetAllocation = async (obj, value) => {
+    await axiosInstance
+      .put(`/ltsJournals/budget-allocation`, {
+        ...value
+      })
+      .then(({ data }) => {
+        const newJournal = { ...journal, userBudgetAllocation: data }
+        // debugger
+        setJournal(newJournal)
       })
   }
 
@@ -506,39 +543,27 @@ function LtsJournalContent(props) {
                   {openAccordion === `accordion-${accordion.id}` && (
                     <>
                       <div className="accordion-content">
-
-                              <div className="col-12">
-                                <div className="">
-                                  <EntriesBox
-                                    entries={
-                                      accordion.ltsJournalAccordionEntries
-                                    }
-                                    entryBoxTitle={journal?.title}
-                                    journal={journal}
-                                    userJournalEntries={userJournalEntries}
-                                    deleteReflection={(
-                                      entry,
-                                      userJournalEntry
-                                    ) =>
-                                      deleteReflection(entry, userJournalEntry)
-                                    }
-                                    updateReflection={(
-                                      entry,
-                                      userJournalEntry
-                                    ) =>
-                                      updateReflection(entry, userJournalEntry)
-                                    }
-                                    addReflection={(entry) =>
-                                      addReflection(entry)
-                                    }
-                                    handleShowAddReflection={(reflection) =>
-                                      handleShowAddReflection(reflection)
-                                    }
-                                    showAddReflection={showAddReflection}
-                                  />
-                                </div>
-                              </div>
-
+                        <div className="col-12">
+                          <div className="">
+                            <EntriesBox
+                              entries={accordion.ltsJournalAccordionEntries}
+                              entryBoxTitle={journal?.title}
+                              journal={journal}
+                              userJournalEntries={userJournalEntries}
+                              deleteReflection={(entry, userJournalEntry) =>
+                                deleteReflection(entry, userJournalEntry)
+                              }
+                              updateReflection={(entry, userJournalEntry) =>
+                                updateReflection(entry, userJournalEntry)
+                              }
+                              addReflection={(entry) => addReflection(entry)}
+                              handleShowAddReflection={(reflection) =>
+                                handleShowAddReflection(reflection)
+                              }
+                              showAddReflection={showAddReflection}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </>
                   )}
@@ -763,6 +788,97 @@ function LtsJournalContent(props) {
                 </Table>
               </div>
             )}
+            <div style={{ padding: '10px 0' }}></div>
+            {
+              <div className="col-12">
+                <Table bordered hover style={{ marginBottom: 0 }}>
+                  <thead>
+                    <JournalTableRow>
+                      <JournalTableCell isGray>Needs</JournalTableCell>
+                      <JournalTableCell isGray>Wants</JournalTableCell>
+                      <JournalTableCell isGray>
+                        Savings/Investments
+                      </JournalTableCell>
+                    </JournalTableRow>
+                  </thead>
+                  <tbody>
+                    <JournalTableRow>
+                      <JournalTableCell>
+                        {journal?.userBudgetAllocation ? (
+                          <JournalTableCellInput
+                            type={'text'}
+                            value={journal?.userBudgetAllocation?.needs}
+                            handleChange={(value) => {
+                              return handleChangeBudgetAllocation(
+                                'needs',
+                                value
+                              )
+                            }}
+                          />
+                        ) : (
+                          <JournalTableCellInput
+                            type={'text'}
+                            handleChange={(value) => {
+                              return handleChangeBudgetAllocation(
+                                'needs',
+                                value
+                              )
+                            }}
+                          />
+                        )}
+                      </JournalTableCell>
+                      <JournalTableCell>
+                        {journal?.userBudgetAllocation ? (
+                          <JournalTableCellInput
+                            type={'text'}
+                            value={journal?.userBudgetAllocation?.wants}
+                            handleChange={(value) => {
+                              return handleChangeBudgetAllocation(
+                                'wants',
+                                value
+                              )
+                            }}
+                          />
+                        ) : (
+                          <JournalTableCellInput
+                            type={'text'}
+                            handleChange={(value) => {
+                              return handleChangeBudgetAllocation(
+                                'wants',
+                                value
+                              )
+                            }}
+                          />
+                        )}
+                      </JournalTableCell>
+                      <JournalTableCell>
+                        {journal?.userBudgetAllocation ? (
+                          <JournalTableCellInput
+                            type={'text'}
+                            value={
+                              journal?.userBudgetAllocation?.savingsInvestments
+                            }
+                            handleChange={(value) => {
+                              return handleChangeBudgetAllocation(
+                                'savingsInvestments',
+                                value
+                              )
+                            }}
+                          />
+                        ) : (
+                          <JournalTableCellInput
+                            type={'text'}
+                            handleChange={(value) => {
+                              return handleChangeBudgetAllocation('', value)
+                            }}
+                          />
+                        )}
+                      </JournalTableCell>
+                    </JournalTableRow>
+                  </tbody>
+                </Table>
+              </div>
+            }
             {(monthlyFixedExpense.length > 0 ||
               monthlyVariableExpense.length > 0 ||
               monthlyIncome.length > 0) && (
@@ -791,7 +907,6 @@ function LtsJournalContent(props) {
 
         {journal?.teamMeetings ? <MeetingManager journal={journal} /> : null}
         {journal?.feedbacks ? <FeedbackManager journal={journal} /> : null}
-
 
         {journal?.teamMeetings ? (
           <MeetingManager journal={journal} isEditable={true} />
