@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
@@ -20,7 +20,9 @@ import StepsBox from './Steps/StepsBox'
 import CurriculumOverview from './CurriculumOverview'
 import ExpectedOutcomes from './ExpectedOutcomes'
 import ProgramOpportunities from './ProgramOpportunities'
-
+import {
+  useHistory,
+} from 'react-router-dom'
 function TestJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
@@ -35,7 +37,7 @@ function TestJournalContent(props) {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
-
+const history = useHistory();
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -49,8 +51,13 @@ function TestJournalContent(props) {
     checkbox2: false,
     checkbox3: false,
     textEditorContent: '',
-    journalId: props.match.params.id
+    journalId: +props.match.params.id
   })
+
+  useEffect(()=>{
+    getInstructorDebriefData()
+  },[props.match.params.id, props.match.params.weekId])
+
 
   const newInstructorBriefData = {
     checkbox1: instructorDebrief?.checkbox1,
@@ -58,10 +65,19 @@ function TestJournalContent(props) {
     checkbox3: instructorDebrief?.checkbox3,
     textEditorContent: instructorDebrief?.textEditorContent
   }
+
   const onSubmitInstructorDebrief = (data) => {
+
+    const isEdit = {...data, id: instructorDebrief.id}
+    const isCreate = {...data, id: null}
+    const instructorDebriefData = instructorDebrief.id ? isEdit : isCreate
+
+
+    const url = `/ltsJournals/${props.view === 'task' ? +props.match.params.id : 0}/${props.view === 'week' ? +props.match.params.weekId : 0}/instructor-debrief`
+
     axiosInstance
-      .post(`/ltsJournals/${props.match.params.id}/instructor-debrief`, {
-        ...data
+      .post(url, {
+        ...instructorDebriefData
       })
       .then((res) => {
         const updatedInstructorDebriefData = res.data
@@ -70,10 +86,13 @@ function TestJournalContent(props) {
           checkbox1: updatedInstructorDebriefData.checkbox1,
           checkbox2: updatedInstructorDebriefData.checkbox2,
           checkbox3: updatedInstructorDebriefData.checkbox3,
-          textEditorContent: updatedInstructorDebriefData.textEditorContent
+          textEditorContent: updatedInstructorDebriefData.textEditorContent,
+          id:updatedInstructorDebriefData.id
         })
       })
   }
+
+
 
   async function saveWatchData(data) {
     await axiosInstance.put(
@@ -112,7 +131,6 @@ function TestJournalContent(props) {
       //     }
       //   }
       // }
-      console.log(data)
       return data
     } catch (err) {}
   }
@@ -170,9 +188,10 @@ function TestJournalContent(props) {
   }
 
   const getInstructorDebriefData = async () => {
+    const url =  `/ltsJournals/${props.view === 'task' ? +props.match.params.id : 0}/${props.view === 'week' ? +props.match.params.weekId : 0}/instructor-debrief`;
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/${+props.match.params.id}/instructor-debrief`
+        url
       )
       return data
     } catch (e) {}
@@ -187,7 +206,6 @@ function TestJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
-        console.log(journalData)
 
         if (
           journalData.userEntry &&
@@ -214,7 +232,17 @@ function TestJournalContent(props) {
               checkbox1: instructorDebriefData.checkbox1,
               checkbox2: instructorDebriefData.checkbox2,
               checkbox3: instructorDebriefData.checkbox3,
-              textEditorContent: instructorDebriefData.textEditorContent
+              textEditorContent: instructorDebriefData.textEditorContent,
+              id: instructorDebriefData.id
+            })
+          } else {
+            setInstructorDebrief({
+              ...instructorDebrief,
+              checkbox1: false,
+              checkbox2: false,
+              checkbox3: false,
+              textEditorContent: '',
+              id: null
             })
           }
         }
@@ -235,7 +263,6 @@ function TestJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
-        console.log(journalData)
         if (
           journalData.userEntry &&
           journalData.userEntry.length > 0 &&
@@ -257,7 +284,17 @@ function TestJournalContent(props) {
               checkbox1: instructorDebriefData.checkbox1,
               checkbox2: instructorDebriefData.checkbox2,
               checkbox3: instructorDebriefData.checkbox3,
-              textEditorContent: instructorDebriefData.textEditorContent
+              textEditorContent: instructorDebriefData.textEditorContent,
+              id: instructorDebriefData.id
+            })
+          } else {
+            setInstructorDebrief({
+              ...instructorDebrief,
+              checkbox1: false,
+              checkbox2: false,
+              checkbox3: false,
+              textEditorContent: '',
+              id: null
             })
           }
         }
@@ -362,7 +399,8 @@ function TestJournalContent(props) {
       ...instructorDebrief,
       [name]: value
     }
-    setInstructorDebrief(newInstructorDebrief)
+    setInstructorDebrief(newInstructorDebrief);
+    // debounce(onSubmitInstructorDebrief, newInstructorDebrief)
   }
   const {
     Bold,
@@ -407,7 +445,6 @@ function TestJournalContent(props) {
     setSelectedTask({ task, index })
     setSelectedTaskIndex(index)
   }
-  console.log(journal)
   return (
     <>
       <>
