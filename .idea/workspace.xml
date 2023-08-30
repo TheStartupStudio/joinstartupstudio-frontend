@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="" />
+=======
+    <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/CertificationSkills/CertificationSkills.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/CertificationSkills/CertificationSkills.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploads.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ContentUploads/ContentUploads.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" afterDir="false" />
+    </list>
+>>>>>>> dev
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,7 +22,11 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
+<<<<<<< HEAD
         <entry key="$PROJECT_DIR$" value="calendar-with-events-and-tasks" />
+=======
+        <entry key="$PROJECT_DIR$" value="student-journals" />
+>>>>>>> dev
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -29,10 +42,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
   <component name="PropertiesComponent">
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
   </component>
+=======
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Dell/Desktop/Learn to start/lts-ims/src/assets/images&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\Dell\\AppData\\Roaming\\npm\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2023.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+>>>>>>> dev
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager" />
@@ -40,6 +72,11 @@
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
+<<<<<<< HEAD
+=======
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\NoteAndChat" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
+>>>>>>> dev
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\Steps" />
@@ -87,7 +124,11 @@
       <workItem from="1688973170084" duration="61926000" />
       <workItem from="1689317962596" duration="25113000" />
       <workItem from="1690182262462" duration="15650000" />
+<<<<<<< HEAD
       <workItem from="1691077287358" duration="48917000" />
+=======
+      <workItem from="1693389779179" duration="1608000" />
+>>>>>>> dev
     </task>
     <servers />
   </component>

@@ -34,8 +34,6 @@ const EditStudentModal = (props) => {
   }
 
   const [data, setData] = useState(defaultData)
-  console.log('data', data)
-  console.log('props', props)
 
   useEffect(() => {
     dispatch(getPeriodsStart())
@@ -402,7 +400,6 @@ const EditStudentModal = (props) => {
                 // name="level"
                 placeholder={data?.level}
                 onChange={(newValue) => {
-                  console.log('newValue', newValue)
                   handleChange({
                     name: 'level',
                     value: newValue.value

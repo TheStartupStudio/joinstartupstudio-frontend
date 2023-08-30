@@ -136,7 +136,7 @@ export default function StudentsTable(props) {
           res.data.instructorsnew.map((instructor) => {
             newArrray.push({
               value: instructor.instructorInfo.id,
-              label: instructor.name,
+              label: instructor.name
             })
           })
 
@@ -252,7 +252,7 @@ export default function StudentsTable(props) {
     )
     setSentTransferRequests((sentTransferRequests) => [
       transfer,
-      ...sentTransferRequests,
+      ...sentTransferRequests
     ])
   }
 
@@ -1028,7 +1028,6 @@ export default function StudentsTable(props) {
         className: 'action',
         sortable: false,
         cell: (record) => {
-          console.log('record', record)
           return (
             <>
               <div className="d-flex justify-content-end w-100 text-end me-3">

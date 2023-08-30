@@ -3,12 +3,14 @@ import CertificationSkillBox from './CertificationSkillBox'
 import axiosInstance from '../../../utils/AxiosInstance'
 import SkillExplanationModal from '../../../components/Modals/SkillExplanationModal'
 import './CertificationSkills.css'
-const CertificationSkills = ({ journal }) => {
+const CertificationSkills = ({ journal, isEditable }) => {
   const [skills, setSkills] = useState([])
 
   const [showExplanationModal, setShowExplanationModal] = useState(false)
 
-  const [selectedSkill, setSelectedSkill] = useState({})
+  const [selectedSkill, setSelectedSkill] = useState({});
+
+  const [loadingSkill, setLoadingSkill]= useState(false)
   const handleOpenExplanationModal = () => {
     setShowExplanationModal(true)
   }
@@ -32,6 +34,7 @@ const CertificationSkills = ({ journal }) => {
   }, [journal.userCertificationSkills, journal.certificationSkills])
 
   const handleToggleSkill = (skill, status) => {
+    setLoadingSkill(true)
     if (skill?.hasOwnProperty('certificationSkillId')) {
       axiosInstance
         .put(`/certificationSkills/updateUserCertificationSkill/`, {
@@ -46,6 +49,7 @@ const CertificationSkills = ({ journal }) => {
           const newSkills = [...skills]
           newSkills.splice(foundedSkillIndex, 1, data)
           setSkills(newSkills)
+          setLoadingSkill(false)
         })
     } else {
       const newSkill = {
@@ -70,6 +74,7 @@ const CertificationSkills = ({ journal }) => {
           const newSkills = [...skills]
           newSkills.splice(foundedSkillIndex, 1, data)
           setSkills(newSkills)
+          setLoadingSkill(false)
         })
     }
   }
@@ -103,7 +108,12 @@ const CertificationSkills = ({ journal }) => {
               >
                 <CertificationSkillBox
                   title={skill?.title}
-                  onSelectContent={() => updateContentSelection(skill)}
+                  isEditable={isEditable}
+                  onSelectContent={() => {
+                    if (!loadingSkill) {
+                      updateContentSelection(skill);
+                    }
+                  }}
                   proficient={skill?.status === 'proficient'}
                   needsImprovement={skill?.status === 'needs_improvement'}
                 />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ArchiveSelector from '../../../components/ArchiveSelector/ArchiveSelector'
 import ArchiveModal from '../../../components/Modals/ArchiveModal'
 import DeleteArchiveModal from '../../../components/Modals/DeleteArchiveModal'
@@ -21,14 +21,15 @@ const ArchiveManager = (props) => {
   }
 
   const archiveOptionTitle = () => {
-    if (props.title === 'meetingTeam') {
-      return 'Meeting'
+    if (props.title === 'teamMeeting') {
+      return 'Team Meeting'
     } else if (props.title === 'feedback') {
       return 'Feedback'
     } else if (props.title === 'mentorMeeting') {
       return 'Mentor Meeting'
     }
   }
+
   return (
     <>
       <div className="col-12">
@@ -42,22 +43,26 @@ const ArchiveManager = (props) => {
               handleSelectedArchive={props.handleSelectedArchive}
             />
           </div>
-          <div className="col-md-6 px-1">
-            <button
-              style={{
-                backgroundColor: '#51c7df',
-                color: '#fff',
-                fontSize: 14,
-                padding: 10
-              }}
-              onClick={
-                props.hasUnsavedChanges ? props.onOpenArchiveModal : props.onAdd
-              }
-              className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
-            >
-              Add a new {archiveOptionTitle()}
-            </button>
-          </div>
+          {props.isEditable && (
+            <div className="col-md-6 px-1">
+              <button
+                style={{
+                  backgroundColor: '#51c7df',
+                  color: '#fff',
+                  fontSize: 14,
+                  padding: 10
+                }}
+                onClick={
+                  props.hasUnsavedChanges
+                    ? props.onOpenArchiveModal
+                    : props.onAdd
+                }
+                className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
+              >
+                Add a new {archiveOptionTitle()}
+              </button>
+            </div>
+          )}
           {props.showArchiveModal && props.hasUnsavedChanges && (
             <ArchiveModal
               show={props.showArchiveModal}
