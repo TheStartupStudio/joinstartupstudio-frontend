@@ -22,6 +22,7 @@ const TableReflections = (props) => {
   const [submitted, setSubmitted] = useState(false)
   const [isEdit, setIsEdit] = useState()
   const [isSaving, setIsSaving] = useState(false)
+  const [isSavingTableRefection, setIsSavingTableReflection] = useState(false)
   const currentDate = new Date()
   const nextDay = new Date(currentDate)
   nextDay.setDate(currentDate.getDate() + 1)
@@ -151,7 +152,7 @@ const TableReflections = (props) => {
             setIsSaving(false)
           })
         } else {
-          setIsSaving(false) // Reset isSaving if the request is blocked
+          setIsSaving(false)
         }
       })
   }
@@ -194,6 +195,7 @@ const TableReflections = (props) => {
   }
 
   const onSubmit = async (debounceName, value) => {
+    setIsSaving(true)
     const isEditValue = {
       ...value,
       id: props.reflectionTable.id,
@@ -219,6 +221,7 @@ const TableReflections = (props) => {
           props.updateUserReflectionsTable(data)
         }
         setTableReflections(data)
+        setIsSaving(false)
       })
   }
 
@@ -240,12 +243,14 @@ const TableReflections = (props) => {
                   value={new Date(tableReflection.startDate).toLocaleDateString(
                     'en-CA'
                   )}
-                  onChange={(e) =>
-                    handleChangeTableReflectionsEntry(
-                      'startDate',
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => {
+                    if (!isSaving) {
+                      return handleChangeTableReflectionsEntry(
+                        'startDate',
+                        e.target.value
+                      )
+                    }
+                  }}
                   disabled={!props.isEditable}
                 />
               </div>
@@ -266,9 +271,14 @@ const TableReflections = (props) => {
                   value={new Date(tableReflection.endDate).toLocaleDateString(
                     'en-CA'
                   )}
-                  onChange={(e) =>
-                    handleChangeTableReflectionsEntry('endDate', e.target.value)
-                  }
+                  onChange={(e) => {
+                    if (!isSaving) {
+                      return handleChangeTableReflectionsEntry(
+                        'endDate',
+                        e.target.value
+                      )
+                    }
+                  }}
                   disabled={!props.isEditable}
                 />
               </div>
@@ -297,24 +307,26 @@ const TableReflections = (props) => {
                   <span
                     className="table-reflections__entry-icon"
                     onClick={() => {
-                      const userReflection =
-                        props.userReflectionTableEntries?.find(
-                          (item) =>
-                            item.reflectionsTableEntriesId === entry.id &&
-                            item.reflectionsTableId ===
-                              props.reflectionTable.reflectionsTableId
+                      if (!isSaving) {
+                        const userReflection =
+                          props.userReflectionTableEntries?.find(
+                            (item) =>
+                              item.reflectionsTableEntriesId === entry.id &&
+                              item.reflectionsTableId ===
+                                props.reflectionTable.reflectionsTableId
+                          )
+                        dispatch(actions.setActiveItem(userReflection))
+                        dispatch(actions.setIsEdit(true))
+                        dispatch(
+                          actions.setContent(
+                            userReflection ? userReflection.content : ''
+                          )
                         )
-                      dispatch(actions.setActiveItem(userReflection))
-                      dispatch(actions.setIsEdit(true))
-                      dispatch(
-                        actions.setContent(
-                          userReflection ? userReflection.content : ''
-                        )
-                      )
-                      dispatch(actions.setSubtitle(entry.title))
-                      dispatch(actions.setReflectionsTableEntry(entry))
+                        dispatch(actions.setSubtitle(entry.title))
+                        dispatch(actions.setReflectionsTableEntry(entry))
 
-                      setShowModal(true)
+                        setShowModal(true)
+                      }
                     }}
                   >
                     <FontAwesomeIcon icon={faPencilAlt} />
@@ -348,32 +360,33 @@ const TableReflections = (props) => {
                       //     item.reflectionsTableEntriesId == entry.id &&
                       //     item.reflectionsTableId == props.reflectionTable.id
                       // )
-
-                      const activeItem = {
-                        ...entry,
-                        reflectionsTableEntriesId: null
-                      }
-                      const newReflectionsTableEntries = {
-                        createdAt: entry.createdAt,
-                        id: entry.id,
-                        order: entry.order,
-                        reflectionsTableId: null,
-                        title: entry.title,
-                        updatedAt: entry.updatedAt
-                      }
-                      dispatch(actions.setActiveItem(activeItem))
-                      dispatch(actions.setIsEdit(true))
-                      dispatch(actions.setContent(entry ? entry.content : ''))
-                      dispatch(actions.setSubtitle(entry.title))
-
-                      dispatch(
-                        actions.setReflectionsTableEntry({
+                      if (!isSaving) {
+                        const activeItem = {
                           ...entry,
                           reflectionsTableEntriesId: null
-                        })
-                      )
+                        }
+                        const newReflectionsTableEntries = {
+                          createdAt: entry.createdAt,
+                          id: entry.id,
+                          order: entry.order,
+                          reflectionsTableId: null,
+                          title: entry.title,
+                          updatedAt: entry.updatedAt
+                        }
+                        dispatch(actions.setActiveItem(activeItem))
+                        dispatch(actions.setIsEdit(true))
+                        dispatch(actions.setContent(entry ? entry.content : ''))
+                        dispatch(actions.setSubtitle(entry.title))
 
-                      setShowModal(true)
+                        dispatch(
+                          actions.setReflectionsTableEntry({
+                            ...entry,
+                            reflectionsTableEntriesId: null
+                          })
+                        )
+
+                        setShowModal(true)
+                      }
                     }}
                   >
                     <FontAwesomeIcon icon={faPencilAlt} />
@@ -391,12 +404,14 @@ const TableReflections = (props) => {
               <span
                 className="table-reflections__entry-icon"
                 onClick={() => {
-                  dispatch(actions.setActiveItem(null))
-                  dispatch(actions.setReflectionsTableEntry(null))
-                  dispatch(actions.setIsEdit(false))
-                  dispatch(actions.setContent(''))
-                  dispatch(actions.setSubtitle('New Team Member'))
-                  setShowModal(true)
+                  if (!isSaving) {
+                    dispatch(actions.setActiveItem(null))
+                    dispatch(actions.setReflectionsTableEntry(null))
+                    dispatch(actions.setIsEdit(false))
+                    dispatch(actions.setContent(''))
+                    dispatch(actions.setSubtitle('New Team Member'))
+                    setShowModal(true)
+                  }
                 }}
               >
                 <FontAwesomeIcon icon={faPlus} />

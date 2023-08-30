@@ -8,7 +8,9 @@ const CertificationSkills = ({ journal, isEditable }) => {
 
   const [showExplanationModal, setShowExplanationModal] = useState(false)
 
-  const [selectedSkill, setSelectedSkill] = useState({})
+  const [selectedSkill, setSelectedSkill] = useState({});
+
+  const [loadingSkill, setLoadingSkill]= useState(false)
   const handleOpenExplanationModal = () => {
     setShowExplanationModal(true)
   }
@@ -32,6 +34,7 @@ const CertificationSkills = ({ journal, isEditable }) => {
   }, [journal.userCertificationSkills, journal.certificationSkills])
 
   const handleToggleSkill = (skill, status) => {
+    setLoadingSkill(true)
     if (skill?.hasOwnProperty('certificationSkillId')) {
       axiosInstance
         .put(`/certificationSkills/updateUserCertificationSkill/`, {
@@ -46,6 +49,7 @@ const CertificationSkills = ({ journal, isEditable }) => {
           const newSkills = [...skills]
           newSkills.splice(foundedSkillIndex, 1, data)
           setSkills(newSkills)
+          setLoadingSkill(false)
         })
     } else {
       const newSkill = {
@@ -70,6 +74,7 @@ const CertificationSkills = ({ journal, isEditable }) => {
           const newSkills = [...skills]
           newSkills.splice(foundedSkillIndex, 1, data)
           setSkills(newSkills)
+          setLoadingSkill(false)
         })
     }
   }
@@ -104,7 +109,11 @@ const CertificationSkills = ({ journal, isEditable }) => {
                 <CertificationSkillBox
                   title={skill?.title}
                   isEditable={isEditable}
-                  onSelectContent={() => updateContentSelection(skill)}
+                  onSelectContent={() => {
+                    if (!loadingSkill) {
+                      updateContentSelection(skill);
+                    }
+                  }}
                   proficient={skill?.status === 'proficient'}
                   needsImprovement={skill?.status === 'needs_improvement'}
                 />
