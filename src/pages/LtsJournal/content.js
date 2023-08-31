@@ -727,7 +727,8 @@ function LtsJournalContent(props) {
             ))}
           </>
         ) : null}
-        {journal.financialProfilesTable ? (
+        {journal?.financialProfilesTable &&
+        journal?.financialProfilesTable?.length > 0 ? (
           <>
             <div>Financial Profiles</div>
             <div className="col-12">
@@ -927,7 +928,7 @@ function LtsJournalContent(props) {
               </div>
             )}
             <div style={{ padding: '10px 0' }}></div>
-            {
+            {journal?.userBudgetAllocation && (
               <div className="col-12">
                 <Table bordered hover style={{ marginBottom: 0 }}>
                   <thead>
@@ -1016,7 +1017,7 @@ function LtsJournalContent(props) {
                   </tbody>
                 </Table>
               </div>
-            }
+            )}
             {(monthlyFixedExpense.length > 0 ||
               monthlyVariableExpense.length > 0 ||
               monthlyIncome.length > 0) && (
@@ -1042,8 +1043,7 @@ function LtsJournalContent(props) {
             )}
           </>
         ) : null}
-        {journal?.teamMeetings ? <MeetingManager journal={journal} /> : null}
-        {journal?.feedbacks ? <FeedbackManager journal={journal} /> : null}
+
         {journal?.teamMeetings ? (
           <MeetingManager journal={journal} isEditable={true} />
         ) : null}
