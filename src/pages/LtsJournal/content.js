@@ -46,7 +46,8 @@ function LtsJournalContent(props) {
   const [monthlyIncome, setMonthlyIncome] = useState([])
   const [monthlyFixedExpense, setMonthlyFixedExpense] = useState([])
   const [monthlyVariableExpense, setMonthlyVariableExpense] = useState([])
-
+  const [financialProfilesTable, setFinancialProfilesTable] = useState([])
+  console.log(financialProfilesTable)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -150,6 +151,7 @@ function LtsJournalContent(props) {
           setMonthlyVariableExpense
         )
         setJournal(journalData)
+        setFinancialProfilesTable(journalData.financialProfilesTable)
 
         if (
           journalData.userEntry &&
@@ -274,6 +276,68 @@ function LtsJournalContent(props) {
     )
 
     setTableData(newTableData)
+  }
+
+  const handleChangeFinancialProfile = async (
+    obj,
+    value,
+    isEdit,
+    fpIndex,
+    fptIndex
+  ) => {
+    const newValue = value
+    // isEdit
+    const editContent = {
+      content: newValue,
+      financialProfilesId: obj.financialProfilesId,
+      journalId: obj.journalId,
+      id: obj.id,
+      order: obj.order
+    }
+    // isCreate
+    const createContent = {
+      content: newValue,
+      financialProfilesId: obj.id,
+      journalId: obj.journalId,
+      order: obj.order
+    }
+    const financialProfile = isEdit ? editContent : createContent
+
+    setFinancialProfilesTable((prevFinancialProfilesTable) => {
+      const newFinancialProfileTables = [...prevFinancialProfilesTable]
+      const newFinancialProfileTable = {
+        ...newFinancialProfileTables[fptIndex]
+      }
+
+      const updatedFinancialProfiles =
+        newFinancialProfileTable.financialProfiles.map((fp, index) => {
+          return index === fpIndex ? financialProfile : fp
+        })
+
+      newFinancialProfileTable.financialProfiles = updatedFinancialProfiles
+      newFinancialProfileTables[fptIndex] = newFinancialProfileTable
+
+      return newFinancialProfileTables
+    })
+
+    //
+    // let newFinancialProfileTables = [...financialProfilesTable]
+    // let newFinancialProfileTable = newFinancialProfileTables[fptIndex]
+    // const financialProfiles = newFinancialProfileTable.financialProfiles?.map(
+    //   (fp, index) => {
+    //     const foundedFinancialProfile =
+    //       newFinancialProfileTable?.financialProfiles[fpIndex]
+    //     if (foundedFinancialProfile.id === fp.id) {
+    //       return financialProfile
+    //     } else {
+    //       return fp
+    //     }
+    //   }
+    // )
+    // newFinancialProfileTable.financialProfiles = financialProfiles
+    // newFinancialProfileTables[fptIndex] = newFinancialProfileTable
+    // console.log(newFinancialProfileTables)
+    // setFinancialProfilesTable(newFinancialProfileTables)
   }
 
   const handleChangeAmount = async (obj, value, isEdit, index, name) => {
@@ -663,7 +727,81 @@ function LtsJournalContent(props) {
             ))}
           </>
         ) : null}
-
+        {journal.financialProfilesTable ? (
+          <>
+            <div>Financial Profiles</div>
+            <div className="col-12">
+              {financialProfilesTable
+                ?.toSorted((a, b) => a.order - b.order)
+                ?.map((fpt, fptIndex) => {
+                  return (
+                    <>
+                      <div>{fpt.title}</div>
+                      {fpt.financialProfiles
+                        ?.toSorted((a, b) => a.order - b.order)
+                        ?.map((fp, fpIndex) => {
+                          return (
+                            <Table bordered hover style={{ marginBottom: 0 }}>
+                              <tbody>
+                                <JournalTableRow key={fp.id}>
+                                  <JournalTableCell
+                                    isGray
+                                    additionalStyling={{
+                                      width: '50%',
+                                      verticalAlign: 'middle'
+                                    }}
+                                  >
+                                    {fp.title}
+                                  </JournalTableCell>
+                                  <JournalTableCell
+                                    additionalStyling={{ width: '50%' }}
+                                  >
+                                    {fp.userFinancialProfiles ? (
+                                      <JournalTableCellInput
+                                        type={'text'}
+                                        value={
+                                          fp.userFinancialProfiles?.content
+                                        }
+                                        handleChange={(value) => {
+                                          const isEdit =
+                                            !!fp.userFinancialProfiles
+                                          return handleChangeFinancialProfile(
+                                            fp.userFinancialProfiles,
+                                            value,
+                                            isEdit,
+                                            fpIndex,
+                                            fptIndex
+                                          )
+                                        }}
+                                      />
+                                    ) : (
+                                      <JournalTableCellInput
+                                        type={'text'}
+                                        handleChange={(value) => {
+                                          const isEdit =
+                                            !!fp.userFinancialProfiles
+                                          return handleChangeFinancialProfile(
+                                            fp,
+                                            value,
+                                            isEdit,
+                                            fpIndex,
+                                            fptIndex
+                                          )
+                                        }}
+                                      />
+                                    )}
+                                  </JournalTableCell>
+                                </JournalTableRow>
+                              </tbody>
+                            </Table>
+                          )
+                        })}
+                    </>
+                  )
+                })}
+            </div>
+          </>
+        ) : null}
         {journal?.financialSnapshots ? (
           <>
             {expenseTable.length > 0 && (
@@ -904,10 +1042,8 @@ function LtsJournalContent(props) {
             )}
           </>
         ) : null}
-
         {journal?.teamMeetings ? <MeetingManager journal={journal} /> : null}
         {journal?.feedbacks ? <FeedbackManager journal={journal} /> : null}
-
         {journal?.teamMeetings ? (
           <MeetingManager journal={journal} isEditable={true} />
         ) : null}
@@ -917,14 +1053,12 @@ function LtsJournalContent(props) {
         {journal?.mentorMeetings ? (
           <MentorMeetingManager journal={journal} isEditable={true} />
         ) : null}
-
         {journal?.contentUploads ? (
           <ContentUploads journal={journal} isEditable={true} />
         ) : null}
         {journal?.certificationSkills ? (
           <CertificationSkills journal={journal} isEditable={true} />
         ) : null}
-
         {journal.brandsJournal &&
         journal.brandsJournal.length &&
         !journal.brandsJournal.find((item) => item.hasAccordion) ? (
