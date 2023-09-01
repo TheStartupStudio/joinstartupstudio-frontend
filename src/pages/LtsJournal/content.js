@@ -278,12 +278,39 @@ function LtsJournalContent(props) {
     setTableData(newTableData)
   }
 
+  const updateFinancialProfileInTable = (
+    financialProfilesTable,
+    fptId,
+    fpId,
+    newFinancialProfile
+  ) => {
+    return financialProfilesTable.map((fpt) => {
+      if (fpt.id === fptId) {
+        return {
+          ...fpt,
+          financialProfiles: fpt.financialProfiles.map((fp) => {
+            if (fp.id === fpId) {
+              return {
+                ...fp,
+                userFinancialProfiles: { ...newFinancialProfile }
+              }
+            }
+            return fp
+          })
+        }
+      }
+      return fpt
+    })
+  }
+
   const handleChangeFinancialProfile = async (
     obj,
     value,
     isEdit,
     fpIndex,
-    fptIndex
+    fptIndex,
+    fpId,
+    fptId
   ) => {
     const newValue = value
     // isEdit
@@ -301,45 +328,39 @@ function LtsJournalContent(props) {
       journalId: obj.journalId,
       order: obj.order
     }
-    const financialProfile = isEdit ? editContent : createContent
+    const newFinancialProfile = isEdit ? editContent : createContent
 
-    setFinancialProfilesTable((prevFinancialProfilesTable) => {
-      const newFinancialProfileTables = [...prevFinancialProfilesTable]
-      const newFinancialProfileTable = {
-        ...newFinancialProfileTables[fptIndex]
-      }
+    const newFinancialProfilesTable = updateFinancialProfileInTable(
+      financialProfilesTable,
+      fptId,
+      fpId,
+      newFinancialProfile
+    )
+    setFinancialProfilesTable(newFinancialProfilesTable)
 
-      const updatedFinancialProfiles =
-        newFinancialProfileTable.financialProfiles.map((fp, index) => {
-          return index === fpIndex ? financialProfile : fp
-        })
-
-      newFinancialProfileTable.financialProfiles = updatedFinancialProfiles
-      newFinancialProfileTables[fptIndex] = newFinancialProfileTable
-
-      return newFinancialProfileTables
+    debounce(updateFinancialProfiles, {
+      financialProfile: newFinancialProfile,
+      fptId,
+      fpId
     })
-
-    //
-    // let newFinancialProfileTables = [...financialProfilesTable]
-    // let newFinancialProfileTable = newFinancialProfileTables[fptIndex]
-    // const financialProfiles = newFinancialProfileTable.financialProfiles?.map(
-    //   (fp, index) => {
-    //     const foundedFinancialProfile =
-    //       newFinancialProfileTable?.financialProfiles[fpIndex]
-    //     if (foundedFinancialProfile.id === fp.id) {
-    //       return financialProfile
-    //     } else {
-    //       return fp
-    //     }
-    //   }
-    // )
-    // newFinancialProfileTable.financialProfiles = financialProfiles
-    // newFinancialProfileTables[fptIndex] = newFinancialProfileTable
-    // console.log(newFinancialProfileTables)
-    // setFinancialProfilesTable(newFinancialProfileTables)
   }
 
+  const updateFinancialProfiles = async (obj, value) => {
+    await axiosInstance
+      .put(`/ltsJournals/user-financial-profiles`, {
+        ...value.financialProfile
+      })
+      .then(({ data }) => {
+        const newFinancialProfilesTable = updateFinancialProfileInTable(
+          financialProfilesTable,
+          value.fptId,
+          value.fpId,
+          data
+        )
+
+        setFinancialProfilesTable(newFinancialProfilesTable)
+      })
+  }
   const handleChangeAmount = async (obj, value, isEdit, index, name) => {
     const newValue = +value
     // isEdit
@@ -771,7 +792,9 @@ function LtsJournalContent(props) {
                                             value,
                                             isEdit,
                                             fpIndex,
-                                            fptIndex
+                                            fptIndex,
+                                            fp.id,
+                                            fpt.id
                                           )
                                         }}
                                       />
@@ -786,7 +809,9 @@ function LtsJournalContent(props) {
                                             value,
                                             isEdit,
                                             fpIndex,
-                                            fptIndex
+                                            fptIndex,
+                                            fp.id,
+                                            fpt.id
                                           )
                                         }}
                                       />

@@ -19,9 +19,6 @@ const EntriesBox = (props) => {
     isDeletable
   } = props
 
-  console.log('isEditable', isEditable)
-  console.log('isDeletable', isDeletable)
-
   return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
       {/* {journal.title && (

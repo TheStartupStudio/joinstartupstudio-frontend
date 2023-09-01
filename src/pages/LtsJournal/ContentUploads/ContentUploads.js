@@ -3,7 +3,6 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import ContentUploadBox from './ContentUploadBox'
 const ContentUploads = ({ journal, isEditable }) => {
   const [contentUploads, setContentUploads] = useState([])
-  console.log(contentUploads)
   useEffect(() => {
     const ids = journal.userContentUploads.map((item1) => item1.contentUploadId)
 
