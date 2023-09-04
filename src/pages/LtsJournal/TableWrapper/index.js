@@ -3,9 +3,9 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 
-const TableWrapper = ({ title, children, isDelete, onDelete }) => {
+const TableWrapper = ({ title, children, isDelete, onDelete,additionalStyle }) => {
   return (
-    <div className="table-wrapper">
+    <div className="table-wrapper" style={{ ...additionalStyle }}>
       <div className="table-wrapper__title">
         <h5>{title}</h5>
         <div>

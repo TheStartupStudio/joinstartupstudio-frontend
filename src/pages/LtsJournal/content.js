@@ -47,7 +47,7 @@ function LtsJournalContent(props) {
   const [monthlyFixedExpense, setMonthlyFixedExpense] = useState([])
   const [monthlyVariableExpense, setMonthlyVariableExpense] = useState([])
   const [financialProfilesTable, setFinancialProfilesTable] = useState([])
-  console.log(financialProfilesTable)
+  const [financialAccounts, setFinancialAccounts] = useState([])
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -152,6 +152,7 @@ function LtsJournalContent(props) {
         )
         setJournal(journalData)
         setFinancialProfilesTable(journalData.financialProfilesTable)
+        setFinancialAccounts(journalData.financialAccounts)
 
         if (
           journalData.userEntry &&
@@ -307,8 +308,6 @@ function LtsJournalContent(props) {
     obj,
     value,
     isEdit,
-    fpIndex,
-    fptIndex,
     fpId,
     fptId
   ) => {
@@ -361,6 +360,71 @@ function LtsJournalContent(props) {
         setFinancialProfilesTable(newFinancialProfilesTable)
       })
   }
+
+  const handleChangeFinancialAccountsFields = async (
+    type,
+    obj,
+    value,
+    isEdit,
+    fapId,
+    faId
+  ) => {
+    const updatedObj = { ...obj }
+
+    if (type === 'fieldOne') {
+      updatedObj.fieldOne = value
+    } else if (type === 'fieldTwo') {
+      updatedObj.fieldTwo = value
+    }
+
+    const content = {
+      fieldOne: updatedObj.fieldOne ?? '',
+      fieldTwo: updatedObj.fieldTwo ?? '',
+      financialAccountsId: updatedObj.id,
+      journalId: props.match.params.journalId,
+      order: updatedObj.order
+    }
+
+    if (isEdit) {
+      content.id = updatedObj.id
+    }
+
+    const financialAccountsFields = updateFinancialAccountsFields(
+      financialAccounts,
+      fapId,
+      faId,
+      content
+    )
+    console.log(financialAccountsFields)
+  }
+
+  const updateFinancialAccountsFields = (
+    financialAccounts,
+    fptId,
+    fpId,
+    newFinancialProfile
+  ) => {
+    return financialAccounts.map((fpt) => {
+      if (fpt.id === fptId) {
+        return {
+          ...fpt,
+          financialAccountsFields: fpt.financialAccountsFields.map((fp) => {
+            if (fp.id === fpId) {
+              return {
+                ...fp,
+                userFinancialAccountsField: { ...newFinancialProfile }
+              }
+            }
+            debugger
+            return fp
+          })
+        }
+      }
+      debugger
+      return fpt
+    })
+  }
+
   const handleChangeAmount = async (obj, value, isEdit, index, name) => {
     const newValue = +value
     // isEdit
@@ -791,8 +855,6 @@ function LtsJournalContent(props) {
                                             fp.userFinancialProfiles,
                                             value,
                                             isEdit,
-                                            fpIndex,
-                                            fptIndex,
                                             fp.id,
                                             fpt.id
                                           )
@@ -808,8 +870,7 @@ function LtsJournalContent(props) {
                                             fp,
                                             value,
                                             isEdit,
-                                            fpIndex,
-                                            fptIndex,
+
                                             fp.id,
                                             fpt.id
                                           )
@@ -828,6 +889,141 @@ function LtsJournalContent(props) {
             </div>
           </>
         ) : null}
+
+        {journal?.financialAccounts && (
+          <div style={{ minHeight: 300, margin: '20px 0' }}>
+            {financialAccounts
+              ?.toSorted((a, b) => a.order - b.order)
+              ?.map((fp) => {
+                return (
+                  <TableWrapper
+                    title={fp.title}
+                    key={fp.id}
+                    additionalStyle={{ margin: 0 }}
+                  >
+                    <div
+                      style={{
+                        display: 'grid',
+                        gap: 4,
+                        alignItems: 'center',
+                        gridTemplateColumns: 'repeat(3,1fr)'
+                      }}
+                    >
+                      {fp.financialAccountsFields
+                        ?.toSorted((a, b) => a.order - b.order)
+                        ?.map((fap) => {
+                          return (
+                            <div
+                              key={fap.id}
+                              style={{
+                                background: '#E5E5E5',
+                                display: 'flex',
+                                flexDirection: 'column'
+                              }}
+                            >
+                              <div
+                                style={{
+                                  height: 45,
+                                  display: 'flex',
+                                  alignItems: 'center'
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    fontSize: 12,
+                                    textAlign: 'start',
+                                    padding: '4px 10px',
+                                    fontWeight: 500
+                                  }}
+                                >
+                                  {fap.title}
+                                </div>
+                              </div>
+
+                              <JournalTableCell>
+                                {fap.userFinancialAccountsField ? (
+                                  <>
+                                    <JournalTableCellInput
+                                      type={'text'}
+                                      value={
+                                        fap.userFinancialAccountsField?.fieldOne
+                                      }
+                                      handleChange={(value) => {
+                                        const isEdit =
+                                          !!fap.userFinancialAccountsField
+                                        return handleChangeFinancialAccountsFields(
+                                          'fieldOne',
+                                          fap.userFinancialAccountsField,
+                                          value,
+                                          isEdit,
+                                          fap.id,
+                                          fp.id
+                                        )
+                                      }}
+                                    />
+                                    <JournalTableCellInput
+                                      type={'text'}
+                                      value={
+                                        fap.userFinancialAccountsField?.fieldTwo
+                                      }
+                                      handleChange={(value) => {
+                                        const isEdit =
+                                          !!fap.userFinancialAccountsField
+                                        return handleChangeFinancialAccountsFields(
+                                          'fieldTwo',
+                                          fap.userFinancialAccountsField,
+                                          value,
+                                          isEdit,
+                                          fap.id,
+                                          fp.id
+                                        )
+                                      }}
+                                    />
+                                  </>
+                                ) : (
+                                  <>
+                                    <JournalTableCellInput
+                                      type={'text'}
+                                      handleChange={(value) => {
+                                        const isEdit =
+                                          !!fap.userFinancialAccountsField
+                                        return handleChangeFinancialAccountsFields(
+                                          'fieldOne',
+                                          fap,
+                                          value,
+                                          isEdit,
+                                          fap.id,
+                                          fp.id
+                                        )
+                                      }}
+                                    />
+                                    <JournalTableCellInput
+                                      type={'text'}
+                                      handleChange={(value) => {
+                                        const isEdit =
+                                          !!fap.userFinancialAccountsField
+                                        return handleChangeFinancialAccountsFields(
+                                          'fieldTwo',
+                                          fap,
+                                          value,
+                                          isEdit,
+                                          fap.id,
+                                          fp.id
+                                        )
+                                      }}
+                                    />
+                                  </>
+                                )}
+                              </JournalTableCell>
+                            </div>
+                          )
+                        })}
+                    </div>
+                  </TableWrapper>
+                )
+              })}
+          </div>
+        )}
         {journal?.financialSnapshots ? (
           <>
             {expenseTable.length > 0 && (
