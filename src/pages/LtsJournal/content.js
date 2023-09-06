@@ -48,6 +48,8 @@ function LtsJournalContent(props) {
   const [monthlyVariableExpense, setMonthlyVariableExpense] = useState([])
   const [financialProfilesTable, setFinancialProfilesTable] = useState([])
   const [financialAccounts, setFinancialAccounts] = useState([])
+  const [researchQuestionTable, setResearchQuestionTable] = useState({})
+  const [journalId, setJournalId] = useState(null)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -59,6 +61,9 @@ function LtsJournalContent(props) {
   useEffect(() => {
     setIsExpanded(false)
   }, [props.match.params.id])
+  useEffect(() => {
+    setJournalId(props.match.params.journalId)
+  }, [props.match.params.journalId])
 
   const handleShowAddReflection = (showAddReflection) => {
     setShowAddReflection(showAddReflection)
@@ -153,6 +158,7 @@ function LtsJournalContent(props) {
         setJournal(journalData)
         setFinancialProfilesTable(journalData.financialProfilesTable)
         setFinancialAccounts(journalData.financialAccounts)
+        setResearchQuestionTable(journalData.researchQuestionTable)
 
         if (
           journalData.userEntry &&
@@ -593,6 +599,112 @@ function LtsJournalContent(props) {
       })
   }
 
+  const updateUserResearchQuestion = (researchQuestions, rqId, content) => {
+    const newResearchQuestions = researchQuestions.map((rq) => {
+      if (rq.id === rqId) {
+        const newRq = {
+          ...rq,
+          userResearchQuestion: content
+        }
+        return newRq
+      }
+      return rq
+    })
+    return newResearchQuestions
+  }
+
+  const handleChangeUserCreditScoreGoal = (...props) => {
+    const [obj, value, isEdit] = props
+    const updatedObj = { ...obj }
+    const newResearchQuestionTable = { ...researchQuestionTable }
+
+    const content = {
+      title: value ?? '',
+      researchQuestionTableId: newResearchQuestionTable.id,
+      journalId: journalId
+    }
+
+    if (isEdit) {
+      content.id = updatedObj.id
+      content.researchQuestionTableId = updatedObj.researchQuestionTableId
+      delete content.journalId
+    }
+
+    newResearchQuestionTable.userCreditScoreGoal = content
+    setResearchQuestionTable(newResearchQuestionTable)
+    debounce(updateChangeUserCreditScoreGoal, { content })
+  }
+
+  const updateChangeUserCreditScoreGoal = async (obj, newData) => {
+    setLoading(true)
+    await axiosInstance
+      .put(`/ltsJournals/user-credit-score-goal`, {
+        ...newData.content
+      })
+      .then(({ data }) => {
+        const newResearchQuestionTable = { ...researchQuestionTable }
+        newResearchQuestionTable.userCreditScoreGoal = data
+        setResearchQuestionTable(newResearchQuestionTable)
+
+        setLoading(false)
+      })
+  }
+
+  const handleChangeResearchQuestion = (...props) => {
+    const [obj, value, isEdit, rqId, type] = props
+    const newResearchQuestionTable = { ...researchQuestionTable }
+    const researchQuestions = newResearchQuestionTable.researchQuestions
+
+    const updatedObj = { ...obj }
+
+    if (type === 'question') {
+      updatedObj.question = value
+    } else if (type === 'research') {
+      updatedObj.research = value
+    }
+
+    const content = {
+      question: updatedObj.question ?? '',
+      research: updatedObj.research ?? '',
+      researchQuestionId: rqId,
+      journalId: journalId
+    }
+
+    if (isEdit) {
+      content.id = updatedObj.id
+      content.researchQuestionId = updatedObj.researchQuestionId
+      delete content.journalId
+    }
+    const newResearchQuestions = updateUserResearchQuestion(
+      researchQuestions,
+      rqId,
+      content
+    )
+
+    newResearchQuestionTable.researchQuestions = newResearchQuestions
+    setResearchQuestionTable(newResearchQuestionTable)
+    debounce(updateResearchQuestionTable, { content, rqId })
+  }
+  const updateResearchQuestionTable = async (obj, newData) => {
+    setLoading(true)
+    await axiosInstance
+      .put(`/ltsJournals/user-research-question`, {
+        ...newData.content
+      })
+      .then(({ data }) => {
+        const researchQuestions = [...researchQuestionTable.researchQuestions]
+        const newResearchQuestions = updateUserResearchQuestion(
+          researchQuestions,
+          newData.rqId,
+          data
+        )
+
+        researchQuestionTable.researchQuestions = newResearchQuestions
+        setResearchQuestionTable(researchQuestionTable)
+        setLoading(false)
+      })
+  }
+
   return (
     <>
       <div className="row">
@@ -840,45 +952,172 @@ function LtsJournalContent(props) {
             ))}
           </>
         ) : null}
-        {journal?.researchQuestionTable ? (
-          <>
-            <div>{journal?.researchQuestionTable?.description}</div>
-            {journal?.researchQuestionTable?.researchQuestions
-              ?.toSorted((a, b) => a.id - b.id)
-              .map((rq) => {
-                return (
-                  <div>
-                    {rq.userResearchQuestion ? (
-                      <>
-                        <JournalTableCell
-                          additionalStyling={{ width: '50%', display: 'flex' }}
-                        >
-                          <JournalTableCellInput
-                            type={'text'}
-                            value={rq.userResearchQuestion.question}
-                          />{' '}
-                          <JournalTableCellInput
-                            type={'text'}
-                            value={rq.userResearchQuestion.research}
-                          />
-                        </JournalTableCell>
-                      </>
-                    ) : (
-                      <>
-                        <JournalTableCell
-                          additionalStyling={{ width: '50%', display: 'flex' }}
-                        >
-                          <JournalTableCellInput type={'text'} value={''} />{' '}
-                          <JournalTableCellInput type={'text'} value={''} />
-                        </JournalTableCell>
-                      </>
-                    )}
-                  </div>
-                )
-              })}
-            <div> {journal?.researchQuestionTable?.creditScoreGoal}</div>
-          </>
-        ) : null}
+        <div className="col-12">
+          {journal?.researchQuestionTable ? (
+            <>
+              <div
+                style={{
+                  backgroundColor: '#E5E5E5',
+                  color: '#231F20',
+                  fontFamily: 'Montserrat',
+                  fontWeight: 700,
+                  lineSpacing: 15,
+                  padding: 10
+                }}
+              >
+                {researchQuestionTable?.description}
+              </div>
+              {researchQuestionTable?.researchQuestions
+                ?.toSorted((a, b) => a.id - b.id)
+                .map((rq) => {
+                  return (
+                    <div>
+                      {rq.userResearchQuestion ? (
+                        <>
+                          <JournalTableCell
+                            additionalStyling={{
+                              width: '100%',
+                              display: 'flex',
+                              gap: 6
+                            }}
+                          >
+                            <JournalTableCellInput
+                              additionalStyle={{ width: '100%' }}
+                              type={'text'}
+                              value={rq.userResearchQuestion.question}
+                              handleChange={(value) => {
+                                const isEdit = !!rq.userResearchQuestion
+                                if (!loading) {
+                                  return handleChangeResearchQuestion(
+                                    rq.userResearchQuestion,
+                                    value,
+                                    isEdit,
+                                    rq.id,
+                                    'question'
+                                  )
+                                }
+                              }}
+                            />{' '}
+                            <JournalTableCellInput
+                              additionalStyle={{ width: '100%' }}
+                              type={'text'}
+                              value={rq.userResearchQuestion.research}
+                              handleChange={(value) => {
+                                const isEdit = !!rq.userResearchQuestion
+                                if (!loading) {
+                                  return handleChangeResearchQuestion(
+                                    rq.userResearchQuestion,
+                                    value,
+                                    isEdit,
+                                    rq.id,
+                                    'research'
+                                  )
+                                }
+                              }}
+                            />
+                          </JournalTableCell>
+                        </>
+                      ) : (
+                        <>
+                          <JournalTableCell
+                            additionalStyling={{
+                              width: '100%',
+                              display: 'flex',
+                              gap: 6
+                            }}
+                          >
+                            <JournalTableCellInput
+                              additionalStyle={{ width: '100%' }}
+                              type={'text'}
+                              handleChange={(value) => {
+                                const isEdit = !!rq.userResearchQuestion
+                                if (!loading) {
+                                  return handleChangeResearchQuestion(
+                                    rq,
+                                    value,
+                                    isEdit,
+                                    rq.id,
+                                    'question'
+                                  )
+                                }
+                              }}
+                            />
+                            <JournalTableCellInput
+                              additionalStyle={{ width: '100%' }}
+                              type={'text'}
+                              handleChange={(value) => {
+                                const isEdit = !!rq.userResearchQuestion
+                                if (!loading) {
+                                  return handleChangeResearchQuestion(
+                                    rq,
+                                    value,
+                                    isEdit,
+                                    rq.id,
+                                    'research'
+                                  )
+                                }
+                              }}
+                            />
+                          </JournalTableCell>
+                        </>
+                      )}
+                    </div>
+                  )
+                })}
+              <div
+                style={{ padding: 10, background: '#fff' }}
+                className={'d-flex align-items-center'}
+              >
+                <div
+                  style={{
+                    width: '60%',
+                    color: '#231F20',
+                    fontFamily: 'Montserrat',
+                    fontWeight: 700,
+                    lineSpacing: 15
+                  }}
+                >
+                  {researchQuestionTable?.creditScoreGoal}
+                </div>
+                {researchQuestionTable?.userCreditScoreGoal ? (
+                  <JournalTableCellInput
+                    additionalStyle={{ width: '40%' }}
+                    type={'text'}
+                    value={researchQuestionTable?.userCreditScoreGoal?.title}
+                    handleChange={(value) => {
+                      const isEdit =
+                        !!researchQuestionTable?.userCreditScoreGoal
+                      if (!loading) {
+                        return handleChangeUserCreditScoreGoal(
+                          researchQuestionTable?.userCreditScoreGoal,
+                          value,
+                          isEdit
+                        )
+                      }
+                    }}
+                  />
+                ) : (
+                  <JournalTableCellInput
+                    additionalStyle={{ width: '40%' }}
+                    type={'text'}
+                    handleChange={(value) => {
+                      const isEdit =
+                        !!researchQuestionTable?.userCreditScoreGoal
+                      if (!loading) {
+                        return handleChangeUserCreditScoreGoal(
+                          researchQuestionTable,
+                          value,
+                          isEdit
+                        )
+                      }
+                    }}
+                  />
+                )}
+              </div>
+            </>
+          ) : null}
+        </div>
+
         {journal?.financialProfilesTable &&
         journal?.financialProfilesTable?.length > 0 ? (
           <>

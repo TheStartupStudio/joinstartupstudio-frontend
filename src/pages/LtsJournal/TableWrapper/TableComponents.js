@@ -31,7 +31,10 @@ export const JournalTableCellInput = (props) => {
     isDisabled
   } = props
   return (
-    <div className={'journal_table-input__container'}>
+    <div
+      className={'journal_table-input__container'}
+      style={{ ...props.additionalStyle }}
+    >
       {title ? (
         <div
           className={'journal_table-input__title'}
