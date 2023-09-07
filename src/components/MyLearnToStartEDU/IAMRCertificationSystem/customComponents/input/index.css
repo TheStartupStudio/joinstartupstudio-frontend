@@ -1,0 +1,43 @@
+.custom-input {
+  position: relative;
+  margin: 20px 12px;
+  margin-bottom: 12px;
+}
+
+.custom-input textarea {
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #333d3d29;
+  border-radius: 6px;
+  padding: 10px;
+  padding-right: 48px;
+  min-height: 52px;
+  font-size: 10px;
+  letter-spacing: 0px;
+  color: #bbbdbf;
+  width: 100%;
+  resize: none;
+}
+
+.custom-input .submit-icon {
+  height: 28px;
+  width: 28px;
+  background: #ff3399;
+  border-radius: 23px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: 22px;
+  top: 12px;
+  cursor: pointer;
+}
+
+.custom-input .submit-icon.disabled {
+  background: #707070;
+  cursor: initial;
+}
+.custom-input .submit-icon svg {
+  color: white;
+  height: 15px;
+  width: 15px;
+}

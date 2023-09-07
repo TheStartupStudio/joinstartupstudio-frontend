@@ -1,10 +1,16 @@
-import React from "react";
+import {useState,useEffect} from "react";
 import ReactPlayer from "react-player";
+import { useIamrContext } from '../iamrContext/context'
 import "./index.css";
 
 const SkillContent = ({ skill }) => {
+
   return (
     <div>
+       <p className='skill-title pb-3'>
+        <span className="text-info fw-bold">{skill.category} - </span> 
+        <span className='fw-bold'>{skill?.title} - </span> Content
+      </p>
       <ReactPlayer
         className="video_inner media-lightbox__video-player mb-3"
         url={skill?.video}

@@ -10,7 +10,8 @@ const MyLtsGridItem = (props) => {
         style={{
           width: '100%',
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          cursor:'pointer'
         }}
       >
         <div

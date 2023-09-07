@@ -1,0 +1,4 @@
+.option-container.feedbacks-options .checkbox-input:checked,
+.option-container.feedbacks-options .checkbox-input {
+  border-radius: 50%;
+}
