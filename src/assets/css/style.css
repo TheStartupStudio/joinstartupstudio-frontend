@@ -4344,9 +4344,9 @@ ul.sidebar-menu-item .collapse a {
   border: 1px solid #3c3c3c;
 }
 
-.accordion-header {
+/* .accordion-header {
   background-color: #f5f5f5;
-}
+} */
 .accordion-header-box {
   display: flex;
   align-items: center;
@@ -4412,7 +4412,7 @@ ul.sidebar-menu-item .collapse a {
 
 .archive-modal .modal-dialog {
   height: 100% !important;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 }

@@ -1,0 +1,40 @@
+.iamr-page-padding {
+  padding-left: calc(0.5rem + 10px);
+  padding-right: 20px;
+  padding-top: 40px;
+}
+
+.iamr-page-padding:nth-child(2) {
+  padding-top: 0;
+}
+
+.iamr-page-header .page-description {
+  font-size: 13px;
+  color: #333d3d83;
+  font-weight: normal;
+}
+.iamr-page-header .page-title {
+  font-size: 24px;
+  color: #231f20;
+  font-weight: 600;
+}
+.iamr-box {
+  background-color: #f8f7f7;
+  max-height: 306px;
+  height: 100%;
+  align-items: center;
+  padding: 10%;
+}
+.iamr-box img {
+  margin-right: 10px;
+  padding-right: 20px;
+}
+.certified-skills:hover {
+  color: #333;
+}
+
+@media (max-width: 576px) {
+  .iamr-page-header .page-description {
+    font-size: 14px;
+  }
+}

@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback,useRef } from 'react'
 import { useMemo } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 
@@ -6,6 +6,7 @@ const AccordionItem = ({ skill, active, hideExpanded }) => {
   const [activeKey, setActiveKey] = active
   const history = useHistory()
   const { studentId } = useParams()
+  const isFirstRender = useRef(true);
 
   const changeRoute = (type) => {
     setActiveKey({ id: skill.id, type: type })
@@ -15,7 +16,12 @@ const AccordionItem = ({ skill, active, hideExpanded }) => {
 
   const isActiveLink = useCallback(
     (type) => {
-      return skill.id === activeKey.id &&
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return false;
+      }
+  
+      return skill.id === activeKey.id  && 
         (type === 'content'
           ? activeKey.type !== 'certification-status'
           : activeKey.type === type)
@@ -23,24 +29,24 @@ const AccordionItem = ({ skill, active, hideExpanded }) => {
         : ''
     },
     [skill, activeKey]
-  )
+  );
 
   const showCollapse = useMemo(() => {
     return (
-      skill.id === activeKey.id && activeKey.type !== 'certification-status'
+      skill.id === activeKey.id && activeKey.type !== 'certification-status' && active.type !== 'content'
     )
   }, [skill, activeKey])
 
   return (
     <div
-      className={`accordion-item accordion-data-item px-0 ${isActiveLink(
+      className={`accordion-item accordion-data-item ps-4 px-0 ${isActiveLink(
         'content'
       )}`}
       key={skill.id}
     >
       <h2 className='accordion-header' id='headingTwo'>
         <button
-          className='accordion-button collapsed accordion_button accordion-button-inner accordion-button-text pb-0'
+          className='accordion-button collapsed accordion_button accordion-button-inner accordion-button-text pb-0 ps-3'
           type='button'
           data-bs-toggle='collapse'
           data-bs-target={`#collapse_inner${skill.id}`}
@@ -68,16 +74,6 @@ const AccordionItem = ({ skill, active, hideExpanded }) => {
       >
         <div className='accordion-body py-0'>
           <div className='mt-0 pt-0'>
-            <Link
-              to={'#'}
-              onClick={() => changeRoute('journal')}
-              className={`d-block accordion-link my-2 ${isActiveLink(
-                'journal'
-              )}`}
-            >
-              Journal
-            </Link>
-
             <Link
               to={'#'}
               onClick={() => changeRoute('uploads')}

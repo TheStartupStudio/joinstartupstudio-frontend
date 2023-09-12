@@ -1,5 +1,5 @@
 .certification-title {
-  font: normal normal 600 14px/18px Montserrat;
+  font: normal normal 600 15px Montserrat !important;
   letter-spacing: 0px;
   color: #333d3d;
   text-transform: uppercase;
@@ -7,15 +7,16 @@
 }
 
 .accordion-item.active .accordion-button-text {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .accordion-link.active {
   color: #707070;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .accordion-data {
+  /* padding-left: 5%; */
   border: 0 !important;
 }
 .accordion-data-item {
@@ -47,7 +48,7 @@
 
 .accordion-link {
   text-align: left;
-  font: normal normal 500 13px Montserrat;
+  font: normal 300 13px Montserrat;
   letter-spacing: 0.52px;
   color: #333d3d;
   text-transform: capitalize;
@@ -59,7 +60,7 @@
 }
 
 .iamr-status-point {
-  width: 10px !important;
+  min-width: 10px !important;
   height: 10px !important;
   border-radius: 50%;
   background-color: #bbbdbf;
@@ -103,7 +104,11 @@
 .upload-status.proficient {
   color: #99cc33;
 }
-
 .upload-status.approved {
   color: gold;
+}
+.grouping-string {
+  font-size: 14px !important;
+  letter-spacing: 0.6px;
+  font-weight: 600 !important;
 }
