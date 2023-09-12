@@ -159,24 +159,28 @@ const Upload = ({ upload, skill, editUpload }) => {
         upload={upload}
         onHide={() => setShowApproveUploadModal(false)}
         editUpload={editUpload}
+        skill={skill}
       />
       <RejectUploadModal
         show={showRejectUploadModal}
         upload={upload}
         onHide={() => setShowRejectUploadModal(false)}
         editUpload={editUpload}
+        skill={skill}
       />
       <ConfirmUploadModal
         show={showConfirmUploadModal}
         upload={upload}
         onHide={() => setShowConfirmUploadModal(false)}
         editUpload={editUpload}
+        skill={skill}
       />
       <DenyUploadModal
         show={showDenyUploadModal}
         upload={upload}
         onHide={() => setShowDenyUploadModal(false)}
         editUpload={editUpload}
+        skill={skill}
       />
     </>
   )

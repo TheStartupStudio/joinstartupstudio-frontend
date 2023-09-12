@@ -3,14 +3,14 @@ import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import { Controller, useForm } from 'react-hook-form'
 
-const DenyUploadModal = ({ upload, show, onHide, editUpload }) => {
+const DenyUploadModal = ({ upload, show, onHide, editUpload, skill }) => {
   const {
     handleSubmit,
     control,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting }
   } = useForm({
-    defaultValues: { message: '' },
+    defaultValues: { message: '' }
   })
 
   const submitTicket = async (values) => {
@@ -19,6 +19,7 @@ const DenyUploadModal = ({ upload, show, onHide, editUpload }) => {
         ...upload,
         status: 'developing',
         message: values.message,
+        skill
       },
       () => {
         onHide()
@@ -35,7 +36,7 @@ const DenyUploadModal = ({ upload, show, onHide, editUpload }) => {
   const hideModal = () => {
     if (isSubmitting) return
     reset({
-      message: '',
+      message: ''
     })
     onHide()
   }
@@ -71,8 +72,8 @@ const DenyUploadModal = ({ upload, show, onHide, editUpload }) => {
                   required: 'Feedback is required',
                   validate: {
                     maxWords: (v) =>
-                      maxWords(v) || 'Maximum number of words is 100',
-                  },
+                      maxWords(v) || 'Maximum number of words is 100'
+                  }
                 }}
                 render={({ onChange, value, field }) => (
                   <textarea

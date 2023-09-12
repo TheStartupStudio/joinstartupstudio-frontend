@@ -179,7 +179,6 @@ function TicketChat({ ticket, close, isTicketOpened }) {
               <p className="subject">
                 <span className="fw-bold">Subject:</span>{' '}
                 {ticket.IamrSkill.title}
-                {console.log('ticket', ticket)}
               </p>
             </div>
           </div>
