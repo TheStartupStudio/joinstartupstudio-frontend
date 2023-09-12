@@ -95,7 +95,7 @@ function LtsJournalContent(props) {
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/${props.match.params.journalId}`
+        `/ltsJournals/${props.match.params.journalId}/student/${0}`
       )
       return data
     } catch (err) {}

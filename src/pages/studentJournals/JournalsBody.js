@@ -39,6 +39,7 @@ function JournalsBody(props) {
   const [globalCategory, setGlobalCategory] = useState('lts')
 
   let contentContainer = useRef()
+
   async function getJournals(category = 'student-lts', redir = true) {
     setGlobalCategory(category)
     try {
@@ -56,6 +57,7 @@ function JournalsBody(props) {
         }
       })
 
+      console.log(data)
       setUser(data.user)
       setJournalsData(data.journals)
       setJournals(data.journals)
