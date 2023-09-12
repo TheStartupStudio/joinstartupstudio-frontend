@@ -49,6 +49,8 @@ function LtsJournalContent(props) {
   const [financialProfilesTable, setFinancialProfilesTable] = useState([])
   const [financialAccounts, setFinancialAccounts] = useState([])
   const [researchQuestionTable, setResearchQuestionTable] = useState({})
+  const [creditCardInfoTable, setCreditCardInfoTable] = useState({})
+  const [collegeInfoTables, setCollegeInfoTables] = useState([])
   const [journalId, setJournalId] = useState(null)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
@@ -159,6 +161,8 @@ function LtsJournalContent(props) {
         setFinancialProfilesTable(journalData.financialProfilesTable)
         setFinancialAccounts(journalData.financialAccounts)
         setResearchQuestionTable(journalData.researchQuestionTable)
+        setCreditCardInfoTable(journalData.creditCardInfoTables)
+        setCollegeInfoTables(journalData.collegePlansTables)
 
         if (
           journalData.userEntry &&
@@ -705,6 +709,180 @@ function LtsJournalContent(props) {
       })
   }
 
+  const updateCreditCardInfoTable = (columnId, cellId, content) => {
+    let newCreditCardInfoTable = { ...creditCardInfoTable }
+    const creditCardInfoColumns = newCreditCardInfoTable.creditCardInfoColumns
+    const newCreditCardInfoColumns = creditCardInfoColumns?.map((column) => {
+      if (column.id === columnId) {
+        const newCreditCardInfoCells = column?.creditCardInfoCells?.map(
+          (cell) => {
+            if (cell.id === cellId) {
+              return { ...cell, userCreditCardInfoCell: content }
+            }
+            return cell
+          }
+        )
+        return { ...column, creditCardInfoCells: newCreditCardInfoCells }
+      }
+      return column
+    })
+    newCreditCardInfoTable.creditCardInfoColumns = newCreditCardInfoColumns
+    return newCreditCardInfoTable
+  }
+
+  const handleChangeCreditCardInfo = async (
+    obj,
+    value,
+    isEdit,
+    columnId,
+    cellId
+  ) => {
+    const content = {
+      content: value ?? '',
+      creditCardInfoCellId: cellId
+      // journalId: journalId
+    }
+    delete content.id
+
+    if (isEdit) {
+      if (obj.id) {
+        content.id = obj.id
+      }
+      content.creditCardInfoCellId = obj.creditCardInfoCellId
+      // delete content.journalId
+    }
+
+    const newCreditCardInfoTable = updateCreditCardInfoTable(
+      columnId,
+      cellId,
+      content
+    )
+
+    console.log(columnId, cellId)
+    setCreditCardInfoTable(newCreditCardInfoTable)
+    debounce(updateCreditCardInfoCell, { content, cellId, columnId })
+  }
+
+  const updateCreditCardInfoCell = async (_, newData) => {
+    setLoading(true)
+    await axiosInstance
+      .put(`/ltsJournals/user-credit-card-info-cell`, {
+        ...newData.content
+      })
+      .then(({ data }) => {
+        const newCreditCardInfoTable = updateCreditCardInfoTable(
+          newData.columnId,
+          newData.cellId,
+          data
+        )
+        // debugger
+        setCreditCardInfoTable(newCreditCardInfoTable)
+
+        setLoading(false)
+      })
+  }
+
+  const updateCollegeInfoTable = (
+    tableId,
+    rowId,
+    columnId,
+    cellId,
+    content
+  ) => {
+    const updatedTables = collegeInfoTables.map((table) => {
+      if (table.id === tableId) {
+        return {
+          ...table,
+          collegePlansRows: table.collegePlansRows.map((row) => {
+            if (row.id === rowId) {
+              return {
+                ...row,
+                collegePlansColumns: row.collegePlansColumns.map((column) => {
+                  if (column.id === columnId) {
+                    return {
+                      ...column,
+                      collegePlansCells: column.collegePlansCells.map(
+                        (cell) => {
+                          if (cell.id === cellId) {
+                            return {
+                              ...cell,
+                              userCollegePlansCells: content
+                            }
+                          }
+                          return cell
+                        }
+                      )
+                    }
+                  }
+                  return column
+                })
+              }
+            }
+            return row
+          })
+        }
+      }
+      return table
+    })
+    return updatedTables
+  }
+
+  const handleCollegeInfo = async (
+    obj,
+    value,
+    isEdit,
+    tableId,
+    rowId,
+    columnId,
+    cellId
+  ) => {
+    const content = {
+      content: value ?? '',
+      cellId: cellId,
+      tableId: tableId
+      // journalId: journalId
+    }
+    delete content.id
+
+    if (isEdit) {
+      if (obj.id) {
+        content.id = obj.id
+      }
+      content.cellId = obj.cellId
+      // delete content.journalId
+    }
+
+    const newCreditCardInfoTable = updateCollegeInfoTable(
+      tableId,
+      rowId,
+      columnId,
+      cellId,
+      content
+    )
+    setCollegeInfoTables(newCreditCardInfoTable)
+
+    debounce(updateCollegeInfo, { content, cellId, columnId, tableId, rowId })
+  }
+
+  const updateCollegeInfo = async (_, newData) => {
+    setLoading(true)
+    await axiosInstance
+      .put(`/ltsJournals/user-college-info`, {
+        ...newData.content
+      })
+      .then(({ data }) => {
+        const newCreditCardInfoTable = updateCollegeInfoTable(
+          newData.tableId,
+          newData.rowId,
+          newData.columnId,
+          newData.cellId,
+          data
+        )
+        setCreditCardInfoTable(newCreditCardInfoTable)
+
+        setLoading(false)
+      })
+  }
   return (
     <>
       <div className="row">
@@ -952,6 +1130,7 @@ function LtsJournalContent(props) {
             ))}
           </>
         ) : null}
+
         <div className="col-12">
           {journal?.researchQuestionTable ? (
             <>
@@ -1115,6 +1294,252 @@ function LtsJournalContent(props) {
                 )}
               </div>
             </>
+          ) : null}
+        </div>
+        {journal?.collegePlansTables ? (
+          <div className="col-12">
+            {collegeInfoTables
+              ?.toSorted((a, b) => a.id - b.id)
+              ?.map((table) => {
+                return (
+                  <TableWrapper title={table.title}>
+                    {table.collegePlansRows
+                      ?.toSorted((a, b) => a.id - b.id)
+                      ?.map((row) => {
+                        return (
+                          <div>
+                            <div
+                              className={'d-flex justify-content-between'}
+                              style={{ gap: 2 }}
+                            >
+                              {row.collegePlansColumns
+                                ?.toSorted((a, b) => a.id - b.id)
+                                ?.map((column) => {
+                                  return (
+                                    <div style={{ width: '100%' }}>
+                                      <div
+                                        style={{
+                                          height: 45,
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          backgroundColor: '#E5E5E5',
+                                          color: '#231F20',
+                                          width: '100%'
+                                        }}
+                                      >
+                                        <div
+                                          style={{
+                                            fontSize: 12,
+                                            textAlign: 'start',
+                                            padding: '4px 10px',
+                                            fontWeight: 500,
+                                            width: '100%',
+                                            height: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                          }}
+                                        >
+                                          {column?.title}
+                                        </div>
+                                      </div>
+                                      <div
+                                        className={
+                                          'd-flex justify-content-between flex-column'
+                                        }
+                                        style={{ gap: 2 }}
+                                      >
+                                        {column.collegePlansCells
+                                          ?.toSorted((a, b) => a.id - b.id)
+                                          ?.map((cell, index) => {
+                                            return (
+                                              <div
+                                                style={{
+                                                  display: 'flex',
+                                                  width: '100%'
+                                                }}
+                                              >
+                                                {!cell?.title &&
+                                                  !cell?.title?.length && (
+                                                    <JournalTableCell
+                                                      additionalStyling={{
+                                                        width: '100%'
+                                                      }}
+                                                    >
+                                                      {cell.userCollegePlansCells ? (
+                                                        <JournalTableCellInput
+                                                          type={'text'}
+                                                          value={
+                                                            cell
+                                                              .userCollegePlansCells
+                                                              ?.content
+                                                          }
+                                                          handleChange={(
+                                                            value
+                                                          ) => {
+                                                            const isEdit =
+                                                              !!cell.userCollegePlansCells
+
+                                                            return handleCollegeInfo(
+                                                              cell.userCollegePlansCells,
+                                                              value,
+                                                              isEdit,
+                                                              table.id,
+                                                              row.id,
+                                                              column.id,
+                                                              cell.id
+                                                            )
+                                                          }}
+                                                        />
+                                                      ) : (
+                                                        <JournalTableCellInput
+                                                          type={'text'}
+                                                          handleChange={(
+                                                            value
+                                                          ) => {
+                                                            const isEdit =
+                                                              !!cell.handleCollegeInfo
+                                                            return handleCollegeInfo(
+                                                              cell,
+                                                              value,
+                                                              isEdit,
+                                                              table.id,
+                                                              row.id,
+                                                              column.id,
+                                                              cell.id
+                                                            )
+                                                          }}
+                                                        />
+                                                      )}
+                                                    </JournalTableCell>
+                                                  )}
+                                                {cell?.title &&
+                                                  cell?.title?.length && (
+                                                    <JournalTableCell
+                                                      additionalStyling={{
+                                                        width: '100%',
+                                                        backgroundColor: '#fff',
+                                                        height: 53.33
+                                                      }}
+                                                    >
+                                                      <div
+                                                        style={{
+                                                          height: 45,
+                                                          display: 'flex',
+                                                          alignItems: 'center',
+
+                                                          width: '100%'
+                                                        }}
+                                                      >
+                                                        <div
+                                                          style={{
+                                                            fontSize: 12,
+                                                            textAlign: 'start',
+                                                            fontWeight: 500,
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center'
+                                                          }}
+                                                        >
+                                                          {cell?.title}
+                                                        </div>
+                                                      </div>
+                                                    </JournalTableCell>
+                                                  )}
+                                              </div>
+                                            )
+                                          })}
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                            </div>
+                          </div>
+                        )
+                      })}
+                  </TableWrapper>
+                )
+              })}
+          </div>
+        ) : null}
+        <div className="col-12">
+          {journal?.creditCardInfoTables ? (
+            <div
+              className={'d-flex justify-content-between'}
+              style={{ gap: 4, height: '100%' }}
+            >
+              {creditCardInfoTable?.creditCardInfoColumns
+                ?.toSorted((a, b) => a.id - b.id)
+                ?.map((column) => {
+                  return (
+                    <div
+                      className={'d-flex justify-content-between flex-column'}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: '#51c7df',
+                          color: '#fff',
+                          padding: 4,
+                          display: 'flex',
+                          alignItems: 'center',
+                          height: '100%'
+                        }}
+                      >
+                        {column.title}
+                      </div>
+                      <div>
+                        {column.creditCardInfoCells
+                          ?.toSorted((a, b) => a.id - b.id)
+                          ?.map((cell) => (
+                            <div>
+                              <div>
+                                <JournalTableCell
+                                  additionalStyling={{ width: '50%' }}
+                                >
+                                  {cell.userCreditCardInfoCell ? (
+                                    <JournalTableCellInput
+                                      type={'text'}
+                                      value={
+                                        cell.userCreditCardInfoCell?.content
+                                      }
+                                      handleChange={(value) => {
+                                        const isEdit =
+                                          !!cell.userCreditCardInfoCell
+
+                                        return handleChangeCreditCardInfo(
+                                          cell.userCreditCardInfoCell,
+                                          value,
+                                          isEdit,
+                                          column.id,
+                                          cell.id
+                                        )
+                                      }}
+                                    />
+                                  ) : (
+                                    <JournalTableCellInput
+                                      type={'text'}
+                                      handleChange={(value) => {
+                                        const isEdit =
+                                          !!cell.userCreditCardInfoCell
+                                        return handleChangeCreditCardInfo(
+                                          cell,
+                                          value,
+                                          isEdit,
+                                          column.id,
+                                          cell.id
+                                        )
+                                      }}
+                                    />
+                                  )}
+                                </JournalTableCell>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )
+                })}
+            </div>
           ) : null}
         </div>
 
