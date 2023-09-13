@@ -92,9 +92,6 @@ const SkillsAccordion = ({ hideExpanded, certificationType }) => {
     'student-certification-2': ['LEADERSHIP SKILLS', 'ENTERPRISE SKILLS']
   }
 
-  console.log('certificationType', certificationType)
-  console.log('activeKey', activeKey)
-
   return (
     <>
       {!loading && (

@@ -43,7 +43,7 @@ const CertificationCard = ({
   return (
     <>
       <Link
-        to={`iamr-certification-system/${certificationType}/${firstElId}/instructions`}
+        to={`iamr-certification-system/${certificationType}/${firstElId}/content`}
         onClick={(e) => handleClick(e)}
         className="col-md-6 col-sm-12"
       >

@@ -254,6 +254,7 @@ const Upload = ({
                   <button
                     className="lts-button float-end mt-2 me-sm-3"
                     type="submit"
+                    style={{ background: '#99CC33' }}
                     value="save"
                     name="save"
                     disabled={true}
@@ -266,6 +267,7 @@ const Upload = ({
                     className="lts-button float-start mt-2 ms-sm-3"
                     type="submit"
                     value="submit"
+                    style={{ background: '#FF3399' }}
                     name="submit"
                     disabled={true}
                   >

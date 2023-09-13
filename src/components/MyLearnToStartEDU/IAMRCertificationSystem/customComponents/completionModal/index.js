@@ -8,8 +8,6 @@ const CompletionModal = ({ show, onHide, loading, title, description }) => {
     onHide()
   }
 
-  console.log('show', show)
-
   return (
     <Modal
       show={show}

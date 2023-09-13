@@ -22,12 +22,11 @@ const AccordionItem = ({
     )
     hideExpanded()
   }
-  console.log('activeKey',activeKey)
 
   const isActiveLink = useCallback(
     (type) => {
-      console.log('type',type)
-      return skill.id === activeKey.id && activeKey.type === type && 
+      return skill.id === activeKey.id &&
+        activeKey.type !== type &&
         (type !== 'instructions'
           ? activeKey.type !== 'certification-status'
           : activeKey.type === type)
@@ -41,7 +40,7 @@ const AccordionItem = ({
     return (
       skill.id === activeKey.id &&
       activeKey.type !== 'certification-status' &&
-      activeKey.type !== 'instructions'
+      activeKey.type !== 'content'
     )
   }, [skill, activeKey])
 

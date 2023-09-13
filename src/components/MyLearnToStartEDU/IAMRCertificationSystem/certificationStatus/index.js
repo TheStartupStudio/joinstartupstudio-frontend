@@ -35,7 +35,6 @@ const CertificationStatus = () => {
     setLoading(false)
   }, [id, certificationId])
 
-
   const downloadCertificateAsPdf = () => {
     const certificate = document.querySelector('.certificate-container')
     html2canvas(certificate).then((canvas) => {
@@ -44,7 +43,6 @@ const CertificationStatus = () => {
       const imgProps = pdf.getImageProperties(imgData)
       const pdfWidth = pdf.internal.pageSize.getWidth() - 20 // Subtract 20mm for padding
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
-      console.log('pdfHeight', pdfHeight)
       pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth, pdfHeight)
       pdf.save('certificate.pdf')
     })
