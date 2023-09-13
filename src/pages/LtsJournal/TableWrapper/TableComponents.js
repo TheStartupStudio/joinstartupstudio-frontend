@@ -9,8 +9,8 @@ export const JournalTableCell = (props) => {
     <td
       colSpan={colSpan}
       style={{
-        ...additionalStyling,
-        backgroundColor: isGray ? '#dfdfdf' : '#fff'
+        backgroundColor: isGray ? '#dfdfdf' : '#fff',
+        ...additionalStyling
       }}
       className={'journal_table-data'}
     >

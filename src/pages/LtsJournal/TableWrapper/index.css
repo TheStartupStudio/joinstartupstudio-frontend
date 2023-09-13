@@ -25,7 +25,9 @@
     padding: 2px 10px !important
 }
 .journal_table-data {
-    padding: 2px 10px !important
+    padding: 2px 10px !important;
+    display:flex;
+    align-items:center
 }
 .fixed-width-cell {
     width: calc(100% / 3);

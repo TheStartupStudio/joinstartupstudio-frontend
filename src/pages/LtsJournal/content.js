@@ -28,6 +28,46 @@ import {
 } from './TableWrapper/TableComponents'
 import MonthlyBudgetComponent from './MonthlyBudget.component'
 
+const UserJournalTableCell = (props) => {
+  return (
+    <JournalTableCell
+      additionalStyling={{
+        width: '100%',
+        display: 'flex',
+        gap: 6,
+        ...props.additionalStyling
+      }}
+    >
+      {props.userCell ? (
+        <JournalTableCellInput
+          additionalStyle={{
+            width: '100%'
+          }}
+          type={props.inputType ? props.inputType : 'text'}
+          value={props.userCellValue}
+          handleChange={(value) => {
+            const isEdit = !!props.userCell
+
+            return props.handleChangeUserCell(props.userCell, value, isEdit)
+          }}
+        />
+      ) : (
+        <JournalTableCellInput
+          additionalStyle={{
+            width: '100%'
+          }}
+          type={'text'}
+          handleChange={(value) => {
+            const isEdit = !!props.userCell
+
+            return props.handleChangeUserCell(props.cell, value, isEdit)
+          }}
+        />
+      )}
+    </JournalTableCell>
+  )
+}
+
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
@@ -51,6 +91,9 @@ function LtsJournalContent(props) {
   const [researchQuestionTable, setResearchQuestionTable] = useState({})
   const [creditCardInfoTable, setCreditCardInfoTable] = useState({})
   const [collegeInfoTables, setCollegeInfoTables] = useState([])
+  const [economicMajorsTables, setEconomicMajorsTables] = useState([])
+  const [jobApplicationTables, setJobApplicationTables] = useState([])
+  console.log(jobApplicationTables)
   const [journalId, setJournalId] = useState(null)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
@@ -159,10 +202,12 @@ function LtsJournalContent(props) {
         )
         setJournal(journalData)
         setFinancialProfilesTable(journalData.financialProfilesTable)
+        setEconomicMajorsTables(journalData.economicMajorsTables)
         setFinancialAccounts(journalData.financialAccounts)
         setResearchQuestionTable(journalData.researchQuestionTable)
         setCreditCardInfoTable(journalData.creditCardInfoTables)
         setCollegeInfoTables(journalData.collegePlansTables)
+        setJobApplicationTables(journalData.jobApplicationTables)
 
         if (
           journalData.userEntry &&
@@ -836,6 +881,7 @@ function LtsJournalContent(props) {
     columnId,
     cellId
   ) => {
+    console.log(obj, value, isEdit, tableId, rowId, columnId, cellId)
     const content = {
       content: value ?? '',
       cellId: cellId,
@@ -871,6 +917,7 @@ function LtsJournalContent(props) {
         ...newData.content
       })
       .then(({ data }) => {
+        debugger
         const newCreditCardInfoTable = updateCollegeInfoTable(
           newData.tableId,
           newData.rowId,
@@ -882,6 +929,200 @@ function LtsJournalContent(props) {
 
         setLoading(false)
       })
+  }
+
+  //
+
+  const updateMajorsTable = (tableId, rowId, columnId, cellId, content) => {
+    const updatedTables = economicMajorsTables.map((table) => {
+      if (table.id === tableId) {
+        return {
+          ...table,
+          economicMajorsRows: table.economicMajorsRows.map((row) => {
+            if (row.id === rowId) {
+              return {
+                ...row,
+                economicMajorsColumns: row.economicMajorsColumns.map(
+                  (column) => {
+                    if (column.id === columnId) {
+                      return {
+                        ...column,
+                        economicMajorsCells: column.economicMajorsCells.map(
+                          (cell) => {
+                            if (cell.id === cellId) {
+                              return {
+                                ...cell,
+                                userEconomicMajorsCells: content
+                              }
+                            }
+                            return cell
+                          }
+                        )
+                      }
+                    }
+                    return column
+                  }
+                )
+              }
+            }
+            return row
+          })
+        }
+      }
+      return table
+    })
+    return updatedTables
+  }
+
+  const handleMajorsInfo = async (
+    obj,
+    value,
+    isEdit,
+    tableId,
+    rowId,
+    columnId,
+    cellId
+  ) => {
+    const content = {
+      content: value ?? '',
+      cellId: cellId,
+      tableId: tableId
+      // journalId: journalId
+    }
+    delete content.id
+
+    if (isEdit) {
+      if (obj.id) {
+        content.id = obj.id
+      }
+      content.cellId = obj.cellId
+      // delete content.journalId
+    }
+
+    const newMajorsTable = updateMajorsTable(
+      tableId,
+      rowId,
+      columnId,
+      cellId,
+      content
+    )
+    setEconomicMajorsTables(newMajorsTable)
+
+    debounce(updateMajors, { content, cellId, columnId, tableId, rowId })
+  }
+
+  const updateMajors = async (_, newData) => {
+    setLoading(true)
+    await axiosInstance
+      .put(`/ltsJournals/user-economic-majors`, {
+        ...newData.content
+      })
+      .then(({ data }) => {
+        const newMajorsTable = updateMajorsTable(
+          newData.tableId,
+          newData.rowId,
+          newData.columnId,
+          newData.cellId,
+          data
+        )
+        setEconomicMajorsTables(newMajorsTable)
+
+        setLoading(false)
+      })
+  }
+
+  //
+
+  const updateJobApplicationTable = (tableId, columnId, cellId, content) => {
+    const updatedTables = jobApplicationTables.map((table) => {
+      if (table.id === tableId) {
+        return {
+          ...table,
+          jobApplicationColumns: table.jobApplicationColumns.map((column) => {
+            if (column.id === columnId) {
+              return {
+                ...column,
+                jobApplicationCells: column.jobApplicationCells.map((cell) => {
+                  if (cell.id === cellId) {
+                    return {
+                      ...cell,
+                      userJobApplicationCells: content
+                    }
+                  }
+                  return cell
+                })
+              }
+            }
+            return column
+          })
+        }
+      }
+      return table
+    })
+    return updatedTables
+  }
+
+  const handleUpdateJobApplication = async (
+    obj,
+    value,
+    isEdit,
+    tableId,
+    columnId,
+    cellId
+  ) => {
+    const content = {
+      content: value ?? '',
+      cellId: cellId,
+      tableId: tableId
+      // journalId: journalId
+    }
+    delete content.id
+
+    if (isEdit) {
+      if (obj.id) {
+        content.id = obj.id
+      }
+      content.cellId = obj.cellId
+      // delete content.journalId
+    }
+
+    const jobApplicationTable = updateJobApplicationTable(
+      tableId,
+      columnId,
+      cellId,
+      content
+    )
+    setJobApplicationTables(jobApplicationTable)
+
+    debounce(updateJobApplication, { content, cellId, columnId, tableId })
+  }
+
+  const updateJobApplication = async (_, newData) => {
+    setLoading(true)
+    await axiosInstance
+      .put(`/ltsJournals/user-job-application`, {
+        ...newData.content
+      })
+      .then(({ data }) => {
+        const jobApplicationTable = updateJobApplicationTable(
+          newData.tableId,
+          newData.columnId,
+          newData.cellId,
+          data
+        )
+        setJobApplicationTables(jobApplicationTable)
+
+        setLoading(false)
+      })
+  }
+
+  const tableColumnStyle = {
+    backgroundColor: '#51c7df',
+    color: '#fff',
+    padding: 4,
+    display: 'flex',
+    alignItems: 'center',
+    height: 56
   }
   return (
     <>
@@ -1130,7 +1371,105 @@ function LtsJournalContent(props) {
             ))}
           </>
         ) : null}
-
+        <div className="col-12">
+          {journal?.jobApplicationTables ? (
+            <>
+              <div>
+                {jobApplicationTables?.map((table) => {
+                  return (
+                    <div>
+                      <TableWrapper title={table.title}>
+                        <div className={'d-flex'} style={{ gap: 2 }}>
+                          {table?.jobApplicationColumns
+                            ?.toSorted((a, b) => a.id - b.id)
+                            ?.map((column) => {
+                              return (
+                                <div
+                                  style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 2
+                                  }}
+                                >
+                                  {column?.jobApplicationCells?.map(
+                                    (cell, index) => {
+                                      return (
+                                        <div style={{ height: 54 }}>
+                                          {cell.title ? (
+                                            <>
+                                              {cell?.title && (
+                                                <div
+                                                  style={{
+                                                    height: 54,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    backgroundColor: '#E5E5E5',
+                                                    color: '#231F20',
+                                                    width: '100%'
+                                                  }}
+                                                >
+                                                  <div
+                                                    style={{
+                                                      fontSize: 12,
+                                                      textAlign: 'start',
+                                                      padding: '4px 10px',
+                                                      fontWeight: 500,
+                                                      width: '100%',
+                                                      height: '100%',
+                                                      display: 'flex',
+                                                      alignItems: 'center'
+                                                    }}
+                                                  >
+                                                    {cell?.title}
+                                                  </div>
+                                                </div>
+                                              )}
+                                            </>
+                                          ) : (
+                                            <UserJournalTableCell
+                                              cell={cell}
+                                              userCell={
+                                                cell.userJobApplicationCells
+                                              }
+                                              userCellValue={
+                                                cell.userJobApplicationCells
+                                                  ?.content
+                                              }
+                                              handleChangeUserCell={(
+                                                cellToUpdate,
+                                                value,
+                                                isEdit
+                                              ) => {
+                                                if (!loading) {
+                                                  return handleUpdateJobApplication(
+                                                    cellToUpdate,
+                                                    value,
+                                                    isEdit,
+                                                    table.id,
+                                                    column.id,
+                                                    cell.id
+                                                  )
+                                                }
+                                              }}
+                                            />
+                                          )}
+                                        </div>
+                                      )
+                                    }
+                                  )}
+                                </div>
+                              )
+                            })}
+                        </div>
+                      </TableWrapper>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          ) : null}
+        </div>
         <div className="col-12">
           {journal?.researchQuestionTable ? (
             <>
@@ -1150,96 +1489,39 @@ function LtsJournalContent(props) {
                 ?.toSorted((a, b) => a.id - b.id)
                 .map((rq) => {
                   return (
-                    <div>
-                      {rq.userResearchQuestion ? (
-                        <>
-                          <JournalTableCell
-                            additionalStyling={{
-                              width: '100%',
-                              display: 'flex',
-                              gap: 6
-                            }}
-                          >
-                            <JournalTableCellInput
-                              additionalStyle={{ width: '100%' }}
-                              type={'text'}
-                              value={rq.userResearchQuestion.question}
-                              handleChange={(value) => {
-                                const isEdit = !!rq.userResearchQuestion
-                                if (!loading) {
-                                  return handleChangeResearchQuestion(
-                                    rq.userResearchQuestion,
-                                    value,
-                                    isEdit,
-                                    rq.id,
-                                    'question'
-                                  )
-                                }
-                              }}
-                            />{' '}
-                            <JournalTableCellInput
-                              additionalStyle={{ width: '100%' }}
-                              type={'text'}
-                              value={rq.userResearchQuestion.research}
-                              handleChange={(value) => {
-                                const isEdit = !!rq.userResearchQuestion
-                                if (!loading) {
-                                  return handleChangeResearchQuestion(
-                                    rq.userResearchQuestion,
-                                    value,
-                                    isEdit,
-                                    rq.id,
-                                    'research'
-                                  )
-                                }
-                              }}
-                            />
-                          </JournalTableCell>
-                        </>
-                      ) : (
-                        <>
-                          <JournalTableCell
-                            additionalStyling={{
-                              width: '100%',
-                              display: 'flex',
-                              gap: 6
-                            }}
-                          >
-                            <JournalTableCellInput
-                              additionalStyle={{ width: '100%' }}
-                              type={'text'}
-                              handleChange={(value) => {
-                                const isEdit = !!rq.userResearchQuestion
-                                if (!loading) {
-                                  return handleChangeResearchQuestion(
-                                    rq,
-                                    value,
-                                    isEdit,
-                                    rq.id,
-                                    'question'
-                                  )
-                                }
-                              }}
-                            />
-                            <JournalTableCellInput
-                              additionalStyle={{ width: '100%' }}
-                              type={'text'}
-                              handleChange={(value) => {
-                                const isEdit = !!rq.userResearchQuestion
-                                if (!loading) {
-                                  return handleChangeResearchQuestion(
-                                    rq,
-                                    value,
-                                    isEdit,
-                                    rq.id,
-                                    'research'
-                                  )
-                                }
-                              }}
-                            />
-                          </JournalTableCell>
-                        </>
-                      )}
+                    <div className={'d-flex'}>
+                      <UserJournalTableCell
+                        cell={rq}
+                        userCell={rq.userResearchQuestion}
+                        userCellValue={rq.userResearchQuestion?.question}
+                        handleChangeUserCell={(cellToUpdate, value, isEdit) => {
+                          if (!loading) {
+                            return handleChangeResearchQuestion(
+                              cellToUpdate,
+                              value,
+                              isEdit,
+                              rq.id,
+                              'question'
+                            )
+                          }
+                        }}
+                      />
+                      <UserJournalTableCell
+                        cell={rq}
+                        userCell={rq.userResearchQuestion}
+                        userCellValue={rq.userResearchQuestion?.research}
+                        handleChangeUserCell={(cellToUpdate, value, isEdit) => {
+                          if (!loading) {
+                            return handleChangeResearchQuestion(
+                              cellToUpdate,
+                              value,
+                              isEdit,
+                              rq.id,
+                              'research'
+                            )
+                          }
+                        }}
+                      />
                     </div>
                   )
                 })}
@@ -1258,40 +1540,22 @@ function LtsJournalContent(props) {
                 >
                   {researchQuestionTable?.creditScoreGoal}
                 </div>
-                {researchQuestionTable?.userCreditScoreGoal ? (
-                  <JournalTableCellInput
-                    additionalStyle={{ width: '40%' }}
-                    type={'text'}
-                    value={researchQuestionTable?.userCreditScoreGoal?.title}
-                    handleChange={(value) => {
-                      const isEdit =
-                        !!researchQuestionTable?.userCreditScoreGoal
-                      if (!loading) {
-                        return handleChangeUserCreditScoreGoal(
-                          researchQuestionTable?.userCreditScoreGoal,
-                          value,
-                          isEdit
-                        )
-                      }
-                    }}
-                  />
-                ) : (
-                  <JournalTableCellInput
-                    additionalStyle={{ width: '40%' }}
-                    type={'text'}
-                    handleChange={(value) => {
-                      const isEdit =
-                        !!researchQuestionTable?.userCreditScoreGoal
-                      if (!loading) {
-                        return handleChangeUserCreditScoreGoal(
-                          researchQuestionTable,
-                          value,
-                          isEdit
-                        )
-                      }
-                    }}
-                  />
-                )}
+                <UserJournalTableCell
+                  cell={researchQuestionTable}
+                  userCell={researchQuestionTable?.userCreditScoreGoal}
+                  userCellValue={
+                    researchQuestionTable?.userCreditScoreGoal?.title
+                  }
+                  handleChangeUserCell={(cellToUpdate, value, isEdit) => {
+                    if (!loading) {
+                      return handleChangeUserCreditScoreGoal(
+                        cellToUpdate,
+                        value,
+                        isEdit
+                      )
+                    }
+                  }}
+                />
               </div>
             </>
           ) : null}
@@ -1319,7 +1583,7 @@ function LtsJournalContent(props) {
                                     <div style={{ width: '100%' }}>
                                       <div
                                         style={{
-                                          height: 45,
+                                          height: 54,
                                           display: 'flex',
                                           alignItems: 'center',
                                           backgroundColor: '#E5E5E5',
@@ -1360,57 +1624,35 @@ function LtsJournalContent(props) {
                                               >
                                                 {!cell?.title &&
                                                   !cell?.title?.length && (
-                                                    <JournalTableCell
-                                                      additionalStyling={{
-                                                        width: '100%'
+                                                    <UserJournalTableCell
+                                                      cell={cell}
+                                                      userCell={
+                                                        cell.userCollegePlansCells
+                                                      }
+                                                      userCellValue={
+                                                        cell
+                                                          ?.userCollegePlansCells
+                                                          ?.content
+                                                      }
+                                                      inputType={'text'}
+                                                      handleChangeUserCell={(
+                                                        cellToUpdate,
+                                                        value,
+                                                        isEdit
+                                                      ) => {
+                                                        if (!loading) {
+                                                          return handleCollegeInfo(
+                                                            cellToUpdate,
+                                                            value,
+                                                            isEdit,
+                                                            table.id,
+                                                            row.id,
+                                                            column.id,
+                                                            cell.id
+                                                          )
+                                                        }
                                                       }}
-                                                    >
-                                                      {cell.userCollegePlansCells ? (
-                                                        <JournalTableCellInput
-                                                          type={'text'}
-                                                          value={
-                                                            cell
-                                                              .userCollegePlansCells
-                                                              ?.content
-                                                          }
-                                                          handleChange={(
-                                                            value
-                                                          ) => {
-                                                            const isEdit =
-                                                              !!cell.userCollegePlansCells
-
-                                                            return handleCollegeInfo(
-                                                              cell.userCollegePlansCells,
-                                                              value,
-                                                              isEdit,
-                                                              table.id,
-                                                              row.id,
-                                                              column.id,
-                                                              cell.id
-                                                            )
-                                                          }}
-                                                        />
-                                                      ) : (
-                                                        <JournalTableCellInput
-                                                          type={'text'}
-                                                          handleChange={(
-                                                            value
-                                                          ) => {
-                                                            const isEdit =
-                                                              !!cell.handleCollegeInfo
-                                                            return handleCollegeInfo(
-                                                              cell,
-                                                              value,
-                                                              isEdit,
-                                                              table.id,
-                                                              row.id,
-                                                              column.id,
-                                                              cell.id
-                                                            )
-                                                          }}
-                                                        />
-                                                      )}
-                                                    </JournalTableCell>
+                                                    />
                                                   )}
                                                 {cell?.title &&
                                                   cell?.title?.length && (
@@ -1418,12 +1660,188 @@ function LtsJournalContent(props) {
                                                       additionalStyling={{
                                                         width: '100%',
                                                         backgroundColor: '#fff',
-                                                        height: 53.33
+                                                        height: 54
                                                       }}
                                                     >
                                                       <div
                                                         style={{
-                                                          height: 45,
+                                                          height: 54,
+                                                          display: 'flex',
+                                                          alignItems: 'center',
+
+                                                          width: '100%'
+                                                        }}
+                                                      >
+                                                        <div
+                                                          style={{
+                                                            fontSize: 12,
+                                                            textAlign: 'start',
+                                                            fontWeight: 500,
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center'
+                                                          }}
+                                                        >
+                                                          {cell?.title}
+                                                        </div>
+                                                      </div>
+                                                    </JournalTableCell>
+                                                  )}
+                                              </div>
+                                            )
+                                          })}
+                                      </div>
+                                    </div>
+                                  )
+                                })}
+                            </div>
+                          </div>
+                        )
+                      })}
+                  </TableWrapper>
+                )
+              })}
+          </div>
+        ) : null}
+        {journal?.economicMajorsTables ? (
+          <div className="col-12">
+            {economicMajorsTables
+              ?.toSorted((a, b) => a.id - b.id)
+              ?.map((table) => {
+                return (
+                  <TableWrapper title={table.title}>
+                    {table.economicMajorsRows
+                      ?.toSorted((a, b) => a.id - b.id)
+                      ?.map((row) => {
+                        return (
+                          <div
+                            className={
+                              'd-flex justify-content-between flex-column'
+                            }
+                            style={{ gap: 2, margin: '2px 0px' }}
+                          >
+                            {row?.title && (
+                              <div
+                                style={{
+                                  height: 54,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  backgroundColor: '#E5E5E5',
+                                  color: '#231F20',
+                                  width: '100%'
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    fontSize: 12,
+                                    textAlign: 'start',
+                                    padding: '4px 10px',
+                                    fontWeight: 500,
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                  }}
+                                >
+                                  {row?.title}
+                                </div>
+                              </div>
+                            )}
+                            <div
+                              className={'d-flex justify-content-between'}
+                              style={{ gap: 2 }}
+                            >
+                              {row.economicMajorsColumns
+                                ?.toSorted((a, b) => a.id - b.id)
+                                ?.map((column) => {
+                                  return (
+                                    <div style={{ width: '100%' }}>
+                                      <div
+                                        style={{
+                                          height: 54,
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          backgroundColor: '#E5E5E5',
+                                          color: '#231F20',
+                                          width: '100%'
+                                        }}
+                                      >
+                                        <div
+                                          style={{
+                                            fontSize: 12,
+                                            textAlign: 'start',
+                                            padding: '4px 10px',
+                                            fontWeight: 500,
+                                            width: '100%',
+                                            height: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                          }}
+                                        >
+                                          {column?.title}
+                                        </div>
+                                      </div>
+                                      <div
+                                        className={
+                                          'd-flex justify-content-between flex-column'
+                                        }
+                                        style={{ gap: 2 }}
+                                      >
+                                        {column.economicMajorsCells
+                                          ?.toSorted((a, b) => a.id - b.id)
+                                          ?.map((cell, index) => {
+                                            return (
+                                              <div
+                                                style={{
+                                                  display: 'flex',
+                                                  width: '100%'
+                                                }}
+                                              >
+                                                {!cell?.title &&
+                                                  !cell?.title?.length && (
+                                                    <UserJournalTableCell
+                                                      cell={cell}
+                                                      userCell={
+                                                        cell.userEconomicMajorsCells
+                                                      }
+                                                      userCellValue={
+                                                        cell
+                                                          ?.userEconomicMajorsCells
+                                                          ?.content
+                                                      }
+                                                      inputType={'number'}
+                                                      handleChangeUserCell={(
+                                                        cellToUpdate,
+                                                        value,
+                                                        isEdit
+                                                      ) => {
+                                                        if (!loading) {
+                                                          return handleMajorsInfo(
+                                                            cell.userEconomicMajorsCells,
+                                                            value,
+                                                            isEdit,
+                                                            table.id,
+                                                            row.id,
+                                                            column.id,
+                                                            cell.id
+                                                          )
+                                                        }
+                                                      }}
+                                                    />
+                                                  )}
+                                                {cell?.title &&
+                                                  cell?.title?.length && (
+                                                    <JournalTableCell
+                                                      additionalStyling={{
+                                                        width: '100%',
+                                                        backgroundColor: '#fff',
+                                                        height: 54
+                                                      }}
+                                                    >
+                                                      <div
+                                                        style={{
+                                                          height: 54,
                                                           display: 'flex',
                                                           alignItems: 'center',
 
@@ -1474,6 +1892,7 @@ function LtsJournalContent(props) {
                   return (
                     <div
                       className={'d-flex justify-content-between flex-column'}
+                      style={{ width: '100%' }}
                     >
                       <div
                         style={{
@@ -1482,7 +1901,7 @@ function LtsJournalContent(props) {
                           padding: 4,
                           display: 'flex',
                           alignItems: 'center',
-                          height: '100%'
+                          height: 56
                         }}
                       >
                         {column.title}
@@ -1493,45 +1912,29 @@ function LtsJournalContent(props) {
                           ?.map((cell) => (
                             <div>
                               <div>
-                                <JournalTableCell
-                                  additionalStyling={{ width: '50%' }}
-                                >
-                                  {cell.userCreditCardInfoCell ? (
-                                    <JournalTableCellInput
-                                      type={'text'}
-                                      value={
-                                        cell.userCreditCardInfoCell?.content
-                                      }
-                                      handleChange={(value) => {
-                                        const isEdit =
-                                          !!cell.userCreditCardInfoCell
-
-                                        return handleChangeCreditCardInfo(
-                                          cell.userCreditCardInfoCell,
-                                          value,
-                                          isEdit,
-                                          column.id,
-                                          cell.id
-                                        )
-                                      }}
-                                    />
-                                  ) : (
-                                    <JournalTableCellInput
-                                      type={'text'}
-                                      handleChange={(value) => {
-                                        const isEdit =
-                                          !!cell.userCreditCardInfoCell
-                                        return handleChangeCreditCardInfo(
-                                          cell,
-                                          value,
-                                          isEdit,
-                                          column.id,
-                                          cell.id
-                                        )
-                                      }}
-                                    />
-                                  )}
-                                </JournalTableCell>
+                                <UserJournalTableCell
+                                  cell={cell}
+                                  userCell={cell.userCreditCardInfoCell}
+                                  userCellValue={
+                                    cell?.userCreditCardInfoCell?.content
+                                  }
+                                  inputType={'text'}
+                                  handleChangeUserCell={(
+                                    cellToUpdate,
+                                    value,
+                                    isEdit
+                                  ) => {
+                                    if (!loading) {
+                                      return handleChangeCreditCardInfo(
+                                        cellToUpdate,
+                                        value,
+                                        isEdit,
+                                        column.id,
+                                        cell.id
+                                      )
+                                    }
+                                  }}
+                                />
                               </div>
                             </div>
                           ))}
@@ -1546,76 +1949,70 @@ function LtsJournalContent(props) {
         {journal?.financialProfilesTable &&
         journal?.financialProfilesTable?.length > 0 ? (
           <>
-            <div>Financial Profiles</div>
             <div className="col-12">
               {financialProfilesTable
                 ?.toSorted((a, b) => a.order - b.order)
                 ?.map((fpt, fptIndex) => {
                   return (
-                    <>
-                      <div>{fpt.title}</div>
+                    <div style={{ border: '1px solid #BBBDBF' }}>
                       {fpt.financialProfiles
                         ?.toSorted((a, b) => a.order - b.order)
                         ?.map((fp, fpIndex) => {
                           return (
-                            <Table bordered hover style={{ marginBottom: 0 }}>
+                            <Table
+                              bordered
+                              style={{
+                                marginBottom: 0
+                              }}
+                            >
                               <tbody>
                                 <JournalTableRow key={fp.id}>
-                                  <JournalTableCell
-                                    isGray
-                                    additionalStyling={{
-                                      width: '50%',
-                                      verticalAlign: 'middle'
-                                    }}
+                                  <div
+                                    className={'d-flex p-0'}
+                                    style={{ gap: 6 }}
                                   >
-                                    {fp.title}
-                                  </JournalTableCell>
-                                  <JournalTableCell
-                                    additionalStyling={{ width: '50%' }}
-                                  >
-                                    {fp.userFinancialProfiles ? (
-                                      <JournalTableCellInput
-                                        type={'text'}
-                                        value={
-                                          fp.userFinancialProfiles?.content
+                                    <JournalTableCell
+                                      additionalStyling={{
+                                        width: '50%',
+                                        verticalAlign: 'middle'
+                                      }}
+                                    >
+                                      {fp.title}
+                                    </JournalTableCell>
+                                    <UserJournalTableCell
+                                      cell={fp}
+                                      userCell={fp?.userFinancialProfiles}
+                                      userCellValue={
+                                        fp?.userFinancialProfiles?.content
+                                      }
+                                      inputType={'text'}
+                                      handleChangeUserCell={(
+                                        cellToUpdate,
+                                        value,
+                                        isEdit
+                                      ) => {
+                                        if (!loading) {
+                                          return handleChangeFinancialProfile(
+                                            cellToUpdate,
+                                            value,
+                                            isEdit,
+                                            fp.id,
+                                            fpt.id
+                                          )
                                         }
-                                        handleChange={(value) => {
-                                          const isEdit =
-                                            !!fp.userFinancialProfiles
-
-                                          return handleChangeFinancialProfile(
-                                            fp.userFinancialProfiles,
-                                            value,
-                                            isEdit,
-                                            fp.id,
-                                            fpt.id
-                                          )
-                                        }}
-                                      />
-                                    ) : (
-                                      <JournalTableCellInput
-                                        type={'text'}
-                                        handleChange={(value) => {
-                                          const isEdit =
-                                            !!fp.userFinancialProfiles
-                                          return handleChangeFinancialProfile(
-                                            fp,
-                                            value,
-                                            isEdit,
-
-                                            fp.id,
-                                            fpt.id
-                                          )
-                                        }}
-                                      />
-                                    )}
-                                  </JournalTableCell>
+                                      }}
+                                      additionalStyling={{
+                                        width: '50%',
+                                        verticalAlign: 'middle'
+                                      }}
+                                    />
+                                  </div>
                                 </JournalTableRow>
                               </tbody>
                             </Table>
                           )
                         })}
-                    </>
+                    </div>
                   )
                 })}
             </div>
@@ -1655,7 +2052,7 @@ function LtsJournalContent(props) {
                             >
                               <div
                                 style={{
-                                  height: 45,
+                                  height: 54,
                                   display: 'flex',
                                   alignItems: 'center'
                                 }}
@@ -1771,60 +2168,80 @@ function LtsJournalContent(props) {
           <>
             {expenseTable.length > 0 && (
               <div className="col-12">
-                <Table bordered hover style={{ marginBottom: 0 }}>
+                <Table bordered style={{ marginBottom: 0 }}>
                   <thead>
                     <JournalTableRow>
-                      <JournalTableCell isGray>
-                        Expense Category
-                      </JournalTableCell>
-                      <JournalTableCell isGray>
-                        What's included
-                      </JournalTableCell>
-                      <JournalTableCell isGray>Amount</JournalTableCell>
+                      <div className={'d-flex p-0'} style={{ gap: 4 }}>
+                        <JournalTableCell
+                          additionalStyling={{
+                            width: '100%',
+                            ...tableColumnStyle
+                          }}
+                        >
+                          Expense Category
+                        </JournalTableCell>
+                        <JournalTableCell
+                          additionalStyling={{
+                            width: '100%',
+                            ...tableColumnStyle
+                          }}
+                        >
+                          What's included
+                        </JournalTableCell>
+                        <JournalTableCell
+                          additionalStyling={{
+                            width: '100%',
+                            ...tableColumnStyle
+                          }}
+                        >
+                          Amount
+                        </JournalTableCell>
+                      </div>
                     </JournalTableRow>
                   </thead>
                   <tbody>
                     {expenseTable.map((cell, index) => {
                       return (
                         <JournalTableRow key={cell.transactionName}>
-                          <JournalTableCell isGray>
-                            {cell.transactionName}
-                          </JournalTableCell>
-                          <JournalTableCell isGray>
-                            {cell.includedItem}
-                          </JournalTableCell>
-                          <JournalTableCell>
-                            {cell.userFinancialSnapshot ? (
-                              <JournalTableCellInput
-                                type={'number'}
-                                value={cell.userFinancialSnapshot?.amount}
-                                handleChange={(value) => {
-                                  const isEdit = cell.userFinancialSnapshot
+                          <div className={'d-flex p-0'}>
+                            <JournalTableCell
+                              additionalStyling={{ width: '100%' }}
+                            >
+                              {cell.transactionName}
+                            </JournalTableCell>
+                            <JournalTableCell
+                              additionalStyling={{ width: '100%' }}
+                            >
+                              {cell.includedItem}
+                            </JournalTableCell>
+                            <UserJournalTableCell
+                              cell={cell}
+                              userCell={cell?.userFinancialSnapshot}
+                              userCellValue={
+                                cell?.userFinancialSnapshot?.amount
+                              }
+                              inputType={'text'}
+                              handleChangeUserCell={(
+                                cellToUpdate,
+                                value,
+                                isEdit
+                              ) => {
+                                if (!loading) {
                                   return handleChangeAmount(
-                                    cell.userFinancialSnapshot,
+                                    cellToUpdate,
                                     value,
                                     isEdit,
                                     index,
                                     'expense'
                                   )
-                                }}
-                              />
-                            ) : (
-                              <JournalTableCellInput
-                                type={'number'}
-                                handleChange={(value) => {
-                                  const isEdit = cell.userFinancialSnapshot
-                                  return handleChangeAmount(
-                                    cell,
-                                    value,
-                                    isEdit,
-                                    index,
-                                    'expense'
-                                  )
-                                }}
-                              />
-                            )}
-                          </JournalTableCell>
+                                }
+                              }}
+                              additionalStyling={{
+                                width: '100%',
+                                verticalAlign: 'middle'
+                              }}
+                            />
+                          </div>
                         </JournalTableRow>
                       )
                     })}
@@ -1836,54 +2253,73 @@ function LtsJournalContent(props) {
             {incomeTable.length > 0 && (
               <div className="col-12">
                 <Table bordered hover style={{ marginBottom: 0 }}>
-                  <thead>
-                    <JournalTableRow>
-                      <JournalTableCell isGray>
+                  <JournalTableRow>
+                    <div className={'d-flex p-0'} style={{ gap: 4 }}>
+                      <JournalTableCell
+                        additionalStyling={{
+                          width: '100%',
+                          ...tableColumnStyle
+                        }}
+                      >
                         Income Category
                       </JournalTableCell>
-                      <JournalTableCell isGray>Amount</JournalTableCell>
-                    </JournalTableRow>
-                  </thead>
+                      <JournalTableCell
+                        additionalStyling={{
+                          width: '100%',
+                          ...tableColumnStyle
+                        }}
+                      >
+                        Amount
+                      </JournalTableCell>
+                    </div>
+                  </JournalTableRow>
                   <tbody>
                     {incomeTable.map((cell, index) => {
                       return (
                         <JournalTableRow key={cell.transactionName}>
-                          <JournalTableCell isGray>
-                            {cell.transactionName}
-                          </JournalTableCell>
-                          <JournalTableCell>
-                            {cell.userFinancialSnapshot ? (
-                              <JournalTableCellInput
-                                type={'number'}
-                                value={cell.userFinancialSnapshot?.amount}
-                                handleChange={(value) => {
-                                  const isEdit = cell.userFinancialSnapshot
-                                  return handleChangeAmount(
-                                    cell.userFinancialSnapshot,
-                                    value,
-                                    isEdit,
-                                    index,
-                                    'income'
-                                  )
-                                }}
-                              />
-                            ) : (
-                              <JournalTableCellInput
-                                type={'number'}
-                                // value={value?.amount}
-                                handleChange={(value) => {
-                                  const isEdit = cell.userFinancialSnapshot
-                                  return handleChangeAmount(
-                                    cell,
-                                    value,
-                                    isEdit,
-                                    index,
-                                    'income'
-                                  )
-                                }}
-                              />
-                            )}
-                          </JournalTableCell>
+                          <div className={'d-flex p-0'}>
+                            <JournalTableCell
+                              additionalStyling={{ width: '100%' }}
+                            >
+                              {cell.transactionName}
+                            </JournalTableCell>
+                            <JournalTableCell
+                              additionalStyling={{ width: '100%' }}
+                            >
+                              {cell.userFinancialSnapshot ? (
+                                <JournalTableCellInput
+                                  type={'number'}
+                                  value={cell.userFinancialSnapshot?.amount}
+                                  handleChange={(value) => {
+                                    const isEdit = cell.userFinancialSnapshot
+                                    return handleChangeAmount(
+                                      cell.userFinancialSnapshot,
+                                      value,
+                                      isEdit,
+                                      index,
+                                      'income'
+                                    )
+                                  }}
+                                />
+                              ) : (
+                                <JournalTableCellInput
+                                  additionalStyling={{ width: '100%' }}
+                                  type={'number'}
+                                  // value={value?.amount}
+                                  handleChange={(value) => {
+                                    const isEdit = cell.userFinancialSnapshot
+                                    return handleChangeAmount(
+                                      cell,
+                                      value,
+                                      isEdit,
+                                      index,
+                                      'income'
+                                    )
+                                  }}
+                                />
+                              )}
+                            </JournalTableCell>
+                          </div>
                         </JournalTableRow>
                       )
                     })}
