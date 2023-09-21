@@ -117,6 +117,7 @@ const JournalTables = (props) => {
         setLoading(false)
       })
   }
+  // console.log(tables)
   return (
     <div className={'table-container'}>
       {tables?.map((table) => {
@@ -147,65 +148,75 @@ const JournalTables = (props) => {
                   ?.toSorted((a, b) => a.order - b.order)
                   ?.map((row) => {
                     return (
-                      <JournalTableRow
-                        additionalStyle={{ width: '100%', height: '100%' }}
-                      >
-                        {row?.cells
-                          ?.toSorted((a, b) => a.order - b.order)
-                          .map((cell, index) => {
-                            return (
-                              <>
-                                {!cell.isEditable ? (
-                                  <TableCellTitle
-                                    title={cell?.content}
-                                    isColumn={cell.isTableHeader}
-                                    isTableSubHeader={cell.isTableSubHeader}
-                                    key={cell.id}
-                                    additionalStyle={{
-                                      width: `${100 / table.gridColumns}%`
-                                    }}
-                                    backgroundColor={'#fff'}
-                                  />
-                                ) : (
-                                  <UserJournalTableCell
-                                    cell={cell}
-                                    inputType={cell.inputType}
-                                    inputTag={cell.inputTag}
-                                    userCell={cell.userCells}
-                                    userCellValue={
-                                      cell.inputType === 'text'
-                                        ? cell.userCells?.content
-                                        : cell.userCells?.amount
-                                    }
-                                    handleChangeUserCell={(
-                                      cellToUpdate,
-                                      value,
-                                      isEdit
-                                    ) => {
-                                      if (!loading) {
-                                        return handleUpdateJournalTables(
-                                          cellToUpdate,
-                                          value,
-                                          isEdit,
-                                          table.id,
-                                          row.id,
-                                          cell.id
-                                        )
+                      <>
+                        <JournalTableRow
+                          additionalStyle={{ width: '100%', height: '100%' }}
+                        >
+                          {row?.cells
+                            ?.toSorted((a, b) => a.order - b.order)
+                            .map((cell, index) => {
+                              return (
+                                <>
+                                  {!cell.isEditable ? (
+                                    <TableCellTitle
+                                      cell={cell}
+                                      title={cell?.content}
+                                      isColumn={cell.isTableHeader}
+                                      isTableSubHeader={cell.isTableSubHeader}
+                                      key={cell.id}
+                                      additionalStyle={{
+                                        // width:
+                                        //   cell.isTableHeader ||
+                                        //   cell.isTableSubHeader
+                                        //     ? `${100 / table.gridColumns}%`
+                                        //     : 'unset'
+                                        width: `${100 / table.gridColumns}%`
+                                      }}
+                                      backgroundColor={'#fff'}
+                                      colSpan={cell?.colSpan}
+                                    />
+                                  ) : (
+                                    <UserJournalTableCell
+                                      cell={cell}
+                                      inputType={cell.inputType}
+                                      inputTag={cell.inputTag}
+                                      colSpan={cell?.colSpan}
+                                      userCell={cell.userCells}
+                                      userCellValue={
+                                        cell.inputType === 'text'
+                                          ? cell.userCells?.content
+                                          : cell.userCells?.amount
                                       }
-                                    }}
-                                    isDisabled={loading === true}
-                                    key={cell.id}
-                                    additionalInputStyle={{
-                                      height: '100%',
-                                      padding: '0px',
-                                      margin: '0px'
-                                    }}
-                                  />
-                                )}
-                              </>
-                            )
-                          })}
-                      </JournalTableRow>
+                                      handleChangeUserCell={(
+                                        cellToUpdate,
+                                        value,
+                                        isEdit
+                                      ) => {
+                                        if (!loading) {
+                                          return handleUpdateJournalTables(
+                                            cellToUpdate,
+                                            value,
+                                            isEdit,
+                                            table.id,
+                                            row.id,
+                                            cell.id
+                                          )
+                                        }
+                                      }}
+                                      isDisabled={loading === true}
+                                      key={cell.id}
+                                      additionalInputStyle={{
+                                        height: '100%',
+                                        padding: '0px',
+                                        margin: '0px'
+                                      }}
+                                    />
+                                  )}
+                                </>
+                              )
+                            })}
+                        </JournalTableRow>
+                      </>
                     )
                   })}
               </table>

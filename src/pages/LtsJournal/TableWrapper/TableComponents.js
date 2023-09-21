@@ -104,6 +104,7 @@ export const JournalTableCellInput = (props) => {
 export const UserJournalTableCell = (props) => {
   return (
     <JournalTableCell
+      colSpan={props.colSpan}
       additionalStyling={{
         // width: '100%',
         display: 'flex',
@@ -153,30 +154,44 @@ export const TableCellTitle = ({
   isColumn,
   isTableSubHeader,
   additionalStyle,
-  backgroundColor
+  backgroundColor,
+  colSpan,
+  cell
 }) => {
   if (isColumn) {
     return (
-      <th style={{ ...additionalStyle }} className={'table_column-title_box'}>
-        <div className={'table_column-title'}>{title}</div>
+      <th
+        style={{ ...additionalStyle, ...cell.cellStyle }}
+        colSpan={colSpan}
+        className={'table_column-title_box'}
+      >
+        <div className={'table_column-title'} style={{ ...cell.cellStyle }}>
+          {title}
+        </div>
       </th>
     )
   } else if (isTableSubHeader) {
     return (
       <th
-        style={{ ...additionalStyle }}
+        style={{ ...additionalStyle, ...cell.cellStyle }}
+        colSpan={colSpan}
         className={'table-subheader-title_box'}
       >
-        <div className={'table-subheader-title'}>{title}</div>
+        <div className={'table-subheader-title'} style={{ ...cell.cellStyle }}>
+          {title}
+        </div>
       </th>
     )
   }
   return (
     <td
-      style={{ ...additionalStyle, backgroundColor }}
+      style={{ ...additionalStyle, backgroundColor, ...cell.cellStyle }}
+      colSpan={colSpan}
       className={'table_cell-title_box'}
     >
-      <div className={'table_cell-title'}>{title}</div>
+      <div className={'table_cell-title'} style={{ ...cell.cellStyle }}>
+        {title}
+      </div>
     </td>
   )
 }

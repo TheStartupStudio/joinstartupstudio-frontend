@@ -1089,6 +1089,7 @@ function LtsJournalContent(props) {
     alignItems: 'center',
     height: 56
   }
+
   return (
     <>
       <div className="row">
@@ -1336,42 +1337,42 @@ function LtsJournalContent(props) {
             ))}
           </>
         ) : null}
-        {journal?.jobApplicationTables ? (
-          <div className="col-12">
-            <>
-              <JobApplicationTable
-                tables={jobApplicationTables}
-                loading={loading}
-                handleUpdateJobApplication={handleUpdateJobApplication}
-              />
-            </>
-          </div>
-        ) : null}
+        {/*{journal?.jobApplicationTables ? (*/}
+        {/*  <div className="col-12">*/}
+        {/*    <>*/}
+        {/*      <JobApplicationTable*/}
+        {/*        tables={jobApplicationTables}*/}
+        {/*        loading={loading}*/}
+        {/*        handleUpdateJobApplication={handleUpdateJobApplication}*/}
+        {/*      />*/}
+        {/*    </>*/}
+        {/*  </div>*/}
+        {/*) : null}*/}
 
-        {journal?.resumeEvaluationTables ? (
-          <div className="col-12">
-            <>
-              <ResumeEvaluationTable
-                tables={journal?.resumeEvaluationTables}
-                loading={loading}
-                handleChange={handleUpdateJobApplication}
-              />
-            </>
-          </div>
-        ) : null}
+        {/*{journal?.resumeEvaluationTables ? (*/}
+        {/*  <div className="col-12">*/}
+        {/*    <>*/}
+        {/*      <ResumeEvaluationTable*/}
+        {/*        tables={journal?.resumeEvaluationTables}*/}
+        {/*        loading={loading}*/}
+        {/*        handleChange={handleUpdateJobApplication}*/}
+        {/*      />*/}
+        {/*    </>*/}
+        {/*  </div>*/}
+        {/*) : null}*/}
 
-        {journal?.lifestyleHousingTables ? (
-          <div className="col-12">
-            <>
-              <LifestyleHousingTable
-                tables={journal?.lifestyleHousingTables}
-                loading={loading}
-                handleChange={handleUpdateJobApplication}
-                backgroundColor={'#fff'}
-              />
-            </>
-          </div>
-        ) : null}
+        {/*{journal?.lifestyleHousingTables ? (*/}
+        {/*  <div className="col-12">*/}
+        {/*    <>*/}
+        {/*      <LifestyleHousingTable*/}
+        {/*        tables={journal?.lifestyleHousingTables}*/}
+        {/*        loading={loading}*/}
+        {/*        handleChange={handleUpdateJobApplication}*/}
+        {/*        backgroundColor={'#fff'}*/}
+        {/*      />*/}
+        {/*    </>*/}
+        {/*  </div>*/}
+        {/*) : null}*/}
         {journal?.journalTables ? (
           <div className="col-12">
             <>
@@ -1386,804 +1387,804 @@ function LtsJournalContent(props) {
           </div>
         ) : null}
 
-        {journal?.researchQuestionTable ? (
-          <div className="col-12">
-            <>
-              <div
-                style={{
-                  backgroundColor: '#E5E5E5',
-                  color: '#231F20',
-                  fontFamily: 'Montserrat',
-                  fontWeight: 700,
-                  lineSpacing: 15,
-                  padding: 10
-                }}
-              >
-                {researchQuestionTable?.description}
-              </div>
-              {researchQuestionTable?.researchQuestions
-                ?.toSorted((a, b) => a.id - b.id)
-                .map((rq) => {
-                  return (
-                    <div className={'d-flex'}>
-                      <UserJournalTableCell
-                        cell={rq}
-                        userCell={rq.userResearchQuestion}
-                        userCellValue={rq.userResearchQuestion?.question}
-                        handleChangeUserCell={(cellToUpdate, value, isEdit) => {
-                          if (!loading) {
-                            return handleChangeResearchQuestion(
-                              cellToUpdate,
-                              value,
-                              isEdit,
-                              rq.id,
-                              'question'
-                            )
-                          }
-                        }}
-                      />
-                      <UserJournalTableCell
-                        cell={rq}
-                        userCell={rq.userResearchQuestion}
-                        userCellValue={rq.userResearchQuestion?.research}
-                        handleChangeUserCell={(cellToUpdate, value, isEdit) => {
-                          if (!loading) {
-                            return handleChangeResearchQuestion(
-                              cellToUpdate,
-                              value,
-                              isEdit,
-                              rq.id,
-                              'research'
-                            )
-                          }
-                        }}
-                      />
-                    </div>
-                  )
-                })}
-              <div
-                style={{ padding: 10, background: '#fff' }}
-                className={'d-flex align-items-center'}
-              >
-                <div
-                  style={{
-                    width: '60%',
-                    color: '#231F20',
-                    fontFamily: 'Montserrat',
-                    fontWeight: 700,
-                    lineSpacing: 15
-                  }}
-                >
-                  {researchQuestionTable?.creditScoreGoal}
-                </div>
-                <UserJournalTableCell
-                  cell={researchQuestionTable}
-                  userCell={researchQuestionTable?.userCreditScoreGoal}
-                  userCellValue={
-                    researchQuestionTable?.userCreditScoreGoal?.title
-                  }
-                  handleChangeUserCell={(cellToUpdate, value, isEdit) => {
-                    if (!loading) {
-                      return handleChangeUserCreditScoreGoal(
-                        cellToUpdate,
-                        value,
-                        isEdit
-                      )
-                    }
-                  }}
-                />
-              </div>
-            </>
-          </div>
-        ) : null}
+        {/*{journal?.researchQuestionTable ? (*/}
+        {/*  <div className="col-12">*/}
+        {/*    <>*/}
+        {/*      <div*/}
+        {/*        style={{*/}
+        {/*          backgroundColor: '#E5E5E5',*/}
+        {/*          color: '#231F20',*/}
+        {/*          fontFamily: 'Montserrat',*/}
+        {/*          fontWeight: 700,*/}
+        {/*          lineSpacing: 15,*/}
+        {/*          padding: 10*/}
+        {/*        }}*/}
+        {/*      >*/}
+        {/*        {researchQuestionTable?.description}*/}
+        {/*      </div>*/}
+        {/*      {researchQuestionTable?.researchQuestions*/}
+        {/*        ?.toSorted((a, b) => a.id - b.id)*/}
+        {/*        .map((rq) => {*/}
+        {/*          return (*/}
+        {/*            <div className={'d-flex'}>*/}
+        {/*              <UserJournalTableCell*/}
+        {/*                cell={rq}*/}
+        {/*                userCell={rq.userResearchQuestion}*/}
+        {/*                userCellValue={rq.userResearchQuestion?.question}*/}
+        {/*                handleChangeUserCell={(cellToUpdate, value, isEdit) => {*/}
+        {/*                  if (!loading) {*/}
+        {/*                    return handleChangeResearchQuestion(*/}
+        {/*                      cellToUpdate,*/}
+        {/*                      value,*/}
+        {/*                      isEdit,*/}
+        {/*                      rq.id,*/}
+        {/*                      'question'*/}
+        {/*                    )*/}
+        {/*                  }*/}
+        {/*                }}*/}
+        {/*              />*/}
+        {/*              <UserJournalTableCell*/}
+        {/*                cell={rq}*/}
+        {/*                userCell={rq.userResearchQuestion}*/}
+        {/*                userCellValue={rq.userResearchQuestion?.research}*/}
+        {/*                handleChangeUserCell={(cellToUpdate, value, isEdit) => {*/}
+        {/*                  if (!loading) {*/}
+        {/*                    return handleChangeResearchQuestion(*/}
+        {/*                      cellToUpdate,*/}
+        {/*                      value,*/}
+        {/*                      isEdit,*/}
+        {/*                      rq.id,*/}
+        {/*                      'research'*/}
+        {/*                    )*/}
+        {/*                  }*/}
+        {/*                }}*/}
+        {/*              />*/}
+        {/*            </div>*/}
+        {/*          )*/}
+        {/*        })}*/}
+        {/*      <div*/}
+        {/*        style={{ padding: 10, background: '#fff' }}*/}
+        {/*        className={'d-flex align-items-center'}*/}
+        {/*      >*/}
+        {/*        <div*/}
+        {/*          style={{*/}
+        {/*            width: '60%',*/}
+        {/*            color: '#231F20',*/}
+        {/*            fontFamily: 'Montserrat',*/}
+        {/*            fontWeight: 700,*/}
+        {/*            lineSpacing: 15*/}
+        {/*          }}*/}
+        {/*        >*/}
+        {/*          {researchQuestionTable?.creditScoreGoal}*/}
+        {/*        </div>*/}
+        {/*        <UserJournalTableCell*/}
+        {/*          cell={researchQuestionTable}*/}
+        {/*          userCell={researchQuestionTable?.userCreditScoreGoal}*/}
+        {/*          userCellValue={*/}
+        {/*            researchQuestionTable?.userCreditScoreGoal?.title*/}
+        {/*          }*/}
+        {/*          handleChangeUserCell={(cellToUpdate, value, isEdit) => {*/}
+        {/*            if (!loading) {*/}
+        {/*              return handleChangeUserCreditScoreGoal(*/}
+        {/*                cellToUpdate,*/}
+        {/*                value,*/}
+        {/*                isEdit*/}
+        {/*              )*/}
+        {/*            }*/}
+        {/*          }}*/}
+        {/*        />*/}
+        {/*      </div>*/}
+        {/*    </>*/}
+        {/*  </div>*/}
+        {/*) : null}*/}
 
-        {journal?.collegePlansTables ? (
-          <div className="col-12">
-            <CollegePlansTable
-              tables={collegeInfoTables}
-              loading={loading}
-              handleChange={handleCollegeInfo}
-            />
-          </div>
-        ) : null}
-        {journal?.economicMajorsTables ? (
-          <div className="col-12">
-            {economicMajorsTables
-              ?.toSorted((a, b) => a.id - b.id)
-              ?.map((table) => {
-                return (
-                  <TableWrapper title={table.title}>
-                    {table.economicMajorsRows
-                      ?.toSorted((a, b) => a.id - b.id)
-                      ?.map((row) => {
-                        return (
-                          <div
-                            className={
-                              'd-flex justify-content-between flex-column'
-                            }
-                            style={{ gap: 2, margin: '2px 0px' }}
-                          >
-                            {row?.title && (
-                              <div
-                                style={{
-                                  height: 54,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  backgroundColor: '#E5E5E5',
-                                  color: '#231F20',
-                                  width: '100%'
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    fontSize: 12,
-                                    textAlign: 'start',
-                                    padding: '4px 10px',
-                                    fontWeight: 500,
-                                    width: '100%',
-                                    height: '100%',
-                                    display: 'flex',
-                                    alignItems: 'center'
-                                  }}
-                                >
-                                  {row?.title}
-                                </div>
-                              </div>
-                            )}
-                            <div
-                              className={'d-flex justify-content-between'}
-                              style={{ gap: 2 }}
-                            >
-                              {row.economicMajorsColumns
-                                ?.toSorted((a, b) => a.id - b.id)
-                                ?.map((column) => {
-                                  return (
-                                    <div style={{ width: '100%' }}>
-                                      <div
-                                        style={{
-                                          height: 54,
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          backgroundColor: '#E5E5E5',
-                                          color: '#231F20',
-                                          width: '100%'
-                                        }}
-                                      >
-                                        <div
-                                          style={{
-                                            fontSize: 12,
-                                            textAlign: 'start',
-                                            padding: '4px 10px',
-                                            fontWeight: 500,
-                                            width: '100%',
-                                            height: '100%',
-                                            display: 'flex',
-                                            alignItems: 'center'
-                                          }}
-                                        >
-                                          {column?.title}
-                                        </div>
-                                      </div>
-                                      <div
-                                        className={
-                                          'd-flex justify-content-between flex-column'
-                                        }
-                                        style={{ gap: 2 }}
-                                      >
-                                        {column.economicMajorsCells
-                                          ?.toSorted((a, b) => a.id - b.id)
-                                          ?.map((cell, index) => {
-                                            return (
-                                              <div
-                                                style={{
-                                                  display: 'flex',
-                                                  width: '100%'
-                                                }}
-                                              >
-                                                {!cell?.title &&
-                                                  !cell?.title?.length && (
-                                                    <UserJournalTableCell
-                                                      cell={cell}
-                                                      userCell={
-                                                        cell.userEconomicMajorsCells
-                                                      }
-                                                      userCellValue={
-                                                        cell
-                                                          ?.userEconomicMajorsCells
-                                                          ?.content
-                                                      }
-                                                      inputType={'number'}
-                                                      handleChangeUserCell={(
-                                                        cellToUpdate,
-                                                        value,
-                                                        isEdit
-                                                      ) => {
-                                                        if (!loading) {
-                                                          return handleMajorsInfo(
-                                                            cell.userEconomicMajorsCells,
-                                                            value,
-                                                            isEdit,
-                                                            table.id,
-                                                            row.id,
-                                                            column.id,
-                                                            cell.id
-                                                          )
-                                                        }
-                                                      }}
-                                                    />
-                                                  )}
-                                                {cell?.title &&
-                                                  cell?.title?.length && (
-                                                    <JournalTableCell
-                                                      additionalStyling={{
-                                                        width: '100%',
-                                                        backgroundColor: '#fff',
-                                                        height: 54
-                                                      }}
-                                                    >
-                                                      <div
-                                                        style={{
-                                                          height: 54,
-                                                          display: 'flex',
-                                                          alignItems: 'center',
+        {/*{journal?.collegePlansTables ? (*/}
+        {/*  <div className="col-12">*/}
+        {/*    <CollegePlansTable*/}
+        {/*      tables={collegeInfoTables}*/}
+        {/*      loading={loading}*/}
+        {/*      handleChange={handleCollegeInfo}*/}
+        {/*    />*/}
+        {/*  </div>*/}
+        {/*) : null}*/}
+        {/*{journal?.economicMajorsTables ? (*/}
+        {/*  <div className="col-12">*/}
+        {/*    {economicMajorsTables*/}
+        {/*      ?.toSorted((a, b) => a.id - b.id)*/}
+        {/*      ?.map((table) => {*/}
+        {/*        return (*/}
+        {/*          <TableWrapper title={table.title}>*/}
+        {/*            {table.economicMajorsRows*/}
+        {/*              ?.toSorted((a, b) => a.id - b.id)*/}
+        {/*              ?.map((row) => {*/}
+        {/*                return (*/}
+        {/*                  <div*/}
+        {/*                    className={*/}
+        {/*                      'd-flex justify-content-between flex-column'*/}
+        {/*                    }*/}
+        {/*                    style={{ gap: 2, margin: '2px 0px' }}*/}
+        {/*                  >*/}
+        {/*                    {row?.title && (*/}
+        {/*                      <div*/}
+        {/*                        style={{*/}
+        {/*                          height: 54,*/}
+        {/*                          display: 'flex',*/}
+        {/*                          alignItems: 'center',*/}
+        {/*                          backgroundColor: '#E5E5E5',*/}
+        {/*                          color: '#231F20',*/}
+        {/*                          width: '100%'*/}
+        {/*                        }}*/}
+        {/*                      >*/}
+        {/*                        <div*/}
+        {/*                          style={{*/}
+        {/*                            fontSize: 12,*/}
+        {/*                            textAlign: 'start',*/}
+        {/*                            padding: '4px 10px',*/}
+        {/*                            fontWeight: 500,*/}
+        {/*                            width: '100%',*/}
+        {/*                            height: '100%',*/}
+        {/*                            display: 'flex',*/}
+        {/*                            alignItems: 'center'*/}
+        {/*                          }}*/}
+        {/*                        >*/}
+        {/*                          {row?.title}*/}
+        {/*                        </div>*/}
+        {/*                      </div>*/}
+        {/*                    )}*/}
+        {/*                    <div*/}
+        {/*                      className={'d-flex justify-content-between'}*/}
+        {/*                      style={{ gap: 2 }}*/}
+        {/*                    >*/}
+        {/*                      {row.economicMajorsColumns*/}
+        {/*                        ?.toSorted((a, b) => a.id - b.id)*/}
+        {/*                        ?.map((column) => {*/}
+        {/*                          return (*/}
+        {/*                            <div style={{ width: '100%' }}>*/}
+        {/*                              <div*/}
+        {/*                                style={{*/}
+        {/*                                  height: 54,*/}
+        {/*                                  display: 'flex',*/}
+        {/*                                  alignItems: 'center',*/}
+        {/*                                  backgroundColor: '#E5E5E5',*/}
+        {/*                                  color: '#231F20',*/}
+        {/*                                  width: '100%'*/}
+        {/*                                }}*/}
+        {/*                              >*/}
+        {/*                                <div*/}
+        {/*                                  style={{*/}
+        {/*                                    fontSize: 12,*/}
+        {/*                                    textAlign: 'start',*/}
+        {/*                                    padding: '4px 10px',*/}
+        {/*                                    fontWeight: 500,*/}
+        {/*                                    width: '100%',*/}
+        {/*                                    height: '100%',*/}
+        {/*                                    display: 'flex',*/}
+        {/*                                    alignItems: 'center'*/}
+        {/*                                  }}*/}
+        {/*                                >*/}
+        {/*                                  {column?.title}*/}
+        {/*                                </div>*/}
+        {/*                              </div>*/}
+        {/*                              <div*/}
+        {/*                                className={*/}
+        {/*                                  'd-flex justify-content-between flex-column'*/}
+        {/*                                }*/}
+        {/*                                style={{ gap: 2 }}*/}
+        {/*                              >*/}
+        {/*                                {column.economicMajorsCells*/}
+        {/*                                  ?.toSorted((a, b) => a.id - b.id)*/}
+        {/*                                  ?.map((cell, index) => {*/}
+        {/*                                    return (*/}
+        {/*                                      <div*/}
+        {/*                                        style={{*/}
+        {/*                                          display: 'flex',*/}
+        {/*                                          width: '100%'*/}
+        {/*                                        }}*/}
+        {/*                                      >*/}
+        {/*                                        {!cell?.title &&*/}
+        {/*                                          !cell?.title?.length && (*/}
+        {/*                                            <UserJournalTableCell*/}
+        {/*                                              cell={cell}*/}
+        {/*                                              userCell={*/}
+        {/*                                                cell.userEconomicMajorsCells*/}
+        {/*                                              }*/}
+        {/*                                              userCellValue={*/}
+        {/*                                                cell*/}
+        {/*                                                  ?.userEconomicMajorsCells*/}
+        {/*                                                  ?.content*/}
+        {/*                                              }*/}
+        {/*                                              inputType={'number'}*/}
+        {/*                                              handleChangeUserCell={(*/}
+        {/*                                                cellToUpdate,*/}
+        {/*                                                value,*/}
+        {/*                                                isEdit*/}
+        {/*                                              ) => {*/}
+        {/*                                                if (!loading) {*/}
+        {/*                                                  return handleMajorsInfo(*/}
+        {/*                                                    cell.userEconomicMajorsCells,*/}
+        {/*                                                    value,*/}
+        {/*                                                    isEdit,*/}
+        {/*                                                    table.id,*/}
+        {/*                                                    row.id,*/}
+        {/*                                                    column.id,*/}
+        {/*                                                    cell.id*/}
+        {/*                                                  )*/}
+        {/*                                                }*/}
+        {/*                                              }}*/}
+        {/*                                            />*/}
+        {/*                                          )}*/}
+        {/*                                        {cell?.title &&*/}
+        {/*                                          cell?.title?.length && (*/}
+        {/*                                            <JournalTableCell*/}
+        {/*                                              additionalStyling={{*/}
+        {/*                                                width: '100%',*/}
+        {/*                                                backgroundColor: '#fff',*/}
+        {/*                                                height: 54*/}
+        {/*                                              }}*/}
+        {/*                                            >*/}
+        {/*                                              <div*/}
+        {/*                                                style={{*/}
+        {/*                                                  height: 54,*/}
+        {/*                                                  display: 'flex',*/}
+        {/*                                                  alignItems: 'center',*/}
 
-                                                          width: '100%'
-                                                        }}
-                                                      >
-                                                        <div
-                                                          style={{
-                                                            fontSize: 12,
-                                                            textAlign: 'start',
-                                                            fontWeight: 500,
-                                                            width: '100%',
-                                                            height: '100%',
-                                                            display: 'flex',
-                                                            alignItems: 'center'
-                                                          }}
-                                                        >
-                                                          {cell?.title}
-                                                        </div>
-                                                      </div>
-                                                    </JournalTableCell>
-                                                  )}
-                                              </div>
-                                            )
-                                          })}
-                                      </div>
-                                    </div>
-                                  )
-                                })}
-                            </div>
-                          </div>
-                        )
-                      })}
-                  </TableWrapper>
-                )
-              })}
-          </div>
-        ) : null}
-        <div className="col-12">
-          {journal?.creditCardInfoTables ? (
-            <div
-              className={'d-flex justify-content-between'}
-              style={{ gap: 4, height: '100%' }}
-            >
-              {creditCardInfoTable?.creditCardInfoColumns
-                ?.toSorted((a, b) => a.id - b.id)
-                ?.map((column) => {
-                  return (
-                    <div
-                      className={'d-flex justify-content-between flex-column'}
-                      style={{ width: '100%' }}
-                    >
-                      <div
-                        style={{
-                          backgroundColor: '#51c7df',
-                          color: '#fff',
-                          padding: 4,
-                          display: 'flex',
-                          alignItems: 'center',
-                          height: 56
-                        }}
-                      >
-                        {column.title}
-                      </div>
-                      <div>
-                        {column.creditCardInfoCells
-                          ?.toSorted((a, b) => a.id - b.id)
-                          ?.map((cell) => (
-                            <div>
-                              <div>
-                                <UserJournalTableCell
-                                  cell={cell}
-                                  userCell={cell.userCreditCardInfoCell}
-                                  userCellValue={
-                                    cell?.userCreditCardInfoCell?.content
-                                  }
-                                  inputType={'text'}
-                                  handleChangeUserCell={(
-                                    cellToUpdate,
-                                    value,
-                                    isEdit
-                                  ) => {
-                                    if (!loading) {
-                                      return handleChangeCreditCardInfo(
-                                        cellToUpdate,
-                                        value,
-                                        isEdit,
-                                        column.id,
-                                        cell.id
-                                      )
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  )
-                })}
-            </div>
-          ) : null}
-        </div>
+        {/*                                                  width: '100%'*/}
+        {/*                                                }}*/}
+        {/*                                              >*/}
+        {/*                                                <div*/}
+        {/*                                                  style={{*/}
+        {/*                                                    fontSize: 12,*/}
+        {/*                                                    textAlign: 'start',*/}
+        {/*                                                    fontWeight: 500,*/}
+        {/*                                                    width: '100%',*/}
+        {/*                                                    height: '100%',*/}
+        {/*                                                    display: 'flex',*/}
+        {/*                                                    alignItems: 'center'*/}
+        {/*                                                  }}*/}
+        {/*                                                >*/}
+        {/*                                                  {cell?.title}*/}
+        {/*                                                </div>*/}
+        {/*                                              </div>*/}
+        {/*                                            </JournalTableCell>*/}
+        {/*                                          )}*/}
+        {/*                                      </div>*/}
+        {/*                                    )*/}
+        {/*                                  })}*/}
+        {/*                              </div>*/}
+        {/*                            </div>*/}
+        {/*                          )*/}
+        {/*                        })}*/}
+        {/*                    </div>*/}
+        {/*                  </div>*/}
+        {/*                )*/}
+        {/*              })}*/}
+        {/*          </TableWrapper>*/}
+        {/*        )*/}
+        {/*      })}*/}
+        {/*  </div>*/}
+        {/*) : null}*/}
+        {/*<div className="col-12">*/}
+        {/*  {journal?.creditCardInfoTables ? (*/}
+        {/*    <div*/}
+        {/*      className={'d-flex justify-content-between'}*/}
+        {/*      style={{ gap: 4, height: '100%' }}*/}
+        {/*    >*/}
+        {/*      {creditCardInfoTable?.creditCardInfoColumns*/}
+        {/*        ?.toSorted((a, b) => a.id - b.id)*/}
+        {/*        ?.map((column) => {*/}
+        {/*          return (*/}
+        {/*            <div*/}
+        {/*              className={'d-flex justify-content-between flex-column'}*/}
+        {/*              style={{ width: '100%' }}*/}
+        {/*            >*/}
+        {/*              <div*/}
+        {/*                style={{*/}
+        {/*                  backgroundColor: '#51c7df',*/}
+        {/*                  color: '#fff',*/}
+        {/*                  padding: 4,*/}
+        {/*                  display: 'flex',*/}
+        {/*                  alignItems: 'center',*/}
+        {/*                  height: 56*/}
+        {/*                }}*/}
+        {/*              >*/}
+        {/*                {column.title}*/}
+        {/*              </div>*/}
+        {/*              <div>*/}
+        {/*                {column.creditCardInfoCells*/}
+        {/*                  ?.toSorted((a, b) => a.id - b.id)*/}
+        {/*                  ?.map((cell) => (*/}
+        {/*                    <div>*/}
+        {/*                      <div>*/}
+        {/*                        <UserJournalTableCell*/}
+        {/*                          cell={cell}*/}
+        {/*                          userCell={cell.userCreditCardInfoCell}*/}
+        {/*                          userCellValue={*/}
+        {/*                            cell?.userCreditCardInfoCell?.content*/}
+        {/*                          }*/}
+        {/*                          inputType={'text'}*/}
+        {/*                          handleChangeUserCell={(*/}
+        {/*                            cellToUpdate,*/}
+        {/*                            value,*/}
+        {/*                            isEdit*/}
+        {/*                          ) => {*/}
+        {/*                            if (!loading) {*/}
+        {/*                              return handleChangeCreditCardInfo(*/}
+        {/*                                cellToUpdate,*/}
+        {/*                                value,*/}
+        {/*                                isEdit,*/}
+        {/*                                column.id,*/}
+        {/*                                cell.id*/}
+        {/*                              )*/}
+        {/*                            }*/}
+        {/*                          }}*/}
+        {/*                        />*/}
+        {/*                      </div>*/}
+        {/*                    </div>*/}
+        {/*                  ))}*/}
+        {/*              </div>*/}
+        {/*            </div>*/}
+        {/*          )*/}
+        {/*        })}*/}
+        {/*    </div>*/}
+        {/*  ) : null}*/}
+        {/*</div>*/}
 
-        {journal?.financialProfilesTable &&
-        journal?.financialProfilesTable?.length > 0 ? (
-          <>
-            <div className="col-12">
-              {financialProfilesTable
-                ?.toSorted((a, b) => a.order - b.order)
-                ?.map((fpt, fptIndex) => {
-                  return (
-                    <div style={{ border: '1px solid #BBBDBF' }}>
-                      {fpt.financialProfiles
-                        ?.toSorted((a, b) => a.order - b.order)
-                        ?.map((fp, fpIndex) => {
-                          return (
-                            <Table
-                              bordered
-                              style={{
-                                marginBottom: 0
-                              }}
-                            >
-                              <tbody>
-                                <JournalTableRow key={fp.id}>
-                                  <div
-                                    className={'d-flex p-0'}
-                                    style={{ gap: 6 }}
-                                  >
-                                    <JournalTableCell
-                                      additionalStyling={{
-                                        width: '50%',
-                                        verticalAlign: 'middle'
-                                      }}
-                                    >
-                                      {fp.title}
-                                    </JournalTableCell>
-                                    <UserJournalTableCell
-                                      cell={fp}
-                                      userCell={fp?.userFinancialProfiles}
-                                      userCellValue={
-                                        fp?.userFinancialProfiles?.content
-                                      }
-                                      inputType={'text'}
-                                      handleChangeUserCell={(
-                                        cellToUpdate,
-                                        value,
-                                        isEdit
-                                      ) => {
-                                        if (!loading) {
-                                          return handleChangeFinancialProfile(
-                                            cellToUpdate,
-                                            value,
-                                            isEdit,
-                                            fp.id,
-                                            fpt.id
-                                          )
-                                        }
-                                      }}
-                                      additionalStyling={{
-                                        width: '50%',
-                                        verticalAlign: 'middle'
-                                      }}
-                                    />
-                                  </div>
-                                </JournalTableRow>
-                              </tbody>
-                            </Table>
-                          )
-                        })}
-                    </div>
-                  )
-                })}
-            </div>
-          </>
-        ) : null}
+        {/*{journal?.financialProfilesTable &&*/}
+        {/*journal?.financialProfilesTable?.length > 0 ? (*/}
+        {/*  <>*/}
+        {/*    <div className="col-12">*/}
+        {/*      {financialProfilesTable*/}
+        {/*        ?.toSorted((a, b) => a.order - b.order)*/}
+        {/*        ?.map((fpt, fptIndex) => {*/}
+        {/*          return (*/}
+        {/*            <div style={{ border: '1px solid #BBBDBF' }}>*/}
+        {/*              {fpt.financialProfiles*/}
+        {/*                ?.toSorted((a, b) => a.order - b.order)*/}
+        {/*                ?.map((fp, fpIndex) => {*/}
+        {/*                  return (*/}
+        {/*                    <Table*/}
+        {/*                      bordered*/}
+        {/*                      style={{*/}
+        {/*                        marginBottom: 0*/}
+        {/*                      }}*/}
+        {/*                    >*/}
+        {/*                      <tbody>*/}
+        {/*                        <JournalTableRow key={fp.id}>*/}
+        {/*                          <div*/}
+        {/*                            className={'d-flex p-0'}*/}
+        {/*                            style={{ gap: 6 }}*/}
+        {/*                          >*/}
+        {/*                            <JournalTableCell*/}
+        {/*                              additionalStyling={{*/}
+        {/*                                width: '50%',*/}
+        {/*                                verticalAlign: 'middle'*/}
+        {/*                              }}*/}
+        {/*                            >*/}
+        {/*                              {fp.title}*/}
+        {/*                            </JournalTableCell>*/}
+        {/*                            <UserJournalTableCell*/}
+        {/*                              cell={fp}*/}
+        {/*                              userCell={fp?.userFinancialProfiles}*/}
+        {/*                              userCellValue={*/}
+        {/*                                fp?.userFinancialProfiles?.content*/}
+        {/*                              }*/}
+        {/*                              inputType={'text'}*/}
+        {/*                              handleChangeUserCell={(*/}
+        {/*                                cellToUpdate,*/}
+        {/*                                value,*/}
+        {/*                                isEdit*/}
+        {/*                              ) => {*/}
+        {/*                                if (!loading) {*/}
+        {/*                                  return handleChangeFinancialProfile(*/}
+        {/*                                    cellToUpdate,*/}
+        {/*                                    value,*/}
+        {/*                                    isEdit,*/}
+        {/*                                    fp.id,*/}
+        {/*                                    fpt.id*/}
+        {/*                                  )*/}
+        {/*                                }*/}
+        {/*                              }}*/}
+        {/*                              additionalStyling={{*/}
+        {/*                                width: '50%',*/}
+        {/*                                verticalAlign: 'middle'*/}
+        {/*                              }}*/}
+        {/*                            />*/}
+        {/*                          </div>*/}
+        {/*                        </JournalTableRow>*/}
+        {/*                      </tbody>*/}
+        {/*                    </Table>*/}
+        {/*                  )*/}
+        {/*                })}*/}
+        {/*            </div>*/}
+        {/*          )*/}
+        {/*        })}*/}
+        {/*    </div>*/}
+        {/*  </>*/}
+        {/*) : null}*/}
 
-        {journal?.financialAccounts &&
-          journal?.financialAccounts?.length > 0 && (
-            <div style={{ minHeight: 300, margin: '20px 0' }}>
-              {financialAccounts
-                ?.toSorted((a, b) => a.order - b.order)
-                ?.map((fa) => {
-                  return (
-                    <TableWrapper
-                      title={fa?.title}
-                      key={fa?.id}
-                      additionalStyle={{ margin: 0 }}
-                    >
-                      <div
-                        style={{
-                          display: 'grid',
-                          gap: 4,
-                          alignItems: 'center',
-                          gridTemplateColumns: 'repeat(3,1fr)'
-                        }}
-                      >
-                        {fa?.financialAccountsFields
-                          ?.toSorted((a, b) => a.order - b.order)
-                          ?.map((faf) => {
-                            return (
-                              <div
-                                key={faf?.id}
-                                style={{
-                                  background: '#E5E5E5',
-                                  display: 'flex',
-                                  flexDirection: 'column'
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    height: 54,
-                                    display: 'flex',
-                                    alignItems: 'center'
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      fontSize: 12,
-                                      textAlign: 'start',
-                                      padding: '4px 10px',
-                                      fontWeight: 500
-                                    }}
-                                  >
-                                    {faf?.title}
-                                  </div>
-                                </div>
-                                <UserJournalTableCell
-                                  cell={faf}
-                                  userCell={faf?.userFinancialAccountsField}
-                                  userCellValue={
-                                    faf?.userFinancialAccountsField?.fieldOne
-                                  }
-                                  inputType={'text'}
-                                  handleChangeUserCell={(
-                                    cellToUpdate,
-                                    value,
-                                    isEdit
-                                  ) => {
-                                    if (!loading) {
-                                      return handleChangeFinancialAccountsFields(
-                                        'fieldOne',
-                                        cellToUpdate,
-                                        value,
-                                        isEdit,
-                                        faf?.id,
-                                        fa?.id
-                                      )
-                                    }
-                                  }}
-                                  additionalStyling={{
-                                    verticalAlign: 'middle'
-                                  }}
-                                />
-                                <UserJournalTableCell
-                                  cell={faf}
-                                  userCell={faf?.userFinancialAccountsField}
-                                  userCellValue={
-                                    faf?.userFinancialAccountsField?.fieldTwo
-                                  }
-                                  inputType={'text'}
-                                  handleChangeUserCell={(
-                                    cellToUpdate,
-                                    value,
-                                    isEdit
-                                  ) => {
-                                    if (!loading) {
-                                      return handleChangeFinancialAccountsFields(
-                                        'fieldTwo',
-                                        cellToUpdate,
-                                        value,
-                                        isEdit,
-                                        faf?.id,
-                                        fa?.id
-                                      )
-                                    }
-                                  }}
-                                  additionalStyling={{
-                                    verticalAlign: 'middle'
-                                  }}
-                                />
-                              </div>
-                            )
-                          })}
-                      </div>
-                    </TableWrapper>
-                  )
-                })}
-            </div>
-          )}
-        {journal?.financialSnapshots ? (
-          <>
-            {expenseTable.length > 0 && (
-              <div className="col-12">
-                <Table bordered style={{ marginBottom: 0 }}>
-                  <thead>
-                    <JournalTableRow>
-                      <div className={'d-flex p-0'} style={{ gap: 4 }}>
-                        <JournalTableCell
-                          additionalStyling={{
-                            width: '100%',
-                            ...tableColumnStyle
-                          }}
-                        >
-                          Expense Category
-                        </JournalTableCell>
-                        <JournalTableCell
-                          additionalStyling={{
-                            width: '100%',
-                            ...tableColumnStyle
-                          }}
-                        >
-                          What's included
-                        </JournalTableCell>
-                        <JournalTableCell
-                          additionalStyling={{
-                            width: '100%',
-                            ...tableColumnStyle
-                          }}
-                        >
-                          Amount
-                        </JournalTableCell>
-                      </div>
-                    </JournalTableRow>
-                  </thead>
-                  <tbody>
-                    {expenseTable.map((cell, index) => {
-                      return (
-                        <JournalTableRow key={cell.transactionName}>
-                          <div className={'d-flex p-0'}>
-                            <JournalTableCell
-                              additionalStyling={{ width: '100%' }}
-                            >
-                              {cell.transactionName}
-                            </JournalTableCell>
-                            <JournalTableCell
-                              additionalStyling={{ width: '100%' }}
-                            >
-                              {cell.includedItem}
-                            </JournalTableCell>
-                            <UserJournalTableCell
-                              cell={cell}
-                              userCell={cell?.userFinancialSnapshot}
-                              userCellValue={
-                                cell?.userFinancialSnapshot?.amount
-                              }
-                              inputType={'text'}
-                              handleChangeUserCell={(
-                                cellToUpdate,
-                                value,
-                                isEdit
-                              ) => {
-                                if (!loading) {
-                                  return handleChangeAmount(
-                                    cellToUpdate,
-                                    value,
-                                    isEdit,
-                                    index,
-                                    'expense'
-                                  )
-                                }
-                              }}
-                              additionalStyling={{
-                                width: '100%',
-                                verticalAlign: 'middle'
-                              }}
-                            />
-                          </div>
-                        </JournalTableRow>
-                      )
-                    })}
-                  </tbody>
-                </Table>
-              </div>
-            )}
-            <div style={{ padding: '10px 0' }}></div>
-            {incomeTable.length > 0 && (
-              <div className="col-12">
-                <Table bordered hover style={{ marginBottom: 0 }}>
-                  <JournalTableRow>
-                    <div className={'d-flex p-0'} style={{ gap: 4 }}>
-                      <JournalTableCell
-                        additionalStyling={{
-                          width: '100%',
-                          ...tableColumnStyle
-                        }}
-                      >
-                        Income Category
-                      </JournalTableCell>
-                      <JournalTableCell
-                        additionalStyling={{
-                          width: '100%',
-                          ...tableColumnStyle
-                        }}
-                      >
-                        Amount
-                      </JournalTableCell>
-                    </div>
-                  </JournalTableRow>
-                  <tbody>
-                    {incomeTable.map((cell, index) => {
-                      return (
-                        <JournalTableRow key={cell.transactionName}>
-                          <div className={'d-flex p-0'}>
-                            <JournalTableCell
-                              additionalStyling={{ width: '100%' }}
-                            >
-                              {cell.transactionName}
-                            </JournalTableCell>
-                            <UserJournalTableCell
-                              cell={cell}
-                              userCell={cell?.userFinancialSnapshot}
-                              userCellValue={
-                                cell?.userFinancialSnapshot?.amount
-                              }
-                              inputType={'number'}
-                              handleChangeUserCell={(
-                                cellToUpdate,
-                                value,
-                                isEdit
-                              ) => {
-                                if (!loading) {
-                                  return handleChangeAmount(
-                                    cellToUpdate,
-                                    value,
-                                    isEdit,
-                                    index,
-                                    'income'
-                                  )
-                                }
-                              }}
-                              additionalStyling={{
-                                width: '100%',
-                                verticalAlign: 'middle'
-                              }}
-                            />
-                          </div>
-                        </JournalTableRow>
-                      )
-                    })}
-                  </tbody>
-                </Table>
-              </div>
-            )}
-            <div style={{ padding: '10px 0' }}></div>
-            {journal?.userBudgetAllocation && (
-              <div className="col-12">
-                <Table bordered hover style={{ marginBottom: 0 }}>
-                  <thead>
-                    <JournalTableRow>
-                      <JournalTableCell isGray>Needs</JournalTableCell>
-                      <JournalTableCell isGray>Wants</JournalTableCell>
-                      <JournalTableCell isGray>
-                        Savings/Investments
-                      </JournalTableCell>
-                    </JournalTableRow>
-                  </thead>
-                  <tbody>
-                    <JournalTableRow>
-                      <JournalTableCell>
-                        {journal?.userBudgetAllocation ? (
-                          <JournalTableCellInput
-                            type={'text'}
-                            value={journal?.userBudgetAllocation?.needs}
-                            handleChange={(value) => {
-                              return handleChangeBudgetAllocation(
-                                'needs',
-                                value
-                              )
-                            }}
-                          />
-                        ) : (
-                          <JournalTableCellInput
-                            type={'text'}
-                            handleChange={(value) => {
-                              return handleChangeBudgetAllocation(
-                                'needs',
-                                value
-                              )
-                            }}
-                          />
-                        )}
-                      </JournalTableCell>
-                      <JournalTableCell>
-                        {journal?.userBudgetAllocation ? (
-                          <JournalTableCellInput
-                            type={'text'}
-                            value={journal?.userBudgetAllocation?.wants}
-                            handleChange={(value) => {
-                              return handleChangeBudgetAllocation(
-                                'wants',
-                                value
-                              )
-                            }}
-                          />
-                        ) : (
-                          <JournalTableCellInput
-                            type={'text'}
-                            handleChange={(value) => {
-                              return handleChangeBudgetAllocation(
-                                'wants',
-                                value
-                              )
-                            }}
-                          />
-                        )}
-                      </JournalTableCell>
-                      <JournalTableCell>
-                        {journal?.userBudgetAllocation ? (
-                          <JournalTableCellInput
-                            type={'text'}
-                            value={
-                              journal?.userBudgetAllocation?.savingsInvestments
-                            }
-                            handleChange={(value) => {
-                              return handleChangeBudgetAllocation(
-                                'savingsInvestments',
-                                value
-                              )
-                            }}
-                          />
-                        ) : (
-                          <JournalTableCellInput
-                            type={'text'}
-                            handleChange={(value) => {
-                              return handleChangeBudgetAllocation('', value)
-                            }}
-                          />
-                        )}
-                      </JournalTableCell>
-                    </JournalTableRow>
-                  </tbody>
-                </Table>
-              </div>
-            )}
-            {(monthlyFixedExpense.length > 0 ||
-              monthlyVariableExpense.length > 0 ||
-              monthlyIncome.length > 0) && (
-              <div className="col-12">
-                <TableWrapper title={'Monthly budget'}>
-                  <MonthlyBudgetComponent
-                    monthlyTransaction={monthlyIncome}
-                    handleChangeAmount={handleChangeAmount}
-                    financialType={'monthly_income'}
-                  />
-                  <MonthlyBudgetComponent
-                    monthlyTransaction={monthlyFixedExpense}
-                    handleChangeAmount={handleChangeAmount}
-                    financialType={'monthly_fixed_expense'}
-                  />
-                  <MonthlyBudgetComponent
-                    monthlyTransaction={monthlyVariableExpense}
-                    handleChangeAmount={handleChangeAmount}
-                    financialType={'monthly_variable_expense'}
-                  />
-                </TableWrapper>
-              </div>
-            )}
-          </>
-        ) : null}
+        {/*{journal?.financialAccounts &&*/}
+        {/*  journal?.financialAccounts?.length > 0 && (*/}
+        {/*    <div style={{ minHeight: 300, margin: '20px 0' }}>*/}
+        {/*      {financialAccounts*/}
+        {/*        ?.toSorted((a, b) => a.order - b.order)*/}
+        {/*        ?.map((fa) => {*/}
+        {/*          return (*/}
+        {/*            <TableWrapper*/}
+        {/*              title={fa?.title}*/}
+        {/*              key={fa?.id}*/}
+        {/*              additionalStyle={{ margin: 0 }}*/}
+        {/*            >*/}
+        {/*              <div*/}
+        {/*                style={{*/}
+        {/*                  display: 'grid',*/}
+        {/*                  gap: 4,*/}
+        {/*                  alignItems: 'center',*/}
+        {/*                  gridTemplateColumns: 'repeat(3,1fr)'*/}
+        {/*                }}*/}
+        {/*              >*/}
+        {/*                {fa?.financialAccountsFields*/}
+        {/*                  ?.toSorted((a, b) => a.order - b.order)*/}
+        {/*                  ?.map((faf) => {*/}
+        {/*                    return (*/}
+        {/*                      <div*/}
+        {/*                        key={faf?.id}*/}
+        {/*                        style={{*/}
+        {/*                          background: '#E5E5E5',*/}
+        {/*                          display: 'flex',*/}
+        {/*                          flexDirection: 'column'*/}
+        {/*                        }}*/}
+        {/*                      >*/}
+        {/*                        <div*/}
+        {/*                          style={{*/}
+        {/*                            height: 54,*/}
+        {/*                            display: 'flex',*/}
+        {/*                            alignItems: 'center'*/}
+        {/*                          }}*/}
+        {/*                        >*/}
+        {/*                          <div*/}
+        {/*                            style={{*/}
+        {/*                              fontSize: 12,*/}
+        {/*                              textAlign: 'start',*/}
+        {/*                              padding: '4px 10px',*/}
+        {/*                              fontWeight: 500*/}
+        {/*                            }}*/}
+        {/*                          >*/}
+        {/*                            {faf?.title}*/}
+        {/*                          </div>*/}
+        {/*                        </div>*/}
+        {/*                        <UserJournalTableCell*/}
+        {/*                          cell={faf}*/}
+        {/*                          userCell={faf?.userFinancialAccountsField}*/}
+        {/*                          userCellValue={*/}
+        {/*                            faf?.userFinancialAccountsField?.fieldOne*/}
+        {/*                          }*/}
+        {/*                          inputType={'text'}*/}
+        {/*                          handleChangeUserCell={(*/}
+        {/*                            cellToUpdate,*/}
+        {/*                            value,*/}
+        {/*                            isEdit*/}
+        {/*                          ) => {*/}
+        {/*                            if (!loading) {*/}
+        {/*                              return handleChangeFinancialAccountsFields(*/}
+        {/*                                'fieldOne',*/}
+        {/*                                cellToUpdate,*/}
+        {/*                                value,*/}
+        {/*                                isEdit,*/}
+        {/*                                faf?.id,*/}
+        {/*                                fa?.id*/}
+        {/*                              )*/}
+        {/*                            }*/}
+        {/*                          }}*/}
+        {/*                          additionalStyling={{*/}
+        {/*                            verticalAlign: 'middle'*/}
+        {/*                          }}*/}
+        {/*                        />*/}
+        {/*                        <UserJournalTableCell*/}
+        {/*                          cell={faf}*/}
+        {/*                          userCell={faf?.userFinancialAccountsField}*/}
+        {/*                          userCellValue={*/}
+        {/*                            faf?.userFinancialAccountsField?.fieldTwo*/}
+        {/*                          }*/}
+        {/*                          inputType={'text'}*/}
+        {/*                          handleChangeUserCell={(*/}
+        {/*                            cellToUpdate,*/}
+        {/*                            value,*/}
+        {/*                            isEdit*/}
+        {/*                          ) => {*/}
+        {/*                            if (!loading) {*/}
+        {/*                              return handleChangeFinancialAccountsFields(*/}
+        {/*                                'fieldTwo',*/}
+        {/*                                cellToUpdate,*/}
+        {/*                                value,*/}
+        {/*                                isEdit,*/}
+        {/*                                faf?.id,*/}
+        {/*                                fa?.id*/}
+        {/*                              )*/}
+        {/*                            }*/}
+        {/*                          }}*/}
+        {/*                          additionalStyling={{*/}
+        {/*                            verticalAlign: 'middle'*/}
+        {/*                          }}*/}
+        {/*                        />*/}
+        {/*                      </div>*/}
+        {/*                    )*/}
+        {/*                  })}*/}
+        {/*              </div>*/}
+        {/*            </TableWrapper>*/}
+        {/*          )*/}
+        {/*        })}*/}
+        {/*    </div>*/}
+        {/*  )}*/}
+        {/*{journal?.financialSnapshots ? (*/}
+        {/*  <>*/}
+        {/*    {expenseTable.length > 0 && (*/}
+        {/*      <div className="col-12">*/}
+        {/*        <Table bordered style={{ marginBottom: 0 }}>*/}
+        {/*          <thead>*/}
+        {/*            <JournalTableRow>*/}
+        {/*              <div className={'d-flex p-0'} style={{ gap: 4 }}>*/}
+        {/*                <JournalTableCell*/}
+        {/*                  additionalStyling={{*/}
+        {/*                    width: '100%',*/}
+        {/*                    ...tableColumnStyle*/}
+        {/*                  }}*/}
+        {/*                >*/}
+        {/*                  Expense Category*/}
+        {/*                </JournalTableCell>*/}
+        {/*                <JournalTableCell*/}
+        {/*                  additionalStyling={{*/}
+        {/*                    width: '100%',*/}
+        {/*                    ...tableColumnStyle*/}
+        {/*                  }}*/}
+        {/*                >*/}
+        {/*                  What's included*/}
+        {/*                </JournalTableCell>*/}
+        {/*                <JournalTableCell*/}
+        {/*                  additionalStyling={{*/}
+        {/*                    width: '100%',*/}
+        {/*                    ...tableColumnStyle*/}
+        {/*                  }}*/}
+        {/*                >*/}
+        {/*                  Amount*/}
+        {/*                </JournalTableCell>*/}
+        {/*              </div>*/}
+        {/*            </JournalTableRow>*/}
+        {/*          </thead>*/}
+        {/*          <tbody>*/}
+        {/*            {expenseTable.map((cell, index) => {*/}
+        {/*              return (*/}
+        {/*                <JournalTableRow key={cell.transactionName}>*/}
+        {/*                  <div className={'d-flex p-0'}>*/}
+        {/*                    <JournalTableCell*/}
+        {/*                      additionalStyling={{ width: '100%' }}*/}
+        {/*                    >*/}
+        {/*                      {cell.transactionName}*/}
+        {/*                    </JournalTableCell>*/}
+        {/*                    <JournalTableCell*/}
+        {/*                      additionalStyling={{ width: '100%' }}*/}
+        {/*                    >*/}
+        {/*                      {cell.includedItem}*/}
+        {/*                    </JournalTableCell>*/}
+        {/*                    <UserJournalTableCell*/}
+        {/*                      cell={cell}*/}
+        {/*                      userCell={cell?.userFinancialSnapshot}*/}
+        {/*                      userCellValue={*/}
+        {/*                        cell?.userFinancialSnapshot?.amount*/}
+        {/*                      }*/}
+        {/*                      inputType={'text'}*/}
+        {/*                      handleChangeUserCell={(*/}
+        {/*                        cellToUpdate,*/}
+        {/*                        value,*/}
+        {/*                        isEdit*/}
+        {/*                      ) => {*/}
+        {/*                        if (!loading) {*/}
+        {/*                          return handleChangeAmount(*/}
+        {/*                            cellToUpdate,*/}
+        {/*                            value,*/}
+        {/*                            isEdit,*/}
+        {/*                            index,*/}
+        {/*                            'expense'*/}
+        {/*                          )*/}
+        {/*                        }*/}
+        {/*                      }}*/}
+        {/*                      additionalStyling={{*/}
+        {/*                        width: '100%',*/}
+        {/*                        verticalAlign: 'middle'*/}
+        {/*                      }}*/}
+        {/*                    />*/}
+        {/*                  </div>*/}
+        {/*                </JournalTableRow>*/}
+        {/*              )*/}
+        {/*            })}*/}
+        {/*          </tbody>*/}
+        {/*        </Table>*/}
+        {/*      </div>*/}
+        {/*    )}*/}
+
+        {/*    {incomeTable.length > 0 && (*/}
+        {/*      <div className="col-12">*/}
+        {/*        <Table bordered hover style={{ marginBottom: 0 }}>*/}
+        {/*          <JournalTableRow>*/}
+        {/*            <div className={'d-flex p-0'} style={{ gap: 4 }}>*/}
+        {/*              <JournalTableCell*/}
+        {/*                additionalStyling={{*/}
+        {/*                  width: '100%',*/}
+        {/*                  ...tableColumnStyle*/}
+        {/*                }}*/}
+        {/*              >*/}
+        {/*                Income Category*/}
+        {/*              </JournalTableCell>*/}
+        {/*              <JournalTableCell*/}
+        {/*                additionalStyling={{*/}
+        {/*                  width: '100%',*/}
+        {/*                  ...tableColumnStyle*/}
+        {/*                }}*/}
+        {/*              >*/}
+        {/*                Amount*/}
+        {/*              </JournalTableCell>*/}
+        {/*            </div>*/}
+        {/*          </JournalTableRow>*/}
+        {/*          <tbody>*/}
+        {/*            {incomeTable.map((cell, index) => {*/}
+        {/*              return (*/}
+        {/*                <JournalTableRow key={cell.transactionName}>*/}
+        {/*                  <div className={'d-flex p-0'}>*/}
+        {/*                    <JournalTableCell*/}
+        {/*                      additionalStyling={{ width: '100%' }}*/}
+        {/*                    >*/}
+        {/*                      {cell.transactionName}*/}
+        {/*                    </JournalTableCell>*/}
+        {/*                    <UserJournalTableCell*/}
+        {/*                      cell={cell}*/}
+        {/*                      userCell={cell?.userFinancialSnapshot}*/}
+        {/*                      userCellValue={*/}
+        {/*                        cell?.userFinancialSnapshot?.amount*/}
+        {/*                      }*/}
+        {/*                      inputType={'number'}*/}
+        {/*                      handleChangeUserCell={(*/}
+        {/*                        cellToUpdate,*/}
+        {/*                        value,*/}
+        {/*                        isEdit*/}
+        {/*                      ) => {*/}
+        {/*                        if (!loading) {*/}
+        {/*                          return handleChangeAmount(*/}
+        {/*                            cellToUpdate,*/}
+        {/*                            value,*/}
+        {/*                            isEdit,*/}
+        {/*                            index,*/}
+        {/*                            'income'*/}
+        {/*                          )*/}
+        {/*                        }*/}
+        {/*                      }}*/}
+        {/*                      additionalStyling={{*/}
+        {/*                        width: '100%',*/}
+        {/*                        verticalAlign: 'middle'*/}
+        {/*                      }}*/}
+        {/*                    />*/}
+        {/*                  </div>*/}
+        {/*                </JournalTableRow>*/}
+        {/*              )*/}
+        {/*            })}*/}
+        {/*          </tbody>*/}
+        {/*        </Table>*/}
+        {/*      </div>*/}
+        {/*    )}*/}
+        {/*  */}
+        {/*    {journal?.userBudgetAllocation && (*/}
+        {/*      <div className="col-12">*/}
+        {/*        <Table bordered hover style={{ marginBottom: 0 }}>*/}
+        {/*          <thead>*/}
+        {/*            <JournalTableRow>*/}
+        {/*              <JournalTableCell isGray>Needs</JournalTableCell>*/}
+        {/*              <JournalTableCell isGray>Wants</JournalTableCell>*/}
+        {/*              <JournalTableCell isGray>*/}
+        {/*                Savings/Investments*/}
+        {/*              </JournalTableCell>*/}
+        {/*            </JournalTableRow>*/}
+        {/*          </thead>*/}
+        {/*          <tbody>*/}
+        {/*            <JournalTableRow>*/}
+        {/*              <JournalTableCell>*/}
+        {/*                {journal?.userBudgetAllocation ? (*/}
+        {/*                  <JournalTableCellInput*/}
+        {/*                    type={'text'}*/}
+        {/*                    value={journal?.userBudgetAllocation?.needs}*/}
+        {/*                    handleChange={(value) => {*/}
+        {/*                      return handleChangeBudgetAllocation(*/}
+        {/*                        'needs',*/}
+        {/*                        value*/}
+        {/*                      )*/}
+        {/*                    }}*/}
+        {/*                  />*/}
+        {/*                ) : (*/}
+        {/*                  <JournalTableCellInput*/}
+        {/*                    type={'text'}*/}
+        {/*                    handleChange={(value) => {*/}
+        {/*                      return handleChangeBudgetAllocation(*/}
+        {/*                        'needs',*/}
+        {/*                        value*/}
+        {/*                      )*/}
+        {/*                    }}*/}
+        {/*                  />*/}
+        {/*                )}*/}
+        {/*              </JournalTableCell>*/}
+        {/*              <JournalTableCell>*/}
+        {/*                {journal?.userBudgetAllocation ? (*/}
+        {/*                  <JournalTableCellInput*/}
+        {/*                    type={'text'}*/}
+        {/*                    value={journal?.userBudgetAllocation?.wants}*/}
+        {/*                    handleChange={(value) => {*/}
+        {/*                      return handleChangeBudgetAllocation(*/}
+        {/*                        'wants',*/}
+        {/*                        value*/}
+        {/*                      )*/}
+        {/*                    }}*/}
+        {/*                  />*/}
+        {/*                ) : (*/}
+        {/*                  <JournalTableCellInput*/}
+        {/*                    type={'text'}*/}
+        {/*                    handleChange={(value) => {*/}
+        {/*                      return handleChangeBudgetAllocation(*/}
+        {/*                        'wants',*/}
+        {/*                        value*/}
+        {/*                      )*/}
+        {/*                    }}*/}
+        {/*                  />*/}
+        {/*                )}*/}
+        {/*              </JournalTableCell>*/}
+        {/*              <JournalTableCell>*/}
+        {/*                {journal?.userBudgetAllocation ? (*/}
+        {/*                  <JournalTableCellInput*/}
+        {/*                    type={'text'}*/}
+        {/*                    value={*/}
+        {/*                      journal?.userBudgetAllocation?.savingsInvestments*/}
+        {/*                    }*/}
+        {/*                    handleChange={(value) => {*/}
+        {/*                      return handleChangeBudgetAllocation(*/}
+        {/*                        'savingsInvestments',*/}
+        {/*                        value*/}
+        {/*                      )*/}
+        {/*                    }}*/}
+        {/*                  />*/}
+        {/*                ) : (*/}
+        {/*                  <JournalTableCellInput*/}
+        {/*                    type={'text'}*/}
+        {/*                    handleChange={(value) => {*/}
+        {/*                      return handleChangeBudgetAllocation('', value)*/}
+        {/*                    }}*/}
+        {/*                  />*/}
+        {/*                )}*/}
+        {/*              </JournalTableCell>*/}
+        {/*            </JournalTableRow>*/}
+        {/*          </tbody>*/}
+        {/*        </Table>*/}
+        {/*      </div>*/}
+        {/*    )}*/}
+        {/*    {(monthlyFixedExpense.length > 0 ||*/}
+        {/*      monthlyVariableExpense.length > 0 ||*/}
+        {/*      monthlyIncome.length > 0) && (*/}
+        {/*      <div className="col-12">*/}
+        {/*        <TableWrapper title={'Monthly budget'}>*/}
+        {/*          <MonthlyBudgetComponent*/}
+        {/*            monthlyTransaction={monthlyIncome}*/}
+        {/*            handleChangeAmount={handleChangeAmount}*/}
+        {/*            financialType={'monthly_income'}*/}
+        {/*          />*/}
+        {/*          <MonthlyBudgetComponent*/}
+        {/*            monthlyTransaction={monthlyFixedExpense}*/}
+        {/*            handleChangeAmount={handleChangeAmount}*/}
+        {/*            financialType={'monthly_fixed_expense'}*/}
+        {/*          />*/}
+        {/*          <MonthlyBudgetComponent*/}
+        {/*            monthlyTransaction={monthlyVariableExpense}*/}
+        {/*            handleChangeAmount={handleChangeAmount}*/}
+        {/*            financialType={'monthly_variable_expense'}*/}
+        {/*          />*/}
+        {/*        </TableWrapper>*/}
+        {/*      </div>*/}
+        {/*    )}*/}
+        {/*  </>*/}
+        {/*) : null}*/}
 
         {journal?.teamMeetings ? (
           <MeetingManager journal={journal} isEditable={true} />

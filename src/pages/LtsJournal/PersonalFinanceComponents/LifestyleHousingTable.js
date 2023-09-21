@@ -148,7 +148,11 @@ const LifestyleHousingTable = (props) => {
                                 isTableSubHeader={cell.isTableSubHeader}
                                 key={cell.id}
                                 additionalStyle={{
-                                  width: `${100 / table.gridColumns}%`
+                                  width: `${
+                                    cell.isTableHeader || cell.isTableSubHeader
+                                      ? 100 / table.gridColumns
+                                      : 'auto'
+                                  }%`
                                 }}
                                 backgroundColor={'#fff'}
                               />
