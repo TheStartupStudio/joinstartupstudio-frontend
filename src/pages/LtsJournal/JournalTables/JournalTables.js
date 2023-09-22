@@ -117,7 +117,7 @@ const JournalTables = (props) => {
         setLoading(false)
       })
   }
-  // console.log(tables)
+
   return (
     <div className={'table-container'}>
       {tables?.map((table) => {
@@ -165,11 +165,6 @@ const JournalTables = (props) => {
                                       isTableSubHeader={cell.isTableSubHeader}
                                       key={cell.id}
                                       additionalStyle={{
-                                        // width:
-                                        //   cell.isTableHeader ||
-                                        //   cell.isTableSubHeader
-                                        //     ? `${100 / table.gridColumns}%`
-                                        //     : 'unset'
                                         width: `${100 / table.gridColumns}%`
                                       }}
                                       backgroundColor={'#fff'}
@@ -225,7 +220,10 @@ const JournalTables = (props) => {
         )
       })}
       {paragraphs?.map((paragraph) => (
-        <div style={{ order: paragraph.order }}>{paragraph.paragraph}</div>
+        <div
+          dangerouslySetInnerHTML={{ __html: paragraph.paragraph }}
+          style={{ order: paragraph.order }}
+        />
       ))}
     </div>
   )

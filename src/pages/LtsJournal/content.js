@@ -1090,6 +1090,8 @@ function LtsJournalContent(props) {
     height: 56
   }
 
+  console.log(journal.entries)
+
   return (
     <>
       <div className="row">
@@ -1154,6 +1156,44 @@ function LtsJournalContent(props) {
           )}
         </div>
       </div>
+      {journal?.journalTables ? (
+        <div className="col-12">
+          <>
+            <JournalTables
+              tables={journal?.journalTables}
+              paragraphs={journal?.journalParagraphs}
+              loading={loading}
+              handleChange={handleUpdateJobApplication}
+              backgroundColor={'#fff'}
+            />
+          </>
+        </div>
+      ) : null}
+      {journal?.entriesLists?.map((list) => (
+        <div className="col-12" key={list.id}>
+          <div className="journal-entries">
+            <EntriesBox
+              entries={list.entries}
+              entryBoxTitle={journal?.title}
+              journal={journal}
+              isEditable={true}
+              isDeletable={true}
+              userJournalEntries={userJournalEntries}
+              deleteReflection={(entry, userJournalEntry) =>
+                deleteReflection(entry, userJournalEntry)
+              }
+              updateReflection={(entry, userJournalEntry) =>
+                updateReflection(entry, userJournalEntry)
+              }
+              addReflection={(entry) => addReflection(entry)}
+              handleShowAddReflection={(reflection) =>
+                handleShowAddReflection(reflection)
+              }
+              showAddReflection={showAddReflection}
+            />
+          </div>
+        </div>
+      ))}
 
       <div className="row">
         <div className="col-12">
@@ -1179,6 +1219,7 @@ function LtsJournalContent(props) {
             />
           </div>
         </div>
+
         <div className="col-12">
           <div className={'custom-breakdowns-container'}>
             {journal.hasAccordion ? (
@@ -1203,6 +1244,7 @@ function LtsJournalContent(props) {
             ) : null}
           </div>
         </div>
+
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (
               <div className="col-12">
@@ -1373,19 +1415,6 @@ function LtsJournalContent(props) {
         {/*    </>*/}
         {/*  </div>*/}
         {/*) : null}*/}
-        {journal?.journalTables ? (
-          <div className="col-12">
-            <>
-              <JournalTables
-                tables={journal?.journalTables}
-                paragraphs={journal?.journalParagraphs}
-                loading={loading}
-                handleChange={handleUpdateJobApplication}
-                backgroundColor={'#fff'}
-              />
-            </>
-          </div>
-        ) : null}
 
         {/*{journal?.researchQuestionTable ? (*/}
         {/*  <div className="col-12">*/}
