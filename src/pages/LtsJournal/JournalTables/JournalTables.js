@@ -101,17 +101,20 @@ const JournalTables = (props) => {
 
   const updateResumeEvaluation = async (_, newData) => {
     setLoading(true)
+    console.log('request', newData.content)
     await axiosInstance
       .put(`/ltsJournals/user-journal-tables`, {
         ...newData.content
       })
       .then(({ data }) => {
+        console.log('response', data)
         const updatedJournalTable = updateJournalTable(
           newData.tableId,
           newData.rowId,
           newData.cellId,
           data
         )
+
         setTables(updatedJournalTable)
 
         setLoading(false)
