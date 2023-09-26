@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import ReactQuill from 'react-quill'
 import { FormControl, FormGroup, InputGroup } from 'react-bootstrap'
+import _ from 'lodash'
 
 export const JournalTableRow = (props) => {
   const { children, additionalStyle } = props
@@ -12,6 +13,7 @@ export const JournalTableRow = (props) => {
 }
 export const JournalTableCell = (props) => {
   const { isGray, colSpan, additionalStyling } = props
+  
   return (
     <td
       colSpan={colSpan}
@@ -49,6 +51,13 @@ export const JournalTableCellInput = (props) => {
     ...additionalInputStyle
   }
 
+  const debounce = useCallback(
+    _.debounce(async (func, value) => {
+      func('debounce', value)
+    }, 1000),
+    []
+  )
+
   return (
     <div
       className={'journal_table-input__container'}
@@ -71,7 +80,7 @@ export const JournalTableCellInput = (props) => {
             style={{ ...newStyle, resize: 'none' }}
             name={inputName ?? ''}
             value={value}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => debounce(() => handleChange(e.target.value))}
           />
         )}
         {inputTag === 'input' && (
@@ -81,8 +90,8 @@ export const JournalTableCellInput = (props) => {
             type={inputType}
             style={newStyle}
             name={inputName ?? ''}
-            value={value}
-            onChange={(e) => handleChange(e.target.value)}
+            defaultValue={value}
+            onChange={(e) => debounce(() => handleChange(e.target.value))}
           />
         )}
         {!inputTag && (
@@ -93,7 +102,7 @@ export const JournalTableCellInput = (props) => {
             style={newStyle}
             name={inputName ?? ''}
             value={value}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => debounce(() => handleChange(e.target.value))}
           />
         )}
       </div>
