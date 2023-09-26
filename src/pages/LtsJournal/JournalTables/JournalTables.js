@@ -1,11 +1,9 @@
-import TableWrapper from '../TableWrapper/index'
 import {
   JournalTableRow,
   TableCellTitle,
   UserJournalTableCell
 } from '../TableWrapper/TableComponents'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { TableRows } from '@fullcalendar/daygrid/internal'
+import React, { useCallback, useEffect, useState } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
 import _ from 'lodash'
 
@@ -101,13 +99,11 @@ const JournalTables = (props) => {
 
   const updateResumeEvaluation = async (_, newData) => {
     setLoading(true)
-    console.log('request', newData.content)
     await axiosInstance
       .put(`/ltsJournals/user-journal-tables`, {
         ...newData.content
       })
       .then(({ data }) => {
-        console.log('response', data)
         const updatedJournalTable = updateJournalTable(
           newData.tableId,
           newData.rowId,
@@ -130,20 +126,15 @@ const JournalTables = (props) => {
               <table
                 className={'journal-table'}
                 style={{
-                  width: '100%',
-                  height: '100%',
-                  borderCollapse: 'separate',
-                  borderSpacing: 2,
-                  border: '1px solid #BBBDB',
                   order: table.order
                 }}
               >
                 {table.title && (
                   <td
-                    className={'table_column-title_box'}
+                    className={'table_header-title_box'}
                     colSpan={table.gridColumns}
                   >
-                    <div className={'table_column-title'}>{table.title}</div>
+                    <div className={'table_header-title'}>{table.title}</div>
                   </td>
                 )}
 
@@ -153,7 +144,7 @@ const JournalTables = (props) => {
                     return (
                       <>
                         <JournalTableRow
-                          additionalStyle={{ width: '100%', height: '100%' }}
+                        // additionalStyle={{ width: '100%', height: '100%' }}
                         >
                           {row?.cells
                             ?.toSorted((a, b) => a.order - b.order)
@@ -163,22 +154,15 @@ const JournalTables = (props) => {
                                   {!cell.isEditable ? (
                                     <TableCellTitle
                                       cell={cell}
-                                      title={cell?.content}
-                                      isColumn={cell.isTableHeader}
-                                      isTableSubHeader={cell.isTableSubHeader}
                                       key={cell.id}
                                       additionalStyle={{
                                         width: `${100 / table.gridColumns}%`
                                       }}
                                       backgroundColor={'#fff'}
-                                      colSpan={cell?.colSpan}
                                     />
                                   ) : (
                                     <UserJournalTableCell
                                       cell={cell}
-                                      inputType={cell.inputType}
-                                      inputTag={cell.inputTag}
-                                      colSpan={cell?.colSpan}
                                       userCell={cell.userCells}
                                       userCellValue={
                                         cell.inputType === 'text'

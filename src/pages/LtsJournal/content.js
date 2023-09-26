@@ -20,18 +20,7 @@ import AccordionItems from './MyGoals/AccordionItems'
 import JournalBrands from './JournalBrands/index'
 import * as actions from '../../redux/reflectionsTable/Actions'
 import { useDispatch } from 'react-redux'
-import { Table } from 'react-bootstrap'
-import {
-  JournalTableCell,
-  JournalTableCellInput,
-  JournalTableRow,
-  UserJournalTableCell
-} from './TableWrapper/TableComponents'
-import MonthlyBudgetComponent from './MonthlyBudget.component'
-import JobApplicationTable from './PersonalFinanceComponents/JobApplicationTable'
-import CollegePlansTable from './PersonalFinanceComponents/CollegePlansTable'
-import ResumeEvaluationTable from './PersonalFinanceComponents/ResumeEvaulationTable'
-import LifestyleHousingTable from './PersonalFinanceComponents/LifestyleHousingTable'
+
 import JournalTables from './JournalTables/JournalTables'
 import IntlMessages from '../../utils/IntlMessages'
 
@@ -46,21 +35,7 @@ function LtsJournalContent(props) {
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const dispatch = useDispatch()
-  const [filteredNullFinancialSnapshots, setFilteredNullFinancialSnapshots] =
-    useState([])
-  const [expenseTable, setExpenseTable] = useState([])
-  const [incomeTable, setIncomeTable] = useState([])
-  const [monthlyIncome, setMonthlyIncome] = useState([])
-  const [monthlyFixedExpense, setMonthlyFixedExpense] = useState([])
-  const [monthlyVariableExpense, setMonthlyVariableExpense] = useState([])
-  const [financialProfilesTable, setFinancialProfilesTable] = useState([])
-  const [financialAccounts, setFinancialAccounts] = useState([])
-  const [researchQuestionTable, setResearchQuestionTable] = useState({})
-  const [creditCardInfoTable, setCreditCardInfoTable] = useState({})
-  const [collegeInfoTables, setCollegeInfoTables] = useState([])
-  const [economicMajorsTables, setEconomicMajorsTables] = useState([])
-  const [jobApplicationTables, setJobApplicationTables] = useState([])
-  const [journalId, setJournalId] = useState(null)
+
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -72,15 +47,10 @@ function LtsJournalContent(props) {
   useEffect(() => {
     setIsExpanded(false)
   }, [props.match.params.id])
-  useEffect(() => {
-    setJournalId(props.match.params.journalId)
-  }, [props.match.params.journalId])
 
   const handleShowAddReflection = (showAddReflection) => {
     setShowAddReflection(showAddReflection)
   }
-
-  const [entriesLists, setEntriesLists] = useState([])
 
   async function saveWatchData(data) {
     await axiosInstance.put(
@@ -137,46 +107,11 @@ function LtsJournalContent(props) {
     } catch (err) {}
   }
 
-  const filterFinancialSnapshots = (
-    journalData,
-    type,
-    setFinancialSnapshotData
-  ) => {
-    const financialSnapshotData = journalData?.financialSnapshots?.filter(
-      (fs) => fs.transactionType === type
-    )
-    setFinancialSnapshotData(financialSnapshotData)
-  }
-
   function loadData() {
     setLoading(true)
     Promise.all([getJournal(), getUserJournalEntries()])
       .then(([journalData, userJournalEntries]) => {
-        filterFinancialSnapshots(journalData, 'expense', setExpenseTable)
-        filterFinancialSnapshots(journalData, 'income', setIncomeTable)
-        filterFinancialSnapshots(
-          journalData,
-          'monthly_income',
-          setMonthlyIncome
-        )
-        filterFinancialSnapshots(
-          journalData,
-          'monthly_fixed_expense',
-          setMonthlyFixedExpense
-        )
-        filterFinancialSnapshots(
-          journalData,
-          'monthly_variable_expense',
-          setMonthlyVariableExpense
-        )
         setJournal(journalData)
-        setFinancialProfilesTable(journalData.financialProfilesTable)
-        setEconomicMajorsTables(journalData.economicMajorsTables)
-        setFinancialAccounts(journalData.financialAccounts)
-        setResearchQuestionTable(journalData.researchQuestionTable)
-        setCreditCardInfoTable(journalData.creditCardInfoTables)
-        setCollegeInfoTables(journalData.collegePlansTables)
-        setJobApplicationTables(journalData.jobApplicationTables)
 
         if (
           journalData.userEntry &&
@@ -208,6 +143,26 @@ function LtsJournalContent(props) {
     },
     [props.match.params.journalId]
   )
+
+  const updateUserReflectionsTable = (updatedTable, index) => {
+    const updatedJournal = { ...journal }
+
+    const foundedReflectionsTable = updatedJournal?.reflectionsTable[index]
+
+    if (foundedReflectionsTable) {
+      const updatedUserReflectionsTable = [
+        ...foundedReflectionsTable.userReflectionsTable
+      ]
+
+      updatedUserReflectionsTable.push(updatedTable)
+
+      foundedReflectionsTable.userReflectionsTable = updatedUserReflectionsTable
+
+      updatedJournal.reflectionsTable[index] = foundedReflectionsTable
+
+      setJournal(updatedJournal)
+    }
+  }
 
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
@@ -268,829 +223,6 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-
-  const updateUserReflectionsTable = (updatedTable, index) => {
-    const updatedJournal = { ...journal }
-
-    const foundedReflectionsTable = updatedJournal?.reflectionsTable[index]
-
-    if (foundedReflectionsTable) {
-      const updatedUserReflectionsTable = [
-        ...foundedReflectionsTable.userReflectionsTable
-      ]
-
-      updatedUserReflectionsTable.push(updatedTable)
-
-      foundedReflectionsTable.userReflectionsTable = updatedUserReflectionsTable
-
-      updatedJournal.reflectionsTable[index] = foundedReflectionsTable
-
-      setJournal(updatedJournal)
-    }
-  }
-
-  const updateTableData = (tableData, index, newObj, setTableData) => {
-    let foundedItem = tableData?.find((item, itemIndex) => itemIndex === index)
-
-    if (foundedItem) {
-      foundedItem.userFinancialSnapshot = newObj
-    }
-
-    const newTableData = tableData?.map((item) =>
-      item.id === foundedItem?.id ? foundedItem : item
-    )
-
-    setTableData(newTableData)
-  }
-
-  const updateFinancialProfileInTable = (
-    financialProfilesTable,
-    fptId,
-    fpId,
-    newFinancialProfile
-  ) => {
-    return financialProfilesTable.map((fpt) => {
-      if (fpt.id === fptId) {
-        return {
-          ...fpt,
-          financialProfiles: fpt.financialProfiles.map((fp) => {
-            if (fp.id === fpId) {
-              return {
-                ...fp,
-                userFinancialProfiles: { ...newFinancialProfile }
-              }
-            }
-            return fp
-          })
-        }
-      }
-      return fpt
-    })
-  }
-
-  const handleChangeFinancialProfile = async (
-    obj,
-    value,
-    isEdit,
-    fpId,
-    fptId
-  ) => {
-    const newValue = value
-    // isEdit
-    const editContent = {
-      content: newValue,
-      financialProfilesId: obj.financialProfilesId,
-      journalId: obj.journalId,
-      id: obj.id,
-      order: obj.order
-    }
-    // isCreate
-    const createContent = {
-      content: newValue,
-      financialProfilesId: obj.id,
-      journalId: obj.journalId,
-      order: obj.order
-    }
-    const newFinancialProfile = isEdit ? editContent : createContent
-
-    const newFinancialProfilesTable = updateFinancialProfileInTable(
-      financialProfilesTable,
-      fptId,
-      fpId,
-      newFinancialProfile
-    )
-    setFinancialProfilesTable(newFinancialProfilesTable)
-
-    debounce(updateFinancialProfiles, {
-      financialProfile: newFinancialProfile,
-      fptId,
-      fpId
-    })
-  }
-
-  const updateFinancialProfiles = async (obj, value) => {
-    await axiosInstance
-      .put(`/ltsJournals/user-financial-profiles`, {
-        ...value.financialProfile
-      })
-      .then(({ data }) => {
-        const newFinancialProfilesTable = updateFinancialProfileInTable(
-          financialProfilesTable,
-          value.fptId,
-          value.fpId,
-          data
-        )
-
-        setFinancialProfilesTable(newFinancialProfilesTable)
-      })
-  }
-
-  const handleChangeFinancialAccountsFields = async (
-    type,
-    obj,
-    value,
-    isEdit,
-    fafId,
-    faId
-  ) => {
-    const updatedObj = { ...obj }
-
-    if (type === 'fieldOne') {
-      updatedObj.fieldOne = value
-    } else if (type === 'fieldTwo') {
-      updatedObj.fieldTwo = value
-    }
-
-    const content = {
-      fieldOne: updatedObj.fieldOne ?? '',
-      fieldTwo: updatedObj.fieldTwo ?? '',
-      financialAccountsFieldsId: fafId,
-      journalId: props.match.params.journalId,
-      order: updatedObj.order
-    }
-
-    if (isEdit) {
-      content.id = updatedObj.id
-      content.financialAccountsFieldsId = updatedObj.financialAccountsFieldsId
-    }
-
-    const financialAccountsFields = updateFinancialAccountsFields(
-      financialAccounts,
-      fafId,
-      faId,
-      content
-    )
-    setFinancialAccounts(financialAccountsFields)
-    debounce(updateFinancialAccount, { content, fafId, faId })
-  }
-  const updateFinancialAccountsFields = (
-    financialAccounts,
-    fafId,
-    faId,
-    newFinancialProfile
-  ) => {
-    return financialAccounts.map((fa) => {
-      if (fa.id === faId) {
-        return {
-          ...fa,
-          financialAccountsFields: fa.financialAccountsFields.map((faf) => {
-            if (faf.id === fafId) {
-              return {
-                ...faf,
-                userFinancialAccountsField: { ...newFinancialProfile }
-              }
-            }
-            return faf
-          })
-        }
-      }
-      return fa
-    })
-  }
-
-  const updateFinancialAccount = async (_, newData) => {
-    setLoading(true)
-    await axiosInstance
-      .put(`/ltsJournals/user-financial-accounts-fields`, {
-        ...newData.content
-      })
-      .then(({ data }) => {
-        const financialAccountsFields = financialAccounts.map((fa) => {
-          if (fa.id === newData.faId) {
-            return {
-              ...fa,
-              financialAccountsFields: fa.financialAccountsFields.map((faf) => {
-                if (faf.id === newData.fafId) {
-                  const newFaf = {
-                    ...faf,
-                    userFinancialAccountsField: data
-                  }
-                  return newFaf
-                }
-                return faf
-              })
-            }
-          }
-          return fa
-        })
-        setLoading(false)
-        setFinancialAccounts(financialAccountsFields)
-      })
-  }
-  const handleChangeAmount = async (obj, value, isEdit, index, name) => {
-    const newValue = +value
-    // isEdit
-    const editAmount = {
-      amount: newValue,
-      financialSnapshotId: obj.financialSnapshotId,
-      journalId: obj.journalId,
-      id: obj.id
-    }
-    // isCreate
-    const createAmount = {
-      amount: newValue,
-      financialSnapshotId: obj.id,
-      journalId: obj.journalId
-    }
-
-    const newAmountObj = isEdit ? editAmount : createAmount
-    if (name === 'expense') {
-      updateTableData(expenseTable, index, newAmountObj, setExpenseTable)
-    }
-    if (name === 'income') {
-      updateTableData(incomeTable, index, newAmountObj, setIncomeTable)
-    }
-    if (name === 'monthly_income') {
-      updateTableData(monthlyIncome, index, newAmountObj, setMonthlyIncome)
-    }
-    if (name === 'monthly_fixed_expense') {
-      updateTableData(
-        monthlyFixedExpense,
-        index,
-        newAmountObj,
-        setMonthlyFixedExpense
-      )
-    }
-    if (name === 'monthly_variable_expense') {
-      updateTableData(
-        monthlyVariableExpense,
-        index,
-        newAmountObj,
-        setMonthlyVariableExpense
-      )
-    }
-    debounce(updateAmount, newAmountObj)
-  }
-
-  const updateTableWithFinancialSnapshot = (
-    tableData,
-    updatedItem,
-    setTableData
-  ) => {
-    const foundedItem = tableData?.find((item) => item.id === updatedItem.id)
-
-    if (foundedItem) {
-      foundedItem.userFinancialSnapshot = updatedItem.userFinancialSnapshot
-    }
-
-    const newTableData = tableData?.map((item) =>
-      item.id === foundedItem?.id ? foundedItem : item
-    )
-
-    setTableData(newTableData)
-  }
-  const updateAmount = async (obj, value) => {
-    await axiosInstance
-      .put(`/ltsJournals/user-financial-snapshots`, {
-        ...value
-      })
-      .then(({ data }) => {
-        const updatedData = {
-          id: data.financialSnapshotId,
-          userFinancialSnapshot: data
-        }
-        updateTableWithFinancialSnapshot(
-          expenseTable,
-          updatedData,
-          setExpenseTable
-        )
-        updateTableWithFinancialSnapshot(
-          incomeTable,
-          updatedData,
-          setIncomeTable
-        )
-        updateTableWithFinancialSnapshot(
-          monthlyIncome,
-          updatedData,
-          setMonthlyIncome
-        )
-        updateTableWithFinancialSnapshot(
-          monthlyFixedExpense,
-          updatedData,
-          setMonthlyFixedExpense
-        )
-        updateTableWithFinancialSnapshot(
-          monthlyVariableExpense,
-          updatedData,
-          setMonthlyVariableExpense
-        )
-      })
-  }
-
-  const handleChangeBudgetAllocation = (name, value, isEdit) => {
-    const userBudgetAllocationId = journal?.userBudgetAllocation?.id
-
-    const baseBudgetAllocation = {
-      needs: journal?.userBudgetAllocation?.needs ?? '',
-      wants: journal?.userBudgetAllocation?.wants ?? '',
-      savingsInvestments:
-        journal?.userBudgetAllocation?.savingsInvestments ?? '',
-      journalId: props.match.params.journalId
-    }
-
-    let createBudgetAllocation = { ...baseBudgetAllocation }
-    let editBudgetAllocation = {
-      ...baseBudgetAllocation,
-      id: userBudgetAllocationId
-    }
-
-    let newBudgetAllocation = userBudgetAllocationId
-      ? { ...editBudgetAllocation }
-      : { ...createBudgetAllocation }
-
-    newBudgetAllocation[name] = value
-
-    const newJournal = { ...journal, userBudgetAllocation: newBudgetAllocation }
-    setJournal(newJournal)
-    debounce(updateBudgetAllocation, newBudgetAllocation)
-  }
-
-  const updateBudgetAllocation = async (obj, value) => {
-    await axiosInstance
-      .put(`/ltsJournals/budget-allocation`, {
-        ...value
-      })
-      .then(({ data }) => {
-        const newJournal = { ...journal, userBudgetAllocation: data }
-        // debugger
-        setJournal(newJournal)
-      })
-  }
-
-  const updateUserResearchQuestion = (researchQuestions, rqId, content) => {
-    const newResearchQuestions = researchQuestions.map((rq) => {
-      if (rq.id === rqId) {
-        const newRq = {
-          ...rq,
-          userResearchQuestion: content
-        }
-        return newRq
-      }
-      return rq
-    })
-    return newResearchQuestions
-  }
-
-  const handleChangeUserCreditScoreGoal = (...props) => {
-    const [obj, value, isEdit] = props
-    const updatedObj = { ...obj }
-    const newResearchQuestionTable = { ...researchQuestionTable }
-
-    const content = {
-      title: value ?? '',
-      researchQuestionTableId: newResearchQuestionTable.id,
-      journalId: journalId
-    }
-
-    if (isEdit) {
-      content.id = updatedObj.id
-      content.researchQuestionTableId = updatedObj.researchQuestionTableId
-      delete content.journalId
-    }
-
-    newResearchQuestionTable.userCreditScoreGoal = content
-    setResearchQuestionTable(newResearchQuestionTable)
-    debounce(updateChangeUserCreditScoreGoal, { content })
-  }
-
-  const updateChangeUserCreditScoreGoal = async (obj, newData) => {
-    setLoading(true)
-    await axiosInstance
-      .put(`/ltsJournals/user-credit-score-goal`, {
-        ...newData.content
-      })
-      .then(({ data }) => {
-        const newResearchQuestionTable = { ...researchQuestionTable }
-        newResearchQuestionTable.userCreditScoreGoal = data
-        setResearchQuestionTable(newResearchQuestionTable)
-
-        setLoading(false)
-      })
-  }
-
-  const handleChangeResearchQuestion = (...props) => {
-    const [obj, value, isEdit, rqId, type] = props
-    const newResearchQuestionTable = { ...researchQuestionTable }
-    const researchQuestions = newResearchQuestionTable.researchQuestions
-
-    const updatedObj = { ...obj }
-
-    if (type === 'question') {
-      updatedObj.question = value
-    } else if (type === 'research') {
-      updatedObj.research = value
-    }
-
-    const content = {
-      question: updatedObj.question ?? '',
-      research: updatedObj.research ?? '',
-      researchQuestionId: rqId,
-      journalId: journalId
-    }
-
-    if (isEdit) {
-      content.id = updatedObj.id
-      content.researchQuestionId = updatedObj.researchQuestionId
-      delete content.journalId
-    }
-    const newResearchQuestions = updateUserResearchQuestion(
-      researchQuestions,
-      rqId,
-      content
-    )
-
-    newResearchQuestionTable.researchQuestions = newResearchQuestions
-    setResearchQuestionTable(newResearchQuestionTable)
-    debounce(updateResearchQuestionTable, { content, rqId })
-  }
-  const updateResearchQuestionTable = async (obj, newData) => {
-    setLoading(true)
-    await axiosInstance
-      .put(`/ltsJournals/user-research-question`, {
-        ...newData.content
-      })
-      .then(({ data }) => {
-        const researchQuestions = [...researchQuestionTable.researchQuestions]
-        const newResearchQuestions = updateUserResearchQuestion(
-          researchQuestions,
-          newData.rqId,
-          data
-        )
-
-        researchQuestionTable.researchQuestions = newResearchQuestions
-        setResearchQuestionTable(researchQuestionTable)
-        setLoading(false)
-      })
-  }
-
-  const updateCreditCardInfoTable = (columnId, cellId, content) => {
-    let newCreditCardInfoTable = { ...creditCardInfoTable }
-    const creditCardInfoColumns = newCreditCardInfoTable.creditCardInfoColumns
-    const newCreditCardInfoColumns = creditCardInfoColumns?.map((column) => {
-      if (column.id === columnId) {
-        const newCreditCardInfoCells = column?.creditCardInfoCells?.map(
-          (cell) => {
-            if (cell.id === cellId) {
-              return { ...cell, userCreditCardInfoCell: content }
-            }
-            return cell
-          }
-        )
-        return { ...column, creditCardInfoCells: newCreditCardInfoCells }
-      }
-      return column
-    })
-    newCreditCardInfoTable.creditCardInfoColumns = newCreditCardInfoColumns
-    return newCreditCardInfoTable
-  }
-
-  const handleChangeCreditCardInfo = async (
-    obj,
-    value,
-    isEdit,
-    columnId,
-    cellId
-  ) => {
-    const content = {
-      content: value ?? '',
-      creditCardInfoCellId: cellId
-      // journalId: journalId
-    }
-    delete content.id
-
-    if (isEdit) {
-      if (obj.id) {
-        content.id = obj.id
-      }
-      content.creditCardInfoCellId = obj.creditCardInfoCellId
-    }
-
-    const newCreditCardInfoTable = updateCreditCardInfoTable(
-      columnId,
-      cellId,
-      content
-    )
-
-    setCreditCardInfoTable(newCreditCardInfoTable)
-    debounce(updateCreditCardInfoCell, { content, cellId, columnId })
-  }
-
-  const updateCreditCardInfoCell = async (_, newData) => {
-    setLoading(true)
-    await axiosInstance
-      .put(`/ltsJournals/user-credit-card-info-cell`, {
-        ...newData.content
-      })
-      .then(({ data }) => {
-        const newCreditCardInfoTable = updateCreditCardInfoTable(
-          newData.columnId,
-          newData.cellId,
-          data
-        )
-        // debugger
-        setCreditCardInfoTable(newCreditCardInfoTable)
-
-        setLoading(false)
-      })
-  }
-
-  const updateCollegeInfoTable = (
-    tableId,
-    rowId,
-    columnId,
-    cellId,
-    content
-  ) => {
-    const updatedTables = collegeInfoTables.map((table) => {
-      if (table.id === tableId) {
-        return {
-          ...table,
-          collegePlansRows: table.collegePlansRows.map((row) => {
-            if (row.id === rowId) {
-              return {
-                ...row,
-                collegePlansColumns: row.collegePlansColumns.map((column) => {
-                  if (column.id === columnId) {
-                    return {
-                      ...column,
-                      collegePlansCells: column.collegePlansCells.map(
-                        (cell) => {
-                          if (cell.id === cellId) {
-                            return {
-                              ...cell,
-                              userCollegePlansCells: content
-                            }
-                          }
-                          return cell
-                        }
-                      )
-                    }
-                  }
-                  return column
-                })
-              }
-            }
-            return row
-          })
-        }
-      }
-      return table
-    })
-    return updatedTables
-  }
-
-  const handleCollegeInfo = async (
-    obj,
-    value,
-    isEdit,
-    tableId,
-    rowId,
-    columnId,
-    cellId
-  ) => {
-    console.log(obj, value, isEdit, tableId, rowId, columnId, cellId)
-    const content = {
-      content: value ?? '',
-      cellId: cellId,
-      tableId: tableId
-      // journalId: journalId
-    }
-    delete content.id
-
-    if (isEdit) {
-      if (obj.id) {
-        content.id = obj.id
-      }
-      content.cellId = obj.cellId
-      // delete content.journalId
-    }
-
-    const newCreditCardInfoTable = updateCollegeInfoTable(
-      tableId,
-      rowId,
-      columnId,
-      cellId,
-      content
-    )
-    setCollegeInfoTables(newCreditCardInfoTable)
-
-    debounce(updateCollegeInfo, { content, cellId, columnId, tableId, rowId })
-  }
-
-  const updateCollegeInfo = async (_, newData) => {
-    setLoading(true)
-    await axiosInstance
-      .put(`/ltsJournals/user-college-info`, {
-        ...newData.content
-      })
-      .then(({ data }) => {
-        debugger
-        const newCreditCardInfoTable = updateCollegeInfoTable(
-          newData.tableId,
-          newData.rowId,
-          newData.columnId,
-          newData.cellId,
-          data
-        )
-        setCreditCardInfoTable(newCreditCardInfoTable)
-
-        setLoading(false)
-      })
-  }
-
-  //
-
-  const updateMajorsTable = (tableId, rowId, columnId, cellId, content) => {
-    const updatedTables = economicMajorsTables.map((table) => {
-      if (table.id === tableId) {
-        return {
-          ...table,
-          economicMajorsRows: table.economicMajorsRows.map((row) => {
-            if (row.id === rowId) {
-              return {
-                ...row,
-                economicMajorsColumns: row.economicMajorsColumns.map(
-                  (column) => {
-                    if (column.id === columnId) {
-                      return {
-                        ...column,
-                        economicMajorsCells: column.economicMajorsCells.map(
-                          (cell) => {
-                            if (cell.id === cellId) {
-                              return {
-                                ...cell,
-                                userEconomicMajorsCells: content
-                              }
-                            }
-                            return cell
-                          }
-                        )
-                      }
-                    }
-                    return column
-                  }
-                )
-              }
-            }
-            return row
-          })
-        }
-      }
-      return table
-    })
-    return updatedTables
-  }
-
-  const handleMajorsInfo = async (
-    obj,
-    value,
-    isEdit,
-    tableId,
-    rowId,
-    columnId,
-    cellId
-  ) => {
-    const content = {
-      content: value ?? '',
-      cellId: cellId,
-      tableId: tableId
-      // journalId: journalId
-    }
-    delete content.id
-
-    if (isEdit) {
-      if (obj.id) {
-        content.id = obj.id
-      }
-      content.cellId = obj.cellId
-      // delete content.journalId
-    }
-
-    const newMajorsTable = updateMajorsTable(
-      tableId,
-      rowId,
-      columnId,
-      cellId,
-      content
-    )
-    setEconomicMajorsTables(newMajorsTable)
-
-    debounce(updateMajors, { content, cellId, columnId, tableId, rowId })
-  }
-
-  const updateMajors = async (_, newData) => {
-    setLoading(true)
-    await axiosInstance
-      .put(`/ltsJournals/user-economic-majors`, {
-        ...newData.content
-      })
-      .then(({ data }) => {
-        const newMajorsTable = updateMajorsTable(
-          newData.tableId,
-          newData.rowId,
-          newData.columnId,
-          newData.cellId,
-          data
-        )
-        setEconomicMajorsTables(newMajorsTable)
-
-        setLoading(false)
-      })
-  }
-
-  //
-
-  const updateJobApplicationTable = (tableId, columnId, cellId, content) => {
-    const updatedTables = jobApplicationTables.map((table) => {
-      if (table.id === tableId) {
-        return {
-          ...table,
-          jobApplicationColumns: table.jobApplicationColumns.map((column) => {
-            if (column.id === columnId) {
-              return {
-                ...column,
-                jobApplicationCells: column.jobApplicationCells.map((cell) => {
-                  if (cell.id === cellId) {
-                    return {
-                      ...cell,
-                      userJobApplicationCells: content
-                    }
-                  }
-                  return cell
-                })
-              }
-            }
-            return column
-          })
-        }
-      }
-      return table
-    })
-    return updatedTables
-  }
-
-  const handleUpdateJobApplication = async (
-    obj,
-    value,
-    isEdit,
-    tableId,
-    columnId,
-    cellId
-  ) => {
-    const content = {
-      content: value ?? '',
-      cellId: cellId,
-      tableId: tableId
-      // journalId: journalId
-    }
-    delete content.id
-
-    if (isEdit) {
-      if (obj.id) {
-        content.id = obj.id
-      }
-      content.cellId = obj.cellId
-      // delete content.journalId
-    }
-
-    const jobApplicationTable = updateJobApplicationTable(
-      tableId,
-      columnId,
-      cellId,
-      content
-    )
-    setJobApplicationTables(jobApplicationTable)
-
-    debounce(updateJobApplication, { content, cellId, columnId, tableId })
-  }
-
-  const updateJobApplication = async (_, newData) => {
-    setLoading(true)
-    await axiosInstance
-      .put(`/ltsJournals/user-job-application`, {
-        ...newData.content
-      })
-      .then(({ data }) => {
-        const jobApplicationTable = updateJobApplicationTable(
-          newData.tableId,
-          newData.columnId,
-          newData.cellId,
-          data
-        )
-        setJobApplicationTables(jobApplicationTable)
-
-        setLoading(false)
-      })
-  }
-
-  const tableColumnStyle = {
-    backgroundColor: '#51c7df',
-    color: '#fff',
-    padding: 4,
-    display: 'flex',
-    alignItems: 'center',
-    height: 56
-  }
 
   console.log(journal)
 
@@ -1172,33 +304,34 @@ function LtsJournalContent(props) {
       ) : null}
 
       <div className="row">
-        <div className="col-12">
-          <div className="journal-entries">
-            <EntriesBox
-              entries={journal.entries}
-              entryBoxTitle={journal?.title}
-              journal={journal}
-              isEditable={true}
-              isDeletable={true}
-              userJournalEntries={userJournalEntries}
-              deleteReflection={(entry, userJournalEntry) =>
-                deleteReflection(entry, userJournalEntry)
-              }
-              updateReflection={(entry, userJournalEntry) =>
-                updateReflection(entry, userJournalEntry)
-              }
-              addReflection={(entry) => addReflection(entry)}
-              handleShowAddReflection={(reflection) =>
-                handleShowAddReflection(reflection)
-              }
-              showAddReflection={showAddReflection}
-            />
+        {journal.entries && journal.entries.length ? (
+          <div className="col-12">
+            <div className="journal-entries">
+              <EntriesBox
+                entries={journal.entries}
+                entryBoxTitle={journal?.title}
+                journal={journal}
+                isEditable={true}
+                isDeletable={true}
+                userJournalEntries={userJournalEntries}
+                deleteReflection={(entry, userJournalEntry) =>
+                  deleteReflection(entry, userJournalEntry)
+                }
+                updateReflection={(entry, userJournalEntry) =>
+                  updateReflection(entry, userJournalEntry)
+                }
+                addReflection={(entry) => addReflection(entry)}
+                handleShowAddReflection={(reflection) =>
+                  handleShowAddReflection(reflection)
+                }
+                showAddReflection={showAddReflection}
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="col-12">
-          <div className={'custom-breakdowns-container'}>
-            {journal.hasAccordion ? (
+        ) : null}
+        {journal.hasAccordion ? (
+          <div className="col-12">
+            <div className={'custom-breakdowns-container'}>
               <div>
                 {!loading && (
                   <div style={{ order: 1 }}>
@@ -1217,9 +350,9 @@ function LtsJournalContent(props) {
                   </div>
                 )}
               </div>
-            ) : null}
+            </div>
           </div>
-        </div>
+        ) : null}
 
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (
@@ -1234,39 +367,51 @@ function LtsJournalContent(props) {
                 >
                   {openAccordion === `accordion-${accordion.id}` && (
                     <>
-                      <div className="accordion-content">
-                        <div className="col-12">
-                          <div className="">
-                            {accordion.ltsJournalAccordionEntries && (
-                              <EntriesBox
-                                entries={accordion.ltsJournalAccordionEntries}
-                                entryBoxTitle={journal?.title}
-                                journal={journal}
-                                userJournalEntries={userJournalEntries}
-                                deleteReflection={(entry, userJournalEntry) =>
-                                  deleteReflection(entry, userJournalEntry)
-                                }
-                                updateReflection={(entry, userJournalEntry) =>
-                                  updateReflection(entry, userJournalEntry)
-                                }
-                                addReflection={(entry) => addReflection(entry)}
-                                handleShowAddReflection={(reflection) =>
-                                  handleShowAddReflection(reflection)
-                                }
-                                showAddReflection={showAddReflection}
-                              />
-                            )}
-                            {accordion.journalTablesAccordions && (
-                              <JournalTables
-                                tables={accordion?.journalTablesAccordions}
-                                paragraphs={null}
-                                loading={loading}
-                                backgroundColor={'#fff'}
-                              />
-                            )}
+                      {accordion.ltsJournalAccordionEntries &&
+                        accordion.ltsJournalAccordionEntries.length > 0 && (
+                          <div className="accordion-content">
+                            <div className="col-12">
+                              <div className="">
+                                <EntriesBox
+                                  entries={accordion.ltsJournalAccordionEntries}
+                                  entryBoxTitle={journal?.title}
+                                  journal={journal}
+                                  userJournalEntries={userJournalEntries}
+                                  deleteReflection={(entry, userJournalEntry) =>
+                                    deleteReflection(entry, userJournalEntry)
+                                  }
+                                  updateReflection={(entry, userJournalEntry) =>
+                                    updateReflection(entry, userJournalEntry)
+                                  }
+                                  addReflection={(entry) =>
+                                    addReflection(entry)
+                                  }
+                                  handleShowAddReflection={(reflection) =>
+                                    handleShowAddReflection(reflection)
+                                  }
+                                  showAddReflection={showAddReflection}
+                                />
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
+                        )}
+                      {accordion.journalTablesAccordions &&
+                        accordion.journalTablesAccordions.length > 0 && (
+                          <div
+                            className="accordion-content"
+                            style={{ padding: '15px 15px ' }}
+                          >
+                            <div className="col-12">
+                              <div className="">
+                                <JournalTables
+                                  tables={accordion?.journalTablesAccordions}
+                                  paragraphs={null}
+                                  loading={loading}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
                     </>
                   )}
                 </AccordionItemWrapper>
