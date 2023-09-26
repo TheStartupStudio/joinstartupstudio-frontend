@@ -19,13 +19,6 @@ const JournalTables = (props) => {
     setParagraphs(props.paragraphs)
   }, [props.paragraphs])
 
-  const debounce = useCallback(
-    _.debounce(async (func, value) => {
-      func('debounce', value)
-    }, 1000),
-    []
-  )
-
   const updateJournalTable = (tableId, rowId, cellId, content) => {
     const updatedTables = tables?.map((table) => {
       if (table.id === tableId) {
@@ -92,9 +85,9 @@ const JournalTables = (props) => {
       content
     )
 
+    console.log('content', content)
     setTables(updatedJournalTable)
-
-    debounce(updateResumeEvaluation, { content, cellId, rowId, tableId })
+    updateResumeEvaluation(null, { content, cellId, rowId, tableId })
   }
 
   const updateResumeEvaluation = async (_, newData) => {
