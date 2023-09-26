@@ -39,8 +39,14 @@ export default function useUploads({ skillId, setSelectedUpload }) {
     setSelectedUpload(upload)
   }
 
-  const removeUpload = (id) => {
+  // const removeUpload = (id) => {
+  //   setUploads((uploads) => uploads.filter((upload) => upload.id !== id))
+  // }
+  const removeUpload = (id, updatedSkillStatus) => {
     setUploads((uploads) => uploads.filter((upload) => upload.id !== id))
+    if (updatedSkillStatus) {
+      updateSkillStatus(updatedSkillStatus)
+    }
   }
 
   const createUpload = async (values) => {
@@ -54,13 +60,32 @@ export default function useUploads({ skillId, setSelectedUpload }) {
     setRequestLoading()
   }
 
-  const deleteUpload = async (id, onFinishCb) => {
+  // const deleteUpload = async (id, onFinishCb) => {
+  //   await axiosInstance
+  //     .delete(`/iamr/uploads/${id}`)
+  //     .then(() => {
+  //       onFinishCb()
+  //       toast.success('Upload has been deleted.')
+  //       removeUpload(id)
+  //     })
+  //     .catch((e) => {
+  //       onFinishCb()
+  //       showErrors(e)
+  //     })
+  // }
+  
+  const deleteUpload = async (id,skillId, onFinishCb) => {
+    const not_started = { skill_id: +skillId, SkillStatus: ['not_started'] }
     await axiosInstance
-      .delete(`/iamr/uploads/${id}`)
-      .then(() => {
+      .delete(`/iamr/uploads/${id}/${skillId}`)
+      .then(({ data }) => {
         onFinishCb()
         toast.success('Upload has been deleted.')
-        removeUpload(id)
+        if (typeof data !== 'string') {
+          removeUpload(id, not_started)
+        } else {
+          removeUpload(id)
+        }
       })
       .catch((e) => {
         onFinishCb()

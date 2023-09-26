@@ -40,7 +40,7 @@
   letter-spacing: 0px;
   color: #707070;
 }
-.accordion_button {
+.MY_MARKET_READY_GUIDE .accordion_button {
   background: #f8f7f7 0% 0% no-repeat padding-box;
   border: 1px solid #f3f3f3;
   opacity: 1;
@@ -50,7 +50,7 @@
   color: #333d3d;
   opacity: 1;
 }
-.accordion_button:not(.collapsed) {
+.MY_MARKET_READY_GUIDE .accordion_button:not(.collapsed) {
   background: #f8f7f7 0% 0% no-repeat padding-box;
   border: 1px solid #f3f3f3;
   opacity: 1;
@@ -62,22 +62,22 @@
   color: #333d3d;
   opacity: 1;
 }
-.accordion_button:active 
+.MY_MARKET_READY_GUIDE .accordion_button:active 
 /* .accordion_button:focus  */ {
   outline: 0 !important;
 }
-.accordion-outter {
+.MY_MARKET_READY_GUIDE .accordion-outter {
   background: #3c3c3c 0% 0% no-repeat padding-box !important;
   color: white;
   opacity: 1;
 }
-.accordion-outter:not(.collapsed) {
+.MY_MARKET_READY_GUIDE .accordion-outter:not(.collapsed) {
   color: white !important;
 }
-.accordion-button:after {
+.MY_MARKET_READY_GUIDE .accordion-button:after {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
 }
-.accordion-button-inner::after {
+.MY_MARKET_READY_GUIDE .accordion-button-inner::after {
   outline: 0 !important;
   display: block;
   content: '+';
@@ -88,31 +88,31 @@
   background-image: none !important;
   color: #707070;
 }
-.accordion-button-inner:not(.collapsed)::after {
+.MY_MARKET_READY_GUIDE .accordion-button-inner:not(.collapsed)::after {
   transform: rotate(0deg) !important;
 }
-.accordion-outter {
+.MY_MARKET_READY_GUIDE .accordion-outter {
   text-align: left;
   font: normal normal 600 16px/22px Montserrat;
   letter-spacing: 0px;
   color: #fcfcfc;
   opacity: 1;
 }
-.accordion-outter-body {
+.MY_MARKET_READY_GUIDE .accordion-outter-body {
   text-align: left;
   font: normal normal 300 16px Montserrat;
   letter-spacing: 0px;
   color: #707070;
   opacity: 1;
 }
-.accordion-button-inner {
+.MY_MARKET_READY_GUIDE .accordion-button-inner {
   text-align: left;
   font: normal normal 600 15px/15px Montserrat;
   letter-spacing: 0.6px;
   color: #333d3d;
   opacity: 1;
 }
-.inner_span {
+.MY_MARKET_READY_GUIDE .inner_span {
   text-align: left;
   font: normal normal 500 14px/16px Montserrat;
   letter-spacing: 0px;
@@ -120,10 +120,10 @@
   display: block;
   margin: 14px 0px;
 }
-.accordion-body {
+.MY_MARKET_READY_GUIDE .accordion-body {
   box-shadow: 0px 6px 9px #00000029;
 }
-.button-accordion {
+.MY_MARKET_READY_GUIDE .button-accordion {
   text-align: left;
   font: normal normal 600 16px/22px Montserrat;
   letter-spacing: 0px;

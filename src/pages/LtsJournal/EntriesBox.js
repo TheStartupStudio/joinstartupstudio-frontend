@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import markdown from './markdown'
 import LtsJournalReflection from './reflection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle, faPlus } from '@fortawesome/free-solid-svg-icons'
+import axiosInstance from '../../utils/AxiosInstance'
 
 const EntriesBox = (props) => {
   const {
@@ -16,8 +17,64 @@ const EntriesBox = (props) => {
     showAddReflection,
     entries,
     isEditable,
-    isDeletable
+    isDeletable,
+    accordion
   } = props
+  const [isSaving, setIsSaving] = useState(false)
+  const [isNew, setIsNew] = useState(true)
+  const currentDate = new Date()
+  const nextDay = new Date(currentDate)
+  nextDay.setDate(currentDate.getDate() + 1)
+  const [accordionDates, setAccordionDates] = useState({})
+
+  useEffect(() => {
+    if (journal?.id && accordion?.id) {
+      axiosInstance
+        .get(`/ltsJournals/${journal?.id}/accordionsTable/${accordion?.id}`)
+        .then(({ data }) => {
+          setAccordionDates(data.ltsJournalsAccordionsTable)
+          setIsNew(false)
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+        })
+    }
+  }, [journal?.id, accordion?.id])
+
+  const handleDataChanges = (name, value) => {
+    const newDates = { ...accordionDates, [name]: value }
+    setAccordionDates(newDates)
+    onSave(newDates, isNew)
+  }
+
+  const onSave = (values, isNew) => {
+    if (isSaving) {
+      return
+    }
+
+    setIsSaving(true)
+
+    let data = {
+      startDate: values?.startDate,
+      endDate: values?.endDate
+    }
+
+    const axiosMethodUrl = isNew
+      ? axiosInstance.post(`/ltsJournals/accordionsTable/${accordion.id}`, data)
+      : axiosInstance.patch(
+          `/ltsJournals/accordionsTable/${accordionDates.id}`,
+          data
+        )
+
+    axiosMethodUrl
+      .then((res) => {
+        setIsSaving(false)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        setIsSaving(false)
+      })
+  }
 
   return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
@@ -34,6 +91,60 @@ const EntriesBox = (props) => {
             <h5 style={{ fontSize: 14, padding: 6 }}>{journal.title}</h5>
           </div>
         )} */}
+      {journal.title === 'MY PROJECT SPRINTS' && (
+        <div className="row" style={{ paddingBottom: '1px' }}>
+          <div className="col-6" style={{ paddingRight: 0 }}>
+            <div className="table-reflections__date">
+              <b>Start date:</b>
+              <div className={` w-100`}>
+                <input
+                  className={`journal_table-input my-1 py-2 px-2 text-dark `}
+                  type={'date'}
+                  style={{
+                    width: '100%'
+                  }}
+                  name={'startDate'}
+                  value={new Date(
+                    accordionDates.startDate ?? currentDate
+                  ).toLocaleDateString('en-CA')}
+                  onChange={(e) =>
+                    handleDataChanges('startDate', e.target.value)
+                  }
+                  disabled={!props.isEditable}
+                />
+              </div>
+              {/*{moment(props.start).format('DD-MM-YYYY')}*/}
+            </div>
+          </div>
+          <div className="col-6" style={{ paddingLeft: 0 }}>
+            <div className="table-reflections__date">
+              <b>End date:</b>{' '}
+              <div className={` w-100`}>
+                <input
+                  className={`journal_table-input my-1 py-2 px-2 text-dark `}
+                  type={'date'}
+                  style={{
+                    width: '100%'
+                  }}
+                  name={'endDate'}
+                  value={new Date(
+                    accordionDates.endDate ?? nextDay
+                  ).toLocaleDateString('en-CA')}
+                  onChange={
+                    (e) =>
+                      // if (!isSaving) {
+                      // return
+                      handleDataChanges('endDate', e.target.value)
+                    // }
+                  }
+                  disabled={!props.isEditable}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {entries &&
         entries?.map((entry, index) => (
           <div

@@ -2,14 +2,16 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import DialogModal from '../customComponents/dialogModal'
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min'
 
 const UploadItem = ({ upload, setSelectedUpload, deleteUpload }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const { id } = useParams()
 
   const handleDelete = () => {
     setDeleteLoading(true)
-    deleteUpload(upload.id, () => setDeleteLoading(false))
+    deleteUpload(upload.id,id, () => setDeleteLoading(false))
   }
 
   const isDeletable =
