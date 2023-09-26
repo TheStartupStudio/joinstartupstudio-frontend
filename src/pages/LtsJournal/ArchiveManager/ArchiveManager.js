@@ -4,22 +4,6 @@ import ArchiveModal from '../../../components/Modals/ArchiveModal'
 import DeleteArchiveModal from '../../../components/Modals/DeleteArchiveModal'
 
 const ArchiveManager = (props) => {
-  const [showArchiveModal, setShowArchiveModal] = useState(false)
-  const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
-
-  const handleCloseArchiveModal = () => {
-    setShowArchiveModal(false)
-  }
-  const handleOpenArchiveModal = () => {
-    setShowArchiveModal(true)
-  }
-  const handleCloseDeleteArchiveModal = () => {
-    setShowDeleteArchiveModal(false)
-  }
-  const handleOpenDeleteArchiveModal = () => {
-    setShowDeleteArchiveModal(true)
-  }
-
   const archiveOptionTitle = () => {
     if (props.title === 'teamMeeting') {
       return 'Team Meeting'

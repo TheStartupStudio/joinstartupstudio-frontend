@@ -2663,6 +2663,12 @@ white-space: nowrap; */
   color: #707070;
   opacity: 1;
 }
+.blocked-user-modal ul li {
+  font: normal normal 300 15px/21px Montserrat;
+  letter-spacing: 0.68px;
+  color: #707070;
+  opacity: 1;
+}
 
 .blocked-user-modal h3 {
   text-align: center;
@@ -4377,7 +4383,6 @@ ul.sidebar-menu-item .collapse a {
 }
 
 .accordion-content {
-  padding: 15px 50px;
   padding: 30px 55px;
   background-color: #ffffff;
   font-size: 13px;

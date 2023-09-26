@@ -215,27 +215,27 @@ const EntriesBox = (props) => {
                 />
               )}
               {/*Show add new reflection*/}
-              {/*<div*/}
-              {/*  className={`journal-entries__entry-reflections-actions ${*/}
-              {/*    userJournalEntries[entry.id] && !showAddReflection[entry.id]*/}
-              {/*      ? 'active'*/}
-              {/*      : ''*/}
-              {/*  }`}*/}
-              {/*>*/}
-              {/*  <a*/}
-              {/*    href="#"*/}
-              {/*    className="journal-entries__entry-reflections-action"*/}
-              {/*    onClick={(e) => {*/}
-              {/*      e.preventDefault()*/}
-              {/*      handleShowAddReflection({*/}
-              {/*        ...showAddReflection,*/}
-              {/*        [entry.id]: true*/}
-              {/*      })*/}
-              {/*    }}*/}
-              {/*  >*/}
-              {/*    Add reflection <FontAwesomeIcon icon={faPlus} />*/}
-              {/*  </a>*/}
-              {/*</div>*/}
+              <div
+                className={`journal-entries__entry-reflections-actions ${
+                  userJournalEntries[entry.id] && !showAddReflection[entry.id]
+                    ? 'active'
+                    : ''
+                }`}
+              >
+                <a
+                  href="#"
+                  className="journal-entries__entry-reflections-action"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleShowAddReflection({
+                      ...showAddReflection,
+                      [entry.id]: true
+                    })
+                  }}
+                >
+                  Add reflection <FontAwesomeIcon icon={faPlus} />
+                </a>
+              </div>
             </div>
             {entry.contentAfter && (
               <div
