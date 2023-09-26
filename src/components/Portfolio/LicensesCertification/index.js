@@ -17,16 +17,12 @@ import addCertification from './addCertification'
 export default function LicencesCertification(props) {
   const general = useSelector((state) => state.general)
   const userId = useSelector((state) => state.user.user.user.id)
-
   const [userCertification, setUserCertification] = useState([])
   const [addCertficateModal, setAddCertificateModal] = useState(false)
   // const [certificateImage, setCertificateImage] = useState()
   const [certificateData, setCertifieData] = useState()
   const [removeCertification, setRemoveCertification] = useState(false)
   const [certificatedToRemove, setCertificatedToRemove] = useState([])
-  console.log(certificatedToRemove)
-  console.log(userCertification)
-  console.log('certificateData', certificateData)
   // const [uploadedImage, setUploadedImage] = useState()
   const [loading, setLoading] = useState(false)
   const [isPublished, setIsPublished] = useState(false)
@@ -143,9 +139,7 @@ export default function LicencesCertification(props) {
   const handleAddCertification = (certification) => {
     setUserCertification((data) => [...data, certification])
   }
-  // console.log('isLoading', isLoading)
 
-  // console.log(!isLoading, userCertification?.length)
   return (
     <>
       {!isLoading ? (

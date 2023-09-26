@@ -12,7 +12,6 @@ export const AccomplishmentDetails = (props) => {
   const [accomp, setAccomp] = useState()
 
   useEffect(() => {
-    console.log(props.accomp.date_issued)
     setAccomp(props.accomp)
   }, [props.accomp])
 
@@ -30,7 +29,7 @@ export const AccomplishmentDetails = (props) => {
               display: 'flex',
               padding: '20px 10px',
               flexDirection: windowWidth < 730 ? 'column' : 'row',
-              position: 'relative',
+              position: 'relative'
             }}
           >
             <div
@@ -41,7 +40,7 @@ export const AccomplishmentDetails = (props) => {
                 alignItems: 'center',
                 borderRight:
                   windowWidth < 730 ? '0px solid #e5e5e5' : '1px solid #e5e5e5',
-                paddingRight: 20,
+                paddingRight: 20
               }}
             >
               <div>
@@ -52,7 +51,7 @@ export const AccomplishmentDetails = (props) => {
                     letterSpacing: 0.68,
                     color: '#231F20',
                     textTransform: 'uppercase',
-                    marginBottom: 4,
+                    marginBottom: 4
                   }}
                 >
                   {accomp.title + ':'} {accomp.company}
@@ -62,11 +61,17 @@ export const AccomplishmentDetails = (props) => {
                     textAlign: 'left',
                     font: 'normal normal 500 15px/16px Montserrat',
                     letterSpacing: 0.6,
-                    color: '#231F20',
+                    color: '#231F20'
                   }}
                 >
-                  { 
-                format((parse(formatDate(props.accomp.date_issued), 'yyyy-MM', new Date())), 'MMMM yyyy')}
+                  {format(
+                    parse(
+                      formatDate(props.accomp.date_issued),
+                      'yyyy-MM',
+                      new Date()
+                    ),
+                    'MMMM yyyy'
+                  )}
                 </div>
               </div>
             </div>
@@ -81,7 +86,7 @@ export const AccomplishmentDetails = (props) => {
                   letterSpacing: 0.6,
                   color: '#231F20',
                   marginTop: windowWidth < 730 ? 6 : 0,
-                  paddingLeft: windowWidth < 730 ? 0 : 20,
+                  paddingLeft: windowWidth < 730 ? 0 : 20
                 }}
               >
                 {accomp?.description}
@@ -90,7 +95,7 @@ export const AccomplishmentDetails = (props) => {
                 <div
                   className=" edit-icon"
                   style={{
-                    paddingRight: windowWidth < 730 ? 0 : 10,
+                    paddingRight: windowWidth < 730 ? 0 : 10
                   }}
                 >
                   <span className="text-end text-md-center">
@@ -118,7 +123,7 @@ export const AccomplishmentDetails = (props) => {
                   top: 12,
                   right: 0,
                   height: '25px',
-                  width: '25px',
+                  width: '25px'
                 }}
               />
             )}

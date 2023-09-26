@@ -12,8 +12,7 @@ import { useParams } from 'react-router-dom'
 import Description from './description'
 import axiosInstance from '../../../../utils/AxiosInstance'
 
-const SkillInstructions = ({ skill,groupingStrings }) => {
-  console.log('groupingStrings',groupingStrings)
+const SkillInstructions = ({ skill, groupingStrings }) => {
   const [tickets, setTickets] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedTicket, setSelectedTicket] = useState()
@@ -54,7 +53,7 @@ const SkillInstructions = ({ skill,groupingStrings }) => {
   return (
     <>
       <p className="skill-title">
-        <span className="text-info fw-bold">{skill.category} - </span> 
+        <span className="text-info fw-bold">{skill.category} - </span>
         <span className="fw-bold">{skill?.title} - </span> Instructions &
         Questions
       </p>

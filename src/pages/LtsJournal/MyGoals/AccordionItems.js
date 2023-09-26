@@ -5,7 +5,6 @@ const AccordionItems = ({ index }) => {
   const [evaluationDropdown, setEvaluationDropdown] = useState(false)
   const [activePage, setActivePage] = useState('')
 
-  useEffect(() => console.log(activePage), [activePage])
   return (
     <div className="accordion-content p-0">
       <div

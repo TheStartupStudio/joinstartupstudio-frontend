@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
-const ConfirmUploadModal = ({ upload, show, onHide, editUpload }) => {
+const ConfirmUploadModal = ({ upload, show, onHide, editUpload, skill }) => {
   const [loading, setLoading] = useState(false)
 
   const submit = () => {
     setLoading(true)
     editUpload(
-      { ...upload, status: 'approved' },
+      { ...upload, status: 'approved', skill },
       () => {
         setLoading(false)
         toast.success('Skill has been marked as approved.')

@@ -5,7 +5,6 @@ import './BreakdownTextAccordion.css'
 import MyTrainingType from './MyTrainingType'
 
 function MyTraining(props) {
-  console.log('props', props)
   return (
     <>
       <Switch>

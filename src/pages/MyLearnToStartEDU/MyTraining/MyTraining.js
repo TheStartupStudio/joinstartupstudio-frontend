@@ -337,8 +337,6 @@ const MyTraining = () => {
       .catch((error) => console.error('Error fetching items:', error))
   }, [])
 
-  console.log('items', items)
-
   const handleItemClick = (itemId) => {
     setSelectedItemId(itemId)
   }

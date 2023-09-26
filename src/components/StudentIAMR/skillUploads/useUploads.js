@@ -56,8 +56,8 @@ export default function useUploads({ skillId, setSelectedUpload }) {
 
         const url =
           values.status === 'developing'
-            ? `/iamr/${skillId}/feedback/${ticket?.id}`
-            : `/iamr/${skillId}/uploads/${upload.id}`
+            ? `/iamr/${values.skill.type}/${skillId}/feedback/${ticket?.id}`
+            : `/iamr/${values.skill.type}/${skillId}/uploads/${upload.id}`
 
         notificationSocket?.emit('sendNotification', {
           sender: loggedUser,

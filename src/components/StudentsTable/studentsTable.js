@@ -476,34 +476,6 @@ export default function StudentsTable(props) {
     { name: 'level', value: 'HE', label: 'HE' }
   ]
 
-  // useEffect(() => {
-  //   const getOptions = (value, prop) => {
-  //     const item = defaultData.find((item) => item.value === value)
-  //     const elements = item ? item[prop] : []
-
-  //     if (prop === 'period') {
-  //       const periodIds = elements?.map(
-  //         (el) => periods.find((period) => period.name === el)?.id
-  //       )
-
-  //       return elements?.map((el, index) => ({
-  //         name: prop,
-  //         value: periodIds[index], // Assign the period ID as the value
-  //         label: el,
-  //       }))
-  //     }
-  //     return elements?.map((el) => ({
-  //       name: prop,
-  //       value: el,
-  //       label: el,
-  //     }))
-  //   }
-  //   const yearOptions = getOptions(currentEditingStudent?.level, 'year')
-  //   const periodOptions = getOptions(currentEditingStudent?.level, 'period')
-  //   setYearOptions(yearOptions)
-  //   setPeriodOptions(periodOptions)
-  // }, [currentEditingStudent?.level])
-
   const updateOptions = (level) => {
     const getOptions = (value, prop) => {
       const item = defaultData.find((item) => item.value === value)
@@ -557,10 +529,14 @@ export default function StudentsTable(props) {
 
   const handleSingleActivationToggle = async () => {
     setDeactivateLoading(true)
+
     await axiosInstance
-      .put(`/instructor/update-student/${tooglingActivationStudent.data.id}`, {
-        deactivated: !tooglingActivationStudent.data.deactivated
-      })
+      .patch(
+        `/instructor/update-student/${tooglingActivationStudent.data.id}`,
+        {
+          deactivated: !tooglingActivationStudent.data.deactivated
+        }
+      )
       .then(({ data }) => {
         if (data) {
           setShowConfirmationModal(true)
@@ -785,11 +761,8 @@ export default function StudentsTable(props) {
                       <span
                         role="button"
                         onClick={() => {
-                          setTooglingActivationStudent({
-                            data: record,
-                            action_type: 'deactivate'
-                          })
-                          setShowToggleActivationModal(true)
+                          setBulkDeactivatingStudents([record.id])
+                          setShowBulkDeactivationModal(true)
                         }}
                       >
                         Deactivate User
@@ -1301,6 +1274,23 @@ export default function StudentsTable(props) {
         />
       )}
 
+      {showToggleActivationModal && (
+        <DeactivateDialogModal
+          show={showToggleActivationModal}
+          onHide={() => {
+            setShowToggleActivationModal(false)
+            setTooglingActivationStudent()
+          }}
+          deactivateLoading={deactivateLoading}
+          handleAction={() => {
+            handleSingleActivationToggle()
+          }}
+          action_type={
+            tooglingActivationStudent && tooglingActivationStudent.action_type
+          }
+        />
+      )}
+
       {showBulkNextYearModal && (
         <NextYearModal
           show={showBulkNextYearModal}
@@ -1314,7 +1304,6 @@ export default function StudentsTable(props) {
           }}
         />
       )}
-
       {bulkDeactivatingStudents && (
         <>
           <ConfirmationModal
@@ -1362,23 +1351,6 @@ export default function StudentsTable(props) {
         school={universities}
         updateState={(id, data) => updateState(id, data)}
       />
-
-      {showToggleActivationModal && (
-        <DeactivateDialogModal
-          show={showToggleActivationModal}
-          onHide={() => {
-            setShowToggleActivationModal(false)
-            setTooglingActivationStudent()
-          }}
-          deactivateLoading={deactivateLoading}
-          handleAction={() => {
-            handleSingleActivationToggle()
-          }}
-          action_type={
-            tooglingActivationStudent && tooglingActivationStudent.action_type
-          }
-        />
-      )}
 
       {tooglingActivationStudent &&
         tooglingActivationStudent.action_type === 'deactivate' && (

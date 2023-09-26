@@ -23,8 +23,6 @@ const AccordionItems = ({
       const groupIndex = (index + 1) / 4
       const groupIndexProp = Math.floor(index / 4)
 
-      console.log('groupingStrings', groupingStrings)
-
       return (
         <Fragment key={skill.id}>
           {isFirstSkill && (
@@ -84,8 +82,6 @@ const SkillsAccordion = ({ hideExpanded, groupingStrings }) => {
   const activeKey = useState({ id: null, type: null })
   const [, setActiveKey] = activeKey
   const { id, type } = useParams()
-
-  console.log('groupingStrings', groupingStrings)
 
   useEffect(() => {
     setActiveKey({ id: parseInt(id), type: type })

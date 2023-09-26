@@ -36,8 +36,6 @@ const MyTrainingContent = (props) => {
     setIsExpanded(false)
   }, [props.match.params.id])
 
-  console.log('journal', journal)
-
   return (
     <>
       <>

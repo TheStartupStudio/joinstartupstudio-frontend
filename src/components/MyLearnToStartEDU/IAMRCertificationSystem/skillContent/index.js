@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 const SkillContent = ({ skill }) => {
   const history = useHistory()
 
-  useEffect(() => history.push(`/iamr/${skill.type}/${skill.id}/instructions`))
+  // useEffect(() => history.push(`/iamr/${skill.type}/${skill.id}/instructions`))
 
   return (
     <div style={{ borderRadius: '10px', overflow: 'hidden' }}>
@@ -27,7 +27,9 @@ const SkillContent = ({ skill }) => {
         playing={true}
       />
       <p className="page-content-title mb-2"></p>
-      <p className="page-content-text ps-3">{skill?.description}</p>
+      <p className="page-content-text ps-3">
+        Watch the video to learn how the Certification System work
+      </p>
     </div>
   )
 }

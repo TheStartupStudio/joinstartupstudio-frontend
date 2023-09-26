@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import { Controller, useForm } from 'react-hook-form'
 
-const RejectUploadModal = ({ upload, show, onHide, editUpload }) => {
+const RejectUploadModal = ({ upload, show, onHide, editUpload, skill }) => {
   const {
     handleSubmit,
     control,
@@ -15,7 +15,7 @@ const RejectUploadModal = ({ upload, show, onHide, editUpload }) => {
 
   const submitTicket = async (values) => {
     await editUpload(
-      { ...upload, status: 'developing', message: values.message },
+      { ...upload, status: 'developing', message: values.message, skill },
       () => {
         onHide()
         toast.success('Upload has been marked as developing.')
@@ -40,28 +40,28 @@ const RejectUploadModal = ({ upload, show, onHide, editUpload }) => {
     <Modal
       show={show}
       onHide={hideModal}
-      backdrop='static'
+      backdrop="static"
       keyboard={false}
-      className='no-border-modal new-ticket-modal'
+      className="no-border-modal new-ticket-modal"
       centered
     >
-      <Modal.Header className='contact-us-title my-auto mx-4'>
-        <h3 className='mb-0 pt-4 mt-2 '>UPLOAD FEEDBACK</h3>
+      <Modal.Header className="contact-us-title my-auto mx-4">
+        <h3 className="mb-0 pt-4 mt-2 ">UPLOAD FEEDBACK</h3>
         <button
-          type='button'
-          className='btn-close me-1'
-          aria-label='Close'
+          type="button"
+          className="btn-close me-1"
+          aria-label="Close"
           onClick={hideModal}
         />
       </Modal.Header>
-      <Modal.Body className='m-4 p-0'>
+      <Modal.Body className="m-4 p-0">
         <form onSubmit={handleSubmit(submitTicket)}>
-          <div className='contact-us'>
+          <div className="contact-us">
             <h6>Please provide a feedback for the student.</h6>
 
-            <div className='input-field mb-4'>
+            <div className="input-field mb-4">
               <Controller
-                name='message'
+                name="message"
                 control={control}
                 rules={{
                   required: 'Feedback is required',
@@ -79,12 +79,12 @@ const RejectUploadModal = ({ upload, show, onHide, editUpload }) => {
                 )}
               />
 
-              <span className='field-error'>
+              <span className="field-error">
                 {errors.message && errors.message.message}
               </span>
             </div>
 
-            <button type='submit' disabled={isSubmitting}>
+            <button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'SENDING' : 'SEND'}
             </button>
           </div>

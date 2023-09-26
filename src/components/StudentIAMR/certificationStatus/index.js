@@ -98,7 +98,7 @@ const CertificationStatus = () => {
         sender: loggedUser,
         receivers: [{ id: studentId }],
         type: type,
-        url: `/iamr/${id}/certification-status`
+        url: `/iamr/${certificationType}/${id}/certification-status`
       })
 
       toast.success(
