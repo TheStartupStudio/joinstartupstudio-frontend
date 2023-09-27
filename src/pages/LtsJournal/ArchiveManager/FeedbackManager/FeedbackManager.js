@@ -167,22 +167,24 @@ const FeedbackManager = (props) => {
 
   function getFeedbacks() {
     try {
-      axiosInstance.get(`/ltsJournals/${params.journalId}`).then((res) => {
-        const data = res.data
-        if (data?.userFeedbacks && data?.userFeedbacks?.length) {
-          const latestFeedback = getLatestUpdatedElement(data?.userFeedbacks)
-          if (latestFeedback) {
-            setIsEdit(latestFeedback.hasOwnProperty('feedbackId'))
-            setSelectedArchive(latestFeedback)
+      axiosInstance
+        .get(`/ltsJournals/${params.journalId}/student/${0}`)
+        .then((res) => {
+          const data = res.data
+          if (data?.userFeedbacks && data?.userFeedbacks?.length) {
+            const latestFeedback = getLatestUpdatedElement(data?.userFeedbacks)
+            if (latestFeedback) {
+              setIsEdit(latestFeedback.hasOwnProperty('feedbackId'))
+              setSelectedArchive(latestFeedback)
+            }
+          } else if (data?.feedbacks && data?.userFeedbacks?.length === 0) {
+            setSelectedArchive({
+              ...data?.feedbacks,
+              feedbackId: data?.feedbacks?.id,
+              feedbackDate: new Date()
+            })
           }
-        } else if (data?.feedbacks && data?.userFeedbacks?.length === 0) {
-          setSelectedArchive({
-            ...data?.feedbacks,
-            feedbackId: data?.feedbacks?.id,
-            feedbackDate: new Date()
-          })
-        }
-      })
+        })
     } catch (err) {}
   }
 
@@ -196,7 +198,7 @@ const FeedbackManager = (props) => {
   useEffect(() => {
     if (props.journal?.userFeedbacks?.length) {
       setFeedbacks([...props.journal.userFeedbacks])
-      // setUserFeedbacks(props.journal?.userFeedbacks);
+
       const latestFeedback = getLatestUpdatedElement(
         props.journal?.userFeedbacks
       )
