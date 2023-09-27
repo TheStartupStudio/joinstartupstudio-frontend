@@ -5,6 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle, faPlus } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
 
+const debounce = (func, delay) => {
+  let timer
+  return function () {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      func.apply(this, arguments)
+    }, delay)
+  }
+}
+
 const EntriesBox = (props) => {
   const {
     entry,
@@ -25,7 +35,7 @@ const EntriesBox = (props) => {
   const currentDate = new Date()
   const nextDay = new Date(currentDate)
   nextDay.setDate(currentDate.getDate() + 1)
-  const [accordionDates, setAccordionDates] = useState({})
+  const [accordionDates, setAccordionDates] = useState(null)
 
   useEffect(() => {
     if (journal?.id && accordion?.id) {
@@ -41,13 +51,7 @@ const EntriesBox = (props) => {
     }
   }, [journal?.id, accordion?.id])
 
-  const handleDataChanges = (name, value) => {
-    const newDates = { ...accordionDates, [name]: value }
-    setAccordionDates(newDates)
-    onSave(newDates, isNew)
-  }
-
-  const onSave = (values, isNew) => {
+   const onSave = (values, isNew) => {
     if (isSaving) {
       return
     }
@@ -76,6 +80,25 @@ const EntriesBox = (props) => {
       })
   }
 
+  const debouncedSave = debounce(onSave, 5000)
+
+  const debouncedStartDateChange = debounce((value) => {
+    handleDataChanges('startDate', value)
+  }, 0)
+
+  const debouncedEndDateChange = debounce((value) => {
+    handleDataChanges('endDate', value)
+  }, 5000)
+
+  const handleDataChanges = (name, value) => {
+    const newDates = { ...accordionDates, [name]: value }
+    setAccordionDates(newDates)
+
+    if (newDates.startDate !== undefined && newDates.endDate !== undefined) {
+      debouncedSave(newDates, isNew)
+    }
+  }
+ 
   return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
       {/* {journal.title && (
@@ -91,7 +114,7 @@ const EntriesBox = (props) => {
             <h5 style={{ fontSize: 14, padding: 6 }}>{journal.title}</h5>
           </div>
         )} */}
-      {journal.title === 'MY PROJECT SPRINTS' && (
+      {journal.title === 'MY PROJECT SPRINTS' && accordionDates ? (
         <div className="row" style={{ paddingBottom: '1px' }}>
           <div className="col-6" style={{ paddingRight: 0 }}>
             <div className="table-reflections__date">
@@ -107,9 +130,11 @@ const EntriesBox = (props) => {
                   value={new Date(
                     accordionDates.startDate ?? currentDate
                   ).toLocaleDateString('en-CA')}
-                  onChange={(e) =>
-                    handleDataChanges('startDate', e.target.value)
-                  }
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    handleDataChanges('startDate', newValue)
+                    debouncedStartDateChange(newValue)
+                  }}
                   disabled={!props.isEditable}
                 />
               </div>
@@ -130,20 +155,25 @@ const EntriesBox = (props) => {
                   value={new Date(
                     accordionDates.endDate ?? nextDay
                   ).toLocaleDateString('en-CA')}
-                  onChange={
-                    (e) =>
-                      // if (!isSaving) {
-                      // return
-                      handleDataChanges('endDate', e.target.value)
-                    // }
-                  }
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    handleDataChanges('endDate', newValue)
+                    debouncedEndDateChange(newValue)
+                  }}
                   disabled={!props.isEditable}
                 />
               </div>
             </div>
           </div>
         </div>
-      )}
+      ) : journal.title === 'MY PROJECT SPRINTS' && !accordionDates ? (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: '50px' }}
+        >
+          <span className=" spinner-border-primary spinner-border-sm " />
+        </div>
+      ) : null}
 
       {entries &&
         entries?.map((entry, index) => (

@@ -308,6 +308,7 @@ function LtsJournalContent(props) {
           <div className="col-12">
             <div className="journal-entries">
               <EntriesBox
+                // accordion={accordion}
                 entries={journal.entries}
                 entryBoxTitle={journal?.title}
                 journal={journal}

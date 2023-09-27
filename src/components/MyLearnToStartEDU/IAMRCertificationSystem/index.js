@@ -30,15 +30,15 @@ const CertificationCard = ({
   const [showModal, setShowModal] = useState(false)
 
   const handleClick = (event) => {
-    if (
-      certificationType === 'student-certification-2' &&
-      certificationOneStatus !== 'approved'
-    ) {
-      event.preventDefault()
-      setShowModal(true)
-    } else {
-      onClick()
-    }
+    // if (
+    //   certificationType === 'student-certification-2' &&
+    //   certificationOneStatus !== 'approved'
+    // ) {
+    //   event.preventDefault()
+    //   setShowModal(true)
+    // } else {
+    onClick()
+    // }
   }
   return (
     <>
