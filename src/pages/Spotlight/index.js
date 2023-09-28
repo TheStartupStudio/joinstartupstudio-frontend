@@ -279,10 +279,10 @@ function StartupLive() {
         {/*  </div>*/}
         {/*</div>*/}
       </Row>
-      <ApplyForPitch
-        show={PitchApplyModal}
-        onHide={() => setPitchApplyModal(false)}
-      />
+      {/*<ApplyForPitch*/}
+      {/*  show={PitchApplyModal}*/}
+      {/*  onHide={() => setPitchApplyModal(false)}*/}
+      {/*/>*/}
       {spotlightSimpleModal.type === 'whatIsSpotlight' && (
         <SpotlightSimpleModal
           show={

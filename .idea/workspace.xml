@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/Modals/Spotlight/ModalWrapper.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Modals/Spotlight/SpotlightApplyModal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Modals/Spotlight/SpotlightModal.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Modals/Spotlight/SpotlightSimpleModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/css/media.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/media.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Spotlight/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Spotlight/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,7 +16,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="spotlight" />
+        <entry key="$PROJECT_DIR$" value="my-connections" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
