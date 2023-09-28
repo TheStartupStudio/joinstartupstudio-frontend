@@ -1,0 +1,42 @@
+.general-modal-wrapper .modal-dialog {
+    max-width: 710px !important;
+}
+.spotlight-apply-modal .modal-dialog{
+    max-width: 60% !important;
+}
+.close-general-modal .btn-close  {
+    color: #231F20;
+}
+.general-modal-container .modal-header {
+    margin-right: -7px;
+}
+.general-modal-wrapper .modal-title {
+    font-size: 22px;
+    text-transform: uppercase;
+    text-align: left;
+    font: normal normal bold 18px/15px Montserrat;
+    letter-spacing: 0.88px;
+    color: #231F20;
+    opacity: 1;
+    margin-top:10px
+}
+
+.close-general-modal {
+    margin-bottom: 23px !important;
+    color: #000;
+    opacity: 1
+}
+
+.general-modal-wrapper .modal-content {
+    border-radius: 0px !important;
+    padding: 10px 35px !important;
+    background-color: #fbfbfb !important;
+}
+.spotlight-apply-modal .modal-content,.spotlight-simple-modal .modal-content {
+    border-radius: 6px !important;
+}
+
+.general-modal-wrapper .general-modal-body{
+    background-color: inherit;
+    padding: 20px 0px !important;
+}
