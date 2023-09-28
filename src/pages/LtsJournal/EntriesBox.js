@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import markdown from './markdown'
 import LtsJournalReflection from './reflection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle, faPlus } from '@fortawesome/free-solid-svg-icons'
+import axiosInstance from '../../utils/AxiosInstance'
+
+const debounce = (func, delay) => {
+  let timer
+  return function () {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      func.apply(this, arguments)
+    }, delay)
+  }
+}
 
 const EntriesBox = (props) => {
   const {
@@ -16,9 +27,78 @@ const EntriesBox = (props) => {
     showAddReflection,
     entries,
     isEditable,
-    isDeletable
+    isDeletable,
+    accordion
   } = props
+  const [isSaving, setIsSaving] = useState(false)
+  const [isNew, setIsNew] = useState(true)
+  const currentDate = new Date()
+  const nextDay = new Date(currentDate)
+  nextDay.setDate(currentDate.getDate() + 1)
+  const [accordionDates, setAccordionDates] = useState(null)
 
+  useEffect(() => {
+    if (journal?.id && accordion?.id) {
+      axiosInstance
+        .get(`/ltsJournals/${journal?.id}/accordionsTable/${accordion?.id}`)
+        .then(({ data }) => {
+          setAccordionDates(data.ltsJournalsAccordionsTable)
+          setIsNew(false)
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+        })
+    }
+  }, [journal?.id, accordion?.id])
+
+   const onSave = (values, isNew) => {
+    if (isSaving) {
+      return
+    }
+
+    setIsSaving(true)
+
+    let data = {
+      startDate: values?.startDate,
+      endDate: values?.endDate
+    }
+
+    const axiosMethodUrl = isNew
+      ? axiosInstance.post(`/ltsJournals/accordionsTable/${accordion.id}`, data)
+      : axiosInstance.patch(
+          `/ltsJournals/accordionsTable/${accordionDates.id}`,
+          data
+        )
+
+    axiosMethodUrl
+      .then((res) => {
+        setIsSaving(false)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+        setIsSaving(false)
+      })
+  }
+
+  const debouncedSave = debounce(onSave, 5000)
+
+  const debouncedStartDateChange = debounce((value) => {
+    handleDataChanges('startDate', value)
+  }, 0)
+
+  const debouncedEndDateChange = debounce((value) => {
+    handleDataChanges('endDate', value)
+  }, 5000)
+
+  const handleDataChanges = (name, value) => {
+    const newDates = { ...accordionDates, [name]: value }
+    setAccordionDates(newDates)
+
+    if (newDates.startDate !== undefined && newDates.endDate !== undefined) {
+      debouncedSave(newDates, isNew)
+    }
+  }
+ 
   return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
       {/* {journal.title && (
@@ -34,6 +114,67 @@ const EntriesBox = (props) => {
             <h5 style={{ fontSize: 14, padding: 6 }}>{journal.title}</h5>
           </div>
         )} */}
+      {journal.title === 'MY PROJECT SPRINTS' && accordionDates ? (
+        <div className="row" style={{ paddingBottom: '1px' }}>
+          <div className="col-6" style={{ paddingRight: 0 }}>
+            <div className="table-reflections__date">
+              <b>Start date:</b>
+              <div className={` w-100`}>
+                <input
+                  className={`journal_table-input my-1 py-2 px-2 text-dark `}
+                  type={'date'}
+                  style={{
+                    width: '100%'
+                  }}
+                  name={'startDate'}
+                  value={new Date(
+                    accordionDates.startDate ?? currentDate
+                  ).toLocaleDateString('en-CA')}
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    handleDataChanges('startDate', newValue)
+                    debouncedStartDateChange(newValue)
+                  }}
+                  disabled={!props.isEditable}
+                />
+              </div>
+              {/*{moment(props.start).format('DD-MM-YYYY')}*/}
+            </div>
+          </div>
+          <div className="col-6" style={{ paddingLeft: 0 }}>
+            <div className="table-reflections__date">
+              <b>End date:</b>{' '}
+              <div className={` w-100`}>
+                <input
+                  className={`journal_table-input my-1 py-2 px-2 text-dark `}
+                  type={'date'}
+                  style={{
+                    width: '100%'
+                  }}
+                  name={'endDate'}
+                  value={new Date(
+                    accordionDates.endDate ?? nextDay
+                  ).toLocaleDateString('en-CA')}
+                  onChange={(e) => {
+                    const newValue = e.target.value
+                    handleDataChanges('endDate', newValue)
+                    debouncedEndDateChange(newValue)
+                  }}
+                  disabled={!props.isEditable}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : journal.title === 'MY PROJECT SPRINTS' && !accordionDates ? (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: '50px' }}
+        >
+          <span className=" spinner-border-primary spinner-border-sm " />
+        </div>
+      ) : null}
+
       {entries &&
         entries?.map((entry, index) => (
           <div

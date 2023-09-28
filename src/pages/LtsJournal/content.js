@@ -306,6 +306,7 @@ function LtsJournalContent(props) {
           <div className="col-12">
             <div className="journal-entries">
               <EntriesBox
+                // accordion={accordion}
                 entries={journal.entries}
                 entryBoxTitle={journal?.title}
                 journal={journal}
@@ -371,8 +372,10 @@ function LtsJournalContent(props) {
                             <div className="col-12">
                               <div className="">
                                 <EntriesBox
+                                  accordion={accordion}
                                   entries={accordion.ltsJournalAccordionEntries}
                                   entryBoxTitle={journal?.title}
+                                  isEditable={true}
                                   journal={journal}
                                   userJournalEntries={userJournalEntries}
                                   deleteReflection={(entry, userJournalEntry) =>

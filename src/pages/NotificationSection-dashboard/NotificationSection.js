@@ -21,7 +21,7 @@ const NotificationSection = () => {
             icon={faBell}
             style={{
               fontSize: '26px',
-              color: '#333D3D',
+              color: '#333D3D'
             }}
             className="nav-bell-icon pt-1"
           />
@@ -29,7 +29,7 @@ const NotificationSection = () => {
         </div>
 
         <div className={'notifications-section-title'}>
-          THE STARTUP STUDIO’S UPDATES
+          LEARN TO START UPDATES
         </div>
       </div>
       <div className={'position-relative'}>

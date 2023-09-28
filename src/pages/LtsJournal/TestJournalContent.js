@@ -340,6 +340,7 @@ function TestJournalContent(props) {
     setSelectedStep(null)
     setSelectedStepIndex(null)
   }, [openAccordion])
+
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
       let filtered = userJournalEntries[entry.id].filter(
@@ -450,7 +451,10 @@ function TestJournalContent(props) {
   const handleSelectTask = (task, index) => {
     setSelectedTask({ task, index })
     setSelectedTaskIndex(index)
+    setSelectedStep(null)
+    setSelectedStepIndex(null)
   }
+
   return (
     <>
       <>
@@ -459,7 +463,7 @@ function TestJournalContent(props) {
           className={'d-flex justify-content-between w-100'}
           style={{ marginTop: 40, gap: 4 }}
         >
-          <div className={'video-container'}>
+          <div className={'video-container full-width'}>
             {videos &&
               videos.constructor == Array &&
               videos.map((video, index) => (
