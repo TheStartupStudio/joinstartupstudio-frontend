@@ -97,7 +97,6 @@ const EntriesBox = (props) => {
 
   const handleDataChanges = (name, value) => {
     const newDates = { ...accordionDates, [name]: value }
-    console.log('newDates', newDates)
     setAccordionDates(newDates)
 
     if (newDates.startDate !== undefined && newDates.endDate !== undefined) {
