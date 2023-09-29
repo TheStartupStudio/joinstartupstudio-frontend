@@ -36,9 +36,11 @@ const EntriesBox = (props) => {
   const nextDay = new Date(currentDate)
   nextDay.setDate(currentDate.getDate() + 1)
   const [accordionDates, setAccordionDates] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (journal?.id && accordion?.id) {
+    if (journal?.id && accordion?.id && journal.id === 1001033) {
+      setLoading(true)
       axiosInstance
         .get(`/ltsJournals/${journal?.id}/accordionsTable/${accordion?.id}`)
         .then(({ data }) => {
@@ -48,10 +50,13 @@ const EntriesBox = (props) => {
         .catch((error) => {
           console.error('Error:', error)
         })
+        .finally(() => {
+          setLoading(false)
+        })
     }
   }, [journal?.id, accordion?.id])
 
-   const onSave = (values, isNew) => {
+  const onSave = (values, isNew) => {
     if (isSaving) {
       return
     }
@@ -80,25 +85,26 @@ const EntriesBox = (props) => {
       })
   }
 
-  const debouncedSave = debounce(onSave, 5000)
+  const debouncedSave = debounce(onSave, 1000)
 
-  const debouncedStartDateChange = debounce((value) => {
-    handleDataChanges('startDate', value)
-  }, 0)
+  // const debouncedStartDateChange = debounce((value) => {
+  //   handleDataChanges('startDate', value)
+  // }, 0)
 
-  const debouncedEndDateChange = debounce((value) => {
-    handleDataChanges('endDate', value)
-  }, 5000)
+  // const debouncedEndDateChange = debounce((value) => {
+  //   handleDataChanges('endDate', value)
+  // }, 0)
 
   const handleDataChanges = (name, value) => {
     const newDates = { ...accordionDates, [name]: value }
+    console.log('newDates', newDates)
     setAccordionDates(newDates)
 
     if (newDates.startDate !== undefined && newDates.endDate !== undefined) {
       debouncedSave(newDates, isNew)
     }
   }
- 
+
   return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
       {/* {journal.title && (
@@ -114,7 +120,14 @@ const EntriesBox = (props) => {
             <h5 style={{ fontSize: 14, padding: 6 }}>{journal.title}</h5>
           </div>
         )} */}
-      {journal.title === 'MY PROJECT SPRINTS' && accordionDates ? (
+      {journal.title === 'MY PROJECT SPRINTS' && loading ? (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: '50px' }}
+        >
+          <span className=" spinner-border-primary spinner-border-sm " />
+        </div>
+      ) : journal.title === 'MY PROJECT SPRINTS' && !loading ? (
         <div className="row" style={{ paddingBottom: '1px' }}>
           <div className="col-6" style={{ paddingRight: 0 }}>
             <div className="table-reflections__date">
@@ -128,12 +141,12 @@ const EntriesBox = (props) => {
                   }}
                   name={'startDate'}
                   value={new Date(
-                    accordionDates.startDate ?? currentDate
+                    accordionDates?.startDate ?? currentDate
                   ).toLocaleDateString('en-CA')}
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChanges('startDate', newValue)
-                    debouncedStartDateChange(newValue)
+                    // debouncedStartDateChange(newValue)
                   }}
                   disabled={!props.isEditable}
                 />
@@ -153,25 +166,18 @@ const EntriesBox = (props) => {
                   }}
                   name={'endDate'}
                   value={new Date(
-                    accordionDates.endDate ?? nextDay
+                    accordionDates?.endDate ?? nextDay
                   ).toLocaleDateString('en-CA')}
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChanges('endDate', newValue)
-                    debouncedEndDateChange(newValue)
+                    // debouncedEndDateChange(newValue)
                   }}
                   disabled={!props.isEditable}
                 />
               </div>
             </div>
           </div>
-        </div>
-      ) : journal.title === 'MY PROJECT SPRINTS' && !accordionDates ? (
-        <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: '50px' }}
-        >
-          <span className=" spinner-border-primary spinner-border-sm " />
         </div>
       ) : null}
 
@@ -253,7 +259,7 @@ const EntriesBox = (props) => {
                 }`}
               >
                 <a
-                  href="#"
+                  href
                   className="journal-entries__entry-reflections-action"
                   onClick={(e) => {
                     e.preventDefault()
