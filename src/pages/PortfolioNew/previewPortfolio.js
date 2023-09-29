@@ -24,6 +24,7 @@ import EmptyAccomplishmentSection from './EmptyAccomplishmentSection'
 import { useSelector } from 'react-redux'
 import EmptyCertificationSection from './EmptyCertificationSection'
 import useWindowWidth from '../../utils/hooks/useWindowWidth'
+import { DeleteConfirmation } from '../../components/Portfolio/Confirm_modal'
 
 const PreviewPortfolio = () => {
   const [user, setUser] = useState()
@@ -39,6 +40,9 @@ const PreviewPortfolio = () => {
   const [userBiography, setUserBiography] = useState(null)
   const [userData, setUserData] = useState(null)
   const userId = useSelector((state) => state.user.user.user.id)
+  const [showPublishModal, setShowPublishModal] = useState(false)
+  const [aggred, setAggred] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const getUserCertification = async () => {
     await axiosInstance.get(`/userCertificates/${userId}`).then((res) => {
@@ -165,38 +169,43 @@ const PreviewPortfolio = () => {
   const isPreview = history.location.pathname.includes('preview')
   const windowWidth = useWindowWidth()
 
-  const SwitchButton = (props) =>{
-    return       <div
-      onClick={props.handleSelectSection}
-      style={{
-        background: `${
-          props.selectedSection ? '#51C7DF' : '#fff'
-        } 0% 0% no-repeat padding-box`,
-        border: '1px solid #BBBDBF',
-        borderRadius: 6,
-        width: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transition: 'all 0.5s',
-      }}
-    > <div
-      style={{
-        font: `normal normal 600 ${
-          windowWidth < 700 ? '15px/27px' : '22px/27px'
-        } Montserrat`,
-        letterSpacing: 0,
-        color: '#231F20',
-        textAlign: 'center',
-        padding: windowWidth < 600 ? '5px 15px' : '20px 30px',
-        textTransform: 'uppercase',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      {props.title}
-    </div></div>
+  const SwitchButton = (props) => {
+    return (
+      <div
+        onClick={props.handleSelectSection}
+        style={{
+          background: `${
+            props.selectedSection ? '#51C7DF' : '#fff'
+          } 0% 0% no-repeat padding-box`,
+          border: '1px solid #BBBDBF',
+          borderRadius: 6,
+          width: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'all 0.5s'
+        }}
+      >
+        {' '}
+        <div
+          style={{
+            font: `normal normal 600 ${
+              windowWidth < 700 ? '15px/27px' : '22px/27px'
+            } Montserrat`,
+            letterSpacing: 0,
+            color: '#231F20',
+            textAlign: 'center',
+            padding: windowWidth < 600 ? '5px 15px' : '20px 30px',
+            textTransform: 'uppercase',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {props.title}
+        </div>
+      </div>
+    )
   }
   return (
     <div style={{ padding: '30px 10px', width: isPreview ? '100%' : '88%' }}>
@@ -246,7 +255,7 @@ const PreviewPortfolio = () => {
                     if (toggle) {
                       updateStatus()
                     } else {
-                      // setShowPublishModal(true)
+                      setShowPublishModal(true)
                     }
                   }}
                 />
@@ -288,10 +297,24 @@ const PreviewPortfolio = () => {
             {skills.length < 1 ? null : <Skills user={user} />}
 
             {isPreview && (
-              <div style={{ display: 'flex', gap: 20, width: '100%',transition: 'all 0.5s' }}>
-                <SwitchButton handleSelectSection={handleSelectExperience} selectedSection={selected === 'experience'} title={'experience'}/>
-                <SwitchButton handleSelectSection={handleSelectEducation} selectedSection={selected === 'education'} title={'education'}/>
-
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 20,
+                  width: '100%',
+                  transition: 'all 0.5s'
+                }}
+              >
+                <SwitchButton
+                  handleSelectSection={handleSelectExperience}
+                  selectedSection={selected === 'experience'}
+                  title={'experience'}
+                />
+                <SwitchButton
+                  handleSelectSection={handleSelectEducation}
+                  selectedSection={selected === 'education'}
+                  title={'education'}
+                />
               </div>
             )}
 
@@ -330,6 +353,25 @@ const PreviewPortfolio = () => {
           </>
         )}
       </div>
+      <DeleteConfirmation
+        showModal={showPublishModal}
+        onHide={() => setShowPublishModal(false)}
+        confirmModal={() => true}
+        checkIfAggre={() => {
+          updateStatus()
+          setLoading(true)
+          setAggred(true)
+          setTimeout(() => {
+            setLoading(false)
+            setShowPublishModal(false)
+          }, 5000)
+        }}
+        loading={loading}
+        setLoading={(data) => setLoading(data)}
+        type={true}
+        title={<IntlMessages id="portfolio.confirmation_modal" />}
+        body={<IntlMessages id="portfolio.confirmation_modal_second_part" />}
+      />
     </div>
   )
 }

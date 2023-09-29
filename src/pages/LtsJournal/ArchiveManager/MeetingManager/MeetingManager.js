@@ -171,33 +171,40 @@ const MeetingManager = (props) => {
   }
   function getTeamMeetings() {
     try {
-      axiosInstance.get(`/ltsJournals/${params.journalId}`).then((res) => {
-        const data = res.data
-        if (data?.userTeamMeetings && data?.userTeamMeetings?.length) {
-          const latestElement = getLatestUpdatedElement(data?.userTeamMeetings)
-          if (latestElement) {
-            setIsEdit(latestElement.hasOwnProperty('teamMeetingId'))
-            setSelectedArchive(latestElement)
-          }
-        } else if (data?.teamMeetings && data?.userTeamMeetings?.length === 0) {
-          const selectedArchive = {
-            ...data?.teamMeetings,
-            teamMeetingId: data?.teamMeetings?.id,
-            meetingDate: new Date()
-          }
+      axiosInstance
+        .get(`/ltsJournals/${params.journalId}/student/${0}`)
+        .then((res) => {
+          const data = res.data
+          console.log(data)
+          if (data?.userTeamMeetings && data?.userTeamMeetings?.length) {
+            const latestElement = getLatestUpdatedElement(
+              data?.userTeamMeetings
+            )
+            if (latestElement) {
+              setIsEdit(latestElement.hasOwnProperty('teamMeetingId'))
+              console.log(latestElement)
+              setSelectedArchive(latestElement)
+              // const latestUpdatedElement = getLatestUpdatedElement(teamMeetings)
+              // setSelectedArchive(latestUpdatedElement)
+            }
+          } else if (
+            data?.teamMeetings &&
+            data?.userTeamMeetings?.length === 0
+          ) {
+            const selectedArchive = {
+              ...data?.teamMeetings,
+              teamMeetingId: data?.teamMeetings?.id,
+              meetingDate: new Date()
+            }
 
-          setSelectedArchive(selectedArchive)
-        }
-      })
+            setSelectedArchive(selectedArchive)
+          }
+        })
     } catch (err) {}
   }
-
-  useEffect(
-    function () {
-      getTeamMeetings()
-    },
-    [params.journalId]
-  )
+  useEffect(() => {
+    getTeamMeetings()
+  }, [params.journalId])
 
   useEffect(() => {
     if (props.journal?.userTeamMeetings?.length) {
@@ -241,6 +248,7 @@ const MeetingManager = (props) => {
         const newTeamMeetings = [...teamMeetings, res.data]
         setTeamMeetings([...teamMeetings, res.data])
         const latestElement = getLatestUpdatedElement(newTeamMeetings)
+
         setSelectedArchive(latestElement)
         handleCloseArchiveModal()
       })

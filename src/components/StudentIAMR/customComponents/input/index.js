@@ -35,7 +35,6 @@ const Input = ({
   }
 
   useEffect(() => {
-    console.log('readOnly', readOnly)
     if (readOnly) return
     if (messageInput.trim() !== defaultValue) setHasChanges(true)
     else setHasChanges(false)
@@ -75,8 +74,8 @@ const Input = ({
   return (
     <div className={`custom-input ${className}`}>
       <TextareaAutosize
-        className=''
-        placeholder='Aa'
+        className=""
+        placeholder="Aa"
         maxRows={5}
         ref={messageBoxRef}
         onKeyDown={(e) => !readOnly && handleSubmit({ e })}

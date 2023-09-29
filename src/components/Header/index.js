@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom'
 import ReactGA from 'react-ga'
 import { Auth } from 'aws-amplify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faBars } from '@fortawesome/free-solid-svg-icons'
 import {
   changeSidebarState,
   getAllNotes,
@@ -32,6 +32,7 @@ import Notifications from './notifications'
 import TermAndCondition from './TermAndCondition'
 import StudentOfInstructors from '../GetInstructorStudents/index.js'
 import useOnClickOutside from 'use-onclickoutside'
+import { useHistory, useLocation } from 'react-router-dom'
 
 function Header(props) {
   const { user } = useSelector((state) => state.user.user)
@@ -40,7 +41,8 @@ function Header(props) {
   const sideBarState = useSelector((state) => state.general.sidebarState)
   const notes = useSelector((state) => state.course)
   const [TnCModal, setOpenTnCModal] = useState(false)
-
+  const history = useHistory()
+  const location = useLocation()
   const [firstNote, setFirstNote] = useState('')
   // const [noteActive, setNoteActive] = useState(false)
   // const [noteHovered, setNoteHovered] = useState(false)
@@ -68,6 +70,7 @@ function Header(props) {
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [showNotifications, setShowNotifications] = useState(false)
   const [allowToShow, setAllowToShow] = useState(false)
+  const [backButton, setBackButton] = useState(false)
   const notificationsRef = useRef(null)
   useOnClickOutside(notificationsRef, () => {
     setTimeout(() => {
@@ -94,6 +97,20 @@ function Header(props) {
    */
 
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    const urlSegments = location.pathname.split('/')
+
+    if (
+      urlSegments[1] === 'iamr-certification-system' &&
+      (urlSegments[2] === 'student-certification-1' ||
+        urlSegments[2] === 'student-certification-2')
+    ) {
+      setBackButton(true)
+    } else {
+      setBackButton(false)
+    }
+  }, [location.pathname])
 
   // const noteActive =
   //   window.location.pathname.includes('/my-notes') ||
@@ -257,29 +274,29 @@ function Header(props) {
         (window.location.href.includes('dashboard') ||
           window.location.href ===
             `${process.env.REACT_APP_CLIENT_BASE_URL}/account`) ? (
-        <div className='verify-email'>
+        <div className="verify-email">
           {userMessage !== '' ? (
             <p>
               <IntlMessages id={`${userMessage}`} />
             </p>
           ) : (
             <p>
-              <img className='mr-2' src={triangleAlertIcon} alt='triangle' />
-              <IntlMessages id='user.verify_email' />
-              <Link to='#' className='link' onClick={() => sendVerifyEmail()}>
-                <IntlMessages id='user.click_to_verify_email' />
+              <img className="mr-2" src={triangleAlertIcon} alt="triangle" />
+              <IntlMessages id="user.verify_email" />
+              <Link to="#" className="link" onClick={() => sendVerifyEmail()}>
+                <IntlMessages id="user.click_to_verify_email" />
               </Link>
-              <IntlMessages id='user.resend_verification_email' />
+              <IntlMessages id="user.resend_verification_email" />
             </p>
           )}
         </div>
       ) : null}
-      <nav className='navbar navbar-expand-lg navbar-light bg-light desktop-menu px-xl-2'>
-        <div className='container-fluid'>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light desktop-menu px-xl-2">
+        <div className="container-fluid">
           <button
-            type='button'
-            id='sidebarCollapse'
-            className='btn'
+            type="button"
+            id="sidebarCollapse"
+            className="btn"
             style={{
               backgroundColor: '#01c5d1'
             }}
@@ -289,9 +306,30 @@ function Header(props) {
           >
             <FontAwesomeIcon icon={faBars} />
           </button>
-          <div className='collapse navbar-collapse' id='navbarSupportedContent'>
-            <ul className='navbar-nav ms-auto mt-1'>
-              <li className='nav-item my-auto me-2 position-relative'>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav  mt-1">
+              {backButton && (
+                <div style={{ display: 'inherit' }}>
+                  <li className="nav-item my-auto">
+                    <button
+                      className={`nav-link icon-menu px-2 me-2 my-auto `}
+                      onClick={() => history.push('/iamr-certification-system')}
+                      style={{ border: 'none' }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faAngleLeft}
+                        style={{
+                          fontSize: '26px'
+                        }}
+                        className="pt-1"
+                      />
+                    </button>
+                  </li>
+                </div>
+              )}
+            </ul>
+            <ul className="navbar-nav ms-auto mt-1">
+              <li className="nav-item my-auto me-2 position-relative">
                 <a
                   className={`nav-link icon-menu px-2 my-auto nav-notifications position-relative ${
                     showNotifications ? 'active' : ''
@@ -306,10 +344,10 @@ function Header(props) {
                       fontSize: '26px',
                       color: '#333D3D'
                     }}
-                    className='nav-bell-icon pt-1'
+                    className="nav-bell-icon pt-1"
                   />
                   {unreadNotifications > 0 && (
-                    <span className='badge nofitication-badge'>
+                    <span className="badge nofitication-badge">
                       {unreadNotifications}
                     </span>
                   )}
@@ -328,7 +366,7 @@ function Header(props) {
                 onClick={() => setShowNotifications(false)}
                 style={{ display: 'inherit' }}
               >
-                <li className='nav-item my-auto'>
+                <li className="nav-item my-auto">
                   <NavLink
                     className={`nav-link icon-menu px-2 me-2 my-auto`}
                     to={'/my-connections'}
@@ -338,11 +376,11 @@ function Header(props) {
                       style={{
                         fontSize: '26px'
                       }}
-                      className='pt-1'
+                      className="pt-1"
                     />
                   </NavLink>
                 </li>
-                <li className='nav-item spotlight-nav my-auto'>
+                <li className="nav-item spotlight-nav my-auto">
                   <NavLink
                     className={`nav-link icon-menu px-2 my-auto`}
                     to={'/spotlight'}
@@ -350,24 +388,24 @@ function Header(props) {
                     <div>
                       <img
                         src={focusIconWhite}
-                        className='d-none focus-icon'
-                        width='28px'
-                        alt='note'
+                        className="d-none focus-icon"
+                        width="28px"
+                        alt="note"
                       />
                       <img
                         src={focusIcon}
-                        className='not-focus-icon'
-                        width='28px'
-                        alt='note'
+                        className="not-focus-icon"
+                        width="28px"
+                        alt="note"
                       />
                     </div>
                   </NavLink>
                 </li>
                 <div
-                  className='my-auto mx-3'
+                  className="my-auto mx-3"
                   style={{ borderRight: '1px solid #BBBDBF', height: '20px' }}
                 ></div>
-                <li className='nav-item my-auto me-2'>
+                <li className="nav-item my-auto me-2">
                   <NavLink
                     onMouseOver={() => setMediaHovered(true)}
                     onMouseLeave={() => setMediaHovered(false)}
@@ -377,13 +415,13 @@ function Header(props) {
                     <FontAwesomeIcon
                       icon={heart}
                       style={{ fontSize: '26px' }}
-                      className='pt-1'
+                      className="pt-1"
                     />
                   </NavLink>
                 </li>
                 {/*  */}
 
-                <li className='nav-item notes-nav my-auto me-5'>
+                <li className="nav-item notes-nav my-auto me-5">
                   <NavLink
                     className={`nav-link icon-menu`}
                     to={
@@ -395,15 +433,15 @@ function Header(props) {
                     <div>
                       <img
                         src={notesIconHovered}
-                        className='d-none focus-icon'
-                        width='25px'
-                        alt='note'
+                        className="d-none focus-icon"
+                        width="25px"
+                        alt="note"
                       />
                       <img
                         src={notesIcon}
-                        className='not-focus-icon'
-                        width='25px'
-                        alt='note'
+                        className="not-focus-icon"
+                        width="25px"
+                        alt="note"
                       />
                     </div>
                   </NavLink>
@@ -412,23 +450,23 @@ function Header(props) {
                 {/* <li className='nav-item dropdown mt-md-1 mt-xl-3 me-3'>
                 <Language />
               </li> */}
-                <li className='nav-item dropdown ms-2'>
+                <li className="nav-item dropdown ms-2">
                   {/* <Dropdown showModal={showModal} close={closeProfileDropDown} /> */}
                   <div
-                    className='dropdown-li'
-                    tabIndex='0'
+                    className="dropdown-li"
+                    tabIndex="0"
                     onBlur={() => closeDropDownMenu()}
                   >
                     <button
-                      className='btn btn-secondary dropdown-toggle menu-dropdown'
-                      type='button'
-                      id='dropdownMenuButton'
-                      data-toggle='dropdown'
-                      aria-haspopup='true'
-                      aria-expanded='false'
+                      className="btn btn-secondary dropdown-toggle menu-dropdown"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
                       onClick={() => setShowDropDown((preState) => !preState)}
                     >
-                      <div className='profile-dropdown me-1 ms-3 desktop-menu d-none d-xl-block'>
+                      <div className="profile-dropdown me-1 ms-3 desktop-menu d-none d-xl-block">
                         {/* <img
                         src={
                           profileImage && profileImage !== 'undefined'
@@ -445,10 +483,10 @@ function Header(props) {
                               ? mainState.user.user.user.profileImage
                               : avator
                           }
-                          alt='Profile Image'
+                          alt="Profile Image"
                         />
                       </div>
-                      <div className='profile-dropdown-info desktop-menu'>
+                      <div className="profile-dropdown-info desktop-menu">
                         <h5>{name ? name : localStorage.getItem('name')}</h5>
                         <p>{user.email}</p>
                       </div>
@@ -457,14 +495,14 @@ function Header(props) {
                       className={`dropdown-menu${
                         showDropDown ? 'show1' : ''
                       } p-0 text-uppercase`}
-                      aria-labelledby='dropdownMenuButton'
+                      aria-labelledby="dropdownMenuButton"
                     >
                       <Link
-                        className='dropdown-item py-2 dropdown-menu-hover'
-                        to='/account'
+                        className="dropdown-item py-2 dropdown-menu-hover"
+                        to="/account"
                         onClick={() => setShowDropDown((preState) => !preState)}
                       >
-                        <IntlMessages id='my_account.page_title' />
+                        <IntlMessages id="my_account.page_title" />
                       </Link>
 
                       {
@@ -491,8 +529,8 @@ function Header(props) {
                       </li>
                       {allowToShow ? (
                         <Link
-                          className='dropdown-item py-2 dropdown-menu-hover'
-                          to='#'
+                          className="dropdown-item py-2 dropdown-menu-hover"
+                          to="#"
                           onClick={() => {
                             setCountStudentOfInstructor(true)
                             setShowDropDown((preState) => !preState)
@@ -504,8 +542,8 @@ function Header(props) {
                         ''
                       )}
                       <Link
-                        className='dropdown-item py-2 dropdown-menu-hover'
-                        to='#'
+                        className="dropdown-item py-2 dropdown-menu-hover"
+                        to="#"
                         onClick={() => {
                           showModal()
                           setShowDropDown((preState) => !preState)
@@ -514,10 +552,10 @@ function Header(props) {
                         SUPPORT
                       </Link>
                       <Link
-                        className='dropdown-item py-2 dropdown-menu-hover'
-                        to='/logout'
+                        className="dropdown-item py-2 dropdown-menu-hover"
+                        to="/logout"
                       >
-                        <IntlMessages id='navigation.logout' />
+                        <IntlMessages id="navigation.logout" />
                       </Link>
                     </div>
                   </div>
@@ -527,12 +565,12 @@ function Header(props) {
           </div>
         </div>
       </nav>
-      <nav className='navbar navbar-expand-lg navbar-light bg-light mobile-menu'>
-        <div className='container-fluid'>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light mobile-menu">
+        <div className="container-fluid">
           <button
-            type='button'
-            id='sidebarCollapse'
-            className='btn'
+            type="button"
+            id="sidebarCollapse"
+            className="btn"
             style={{
               backgroundColor: '#01c5d1'
             }}
@@ -543,23 +581,23 @@ function Header(props) {
           >
             <FontAwesomeIcon icon={faBars} />
           </button>
-          <div className='col-2 d-flex ms-auto flex-row-reverse'>
+          <div className="col-2 d-flex ms-auto flex-row-reverse">
             <button
-              className='btn d-inline-block'
-              type='button'
+              className="btn d-inline-block"
+              type="button"
               // style={{ display: 'none' }}
-              id='dropdownMenuButton'
-              data-toggle='dropdown'
-              aria-haspopup='true'
-              aria-expanded='false'
+              id="dropdownMenuButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
               onClick={() => {
                 setShowDropDown((preState) => !preState)
               }}
             >
               <FontAwesomeIcon icon={faBars} />
             </button>
-            <ul className='navbar-nav my-auto'>
-              <li className='nav-item my-auto position-relative nav-notifications-li'>
+            <ul className="navbar-nav my-auto">
+              <li className="nav-item my-auto position-relative nav-notifications-li">
                 <a
                   className={`nav-link icon-menu px-2 my-auto nav-notifications position-relative ${
                     showNotifications ? 'active' : ''
@@ -572,10 +610,10 @@ function Header(props) {
                       fontSize: '26px',
                       color: '#333D3D'
                     }}
-                    className='nav-bell-icon pt-1'
+                    className="nav-bell-icon pt-1"
                   />
                   {unreadNotifications > 0 && (
-                    <span className='badge nofitication-badge'>
+                    <span className="badge nofitication-badge">
                       {unreadNotifications}
                     </span>
                   )}
@@ -593,7 +631,7 @@ function Header(props) {
                 onClick={() => setShowNotifications(false)}
                 style={{ display: 'inherit' }}
               >
-                <li className='nav-item spotlight-nav my-auto'>
+                <li className="nav-item spotlight-nav my-auto">
                   <NavLink
                     className={`nav-link icon-menu px-2 me-2 my-auto`}
                     to={'/spotlight'}
@@ -601,20 +639,20 @@ function Header(props) {
                     <div>
                       <img
                         src={focusIconWhite}
-                        className='d-none focus-icon'
-                        width='28px'
-                        alt='note'
+                        className="d-none focus-icon"
+                        width="28px"
+                        alt="note"
                       />
                       <img
                         src={focusIcon}
-                        className='not-focus-icon'
-                        width='28px'
-                        alt='note'
+                        className="not-focus-icon"
+                        width="28px"
+                        alt="note"
                       />
                     </div>
                   </NavLink>
                 </li>
-                <li className='nav-item my-auto'>
+                <li className="nav-item my-auto">
                   <NavLink
                     className={`nav-link icon-menu px-2 me-2 my-auto`}
                     to={'/savedMedia'}
@@ -622,12 +660,12 @@ function Header(props) {
                     <FontAwesomeIcon
                       icon={heart}
                       style={{ fontSize: '26px' }}
-                      className='pt-1'
+                      className="pt-1"
                     />
                   </NavLink>
                 </li>
                 {/*  */}
-                <li className='nav-item notes-nav my-auto'>
+                <li className="nav-item notes-nav my-auto">
                   <NavLink
                     className={`nav-link px-2 me-1 icon-menu`}
                     to={
@@ -639,15 +677,15 @@ function Header(props) {
                     <div>
                       <img
                         src={notesIconHovered}
-                        className='d-none focus-icon'
-                        width='25px'
-                        alt='note'
+                        className="d-none focus-icon"
+                        width="25px"
+                        alt="note"
                       />
                       <img
                         src={notesIcon}
-                        className='not-focus-icon'
-                        width='25px'
-                        alt='note'
+                        className="not-focus-icon"
+                        width="25px"
+                        alt="note"
                       />
                     </div>
                   </NavLink>
@@ -656,18 +694,18 @@ function Header(props) {
             </ul>
           </div>
         </div>
-        <div className='dropdown-li'>
+        <div className="dropdown-li">
           <button
-            className='btn btn-secondary  menu-dropdown'
-            type='button'
+            className="btn btn-secondary  menu-dropdown"
+            type="button"
             // style={{ display: 'none' }}
-            id='dropdownMenuButton'
-            data-toggle='dropdown'
-            aria-haspopup='true'
-            aria-expanded='false'
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
             onClick={() => setShowDropDown((preState) => !preState)}
           >
-            <div className='profile-dropdown me-1 ms-3 desktop-menu'>
+            <div className="profile-dropdown me-1 ms-3 desktop-menu">
               {/* <img
                 src={
                   profileImage && profileImage !== 'undefined'
@@ -684,10 +722,10 @@ function Header(props) {
                     ? mainState.user.user.user.profileImage
                     : avator
                 }
-                alt='Profile Image'
+                alt="Profile Image"
               />
             </div>
-            <div className='profile-dropdown-info desktop-menu'>
+            <div className="profile-dropdown-info desktop-menu">
               <h5>{name}</h5>
               <p>{user.email}</p>
             </div>
@@ -696,14 +734,14 @@ function Header(props) {
             className={`dropdown-menu${
               showDropDown ? 'show1' : ''
             } p-0 text-uppercase`}
-            aria-labelledby='dropdownMenuButton'
+            aria-labelledby="dropdownMenuButton"
           >
             <Link
-              className='dropdown-item py-2 dropdown-menu-hover'
-              to='/account'
+              className="dropdown-item py-2 dropdown-menu-hover"
+              to="/account"
               onClick={() => setShowDropDown((preState) => !preState)}
             >
-              <IntlMessages id='my_account.page_title' />
+              <IntlMessages id="my_account.page_title" />
             </Link>
             {
               <Link
@@ -770,7 +808,7 @@ function Header(props) {
               className="dropdown-item py-2 dropdown-menu-hover"
               to="/logout"
             >
-              <IntlMessages id='navigation.logout' />
+              <IntlMessages id="navigation.logout" />
             </Link>
           </div>
         </div>

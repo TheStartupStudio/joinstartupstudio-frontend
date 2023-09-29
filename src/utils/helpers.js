@@ -173,3 +173,12 @@ export const showErrors = (e) => {
     </>
   )
 }
+
+export const getCertificationType = (skillType) => {
+  if (skillType === 'student-certification-1') {
+    return 1
+  } else if (skillType === 'student-certification-2') {
+    return 2
+  }
+  return null
+}

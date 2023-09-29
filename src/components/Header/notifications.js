@@ -60,7 +60,7 @@ const Notifications = (props) => {
         notification.read = true
         props.setShowNotifications(false)
         setLoading(false)
-        history.push(notification.url)
+        history.push(`/${notification.url}`)
       })
   }
 

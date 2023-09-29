@@ -364,8 +364,6 @@ function MyTrainingContent(props) {
       : [journal.video]
   ).filter(Boolean)
 
-  console.log('journal', journal)
-
   const {
     Bold,
     Italic,

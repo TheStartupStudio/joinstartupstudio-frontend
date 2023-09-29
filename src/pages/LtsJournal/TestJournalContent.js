@@ -20,9 +20,8 @@ import StepsBox from './Steps/StepsBox'
 import CurriculumOverview from './CurriculumOverview'
 import ExpectedOutcomes from './ExpectedOutcomes'
 import ProgramOpportunities from './ProgramOpportunities'
-import {
-  useHistory,
-} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import ReactQuill from 'react-quill'
 function TestJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
@@ -37,7 +36,7 @@ function TestJournalContent(props) {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
-const history = useHistory();
+  const history = useHistory()
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -54,10 +53,9 @@ const history = useHistory();
     journalId: +props.match.params.id
   })
 
-  useEffect(()=>{
+  useEffect(() => {
     getInstructorDebriefData()
-  },[props.match.params.id, props.match.params.weekId])
-
+  }, [props.match.params.id, props.match.params.weekId])
 
   const newInstructorBriefData = {
     checkbox1: instructorDebrief?.checkbox1,
@@ -67,13 +65,15 @@ const history = useHistory();
   }
 
   const onSubmitInstructorDebrief = (data) => {
-
-    const isEdit = {...data, id: instructorDebrief.id}
-    const isCreate = {...data, id: null}
+    const isEdit = { ...data, id: instructorDebrief.id }
+    const isCreate = { ...data, id: null }
     const instructorDebriefData = instructorDebrief.id ? isEdit : isCreate
 
-
-    const url = `/ltsJournals/${props.view === 'task' ? +props.match.params.id : 0}/${props.view === 'week' ? +props.match.params.weekId : 0}/instructor-debrief`
+    const url = `/ltsJournals/${
+      props.view === 'task' ? +props.match.params.id : 0
+    }/${
+      props.view === 'week' ? +props.match.params.weekId : 0
+    }/instructor-debrief`
 
     axiosInstance
       .post(url, {
@@ -87,12 +87,10 @@ const history = useHistory();
           checkbox2: updatedInstructorDebriefData.checkbox2,
           checkbox3: updatedInstructorDebriefData.checkbox3,
           textEditorContent: updatedInstructorDebriefData.textEditorContent,
-          id:updatedInstructorDebriefData.id
+          id: updatedInstructorDebriefData.id
         })
       })
   }
-
-
 
   async function saveWatchData(data) {
     await axiosInstance.put(
@@ -188,11 +186,13 @@ const history = useHistory();
   }
 
   const getInstructorDebriefData = async () => {
-    const url =  `/ltsJournals/${props.view === 'task' ? +props.match.params.id : 0}/${props.view === 'week' ? +props.match.params.weekId : 0}/instructor-debrief`;
+    const url = `/ltsJournals/${
+      props.view === 'task' ? +props.match.params.id : 0
+    }/${
+      props.view === 'week' ? +props.match.params.weekId : 0
+    }/instructor-debrief`
     try {
-      let { data } = await axiosInstance.get(
-        url
-      )
+      let { data } = await axiosInstance.get(url)
       return data
     } catch (e) {}
   }
@@ -334,6 +334,7 @@ const history = useHistory();
     setSelectedStep(null)
     setSelectedStepIndex(null)
   }, [openAccordion])
+
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
       let filtered = userJournalEntries[entry.id].filter(
@@ -399,7 +400,7 @@ const history = useHistory();
       ...instructorDebrief,
       [name]: value
     }
-    setInstructorDebrief(newInstructorDebrief);
+    setInstructorDebrief(newInstructorDebrief)
     // debounce(onSubmitInstructorDebrief, newInstructorDebrief)
   }
   const {
@@ -444,7 +445,10 @@ const history = useHistory();
   const handleSelectTask = (task, index) => {
     setSelectedTask({ task, index })
     setSelectedTaskIndex(index)
+    setSelectedStep(null)
+    setSelectedStepIndex(null)
   }
+
   return (
     <>
       <>
@@ -453,7 +457,7 @@ const history = useHistory();
           className={'d-flex justify-content-between w-100'}
           style={{ marginTop: 40, gap: 4 }}
         >
-          <div className={'video-container'}>
+          <div className={'video-container full-width'}>
             {videos &&
               videos.constructor == Array &&
               videos.map((video, index) => (
@@ -992,50 +996,60 @@ const history = useHistory();
                         </div>
                       </div>
                     </>
-                    <>
-                      <>
-                        <div
-                          style={{
-                            font: 'normal normal 600 11px/17px Montserrat !important',
-                            letterSpacing: 0.18,
-                            color: '#000000',
-                            paddingTop: '15px',
-                            paddingBottom: '6px'
-                          }}
-                        >
-                          Please submit any questions or feedback regarding this
-                          task in the curriculum to the LTS team.
-                        </div>
-                        <KendoTextEditor
-                          minHeight={150}
-                          value={instructorDebrief?.textEditorContent}
-                          handleChange={(e) => {
-                            handleChangeInstructorDebrief2(
-                              'textEditorContent',
-                              e
-                            )
-                          }}
-                          tools={[
-                            [Bold, Italic],
-                            [AlignLeft, AlignCenter, AlignRight, AlignJustify],
-                            [Indent, Outdent],
-                            [OrderedList, UnorderedList],
-                            FontSize,
-                            FontName,
-                            FormatBlock,
-                            [Undo, Redo],
-                            [Link, Unlink, InsertImage, ViewHtml]
-                          ]}
-                        />
-                      </>
-                    </>
+                    <div style={{ height: 270, minHeight: 270 }}>
+                      <div
+                        style={{
+                          font: 'normal normal 600 11px/17px Montserrat !important',
+                          letterSpacing: 0.18,
+                          color: '#000000',
+                          paddingTop: '15px',
+                          paddingBottom: '6px'
+                        }}
+                      >
+                        Please submit any questions or feedback regarding this
+                        task in the curriculum to the LTS team.
+                      </div>
+                      <ReactQuill
+                        theme="snow"
+                        name={'textEditorContent'}
+                        id={'textEditorContent'}
+                        className="w-100 rounded-0 "
+                        onChange={(e) =>
+                          handleChangeInstructorDebrief2('textEditorContent', e)
+                        }
+                        style={{ height: 180 }}
+                        value={instructorDebrief?.textEditorContent}
+                      />
+                      {/*<KendoTextEditor*/}
+                      {/*  minHeight={150}*/}
+                      {/*  value={instructorDebrief?.textEditorContent}*/}
+                      {/*  handleChange={(e) => {*/}
+                      {/*    handleChangeInstructorDebrief2(*/}
+                      {/*      'textEditorContent',*/}
+                      {/*      e*/}
+                      {/*    )*/}
+                      {/*  }}*/}
+                      {/*  tools={[*/}
+                      {/*    [Bold, Italic],*/}
+                      {/*    [AlignLeft, AlignCenter, AlignRight, AlignJustify],*/}
+                      {/*    [Indent, Outdent],*/}
+                      {/*    [OrderedList, UnorderedList],*/}
+                      {/*    FontSize,*/}
+                      {/*    FontName,*/}
+                      {/*    FormatBlock,*/}
+                      {/*    [Undo, Redo],*/}
+                      {/*    [Link, Unlink, InsertImage, ViewHtml]*/}
+                      {/*  ]}*/}
+                      {/*/>*/}
+                    </div>
                     <div className={'d-flex justify-content-end mt-3'}>
                       <button
                         style={{
                           backgroundColor: '#51c7df',
                           color: '#fff',
                           fontSize: 12,
-                          fontWeight: 600
+                          fontWeight: 600,
+                          zIndex: 999
                         }}
                         className="px-4 py-2 border-0 color transform my-1"
                         onClick={() =>

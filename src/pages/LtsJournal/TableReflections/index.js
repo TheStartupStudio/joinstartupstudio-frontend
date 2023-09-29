@@ -145,7 +145,6 @@ const TableReflections = (props) => {
           props.updateUserReflectionsTable(newObj)
         }
         if (!isSaving) {
-          // Check isSaving before making the request
           axiosInstance[method](url, newObj).then((data) => {
             props.loadData()
             setShowModal(false)

@@ -8,7 +8,7 @@ import MediaLightbox from '../../components/MediaLightbox'
 import parse from 'html-react-parser'
 import EntriesBox from './EntriesBox'
 import TableWrapper from './TableWrapper/index'
-import TableReflections from './TableReflections'
+import TableReflections from './TableReflections/index.js'
 import _, { debounce, isEqual } from 'lodash'
 import MeetingManager from './ArchiveManager/MeetingManager/MeetingManager'
 import FeedbackManager from './ArchiveManager/FeedbackManager/FeedbackManager'
@@ -21,19 +21,17 @@ import JournalBrands from './JournalBrands/index'
 import * as actions from '../../redux/reflectionsTable/Actions'
 import { useDispatch } from 'react-redux'
 
+import JournalTables from './JournalTables/JournalTables'
+import IntlMessages from '../../utils/IntlMessages'
+
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
   let [videoWatchData, setVideoWatchData] = useState([])
   let [userJournalEntries, setUserJournalEntries] = useState({})
-  let [loading, setLoading] = useState(true)
+  let [loading, setLoading] = useState(false)
   let [showVideo, setShowVideo] = useState(false)
-  const [meeting, setMeeting] = useState({})
-  const [selectedMeeting, setSelectedMeeting] = useState({})
-  const [unChangedMeeting, setUnChangedMeeting] = useState({})
-  const [showMeetingModal, setShowMeetingModal] = useState(false)
-  const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
-  const [testAcc, setTestAcc] = useState(false)
+
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const dispatch = useDispatch()
@@ -79,7 +77,7 @@ function LtsJournalContent(props) {
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/${props.match.params.journalId}`
+        `/ltsJournals/${props.match.params.journalId}/student/${0}`
       )
       return data
     } catch (err) {}
@@ -90,7 +88,6 @@ function LtsJournalContent(props) {
       let { data } = await axiosInstance.get(
         `/ltsJournals/${props.match.params.journalId}/userEntries`
       )
-
       let groupedByJournalEntry = {}
       if (data) {
         for (var userJournalEntry of data) {
@@ -146,6 +143,26 @@ function LtsJournalContent(props) {
     },
     [props.match.params.journalId]
   )
+
+  const updateUserReflectionsTable = (updatedTable, index) => {
+    const updatedJournal = { ...journal }
+
+    const foundedReflectionsTable = updatedJournal?.reflectionsTable[index]
+
+    if (foundedReflectionsTable) {
+      const updatedUserReflectionsTable = [
+        ...foundedReflectionsTable.userReflectionsTable
+      ]
+
+      updatedUserReflectionsTable.push(updatedTable)
+
+      foundedReflectionsTable.userReflectionsTable = updatedUserReflectionsTable
+
+      updatedJournal.reflectionsTable[index] = foundedReflectionsTable
+
+      setJournal(updatedJournal)
+    }
+  }
 
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
@@ -206,26 +223,6 @@ function LtsJournalContent(props) {
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
-
-  const updateUserReflectionsTable = (updatedTable, index) => {
-    const updatedJournal = { ...journal }
-
-    const foundedReflectionsTable = updatedJournal?.reflectionsTable[index]
-
-    if (foundedReflectionsTable) {
-      const updatedUserReflectionsTable = [
-        ...foundedReflectionsTable.userReflectionsTable
-      ]
-
-      updatedUserReflectionsTable.push(updatedTable)
-
-      foundedReflectionsTable.userReflectionsTable = updatedUserReflectionsTable
-
-      updatedJournal.reflectionsTable[index] = foundedReflectionsTable
-
-      setJournal(updatedJournal)
-    }
-  }
 
   return (
     <>
@@ -291,34 +288,49 @@ function LtsJournalContent(props) {
           )}
         </div>
       </div>
+      {journal?.journalTables ? (
+        <div className="col-12">
+          <>
+            <JournalTables
+              tables={journal?.journalTables}
+              paragraphs={journal?.journalParagraphs}
+              loading={loading}
+              backgroundColor={'#fff'}
+            />
+          </>
+        </div>
+      ) : null}
 
       <div className="row">
-        <div className="col-12">
-          <div className="journal-entries">
-            <EntriesBox
-              entries={journal.entries}
-              entryBoxTitle={journal?.title}
-              journal={journal}
-              isEditable={true}
-              isDeletable={true}
-              userJournalEntries={userJournalEntries}
-              deleteReflection={(entry, userJournalEntry) =>
-                deleteReflection(entry, userJournalEntry)
-              }
-              updateReflection={(entry, userJournalEntry) =>
-                updateReflection(entry, userJournalEntry)
-              }
-              addReflection={(entry) => addReflection(entry)}
-              handleShowAddReflection={(reflection) =>
-                handleShowAddReflection(reflection)
-              }
-              showAddReflection={showAddReflection}
-            />
+        {journal.entries && journal.entries.length ? (
+          <div className="col-12">
+            <div className="journal-entries">
+              <EntriesBox
+                // accordion={accordion}
+                entries={journal.entries}
+                entryBoxTitle={journal?.title}
+                journal={journal}
+                isEditable={true}
+                isDeletable={true}
+                userJournalEntries={userJournalEntries}
+                deleteReflection={(entry, userJournalEntry) =>
+                  deleteReflection(entry, userJournalEntry)
+                }
+                updateReflection={(entry, userJournalEntry) =>
+                  updateReflection(entry, userJournalEntry)
+                }
+                addReflection={(entry) => addReflection(entry)}
+                handleShowAddReflection={(reflection) =>
+                  handleShowAddReflection(reflection)
+                }
+                showAddReflection={showAddReflection}
+              />
+            </div>
           </div>
-        </div>
-        <div className="col-12">
-          <div className={'custom-breakdowns-container'}>
-            {journal.hasAccordion ? (
+        ) : null}
+        {journal.hasAccordion ? (
+          <div className="col-12">
+            <div className={'custom-breakdowns-container'}>
               <div>
                 {!loading && (
                   <div style={{ order: 1 }}>
@@ -337,9 +349,10 @@ function LtsJournalContent(props) {
                   </div>
                 )}
               </div>
-            ) : null}
+            </div>
           </div>
-        </div>
+        ) : null}
+
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (
               <div className="col-12">
@@ -352,33 +365,60 @@ function LtsJournalContent(props) {
                   title={accordion.title}
                 >
                   {openAccordion === `accordion-${accordion.id}` && (
-                    <div className="accordion-content">
-                      <div className="col-12">
-                        <EntriesBox
-                          entries={accordion.ltsJournalAccordionEntries}
-                          entryBoxTitle={journal?.title}
-                          journal={journal}
-                          userJournalEntries={userJournalEntries}
-                          deleteReflection={(entry, userJournalEntry) =>
-                            deleteReflection(entry, userJournalEntry)
-                          }
-                          updateReflection={(entry, userJournalEntry) =>
-                            updateReflection(entry, userJournalEntry)
-                          }
-                          addReflection={(entry) => addReflection(entry)}
-                          handleShowAddReflection={(reflection) =>
-                            handleShowAddReflection(reflection)
-                          }
-                          showAddReflection={showAddReflection}
-                        />
-                      </div>
-                    </div>
+                    <>
+                      {accordion.ltsJournalAccordionEntries &&
+                        accordion.ltsJournalAccordionEntries.length > 0 && (
+                          <div className="accordion-content">
+                            <div className="col-12">
+                              <div className="">
+                                <EntriesBox
+                                  accordion={accordion}
+                                  entries={accordion.ltsJournalAccordionEntries}
+                                  entryBoxTitle={journal?.title}
+                                  isEditable={true}
+                                  journal={journal}
+                                  userJournalEntries={userJournalEntries}
+                                  deleteReflection={(entry, userJournalEntry) =>
+                                    deleteReflection(entry, userJournalEntry)
+                                  }
+                                  updateReflection={(entry, userJournalEntry) =>
+                                    updateReflection(entry, userJournalEntry)
+                                  }
+                                  addReflection={(entry) =>
+                                    addReflection(entry)
+                                  }
+                                  handleShowAddReflection={(reflection) =>
+                                    handleShowAddReflection(reflection)
+                                  }
+                                  showAddReflection={showAddReflection}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      {accordion.journalTablesAccordions &&
+                        accordion.journalTablesAccordions.length > 0 && (
+                          <div
+                            className="accordion-content"
+                            style={{ padding: '15px 15px ' }}
+                          >
+                            <div className="col-12">
+                              <div className="">
+                                <JournalTables
+                                  tables={accordion?.journalTablesAccordions}
+                                  paragraphs={null}
+                                  loading={loading}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                    </>
                   )}
                 </AccordionItemWrapper>
               </div>
             ))
           : null}
-
         {journal.brandsJournal &&
         journal.brandsJournal.length &&
         journal.brandsJournal.find((item) => item.hasAccordion) ? (
@@ -407,7 +447,6 @@ function LtsJournalContent(props) {
             </AccordionItemWrapper>
           </div>
         ) : null}
-
         {journal.reflectionsTable && journal.reflectionsTable.length ? (
           <>
             {journal.reflectionsTable.map((reflectionTable, tableIndex) => (
@@ -473,58 +512,6 @@ function LtsJournalContent(props) {
           </>
         ) : null}
 
-        {/*{journal.reflectionsTable && journal.reflectionsTable.length  ? (*/}
-        {/*  <>*/}
-        {/*    {journal.reflectionsTable.map((reflectionTable) => (*/}
-        {/*     <div className="col-12" key={reflectionTable.id}>*/}
-        {/*        <TableWrapper title={reflectionTable.title}>*/}
-        {/*          <TableReflections*/}
-        {/*            loadData={loadData}*/}
-        {/*            tableTitle={reflectionTable.title}*/}
-        {/*            start={reflectionTable.startDate}*/}
-        {/*            end={reflectionTable.endDate}*/}
-        {/*            reflectionTable={reflectionTable}*/}
-        {/*            reflectionTableEntries={*/}
-        {/*              reflectionTable.reflectionsTableEntries*/}
-        {/*            }*/}
-        {/*            userReflectionTableEntries={*/}
-        {/*              reflectionTable.userReflectionsTableEntries*/}
-        {/*            }*/}
-        {/*          />*/}
-        {/*        </TableWrapper>*/}
-        {/*      </div>}*/}
-        {/*    ))}*/}
-        {/*  </>*/}
-        {/*) : null}*/}
-        {/*{journal.reflectionsTable && journal.reflectionsTable.length && journal.reflectionsTable?.userReflectionsTable?.length ? (*/}
-        {/*  <>*/}
-        {/*    {journal.reflectionsTable.map((reflectionTable) => (*/}
-        {/*      {*/}
-        {/*        reflectionTable.userReflectionsTable.map(()=>{*/}
-        {/*          <div className="col-12" key={reflectionTable.id}>*/}
-        {/*            <TableWrapper title={reflectionTable.title}>*/}
-        {/*              <TableReflections*/}
-        {/*                loadData={loadData}*/}
-        {/*                tableTitle={reflectionTable.title}*/}
-        {/*                start={reflectionTable.startDate}*/}
-        {/*                end={reflectionTable.endDate}*/}
-        {/*                reflectionTable={reflectionTable}*/}
-        {/*                reflectionTableEntries={*/}
-        {/*                  reflectionTable.reflectionsTableEntries*/}
-        {/*                }*/}
-        {/*                userReflectionTableEntries={*/}
-        {/*                  reflectionTable.userReflectionsTableEntries*/}
-        {/*                }*/}
-        {/*              />*/}
-        {/*            </TableWrapper>*/}
-        {/*          </div>*/}
-        {/*        })*/}
-        {/*      }*/}
-
-        {/*    ))}*/}
-        {/*  </>*/}
-        {/*) : null}*/}
-
         {journal?.teamMeetings ? (
           <MeetingManager journal={journal} isEditable={true} />
         ) : null}
@@ -534,14 +521,12 @@ function LtsJournalContent(props) {
         {journal?.mentorMeetings ? (
           <MentorMeetingManager journal={journal} isEditable={true} />
         ) : null}
-
         {journal?.contentUploads ? (
           <ContentUploads journal={journal} isEditable={true} />
         ) : null}
         {journal?.certificationSkills ? (
           <CertificationSkills journal={journal} isEditable={true} />
         ) : null}
-
         {journal.brandsJournal &&
         journal.brandsJournal.length &&
         !journal.brandsJournal.find((item) => item.hasAccordion) ? (

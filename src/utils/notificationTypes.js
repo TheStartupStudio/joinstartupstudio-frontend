@@ -38,7 +38,7 @@ export default {
   },
   APPROVAL_REQUEST: {
     key: 'APPROVAL_REQUEST',
-    value: ' submited their uploads for approval'
+    value: ' submitted their approval request'
   },
   REAPPROVAL_REQUEST: {
     key: 'REAPPROVAL_REQUEST',

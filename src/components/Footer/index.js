@@ -12,10 +12,7 @@ export default function Footer() {
     <section id="footer">
       <div className="container-fluid">
         <div className="row mx-md-4 footer-copyright">
-          <div
-            className="col-sm-12 col-lg-4 text-align-left-footer"
-            // style={{ paddingLeft: '20px' }}
-          >
+          <div className="col-sm-12 col-lg-4 text-align-left-footer">
             <p>© STARTUP STUDIO LLC 2023</p>
           </div>
           <div className="col-md-12 col-sm-12 col-lg-4 text-align-center-footer">
@@ -31,24 +28,6 @@ export default function Footer() {
           <div className="col-md-3 col-sm-12 col-lg-4 text-align-right-footer">
             <div className="footer-menu">
               <ul className="mt-1 mt-lg-0">
-                {/* <li>
-                  <a
-                    href='https://www.facebook.com/learntostart/'
-                    rel='noreferrer'
-                    target='_blank'
-                  >
-                    <FontAwesomeIcon icon={faFacebookF} />
-                  </a>
-                </li> */}
-                <li>
-                  <a
-                    href="https://twitter.com/learntostart"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    <FontAwesomeIcon icon={faTwitter} />
-                  </a>
-                </li>
                 <li>
                   <a
                     href="https://www.linkedin.com/company/learntostart/"
