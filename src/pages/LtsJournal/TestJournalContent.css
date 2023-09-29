@@ -55,3 +55,27 @@
     background: #51C7DF !important;
     color: #fff !important;
 }
+.instructor-debrief-editor .ql-container {
+    height: 0% !important;
+    min-height: 120px !important;
+}
+@media screen and (max-width: 1173px) {
+    .instructor-debrief-button {
+        margin-top: 10px !important;
+    }
+}
+
+@media screen and (max-width: 435px) {
+    .instructor-debrief-button {
+        margin-top: 40px !important;
+    }
+}
+
+@media screen and (max-width: 310px) {
+    .instructor-debrief-button {
+        margin-top: 80px !important;
+    }
+}
+
+
+

@@ -1836,6 +1836,9 @@
   .beyound-all-videos-thumb img {
     height: 180px !important;
   }
+  .beyound-all-videos-thumb.spotlight img {
+    height: 115px !important;
+  }
 }
 
 @media (max-width: 992px) {
