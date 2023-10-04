@@ -26,6 +26,7 @@ function TicketChat({ ticket, close, isTicketOpened }) {
   const [messageInput, setMessageInput] = useState('')
   const [messages, setMessages] = useState([])
   const [fetching, setFetching] = useState(false)
+  const [skillType, setSkillType] = useState('')
   const options = { defaultProtocol: 'https', target: '_blank' }
   const loggedUser = useSelector((state) => state.user.user.user)
   const scrollRef = useRef(null)
@@ -53,6 +54,12 @@ function TicketChat({ ticket, close, isTicketOpened }) {
     }
   }
 
+  useEffect(() => {
+    axiosInstance
+      .get(`/iamr/skills/test/${ticket.IamrSkill.id}`)
+      .then(({ data }) => setSkillType(data.type))
+  }, [ticket.IamrSkill.id])
+
   const submitMessage = async (message) => {
     setMessageInput('')
     setReplying(true)
@@ -60,6 +67,7 @@ function TicketChat({ ticket, close, isTicketOpened }) {
     await axiosInstance
       .post(`instructor/iamr/tickets/reply/${ticket.id}`, { message })
       .then((res) => {
+        console.log('res', res)
         const { id, name, profile_image } = loggedUser
         const message = { ...res.data, User: { id, name, profile_image } }
         setMessages((messages) => [...messages, message])
@@ -71,8 +79,8 @@ function TicketChat({ ticket, close, isTicketOpened }) {
             : NotificationTypes.FEEDBACK_TICKET_REPLY.key
         const url =
           ticket.type === 'instruction'
-            ? `/iamr/${ticket.skill_id}/instructions/${ticket.id}`
-            : `/iamr/${ticket.skill_id}/feedback/${ticket.id}`
+            ? `/iamr/${skillType}/${ticket.skill_id}/instructions/${ticket.id}`
+            : `/iamr/${skillType}/${ticket.skill_id}/feedback/${ticket.id}`
 
         socket?.emit('sendNotification', {
           sender: loggedUser,
