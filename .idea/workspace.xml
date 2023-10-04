@@ -16,7 +16,19 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
+<<<<<<< HEAD
         <entry key="$PROJECT_DIR$" value="my-connections" />
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+        <entry key="$PROJECT_DIR$" value="calendar-with-events-and-tasks" />
+=======
+        <entry key="$PROJECT_DIR$" value="student-journals" />
+>>>>>>> dev
+=======
+        <entry key="$PROJECT_DIR$" value="spotlight" />
+>>>>>>> dev
+>>>>>>> bledon-live-fixes
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -29,6 +41,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "WebServerToolWindowFactoryState": "false",
@@ -47,10 +60,49 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
+=======
+<<<<<<< HEAD
+  <component name="PropertiesComponent">
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+  </component>
+=======
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/LtsJournal/JournalTables&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Program Files\\nodejs\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+>>>>>>> dev
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+<<<<<<< HEAD
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
+<<<<<<< HEAD
+=======
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\NoteAndChat" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
+>>>>>>> dev
+=======
+>>>>>>> bledon-live-fixes
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\JournalTables" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager\MentorMeetingManager" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
+>>>>>>> dev
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager\FeedbackManager" />
@@ -92,6 +144,18 @@
       <workItem from="1683529563402" duration="25237000" />
       <workItem from="1683702324579" duration="67480000" />
       <workItem from="1684134188258" duration="19780000" />
+<<<<<<< HEAD
+      <workItem from="1687761748633" duration="184832000" />
+      <workItem from="1688713293918" duration="16152000" />
+      <workItem from="1688973170084" duration="61926000" />
+      <workItem from="1689317962596" duration="25113000" />
+      <workItem from="1690182262462" duration="15650000" />
+<<<<<<< HEAD
+      <workItem from="1691077287358" duration="48917000" />
+=======
+      <workItem from="1693389779179" duration="1608000" />
+>>>>>>> dev
+=======
       <workItem from="1691782945101" duration="95000" />
       <workItem from="1692256296782" duration="751000" />
       <workItem from="1692342525796" duration="11774000" />
@@ -107,10 +171,23 @@
       <workItem from="1695297251034" duration="2078000" />
       <workItem from="1695306159157" duration="7758000" />
       <workItem from="1695626727242" duration="12054000" />
+>>>>>>> dev
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
