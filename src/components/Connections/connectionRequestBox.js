@@ -47,27 +47,27 @@ export default function ConnectionRequestsBox(props) {
         props?.type !== 'no-margin' && 'mt-4'
       }`}
     >
-      <h3 className='py-2 px-3 mb-0 text-lg-center'>
-        <IntlMessages id='connection.page_title' />
+      <h3 className="py-2 px-3 mb-0 text-lg-center">
+        <IntlMessages id="connection.page_title" />
       </h3>
       {props.from != 'MyProject' && (
-        <div className='row px-3'>
-          <div className='col-10'>
-            <p className='mt-2 mb-0'>Connection Requests</p>
+        <div className="row px-3">
+          <div className="col-10">
+            <p className="mt-2 mb-0">Connection Requests</p>
           </div>
-          <div className='col-1 text-left'>
-            <p className='mt-2 mb-0'>{myRequests}</p>
+          <div className="col-1 text-left">
+            <p className="mt-2 mb-0">{myRequests}</p>
           </div>
         </div>
       )}
-      <div className='row px-3'>
-        <div className='col-10'>
-          <p className='mt-2 mb-0'>
-            <IntlMessages id='connection.page_title' />
+      <div className="row px-3">
+        <div className="col-10">
+          <p className="mt-2 mb-0">
+            <IntlMessages id="connection.page_title" />
           </p>
         </div>
-        <div className='col-1 text-left'>
-          <p className='mt-2 mb-0'>{myConnections}</p>
+        <div className="col-1 text-left">
+          <p className="mt-2 mb-0">{myConnections}</p>
         </div>
       </div>
     </div>

@@ -25,7 +25,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import _ from 'lodash'
 import MisconductModal from '../../components/Modals/misconductModal'
 
-function MyConnections() {
+function MyClassroom() {
   const [loading, setLoading] = useState(false)
   const [connections, setConnections] = useState([])
   const [connectionRequests, setConnectionRequests] = useState([])
@@ -59,11 +59,12 @@ function MyConnections() {
   const paramId = useParams().id
   const [connectionPage, setConnectionPage] = useState(0)
   const [connectionsCount, setConnectionsCount] = useState(0)
-
+  console.log('connectionsCount', connectionsCount)
+  console.log('connectionPage', connectionPage)
   // useEffect(() => {
 
   // }, [paramId])
-
+  console.log(filteredUsers)
   useEffect(() => {
     const myWidth = window.innerWidth
     setWidth(myWidth)
@@ -502,10 +503,12 @@ function MyConnections() {
             <div className="row ps-2">
               <div className="col-md-6">
                 <h3 className="page-title mb-0">
-                  <IntlMessages id="connection.page_title" />
+                  {/*<IntlMessages id="connection.page_title" />*/}
+                  My classroom
                 </h3>
                 <p className="page-description mb-0">
-                  <IntlMessages id="connection.page_description" />
+                  {/*<IntlMessages id="connection.page_description" />*/}
+                  View the portfolios of your peers.
                 </p>
               </div>
               {/*<div className="col-md-6 mt-3 mt-md-0">*/}
@@ -566,8 +569,8 @@ function MyConnections() {
                     {filteredUsers.length > 0 && (
                       <ConnectionsSlider
                         data={filteredUsers}
-                        removeConnection={(user) => {
-                          setConnectiontoBeRemoved(user)
+                        removeConnection={(useaccordionsTabler) => {
+                          // setConnectiontoBeRemoved(user)
                           setShowRemoveConnectionModal(true)
                         }}
                         newConnectionRequest={newConnectionRequest}
@@ -754,4 +757,4 @@ function MyConnections() {
   )
 }
 
-export default MyConnections
+export default MyClassroom
