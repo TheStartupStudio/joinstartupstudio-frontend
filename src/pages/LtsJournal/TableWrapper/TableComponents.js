@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import ReactQuill from 'react-quill'
 import { FormControl, FormGroup, InputGroup } from 'react-bootstrap'
 import _ from 'lodash'
@@ -13,7 +13,7 @@ export const JournalTableRow = (props) => {
 }
 export const JournalTableCell = (props) => {
   const { isGray, colSpan, additionalStyling } = props
-  
+
   return (
     <td
       colSpan={colSpan}
@@ -46,6 +46,18 @@ export const JournalTableCellInput = (props) => {
     inputTag,
     inputType
   } = props
+  const inputRef = useRef(null)
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      const inputs = document.querySelectorAll('.journal_table-input')
+      const currentIndex = Array.from(inputs).indexOf(inputRef.current)
+      const nextIndex = (currentIndex + 1) % inputs.length
+      inputs[nextIndex].focus()
+    }
+  }
+
   const newStyle = {
     width: width ?? '100%',
     ...additionalInputStyle
@@ -54,7 +66,7 @@ export const JournalTableCellInput = (props) => {
   const debounce = useCallback(
     _.debounce(async (func, value) => {
       func('debounce', value)
-    }, 1000),
+    }, 2000),
     []
   )
 
@@ -74,17 +86,23 @@ export const JournalTableCellInput = (props) => {
       <div className={` ${width ? '' : 'w-100'}`}>
         {inputTag === 'textarea' && (
           <textarea
+            key={props.cell.id}
+            ref={inputRef}
+            onKeyDown={handleKeyDown}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
-            type={inputType}
+            // type={inputType}
             style={{ ...newStyle, resize: 'none' }}
-            name={inputName ?? ''}
+            name={'textarea'}
             value={value}
             onChange={(e) => debounce(() => handleChange(e.target.value))}
           />
         )}
         {inputTag === 'input' && (
           <input
+            key={props.cell.id}
+            ref={inputRef}
+            onKeyDown={handleKeyDown}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
             type={inputType}
@@ -96,6 +114,9 @@ export const JournalTableCellInput = (props) => {
         )}
         {!inputTag && (
           <input
+            key={props.cell.id}
+            ref={inputRef}
+            onKeyDown={handleKeyDown}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
             type={inputType}
@@ -122,6 +143,7 @@ export const UserJournalTableCell = (props) => {
     >
       {props.userCell ? (
         <JournalTableCellInput
+          cell={props.cell}
           additionalStyle={{
             width: '100%',
             height: '100%'
@@ -130,6 +152,8 @@ export const UserJournalTableCell = (props) => {
           value={props.userCellValue}
           handleChange={(value) => {
             const isEdit = !!props.userCell
+            console.log('isEdit', isEdit)
+            console.log('props.userCell', props.userCell)
             return props.handleChangeUserCell(props.userCell, value, isEdit)
           }}
           isDisabled={props.isDisabled}
@@ -138,12 +162,15 @@ export const UserJournalTableCell = (props) => {
         />
       ) : (
         <JournalTableCellInput
+          cell={props.cell}
           additionalStyle={{
             width: '100%'
           }}
           additionalInputStyle={{ ...props.additionalInputStyle }}
           handleChange={(value) => {
             const isEdit = !!props.userCell
+            console.log('isEdit', isEdit)
+            console.log('props.userCell', props.userCell)
             return props.handleChangeUserCell(props.cell, value, isEdit)
           }}
           isDisabled={props.isDisabled}

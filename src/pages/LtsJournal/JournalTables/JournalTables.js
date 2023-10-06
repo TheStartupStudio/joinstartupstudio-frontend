@@ -15,6 +15,7 @@ const JournalTables = (props) => {
   useEffect(() => {
     setTables(props.tables)
   }, [props.tables])
+
   useEffect(() => {
     setParagraphs(props.paragraphs)
   }, [props.paragraphs])
@@ -30,9 +31,13 @@ const JournalTables = (props) => {
                 ...row,
                 cells: row.cells.map((cell) => {
                   if (cell.id === cellId) {
+                    console.log({
+                      ...cell,
+                      userCells: { ...cell.userCells, ...content }
+                    })
                     return {
                       ...cell,
-                      userCells: content
+                      userCells: { ...cell.userCells, ...content }
                     }
                   }
                   return cell
@@ -48,6 +53,8 @@ const JournalTables = (props) => {
     return updatedTables
   }
 
+  console.log(tables)
+
   const handleUpdateJournalTables = async (
     obj,
     value,
@@ -56,6 +63,7 @@ const JournalTables = (props) => {
     rowId,
     cellId
   ) => {
+    console.log('--- obj', obj)
     const content = {
       content: null,
       amount: null,
@@ -85,30 +93,59 @@ const JournalTables = (props) => {
       content
     )
 
-    console.log('content', content)
     setTables(updatedJournalTable)
-    updateResumeEvaluation(null, { content, cellId, rowId, tableId })
+    await updateResumeEvaluation(null, {
+      content,
+      cellId,
+      rowId,
+      tableId,
+      isEdit
+    })
   }
 
   const updateResumeEvaluation = async (_, newData) => {
+    // console.log('newData', newData)
     setLoading(true)
+    // if (newData.isEdit && newData.content.id === null)
     await axiosInstance
       .put(`/ltsJournals/user-journal-tables`, {
         ...newData.content
       })
       .then(({ data }) => {
-        const updatedJournalTable = updateJournalTable(
-          newData.tableId,
-          newData.rowId,
-          newData.cellId,
-          data
-        )
+        if (data) {
+          console.log('-- data', data)
+          const updatedJournalTable = updateJournalTable(
+            newData.tableId,
+            newData.rowId,
+            newData.cellId,
+            data
+          )
+          setTables(updatedJournalTable)
+          setLoading(false)
 
-        setTables(updatedJournalTable)
+          // ------ With this works, but page is jumping to top -------
 
-        setLoading(false)
+          // props.loadData()
+
+          // ----------------------------------------------------------
+        }
+      })
+      .catch((e) => {
+        console.error(e)
       })
   }
+  // console.log(
+  //   `${tables[0]?.rows[0]?.cells[0].content}`,
+  //   tables[0]?.rows[0]?.cells[1]
+  // )
+  // console.log(
+  //   `${tables[0]?.rows[1]?.cells[0].content}`,
+  //   tables[0]?.rows[1]?.cells[1]
+  // )
+  // console.log(
+  //   `${tables[0]?.rows[2]?.cells[0].content}`,
+  //   tables[0]?.rows[2]?.cells[1]
+  // )
 
   return (
     <div className={'table-container'}>
@@ -142,6 +179,7 @@ const JournalTables = (props) => {
                           {row?.cells
                             ?.toSorted((a, b) => a.order - b.order)
                             .map((cell, index) => {
+                              // if (index < 3) console.log(cell.userCells)
                               return (
                                 <>
                                   {!cell.isEditable ? (
@@ -167,18 +205,17 @@ const JournalTables = (props) => {
                                         value,
                                         isEdit
                                       ) => {
-                                        if (!loading) {
-                                          return handleUpdateJournalTables(
-                                            cellToUpdate,
-                                            value,
-                                            isEdit,
-                                            table.id,
-                                            row.id,
-                                            cell.id
-                                          )
-                                        }
+                                        // if (!loading) {
+                                        return handleUpdateJournalTables(
+                                          cellToUpdate,
+                                          value,
+                                          isEdit,
+                                          table.id,
+                                          row.id,
+                                          cell.id
+                                        )
+                                        // }
                                       }}
-                                      isDisabled={loading === true}
                                       key={cell.id}
                                       additionalInputStyle={{
                                         height: '100%',
