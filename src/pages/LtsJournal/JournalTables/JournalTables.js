@@ -20,6 +20,58 @@ const JournalTables = (props) => {
     setParagraphs(props.paragraphs)
   }, [props.paragraphs])
 
+  const getTables = async (tableId) => {
+    // const journalId = params.journalId
+    await axiosInstance
+      .get(`/ltsJournals/journal-tables/${tableId}`)
+      .then(({ data }) => {
+        let newTables = [...tables]
+        const foundedIndex = newTables.findIndex(
+          (table) => table.id === tableId
+        )
+
+        newTables[foundedIndex].rows = data
+        setTables(newTables)
+      })
+  }
+  const getTableCells = async (tableId, rowId, cellId) => {
+    try {
+      const response = await axiosInstance.get(
+        `/ltsJournals/journal-tables-cell/${cellId}`
+      )
+      const newData = response.data
+      console.log(newData)
+      setTables((prevTables) => {
+        return prevTables.map((table) => {
+          if (table.id === tableId) {
+            return {
+              ...table,
+              rows: table.rows.map((row) => {
+                if (row.id === rowId) {
+                  return {
+                    ...row,
+                    cells: row.cells.map((cell) => {
+                      if (cell.id === cellId) {
+                        debugger
+                        return newData // Update the cell data here
+                      }
+                      return cell
+                    })
+                  }
+                }
+                return row
+              })
+            }
+          }
+          return table
+        })
+      })
+    } catch (error) {
+      // Handle errors here
+      console.error('Error fetching data:', error)
+    }
+  }
+
   const updateJournalTable = (tableId, rowId, cellId, content) => {
     const updatedTables = tables?.map((table) => {
       if (table.id === tableId) {
@@ -31,10 +83,6 @@ const JournalTables = (props) => {
                 ...row,
                 cells: row.cells.map((cell) => {
                   if (cell.id === cellId) {
-                    console.log({
-                      ...cell,
-                      userCells: { ...cell.userCells, ...content }
-                    })
                     return {
                       ...cell,
                       userCells: { ...cell.userCells, ...content }
@@ -63,7 +111,7 @@ const JournalTables = (props) => {
     rowId,
     cellId
   ) => {
-    console.log('--- obj', obj)
+    // console.log('--- obj', obj)
     const content = {
       content: null,
       amount: null,
@@ -113,7 +161,6 @@ const JournalTables = (props) => {
       })
       .then(({ data }) => {
         if (data) {
-          console.log('-- data', data)
           const updatedJournalTable = updateJournalTable(
             newData.tableId,
             newData.rowId,
@@ -122,30 +169,14 @@ const JournalTables = (props) => {
           )
           setTables(updatedJournalTable)
           setLoading(false)
-
-          // ------ With this works, but page is jumping to top -------
-
-          // props.loadData()
-
-          // ----------------------------------------------------------
+          getTables(newData.tableId, newData.rowId, newData.cellId)
+          // getTableCells(newData.tableId, newData.rowId, newData.cellId)
         }
       })
       .catch((e) => {
         console.error(e)
       })
   }
-  // console.log(
-  //   `${tables[0]?.rows[0]?.cells[0].content}`,
-  //   tables[0]?.rows[0]?.cells[1]
-  // )
-  // console.log(
-  //   `${tables[0]?.rows[1]?.cells[0].content}`,
-  //   tables[0]?.rows[1]?.cells[1]
-  // )
-  // console.log(
-  //   `${tables[0]?.rows[2]?.cells[0].content}`,
-  //   tables[0]?.rows[2]?.cells[1]
-  // )
 
   return (
     <div className={'table-container'}>

@@ -48,16 +48,6 @@ export const JournalTableCellInput = (props) => {
   } = props
   const inputRef = useRef(null)
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Tab') {
-      e.preventDefault()
-      const inputs = document.querySelectorAll('.journal_table-input')
-      const currentIndex = Array.from(inputs).indexOf(inputRef.current)
-      const nextIndex = (currentIndex + 1) % inputs.length
-      inputs[nextIndex].focus()
-    }
-  }
-
   const newStyle = {
     width: width ?? '100%',
     ...additionalInputStyle
@@ -88,13 +78,12 @@ export const JournalTableCellInput = (props) => {
           <textarea
             key={props.cell.id}
             ref={inputRef}
-            onKeyDown={handleKeyDown}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
             // type={inputType}
             style={{ ...newStyle, resize: 'none' }}
             name={'textarea'}
-            value={value}
+            defaultValue={value}
             onChange={(e) => debounce(() => handleChange(e.target.value))}
           />
         )}
@@ -102,7 +91,6 @@ export const JournalTableCellInput = (props) => {
           <input
             key={props.cell.id}
             ref={inputRef}
-            onKeyDown={handleKeyDown}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
             type={inputType}
@@ -116,7 +104,6 @@ export const JournalTableCellInput = (props) => {
           <input
             key={props.cell.id}
             ref={inputRef}
-            onKeyDown={handleKeyDown}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
             type={inputType}

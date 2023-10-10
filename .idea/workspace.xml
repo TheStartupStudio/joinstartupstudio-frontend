@@ -7,12 +7,7 @@
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/PersonalFinanceComponents/CollegePlansTable.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/PersonalFinanceComponents/JobApplicationTable.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/PersonalFinanceComponents/LifestyleHousingTable.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/PersonalFinanceComponents/ResumeEvaulationTable.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/TableComponents.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/TableComponents.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,6 +108,7 @@
       <workItem from="1695297251034" duration="2078000" />
       <workItem from="1695306159157" duration="7758000" />
       <workItem from="1695626727242" duration="12054000" />
+      <workItem from="1696584766362" duration="21972000" />
     </task>
     <servers />
   </component>
