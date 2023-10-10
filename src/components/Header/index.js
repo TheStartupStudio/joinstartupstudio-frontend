@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useParams } from 'react-router-dom'
 import ReactGA from 'react-ga'
 import { Auth } from 'aws-amplify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -33,6 +33,7 @@ import TermAndCondition from './TermAndCondition'
 import StudentOfInstructors from '../GetInstructorStudents/index.js'
 import useOnClickOutside from 'use-onclickoutside'
 import { useHistory, useLocation } from 'react-router-dom'
+import PeerSharingModal from '../Modals/PeerSharingModal'
 
 function Header(props) {
   const { user } = useSelector((state) => state.user.user)
@@ -72,12 +73,53 @@ function Header(props) {
   const [allowToShow, setAllowToShow] = useState(false)
   const [backButton, setBackButton] = useState(false)
   const notificationsRef = useRef(null)
+  const [peerSharingModal, setPeerSharingModal] = useState(false)
+  const [peerSharingAccepted, setPeerSharingAccepted] = useState(false)
+  const params = useParams()
+
+  useEffect(() => {
+    axiosInstance.get('/peerSharing/').then(({ data }) => {
+      if (data) {
+        setPeerSharingAccepted(data.peerSharingAccepted)
+      }
+    })
+  }, [])
+
+  // useEffect(() => {
+  //   if (peerSharingAccepted) {
+  //     history.push('/my-classroom')
+  //     closePeerSharingModal()
+  //   }
+  // }, [peerSharingAccepted])
+
+  const acceptPeerSharing = (value) => {
+    axiosInstance
+      .post('/peerSharing/', { peerSharingAccepted: value })
+      .then(({ data }) => {
+        if (data) {
+          setPeerSharingAccepted(data.peerSharingAccepted)
+          history.push('/my-classroom')
+          closePeerSharingModal()
+        }
+      })
+  }
+
+  const openPeerSharingModal = () => {
+    setPeerSharingModal(true)
+  }
+  const closePeerSharingModal = () => {
+    setPeerSharingModal(false)
+  }
   useOnClickOutside(notificationsRef, () => {
     setTimeout(() => {
       setShowNotifications(false)
     }, 100)
   })
-
+  // useEffect(() => {
+  //   if (peerSharingAccepted) {
+  //     setPeerSharingModal(false)
+  //   }
+  // }, [peerSharingAccepted])
   const hasAccess = () => {
     axiosInstance
       .get('/studentsInstructorss/has-access')
@@ -369,7 +411,14 @@ function Header(props) {
                 <li className="nav-item my-auto">
                   <NavLink
                     className={`nav-link icon-menu px-2 me-2 my-auto`}
-                    to={'/my-connections'}
+                    to={
+                      peerSharingAccepted ? '/my-classroom' : location.pathname
+                    }
+                    onClick={() => {
+                      if (!peerSharingAccepted) {
+                        openPeerSharingModal()
+                      }
+                    }}
                   >
                     <FontAwesomeIcon
                       icon={faUsers}
@@ -837,6 +886,12 @@ function Header(props) {
         allow={() => allowToShow}
         onShow={countStudentOfInstructor}
         onHide={() => setCountStudentOfInstructor(false)}
+      />
+      <PeerSharingModal
+        show={peerSharingModal}
+        onHide={closePeerSharingModal}
+        peerSharingAccepted={peerSharingAccepted}
+        handleChange={(value) => acceptPeerSharing(value)}
       />
     </div>
   )
