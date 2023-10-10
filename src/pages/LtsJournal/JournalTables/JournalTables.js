@@ -20,8 +20,7 @@ const JournalTables = (props) => {
     setParagraphs(props.paragraphs)
   }, [props.paragraphs])
 
-  const getTables = async (tableId) => {
-    // const journalId = params.journalId
+  const getRows = async (tableId) => {
     await axiosInstance
       .get(`/ltsJournals/journal-tables/${tableId}`)
       .then(({ data }) => {
@@ -40,7 +39,6 @@ const JournalTables = (props) => {
         `/ltsJournals/journal-tables-cell/${cellId}`
       )
       const newData = response.data
-      console.log(newData)
       setTables((prevTables) => {
         return prevTables.map((table) => {
           if (table.id === tableId) {
@@ -52,8 +50,7 @@ const JournalTables = (props) => {
                     ...row,
                     cells: row.cells.map((cell) => {
                       if (cell.id === cellId) {
-                        debugger
-                        return newData // Update the cell data here
+                        return newData
                       }
                       return cell
                     })
@@ -101,8 +98,6 @@ const JournalTables = (props) => {
     return updatedTables
   }
 
-  console.log(tables)
-
   const handleUpdateJournalTables = async (
     obj,
     value,
@@ -111,7 +106,6 @@ const JournalTables = (props) => {
     rowId,
     cellId
   ) => {
-    // console.log('--- obj', obj)
     const content = {
       content: null,
       amount: null,
@@ -152,9 +146,7 @@ const JournalTables = (props) => {
   }
 
   const updateResumeEvaluation = async (_, newData) => {
-    // console.log('newData', newData)
     setLoading(true)
-    // if (newData.isEdit && newData.content.id === null)
     await axiosInstance
       .put(`/ltsJournals/user-journal-tables`, {
         ...newData.content
@@ -169,8 +161,8 @@ const JournalTables = (props) => {
           )
           setTables(updatedJournalTable)
           setLoading(false)
-          getTables(newData.tableId, newData.rowId, newData.cellId)
-          // getTableCells(newData.tableId, newData.rowId, newData.cellId)
+          if (!newData.isEdit)
+            getRows(newData.tableId, newData.rowId, newData.cellId)
         }
       })
       .catch((e) => {
@@ -210,7 +202,6 @@ const JournalTables = (props) => {
                           {row?.cells
                             ?.toSorted((a, b) => a.order - b.order)
                             .map((cell, index) => {
-                              // if (index < 3) console.log(cell.userCells)
                               return (
                                 <>
                                   {!cell.isEditable ? (

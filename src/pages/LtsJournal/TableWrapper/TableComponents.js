@@ -139,8 +139,6 @@ export const UserJournalTableCell = (props) => {
           value={props.userCellValue}
           handleChange={(value) => {
             const isEdit = !!props.userCell
-            console.log('isEdit', isEdit)
-            console.log('props.userCell', props.userCell)
             return props.handleChangeUserCell(props.userCell, value, isEdit)
           }}
           isDisabled={props.isDisabled}
@@ -156,8 +154,6 @@ export const UserJournalTableCell = (props) => {
           additionalInputStyle={{ ...props.additionalInputStyle }}
           handleChange={(value) => {
             const isEdit = !!props.userCell
-            console.log('isEdit', isEdit)
-            console.log('props.userCell', props.userCell)
             return props.handleChangeUserCell(props.cell, value, isEdit)
           }}
           isDisabled={props.isDisabled}
