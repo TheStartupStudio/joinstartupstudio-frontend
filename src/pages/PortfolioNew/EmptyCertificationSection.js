@@ -7,9 +7,9 @@ import PortfolioSection from './PortfolioSection'
 import { AccomplishmentModal } from '../../components/Portfolio/Accomplishment/accomplishmentModal'
 import { toast } from 'react-toastify'
 import IntlMessages from '../../utils/IntlMessages'
-import AddCertification from '../../components/Portfolio/LicensesCertification/addCertification'
 import { useSelector } from 'react-redux'
-const EmptyEducationSection = () => {
+import AddCertification from '../../components/Portfolio/LicensesCertification/addCertification'
+const EmptyCertificationSection = (props) => {
   const general = useSelector((state) => state.general)
   const userId = useSelector((state) => state.user.user.user.id)
 
@@ -42,8 +42,8 @@ const EmptyEducationSection = () => {
       await axiosInstance
         .post('/upload/img-transform', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+            'Content-Type': 'multipart/form-data'
+          }
         })
         .then(async (response) => {
           image = response.data.fileLocation
@@ -54,14 +54,16 @@ const EmptyEducationSection = () => {
       await axiosInstance
         .post('/userCertificates', {
           ...certificateData,
-          image: image,
+          image: image
         })
         .then((res) => {
           toast.success(<IntlMessages id="alerts.success_change" />)
           setLoading(false)
           setAddCertificateModal(false)
           // setCertificateImage()
-          setUserCertification((data) => [...data, res.data])
+          props.addCertification(res.data)
+
+          // setUserCertification((data) => [...data, res.data])
         })
         .catch((err) => {
           setAddCertificateModal(false)
@@ -72,8 +74,8 @@ const EmptyEducationSection = () => {
     }
   }
   return (
-    <PortfolioSection title={'Education'}>
-      {!userCertification.length && (
+    <PortfolioSection title={'LICENSES & CERTIFICATIONS'}>
+      {
         <>
           <div
             className="border rounded px-5"
@@ -84,7 +86,7 @@ const EmptyEducationSection = () => {
               icon={faPlus}
               className="w-100 h-100 skills-button"
               style={{
-                cursor: 'pointer',
+                cursor: 'pointer'
                 // border: '1px solid #BBBDBF'
               }}
             />
@@ -101,9 +103,9 @@ const EmptyEducationSection = () => {
             setCertifieData={(data) => setCertifieData(data)}
           />
         </>
-      )}
+      }
     </PortfolioSection>
   )
 }
 
-export default EmptyEducationSection
+export default EmptyCertificationSection

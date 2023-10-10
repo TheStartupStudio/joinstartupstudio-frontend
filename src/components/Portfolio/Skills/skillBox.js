@@ -20,7 +20,7 @@ export default function SkillBoxButton(props) {
         font: 'normal normal medium 12px/16px Montserrat',
         letterSpacing: 0.48,
         color: '#231F20',
-        height: 70,
+        height: 70
       }}
       id={props.id}
       key={props.id}
@@ -65,7 +65,7 @@ export default function SkillBoxButton(props) {
       {selected && props.from != 'removeModal' && (
         <FontAwesomeIcon icon={faCheck} className="me-2" />
       )}
-      {!props.isEmpty && props.data.name}
+      {!props.isEmpty && props.data.title}
     </button>
   )
 }

@@ -222,7 +222,7 @@ function EditPortfolio() {
         </div>
         {user && (
           <>
-            <PersonalBio user={user} isPreview={false} />
+            <PersonalBio user={user} isPreview={false} userId={userId} />
 
             <IAMR user={user} isPreview={false} />
 

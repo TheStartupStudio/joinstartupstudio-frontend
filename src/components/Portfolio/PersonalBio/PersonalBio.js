@@ -17,14 +17,14 @@ import './index.css'
 import IntlMessages from '../../../utils/IntlMessages'
 import EditBio from './EditBio'
 import Certificate from '../../../assets/images/lts-certifeid-logo.png'
+import CertificationBadge1 from '../../../assets/images/market-ready-1-badge.png'
+import CertificationBadge2 from '../../../assets/images/market-ready-2-badge.png'
 import { toast } from 'react-toastify'
 import { useHistory } from 'react-router-dom'
 import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
-import CertificationBadge1 from '../../../assets/images/market-ready-1-badge.jpg'
-import CertificationBadge2 from '../../../assets/images/market-ready-2-badge.jpg'
 
 export default function PersonalBio(props) {
-  const userId = useSelector((state) => state.user.user.user.id)
+  // const userId = useSelector((state) => state.user.user.user.id)
   const [user, setUser] = useState()
   const [userBio, setUserBio] = useState()
   const [userConnections, setuserConnections] = useState()
@@ -33,9 +33,20 @@ export default function PersonalBio(props) {
   const [updateBio, setUpdateBio] = useState(false)
   const [showEditBioModal, setShowEditBioModal] = useState(false)
   const [isCertified, setIsCertified] = useState(false)
+  const [userId, setUserId] = useState(null)
+  const [isPreview, setIsPreview] = useState(null)
   useEffect(() => {
     getUser()
-  }, [])
+  }, [userId])
+  useEffect(() => {
+    setUserId(props.userId)
+  }, [props.userId])
+  useEffect(() => {
+    setIsPreview(props.isPreview)
+  }, [props.isPreview])
+  // console.log(isPreview)
+
+  // console.log('userId', userId)
 
   // useEffect(() => {
   //   setUserBio(props.userBiography)
@@ -51,14 +62,19 @@ export default function PersonalBio(props) {
       .then((response) =>
         setuserConnections(parseInt(response.data.connectionCount))
       )
-    await axiosInstance
-      .get(`/users/${userId}`)
-      .then((response) => {
-        setUser(response.data)
-        setUserBio(response.data.bio)
-        setLoading(false)
-      })
-      .catch((err) => setLoading(false))
+    if (userId) {
+      await axiosInstance
+        .get(`/users/${userId}`)
+        .then((response) => {
+          setUser(response.data)
+          setUserBio(response.data.bio)
+          setLoading(false)
+        })
+        .catch((err) => {
+          setLoading(false)
+          return err
+        })
+    }
   }
 
   const handleChange = async (event) => {
@@ -106,7 +122,7 @@ export default function PersonalBio(props) {
       paddingLeft: '3px'
     }
   }
-  const isPreview = props.isPreview
+  // const isPreview = props.isPreview
   // const history = useHistory()
   // const isPreview = history.location.pathname.includes('preview')
 
@@ -294,17 +310,10 @@ export default function PersonalBio(props) {
                         </div>
                         <div className="d-lg-flex flex-wrap w-100 w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate mx-lg-5 mx-sm-1">
                           {!isCertified && (
-                            <span className="d-flex">
-                              <img
-                                src={CertificationBadge1}
-                                className="w-100 h-100 "
-                                alt="Certification badge 1"
-                              />
-                              <img
-                                src={CertificationBadge2}
-                                alt="Certification badge 1"
-                              />
-                            </span>
+                            <div className="d-flex">
+                              <img src={CertificationBadge1} />
+                              <img src={CertificationBadge2} />
+                            </div>
                           )}
                         </div>
                       </div>

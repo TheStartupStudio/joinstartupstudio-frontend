@@ -99,6 +99,7 @@ const SampleNote = React.lazy(() => import('../src/pages/MyNotes/sampleNote'))
 const MyJournals = React.lazy(() => import('../src/pages/MyJournals'))
 const Logout = React.lazy(() => import('./pages/Auth/LogOut'))
 const VerifyEmail = React.lazy(() => import('./pages/Verify'))
+const MyConnections = React.lazy(() => import('./pages/MyConnections'))
 const MyClassroom = React.lazy(() => import('./pages/MyClassroom'))
 const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
 const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
@@ -177,12 +178,17 @@ function Router(props) {
                 path="/preview-portfolio"
                 component={PreviewPortfolioNew}
               />
-              <Route exact path="/terms" component={Terms} />
               <Route
                 exact
                 path="/user-portfolio/:username"
-                component={PreviewPublicPortfolio}
+                component={PreviewPortfolioNew}
               />
+              <Route exact path="/terms" component={Terms} />
+              {/*<Route*/}
+              {/*  exact*/}
+              {/*  path="/user-portfolio/:username"*/}
+              {/*  component={PreviewPublicPortfolio}*/}
+              {/*/>*/}
               <Route
                 exact
                 path="/beyond-your-course"

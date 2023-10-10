@@ -227,7 +227,6 @@ const JournalTables = (props) => {
                                         value,
                                         isEdit
                                       ) => {
-                                        // if (!loading) {
                                         return handleUpdateJournalTables(
                                           cellToUpdate,
                                           value,
@@ -236,7 +235,6 @@ const JournalTables = (props) => {
                                           row.id,
                                           cell.id
                                         )
-                                        // }
                                       }}
                                       key={cell.id}
                                       additionalInputStyle={{

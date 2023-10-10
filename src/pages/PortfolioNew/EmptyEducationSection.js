@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { EducationModal } from '../../components/Portfolio/Education/educationModal'
 import axiosInstance from '../../utils/AxiosInstance'
 import PortfolioSection from './PortfolioSection'
-const EmptyEducationSection = () => {
+const EmptyEducationSection = (props) => {
   const [showEducationModal, setShowEducationModal] = useState(false)
   const [educations, setEducations] = useState([])
   const [currentEducation, setCurrentEducation] = useState([])
@@ -13,9 +13,11 @@ const EmptyEducationSection = () => {
     getUserEducations()
   }, [])
   const getUserEducations = async () => {
-    await axiosInstance.get(`/userBackground/by-type/education`).then((res) => {
-      setEducations(res.data)
-    })
+    await axiosInstance
+      .get(`/userBackground/by-type/education/user/${props.user.id}`)
+      .then((res) => {
+        setEducations(res.data)
+      })
   }
 
   const updateEducation = async (education) => {
@@ -32,7 +34,8 @@ const EmptyEducationSection = () => {
   }
 
   const addEducation = async (education) => {
-    setEducations([...educations, education])
+    props.addEducation(education)
+    // setEducations([...educations, education])
   }
 
   return (
@@ -51,7 +54,7 @@ const EmptyEducationSection = () => {
                 height: '56px',
                 width: '56px',
                 cursor: 'pointer',
-                color: '#BBBDBF',
+                color: '#BBBDBF'
               }}
               onClick={() => setShowEducationModal(true)}
             />
