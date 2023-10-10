@@ -85,13 +85,6 @@ function Header(props) {
     })
   }, [])
 
-  // useEffect(() => {
-  //   if (peerSharingAccepted) {
-  //     history.push('/my-classroom')
-  //     closePeerSharingModal()
-  //   }
-  // }, [peerSharingAccepted])
-
   const acceptPeerSharing = (value) => {
     axiosInstance
       .post('/peerSharing/', { peerSharingAccepted: value })
@@ -409,16 +402,28 @@ function Header(props) {
                 style={{ display: 'inherit' }}
               >
                 <li className="nav-item my-auto">
+                  {/*<NavLink*/}
+                  {/*  className={`nav-link icon-menu px-2 me-2 my-auto`}*/}
+                  {/*  to={*/}
+                  {/*    peerSharingAccepted ? '/my-classroom' : location.pathname*/}
+                  {/*  }*/}
+                  {/*  onClick={() => {*/}
+                  {/*    if (!peerSharingAccepted) {*/}
+                  {/*      openPeerSharingModal()*/}
+                  {/*    }*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  <FontAwesomeIcon*/}
+                  {/*    icon={faUsers}*/}
+                  {/*    style={{*/}
+                  {/*      fontSize: '26px'*/}
+                  {/*    }}*/}
+                  {/*    className="pt-1"*/}
+                  {/*  />*/}
+                  {/*</NavLink>*/}
                   <NavLink
                     className={`nav-link icon-menu px-2 me-2 my-auto`}
-                    to={
-                      peerSharingAccepted ? '/my-classroom' : location.pathname
-                    }
-                    onClick={() => {
-                      if (!peerSharingAccepted) {
-                        openPeerSharingModal()
-                      }
-                    }}
+                    to={'/my-classroom'}
                   >
                     <FontAwesomeIcon
                       icon={faUsers}

@@ -75,7 +75,6 @@ export const Experience = (props) => {
   }
 
   const deleteExperience = (id) => {
-    debugger
     setExperiences(experiences.filter((exp) => exp.id !== id))
     // props.deleteExperience(id)
   }

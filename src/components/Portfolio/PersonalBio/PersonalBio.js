@@ -36,11 +36,14 @@ export default function PersonalBio(props) {
   const [userId, setUserId] = useState(null)
   const [isPreview, setIsPreview] = useState(null)
   useEffect(() => {
-    getUser()
-  }, [userId])
-  useEffect(() => {
+    // getUser()
+    setUser(props.user)
+    setUserBio(props.user.bio)
     setUserId(props.userId)
-  }, [props.userId])
+  }, [props.user])
+  // useEffect(() => {
+  //   setUserId(props.userId)
+  // }, [props.userId])
   useEffect(() => {
     setIsPreview(props.isPreview)
   }, [props.isPreview])
