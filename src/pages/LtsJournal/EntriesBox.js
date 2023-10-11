@@ -4,6 +4,7 @@ import LtsJournalReflection from './reflection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle, faPlus } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
+import moment from 'moment'
 
 const debounce = (func, delay) => {
   let timer
@@ -104,6 +105,11 @@ const EntriesBox = (props) => {
     }
   }
 
+  function getFormattedDate(date) {
+    const formattedDate = moment(date).format('YYYY-MM-DD'); 
+    return formattedDate;
+  }
+
   return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
       {/* {journal.title && (
@@ -139,9 +145,7 @@ const EntriesBox = (props) => {
                     width: '100%'
                   }}
                   name={'startDate'}
-                  value={new Date(
-                    accordionDates?.startDate ?? currentDate
-                  ).toLocaleDateString('en-CA')}
+                  value={getFormattedDate(accordionDates?.startDate || currentDate)}
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChanges('startDate', newValue)
@@ -164,9 +168,7 @@ const EntriesBox = (props) => {
                     width: '100%'
                   }}
                   name={'endDate'}
-                  value={new Date(
-                    accordionDates?.endDate ?? nextDay
-                  ).toLocaleDateString('en-CA')}
+                  value={getFormattedDate(accordionDates?.endDate || nextDay)}
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChanges('endDate', newValue)
