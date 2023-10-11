@@ -22,6 +22,7 @@ import ExpectedOutcomes from './ExpectedOutcomes'
 import ProgramOpportunities from './ProgramOpportunities'
 import { useHistory } from 'react-router-dom'
 import ReactQuill from 'react-quill'
+import { ToastContainer, toast } from 'react-toastify';
 function TestJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
@@ -89,6 +90,7 @@ function TestJournalContent(props) {
           textEditorContent: updatedInstructorDebriefData.textEditorContent,
           id: updatedInstructorDebriefData.id
         })
+        toast.success('The message was submmited successfully!')
       })
   }
 
@@ -1017,7 +1019,7 @@ function TestJournalContent(props) {
                         onChange={(e) =>
                           handleChangeInstructorDebrief2('textEditorContent', e)
                         }
-                        style={{ height: 180 }}
+                        // style={{ height: 180 }}
                         value={instructorDebrief?.textEditorContent}
                       />
                       {/*<KendoTextEditor*/}

@@ -1,57 +1,78 @@
-.journal-title{
-    border-bottom: 1px solid #e3e3e3;
-    padding: 0 15px 10px 0px;
-    text-transform: uppercase;
-    font: normal normal 700 20px Montserrat;
-    letter-spacing: 0.96px;
-    color: #231F20
+.journal-title {
+  border-bottom: 1px solid #e3e3e3;
+  padding: 0 15px 10px 0px;
+  text-transform: uppercase;
+  font: normal normal 700 20px Montserrat;
+  letter-spacing: 0.96px;
+  color: #231f20;
 }
 
 .video-container {
-    width: 60%;
-    display: flex;
-    align-items: end;
-    height: 100%;
+  width: 60%;
+  display: flex;
+  align-items: end;
+  height: 100%;
 }
 
 .lts-triangle-container {
-    width: 40%;
-    display:flex;
-    justify-content:center
+  width: 40%;
+  display: flex;
+  justify-content: center;
 }
 
 .triangle-icon {
-    /*width: 180px;*/
-    /*height: 180px */
-    width: 95%;
-    height: 100%
+  /*width: 180px;*/
+  /*height: 180px */
+  width: 95%;
+  height: 100%;
 }
 
-.journal-paragraph{
-    font: normal normal 500 10.2px/16px Montserrat;
-    letter-spacing: 0.52px;
-    color: #333D3D
+.journal-paragraph {
+  font: normal normal 500 10.2px/16px Montserrat;
+  letter-spacing: 0.52px;
+  color: #333d3d;
 }
 
 .custom-breakdowns-container {
-    display:flex;
-    flex-direction:column
+  display: flex;
+  flex-direction: column;
 }
 
 .select-task-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    padding: 35px 10px
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 35px 10px;
 }
 
 .days-of-task-box {
-    background: #fff;
-    color: #231F20;
-    border-radius: 6px;
-    cursor:pointer;
+  background: #fff;
+  color: #231f20;
+  border-radius: 6px;
+  cursor: pointer;
 }
 .days-of-task-box:hover {
-    background: #51C7DF !important;
-    color: #fff !important;
+  background: #51c7df !important;
+  color: #fff !important;
+}
+#textEditorContent {
+  height: 170px;
+}
+
+@media screen and (max-width: 545px) {
+  #textEditorContent {
+    height: 150px;
+  }
+}
+@media screen and (max-width: 1137px) {
+  #textEditorContent {
+    height: 160px;
+    padding-bottom:15px
+  }
+}
+@media screen and (max-width: 785px) {
+  #textEditorContent {
+    height: 150px;
+    padding-bottom:20px
+  }
 }

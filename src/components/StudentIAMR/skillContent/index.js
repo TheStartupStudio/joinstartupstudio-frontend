@@ -13,7 +13,9 @@ const SkillContent = ({ skill }) => {
       </p>
       <ReactPlayer
         className="video_inner media-lightbox__video-player mb-3"
-        url={skill?.video}
+        // url={skill?.video}
+        url={'https://d5tx03iw7t69i.cloudfront.net/iamr/Market-Ready 1&2 Certification Introduction (1).mov'}
+
         controls={true}
         light={
           "https://d5tx03iw7t69i.cloudfront.net/Journal/MarketReadyGuide/MRG-Thumbnail.jpg"
