@@ -30,6 +30,7 @@ const EnLangs = {
   'old.navigation.startup_live': 'MY STARTUP LIVE™',
   'navigation.startup_live': 'MY STARTUP LIVE',
   'navigation.beyond_your_course': 'BEYOND LEARN TO START',
+  'navigation.my_market_resources': 'MY MARKET RESOURCES',
   'navigation.create_your_account': 'Create your account',
   'navigation.learn_to_start': 'MY LEARN TO START',
   'navigation.lts_journal': 'MY LTS JOURNAL',
@@ -921,6 +922,8 @@ const EnLangs = {
   'sidebar.story_in_motion': 'STORY IN MOTION®',
   'storyInMotion.page_description':
     'A Learn to Start Podcast - Conversations on Empowerment, Wellness and Performance.',
+  'storyInMotion.page_description2':
+    'A Learn to Start Podcast - Exploring who you are and why it matters',
   'storyInMotion.page_week_podcast': 'THIS WEEK’S PODCAST',
   'storyInMotion.page_week_now_playing': 'NOW PLAYING:',
   // 'storyInMotion.page_also_avalible':
@@ -936,6 +939,7 @@ const EnLangs = {
   'my_saved.MEDIA_VIDEOS': 'VIDEOS',
   'my_saved.MEDIA_PODCASTS': 'PODCASTS',
   'my_saved.MEDIA_PODCASTS': 'PODCAST',
+  'my_saved.STORY_IN_MOTION': 'STORY IN MOTION',
   'my_saved.not_saved_PODCASTS': 'No saved podcast!',
   'my_saved.alredy_saved_PODCASTS': 'Podcast is alredy saved',
   'my_saved.alredy_saved_PODCASTS_note': 'Note podcast page',
@@ -967,13 +971,17 @@ const EnLangs = {
   'calendar_task-events.start_time_of_event': 'Start time of event',
   'calendar_task-events.end_time_of_event': 'End time of event',
   'student_journals.student-lts_title': 'LEARN TO START JOURNAL',
-  'student_journals.student-lts_description': 'The Learn to Start Model is a guide in the lifelong process of developing the answers to the only three questions that matter: Who am I? What can I do? How do I prove it? You will use this journal to guide your development to those answers.',
+  'student_journals.student-lts_description':
+    'The Learn to Start Model is a guide in the lifelong process of developing the answers to the only three questions that matter: Who am I? What can I do? How do I prove it? You will use this journal to guide your development to those answers.',
   'student_journals.student-wellnes_title': 'WELLNESS JOURNAL',
-  'student_journals.student-wellnes_description': 'Wellness is planning, acting, and responding with self-awareness with the intent of becoming your best self. Use this journal to reflect on your wellness journey and treat it as a lifelong process.',
+  'student_journals.student-wellnes_description':
+    'Wellness is planning, acting, and responding with self-awareness with the intent of becoming your best self. Use this journal to reflect on your wellness journey and treat it as a lifelong process.',
   'student_journals.student-personal-finance_title': 'PERSONAL FINANCE JOURNAL',
-  'student_journals.student-personal-finance_description': 'In order to be market-ready, you must be financially literate. This journal will help you gain the knowledge and skills you need to make informed financial decisions.',
+  'student_journals.student-personal-finance_description':
+    'In order to be market-ready, you must be financially literate. This journal will help you gain the knowledge and skills you need to make informed financial decisions.',
   'student_journals.student-leadership_title': 'LEADERSHIP JOURNAL',
-  'student_journals.student-leadership_description': 'Leadership comes in many forms but the foundation is leading yourself first. Use this journal to inspire your development as a leader.',
+  'student_journals.student-leadership_description':
+    'Leadership comes in many forms but the foundation is leading yourself first. Use this journal to inspire your development as a leader.'
 }
 
 export default EnLangs

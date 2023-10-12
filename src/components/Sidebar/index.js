@@ -823,7 +823,7 @@ function Sidebar(props) {
                       icon={faMapSigns}
                     />
                     <div className="ms-1 flex-grow-1">
-                      <IntlMessages id="navigation.beyond_your_course" />
+                      <IntlMessages id="navigation.my_market_resources" />
                     </div>
                     <FontAwesomeIcon
                       icon={faAngleDown}
@@ -878,7 +878,7 @@ function Sidebar(props) {
                   >
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">
-                        <IntlMessages id="my_saved.MEDIA_PODCASTS" />
+                        <IntlMessages id="my_saved.STORY_IN_MOTION" />
                       </div>
                     </div>
                   </NavLink>
