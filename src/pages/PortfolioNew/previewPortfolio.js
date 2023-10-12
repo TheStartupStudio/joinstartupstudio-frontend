@@ -226,19 +226,7 @@ const PreviewPortfolio = () => {
   const windowWidth = useWindowWidth()
 
   const isPreviewPortfolio = isPreview || location?.state?.isPeerView
-  useEffect(() => {
-    if (!loading) {
-      if (user) {
-        if (user?.UserPortfolio?.is_published || isOwnPortfolio) {
-          console.log('display data')
-        } else {
-          console.log('private')
-        }
-      }
-    } else {
-      console.log('no data')
-    }
-  }, [])
+
   return (
     <div
       style={{
