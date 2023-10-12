@@ -137,7 +137,7 @@ const JournalTables = (props) => {
             !e.target.classList.contains('edit-pencil') &&
             !e.target.classList.contains('edit-pencil-container') &&
             !e.target.classList.contains('journal_table-input') &&
-            e.target.classList.length
+            !props.loading
           ) {
             props.setDisplayedCellIndex(null)
             props.setSelectedCell(null)
