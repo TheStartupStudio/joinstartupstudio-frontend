@@ -197,7 +197,8 @@ const MyTraining = (props) => {
                       textTransform: 'uppercase',
                       fontSize: 12,
                       padding: '4px 10px',
-                      marginBottom: 10
+                      marginBottom: 10,
+                      cursor: 'pointer'
                     }}
                     onClick={() => {
                       if (props.match.params.type === 'task') {

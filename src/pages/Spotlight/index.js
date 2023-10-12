@@ -314,10 +314,7 @@ function StartupLive() {
                 and a registered user inside of the Learn to Start platform with
                 at least one year of experience on the platform.
               </li>
-              <li>
-                Participants under the age of 18 must submit a Parent/Guardian
-                approval form.
-              </li>
+       
               <li>
                 Participants will have 12 minutes to present their pitch deck,
                 with additional minutes allocated to Q&A from the expert panel.
@@ -377,7 +374,6 @@ function StartupLive() {
                           <li>Identify the type of mentorship you are applying for</li>
                           <li>Upload your pitch deck</li>
                           <li>Upload your business plan</li>
-                          <li>Parent/Guardian approval form (if younger than 18)</li>
                         </ul>
                       </li>
                     </ul>

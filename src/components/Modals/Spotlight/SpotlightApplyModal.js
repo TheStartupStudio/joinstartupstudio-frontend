@@ -41,8 +41,9 @@ const SpotlightApplyModal = (props) => {
       data.who_is_pitching.length == 0 ||
       data.product.length == 0 ||
       data.describe.length == 0 ||
-      data.outcome.length == 0 ||
-      data.product_or_service == 0
+      data.outcome.length == 0
+      // ||
+      // data.product_or_service == 0
     ) {
       setLoading(false)
       return toast.error('Please fill in all the fields.')
@@ -132,13 +133,13 @@ const SpotlightApplyModal = (props) => {
           />
         </div>
         <div className="col-12 col-lg-6">
-          <input
-            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input"
-            type="text"
-            onChange={(e) => handleChange(e)}
-            name="product_or_service"
-            placeholder={'What is your product or service called?'}
-          />
+          {/*<input*/}
+          {/*  className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input"*/}
+          {/*  type="text"*/}
+          {/*  onChange={(e) => handleChange(e)}*/}
+          {/*  name="product_or_service"*/}
+          {/*  placeholder={'What is your product or service called?'}*/}
+          {/*/>*/}
           <div className="">
             <label className="edit-label text-center mt-2 pitch-input">
               <input
