@@ -1,23 +1,55 @@
 import {
+  JournalTableCell,
   JournalTableRow,
   TableCellTitle,
   UserJournalTableCell
 } from '../TableWrapper/TableComponents'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
 import _ from 'lodash'
+import * as actions from '../../../redux/reflectionsTable/Actions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencilAlt, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 const JournalTables = (props) => {
   const [tables, setTables] = useState([])
   const [paragraphs, setParagraphs] = useState([])
   const [loading, setLoading] = useState(false)
 
+  const [displayedCellIndex, setDisplayedCellIndex] = useState(null)
+  const [selectedCell, setSelectedCell] = useState(null)
+
   useEffect(() => {
     setTables(props.tables)
   }, [props.tables])
+
   useEffect(() => {
     setParagraphs(props.paragraphs)
   }, [props.paragraphs])
+  const inputRef = useRef(null)
+
+  const getRows = async (tableId) => {
+    await axiosInstance
+      .get(`/ltsJournals/journal-tables/${tableId}`)
+      .then(({ data }) => {
+        let newTables = [...tables]
+        const foundedIndex = newTables.findIndex(
+          (table) => table.id === tableId
+        )
+
+        newTables[foundedIndex].rows = data
+        setTables(newTables)
+      })
+  }
+  useEffect(() => {
+    if (inputRef) {
+      inputRef?.current?.focus()
+      const textLength = inputRef?.current?.value?.length
+      if (inputRef?.current?.type !== 'number') {
+        inputRef?.current?.setSelectionRange(textLength, textLength)
+      }
+    }
+  }, [selectedCell])
 
   const updateJournalTable = (tableId, rowId, cellId, content) => {
     const updatedTables = tables?.map((table) => {
@@ -32,7 +64,7 @@ const JournalTables = (props) => {
                   if (cell.id === cellId) {
                     return {
                       ...cell,
-                      userCells: content
+                      userCells: { ...cell.userCells, ...content }
                     }
                   }
                   return cell
@@ -56,6 +88,7 @@ const JournalTables = (props) => {
     rowId,
     cellId
   ) => {
+    // setLoading(true)
     const content = {
       content: null,
       amount: null,
@@ -85,34 +118,115 @@ const JournalTables = (props) => {
       content
     )
 
-    console.log('content', content)
     setTables(updatedJournalTable)
-    updateResumeEvaluation(null, { content, cellId, rowId, tableId })
+    await updateTable({
+      content,
+      cellId,
+      rowId,
+      tableId,
+      isEdit
+    })
   }
+  const EditButton = (props) => {
+    const newRef = useRef(null)
 
-  const updateResumeEvaluation = async (_, newData) => {
+    useEffect(() => {
+      if (props.selectedCell) {
+        function handleOutsideClick(e) {
+          if (
+            !e.target.classList.contains('edit-pencil') &&
+            !e.target.classList.contains('edit-pencil-container') &&
+            !e.target.classList.contains('journal_table-input') &&
+            !props.loading
+          ) {
+            props.setDisplayedCellIndex(null)
+            props.setSelectedCell(null)
+          }
+        }
+
+        document.addEventListener('mousedown', handleOutsideClick)
+
+        return () => {
+          document.removeEventListener('mousedown', handleOutsideClick)
+        }
+      }
+    }, [props.selectedCell])
+    return (
+      <span
+        disabled={props.disabled}
+        style={{
+          ...props.additionalStyle,
+          backgroundColor: '#fff',
+          height: '100%',
+          padding: '8px 0',
+          cursor: 'pointer'
+        }}
+        className={'d-flex justify-content-between align-items-center '}
+      >
+        <div>
+          <div>{props.userCellValue}</div>
+          <div></div>
+        </div>
+        <div
+          ref={newRef}
+          onClick={(event) => {
+            props.openEditBox(event)
+          }}
+          className={'edit-pencil-container d-flex justify-content-end'}
+          style={{ padding: '16px 0 16px 16px' }}
+        >
+          <FontAwesomeIcon
+            className={'z-3 ml-1 edit-pencil'}
+            icon={faPencilAlt}
+          />
+        </div>
+      </span>
+    )
+  }
+  const updateTable = async (newData) => {
     setLoading(true)
     await axiosInstance
       .put(`/ltsJournals/user-journal-tables`, {
         ...newData.content
       })
       .then(({ data }) => {
-        const updatedJournalTable = updateJournalTable(
-          newData.tableId,
-          newData.rowId,
-          newData.cellId,
-          data
-        )
-
-        setTables(updatedJournalTable)
-
-        setLoading(false)
+        if (data) {
+          const updatedJournalTable = updateJournalTable(
+            newData.tableId,
+            newData.rowId,
+            newData.cellId,
+            data
+          )
+          setTables(updatedJournalTable)
+          setLoading(false)
+          // if (!newData.isEdit)
+          //   getRows(newData.tableId, newData.rowId, newData.cellId)
+        }
       })
+      .catch((e) => {
+        console.error(e)
+      })
+  }
+  const [editClicked, setEditClicked] = useState(null)
+  const handlePencilClick = (tableIndex, rowIndex, cellIndex, event) => {
+    const currentIndex = { tableIndex, rowIndex, cellIndex }
+    if (
+      selectedCell &&
+      selectedCell.tableIndex === tableIndex &&
+      selectedCell.rowIndex === rowIndex &&
+      selectedCell.cellIndex === cellIndex
+    ) {
+      setSelectedCell(null)
+      setDisplayedCellIndex(null)
+    } else {
+      setSelectedCell(currentIndex)
+      setDisplayedCellIndex(currentIndex)
+    }
   }
 
   return (
     <div className={'table-container'}>
-      {tables?.map((table) => {
+      {tables?.map((table, tableIndex) => {
         return (
           <>
             <>
@@ -133,15 +247,13 @@ const JournalTables = (props) => {
 
                 {table?.rows
                   ?.toSorted((a, b) => a.order - b.order)
-                  ?.map((row) => {
+                  ?.map((row, rowIndex) => {
                     return (
                       <>
-                        <JournalTableRow
-                        // additionalStyle={{ width: '100%', height: '100%' }}
-                        >
+                        <JournalTableRow>
                           {row?.cells
                             ?.toSorted((a, b) => a.order - b.order)
-                            .map((cell, index) => {
+                            .map((cell, cellIndex) => {
                               return (
                                 <>
                                   {!cell.isEditable ? (
@@ -149,25 +261,35 @@ const JournalTables = (props) => {
                                       cell={cell}
                                       key={cell.id}
                                       additionalStyle={{
-                                        width: `${100 / table.gridColumns}%`
+                                        width: `${100 / table.gridColumns}%`,
+                                        minHeight: 70
                                       }}
                                       backgroundColor={'#fff'}
                                     />
-                                  ) : (
-                                    <UserJournalTableCell
-                                      cell={cell}
-                                      userCell={cell.userCells}
-                                      userCellValue={
-                                        cell.inputType === 'text'
-                                          ? cell.userCells?.content
-                                          : cell.userCells?.amount
-                                      }
-                                      handleChangeUserCell={(
-                                        cellToUpdate,
-                                        value,
-                                        isEdit
-                                      ) => {
-                                        if (!loading) {
+                                  ) : // ) : cell.isEditBox && cell.id === activeId ? (
+                                  displayedCellIndex &&
+                                    displayedCellIndex.tableIndex ===
+                                      tableIndex &&
+                                    displayedCellIndex.rowIndex === rowIndex &&
+                                    displayedCellIndex.cellIndex ===
+                                      cellIndex ? (
+                                    <React.Fragment>
+                                      <UserJournalTableCell
+                                        loading={loading}
+                                        setLoading={setLoading}
+                                        inputRef={inputRef}
+                                        cell={cell}
+                                        userCell={cell.userCells}
+                                        userCellValue={
+                                          cell.inputType === 'text'
+                                            ? cell.userCells?.content
+                                            : cell.userCells?.amount
+                                        }
+                                        handleChangeUserCell={(
+                                          cellToUpdate,
+                                          value,
+                                          isEdit
+                                        ) => {
                                           return handleUpdateJournalTables(
                                             cellToUpdate,
                                             value,
@@ -176,16 +298,55 @@ const JournalTables = (props) => {
                                             row.id,
                                             cell.id
                                           )
+                                        }}
+                                        key={cell.id}
+                                        additionalInputStyle={{
+                                          padding: '0px',
+                                          margin: '0px',
+                                          minHeight: 70
+                                        }}
+                                      />
+                                    </React.Fragment>
+                                  ) : (
+                                    <JournalTableCell
+                                      colSpan={cell.colSpan}
+                                      additionalStyling={{
+                                        display: 'flex',
+                                        gap: 6,
+                                        ...props.additionalStyling,
+                                        zIndex: 0
+                                      }}
+                                    >
+                                      <EditButton
+                                        editClicked={editClicked}
+                                        selectedCell={selectedCell}
+                                        loading={loading}
+                                        userCellValue={
+                                          cell.inputType === 'text'
+                                            ? cell.userCells?.content
+                                            : cell.userCells?.amount
                                         }
-                                      }}
-                                      isDisabled={loading === true}
-                                      key={cell.id}
-                                      additionalInputStyle={{
-                                        height: '100%',
-                                        padding: '0px',
-                                        margin: '0px'
-                                      }}
-                                    />
+                                        additionalStyle={{
+                                          minHeight: 70,
+                                          width: '100%',
+                                          zIndex: 9999
+                                        }}
+                                        setSelectedCell={setSelectedCell}
+                                        setDisplayedCellIndex={
+                                          setDisplayedCellIndex
+                                        }
+                                        openEditBox={(event) => {
+                                          if (!loading) {
+                                            return handlePencilClick(
+                                              tableIndex,
+                                              rowIndex,
+                                              cellIndex,
+                                              event
+                                            )
+                                          }
+                                        }}
+                                      />
+                                    </JournalTableCell>
                                   )}
                                 </>
                               )

@@ -36,7 +36,7 @@ export default function ConnectionBox(props) {
           }}
         />
       )}
-      <div className='text-center mb-2'>
+      <div className="text-center mb-2">
         <Image
           src={
             props.data.profile_image ? props.data.profile_image : defaultImage
@@ -50,13 +50,13 @@ export default function ConnectionBox(props) {
       props.from == 'EditPage' ? (
         <p>{props.data.Business_Founders.role}</p>
       ) : (
-        <p className='mt-0 mb-3'>{props.data.profession}</p>
+        <p className="mt-0 mb-3">{props.data.profession}</p>
       )}
       {props.from !== 'EditPage' && (
         <>
           {props.data.status === 'request' ? (
             <button
-              className='d-block mx-auto'
+              className="d-block mx-auto"
               onClick={() =>
                 props.toggleRespondConnectionModal(props.data.connectionId)
               }
@@ -65,26 +65,32 @@ export default function ConnectionBox(props) {
             </button>
           ) : props.data.status === 'accept' ? (
             <button
-              className='d-block mx-auto'
+              className="d-block mx-auto"
               onClick={() =>
-                navigate.push(`/user-portfolio/${props.data.username}`)
+                navigate.push(`/user-portfolio/${props.data.username}`, {
+                  isPeerView: true
+                })
               }
             >
               PORTFOLIO
             </button>
           ) : props.data.status === 'requested' ? (
-            <button className='d-block mx-auto'>Requested</button>
+            <button className="d-block mx-auto">Requested</button>
           ) : props.data.status === 'block' ? (
-            <button className='d-block mx-auto'>Blocked</button>
+            <button className="d-block mx-auto">Blocked</button>
           ) : (
             <button
-              className='d-block mx-auto'
+              className="d-block mx-auto"
               onClick={
                 props.from == 'PublishedProject' || props.from == 'PreviewPage'
                   ? () =>
-                      navigate.push(`/user-portfolio/${props.data.username}`)
+                      navigate.push(`/user-portfolio/${props.data.username}`, {
+                        isPeerView: true
+                      })
                   : () =>
-                      navigate.push(`/user-portfolio/${props.data.username}`)
+                      navigate.push(`/user-portfolio/${props.data.username}`, {
+                        isPeerView: true
+                      })
               }
             >
               Connect
@@ -93,17 +99,17 @@ export default function ConnectionBox(props) {
         </>
       )}
       {props.from == 'EditPage' && (
-        <div className='w-100'>
-          <label className='px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'>
+        <div className="w-100">
+          <label className="px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex">
             <input
-              type='checkbox'
-              name='showFounder'
+              type="checkbox"
+              name="showFounder"
               checked={props.isChecked}
               onChange={(e) => {
                 props.updateShowPreference(e, props.data.id, !props?.isChecked)
               }}
             />
-            <i className='my-auto'></i>
+            <i className="my-auto"></i>
           </label>
         </div>
       )}

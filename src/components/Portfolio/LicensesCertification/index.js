@@ -17,6 +17,7 @@ import addCertification from './addCertification'
 export default function LicencesCertification(props) {
   const general = useSelector((state) => state.general)
   const userId = useSelector((state) => state.user.user.user.id)
+
   const [userCertification, setUserCertification] = useState([])
   const [addCertficateModal, setAddCertificateModal] = useState(false)
   // const [certificateImage, setCertificateImage] = useState()
@@ -27,6 +28,11 @@ export default function LicencesCertification(props) {
   const [loading, setLoading] = useState(false)
   const [isPublished, setIsPublished] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isPreview, setIsPreview] = useState(null)
+
+  useEffect(() => {
+    setIsPreview(props.isPreview)
+  }, [props.isPreview])
 
   useEffect(() => {
     getuserCertification()
@@ -62,9 +68,8 @@ export default function LicencesCertification(props) {
         setCertificatedToRemove([])
         setRemoveCertification(false)
         setIsLoading(false)
-        // if (data) {
-        //   getuserCertification()
-        // }
+
+        // getuserCertification();
       })
       .catch((err) => {
         toast.error(<IntlMessages id="alerts.something_went_wrong" />)
@@ -139,7 +144,9 @@ export default function LicencesCertification(props) {
   const handleAddCertification = (certification) => {
     setUserCertification((data) => [...data, certification])
   }
+  // console.log('isLoading', isLoading)
 
+  // console.log(!isLoading, userCertification?.length)
   return (
     <>
       {!isLoading ? (
@@ -153,6 +160,7 @@ export default function LicencesCertification(props) {
             isShownInPortfolio={isPublished}
             onAdd={() => setAddCertificateModal(true)}
             onEdit={() => setRemoveCertification(true)}
+            isPreview={isPreview}
           >
             <div className="my-account rounded mx-0 mt-4">
               <div className="mx-3 mt-4 mb-4">
@@ -192,23 +200,28 @@ export default function LicencesCertification(props) {
             </div>
           </PortfolioSection>
         ) : (
-          <PortfolioSection title={'LICENSES & CERTIFICATIONS'}>
+          <PortfolioSection
+            title={'LICENSES & CERTIFICATIONS'}
+            isPreview={isPreview}
+          >
             {
               <>
-                <div
-                  className="border rounded px-5"
-                  style={{ width: '140px', height: '180px' }}
-                  onClick={() => setAddCertificateModal(true)}
-                >
-                  <FontAwesomeIcon
-                    icon={faPlus}
-                    className="w-100 h-100 skills-button"
-                    style={{
-                      cursor: 'pointer'
-                      // border: '1px solid #BBBDBF'
-                    }}
-                  />
-                </div>
+                {!isPreview && (
+                  <div
+                    className="border rounded px-5"
+                    style={{ width: '140px', height: '180px' }}
+                    onClick={() => setAddCertificateModal(true)}
+                  >
+                    <FontAwesomeIcon
+                      icon={faPlus}
+                      className="w-100 h-100 skills-button"
+                      style={{
+                        cursor: 'pointer'
+                        // border: '1px solid #BBBDBF'
+                      }}
+                    />
+                  </div>
+                )}
                 <AddCertification
                   show={addCertficateModal}
                   onHide={() => {

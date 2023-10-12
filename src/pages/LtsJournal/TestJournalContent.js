@@ -91,6 +91,7 @@ function TestJournalContent(props) {
           textEditorContent: updatedInstructorDebriefData.textEditorContent,
           id: updatedInstructorDebriefData.id
         })
+        toast.success('The message was submmited successfully!')
       })
       .catch((error) => {
         console.error('Error submitting instructor debrief:', error)
@@ -1026,7 +1027,7 @@ function TestJournalContent(props) {
                         onChange={(e) =>
                           handleChangeInstructorDebrief2('textEditorContent', e)
                         }
-                        style={{ height: 180 }}
+                        // style={{ height: 180 }}
                         value={instructorDebrief?.textEditorContent}
                       />
                     </div>

@@ -100,6 +100,7 @@ const MyJournals = React.lazy(() => import('../src/pages/MyJournals'))
 const Logout = React.lazy(() => import('./pages/Auth/LogOut'))
 const VerifyEmail = React.lazy(() => import('./pages/Verify'))
 const MyConnections = React.lazy(() => import('./pages/MyConnections'))
+const MyClassroom = React.lazy(() => import('./pages/MyClassroom'))
 const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
 const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
 const PreviewPortfolioNew = React.lazy(() =>
@@ -177,12 +178,17 @@ function Router(props) {
                 path="/preview-portfolio"
                 component={PreviewPortfolioNew}
               />
-              <Route exact path="/terms" component={Terms} />
               <Route
                 exact
                 path="/user-portfolio/:username"
-                component={PreviewPublicPortfolio}
+                component={PreviewPortfolioNew}
               />
+              <Route exact path="/terms" component={Terms} />
+              {/*<Route*/}
+              {/*  exact*/}
+              {/*  path="/user-portfolio/:username"*/}
+              {/*  component={PreviewPublicPortfolio}*/}
+              {/*/>*/}
               <Route
                 exact
                 path="/beyond-your-course"
@@ -363,7 +369,7 @@ function Router(props) {
               <Route exact path="/my-account" component={Profile} />
               <Route path="/verify" component={VerifyEmail} />
               <Route path="/logout" component={Logout} />
-              <Route exact path="/my-connections" component={MyConnections} />
+              <Route exact path="/my-classroom" component={MyClassroom} />
               <Route
                 exact
                 path="/edit-journals"
@@ -381,8 +387,8 @@ function Router(props) {
               />
               <Route
                 exact
-                path="/my-connections/request/:id"
-                component={MyConnections}
+                path="/my-classroom/request/:id"
+                component={MyClassroom}
               />
               <Route path="/iamr-inbox" component={IAMRinbox} />
               <Route

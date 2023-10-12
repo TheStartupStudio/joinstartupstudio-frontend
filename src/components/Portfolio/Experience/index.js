@@ -23,7 +23,11 @@ export const Experience = (props) => {
   // useEffect(() => {
   //   setExperiences(props.experiences)
   // }, [props.experiences])
+  const [isPreview, setIsPreview] = useState(null)
 
+  useEffect(() => {
+    setIsPreview(props.isPreview)
+  }, [props.isPreview])
   useEffect(() => {
     getUserExperiences()
   }, [])
@@ -41,7 +45,7 @@ export const Experience = (props) => {
     setIsPublished(!isPublished)
     await axiosInstance
       .put(`/users`, {
-        show_experience: !oldPublishValue,
+        show_experience: !oldPublishValue
       })
       .then()
       .catch((e) => {
@@ -53,7 +57,7 @@ export const Experience = (props) => {
   const getUserExperiences = async () => {
     setIsLoading(true)
     await axiosInstance
-      .get(`/userBackground/by-type/experience`)
+      .get(`/userBackground/by-type/experience/user/${props.user.id}`)
       .then((res) => {
         setExperiences(res.data)
         setIsLoading(false)
@@ -79,7 +83,7 @@ export const Experience = (props) => {
     setExperiences([...experiences, experience])
     // props.addExperience(experience)
   }
-
+  // console.log('user', props.user)
   const Experiences = () => {
     return (
       <PortfolioSection
@@ -89,6 +93,7 @@ export const Experience = (props) => {
         onAdd={() => setShowExperienceModal(true)}
         isShownInPortfolio={isPublished}
         handleShowInPortfolio={() => updateShowPreference()}
+        isPreview={isPreview}
       >
         <div
           className="
@@ -104,7 +109,7 @@ export const Experience = (props) => {
                     border: '1px solid #E5E5E5',
                     borderRadius: 6,
                     background: '#F8F8F8 0% 0% no-repeat padding-box',
-                    minHeight: 230,
+                    minHeight: 230
                   }}
                 >
                   <ExperienceDetails
@@ -152,6 +157,7 @@ export const Experience = (props) => {
             onAdd={() => setShowExperienceModal(true)}
             isShownInPortfolio={isPublished}
             handleShowInPortfolio={() => updateShowPreference()}
+            isPreview={isPreview}
           >
             <div
               className="
@@ -159,7 +165,7 @@ export const Experience = (props) => {
         mx-0 mt-4
         "
             >
-              <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
+              <div className="w-100 mx-auto  px-md-0 mx-md-0 row gap-4">
                 {experiences.map((experience, index, { length }) => {
                   return (
                     <div
@@ -167,7 +173,7 @@ export const Experience = (props) => {
                         border: '1px solid #E5E5E5',
                         borderRadius: 6,
                         background: '#F8F8F8 0% 0% no-repeat padding-box',
-                        minHeight: 230,
+                        minHeight: 230
                       }}
                     >
                       <ExperienceDetails
@@ -179,6 +185,7 @@ export const Experience = (props) => {
                           setCurrentExperience(experience)
                         }
                         editing={true}
+                        isPreview={isPreview}
                       />
                     </div>
                   )
@@ -202,7 +209,10 @@ export const Experience = (props) => {
             />
           </PortfolioSection>
         ) : (
-          <EmptyExperienceSection addExperience={addExperience} />
+          <EmptyExperienceSection
+            user={props.user}
+            addExperience={addExperience}
+          />
         )
       ) : (
         <></>

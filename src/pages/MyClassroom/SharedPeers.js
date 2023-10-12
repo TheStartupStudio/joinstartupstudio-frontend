@@ -1,55 +1,45 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import _ from 'lodash'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import IntlMessages from '../../utils/IntlMessages'
-import ConnectionBox from './connectionBox'
 import searchIcon from '../../assets/images/search-icon.png'
-import './style.css'
+import '../../components/Connections/style.css'
 import axiosInstance from '../../utils/AxiosInstance'
+import SharedPeerBox from './SharedPeerBox'
+import { useSelector } from 'react-redux'
 
-export const ApprovedConnections = (props) => {
+export const SharedPeers = (props) => {
   const [loadingData, setLoadingData] = useState(true)
   const [searchLoader, setSearchLoader] = useState(false)
   const [showLimit, setShowLimit] = useState(0)
-  const [connectionIndex, setConnectionIndex] = useState(1)
+  const [peerIndex, setPeerIndex] = useState(1)
   const [debouncedState, setDebouncedState] = useState('')
-  const [filteredConnections, setFilteredConnections] = useState([])
-
+  const [filteredPeers, setFilteredPeers] = useState([])
+  const loggedUser = useSelector((state) => state?.user?.user?.user)
   useEffect(() => {
     if (props.width >= 1800) {
       setShowLimit(4)
-      setConnectionIndex(4)
+      setPeerIndex(4)
     } else if (props.width > 1340 && props.width <= 1800) {
       setShowLimit(3)
-      setConnectionIndex(3)
+      setPeerIndex(3)
     } else if (props.width > 1200 && props.width <= 1340) {
       setShowLimit(2)
-      setConnectionIndex(2)
+      setPeerIndex(2)
     } else if (props.width > 860 && props.width <= 1200) {
       setShowLimit(3)
-      setConnectionIndex(3)
+      setPeerIndex(3)
     } else if (props.width > 620 && props.width <= 860) {
       setShowLimit(2)
-      setConnectionIndex(2)
+      setPeerIndex(2)
     } else {
       setShowLimit(1)
-      setConnectionIndex(1)
+      setPeerIndex(1)
     }
   }, [props.width])
 
   useEffect(() => {
     setLoadingData(false)
-  }, [props.connections])
-
-  useEffect(() => {
-    if (filteredConnections.length > 0) {
-      setFilteredConnections(
-        filteredConnections.filter(
-          (connection) => connection.id !== props.latestRemovedConnection
-        )
-      )
-    }
-  }, [props.latestRemovedConnection])
+  }, [props.peers])
 
   useEffect(() => {
     debouncedState.length > 2 ? setSearchLoader(true) : setSearchLoader(false)
@@ -61,18 +51,23 @@ export const ApprovedConnections = (props) => {
       setDebouncedState(searchedKeyword)
       debounce(searchedKeyword)
     } else {
-      filteredConnections.length > 0 && setFilteredConnections([])
+      filteredPeers.length > 0 && setFilteredPeers([])
       setDebouncedState('')
     }
   }
 
+  // eslint-disable-next-line
   const debounce = useCallback(
     _.debounce((_searchVal) => {
       setDebouncedState(_searchVal)
+      const url =
+        loggedUser.Role.id === 2
+          ? `/peerSharing/peers/${_searchVal}/search/instructor/${loggedUser.id}`
+          : `/peerSharing/peers/${_searchVal}/search`
       axiosInstance
-        .get(`/connect/filter-connections?keyword=${_searchVal}`)
+        .get(url)
         .then((res) => {
-          setFilteredConnections(res.data.data)
+          setFilteredPeers(res.data)
           setSearchLoader(false)
         })
         .catch((e) => e)
@@ -81,8 +76,8 @@ export const ApprovedConnections = (props) => {
   )
 
   const loadMoreData = () => {
-    if (showLimit < props.connectionsCount) {
-      return setShowLimit(props.connectionsCount)
+    if (showLimit < props.peersCount) {
+      return setShowLimit(props.peersCount)
     }
     setLoadingData(true)
     props.loadMore()
@@ -91,10 +86,10 @@ export const ApprovedConnections = (props) => {
   return (
     <div className="m-0 p-0">
       <h3 className="my-connection-titles ms-0 ps-0">
-        {/*<IntlMessages id='connection.page_title' />*/}
-        My classroom
+        {/*<IntlMessages id="connection.page_title" />*/}
+        My Classroom
       </h3>
-      {props.connections.length === 0 ? (
+      {props.peers.length === 0 ? (
         <div className="ms-3 ps-0">
           <p className="page-description fw-light ms-0 ps-0">
             <IntlMessages id="connection.no_connections" />
@@ -118,8 +113,7 @@ export const ApprovedConnections = (props) => {
                 type="text"
                 className="form-control"
                 name="searchedNote"
-                // placeholder={'SEARCH YOUR CONNECTIONS'}
-                placeholder={'SEARCH MY PEERS'}
+                placeholder={'SEARCH YOUR PEERS'}
                 aria-describedby="button-addon1"
                 onChange={handleChange}
               />
@@ -127,20 +121,15 @@ export const ApprovedConnections = (props) => {
           </div>
           {debouncedState.length > 2 ? (
             !searchLoader ? (
-              filteredConnections.length > 0 ? (
+              filteredPeers.length > 0 ? (
                 <div className="approved-connections-container mt-2 mt-md-0">
                   <div className="mx-3 ps-0 text-center">
                     <div className="all-approved-connections">
-                      {filteredConnections?.map((user, index) => (
-                        <ConnectionBox
+                      {filteredPeers?.map((user, index) => (
+                        <SharedPeerBox
                           key={index}
                           data={user}
-                          removeConnection={props.removeConnection}
-                          newConnectionRequest={props.newConnectionRequest}
-                          toggleRespondConnectionModal={
-                            props.toggleRespondConnectionModal
-                          }
-                          from={'approved-connections'}
+                          from={'my-classroom'}
                         />
                       ))}
                     </div>
@@ -163,41 +152,31 @@ export const ApprovedConnections = (props) => {
           ) : (
             <div className="mx-2 ps-0 mt-2 mt-md-0 text-center approved-connections-container">
               <div className="all-approved-connections">
-                {props.connections.length > 0 &&
-                  props.connections?.map(
+                {props.peers.length > 0 &&
+                  props.peers?.map(
                     (user, index) =>
                       index < showLimit && (
-                        <ConnectionBox
+                        <SharedPeerBox
                           key={index}
                           data={user}
-                          removeConnection={props.removeConnection}
-                          newConnectionRequest={props.newConnectionRequest}
-                          toggleRespondConnectionModal={
-                            props.toggleRespondConnectionModal
-                          }
-                          from={'approved-connections'}
+                          from={'my-classroom'}
                         />
                       )
                   )}
 
-                {props.connections.length <= showLimit &&
-                  connectionIndex -
-                    (props.connections.length % connectionIndex) <
-                    connectionIndex &&
-                  [
-                    ...Array(
-                      connectionIndex -
-                        (props.connections.length % connectionIndex)
+                {props.peers.length <= showLimit &&
+                  peerIndex - (props.peers.length % peerIndex) < peerIndex &&
+                  [...Array(peerIndex - (props.peers.length % peerIndex))].map(
+                    (item, index) => (
+                      <div
+                        className="col-auto my-connection-box mt-3 mx-2 p-3 empty-connection-box"
+                        key={index}
+                      ></div>
                     )
-                  ].map((item, index) => (
-                    <div
-                      className="col-auto my-connection-box mt-3 mx-2 p-3 empty-connection-box"
-                      key={index}
-                    ></div>
-                  ))}
+                  )}
               </div>
-              {(props.connectionsCount > props.connections.length ||
-                props.connections.length > showLimit) &&
+              {(props.peersCount > props.peers.length ||
+                props.peers.length > showLimit) &&
                 !loadingData && (
                   <>
                     <hr

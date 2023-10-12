@@ -292,6 +292,7 @@ function LtsJournalContent(props) {
         <div className="col-12">
           <>
             <JournalTables
+              loadData={loadData}
               tables={journal?.journalTables}
               paragraphs={journal?.journalParagraphs}
               loading={loading}

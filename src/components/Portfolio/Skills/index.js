@@ -23,10 +23,16 @@ export const Skills = (props) => {
   const [newSkill, setNewSkill] = useState()
   const [removeSkill, setRemoveSkill] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [approvedSkills, setApprovedSkills] = useState([])
 
   // useEffect(() => {
   //   setUserSkill(props.skills)
   // }, [props.skills])
+  const [isPreview, setIsPreview] = useState(null)
+
+  useEffect(() => {
+    setIsPreview(props.isPreview)
+  }, [props.isPreview])
 
   const remove = async () => {
     await axiosInstance
@@ -51,6 +57,29 @@ export const Skills = (props) => {
         GetSkillsFromDB()
       })
   }
+
+  useEffect(() => {
+    setApprovedSkills(props.approvedSkills)
+  }, [props.approvedSkills])
+  // const getIAMRSkills = async () => {
+  //   try {
+  //     const { data } = await axiosInstance.get('/iamr/skills')
+  //     const approvedSkills = data.skills.reduce((accumulator, skill) => {
+  //       if (
+  //         skill.SkillStatus.status === 'approved' ||
+  //         skill.SkillStatus.status === 'proficient'
+  //       ) {
+  //         accumulator.push(skill)
+  //       }
+  //       return accumulator
+  //     }, [])
+  //     console.log(approvedSkills)
+  //
+  //     setApprovedSkills(approvedSkills)
+  //   } catch (error) {
+  //     console.error('error', error)
+  //   }
+  // }
 
   const editAddedSelectedSkill = (name) => {
     let array = selcetedSkills
@@ -123,8 +152,12 @@ export const Skills = (props) => {
     getUserSkills()
     GetSkillsFromDB()
   }, [])
+  // useEffect(() => {
+  //   getIAMRSkills()
+  //   // console.log('inside SKILLS')
+  // }, [])
   const history = useHistory()
-  const isPreview = history.location.pathname.includes('preview')
+  // const isPreview = history.location.pathname.includes('preview')
 
   const windowWidth = useWindowWidth()
 
@@ -155,14 +188,14 @@ export const Skills = (props) => {
       return '75%'
     }
   }
-
+  // console.log(approvedSkills)
   return (
     <>
       {!isLoading ? (
-        userSkill?.length ? (
+        approvedSkills?.length ? (
           <PortfolioSection
             title={'Market-ready certified skills'}
-            isEdit={true}
+            isEdit={false}
             isAdd={false}
             onEdit={
               userSkill && userSkill.length > 0
@@ -175,13 +208,14 @@ export const Skills = (props) => {
                   }
             }
             onAdd={() => setShowSkillBoxModal(true)}
+            // handleShowInPortfolio={updateShowPreference}
           >
             <div style={{ display: 'flex', gap: 10 }}>
               <div style={{ width: skillsContainerWidth() }}>
                 <div className="w-100 ">
                   <div className="row">
                     {/*{userSkill && userSkill.length > 0 ? (*/}
-                    {userSkill.map((data) => (
+                    {approvedSkills?.map((data) => (
                       <div className="col-md-3 col-sm-6" key={data.id}>
                         <SkillBoxButton
                           data={data}
@@ -197,19 +231,6 @@ export const Skills = (props) => {
                   </div>
                 </div>
               </div>
-              {!isPreview && (
-                <div
-                  className={'py-2'}
-                  style={{
-                    width: verifyButtonContainerWidth(),
-                    display: 'flex',
-                    alignItems: 'end',
-                    justifyContent: 'end'
-                  }}
-                >
-                  <VerifyButton width={verifyButtonWidth()} />
-                </div>
-              )}
             </div>
           </PortfolioSection>
         ) : (
@@ -236,7 +257,7 @@ export const Skills = (props) => {
       ) : (
         <></>
       )}
-      <SkillBoxEditModal
+      {/* <SkillBoxEditModal
         allSkill={allSkill}
         show={showSkillBoxModal}
         onHide={() => {
@@ -263,7 +284,7 @@ export const Skills = (props) => {
         }}
         newSkill={newSkill}
         setNewSkill={(data) => setNewSkill(data)}
-      />
+      /> */}
       <RemoveSkill
         show={showRemoveSkill}
         onHide={() => {

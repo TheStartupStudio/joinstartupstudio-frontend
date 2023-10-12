@@ -5,6 +5,7 @@ import AccordionItem from './accordionItem'
 import CertificationAccordionItem from './certificationAccordionItem'
 import './index.css'
 import axiosInstance from '../../../../utils/AxiosInstance'
+import { useSelector } from 'react-redux'
 
 const GroupingString = ({ text }) => (
   <div className="grouping-string pt-3">{text}</div>
@@ -53,7 +54,7 @@ const SkillsAccordion = ({ hideExpanded, certificationType }) => {
   const activeKey = useState({ certificationType: null, id: null, type: null })
   const [, setActiveKey] = activeKey
   const [certificationStatus, setCertificationStatus] = useState()
-
+  const loggedUser = useSelector((state) => state.user.user.user)
   const { id, type } = useParams()
 
   useEffect(() => {
@@ -63,7 +64,7 @@ const SkillsAccordion = ({ hideExpanded, certificationType }) => {
   useEffect(() => {
     setLoading(true)
     axiosInstance
-      .get(`/iamr/skills`)
+      .get(`/iamr/skills/user/${loggedUser.id}`)
       .then(({ data }) => {
         const { skills, certificationStatus } = data
         setSkills(skills)

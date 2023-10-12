@@ -11,30 +11,30 @@ export const ConnectionRequestedModal = (props) => {
     <Modal
       show={props.show}
       onHide={props.onHide}
-      backdrop='static'
+      backdrop="static"
       keyboard={false}
-      id='subscription-modal'
-      className='requested-modal'
+      id="subscription-modal"
+      className="requested-modal"
     >
-      <Modal.Header className='connection-modal-header general-modal-header mx-4'>
+      <Modal.Header className="connection-modal-header general-modal-header mx-4">
         <button
-          type='button'
-          className='btn-close me-3 mt-3'
-          aria-label='Close'
+          type="button"
+          className="btn-close me-3 mt-3"
+          aria-label="Close"
           onClick={props.onHide}
         ></button>
       </Modal.Header>
       <Modal.Body>
-        <div className='mt-4 mb-5 blocked-user-modal px-md-3 text-center'>
+        <div className="mt-4 mb-5 blocked-user-modal px-md-3 text-center">
           <h4>Your connection request was sent!</h4>
           <p>
             Once they respond, you’ll be able to view their portfolio and send
             them a message.
           </p>
           <button
-            className='cancel-subscription-button accept-request-button'
+            className="cancel-subscription-button accept-request-button"
             style={{ backgroundColor: '#F2359D' }}
-            onClick={() => navigate.push('/my-connections')}
+            onClick={() => navigate.push('/my-classroom')}
           >
             GREAT! THANKS
           </button>

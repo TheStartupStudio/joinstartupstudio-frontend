@@ -59,6 +59,7 @@ export const VerifyButton = (props) => {
 
 function EditPortfolio() {
   const [toggle, setToggle] = useState(0)
+  const [togglePeerSharing, setTogglePeerSharing] = useState(0)
   const [user, setUser] = useState()
   const [showPublishModal, setShowPublishModal] = useState(false)
   const [recommendationRequestId, setRecommendationRequestId] = useState()
@@ -87,6 +88,7 @@ function EditPortfolio() {
         setUser(response.data)
         await axiosInstance.get('/portfolio').then((response) => {
           setToggle(response.data.is_published)
+          setTogglePeerSharing(response.data.isPeerShared)
         })
       })
       .catch((err) => err)
@@ -108,6 +110,21 @@ function EditPortfolio() {
       .catch((err) => {
         toast.error(<IntlMessages id="alerts.success_change" />)
         setToggle(!toggle)
+      })
+  }
+  const updatePeerSharing = async () => {
+    const data = {
+      isPeerShared: !togglePeerSharing
+    }
+    await axiosInstance
+      .put(`/portfolio/peerSharing/`, data)
+      .then((response) => {
+        toast.success(<IntlMessages id="alerts.success_change" />)
+        setTogglePeerSharing(!togglePeerSharing)
+      })
+      .catch((err) => {
+        toast.error(<IntlMessages id="alerts.success_change" />)
+        setTogglePeerSharing(!togglePeerSharing)
       })
   }
 
@@ -141,28 +158,51 @@ function EditPortfolio() {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ width: '30%' }}>
-            <span className="my_portfolio_publish pe-xxl-0 ">
-              <IntlMessages id="portfolio.Publish.My.Portfolio" />
-              <label className="px-0 ps-sm-1 ps-md-1 form-switch">
-                <input
-                  type="checkbox"
-                  checked={toggle}
-                  onChange={() => {
-                    if (toggle) {
-                      updateStatus()
-                    } else {
-                      setShowPublishModal(true)
-                    }
-                  }}
-                />
-                <i></i>
-              </label>
-            </span>
-
-            <span className="ps-xl-0 d-block mt-1 mt-sm-1 publish_checkbox_info">
-              <IntlMessages id="portfolio.publish_checkbox" />
-            </span>
+            <div>
+              <span className="my_portfolio_publish pe-xxl-0">
+                <IntlMessages id="portfolio.Publish.My.Portfolio" />
+                <label className="px-0 ps-sm-1 ps-md-1 form-switch">
+                  <input
+                    type="checkbox"
+                    checked={toggle}
+                    onChange={() => {
+                      if (toggle) {
+                        updateStatus()
+                      } else {
+                        setShowPublishModal(true)
+                      }
+                    }}
+                  />
+                  <i></i>
+                </label>
+              </span>
+              <span className="ps-xl-0 d-block mt-1 mt-sm-1 publish_checkbox_info">
+                <IntlMessages id="portfolio.publish_checkbox" />
+              </span>
+            </div>
+            <div>
+              <span className="my_portfolio_publish pe-xxl-0 ">
+                {/*<IntlMessages id="portfolio.Publish.My.Portfolio" />*/}
+                Allow My Peers to View My Portfolio
+                <label className="px-0 ps-sm-1 ps-md-1 form-switch">
+                  <input
+                    type="checkbox"
+                    checked={togglePeerSharing}
+                    onChange={() => {
+                      updatePeerSharing()
+                      // if (togglePeerSharing) {
+                      //   updatePeerSharing()
+                      // } else {
+                      //   setShowPublishModal(true)
+                      // }
+                    }}
+                  />
+                  <i></i>
+                </label>
+              </span>
+            </div>
           </div>
+
           {/* <div
             style={{
               display: 'flex',
@@ -182,7 +222,7 @@ function EditPortfolio() {
         </div>
         {user && (
           <>
-            <PersonalBio user={user} isPreview={false} />
+            <PersonalBio user={user} isPreview={false} userId={userId} />
 
             <IAMR user={user} isPreview={false} />
 

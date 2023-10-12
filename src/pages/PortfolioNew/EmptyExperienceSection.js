@@ -8,7 +8,7 @@ import { AccomplishmentModal } from '../../components/Portfolio/Accomplishment/a
 import { toast } from 'react-toastify'
 import IntlMessages from '../../utils/IntlMessages'
 import { ExperienceModal } from '../../components/Portfolio/Experience/experienceModal'
-const EmptyEducationSection = () => {
+const EmptyExperienceSection = (props) => {
   const [showExperienceModal, setShowExperienceModal] = useState(false)
   const [experiences, setExperiences] = useState([])
   const [currentExperience, setCurrentExperience] = useState([])
@@ -23,27 +23,14 @@ const EmptyEducationSection = () => {
 
   const getUserExperiences = async () => {
     await axiosInstance
-      .get(`/userBackground/by-type/experience`)
+      .get(`/userBackground/by-type/experience/user/${props.user.id}`)
       .then((res) => {
         setExperiences(res.data)
       })
   }
 
-  const updateExperience = async (experience) => {
-    setExperiences(
-      experiences.map((exp) => {
-        if (exp.id === experience.id) return (exp = experience)
-        return exp
-      })
-    )
-  }
-
-  const deleteBackground = (id) => {
-    setExperiences(experiences.filter((exp) => exp.id !== id))
-  }
-
   const addExperience = async (experience) => {
-    setExperiences([...experiences, experience])
+    props.addExperience(experience)
   }
 
   return (
@@ -63,7 +50,7 @@ const EmptyEducationSection = () => {
                   height: '56px',
                   width: '56px',
                   cursor: 'pointer',
-                  color: '#BBBDBF',
+                  color: '#BBBDBF'
                 }}
                 onClick={() => setShowExperienceModal(true)}
               />
@@ -75,9 +62,7 @@ const EmptyEducationSection = () => {
               setCurrentExperience([])
               setShowExperienceModal(false)
             }}
-            updateExperience={(exp) => updateExperience(exp)}
             addExperience={(exp) => addExperience(exp)}
-            deleteBackground={(id) => deleteBackground(id)}
             currentExperience={currentExperience}
           />
         </>
@@ -86,4 +71,4 @@ const EmptyEducationSection = () => {
   )
 }
 
-export default EmptyEducationSection
+export default EmptyExperienceSection

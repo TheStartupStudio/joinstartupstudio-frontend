@@ -459,10 +459,11 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li>
+                <li className="disabledd">
                   <NavLink
                     to={'/student-wellnes'}
                     activeClassName="sidenav active"
+                    disabled={true}
                   >
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1 text-uppercase">
@@ -473,6 +474,7 @@ function Sidebar(props) {
                 </li>
                 <li>
                   <NavLink
+                    disabled={true}
                     to={'/student-personal-finance'}
                     activeClassName="sidenav active"
                   >
@@ -485,6 +487,7 @@ function Sidebar(props) {
                 </li>
                 <li className="disabledd">
                   <NavLink
+                    disabled={true}
                     to={'/student-leadership'}
                     activeClassName="sidenav active"
                   >

@@ -17,6 +17,12 @@ export const Education = (props) => {
   const [isPublished, setIsPublished] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  const [isPreview, setIsPreview] = useState(null)
+
+  useEffect(() => {
+    setIsPreview(props.isPreview)
+  }, [props.isPreview])
+
   useEffect(() => {
     getUserEducations()
   }, [])
@@ -35,7 +41,7 @@ export const Education = (props) => {
 
     await axiosInstance
       .put(`/users`, {
-        show_education: !oldPublishValue,
+        show_education: !oldPublishValue
       })
       .then()
       .catch((e) => {
@@ -46,10 +52,12 @@ export const Education = (props) => {
 
   const getUserEducations = async () => {
     setIsLoading(true)
-    await axiosInstance.get(`/userBackground/by-type/education`).then((res) => {
-      setEducations(res.data)
-      setIsLoading(false)
-    })
+    await axiosInstance
+      .get(`/userBackground/by-type/education/user/${props.user.id}`)
+      .then((res) => {
+        setEducations(res.data)
+        setIsLoading(false)
+      })
   }
 
   const updateEducation = async (education) => {
@@ -78,6 +86,7 @@ export const Education = (props) => {
         handleShowInPortfolio={updateShowPreference}
         isShownInPortfolio={isPublished}
         onAdd={() => setShowEducationModal(true)}
+        isPreview={isPreview}
       >
         <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
           {educations.length > 0 &&
@@ -90,7 +99,7 @@ export const Education = (props) => {
                     borderRadius: 6,
                     background: '#F8F8F8 0% 0% no-repeat padding-box',
                     minHeight: 230,
-                    height: 230,
+                    height: 230
                   }}
                 >
                   <EducationDetails
@@ -102,6 +111,7 @@ export const Education = (props) => {
                       setCurrentEducation(education)
                     }
                     editing={true}
+                    isPreview={isPreview}
                   />
                 </div>
               )
@@ -125,7 +135,7 @@ export const Education = (props) => {
         />
       </PortfolioSection>
     ) : (
-      <EmptyEducationSection addEducation={addEducation} />
+      <EmptyEducationSection addEducation={addEducation} user={props.user} />
     )
   ) : (
     <></>

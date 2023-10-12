@@ -15,7 +15,6 @@ const SpotlightApplyModal = (props) => {
   const [file1, setfile1] = useState()
   const [loading, setLoading] = useState(false)
   const [agreed, setAgreed] = useState(false)
-
   const [data, setData] = useState({
     who_is_pitching: '',
     product: '',

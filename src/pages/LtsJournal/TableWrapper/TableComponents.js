@@ -1,7 +1,9 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ReactQuill from 'react-quill'
 import { FormControl, FormGroup, InputGroup } from 'react-bootstrap'
 import _ from 'lodash'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPencilAlt, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 export const JournalTableRow = (props) => {
   const { children, additionalStyle } = props
@@ -13,7 +15,7 @@ export const JournalTableRow = (props) => {
 }
 export const JournalTableCell = (props) => {
   const { isGray, colSpan, additionalStyling } = props
-  
+
   return (
     <td
       colSpan={colSpan}
@@ -30,9 +32,28 @@ export const JournalTableCell = (props) => {
     </td>
   )
 }
+const EditButton = (props) => {
+  return (
+    <span
+      style={{
+        backgroundColor: '#fff',
+        height: '100%',
+        padding: '8px 0',
+        cursor: 'pointer'
+      }}
+      className={'d-flex justify-content-end align-items-center z-2 '}
+      onClick={() => {
+        props.openEditBox()
+      }}
+    >
+      <FontAwesomeIcon className={'me-2'} icon={faPencilAlt} />
+    </span>
+  )
+}
 
 export const JournalTableCellInput = (props) => {
   const {
+    cell,
     title,
     type,
     value,
@@ -44,8 +65,11 @@ export const JournalTableCellInput = (props) => {
     additionalStyle,
     additionalInputStyle,
     inputTag,
-    inputType
+    inputType,
+    inputRef,
+    setLoading
   } = props
+
   const newStyle = {
     width: width ?? '100%',
     ...additionalInputStyle
@@ -54,7 +78,7 @@ export const JournalTableCellInput = (props) => {
   const debounce = useCallback(
     _.debounce(async (func, value) => {
       func('debounce', value)
-    }, 1000),
+    }, 500),
     []
   )
 
@@ -74,35 +98,50 @@ export const JournalTableCellInput = (props) => {
       <div className={` ${width ? '' : 'w-100'}`}>
         {inputTag === 'textarea' && (
           <textarea
+            key={props.cell.id}
+            ref={inputRef}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
-            type={inputType}
+            // type={inputType}
             style={{ ...newStyle, resize: 'none' }}
-            name={inputName ?? ''}
-            value={value}
-            onChange={(e) => debounce(() => handleChange(e.target.value))}
+            name={'textarea'}
+            defaultValue={value}
+            onChange={(e) => {
+              debounce(() => handleChange(e.target.value))
+              setLoading(true)
+            }}
           />
         )}
         {inputTag === 'input' && (
           <input
+            key={props.cell.id}
+            ref={inputRef}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
             type={inputType}
             style={newStyle}
             name={inputName ?? ''}
             defaultValue={value}
-            onChange={(e) => debounce(() => handleChange(e.target.value))}
+            onChange={(e) => {
+              debounce(() => handleChange(e.target.value))
+              setLoading(true)
+            }}
           />
         )}
         {!inputTag && (
           <input
+            key={props.cell.id}
+            ref={inputRef}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
             type={inputType}
             style={newStyle}
             name={inputName ?? ''}
             value={value}
-            onChange={(e) => debounce(() => handleChange(e.target.value))}
+            onChange={(e) => {
+              debounce(() => handleChange(e.target.value))
+              setLoading(true)
+            }}
           />
         )}
       </div>
@@ -117,27 +156,48 @@ export const UserJournalTableCell = (props) => {
       additionalStyling={{
         display: 'flex',
         gap: 6,
-        ...props.additionalStyling
+        ...props.additionalStyling,
+        position: 'relative'
       }}
     >
       {props.userCell ? (
-        <JournalTableCellInput
-          additionalStyle={{
-            width: '100%',
-            height: '100%'
-          }}
-          additionalInputStyle={{ ...props.additionalInputStyle }}
-          value={props.userCellValue}
-          handleChange={(value) => {
-            const isEdit = !!props.userCell
-            return props.handleChangeUserCell(props.userCell, value, isEdit)
-          }}
-          isDisabled={props.isDisabled}
-          inputType={props.cell.inputType}
-          inputTag={props.cell.inputTag}
-        />
+        <>
+          <JournalTableCellInput
+            cell={props.cell}
+            additionalStyle={{
+              width: '100%',
+              height: '100%'
+            }}
+            additionalInputStyle={{ ...props.additionalInputStyle }}
+            value={props.userCellValue}
+            handleChange={(value) => {
+              const isEdit = !!props.userCell
+              return props.handleChangeUserCell(props.userCell, value, isEdit)
+            }}
+            isDisabled={props.isDisabled}
+            inputType={props.cell.inputType}
+            inputTag={props.cell.inputTag}
+            inputRef={props.inputRef}
+            setLoading={props.setLoading}
+          />
+          {props.loading && (
+            <div
+              className=""
+              style={{
+                color: '#01c5d1',
+                position: 'absolute',
+                zIndex: 999,
+                bottom: 0,
+                right: 13
+              }}
+            >
+              <FontAwesomeIcon icon={faSpinner} className="" spin />
+            </div>
+          )}
+        </>
       ) : (
         <JournalTableCellInput
+          cell={props.cell}
           additionalStyle={{
             width: '100%'
           }}
@@ -149,6 +209,8 @@ export const UserJournalTableCell = (props) => {
           isDisabled={props.isDisabled}
           inputType={props.cell.inputType}
           inputTag={props.cell.inputTag}
+          inputRef={props.inputRef}
+          setLoading={props.setLoading}
         />
       )}
     </JournalTableCell>

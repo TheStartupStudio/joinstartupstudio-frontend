@@ -104,7 +104,6 @@ const CalendarModal = (props) => {
     )
   }
 
-  console.log(props.event)
   return (
     <>
       <Modal

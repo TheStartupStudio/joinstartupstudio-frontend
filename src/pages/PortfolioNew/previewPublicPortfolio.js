@@ -80,7 +80,7 @@ const PreviewPublicPortfolio = () => {
             sender: { id: loggedUser.id, name: loggedUser.name },
             receivers: [{ id: user.id }],
             type: NotificationTypes.FRIEND_REQUEST.key,
-            url: `/my-connections/request/${res.data.id}`
+            url: `/my-classroom/request/${res.data.id}`
           })
         }
       })
