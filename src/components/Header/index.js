@@ -19,6 +19,8 @@ import IntlMessages from '../../utils/IntlMessages'
 import triangleAlertIcon from '../../assets/images/alert-triangle-icon.svg'
 import notesIcon from '../../assets/images/notes-icon.svg'
 import notesIconHovered from '../../assets/images/notes-icon-active.svg'
+import unColoredSpark from '../../assets/images/black-spark.png'
+import coloredSpark from '../../assets/images/colored-spark.png'
 // import journalIcon from '../../assets/images/journals-icon.svg'
 // import journalIconHovered from '../../assets/images/journals-icon-active.svg'
 import focusIcon from '../../assets/images/focus_icon.png'
@@ -475,7 +477,7 @@ function Header(props) {
                 </li>
                 {/*  */}
 
-                <li className="nav-item notes-nav my-auto me-5">
+                <li className="nav-item notes-nav my-auto ">
                   <NavLink
                     className={`nav-link icon-menu`}
                     to={
@@ -497,6 +499,24 @@ function Header(props) {
                         width="25px"
                         alt="note"
                       />
+                    </div>
+                  </NavLink>
+                </li>
+                <li className="nav-item notes-nav my-auto me-5">
+                  <NavLink className={`nav-link icon-menu`} to={'/my-spark'}>
+                    <div>
+                      <img
+                        src={unColoredSpark}
+                        className="focus-icon"
+                        width="25px"
+                        alt="note"
+                      />
+                      {/*<img*/}
+                      {/*  src={notesIcon}*/}
+                      {/*  className="not-focus-icon"*/}
+                      {/*  width="25px"*/}
+                      {/*  alt="note"*/}
+                      {/*/>*/}
                     </div>
                   </NavLink>
                 </li>
@@ -741,6 +761,27 @@ function Header(props) {
                         width="25px"
                         alt="note"
                       />
+                    </div>
+                  </NavLink>
+                </li>
+                <li className="nav-item notes-nav my-auto ">
+                  <NavLink
+                    className={`nav-link px-2 me-1 icon-menu`}
+                    to={'/my-spark'}
+                  >
+                    <div>
+                      <img
+                        src={unColoredSpark}
+                        className="focus-icon"
+                        width="25px"
+                        alt="note"
+                      />
+                      {/*<img*/}
+                      {/*  src={notesIcon}*/}
+                      {/*  className="not-focus-icon"*/}
+                      {/*  width="25px"*/}
+                      {/*  alt="note"*/}
+                      {/*/>*/}
                     </div>
                   </NavLink>
                 </li>

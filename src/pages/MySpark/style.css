@@ -1,0 +1,74 @@
+.my-spark-widgets__container{
+    background-color: #f8f7f7
+}
+.container-fluid .spark-widgets__container{
+    margin: 0 !important;
+    background-color: #f8f7f7
+}
+.spark-widgets__row-container{
+    /*width: 88% !important;*/
+    margin: 0 !important
+}
+.spark-widget-box__container {
+    min-height: 120px;
+}
+.spark-widget-box__container .spark-widget__container {
+    height: 100% !important;
+    background: #FFFFFF 0 0 no-repeat padding-box;
+    box-shadow: 0 3px 6px #00000012;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center
+}
+
+.spark-icon__container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #fff;
+    background: transparent linear-gradient(141deg, #F2359D 0%, #51C7DF 100%) 0 0 no-repeat padding-box;
+}
+
+.widget-icon {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -30px;
+    width: 60px;
+    height: 60px;
+    object-fit:contain
+}
+.my-spark-icon {
+    position: absolute;
+    /*left: 50%;*/
+    /*transform: translateX(-50%);*/
+    bottom: 10px;
+    width: 100px;
+    height: 150px;
+    object-fit:contain;
+    right: -25px
+}
+
+.spark-widget__container .spark-widget__title {
+    text-align:center;
+    margin: auto;
+    font: normal normal 600 20px/24px Montserrat;
+    letter-spacing: 0px;
+    color: #838EAB;
+    text-transform: uppercase;
+    opacity: 1;
+    padding: 0 10px
+
+}
+
+/*@media only screen and (max-width: 1200px) {*/
+/*    .spark-widgets__row-container{*/
+/*        width: 100% !important;*/
+/*    }*/
+/*}*/

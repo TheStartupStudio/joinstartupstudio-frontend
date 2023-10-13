@@ -101,6 +101,7 @@ const Logout = React.lazy(() => import('./pages/Auth/LogOut'))
 const VerifyEmail = React.lazy(() => import('./pages/Verify'))
 const MyConnections = React.lazy(() => import('./pages/MyConnections'))
 const MyClassroom = React.lazy(() => import('./pages/MyClassroom'))
+const MySpark = React.lazy(() => import('./pages/MySpark'))
 const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
 const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
 const PreviewPortfolioNew = React.lazy(() =>
@@ -390,6 +391,7 @@ function Router(props) {
                 path="/my-classroom/request/:id"
                 component={MyClassroom}
               />
+              <Route exact path="/my-spark" component={MySpark} />
               <Route path="/iamr-inbox" component={IAMRinbox} />
               <Route
                 path="/student-iamr/:studentId/:id?/:type?"
