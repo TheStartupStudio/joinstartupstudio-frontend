@@ -19,6 +19,7 @@ import socialPostIcon from '../../assets/images/My Spark Widget Icons/9.Social-P
 import socialPostCaptionIcon from '../../assets/images/My Spark Widget Icons/10.Social-Post-Caption.svg'
 import videoScriptIcon from '../../assets/images/My Spark Widget Icons/11.Video-Script.svg'
 import imageIcon from '../../assets/images/My Spark Widget Icons/12.Image.svg'
+import { useHistory } from 'react-router-dom'
 
 function MySpark() {
   const [loading, setLoading] = useState(false)
@@ -41,7 +42,7 @@ function MySpark() {
     { title: 'VIDEO SCRIPT', icon: videoScriptIcon },
     { title: 'IMAGE', icon: imageIcon }
   ]
-
+  const history = useHistory()
   return (
     <Container fluid>
       <Row>
@@ -75,6 +76,15 @@ function MySpark() {
                           <div
                             className={
                               'spark-widget__container position-relative '
+                            }
+                            onClick={() =>
+                              history.push(
+                                `my-spark/${widget.title
+                                  .split(' ')
+                                  .join('-')
+                                  .toLowerCase()}`,
+                                { widgetTitle: widget.title.toLowerCase() }
+                              )
                             }
                           >
                             <img

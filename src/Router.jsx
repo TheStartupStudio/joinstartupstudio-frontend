@@ -102,6 +102,15 @@ const VerifyEmail = React.lazy(() => import('./pages/Verify'))
 const MyConnections = React.lazy(() => import('./pages/MyConnections'))
 const MyClassroom = React.lazy(() => import('./pages/MyClassroom'))
 const MySpark = React.lazy(() => import('./pages/MySpark'))
+const MySparkWidgetDetails = React.lazy(() =>
+  import('./pages/MySpark/MySparkWidgetDetails')
+)
+const MySparkGeneratePage = React.lazy(() =>
+  import('./pages/MySpark/MySparkGeneratePage')
+)
+const MySparkArchivePage = React.lazy(() =>
+  import('./pages/MySpark/MySparkArchivePage')
+)
 const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
 const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
 const PreviewPortfolioNew = React.lazy(() =>
@@ -392,6 +401,21 @@ function Router(props) {
                 component={MyClassroom}
               />
               <Route exact path="/my-spark" component={MySpark} />
+              <Route
+                path="/my-spark/generate-page"
+                exact
+                component={MySparkGeneratePage}
+              />
+              <Route
+                path="/my-spark/archive"
+                exact
+                component={MySparkArchivePage}
+              />
+              <Route
+                path="/my-spark/:widgetName"
+                exact
+                component={MySparkWidgetDetails}
+              />
               <Route path="/iamr-inbox" component={IAMRinbox} />
               <Route
                 path="/student-iamr/:studentId/:id?/:type?"

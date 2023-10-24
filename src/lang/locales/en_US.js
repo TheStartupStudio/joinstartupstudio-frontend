@@ -981,7 +981,27 @@ const EnLangs = {
     'In order to be market-ready, you must be financially literate. This journal will help you gain the knowledge and skills you need to make informed financial decisions.',
   'student_journals.student-leadership_title': 'LEADERSHIP JOURNAL',
   'student_journals.student-leadership_description':
-    'Leadership comes in many forms but the foundation is leading yourself first. Use this journal to inspire your development as a leader.'
+    'Leadership comes in many forms but the foundation is leading yourself first. Use this journal to inspire your development as a leader.',
+
+  // My SPARK
+  'my_spark.input-label_name': 'Name',
+  'my_spark.input-label_title': 'Title',
+  'my_spark.input-label_keywords': 'Keywords',
+  'my_spark.input-label_subheadings': 'Subheadings',
+  'my_spark.input-label_length': 'Length',
+
+  'my_spark.input-placeholder_name': 'Name',
+  'my_spark.input-placeholder_title': 'The best summer destinations',
+  'my_spark.input-placeholder_keywords': 'ocean, beach, hotel',
+  'my_spark.input-placeholder_subheadings':
+    'Florida, Los Angeles, San Francisco',
+  'my_spark.input-placeholder_length': 'Medium',
+
+  'my_spark.input-description_name': 'The name of the document.',
+  'my_spark.input-description_title': 'The title of the article',
+  'my_spark.input-description_keywords': 'The keywords to include.',
+  'my_spark.input-description_subheadings': 'The subheadings of the article.',
+  'my_spark.input-description_length': 'The length result.'
 }
 
 export default EnLangs
