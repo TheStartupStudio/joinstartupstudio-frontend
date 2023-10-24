@@ -10,6 +10,7 @@ import dashboardReducer from './dashboard/Reducer'
 import headerReducer from './header/Reducer'
 import usersReducer from './users/Reducer'
 import reflectionsTableReducer from './reflectionsTable/Reducer'
+import rwlJournalReducer from './rwl/reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   dashboard: dashboardReducer,
   header: headerReducer,
   users: usersReducer,
-  reflectionsTable: reflectionsTableReducer
+  reflectionsTable: reflectionsTableReducer,
+  rwlJournal: rwlJournalReducer
 })
 export default rootReducer

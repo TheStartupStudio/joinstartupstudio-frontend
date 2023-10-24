@@ -1,0 +1,119 @@
+.rwl-buttons_container {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin: 0 10%;
+  position: relative;
+  padding: 0;
+}
+
+.rwl-buttons {
+  width: 190px;
+  height: 71px;
+  color: #ffffff;
+  border: 1px solid #333d3d29;
+  background: #ffffff 0% 0% no-repeat padding-box;
+}
+.rwl-buttons_container .active {
+  border: none;
+}
+/* .read-active {
+  color: #fff;
+  border: none !important;
+  background-color: #f2359d;
+  background-image: url('../../../assets/images/Read-01.jpg') !important;
+}
+.watch-active {
+  color: #fff;
+  border: none !important;
+  background-color: #99cc33;
+}
+.listen-active {
+  color: #fff;
+  border: none !important;
+  background-color: #51c7df;
+} */
+
+.rwl-buttons img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rwl-button_body {
+  position: absolute;
+  top: 75px;
+  left: 0;
+  width: 100%;
+  background: var(--unnamed-color-ffffff) 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  padding-left: 10px;
+  border: none;
+  opacity: 1;
+  color: #000;
+}
+.rwl-button_body .form-check {
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+.rwl .accordion-header-box {
+  background-color: #51c7df;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.rwl .accordion-content {
+  padding: 10px 16px;
+}
+.myrwl-inside-container {
+  padding-bottom: 20px;
+}
+.myrwl-inside-container h6 {
+  font: normal normal 600 12px/14px Montserrat;
+  letter-spacing: 0px;
+  text-transform: uppercase;
+}
+.myrwl-inside-container span {
+  top: 566px;
+  left: 631px;
+  width: 313px;
+  height: 18px;
+  /* UI Properties */
+  font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-300)
+    var(--unnamed-font-size-12) / var(--unnamed-line-spacing-14)
+    var(--unnamed-font-family-montserrat);
+  letter-spacing: var(--unnamed-character-spacing-0);
+  color: var(--unnamed-color-3d3d3d);
+  text-align: left;
+  font: normal normal 300 12px/14px Montserrat;
+  letter-spacing: 0px;
+  color: #3d3d3d;
+  opacity: 1;
+}
+.icons-container {
+  display: flex;
+  width: 15%;
+  justify-content: space-evenly;
+}
+.icons-container svg {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+.icons-container .isChecked {
+  font-weight: 700;
+  color: #99cc33;
+}
+#recommendation-modal {
+  top: 25%;
+}
+.recommendation-modal {
+  display: flex;
+  height: 260px;
+  justify-content: center;
+  align-items: center;
+}
+.recommendation-modal h3 {
+  font: normal normal 600 21px/21px Montserrat;
+  letter-spacing: 0.84px;
+  color: #f2359d;
+}

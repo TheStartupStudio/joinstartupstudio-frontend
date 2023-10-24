@@ -20,6 +20,7 @@ import AccordionItems from './MyGoals/AccordionItems'
 import JournalBrands from './JournalBrands/index'
 import * as actions from '../../redux/reflectionsTable/Actions'
 import { useDispatch } from 'react-redux'
+import Rwl from './rwl'
 
 import JournalTables from './JournalTables/JournalTables'
 import IntlMessages from '../../utils/IntlMessages'
@@ -538,6 +539,8 @@ function LtsJournalContent(props) {
             hasActions={true}
           />
         ) : null}
+
+        {props.match.params.journalId === '1001028' && <Rwl />}
       </div>
     </>
   )

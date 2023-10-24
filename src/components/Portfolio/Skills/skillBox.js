@@ -13,14 +13,14 @@ export default function SkillBoxButton(props) {
         selected && 'active'
       } px-4 py-2 btn border rounded me-2 my-2 skills-button w-100`}
       style={{
-        wordBreak: 'break-all',
+        wordBreak: 'unset',
         background: '#E4E9F4 0% 0% no-repeat padding-box',
         borderRadius: 6,
         textAlign: 'center',
         font: 'normal normal medium 12px/16px Montserrat',
         letterSpacing: 0.48,
         color: '#231F20',
-        height: 70,
+        height: 70
       }}
       id={props.id}
       key={props.id}
