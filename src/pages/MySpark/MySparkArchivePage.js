@@ -5,13 +5,15 @@ import {
   faAngleUp,
   faBars,
   faBook,
-  faSearch
+  faSearch,
+  faTrash
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './style.css'
 import mySparkArticle from '../../assets/icons/Notebook.svg'
 import mySparkPrompt from '../../assets/icons/comment-alt-lines.svg'
 import mySparkResponse from '../../assets/icons/Group 1770.svg'
+import mySparkConversation from '../../assets/icons/comments-alt.svg'
 import mySparkBlack from '../../assets/icons/Asset 1.svg'
 
 const MySparkArchiveCard = (props) => {
@@ -39,52 +41,40 @@ const MySparkArchiveCard = (props) => {
     }
   }
   return (
-    <div className={'my-spark-archive__card-container'}>
-      <div className={'my-spark-archive__card-header'}>
+    <div className={'archive__card-container'}>
+      <div className={'archive__card-header'}>
         <img
-          className="my-spark-archive__card-icon me-3"
+          className="my-spark-type__icon me-3"
           src={mySparkArticle}
           alt={'my spark icon'}
         />
-        <div className="my-spark-archive__card-title">Article</div>
+        <div className="header-title">Article</div>
       </div>
-      <div className={'my-spark-archive__card-prompt-container'}>
+      <div className={'archive__card-prompt-container'}>
         <img
-          className="my-spark-archive__card-prompt-icon me-3"
+          className="prompt-icon me-3"
           src={mySparkPrompt}
           alt={'my spark icon'}
         />
-        <div className="my-spark-archive__card-prompt">
+        <div className="prompt-text">
           Lorem ipsum dolor sit amet, consectetuer adipiscing elit?
         </div>
       </div>
-      <div className={'my-spark-archive__card-response-container'}>
-        <div className={'my-spark-archive__card-response-icon__container'}>
+      <div className={'response-section__container'}>
+        <div className={'response-section__header'}>
           <img
-            className="my-spark-archive__card-response-icon me-3"
+            className="card-icon me-3"
             src={mySparkResponse}
             alt={'my spark icon'}
           />
-          <div className={'my-spark-archive__card-response__content-title'}>
-            Content
-          </div>
+          <div className={'content-title'}>Content</div>
         </div>
-        <div className="my-spark-archive__card-response">
-          <div
-            className={
-              'my-spark-archive__card-response-content_container d-flex'
-            }
-          >
+        <div className="response-section">
+          <div className={'response__content-container d-flex'}>
             <div
               className={'response-content'}
               ref={containerRef}
               onScroll={() => setScrollPosition(containerRef.current.scrollTop)}
-              style={{
-                // width: '300px',
-                height: '39px',
-                overflow: 'hidden'
-                // border: '1px solid #ccc'
-              }}
             >
               <div className={'response-text'}>
                 Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
@@ -115,8 +105,24 @@ const MySparkArchiveCard = (props) => {
             </div>
           </div>
         </div>
+        <div className={'response-section__full-content__container'}>
+          View full content
+          <span className={'view-full-content__icon-container'}>
+            <img
+              src={mySparkConversation}
+              className="view-full-content__icon"
+              alt={'my spark icon'}
+              width={'20px'}
+            />
+          </span>
+        </div>
       </div>
-      <div className={'my-spark-archive__card-footer'}></div>
+      <div className={'archive-card__footer'}>
+        <div className={'time-ago'}>6 Minutes Ago</div>
+        <div>
+          <FontAwesomeIcon icon={faTrash} className="me-2 me-md-0 trash-icon" />
+        </div>
+      </div>
     </div>
   )
 }
@@ -144,7 +150,7 @@ function MySparkArchivePage(props) {
                     </div>
                   </div>
                   <div className={'row my-spark-archive__filters'}>
-                    <div className={'col-md-2'}>
+                    <div className={'col-md-2 col-xs-4 '}>
                       <div className={'dropdown-filter'}>
                         <div className={'dropdown-text'}>All (5)</div>
                         <div className={'dropdown-buttons'}>
@@ -163,7 +169,7 @@ function MySparkArchivePage(props) {
                         </div>
                       </div>
                     </div>
-                    <div className={'col-md-10'}>
+                    <div className={'col-md-10 col-xs-8 '}>
                       <div className={'my-spark-archive__search-filter'}>
                         <FontAwesomeIcon
                           icon={faSearch}
@@ -178,13 +184,11 @@ function MySparkArchivePage(props) {
                       </div>
                     </div>
                   </div>
-                  <div className={'row my-spark-archive__cards'}>
-                    <div className={'col-md-3'}>
-                      <MySparkArchiveCard />
-                    </div>
-                    <div className={'col-md-3'}>2</div>
-                    <div className={'col-md-3'}>3</div>
-                    <div className={'col-md-3'}>4</div>
+                  <div className={' my-spark-archive__cards'}>
+                    <MySparkArchiveCard />
+                    <MySparkArchiveCard />
+                    <MySparkArchiveCard />
+                    <MySparkArchiveCard />
                   </div>
                 </div>
               </div>

@@ -79,7 +79,7 @@ function MySpark() {
                             }
                             onClick={() =>
                               history.push(
-                                `my-spark/${widget.title
+                                `/my-spark/widgets/${widget.title
                                   .split(' ')
                                   .join('-')
                                   .toLowerCase()}`,

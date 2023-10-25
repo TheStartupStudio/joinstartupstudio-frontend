@@ -197,6 +197,7 @@ font-size: 34px;
 .my-spark_generate-page__icon {
 font-size: 34px;
 }
+
 .grayish-blue-bg {
 background-color: #F6F9FC
 }
@@ -211,12 +212,16 @@ background-color: #FFF
 .my-spark_generate-page__circled-icon {
     width: 70px;
     height: 70px;
-    padding: 16px;
+    /*padding: 16px;*/
     box-shadow: 0px 3px 6px #00000012;
     border-radius: 50%;
     display:flex;
     justify-content:center;
     align-items:center
+}
+
+.generate-page-type__icon {
+    width: 70px;
 }
 .my-spark_generate-page__content {
     padding: 20px;
@@ -228,22 +233,35 @@ background-color: #FFF
 }
 
 .my-spark_generate-page__content-title_container {
-    padding: 14px;
+    padding: 28px 20px;
     display:flex
 }
+
+.my-spark_generate-page__content-title_container .prompt-icon {
+    width: 24px
+}
+
 .my-spark_generate-page__content-title {
     text-align: left;
-    font: normal normal 300 13px/16px Montserrat;
+    font: normal normal 400 13px/16px Montserrat;
     letter-spacing: 0px;
     color: #707070;
 }
 .my-spark_generate-page__content-generated_paragraph-container {
     padding: 14px;
 }
+.my-spark_generate-page__content-generated_paragraph-container .response-icon{
+    width: 34px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000012;
+    border-radius: 4px;
+}
 .my-spark_generate-page__content-generated_paragraph-title {
-    font: normal normal 700 18px/22px Montserrat;
+    font: normal normal 600 18px/22px Montserrat;
     letter-spacing: 0px;
     color: #231F20;
+    display:flex;
+    align-items:center
 }
 .my-spark_generate-page__content-generated_paragraph {
     padding: 10px 80px;
@@ -257,7 +275,7 @@ background-color: #FFF
     display:flex;
     justify-content:space-between;
 }
-.my-spark_generate-page__content-footer_generated-time {
+.my-spark_generate-page__content-footer .time-ago {
     text-align: left;
     font: normal normal 500 12px/15px Montserrat;
     letter-spacing: 0px;
@@ -267,7 +285,12 @@ background-color: #FFF
     display:flex;
     align-items:center
 }
-
+.my-spark_generate-page__content-footer .trash-icon{
+    letter-spacing: 0px;
+    color: #FF3399;
+    font-size: 18px;
+    cursor:pointer
+}
 /*///// ARCHIVE PAGE /////*/
 
 .rose-text {
@@ -296,7 +319,8 @@ background-color: #FFF
 }
 
 .my-spark-archive__filters {
-    padding: 20px
+    padding: 20px;
+    row-gap: 4px
 }
 
 .my-spark-archive__filters .dropdown-filter {
@@ -370,16 +394,35 @@ background-color: #FFF
  }
 
 .my-spark-archive__cards {
-    padding: 20px
+    padding: 20px;
+    gap: 10px;
+    display:grid;
+    grid-template-columns: repeat(4,1fr);
+}
+@media (max-width: 1200px) {
+    .my-spark-archive__cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 900px) {
+    .my-spark-archive__cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.my-spark-archive__card-container {
+@media (max-width: 600px) {
+    .my-spark-archive__cards {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+/*//// ARCHIVE CARD /////*/
+.archive__card-container {
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 7px 14px #32325D1A;
     border-radius: 30px 4px 4px 4px;
-    min-height: 300px
+    width: 100%
 }
-.my-spark-archive__card-container .my-spark-archive__card-header {
+.archive__card-container .archive__card-header {
     display:flex;
     align-items:center;
     overflow:hidden;
@@ -387,88 +430,85 @@ background-color: #FFF
     box-shadow: 0px -2px 14px #32325D1A;
     border-radius: 30px 4px 4px 30px;
 }
-.my-spark-archive__card-icon {
+.archive__card-header .my-spark-type__icon{
     width: 54px
 }
 
-.my-spark-archive__card-header .my-spark-archive__card-title {
+.archive__card-header .header-title {
     font: normal normal 600 13px/16px Montserrat;
     letter-spacing: 0px;
     color: #838EAB;
     text-transform: uppercase;
 }
-.my-spark-archive__card-prompt-container {
+/*// PROMPT SECTION //*/
+
+.archive__card-prompt-container {
     display:flex;
     padding: 20px;
 
 }
-.my-spark-archive__card-prompt {
+.archive__card-prompt-container .prompt-text {
     font: normal normal 400 12px/16px Montserrat;
     letter-spacing: 0px;
     color: #1C2238;
 }
-.my-spark-archive__card-prompt-icon {
+.archive__card-prompt-container .prompt-icon {
     width: 16px
 }
 
-.my-spark-archive__card-response-container {
+/*// RESPONSE SECTION //*/
+
+.response-section__container {
     padding: 20px;
     background: #F6F9FC 0% 0% no-repeat padding-box;
 
 }
-.my-spark-archive__card-response {
+.response-section__container .response-section__header {
     font: normal normal 400 12px/16px Montserrat;
     letter-spacing: 0px;
     color: #1C2238;
-}
-.my-spark-archive__card-response-icon {
-    width: 20px
-}
-
-.my-spark-archive__card-response-icon__container {
     display:flex;
     align-items:center
 }
 
-.my-spark-archive__card-response__content-title {
+.response-section__header .card-icon {
+    width: 18px
+}
+
+.response-section__header .content-title {
     text-align: left;
     font: normal normal 500 13px/13px Montserrat;
     letter-spacing: 0px;
     color: #231F20;
 }
 
-    .my-spark-archive__card-response {
+.response-section {
     background: #fff;
         margin-left:35px
     }
 
-.my-spark-archive__card-response-content_container {
+.response-section .response__content-container {
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-top: 4px
 }
 
-.my-spark-archive__card-response .response-content {
+.response-content {
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 3px 6px #00000012;
     border-radius: 4px;
-    height: 50px;
+    height: 39px;
     overflow:hidden
 
 
 }
-.my-spark-archive__card-response .response-content > * {
+.response__content-container .response-content > * {
     padding: 8px
 }
 
-.my-spark-archive__card-response .response-buttons {
-    border-left: 1px solid #E6EBF1;
-    flex-grow: 1;
-    width: 20%;
-    text-align:center
-}
-.my-spark-archive__card-response .response-text {
+
+.response__content-container .response-text {
     text-align: left;
     font: normal normal 300 11px/14px Montserrat;
     letter-spacing: 0px;
@@ -476,8 +516,13 @@ background-color: #FFF
     width: 100%;
 
 }
-
-.response-buttons .response-button {
+.response__content-container .response-buttons {
+    border-left: 1px solid #E6EBF1;
+    flex-grow: 1;
+    width: 20%;
+    text-align:center
+}
+.response__content-container .response-buttons .response-button {
     display:flex;
     justify-content:center;
     text-align:center;
@@ -487,5 +532,47 @@ background-color: #FFF
     width: 0.800em !important;
     color:#838EAB;
     font-weight: 300 !important;
+    cursor:pointer
+}
+
+.response-section__full-content__container {
+    margin-top: 10px;
+    text-align: right;
+    font: normal normal 500 10px/13px Montserrat;
+    letter-spacing: 0px;
+    color: #707070;
+    font-size: 11px;
+    cursor:pointer
+}
+
+.view-full-content__icon-container {
+    margin-left: 6px
+}
+.view-full-content__icon {
+    width: 0.900em !important;
+    color:#838EAB;
+    font-weight: 300 !important;
+    cursor:pointer;
+
+}
+
+.archive-card__footer {
+    padding: 6px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.archive-card__footer .time-ago{
+    text-align: left;
+    font: normal normal medium 10px/13px Montserrat;
+    letter-spacing: 0px;
+    color: #838EAB;
+    font-size: 11px
+}
+.archive-card__footer .trash-icon{
+    letter-spacing: 0px;
+    color: #FF3399;
+    font-size: 14px;
     cursor:pointer
 }

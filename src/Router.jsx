@@ -400,19 +400,19 @@ function Router(props) {
                 path="/my-classroom/request/:id"
                 component={MyClassroom}
               />
-              <Route exact path="/my-spark" component={MySpark} />
               <Route
                 path="/my-spark/generate-page"
                 exact
                 component={MySparkGeneratePage}
               />
+              <Route exact path="/my-spark/widgets" component={MySpark} />
               <Route
                 path="/my-spark/archive"
                 exact
                 component={MySparkArchivePage}
               />
               <Route
-                path="/my-spark/:widgetName"
+                path="/my-spark/widgets/:widgetName"
                 exact
                 component={MySparkWidgetDetails}
               />

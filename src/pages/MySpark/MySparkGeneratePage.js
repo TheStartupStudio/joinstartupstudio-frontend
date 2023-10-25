@@ -7,8 +7,13 @@ import {
   faBars,
   faHamburger,
   faTv,
-  faBook
+  faBook,
+  faTrash
 } from '@fortawesome/free-solid-svg-icons'
+import mySparkArticle from '../../assets/icons/Notebook.svg'
+import mySparkPrompt from '../../assets/icons/comment-alt-lines.svg'
+import mySparkResponse from '../../assets/icons/Group 1770.svg'
+import mySparkConversation from '../../assets/icons/comments-alt.svg'
 
 function MySparkWidgetDetails(props) {
   const [name, setName] = useState('')
@@ -58,9 +63,9 @@ function MySparkWidgetDetails(props) {
         className="my-spark_generate-page__circled-icon"
         style={{ backgroundColor: props.circleColor }}
       >
-        <FontAwesomeIcon
-          className="my-spark_generate-page__icon "
-          icon={props.icon}
+        <img
+          className="generate-page-type__icon "
+          src={props.icon}
           style={{ color: props.color }}
         />
       </div>
@@ -93,7 +98,7 @@ function MySparkWidgetDetails(props) {
                     `}
                 >
                   <CircledIcon
-                    icon={faBook}
+                    icon={mySparkArticle}
                     color={'#fff'}
                     circleColor={'#51C7DF'}
                   />
@@ -128,7 +133,11 @@ function MySparkWidgetDetails(props) {
                       'white-bg my-spark_generate-page__content-title_container'
                     }
                   >
-                    <div>Icon</div>
+                    <img
+                      className="prompt-icon me-3"
+                      src={mySparkPrompt}
+                      alt={'my spark icon'}
+                    />
                     <div
                       className={`my-spark_generate-page__content-title
                                 ms-4 
@@ -143,11 +152,15 @@ function MySparkWidgetDetails(props) {
                       'my-spark_generate-page__content-generated_paragraph-container'
                     }
                   >
-                    <div className={'d-flex'}>
-                      <div>Icon</div>
+                    <div className={'d-flex align-items-center'}>
+                      <img
+                        className="response-icon me-3"
+                        src={mySparkResponse}
+                        alt={'my spark icon'}
+                      />
                       <div
                         className={
-                          'ms-4 my-spark_generate-page__content-generated_paragraph-title'
+                          'my-spark_generate-page__content-generated_paragraph-title'
                         }
                       >
                         Content
@@ -172,20 +185,12 @@ function MySparkWidgetDetails(props) {
                       'white-bg my-spark_generate-page__content-footer'
                     }
                   >
-                    <div
-                      className={
-                        'my-spark_generate-page__content-footer_generated-time'
-                      }
-                    >
-                      6 Minutes Ago
-                    </div>
-                    <div
-                      className={
-                        'my-spark_generate-page__content-footer_remove_icon'
-                      }
-                    >
-                      Icon
-                    </div>
+                    <div className={'time-ago'}>6 Minutes Ago</div>
+
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      className="me-2 me-md-0 trash-icon"
+                    />
                   </div>
                 </div>
               </div>

@@ -698,7 +698,10 @@ function Sidebar(props) {
                 data-parent="#side-menu-main"
               >
                 <li>
-                  <NavLink to={'/my-spark'} activeClassName="sidenav active">
+                  <NavLink
+                    to={'/my-spark/widgets'}
+                    activeClassName="sidenav active"
+                  >
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">SPARK WIDGETS</div>
                     </div>
@@ -711,7 +714,7 @@ function Sidebar(props) {
                       props.hideHeaderIcons()
                     }}
                     to="/my-spark/archive"
-                    activeClassName="sidenav"
+                    activeClassName="sidenav active"
                   >
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1">SPARK ARCHIVE</div>

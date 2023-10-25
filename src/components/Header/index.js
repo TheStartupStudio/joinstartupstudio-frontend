@@ -505,7 +505,10 @@ function Header(props) {
                   </NavLink>
                 </li>
                 <li className="nav-item notes-nav my-auto me-5 ">
-                  <NavLink className={`nav-link icon-menu`} to={'/my-spark'}>
+                  <NavLink
+                    className={`nav-link icon-menu`}
+                    to={'/my-spark/widgets'}
+                  >
                     <div>
                       <img
                         src={mySparkWhite}
