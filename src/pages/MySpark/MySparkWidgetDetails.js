@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Container, Row } from 'react-bootstrap'
+import { Collapse, Container, Row } from 'react-bootstrap'
 import './style.css'
 import { FormattedMessage } from 'react-intl'
 
 const MySparkInput = (props) => {
+  const showStyle = {
+    height: 'auto'
+  }
+  const hideStyle = {
+    height: '0',
+    paddingTop: '0',
+    paddingBottom: '0'
+  }
   return (
     <div className={'my-spark_widget-details__input_container'}>
       <label
@@ -16,7 +24,7 @@ const MySparkInput = (props) => {
       <FormattedMessage id={`my_spark.input-placeholder_${props.name}`}>
         {(placeholder) => (
           <input
-            className="my-1 py-2 px-2 w-100 my-spark_widget-details__input text-dark "
+            className="my-1 py-2 px-2 w-100 my-spark_widget-details__input text-dark"
             type="text"
             name={props.name}
             placeholder={placeholder}
@@ -63,15 +71,24 @@ function MySparkWidgetDetails(props) {
     setLength('')
   }
 
+  const [showAdvanced, setShowAdvanced] = useState(false)
   const handleAdvancedClick = () => {
-    // Open an advanced form dialog or show additional form fields
-    // ...
+    setShowAdvanced((prevState) => !prevState)
   }
 
   const handleGenerateClick = () => {
     history.push(`/my-spark/generate-page`, {
       widgetTitle: location?.state?.widgetTitle?.toUpperCase()
     })
+  }
+
+  const showStyle = {
+    height: 'auto'
+  }
+  const hideStyle = {
+    height: '0',
+    paddingTop: '0',
+    paddingBottom: '0'
   }
 
   return (
@@ -97,10 +114,29 @@ function MySparkWidgetDetails(props) {
                 <MySparkInput name={'keywords'} />
                 <MySparkInput name={'subheadings'} />
                 <MySparkInput name={'length'} />
+
+                {/*<div*/}
+                {/*  className={`advanced-inputs`}*/}
+                {/*  style={showAdvanced ? showStyle : hideStyle}*/}
+                {/*>*/}
+                {/*  <MySparkInput name={'language'} />*/}
+                {/*  <MySparkInput name={'creativity'} />*/}
+                {/*  <MySparkInput name={'variations'} />*/}
+                {/*</div>*/}
+                <Collapse in={showAdvanced}>
+                  <div id="example-collapse-text">
+                    <MySparkInput name={'language'} />
+                    <MySparkInput name={'creativity'} />
+                    <MySparkInput name={'variations'} />
+                  </div>
+                </Collapse>
+
                 <div className={'d-flex justify-content-between mt-2'}>
                   <div
                     className={'advanced-button_container'}
                     onClick={handleAdvancedClick}
+                    aria-controls="example-collapse-text"
+                    aria-expanded={showAdvanced}
                   >
                     <div className={'advanced-button'}>Advanced</div>
                   </div>

@@ -109,14 +109,14 @@ function MySparkWidgetDetails(props) {
                   }
                   style={{ flex: 1 }}
                 >
-                  <div className={'my-spark_generate-page__icon-container'}>
-                    <FontAwesomeIcon
-                      className="my-spark_generate-page__icon"
-                      icon={faBars}
-                      color={'#BBBDBF'}
-                    />
-                  </div>
-                  <div className={'my-spark_generate-page__title me-5'}>
+                  {/*<div className={'my-spark_generate-page__icon-container'}>*/}
+                  {/*  <FontAwesomeIcon*/}
+                  {/*    className="my-spark_generate-page__icon"*/}
+                  {/*    icon={faBars}*/}
+                  {/*    color={'#BBBDBF'}*/}
+                  {/*  />*/}
+                  {/*</div>*/}
+                  <div className={'my-spark_generate-page__title ms-5'}>
                     {location.state.widgetTitle.toUpperCase()}
                   </div>
                   <div></div>

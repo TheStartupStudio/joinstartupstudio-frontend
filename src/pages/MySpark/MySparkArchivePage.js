@@ -150,37 +150,36 @@ function MySparkArchivePage(props) {
                     </div>
                   </div>
                   <div className={'row my-spark-archive__filters'}>
-                    <div className={'col-md-2 col-xs-4 '}>
-                      <div className={'dropdown-filter'}>
-                        <div className={'dropdown-text'}>All (5)</div>
-                        <div className={'dropdown-buttons'}>
-                          <div className={'dropdown-button'}>
-                            <FontAwesomeIcon
-                              icon={faAngleUp}
-                              className="me-2 me-md-0 dropdown-arrow"
-                            />
-                          </div>
-                          <div className={'dropdown-button'}>
-                            <FontAwesomeIcon
-                              icon={faAngleDown}
-                              className="me-2 me-md-0 dropdown-arrow"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className={'col-md-10 col-xs-8 '}>
+                    {/*<div className={'col-md-2 col-xs-4 '}>*/}
+                    {/*  <div className={'dropdown-filter'}>*/}
+                    {/*    <div className={'dropdown-text'}>All (5)</div>*/}
+                    {/*    <div className={'dropdown-buttons'}>*/}
+                    {/*      <div className={'dropdown-button'}>*/}
+                    {/*        <FontAwesomeIcon*/}
+                    {/*          icon={faAngleUp}*/}
+                    {/*          className="me-2 me-md-0 dropdown-arrow"*/}
+                    {/*        />*/}
+                    {/*      </div>*/}
+                    {/*      <div className={'dropdown-button'}>*/}
+                    {/*        <FontAwesomeIcon*/}
+                    {/*          icon={faAngleDown}*/}
+                    {/*          className="me-2 me-md-0 dropdown-arrow"*/}
+                    {/*        />*/}
+                    {/*      </div>*/}
+                    {/*    </div>*/}
+                    {/*  </div>*/}
+                    {/*</div>*/}
+                    <div className={'col-md-12'}>
                       <div className={'my-spark-archive__search-filter'}>
                         <FontAwesomeIcon
                           icon={faSearch}
                           className="me-2 me-md-0 search-icon"
                         />
-                        <div>
-                          <input
-                            placeholder={'Search Content'}
-                            className={'search-input'}
-                          />
-                        </div>
+
+                        <input
+                          placeholder={'Search Content'}
+                          className={'search-input w-100'}
+                        />
                       </div>
                     </div>
                   </div>
