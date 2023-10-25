@@ -1102,6 +1102,9 @@ input[type='file'] {
 .edit-button:hover {
   background: #a7ca42 !important;
 }
+.cursor-pointer {
+  cursor: pointer;
+}
 .spinner-border {
   display: inline-block;
   width: 2rem;
