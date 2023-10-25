@@ -26,13 +26,47 @@ const ArticleModal = (props) => {
   useEffect(() => {
     if (props?.id) {
       dispatch(getUserArticle(props?.id)).then((res) => {
+        console.log('res', res)
         if (res.status === 200) {
           setIsEditable(true)
           setArticle(res.data.content)
+        } else if (res.status === 404) {
+          return res.json().then((data) => {
+            console.log(data.message)
+          })
+        } else {
+          throw new Error('Unexpected response from the server')
         }
       })
     }
   }, [dispatch, props?.id])
+
+  //    // case types.UPDATE_USER_ARTICLE:
+  //   const { articleID, updatedContent } = action.payload
+  //   console.log('action.payload', action.payload)
+  //   console.log('state.userArticles', state.userArticles)
+
+  //   const articleIndex = state.userArticles?.findIndex(
+  //     (article) => article.id === articleID
+  //   )
+
+  //   if (articleIndex === -1) {
+  //     return state
+  //   }
+  //   const updatedArticles = state.userArticles.map((article, index) => {
+  //     if (index === articleIndex) {
+  //       return {
+  //         ...article,
+  //         content: updatedContent
+  //       }
+  //     }
+  //     return article
+  //   })
+
+  //   return {
+  //     ...state,
+  //     userArticles: updatedArticles
+  //   }
 
   const submitArticle = async (itemID, content) => {
     setLoading(true)

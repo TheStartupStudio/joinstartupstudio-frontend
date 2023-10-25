@@ -4,14 +4,13 @@ const inititalState = {
   loading: false,
   items: [],
   userSelections: [],
-  userArticles: [],
+  userArticles: {},
   error: false,
   message: ''
 }
 
 const rwlJournalReducer = (state = inititalState, action) => {
   const { type, payload } = action
-  console.log('payload', payload)
   switch (type) {
     case types.FETCH_ITEMS_PENDING:
       return {
@@ -89,27 +88,27 @@ const rwlJournalReducer = (state = inititalState, action) => {
     case types.GET_USER_ARTICLE:
       return {
         ...state,
-        userArticles: payload
+        userArticles: action.payload
       }
+
     case types.UPDATE_USER_ARTICLE:
-      const { articleID, updatedContent } = payload
+      const { articleID, updatedContent } = action.payload
 
-      const articleIndex = state.userArticles.findIndex(
-        (article) => article.id === articleID
-      )
-
-      if (articleIndex === -1) {
-        return state
-      }
-      const updatedArticles = [...state.userArticles]
-      updatedArticles[articleIndex] = {
-        ...updatedArticles[articleIndex],
-        content: updatedContent
+      if (articleID === state.userArticles.id) {
+        return {
+          ...state,
+          userArticles: {
+            ...state.userArticles,
+            content: updatedContent
+          }
+        }
       }
 
+      return state
+    case types.ARTICLE_NOT_FOUND:
       return {
         ...state,
-        userArticles: updatedArticles
+        message: action.payload
       }
     default:
       return state

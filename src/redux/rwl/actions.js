@@ -27,7 +27,6 @@ export const addUserSelection = (itemID) => {
   return async (dispatch) => {
     try {
       const data = await rwlService.addUserSelection(itemID)
-      console.log('data', data)
       dispatch(addSelection(data))
       await dispatch(fetchAllUserSelections())
     } catch (error) {
@@ -90,10 +89,18 @@ export const updateUserArticle = (itemID, content) => {
       const data = await rwlService.updateUserArticle(itemID, content)
       await dispatch(updateUserArticleAction(data))
     } catch (error) {
-      throw error
+      if (error.response && error.response.status === 404) {
+        dispatch(articleNotFoundAction('Article not found for this ID.'))
+      } else {
+        throw error
+      }
     }
   }
 }
+export const articleNotFoundAction = (message) => ({
+  type: types.ARTICLE_NOT_FOUND,
+  message
+})
 export const updateUserArticleAction = (payload) => {
   return { type: types.UPDATE_USER_ARTICLE, payload }
 }
