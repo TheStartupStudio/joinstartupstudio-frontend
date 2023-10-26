@@ -10,6 +10,7 @@ import {
 import { toast } from 'react-toastify'
 
 const ArticleModal = (props) => {
+  console.log(props.isEditable,'props.isEditable')
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const { userArticles } = useSelector((state) => state.rwlJournal)
@@ -93,13 +94,17 @@ const ArticleModal = (props) => {
                 placeholder={'Write your analysis:'}
                 value={article}
                 onChange={handleArticleForm}
+                disabled={isEditable}
               />
             )}
           </FormattedMessage>
+          
+          {props.isEditable && (
 
           <button onClick={() => submitArticle(props?.id, article)}>
             {loading ? 'SAVING...' : 'SAVE'}
           </button>
+          )}
         </div>
       </Modal.Body>
     </Modal>
