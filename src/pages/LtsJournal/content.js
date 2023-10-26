@@ -540,7 +540,7 @@ function LtsJournalContent(props) {
           />
         ) : null}
 
-        {props.match.params.journalId === '1001028' && <Rwl />}
+        {props.match.params.journalId === '1001028' && <Rwl isEditable={true} />}
       </div>
     </>
   )

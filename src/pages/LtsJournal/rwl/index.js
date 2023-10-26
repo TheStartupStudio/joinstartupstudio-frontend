@@ -7,7 +7,8 @@ import {
   fetchAllUserSelections
 } from '../../../redux/rwl/actions'
 
-const Rwl = () => {
+const Rwl = ({ isEditable }) => {
+  console.log('isEditable', isEditable)
   const dispatch = useDispatch()
   const [readSelectedItems, setReadSelectedItems] = useState([])
   const [watchSelectedItems, setWatchSelectedItems] = useState([])
@@ -54,6 +55,7 @@ const Rwl = () => {
         readSelectedItems={readSelectedItems}
         watchSelectedItems={watchSelectedItems}
         listenSelectedItems={listenSelectedItems}
+        isEditable={isEditable}
       />
       <ul className="page-card__content-description">
         <p className="fw-bold">Suggestions for creating RWL habits:</p>
@@ -95,6 +97,7 @@ const Rwl = () => {
         readSelectedItems={readSelectedItems}
         watchSelectedItems={watchSelectedItems}
         listenSelectedItems={listenSelectedItems}
+        isEditable={isEditable}
       />
     </div>
   )

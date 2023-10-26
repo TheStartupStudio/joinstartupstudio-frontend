@@ -8,8 +8,15 @@ import {
   userSelectionIsCheckedToggle
 } from '../../../redux/rwl/actions'
 import ArticleModal from './modals/articleModal'
+import { faFileAlt } from '@fortawesome/free-regular-svg-icons'
 
-const RwlListContainer = ({ title, color, items, userSelections }) => {
+const RwlListContainer = ({
+  title,
+  color,
+  items,
+  userSelections,
+  isEditable
+}) => {
   const [articleModal, setArticleModal] = useState({
     state: false,
     id: null,
@@ -35,15 +42,20 @@ const RwlListContainer = ({ title, color, items, userSelections }) => {
               <span>{item.name}</span>
 
               <div className="icons-container">
+                {isEditable && (
+                  <i
+                    className="cursor-pointer"
+                    onClick={() => userSelectionRemove(item.id)}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </i>
+                )}
+
                 <i
-                  className="cursor-pointer"
-                  onClick={() => userSelectionRemove(item.id)}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </i>
-                <i
-                  className="cursor-pointer"
-                  onClick={() => isCheckedToggle(item.id)}
+                  className={isEditable ? 'cursor-pointer' : ''}
+                  onClick={
+                    isEditable ? () => isCheckedToggle(item.id) : undefined
+                  }
                 >
                   <FontAwesomeIcon
                     icon={faCheck}
@@ -58,7 +70,7 @@ const RwlListContainer = ({ title, color, items, userSelections }) => {
                   />
                 </i>
                 <i
-                  className="cursor-pointer"
+                  className={'cursor-pointer'}
                   onClick={() =>
                     setArticleModal({
                       state: true,
@@ -67,7 +79,7 @@ const RwlListContainer = ({ title, color, items, userSelections }) => {
                     })
                   }
                 >
-                  <FontAwesomeIcon icon={faList} />
+                  <FontAwesomeIcon icon={faFileAlt} />
                 </i>
               </div>
               {articleModal && (
@@ -80,6 +92,7 @@ const RwlListContainer = ({ title, color, items, userSelections }) => {
                   title={articleModal.name}
                   color={color}
                   id={articleModal.id}
+                  isEditable={isEditable}
                 />
               )}
             </div>
@@ -115,18 +128,21 @@ const MyRwlButton = (props) => {
             color="#F2359D"
             items={props.readSelectedItems}
             userSelections={props.userSelections}
+            isEditable={props.isEditable}
           />
           <RwlListContainer
             title="watch"
             color="#A7CA42"
             items={props.watchSelectedItems}
             userSelections={props.userSelections}
+            isEditable={props.isEditable}
           />
           <RwlListContainer
             title="listen"
             color="#51C7DF"
             items={props.listenSelectedItems}
             userSelections={props.userSelections}
+            isEditable={props.isEditable}
           />
         </div>
       )}

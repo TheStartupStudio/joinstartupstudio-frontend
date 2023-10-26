@@ -94,7 +94,11 @@ const RwlButtons = (props) => {
                     checked={props.userSelections.some(
                       (userSel) => userSel.itemID === item.id
                     )}
-                    onClick={(e) => createUserSelection(e.target.id, 1)}
+                    onClick={
+                      props.isEditable
+                        ? (e) => createUserSelection(e.target.id, 1)
+                        : undefined
+                    }
                     disabled={
                       props.userSelections.filter(
                         (userSel) =>
@@ -142,7 +146,11 @@ const RwlButtons = (props) => {
                     checked={props.userSelections.some(
                       (userSel) => userSel.itemID === item.id
                     )}
-                    onClick={(e) => createUserSelection(e.target.id, 2)}
+                    onClick={
+                      props.isEditable
+                        ? (e) => createUserSelection(e.target.id, 2)
+                        : undefined
+                    }
                     disabled={
                       props.userSelections.filter(
                         (userSel) =>
@@ -190,7 +198,11 @@ const RwlButtons = (props) => {
                     checked={props.userSelections.some(
                       (userSel) => userSel.itemID === item.id
                     )}
-                    onClick={(e) => createUserSelection(e.target.id, 3)}
+                    onClick={
+                      props.isEditable
+                        ? (e) => createUserSelection(e.target.id, 3)
+                        : undefined
+                    }
                     disabled={
                       props.userSelections.filter(
                         (userSel) =>
