@@ -20,7 +20,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items:center
+    align-items:center;
+    cursor: pointer
 }
 
 .spark-icon__container {

@@ -123,7 +123,7 @@ function MySparkWidgetDetails(props) {
                 {/*  <MySparkInput name={'creativity'} />*/}
                 {/*  <MySparkInput name={'variations'} />*/}
                 {/*</div>*/}
-                <Collapse in={showAdvanced}>
+                <Collapse in={showAdvanced} className={`advanced-inputs`}>
                   <div id="example-collapse-text">
                     <MySparkInput name={'language'} />
                     <MySparkInput name={'creativity'} />
