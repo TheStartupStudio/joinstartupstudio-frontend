@@ -181,7 +181,9 @@ function Router(props) {
               <Route
                 exact
                 path="/user-portfolio/:username"
-                component={PreviewPortfolioNew}
+                component={(props) => {
+                  return <PreviewPortfolioNew {...props} isPublicView={false} />
+                }}
               />
               <Route exact path="/terms" component={Terms} />
               {/*<Route*/}
@@ -421,7 +423,9 @@ function Router(props) {
               <Route
                 exact
                 path="/user-portfolio/:username"
-                component={PreviewPublicPortfolio}
+                component={(props) => {
+                  return <PreviewPortfolioNew {...props} isPublicView={true} />
+                }}
               />
               <Route
                 path="/password-change-required"

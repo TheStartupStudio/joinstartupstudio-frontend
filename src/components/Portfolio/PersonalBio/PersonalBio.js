@@ -41,15 +41,10 @@ export default function PersonalBio(props) {
     setUserBio(props.user.bio)
     setUserId(props.userId)
   }, [props.user])
-  // useEffect(() => {
-  //   setUserId(props.userId)
-  // }, [props.userId])
+
   useEffect(() => {
     setIsPreview(props.isPreview)
   }, [props.isPreview])
-  // console.log(isPreview)
-
-  // console.log('userId', userId)
 
   // useEffect(() => {
   //   setUserBio(props.userBiography)
@@ -59,6 +54,7 @@ export default function PersonalBio(props) {
   // }, [props.userData])
 
   const getUser = async () => {
+    debugger
     setLoading(true)
     await axiosInstance
       .get('/connect/count')
@@ -125,9 +121,6 @@ export default function PersonalBio(props) {
       paddingLeft: '3px'
     }
   }
-  // const isPreview = props.isPreview
-  // const history = useHistory()
-  // const isPreview = history.location.pathname.includes('preview')
 
   return (
     <PortfolioSection
