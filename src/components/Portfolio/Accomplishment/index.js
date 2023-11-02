@@ -26,8 +26,13 @@ export const Accomplishment = (props) => {
   }, [props.isPreview])
 
   useEffect(() => {
-    getUserAccomplishments()
-  }, [])
+    if (props.accomplishments) {
+      setAccomp(props.accomplishments)
+    }
+  }, [props.accomplishments])
+  // useEffect(() => {
+  //   getUserAccomplishments()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_accomplishments)
@@ -77,7 +82,6 @@ export const Accomplishment = (props) => {
   const addAccomp = async (accomp) => {
     setAccomp([...accomps, accomp])
   }
-
   return !isLoading ? (
     accomps.length ? (
       <PortfolioSection
@@ -132,10 +136,16 @@ export const Accomplishment = (props) => {
         />
       </PortfolioSection>
     ) : (
-      <EmptyAccomplishmentSection
-        addAccomplishment={addAccomp}
-        user={props.user}
-      />
+      <>
+        {!props.isPeerOrPublicView ? (
+          <EmptyAccomplishmentSection
+            addAccomplishment={addAccomp}
+            user={props.user}
+          />
+        ) : (
+          <></>
+        )}
+      </>
     )
   ) : (
     <></>

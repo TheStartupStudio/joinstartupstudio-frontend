@@ -24,8 +24,12 @@ export const Education = (props) => {
   }, [props.isPreview])
 
   useEffect(() => {
-    getUserEducations()
-  }, [])
+    setEducations(props.educations)
+  }, [props.educations])
+
+  // useEffect(() => {
+  //   getUserEducations()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_education)
@@ -78,7 +82,7 @@ export const Education = (props) => {
   }
 
   return !isLoading ? (
-    educations.length ? (
+    educations?.length ? (
       <PortfolioSection
         title={'EDUCATION'}
         isAdd={true}
@@ -89,10 +93,11 @@ export const Education = (props) => {
         isPreview={isPreview}
       >
         <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
-          {educations.length > 0 &&
-            educations.map((education, index, { length }) => {
+          {educations?.length > 0 &&
+            educations?.map((education, index, { length }) => {
               return (
                 <div
+                  key={index}
                   className={'mt-4'}
                   style={{
                     border: '1px solid #E5E5E5',
@@ -135,7 +140,16 @@ export const Education = (props) => {
         />
       </PortfolioSection>
     ) : (
-      <EmptyEducationSection addEducation={addEducation} user={props.user} />
+      <>
+        {!props.isPeerOrPublicView ? (
+          <EmptyEducationSection
+            addEducation={addEducation}
+            user={props.user}
+          />
+        ) : (
+          <></>
+        )}
+      </>
     )
   ) : (
     <></>

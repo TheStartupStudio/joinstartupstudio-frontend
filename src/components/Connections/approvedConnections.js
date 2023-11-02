@@ -92,7 +92,7 @@ export const ApprovedConnections = (props) => {
     <div className="m-0 p-0">
       <h3 className="my-connection-titles ms-0 ps-0">
         {/*<IntlMessages id='connection.page_title' />*/}
-        My classroom
+        My Peers
       </h3>
       {props.connections.length === 0 ? (
         <div className="ms-3 ps-0">

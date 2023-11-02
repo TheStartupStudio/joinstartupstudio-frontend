@@ -7,6 +7,7 @@ import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import IntlMessages from '../../../utils/IntlMessages'
 import './SpotlightModal.css'
 import '../../../pages/StartupProfile/style/index.css'
+import SpotlightSimpleModal from './SpotlightSimpleModal'
 
 const SpotlightApplyModal = (props) => {
   const [fileName, setfileName] = useState()
@@ -24,7 +25,24 @@ const SpotlightApplyModal = (props) => {
     Business_Plan: '',
     Pitch_Deck: ''
   })
+  const [spotlightSimpleModal, setSpotlightSimpleModal] = useState({
+    type: '',
+    show: null
+  })
 
+  const openSimpleSpotlightModal = (type) => {
+    let newSpotlightSimpleModal = { ...spotlightSimpleModal }
+    newSpotlightSimpleModal.type = type
+    newSpotlightSimpleModal.show = true
+    setSpotlightSimpleModal(newSpotlightSimpleModal)
+  }
+  const closeSimpleSpotlightModal = (type) => {
+    let newSpotlightSimpleModal = { ...spotlightSimpleModal }
+    newSpotlightSimpleModal.type = type
+    newSpotlightSimpleModal.show = false
+    setSpotlightSimpleModal(newSpotlightSimpleModal)
+  }
+  const [spotlightApplyModal, setSpotlightApplyModal] = useState(false)
   const handleChange = (e) => {
     const { name, value } = e.target
     setData((old) => ({
@@ -206,14 +224,17 @@ const SpotlightApplyModal = (props) => {
             />
             <span className="term ps-3">
               I agree to the Spotlight{' '}
-              <span className="text-blue blue-text font-bold">
+              <span
+                className="text-blue blue-text font-bold"
+                style={{ cursor: 'pointer' }}
+                onClick={() => openSimpleSpotlightModal('termsAndConditions')}
+              >
                 Terms & Conditions
               </span>
             </span>
           </div>
         </div>
       </div>
-
       <div className="w-100 pb-5">
         {/*<div className="row float-start">*/}
         {/*  <button*/}
@@ -243,11 +264,34 @@ const SpotlightApplyModal = (props) => {
             {loading ? (
               <span className="spinner-border spinner-border-sm" />
             ) : (
-              <IntlMessages id="general.save" />
+              // <IntlMessages id="general.save" />
+              <>Submit</>
             )}
           </button>
         </div>
       </div>
+      {spotlightSimpleModal.type === 'termsAndConditions' && (
+        <SpotlightSimpleModal
+          boxShadow={true}
+          show={
+            spotlightSimpleModal.type === 'termsAndConditions' &&
+            spotlightSimpleModal.show
+          }
+          onHide={() => closeSimpleSpotlightModal('termsAndConditions')}
+          content={`<ul style=' display: flex;
+                                flex-direction: column;
+                                gap: 10px;'>
+                       <li>To pitch in a Spotlight event, you must be at least 16 years old and a registered user inside of the Learn to Start platform with at least one year of experience on the platform.</li>
+  <li>Participants will have 12 minutes to present their pitch deck, with additional minutes allocated to Q&A from the expert panel.</li>
+  <li>Ventures submitted for Spotlight are not kept confidential, so teams should not include detailed descriptions of intellectual property in their submission. Participants retain ownership over their ventures, concepts, and work.</li>
+  <li>All participants are expected to compete with integrity and shall not knowingly deceive panels or members of the advisory committee. All presented materials shall be offered as an accurate representation of knowledge and expectations and shall not contain false or misleading statements. Participants who violate this expectation of integrity are subject to disqualification and revocation of their Learn to Start platform membership.</li>
+  <li>Spotlight participants authorize Learn to Start and its affiliates to use a summary of the content of their submission and any video and image submissions for publicity purposes related to Spotlight.</li>
+  <li>The organizers of Spotlight reserve the right to disqualify any entry that, in their judgment, violates the spirit of the event guidelines.</li>
+                    </ul>
+                  `}
+          title={'What is spotlight'}
+        />
+      )}{' '}
     </ModalWrapper>
   )
 }
