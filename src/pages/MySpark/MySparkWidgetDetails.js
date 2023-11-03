@@ -1,94 +1,126 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Collapse, Container, Row } from 'react-bootstrap'
+import { Container, Row } from 'react-bootstrap'
 import './style.css'
-import { FormattedMessage } from 'react-intl'
+import { widgetInputData } from './widgetInputData'
 
-const MySparkInput = (props) => {
-  const showStyle = {
-    height: 'auto'
-  }
-  const hideStyle = {
-    height: '0',
-    paddingTop: '0',
-    paddingBottom: '0'
-  }
-  return (
-    <div className={'my-spark_widget-details__input_container'}>
-      <label
-        htmlFor={props.name}
-        className={'my-spark_widget-details__input_label'}
-      >
-        <FormattedMessage id={`my_spark.input-label_${props.name}`} />
-      </label>
-      <FormattedMessage id={`my_spark.input-placeholder_${props.name}`}>
-        {(placeholder) => (
-          <input
-            className="my-1 py-2 px-2 w-100 my-spark_widget-details__input text-dark"
-            type="text"
-            name={props.name}
-            placeholder={placeholder}
-          />
-        )}
-      </FormattedMessage>
-      <div className={'my-spark_input-description'}>
-        <FormattedMessage id={`my_spark.input-description_${props.name}`} />
-      </div>
-    </div>
-  )
-}
+import MySparkWidgetInputs from './MySparkWidgetInputs'
+import axiosInstance from '../../utils/AxiosInstance'
+import axios from 'axios'
+import qs from 'qs'
 
 function MySparkWidgetDetails(props) {
-  const [name, setName] = useState('')
-  const [title, setTitle] = useState('')
-  const [keywords, setKeywords] = useState('')
-  const [subheadings, setSubheadings] = useState('')
-  const [length, setLength] = useState('')
-
+  const [shownWidgetInputs, setShownWidgetInputs] = useState([])
+  const [hiddenWidgetInputs, setHiddenWidgetInputs] = useState([])
+  const [prompt, setPrompt] = useState({})
+  const [customFields, setCustomFields] = useState({})
+  const [requestData, setRequestData] = useState({})
+  const [responseData, setResponseData] = useState('')
+  console.log(customFields)
+  console.log(prompt)
   const location = useLocation()
   const history = useHistory()
+  const widgetTitle = location?.state?.widgetTitle
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-
-    // Create a new article object with the form data
-    const article = {
-      name: name,
-      title: title,
-      keywords: keywords,
-      subheadings: subheadings,
-      length: length
-    }
-
-    // Save the article to the database or send it to a backend API
-    // ...
-
-    // Clear the form
-    setName('')
-    setTitle('')
-    setKeywords('')
-    setSubheadings('')
-    setLength('')
+  function reduceInputs(inputs, excludedFields) {
+    return inputs.reduce(
+      (result, input) => {
+        const isExcluded = excludedFields.some((field) => field === input.title)
+        if (!isExcluded) {
+          result.prompt[input.title] = input.value
+        } else {
+          result.customFields[input.title.toLowerCase()] = input.value
+        }
+        return result
+      },
+      { prompt: {}, customFields: {} }
+    )
   }
+
+  useEffect(() => {
+    const allInputs = [...shownWidgetInputs, ...hiddenWidgetInputs]
+    const excludedFields = ['Name', 'Creativity']
+
+    const { prompt, customFields } = reduceInputs(allInputs, excludedFields)
+    setRequestData({
+      prompt: JSON.stringify(prompt),
+      ...customFields
+    })
+  }, [shownWidgetInputs, hiddenWidgetInputs])
+
+  useEffect(() => {
+    if (widgetTitle) {
+      setShownWidgetInputs(widgetInputData[widgetTitle]?.shownWidgetInputs)
+      setHiddenWidgetInputs(widgetInputData[widgetTitle]?.hiddenWidgetInputs)
+    }
+  }, [widgetTitle])
 
   const [showAdvanced, setShowAdvanced] = useState(false)
   const handleAdvancedClick = () => {
     setShowAdvanced((prevState) => !prevState)
   }
 
+  console.log(requestData)
+  const params = new URLSearchParams(requestData).toString()
+  console.log(params)
+
+  const authToken =
+    'dvNDAZv7ooEJnugmtCLwzHX6tkgRiuyIhBPJkFGpqfmTuCkcFllCeJaKyli1nKHP'
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Bearer ${authToken}`
+    }
+  }
+  const customAxios = axios.create({
+    headers: {
+      common: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${authToken}`
+      }
+    }
+  })
+
   const handleGenerateClick = () => {
-    history.push(`/my-spark/generate-page`, {
-      widgetTitle: location?.state?.widgetTitle?.toUpperCase()
-    })
+    // axios
+    // .post('https://getmaze.com/api/v1/documents', requestData, config)
+    console.log(qs.stringify(requestData))
+    axios
+      .post(
+        `https://getmaze.com/api/v1/documents`,
+        qs.stringify(requestData),
+        config
+      )
+      .then((response) => {
+        console.log('Response:', response.data)
+        setResponseData(response?.data?.data?.result)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
   }
 
-  const showStyle = {
-    height: 'auto'
+  const updateInputValues = (state, inputName, value) => {
+    return state.map((input) =>
+      input.title === inputName ? { ...input, value } : input
+    )
   }
-  const hideStyle = {
-    height: '0',
-    paddingTop: '0',
-    paddingBottom: '0'
+
+  const handleInputChange = (inputName, value, type) => {
+    let updatedInputs
+    switch (type) {
+      case 'shownInputs':
+        updatedInputs = updateInputValues(shownWidgetInputs, inputName, value)
+        setShownWidgetInputs(updatedInputs)
+        break
+      case 'hiddenInputs':
+        updatedInputs = updateInputValues(hiddenWidgetInputs, inputName, value)
+        setHiddenWidgetInputs(updatedInputs)
+        break
+      default:
+        console.log(`Unhandled type: ${type}`)
+    }
   }
 
   return (
@@ -109,27 +141,14 @@ function MySparkWidgetDetails(props) {
                 </div>
               </div>
               <div className={'my-spark-widget-details__inputs_container'}>
-                <MySparkInput name={'name'} />
-                <MySparkInput name={'title'} />
-                <MySparkInput name={'keywords'} />
-                <MySparkInput name={'subheadings'} />
-                <MySparkInput name={'length'} />
-
-                {/*<div*/}
-                {/*  className={`advanced-inputs`}*/}
-                {/*  style={showAdvanced ? showStyle : hideStyle}*/}
-                {/*>*/}
-                {/*  <MySparkInput name={'language'} />*/}
-                {/*  <MySparkInput name={'creativity'} />*/}
-                {/*  <MySparkInput name={'variations'} />*/}
-                {/*</div>*/}
-                <Collapse in={showAdvanced} className={`advanced-inputs`}>
-                  <div id="example-collapse-text">
-                    <MySparkInput name={'language'} />
-                    <MySparkInput name={'creativity'} />
-                    <MySparkInput name={'variations'} />
-                  </div>
-                </Collapse>
+                <MySparkWidgetInputs
+                  shownInputs={shownWidgetInputs}
+                  hiddenInputs={hiddenWidgetInputs}
+                  showAdvanced={showAdvanced}
+                  onChange={(inputName, value, type) => {
+                    handleInputChange(inputName, value, type)
+                  }}
+                />
 
                 <div className={'d-flex justify-content-between mt-2'}>
                   <div
@@ -148,6 +167,7 @@ function MySparkWidgetDetails(props) {
                   </div>
                 </div>
               </div>
+              <div>{responseData}</div>
             </div>
           </div>
         </div>
