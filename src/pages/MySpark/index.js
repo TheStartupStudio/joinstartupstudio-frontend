@@ -29,18 +29,30 @@ function MySpark() {
   const loggedUser = useSelector((state) => state?.user?.user?.user)
 
   const widgets = [
-    { title: 'ARTICLE', icon: articleIcon },
-    { title: 'ABOUT US', icon: aboutUsIcon },
-    { title: 'FAQ', icon: faqIcon },
-    { title: 'STARTUP NAMES', icon: startUpNamesIcon },
-    { title: 'VISION STATEMENT', icon: visionStatementIcon },
-    { title: 'VALUE PROPOSITION', icon: valuePropositionIcon },
-    { title: 'STARTUP IDEAS', icon: startUpIdeasIcon },
-    { title: 'MISSION STATEMENT', icon: missionStatementIcon },
-    { title: 'SOCIAL POST', icon: socialPostIcon },
-    { title: 'SOCIAL POST CAPTION', icon: socialPostCaptionIcon },
-    { title: 'VIDEO SCRIPT', icon: videoScriptIcon },
-    { title: 'IMAGE', icon: imageIcon }
+    { title: 'ARTICLE', icon: articleIcon, type: 'document' },
+    { title: 'ABOUT US', icon: aboutUsIcon, type: 'document' },
+    { title: 'FAQ', icon: faqIcon, type: 'document' },
+    { title: 'STARTUP NAMES', icon: startUpNamesIcon, type: 'document' },
+    { title: 'VISION STATEMENT', icon: visionStatementIcon, type: 'document' },
+    {
+      title: 'VALUE PROPOSITION',
+      icon: valuePropositionIcon,
+      type: 'document'
+    },
+    { title: 'STARTUP IDEAS', icon: startUpIdeasIcon, type: 'document' },
+    {
+      title: 'MISSION STATEMENT',
+      icon: missionStatementIcon,
+      type: 'document'
+    },
+    { title: 'SOCIAL POST', icon: socialPostIcon, type: 'document' },
+    {
+      title: 'SOCIAL POST CAPTION',
+      icon: socialPostCaptionIcon,
+      type: 'document'
+    },
+    { title: 'VIDEO SCRIPT', icon: videoScriptIcon, type: 'document' },
+    { title: 'IMAGE', icon: imageIcon, type: 'image' }
   ]
   const history = useHistory()
   return (
@@ -83,7 +95,10 @@ function MySpark() {
                                   .split(' ')
                                   .join('-')
                                   .toLowerCase()}`,
-                                { widgetTitle: widget.title.toLowerCase() }
+                                {
+                                  widgetTitle: widget.title.toLowerCase(),
+                                  widgetType: widget.type
+                                }
                               )
                             }
                           >

@@ -14,48 +14,12 @@ import mySparkArticle from '../../assets/icons/Notebook.svg'
 import mySparkPrompt from '../../assets/icons/comment-alt-lines.svg'
 import mySparkResponse from '../../assets/icons/Group 1770.svg'
 import mySparkConversation from '../../assets/icons/comments-alt.svg'
+import moment from 'moment'
+import LtsButton from '../../components/LTSButtons/LTSButton'
+import VerticalSeparator from '../../Separators/VerticalSeparator'
 
 function MySparkWidgetDetails(props) {
-  const [name, setName] = useState('')
-  const [title, setTitle] = useState('')
-  const [keywords, setKeywords] = useState('')
-  const [subheadings, setSubheadings] = useState('')
-  const [length, setLength] = useState('')
-
   const location = useLocation()
-
-  const handleSubmit = (event) => {
-    event.preventDefault()
-
-    // Create a new article object with the form data
-    const article = {
-      name: name,
-      title: title,
-      keywords: keywords,
-      subheadings: subheadings,
-      length: length
-    }
-
-    // Save the article to the database or send it to a backend API
-    // ...
-
-    // Clear the form
-    setName('')
-    setTitle('')
-    setKeywords('')
-    setSubheadings('')
-    setLength('')
-  }
-
-  const handleAdvancedClick = () => {
-    // Open an advanced form dialog or show additional form fields
-    // ...
-  }
-
-  const handleGenerateClick = () => {
-    // Generate an article based on the form data
-    // ...
-  }
 
   const CircledIcon = (props) => {
     return (
@@ -71,7 +35,13 @@ function MySparkWidgetDetails(props) {
       </div>
     )
   }
+  function formatText(text) {
+    text = text.replace(/\n\n/g, '<br/><br/>')
+    text = text.replace(/\n/g, '<br/>')
+    return text
+  }
 
+  const timeAgo = moment(location?.state?.responseData?.updated_at).fromNow()
   return (
     <Container fluid>
       <Row>
@@ -117,7 +87,7 @@ function MySparkWidgetDetails(props) {
                   {/*  />*/}
                   {/*</div>*/}
                   <div className={'my-spark_generate-page__title ms-5'}>
-                    {location.state.widgetTitle.toUpperCase()}
+                    {location?.state?.widgetTitle?.toUpperCase()}
                   </div>
                   <div></div>
                 </div>
@@ -144,7 +114,8 @@ function MySparkWidgetDetails(props) {
                                 d-flex 
                                 align-items-center`}
                     >
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit?
+                      {/*Lorem ipsum dolor sit amet, consectetuer adipiscing elit?*/}
+                      {location?.state?.responseData?.name}
                     </div>
                   </div>
                   <div
@@ -171,13 +142,20 @@ function MySparkWidgetDetails(props) {
                         'my-spark_generate-page__content-generated_paragraph'
                       }
                     >
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-                      sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-                      magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-                      quis nostrud exerci tation ullamcorper suscipit lobortis
-                      nisl ut aliquip ex ea commodo consequat. Duis autem vel
-                      eum iriure dolor in hendrerit in vulputate velit esse
-                      molestie consequat, vel illum dolore eu feugiat
+                      {/*Lorem ipsum dolor sit amet, consectetuer adipiscing elit,*/}
+                      {/*sed diam nonummy nibh euismod tincidunt ut laoreet dolore*/}
+                      {/*magna aliquam erat volutpat. Ut wisi enim ad minim veniam,*/}
+                      {/*quis nostrud exerci tation ullamcorper suscipit lobortis*/}
+                      {/*nisl ut aliquip ex ea commodo consequat. Duis autem vel*/}
+                      {/*eum iriure dolor in hendrerit in vulputate velit esse*/}
+                      {/*molestie consequat, vel illum dolore eu feugiat*/}
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: formatText(
+                            location?.state?.responseData?.result
+                          )
+                        }}
+                      />
                     </div>
                   </div>
                   <div
@@ -185,11 +163,41 @@ function MySparkWidgetDetails(props) {
                       'white-bg my-spark_generate-page__content-footer'
                     }
                   >
-                    <div className={'time-ago'}>6 Minutes Ago</div>
+                    {/*<div className={'time-ago'}>6 Minutes Ago</div>*/}
+                    <div className={'time-ago'}>{timeAgo}</div>
 
                     <FontAwesomeIcon
                       icon={faTrash}
                       className="me-2 me-md-0 trash-icon"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className={'d-flex justify-content-center'}>
+                <div style={{ width: '70%' }}>
+                  <div className={'mt-3 mb-3'}>
+                    <LtsButton name={'Create your own'} />
+                  </div>
+
+                  <div className={'d-flex justify-content-between my-5'}>
+                    <LtsButton
+                      name={'Copy'}
+                      width={'70%'}
+                      backgroundColor={'#BBBDBF'}
+                      align={'start'}
+                    />
+                    <VerticalSeparator />
+                    <LtsButton
+                      name={'Download'}
+                      width={'70%'}
+                      backgroundColor={'#BBBDBF'}
+                    />
+                    <VerticalSeparator />
+                    <LtsButton
+                      name={'Save to archive'}
+                      width={'70%'}
+                      backgroundColor={'#BBBDBF'}
+                      align={'end'}
                     />
                   </div>
                 </div>

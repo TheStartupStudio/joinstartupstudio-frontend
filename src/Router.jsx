@@ -403,7 +403,7 @@ function Router(props) {
                 component={MyClassroom}
               />
               <Route
-                path="/my-spark/generate-page"
+                path="/my-spark/generate-page/:id"
                 exact
                 component={MySparkGeneratePage}
               />

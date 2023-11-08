@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Container, Row } from 'react-bootstrap'
 import {
   faAngleDown,
@@ -15,119 +15,65 @@ import mySparkPrompt from '../../assets/icons/comment-alt-lines.svg'
 import mySparkResponse from '../../assets/icons/Group 1770.svg'
 import mySparkConversation from '../../assets/icons/comments-alt.svg'
 import mySparkBlack from '../../assets/icons/Asset 1.svg'
+import axios from 'axios'
+import qs from 'qs'
 
-const MySparkArchiveCard = (props) => {
-  const [scrollPosition, setScrollPosition] = useState(0)
-  const containerRef = useRef()
-
-  const handleScroll = (direction) => {
-    const container = containerRef.current
-    const scrollHeight = container.scrollHeight - container.clientHeight
-    let newPosition = scrollPosition
-
-    if (direction === 'up') {
-      newPosition = Math.max(newPosition - 39, 0)
-    } else if (direction === 'down') {
-      newPosition = Math.min(newPosition + 39, scrollHeight)
-    }
-
-    container.scrollTo({
-      top: newPosition,
-      behavior: 'smooth'
-    })
-
-    if (newPosition !== scrollPosition) {
-      setScrollPosition(newPosition)
-    }
-  }
-  return (
-    <div className={'archive__card-container'}>
-      <div className={'archive__card-header'}>
-        <img
-          className="my-spark-type__icon me-3"
-          src={mySparkArticle}
-          alt={'my spark icon'}
-        />
-        <div className="header-title">Article</div>
-      </div>
-      <div className={'archive__card-prompt-container'}>
-        <img
-          className="prompt-icon me-3"
-          src={mySparkPrompt}
-          alt={'my spark icon'}
-        />
-        <div className="prompt-text">
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit?
-        </div>
-      </div>
-      <div className={'response-section__container'}>
-        <div className={'response-section__header'}>
-          <img
-            className="card-icon me-3"
-            src={mySparkResponse}
-            alt={'my spark icon'}
-          />
-          <div className={'content-title'}>Content</div>
-        </div>
-        <div className="response-section">
-          <div className={'response__content-container d-flex'}>
-            <div
-              className={'response-content'}
-              ref={containerRef}
-              onScroll={() => setScrollPosition(containerRef.current.scrollTop)}
-            >
-              <div className={'response-text'}>
-                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed
-                diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-                aliquam erat volutpat.
-              </div>
-            </div>
-
-            <div className={'response-buttons'}>
-              <div
-                className={'response-button'}
-                onClick={() => handleScroll('up')}
-              >
-                <FontAwesomeIcon
-                  icon={faAngleUp}
-                  className="me-2 me-md-0 response-arrow "
-                />
-              </div>
-              <div
-                className={'response-button'}
-                onClick={() => handleScroll('down')}
-              >
-                <FontAwesomeIcon
-                  icon={faAngleDown}
-                  className="me-2 me-md-0 response-arrow "
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={'response-section__full-content__container'}>
-          View full content
-          <span className={'view-full-content__icon-container'}>
-            <img
-              src={mySparkConversation}
-              className="view-full-content__icon"
-              alt={'my spark icon'}
-              width={'20px'}
-            />
-          </span>
-        </div>
-      </div>
-      <div className={'archive-card__footer'}>
-        <div className={'time-ago'}>6 Minutes Ago</div>
-        <div>
-          <FontAwesomeIcon icon={faTrash} className="me-2 me-md-0 trash-icon" />
-        </div>
-      </div>
-    </div>
-  )
-}
+import moment from 'moment/moment'
+import { useHistory } from 'react-router-dom'
+import MySparkArchiveCard from './MySparkArchiveCard'
+const authToken =
+  process.env.MY_SPARK_TOKEN ??
+  'dvNDAZv7ooEJnugmtCLwzHX6tkgRiuyIhBPJkFGpqfmTuCkcFllCeJaKyli1nKHP'
 
 function MySparkArchivePage(props) {
+  const [archivedDocuments, setArchivedDocuments] = useState([])
+  useEffect(() => {
+    let url = 'https://getmaze.com/api/v1/documents'
+
+    // Define the parameters as an object
+    const params = {
+      // search: 'your_search_query',
+      // search_by: 'name', // or any other value
+      // template_id: 1, // or any other template ID
+      // favorite: true, // or false
+      sort_by: 'id', // or 'name'
+      sort: 'desc', // or 'asc'
+      per_page: 25 // or any other value
+    }
+
+    // Use qs.stringify to convert the parameters into a query string
+    const queryString = qs.stringify(params)
+
+    // Append the query string to the URL
+    if (queryString) {
+      url = `${url}?${queryString}`
+    }
+
+    const options = {
+      method: 'GET',
+      headers: {
+        common: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${authToken}`
+        }
+      },
+      url
+    }
+
+    axios(options)
+      .then((res) => {
+        console.log('Response:', res.data?.data)
+        setArchivedDocuments(res.data?.data)
+        if (res?.data?.data?.id) {
+          // setResponseData(res?.data?.data);
+          // setResponseImage(res?.data?.data);
+        } else {
+          console.log('No valid ID in the response data.')
+        }
+      })
+      .catch((e) => console.log(e))
+  }, [])
+
   return (
     <Container fluid>
       <Row>
@@ -150,25 +96,6 @@ function MySparkArchivePage(props) {
                     </div>
                   </div>
                   <div className={'row my-spark-archive__filters'}>
-                    {/*<div className={'col-md-2 col-xs-4 '}>*/}
-                    {/*  <div className={'dropdown-filter'}>*/}
-                    {/*    <div className={'dropdown-text'}>All (5)</div>*/}
-                    {/*    <div className={'dropdown-buttons'}>*/}
-                    {/*      <div className={'dropdown-button'}>*/}
-                    {/*        <FontAwesomeIcon*/}
-                    {/*          icon={faAngleUp}*/}
-                    {/*          className="me-2 me-md-0 dropdown-arrow"*/}
-                    {/*        />*/}
-                    {/*      </div>*/}
-                    {/*      <div className={'dropdown-button'}>*/}
-                    {/*        <FontAwesomeIcon*/}
-                    {/*          icon={faAngleDown}*/}
-                    {/*          className="me-2 me-md-0 dropdown-arrow"*/}
-                    {/*        />*/}
-                    {/*      </div>*/}
-                    {/*    </div>*/}
-                    {/*  </div>*/}
-                    {/*</div>*/}
                     <div className={'col-md-12'}>
                       <div className={'my-spark-archive__search-filter'}>
                         <FontAwesomeIcon
@@ -184,10 +111,11 @@ function MySparkArchivePage(props) {
                     </div>
                   </div>
                   <div className={' my-spark-archive__cards'}>
-                    <MySparkArchiveCard />
-                    <MySparkArchiveCard />
-                    <MySparkArchiveCard />
-                    <MySparkArchiveCard />
+                    {archivedDocuments?.map((document, index) => {
+                      return (
+                        <MySparkArchiveCard key={index} document={document} />
+                      )
+                    })}
                   </div>
                 </div>
               </div>

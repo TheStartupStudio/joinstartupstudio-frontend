@@ -5,22 +5,23 @@ import './style.css'
 import { widgetInputData } from './widgetInputData'
 
 import MySparkWidgetInputs from './MySparkWidgetInputs'
-import axiosInstance from '../../utils/AxiosInstance'
 import axios from 'axios'
 import qs from 'qs'
 
+const authToken =
+  process.env.MY_SPARK_TOKEN ??
+  'dvNDAZv7ooEJnugmtCLwzHX6tkgRiuyIhBPJkFGpqfmTuCkcFllCeJaKyli1nKHP'
+
 function MySparkWidgetDetails(props) {
-  const [shownWidgetInputs, setShownWidgetInputs] = useState([])
-  const [hiddenWidgetInputs, setHiddenWidgetInputs] = useState([])
-  const [prompt, setPrompt] = useState({})
-  const [customFields, setCustomFields] = useState({})
+  const [widgetInputs, setWidgetInputs] = useState([])
   const [requestData, setRequestData] = useState({})
   const [responseData, setResponseData] = useState('')
-  console.log(customFields)
-  console.log(prompt)
+  const [responseImage, setResponseImage] = useState(null)
+
   const location = useLocation()
   const history = useHistory()
   const widgetTitle = location?.state?.widgetTitle
+  const widgetType = location?.state?.widgetType
 
   function reduceInputs(inputs, excludedFields) {
     return inputs.reduce(
@@ -38,20 +39,37 @@ function MySparkWidgetDetails(props) {
   }
 
   useEffect(() => {
-    const allInputs = [...shownWidgetInputs, ...hiddenWidgetInputs]
-    const excludedFields = ['Name', 'Creativity']
+    let excludedFields = []
+    switch (widgetType) {
+      case 'document':
+        excludedFields.push('Name', 'Creativity')
+        break
+      case 'image':
+        excludedFields.push(
+          'Name',
+          'Description',
+          'Style',
+          'Medium',
+          'Filter',
+          'Resolution'
+        )
+        break
+      default:
+        console.log('')
+    }
 
-    const { prompt, customFields } = reduceInputs(allInputs, excludedFields)
+    const { prompt, customFields } = reduceInputs(widgetInputs, excludedFields)
+    console.log(prompt, customFields)
     setRequestData({
-      prompt: JSON.stringify(prompt),
+      prompt,
       ...customFields
     })
-  }, [shownWidgetInputs, hiddenWidgetInputs])
+  }, [widgetInputs])
 
   useEffect(() => {
+    const formattedWidgetTitle = widgetTitle?.split(' ')?.join('-')
     if (widgetTitle) {
-      setShownWidgetInputs(widgetInputData[widgetTitle]?.shownWidgetInputs)
-      setHiddenWidgetInputs(widgetInputData[widgetTitle]?.hiddenWidgetInputs)
+      setWidgetInputs(widgetInputData[formattedWidgetTitle])
     }
   }, [widgetTitle])
 
@@ -60,45 +78,102 @@ function MySparkWidgetDetails(props) {
     setShowAdvanced((prevState) => !prevState)
   }
 
-  console.log(requestData)
-  const params = new URLSearchParams(requestData).toString()
-  console.log(params)
+  const handleGenerateClick = () => {
+    // https://getmaze.com/api/v1/images
+    // const url = 'https://getmaze.com/api/v1/documents'
 
-  const authToken =
-    'dvNDAZv7ooEJnugmtCLwzHX6tkgRiuyIhBPJkFGpqfmTuCkcFllCeJaKyli1nKHP'
-
-  const config = {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: `Bearer ${authToken}`
+    let url = 'https://getmaze.com/api/v1/'
+    switch (widgetType) {
+      case 'document':
+        url += 'documents'
+        break
+      case 'image':
+        url += 'images'
+        break
+      default:
+        console.log('')
     }
-  }
-  const customAxios = axios.create({
-    headers: {
-      common: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: `Bearer ${authToken}`
+
+    let newPrompt = ''
+    const promptEntries = Object.entries(requestData.prompt)
+    for (let i = 0; i < promptEntries.length; i++) {
+      const [key, value] = promptEntries[i]
+
+      newPrompt += `\n${key}:${value}`
+
+      if (i < promptEntries.length - 1) {
+        newPrompt += ','
       }
     }
-  })
+    // const newReqData = {
+    //   prompt: newPrompt,
+    //   name: requestData.name,
+    //   creativity: requestData.creativity
+    // }
 
-  const handleGenerateClick = () => {
-    // axios
-    // .post('https://getmaze.com/api/v1/documents', requestData, config)
-    console.log(qs.stringify(requestData))
-    axios
-      .post(
-        `https://getmaze.com/api/v1/documents`,
-        qs.stringify(requestData),
-        config
-      )
-      .then((response) => {
-        console.log('Response:', response.data)
-        setResponseData(response?.data?.data?.result)
+    console.log(requestData)
+
+    let newReqData = {}
+    switch (widgetType) {
+      case 'document':
+        newReqData = {
+          prompt: newPrompt,
+          name: requestData.name,
+          creativity: requestData.creativity
+        }
+        break
+      case 'image':
+        newReqData = {
+          prompt: newPrompt,
+          name: requestData.name,
+          description: requestData.description,
+          style: requestData.style,
+          medium: requestData.medium,
+          filter: requestData.filter,
+          resolution: requestData.resolution
+        }
+        requestData.style === 'None' && delete newReqData.style
+        requestData.medium === 'None' && delete newReqData.medium
+        requestData.filter === 'None' && delete newReqData.filter
+        requestData.resolution === 'None' && delete newReqData.resolution
+
+        break
+      default:
+        console.log('')
+    }
+
+    console.log(newReqData)
+
+    let data = qs.stringify(newReqData)
+    const options = {
+      method: 'POST',
+      headers: {
+        common: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${authToken}`
+        }
+      },
+      data: data,
+      url
+    }
+
+    axios(options)
+      .then((res) => {
+        console.log('Response:', res.data?.data)
+
+        if (res?.data?.data?.id) {
+          setResponseData(res?.data?.data)
+          setResponseImage(res?.data?.data)
+          history.push(`/my-spark/generate-page/${res?.data?.data?.id}`, {
+            responseData: res?.data?.data,
+            widgetType,
+            widgetTitle
+          })
+        } else {
+          console.log('No valid ID in the response data.')
+        }
       })
-      .catch((error) => {
-        console.error('Error:', error)
-      })
+      .catch((e) => console.log(e))
   }
 
   const updateInputValues = (state, inputName, value) => {
@@ -107,21 +182,20 @@ function MySparkWidgetDetails(props) {
     )
   }
 
-  const handleInputChange = (inputName, value, type) => {
-    let updatedInputs
-    switch (type) {
-      case 'shownInputs':
-        updatedInputs = updateInputValues(shownWidgetInputs, inputName, value)
-        setShownWidgetInputs(updatedInputs)
-        break
-      case 'hiddenInputs':
-        updatedInputs = updateInputValues(hiddenWidgetInputs, inputName, value)
-        setHiddenWidgetInputs(updatedInputs)
-        break
-      default:
-        console.log(`Unhandled type: ${type}`)
-    }
+  const handleInputChange = (inputName, value) => {
+    const updatedInputs = updateInputValues(widgetInputs, inputName, value)
+    setWidgetInputs(updatedInputs)
   }
+
+  const testString =
+    'Title: Understanding Atoms and Quantum Theory in Modern Chemistry\n\nKeywords: atoms, quantum theory\n\nIntroduction:\n- Brief overview of the importance of atoms and quantum theory in modern chemistry\n\nQuantum Theory:\n- Explanation of the basic principles of quantum theory\n- Wave-particle duality and the uncertainty principle\n- Quantum numbers and their significance in describing atomic structure\n- Quantum mechanical model of the atom\n\nAtoms:\n- Historical background on the discovery of atoms\n- Atomic structure and the different subatomic particles (protons, neutrons, electrons)\n- Atomic mass and atomic number\n- Electron configuration and energy levels\n- Periodic table and its organization based on atomic structure\n\nApplications of Quantum Theory in Chemistry:\n- Understanding chemical bonding and molecular structure using quantum theory\n- Quantum mechanics and spectroscopy\n- Quantum chemical calculations and computational chemistry\n- Quantum dots and their applications in nanotechnology\n- Quantum cryptography and its role in secure communication\n\nConclusion:\n- Recap of the importance of atoms and quantum theory in modern chemistry\n- Future prospects and advancements in the field\n\nLength: Medium (around 1000-1500 words)\n\nLanguage: English\n\nVariations: The variations could include adding more specific subheadings within the Quantum Theory and Atoms sections, such as "Quantum Entanglement" or "Isotopes and Atomic Mass." Additionally, the length of the article could be adjusted to be shorter or longer based on the desired depth of coverage.'
+
+  function formatText(text) {
+    text = text?.replace(/\n\n/g, '<br/><br/>')
+    text = text?.replace(/\n/g, '<br/>')
+    return text
+  }
+  const formattedString = formatText(responseData?.result)
 
   return (
     <Container fluid>
@@ -142,11 +216,10 @@ function MySparkWidgetDetails(props) {
               </div>
               <div className={'my-spark-widget-details__inputs_container'}>
                 <MySparkWidgetInputs
-                  shownInputs={shownWidgetInputs}
-                  hiddenInputs={hiddenWidgetInputs}
+                  widgetInputs={widgetInputs}
                   showAdvanced={showAdvanced}
-                  onChange={(inputName, value, type) => {
-                    handleInputChange(inputName, value, type)
+                  onChange={(inputName, value) => {
+                    handleInputChange(inputName, value)
                   }}
                 />
 
@@ -167,7 +240,19 @@ function MySparkWidgetDetails(props) {
                   </div>
                 </div>
               </div>
-              <div>{responseData}</div>
+              {/*<div dangerouslySetInnerHTML={{ __html: formattedString }} />*/}
+              {/*<div className={'d-flex justify-content-center'}>*/}
+              {/*  {responseImage && (*/}
+              {/*    <img*/}
+              {/*      src={responseImage?.url}*/}
+              {/*      alt={responseImage?.name}*/}
+              {/*      style={{*/}
+              {/*        width: +responseImage?.resolution?.split('x')[0],*/}
+              {/*        height: +responseImage?.resolution?.split('x')[1]*/}
+              {/*      }}*/}
+              {/*    />*/}
+              {/*  )}*/}
+              {/*</div>*/}
             </div>
           </div>
         </div>

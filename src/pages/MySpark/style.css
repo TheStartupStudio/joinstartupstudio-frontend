@@ -118,7 +118,13 @@
     padding-left: 30px !important;
     box-shadow: 0px 3px 6px #00000012;
     border-radius: 4px;
+    outline: none;
+    border: none
 }
+
+/*.my-spark_widget-details__input option {*/
+/*    padding: 10px 0*/
+/*}*/
 
 .my-spark_widget-details__input::placeholder {
     background-color: #fff !important;
