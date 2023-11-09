@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { FormattedMessage } from 'react-intl'
 import { useDispatch, useSelector } from 'react-redux'
+import {  useParams, useLocation } from 'react-router-dom';
 import {
   createUserArticle,
   getUserArticle,
@@ -10,7 +11,8 @@ import {
 import { toast } from 'react-toastify'
 
 const ArticleModal = (props) => {
-  console.log(props.isEditable,'props.isEditable')
+  const { studentId } = useParams()
+  const studentID = useLocation().pathname.split('/')[2]
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const { userArticles } = useSelector((state) => state.rwlJournal)
@@ -26,7 +28,7 @@ const ArticleModal = (props) => {
 
   useEffect(() => {
     if (props?.id) {
-      dispatch(getUserArticle(props?.id)).then((res) => {
+      dispatch(getUserArticle(+studentID,props?.id)).then((res) => {
         if (res.status === 200) {
           setIsEditable(true)
           setArticle(res.data.content)
@@ -39,7 +41,7 @@ const ArticleModal = (props) => {
         }
       })
     }
-  }, [dispatch, props?.id])
+  }, [dispatch, props?.id,studentID])
 
   const submitArticle = async (itemID, content) => {
     setLoading(true)
@@ -91,7 +93,7 @@ const ArticleModal = (props) => {
               <textarea
                 className="mb-3"
                 name="article"
-                placeholder={'Write your analysis:'}
+                // placeholder={'Write your analysis:'}
                 value={article}
                 onChange={handleArticleForm}
                 disabled={isEditable}

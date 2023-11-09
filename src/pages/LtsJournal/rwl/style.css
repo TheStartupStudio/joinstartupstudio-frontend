@@ -100,3 +100,89 @@
   letter-spacing: 0.84px;
   color: #f2359d;
 }
+
+@media screen and (min-width: 450px) {
+  .rwl-buttons_container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0%;
+    position: relative;
+    padding: 0;
+  }
+  .rwl-buttons {
+    width: 100px;
+    height: 51px;
+    color: #ffffff;
+    border: 1px solid #333d3d29;
+    background: #ffffff 0% 0% no-repeat padding-box;
+  }
+}
+@media screen and (min-width: 992px) {
+  .rwl-buttons_container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0%;
+    position: relative;
+    padding: 0;
+  }
+  .rwl-buttons {
+    width: 140px;
+    height: 61px;
+    color: #ffffff;
+    border: 1px solid #333d3d29;
+    background: #ffffff 0% 0% no-repeat padding-box;
+  }
+}
+@media screen and (min-width: 1025px) {
+  .rwl-buttons_container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0%;
+    position: relative;
+    padding: 0;
+  }
+  .rwl-buttons {
+    width: 120px;
+    height: 51px;
+    color: #ffffff;
+    border: 1px solid #333d3d29;
+    background: #ffffff 0% 0% no-repeat padding-box;
+  }
+}
+@media screen and (min-width: 1202px) {
+  .rwl-buttons_container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0%;
+    position: relative;
+    padding: 0;
+  }
+  .rwl-buttons {
+    width: 150px;
+    height: 61px;
+    color: #ffffff;
+    border: 1px solid #333d3d29;
+    background: #ffffff 0% 0% no-repeat padding-box;
+  }
+}
+@media screen and (min-width: 1400px) {
+  .rwl-buttons_container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
+    position: relative;
+    padding: 0;
+  }
+  .rwl-buttons {
+    width: 190px;
+    height: 71px;
+    color: #ffffff;
+    border: 1px solid #333d3d29;
+    background: #ffffff 0% 0% no-repeat padding-box;
+  }
+}

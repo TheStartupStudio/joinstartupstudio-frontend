@@ -96,9 +96,9 @@ const createUserArticle = async (itemID, content) => {
     throw error
   }
 }
-const fetchArticleData = async (id) => {
+const fetchArticleData = async (studentID,itemID) => {
   try {
-    const response = await axiosInstance.get(`/rwl/userArticles/${id}`)
+    const response = await axiosInstance.get(`/rwl/userArticles/user/${studentID}/${itemID}`)
 
     if (response.status === 200) {
       return response
