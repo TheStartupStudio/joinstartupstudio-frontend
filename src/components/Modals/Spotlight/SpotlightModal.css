@@ -1,5 +1,8 @@
 .general-modal-wrapper .modal-dialog {
     max-width: 710px !important;
+    height: 100% !important;
+    display:flex !important;
+    align-items:center !important;
 }
 .spotlight-apply-modal .modal-dialog{
     max-width: 60% !important;
@@ -44,3 +47,23 @@
 .modal-content   {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
+
+ .my-spark__content-modal .modal-dialog{
+   height: 100% !important;
+    display:flex;
+    align-items:center
+}
+
+.my-spark__content-modal .modal-content{
+   padding: 20px 40px !important;
+}
+
+/*.my-spark__content-modal .modal-dialog{*/
+/*    height: 100% !important;*/
+/*    display:flex;*/
+/*    align-items:center*/
+/*}*/
+
+/*.my-spark__content-modal .modal-content{*/
+/*    padding: 20px 40px !important;*/
+/*}*/

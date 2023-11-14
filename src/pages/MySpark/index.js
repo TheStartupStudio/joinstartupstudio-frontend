@@ -29,30 +29,78 @@ function MySpark() {
   const loggedUser = useSelector((state) => state?.user?.user?.user)
 
   const widgets = [
-    { title: 'ARTICLE', icon: articleIcon, type: 'document' },
-    { title: 'ABOUT US', icon: aboutUsIcon, type: 'document' },
-    { title: 'FAQ', icon: faqIcon, type: 'document' },
-    { title: 'STARTUP NAMES', icon: startUpNamesIcon, type: 'document' },
-    { title: 'VISION STATEMENT', icon: visionStatementIcon, type: 'document' },
     {
-      title: 'VALUE PROPOSITION',
+      name: 'Article',
+      icon: articleIcon,
+      getMazeApiType: 'document',
+      type: 'article'
+    },
+    {
+      name: 'About us',
+      icon: aboutUsIcon,
+      getMazeApiType: 'document',
+      type: 'about-us'
+    },
+    {
+      name: 'Faq',
+      icon: faqIcon,
+      getMazeApiType: 'document',
+      type: 'faq'
+    },
+    {
+      name: 'Startup names',
+      icon: startUpNamesIcon,
+      getMazeApiType: 'document',
+      type: 'startup-names'
+    },
+    {
+      name: 'Vision statement',
+      icon: visionStatementIcon,
+      getMazeApiType: 'document',
+      type: 'vision-statement'
+    },
+    {
+      name: 'Value proposition',
       icon: valuePropositionIcon,
-      type: 'document'
+      getMazeApiType: 'document',
+      type: 'value-proposition'
     },
-    { title: 'STARTUP IDEAS', icon: startUpIdeasIcon, type: 'document' },
     {
-      title: 'MISSION STATEMENT',
+      name: 'Startup ideas',
+      icon: startUpIdeasIcon,
+      getMazeApiType: 'document',
+      type: 'startup-ideas'
+    },
+    {
+      name: 'Mission statement',
       icon: missionStatementIcon,
-      type: 'document'
+      getMazeApiType: 'document',
+      type: 'mission-statement'
     },
-    { title: 'SOCIAL POST', icon: socialPostIcon, type: 'document' },
     {
-      title: 'SOCIAL POST CAPTION',
-      icon: socialPostCaptionIcon,
-      type: 'document'
+      name: 'Social post',
+      icon: socialPostIcon,
+      getMazeApiType: 'document',
+      type: 'social-post'
     },
-    { title: 'VIDEO SCRIPT', icon: videoScriptIcon, type: 'document' },
-    { title: 'IMAGE', icon: imageIcon, type: 'image' }
+    {
+      name: 'Social post caption',
+      icon: socialPostCaptionIcon,
+      getMazeApiType: 'document',
+      type: 'social-post-caption'
+    },
+    {
+      name: 'Video script',
+      icon: videoScriptIcon,
+      getMazeApiType: 'document',
+      type: 'video-script'
+    },
+    {
+      name: 'Image',
+      icon: imageIcon,
+      getMazeApiType: 'image',
+      type: 'image'
+    }
   ]
   const history = useHistory()
   return (
@@ -90,16 +138,11 @@ function MySpark() {
                               'spark-widget__container position-relative '
                             }
                             onClick={() =>
-                              history.push(
-                                `/my-spark/widgets/${widget.title
-                                  .split(' ')
-                                  .join('-')
-                                  .toLowerCase()}`,
-                                {
-                                  widgetTitle: widget.title.toLowerCase(),
-                                  widgetType: widget.type
-                                }
-                              )
+                              history.push(`/my-spark/widgets/${widget.type}`, {
+                                widgetName: widget.name,
+                                widgetType: widget.type,
+                                widgetApiType: widget.getMazeApiType
+                              })
                             }
                           >
                             <img
@@ -109,7 +152,7 @@ function MySpark() {
                             />
 
                             <div className={'spark-widget__title'}>
-                              {widget.title}
+                              {widget.name}
                             </div>
                           </div>
                         </Col>

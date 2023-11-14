@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Container, Row } from 'react-bootstrap'
+import { Container, Row, Pagination } from 'react-bootstrap'
 import {
   faAngleDown,
   faAngleUp,
@@ -10,69 +10,83 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './style.css'
-import mySparkArticle from '../../assets/icons/Notebook.svg'
-import mySparkPrompt from '../../assets/icons/comment-alt-lines.svg'
-import mySparkResponse from '../../assets/icons/Group 1770.svg'
-import mySparkConversation from '../../assets/icons/comments-alt.svg'
-import mySparkBlack from '../../assets/icons/Asset 1.svg'
-import axios from 'axios'
-import qs from 'qs'
-
-import moment from 'moment/moment'
-import { useHistory } from 'react-router-dom'
 import MySparkArchiveCard from './MySparkArchiveCard'
-const authToken =
-  process.env.MY_SPARK_TOKEN ??
-  'dvNDAZv7ooEJnugmtCLwzHX6tkgRiuyIhBPJkFGpqfmTuCkcFllCeJaKyli1nKHP'
+import axiosInstance from '../../utils/AxiosInstance'
+import { addDocumentIcons } from './mySparkHelpersFuncs'
+import { toast } from 'react-toastify'
+import { useHistory } from 'react-router-dom'
+import DeleteSparkArchiveModal from '../DeleteSparkArchiveModal'
+import { debounce } from 'lodash'
 
 function MySparkArchivePage(props) {
   const [archivedDocuments, setArchivedDocuments] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const history = useHistory()
+  const [showDeleteSparkModal, setShowDeleteSparkModal] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [totalPages, setTotalPages] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const debouncedSearch = debounce((value) => {
+    // Call the search function with the debounced value
+    console.log('Debounced search:', value)
+    // Update the search logic here, including the API call
+    getData(value)
+  }, 300) // 300 milliseconds debounce time, adjust as needed
+
+  const DEFAULT_PAGE_SIZE = 10
   useEffect(() => {
-    let url = 'https://getmaze.com/api/v1/documents'
+    getData('')
+  }, [currentPage])
 
-    // Define the parameters as an object
-    const params = {
-      // search: 'your_search_query',
-      // search_by: 'name', // or any other value
-      // template_id: 1, // or any other template ID
-      // favorite: true, // or false
-      sort_by: 'id', // or 'name'
-      sort: 'desc', // or 'asc'
-      per_page: 25 // or any other value
+  const getData = (searchTerm) => {
+    // let url = '/mySparkArchive'
+    let url = `/mySparkArchive?page=${currentPage}&pageSize=${DEFAULT_PAGE_SIZE}`
+
+    if (searchTerm?.length > 1) {
+      url += `&search=${searchTerm}`
     }
-
-    // Use qs.stringify to convert the parameters into a query string
-    const queryString = qs.stringify(params)
-
-    // Append the query string to the URL
-    if (queryString) {
-      url = `${url}?${queryString}`
-    }
-
-    const options = {
-      method: 'GET',
-      headers: {
-        common: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${authToken}`
-        }
-      },
-      url
-    }
-
-    axios(options)
+    axiosInstance
+      .get(url)
       .then((res) => {
-        console.log('Response:', res.data?.data)
-        setArchivedDocuments(res.data?.data)
-        if (res?.data?.data?.id) {
-          // setResponseData(res?.data?.data);
-          // setResponseImage(res?.data?.data);
-        } else {
-          console.log('No valid ID in the response data.')
-        }
+        console.log('Response:', res.data)
+        const { sparks, totalItems } = res.data
+        const documents = addDocumentIcons(res.data.sparks)
+        setTotalPages(Math.ceil(totalItems / DEFAULT_PAGE_SIZE))
+        setArchivedDocuments(documents)
       })
       .catch((e) => console.log(e))
-  }, [])
+  }
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
+  const handleDeleteArchive = (archiveId) => {
+    setIsLoading(true)
+    let url = `/mySparkArchive/${archiveId}`
+    axiosInstance
+      .delete(url)
+      .then((res) => {
+        toast.success(
+          `Your archived spark with id: ${archiveId} deleted successfully`
+        )
+        let newArchivedDocuments = [...archivedDocuments]
+        newArchivedDocuments = newArchivedDocuments.filter((doc) => {
+          return doc.id !== archiveId
+        })
+        setArchivedDocuments(newArchivedDocuments)
+
+        setIsLoading(false)
+        setShowDeleteSparkModal(false)
+      })
+      .catch((e) => {
+        console.log(e)
+        toast.error('Your generated spark failed to delete')
+        setIsLoading(false)
+        setShowDeleteSparkModal(false)
+      })
+  }
 
   return (
     <Container fluid>
@@ -106,6 +120,10 @@ function MySparkArchivePage(props) {
                         <input
                           placeholder={'Search Content'}
                           className={'search-input w-100'}
+                          onChange={(e) => {
+                            setSearchTerm(e.target.value)
+                            debouncedSearch(e.target.value)
+                          }}
                         />
                       </div>
                     </div>
@@ -113,7 +131,14 @@ function MySparkArchivePage(props) {
                   <div className={' my-spark-archive__cards'}>
                     {archivedDocuments?.map((document, index) => {
                       return (
-                        <MySparkArchiveCard key={index} document={document} />
+                        <MySparkArchiveCard
+                          key={index}
+                          document={document}
+                          onDeleteSpark={(archiveId) =>
+                            handleDeleteArchive(archiveId)
+                          }
+                          showDeleteSparkModal={showDeleteSparkModal}
+                        />
                       )
                     })}
                   </div>
@@ -123,6 +148,29 @@ function MySparkArchivePage(props) {
           </div>
         </div>
       </Row>
+      <div className={'my-spark-archive__pagination'}>
+        <Pagination>
+          <Pagination.Prev
+            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+            disabled={currentPage === 1}
+          />
+          {[...Array(totalPages)?.keys()]?.map((page) => (
+            <Pagination.Item
+              key={page + 1}
+              active={page + 1 === currentPage}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() =>
+              handlePageChange(Math.min(currentPage + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
+      </div>
     </Container>
   )
 }

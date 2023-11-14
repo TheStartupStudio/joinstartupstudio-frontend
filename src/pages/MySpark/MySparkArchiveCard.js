@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment'
 import mySparkArticle from '../../assets/icons/Notebook.svg'
@@ -11,11 +11,19 @@ import {
   faTrash
 } from '@fortawesome/free-solid-svg-icons'
 import mySparkConversation from '../../assets/icons/comments-alt.svg'
+import DeleteSparkArchiveModal from '../DeleteSparkArchiveModal'
 
 const MySparkArchiveCard = (props) => {
   const [scrollPosition, setScrollPosition] = useState(0)
+  const [showDeleteSparkModal, setShowDeleteSparkModal] = useState(false)
   const containerRef = useRef()
   const history = useHistory()
+
+  useEffect(() => {
+    if (props.showDeleteSparkModal) {
+      setShowDeleteSparkModal(false)
+    }
+  }, [props.showDeleteSparkModal])
 
   const handleScroll = (direction) => {
     const container = containerRef.current
@@ -39,17 +47,15 @@ const MySparkArchiveCard = (props) => {
   }
 
   function formatText(text) {
-    text = text.replace(/\n\n/g, '<br/><br/>')
-    text = text.replace(/\n/g, '<br/>')
+    text = text?.replace(/\n\n/g, '<br/><br/>')
+    text = text?.replace(/\n/g, '<br/>')
     return text
   }
 
-  const timeAgo = moment(props?.document?.updated_at).fromNow()
+  const timeAgo = moment(props?.document?.updatedAt).fromNow()
   const goToDetailsPage = () => {
     history.push(`/my-spark/generate-page/${props?.document?.id}`, {
-      responseData: props?.document,
-      widgetType: 'document',
-      widgetTitle: 'any'
+      fromPage: 'archive'
     })
   }
   return (
@@ -57,10 +63,10 @@ const MySparkArchiveCard = (props) => {
       <div className={'archive__card-header'}>
         <img
           className="my-spark-type__icon me-3"
-          src={mySparkArticle}
+          src={props.document?.icon}
           alt={'my spark icon'}
         />
-        <div className="header-title">Article</div>
+        <div className="header-title">{props.document?.name}</div>
       </div>
       <div className={'archive__card-prompt-container'}>
         <img
@@ -68,10 +74,7 @@ const MySparkArchiveCard = (props) => {
           src={mySparkPrompt}
           alt={'my spark icon'}
         />
-        <div className="prompt-text">
-          {props.document?.name}
-          {/*Lorem ipsum dolor sit amet, consectetuer adipiscing elit?*/}
-        </div>
+        <div className="prompt-text">{props.document?.title}</div>
       </div>
       <div className={'response-section__container'}>
         <div className={'response-section__header'}>
@@ -83,46 +86,55 @@ const MySparkArchiveCard = (props) => {
           <div className={'content-title'}>Content</div>
         </div>
         <div className="response-section">
-          <div className={'response__content-container d-flex'}>
-            <div
-              className={'response-content'}
-              ref={containerRef}
-              onScroll={() => setScrollPosition(containerRef.current.scrollTop)}
-            >
-              {/*<div className={'response-text'}>*/}
-              {/*  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed*/}
-              {/*  diam nonummy nibh euismod tincidunt ut laoreet dolore magna*/}
-              {/*  aliquam erat volutpat.*/}
-              {/*</div>*/}
+          {props.document?.type !== 'image' && (
+            <div className={'response__content-container d-flex'}>
               <div
-                className={'response-text'}
-                dangerouslySetInnerHTML={{
-                  __html: formatText(props?.document?.result)
-                }}
-              />
-            </div>
+                className={'response-content'}
+                ref={containerRef}
+                onScroll={() =>
+                  setScrollPosition(containerRef.current.scrollTop)
+                }
+              >
+                <div
+                  className={'response-text'}
+                  dangerouslySetInnerHTML={{
+                    __html: formatText(props?.document?.mySparkContent)
+                  }}
+                />
+              </div>
 
-            <div className={'response-buttons'}>
-              <div
-                className={'response-button'}
-                onClick={() => handleScroll('up')}
-              >
-                <FontAwesomeIcon
-                  icon={faAngleUp}
-                  className="me-2 me-md-0 response-arrow "
-                />
-              </div>
-              <div
-                className={'response-button'}
-                onClick={() => handleScroll('down')}
-              >
-                <FontAwesomeIcon
-                  icon={faAngleDown}
-                  className="me-2 me-md-0 response-arrow "
-                />
+              <div className={'response-buttons'}>
+                <div
+                  className={'response-button'}
+                  onClick={() => handleScroll('up')}
+                >
+                  <FontAwesomeIcon
+                    icon={faAngleUp}
+                    className="me-2 me-md-0 response-arrow "
+                  />
+                </div>
+                <div
+                  className={'response-button'}
+                  onClick={() => handleScroll('down')}
+                >
+                  <FontAwesomeIcon
+                    icon={faAngleDown}
+                    className="me-2 me-md-0 response-arrow "
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
+          {props.document?.type === 'image' && (
+            <div className={'d-flex align-items-center'}>
+              <img
+                alt={'My Spark Image'}
+                src={props.document?.mySparkContent}
+                style={{ width: 40, height: 40 }}
+              />
+              <div className={'ms-2'}>{'Name of image'}</div>
+            </div>
+          )}
         </div>
         <div
           onClick={() => goToDetailsPage()}
@@ -141,10 +153,18 @@ const MySparkArchiveCard = (props) => {
       </div>
       <div className={'archive-card__footer'}>
         <div className={'time-ago'}>{timeAgo}</div>
-        <div>
+        <div onClick={() => setShowDeleteSparkModal(true)}>
           <FontAwesomeIcon icon={faTrash} className="me-2 me-md-0 trash-icon" />
         </div>
       </div>
+      {showDeleteSparkModal && (
+        <DeleteSparkArchiveModal
+          show={showDeleteSparkModal}
+          onHide={() => setShowDeleteSparkModal(false)}
+          title={props?.document?.name}
+          onDelete={() => props.onDeleteSpark(props?.document?.id)}
+        />
+      )}
     </div>
   )
 }

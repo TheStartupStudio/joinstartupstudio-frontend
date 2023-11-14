@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Container, Row } from 'react-bootstrap'
+import { Container, Row, Spinner } from 'react-bootstrap'
 import './style.css'
 import { widgetInputData } from './widgetInputData'
 
 import MySparkWidgetInputs from './MySparkWidgetInputs'
 import axios from 'axios'
 import qs from 'qs'
+import axiosInstance from '../../utils/AxiosInstance'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 const authToken =
   process.env.MY_SPARK_TOKEN ??
@@ -17,35 +20,39 @@ function MySparkWidgetDetails(props) {
   const [requestData, setRequestData] = useState({})
   const [responseData, setResponseData] = useState('')
   const [responseImage, setResponseImage] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const location = useLocation()
   const history = useHistory()
-  const widgetTitle = location?.state?.widgetTitle
+  const widgetName = location?.state?.widgetName
   const widgetType = location?.state?.widgetType
+  const widgetApiType = location?.state?.widgetApiType
 
-  function reduceInputs(inputs, excludedFields) {
-    return inputs.reduce(
+  function reduceInputs(inputs, nonPromptFields) {
+    return inputs?.reduce(
       (result, input) => {
-        const isExcluded = excludedFields.some((field) => field === input.title)
+        const isExcluded = nonPromptFields?.some(
+          (field) => field === input.title
+        )
         if (!isExcluded) {
           result.prompt[input.title] = input.value
         } else {
-          result.customFields[input.title.toLowerCase()] = input.value
+          result.nonPrompt[input.title.toLowerCase()] = input.value
         }
         return result
       },
-      { prompt: {}, customFields: {} }
+      { prompt: {}, nonPrompt: {} }
     )
   }
 
   useEffect(() => {
-    let excludedFields = []
-    switch (widgetType) {
+    let nonPromptFields = []
+    switch (widgetApiType) {
       case 'document':
-        excludedFields.push('Name', 'Creativity')
+        nonPromptFields.push('Name', 'Creativity')
         break
       case 'image':
-        excludedFields.push(
+        nonPromptFields.push(
           'Name',
           'Description',
           'Style',
@@ -58,20 +65,18 @@ function MySparkWidgetDetails(props) {
         console.log('')
     }
 
-    const { prompt, customFields } = reduceInputs(widgetInputs, excludedFields)
-    console.log(prompt, customFields)
+    const { prompt, nonPrompt } = reduceInputs(widgetInputs, nonPromptFields)
     setRequestData({
       prompt,
-      ...customFields
+      ...nonPrompt
     })
   }, [widgetInputs])
 
   useEffect(() => {
-    const formattedWidgetTitle = widgetTitle?.split(' ')?.join('-')
-    if (widgetTitle) {
-      setWidgetInputs(widgetInputData[formattedWidgetTitle])
+    if (widgetType) {
+      setWidgetInputs(widgetInputData[widgetType])
     }
-  }, [widgetTitle])
+  }, [widgetType])
 
   const [showAdvanced, setShowAdvanced] = useState(false)
   const handleAdvancedClick = () => {
@@ -83,7 +88,7 @@ function MySparkWidgetDetails(props) {
     // const url = 'https://getmaze.com/api/v1/documents'
 
     let url = 'https://getmaze.com/api/v1/'
-    switch (widgetType) {
+    switch (widgetApiType) {
       case 'document':
         url += 'documents'
         break
@@ -111,10 +116,8 @@ function MySparkWidgetDetails(props) {
     //   creativity: requestData.creativity
     // }
 
-    console.log(requestData)
-
     let newReqData = {}
-    switch (widgetType) {
+    switch (widgetApiType) {
       case 'document':
         newReqData = {
           prompt: newPrompt,
@@ -156,20 +159,44 @@ function MySparkWidgetDetails(props) {
       data: data,
       url
     }
-
+    console.log('options', options)
+    setIsLoading(true)
     axios(options)
       .then((res) => {
         console.log('Response:', res.data?.data)
-
+        debugger
         if (res?.data?.data?.id) {
-          setResponseData(res?.data?.data)
           setResponseImage(res?.data?.data)
-          history.push(`/my-spark/generate-page/${res?.data?.data?.id}`, {
-            responseData: res?.data?.data,
-            widgetType,
-            widgetTitle
+
+          const { name: title, result } = res?.data?.data
+
+          const image = res?.data?.data?.url
+
+          const newData = {
+            name: widgetName,
+            mySparkContent: !!image ? image : result,
+            myContent: null,
+            type: widgetType,
+            title
+          }
+
+          history.push(`/my-spark/generate-page/${'newReneratedResponse'}`, {
+            // isNewGeneratedResponse: true,
+            fromPage: 'widgets',
+            data: newData
           })
+
+          // axiosInstance.post(`/mySparkArchive`, newData).then((res) => {
+          //   setResponseData(res?.data)
+          //   history.push(`/my-spark/generate-page/${res?.data?.id}`, {
+          //     // isNewGeneratedResponse: true,
+          //     fromPage: 'widgets',
+          //     data: newData
+          //   })
+          //   setIsLoading(false)
+          // })
         } else {
+          setIsLoading(false)
           console.log('No valid ID in the response data.')
         }
       })
@@ -198,10 +225,10 @@ function MySparkWidgetDetails(props) {
   const formattedString = formatText(responseData?.result)
 
   return (
-    <Container fluid>
+    <Container fluid className={''}>
       <Row>
         <div className="col-12 col-xl-12 px-0">
-          <div className="account-page-padding page-border">
+          <div className="account-page-padding page-border ">
             <div className="row ps-2">
               <div className="col-md-6">
                 <h3 className="page-title mb-0">MY SPARK</h3>
@@ -211,10 +238,14 @@ function MySparkWidgetDetails(props) {
             <div className={'my-spark_widget-details__container '}>
               <div className={'my-spark_widget-details__header_container'}>
                 <div className={'my-spark_widget-details__title'}>
-                  {location?.state?.widgetTitle?.toUpperCase()}
+                  {location?.state?.widgetName?.toUpperCase()}
                 </div>
               </div>
-              <div className={'my-spark-widget-details__inputs_container'}>
+              <div
+                className={
+                  'my-spark-widget-details__inputs_container position-relative'
+                }
+              >
                 <MySparkWidgetInputs
                   widgetInputs={widgetInputs}
                   showAdvanced={showAdvanced}
@@ -239,6 +270,16 @@ function MySparkWidgetDetails(props) {
                     <div className={'generate-button'}>Generate</div>
                   </div>
                 </div>
+                {isLoading && (
+                  <div className="my-spark__loader ">
+                    <FontAwesomeIcon
+                      icon={faSpinner}
+                      className="my-spark__spinner"
+                      spin
+                      size={'lg'}
+                    />
+                  </div>
+                )}
               </div>
               {/*<div dangerouslySetInnerHTML={{ __html: formattedString }} />*/}
               {/*<div className={'d-flex justify-content-center'}>*/}
