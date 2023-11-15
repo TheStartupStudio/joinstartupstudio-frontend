@@ -168,20 +168,25 @@ function MySparkWidgetDetails(props) {
         if (res?.data?.data?.id) {
           setResponseImage(res?.data?.data)
 
-          const { name: title, result } = res?.data?.data
+          const {
+            name: title,
+            result: mySparkContent,
+            resolution: imageResolution
+          } = res?.data?.data
 
-          const image = res?.data?.data?.url
+          const imageUrl = res?.data?.data?.url
 
           const newData = {
-            name: widgetName,
-            mySparkContent: !!image ? image : result,
+            widgetName,
+            mySparkContent,
+            imageUrl,
             myContent: null,
             type: widgetType,
-            title
+            title,
+            imageResolution
           }
-
+          console.log(newData)
           history.push(`/my-spark/generate-page/${'newReneratedResponse'}`, {
-            // isNewGeneratedResponse: true,
             fromPage: 'widgets',
             data: newData
           })

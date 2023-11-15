@@ -66,7 +66,7 @@ const MySparkArchiveCard = (props) => {
           src={props.document?.icon}
           alt={'my spark icon'}
         />
-        <div className="header-title">{props.document?.name}</div>
+        <div className="header-title">{props.document?.widgetName}</div>
       </div>
       <div className={'archive__card-prompt-container'}>
         <img
@@ -74,7 +74,7 @@ const MySparkArchiveCard = (props) => {
           src={mySparkPrompt}
           alt={'my spark icon'}
         />
-        <div className="prompt-text">{props.document?.title}</div>
+        <div className={'prompt-text'}>{props.document?.title}</div>
       </div>
       <div className={'response-section__container'}>
         <div className={'response-section__header'}>
@@ -129,10 +129,10 @@ const MySparkArchiveCard = (props) => {
             <div className={'d-flex align-items-center'}>
               <img
                 alt={'My Spark Image'}
-                src={props.document?.mySparkContent}
+                src={props.document?.imageUrl}
                 style={{ width: 40, height: 40 }}
               />
-              <div className={'ms-2'}>{'Name of image'}</div>
+              <div className={'prompt-text ms-2'}>{props.document?.title}</div>
             </div>
           )}
         </div>
@@ -161,7 +161,7 @@ const MySparkArchiveCard = (props) => {
         <DeleteSparkArchiveModal
           show={showDeleteSparkModal}
           onHide={() => setShowDeleteSparkModal(false)}
-          title={props?.document?.name}
+          title={props?.document?.widgetName}
           onDelete={() => props.onDeleteSpark(props?.document?.id)}
         />
       )}

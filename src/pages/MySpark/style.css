@@ -474,6 +474,13 @@ background-color: #FFF
     letter-spacing: 0px;
     color: #1C2238;
 }
+
+
+.prompt-text {
+    font: normal normal 400 12px/16px Montserrat;
+    letter-spacing: 0px;
+    color: #1C2238;
+}
 .archive__card-prompt-container .prompt-icon {
     width: 16px
 }

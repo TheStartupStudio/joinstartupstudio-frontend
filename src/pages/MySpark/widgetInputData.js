@@ -492,13 +492,14 @@ export const widgetInputData = {
   image: [
     {
       ...name,
-      value: 'Year 1000',
+      value: 'Deep of Ocean',
       description: 'The name of the image.',
       order: 1
     },
     {
       ...description,
-      value: 'Sword battles, blood on sword, helmet',
+      value:
+        'Give some blue and yellow starfishes and some other fishes, in background should see ocean water',
       description: 'The description of the image.',
       placeholder: 'Blue butterfly',
       order: 2

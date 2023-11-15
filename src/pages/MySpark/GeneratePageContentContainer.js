@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 function GeneratePageContentContainer(props) {
-  console.log(props.archivedDocument)
+  console.log(props)
   return (
     <div
       className={
@@ -42,22 +42,22 @@ function GeneratePageContentContainer(props) {
           </div>
         )}
       </div>
-
-      {!!props.isImage ? (
+      {props.archivedDocument?.widgetName !== 'Image' && (
         <div
           className={'my-spark_generate-page__content-generated_paragraph'}
           dangerouslySetInnerHTML={{
             __html: formatAIResponse(props.content)
           }}
         />
-      ) : (
+      )}
+      {props.archivedDocument?.widgetName === 'Image' && (
         <div className={'d-flex justify-content-center'}>
           <img
-            src={props.archivedDocument?.mySparkContent}
+            src={props.archivedDocument?.imageUrl}
             alt={props.archivedDocument?.name}
             style={{
-              width: +props.archivedDocument?.resolution?.split('x')[0],
-              height: +props.archivedDocument?.resolution?.split('x')[1]
+              width: +props.archivedDocument?.imageResolution?.split('x')[0],
+              height: +props.archivedDocument?.imageResolution?.split('x')[1]
             }}
           />
         </div>

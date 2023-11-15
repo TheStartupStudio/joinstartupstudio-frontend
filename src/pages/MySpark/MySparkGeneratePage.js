@@ -3,18 +3,8 @@ import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { Alert, Container, Row } from 'react-bootstrap'
 import './style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faBars,
-  faHamburger,
-  faTv,
-  faBook,
-  faTrash,
-  faSpinner
-} from '@fortawesome/free-solid-svg-icons'
-import mySparkArticle from '../../assets/icons/Notebook.svg'
+import { faTrash, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import mySparkPrompt from '../../assets/icons/comment-alt-lines.svg'
-import mySparkResponse from '../../assets/icons/Group 1770.svg'
-import mySparkConversation from '../../assets/icons/comments-alt.svg'
 import moment from 'moment'
 import LtsButton from '../../components/LTSButtons/LTSButton'
 import VerticalSeparator from '../../Separators/VerticalSeparator'
@@ -57,7 +47,7 @@ const MyDoc = ({ archivedDocument }) => (
       <View style={styles.page}>
         <View style={styles.section}>
           <Text style={{ fontSize: 14 }}>
-            {archivedDocument?.name?.toUpperCase()}
+            {archivedDocument?.widgetName?.toUpperCase()}
           </Text>
         </View>
         <View style={styles.section}>
@@ -264,9 +254,9 @@ function MySparkGeneratePage(props) {
     )
   }
 
-  const isImage = () => {
-    return archivedDocument?.url
-  }
+  // const isImage = () => {
+  //   return archivedDocument?.widgetName === 'Image'
+  // }
 
   return (
     <>
@@ -310,7 +300,7 @@ function MySparkGeneratePage(props) {
                     style={{ flex: 1 }}
                   >
                     <div className={'my-spark_generate-page__title ms-5'}>
-                      {archivedDocument?.name?.toUpperCase()}
+                      {archivedDocument?.widgetName?.toUpperCase()}
                     </div>
                     <div></div>
                   </div>
@@ -358,7 +348,7 @@ function MySparkGeneratePage(props) {
                             <GeneratePageContentContainer
                               content={archivedDocument?.mySparkContent}
                               title={'My Spark Content'}
-                              isImage={isImage()}
+                              // isImage={isImage()}
                               archivedDocument={archivedDocument}
                             />
                           </div>
@@ -423,7 +413,7 @@ function MySparkGeneratePage(props) {
                               document={
                                 <MyDoc archivedDocument={archivedDocument} />
                               }
-                              fileName={`${archivedDocument?.name}.pdf`}
+                              fileName={`${archivedDocument?.widgetName}.pdf`}
                               className={'w-100'}
                             >
                               {({ blob, url, loading, error }) => {
@@ -517,7 +507,7 @@ function MySparkGeneratePage(props) {
                     content={
                       isEdit ? editingContent : archivedDocument?.myContent
                     }
-                    title={archivedDocument?.name}
+                    title={archivedDocument?.widgetName}
                     handleChangeContent={(e) => {
                       if (isEdit) {
                         handleEditContent(e)
@@ -543,7 +533,7 @@ function MySparkGeneratePage(props) {
                   <DeleteSparkArchiveModal
                     show={showDeleteSparkModal}
                     onHide={() => setShowDeleteSparkModal(false)}
-                    title={archivedDocument?.name}
+                    title={archivedDocument?.widgetName}
                     onDelete={(e) => handleDeleteArchive(e)}
                   />
                 )}
