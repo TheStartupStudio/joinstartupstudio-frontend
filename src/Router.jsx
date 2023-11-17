@@ -408,6 +408,11 @@ function Router(props) {
               {/*  component={MySparkGeneratePage}*/}
               {/*/>*/}
               <Route
+                path="/my-spark/generate-page/response"
+                exact
+                component={MySparkGeneratePage}
+              />
+              <Route
                 path="/my-spark/generate-page/:id"
                 exact
                 component={MySparkGeneratePage}

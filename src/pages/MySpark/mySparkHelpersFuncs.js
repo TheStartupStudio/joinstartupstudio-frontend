@@ -10,6 +10,43 @@ import socialPostIcon from '../../assets/images/My Spark Widget Icons/Blue backg
 import socialPostCaptionIcon from '../../assets/images/My Spark Widget Icons/Blue background/10. Social post caption.png'
 import videoScriptIcon from '../../assets/images/My Spark Widget Icons/Blue background/11. Video script.png'
 import imageIcon from '../../assets/images/My Spark Widget Icons/Blue background/12. Image.png'
+
+export function isEmptyObject(obj) {
+  return Object.entries(obj).length === 0
+}
+export function formatAIResponse(text) {
+  text = text?.replace(/\n\n/g, '<br/><br/>')
+  text = text?.replace(/\n/g, '<br/>')
+  return text
+}
+
+export const HTMLToString = (html) => {
+  let div = document.createElement('div')
+  div.innerHTML = html
+  return div.textContent || div.innerText || ''
+}
+
+export const imageResolutionToPercentage = (imageResolution, page) => {
+  let newResolution = {}
+  if (imageResolution === '1024x1024') {
+    newResolution = {
+      width: page === 'generate-page' ? '50%' : '90%',
+      height: page === 'generate-page' ? '50%' : '90%'
+    }
+  } else if (imageResolution === '512x512') {
+    newResolution = {
+      width: page === 'generate-page' ? '40%' : '80%',
+      height: page === 'generate-page' ? '40%' : '80%'
+    }
+  } else if (imageResolution === '256x256') {
+    newResolution = {
+      width: page === 'generate-page' ? '30%' : '70%',
+      height: page === 'generate-page' ? '30%' : '70%'
+    }
+  }
+  return newResolution
+}
+
 export function addDocumentIcons(data) {
   return data?.map((doc) => {
     let documentIcon
@@ -103,10 +140,4 @@ export function addDocumentIcon(doc) {
       console.log('default')
   }
   return documentIcon
-}
-
-export function formatAIResponse(text) {
-  text = text?.replace(/\n\n/g, '<br/><br/>')
-  text = text?.replace(/\n/g, '<br/>')
-  return text
 }

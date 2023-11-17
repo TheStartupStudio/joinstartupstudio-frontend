@@ -28,7 +28,6 @@ function MySelectInput(props) {
         id="selectInput"
         value={selectedOptionValue}
         onChange={handleChange}
-        defaultValue={props.value}
         className="my-1 py-2 px-2 w-100 my-spark_widget-details__input text-dark "
       >
         {options?.map((option) => (

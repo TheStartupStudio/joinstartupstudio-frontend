@@ -1,11 +1,13 @@
 import React from 'react'
 import mySparkResponse from '../../assets/icons/Group 1770.svg'
-import { formatAIResponse } from './mySparkHelpersFuncs'
+import {
+  formatAIResponse,
+  imageResolutionToPercentage
+} from './mySparkHelpersFuncs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 function GeneratePageContentContainer(props) {
-  console.log(props)
   return (
     <div
       className={
@@ -42,7 +44,7 @@ function GeneratePageContentContainer(props) {
           </div>
         )}
       </div>
-      {props.archivedDocument?.widgetName !== 'Image' && (
+      {props.archivedDocument?.type !== 'image' && (
         <div
           className={'my-spark_generate-page__content-generated_paragraph'}
           dangerouslySetInnerHTML={{
@@ -50,14 +52,20 @@ function GeneratePageContentContainer(props) {
           }}
         />
       )}
-      {props.archivedDocument?.widgetName === 'Image' && (
+      {props.archivedDocument?.type === 'image' && (
         <div className={'d-flex justify-content-center'}>
           <img
             src={props.archivedDocument?.imageUrl}
             alt={props.archivedDocument?.name}
             style={{
-              width: +props.archivedDocument?.imageResolution?.split('x')[0],
-              height: +props.archivedDocument?.imageResolution?.split('x')[1]
+              width: imageResolutionToPercentage(
+                props.archivedDocument?.imageResolution,
+                'generate-page'
+              ).width,
+              height: imageResolutionToPercentage(
+                props.archivedDocument?.imageResolution,
+                'generate-page'
+              ).height
             }}
           />
         </div>

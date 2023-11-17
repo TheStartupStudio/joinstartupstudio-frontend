@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment'
-import mySparkArticle from '../../assets/icons/Notebook.svg'
 import mySparkPrompt from '../../assets/icons/comment-alt-lines.svg'
 import mySparkResponse from '../../assets/icons/Group 1770.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -11,7 +10,8 @@ import {
   faTrash
 } from '@fortawesome/free-solid-svg-icons'
 import mySparkConversation from '../../assets/icons/comments-alt.svg'
-import DeleteSparkArchiveModal from '../DeleteSparkArchiveModal'
+import DeleteSparkArchiveModal from './DeleteSparkArchiveModal'
+import { formatAIResponse } from './mySparkHelpersFuncs'
 
 const MySparkArchiveCard = (props) => {
   const [scrollPosition, setScrollPosition] = useState(0)
@@ -44,12 +44,6 @@ const MySparkArchiveCard = (props) => {
     if (newPosition !== scrollPosition) {
       setScrollPosition(newPosition)
     }
-  }
-
-  function formatText(text) {
-    text = text?.replace(/\n\n/g, '<br/><br/>')
-    text = text?.replace(/\n/g, '<br/>')
-    return text
   }
 
   const timeAgo = moment(props?.document?.updatedAt).fromNow()
@@ -98,7 +92,7 @@ const MySparkArchiveCard = (props) => {
                 <div
                   className={'response-text'}
                   dangerouslySetInnerHTML={{
-                    __html: formatText(props?.document?.mySparkContent)
+                    __html: formatAIResponse(props?.document?.mySparkContent)
                   }}
                 />
               </div>

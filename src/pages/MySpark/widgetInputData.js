@@ -492,14 +492,13 @@ export const widgetInputData = {
   image: [
     {
       ...name,
-      value: 'Deep of Ocean',
+      value: 'Old Items',
       description: 'The name of the image.',
       order: 1
     },
     {
       ...description,
-      value:
-        'Give some blue and yellow starfishes and some other fishes, in background should see ocean water',
+      value: 'Old houses in the middle of dessert, outside parked car',
       description: 'The description of the image.',
       placeholder: 'Blue butterfly',
       order: 2
@@ -511,5 +510,3 @@ export const widgetInputData = {
     ...filterFields(hiddenWidgetInputs, ['Creativity', 'Language'])
   ]
 }
-
-console.log(widgetInputData)

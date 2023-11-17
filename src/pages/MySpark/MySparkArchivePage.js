@@ -1,39 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Row, Pagination } from 'react-bootstrap'
-import {
-  faAngleDown,
-  faAngleUp,
-  faBars,
-  faBook,
-  faSearch,
-  faTrash
-} from '@fortawesome/free-solid-svg-icons'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './style.css'
 import MySparkArchiveCard from './MySparkArchiveCard'
 import axiosInstance from '../../utils/AxiosInstance'
 import { addDocumentIcons } from './mySparkHelpersFuncs'
 import { toast } from 'react-toastify'
-import { useHistory } from 'react-router-dom'
-import DeleteSparkArchiveModal from '../DeleteSparkArchiveModal'
 import { debounce } from 'lodash'
 
 function MySparkArchivePage(props) {
   const [archivedDocuments, setArchivedDocuments] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const history = useHistory()
   const [showDeleteSparkModal, setShowDeleteSparkModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
   const [totalPages, setTotalPages] = useState(1)
-  const [searchTerm, setSearchTerm] = useState('')
 
   const debouncedSearch = debounce((value) => {
-    // Call the search function with the debounced value
-    console.log('Debounced search:', value)
-    // Update the search logic here, including the API call
     getData(value)
-  }, 300) // 300 milliseconds debounce time, adjust as needed
+  }, 300)
 
   const DEFAULT_PAGE_SIZE = 10
   useEffect(() => {
@@ -41,7 +26,6 @@ function MySparkArchivePage(props) {
   }, [currentPage])
 
   const getData = (searchTerm) => {
-    // let url = '/mySparkArchive'
     let url = `/mySparkArchive?page=${currentPage}&pageSize=${DEFAULT_PAGE_SIZE}`
 
     if (searchTerm?.length > 1) {
@@ -52,7 +36,7 @@ function MySparkArchivePage(props) {
       .then((res) => {
         console.log('Response:', res.data)
         const { sparks, totalItems } = res.data
-        const documents = addDocumentIcons(res.data.sparks)
+        const documents = addDocumentIcons(sparks)
         setTotalPages(Math.ceil(totalItems / DEFAULT_PAGE_SIZE))
         setArchivedDocuments(documents)
       })
@@ -121,7 +105,6 @@ function MySparkArchivePage(props) {
                           placeholder={'Search Content'}
                           className={'search-input w-100'}
                           onChange={(e) => {
-                            setSearchTerm(e.target.value)
                             debouncedSearch(e.target.value)
                           }}
                         />

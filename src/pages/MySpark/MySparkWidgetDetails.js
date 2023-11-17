@@ -10,16 +10,15 @@ import qs from 'qs'
 import axiosInstance from '../../utils/AxiosInstance'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-
+import { toast } from 'react-toastify'
 const authToken =
   process.env.MY_SPARK_TOKEN ??
   'dvNDAZv7ooEJnugmtCLwzHX6tkgRiuyIhBPJkFGpqfmTuCkcFllCeJaKyli1nKHP'
 
+// console.log('process.env.MY_SPARK_TOKEN', process.env.MY_SPARK_TOKEN)
 function MySparkWidgetDetails(props) {
   const [widgetInputs, setWidgetInputs] = useState([])
   const [requestData, setRequestData] = useState({})
-  const [responseData, setResponseData] = useState('')
-  const [responseImage, setResponseImage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const location = useLocation()
@@ -84,9 +83,6 @@ function MySparkWidgetDetails(props) {
   }
 
   const handleGenerateClick = () => {
-    // https://getmaze.com/api/v1/images
-    // const url = 'https://getmaze.com/api/v1/documents'
-
     let url = 'https://getmaze.com/api/v1/'
     switch (widgetApiType) {
       case 'document':
@@ -110,11 +106,6 @@ function MySparkWidgetDetails(props) {
         newPrompt += ','
       }
     }
-    // const newReqData = {
-    //   prompt: newPrompt,
-    //   name: requestData.name,
-    //   creativity: requestData.creativity
-    // }
 
     let newReqData = {}
     switch (widgetApiType) {
@@ -145,8 +136,6 @@ function MySparkWidgetDetails(props) {
         console.log('')
     }
 
-    console.log(newReqData)
-
     let data = qs.stringify(newReqData)
     const options = {
       method: 'POST',
@@ -159,15 +148,11 @@ function MySparkWidgetDetails(props) {
       data: data,
       url
     }
-    console.log('options', options)
     setIsLoading(true)
     axios(options)
       .then((res) => {
         console.log('Response:', res.data?.data)
-        debugger
         if (res?.data?.data?.id) {
-          setResponseImage(res?.data?.data)
-
           const {
             name: title,
             result: mySparkContent,
@@ -185,21 +170,26 @@ function MySparkWidgetDetails(props) {
             title,
             imageResolution
           }
-          console.log(newData)
-          history.push(`/my-spark/generate-page/${'newReneratedResponse'}`, {
-            fromPage: 'widgets',
-            data: newData
-          })
-
-          // axiosInstance.post(`/mySparkArchive`, newData).then((res) => {
-          //   setResponseData(res?.data)
-          //   history.push(`/my-spark/generate-page/${res?.data?.id}`, {
-          //     // isNewGeneratedResponse: true,
-          //     fromPage: 'widgets',
-          //     data: newData
-          //   })
-          //   setIsLoading(false)
-          // })
+          if (widgetType === 'image') {
+            const match = newData.imageUrl.match(/\/images\/([\w-]+)\.jpg/)
+            const imageId = match ? match[1] : null
+            axiosInstance
+              .get(`/mySparkArchive/getImage/${imageId}`)
+              .then(({ data }) => {
+                newData.imageUrl = data.imageUrl
+                history.push(`/my-spark/generate-page/${'response'}`, {
+                  fromPage: 'widgets',
+                  data: newData
+                })
+                setIsLoading(false)
+              })
+              .catch((reason) => toast.error('Error while saving image!'))
+          } else {
+            history.push(`/my-spark/generate-page/${'response'}`, {
+              fromPage: 'widgets',
+              data: newData
+            })
+          }
         } else {
           setIsLoading(false)
           console.log('No valid ID in the response data.')
@@ -218,16 +208,6 @@ function MySparkWidgetDetails(props) {
     const updatedInputs = updateInputValues(widgetInputs, inputName, value)
     setWidgetInputs(updatedInputs)
   }
-
-  const testString =
-    'Title: Understanding Atoms and Quantum Theory in Modern Chemistry\n\nKeywords: atoms, quantum theory\n\nIntroduction:\n- Brief overview of the importance of atoms and quantum theory in modern chemistry\n\nQuantum Theory:\n- Explanation of the basic principles of quantum theory\n- Wave-particle duality and the uncertainty principle\n- Quantum numbers and their significance in describing atomic structure\n- Quantum mechanical model of the atom\n\nAtoms:\n- Historical background on the discovery of atoms\n- Atomic structure and the different subatomic particles (protons, neutrons, electrons)\n- Atomic mass and atomic number\n- Electron configuration and energy levels\n- Periodic table and its organization based on atomic structure\n\nApplications of Quantum Theory in Chemistry:\n- Understanding chemical bonding and molecular structure using quantum theory\n- Quantum mechanics and spectroscopy\n- Quantum chemical calculations and computational chemistry\n- Quantum dots and their applications in nanotechnology\n- Quantum cryptography and its role in secure communication\n\nConclusion:\n- Recap of the importance of atoms and quantum theory in modern chemistry\n- Future prospects and advancements in the field\n\nLength: Medium (around 1000-1500 words)\n\nLanguage: English\n\nVariations: The variations could include adding more specific subheadings within the Quantum Theory and Atoms sections, such as "Quantum Entanglement" or "Isotopes and Atomic Mass." Additionally, the length of the article could be adjusted to be shorter or longer based on the desired depth of coverage.'
-
-  function formatText(text) {
-    text = text?.replace(/\n\n/g, '<br/><br/>')
-    text = text?.replace(/\n/g, '<br/>')
-    return text
-  }
-  const formattedString = formatText(responseData?.result)
 
   return (
     <Container fluid className={''}>
@@ -286,19 +266,6 @@ function MySparkWidgetDetails(props) {
                   </div>
                 )}
               </div>
-              {/*<div dangerouslySetInnerHTML={{ __html: formattedString }} />*/}
-              {/*<div className={'d-flex justify-content-center'}>*/}
-              {/*  {responseImage && (*/}
-              {/*    <img*/}
-              {/*      src={responseImage?.url}*/}
-              {/*      alt={responseImage?.name}*/}
-              {/*      style={{*/}
-              {/*        width: +responseImage?.resolution?.split('x')[0],*/}
-              {/*        height: +responseImage?.resolution?.split('x')[1]*/}
-              {/*      }}*/}
-              {/*    />*/}
-              {/*  )}*/}
-              {/*</div>*/}
             </div>
           </div>
         </div>

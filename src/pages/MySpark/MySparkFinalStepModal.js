@@ -1,6 +1,4 @@
 import React from 'react'
-import { Modal } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
 import ModalWrapper from '../../components/Modals/Spotlight/ModalWrapper'
 import LTSButton from '../../components/LTSButtons/LTSButton'
 

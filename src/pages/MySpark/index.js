@@ -1,10 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 
-import axiosInstance from '../../utils/AxiosInstance'
-import IntlMessages from '../../utils/IntlMessages'
-
-import { useSelector } from 'react-redux'
 import './style.css'
 import coloredSparkIcon from '../../assets/images/colored-spark.png'
 import articleIcon from '../../assets/images/My Spark Widget Icons/1.Article.svg'
@@ -22,12 +18,6 @@ import imageIcon from '../../assets/images/My Spark Widget Icons/12.Image.svg'
 import { useHistory } from 'react-router-dom'
 
 function MySpark() {
-  const [loading, setLoading] = useState(false)
-
-  const [searchingUsers, setSearchingUsers] = useState(false)
-
-  const loggedUser = useSelector((state) => state?.user?.user?.user)
-
   const widgets = [
     {
       name: 'Article',
