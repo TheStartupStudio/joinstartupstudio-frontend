@@ -1,13 +1,13 @@
 import React from 'react'
-import mySparkResponse from '../../assets/icons/Group 1770.svg'
+import mySparkResponse from '../../../assets/icons/Group 1770.svg'
 import {
   formatAIResponse,
   imageResolutionToPercentage
-} from './mySparkHelpersFuncs'
+} from '../mySparkHelpersFuncs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
-function GeneratePageContentContainer(props) {
+function ContentContainer(props) {
   return (
     <div
       className={
@@ -74,4 +74,4 @@ function GeneratePageContentContainer(props) {
   )
 }
 
-export default GeneratePageContentContainer
+export default ContentContainer

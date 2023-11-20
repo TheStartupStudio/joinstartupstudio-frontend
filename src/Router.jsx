@@ -103,13 +103,13 @@ const MyConnections = React.lazy(() => import('./pages/MyConnections'))
 const MyClassroom = React.lazy(() => import('./pages/MyClassroom'))
 const MySpark = React.lazy(() => import('./pages/MySpark'))
 const MySparkWidgetDetails = React.lazy(() =>
-  import('./pages/MySpark/MySparkWidgetDetails')
+  import('./pages/MySpark/Widgets/WidgetDetails')
 )
 const MySparkGeneratePage = React.lazy(() =>
-  import('./pages/MySpark/MySparkGeneratePage')
+  import('./pages/MySpark/GeneratedResponsePage/GeneratedResponsePage')
 )
 const MySparkArchivePage = React.lazy(() =>
-  import('./pages/MySpark/MySparkArchivePage')
+  import('./pages/MySpark/ArchivePage/ArchivePage')
 )
 const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
 const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
@@ -405,7 +405,7 @@ function Router(props) {
               {/*<Route*/}
               {/*  path="/my-spark/generated-response-page"*/}
               {/*  exact*/}
-              {/*  component={MySparkGeneratePage}*/}
+              {/*  component={GeneratedResponsePage}*/}
               {/*/>*/}
               <Route
                 path="/my-spark/generate-page/response"

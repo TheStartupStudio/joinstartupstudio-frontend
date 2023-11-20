@@ -1,6 +1,6 @@
 import React from 'react'
 
-const MySparkInput = (props) => {
+const WidgetInput = (props) => {
   return (
     <div className={'my-spark_widget-details__input_container'}>
       <label
@@ -24,4 +24,4 @@ const MySparkInput = (props) => {
   )
 }
 
-export default MySparkInput
+export default WidgetInput

@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Container, Row, Pagination } from 'react-bootstrap'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import './style.css'
-import MySparkArchiveCard from './MySparkArchiveCard'
-import axiosInstance from '../../utils/AxiosInstance'
-import { addDocumentIcons } from './mySparkHelpersFuncs'
+import '../style.css'
+import ArchiveCard from './ArchiveCard'
+import axiosInstance from '../../../utils/AxiosInstance'
+import { addDocumentIcons } from '../mySparkHelpersFuncs'
 import { toast } from 'react-toastify'
 import { debounce } from 'lodash'
 
-function MySparkArchivePage(props) {
+function ArchivePage(props) {
   const [archivedDocuments, setArchivedDocuments] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [showDeleteSparkModal, setShowDeleteSparkModal] = useState(false)
@@ -114,7 +114,7 @@ function MySparkArchivePage(props) {
                   <div className={' my-spark-archive__cards'}>
                     {archivedDocuments?.map((document, index) => {
                       return (
-                        <MySparkArchiveCard
+                        <ArchiveCard
                           key={index}
                           document={document}
                           onDeleteSpark={(archiveId) =>
@@ -158,4 +158,4 @@ function MySparkArchivePage(props) {
   )
 }
 
-export default MySparkArchivePage
+export default ArchivePage

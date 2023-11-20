@@ -1,6 +1,6 @@
 import React from 'react'
-import ModalWrapper from '../../components/Modals/Spotlight/ModalWrapper'
-import LTSButton from '../../components/LTSButtons/LTSButton'
+import ModalWrapper from '../../../components/Modals/Spotlight/ModalWrapper'
+import LTSButton from '../../../components/LTSButtons/LTSButton'
 
 const DeleteArchiveModal = (props) => {
   return (

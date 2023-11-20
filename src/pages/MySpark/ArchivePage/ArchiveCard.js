@@ -1,19 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment'
-import mySparkPrompt from '../../assets/icons/comment-alt-lines.svg'
-import mySparkResponse from '../../assets/icons/Group 1770.svg'
+import mySparkPrompt from '../../../assets/icons/comment-alt-lines.svg'
+import mySparkResponse from '../../../assets/icons/Group 1770.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faAngleDown,
   faAngleUp,
   faTrash
 } from '@fortawesome/free-solid-svg-icons'
-import mySparkConversation from '../../assets/icons/comments-alt.svg'
-import DeleteSparkArchiveModal from './DeleteSparkArchiveModal'
-import { formatAIResponse } from './mySparkHelpersFuncs'
+import mySparkConversation from '../../../assets/icons/comments-alt.svg'
+import DeleteSparkArchiveModal from '../Modals/DeleteArchiveModal'
+import { formatAIResponse } from '../mySparkHelpersFuncs'
 
-const MySparkArchiveCard = (props) => {
+const ArchiveCard = (props) => {
   const [scrollPosition, setScrollPosition] = useState(0)
   const [showDeleteSparkModal, setShowDeleteSparkModal] = useState(false)
   const containerRef = useRef()
@@ -163,4 +163,4 @@ const MySparkArchiveCard = (props) => {
   )
 }
 
-export default MySparkArchiveCard
+export default ArchiveCard

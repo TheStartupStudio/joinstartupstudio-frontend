@@ -1,8 +1,8 @@
 import React from 'react'
-import ModalWrapper from '../../components/Modals/Spotlight/ModalWrapper'
-import LTSButton from '../../components/LTSButtons/LTSButton'
+import ModalWrapper from '../../../components/Modals/Spotlight/ModalWrapper'
+import LTSButton from '../../../components/LTSButtons/LTSButton'
 
-const MySparkFinalStepModal = (props) => {
+const FinalStepModal = (props) => {
   return (
     <ModalWrapper
       show={props.show}
@@ -40,4 +40,4 @@ const MySparkFinalStepModal = (props) => {
     </ModalWrapper>
   )
 }
-export default MySparkFinalStepModal
+export default FinalStepModal

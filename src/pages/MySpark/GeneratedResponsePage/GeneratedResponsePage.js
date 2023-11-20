@@ -1,93 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { Alert, Container, Row } from 'react-bootstrap'
-import './style.css'
+import '../style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faSpinner } from '@fortawesome/free-solid-svg-icons'
-import mySparkPrompt from '../../assets/icons/comment-alt-lines.svg'
+import mySparkPrompt from '../../../assets/icons/comment-alt-lines.svg'
 import moment from 'moment'
-import LtsButton from '../../components/LTSButtons/LTSButton'
-import VerticalSeparator from '../../Separators/VerticalSeparator'
-import axiosInstance from '../../utils/AxiosInstance'
-import {
-  addDocumentIcon,
-  HTMLToString,
-  imageResolutionToPercentage,
-  isEmptyObject
-} from './mySparkHelpersFuncs'
-import GeneratePageContentContainer from './GeneratePageContentContainer'
-import MyContentModal from './MyContentModal'
-import DeleteSparkArchiveModal from './DeleteSparkArchiveModal'
+import LtsButton from '../../../components/LTSButtons/LTSButton'
+import VerticalSeparator from '../../../Separators/VerticalSeparator'
+import axiosInstance from '../../../utils/AxiosInstance'
+import { addDocumentIcon, isEmptyObject } from '../mySparkHelpersFuncs'
+import ContentContainer from './ContentContainer'
+import MyContentModal from '../Modals/MyContentModal'
+import DeleteSparkArchiveModal from '../Modals/DeleteArchiveModal'
 import { toast } from 'react-toastify'
-import MySparkFinalStepModal from './MySparkFinalStepModal'
-import {
-  Page,
-  Text,
-  View,
-  Document,
-  StyleSheet,
-  PDFDownloadLink,
-  Image
-} from '@react-pdf/renderer'
+import FinalStepModal from '../Modals/FinalStepModal'
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import PdfDocument from './PdfDocument'
+import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'row',
-    backgroundColor: '#E4E4E4'
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1
-  }
-})
-
-const MyDoc = ({ archivedDocument }) => {
-  return (
-    <Document>
-      <Page size="A4">
-        <View style={styles.page}>
-          <View style={styles.section}>
-            <Text style={{ fontSize: 14 }}>
-              {archivedDocument?.widgetName?.toUpperCase()}
-            </Text>
-          </View>
-          <View style={styles.section}>
-            <Text>{archivedDocument?.title}</Text>
-          </View>
-          <View style={styles.section}>
-            <Text></Text>
-          </View>
-        </View>
-        <View style={{ ...styles.page, backgroundColor: '#fff' }}>
-          <View style={styles.section}>
-            {archivedDocument.type !== 'image' && (
-              <Text>{HTMLToString(archivedDocument?.myContent)}</Text>
-            )}
-            {archivedDocument.type === 'image' && (
-              <View style={{ display: 'flex', justifyContent: 'center' }}>
-                <Image
-                  src={archivedDocument?.imageUrl}
-                  alt={archivedDocument?.name}
-                  style={{
-                    marginHorizontal: 'auto',
-                    width: imageResolutionToPercentage(
-                      archivedDocument?.imageResolution
-                    ).width,
-                    height: imageResolutionToPercentage(
-                      archivedDocument?.imageResolution
-                    ).height
-                  }}
-                />
-              </View>
-            )}
-          </View>
-        </View>
-      </Page>
-    </Document>
-  )
-}
-function MySparkGeneratePage(props) {
+function GeneratedResponsePage(props) {
   const [archivedDocument, setArchivedDocument] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [showMyContentModal, setShowMyContentModal] = useState(false)
@@ -98,11 +30,10 @@ function MySparkGeneratePage(props) {
   const history = useHistory()
   const params = useParams()
   const locationState = useLocation().state
-  const [isArchived, setIsArchived] = useState(false)
-  const [isDeleted, setIsDeleted] = useState(false)
-  const [myContentAdded, setMyContentAdded] = useState(false)
+  const [isMyContentAdded, setIsMyContentAdded] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
-
+  const [existMyContent, setExistMyContent] = useState(false)
+  const windowWidth = useWindowWidth()
   const [displayItem, setDisplayItem] = useState([
     {
       name: 'first-line',
@@ -140,7 +71,7 @@ function MySparkGeneratePage(props) {
       align: 'center'
     },
     {
-      type: 'save',
+      type: 'saveToArchive',
       align: 'end'
     }
   ])
@@ -168,6 +99,7 @@ function MySparkGeneratePage(props) {
         shouldDisplayItem('copy-button', false)
         shouldDisplayItem('download-button', false)
         shouldDisplayItem('create-own-content', false)
+        buttonAlignment('saveToArchive', 'center')
       } else {
         shouldDisplayItem('copy-button', true)
         shouldDisplayItem('download-button', true)
@@ -186,6 +118,17 @@ function MySparkGeneratePage(props) {
       }
     }
   }, [locationState])
+  const location = useLocation()
+  useEffect(() => {
+    if (
+      location.pathname?.includes('response') &&
+      typeof fromPage === 'undefined'
+    ) {
+      setTimeout(() => {
+        history.push('/my-spark/widgets')
+      }, 2000)
+    }
+  }, [params, fromPage])
 
   useEffect(() => {
     if (
@@ -194,7 +137,6 @@ function MySparkGeneratePage(props) {
       typeof fromPage === 'undefined'
     ) {
       setIsLoading(true)
-      console.log('params.id', params.id)
       if (params.id && params.id !== 0) {
         let url = `/mySparkArchive/${params.id}`
         axiosInstance
@@ -205,7 +147,7 @@ function MySparkGeneratePage(props) {
             document.icon = icon
             setArchivedDocument(document)
             if (document?.myContent?.length > 0) {
-              setMyContentAdded(true)
+              setIsMyContentAdded(true)
               buttonAlignment('download', 'end')
               shouldDisplayItem('first-line', true)
               shouldDisplayItem('second-line', false)
@@ -216,6 +158,7 @@ function MySparkGeneratePage(props) {
               shouldDisplayItem('copy-button', false)
               shouldDisplayItem('download-button', false)
               shouldDisplayItem('create-own-content', false)
+              buttonAlignment('saveToArchive', 'center')
             } else {
               shouldDisplayItem('copy-button', true)
               shouldDisplayItem('download-button', true)
@@ -233,7 +176,6 @@ function MySparkGeneratePage(props) {
               shouldDisplayItem('create-own-content', false)
             }
             setIsLoading(false)
-            setIsArchived(true)
           })
           .catch((e) => {
             if (e?.response?.status === 404) {
@@ -242,7 +184,6 @@ function MySparkGeneratePage(props) {
             }
 
             setIsLoading(false)
-            setIsArchived(false)
           })
       }
     }
@@ -281,16 +222,15 @@ function MySparkGeneratePage(props) {
       })
   }
 
-  const handleMyContentAdded = () => {
+  const handleAddMyContent = () => {
     if (archivedDocument?.myContent?.length > 0) {
-      setMyContentAdded(true)
+      setIsMyContentAdded(true)
       setShowMyContentModal(false)
       setShowFinalStepModal(false)
     }
   }
 
-  // todo: edit content locally if response is not saved
-  const handleMyContentEdited = () => {
+  const handleSaveEditedContent = () => {
     setArchivedDocument({ ...archivedDocument, myContent: editingContent })
     axiosInstance
       .patch(`/mySparkArchive/${archivedDocument?.id}`, {
@@ -300,9 +240,7 @@ function MySparkGeneratePage(props) {
         const icon = addDocumentIcon(res?.data?.data)
         let document = { ...res?.data?.data }
         document.icon = icon
-        debugger
         setArchivedDocument(document)
-        setIsArchived(true)
         toast.success('Your generated spark edited successfully')
         setIsLoading(false)
       })
@@ -310,7 +248,6 @@ function MySparkGeneratePage(props) {
         console.log(e)
         toast.error('Your generated spark failed to edit')
         setIsLoading(false)
-        setIsArchived(false)
       })
   }
 
@@ -324,7 +261,6 @@ function MySparkGeneratePage(props) {
         let document = { ...data }
         document.icon = icon
         setArchivedDocument(document)
-        setIsArchived(true)
         toast.success('Your generated spark archived successfully')
         setIsLoading(false)
         shouldDisplayItem('create-own-content', false)
@@ -337,7 +273,6 @@ function MySparkGeneratePage(props) {
         console.log(e)
         toast.error('Your generated spark failed to archive')
         setIsLoading(false)
-        setIsArchived(false)
       })
   }
   const timeAgo = moment(archivedDocument?.updatedAt).fromNow()
@@ -361,11 +296,11 @@ function MySparkGeneratePage(props) {
     }
   }
 
-  const existMyContent = () => {
-    return (
+  useEffect(() => {
+    setExistMyContent(
       archivedDocument?.myContent?.length > 0 || !!archivedDocument?.myContent
     )
-  }
+  }, [archivedDocument?.myContent])
 
   const buttonAlignment = (type, align) => {
     let newButtons = [...alignButtons]
@@ -393,7 +328,6 @@ function MySparkGeneratePage(props) {
     return !!archivedDocument.id
   }
 
-  console.log(showItem('create-own-content'))
   return (
     <>
       <Container fluid>
@@ -431,11 +365,11 @@ function MySparkGeneratePage(props) {
                   </div>
                   <div
                     className={
-                      'my-spark_generate-page__header_title my-spark-generate-page__border d-flex align-items-center justify-content-between'
+                      'my-spark_generate-page__header_title my-spark-generate-page__border '
                     }
                     style={{ flex: 1 }}
                   >
-                    <div className={'my-spark_generate-page__title ms-5'}>
+                    <div className={'my-spark_generate-page__title'}>
                       {archivedDocument?.widgetName?.toUpperCase()}
                     </div>
                     <div></div>
@@ -481,7 +415,7 @@ function MySparkGeneratePage(props) {
                               !!archivedDocument?.myContent ? 'mb-2' : ''
                             }`}
                           >
-                            <GeneratePageContentContainer
+                            <ContentContainer
                               content={archivedDocument?.mySparkContent}
                               title={'My Spark Content'}
                               // isImage={isImage()}
@@ -491,11 +425,11 @@ function MySparkGeneratePage(props) {
 
                           {archivedDocument?.type !== 'image' &&
                             !!archivedDocument?.myContent &&
-                            myContentAdded && (
-                              <GeneratePageContentContainer
+                            isMyContentAdded && (
+                              <ContentContainer
                                 content={archivedDocument?.myContent}
                                 title={'My Content'}
-                                containEdit={existMyContent()}
+                                containEdit={existMyContent}
                                 openEditBox={() => {
                                   setShowMyContentModal(true)
                                   setIsEdit(true)
@@ -523,10 +457,6 @@ function MySparkGeneratePage(props) {
                       <div className={'d-flex justify-content-center'}>
                         <div style={{ width: '70%' }}>
                           {showItem('create-own-content') && (
-                            // archivedDocument?.type !== 'image' &&
-                            // !(
-                            //   !!archivedDocument?.myContent && myContentAdded
-                            // )
                             <div className={'mt-3 mb-3'}>
                               <LtsButton
                                 name={'Create your own'}
@@ -535,17 +465,15 @@ function MySparkGeneratePage(props) {
                             </div>
                           )}
 
-                          <div
-                            className={'d-flex justify-content-between my-5'}
-                          >
+                          <div className={'response-actions my-5'}>
                             {showItem('copy-button') && (
                               <LtsButton
                                 name={'Copy'}
-                                width={'70%'}
+                                width={windowWidth < 700 ? '100%' : '70%'}
                                 backgroundColor={
                                   isSavedArchive() ? '#51C7DF' : '#BBBDBF'
                                 }
-                                align={'start'}
+                                align={alignButton('copy')}
                                 onClick={() => handleCopyClick()}
                               />
                             )}
@@ -555,40 +483,27 @@ function MySparkGeneratePage(props) {
                             {showItem('download-button') && (
                               <PDFDownloadLink
                                 document={
-                                  <MyDoc archivedDocument={archivedDocument} />
+                                  <PdfDocument
+                                    archivedDocument={archivedDocument}
+                                  />
                                 }
                                 fileName={`${archivedDocument?.widgetName}.pdf`}
-                                className={'w-100'}
+                                className={'w-100 d-flex'}
                               >
-                                {({ blob, url, loading, error }) => {
-                                  if (loading) {
-                                    return (
-                                      <LtsButton
-                                        name={'Loading document...'}
-                                        width={'70%'}
-                                        align={alignButton('download')}
-                                        backgroundColor={
-                                          isSavedArchive()
-                                            ? '#99CC33'
-                                            : '#BBBDBF'
-                                        }
-                                      />
-                                    )
-                                  } else {
-                                    return (
-                                      <LtsButton
-                                        name={'Download'}
-                                        width={'70%'}
-                                        align={alignButton('download')}
-                                        backgroundColor={
-                                          isSavedArchive()
-                                            ? '#99CC33'
-                                            : '#BBBDBF'
-                                        }
-                                      />
-                                    )
-                                  }
-                                }}
+                                {({ blob, url, loading, error }) => (
+                                  <LtsButton
+                                    name={
+                                      loading
+                                        ? 'Loading document...'
+                                        : 'Download'
+                                    }
+                                    width={windowWidth < 700 ? '100%' : '70%'}
+                                    align={alignButton('download')}
+                                    backgroundColor={
+                                      isSavedArchive() ? '#99CC33' : '#BBBDBF'
+                                    }
+                                  />
+                                )}
                               </PDFDownloadLink>
                             )}
 
@@ -598,13 +513,13 @@ function MySparkGeneratePage(props) {
                               <>
                                 <LtsButton
                                   name={'Save to archive'}
-                                  width={'70%'}
+                                  width={windowWidth < 700 ? '100%' : '70%'}
                                   backgroundColor={
                                     isSavedArchive() ? '#FF3399' : '#BBBDBF'
                                   }
                                   align={alignButton('saveToArchive')}
                                   onClick={() =>
-                                    !existMyContent() &&
+                                    !existMyContent &&
                                     archivedDocument?.type !== 'image'
                                       ? setShowFinalStepModal(true)
                                       : handleSaveToArchive()
@@ -659,11 +574,11 @@ function MySparkGeneratePage(props) {
                     }}
                     onSave={() => {
                       if (isEdit) {
-                        handleMyContentEdited()
+                        handleSaveEditedContent()
                         setIsEdit(false)
                         setShowMyContentModal(false)
                       } else {
-                        handleMyContentAdded()
+                        handleAddMyContent()
                         setIsEdit(false)
                         setShowMyContentModal(false)
                       }
@@ -680,7 +595,7 @@ function MySparkGeneratePage(props) {
                   />
                 )}
                 {showFinalStepModal && (
-                  <MySparkFinalStepModal
+                  <FinalStepModal
                     show={showFinalStepModal}
                     onHide={() => setShowFinalStepModal(false)}
                     confirmFinalStep={() => {
@@ -697,4 +612,4 @@ function MySparkGeneratePage(props) {
   )
 }
 
-export default MySparkGeneratePage
+export default GeneratedResponsePage

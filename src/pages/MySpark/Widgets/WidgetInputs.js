@@ -1,9 +1,9 @@
 import React from 'react'
 import { Collapse } from 'react-bootstrap'
-import MySparkInput from './MySparkInput'
-import MySparkSelectInput from './MySparkSelectInput'
+import WidgetInput from './WidgetInput'
+import MySparkSelectInput from './WidgetSelectInput'
 
-function MySparkWidgetInputs(props) {
+function WidgetInputs(props) {
   const handleInputChange = (inputName, value, type) => {
     props.onChange(inputName, value, type)
   }
@@ -11,7 +11,7 @@ function MySparkWidgetInputs(props) {
   const renderInputs = (inputs, inputType) => {
     return inputs?.map((input) =>
       !input.isSelectInput ? (
-        <MySparkInput
+        <WidgetInput
           key={input.title}
           title={input.title}
           description={input.description}
@@ -52,4 +52,4 @@ function MySparkWidgetInputs(props) {
   )
 }
 
-export default MySparkWidgetInputs
+export default WidgetInputs

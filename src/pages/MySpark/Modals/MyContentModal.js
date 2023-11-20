@@ -1,6 +1,6 @@
 import React from 'react'
-import ModalWrapper from '../../components/Modals/Spotlight/ModalWrapper'
-import LtsButton from '../../components/LTSButtons/LTSButton'
+import ModalWrapper from '../../../components/Modals/Spotlight/ModalWrapper'
+import LtsButton from '../../../components/LTSButtons/LTSButton'
 import ReactQuill from 'react-quill'
 
 function MyContentModal(props) {
