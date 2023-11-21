@@ -21,8 +21,6 @@ import notesIcon from '../../assets/images/notes-icon.svg'
 import notesIconHovered from '../../assets/images/notes-icon-active.svg'
 import mySparkBlack from '../../assets/icons/Asset 1.svg'
 import mySparkWhite from '../../assets/icons/Group 3819.svg'
-// import unColoredSpark from '../../assets/images/black-spark.png'
-// import coloredSpark from '../../assets/images/colored-spark.png'
 // import journalIcon from '../../assets/images/journals-icon.svg'
 // import journalIconHovered from '../../assets/images/journals-icon-active.svg'
 import focusIcon from '../../assets/images/focus_icon.png'
@@ -772,7 +770,7 @@ function Header(props) {
                 <li className="nav-item notes-nav my-auto ">
                   <NavLink
                     className={`nav-link px-2 me-1 icon-menu`}
-                    to={'/my-spark'}
+                    to={'/my-spark/widgets'}
                   >
                     <div>
                       <img

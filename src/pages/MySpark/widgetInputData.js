@@ -267,25 +267,25 @@ export const widgetInputData = {
   article: [
     {
       ...name,
-      value: 'Chemistry',
+      value: '',
       placeholder: '',
       order: 1
     },
     {
       ...title,
-      value: 'Modern Chemistry',
+      value: '',
       description: 'The title of the article.',
       order: 2
     },
     {
       ...keywords,
-      value: 'atoms, quantum theory',
+      value: '',
       placeholder: 'ocean, beach, hotel',
       order: 3
     },
     {
       ...subHeadings,
-      value: 'Quantum theory, Atoms',
+      value: '',
       description: 'The subheadings of the article.',
       placeholder: 'Florida, Los Angeles, San Francisco',
       order: 4
@@ -301,22 +301,22 @@ export const widgetInputData = {
     {
       ...name,
       title: 'Name',
-      value: 'Fantasy Action Game',
+      value: '',
       order: 1
     },
     {
       ...product,
-      value: 'Video game',
+      value: '',
       order: 2
     },
     {
       ...audience,
-      value: 'Adult gamers',
+      value: '',
       order: 3
     },
     {
       ...description,
-      value: `Zombie game`,
+      value: ``,
       order: 4
     },
     { ...tone, order: 5 },
@@ -325,18 +325,17 @@ export const widgetInputData = {
   faq: [
     {
       ...name,
-      value: 'FAQ for TechSolutions Inc.',
+      value: '',
       order: 1
     },
     {
       ...product,
-      value: 'TechSolutions Inc. Services',
+      value: '',
       order: 2
     },
     {
       ...description,
-      value:
-        'Answers to common questions about our IT and tech support services.',
+      value: '',
       order: 3
     },
     ...hiddenWidgetInputs
@@ -344,20 +343,19 @@ export const widgetInputData = {
   'startup-names': [
     {
       ...name,
-      value: 'Guide to Choosing Startup Names',
+      value: '',
       order: 1
     },
     {
       ...description,
-      value:
-        'A comprehensive guide on how to select the perfect name for your startup.',
+      value: '',
       description: 'The description of the startup.',
       placeholder: 'Web and mobile software development agency',
       order: 2
     },
     {
       ...keywords,
-      value: 'naming, startup, brand, business',
+      value: '',
       description: 'The keywords to include.',
       placeholder: 'Web, dev',
       order: 3
@@ -367,17 +365,17 @@ export const widgetInputData = {
   'vision-statement': [
     {
       ...name,
-      value: 'Vision Statement for Youtube',
+      value: '',
       order: 1
     },
     {
       ...company,
-      value: 'Youtube',
+      value: '',
       order: 2
     },
     {
       ...description,
-      value: 'Empowering creators to share their content with the world.',
+      value: '',
       description: 'Learn how to program through our easy to understand course',
       placeholder: 'The description of the company.',
       order: 3
@@ -387,23 +385,23 @@ export const widgetInputData = {
   'value-proposition': [
     {
       ...name,
-      value: 'Technology',
+      value: '',
       placeholder: '',
       order: 1
     },
     {
       ...product,
-      value: 'TechSolutions Inc. Services',
+      value: '',
       order: 2
     },
     {
       ...audience,
-      value: 'Small and Medium-Sized Businesses',
+      value: '',
       order: 3
     },
     {
       ...description,
-      value: `Providing comprehensive IT solutions for enhancing business efficiency and growth.`,
+      value: ``,
       order: 4
     },
     { ...tone, order: 5 },
@@ -412,12 +410,12 @@ export const widgetInputData = {
   'startup-ideas': [
     {
       ...name,
-      value: '.Net 8',
+      value: '',
       order: 1
     },
     {
       ...domains,
-      value: 'Web programming',
+      value: '',
       order: 2
     },
     ...hiddenWidgetInputs
@@ -425,17 +423,17 @@ export const widgetInputData = {
   'mission-statement': [
     {
       ...name,
-      value: 'Mission Statement for ArditTech',
+      value: '',
       order: 1
     },
     {
       ...company,
-      value: 'ArditTech',
+      value: '',
       order: 2
     },
     {
       ...description,
-      value: 'We strive to be the best when it comes to content creation.',
+      value: '',
       placeholder: 'We strive to be the best when it comes to content creation',
       description: 'We strive to be the best when it comes to content creation',
       order: 3
@@ -492,13 +490,13 @@ export const widgetInputData = {
   image: [
     {
       ...name,
-      value: 'Old Items',
+      value: '',
       description: 'The name of the image.',
       order: 1
     },
     {
       ...description,
-      value: 'Old houses in the middle of dessert, outside parked car',
+      value: '',
       description: 'The description of the image.',
       placeholder: 'Blue butterfly',
       order: 2

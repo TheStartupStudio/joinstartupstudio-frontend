@@ -402,11 +402,6 @@ function Router(props) {
                 path="/my-classroom/request/:id"
                 component={MyClassroom}
               />
-              {/*<Route*/}
-              {/*  path="/my-spark/generated-response-page"*/}
-              {/*  exact*/}
-              {/*  component={GeneratedResponsePage}*/}
-              {/*/>*/}
               <Route
                 path="/my-spark/generate-page/response"
                 exact

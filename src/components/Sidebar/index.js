@@ -660,69 +660,6 @@ function Sidebar(props) {
                   </a> */}
                 </li>
               </div>
-              <li
-                className="dropdownMenuSidebarHover"
-                data-bs-toggle="collapse"
-                href="#mySpark"
-                role="button"
-                aria-expanded="true"
-                aria-controls="mySpark"
-              >
-                <a>
-                  <div
-                    className="d-flex w-100"
-                    style={{ alignItems: 'center' }}
-                  >
-                    <img
-                      className="sidebar-icon me-2"
-                      src={mySparkBlack}
-                      alt={'my spark icon'}
-                    />
-                    <div className="flex-grow-1 ms-1">
-                      <span className={'text-uppercase'}>MY SPARK</span>
-                    </div>
-                    <FontAwesomeIcon
-                      icon={faAngleDown}
-                      className="me-2 me-md-0"
-                      style={{
-                        fontSize: '16px',
-                        color: '#333D3D'
-                      }}
-                    />
-                  </div>
-                </a>
-              </li>
-              <div
-                className="collapse"
-                id="mySpark"
-                data-parent="#side-menu-main"
-              >
-                <li>
-                  <NavLink
-                    to={'/my-spark/widgets'}
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">SPARK WIDGETS</div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    onClick={() => {
-                      dispatch(setAccordionToggled(false))
-                      props.hideHeaderIcons()
-                    }}
-                    to="/my-spark/archive"
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1">SPARK ARCHIVE</div>
-                    </div>
-                  </NavLink>
-                </li>
-                <li></li>
-              </div>
             </ul>
             <div className="sidebar-bottom">
               <div style={{ position: 'relative' }}>

@@ -6,8 +6,6 @@ function VerticalSeparator(props) {
       style={{
         width: '3px',
         backgroundColor: '#BBBDBF'
-        // margin: '0 5px'
-        // height: '100%'
       }}
     ></div>
   )

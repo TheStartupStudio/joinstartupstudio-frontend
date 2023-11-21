@@ -16,6 +16,8 @@ import socialPostCaptionIcon from '../../assets/images/My Spark Widget Icons/10.
 import videoScriptIcon from '../../assets/images/My Spark Widget Icons/11.Video-Script.svg'
 import imageIcon from '../../assets/images/My Spark Widget Icons/12.Image.svg'
 import { useHistory } from 'react-router-dom'
+import LTSButton from '../../components/LTSButtons/LTSButton'
+import useWindowWidth from '../../utils/hooks/useWindowWidth'
 
 function MySpark() {
   const widgets = [
@@ -93,14 +95,23 @@ function MySpark() {
     }
   ]
   const history = useHistory()
+  const windowWidth = useWindowWidth()
   return (
     <Container fluid>
       <Row>
         <div className="col-12 col-xl-12 px-0">
           <div className="account-page-padding page-border">
-            <div className="row ps-2">
-              <div className="col-md-6">
+            <div className="row ps-2 pb-4">
+              <div className="col-md-6 d-flex align-items-center ">
                 <h3 className="page-title mb-0">My SPARK</h3>
+              </div>
+              <div className={`col-md-6 ${windowWidth < 450 ? 'mt-3' : ''}`}>
+                <LTSButton
+                  name={'My spark archive'}
+                  width={windowWidth < 450 ? '100%' : '50%'}
+                  align={'end'}
+                  onClick={() => history.push('/my-spark/archive')}
+                />
               </div>
             </div>
             <div
