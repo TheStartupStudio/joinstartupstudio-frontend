@@ -5,17 +5,12 @@ import '../style.css'
 import { widgetInputData } from '../widgetInputData'
 
 import WidgetInputs from './WidgetInputs'
-import axios from 'axios'
-import qs from 'qs'
+
 import axiosInstance from '../../../utils/AxiosInstance'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { toast } from 'react-toastify'
 import LtsButton from '../../../components/LTSButtons/LTSButton'
 import useWindowWidth from '../../../utils/hooks/useWindowWidth'
-const authToken =
-  process.env.MY_SPARK_TOKEN ??
-  'dvNDAZv7ooEJnugmtCLwzHX6tkgRiuyIhBPJkFGpqfmTuCkcFllCeJaKyli1nKHP'
 
 function WidgetDetails(props) {
   const [widgetInputs, setWidgetInputs] = useState([])
@@ -28,17 +23,16 @@ function WidgetDetails(props) {
   const widgetName = location?.state?.widgetName
   const widgetType = location?.state?.widgetType
   const widgetApiType = location?.state?.widgetApiType
-
   function reduceInputs(inputs, nonPromptFields) {
     return inputs?.reduce(
       (result, input) => {
         const isExcluded = nonPromptFields?.some(
-          (field) => field === input.title
+          (field) => field === input?.title
         )
         if (!isExcluded) {
-          result.prompt[input.title] = input.value
+          result.prompt[input?.title] = input?.value
         } else {
-          result.nonPrompt[input.title.toLowerCase()] = input.value
+          result.nonPrompt[input?.title?.toLowerCase()] = input?.value
         }
         return result
       },
@@ -84,7 +78,10 @@ function WidgetDetails(props) {
     setShowAdvanced((prevState) => !prevState)
   }
 
+  const [generateButtonClicked, setGenerateButtonClicked] = useState(false)
   const handleGenerateClick = async () => {
+    setGenerateButtonClicked(true)
+
     setIsLoading(true)
     let newPrompt = ''
     const promptEntries = Object.entries(requestData.prompt)
@@ -129,15 +126,23 @@ function WidgetDetails(props) {
     }
 
     try {
-      const response = await axiosInstance.post(
-        `/mySparkArchive/getMazeAPI/${widgetApiType}`,
-        { ...newReqData, widgetName, widgetType }
-      )
-      history.push(`/my-spark/generate-page/${'response'}`, {
-        fromPage: 'widgets',
-        data: response.data
-      })
-      setIsLoading(false)
+      if (
+        !widgetInputs?.some(
+          (inp) => inp?.validation?.isRequired && inp?.value?.length === 0
+        )
+      ) {
+        const response = await axiosInstance.post(
+          `/mySparkArchive/getMazeAPI/${widgetApiType}`,
+          { ...newReqData, widgetName, widgetType }
+        )
+        history.push(`/my-spark/generate-page/${'response'}`, {
+          fromPage: 'widgets',
+          data: response.data
+        })
+        setIsLoading(false)
+      } else {
+        setIsLoading(false)
+      }
     } catch (error) {
       console.error(error)
       setIsLoading(false)
@@ -145,7 +150,7 @@ function WidgetDetails(props) {
   }
   const updateInputValues = (state, inputName, value) => {
     return state.map((input) =>
-      input.title === inputName ? { ...input, value } : input
+      input?.title === inputName ? { ...input, value } : input
     )
   }
 
@@ -182,6 +187,9 @@ function WidgetDetails(props) {
                   onChange={(inputName, value) => {
                     handleInputChange(inputName, value)
                   }}
+                  onBlur={(inputName, value) => console.log(inputName, value)}
+                  generateButtonClicked={generateButtonClicked}
+                  displayedErrors={null}
                 />
 
                 <div className={'widget-details__buttons mt-2'}>

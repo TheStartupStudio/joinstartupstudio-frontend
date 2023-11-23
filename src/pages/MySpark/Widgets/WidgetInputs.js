@@ -8,34 +8,38 @@ function WidgetInputs(props) {
     props.onChange(inputName, value, type)
   }
 
+  const handleInputBlur = (inputName, value, type) => {
+    props.onBlur(inputName, value, type)
+  }
+
   const renderInputs = (inputs, inputType) => {
-    return inputs?.map((input) =>
-      !input.isSelectInput ? (
-        <WidgetInput
-          key={input.title}
-          title={input.title}
-          description={input.description}
-          placeholder={input.placeholder}
-          value={input.value}
-          onChange={(value) => handleInputChange(input.title, value, inputType)}
-        />
-      ) : (
-        <MySparkSelectInput
-          key={input.title}
-          title={input.title}
-          description={input.description}
-          placeholder={input.placeholder}
-          value={input.value}
-          options={input.options}
-          onChange={(value) => handleInputChange(input.title, value, inputType)}
+    return inputs?.map((input) => {
+      const InputComponent = input?.isSelectInput
+        ? MySparkSelectInput
+        : WidgetInput
+
+      return (
+        <InputComponent
+          key={input?.title}
+          title={input?.title}
+          description={input?.description}
+          placeholder={input?.placeholder}
+          value={input?.value}
+          options={input?.options}
+          onChange={(value) =>
+            handleInputChange(input?.title, value, inputType)
+          }
+          onBlur={(value) => handleInputBlur(input?.title, value, inputType)}
+          validation={input?.validation}
+          generateButtonClicked={props.generateButtonClicked}
         />
       )
-    )
+    })
   }
 
   const filterInputs = (inputs, filter) => {
     return inputs?.filter((input) =>
-      filter === 'shownInputs' ? !input.isHidden : input.isHidden
+      filter === 'shownInputs' ? !input?.isHidden : input?.isHidden
     )
   }
 

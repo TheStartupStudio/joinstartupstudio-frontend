@@ -25,14 +25,23 @@ const company = {
   value: '',
   description: 'The name of the company.',
   placeholder: 'Youtube',
-  order: -1
+  order: -1,
+  validation: {
+    isRequired: true,
+    message: 'The company field is required'
+  }
 }
 const description = {
   title: 'Description',
   value: '',
   description: 'The description of the product or service.',
   placeholder: 'Creating content that inspires and entertains',
-  order: -1
+  order: -1,
+  validation: {
+    isRequired: true,
+    message: 'The description field is required'
+  },
+  type: 'textarea'
 }
 
 const name = {
@@ -40,7 +49,8 @@ const name = {
   value: '',
   description: 'The name of the document.',
   placeholder: '',
-  order: -1
+  order: -1,
+  validation: { isRequired: true, message: 'The name field is required' }
 }
 
 const title = {
@@ -48,7 +58,8 @@ const title = {
   value: '',
   description: 'The title of the document.',
   placeholder: 'The best summer destinations',
-  order: -1
+  order: -1,
+  validation: { isRequired: true, message: 'The title field is required' }
 }
 
 const keywords = {
@@ -56,14 +67,16 @@ const keywords = {
   value: '',
   description: 'The keywords to include.',
   placeholder: 'ocean, beach, hotel',
-  order: -1
+  order: -1,
+  validation: { isRequired: true, message: 'The keywords field is required' }
 }
 const subHeadings = {
   title: 'Subheadings',
   value: '',
   description: 'The subheadings of the article.',
   placeholder: 'Florida, Los Angeles, San Francisco',
-  order: -1
+  order: -1,
+  validation: { isRequired: true, message: 'The subheadings field is required' }
 }
 
 const product = {
@@ -71,14 +84,16 @@ const product = {
   value: '',
   description: 'The name of the product or service.',
   placeholder: 'Youtube',
-  order: -1
+  order: -1,
+  validation: { isRequired: true, message: 'The product field is required' }
 }
 const audience = {
   title: 'Audience',
   value: '',
   description: 'The audience of the product or service.',
   placeholder: 'Gamers',
-  order: -1
+  order: -1,
+  validation: { isRequired: true, message: 'The audience field is required' }
 }
 
 const domains = {
@@ -86,7 +101,11 @@ const domains = {
   value: '',
   description: 'The domains of the startup.',
   placeholder: 'Web programming, digital art, artificial intelligence',
-  order: -1
+  order: -1,
+  validation: {
+    isRequired: true,
+    message: 'The domains field is required'
+  }
 }
 const length = {
   title: 'Length',
@@ -185,6 +204,197 @@ const resolution = {
   order: -1
 }
 
+const languageOptions = [
+  { name: 'Afar', value: 'afar' },
+  { name: 'Аҧсуа', value: 'аҧсуа' },
+  { name: 'Afrikaans', value: 'afrikaans' },
+  { name: 'Akana', value: 'akana' },
+  { name: 'አማርኛ', value: 'አማርኛ' },
+  { name: 'Aragonés', value: 'aragonés' },
+  { name: 'العربية', value: 'العربية' },
+  { name: 'অসমীয়া', value: 'অসমীয়া' },
+  { name: 'Авар', value: 'авар' },
+  { name: 'Aymar', value: 'aymar' },
+  { name: 'Azərbaycanca / آذربايجان', value: 'azərbaycanca / آذربايجان' },
+  { name: 'Башҡорт', value: 'башҡорт' },
+  { name: 'Беларуская', value: 'беларуская' },
+  { name: 'Български', value: 'български' },
+  { name: 'भोजपुरी', value: 'भोजपुरी' },
+  { name: 'Bislama', value: 'bislama' },
+  { name: 'Bamanankan', value: 'bamanankan' },
+  { name: 'বাংলা', value: 'বাংলা' },
+  { name: 'བོད་ཡིག / Bod skad', value: 'བོད་ཡིག / bod skad' },
+  { name: 'Brezhoneg', value: 'brezhoneg' },
+  { name: 'Bosanski', value: 'bosanski' },
+  { name: 'Català', value: 'català' },
+  { name: 'Нохчийн', value: 'нохчийн' },
+  { name: 'Chamoru', value: 'chamoru' },
+  { name: 'Corsu', value: 'corsu' },
+  { name: 'Nehiyaw', value: 'nehiyaw' },
+  { name: 'Česky', value: 'česky' },
+  { name: 'словѣньскъ / slověnĭskŭ', value: 'словѣньскъ / slověnĭskŭ' },
+  { name: 'Чăваш', value: 'чăваш' },
+  { name: 'Cymraeg', value: 'cymraeg' },
+  { name: 'Dansk', value: 'dansk' },
+  { name: 'Deutsch', value: 'deutsch' },
+  { name: 'ދިވެހިބަސް', value: 'ދިވެހިބަސް' },
+  { name: 'ཇོང་ཁ', value: 'ཇོང་ཁ' },
+  { name: 'Ɛʋɛ', value: 'ɛʋɛ' },
+  { name: 'Ελληνικά', value: 'ελληνικά' },
+  { name: 'English', value: 'english' },
+  { name: 'Esperanto', value: 'esperanto' },
+  { name: 'Español', value: 'español' },
+  { name: 'Eesti', value: 'eesti' },
+  { name: 'Euskara', value: 'euskara' },
+  { name: 'فارسی', value: 'فارسی' },
+  { name: 'Fulfulde', value: 'fulfulde' },
+  { name: 'Suomi', value: 'suomi' },
+  { name: 'Na Vosa Vakaviti', value: 'na vosa vakaviti' },
+  { name: 'Føroyskt', value: 'føroyskt' },
+  { name: 'Français', value: 'français' },
+  { name: 'Frysk', value: 'frysk' },
+  { name: 'Gaeilge', value: 'gaeilge' },
+  { name: 'Gàidhlig', value: 'gàidhlig' },
+  { name: 'Galego', value: 'galego' },
+  { name: "Avañe'ẽ", value: "avañe'ẽ" },
+  { name: 'ગુજરાતી', value: 'ગુજરાતી' },
+  { name: 'Gaelg', value: 'gaelg' },
+  { name: 'هَوُسَ', value: 'هَوُسَ' },
+  { name: 'עברית', value: 'עברית' },
+  { name: 'हिन्दी', value: 'हिन्दी' },
+  { name: 'Hiri Motu', value: 'hiri motu' },
+  { name: 'Hrvatski', value: 'hrvatski' },
+  { name: 'Krèyol ayisyen', value: 'krèyol ayisyen' },
+  { name: 'Magyar', value: 'magyar' },
+  { name: 'Հայերեն', value: 'հայերեն' },
+  { name: 'Otsiherero', value: 'otsiherero' },
+  { name: 'Interlingua', value: 'interlingua' },
+  { name: 'Bahasa Indonesia', value: 'bahasa indonesia' },
+  { name: 'Interlingue', value: 'interlingue' },
+  { name: 'Igbo', value: 'igbo' },
+  { name: 'ꆇꉙ / 四川彝语', value: 'ꆇꉙ / 四川彝语' },
+  { name: 'Iñupiak', value: 'iñupiak' },
+  { name: 'Ido', value: 'ido' },
+  { name: 'Íslenska', value: 'íslenska' },
+  { name: 'Italiano', value: 'italiano' },
+  { name: 'ᐃᓄᒃᑎᑐᑦ', value: 'ᐃᓄᒃᑎᑐᑦ' },
+  { name: '日本語', value: '日本語' },
+  { name: 'Basa Jawa', value: 'basa jawa' },
+  { name: 'ქართული', value: 'ქართული' },
+  { name: 'KiKongo', value: 'kikongo' },
+  { name: 'Gĩkũyũ', value: 'gĩkũyũ' },
+  { name: 'Kuanyama', value: 'kuanyama' },
+  { name: 'Қазақша', value: 'қазақша' },
+  { name: 'Kalaallisut', value: 'kalaallisut' },
+  { name: 'ភាសាខ្មែរ', value: 'ភាសាខ្មែរ' },
+  { name: 'ಕನ್ನಡ', value: 'ಕನ್ನಡ' },
+  { name: '한국어', value: '한국어' },
+  { name: 'Kanuri', value: 'kanuri' },
+  { name: 'कश्मीरी / كشميري', value: 'कश्मीरी / كشميري' },
+  { name: 'Kurdî / كوردی', value: 'kurdî / كوردی' },
+  { name: 'Коми', value: 'коми' },
+  { name: 'Kernewek', value: 'kernewek' },
+  { name: 'Kırgızca / Кыргызча', value: 'кыргызча' },
+  { name: 'Latina', value: 'latina' },
+  { name: 'Lëtzebuergesch', value: 'lëtzebuergesch' },
+  { name: 'Luganda', value: 'luganda' },
+  { name: 'Limburgs', value: 'limburgs' },
+  { name: 'Lingála', value: 'lingála' },
+  { name: 'ລາວ / Pha xa lao', value: 'ລາວ / pha xa lao' },
+  { name: 'Lietuvių', value: 'lietuvių' },
+  { name: 'Tshiluba', value: 'tshiluba' },
+  { name: 'Latviešu', value: 'latviešu' },
+  { name: 'Malagasy', value: 'malagasy' },
+  { name: 'Kajin Majel / Ebon', value: 'kajin majel / ebon' },
+  { name: 'Māori', value: 'māori' },
+  { name: 'Македонски', value: 'македонски' },
+  { name: 'മലയാളം', value: 'മലയാളം' },
+  { name: 'Монгол', value: 'монгол' },
+  { name: 'Moldovenească', value: 'moldovenească' },
+  { name: 'मराठी', value: 'मराठी' },
+  { name: 'Bahasa Melayu', value: 'bahasa melayu' },
+  { name: 'bil-Malti', value: 'bil-malti' },
+  { name: 'မြန်မာစာ', value: 'မြန်မာစာ' },
+  { name: 'Dorerin Naoero', value: 'dorerin naoero' },
+  { name: 'Norsk bokmål', value: 'norsk bokmål' },
+  { name: 'Sindebele', value: 'sindebele' },
+  { name: 'नेपाली', value: 'नेपाली' },
+  { name: 'Oshiwambo', value: 'oshiwambo' },
+  { name: 'Nederlands', value: 'nederlands' },
+  { name: 'Norsk nynorsk', value: 'norsk nynorsk' },
+  { name: 'Norsk', value: 'norsk' },
+  { name: 'isiNdebele', value: 'isindebele' },
+  { name: 'Diné bizaad', value: 'diné bizaad' },
+  { name: 'Chi-Chewa', value: 'chi-chewa' },
+  { name: 'Occitan', value: 'occitan' },
+  { name: 'ᐊᓂᔑᓈᐯᒧᐎᓐ / Anishinaabemowin', value: 'ᐊᓂᔑᓈᐯᒧᐎᓐ / anishinaabemowin' },
+  { name: 'Oromoo', value: 'oromoo' },
+  { name: 'ଓଡ଼ିଆ', value: 'ଓଡ଼ିଆ' },
+  { name: 'Иронау', value: 'иронау' },
+  { name: 'ਪੰਜਾਬੀ / पंजाबी / پنجابي', value: 'ਪੰਜਾਬੀ / पंजाबी / پنجابي' },
+  { name: 'Pāli / पाऴि', value: 'pāli / पाऴि' },
+  { name: 'Polski', value: 'polski' },
+  { name: 'پښتو', value: 'پښتو' },
+  { name: 'Português', value: 'português' },
+  { name: 'Runa Simi', value: 'runa simi' },
+  { name: 'Rumantsch', value: 'rumantsch' },
+  { name: 'Kirundi', value: 'kirundi' },
+  { name: 'Română', value: 'română' },
+  { name: 'Русский', value: 'русский' },
+  { name: 'Kinyarwandi', value: 'kinyarwandi' },
+  { name: 'संस्कृतम्', value: 'संस्कृतम्' },
+  { name: 'Sardu', value: 'sardu' },
+  { name: 'सिनधि', value: 'सिनधि' },
+  { name: 'Sámegiella', value: 'sámegiella' },
+  { name: 'Sängö', value: 'sängö' },
+  {
+    name: 'Srpskohrvatski / Српскохрватски',
+    value: 'srpskohrvatski / српскохрватски'
+  },
+  { name: 'සිංහල', value: 'සිංහල' },
+  { name: 'Slovenčina', value: 'slovenčina' },
+  { name: 'Slovenščina', value: 'slovenščina' },
+  { name: 'Gagana Samoa', value: 'gagana samoa' },
+  { name: 'chiShona', value: 'chishona' },
+  { name: 'Soomaaliga', value: 'soomaaliga' },
+  { name: 'Shqip', value: 'shqip' },
+  { name: 'Српски', value: 'српски' },
+  { name: 'SiSwati', value: 'siswati' },
+  { name: 'Sesotho', value: 'sesotho' },
+  { name: 'Basa Sunda', value: 'basa sunda' },
+  { name: 'Svenska', value: 'svenska' },
+  { name: 'Kiswahili', value: 'kiswahili' },
+  { name: 'தமிழ்', value: 'தமிழ்' },
+  { name: 'తెలుగు', value: 'తెలుగు' },
+  { name: 'Тоҷикӣ', value: 'тоҷикӣ' },
+  { name: 'ไทย / Phasa Thai', value: 'ไทย / phasa thai' },
+  { name: 'ትግርኛ', value: 'ትግርኛ' },
+  { name: 'Туркмен / تركمن', value: 'туркмен / تركمن' },
+  { name: 'Tagalog', value: 'tagalog' },
+  { name: 'Setswana', value: 'setswana' },
+  { name: 'Lea Faka-Tonga', value: 'lea faka-tonga' },
+  { name: 'Türkçe', value: 'türkçe' },
+  { name: 'Xitsonga', value: 'xitsonga' },
+  { name: 'Tatarça', value: 'tatarça' },
+  { name: 'Twi', value: 'twi' },
+  { name: 'Reo Mā`ohi', value: 'reo mā`ohi' },
+  { name: 'Uyƣurqə / ئۇيغۇرچە', value: 'uyƣurqə / ئۇيغۇرچە' },
+  { name: 'Українська', value: 'українська' },
+  { name: 'اردو', value: 'اردو' },
+  { name: 'Ўзбек', value: 'ўзбек' },
+  { name: 'Tshivenḓa', value: 'tshivenḓa' },
+  { name: 'Tiếng Việt', value: 'tiếng việt' },
+  { name: 'Volapük', value: 'volapük' },
+  { name: 'Walon', value: 'walon' },
+  { name: 'Wollof', value: 'wollof' },
+  { name: 'isiXhosa', value: 'isixhosa' },
+  { name: 'ייִדיש', value: 'ייִדיש' },
+  { name: 'Yorùbá', value: 'yorùbá' },
+  { name: 'Cuengh / Tôô / 壮语', value: 'cuengh / tôô / 壮语' },
+  { name: '中文', value: 'chinese' },
+  { name: 'isiZulu', value: 'isizulu' }
+]
+
 const hiddenWidgetInputs = [
   {
     title: 'Language',
@@ -193,7 +403,7 @@ const hiddenWidgetInputs = [
     placeholder: '',
     default: 'English',
     isSelectInput: true,
-    options: [{ value: 'english', name: 'English' }],
+    options: languageOptions,
     order: 1,
     isHidden: true
   },
