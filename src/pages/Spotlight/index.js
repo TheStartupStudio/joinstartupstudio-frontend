@@ -1,46 +1,39 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Row } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import CountdownTimer from 'react-component-countdown-timer'
-import moment from 'moment'
+import axiosInstance from '../../utils/AxiosInstance'
+import { changeSidebarState } from '../../redux'
+import SpotlightImg from '../../assets/images/spotlight-thumbnail.png'
+import ApplyForPitch from '../StartupProfile/components/Modals/ApplyForPitch'
+import Countdown from 'react-countdown'
+import StartupMailer from '../../components/StartupLiveMailer'
+import SpotlightSimpleModal from '../../components/Modals/Spotlight/SpotlightSimpleModal'
+import SpotlightApplyModal from '../../components/Modals/Spotlight/SpotlightApplyModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChevronLeft,
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons'
-import IntMessages from '../../utils/IntlMessages'
-import axiosInstance from '../../utils/AxiosInstance'
-import { changeSidebarState } from '../../redux'
 import Video from '../../components/Video'
-import SpotlightImg from '../../assets/images/spotlight-thumbnail.png'
-import { faUsers } from '@fortawesome/free-solid-svg-icons'
-
-import { ShowMessenger } from '../../utils/helpers'
-import ApplyForPitch from '../StartupProfile/components/Modals/ApplyForPitch'
-import Countdown from 'react-countdown'
-import Chat from '../../components/NoteAndChat/chat'
+import '../../assets/css/media.css'
 
 function StartupLive() {
-  const startDate = new Date()
-  const firstEvent = moment(startDate).format('2021-06-26T24:00:00')
   const firstEventTime = new Date('2023-01-30T16:30:00').getTime()
-  const secondEvent = moment(startDate).format('2021-05-27T16:30:00')
-  const [timeLeft, setTimeLeft] = useState(null)
-  const [showButton, setShowButton] = useState(false)
-  const [startStartupLiveVideoIndex, setStartStartupLiveVideoIndex] =
-    useState(0)
-  const [endStartupLiveVideoIndex, setEndStartupLiveVideoIndex] = useState(3)
-  const [endStartupLiveVideoIndexMobile, setEndStartupLiveVideoIndexMobile] =
-    useState(1)
   const [startupLiveVideos, setStartupLiveVideos] = useState([])
-  const currentLanguage = useSelector((state) => state.lang.locale)
+  const userLevel = useSelector((state) => state.user.user.user.level)
   const dispatch = useDispatch()
   const [showSpotlight, setShowSpotlight] = useState(false)
-  const [state, setState] = useState({})
   const [PitchApplyModal, setPitchApplyModal] = useState(false)
   const [width, setWidth] = useState(window.innerWidth)
-
+  const [startIndex, setStartIndex] = useState(0)
+  const [endIndex, setEndIndex] = useState(4)
+  const actualpage = window.location.href.includes('encouragement')
+    ? 'encouragement'
+    : window.location.href.includes('master-classes')
+      ? 'master-classes'
+      : 'startup-live'
+  const [connections, setConnections] = useState([])
   const resize = () => {
     setWidth(window.innerWidth)
   }
@@ -66,47 +59,6 @@ function StartupLive() {
     dispatch(changeSidebarState(false))
   })
 
-  const getStartupLiveVideos = async () => {
-    await axiosInstance
-      .get(`/contents/by-type/startup-live`)
-      .then((response) => {
-        setStartupLiveVideos(response.data)
-      })
-      .catch((err) => err)
-  }
-
-  const handlePreviousVideo = async (page, startIndex, endIndex) => {
-    if (startIndex > 0) {
-      setStartStartupLiveVideoIndex(startIndex - 1)
-      setEndStartupLiveVideoIndex(endIndex - 1)
-    }
-  }
-
-  const handleNextVideo = async (page, startIndex, endIndex) => {
-    if (endIndex < startupLiveVideos.length) {
-      setStartStartupLiveVideoIndex(startIndex + 1)
-      setEndStartupLiveVideoIndex(endIndex + 1)
-    }
-  }
-
-  const handleNextVideoMobile = async (page, startIndex, endIndexMobile) => {
-    if (endIndexMobile < startupLiveVideos.length) {
-      setStartStartupLiveVideoIndex(startIndex + 1)
-      setEndStartupLiveVideoIndexMobile(endIndexMobile + 1)
-    }
-  }
-
-  const handlePreviousVideoMobile = async (
-    page,
-    startIndex,
-    endIndexMobile
-  ) => {
-    if (startIndex > 0) {
-      setStartStartupLiveVideoIndex(startIndex - 1)
-      setEndStartupLiveVideoIndexMobile(endIndexMobile - 1)
-    }
-  }
-
   const renderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
       return ' SOON'
@@ -120,10 +72,78 @@ function StartupLive() {
     }
   }
 
+  const [spotlightSimpleModal, setSpotlightSimpleModal] = useState({
+    type: '',
+    show: null
+  })
+  const [spotlightApplyModal, setSpotlightApplyModal] = useState(false)
+
+  const openSimpleSpotlightModal = (type) => {
+    let newSpotlightSimpleModal = { ...spotlightSimpleModal }
+    newSpotlightSimpleModal.type = type
+    newSpotlightSimpleModal.show = true
+    setSpotlightSimpleModal(newSpotlightSimpleModal)
+  }
+  const closeSimpleSpotlightModal = (type) => {
+    let newSpotlightSimpleModal = { ...spotlightSimpleModal }
+    newSpotlightSimpleModal.type = type
+    newSpotlightSimpleModal.show = false
+    setSpotlightSimpleModal(newSpotlightSimpleModal)
+  }
+
+  const openSpotlightApplyModal = () => {
+    setSpotlightApplyModal(true)
+  }
+  const closeSpotlightApplyModal = () => {
+    setSpotlightApplyModal(false)
+  }
+
+  const SpotlightGridItem = (props) => {
+    return (
+      <div class="col-lg-6 col-md-12 ">
+        <div
+          class="p-3 px-5 border d-flex flex-column align-items-center justify-content-center"
+          style={{ backgroundColor: '#F8F7F7', minHeight: 210 }}
+        >
+          <div className="text-center">
+            <button
+              style={{
+                backgroundColor: '#51c7df',
+                color: '#fff',
+                fontSize: 14,
+                border: '1px solid #51C7DF',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                props.onOpen()
+              }}
+              className="px-5 py-2 border-0 color transform text-uppercase my-1"
+            >
+              {props.buttonTitle}
+            </button>
+          </div>
+          <div
+            style={{
+              font: 'normal normal normal 15px/17px Montserrat',
+              letterSpacing: 0.52,
+              color: '#333D3D',
+              textAlign: 'left',
+              marginTop: 20
+            }}
+          >
+            {props.content}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <Container fluid>
       <Row>
-        <div className="col-12 col-xl-9 pe-0">
+        <div className="col-12  pe-0">
           <div
             className="account-page-padding page-border spotlight-container"
             style={{ minHeight: '100vh' }}
@@ -132,70 +152,83 @@ function StartupLive() {
             <p className="page-description">
               Pitch your startup to the Learn to Start community.
             </p>
+
+            <Container fluid className={'m-0 g-0 '}>
+              <div className="row g-2">
+                <SpotlightGridItem
+                  content={
+                    'Learn about the Spotlight competition and determine if you would like to enter.'
+                  }
+                  buttonTitle={'WHAT IS SPOTLIGHT'}
+                  type={'whatIsSpotlight'}
+                  onOpen={() => openSimpleSpotlightModal('whatIsSpotlight')}
+                />
+                <SpotlightGridItem
+                  content={
+                    'Learn how to qualify to apply for the Spotlight competition.'
+                  }
+                  buttonTitle={'RULES OF SPOTLIGHT'}
+                  type={'rulesOfSpotlight'}
+                  onOpen={() => openSimpleSpotlightModal('rulesOfSpotlight')}
+                />
+                <SpotlightGridItem
+                  content={'Learn how to apply for the Spotlight competition.'}
+                  buttonTitle={'APPLICATION PROCESS'}
+                  type={'applicationProcess'}
+                  onOpen={() => openSimpleSpotlightModal('applicationProcess')}
+                />
+                <SpotlightGridItem
+                  content={'Apply for the Spotlight competition.'}
+                  buttonTitle={'APPLY NOW'}
+                  type={'applyNow'}
+                  onOpen={() => openSpotlightApplyModal()}
+                />
+              </div>
+            </Container>
             <Row>
-              <div
-                className="col-12"
-                style={{ visibility: showSpotlight ? 'visible' : 'hidden' }}
-              >
-                <div
-                  style={{
-                    width: '100%',
-                    maxWidth: '650px'
-                  }}
-                >
-                  <iframe
-                    src="https://stream.joinstartuplive.com/view/48dc5f73-924a-4b32-8457-1dcca27734e6/?embedded=True"
-                    scrolling="no"
-                    width="100%"
-                    // height='380px'
-                    height={width < 700 ? (width + 75) / 2.15 : 380}
-                    className="spl-offline-image-preview"
-                    style={{
-                      border: '1px solid #BBBDBF'
-                    }}
-                  ></iframe>
-                  <div className="row pitch-apply">
-                    <div className="col-12 col-md-7 my-2 d-flex">
-                      <p className="my-auto">
-                        NEXT PITCH IS
-                        <Countdown date={firstEventTime} renderer={renderer} />
-                      </p>
-                    </div>
-                    <div className="col-12 col-md-5 my-2">
-                      <button
-                        className="d-block float-start float-md-end"
-                        onClick={(e) => {
-                          setPitchApplyModal(true)
-                          e.preventDefault()
-                        }}
-                      >
-                        APPLICATIONS OPEN JAN 2023
-                      </button>
-                    </div>
+              <div>
+                <div className="d-flex justify-content-between guidance-videos-top mt-5 guidance-encouragement-page-titles ">
+                  <h3>SPOTLIGHT® Archive</h3>
+                  <div class={'d-flex align-items-end  blue-text'}>
+                    View all
                   </div>
                 </div>
               </div>
             </Row>
-            <Row>
-              <div>
-                <div className="guidance-videos-top mt-5 guidance-encouragement-page-titles ">
-                  <h3>SPOTLIGHT® Archive</h3>
-                  {/* <Link className='guidance-link' to={`/startup-live/videos`}>
-                    <IntMessages id='general.view_all' />
-                  </Link> */}
-                </div>
-                <div className="card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start flex-column flex-sm-row">
+            <div className="beyond-videos-desktop mt-2 d-flex align-items-center">
+              <div className="arrow-icon-1" style={{ height: '100%' }}>
+                <button
+                  className="videos-track"
+                  onClick={() => {
+                    // handlePreviousVideo(1, startIndex, endIndex)
+                  }}
+                  style={{ width: '4%' }}
+                >
+                  <FontAwesomeIcon
+                    icon={faChevronLeft}
+                    className="videos-track-icon"
+                    style={{ marginRight: '20px' }}
+                  />
+                </button>
+              </div>
+              <div
+                className="card-group desktop-menu card-group-beyond-your-course"
+                // style={{ marginTop: '15px' }}
+                style={{ width: '94%' }}
+              >
+                <div className="card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start  flex-sm-row">
                   {[0, 0].map((item, index) => (
                     <div
-                      className="card-group mt-4 all-videos-beyond-your-course-videos col-12 col-sm-5 col-md-4 me-4"
+                      className="card-group all-videos-beyond-your-course-videos col-12 col-sm-5 col-md-4 me-4"
                       key={index}
+                      style={{ width: '20%' }}
                     >
                       <div
                         className="card mobile-card"
                         // style={{ paddingRight: '20px' }}
                       >
                         <Link to={'#'}>
-                          <div className="beyond-your-course-video-thumb beyound-all-videos-thumb">
+                          <div className="beyond-your-course-video-thumb beyound-all-videos-thumb spotlight">
                             <div
                               style={{
                                 position: 'absolute',
@@ -206,13 +239,14 @@ function StartupLive() {
                             <div>
                               <img
                                 src={SpotlightImg}
-                                // style={{ height: '200px' }}
                                 width="100%"
-                                // height=''
+                                alt="spotlight"
+                                style={{
+                                  height: '115px',
+                                  objectFit: 'contain'
+                                }}
                               />
-                              <div className="beyond-your-course-video-thumb-icon">
-                                {/* <FontAwesomeIcon icon={faPlay} /> */}
-                              </div>
+                              <div className="beyond-your-course-video-thumb-icon"></div>
                             </div>
                           </div>
                         </Link>
@@ -221,40 +255,139 @@ function StartupLive() {
                   ))}
                 </div>
               </div>
-            </Row>
+              <div
+                className="arrow-icon-1 justify-content-start"
+                style={{ height: '100%' }}
+              >
+                <button
+                  className="videos-track"
+                  style={{ width: '4%' }}
+                  // onClick={() => handleNextVideo(1, startIndex, endIndex)}
+                >
+                  <FontAwesomeIcon
+                    icon={faChevronRight}
+                    className="videos-track-icon"
+                  />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="col-12 col-xl-3 px-3">
-          <div className="msg-widget-startup-live d-none">
-            {/* <ShowMessenger /> */}
-            {/* <Chat room={'spotlight-room'} /> */}
-            {/* <NotesButton /> */}
-
-            {/* <div className={'community-connect my-2'}>
-              <Link to='/my-connections'>
-                <FontAwesomeIcon
-                  icon={faUsers}
-                  style={{
-                    color: '#01C5D1',
-                    background: 'white',
-                    borderRadius: '50%',
-                    height: '25px',
-                    width: '36px',
-                    opacity: '1'
-                  }}
-                />
-              </Link>
-              <Link to='/my-connections'>
-                <p className='my-auto ms-2'>Connect with my community</p>
-              </Link>
-            </div> */}
-          </div>
-        </div>
+        {/*<div className="col-12 col-xl-3 px-3">*/}
+        {/*  <div className="msg-widget-startup-live">*/}
+        {/*    <StartupMailer userLevel={{ name: userLevel }} />*/}
+        {/*  </div>*/}
+        {/*</div>*/}
       </Row>
-      <ApplyForPitch
-        show={PitchApplyModal}
-        onHide={() => setPitchApplyModal(false)}
-      />
+      {/*<ApplyForPitch*/}
+      {/*  show={PitchApplyModal}*/}
+      {/*  onHide={() => setPitchApplyModal(false)}*/}
+      {/*/>*/}
+      {spotlightSimpleModal.type === 'whatIsSpotlight' && (
+        <SpotlightSimpleModal
+          show={
+            spotlightSimpleModal.type === 'whatIsSpotlight' &&
+            spotlightSimpleModal.show
+          }
+          onHide={() => closeSimpleSpotlightModal('whatIsSpotlight')}
+          content={`                   
+                  <p>Spotlight is a virtual pitch competition open to all Learn to Start students through their platform. It introduces the individuals and teams to our community of global leaders and industry experts and provides key resources to help launch their ideas and ventures. It also gives our participants the unique opportunity to use the art of effective communication and pitch themselves and their ideas in the world. Winners of the Spotlight competition earn dedicated monthly mentorship from our group of global leaders and industry experts and enter into a virtual incubator process to take their initiatives to market.</p>
+                  <p>Spotlight accepts all types of venture proposals whether they be community-based organizations or startups, not-for-profit or for-profit.</p>
+                  <p>Spotlight has been created to give all of our Learn to Start participants the opportunity to experience a powerful platform where feedback from our experts drives valuable learning outcomes. For those individuals and teams who display well-crafted models with real potential in the markets. Spotlight is an opportunity to access our powerful virtual incubator.</p>
+                  <p>This incubator is unlike the traditional accelerator models currently offered in the market today. We focus on all aspects of the Learn to Start model based on the real meaning of entrepreneurship so as to ensure these startups can reach the critical next level in their journey. This is where selected participants or teams can gain monthly access to our entire community of industry partners to provide critical expertise and mentorship as they push to market.</p>
+                  `}
+          title={'What is spotlight'}
+        />
+      )}{' '}
+      {spotlightSimpleModal.type === 'rulesOfSpotlight' && (
+        <SpotlightSimpleModal
+          show={
+            spotlightSimpleModal.type === 'rulesOfSpotlight' &&
+            spotlightSimpleModal.show
+          }
+          onHide={() => closeSimpleSpotlightModal('rulesOfSpotlight')}
+          content={`<ul style=' display: flex;
+                                flex-direction: column;
+                                gap: 10px;'>
+              <li>
+                To pitch in a Spotlight event, you must be at least 16 years old
+                and a registered user inside of the Learn to Start platform with
+                at least one year of experience on the platform.
+              </li>
+       
+              <li>
+                Participants will have 12 minutes to present their pitch deck,
+                with additional minutes allocated to Q&A from the expert panel.
+              </li>
+              <li>
+                Ventures submitted for Spotlight are not kept confidential, so
+                teams should not include detailed descriptions of intellectual
+                property in their submission. Participants retain ownership over
+                their ventures, concepts, and work.
+              </li>
+              <li>
+                All participants are expected to compete with integrity and
+                shall not knowingly deceive panels or members of the advisory
+                committee. All presented materials shall be offered as an
+                accurate representation of knowledge and expectations and shall
+                not contain false or misleading statements. Participants who
+                violate this expectation of integrity are subject to
+                disqualification and revocation of their Learn to Start platform
+                membership.
+              </li>
+              <li>
+                Spotlight participants authorize Learn to Start and its
+                affiliates to use a summary of the content of their submission
+                and any video and image submissions for publicity purposes
+                related to Spotlight.
+              </li>
+              <li>
+                The organizers of Spotlight reserve the right to disqualify any
+                entry that, in their judgment, violates the spirit of the event
+                guidelines.
+              </li>
+            </ul>`}
+          title={'Rules of Spotlight'}
+        />
+      )}{' '}
+      {spotlightSimpleModal.type === 'applicationProcess' && (
+        <SpotlightSimpleModal
+          show={
+            spotlightSimpleModal.type === 'applicationProcess' &&
+            spotlightSimpleModal.show
+          }
+          onHide={() => closeSimpleSpotlightModal('applicationProcess')}
+          content={`<ul style=' display: flex;
+                                flex-direction: column;
+                                gap: 10px;'>
+                      <li>All participants planning to pitch should work directly with their instructors, mentors, and network so as to help them review their business models, financial models, presentation strategies, and pitch decks.</li>
+                      <li>Once students are ready, they send their submission inside their Learn to Start platform on the Spotlight page. Once their submission qualifies, they will get scheduled for a virtual pitch in one of our upcoming Spotlight events.</li>
+                      <li>If their application does not qualify, they can submit in the next year’s application process.</li>
+                      <li>The application includes the following:
+                       <ul style=' display: flex;
+                                   flex-direction: column;
+                                   gap: 10px;
+                                   margin-top: 10px'>
+                          <li>Identify who is pitching</li>
+                          <li>Identify the name of the product or service</li>
+                          <li>Describe the product or service</li>
+                          <li>Identify the type of mentorship you are applying for</li>
+                          <li>Upload your pitch deck</li>
+                          <li>Upload your business plan</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  `}
+          title={'Application Process'}
+        />
+      )}
+      {spotlightApplyModal && (
+        <SpotlightApplyModal
+          show={spotlightApplyModal}
+          onHide={() => closeSpotlightApplyModal()}
+          title={'Apply to Pitch'}
+        />
+      )}
     </Container>
   )
 }
