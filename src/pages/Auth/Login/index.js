@@ -1,103 +1,110 @@
-import React, { useState } from "react";
-import { Link, NavLink, useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { FormattedMessage } from "react-intl";
-import { Auth } from "aws-amplify";
-import { userLogin, loginLoading } from "../../../redux";
-import IntlMessages from "../../../utils/IntlMessages";
-import { validateEmail } from "../../../utils/helpers";
-import "./index.css";
-import triangleIcon from "../../../assets/images/triangle.png";
+import React, { useState } from 'react'
+import { Link, NavLink, useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import { FormattedMessage } from 'react-intl'
+import { Auth } from 'aws-amplify'
+import { userLogin, loginLoading } from '../../../redux'
+import IntlMessages from '../../../utils/IntlMessages'
+import { validateEmail } from '../../../utils/helpers'
+import './index.css'
+import triangleIcon from '../../../assets/images/triangle.png'
+import axiosInstance from '../../../utils/AxiosInstance'
+import { updateStartTime } from '../../../redux/user/Actions'
 
 function Login() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({})
   const currentLanguage =
-    localStorage.getItem("currentLanguage") !== undefined ||
-    localStorage.getItem("currentLanguage") !== ""
-      ? localStorage.getItem("currentLanguage")
-      : "en";
-  const [loading, setLoading] = useState(false);
-  const isLoading = useSelector((state) => state.user.loginLoading);
-  const history = useHistory();
+    localStorage.getItem('currentLanguage') !== undefined ||
+    localStorage.getItem('currentLanguage') !== ''
+      ? localStorage.getItem('currentLanguage')
+      : 'en'
+  const [loading, setLoading] = useState(false)
+  const isLoading = useSelector((state) => state.user.loginLoading)
+  const history = useHistory()
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
     setUser((prevValues) => ({
       ...prevValues,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const enterLogin = (e) => {
-    if (e.key.toLowerCase() == "enter") handleSubmit(e);
-  };
+    if (e.key.toLowerCase() == 'enter') handleSubmit(e)
+  }
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    dispatch(loginLoading(true));
+    event.preventDefault()
+    setLoading(true)
+    dispatch(loginLoading(true))
 
-    if (!user.email || user.email === "") {
-      toast.error(<IntlMessages id="alerts.email_required" />);
-      dispatch(loginLoading(false));
-    } else if (!user.password || user.password === "") {
-      toast.error(<IntlMessages id="alerts.password_required" />);
-      dispatch(loginLoading(false));
+    if (!user.email || user.email === '') {
+      toast.error(<IntlMessages id="alerts.email_required" />)
+      dispatch(loginLoading(false))
+    } else if (!user.password || user.password === '') {
+      toast.error(<IntlMessages id="alerts.password_required" />)
+      dispatch(loginLoading(false))
     } else if (!validateEmail(user.email)) {
-      toast.error(<IntlMessages id="alerts.valid_email" />);
-      dispatch(loginLoading(false));
+      toast.error(<IntlMessages id="alerts.valid_email" />)
+      dispatch(loginLoading(false))
     } else {
       await Auth.signIn(user.email, user.password)
-        .then((response) => {
+        .then(async (response) => {
           localStorage.setItem(
-            "access_token",
+            'access_token',
             response.signInUserSession.idToken.jwtToken
-          );
+          )
           localStorage.setItem(
-            "language",
-            response.attributes["custom:language"]
-          );
-          localStorage.setItem("email", user.email);
-          
+            'language',
+            response.attributes['custom:language']
+          )
+          localStorage.setItem('email', user.email)
+          // if (response.signInUserSession.idToken.jwtToken) {
+          //   const newTime = await axiosInstance.get(
+          //     '/myPerformanceData/loginTime'
+          //   )
+          //   console.log(newTime)
+          // }
+
           dispatch(userLogin(user.password)).then((res) => {
-            if (res === "passwordResetRequired") {
-              history.push("/password-change-required");
+            if (res === 'passwordResetRequired') {
+              history.push('/password-change-required')
             }
-              history.push('/dashboard')
-            
-          });
+            history.push('/dashboard')
+          })
         })
         .catch((err) => {
-          dispatch(loginLoading(false));
-          if (err.message === "Incorrect username or password.") {
-            toast.error(<IntlMessages id="alerts.email_password_incorrect" />);
+          dispatch(loginLoading(false))
+          if (err.message === 'Incorrect username or password.') {
+            toast.error(<IntlMessages id="alerts.email_password_incorrect" />)
           } else {
-            toast.error(<IntlMessages id="alerts.something_went_wrong" />);
+            toast.error(<IntlMessages id="alerts.something_went_wrong" />)
           }
-        });
+        })
     }
     // dispatch(loginLoading(false))
-  };
+  }
 
   return (
     <div
       className="container-fluid md-px-5 ps-md-5"
-      style={{ backgroundColor: "#F8F7F7", minHeight: " calc(100vh - 90px)" }}
+      style={{ backgroundColor: '#F8F7F7', minHeight: ' calc(100vh - 90px)' }}
     >
       {/* <div className='login-create-account'>
 				<Link to='/create-account'>Create your Account</Link>
 			</div> */}
       <div className="row pt-5 center-content">
         <div className="col-md-6 d-flex justify-content-center">
-          <img src={triangleIcon} style={{ width: "400px", height: "100%" }} />
+          <img src={triangleIcon} style={{ width: '400px', height: '100%' }} />
         </div>
         <div className="col-md-5">
           <div
             className="col-lg-9 mx-auto public-page-form px-4 pb-3 pt-4"
-            style={{ backgroundColor: "white" }}
+            style={{ backgroundColor: 'white' }}
           >
             {/* <h3 className='text-center'>
               <IntlMessages id='login.title' />
@@ -149,7 +156,7 @@ function Login() {
             </p>
             <p className="text-center public-page-text">
               <IntlMessages id="login.forgot_password" />
-              <NavLink to={"/forgot-password"} className="ml-2 link">
+              <NavLink to={'/forgot-password'} className="ml-2 link">
                 <IntlMessages id="general.click_here" />
               </NavLink>
             </p>
@@ -163,7 +170,7 @@ function Login() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login

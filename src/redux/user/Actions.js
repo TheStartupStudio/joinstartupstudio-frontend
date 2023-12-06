@@ -10,7 +10,9 @@ import {
   USER_CHANGE_PROFILE_IMAGE,
   USER_EDIT_ERROR,
   NEED_RESET,
-  UPDATE_USER_TNC
+  UPDATE_USER_TNC,
+  SESSION_START_TIME,
+  SESSION_END_TIME
 } from './Types'
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -29,7 +31,7 @@ export const userLogin = (old_password) => async (dispatch) => {
       .get('/instructor/')
       .then()
       .catch((e) => {
-        toast.error(<IntlMessages id='alerts.email_password_incorrect' />)
+        toast.error(<IntlMessages id="alerts.email_password_incorrect" />)
         dispatch({
           type: LOGIN_LOADING,
           payload: false
@@ -99,6 +101,14 @@ export const userLogin = (old_password) => async (dispatch) => {
         type: USER_LOGIN_SUCCESS,
         payload: userData
       })
+      // await axiosInstance.post('/myPerformanceData/start').then(({ data }) => {
+      //   console.log(data)
+      //   dispatch({
+      //     type: SESSION_START_TIME,
+      //     payload: data
+      //   })
+      // })
+
       dispatch({
         type: LOGIN_LOADING,
         payload: false
@@ -114,6 +124,7 @@ export const userLogin = (old_password) => async (dispatch) => {
 
 export const userLogout = () => {
   localStorage.clear()
+  console.log(localStorage)
   return {
     type: USER_LOGOUT
   }
@@ -189,3 +200,26 @@ export const updateTnC = () => async (dispatch) => {
     console.log(err)
   }
 }
+
+export const updateStartTime = () => {
+  try {
+    axiosInstance.post('/myPerformanceData/start').then((res) => {
+      return res.data
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// export const updateEndTime = () => async (dispatch) => {
+//   try {
+//     let newD
+//     axiosInstance.patch(`/myPerformanceData/end`).then((res) => {
+//       newD = res.data
+//       return res.data
+//     })
+//     return newD
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
