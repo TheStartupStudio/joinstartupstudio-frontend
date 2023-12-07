@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -36,7 +36,13 @@ function LtsJournalContent(props) {
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const dispatch = useDispatch()
+  const location = useLocation()
 
+  // useEffect(() => {
+  //   if (isStudentPersonalFinance) {
+  //     setShowAddReflection({ ...showAddReflection, [entry.id]: false })
+  //   }
+  // }, [location.pathname])
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -187,6 +193,14 @@ function LtsJournalContent(props) {
       }
     }
   }
+  const [isStudentPersonalFinance, setIsStudentPersonalFinance] =
+    useState(false)
+
+  useEffect(() => {
+    if (location?.pathname?.includes('student-personal-finance')) {
+      setIsStudentPersonalFinance(true)
+    }
+  }, [location.pathname])
 
   function addReflection(entry) {
     return (data) => {
@@ -194,6 +208,7 @@ function LtsJournalContent(props) {
         ...userJournalEntries,
         [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry]
       })
+
       setShowAddReflection({ ...showAddReflection, [entry.id]: false })
 
       props.saved && props.saved(data.journal)
@@ -326,6 +341,7 @@ function LtsJournalContent(props) {
                   handleShowAddReflection(reflection)
                 }
                 showAddReflection={showAddReflection}
+                isStudentPersonalJournal={isStudentPersonalFinance}
               />
             </div>
           </div>
@@ -541,7 +557,9 @@ function LtsJournalContent(props) {
           />
         ) : null}
 
-        {props.match.params.journalId === '1001028' && <Rwl isEditable={true} />}
+        {props.match.params.journalId === '1001028' && (
+          <Rwl isEditable={true} />
+        )}
       </div>
     </>
   )

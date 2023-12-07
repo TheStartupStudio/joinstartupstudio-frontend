@@ -70,6 +70,11 @@ export const JournalTableCellInput = (props) => {
     setLoading
   } = props
 
+  const handleTabKey = (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault()
+    }
+  }
   const newStyle = {
     width: width ?? '100%',
     ...additionalInputStyle
@@ -98,7 +103,7 @@ export const JournalTableCellInput = (props) => {
       <div className={` ${width ? '' : 'w-100'}`}>
         {inputTag === 'textarea' && (
           <textarea
-            key={props.cell.id}
+            key={props.cell?.id}
             ref={inputRef}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
@@ -106,6 +111,7 @@ export const JournalTableCellInput = (props) => {
             style={{ ...newStyle, resize: 'none' }}
             name={'textarea'}
             defaultValue={value}
+            onKeyDown={handleTabKey}
             onChange={(e) => {
               debounce(() => handleChange(e.target.value))
               setLoading(true)
@@ -114,7 +120,7 @@ export const JournalTableCellInput = (props) => {
         )}
         {inputTag === 'input' && (
           <input
-            key={props.cell.id}
+            key={props.cell?.id}
             ref={inputRef}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
@@ -122,6 +128,7 @@ export const JournalTableCellInput = (props) => {
             style={newStyle}
             name={inputName ?? ''}
             defaultValue={value}
+            onKeyDown={handleTabKey}
             onChange={(e) => {
               debounce(() => handleChange(e.target.value))
               setLoading(true)
@@ -130,7 +137,7 @@ export const JournalTableCellInput = (props) => {
         )}
         {!inputTag && (
           <input
-            key={props.cell.id}
+            key={props.cell?.id}
             ref={inputRef}
             className={`journal_table-input py-2 px-2 text-dark `}
             disabled={isDisabled}
@@ -138,6 +145,7 @@ export const JournalTableCellInput = (props) => {
             style={newStyle}
             name={inputName ?? ''}
             value={value}
+            onKeyDown={handleTabKey}
             onChange={(e) => {
               debounce(() => handleChange(e.target.value))
               setLoading(true)

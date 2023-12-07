@@ -10,7 +10,7 @@ import _ from 'lodash'
 import * as actions from '../../../redux/reflectionsTable/Actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt, faSpinner } from '@fortawesome/free-solid-svg-icons'
-
+import './styles.css'
 const JournalTables = (props) => {
   const [tables, setTables] = useState([])
   const [paragraphs, setParagraphs] = useState([])
