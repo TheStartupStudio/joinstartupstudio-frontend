@@ -602,6 +602,7 @@ function MyTrainingContent(props) {
                               entries={journal.entries}
                               entryBoxTitle={journal?.title}
                               journal={journal}
+                              isEditable={true}
                               userJournalEntries={userJournalEntries}
                               deleteReflection={(entry, userJournalEntry) =>
                                 deleteReflection(entry, userJournalEntry)
