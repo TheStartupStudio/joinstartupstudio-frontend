@@ -225,6 +225,8 @@ function MyPerformanceData() {
   const [curriculumCompletion, setCurriculumCompletion] = React.useState('')
   const [myPerformanceData, setMyPerformanceData] = useState({})
   const [certification, setCertification] = useState([])
+  const [sectionTwoData, setSectionTwoData] = useState([])
+  const [sectionOneData, setSectionOneData] = useState([])
 
   const handleFilterChange = (event) => {
     setFilterBy(event.target.value)
@@ -244,19 +246,28 @@ function MyPerformanceData() {
   }, [])
 
   useEffect(() => {
+    axiosInstance.get('/myPerformanceData/sectionTwo').then(({ data }) => {
+      setSectionTwoData(data)
+    })
+    axiosInstance.get('/myPerformanceData/sectionOne').then(({ data }) => {
+      setSectionOneData(data)
+    })
+  }, [])
+
+  useEffect(() => {
     axiosInstance
-      .get('/myPerformanceData/certification/mr1')
+      .get('/myPerformanceData/sectionTwo-certification/mr1')
       .then(({ data }) => {
         console.log(data)
-        setCertification(data)
+        setCertification(data.certification)
       })
   }, [])
 
   const handleChangeMRType = (type) => {
     axiosInstance
-      .get(`/myPerformanceData/certification/${type}`)
+      .get(`/myPerformanceData/sectionTwo-certification/${type}`)
       .then(({ data }) => {
-        setCertification(data)
+        setCertification(data.certification)
       })
   }
   return (
@@ -283,17 +294,17 @@ function MyPerformanceData() {
               <div className={'row g-2'}>
                 <DisplayRectangleData
                   name={'Number of Active Students'}
-                  value={myPerformanceData?.activeStudents}
+                  value={sectionOneData?.activeStudents}
                   backgroundColor={'#ace7ec'}
                 />
                 <DisplayRectangleData
                   name={'Time spent on the platform'}
-                  value={myPerformanceData?.timeSpentOnPlatform ?? '5hrs 35min'}
+                  value={sectionOneData?.userActiveTime ?? '5hrs 35min'}
                   backgroundColor={'#ffd1e8'}
                 />
                 <DisplayRectangleData
                   name={'Number of New Briefings'}
-                  value={myPerformanceData?.numOfBriefings ?? '17'}
+                  value={sectionOneData?.numOfBriefings ?? '17'}
                   backgroundColor={'#edfcd0'}
                 />
               </div>
@@ -302,9 +313,12 @@ function MyPerformanceData() {
                   className={'col-md-4 p-3 d-flex flex-column'}
                   style={{ gap: 20 }}
                 >
-                  <ProgressCard progress={50} title={'Training completion'} />
                   <ProgressCard
-                    progress={myPerformanceData?.instructorNotesCompletion}
+                    progress={sectionTwoData?.trainingCompletion}
+                    title={'Training completion'}
+                  />
+                  <ProgressCard
+                    progress={sectionTwoData?.instructorNotesCompletion}
                     title={'Instructor notes completion'}
                   />
                 </div>
