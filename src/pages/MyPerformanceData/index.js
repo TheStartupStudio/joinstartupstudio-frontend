@@ -223,7 +223,6 @@ function MyPerformanceData() {
   const windowWidth = useWindowWidth()
   const [filterBy, setFilterBy] = React.useState('')
   const [curriculumCompletion, setCurriculumCompletion] = React.useState('')
-  const [myPerformanceData, setMyPerformanceData] = useState({})
   const [certification, setCertification] = useState([])
   const [sectionTwoData, setSectionTwoData] = useState([])
   const [sectionOneData, setSectionOneData] = useState([])
@@ -235,15 +234,6 @@ function MyPerformanceData() {
   const handleCurriculumCompletionChange = (event) => {
     setCurriculumCompletion(event.target.value)
   }
-
-  // const [timeSpent, setTimeSpent] = useState(null)
-  useEffect(() => {
-    axiosInstance.get('/myPerformanceData').then(({ data }) => {
-      console.log(data)
-      setMyPerformanceData(data)
-      // setCertification(data.certification)
-    })
-  }, [])
 
   useEffect(() => {
     axiosInstance.get('/myPerformanceData/sectionTwo').then(({ data }) => {
