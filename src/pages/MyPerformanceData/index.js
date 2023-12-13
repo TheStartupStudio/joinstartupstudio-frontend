@@ -6,7 +6,7 @@ import './style.css'
 import { useHistory } from 'react-router-dom'
 import useWindowWidth from '../../utils/hooks/useWindowWidth'
 import OptionSelector from '../../components/OptionSelector'
-import Bar from '../../components/Charts/Bar'
+import BarChartComponent from '../../components/Charts/BarChartComponent'
 import axiosInstance from '../../utils/AxiosInstance'
 
 const ProgressCard = ({ title, progress }) => {
@@ -224,6 +224,7 @@ function MyPerformanceData() {
   const [filterBy, setFilterBy] = React.useState('')
   const [curriculumCompletion, setCurriculumCompletion] = React.useState('')
   const [certification, setCertification] = useState([])
+  const [instructorDebriefData, setInstructorDebriefData] = useState({})
   const [sectionTwoData, setSectionTwoData] = useState([])
   const [sectionOneData, setSectionOneData] = useState([])
 
@@ -236,30 +237,44 @@ function MyPerformanceData() {
   }
 
   useEffect(() => {
-    axiosInstance.get('/myPerformanceData/sectionTwo').then(({ data }) => {
-      setSectionTwoData(data)
-    })
     axiosInstance.get('/myPerformanceData/sectionOne').then(({ data }) => {
       setSectionOneData(data)
     })
-  }, [])
-
-  useEffect(() => {
+    axiosInstance.get('/myPerformanceData/sectionTwo').then(({ data }) => {
+      setSectionTwoData(data)
+    })
     axiosInstance
-      .get('/myPerformanceData/sectionTwo-certification/mr1')
+      .get('/myPerformanceData/sectionTwo/mr1/certification')
       .then(({ data }) => {
         console.log(data)
         setCertification(data.certification)
+      })
+    axiosInstance
+      .get('/myPerformanceData/sectionThree/lts1/instructorDebriefData')
+      .then(({ data }) => {
+        console.log(data)
+        setInstructorDebriefData(data)
       })
   }, [])
 
   const handleChangeMRType = (type) => {
     axiosInstance
-      .get(`/myPerformanceData/sectionTwo-certification/${type}`)
+      .get(`/myPerformanceData/sectionTwo/${type}/certification`)
       .then(({ data }) => {
         setCertification(data.certification)
       })
   }
+
+  useEffect(() => {
+    axiosInstance
+      .get(
+        `/myPerformanceData/sectionThree/${curriculumCompletion}/instructorDebriefData`
+      )
+      .then(({ data }) => {
+        setInstructorDebriefData(data)
+      })
+  }, [curriculumCompletion])
+
   return (
     <Container fluid>
       <Row className={'g-2'}>
@@ -324,9 +339,13 @@ function MyPerformanceData() {
                     >
                       Certification
                     </div>
-                    <Bar
-                      certification={certification}
-                      handleChangeMRType={handleChangeMRType}
+                    <BarChartComponent
+                      data={certification}
+                      handleChangeDataType={(e) => handleChangeMRType(e)}
+                      dataTypes={[
+                        { name: 'MR1', value: 'mr1' },
+                        { name: 'MR2', value: 'mr2' }
+                      ]}
                     />
                   </div>
                 </div>
@@ -409,18 +428,24 @@ function MyPerformanceData() {
                     width={'100%'}
                     defaultValue={'Curriculum Completion'}
                     options={[
-                      { label: 'LTS1', value: 'lts-1' },
-                      { label: 'LTS2', value: 'lts-2' },
-                      { label: 'LTS3&4', value: 'lts-3&4' },
+                      { label: 'LTS1', value: 'lts1' },
+                      { label: 'LTS2', value: 'lts2' },
+                      { label: 'LTS3&4', value: 'lts3&4' },
                       { label: 'FinLit', value: 'finlit' }
                     ]}
                     value={curriculumCompletion}
                     onChange={handleCurriculumCompletionChange}
                   />
-                  <ProgressCard progress={20} title={'New Briefing in Task'} />
-                  <ProgressCard progress={80} title={'Student Voice'} />
                   <ProgressCard
-                    progress={100}
+                    progress={instructorDebriefData?.news_briefing ?? 0}
+                    title={'New Briefing in Task'}
+                  />
+                  <ProgressCard
+                    progress={instructorDebriefData?.student_voice ?? 0}
+                    title={'Student Voice'}
+                  />
+                  <ProgressCard
+                    progress={instructorDebriefData?.time_for_portfolio ?? 0}
                     title={'Time for Portfolio/Journal'}
                   />
                 </div>

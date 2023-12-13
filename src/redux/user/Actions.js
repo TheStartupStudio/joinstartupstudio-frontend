@@ -25,13 +25,13 @@ export const userLogin = (old_password) => async (dispatch) => {
 
     axiosInstance.defaults.headers.common[
       'Authorization'
-    ] = `Bearer ${localStorage.getItem('access_token')}`
+      ] = `Bearer ${localStorage.getItem('access_token')}`
     axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
     const user = await axiosInstance
       .get('/instructor/')
       .then()
       .catch((e) => {
-        toast.error(<IntlMessages id="alerts.email_password_incorrect" />)
+        toast.error(<IntlMessages id='alerts.email_password_incorrect' />)
         dispatch({
           type: LOGIN_LOADING,
           payload: false
@@ -124,7 +124,6 @@ export const userLogin = (old_password) => async (dispatch) => {
 
 export const userLogout = () => {
   localStorage.clear()
-  console.log(localStorage)
   return {
     type: USER_LOGOUT
   }

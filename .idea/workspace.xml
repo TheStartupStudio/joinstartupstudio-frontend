@@ -6,7 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="ae532a5f-2fde-47e9-a7e9-1479691cbe70" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TestJournalContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Charts/Bar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Charts/BarChartComponent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Auth/LogOut/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/LogOut/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MyPerformanceData/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyPerformanceData/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/user/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/user/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Reducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="student-journals" />
+        <entry key="$PROJECT_DIR$" value="my-spark" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

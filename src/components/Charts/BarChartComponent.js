@@ -39,39 +39,38 @@ const data = [
   }
 ]
 
-const BarChartComponent = ({ certification, handleChangeMRType }) => {
+const BarChartComponent = ({ data, handleChangeDataType, dataTypes }) => {
   const transformedData = []
 
   // Iterate through the original data
-  certification?.forEach((item) => {
-    const existingEntry = transformedData?.find(
-      (entry) => entry.name === item.year
-    )
+  if (data) {
+    data?.forEach((item) => {
+      const existingEntry = transformedData?.find(
+        (entry) => entry.name === item.year
+      )
 
-    if (existingEntry) {
-      // Update existing entry
-      existingEntry[item.status.toLowerCase()] = item.percentage
-    } else {
-      // Create a new entry
-      const newEntry = {
-        name: item.year,
-        proficient: 0,
-        developing: 0,
-        certified: 0
+      if (existingEntry) {
+        // Update existing entry
+        existingEntry[item.status.toLowerCase()] = item.percentage
+      } else {
+        // Create a new entry
+        const newEntry = {
+          name: item.year,
+          proficient: 0,
+          developing: 0,
+          certified: 0
+        }
+        newEntry[item.status.toLowerCase()] = item.percentage
+        transformedData.push(newEntry)
       }
-      newEntry[item.status.toLowerCase()] = item.percentage
-      transformedData.push(newEntry)
-    }
-  })
-  console.log(transformedData)
+    })
+  }
+  // console.log(transformedData)
   return (
     <>
       <SelectInput
-        options={[
-          { name: 'MR1', value: 'mr1' },
-          { name: 'MR2', value: 'mr2' }
-        ]}
-        onChange={(e) => handleChangeMRType(e)}
+        options={dataTypes}
+        onChange={(e) => handleChangeDataType(e)}
       />
       <BarChart
         width={500}
