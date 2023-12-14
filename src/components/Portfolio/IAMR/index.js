@@ -54,7 +54,7 @@ export const IAMR = (props) => {
 
   useEffect(() => {
     setIsLoading(true)
-    axiosInstance.get(`/submissions/user/${props.user?.id}`).then((data) => {
+    axiosInstance.get(`/submissions/user/${props.userId}`).then((data) => {
       setIsLoading(false)
       setSubmissions(data?.data?.submissions)
     })

@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ModalWrapper from './Spotlight/ModalWrapper'
-import { useHistory } from 'react-router-dom'
-import axiosInstance from '../../utils/AxiosInstance'
 
 function PeerSharingModal(props) {
-  const history = useHistory()
-
-  // useEffect(() => {
-  //   if (peerSharingAccepted) {
-  //     history.push('/my-classroom')
-  //     props.onHide()
-  //   }
-  // }, [peerSharingAccepted])
-
   return (
     <ModalWrapper show={props.show} onHide={props.onHide}>
-      <div>
+      <div
+        className={'text-center p-4'}
+        style={{
+          font: 'normal normal 400 16px/20px Montserrat',
+          letterSpacing: 0,
+          color: '#231f20'
+        }}
+      >
         In My Classroom you are connected to your peers. Every student chooses
         whether or not their peers can view their portfolios. By clicking I
         Accept below, you are accepting the responsibility of treating your
@@ -24,17 +20,26 @@ function PeerSharingModal(props) {
         being a respectful peer who can offer in class feedback and be inspired
         to make changes to your own portfolios.
       </div>
-      <div className="d-flex align-items-center">
+      <div className="d-flex align-items-center justify-content-center mt-3">
         <input
           type="checkbox"
           name="agree"
-          className="form-check-input spotlight-checkbox"
+          className="form-check-input spotlight-checkbox mt-0"
           checked={props.peerSharingAccepted}
           onChange={(e) => {
             props.handleChange(e.target.checked)
           }}
         />
-        <span className="term ps-3">I accept</span>
+        <span
+          className="term ps-3"
+          style={{
+            font: 'normal normal 400 16px/20px Montserrat',
+            letterSpacing: 0,
+            color: '#231f20'
+          }}
+        >
+          I accept
+        </span>
       </div>
     </ModalWrapper>
   )

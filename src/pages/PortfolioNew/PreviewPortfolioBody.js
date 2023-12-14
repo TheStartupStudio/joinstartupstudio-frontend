@@ -7,7 +7,32 @@ import { Education } from '../../components/Portfolio/Education'
 import { Accomplishment } from '../../components/Portfolio/Accomplishment'
 import LicencesCertification from '../../components/Portfolio/LicensesCertification/index'
 import useWindowWidth from '../../utils/hooks/useWindowWidth'
+const PreviewTypeButton = ({ onClick, selected, label, windowWidth }) => {
+  const buttonStyle = {
+    background: selected ? '#51C7DF' : '#fff',
+    border: '1px solid #BBBDBF',
+    borderRadius: 6,
+    width: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    font: `normal normal 600 ${
+      windowWidth < 700 ? '15px/27px' : '22px/27px'
+    } Montserrat`,
+    letterSpacing: 0,
+    color: '#231F20',
+    textAlign: 'center',
+    padding: windowWidth < 600 ? '5px 15px' : '20px 30px',
+    textTransform: 'uppercase',
+    cursor: 'pointer'
+  }
 
+  return (
+    <div onClick={onClick} style={buttonStyle}>
+      {label}
+    </div>
+  )
+}
 function PreviewPortfolioBody(props) {
   const [selected, setSelected] = useState('experience')
   const handleSelectExperience = () => {
@@ -23,15 +48,14 @@ function PreviewPortfolioBody(props) {
     isPreviewPortfolio,
     userData,
     userBiography,
-    location,
-    isOwnPortfolio,
-    userId,
+
     approvedSkills,
     experiences,
     educations,
     accomplishments,
     userCertifications
   } = props
+
   return (
     <>
       {!!user && (
@@ -40,136 +64,102 @@ function PreviewPortfolioBody(props) {
           isPreview={isPreviewPortfolio}
           userBiography={userBiography}
           userData={userData}
-          userId={location?.state?.isPeerView ? user.id : userId}
+          userId={props.userId}
+          isPeerOrPublicView={props.isPeerOrPublicView}
         />
       )}
-      {!!user ? (
-        (!!user && user?.UserPortfolio?.is_published) || isOwnPortfolio ? (
-          <>
-            {user?.show_iamr && (
-              <IAMR user={user} isPreview={isPreviewPortfolio} />
-            )}
-
-            {approvedSkills?.length > 0 && (
-              <Skills
+      {!!user && (
+        <>
+          {user?.show_iamr && (
+            <>
+              <IAMR
                 user={user}
                 isPreview={isPreviewPortfolio}
-                approvedSkills={approvedSkills}
+                userId={user.id}
+                isPeerOrPublicView={props.isPeerOrPublicView}
               />
-            )}
+            </>
+          )}
 
-            {isPreviewPortfolio && (
-              <div style={{ display: 'flex', gap: 20, width: '100%' }}>
-                <div
-                  onClick={handleSelectExperience}
-                  style={{
-                    background: `${
-                      selected === 'experience' ? '#51C7DF' : '#fff'
-                    } 0% 0% no-repeat padding-box`,
-                    border: '1px solid #BBBDBF',
-                    borderRadius: 6,
-                    width: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <div
-                    style={{
-                      font: `normal normal 600 ${
-                        windowWidth < 700 ? '15px/27px' : '22px/27px'
-                      } Montserrat`,
-                      letterSpacing: 0,
-                      color: '#231F20',
-                      textAlign: 'center',
-                      padding: windowWidth < 600 ? '5px 15px' : '20px 30px',
-                      textTransform: 'uppercase',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    Experience
-                  </div>
-                </div>
-                <div
-                  onClick={handleSelectEducation}
-                  style={{
-                    background: `${
-                      selected === 'education' ? '#51C7DF' : '#fff'
-                    } 0% 0% no-repeat padding-box`,
-                    border: '1px solid #BBBDBF',
-                    borderRadius: 6,
-                    width: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <div
-                    style={{
-                      font: `normal normal 600 ${
-                        windowWidth < 700 ? '15px/27px' : '22px/27px'
-                      } Montserrat`,
-                      letterSpacing: 0,
-                      color: '#231F20',
-                      textAlign: 'center',
-                      padding: windowWidth < 600 ? '5px 15px' : '20px 30px',
-                      textTransform: 'uppercase',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    Education & Certifications
-                  </div>
-                </div>
-              </div>
-            )}
+          {approvedSkills?.length > 0 && (
+            <Skills
+              user={user}
+              isPreview={isPreviewPortfolio}
+              approvedSkills={approvedSkills}
+              isPeerOrPublicView={props.isPeerOrPublicView}
+            />
+          )}
 
-            {selected === 'experience' && (
-              <div>
-                {user?.show_experience && experiences?.length ? (
-                  <Experience user={user} isPreview={isPreviewPortfolio} />
-                ) : (
-                  <></>
-                )}
+          {isPreviewPortfolio && (
+            <div style={{ display: 'flex', gap: 20, width: '100%' }}>
+              <PreviewTypeButton
+                onClick={handleSelectExperience}
+                selected={selected === 'experience'}
+                label="Experience"
+                windowWidth={windowWidth}
+              />
+              <PreviewTypeButton
+                onClick={handleSelectEducation}
+                selected={selected === 'education'}
+                label="Education & Certifications"
+                windowWidth={windowWidth}
+              />
+            </div>
+          )}
 
-                {/*<Recommendation user={user} />*/}
-              </div>
-            )}
-            {selected === 'education' && (
-              <div>
-                {user?.show_education && educations?.length ? (
-                  <Education user={user} isPreview={isPreviewPortfolio} />
-                ) : (
-                  <></>
-                )}
+          {selected === 'experience' && (
+            <>
+              {user?.show_experience && experiences?.length ? (
+                <Experience
+                  user={user}
+                  isPreview={isPreviewPortfolio}
+                  experiences={experiences}
+                  isPeerOrPublicView={props.isPeerOrPublicView}
+                />
+              ) : (
+                <></>
+              )}
 
-                {user?.show_accomplishments && accomplishments?.length ? (
-                  <Accomplishment user={user} isPreview={isPreviewPortfolio} />
-                ) : (
-                  <></>
-                )}
+              {/*<Recommendation user={user} />*/}
+            </>
+          )}
+          {selected === 'education' && (
+            <>
+              {user?.show_education && educations?.length ? (
+                <Education
+                  user={user}
+                  isPreview={isPreviewPortfolio}
+                  educations={educations}
+                  isPeerOrPublicView={props.isPeerOrPublicView}
+                />
+              ) : (
+                <></>
+              )}
 
-                {user?.show_certifications && userCertifications?.length ? (
-                  <LicencesCertification
-                    user={user}
-                    isPreview={isPreviewPortfolio}
-                  />
-                ) : (
-                  <></>
-                )}
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="mx-auto w-100 my-auto text-center my-5">
-            <p className="py-5">This portfolio is private</p>
-          </div>
-        )
-      ) : (
-        <></>
+              {user?.show_accomplishments && accomplishments?.length ? (
+                <Accomplishment
+                  user={user}
+                  isPreview={isPreviewPortfolio}
+                  accomplishments={accomplishments}
+                  isPeerOrPublicView={props.isPeerOrPublicView}
+                />
+              ) : (
+                <></>
+              )}
+
+              {user?.show_certifications && userCertifications?.length ? (
+                <LicencesCertification
+                  user={user}
+                  isPreview={isPreviewPortfolio}
+                  userCertifications={userCertifications}
+                  isPeerOrPublicView={props.isPeerOrPublicView}
+                />
+              ) : (
+                <></>
+              )}
+            </>
+          )}
+        </>
       )}
     </>
   )

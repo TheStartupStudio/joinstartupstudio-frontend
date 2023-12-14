@@ -87,12 +87,14 @@ export const SharedPeers = (props) => {
     <div className="m-0 p-0">
       <h3 className="my-connection-titles ms-0 ps-0">
         {/*<IntlMessages id="connection.page_title" />*/}
-        My Classroom
+        My Peers
       </h3>
       {props.peers.length === 0 ? (
         <div className="ms-3 ps-0">
           <p className="page-description fw-light ms-0 ps-0">
-            <IntlMessages id="connection.no_connections" />
+            {/*<IntlMessages id="connection.no_connections" />*/}
+            None of your students have made their portfolios viewable. Check
+            back.
           </p>
         </div>
       ) : (
@@ -113,7 +115,7 @@ export const SharedPeers = (props) => {
                 type="text"
                 className="form-control"
                 name="searchedNote"
-                placeholder={'SEARCH YOUR PEERS'}
+                placeholder={'SEARCH MY PEERS'}
                 aria-describedby="button-addon1"
                 onChange={handleChange}
               />

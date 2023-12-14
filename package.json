@@ -32,6 +32,9 @@
     "@progress/kendo-svg-icons": "^1.5.0",
     "@progress/kendo-theme-default": "^6.4.0",
     "@progress/kendo-ui": "^2023.2.606",
+    "@react-pdf/font": "2.2.0",
+    "@react-pdf/pdfkit": "^3.0.2",
+    "@react-pdf/renderer": "2.1.0",
     "@stripe/react-stripe-js": "^1.4.1",
     "@stripe/stripe-js": "^1.17.1",
     "@testing-library/jest-dom": "^5.11.4",
@@ -42,7 +45,9 @@
     "date-fns": "^2.23.0",
     "debounce-promise": "^3.1.2",
     "env-cmd": "^10.1.0",
+    "file-saver": "^2.0.5",
     "html-react-parser": "^1.4.4",
+    "html-to-docx": "^1.8.0",
     "html2canvas": "^1.4.1",
     "jquery": "^3.6.0",
     "jspdf": "^2.5.1",
@@ -92,6 +97,10 @@
     "wavesurfer.js": "^5.2.0",
     "web-vitals": "^1.0.1"
   },
+  "resolutions": {
+    "@react-pdf/font": "2.2.0"
+  },
+
   "scripts": {
     "start": "set PORT=3000 &&  react-scripts start",
     "build": "react-scripts build",

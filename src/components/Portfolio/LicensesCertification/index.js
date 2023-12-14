@@ -16,7 +16,7 @@ import addCertification from './addCertification'
 
 export default function LicencesCertification(props) {
   const general = useSelector((state) => state.general)
-  const userId = useSelector((state) => state.user.user.user.id)
+  const userId = useSelector((state) => state?.user?.user?.user?.id)
 
   const [userCertification, setUserCertification] = useState([])
   const [addCertficateModal, setAddCertificateModal] = useState(false)
@@ -35,8 +35,15 @@ export default function LicencesCertification(props) {
   }, [props.isPreview])
 
   useEffect(() => {
-    getuserCertification()
-  }, [])
+    if (props.userCertifications) {
+      console.log(props.userCertifications)
+      setUserCertification(props.userCertifications)
+    }
+  }, [props.userCertifications])
+
+  // useEffect(() => {
+  //   getuserCertification()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_certifications)
@@ -79,16 +86,16 @@ export default function LicencesCertification(props) {
       })
   }
 
-  const getuserCertification = async () => {
-    setIsLoading(true)
-
-    await axiosInstance.get(`/userCertificates/${userId}`).then((res) => {
-      // setTimeout(() => {
-      setUserCertification(res.data.UserCertificates)
-      setIsLoading(false)
-      // }, 2000)
-    })
-  }
+  // const getuserCertification = async () => {
+  //   setIsLoading(true)
+  //
+  //   await axiosInstance.get(`/userCertificates/${userId}`).then((res) => {
+  //     // setTimeout(() => {
+  //     setUserCertification(res.data.UserCertificates)
+  //     setIsLoading(false)
+  //     // }, 2000)
+  //   })
+  // }
 
   const editRevmoveCertification = (id) => {
     let array = certificatedToRemove

@@ -1,0 +1,694 @@
+.my-spark-widgets__container{
+    background-color: #f8f7f7
+}
+.container-fluid .spark-widgets__container{
+    margin: 0 !important;
+    background-color: #f8f7f7
+}
+.spark-widgets__row-container{
+    /*width: 88% !important;*/
+    margin: 0 !important
+}
+.spark-widget-box__container {
+    min-height: 120px;
+
+}
+.spark-widget-box__container .spark-widget__container {
+    height: 100% !important;
+    background: #FFFFFF 0 0 no-repeat padding-box;
+    box-shadow: 0 3px 6px #00000012;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    cursor: pointer;
+}
+
+.spark-icon__container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #fff;
+    background: transparent linear-gradient(141deg, #F2359D 0%, #51C7DF 100%) 0 0 no-repeat padding-box;
+}
+
+.widget-icon {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -30px;
+    width: 60px;
+    height: 60px;
+    object-fit:contain
+}
+.my-spark-icon {
+    position: absolute;
+    /*left: 50%;*/
+    /*transform: translateX(-50%);*/
+    bottom: 10px;
+    width: 100px;
+    height: 150px;
+    object-fit:contain;
+    right: -25px
+}
+
+.spark-widget__container .spark-widget__title {
+    text-align:center;
+    margin: auto;
+    font: normal normal 600 20px/24px Montserrat;
+    letter-spacing: 0px;
+    color: #838EAB;
+    text-transform: uppercase;
+    opacity: 1;
+    /*padding: 0 10px;*/
+    padding: 0 !important;
+
+}
+
+@media (max-width: 1200px) {
+    .spark-widget__container .spark-widget__title {
+
+        font-size: 18px
+
+    }
+}
+
+/*/////////////// My spark - Widget Details ////////////////*/
+
+.my-spark_widget-details__container {
+    background: #F6F9FC 0% 0% no-repeat padding-box;
+    margin-top: 20px
+}
+.my-spark_widget-details__header_container {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #333D3D29;
+    padding: 15px 40px;
+}
+
+.my-spark_widget-details__title {
+    text-align: left;
+    font: normal normal 600 22px/27px Montserrat;
+    letter-spacing: 0px;
+    color: #FF3399;
+    font-size: 20px;
+}
+
+.my-spark_widget-details__input_label {
+    text-align: left;
+    font: normal normal 500 16px/19px Montserrat;
+    letter-spacing: 0px;
+    color: #231F20;
+}
+.my-spark-widget-details__inputs_container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 30px;
+    flex-direction:column;
+    overflow:hidden
+}
+
+.my-spark_widget-details__input_container {
+    width: 100% !important;
+}
+
+.my-spark-widget-details__inputs_container > * {
+    margin-bottom: 20px
+                                             }
+.my-spark_widget-details__input {
+    background-color: #fff !important;
+    font-size: 13px !important;
+    color:#000000 !important;
+    height: 52px;
+    margin-bottom: 6px;
+    padding-left: 30px !important;
+    box-shadow: 0px 3px 6px #00000012;
+    border-radius: 4px;
+    outline: none;
+    border: none
+}
+
+
+
+.my-spark_widget-details__input::placeholder {
+    background-color: #fff !important;
+    font-size: 13px !important;
+    font-weight: 400;
+    /*padding-left: 30px !important;*/
+}
+
+.my-spark_input-description {
+    margin-top: 6px;
+    margin-left: 30px;
+    font: normal normal 400 13px/16px Montserrat;
+    letter-spacing: 0px;
+    color: #231F20;
+}
+
+.widget-details__buttons {
+    display:flex;
+    justify-content:space-between;
+    gap: 20px
+}
+
+.error-message {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+}
+.input-error {
+
+border-color: #dc3545;
+padding-right: calc(1.5em + .75rem);
+background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+background-repeat: no-repeat;
+background-position: right calc(.375em + .875rem) center;
+background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+    background-color: #fff0f0 !important;
+}
+
+.input-error::placeholder {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + .75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(.375em + .1875rem) center;
+    background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+    background-color: #fff0f0 !important
+}
+
+@media (max-width: 420px) {
+    .widget-details__buttons {
+       flex-direction: column;
+        gap: 20px
+    }
+}
+
+.advanced-button_container{
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #BBBDBF;
+}
+
+.advanced-button {
+    font: normal normal 600 9px/11px Montserrat;
+    letter-spacing: 0.36px;
+    color: #707070;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    width: 145px;
+    text-align:center;
+    cursor:pointer;
+}
+
+.generate-button_container {
+    background: #51C7DF 0% 0% no-repeat padding-box;
+}
+
+.generate-button {
+    font: normal normal 600 9px/11px Montserrat;
+    letter-spacing: 0.36px;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    width: 145px;
+    text-align:center;
+    cursor: pointer
+}
+/*/////////////// My spark - Generate Page ////////////////*/
+
+.my-spark_generate-page__container {
+    background: #F6F9FC 0% 0% no-repeat padding-box;
+    margin-top: 20px
+}
+.my-spark_generate-page__header_container {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    /*border: 1px solid #333D3D29;*/
+    /*padding: 15px 40px;*/
+}
+.my-spark-generate-page__border {
+    border: 1px solid #333D3D29;
+}
+.my-spark_generate-page__header_title {
+    border-radius: 0px 0px 0px 6px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between
+}
+.my-spark_generate-page__title {
+    text-align: left;
+    font: normal normal 600 24px/27px Montserrat;
+    letter-spacing: 0px;
+    color: #FF3399;
+    font-size: 24px;
+    margin-left: 60px !important;
+}
+
+@media (max-width: 600px) {
+    .my-spark_generate-page__title {
+        font-size: 20px;
+        margin: auto !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .my-spark_generate-page__title {
+        font-size: 16px;
+        padding: 10px;
+        text-align:center
+    }
+}
+.my-spark_generate-page__icon-container {
+    padding: 10px 20px
+}
+.my-spark_generate-page__menu-icon {
+font-size: 34px;
+}
+.my-spark_generate-page__icon {
+font-size: 34px;
+}
+
+.grayish-blue-bg {
+background-color: #F6F9FC
+}
+.white-bg {
+background-color: #FFF
+}
+
+.my-spark_generate-page__content {
+    min-height: 300px
+}
+
+.my-spark_generate-page__not-found {
+    min-height: 500px
+}
+
+.my-spark_generate-page__circled-icon {
+    width: 70px;
+    height: 70px;
+    /*padding: 16px;*/
+    box-shadow: 0px 3px 6px #00000012;
+    border-radius: 50%;
+    display:flex;
+    justify-content:center;
+    align-items:center
+}
+
+.generate-page-type__icon {
+    width: 70px;
+}
+.my-spark_generate-page__content {
+    padding: 20px;
+
+}
+.my-spark_generate-page__generated-content-card {
+    box-shadow: 0px 3px 6px #00000012;
+    border-radius: 4px;
+    background: #fff
+}
+
+.my-spark_generate-page__content-title_container {
+    padding: 28px 20px;
+    display:flex
+}
+
+.my-spark_generate-page__content-title_container .prompt-icon {
+    width: 24px
+}
+
+.my-spark_generate-page__content-title {
+    text-align: left;
+    font: normal normal 400 13px/16px Montserrat;
+    letter-spacing: 0px;
+    color: #707070;
+}
+.my-spark_generate-page__content-generated_paragraph-container {
+    padding: 14px;
+    background: #F6F9FC
+}
+.my-spark_generate-page__content-generated_paragraph-container .response-icon{
+    width: 34px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000012;
+    border-radius: 4px;
+}
+.my-spark_generate-page__content-generated_paragraph-title {
+    font: normal normal 600 18px/22px Montserrat;
+    letter-spacing: 0px;
+    color: #231F20;
+    display:flex;
+    align-items:center
+}
+.my-spark_generate-page__content-generated_paragraph {
+    /*padding: 10px 80px;*/
+    padding: 10px 30px 10px 80px;
+    text-align: left;
+    font: normal normal 300 18px/22px Montserrat;
+    letter-spacing: 0px;
+    color: #707070;
+    overflow: auto;
+    max-height: 250px
+}
+.my-spark_generate-page__content-footer {
+    padding: 14px;
+    display:flex;
+    justify-content:space-between;
+}
+.my-spark_generate-page__content-footer .time-ago {
+    text-align: left;
+    font: normal normal 500 12px/15px Montserrat;
+    letter-spacing: 0px;
+    color: #838EAB;
+    opacity: 1;
+    font-size: 12px;
+    display:flex;
+    align-items:center
+}
+.my-spark_generate-page__content-footer .trash-icon{
+    letter-spacing: 0px;
+    color: #FF3399;
+    font-size: 18px;
+    cursor:pointer
+}
+/*///// ARCHIVE PAGE /////*/
+
+.rose-text {
+    color: #F2359D;
+}
+
+
+.my-spark-archive__container {
+    min-height: 500px;
+    background: #F8F7F7 0% 0% no-repeat padding-box;
+}
+
+.my-spark-archive__header-text {
+    padding: 20px
+}
+.my-spark-archive__header-text .content-text {
+    font: normal normal 500 16px/21px Montserrat;
+    letter-spacing: 0px;
+    color: #3C3C3F;
+}
+.my-spark-archive__header-text .archive-content-text {
+    text-align: left;
+    font: normal normal normal 14px/21px Montserrat;
+    letter-spacing: 0px;
+    color: #838EAB;
+}
+
+.my-spark-archive__filters {
+    padding: 20px;
+    row-gap: 4px
+}
+
+ .search-icon {
+     width: 1.200em !important;
+     color:#838EAB;
+ }
+
+ .my-spark-archive__search-filter {
+     display:flex;
+     align-items:center;
+     background: #FFFFFF 0% 0% no-repeat padding-box;
+     box-shadow: 0px 3px 6px #00000012;
+     border-radius: 4px;
+     gap: 10px;
+     height: 40px;
+     padding:  8px 14px
+ }
+
+ .my-spark-archive__search-filter .search-input {
+     font: normal normal 500 16px/18px Montserrat;
+     letter-spacing: 0px;
+     color: #838EAB;
+     background: #fff;
+     width: 100%;
+ }
+.my-spark-archive__search-filter .search-input::placeholder {
+    text-align: left;
+    font: normal normal 500 16px/18px Montserrat;
+    letter-spacing: 0px;
+    color: #838EAB;
+ }
+
+.my-spark-archive__cards {
+    padding: 20px;
+    gap: 10px;
+    display:grid;
+    grid-template-columns: repeat(4,1fr);
+}
+@media (max-width: 1200px) {
+    .my-spark-archive__cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 900px) {
+    .my-spark-archive__cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .my-spark-archive__cards {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+/*//// ARCHIVE CARD /////*/
+
+/*// HEADER //*/
+.archive__card-container {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 7px 14px #32325D1A;
+    border-radius: 30px 4px 4px 4px;
+    width: 100%
+}
+.archive__card-container .archive__card-header {
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px -2px 14px #32325D1A;
+    border-radius: 30px 4px 4px 30px;
+    height: 20%
+}
+.archive__card-header .my-spark-type__icon{
+    width: 54px
+}
+
+.archive__card-header .header-title {
+    font: normal normal 600 13px/16px Montserrat;
+    letter-spacing: 0px;
+    color: #838EAB;
+    text-transform: uppercase;
+}
+/*// PROMPT SECTION //*/
+
+.archive__card-prompt-container {
+    display:flex;
+    padding: 20px;
+    height: 20%
+
+}
+.archive__card-prompt-container .prompt-text {
+    font: normal normal 400 12px/16px Montserrat;
+    letter-spacing: 0px;
+    color: #1C2238;
+}
+
+
+.prompt-text {
+    font: normal normal 400 12px/16px Montserrat;
+    letter-spacing: 0px;
+    color: #1C2238;
+}
+.archive__card-prompt-container .prompt-icon {
+    width: 16px
+}
+
+/*// RESPONSE SECTION //*/
+
+.response-section__container {
+    padding: 20px;
+    background: #F6F9FC 0% 0% no-repeat padding-box;
+    height: 45%
+
+}
+.response-section__container .response-section__header {
+    font: normal normal 400 12px/16px Montserrat;
+    letter-spacing: 0px;
+    color: #1C2238;
+    display:flex;
+    align-items:center
+}
+
+.response-section__header .card-icon {
+    width: 18px
+}
+
+.response-section__header .content-title {
+    text-align: left;
+    font: normal normal 500 13px/13px Montserrat;
+    letter-spacing: 0px;
+    color: #231F20;
+}
+
+.response-section {
+    background: #fff;
+    margin-left:35px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    }
+
+.response-section .response__content-container {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top: 4px
+}
+
+.response-content {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000012;
+    border-radius: 4px;
+    height: 39px;
+    overflow:hidden;
+    width: 80%
+
+
+}
+.response__content-container .response-content > * {
+    padding: 8px
+}
+
+
+.response__content-container .response-text {
+    text-align: left;
+    font: normal normal 300 11px/14px Montserrat;
+    letter-spacing: 0px;
+    color: #525F7F;
+    width: 100%;
+
+}
+.response__content-container .response-buttons {
+    border-left: 1px solid #E6EBF1;
+    flex-grow: 1;
+    width: 20%;
+    text-align:center
+}
+.response__content-container .response-buttons .response-button {
+    display:flex;
+    justify-content:center;
+    text-align:center;
+}
+
+.response-arrow {
+    width: 0.800em !important;
+    color:#838EAB;
+    font-weight: 300 !important;
+    cursor:pointer
+}
+
+.response-section__full-content__container {
+    margin-top: 10px;
+    text-align: right;
+    font: normal normal 500 10px/13px Montserrat;
+    letter-spacing: 0px;
+    color: #707070;
+    font-size: 11px;
+    cursor:pointer
+}
+
+.view-full-content__icon-container {
+    margin-left: 6px
+}
+.view-full-content__icon {
+    width: 0.900em !important;
+    color:#838EAB;
+    font-weight: 300 !important;
+    cursor:pointer;
+}
+
+
+.response-actions {
+    display:flex;
+    justify-content: space-between
+}
+
+
+@media (max-width: 700px) {
+    .response-actions {
+        display:flex;
+        flex-direction: column;
+        gap: 10px
+    }
+}
+/*// FOOTER // */
+.archive-card__footer {
+    padding: 6px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height: 15%
+}
+
+.archive-card__footer .time-ago{
+    text-align: left;
+    font: normal normal medium 10px/13px Montserrat;
+    letter-spacing: 0px;
+    color: #838EAB;
+    font-size: 11px
+}
+.archive-card__footer .trash-icon{
+    letter-spacing: 0px;
+    color: #FF3399;
+    font-size: 14px;
+    cursor:pointer
+}
+
+/*/// */
+
+.advanced-inputs {
+    margin-top: -20px;
+    transition: 0.7s all ease;
+    box-sizing: content-box;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    flex-direction:column;
+    padding: 20px 0;
+}
+
+.advanced-inputs > *{
+margin-bottom: 20px
+}
+
+/*// LOADER //*/
+.my-spark__loader {
+    color: rgb(1, 197, 209);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(240, 240, 240, 0.1);
+    width: 100%;
+    height: 100%;
+}
+
+.my-spark__overlay {
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+

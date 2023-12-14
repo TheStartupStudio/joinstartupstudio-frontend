@@ -6,20 +6,15 @@ import axiosInstance from '../../utils/AxiosInstance'
 import './style/previewPortfolio.css'
 import './style/editPortfolio.css'
 import { toast } from 'react-toastify'
-import { IAMR } from '../../components/Portfolio/IAMR/index'
-import PersonalBio from '../../components/Portfolio/PersonalBio/PersonalBio'
-import { Skills } from '../../components/Portfolio/Skills'
-import { Experience } from '../../components/Portfolio/Experience'
-import { Recommendation } from '../../components/Portfolio/Recommendation'
-import { Education } from '../../components/Portfolio/Education'
-import { Accomplishment } from '../../components/Portfolio/Accomplishment'
-import LicencesCertification from '../../components/Portfolio/LicensesCertification/index'
+
 import { useSelector } from 'react-redux'
 import useWindowWidth from '../../utils/hooks/useWindowWidth'
 import { DeleteConfirmation } from '../../components/Portfolio/Confirm_modal'
 import PreviewPortfolioBody from './PreviewPortfolioBody'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
-const PreviewPortfolio = () => {
+const PreviewPortfolio = (props) => {
   const [user, setUser] = useState(null)
   const [toggle, setToggle] = useState(0)
   const [selected, setSelected] = useState('experience')
@@ -33,7 +28,7 @@ const PreviewPortfolio = () => {
   const [userBiography, setUserBiography] = useState(null)
   const [userData, setUserData] = useState(null)
   // const [userId, setUserId] = useState(null)
-  const userId = useSelector((state) => state.user.user.user.id)
+  const userId = useSelector((state) => state?.user?.user?.user?.id)
   const [showPublishModal, setShowPublishModal] = useState(false)
   const [aggred, setAggred] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -45,61 +40,158 @@ const PreviewPortfolio = () => {
   const [emptyBackground, setEmptyBackground] = useState(true)
   const [isConnected, setIsConnected] = useState()
   const location = useLocation()
-  const isOwnPortfolio = !!user && userId === user.id
+  const [approvedSkills, setApprovedSkills] = useState([])
+  const [certifications, setCertifications] = useState([])
+  const isOwnPortfolio = !!user && userId === user?.id
+  const isPublicView = props.isPublicView
+  const isPeerView = location?.state?.isPeerView
+  const previousPathname = location?.state?.previousPathname
+  const history = useHistory()
+  const isPreview = history.location.pathname.includes('preview')
+  const windowWidth = useWindowWidth()
+  const isPeerShared = user?.UserPortfolio?.isPeerShared
+  const isPublished = user?.UserPortfolio?.is_published
 
-  const getUserPortfolio = () => {
-    setLoading(true)
-    const url = loggedUser
-      ? `/users/${username}/portfolio`
-      : `/${username}/portfolio`
-    console.log(url)
-    axiosInstance
-      .get(url)
+  const isPreviewPortfolio = isPreview || isPeerView || isPublicView
+  const [renderPortfolio, setShouldRenderPortfolio] = useState(true)
+
+  const updateStatus = async () => {
+    await axiosInstance
+      .put(`/portfolio`, {
+        is_published: !toggle
+      })
       .then((response) => {
-        setUser(response.data.user)
-
-        setIsConnected(response.data.isConnected)
-        if (response.data?.userBackground)
-          setBackground(response.data.userBackground)
-        else setBackground(null)
-        setLoading(false)
+        toast.success(<IntlMessages id="alerts.success_change" />)
+        setToggle(!toggle)
       })
       .catch((err) => {
-        setLoading(false)
+        toast.error(<IntlMessages id="alerts.success_change" />)
+        setToggle(!toggle)
       })
   }
+
+  useEffect(() => {
+    if (background) {
+      setExperiences(background.experience)
+      setEducations(background.education)
+      setAccomplishments(background.accomplishments)
+      setUserCertifications(background.certificates)
+    }
+  }, [background])
+
+  const isHiddenFeature = () => {
+    if (isPeerView && !isPublicView) return true
+    if (!isPeerView && isPublicView) return true
+    if (location.pathname !== '/preview-portfolio') return true
+    // if (!isPublished) return true
+  }
+  const getUserPortfolio = () => {
+    if (username) {
+      setLoading(true)
+      const url = loggedUser
+        ? `/users/${username}/portfolio`
+        : `/${username}/portfolio`
+
+      axiosInstance
+        .get(url)
+        .then((response) => {
+          setUser(response.data.user)
+          setToggle(response.data.is_published)
+          if (response.data.user.id === userId) {
+            history.push('/preview-portfolio')
+          }
+          setIsConnected(response.data.isConnected)
+          if (response.data?.userBackground)
+            setBackground(response.data.userBackground)
+          else setBackground(null)
+
+          setLoading(false)
+        })
+        .catch((err) => {
+          setLoading(false)
+        })
+    }
+  }
   const getUserCertification = async () => {
-    await axiosInstance.get(`/userCertificates/${userId}`).then((res) => {
+    await axiosInstance.get(`/userCertificates/${user.id}`).then((res) => {
       setTimeout(() => {
         setUserCertifications(res.data.UserCertificates)
       }, 2000)
     })
   }
-
-  const handleSelectExperience = () => {
-    setSelected('experience')
+  const handlePublishedPortfolio = () => {
+    setShouldRenderPortfolio(isPublished)
+    getUserPortfolio()
   }
 
-  const handleSelectEducation = () => {
-    setSelected('education')
+  const handlePreviewPortfolio = () => {
+    if (location.pathname === '/preview-portfolio') {
+      getUserData()
+      setShouldRenderPortfolio(true)
+    }
+  }
+
+  const handlePeerSharedPortfolio = () => {
+    if (isPeerShared) {
+      getUserPortfolio()
+    }
+  }
+
+  const handleUserPortfolio = () => {
+    getUserPortfolio()
+  }
+  const getPortfolio = async () => {
+    setLoading(true)
+    if (username) {
+      await axiosInstance
+        .get(`/publicPortfolio/${username}`)
+        .then((response) => {
+          setUser(response.data)
+          if (
+            response.data.is_published ||
+            (response.data.isPeerShared && loggedUser)
+          ) {
+            getUserPortfolio()
+          } else setShouldRenderPortfolio(false)
+          if (response.data.user.id === userId) {
+            history.push('/preview-portfolio')
+          }
+          setLoading(false)
+        })
+        .catch((err) => {
+          setLoading(false)
+        })
+    }
   }
 
   useEffect(() => {
-    location?.state?.isPeerView && getUserPortfolio()
-    !location?.state?.isPeerView && getUserData()
-  }, [])
+    if (isPublicView) {
+      getPortfolio()
+    } else {
+      if (isPeerView === true && !isPeerShared) {
+        handleUserPortfolio()
+      } else {
+        getPortfolio()
+        handlePeerSharedPortfolio()
+        handlePreviewPortfolio()
+      }
+    }
+  }, [isPeerView, isPublicView])
 
   useEffect(() => {
-    if (!user) return
-    getSubmissions()
-    getUserBio()
-    getUserSkills()
-
-    user?.show_certifications && getUserCertification()
-    user?.show_experience && getUserExperiences()
-    user?.show_accomplishments && getUserAccomplishments()
-    user?.show_education && getUserEducations()
-    user?.show_recommendations && getUserRecommendations()
+    if (user) {
+      if (background?.length === 0 && loggedUser) {
+        getSubmissions()
+        getUserBio()
+        // getUserSkills()
+        getIAMRSkills()
+        user?.show_certifications && getUserCertification()
+        user?.show_experience && getUserExperiences()
+        user?.show_accomplishments && getUserAccomplishments()
+        user?.show_education && getUserEducations()
+        user?.show_recommendations && getUserRecommendations()
+      }
+    }
   }, [user])
 
   const authorizedLevel = IsUserLevelAuthorized()
@@ -107,22 +199,13 @@ const PreviewPortfolio = () => {
     if (userId) {
       await axiosInstance.get(`/users/${userId}`).then((response) => {
         setUser(response.data)
+        axiosInstance.get('/portfolio').then((response) => {
+          setToggle(response.data.is_published)
+        })
+        // setToggle(response.data.is_published)
       })
     }
   }
-
-  const updateStatus = async () => {
-    await axiosInstance
-      .put(`/users`, {
-        is_published: !toggle
-      })
-      .then(() => {
-        toast.success(<IntlMessages id="alerts.success_change" />)
-        setToggle(!toggle)
-      })
-      .catch((err) => err)
-  }
-
   const getUserRecommendations = async () => {
     authorizedLevel &&
       (await axiosInstance
@@ -133,27 +216,33 @@ const PreviewPortfolio = () => {
   }
 
   const getUserExperiences = async () => {
-    await axiosInstance
-      .get(`/userBackground/by-type/experience/user/${user.id}`)
-      .then((res) => {
-        setExperiences(res.data)
-      })
+    if (user) {
+      await axiosInstance
+        .get(`/userBackground/by-type/experience/user/${user.id}`)
+        .then((res) => {
+          setExperiences(res.data)
+        })
+    }
   }
 
   const getUserEducations = async () => {
-    await axiosInstance
-      .get(`/userBackground/by-type/education/user/${user.id}`)
-      .then((res) => {
-        setEducations(res.data)
-      })
+    if (user) {
+      await axiosInstance
+        .get(`/userBackground/by-type/education/user/${user.id}`)
+        .then((res) => {
+          setEducations(res.data)
+        })
+    }
   }
 
   const getUserAccomplishments = async () => {
-    await axiosInstance
-      .get(`/userBackground/by-type/accomplishments/user/${user.id}`)
-      .then((res) => {
-        setAccomplishments(res.data)
-      })
+    if (user) {
+      await axiosInstance
+        .get(`/userBackground/by-type/accomplishments/user/${user.id}`)
+        .then((res) => {
+          setAccomplishments(res.data)
+        })
+    }
   }
 
   const getUser = async () => {
@@ -169,11 +258,9 @@ const PreviewPortfolio = () => {
   }
 
   const getUserBio = async () => {
-    const newUserId = location?.state?.isPeerView ? user.id : userId
-
-    if (newUserId) {
+    if (user?.id) {
       await axiosInstance
-        .get(`/users/${newUserId}`)
+        .get(`/users/${user?.id}`)
         .then((response) => {
           setUserBiography(response.data.bio)
           setUserData(response.data)
@@ -185,9 +272,9 @@ const PreviewPortfolio = () => {
   }
 
   const getSubmissions = () => {
-    axiosInstance
-      .get(`/submissions/user/${user?.id}`)
-      .then((data) => setSubmissions(data.data?.submissions))
+    axiosInstance.get(`/submissions/user/${user?.id}`).then((data) => {
+      setSubmissions(data.data?.submissions)
+    })
   }
 
   const getUserSkills = async () => {
@@ -199,42 +286,34 @@ const PreviewPortfolio = () => {
       .catch((err) => err)
   }
 
-  const [approvedSkills, setApprovedSkills] = useState([])
   const getIAMRSkills = async () => {
-    try {
-      const { data } = await axiosInstance.get(`/iamr/skills/user/${user.id}`)
-      const approvedSkills = data.skills.reduce((accumulator, skill) => {
-        if (
-          skill.SkillStatus.status === 'approved' ||
-          skill.SkillStatus.status === 'proficient'
-        ) {
-          accumulator.push(skill)
-        }
-        return accumulator
-      }, [])
-      setApprovedSkills(approvedSkills)
-    } catch (error) {
-      console.error('error', error)
+    if (!!user && user.id) {
+      try {
+        const { data } = await axiosInstance.get(`/iamr/skills/user/${user.id}`)
+        const approvedSkills = data.skills.reduce((accumulator, skill) => {
+          if (
+            skill.SkillStatus.status === 'approved' ||
+            skill.SkillStatus.status === 'proficient'
+          ) {
+            accumulator.push(skill)
+          }
+          return accumulator
+        }, [])
+        setApprovedSkills(approvedSkills)
+      } catch (error) {
+        console.error('error', error)
+      }
     }
   }
-
-  useEffect(() => {
-    getIAMRSkills()
-  }, [user])
-  const history = useHistory()
-  const isPreview = history.location.pathname.includes('preview')
-  const windowWidth = useWindowWidth()
-
-  const isPreviewPortfolio = isPreview || location?.state?.isPeerView
 
   return (
     <div
       style={{
         padding: '30px 10px',
-        width: isPreview || location?.state?.isPeerView ? '100%' : '88%'
+        width: isPreviewPortfolio || !isPublished ? '100%' : '88%'
       }}
     >
-      {!location?.state?.isPeerView && (
+      {!isHiddenFeature() && (
         <div>
           <div>
             <span className="my_portfolio_title">
@@ -247,7 +326,7 @@ const PreviewPortfolio = () => {
             <span className="text-uppercase title_preview_portfolio d-block d-sm-inline">
               {
                 <>
-                  {!isPreview || location?.state?.isPeerView ? (
+                  {!isPreviewPortfolio || isPeerView ? (
                     <Link to={'/preview-portfolio'}>
                       <IntlMessages id="portfolio.preview" />
                     </Link>
@@ -268,11 +347,21 @@ const PreviewPortfolio = () => {
           style={{
             background: '#F8F7F7 0% 0% no-repeat padding-box',
             opacity: 1,
-            padding: 20
+            padding: 20,
+            minHeight: '500px'
           }}
+          className={
+            'd-flex align-items-center justify-content-center flex-column '
+          }
         >
-          {!location?.state?.isPeerView && (
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {!isHiddenFeature() && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                width: '100%'
+              }}
+            >
               <div style={{ width: '30%' }}>
                 <span className="my_portfolio_publish pe-xxl-0 ">
                   <IntlMessages id="portfolio.Publish.My.Portfolio" />
@@ -296,6 +385,36 @@ const PreviewPortfolio = () => {
                   <IntlMessages id="portfolio.publish_checkbox" />
                 </span>
               </div>
+            </div>
+          )}
+          {!!user ? (
+            <>
+              {renderPortfolio ? (
+                <PreviewPortfolioBody
+                  loggedUser={loggedUser}
+                  user={user}
+                  isPreviewPortfolio={
+                    isPreview || isPublicView || isPublished || !isPublicView
+                  }
+                  userData={userData}
+                  userBiography={userBiography}
+                  location={location}
+                  isOwnPortfolio={isOwnPortfolio}
+                  userId={isPeerView || isPublicView ? user.id : userId}
+                  approvedSkills={approvedSkills}
+                  experiences={experiences}
+                  educations={educations}
+                  accomplishments={accomplishments}
+                  userCertifications={userCertifications}
+                  isPeerOrPublicView={isPeerView || isPublicView}
+                />
+              ) : (
+                <>{'This portfolio is private'}</>
+              )}
+            </>
+          ) : (
+            <div className="text-center" style={{ color: '#01c5d1' }}>
+              <FontAwesomeIcon icon={faSpinner} className="" spin />
             </div>
           )}
           <PreviewPortfolioBody

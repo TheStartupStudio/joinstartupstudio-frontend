@@ -100,6 +100,16 @@ const Logout = React.lazy(() => import('./pages/Auth/LogOut'))
 const VerifyEmail = React.lazy(() => import('./pages/Verify'))
 const MyConnections = React.lazy(() => import('./pages/MyConnections'))
 const MyClassroom = React.lazy(() => import('./pages/MyClassroom'))
+const MySpark = React.lazy(() => import('./pages/MySpark'))
+const MySparkWidgetDetails = React.lazy(() =>
+  import('./pages/MySpark/Widgets/WidgetDetails')
+)
+const MySparkGeneratePage = React.lazy(() =>
+  import('./pages/MySpark/GeneratedResponsePage/GeneratedResponsePage')
+)
+const MySparkArchivePage = React.lazy(() =>
+  import('./pages/MySpark/ArchivePage/ArchivePage')
+)
 const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
 const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
 const PreviewPortfolioNew = React.lazy(() =>
@@ -180,7 +190,9 @@ function Router(props) {
               <Route
                 exact
                 path="/user-portfolio/:username"
-                component={PreviewPortfolioNew}
+                component={(props) => {
+                  return <PreviewPortfolioNew {...props} isPublicView={false} />
+                }}
               />
               <Route exact path="/terms" component={Terms} />
               {/*<Route*/}
@@ -389,6 +401,27 @@ function Router(props) {
                 path="/my-classroom/request/:id"
                 component={MyClassroom}
               />
+              <Route
+                path="/my-spark/generate-page/response"
+                exact
+                component={MySparkGeneratePage}
+              />
+              <Route
+                path="/my-spark/generate-page/:id"
+                exact
+                component={MySparkGeneratePage}
+              />
+              <Route exact path="/my-spark/widgets" component={MySpark} />
+              <Route
+                path="/my-spark/archive"
+                exact
+                component={MySparkArchivePage}
+              />
+              <Route
+                path="/my-spark/widgets/:widgetName"
+                exact
+                component={MySparkWidgetDetails}
+              />
               <Route path="/iamr-inbox" component={IAMRinbox} />
               <Route
                 path="/student-iamr/:studentId/:id?/:type?"
@@ -420,7 +453,9 @@ function Router(props) {
               <Route
                 exact
                 path="/user-portfolio/:username"
-                component={PreviewPublicPortfolio}
+                component={(props) => {
+                  return <PreviewPortfolioNew {...props} isPublicView={true} />
+                }}
               />
               <Route
                 path="/password-change-required"
