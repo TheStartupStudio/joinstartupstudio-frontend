@@ -8,6 +8,7 @@ import useWindowWidth from '../../utils/hooks/useWindowWidth'
 import OptionSelector from '../../components/OptionSelector'
 import BarChartComponent from '../../components/Charts/BarChartComponent'
 import axiosInstance from '../../utils/AxiosInstance'
+import useTabActive from '../../utils/hooks/useTabActive'
 
 const ProgressCard = ({ title, progress }) => {
   return (
@@ -222,11 +223,12 @@ function MyPerformanceData() {
   const history = useHistory()
   const windowWidth = useWindowWidth()
   const [filterBy, setFilterBy] = React.useState('')
-  const [curriculumCompletion, setCurriculumCompletion] = React.useState('')
+  const [curriculumCompletion, setCurriculumCompletion] = React.useState('lts1')
   const [certification, setCertification] = useState([])
   const [instructorDebriefData, setInstructorDebriefData] = useState({})
   const [sectionTwoData, setSectionTwoData] = useState([])
   const [sectionOneData, setSectionOneData] = useState([])
+  const tabActive = useTabActive()
 
   const handleFilterChange = (event) => {
     setFilterBy(event.target.value)
@@ -238,6 +240,7 @@ function MyPerformanceData() {
 
   useEffect(() => {
     axiosInstance.get('/myPerformanceData/sectionOne').then(({ data }) => {
+      console.log(data)
       setSectionOneData(data)
     })
     axiosInstance.get('/myPerformanceData/sectionTwo').then(({ data }) => {

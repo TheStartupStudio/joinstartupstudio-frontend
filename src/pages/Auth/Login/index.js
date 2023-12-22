@@ -10,7 +10,10 @@ import { validateEmail } from '../../../utils/helpers'
 import './index.css'
 import triangleIcon from '../../../assets/images/triangle.png'
 import axiosInstance from '../../../utils/AxiosInstance'
-import { updateStartTime } from '../../../redux/user/Actions'
+import {
+  updateStartTime,
+  updateUserActivity
+} from '../../../redux/user/Actions'
 
 function Login() {
   const [user, setUser] = useState({})
@@ -68,6 +71,16 @@ function Login() {
           //     '/myPerformanceData/loginTime'
           //   )
           //   console.log(newTime)
+          // }
+
+          // if (response) {
+          //   console.log(response)
+          //   axiosInstance
+          //     .put(`/myPerformanceData/updateActivity`)
+          //     .then(({ data }) => {
+          //       debugger
+          //       dispatch(updateUserActivity(data))
+          //     })
           // }
 
           dispatch(userLogin(user.password)).then((res) => {

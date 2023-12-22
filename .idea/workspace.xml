@@ -5,13 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae532a5f-2fde-47e9-a7e9-1479691cbe70" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/utils/hooks/useTabActive.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/hooks/useWindowFocus.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Charts/Bar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Charts/BarChartComponent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Header/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Profile/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Auth/LogOut/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/LogOut/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Auth/Login/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/Login/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/MyPerformanceData/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyPerformanceData/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/NotificationSection-dashboard/NotificationBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/NotificationSection-dashboard/NotificationBox.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/user/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Actions.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/user/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Reducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/user/Types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/AxiosInstance.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/AxiosInstance.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +80,9 @@
       <workItem from="1701426742200" duration="12943000" />
       <workItem from="1701948513421" duration="623000" />
       <workItem from="1702025262798" duration="5786000" />
+      <workItem from="1702649923099" duration="1184000" />
+      <workItem from="1702721229455" duration="58809000" />
+      <workItem from="1703156757801" duration="11699000" />
     </task>
     <servers />
   </component>

@@ -53,7 +53,9 @@ axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
 axiosInstance.interceptors.request.use(
   (request) => {
     const token = JSON.parse(localStorage.getItem('user'))
+
     if (token) request.headers.Authorization = `Bearer ${token.token}`
+
     return request
   },
   (error) => {

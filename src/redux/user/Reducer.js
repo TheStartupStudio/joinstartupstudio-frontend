@@ -9,8 +9,14 @@ import {
   EDIT_SOCIAL_MEDIA,
   USER_CHANGE_PROFILE_IMAGE,
   NEED_RESET,
-  UPDATE_USER_TNC
+  UPDATE_USER_TNC,
+  LOGIN_TIME,
+  LOGOUT_TIME,
+  ACTIVE_MINUTES,
+  USER_ACTIVITY
 } from './Types'
+import axiosInstance from '../../utils/AxiosInstance'
+import { updateUserActivity } from './Actions'
 
 const user = JSON.parse(localStorage.getItem('user'))
 const auth_token = localStorage.getItem('access_token')
@@ -22,7 +28,14 @@ const initialState = {
   successMessage: null,
   errorMessage: null,
   loginLoading: false,
-  oldPassword: null
+  oldPassword: null,
+  userActivity: {
+    loginTime: null,
+    logoutTime: null,
+    activeMinutes: 0,
+    windowFocused: null
+    // isFirstRendered: null
+  }
 }
 
 const userReducer = (state = initialState, action) => {
@@ -60,6 +73,20 @@ const userReducer = (state = initialState, action) => {
         isAuthenticated: true,
         successMessage: null,
         errorMessage: null
+      }
+
+    case LOGIN_TIME:
+
+    case LOGOUT_TIME:
+    case USER_ACTIVITY:
+      return {
+        ...state,
+        userActivity: {
+          loginTime: payload.loginTime,
+          logoutTime: payload.logoutTime,
+          activeMinutes: payload.activeMinutes,
+          windowFocused: payload.windowFocused
+        }
       }
     case USER_LOGOUT:
       localStorage.clear()

@@ -22,5 +22,7 @@ export const USER_REMOVE_ERROR_MESSAGE = 'USER_REMOVE_ERROR_MESSAGE'
 // update user term and condition
 export const UPDATE_USER_TNC = 'UPDATE_USER_TNC'
 
-export const SESSION_START_TIME = 'SESSION_START_TIME'
-export const SESSION_END_TIME = 'SESSION_END_TIME'
+export const LOGIN_TIME = 'LOGIN_TIME'
+export const LOGOUT_TIME = 'LOGOUT_TIME'
+export const ACTIVE_MINUTES = 'ACTIVE_MINUTES'
+export const USER_ACTIVITY = 'USER_ACTIVITY'

@@ -12,7 +12,8 @@ import {
   NEED_RESET,
   UPDATE_USER_TNC,
   SESSION_START_TIME,
-  SESSION_END_TIME
+  SESSION_END_TIME,
+  USER_ACTIVITY
 } from './Types'
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -25,13 +26,13 @@ export const userLogin = (old_password) => async (dispatch) => {
 
     axiosInstance.defaults.headers.common[
       'Authorization'
-      ] = `Bearer ${localStorage.getItem('access_token')}`
+    ] = `Bearer ${localStorage.getItem('access_token')}`
     axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
     const user = await axiosInstance
       .get('/instructor/')
       .then()
       .catch((e) => {
-        toast.error(<IntlMessages id='alerts.email_password_incorrect' />)
+        toast.error(<IntlMessages id="alerts.email_password_incorrect" />)
         dispatch({
           type: LOGIN_LOADING,
           payload: false
@@ -96,7 +97,27 @@ export const userLogin = (old_password) => async (dispatch) => {
       }
 
       localStorage.setItem('user', JSON.stringify(user_token))
-
+      // if (userData) {
+      //   console.log(userData)
+      //   axiosInstance
+      //     .put(`/myPerformanceData/updateActivity`, {
+      //       loginTime: new Date()
+      //     })
+      //     .then(({ data }) => {
+      //       // debugger
+      //       console.log(data)
+      //       dispatch(updateUserActivity(data))
+      //     })
+      // }
+      // if (userData) {
+      //   dispatch(
+      //     updateUserActivity({
+      //       loginTime: new Date(),
+      //       logoutTime: null,
+      //       activeMinutes: 0
+      //     })
+      //   )
+      // }
       dispatch({
         type: USER_LOGIN_SUCCESS,
         payload: userData
@@ -205,6 +226,30 @@ export const updateStartTime = () => {
     axiosInstance.post('/myPerformanceData/start').then((res) => {
       return res.data
     })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const updateUserActivity = (data) => async (dispatch) => {
+  // console.log(data)
+  // debugger
+  try {
+    dispatch({
+      type: USER_ACTIVITY,
+      payload: data
+    })
+
+    // axiosInstance
+    //   .put(`/myPerformanceData/updateActivity`, {
+    //     activeMinutes: +data.activeMinutes
+    //   })
+    //   .then(({ data }) => {
+    //     // debugger
+    //     dispatch(updateUserActivity(data))
+    //     console.log('Should be called second')
+    //     setIsExistingSecondData(true)
+    //   })
   } catch (err) {
     console.log(err)
   }
