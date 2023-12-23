@@ -139,10 +139,7 @@ function Router(props) {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
   const clientBaseURL = `${process.env.REACT_APP_CLIENT_BASE_URL}`
 
-  const location = useLocation()
-
   const history = useHistory()
-  console.log('history', history)
 
   useEffect(() => {
     const handleGetData = (type) => {
@@ -151,7 +148,7 @@ function Router(props) {
           isActive: false
         })
         .then((response) => {
-          console.log(response)
+          // console.log(response)
         })
         .catch((error) => {
           console.error('Error updating activity:', error)
