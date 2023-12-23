@@ -13,11 +13,11 @@ import socket from './utils/notificationSocket'
 import useTabActive from './utils/hooks/useTabActive'
 import { isFirstFocusedRender } from 'react-big-calendar/lib/utils/helpers'
 import axiosInstance from './utils/AxiosInstance'
+import ReactGA from 'react-ga'
 
 window.jQuery = jQuery
 
 function App({ basename }) {
-  // todo: loginTime, logoutTime, activeMinutes
   //
 
   const windowFocus = useWindowFocus()
@@ -45,8 +45,53 @@ function App({ basename }) {
   }
 
   // useEffect(() => {
-  // console.log(document.hasFocus())
+  //   const handleBeforeUnload = (e) => {
+  //     axiosInstance
+  //       .put('/myPerformanceData/updateActivity', {
+  //         isActive: false
+  //       })
+  //       .then((r) => {
+  //         console.log(r)
+  //       })
+  //   }
+  //
+  //   window.addEventListener('beforeunload', handleBeforeUnload)
+  //
+  //   return () => {
+  //     window.removeEventListener('beforeunload', handleBeforeUnload)
+  //   }
+  // }, [])
 
+  // useEffect(() => {
+  //   const handleGetData = () => {
+  //     axiosInstance
+  //       .put('/myPerformanceData/updateActivity', {
+  //         isActive: false
+  //       })
+  //       .then((response) => {
+  //         console.log(response)
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error updating activity:', error)
+  //       })
+  //   }
+  //
+  //   const handlePathnameChange = () => {
+  //     const newPathname = window.location.pathname
+  //     console.log('Pathname:', newPathname)
+  //     handleGetData()
+  //   }
+  //
+  //   window.addEventListener('popstate', handlePathnameChange)
+  //
+  //   return () => {
+  //     window.removeEventListener('popstate', handlePathnameChange)
+  //   }
+  // }, [])
+
+  // useEffect(() => {
+  // console.log(document.hasFocus())
+  //
   // const handleVisibilityChange = () => {
   //   if (document.visibilityState === 'hidden') {
   //     handleBeforeUnload()
@@ -81,13 +126,11 @@ function App({ basename }) {
   // }
 
   //   const handleBeforeUnload = (e) => {
-  //     debugger
   //     axiosInstance
   //       .put('/myPerformanceData/updateActivity', {
   //         isActive: false
   //       })
   //       .then((r) => {
-  //         debugger
   //         console.log(r)
   //       })
   //   }
