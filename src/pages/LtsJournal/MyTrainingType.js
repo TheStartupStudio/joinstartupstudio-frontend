@@ -23,6 +23,7 @@ const MyTrainingType = (props) => {
         })
       } catch (err) {}
     }
+
     getJournals()
   }, [])
 
@@ -90,7 +91,6 @@ const MyTrainingType = (props) => {
                             journals={journals}
                             // contentContainer={contentContainer}
                             backRoute={props.match.url}
-                            // saved={journalChanged}
                             // view={'task'}
                           />
                         </>
