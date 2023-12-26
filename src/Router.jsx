@@ -142,7 +142,7 @@ function Router(props) {
   const history = useHistory()
 
   useEffect(() => {
-    const handleGetData = (type) => {
+    const handleGetData = () => {
       axiosInstance
         .put('/myPerformanceData/updateActivity', {
           isActive: false
@@ -156,21 +156,17 @@ function Router(props) {
     }
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        handleGetData('PageMinimized')
+        handleGetData()
       }
     }
 
-    window.addEventListener('beforeunload', () =>
-      handleGetData('Addbeforeunload')
-    )
+    window.addEventListener('beforeunload', () => handleGetData())
     document.addEventListener('visibilitychange', handleVisibilityChange)
-    const unlisten = history.listen(() => handleGetData('history check'))
+    const unlisten = history.listen(() => handleGetData())
 
     return () => {
       unlisten()
-      window.removeEventListener('beforeunload', () =>
-        handleGetData('Removebeforeunload')
-      )
+      window.removeEventListener('beforeunload', () => handleGetData())
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [history])

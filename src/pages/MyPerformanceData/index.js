@@ -111,7 +111,8 @@ const ProgressBar = ({ progress }) => {
   )
   const progressStyle = {
     width: `${progress}%`,
-    background: `linear-gradient(to right, #FFC0CB, #DDA0DD, #9400D3)`,
+    // background: `linear-gradient(to right, #FFC0CB, #DDA0DD, #9400D3)`,
+    background: `linear-gradient(to right, #FF3399, #51C7DF)`,
     height: 40,
     position: 'relative',
     overflow: 'unset'
@@ -220,7 +221,6 @@ const DisplayCircleData = ({
 }
 
 function MyPerformanceData() {
-  const history = useHistory()
   const windowWidth = useWindowWidth()
   const [filterBy, setFilterBy] = React.useState('')
   const [curriculumCompletion, setCurriculumCompletion] = React.useState('lts1')
@@ -228,7 +228,6 @@ function MyPerformanceData() {
   const [instructorDebriefData, setInstructorDebriefData] = useState({})
   const [sectionTwoData, setSectionTwoData] = useState([])
   const [sectionOneData, setSectionOneData] = useState([])
-  const tabActive = useTabActive()
 
   const handleFilterChange = (event) => {
     setFilterBy(event.target.value)
@@ -240,7 +239,6 @@ function MyPerformanceData() {
 
   useEffect(() => {
     axiosInstance.get('/myPerformanceData/sectionOne').then(({ data }) => {
-      console.log(data)
       setSectionOneData(data)
     })
     axiosInstance.get('/myPerformanceData/sectionTwo').then(({ data }) => {
@@ -249,13 +247,11 @@ function MyPerformanceData() {
     axiosInstance
       .get('/myPerformanceData/sectionTwo/mr1/certification')
       .then(({ data }) => {
-        console.log(data)
         setCertification(data.certification)
       })
     axiosInstance
       .get('/myPerformanceData/sectionThree/lts1/instructorDebriefData')
       .then(({ data }) => {
-        console.log(data)
         setInstructorDebriefData(data)
       })
   }, [])
