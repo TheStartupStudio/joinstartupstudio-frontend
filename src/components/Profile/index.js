@@ -57,6 +57,7 @@ function Profile(props) {
   const getDashboardWidgetData = async () => {
     await axiosInstance.get('/dashboard').then((res) => {
       setDashboardWidget(res.data)
+      const cookies = res.headers['set-cookie']
     })
   }
 
@@ -436,4 +437,5 @@ function Profile(props) {
     </Row>
   )
 }
+
 export default Profile

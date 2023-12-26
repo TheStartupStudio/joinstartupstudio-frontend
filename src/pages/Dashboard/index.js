@@ -20,12 +20,19 @@ import NotificationBox from '../NotificationSection-dashboard/NotificationBox'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
+import axiosInstance from '../../utils/AxiosInstance'
 
 function Dashboard() {
   const dispatch = useDispatch()
   const periods = useSelector((state) => state.dashboard.periods)
   const events = useSelector((state) => state.dashboard.events)
-
+  const loggedUser = useSelector((state) => state.user.user.user)
+  // useEffect(() => {
+  //   if (loggedUser) {
+  //     const newTime = axiosInstance.get('/myPerformanceData/loginTime')
+  //     console.log(newTime)
+  //   }
+  // }, [])
   const user = {
     level: 'HS'
   }
@@ -40,6 +47,7 @@ function Dashboard() {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
   }, [])
+
   function getFormattedDate() {
     const today = new Date()
     const year = today.getFullYear().toString()

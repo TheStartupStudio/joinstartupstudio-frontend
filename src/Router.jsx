@@ -73,6 +73,9 @@ const BeyondYourCourse = React.lazy(() => import('./pages/BeyondYourCourse'))
 const BeyondYourCourseVideo = React.lazy(() =>
   import('../src/pages/BeyondYourCourse/beyondYourCourseVideo')
 )
+const MyPerformanceData = React.lazy(() =>
+  import('../src/pages/MyPerformanceData')
+)
 const Profile = React.lazy(() => import('./pages/Profile/index'))
 const ProfilePreview = React.lazy(() =>
   import('./pages/Profile/profilePreview')
@@ -337,6 +340,10 @@ function Router(props) {
                 component={(props) => (
                   <LtsJournal {...props} category="student-personal-finance" />
                 )}
+              />
+              <Route
+                path="/my-performance-data/"
+                component={MyPerformanceData}
               />
               <Route
                 path="/student-leadership/"

@@ -388,31 +388,31 @@ function Sidebar(props) {
                   </NavLink>
                 </li>
                 <li>
-                  {/*<NavLink*/}
-                  {/*  to={'/my-performance-data'}*/}
-                  {/*  activeClassName="sidenav active"*/}
-                  {/*>*/}
-                  {/*  <div className="d-flex" style={{ alignItems: 'center' }}>*/}
-                  {/*    <div className="ms-4 ps-2 py-1 text-uppercase ">*/}
-                  {/*      My performance data*/}
-                  {/*    </div>*/}
-                  {/*  </div>*/}
-                  {/*</NavLink>*/}
-                  <div
-                    className="sidenav"
-                    style={{
-                      marginLeft: '24px !important',
-                      fontSize: 12,
-                      marginTop: 6,
-                      cursor: 'pointer'
-                    }}
+                  <NavLink
+                    to={'/my-performance-data'}
+                    activeClassName="sidenav active"
                   >
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1 text-uppercase ">
                         My performance data
                       </div>
                     </div>
-                  </div>
+                  </NavLink>
+                  {/*<div*/}
+                  {/*  className="sidenav"*/}
+                  {/*  style={{*/}
+                  {/*    marginLeft: '24px !important',*/}
+                  {/*    fontSize: 12,*/}
+                  {/*    marginTop: 6,*/}
+                  {/*    cursor: 'pointer'*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+                  {/*    <div className="ms-4 ps-2 py-1 text-uppercase ">*/}
+                  {/*      My performance data*/}
+                  {/*    </div>*/}
+                  {/*  </div>*/}
+                  {/*</div>*/}
                 </li>
               </div>
               <li
@@ -473,7 +473,7 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li>
+                <li className="disabledd">
                   <NavLink
                     disabled={true}
                     to={'/student-personal-finance'}

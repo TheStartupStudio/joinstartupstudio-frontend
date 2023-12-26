@@ -10,7 +10,10 @@ import {
   USER_CHANGE_PROFILE_IMAGE,
   USER_EDIT_ERROR,
   NEED_RESET,
-  UPDATE_USER_TNC
+  UPDATE_USER_TNC,
+  SESSION_START_TIME,
+  SESSION_END_TIME,
+  USER_ACTIVITY
 } from './Types'
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -94,11 +97,39 @@ export const userLogin = (old_password) => async (dispatch) => {
       }
 
       localStorage.setItem('user', JSON.stringify(user_token))
-
+      // if (userData) {
+      //   console.log(userData)
+      //   axiosInstance
+      //     .put(`/myPerformanceData/updateActivity`, {
+      //       loginTime: new Date()
+      //     })
+      //     .then(({ data }) => {
+      //       // debugger
+      //       console.log(data)
+      //       dispatch(updateUserActivity(data))
+      //     })
+      // }
+      // if (userData) {
+      //   dispatch(
+      //     updateUserActivity({
+      //       loginTime: new Date(),
+      //       logoutTime: null,
+      //       activeMinutes: 0
+      //     })
+      //   )
+      // }
       dispatch({
         type: USER_LOGIN_SUCCESS,
         payload: userData
       })
+      // await axiosInstance.post('/myPerformanceData/start').then(({ data }) => {
+      //   console.log(data)
+      //   dispatch({
+      //     type: SESSION_START_TIME,
+      //     payload: data
+      //   })
+      // })
+
       dispatch({
         type: LOGIN_LOADING,
         payload: false
@@ -189,3 +220,50 @@ export const updateTnC = () => async (dispatch) => {
     console.log(err)
   }
 }
+
+export const updateStartTime = () => {
+  try {
+    axiosInstance.post('/myPerformanceData/start').then((res) => {
+      return res.data
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const updateUserActivity = (data) => async (dispatch) => {
+  // console.log(data)
+  // debugger
+  try {
+    dispatch({
+      type: USER_ACTIVITY,
+      payload: data
+    })
+
+    // axiosInstance
+    //   .put(`/myPerformanceData/updateActivity`, {
+    //     activeMinutes: +data.activeMinutes
+    //   })
+    //   .then(({ data }) => {
+    //     // debugger
+    //     dispatch(updateUserActivity(data))
+    //     console.log('Should be called second')
+    //     setIsExistingSecondData(true)
+    //   })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+// export const updateEndTime = () => async (dispatch) => {
+//   try {
+//     let newD
+//     axiosInstance.patch(`/myPerformanceData/end`).then((res) => {
+//       newD = res.data
+//       return res.data
+//     })
+//     return newD
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }

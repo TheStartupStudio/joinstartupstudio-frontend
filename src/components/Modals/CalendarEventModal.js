@@ -76,6 +76,7 @@ const CalendarModal = (props) => {
       return date.toLocaleString('en-US', options)
     }
   }
+
   const Event = (props) => {
     return (
       <div style={{ marginBottom: 4 }}>

@@ -36,6 +36,7 @@ import StudentOfInstructors from '../GetInstructorStudents/index.js'
 import useOnClickOutside from 'use-onclickoutside'
 import { useHistory, useLocation } from 'react-router-dom'
 import PeerSharingModal from '../Modals/PeerSharingModal'
+import { updateUserActivity } from '../../redux/user/Actions'
 
 function Header(props) {
   const { user } = useSelector((state) => state.user.user)
@@ -201,7 +202,7 @@ function Header(props) {
     checkIfUserHasVerifiedEmail()
 
     axiosInstance.get(`/notifications/${user.id}`).then((res) => {
-      if (res.data.notifications.length > 0) {
+      if (res.data.notifications?.length > 0) {
         setNotifications(res.data.notifications)
       }
 
@@ -304,7 +305,9 @@ function Header(props) {
     }
     dispatch(changeSidebarState(!sideBarState))
   }
+  const navigate = useHistory()
 
+  const userActivity = useSelector((state) => state.user.userActivity)
   return (
     <div>
       {window.location.href.includes('demo') ? null : verifiedEmail === false &&
@@ -628,12 +631,44 @@ function Header(props) {
                       >
                         SUPPORT
                       </Link>
-                      <Link
+                      <div
                         className="dropdown-item py-2 dropdown-menu-hover"
-                        to="/logout"
+                        // to="/logout"
+                        onClick={() => {
+                          // console.log('asd')
+                          // console.log(userActivity)
+                          //
+                          // dispatch(
+                          //   updateUserActivity({
+                          //     ...userActivity,
+                          //     logoutTime: new Date(),
+                          //     activeMinutes:
+                          //       (!!userActivity.activeMinutes
+                          //         ? +userActivity.activeMinutes
+                          //         : 0) +
+                          //       (new Date() - new Date(userActivity.loginTime))
+                          //   })
+                          // )
+                          // axiosInstance
+                          //   .put(`/myPerformanceData/updateActivity`, {
+                          //     logoutTime: new Date(),
+                          //     activeMinutes:
+                          //       +userActivity.activeMinutes +
+                          //       (new Date() - new Date(userActivity.loginTime))
+                          //   })
+                          //   .then(({ data }) => {
+                          //     // debugger
+                          //     console.log(data)
+                          //     if (data) {
+                          //       debugger
+                          //       // dispatch(updateUserActivity(data))
+                          //       navigate.push('/logout')
+                          //     }
+                          //   })
+                        }}
                       >
                         <IntlMessages id="navigation.logout" />
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 </li>
@@ -905,6 +940,9 @@ function Header(props) {
             <Link
               className="dropdown-item py-2 dropdown-menu-hover"
               to="/logout"
+              onClick={() => {
+                console.log('asd')
+              }}
             >
               <IntlMessages id="navigation.logout" />
             </Link>
@@ -945,4 +983,5 @@ function Header(props) {
     </div>
   )
 }
+
 export default Header

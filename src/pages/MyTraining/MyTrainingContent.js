@@ -304,6 +304,7 @@ function MyTrainingContent(props) {
     setSelectedPedagogy(null)
     setSelectedPedagogyIndex(null)
   }, [openAccordion])
+
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
       let filtered = userJournalEntries[entry.id].filter(
@@ -599,6 +600,7 @@ function MyTrainingContent(props) {
                             </p>
 
                             <EntriesBox
+                              isEditable={true}
                               entries={journal.entries}
                               entryBoxTitle={journal?.title}
                               journal={journal}

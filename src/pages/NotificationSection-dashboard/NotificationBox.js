@@ -15,7 +15,7 @@ const NotificationListItem = ({
   description,
   url,
   onEdit,
-  onDelete,
+  onDelete
 }) => {
   return (
     <Link className="notification-content-list-container" to={url}>
@@ -64,7 +64,7 @@ const NotificationBox = (props) => {
     axiosInstance
       .get(`/notifications/${user.id}/manual-notifications`)
       .then((res) => {
-        if (res.data.notifications.length > 0) {
+        if (res.data.notifications?.length > 0) {
           setReceivedNotifications(res.data.notifications)
         }
       })
@@ -74,14 +74,14 @@ const NotificationBox = (props) => {
       const editedNotifications = data.notifications.map((notification) => {
         return {
           ...notification,
-          Sender: { ...data.Sender },
+          Sender: { ...data.Sender }
         }
       })
 
       setReceivedNotifications((receivedNotifications) => {
         const newNotificationsArray = [
           ...editedNotifications,
-          ...receivedNotifications,
+          ...receivedNotifications
         ]
         return newNotificationsArray
       })
@@ -149,7 +149,7 @@ const NotificationBox = (props) => {
     try {
       socket?.emit('editNotification', {
         updatedNotification,
-        notificationId: updatedNotification.id,
+        notificationId: updatedNotification.id
       })
       toast.success('Notification updated successfully!')
     } catch (e) {
@@ -160,7 +160,7 @@ const NotificationBox = (props) => {
   const onDeleteNotification = () => {
     try {
       socket?.emit('deleteNotification', {
-        notificationId: notification.id,
+        notificationId: notification.id
       })
       handleCloseDeleteNotificationModal()
       toast.success('Notification deleted successfully!')
