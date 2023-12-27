@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row } from 'react-bootstrap'
-
 import './style.css'
-
-import { useHistory } from 'react-router-dom'
 import useWindowWidth from '../../utils/hooks/useWindowWidth'
 import OptionSelector from '../../components/OptionSelector'
-import BarChartComponent from '../../components/Charts/BarChartComponent'
 import axiosInstance from '../../utils/AxiosInstance'
-import useTabActive from '../../utils/hooks/useTabActive'
+import BarChartJs from '../../components/Charts/BarChartJs'
+import SelectInput from '../../components/SelectInput'
 
 const ProgressCard = ({ title, progress }) => {
   return (
@@ -327,9 +324,10 @@ function MyPerformanceData() {
                   />
                 </div>
                 <div className={'col-md-8 p-3'}>
+                  {/*// d-flex align-items-center flex-column justify-content-center*/}
                   <div
                     className={
-                      'mb-2 border-2 performance-data-card bg-white w-100 h-100 d-flex align-items-center flex-column justify-content-center'
+                      'position-relative mb-2 border-2 performance-data-card bg-white w-100 h-100 '
                     }
                   >
                     <div
@@ -338,14 +336,41 @@ function MyPerformanceData() {
                     >
                       Certification
                     </div>
-                    <BarChartComponent
-                      data={certification}
-                      handleChangeDataType={(e) => handleChangeMRType(e)}
-                      dataTypes={[
-                        { name: 'MR1', value: 'mr1' },
-                        { name: 'MR2', value: 'mr2' }
-                      ]}
-                    />
+
+                    <div className={'d-flex justify-content-end w-100 pe-2 '}>
+                      <SelectInput
+                        options={[
+                          { name: 'MR1', value: 'mr1' },
+                          { name: 'MR2', value: 'mr2' }
+                        ]}
+                        onChange={(e) => handleChangeMRType(e)}
+                      />
+                    </div>
+                    <div
+                      className={
+                        ' d-flex align-items-center flex-column justify-content-center'
+                      }
+                    >
+                      <BarChartJs
+                        data={certification}
+                        handleChangeDataType={(e) => handleChangeMRType(e)}
+                        dataTypes={[
+                          { name: 'MR1', value: 'mr1' },
+                          { name: 'MR2', value: 'mr2' }
+                        ]}
+                      />
+                    </div>
+
+                    {/*<GoogleBarChart />*/}
+                    {/*<BarChart />*/}
+                    {/*<BarChartComponent*/}
+                    {/*  data={certification}*/}
+                    {/*  handleChangeDataType={(e) => handleChangeMRType(e)}*/}
+                    {/*  dataTypes={[*/}
+                    {/*    { name: 'MR1', value: 'mr1' },*/}
+                    {/*    { name: 'MR2', value: 'mr2' }*/}
+                    {/*  ]}*/}
+                    {/*/>*/}
                   </div>
                 </div>
               </div>
