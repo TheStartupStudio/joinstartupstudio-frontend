@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Modal } from 'react-bootstrap'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -19,6 +19,7 @@ import {
 import { IsUserLevelAuthorized } from '../../utils/helpers'
 import { faHeart as heartNotSaved } from '@fortawesome/free-regular-svg-icons'
 import { NotesButton } from '../Notes'
+import CustomVideoPlayer from '../Video/CustomVideoPlayer'
 
 export const VideoModal = (props) => {
   const [loading, setLoading] = useState(false)
@@ -28,6 +29,33 @@ export const VideoModal = (props) => {
   const [connections, setConnections] = useState([])
   const [showShareVideoModal, setShowShareVideoModal] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
+  const videoRef = useRef(null)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+
+  useEffect(() => {
+    const videoPlayer = videoRef.current
+
+    const updateTime = (state) => {
+      setCurrentTime(state.playedSeconds)
+    }
+
+    const handleDuration = (duration) => {
+      setDuration(duration)
+    }
+
+    if (videoPlayer) {
+      videoPlayer.addEventListener('progress', updateTime)
+      videoPlayer.addEventListener('duration', handleDuration)
+    }
+
+    return () => {
+      if (videoPlayer) {
+        videoPlayer.removeEventListener('progress', updateTime)
+        videoPlayer.removeEventListener('duration', handleDuration)
+      }
+    }
+  }, [videoRef])
 
   useEffect(() => {
     if (props.connections?.length) {
@@ -44,65 +72,16 @@ export const VideoModal = (props) => {
       <Modal
         show={props.show}
         onHide={props.onHide}
-        // backdrop='static'
-        size='lg'
-        aria-labelledby='contained-modal-title-vcenter'
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
         keyboard={true}
-        className='videoPlayerModal d-lg-flex'
+        className="videoPlayerModal d-lg-flex"
         centered={true}
       >
-        <Modal.Body className='p-0 m-0'>
-          {/* {shareVideo && (
-            <div className='share-video-overlay'>
-              <div className='d-flex h-100 justify-content-center align-items-center'>
-                <div className='row justify-content-center'>
-                  <div
-                    className='col-6 d-flex share-container'
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => {
-                      setShowShareVideoModal(true)
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faUser}
-                      // className='mt-2'
-                      style={{
-                        width: '46px',
-                        height: '55px',
-                        color: '#FFFFFF'
-                      }}
-                    />
-                    <p className='mt-4'>SHARE WITH A CONNECTION</p>
-                  </div>
-                  <div className='col-6 d-flex share-container'>
-                    <FontAwesomeIcon
-                      icon={faUsers}
-                      // className='mt-4'
-                      style={{
-                        width: '70px',
-                        height: '55px',
-                        color: '#FFFFFF'
-                      }}
-                    />
-                    <p className='mt-4'>SHARE WITH THE COMMUNITY</p>
-                  </div>
-                  <div className='col-12'>
-                    <p
-                      className='text-center mt-2'
-                      style={{ color: '#01C5D1', cursor: 'pointer' }}
-                      onClick={() => setShareVideo(false)}
-                    >
-                      CANCEL
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )} */}
-          <div className='video-options d-flex'>
+        <Modal.Body className="p-0 m-0">
+          <div className="video-options d-flex">
             <FontAwesomeIcon
               icon={faTimes}
-              // className='mt-2'
               style={{ width: '25px', height: '30px', color: '#FFFFFF' }}
               onClick={() => {
                 props.onHide()
@@ -112,7 +91,7 @@ export const VideoModal = (props) => {
             />
             <FontAwesomeIcon
               icon={videoData.favorite ? heartSaved : heartNotSaved}
-              className='mt-3'
+              className="mt-3"
               style={{
                 width: '25px',
                 height: '25px',
@@ -138,15 +117,15 @@ export const VideoModal = (props) => {
             )} */}
           </div>
           {!playVideo ? (
-            <div className='d-flex justify-content-center align-items-center'>
+            <div className="d-flex justify-content-center align-items-center">
               <img
                 src={videoData?.thumbnail}
-                width='100%'
-                alt='video'
+                width="100%"
+                alt="video"
                 style={{ objectFit: 'cover' }}
               />
               {!shareVideo && (
-                <div className='beyond-your-course-video-thumb-icon'>
+                <div className="beyond-your-course-video-thumb-icon">
                   <FontAwesomeIcon
                     icon={faPlay}
                     onClick={() => setPlayVideo(true)}
@@ -156,16 +135,22 @@ export const VideoModal = (props) => {
               )}
             </div>
           ) : (
-            <ReactPlayer
-              // className='react-player'
-              url={videoData?.url}
-              controls={true}
-              width='100%'
-              height='100%'
-              config={{
-                file: { attributes: { controlsList: 'nodownload' } }
-              }}
-              playing={true}
+            // <ReactPlayer
+            //   // className='react-player'
+            //   url={videoData?.url}
+            //   controls={true}
+            //   width='100%'
+            //   height='100%'
+            //   config={{
+            //     file: { attributes: { controlsList: 'nodownload' } }
+            //   }}
+            //   playing={true}
+            // />
+            <CustomVideoPlayer
+              videoUrl={videoData?.url}
+              playVideo={playVideo}
+              setPlayVideo={setPlayVideo}
+              videoData={props.videoData}
             />
           )}
 
