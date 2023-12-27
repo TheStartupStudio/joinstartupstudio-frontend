@@ -103,6 +103,32 @@ export const fetchPortfolioContent = (studentID) => {
     }
   }
 }
+export const createWatchedMasterclass = (contentID) => {
+  return async (dispatch) => {
+    try {
+      dispatch(createWatchedMasterclassPending())
+      const data = await platformBadgesService.createMasterClassWatchedVideo(
+        contentID
+      )
+      dispatch(createWatchedMasterclassFulfilled(data))
+    } catch (error) {
+      dispatch(createWatchedMasterclassRejected(error))
+    }
+  }
+}
+export const createWatchedPodcast = (podcastID) => {
+  return async (dispatch) => {
+    try {
+      dispatch(createWatchedPodcastPending())
+      const data = await platformBadgesService.createPodcastWatchedVideo(
+        podcastID
+      )
+      dispatch(createWatchedPodcastFulfilled(data))
+    } catch (error) {
+      dispatch(createWatchedPodcastRejected(error))
+    }
+  }
+}
 
 export const fetchWatchedMasterclassVideosPending = () => ({
   type: types.FETCH_WATCHED_MASTERCLASS_VIDEOS_PENDING
@@ -175,4 +201,22 @@ export function fetchCompletedPortfolioContentFulfilled(payload) {
 }
 export function fetchCompletedPortfolioContentRejected(error) {
   return { type: types.FETCH_COMPLETED_PORTFOLIO_CONTENT_REJECTED, error }
+}
+export const createWatchedMasterclassPending = () => ({
+  type: types.CREATE_WATCHED_MASTERCLASS_PENDING
+})
+export function createWatchedMasterclassFulfilled(payload) {
+  return { type: types.CREATE_WATCHED_MASTERCLASS_FULFILLED, payload }
+}
+export function createWatchedMasterclassRejected(error) {
+  return { type: types.CREATE_WATCHED_MASTERCLASS_REJECTED, error }
+}
+export const createWatchedPodcastPending = () => ({
+  type: types.CREATE_WATCHED_PODCAST_PENDING
+})
+export function createWatchedPodcastFulfilled(payload) {
+  return { type: types.CREATE_WATCHED_PODCAST_FULFILLED, payload }
+}
+export function createWatchedPodcastRejected(error) {
+  return { type: types.CREATE_WATCHED_PODCAST_REJECTED, error }
 }
