@@ -36,7 +36,7 @@ const BadgeBox = () => {
     loading
   } = useSelector((state) => state.platformBadges)
 
-  const fetchCompletedPlatformBadges = useCallback(() => {
+  useEffect(() => {
     if (id) {
       dispatch(fetchProfficientIamrSkills(id))
       dispatch(fetchCompletedJournals(id))
@@ -48,12 +48,6 @@ const BadgeBox = () => {
       dispatch(fetchWatchedMasterclassVideos(id))
     }
   }, [dispatch, id])
-
-  useEffect(() => {
-    if (id) {
-      fetchCompletedPlatformBadges(id)
-    }
-  }, [dispatch, id, fetchCompletedPlatformBadges])
 
   if (loading) {
     return (
