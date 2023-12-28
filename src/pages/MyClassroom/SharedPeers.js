@@ -87,7 +87,7 @@ export const SharedPeers = (props) => {
     <div className="m-0 p-0">
       <h3 className="my-connection-titles ms-0 ps-0">
         {/*<IntlMessages id="connection.page_title" />*/}
-        My Peers
+        My Classroom Portfolios
       </h3>
       {props.peers.length === 0 ? (
         <div className="ms-3 ps-0">
@@ -115,7 +115,7 @@ export const SharedPeers = (props) => {
                 type="text"
                 className="form-control"
                 name="searchedNote"
-                placeholder={'SEARCH MY PEERS'}
+                placeholder={'SEARCH MY CLASSROOM PORTFOLIOS'}
                 aria-describedby="button-addon1"
                 onChange={handleChange}
               />

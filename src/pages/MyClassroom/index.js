@@ -73,9 +73,9 @@ function MyClassroom() {
           <div className="account-page-padding page-border">
             <div className="row ps-2">
               <div className="col-md-6">
-                <h3 className="page-title mb-0">My classroom</h3>
+                <h3 className="page-title mb-0">My Portfolios</h3>
                 <p className="page-description mb-0">
-                  View the portfolios of your peers.
+                  View the portfolios of your students.
                 </p>
               </div>
             </div>

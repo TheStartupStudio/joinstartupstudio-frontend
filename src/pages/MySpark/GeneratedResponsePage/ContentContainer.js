@@ -46,7 +46,10 @@ function ContentContainer(props) {
       </div>
       {props.archivedDocument?.type !== 'image' && (
         <div
-          className={'my-spark_generate-page__content-generated_paragraph'}
+          ref={props.htmlRef}
+          className={`my-spark_generate-page__content-generated_paragraph ${
+            props.type === 'myContent' ? '' : 'no-select'
+          } `}
           dangerouslySetInnerHTML={{
             __html: formatAIResponse(props.content)
           }}
