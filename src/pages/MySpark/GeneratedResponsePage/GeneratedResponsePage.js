@@ -235,23 +235,25 @@ function GeneratedResponsePage(props) {
 
   const handleSaveEditedContent = () => {
     setArchivedDocument({ ...archivedDocument, myContent: editingContent })
-    axiosInstance
-      .patch(`/mySparkArchive/${archivedDocument?.id}`, {
-        myContent: editingContent
-      })
-      .then((res) => {
-        const icon = addDocumentIcon(res?.data?.data)
-        let document = { ...res?.data?.data }
-        document.icon = icon
-        setArchivedDocument(document)
-        toast.success('Your generated spark edited successfully')
-        setIsLoading(false)
-      })
-      .catch((e) => {
-        console.log(e)
-        toast.error('Your generated spark failed to edit')
-        setIsLoading(false)
-      })
+    if (archivedDocument?.id) {
+      axiosInstance
+        .patch(`/mySparkArchive/${archivedDocument?.id}`, {
+          myContent: editingContent
+        })
+        .then((res) => {
+          const icon = addDocumentIcon(res?.data?.data)
+          let document = { ...res?.data?.data }
+          document.icon = icon
+          setArchivedDocument(document)
+          toast.success('Your generated spark edited successfully')
+          setIsLoading(false)
+        })
+        .catch((e) => {
+          console.log(e)
+          toast.error('Your generated spark failed to edit')
+          setIsLoading(false)
+        })
+    }
   }
 
   const handleSaveToArchive = () => {
@@ -352,6 +354,9 @@ function GeneratedResponsePage(props) {
   const isSavedArchive = () => {
     return !!archivedDocument.id
   }
+
+  console.log('existMyContent', existMyContent)
+  console.log('isEdit', isEdit)
 
   return (
     <>
