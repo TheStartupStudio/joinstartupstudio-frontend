@@ -352,6 +352,10 @@ background-color: #FFF
     overflow: auto;
     max-height: 250px
 }
+
+.no-select {
+    user-select:none;
+}
 .my-spark_generate-page__content-footer {
     padding: 14px;
     display:flex;

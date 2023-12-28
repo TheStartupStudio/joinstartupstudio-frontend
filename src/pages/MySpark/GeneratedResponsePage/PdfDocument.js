@@ -7,11 +7,8 @@ import {
   Text,
   View
 } from '@react-pdf/renderer'
-import {
-  HTMLToString,
-  imageResolutionToPercentage
-} from '../mySparkHelpersFuncs'
-
+import { imageResolutionToPercentage } from '../mySparkHelpersFuncs'
+import Html from 'react-pdf-html'
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'row',
@@ -23,6 +20,7 @@ const styles = StyleSheet.create({
     flexGrow: 1
   }
 })
+
 const PdfDocument = ({ archivedDocument }) => {
   return (
     <Document>
@@ -43,7 +41,7 @@ const PdfDocument = ({ archivedDocument }) => {
         <View style={{ ...styles.page, backgroundColor: '#fff' }}>
           <View style={styles.section}>
             {archivedDocument.type !== 'image' && (
-              <Text>{HTMLToString(archivedDocument?.myContent)}</Text>
+              <Html>{archivedDocument?.myContent}</Html>
             )}
             {archivedDocument.type === 'image' && (
               <View style={{ display: 'flex', justifyContent: 'center' }}>
