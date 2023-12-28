@@ -152,35 +152,27 @@ const JournalTables = (props) => {
       }
     }, [props.selectedCell])
     return (
-      <span
-        disabled={props.disabled}
-        style={{
-          ...props.additionalStyle,
-          backgroundColor: '#fff',
-          height: '100%',
-          padding: '8px 0',
-          cursor: 'pointer'
-        }}
-        className={'d-flex justify-content-between align-items-center '}
-      >
-        <div>
-          <div>{props.userCellValue}</div>
-          <div></div>
-        </div>
+      <>
         <div
           ref={newRef}
           onClick={(event) => {
             props.openEditBox(event)
           }}
           className={'edit-pencil-container d-flex justify-content-end'}
-          style={{ padding: '16px 0 16px 16px' }}
+          style={{
+            padding: '16px 0 16px 16px',
+            position: 'absolute',
+            right: 8,
+            top: '50%',
+            transform: 'translateY(-50%)'
+          }}
         >
           <FontAwesomeIcon
             className={'z-3 ml-1 edit-pencil'}
             icon={faPencilAlt}
           />
         </div>
-      </span>
+      </>
     )
   }
   const updateTable = async (newData) => {
@@ -233,7 +225,8 @@ const JournalTables = (props) => {
               <table
                 className={'journal-table'}
                 style={{
-                  order: table.order
+                  order: table.order,
+                  tableLayout: 'fixed'
                 }}
               >
                 {table.title && (
@@ -314,18 +307,22 @@ const JournalTables = (props) => {
                                         display: 'flex',
                                         gap: 6,
                                         ...props.additionalStyling,
-                                        zIndex: 0
+                                        zIndex: 0,
+                                        wordWrap: 'break-word',
+                                        overflowWrap: 'break-word',
+                                        position: 'relative'
                                       }}
                                     >
+                                      <div style={{ paddingRight: 15 }}>
+                                        {cell.inputType === 'text'
+                                          ? cell.userCells?.content
+                                          : cell.userCells?.amount}
+                                      </div>
+
                                       <EditButton
                                         editClicked={editClicked}
                                         selectedCell={selectedCell}
                                         loading={loading}
-                                        userCellValue={
-                                          cell.inputType === 'text'
-                                            ? cell.userCells?.content
-                                            : cell.userCells?.amount
-                                        }
                                         additionalStyle={{
                                           minHeight: 70,
                                           width: '100%',

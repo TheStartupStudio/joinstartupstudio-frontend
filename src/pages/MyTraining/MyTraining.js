@@ -24,8 +24,6 @@ const MyTraining = (props) => {
 
   async function getTrainings(redir = true) {
     try {
-      // const response = await axiosInstance.get('/my-training/')
-      // setTrainings((prevJournals) => [...prevJournals, ...response.data.data])
       let { data } = await axiosInstance.get(`/my-training/`, {
         params: {
           category: props.category,
@@ -34,15 +32,6 @@ const MyTraining = (props) => {
         }
       })
       setTrainings([...data.data].sort((a, b) => a.id - b.id))
-      // if (history.location.pathname.includes('task')) {
-      //   if (data.length > 0 && redir) {
-      //     if (data[0].children && data[0].children.length > 0) {
-      //       history.push(`task/${data[0].children[0].id}`)
-      //     } else {
-      //       history.push(`task/${data[0].id}`)
-      //     }
-      //   }
-      // }
     } catch (err) {}
   }
   useEffect(() => {

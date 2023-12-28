@@ -71,10 +71,10 @@ export const createUserArticle = (itemID, content) => {
     }
   }
 }
-export const getUserArticle = (id) => {
+export const getUserArticle = (studentID,itemID) => {
   return async (dispatch) => {
     try {
-      const data = await rwlService.fetchArticleData(id)
+      const data = await rwlService.fetchArticleData(studentID,itemID)
       dispatch(getUserArticleAction(data.data))
       return data
     } catch (error) {

@@ -6,7 +6,8 @@ import { Link, useParams } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
 import Auth from '@aws-amplify/auth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faPencilAlt,  faClipboardList,
+  faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
 import { validateEmail, validateNumber } from '../../utils/helpers'
@@ -23,6 +24,7 @@ import { StudentCountProvider } from '../../components/MyStudents/studentCountCo
 import { getUserWithIdAction } from '../../redux/users/Actions'
 import './style.css'
 import InstructorNotes from '../../components/Profile/InstructorNotes/InstructorNotes'
+import PlatformBadges from '../../components/Profile/PlatformBadges'
 
 function Profile(props) {
   const dispatch = useDispatch()
@@ -31,6 +33,8 @@ function Profile(props) {
   const [userTags, setUserTags] = useState({})
   const [allTags, setAllTags] = useState({})
   const [showEditPasswordModal, setShowEditPasswordModal] = useState(false)
+  const [instructorNotes, setInstructorNotes] = useState(false)
+  const [platformBadges, setPlatformBadges] = useState(false)
   const [userPortfolio, setUserPortfolio] = useState({})
   const [userTagsId, setUserTagsId] = useState([])
   const [isContactable, setIsContactable] = useState(false)
@@ -94,6 +98,15 @@ function Profile(props) {
         setAllTags(response.data.filter((tag) => !userTagsId.includes(tag.id)))
       })
       .catch((err) => err)
+  }
+
+  const instructorNotesHandler = () => {
+    setPlatformBadges(false)
+    setInstructorNotes((state) => !state)
+  }
+  const platformBadgeHandler = () => {
+    setInstructorNotes(false)
+    setPlatformBadges((state) => !state)
   }
 
   return (
@@ -168,7 +181,65 @@ function Profile(props) {
                   </div>
                 </div>
 
-                <InstructorNotes />
+                <div className="d-flex mx-3 my-3">
+                  {!instructorNotes && (
+                    <Col md="6" className="pe-2">
+                      <div
+                        className={`my-account  ${
+                          instructorNotes
+                            ? 'intructor-notes__btn-active'
+                            : 'intructor-notes__btn'
+                        }  `}
+                        onClick={instructorNotesHandler}
+                      >
+                        <FontAwesomeIcon
+                          icon={faClipboardList}
+                          size="xl"
+                          style={
+                            instructorNotes
+                              ? { color: 'white', fontSize: '40px' }
+                              : { color: '#707070', fontSize: '40px' }
+                          }
+                        />
+                        <h4>INSTRUCTOR NOTES</h4>
+                      </div>
+                    </Col>
+                  )}
+                  {!platformBadges && (
+                    <Col
+                      md="6"
+                      className={`${!platformBadges ? 'ps-0' : 'ps-2'} `}
+                    >
+                      <div
+                        className={`my-account  ${
+                          platformBadges
+                            ? 'intructor-notes__btn-active'
+                            : 'intructor-notes__btn'
+                        }  `}
+                        onClick={platformBadgeHandler}
+                      >
+                        <FontAwesomeIcon
+                          icon={faCircleNotch}
+                          size="xl"
+                          style={
+                            platformBadges
+                              ? { color: 'white', fontSize: '40px' }
+                              : { color: '#707070', fontSize: '40px' }
+                          }
+                        />
+                        <h4>PLATFORM BADGES</h4>
+                      </div>
+                    </Col>
+                  )}
+                </div>
+                {instructorNotes && (
+                  <InstructorNotes
+                    instructorNotesHandler={instructorNotesHandler}
+                  />
+                )}
+                {platformBadges && (
+                  <PlatformBadges platformBadgeHandler={platformBadgeHandler} />
+                )}
               </div>
             </div>
           </div>
