@@ -321,7 +321,7 @@ function MyNotes(props) {
                                         to={`/my-notes/${note.id}`}
                                       >
                                         {note.title && (
-                                          <h5>
+                                          <h5 className="pb-1">
                                             {note.createdFrom ===
                                             ' my-notes' ? (
                                               note.title

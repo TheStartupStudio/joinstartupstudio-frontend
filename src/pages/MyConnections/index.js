@@ -63,7 +63,6 @@ function MyConnections() {
   // useEffect(() => {
 
   // }, [paramId])
-
   useEffect(() => {
     const myWidth = window.innerWidth
     setWidth(myWidth)
@@ -497,50 +496,52 @@ function MyConnections() {
   return (
     <Container fluid>
       <Row>
-        <div className="col-12 col-xl-9 px-0">
+        <div className="col-12 col-xl-12 px-0">
           <div className="account-page-padding page-border">
             <div className="row ps-2">
               <div className="col-md-6">
                 <h3 className="page-title mb-0">
-                  <IntlMessages id="connection.page_title" />
+                  {/*<IntlMessages id="connection.page_title" />*/}
+                  My classroom
                 </h3>
                 <p className="page-description mb-0">
-                  <IntlMessages id="connection.page_description" />
+                  {/*<IntlMessages id="connection.page_description" />*/}
+                  View the portfolios of your peers.
                 </p>
               </div>
-              <div className="col-md-6 mt-3 mt-md-0">
-                <div className="connections-search h-100">
-                  <div className="input-group h-100">
-                    <div className="input-group-prepend my-auto">
-                      <button
-                        className="btn btn-outline-secondary my-2 ms-2"
-                        type="button"
-                        id="button-addon1"
-                      >
-                        <img src={searchIcon} alt="#" width="90%" />
-                      </button>
-                    </div>
-                    <FormattedMessage
-                      id="connection.search_community"
-                      defaultMessage="connection.search_community"
-                    >
-                      {(placeholder) => (
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="searchedNote"
-                          placeholder={placeholder}
-                          aria-describedby="button-addon1"
-                          onChange={(e) => {
-                            // setLoading(true)
-                            handleSearch(e)
-                          }}
-                        />
-                      )}
-                    </FormattedMessage>
-                  </div>
-                </div>
-              </div>
+              {/*<div className="col-md-6 mt-3 mt-md-0">*/}
+              {/*  <div className="connections-search h-100">*/}
+              {/*    <div className="input-group h-100">*/}
+              {/*      <div className="input-group-prepend my-auto">*/}
+              {/*        <button*/}
+              {/*          className="btn btn-outline-secondary my-2 ms-2"*/}
+              {/*          type="button"*/}
+              {/*          id="button-addon1"*/}
+              {/*        >*/}
+              {/*          <img src={searchIcon} alt="#" width="90%" />*/}
+              {/*        </button>*/}
+              {/*      </div>*/}
+              {/*      <FormattedMessage*/}
+              {/*        id="connection.search_community"*/}
+              {/*        defaultMessage="connection.search_community"*/}
+              {/*      >*/}
+              {/*        {(placeholder) => (*/}
+              {/*          <input*/}
+              {/*            type="text"*/}
+              {/*            className="form-control"*/}
+              {/*            name="searchedNote"*/}
+              {/*            placeholder={placeholder}*/}
+              {/*            aria-describedby="button-addon1"*/}
+              {/*            onChange={(e) => {*/}
+              {/*              // setLoading(true)*/}
+              {/*              handleSearch(e)*/}
+              {/*            }}*/}
+              {/*          />*/}
+              {/*        )}*/}
+              {/*      </FormattedMessage>*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
             </div>
             {searchingUsers ? (
               <div className="row mt-5 ps-2">
@@ -566,8 +567,8 @@ function MyConnections() {
                     {filteredUsers.length > 0 && (
                       <ConnectionsSlider
                         data={filteredUsers}
-                        removeConnection={(user) => {
-                          setConnectiontoBeRemoved(user)
+                        removeConnection={(useaccordionsTabler) => {
+                          // setConnectiontoBeRemoved(user)
                           setShowRemoveConnectionModal(true)
                         }}
                         newConnectionRequest={newConnectionRequest}
@@ -686,14 +687,14 @@ function MyConnections() {
             )}
           </div>
         </div>
-        <div className="col-12 col-xl-3 px-2">
-          <ConnectionRequestsBox
-            count={connectionsCount}
-            requests_count={connectionRequests.length}
-            type={'no-margin'}
-          />
-          <ShowMessenger />
-        </div>
+        {/*<div className="col-12 col-xl-3 px-2">*/}
+        {/*  <ConnectionRequestsBox*/}
+        {/*    count={connectionsCount}*/}
+        {/*    requests_count={connectionRequests.length}*/}
+        {/*    type={'no-margin'}*/}
+        {/*  />*/}
+        {/*  <ShowMessenger />*/}
+        {/*</div>*/}
       </Row>
       {respondConnectionModal1 && (
         <RespondConnectionModal

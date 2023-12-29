@@ -202,7 +202,8 @@ const FirstDiv = () => {
               width={"100%"}
               height={"300px"}
               url={
-                "https://d5tx03iw7t69i.cloudfront.net/Journal/MarketReadyGuide/MRG-1-Introduction-to-My-Market-Ready-Guide-V2.mov"
+                // "https://d5tx03iw7t69i.cloudfront.net/Journal/MarketReadyGuide/MRG-1-Introduction-to-My-Market-Ready-Guide-V2.mov"
+                'https://d5tx03iw7t69i.cloudfront.net/iamr/Market Ready Guide.mov'
               }
               controls
               playing={true}

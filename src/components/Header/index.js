@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useParams } from 'react-router-dom'
 import ReactGA from 'react-ga'
 import { Auth } from 'aws-amplify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,6 +19,8 @@ import IntlMessages from '../../utils/IntlMessages'
 import triangleAlertIcon from '../../assets/images/alert-triangle-icon.svg'
 import notesIcon from '../../assets/images/notes-icon.svg'
 import notesIconHovered from '../../assets/images/notes-icon-active.svg'
+import mySparkBlack from '../../assets/icons/Asset 1.svg'
+import mySparkWhite from '../../assets/icons/Group 3819.svg'
 // import journalIcon from '../../assets/images/journals-icon.svg'
 // import journalIconHovered from '../../assets/images/journals-icon-active.svg'
 import focusIcon from '../../assets/images/focus_icon.png'
@@ -33,6 +35,7 @@ import TermAndCondition from './TermAndCondition'
 import StudentOfInstructors from '../GetInstructorStudents/index.js'
 import useOnClickOutside from 'use-onclickoutside'
 import { useHistory, useLocation } from 'react-router-dom'
+import PeerSharingModal from '../Modals/PeerSharingModal'
 
 function Header(props) {
   const { user } = useSelector((state) => state.user.user)
@@ -72,12 +75,46 @@ function Header(props) {
   const [allowToShow, setAllowToShow] = useState(false)
   const [backButton, setBackButton] = useState(false)
   const notificationsRef = useRef(null)
+  const [peerSharingModal, setPeerSharingModal] = useState(false)
+  const [peerSharingAccepted, setPeerSharingAccepted] = useState(false)
+  const params = useParams()
+
+  useEffect(() => {
+    axiosInstance.get('/peerSharing/').then(({ data }) => {
+      if (data) {
+        setPeerSharingAccepted(data.peerSharingAccepted)
+      }
+    })
+  }, [])
+
+  const acceptPeerSharing = (value) => {
+    axiosInstance
+      .post('/peerSharing/', { peerSharingAccepted: value })
+      .then(({ data }) => {
+        if (data) {
+          setPeerSharingAccepted(data.peerSharingAccepted)
+          history.push('/my-classroom')
+          closePeerSharingModal()
+        }
+      })
+  }
+
+  const openPeerSharingModal = () => {
+    setPeerSharingModal(true)
+  }
+  const closePeerSharingModal = () => {
+    setPeerSharingModal(false)
+  }
   useOnClickOutside(notificationsRef, () => {
     setTimeout(() => {
       setShowNotifications(false)
     }, 100)
   })
-
+  // useEffect(() => {
+  //   if (peerSharingAccepted) {
+  //     setPeerSharingModal(false)
+  //   }
+  // }, [peerSharingAccepted])
   const hasAccess = () => {
     axiosInstance
       .get('/studentsInstructorss/has-access')
@@ -367,9 +404,28 @@ function Header(props) {
                 style={{ display: 'inherit' }}
               >
                 <li className="nav-item my-auto">
+                  {/*<NavLink*/}
+                  {/*  className={`nav-link icon-menu px-2 me-2 my-auto`}*/}
+                  {/*  to={*/}
+                  {/*    peerSharingAccepted ? '/my-classroom' : location.pathname*/}
+                  {/*  }*/}
+                  {/*  onClick={() => {*/}
+                  {/*    if (!peerSharingAccepted) {*/}
+                  {/*      openPeerSharingModal()*/}
+                  {/*    }*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  <FontAwesomeIcon*/}
+                  {/*    icon={faUsers}*/}
+                  {/*    style={{*/}
+                  {/*      fontSize: '26px'*/}
+                  {/*    }}*/}
+                  {/*    className="pt-1"*/}
+                  {/*  />*/}
+                  {/*</NavLink>*/}
                   <NavLink
                     className={`nav-link icon-menu px-2 me-2 my-auto`}
-                    to={'/my-connections'}
+                    to={'/my-classroom'}
                   >
                     <FontAwesomeIcon
                       icon={faUsers}
@@ -421,7 +477,7 @@ function Header(props) {
                 </li>
                 {/*  */}
 
-                <li className="nav-item notes-nav my-auto me-5">
+                <li className="nav-item notes-nav my-auto me-2 ">
                   <NavLink
                     className={`nav-link icon-menu`}
                     to={
@@ -441,6 +497,27 @@ function Header(props) {
                         src={notesIcon}
                         className="not-focus-icon"
                         width="25px"
+                        alt="note"
+                      />
+                    </div>
+                  </NavLink>
+                </li>
+                <li className="nav-item notes-nav my-auto me-5 ">
+                  <NavLink
+                    className={`nav-link icon-menu`}
+                    to={'/my-spark/widgets'}
+                  >
+                    <div>
+                      <img
+                        src={mySparkWhite}
+                        className="d-none focus-icon"
+                        width="21px"
+                        alt="note"
+                      />
+                      <img
+                        src={mySparkBlack}
+                        className="not-focus-icon"
+                        width="21px"
                         alt="note"
                       />
                     </div>
@@ -701,6 +778,27 @@ function Header(props) {
                     </div>
                   </NavLink>
                 </li>
+                <li className="nav-item notes-nav my-auto ">
+                  <NavLink
+                    className={`nav-link px-2 me-1 icon-menu`}
+                    to={'/my-spark/widgets'}
+                  >
+                    <div>
+                      <img
+                        src={mySparkWhite}
+                        className="d-none focus-icon"
+                        width="21px"
+                        alt="note"
+                      />
+                      <img
+                        src={mySparkBlack}
+                        className="not-focus-icon"
+                        width="21px"
+                        alt="note"
+                      />
+                    </div>
+                  </NavLink>
+                </li>
               </div>
             </ul>
           </div>
@@ -859,6 +957,12 @@ function Header(props) {
         allow={() => allowToShow}
         onShow={countStudentOfInstructor}
         onHide={() => setCountStudentOfInstructor(false)}
+      />
+      <PeerSharingModal
+        show={peerSharingModal}
+        onHide={closePeerSharingModal}
+        peerSharingAccepted={peerSharingAccepted}
+        handleChange={(value) => acceptPeerSharing(value)}
       />
     </div>
   )

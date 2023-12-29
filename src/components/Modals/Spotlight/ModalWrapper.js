@@ -31,15 +31,26 @@ const ModalWrapper = (props) => {
 
         // className={props.class ? props.class : 'general-modal-wrapper'}
       >
-        <Modal.Header>
-          <Modal.Title>{props.title}</Modal.Title>
-          <button
-            type="button"
-            className="btn-close mb-1 close-general-modal"
-            aria-label="Close"
-            onClick={props.onHide}
-          />
-        </Modal.Header>
+        {/*<Modal.Header>*/}
+        {/*  <Modal.Title>{props.title}</Modal.Title>*/}
+        {/*  <button*/}
+        {/*    type="button"*/}
+        {/*    className="btn-close mb-1 close-general-modal"*/}
+        {/*    aria-label="Close"*/}
+        {/*    onClick={props.onHide}*/}
+        {/*  />*/}
+        {/*</Modal.Header>*/}
+        {props.showHeader ?? (
+          <Modal.Header>
+            <Modal.Title>{props.title}</Modal.Title>
+            <button
+              type="button"
+              className="btn-close mb-1 close-general-modal"
+              aria-label="Close"
+              onClick={props.onHide}
+            />
+          </Modal.Header>
+        )}
         <Modal.Body className={'general-modal-body'}>
           {props.children}
         </Modal.Body>

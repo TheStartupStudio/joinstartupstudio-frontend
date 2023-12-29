@@ -19,10 +19,20 @@ export const Accomplishment = (props) => {
   const [currentAccomp, setCurrentAccomp] = useState([])
   const [isPublished, setIsPublished] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isPreview, setIsPreview] = useState(null)
 
   useEffect(() => {
-    getUserAccomplishments()
-  }, [])
+    setIsPreview(props.isPreview)
+  }, [props.isPreview])
+
+  useEffect(() => {
+    if (props.accomplishments) {
+      setAccomp(props.accomplishments)
+    }
+  }, [props.accomplishments])
+  // useEffect(() => {
+  //   getUserAccomplishments()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_accomplishments)
@@ -37,7 +47,7 @@ export const Accomplishment = (props) => {
     setIsPublished(!isPublished)
     await axiosInstance
       .put(`/users`, {
-        show_accomplishments: !oldPublishValue,
+        show_accomplishments: !oldPublishValue
       })
       .then()
       .catch((e) => {
@@ -49,7 +59,7 @@ export const Accomplishment = (props) => {
   const getUserAccomplishments = async () => {
     setIsLoading(true)
     await axiosInstance
-      .get(`/userBackground/by-type/accomplishments`)
+      .get(`/userBackground/by-type/accomplishments/user/${props.user.id}`)
       .then((res) => {
         setAccomp(res.data)
         setIsLoading(false)
@@ -72,7 +82,6 @@ export const Accomplishment = (props) => {
   const addAccomp = async (accomp) => {
     setAccomp([...accomps, accomp])
   }
-
   return !isLoading ? (
     accomps.length ? (
       <PortfolioSection
@@ -82,16 +91,18 @@ export const Accomplishment = (props) => {
         onAdd={() => setShowAccompModal(true)}
         isShownInPortfolio={isPublished}
         handleShowInPortfolio={updateShowPreference}
+        isPreview={isPreview}
       >
         <div className="experiences-container mx-0 mt-4">
-          <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row experience-details gap-4">
+          <div className="w-100 mx-auto  px-md-0 mx-md-0 row experience-details gap-4">
             {accomps.map((accomp, index, { length }) => {
               return (
                 <div
+                  key={index}
                   style={{
                     border: '1px solid #E5E5E5',
                     borderRadius: 6,
-                    background: '#F8F8F8 0% 0% no-repeat padding-box',
+                    background: '#F8F8F8 0% 0% no-repeat padding-box'
                   }}
                 >
                   <AccomplishmentDetails
@@ -101,6 +112,7 @@ export const Accomplishment = (props) => {
                     length={length}
                     setCurrentAccomp={(accomp) => setCurrentAccomp(accomp)}
                     editing={true}
+                    isPreview={isPreview}
                   />
                 </div>
               )
@@ -124,7 +136,16 @@ export const Accomplishment = (props) => {
         />
       </PortfolioSection>
     ) : (
-      <EmptyAccomplishmentSection addAccomplishment={addAccomp} />
+      <>
+        {!props.isPeerOrPublicView ? (
+          <EmptyAccomplishmentSection
+            addAccomplishment={addAccomp}
+            user={props.user}
+          />
+        ) : (
+          <></>
+        )}
+      </>
     )
   ) : (
     <></>
