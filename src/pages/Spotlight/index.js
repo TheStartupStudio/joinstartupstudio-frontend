@@ -31,8 +31,8 @@ function StartupLive() {
   const actualpage = window.location.href.includes('encouragement')
     ? 'encouragement'
     : window.location.href.includes('master-classes')
-      ? 'master-classes'
-      : 'startup-live'
+    ? 'master-classes'
+    : 'startup-live'
   const [connections, setConnections] = useState([])
   const resize = () => {
     setWidth(window.innerWidth)
@@ -58,60 +58,6 @@ function StartupLive() {
   useEffect(() => {
     dispatch(changeSidebarState(false))
   })
-
-  const getStartupLiveVideos = async () => {
-    await axiosInstance
-      .get(`/contents/by-type/startup-live`)
-      .then((response) => {
-        setStartupLiveVideos(response.data)
-      })
-      .catch((err) => err)
-  }
-
-  const handlePreviousVideo = async (page, startIndex, endIndex) => {
-    if (startIndex > 0) {
-      setStartStartupLiveVideoIndex(startIndex - 1)
-      setEndStartupLiveVideoIndex(endIndex - 1)
-    }
-  }
-
-  const handleNextVideo = async (page, startIndex, endIndex) => {
-    if (endIndex < startupLiveVideos.length) {
-      setStartStartupLiveVideoIndex(startIndex + 1)
-      setEndStartupLiveVideoIndex(endIndex + 1)
-    }
-  }
-
-  const handleNextVideoMobile = async (page, startIndex, endIndexMobile) => {
-    if (endIndexMobile < startupLiveVideos.length) {
-      setStartStartupLiveVideoIndex(startIndex + 1)
-      setEndStartupLiveVideoIndexMobile(endIndexMobile + 1)
-    }
-  }
-
-  const handlePreviousVideoMobile = async (
-    page,
-    startIndex,
-    endIndexMobile
-  ) => {
-    if (startIndex > 0) {
-      setStartStartupLiveVideoIndex(startIndex - 1)
-      setEndStartupLiveVideoIndexMobile(endIndexMobile - 1)
-    }
-  }
-
-  const renderer = ({ days, hours, minutes, seconds, completed }) => {
-    if (completed) {
-      return ' SOON'
-    } else {
-      return (
-        <span>
-          {' IN ' + days + ' DAYS ' + hours + ' HOURS ' + minutes + ' MINUTES '}
-          {minutes === 0 ? seconds + ' SECONDS' : ''}
-        </span>
-      )
-    }
-  }
 
   const [spotlightSimpleModal, setSpotlightSimpleModal] = useState({
     type: '',
