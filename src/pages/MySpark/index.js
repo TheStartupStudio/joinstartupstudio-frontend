@@ -102,8 +102,12 @@ function MySpark() {
         <div className="col-12 col-xl-12 px-0">
           <div className="account-page-padding page-border">
             <div className="row ps-2 pb-4">
-              <div className="col-md-6 d-flex align-items-center ">
+              <div className="col-md-6 d-flex align-items-start flex-column  ">
                 <h3 className="page-title mb-0">My SPARK</h3>
+                <p className={'page-description'}>
+                  Use the AI tool, My Spark, to help inspire you to create your
+                  own versions of each piece of content.
+                </p>
               </div>
               <div className={`col-md-6 ${windowWidth < 450 ? 'mt-3' : ''}`}>
                 <LTSButton
