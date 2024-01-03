@@ -177,13 +177,13 @@ export default function Waveform({
               }}
             />
           )}
-          <span className="my-auto">
+          {/* <span className="my-auto">
             <FontAwesomeIcon
               icon={faStepForward}
               style={darts}
               onClick={goForward}
             />
-          </span>
+          </span> */}
         </div>
         <span className="float-end col-1 col-sm-4 my-auto">
           <span className="float-end my-auto">
