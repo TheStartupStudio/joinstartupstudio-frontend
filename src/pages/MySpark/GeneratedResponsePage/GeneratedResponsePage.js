@@ -80,11 +80,15 @@ function GeneratedResponsePage(props) {
   const { fromPage, data } = locationState ?? {}
   const [editingContent, setEditingContent] = useState('')
 
-  useEffect(() => {
-    if (archivedDocument?.myContent?.length > 0) {
-      shouldDisplayItem('create-own-content', false)
-    }
-  }, [archivedDocument?.myContent])
+  // useEffect(() => {
+  //   if (archivedDocument?.myContent?.length > 0) {
+  //     shouldDisplayItem('create-own-content', false)
+  //   } else {
+  //     shouldDisplayItem('create-own-content', true)
+  //   }
+  // }, [archivedDocument?.myContent])
+
+  // console.log('editingContent', editingContent)
 
   useEffect(() => {
     if (fromPage === 'widgets') {
@@ -286,40 +290,33 @@ function GeneratedResponsePage(props) {
   const copyToClipboard = () => {
     const range = document.createRange()
     const container = htmlRef.current
-    container.style.backgroundColor = 'white'
-    range.selectNode(container)
+    if (container && container.style) {
+      container.style.backgroundColor = 'white'
+    }
+    if (container && range) {
+      range.selectNode(container)
+    }
     const selection = window.getSelection()
-
-    selection.removeAllRanges()
-    selection.addRange(range)
-
-    try {
-      document.execCommand('copy')
+    if (selection) {
       selection.removeAllRanges()
-      container.style.backgroundColor = 'transparent'
-      toast.success('Copied to clipboard successfully!')
-    } catch (err) {
-      console.error('Unable to copy to clipboard', err)
-      selection.removeAllRanges()
-      container.style.backgroundColor = 'transparent'
-      toast.error('Error copying to clipboard')
+      selection.addRange(range)
+      try {
+        document.execCommand('copy')
+        selection.removeAllRanges()
+        container.style.backgroundColor = 'transparent'
+        toast.success('Copied to clipboard successfully!')
+      } catch (err) {
+        console.error('Unable to copy to clipboard', err)
+        selection.removeAllRanges()
+        container.style.backgroundColor = 'transparent'
+        toast.error('Error copying to clipboard')
+      }
     }
   }
 
   const handleCopyClick = () => {
     if (!isEmptyObject(archivedDocument)) {
-      // handleCopyToClipboard(archivedDocument?.myContent)
       copyToClipboard()
-      // navigator.clipboard
-      //   .writeText(
-      //     `${archivedDocument?.myContent?.length ? `${copyToClipboard()}` : ''}`
-      //   )
-      //   .then(() => {
-      //     toast.success('Text copied to clipboard')
-      //   })
-      //   .catch((err) => {
-      //     toast.error('Unable to copy text to clipboard')
-      //   })
     }
   }
 
@@ -355,8 +352,7 @@ function GeneratedResponsePage(props) {
     return !!archivedDocument.id
   }
 
-  console.log('existMyContent', existMyContent)
-  console.log('isEdit', isEdit)
+  const myContentDisplayed = !!archivedDocument?.myContent && isMyContentAdded
 
   return (
     <>
@@ -454,8 +450,7 @@ function GeneratedResponsePage(props) {
                           </div>
 
                           {archivedDocument?.type !== 'image' &&
-                            !!archivedDocument?.myContent &&
-                            isMyContentAdded && (
+                            myContentDisplayed && (
                               <ContentContainer
                                 content={archivedDocument?.myContent}
                                 title={'My Content'}
@@ -508,7 +503,7 @@ function GeneratedResponsePage(props) {
                                 }
                                 align={alignButton('copy')}
                                 onClick={() =>
-                                  !existMyContent
+                                  !myContentDisplayed
                                     ? setShowFinalStepModal(true)
                                     : handleCopyClick()
                                 }
@@ -519,7 +514,8 @@ function GeneratedResponsePage(props) {
 
                             {showItem('download-button') && (
                               <>
-                                {existMyContent ? (
+                                {myContentDisplayed ||
+                                archivedDocument?.type === 'image' ? (
                                   <PDFDownloadLink
                                     document={
                                       <PdfDocument
@@ -531,11 +527,7 @@ function GeneratedResponsePage(props) {
                                   >
                                     {({ blob, url, loading, error }) => (
                                       <LtsButton
-                                        name={
-                                          loading
-                                            ? 'Loading document...'
-                                            : 'Download'
-                                        }
+                                        name={'Download'}
                                         width={
                                           windowWidth < 700 ? '100%' : '70%'
                                         }
@@ -573,7 +565,7 @@ function GeneratedResponsePage(props) {
                                   }
                                   align={alignButton('saveToArchive')}
                                   onClick={() =>
-                                    !existMyContent &&
+                                    !myContentDisplayed &&
                                     archivedDocument?.type !== 'image'
                                       ? setShowFinalStepModal(true)
                                       : handleSaveToArchive()
@@ -613,14 +605,11 @@ function GeneratedResponsePage(props) {
                     show={showMyContentModal}
                     onHide={() => {
                       setShowMyContentModal(false)
-                      setIsEdit(true)
+
                       setShowFinalStepModal(false)
-                      if (
-                        unChangedArchivedDocument?.myContent === '' ||
-                        unChangedArchivedDocument?.myContent === null
-                      ) {
-                        setExistMyContent(false)
-                        setIsEdit(false)
+
+                      if (editingContent === '' || editingContent === null) {
+                        shouldDisplayItem('create-own-content', true)
                       }
                     }}
                     content={
@@ -638,10 +627,17 @@ function GeneratedResponsePage(props) {
                       if (isEdit) {
                         handleSaveEditedContent()
                         setIsEdit(false)
+                        // debugger
+                        if (archivedDocument.myContent) {
+                          shouldDisplayItem('create-own-content', false)
+                        }
                         setShowMyContentModal(false)
                       } else {
                         handleAddMyContent()
                         setIsEdit(false)
+                        if (archivedDocument.myContent) {
+                          shouldDisplayItem('create-own-content', false)
+                        }
                         setShowMyContentModal(false)
                       }
                     }}
