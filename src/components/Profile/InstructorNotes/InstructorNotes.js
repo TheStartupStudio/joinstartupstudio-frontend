@@ -9,9 +9,8 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import notificationSocket from '../../../utils/notificationSocket'
 import { toast } from 'react-toastify'
 
-const InstructorNotes = () => {
+const InstructorNotes = (props) => {
   const [newNoteModal, setNewNoteModal] = useState(false)
-  const [instructorNotes, setInstructorNotes] = useState(false)
   const [receivedNotes, setReceivedNotes] = useState([])
   const [sliceIndex, setSliceIndex] = useState(3)
   const { id } = useParams()
@@ -45,50 +44,40 @@ const InstructorNotes = () => {
   }
 
   return (
-    <>
-      <div>
+    <div className="p-3">
+      <div className="border p-3 my-account">
         <div
-          className={`my-account  ${
-            instructorNotes
-              ? 'intructor-notes__btn-active'
-              : 'intructor-notes__btn'
-          }  col-6 mt-4 mb-2 mx-3 `}
-          onClick={() => setInstructorNotes((state) => !state)}
+          className={`my-account col-md-6   ${'intructor-notes__btn-active'}  `}
+          onClick={props.instructorNotesHandler}
         >
           <FontAwesomeIcon
             icon={faClipboardList}
             size="xl"
-            style={
-              instructorNotes
-                ? { color: 'white', fontSize: '40px' }
-                : { color: '#707070', fontSize: '40px' }
-            }
+            style={{ color: 'white', fontSize: '40px' }}
           />
           <h4>INSTRUCTOR NOTES</h4>
         </div>
 
-        {instructorNotes && (
-          <div className="my-account mt-4 mb-2 mx-3 intructor-notes">
-            <h4 className="mt-5">INSTRUCTOR NOTES</h4>
-            <InstructorNotesBox
-              receivedNotes={receivedNotes}
-              sliceIndex={sliceIndex}
-            />
+        <div className="my-account mt-4 mb-2 intructor-notes">
+          <h4 className="mt-2">INSTRUCTOR NOTES</h4>
+          <InstructorNotesBox
+            receivedNotes={receivedNotes}
+            sliceIndex={sliceIndex}
+          />
 
-            {receivedNotes?.length > 3 && (
-              <div className="d-flex justify-content-end">
-                <a
-                  href
-                  style={{ fontSize: '16px', cursor: 'pointer' }}
-                  className="text-info"
-                  onClick={handleShowMore}
-                >
-                  {typeof sliceIndex !== 'undefined' ? 'View all' : 'View less'}
-                </a>
-              </div>
-            )}
-          </div>
-        )}
+          {receivedNotes?.length > 3 && (
+            <div className="d-flex justify-content-end">
+              <a
+                href
+                style={{ fontSize: '16px', cursor: 'pointer' }}
+                className="text-info"
+                onClick={handleShowMore}
+              >
+                {typeof sliceIndex !== 'undefined' ? 'View all' : 'View less'}
+              </a>
+            </div>
+          )}
+        </div>
 
         <NewNoteModal
           show={newNoteModal}
@@ -97,14 +86,12 @@ const InstructorNotes = () => {
           close={() => setNewNoteModal(false)}
         />
       </div>
-      {instructorNotes && (
-        <div className="end-button me-3">
-          <button className="btn" onClick={() => setNewNoteModal(true)}>
-            Add a note
-          </button>
-        </div>
-      )}
-    </>
+      <div className="end-button me-3">
+        <button className="btn" onClick={() => setNewNoteModal(true)}>
+          Add a note
+        </button>
+      </div>
+    </div>
   )
 }
 

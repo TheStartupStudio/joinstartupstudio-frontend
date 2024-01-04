@@ -29,7 +29,8 @@ const EntriesBox = (props) => {
     entries,
     isEditable,
     isDeletable,
-    accordion
+    accordion,
+    isStudentPersonalJournal
   } = props
   const [isSaving, setIsSaving] = useState(false)
   const [isNew, setIsNew] = useState(true)
@@ -38,6 +39,31 @@ const EntriesBox = (props) => {
   nextDay.setDate(currentDate.getDate() + 1)
   const [accordionDates, setAccordionDates] = useState(null)
   const [loading, setLoading] = useState(false)
+
+  // useEffect(() => {
+  //   if (props.entries) {
+  //     if (isStudentPersonalJournal) {
+  //       console.log(
+  //         props.entries.map((e) => {
+  //           return {
+  //             ...e,
+  //             id: Math.random()
+  //           }
+  //         })
+  //       )
+  //       setEntries(
+  //         props.entries.map((e) => {
+  //           return {
+  //             ...e,
+  //             id: Math.random()
+  //           }
+  //         })
+  //       )
+  //     } else {
+  //       setEntries(props.entries)
+  //     }
+  //   }
+  // }, [props.entries])
 
   useEffect(() => {
     if (journal?.id && accordion?.id && journal.id === 1001033) {
@@ -98,7 +124,6 @@ const EntriesBox = (props) => {
 
   const handleDataChanges = (name, value) => {
     const newDates = { ...accordionDates, [name]: value }
-    console.log('newDates', newDates)
     setAccordionDates(newDates)
 
     if (newDates.startDate !== undefined && newDates.endDate !== undefined) {
@@ -107,8 +132,8 @@ const EntriesBox = (props) => {
   }
 
   function getFormattedDate(date) {
-    const formattedDate = moment(date).format('YYYY-MM-DD'); 
-    return formattedDate;
+    const formattedDate = moment(date).format('YYYY-MM-DD')
+    return formattedDate
   }
 
   return entries && entries.length > 0 ? (
@@ -146,7 +171,9 @@ const EntriesBox = (props) => {
                     width: '100%'
                   }}
                   name={'startDate'}
-                  value={getFormattedDate(accordionDates?.startDate || currentDate)}
+                  value={getFormattedDate(
+                    accordionDates?.startDate || currentDate
+                  )}
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChanges('startDate', newValue)
@@ -253,27 +280,33 @@ const EntriesBox = (props) => {
                 />
               )}
               {/*Show add new reflection*/}
-              <div
-                className={`journal-entries__entry-reflections-actions ${
-                  userJournalEntries[entry.id] && !showAddReflection[entry.id]
-                    ? 'active'
-                    : ''
-                }`}
-              >
-                <a
-                  href
-                  className="journal-entries__entry-reflections-action"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleShowAddReflection({
-                      ...showAddReflection,
-                      [entry.id]: true
-                    })
-                  }}
+
+              {/*// temp solution to remove [+] button from some entry boxes*/}
+              {isStudentPersonalJournal ? (
+                <></>
+              ) : (
+                <div
+                  className={`journal-entries__entry-reflections-actions ${
+                    userJournalEntries[entry.id] && !showAddReflection[entry.id]
+                      ? 'active'
+                      : ''
+                  }`}
                 >
-                  Add reflection <FontAwesomeIcon icon={faPlus} />
-                </a>
-              </div>
+                  <a
+                    href
+                    className="journal-entries__entry-reflections-action"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleShowAddReflection({
+                        ...showAddReflection,
+                        [entry.id]: true
+                      })
+                    }}
+                  >
+                    Add reflection <FontAwesomeIcon icon={faPlus} />
+                  </a>
+                </div>
+              )}
             </div>
             {entry.contentAfter && (
               <div

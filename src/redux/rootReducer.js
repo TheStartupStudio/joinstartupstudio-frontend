@@ -10,6 +10,8 @@ import dashboardReducer from './dashboard/Reducer'
 import headerReducer from './header/Reducer'
 import usersReducer from './users/Reducer'
 import reflectionsTableReducer from './reflectionsTable/Reducer'
+import rwlJournalReducer from './rwl/reducer'
+import platformBadgesReducer from './platformBadges/reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -21,6 +23,8 @@ const rootReducer = combineReducers({
   dashboard: dashboardReducer,
   header: headerReducer,
   users: usersReducer,
-  reflectionsTable: reflectionsTableReducer
+  reflectionsTable: reflectionsTableReducer,
+  rwlJournal: rwlJournalReducer,
+  platformBadges:platformBadgesReducer
 })
 export default rootReducer

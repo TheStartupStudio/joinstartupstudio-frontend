@@ -29,7 +29,7 @@ export const userLogin = (old_password) => async (dispatch) => {
       .get('/instructor/')
       .then()
       .catch((e) => {
-        toast.error(<IntlMessages id='alerts.email_password_incorrect' />)
+        toast.error(<IntlMessages id="alerts.email_password_incorrect" />)
         dispatch({
           type: LOGIN_LOADING,
           payload: false

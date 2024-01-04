@@ -22,7 +22,7 @@ import ExpectedOutcomes from './ExpectedOutcomes'
 import ProgramOpportunities from './ProgramOpportunities'
 import { useHistory } from 'react-router-dom'
 import ReactQuill from 'react-quill'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify'
 function TestJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
@@ -82,6 +82,7 @@ function TestJournalContent(props) {
       })
       .then((res) => {
         const updatedInstructorDebriefData = res.data
+        toast.success('Instructor debrief submitted successfully!')
         setInstructorDebrief({
           ...instructorDebrief,
           checkbox1: updatedInstructorDebriefData.checkbox1,
@@ -91,6 +92,10 @@ function TestJournalContent(props) {
           id: updatedInstructorDebriefData.id
         })
         toast.success('The message was submmited successfully!')
+      })
+      .catch((error) => {
+        console.error('Error submitting instructor debrief:', error)
+        toast.error('Error submitting instructor debrief.')
       })
   }
 
@@ -546,7 +551,7 @@ function TestJournalContent(props) {
                   handleAccordionClick('curriculumOverview')
                 }
                 data={journal?.curriculumOverview}
-              />{' '}
+              />
               <ExpectedOutcomes
                 title={'expected outcomes'}
                 isExanded={isExpanded}
@@ -998,7 +1003,10 @@ function TestJournalContent(props) {
                         </div>
                       </div>
                     </>
-                    <div style={{ height: 270, minHeight: 270 }}>
+                    <div
+                      className={'row'}
+                      // style={{ height: 270, minHeight: 270 }}
+                    >
                       <div
                         style={{
                           font: 'normal normal 600 11px/17px Montserrat !important',
@@ -1015,36 +1023,19 @@ function TestJournalContent(props) {
                         theme="snow"
                         name={'textEditorContent'}
                         id={'textEditorContent'}
-                        className="w-100 rounded-0 "
+                        className="instructor-debrief-editor w-100 rounded-0 "
                         onChange={(e) =>
                           handleChangeInstructorDebrief2('textEditorContent', e)
                         }
                         // style={{ height: 180 }}
                         value={instructorDebrief?.textEditorContent}
                       />
-                      {/*<KendoTextEditor*/}
-                      {/*  minHeight={150}*/}
-                      {/*  value={instructorDebrief?.textEditorContent}*/}
-                      {/*  handleChange={(e) => {*/}
-                      {/*    handleChangeInstructorDebrief2(*/}
-                      {/*      'textEditorContent',*/}
-                      {/*      e*/}
-                      {/*    )*/}
-                      {/*  }}*/}
-                      {/*  tools={[*/}
-                      {/*    [Bold, Italic],*/}
-                      {/*    [AlignLeft, AlignCenter, AlignRight, AlignJustify],*/}
-                      {/*    [Indent, Outdent],*/}
-                      {/*    [OrderedList, UnorderedList],*/}
-                      {/*    FontSize,*/}
-                      {/*    FontName,*/}
-                      {/*    FormatBlock,*/}
-                      {/*    [Undo, Redo],*/}
-                      {/*    [Link, Unlink, InsertImage, ViewHtml]*/}
-                      {/*  ]}*/}
-                      {/*/>*/}
                     </div>
-                    <div className={'d-flex justify-content-end mt-3'}>
+                    <div
+                      className={
+                        ' d-flex justify-content-end instructor-debrief-button'
+                      }
+                    >
                       <button
                         style={{
                           backgroundColor: '#51c7df',

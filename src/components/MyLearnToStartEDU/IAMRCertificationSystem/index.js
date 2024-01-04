@@ -86,7 +86,7 @@ const CertificationCard = ({
 
 const IAMRCertificationSystem = () => {
   const { setSkills, setLoading } = useIamrContext()
-  const user = useSelector((state) => state.user.user.user)
+  const loggedUser = useSelector((state) => state.user.user.user)
   const [expanded, setExpanded] = useState(true)
   const accordionRef = useRef(null)
   const location = useLocation()
@@ -118,7 +118,9 @@ const IAMRCertificationSystem = () => {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const { data } = await axiosInstance.get(`/iamr/skills`)
+        const { data } = await axiosInstance.get(
+          `/iamr/skills/user/${loggedUser.id}`
+        )
         const { skills, certificationOneStatus, certificationTwoStatus } = data
         setSkills(skills)
         setCertificationOneStatus(certificationOneStatus)
@@ -136,7 +138,7 @@ const IAMRCertificationSystem = () => {
     const getCertificatonStats = async (type) => {
       try {
         const response = await axiosInstance.get(
-          `/iamr/certifications/stats/${user.id}/${type}`
+          `/iamr/certifications/stats/${loggedUser.id}/${type}`
         )
 
         if (response.data && response.data.result) {
@@ -173,7 +175,7 @@ const IAMRCertificationSystem = () => {
         )
       }
     })
-  }, [user.id])
+  }, [loggedUser.id])
 
   useOnClickOutside(accordionRef, () => {
     expanded && setExpanded(false)

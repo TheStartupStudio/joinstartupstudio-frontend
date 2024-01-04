@@ -10,7 +10,10 @@
       <change afterPath="$PROJECT_DIR$/src/components/Modals/Spotlight/SpotlightModal.css" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/components/Modals/Spotlight/SpotlightSimpleModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/src/components/Sidebar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/index.js" afterDir="false" />
+=======
+>>>>>>> dev
       <change beforePath="$PROJECT_DIR$/src/pages/Spotlight/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Spotlight/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,7 +24,23 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
+<<<<<<< HEAD
         <entry key="$PROJECT_DIR$" value="my-spark" />
+=======
+<<<<<<< HEAD
+        <entry key="$PROJECT_DIR$" value="my-connections" />
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+        <entry key="$PROJECT_DIR$" value="calendar-with-events-and-tasks" />
+=======
+        <entry key="$PROJECT_DIR$" value="student-journals" />
+>>>>>>> dev
+=======
+        <entry key="$PROJECT_DIR$" value="spotlight" />
+>>>>>>> dev
+>>>>>>> bledon-live-fixes
+>>>>>>> dev
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -30,6 +49,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -44,10 +64,75 @@
     "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Dell\\AppData\\Roaming\\npm\\node_modules\\prettier",
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
+=======
+<<<<<<< HEAD
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/components/Modals",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Program Files\\nodejs\\node_modules\\prettier",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
+=======
+<<<<<<< HEAD
+  <component name="PropertiesComponent">
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+  </component>
+=======
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/LtsJournal/JournalTables&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Program Files\\nodejs\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+>>>>>>> dev
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
+<<<<<<< HEAD
+=======
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\NoteAndChat" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
+>>>>>>> dev
+=======
+>>>>>>> bledon-live-fixes
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\JournalTables" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager\MentorMeetingManager" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
+>>>>>>> dev
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager\FeedbackManager" />
+>>>>>>> dev
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
     </key>
   </component>

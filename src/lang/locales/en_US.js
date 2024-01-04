@@ -30,6 +30,7 @@ const EnLangs = {
   'old.navigation.startup_live': 'MY STARTUP LIVE™',
   'navigation.startup_live': 'MY STARTUP LIVE',
   'navigation.beyond_your_course': 'BEYOND LEARN TO START',
+  'navigation.my_market_resources': 'MY MARKET RESOURCES',
   'navigation.create_your_account': 'Create your account',
   'navigation.learn_to_start': 'MY LEARN TO START',
   'navigation.lts_journal': 'MY LTS JOURNAL',
@@ -567,8 +568,7 @@ const EnLangs = {
   'startup_live.join_session': 'Join Session',
   'startup_live.now_streaming': 'Now streaming',
   'startup_live.startup_archive': 'StartupLive™ Archive',
-  'startup_live.startup_archive_description':
-    'Recorded classes from your StartupLive classroom.',
+  'startup_live.startup_archive_description': 'Watch the video Q&As here.',
 
   //My notes
   'my_notes.page_title': 'My Notes',
@@ -921,6 +921,8 @@ const EnLangs = {
   'sidebar.story_in_motion': 'STORY IN MOTION®',
   'storyInMotion.page_description':
     'A Learn to Start Podcast - Conversations on Empowerment, Wellness and Performance.',
+  'storyInMotion.page_description2':
+    'A Learn to Start Podcast - Exploring who you are and why it matters',
   'storyInMotion.page_week_podcast': 'THIS WEEK’S PODCAST',
   'storyInMotion.page_week_now_playing': 'NOW PLAYING:',
   // 'storyInMotion.page_also_avalible':
@@ -930,12 +932,14 @@ const EnLangs = {
   'storyInMotion.previous_podcast_episodes': 'Previous Podcast Episodes',
   'storyInMotion.favorite': 'Favorite Episodes',
   'storyInMotion.load_more': 'Load more...',
+  'storyInMotion.guest_q&a_videos': 'Story in Motion Guest Q&As',
   // SAVED page
   'my_saved.MEDIA': 'MY SAVED MEDIA',
   'my_saved.MEDIA_des': 'Your favorite content in one place.',
   'my_saved.MEDIA_VIDEOS': 'VIDEOS',
   'my_saved.MEDIA_PODCASTS': 'PODCASTS',
   'my_saved.MEDIA_PODCASTS': 'PODCAST',
+  'my_saved.STORY_IN_MOTION': 'STORY IN MOTION',
   'my_saved.not_saved_PODCASTS': 'No saved podcast!',
   'my_saved.alredy_saved_PODCASTS': 'Podcast is alredy saved',
   'my_saved.alredy_saved_PODCASTS_note': 'Note podcast page',
@@ -967,13 +971,48 @@ const EnLangs = {
   'calendar_task-events.start_time_of_event': 'Start time of event',
   'calendar_task-events.end_time_of_event': 'End time of event',
   'student_journals.student-lts_title': 'LEARN TO START JOURNAL',
-  'student_journals.student-lts_description': 'The Learn to Start Model is a guide in the lifelong process of developing the answers to the only three questions that matter: Who am I? What can I do? How do I prove it? You will use this journal to guide your development to those answers.',
+  'student_journals.student-lts_description':
+    'The Learn to Start Model is a guide in the lifelong process of developing the answers to the only three questions that matter: Who am I? What can I do? How do I prove it? You will use this journal to guide your development to those answers.',
   'student_journals.student-wellnes_title': 'WELLNESS JOURNAL',
-  'student_journals.student-wellnes_description': 'Wellness is planning, acting, and responding with self-awareness with the intent of becoming your best self. Use this journal to reflect on your wellness journey and treat it as a lifelong process.',
+  'student_journals.student-wellnes_description':
+    'Wellness is planning, acting, and responding with self-awareness with the intent of becoming your best self. Use this journal to reflect on your wellness journey and treat it as a lifelong process.',
   'student_journals.student-personal-finance_title': 'PERSONAL FINANCE JOURNAL',
-  'student_journals.student-personal-finance_description': 'In order to be market-ready, you must be financially literate. This journal will help you gain the knowledge and skills you need to make informed financial decisions.',
+  'student_journals.student-personal-finance_description':
+    'In order to be market-ready, you must be financially literate. This journal will help you gain the knowledge and skills you need to make informed financial decisions.',
   'student_journals.student-leadership_title': 'LEADERSHIP JOURNAL',
-  'student_journals.student-leadership_description': 'Leadership comes in many forms but the foundation is leading yourself first. Use this journal to inspire your development as a leader.',
+  'student_journals.student-leadership_description':
+    'Leadership comes in many forms but the foundation is leading yourself first. Use this journal to inspire your development as a leader.',
+
+  // My SPARK
+  'my_spark.input-label_name': 'Name',
+  'my_spark.input-label_title': 'Title',
+  'my_spark.input-label_keywords': 'Keywords',
+  'my_spark.input-label_subheadings': 'Subheadings',
+  'my_spark.input-label_length': 'Length',
+  'my_spark.input-label_language': 'Language',
+  'my_spark.input-label_creativity': 'Creativity',
+  'my_spark.input-label_variations': 'Variations',
+
+  'my_spark.input-placeholder_name': 'Name',
+  'my_spark.input-placeholder_title': 'The best summer destinations',
+  'my_spark.input-placeholder_keywords': 'ocean, beach, hotel',
+  'my_spark.input-placeholder_subheadings':
+    'Florida, Los Angeles, San Francisco',
+  'my_spark.input-placeholder_length': 'Medium',
+  'my_spark.input-placeholder_language': 'English',
+  'my_spark.input-placeholder_creativity': 'Original',
+  'my_spark.input-placeholder_variations': '1',
+
+  'my_spark.input-description_name': 'The name of the document.',
+  'my_spark.input-description_title': 'The title of the article',
+  'my_spark.input-description_keywords': 'The keywords to include.',
+  'my_spark.input-description_subheadings': 'The subheadings of the article.',
+  'my_spark.input-description_length': 'The length result.',
+  'my_spark.input-description_language':
+    'The language in which the result to be returned.',
+  'my_spark.input-description_creativity': 'The creative level of result.',
+  'my_spark.input-description_variations':
+    'The number of variations of results.'
 }
 
 export default EnLangs

@@ -31,8 +31,8 @@ function StartupLive() {
   const actualpage = window.location.href.includes('encouragement')
     ? 'encouragement'
     : window.location.href.includes('master-classes')
-      ? 'master-classes'
-      : 'startup-live'
+    ? 'master-classes'
+    : 'startup-live'
   const [connections, setConnections] = useState([])
   const resize = () => {
     setWidth(window.innerWidth)

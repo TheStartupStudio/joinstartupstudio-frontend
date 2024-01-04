@@ -17,9 +17,19 @@ export const Education = (props) => {
   const [isPublished, setIsPublished] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  const [isPreview, setIsPreview] = useState(null)
+
   useEffect(() => {
-    getUserEducations()
-  }, [])
+    setIsPreview(props.isPreview)
+  }, [props.isPreview])
+
+  useEffect(() => {
+    setEducations(props.educations)
+  }, [props.educations])
+
+  // useEffect(() => {
+  //   getUserEducations()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_education)
@@ -35,7 +45,7 @@ export const Education = (props) => {
 
     await axiosInstance
       .put(`/users`, {
-        show_education: !oldPublishValue,
+        show_education: !oldPublishValue
       })
       .then()
       .catch((e) => {
@@ -46,10 +56,12 @@ export const Education = (props) => {
 
   const getUserEducations = async () => {
     setIsLoading(true)
-    await axiosInstance.get(`/userBackground/by-type/education`).then((res) => {
-      setEducations(res.data)
-      setIsLoading(false)
-    })
+    await axiosInstance
+      .get(`/userBackground/by-type/education/user/${props.user.id}`)
+      .then((res) => {
+        setEducations(res.data)
+        setIsLoading(false)
+      })
   }
 
   const updateEducation = async (education) => {
@@ -70,7 +82,7 @@ export const Education = (props) => {
   }
 
   return !isLoading ? (
-    educations.length ? (
+    educations?.length ? (
       <PortfolioSection
         title={'EDUCATION'}
         isAdd={true}
@@ -78,19 +90,21 @@ export const Education = (props) => {
         handleShowInPortfolio={updateShowPreference}
         isShownInPortfolio={isPublished}
         onAdd={() => setShowEducationModal(true)}
+        isPreview={isPreview}
       >
         <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
-          {educations.length > 0 &&
-            educations.map((education, index, { length }) => {
+          {educations?.length > 0 &&
+            educations?.map((education, index, { length }) => {
               return (
                 <div
+                  key={index}
                   className={'mt-4'}
                   style={{
                     border: '1px solid #E5E5E5',
                     borderRadius: 6,
                     background: '#F8F8F8 0% 0% no-repeat padding-box',
                     minHeight: 230,
-                    height: 230,
+                    height: 230
                   }}
                 >
                   <EducationDetails
@@ -102,6 +116,7 @@ export const Education = (props) => {
                       setCurrentEducation(education)
                     }
                     editing={true}
+                    isPreview={isPreview}
                   />
                 </div>
               )
@@ -125,7 +140,16 @@ export const Education = (props) => {
         />
       </PortfolioSection>
     ) : (
-      <EmptyEducationSection addEducation={addEducation} />
+      <>
+        {!props.isPeerOrPublicView ? (
+          <EmptyEducationSection
+            addEducation={addEducation}
+            user={props.user}
+          />
+        ) : (
+          <></>
+        )}
+      </>
     )
   ) : (
     <></>
