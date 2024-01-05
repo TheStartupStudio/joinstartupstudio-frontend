@@ -471,7 +471,7 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li className="disabledd">
+                <li>
                   <NavLink
                     to={'/student-personal-finance'}
                     activeClassName="sidenav active"
@@ -483,7 +483,7 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li className="disabledd">
+                {/* <li className="disabledd">
 
                   <NavLink
                     to={'/student-leadership'}
@@ -495,7 +495,7 @@ function Sidebar(props) {
                       </div>
                     </div>
                   </NavLink>
-                </li>
+                </li> */}
               </div>
               {/*<NavListParent*/}
               {/*  listName={'myLearnToStartEdu'}*/}
