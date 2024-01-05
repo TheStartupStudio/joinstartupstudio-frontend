@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
@@ -20,7 +20,9 @@ import StepsBox from './Steps/StepsBox'
 import CurriculumOverview from './CurriculumOverview'
 import ExpectedOutcomes from './ExpectedOutcomes'
 import ProgramOpportunities from './ProgramOpportunities'
-
+import { useHistory } from 'react-router-dom'
+import ReactQuill from 'react-quill'
+import { toast } from 'react-toastify'
 function TestJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
@@ -35,7 +37,7 @@ function TestJournalContent(props) {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
-
+  const history = useHistory()
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -49,8 +51,12 @@ function TestJournalContent(props) {
     checkbox2: false,
     checkbox3: false,
     textEditorContent: '',
-    journalId: props.match.params.id
+    journalId: +props.match.params.id
   })
+
+  useEffect(() => {
+    getInstructorDebriefData()
+  }, [props.match.params.id, props.match.params.weekId])
 
   const newInstructorBriefData = {
     checkbox1: instructorDebrief?.checkbox1,
@@ -58,20 +64,38 @@ function TestJournalContent(props) {
     checkbox3: instructorDebrief?.checkbox3,
     textEditorContent: instructorDebrief?.textEditorContent
   }
+
   const onSubmitInstructorDebrief = (data) => {
+    const isEdit = { ...data, id: instructorDebrief.id }
+    const isCreate = { ...data, id: null }
+    const instructorDebriefData = instructorDebrief.id ? isEdit : isCreate
+
+    const url = `/ltsJournals/${
+      props.view === 'task' ? +props.match.params.id : 0
+    }/${
+      props.view === 'week' ? +props.match.params.weekId : 0
+    }/instructor-debrief`
+
     axiosInstance
-      .post(`/ltsJournals/${props.match.params.id}/instructor-debrief`, {
-        ...data
+      .post(url, {
+        ...instructorDebriefData
       })
       .then((res) => {
         const updatedInstructorDebriefData = res.data
+        toast.success('Instructor debrief submitted successfully!')
         setInstructorDebrief({
           ...instructorDebrief,
           checkbox1: updatedInstructorDebriefData.checkbox1,
           checkbox2: updatedInstructorDebriefData.checkbox2,
           checkbox3: updatedInstructorDebriefData.checkbox3,
-          textEditorContent: updatedInstructorDebriefData.textEditorContent
+          textEditorContent: updatedInstructorDebriefData.textEditorContent,
+          id: updatedInstructorDebriefData.id
         })
+        toast.success('The message was submmited successfully!')
+      })
+      .catch((error) => {
+        console.error('Error submitting instructor debrief:', error)
+        toast.error('Error submitting instructor debrief.')
       })
   }
 
@@ -112,7 +136,6 @@ function TestJournalContent(props) {
       //     }
       //   }
       // }
-      console.log(data)
       return data
     } catch (err) {}
   }
@@ -170,10 +193,13 @@ function TestJournalContent(props) {
   }
 
   const getInstructorDebriefData = async () => {
+    const url = `/ltsJournals/${
+      props.view === 'task' ? +props.match.params.id : 0
+    }/${
+      props.view === 'week' ? +props.match.params.weekId : 0
+    }/instructor-debrief`
     try {
-      let { data } = await axiosInstance.get(
-        `/ltsJournals/${+props.match.params.id}/instructor-debrief`
-      )
+      let { data } = await axiosInstance.get(url)
       return data
     } catch (e) {}
   }
@@ -187,7 +213,6 @@ function TestJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
-        console.log(journalData)
 
         if (
           journalData.userEntry &&
@@ -214,7 +239,17 @@ function TestJournalContent(props) {
               checkbox1: instructorDebriefData.checkbox1,
               checkbox2: instructorDebriefData.checkbox2,
               checkbox3: instructorDebriefData.checkbox3,
-              textEditorContent: instructorDebriefData.textEditorContent
+              textEditorContent: instructorDebriefData.textEditorContent,
+              id: instructorDebriefData.id
+            })
+          } else {
+            setInstructorDebrief({
+              ...instructorDebrief,
+              checkbox1: false,
+              checkbox2: false,
+              checkbox3: false,
+              textEditorContent: '',
+              id: null
             })
           }
         }
@@ -235,7 +270,6 @@ function TestJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
-        console.log(journalData)
         if (
           journalData.userEntry &&
           journalData.userEntry.length > 0 &&
@@ -257,7 +291,17 @@ function TestJournalContent(props) {
               checkbox1: instructorDebriefData.checkbox1,
               checkbox2: instructorDebriefData.checkbox2,
               checkbox3: instructorDebriefData.checkbox3,
-              textEditorContent: instructorDebriefData.textEditorContent
+              textEditorContent: instructorDebriefData.textEditorContent,
+              id: instructorDebriefData.id
+            })
+          } else {
+            setInstructorDebrief({
+              ...instructorDebrief,
+              checkbox1: false,
+              checkbox2: false,
+              checkbox3: false,
+              textEditorContent: '',
+              id: null
             })
           }
         }
@@ -297,6 +341,7 @@ function TestJournalContent(props) {
     setSelectedStep(null)
     setSelectedStepIndex(null)
   }, [openAccordion])
+
   function deleteReflection(entry, userJournalEntry) {
     return (data) => {
       let filtered = userJournalEntries[entry.id].filter(
@@ -363,6 +408,7 @@ function TestJournalContent(props) {
       [name]: value
     }
     setInstructorDebrief(newInstructorDebrief)
+    // debounce(onSubmitInstructorDebrief, newInstructorDebrief)
   }
   const {
     Bold,
@@ -406,8 +452,10 @@ function TestJournalContent(props) {
   const handleSelectTask = (task, index) => {
     setSelectedTask({ task, index })
     setSelectedTaskIndex(index)
+    setSelectedStep(null)
+    setSelectedStepIndex(null)
   }
-  console.log(journal)
+
   return (
     <>
       <>
@@ -416,7 +464,7 @@ function TestJournalContent(props) {
           className={'d-flex justify-content-between w-100'}
           style={{ marginTop: 40, gap: 4 }}
         >
-          <div className={'video-container'}>
+          <div className={'video-container full-width'}>
             {videos &&
               videos.constructor == Array &&
               videos.map((video, index) => (
@@ -503,7 +551,7 @@ function TestJournalContent(props) {
                   handleAccordionClick('curriculumOverview')
                 }
                 data={journal?.curriculumOverview}
-              />{' '}
+              />
               <ExpectedOutcomes
                 title={'expected outcomes'}
                 isExanded={isExpanded}
@@ -955,50 +1003,46 @@ function TestJournalContent(props) {
                         </div>
                       </div>
                     </>
-                    <>
-                      <>
-                        <div
-                          style={{
-                            font: 'normal normal 600 11px/17px Montserrat !important',
-                            letterSpacing: 0.18,
-                            color: '#000000',
-                            paddingTop: '15px',
-                            paddingBottom: '6px'
-                          }}
-                        >
-                          Please submit any questions or feedback regarding this
-                          task in the curriculum to the LTS team.
-                        </div>
-                        <KendoTextEditor
-                          minHeight={150}
-                          value={instructorDebrief?.textEditorContent}
-                          handleChange={(e) => {
-                            handleChangeInstructorDebrief2(
-                              'textEditorContent',
-                              e
-                            )
-                          }}
-                          tools={[
-                            [Bold, Italic],
-                            [AlignLeft, AlignCenter, AlignRight, AlignJustify],
-                            [Indent, Outdent],
-                            [OrderedList, UnorderedList],
-                            FontSize,
-                            FontName,
-                            FormatBlock,
-                            [Undo, Redo],
-                            [Link, Unlink, InsertImage, ViewHtml]
-                          ]}
-                        />
-                      </>
-                    </>
-                    <div className={'d-flex justify-content-end mt-3'}>
+                    <div
+                      className={'row'}
+                      // style={{ height: 270, minHeight: 270 }}
+                    >
+                      <div
+                        style={{
+                          font: 'normal normal 600 11px/17px Montserrat !important',
+                          letterSpacing: 0.18,
+                          color: '#000000',
+                          paddingTop: '15px',
+                          paddingBottom: '6px'
+                        }}
+                      >
+                        Please submit any questions or feedback regarding this
+                        task in the curriculum to the LTS team.
+                      </div>
+                      <ReactQuill
+                        theme="snow"
+                        name={'textEditorContent'}
+                        id={'textEditorContent'}
+                        className="instructor-debrief-editor w-100 rounded-0 "
+                        onChange={(e) =>
+                          handleChangeInstructorDebrief2('textEditorContent', e)
+                        }
+                        // style={{ height: 180 }}
+                        value={instructorDebrief?.textEditorContent}
+                      />
+                    </div>
+                    <div
+                      className={
+                        ' d-flex justify-content-end instructor-debrief-button'
+                      }
+                    >
                       <button
                         style={{
                           backgroundColor: '#51c7df',
                           color: '#fff',
                           fontSize: 12,
-                          fontWeight: 600
+                          fontWeight: 600,
+                          zIndex: 999
                         }}
                         className="px-4 py-2 border-0 color transform my-1"
                         onClick={() =>

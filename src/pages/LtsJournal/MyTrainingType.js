@@ -19,17 +19,12 @@ const MyTrainingType = (props) => {
     async function getJournals() {
       try {
         await axiosInstance.get(`/my-training`).then(({ data }) => {
-          console.log('data', data)
           setJournals([...data.data].sort((a, b) => a.id - b.id))
         })
       } catch (err) {}
     }
     getJournals()
   }, [])
-
-  console.log('journals', journals)
-
-  console.log('props', props)
 
   return (
     <div id="main-body">

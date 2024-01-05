@@ -54,38 +54,37 @@ const accordionData = [
 ]
 const IamrContentsAccordion = (props) => {
   const { contentId, section } = useParams()
-  console.log({ contentId, section })
   const history = useHistory()
   return (
     <>
-      <div className='col-12 col-md-6 border-end min-vh-100 ps-5 pt-4'>
-        <div className='pb-2'>
-          <span className='text-uppercase fw-bold'>
+      <div className="col-12 col-md-6 border-end min-vh-100 ps-5 pt-4">
+        <div className="pb-2">
+          <span className="text-uppercase fw-bold">
             market -ready certification 1 skills
           </span>
         </div>
 
-        <div className='row d-row accordion-data' id='accordionExample0'>
+        <div className="row d-row accordion-data" id="accordionExample0">
           {accordionData.map((data, index) => (
-            <div className='accordion-item accordion-data-item px-0'>
+            <div className="accordion-item accordion-data-item px-0">
               <h2
-                className='accordion-header'
-                id='headingTwo'
+                className="accordion-header"
+                id="headingTwo"
                 onClick={() => {
                   history.push(`/iamr/${data.id}`)
                 }}
               >
                 <button
-                  className='accordion-button collapsed accordion_button accordion-button-inner '
-                  type='button'
+                  className="accordion-button collapsed accordion_button accordion-button-inner "
+                  type="button"
                   style={{ minHeight: '40px' }}
-                  data-bs-toggle='collapse'
+                  data-bs-toggle="collapse"
                   data-bs-target={`#collapse_inner${index}`}
-                  aria-expanded='false'
-                  aria-controls='collapseTwo'
+                  aria-expanded="false"
+                  aria-controls="collapseTwo"
                 >
                   <span
-                    className='iamr-status-point me-2'
+                    className="iamr-status-point me-2"
                     style={{ backgroundColor: 'red' }}
                   ></span>
                   {data.title}
@@ -93,12 +92,12 @@ const IamrContentsAccordion = (props) => {
               </h2>
               <div
                 id={`collapse_inner${index}`}
-                className='accordion-collapse collapse ps-4'
-                aria-labelledby='headingTwo'
-                data-bs-parent='#accordionExample0'
+                className="accordion-collapse collapse ps-4"
+                aria-labelledby="headingTwo"
+                data-bs-parent="#accordionExample0"
               >
-                <div className='accordion-body py-0'>
-                  <div className='mt-0 pt-0'>
+                <div className="accordion-body py-0">
+                  <div className="mt-0 pt-0">
                     {data?.links?.map((links) => (
                       <Link
                         onClick={() =>
@@ -118,7 +117,7 @@ const IamrContentsAccordion = (props) => {
           ))}
         </div>
       </div>
-      <div className='col-12 col-md-6 px-md-3 pt-4 single-iamr-section'>
+      <div className="col-12 col-md-6 px-md-3 pt-4 single-iamr-section">
         <Route exact path={`/iamr/:id`} component={ImrContent} />
         <Route
           exact
@@ -141,7 +140,7 @@ const IamrContentsAccordion = (props) => {
           component={InstructionsQuestions}
         />
 
-        <Route path='/iamr/:id/:type' component={ImrSubContent} />
+        <Route path="/iamr/:id/:type" component={ImrSubContent} />
       </div>
     </>
   )

@@ -8,7 +8,7 @@ import {
   deleteEventStart,
   getPeriodsStart,
   openTaskModal,
-  openCalendarDeleteEventModal,
+  openCalendarDeleteEventModal
 } from '../../redux/dashboard/Actions'
 import TaskEventModal from './TaskEventModal'
 import DeleteEventModal from './DeleteEventModal'
@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faClock,
   faEdit,
-  faTrashAlt,
+  faTrashAlt
 } from '@fortawesome/free-regular-svg-icons'
 
 const CalendarModal = (props) => {
@@ -83,7 +83,7 @@ const CalendarModal = (props) => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           }}
         >
           <div
@@ -91,7 +91,7 @@ const CalendarModal = (props) => {
               width: 7,
               height: 7,
               backgroundColor: props.type == 'event' ? '#ff3399' : '#a7ca42',
-              marginRight: 10,
+              marginRight: 10
             }}
           ></div>
           <FormattedMessage id={`calendar_task-events.${props.title}`} />
@@ -103,6 +103,7 @@ const CalendarModal = (props) => {
       </div>
     )
   }
+
   return (
     <>
       <Modal
@@ -117,7 +118,7 @@ const CalendarModal = (props) => {
           style={{
             backgroundColor:
               props.event?.type === 'task' ? '#A7CA42' : '#FF3399',
-            color: '#fff',
+            color: '#fff'
           }}
           className="add-new-note-title general-modal-header my-auto p-2 d-flex flex-column justify-start calendar-modal-header"
         >
@@ -129,7 +130,7 @@ const CalendarModal = (props) => {
             <h3
               className="mb-0 pb-0 "
               style={{
-                color: '#fff',
+                color: '#fff'
               }}
             >
               {props.event?.type === 'event' ? (

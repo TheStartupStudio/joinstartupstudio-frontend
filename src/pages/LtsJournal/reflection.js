@@ -198,52 +198,51 @@ function LtsJournalReflection(props) {
           !entryId ? 'journal-entries__entry-reflection--new' : ''
         } ${editing ? 'journal-entries__entry-reflection--editing' : ''}`}
       >
-        {/*<div className="journal-entries__entry-reflection-header">*/}
-        {/*  <div className="journal-entries__entry-reflection-date">*/}
-        {/*    {entryId && (*/}
-        {/*      <>*/}
-        {/*        {props.entry?.createdAt && (*/}
-        {/*          <span>*/}
-        {/*            <strong>*/}
-        {/*              <IntlMessages id="journals.started" />*/}
-        {/*            </strong>*/}
-        {/*            {moment(props.entry?.createdAt)*/}
-        {/*              .locale(currentLanguage)*/}
-        {/*              .format('MMM DD, YYYY HH:mm')}*/}
-        {/*          </span>*/}
-        {/*        )}*/}
-        {/*        {props.entry?.updatedAt && (*/}
-        {/*          <span>*/}
-        {/*            <strong>*/}
-        {/*              <IntlMessages id="journals.edited" />*/}
-        {/*            </strong>*/}
-        {/*            {moment(props.entry?.updatedAt)*/}
-        {/*              .locale(currentLanguage)*/}
-        {/*              .format('MMM DD, YYYY HH:mm')}*/}
-        {/*          </span>*/}
-        {/*        )}*/}
-        {/*      </>*/}
-        {/*    )}*/}
-        {/*  </div>*/}
-        {/*  <div className="journal-entries__entry-reflection-actions">*/}
-        {/*    {entryId && !editing && (*/}
-        {/*      <FontAwesomeIcon*/}
-        {/*        onClick={() => setEditing(true)}*/}
-        {/*        icon={faPencilAlt}*/}
-        {/*      />*/}
-        {/*    )}*/}
-
-        {/*    {(!entryId || editing) && (*/}
-        {/*      <>*/}
-        {/*        {saving && (*/}
-        {/*          <div className="" style={{ color: '#01c5d1' }}>*/}
-        {/*            <FontAwesomeIcon icon={faSpinner} className="" spin />*/}
-        {/*          </div>*/}
-        {/*        )}*/}
-        {/*      </>*/}
-        {/*    )}*/}
-        {/*  </div>*/}
-        {/*</div>*/}
+        {/* <div className="journal-entries__entry-reflection-header">
+          <div className="journal-entries__entry-reflection-date">
+            {entryId && (
+              <>
+                {props.entry?.createdAt && (
+                  <span>
+                    <strong>
+                      <IntlMessages id="journals.started" />
+                    </strong>
+                    {moment(props.entry?.createdAt)
+                      .locale(currentLanguage)
+                      .format('MMM DD, YYYY HH:mm')}
+                  </span>
+                )}
+                {props.entry?.updatedAt && (
+                  <span>
+                    <strong>
+                      <IntlMessages id="journals.edited" />
+                    </strong>
+                    {moment(props.entry?.updatedAt)
+                      .locale(currentLanguage)
+                      .format('MMM DD, YYYY HH:mm')}
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+          <div className="journal-entries__entry-reflection-actions">
+            {entryId && !editing && (
+              <FontAwesomeIcon
+                onClick={() => setEditing(true)}
+                icon={faPencilAlt}
+              />
+            )}
+            {(!entryId || editing) && (
+              <>
+                {saving && (
+                  <div className="" style={{ color: '#01c5d1' }}>
+                    <FontAwesomeIcon icon={faSpinner} className="" spin />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div> */}
         <div
           className="journal-entries__entry-reflection-body"
           style={{ borderRadius: 0, border: '0px' }}

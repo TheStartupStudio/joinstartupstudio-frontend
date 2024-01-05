@@ -17,6 +17,7 @@ import ContentUploads from '../LtsJournal/ContentUploads/ContentUploads'
 import CertificationSkills from '../LtsJournal/CertificationSkills/CertificationSkills'
 import TableWrapper from '../LtsJournal/TableWrapper/index'
 import TableReflections from '../LtsJournal/TableReflections'
+import Rwl from '../LtsJournal/rwl'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -50,8 +51,9 @@ function LtsJournalContent(props) {
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
-        `/ltsJournals/${props.match.params.journalId}`
+        `/ltsJournals/${props.match.params.journalId}/student/${props.studentId}`
       )
+
       return data
     } catch (err) {}
   }
@@ -491,6 +493,7 @@ function LtsJournalContent(props) {
           />
         ) : null}
       </div>
+      {props.match.params.journalId === '1001028' && <Rwl isEditable={false} />}
     </>
   )
 }

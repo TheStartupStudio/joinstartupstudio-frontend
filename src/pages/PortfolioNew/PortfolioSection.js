@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
-import axiosInstance from '../../utils/AxiosInstance'
-import { toast } from 'react-toastify'
-import IntlMessages from '../../utils/IntlMessages'
+import React, { useEffect, useState } from 'react'
+
 import { faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHistory } from 'react-router-dom'
@@ -21,7 +19,7 @@ export const ActionIcon = (props) => {
             padding: 5,
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
+            alignItems: 'center'
           }}
           onClick={props.handleOnClick}
         >
@@ -30,7 +28,7 @@ export const ActionIcon = (props) => {
             icon={props.icon}
             style={{
               height: '25px',
-              width: '25px',
+              width: '25px'
             }}
           />
         </div>
@@ -41,9 +39,13 @@ export const ActionIcon = (props) => {
 
 const PortfolioSection = (props) => {
   const history = useHistory()
-  const isPreview = history.location.pathname.includes('preview')
+  const [isPreview, setIsPreview] = useState(null)
+  // const isPreview = history.location.pathname.includes('preview')
 
   const windowWidth = useWindowWidth()
+  useEffect(() => {
+    setIsPreview(props.isPreview)
+  }, [props.isPreview])
 
   return (
     <div
@@ -53,6 +55,7 @@ const PortfolioSection = (props) => {
         border: '1px solid #BBBDBF',
         background: '#FFFFFF 0% 0% no-repeat padding-box',
         margin: '30px 0',
+        width: '100%'
       }}
     >
       {!isPreview ? (
@@ -61,7 +64,7 @@ const PortfolioSection = (props) => {
             display: 'flex',
             justifyContent: props.title ? 'space-between' : 'flex-end',
             height: windowWidth < 500 ? '100%' : 50,
-            flexDirection: windowWidth < 500 ? 'column-reverse' : 'row',
+            flexDirection: windowWidth < 500 ? 'column-reverse' : 'row'
           }}
         >
           {props.title ? (
@@ -75,84 +78,82 @@ const PortfolioSection = (props) => {
                 color: '#231F20',
                 display: 'flex',
                 alignItems: 'center',
-                paddingLeft: 15,
+                paddingLeft: 15
               }}
             >
               {props.title}
             </div>
           ) : null}
-          {
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {props.showInMyPortfolio ? (
-                <div
-                  style={{
-                    padding: windowWidth < 500 ? 10 : 0,
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            {props.showInMyPortfolio && !isPreview ? (
+              <div
+                style={{
+                  padding: windowWidth < 500 ? 10 : 0,
 
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <span
-                    className="my_portfolio_publish pe-xxl-0 text-end"
-                    style={{
-                      font: `normal normal 600  ${
-                        windowWidth < 700 ? '14px/22px' : '17px/22px'
-                      } Montserrat`,
-                      color: '#707070',
-                    }}
-                  >
-                    Show in my portfolio
-                    {/*<IntlMessages id="portfolio.Publish.My.Portfolio" />*/}
-                    <label className="px-0 ps-sm-1 ps-md-1 form-switch ml-2">
-                      <input
-                        type="checkbox"
-                        checked={props.isShownInPortfolio}
-                        onChange={props.handleShowInPortfolio}
-                      />
-                      <i></i>
-                    </label>
-                  </span>
-                </div>
-              ) : null}
-              {props.showLinkToProjects ? (
-                <div
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <span
+                  className="my_portfolio_publish pe-xxl-0 text-end"
                   style={{
-                    display: 'flex',
-                    padding: windowWidth < 500 ? 10 : 0,
-                    alignItems: 'center',
+                    font: `normal normal 600  ${
+                      windowWidth < 700 ? '14px/22px' : '17px/22px'
+                    } Montserrat`,
+                    color: '#707070'
                   }}
                 >
-                  <span
-                    className="my_portfolio_publish pe-xxl-0"
-                    style={{
-                      font: 'normal normal 600 17px/20px Montserrat',
-                      color: '#707070',
-                    }}
+                  Show in my portfolio
+                  {/*<IntlMessages id="portfolio.Publish.My.Portfolio" />*/}
+                  <label className="px-0 ps-sm-1 ps-md-1 form-switch ml-2">
+                    <input
+                      type="checkbox"
+                      checked={props.isShownInPortfolio}
+                      onChange={props.handleShowInPortfolio}
+                    />
+                    <i></i>
+                  </label>
+                </span>
+              </div>
+            ) : null}
+            {props.showLinkToProjects && !isPreview ? (
+              <div
+                style={{
+                  display: 'flex',
+                  padding: windowWidth < 500 ? 10 : 0,
+                  alignItems: 'center'
+                }}
+              >
+                <span
+                  className="my_portfolio_publish pe-xxl-0"
+                  style={{
+                    font: 'normal normal 600 17px/20px Montserrat',
+                    color: '#707070'
+                  }}
+                >
+                  Show link to my projects in my portfolio
+                  {/*<IntlMessages id="portfolio.Publish.My.Portfolio" />*/}
+                  <label
+                    className="px-0 ps-sm-1 ps-md-1 form-switch"
+                    style={{ marginLeft: 4 }}
                   >
-                    Show link to my projects in my portfolio
-                    {/*<IntlMessages id="portfolio.Publish.My.Portfolio" />*/}
-                    <label
-                      className="px-0 ps-sm-1 ps-md-1 form-switch"
-                      style={{ marginLeft: 4 }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={props.isShownLinkInPortfolio}
-                        onChange={props.handleShowLinkInPortfolio}
-                      />
-                      <i></i>
-                    </label>
-                  </span>
-                </div>
-              ) : null}
-              {props.isAdd ? (
-                <ActionIcon handleOnClick={props.onAdd} icon={faPlus} />
-              ) : null}
-              {props.isEdit ? (
-                <ActionIcon handleOnClick={props.onEdit} icon={faPencilAlt} />
-              ) : null}
-            </div>
-          }
+                    <input
+                      type="checkbox"
+                      checked={props.isShownLinkInPortfolio}
+                      onChange={props.handleShowLinkInPortfolio}
+                    />
+                    <i></i>
+                  </label>
+                </span>
+              </div>
+            ) : null}
+            {props.isAdd ? (
+              <ActionIcon handleOnClick={props.onAdd} icon={faPlus} />
+            ) : null}
+            {props.isEdit ? (
+              <ActionIcon handleOnClick={props.onEdit} icon={faPencilAlt} />
+            ) : null}
+          </div>
         </div>
       ) : null}
 
@@ -161,7 +162,7 @@ const PortfolioSection = (props) => {
           style={{
             display: 'flex',
             justifyContent: props.title ? 'space-between' : 'flex-end',
-            height: 50,
+            height: 50
             // ...(isPreview ? { height: '0px' } : { height: '50px' }),
           }}
         >
@@ -174,7 +175,7 @@ const PortfolioSection = (props) => {
                 color: '#231F20',
                 display: 'flex',
                 alignItems: 'center',
-                paddingLeft: 15,
+                paddingLeft: 15
               }}
             >
               {props.title}

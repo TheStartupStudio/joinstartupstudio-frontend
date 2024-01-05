@@ -7,7 +7,7 @@ import PortfolioSection from './PortfolioSection'
 import { AccomplishmentModal } from '../../components/Portfolio/Accomplishment/accomplishmentModal'
 import { toast } from 'react-toastify'
 import IntlMessages from '../../utils/IntlMessages'
-const EmptyEducationSection = () => {
+const EmptyEducationSection = (props) => {
   const [showAccompModal, setShowAccompModal] = useState(false)
   const [accomps, setAccomp] = useState([])
   const [currentAccomp, setCurrentAccomp] = useState([])
@@ -22,7 +22,7 @@ const EmptyEducationSection = () => {
 
   const getUserAccomplishments = async () => {
     await axiosInstance
-      .get(`/userBackground/by-type/accomplishments`)
+      .get(`/userBackground/by-type/accomplishments/user/${props.user.id}`)
       .then((res) => {
         setAccomp(res.data)
       })
@@ -41,8 +41,9 @@ const EmptyEducationSection = () => {
     setAccomp(accomps.filter((accomp) => accomp.id !== id))
   }
 
-  const addAccomp = async (accomp) => {
-    setAccomp([...accomps, accomp])
+  const addAccomplishment = async (accomplishment) => {
+    props.addAccomplishment(accomplishment)
+    // setAccomp([...accomps, accomp])
   }
 
   return (
@@ -62,7 +63,7 @@ const EmptyEducationSection = () => {
                   height: '56px',
                   width: '56px',
                   cursor: 'pointer',
-                  color: '#BBBDBF',
+                  color: '#BBBDBF'
                 }}
                 onClick={() => setShowAccompModal(true)}
               />
@@ -76,7 +77,7 @@ const EmptyEducationSection = () => {
             }}
             updateAccomp={(accomp) => updateAccomp(accomp)}
             deleteBackground={(id) => deleteBackground(id)}
-            addAccomp={(accomp) => addAccomp(accomp)}
+            addAccomp={(accomp) => addAccomplishment(accomp)}
             currentAccomp={currentAccomp}
           />
         </>

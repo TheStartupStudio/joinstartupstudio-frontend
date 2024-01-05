@@ -23,14 +23,15 @@ const CertificationAccordionItem = ({ status, active, id, hideExpanded }) => {
         }}
       >
         <button
-          className='accordion-button collapsed accordion_button accordion-button-inner accordion-button-text pb-0'
+          className='accordion-button collapsed accordion_button accordion-button-inner accordion-button-text pb-0 text-secondary'
+          style={{fontWeight:'600'}}
           type='button'
           data-bs-toggle='collapse'
           data-bs-target={`#collapse_inner-certificate-${id}`}
           aria-expanded='false'
           aria-controls='collapseTwo'
         >
-          <span className={`iamr-status-point me-2 ${status}`}></span>
+          <span className={` me-2 `}></span>
           CERTIFICATION
         </button>
       </h2>

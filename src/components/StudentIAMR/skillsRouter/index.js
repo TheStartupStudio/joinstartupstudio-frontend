@@ -8,7 +8,7 @@ import CertificationStatus from '../certificationStatus'
 import SkillUploads from '../skillUploads'
 import IAMRWelcomePage from '../iamrWelcome'
 
-const SkillsRouter = () => {
+const SkillsRouter = ({groupingStrings}) => {
   const { loading } = useIamrContext()
   const { id, type } = useParams()
   const { findOneSkill } = useIamrContext()
@@ -38,17 +38,17 @@ const SkillsRouter = () => {
             <Route
               exact
               path={`/student-iamr/:studentId/:id/content`}
-              component={() => <SkillContent skill={skill} />}
+              component={() => <SkillContent skill={skill} groupingStrings={groupingStrings} />}
             />
             <Route
               path={`/student-iamr/:studentId/:id/certification-status`}
               component={CertificationStatus}
             />
-            <Route
+            {/* <Route
               exact
               path={`/student-iamr/:studentId/:id/journal`}
               component={() => <SkillJournal skill={skill} />}
-            />
+            /> */}
             <Route
               exact
               path={`/student-iamr/:studentId/:id/uploads/:uploadId?`}

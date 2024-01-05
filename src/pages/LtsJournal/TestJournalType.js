@@ -17,7 +17,6 @@ import { faAngleDown, faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment/moment'
 
 const TestJournalType = (props) => {
-  console.log('props', props)
   const [journals, setJournals] = useState([])
   const [weeks, setWeeks] = useState([])
   const match = useRouteMatch()
@@ -214,6 +213,7 @@ const TestJournalType = (props) => {
                             <TestJournalContent
                               {...renderprops}
                               journals={journals}
+                              type={props.match.params.type}
                               // contentContainer={contentContainer}
                               backRoute={props.match.url}
                               // saved={journalChanged}
@@ -233,6 +233,7 @@ const TestJournalType = (props) => {
                             <TestJournalContent
                               {...renderprops}
                               journals={weeks}
+                              type={props.match.params.type}
                               // contentContainer={contentContainer}
                               backRoute={props.match.url}
                               // saved={journalChanged}
@@ -284,7 +285,8 @@ const TestJournalType = (props) => {
                       textTransform: 'uppercase',
                       fontSize: 12,
                       padding: '4px 10px',
-                      marginBottom: 10
+                      marginBottom: 10,
+                      cursor: 'pointer'
                     }}
                     onClick={() => {
                       if (props.match.params.type === 'task') {

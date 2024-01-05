@@ -18,7 +18,6 @@ import IamrContents from './pages/Iamr/IamrContentsAccordion'
 import ImrContent from './pages/Iamr/ImrContent'
 import TestJournal from './pages/LtsJournal/TestJournal'
 import UserProfile from './pages/Profile/userProfile'
-// import MyTraining from './pages/LtsJournal/MyTraining'
 
 const MyTraining = React.lazy(() => import('./pages/MyTraining/MyTraining'))
 const Login = React.lazy(() => import('./pages/Auth/Login'))
@@ -50,6 +49,13 @@ const IamrCertificationGuide = React.lazy(() =>
     './pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationGuide'
   )
 )
+
+const IamrCertificationSystem = React.lazy(() =>
+  import(
+    './pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationSystem/IamrCertificationSystem'
+  )
+)
+
 const EditPortfolio = React.lazy(() =>
   import('./pages/Portfolio/editPortfolio')
 )
@@ -93,6 +99,17 @@ const MyJournals = React.lazy(() => import('../src/pages/MyJournals'))
 const Logout = React.lazy(() => import('./pages/Auth/LogOut'))
 const VerifyEmail = React.lazy(() => import('./pages/Verify'))
 const MyConnections = React.lazy(() => import('./pages/MyConnections'))
+const MyClassroom = React.lazy(() => import('./pages/MyClassroom'))
+const MySpark = React.lazy(() => import('./pages/MySpark'))
+const MySparkWidgetDetails = React.lazy(() =>
+  import('./pages/MySpark/Widgets/WidgetDetails')
+)
+const MySparkGeneratePage = React.lazy(() =>
+  import('./pages/MySpark/GeneratedResponsePage/GeneratedResponsePage')
+)
+const MySparkArchivePage = React.lazy(() =>
+  import('./pages/MySpark/ArchivePage/ArchivePage')
+)
 const StoryInMotion = React.lazy(() => import('./pages/StoryInMotion'))
 const MyStartupProfile = React.lazy(() => import('./pages/StartupProfile'))
 const PreviewPortfolioNew = React.lazy(() =>
@@ -145,6 +162,15 @@ function Router(props) {
                 path="/iamr-certification-guide"
                 component={IamrCertificationGuide}
               />
+              <Route
+                exact
+                path="/iamr-certification-system"
+                component={IamrCertificationSystem}
+              />
+              <Route
+                path="/iamr-certification-system/:certificationType?/:id?/:type?"
+                component={IamrCertificationSystem}
+              />
               <Route path="/my-students" component={MyStudents} />
               <Route path="/resources" component={Resources} />
               <Route
@@ -161,12 +187,19 @@ function Router(props) {
                 path="/preview-portfolio"
                 component={PreviewPortfolioNew}
               />
-              <Route exact path="/terms" component={Terms} />
               <Route
                 exact
                 path="/user-portfolio/:username"
-                component={PreviewPublicPortfolio}
+                component={(props) => {
+                  return <PreviewPortfolioNew {...props} isPublicView={false} />
+                }}
               />
+              <Route exact path="/terms" component={Terms} />
+              {/*<Route*/}
+              {/*  exact*/}
+              {/*  path="/user-portfolio/:username"*/}
+              {/*  component={PreviewPublicPortfolio}*/}
+              {/*/>*/}
               <Route
                 exact
                 path="/beyond-your-course"
@@ -347,7 +380,7 @@ function Router(props) {
               <Route exact path="/my-account" component={Profile} />
               <Route path="/verify" component={VerifyEmail} />
               <Route path="/logout" component={Logout} />
-              <Route exact path="/my-connections" component={MyConnections} />
+              <Route exact path="/my-classroom" component={MyClassroom} />
               <Route
                 exact
                 path="/edit-journals"
@@ -365,8 +398,29 @@ function Router(props) {
               />
               <Route
                 exact
-                path="/my-connections/request/:id"
-                component={MyConnections}
+                path="/my-classroom/request/:id"
+                component={MyClassroom}
+              />
+              <Route
+                path="/my-spark/generate-page/response"
+                exact
+                component={MySparkGeneratePage}
+              />
+              <Route
+                path="/my-spark/generate-page/:id"
+                exact
+                component={MySparkGeneratePage}
+              />
+              <Route exact path="/my-spark/widgets" component={MySpark} />
+              <Route
+                path="/my-spark/archive"
+                exact
+                component={MySparkArchivePage}
+              />
+              <Route
+                path="/my-spark/widgets/:widgetName"
+                exact
+                component={MySparkWidgetDetails}
               />
               <Route path="/iamr-inbox" component={IAMRinbox} />
               <Route
@@ -399,7 +453,9 @@ function Router(props) {
               <Route
                 exact
                 path="/user-portfolio/:username"
-                component={PreviewPublicPortfolio}
+                component={(props) => {
+                  return <PreviewPortfolioNew {...props} isPublicView={true} />
+                }}
               />
               <Route
                 path="/password-change-required"

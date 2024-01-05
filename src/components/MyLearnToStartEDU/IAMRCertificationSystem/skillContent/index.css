@@ -1,0 +1,16 @@
+.first-page-content-title {
+  margin-top: 10px;
+  text-align: left;
+  font: normal normal 500 13px Montserrat;
+  letter-spacing: 0.52px;
+  color: #333d3d;
+  text-transform: uppercase;
+  opacity: 1;
+}
+.first-page-content-text {
+  text-align: left;
+  font: normal normal 300 13px Montserrat;
+  letter-spacing: 0.52px;
+  color: #333d3d;
+  opacity: 1;
+}

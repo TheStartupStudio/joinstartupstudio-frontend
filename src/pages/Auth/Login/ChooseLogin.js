@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom'
 import IntlMessages from '../../../utils/IntlMessages'
 import SUSLogo from '../../../assets/images/LTS-logo-horizontal.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import instructorNormal from '../../../assets/images/instructor-normal.png'
-import learnerNormal from '../../../assets/images/learner-normal.png'
-import instructorHover from '../../../assets/images/instructor-hover.png'
-import learnerHover from '../../../assets/images/learner-hover.png'
+import instructorNormal from '../../../assets/images/LTS INSTRUCTOR.png'
+import learnerNormal from '../../../assets/images/LTS LEARNER.png'
+import instructorHover from '../../../assets/images/LTS INSTRUCTOR FILLED.png'
+import learnerHover from '../../../assets/images/LTS LEARNER FILLED.png'
 import './index.css'
 import {
   faTwitter,
@@ -62,7 +62,11 @@ const ChooseLogin = () => {
           overflow: 'hidden'
         }}
       >
-        <img src={icon()} style={{ width: '100%', objectFit: 'contain' }} />
+        <img
+          src={icon()}
+          style={{ width: '100%', objectFit: 'contain' }}
+          alt="Role Icon"
+        />
       </div>
     )
   }
@@ -94,25 +98,16 @@ const ChooseLogin = () => {
                 <img className="login-logo" src={SUSLogo} alt="logo" />
                 <h1 className="login-title">Welcome...</h1>
                 <p>
-                  ...to the Learn to Start Instructor Management System. Please
-                  log in to access your platform.
+                  ...to your Learn to Start Platform. Please choose your role
+                  and log in to access.
                 </p>
 
                 <div className="social-media-items">
-                  {/* <a className='social-media-item' href='' target='_blank'>
-										<FontAwesomeIcon icon={faFacebook} />
-									</a> */}
-                  <a
-                    className="social-media-item"
-                    href="https://twitter.com/learntostart"
-                    target="_blank"
-                  >
-                    <FontAwesomeIcon icon={faTwitter} />
-                  </a>
                   <a
                     className="social-media-item"
                     href="https://www.linkedin.com/company/learntostart/"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     <FontAwesomeIcon icon={faLinkedin} />
                   </a>
@@ -120,6 +115,7 @@ const ChooseLogin = () => {
                     className="social-media-item"
                     href="https://vimeo.com/showcase/9368302"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     <FontAwesomeIcon icon={faVimeo} />
                   </a>
@@ -127,6 +123,7 @@ const ChooseLogin = () => {
                     className="social-media-item"
                     href="https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     <FontAwesomeIcon icon={faSpotify} />
                   </a>
@@ -166,7 +163,7 @@ const ChooseLogin = () => {
                   alignItems: 'center'
                 }}
               >
-                <div style={{ marginRight: '-5px' }}>
+                <div style={{ marginRight: '-5px', cursor: 'pointer' }}>
                   <LoginRole
                     role={'ims'}
                     normalIcon={
@@ -178,7 +175,7 @@ const ChooseLogin = () => {
                     }}
                   />
                 </div>
-                <div>
+                <div style={{ cursor: 'pointer' }}>
                   <LoginRole
                     role={'main'}
                     normalIcon={

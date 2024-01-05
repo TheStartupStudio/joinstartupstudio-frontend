@@ -24,6 +24,11 @@ export const IAMR = (props) => {
   const [isPublished, setIsPublished] = useState(false)
   const user = useSelector((state) => state?.user?.user?.user)
   const [isLoading, setIsLoading] = useState(false)
+  const [isPreview, setIsPreview] = useState(null)
+
+  useEffect(() => {
+    setIsPreview(props.isPreview)
+  }, [props.isPreview])
 
   // useEffect(() => {
   //   setSubmissions(props.submissions)
@@ -49,7 +54,7 @@ export const IAMR = (props) => {
 
   useEffect(() => {
     setIsLoading(true)
-    axiosInstance.get(`/submissions/user/${props.user?.id}`).then((data) => {
+    axiosInstance.get(`/submissions/user/${props.userId}`).then((data) => {
       setIsLoading(false)
       setSubmissions(data?.data?.submissions)
     })
@@ -64,8 +69,6 @@ export const IAMR = (props) => {
     setActiveSubmission(submission)
     setDeleteModal(true)
   }
-
-  const isPreview = props.isPreview
 
   const windowWidth = useWindowWidth()
 
@@ -267,6 +270,7 @@ export const IAMR = (props) => {
       isShownLinkInPortfolio={isPublished}
       handleShowLinkInPortfolio={() => updateShowPreference()}
       isIAMR={true}
+      isPreview={isPreview}
     >
       {props?.preview !== 'undefined' ? (
         <div className={['iamr-section', props.className].join(' ')}>
@@ -284,11 +288,11 @@ export const IAMR = (props) => {
             >
               <h4 className="m-3 text-center iamr-title">I AM MARKET-READY</h4>
 
-              {/* <p className="row m-3" style={{ paddingInline: '4.2%' }}>
+              <p className="row m-3" style={{ paddingInline: '4.2%' }}>
                 The components of your portfolio speak to your level of
                 market-ready skills as you introduce the world to who you are,
                 what you can do, and your ability to prove it.
-              </p> */}
+              </p>
 
               <div className="iamr-submissions m-3">
                 <div

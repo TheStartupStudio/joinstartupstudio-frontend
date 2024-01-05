@@ -181,31 +181,31 @@ const MentorMeetingManager = (props) => {
 
   function getMentorMeetings() {
     try {
-      axiosInstance.get(`/ltsJournals/${params.journalId}`).then((res) => {
-        const data = res.data
-        if (data?.userMentorMeetings && data?.userMentorMeetings?.length) {
-          // Replaced userTeamMeetings with userMentorMeetings
-          const latestElement = getLatestUpdatedElement(
-            data?.userMentorMeetings
-          ) // Replaced userTeamMeetings with userMentorMeetings
-          if (latestElement) {
-            setIsEdit(latestElement.hasOwnProperty('mentorMeetingId'))
-            setSelectedArchive(latestElement)
-          }
-        } else if (
-          data?.mentorMeetings &&
-          data?.userMentorMeetings?.length === 0
-        ) {
-          // Replaced teamMeetings with mentorMeetings
-          const selectedArchive = {
-            ...data?.mentorMeetings,
-            mentorMeetingId: data?.mentorMeetings?.id,
-            meetingDate: new Date()
-          }
+      axiosInstance
+        .get(`/ltsJournals/${params.journalId}/student/${0}`)
+        .then((res) => {
+          const data = res.data
+          if (data?.userMentorMeetings && data?.userMentorMeetings?.length) {
+            const latestElement = getLatestUpdatedElement(
+              data?.userMentorMeetings
+            )
+            if (latestElement) {
+              setIsEdit(latestElement.hasOwnProperty('mentorMeetingId'))
+              setSelectedArchive(latestElement)
+            }
+          } else if (
+            data?.mentorMeetings &&
+            data?.userMentorMeetings?.length === 0
+          ) {
+            const selectedArchive = {
+              ...data?.mentorMeetings,
+              mentorMeetingId: data?.mentorMeetings?.id,
+              meetingDate: new Date()
+            }
 
-          setSelectedArchive(selectedArchive)
-        }
-      })
+            setSelectedArchive(selectedArchive)
+          }
+        })
     } catch (err) {}
   }
 

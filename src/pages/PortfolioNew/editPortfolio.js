@@ -12,7 +12,7 @@ import { Education } from '../../components/Portfolio/Education'
 import { Accomplishment } from '../../components/Portfolio/Accomplishment'
 import { Recommendation } from '../../components/Portfolio/Recommendation'
 import { IAMR } from '../../components/Portfolio/IAMR'
-import LicencesCertification from '../../components/Portfolio/LicensesCertification'
+import LicencesCertification from '../../components/Portfolio/LicensesCertification/index'
 import { DeleteConfirmation } from '../../components/Portfolio/Confirm_modal'
 import { toast } from 'react-toastify'
 import './style/previewPortfolio.css'
@@ -59,12 +59,17 @@ export const VerifyButton = (props) => {
 
 function EditPortfolio() {
   const [toggle, setToggle] = useState(0)
+  const [togglePeerSharing, setTogglePeerSharing] = useState(0)
   const [user, setUser] = useState()
   const [showPublishModal, setShowPublishModal] = useState(false)
+  const [experiences, setExperiences] = useState([])
+  const [educations, setEducations] = useState([])
+  const [accomplishments, setAccomplishments] = useState([])
+  const [certifications, setCertifications] = useState([])
   const [recommendationRequestId, setRecommendationRequestId] = useState()
 
   const [aggred, setAggred] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const userId = useSelector((state) => state.user.user.user.id)
 
   const dispatch = useDispatch()
@@ -87,6 +92,7 @@ function EditPortfolio() {
         setUser(response.data)
         await axiosInstance.get('/portfolio').then((response) => {
           setToggle(response.data.is_published)
+          setTogglePeerSharing(response.data.isPeerShared)
         })
       })
       .catch((err) => err)
@@ -108,6 +114,90 @@ function EditPortfolio() {
       .catch((err) => {
         toast.error(<IntlMessages id="alerts.success_change" />)
         setToggle(!toggle)
+      })
+  }
+
+  const updatePeerSharing = async () => {
+    const data = {
+      isPeerShared: !togglePeerSharing
+    }
+    await axiosInstance
+      .put(`/portfolio/peerSharing/`, data)
+      .then((response) => {
+        toast.success(<IntlMessages id="alerts.success_change" />)
+        setTogglePeerSharing(!togglePeerSharing)
+      })
+      .catch((err) => {
+        toast.error(<IntlMessages id="alerts.success_change" />)
+        setTogglePeerSharing(!togglePeerSharing)
+      })
+  }
+
+  const [approvedSkills, setApprovedSkills] = useState([])
+  const getIAMRSkills = async () => {
+    try {
+      const { data } = await axiosInstance.get(`/iamr/skills/user/${userId}`)
+      const approvedSkills = data.skills.reduce((accumulator, skill) => {
+        if (
+          skill.SkillStatus.status === 'approved' ||
+          skill.SkillStatus.status === 'proficient'
+        ) {
+          accumulator.push(skill)
+        }
+        return accumulator
+      }, [])
+      setApprovedSkills(approvedSkills)
+    } catch (error) {
+      console.error('error', error)
+    }
+  }
+
+  const getUserAccomplishments = async () => {
+    setIsLoading(true)
+    await axiosInstance
+      .get(`/userBackground/by-type/accomplishments/user/${user.id}`)
+      .then((res) => {
+        setAccomplishments(res.data)
+        setIsLoading(false)
+      })
+  }
+
+  const getUserCertifications = async () => {
+    setIsLoading(true)
+
+    await axiosInstance.get(`/userCertificates/${user.id}`).then((res) => {
+      // setTimeout(() => {
+      setCertifications(res.data.UserCertificates)
+      setIsLoading(false)
+      // }, 2000)
+    })
+  }
+  const getUserEducations = async () => {
+    if (user) {
+      await axiosInstance
+        .get(`/userBackground/by-type/education/user/${user.id}`)
+        .then((res) => {
+          setEducations(res.data)
+        })
+    }
+  }
+  useEffect(() => {
+    if (user) {
+      getIAMRSkills()
+      getUserExperiences()
+      getUserAccomplishments()
+      getUserCertifications()
+      getUserEducations()
+    }
+  }, [user])
+
+  const getUserExperiences = async () => {
+    setIsLoading(true)
+    await axiosInstance
+      .get(`/userBackground/by-type/experience/user/${user.id}`)
+      .then((res) => {
+        setExperiences(res.data)
+        setIsLoading(false)
       })
   }
 
@@ -141,28 +231,51 @@ function EditPortfolio() {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ width: '30%' }}>
-            <span className="my_portfolio_publish pe-xxl-0 ">
-              <IntlMessages id="portfolio.Publish.My.Portfolio" />
-              <label className="px-0 ps-sm-1 ps-md-1 form-switch">
-                <input
-                  type="checkbox"
-                  checked={toggle}
-                  onChange={() => {
-                    if (toggle) {
-                      updateStatus()
-                    } else {
-                      setShowPublishModal(true)
-                    }
-                  }}
-                />
-                <i></i>
-              </label>
-            </span>
-
-            <span className="ps-xl-0 d-block mt-1 mt-sm-1 publish_checkbox_info">
-              <IntlMessages id="portfolio.publish_checkbox" />
-            </span>
+            <div>
+              <span className="my_portfolio_publish pe-xxl-0">
+                <IntlMessages id="portfolio.Publish.My.Portfolio" />
+                <label className="px-0 ps-sm-1 ps-md-1 form-switch">
+                  <input
+                    type="checkbox"
+                    checked={toggle}
+                    onChange={() => {
+                      if (toggle) {
+                        updateStatus()
+                      } else {
+                        setShowPublishModal(true)
+                      }
+                    }}
+                  />
+                  <i></i>
+                </label>
+              </span>
+              <span className="ps-xl-0 d-block mt-1 mt-sm-1 publish_checkbox_info">
+                <IntlMessages id="portfolio.publish_checkbox" />
+              </span>
+            </div>
+            <div>
+              <span className="my_portfolio_publish pe-xxl-0 ">
+                {/*<IntlMessages id="portfolio.Publish.My.Portfolio" />*/}
+                Allow My Peers to View My Portfolio
+                <label className="px-0 ps-sm-1 ps-md-1 form-switch">
+                  <input
+                    type="checkbox"
+                    checked={togglePeerSharing}
+                    onChange={() => {
+                      updatePeerSharing()
+                      // if (togglePeerSharing) {
+                      //   updatePeerSharing()
+                      // } else {
+                      //   setShowPublishModal(true)
+                      // }
+                    }}
+                  />
+                  <i></i>
+                </label>
+              </span>
+            </div>
           </div>
+
           {/* <div
             style={{
               display: 'flex',
@@ -182,11 +295,14 @@ function EditPortfolio() {
         </div>
         {user && (
           <>
-            <PersonalBio user={user} isPreview={false} />
+            <PersonalBio user={user} userId={userId} />
+            <IAMR user={user} isPreview={false} userId={user?.id} />
 
-            <IAMR user={user} isPreview={false} />
-
-            <Skills user={user} />
+            <Skills
+              user={user}
+              isPreview={false}
+              approvedSkills={approvedSkills}
+            />
 
             <div>
               <div
@@ -199,7 +315,11 @@ function EditPortfolio() {
               >
                 EXPERIENCE
               </div>
-              <Experience user={user} />
+              <Experience
+                user={user}
+                isPreview={false}
+                experiences={experiences}
+              />
             </div>
             <div>
               <div
@@ -212,10 +332,22 @@ function EditPortfolio() {
               >
                 EDUCATION AND ACCOMPLISHMENTS
               </div>
-              <Education user={user} />
-              <Accomplishment user={user} />
+              <Education
+                user={user}
+                isPreview={false}
+                educations={educations}
+              />
+              <Accomplishment
+                user={user}
+                isPreview={false}
+                accomplishments={accomplishments}
+              />
             </div>
-            <LicencesCertification user={user} />
+            <LicencesCertification
+              user={user}
+              isPreview={false}
+              userCertifications={certifications}
+            />
           </>
         )}
       </div>
@@ -225,15 +357,15 @@ function EditPortfolio() {
         confirmModal={() => true}
         checkIfAggre={() => {
           updateStatus()
-          setLoading(true)
+          setIsLoading(true)
           setAggred(true)
           setTimeout(() => {
-            setLoading(false)
+            setIsLoading(false)
             setShowPublishModal(false)
           }, 5000)
         }}
-        loading={loading}
-        setLoading={(data) => setLoading(data)}
+        loading={isLoading}
+        setLoading={(data) => setIsLoading(data)}
         type={true}
         title={<IntlMessages id="portfolio.confirmation_modal" />}
         body={<IntlMessages id="portfolio.confirmation_modal_second_part" />}

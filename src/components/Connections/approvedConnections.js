@@ -89,36 +89,38 @@ export const ApprovedConnections = (props) => {
   }
 
   return (
-    <div className='m-0 p-0'>
-      <h3 className='my-connection-titles ms-0 ps-0'>
-        <IntlMessages id='connection.page_title' />
+    <div className="m-0 p-0">
+      <h3 className="my-connection-titles ms-0 ps-0">
+        {/*<IntlMessages id='connection.page_title' />*/}
+        My Classroom Portfolios
       </h3>
       {props.connections.length === 0 ? (
-        <div className='ms-3 ps-0'>
-          <p className='page-description fw-light ms-0 ps-0'>
-            <IntlMessages id='connection.no_connections' />
+        <div className="ms-3 ps-0">
+          <p className="page-description fw-light ms-0 ps-0">
+            <IntlMessages id="connection.no_connections" />
           </p>
         </div>
       ) : (
         <>
-          <div className='connections-search' style={{ height: '48px' }}>
-            <div className='input-group h-100'>
-              <div className='input-group-prepend my-auto'>
+          <div className="connections-search" style={{ height: '48px' }}>
+            <div className="input-group h-100">
+              <div className="input-group-prepend my-auto">
                 <button
-                  className='btn btn-outline-secondary my-2 ms-2'
-                  type='button'
-                  id='button-addon1'
+                  className="btn btn-outline-secondary my-2 ms-2"
+                  type="button"
+                  id="button-addon1"
                 >
-                  <img src={searchIcon} alt='#' width='90%' />
+                  <img src={searchIcon} alt="#" width="90%" />
                 </button>
               </div>
 
               <input
-                type='text'
-                className='form-control'
-                name='searchedNote'
-                placeholder={'SEARCH YOUR CONNECTIONS'}
-                aria-describedby='button-addon1'
+                type="text"
+                className="form-control"
+                name="searchedNote"
+                // placeholder={'SEARCH YOUR CONNECTIONS'}
+                placeholder={'SEARCH MY CLASSROOM PORTFOLIOS'}
+                aria-describedby="button-addon1"
                 onChange={handleChange}
               />
             </div>
@@ -126,9 +128,9 @@ export const ApprovedConnections = (props) => {
           {debouncedState.length > 2 ? (
             !searchLoader ? (
               filteredConnections.length > 0 ? (
-                <div className='approved-connections-container mt-2 mt-md-0'>
-                  <div className='mx-3 ps-0 text-center'>
-                    <div className='all-approved-connections'>
+                <div className="approved-connections-container mt-2 mt-md-0">
+                  <div className="mx-3 ps-0 text-center">
+                    <div className="all-approved-connections">
                       {filteredConnections?.map((user, index) => (
                         <ConnectionBox
                           key={index}
@@ -145,22 +147,22 @@ export const ApprovedConnections = (props) => {
                   </div>
                 </div>
               ) : (
-                <div className='search-results mt-2 mt-md-0'>
-                  <p className='load-data' style={{ cursor: 'inherit' }}>
+                <div className="search-results mt-2 mt-md-0">
+                  <p className="load-data" style={{ cursor: 'inherit' }}>
                     No results found!
                   </p>
                 </div>
               )
             ) : (
-              <div className='search-results mt-2 mt-md-0'>
-                <p className='load-data' style={{ cursor: 'inherit' }}>
+              <div className="search-results mt-2 mt-md-0">
+                <p className="load-data" style={{ cursor: 'inherit' }}>
                   Searching...
                 </p>
               </div>
             )
           ) : (
-            <div className='mx-2 ps-0 mt-2 mt-md-0 text-center approved-connections-container'>
-              <div className='all-approved-connections'>
+            <div className="mx-2 ps-0 mt-2 mt-md-0 text-center approved-connections-container">
+              <div className="all-approved-connections">
                 {props.connections.length > 0 &&
                   props.connections?.map(
                     (user, index) =>
@@ -189,7 +191,7 @@ export const ApprovedConnections = (props) => {
                     )
                   ].map((item, index) => (
                     <div
-                      className='col-auto my-connection-box mt-3 mx-2 p-3 empty-connection-box'
+                      className="col-auto my-connection-box mt-3 mx-2 p-3 empty-connection-box"
                       key={index}
                     ></div>
                   ))}
@@ -199,11 +201,11 @@ export const ApprovedConnections = (props) => {
                 !loadingData && (
                   <>
                     <hr
-                      className='m-auto mt-3'
+                      className="m-auto mt-3"
                       style={{ width: '20%', color: '#01c5d1' }}
                     />
                     <p
-                      className='load-data mt-2'
+                      className="load-data mt-2"
                       onClick={() => {
                         loadMoreData()
                       }}
@@ -215,11 +217,11 @@ export const ApprovedConnections = (props) => {
               {loadingData && (
                 <>
                   <hr
-                    className='m-auto mt-3'
+                    className="m-auto mt-3"
                     style={{ width: '20%', color: '#01c5d1' }}
                   />
 
-                  <p className='mt-2 load-data' style={{ cursor: 'inherit' }}>
+                  <p className="mt-2 load-data" style={{ cursor: 'inherit' }}>
                     Loading Data...
                   </p>
                 </>

@@ -1,13 +1,21 @@
-import React from "react";
+import {useState,useEffect} from "react";
 import ReactPlayer from "react-player";
+import { useIamrContext } from '../iamrContext/context'
 import "./index.css";
 
 const SkillContent = ({ skill }) => {
+
   return (
     <div>
+       <p className='skill-title pb-3'>
+        <span className="text-info fw-bold">{skill.category} - </span> 
+        <span className='fw-bold'>{skill?.title} - </span> Content
+      </p>
       <ReactPlayer
         className="video_inner media-lightbox__video-player mb-3"
-        url={skill?.video}
+        // url={skill?.video}
+        url={'https://d5tx03iw7t69i.cloudfront.net/iamr/Market-Ready 1&2 Certification Introduction (1).mov'}
+
         controls={true}
         light={
           "https://d5tx03iw7t69i.cloudfront.net/Journal/MarketReadyGuide/MRG-Thumbnail.jpg"

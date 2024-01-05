@@ -364,8 +364,6 @@ function MyTrainingContent(props) {
       : [journal.video]
   ).filter(Boolean)
 
-  console.log('journal', journal)
-
   const {
     Bold,
     Italic,
@@ -604,6 +602,7 @@ function MyTrainingContent(props) {
                               entries={journal.entries}
                               entryBoxTitle={journal?.title}
                               journal={journal}
+                              isEditable={true}
                               userJournalEntries={userJournalEntries}
                               deleteReflection={(entry, userJournalEntry) =>
                                 deleteReflection(entry, userJournalEntry)

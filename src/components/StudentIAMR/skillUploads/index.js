@@ -31,6 +31,7 @@ const SkillUploads = ({ skill }) => {
               }}
             />
           )}
+          <span className="text-info fw-bold">{skill.category} - </span>
           <span className='fw-bold'>{skill?.title} - </span> STUDENT UPLOADS
         </p>
         <p className='skill-title text-end'>

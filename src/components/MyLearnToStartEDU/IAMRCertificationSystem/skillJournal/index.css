@@ -1,0 +1,13 @@
+.journal-question {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.button.undo-reflection {
+  margin-top: -5px;
+  width: 70px;
+  font-size: 10px;
+  height: 25px;
+  min-width: 0;
+}
