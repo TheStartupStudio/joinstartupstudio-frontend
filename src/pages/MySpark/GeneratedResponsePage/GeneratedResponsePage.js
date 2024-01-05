@@ -489,7 +489,9 @@ function GeneratedResponsePage(props) {
                                 name={'Copy'}
                                 width={windowWidth < 700 ? '100%' : '70%'}
                                 backgroundColor={
-                                  isSavedArchive() ? '#51C7DF' : '#BBBDBF'
+                                  isSavedArchive() || myContentDisplayed
+                                    ? '#51C7DF'
+                                    : '#BBBDBF'
                                 }
                                 align={alignButton('copy')}
                                 onClick={() =>
@@ -523,7 +525,7 @@ function GeneratedResponsePage(props) {
                                         }
                                         align={alignButton('download')}
                                         backgroundColor={
-                                          isSavedArchive()
+                                          isSavedArchive() || myContentDisplayed
                                             ? '#99CC33'
                                             : '#BBBDBF'
                                         }
@@ -534,7 +536,9 @@ function GeneratedResponsePage(props) {
                                   <LtsButton
                                     onClick={() => setShowFinalStepModal(true)}
                                     backgroundColor={
-                                      isSavedArchive() ? '#99CC33' : '#BBBDBF'
+                                      isSavedArchive() || myContentDisplayed
+                                        ? '#99CC33'
+                                        : '#BBBDBF'
                                     }
                                     width={windowWidth < 700 ? '100%' : '70%'}
                                     name={'Download'}
@@ -551,7 +555,9 @@ function GeneratedResponsePage(props) {
                                   name={'Save to archive'}
                                   width={windowWidth < 700 ? '100%' : '70%'}
                                   backgroundColor={
-                                    isSavedArchive() ? '#FF3399' : '#BBBDBF'
+                                    isSavedArchive() || myContentDisplayed
+                                      ? '#FF3399'
+                                      : '#BBBDBF'
                                   }
                                   align={alignButton('saveToArchive')}
                                   onClick={() =>
