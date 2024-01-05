@@ -473,7 +473,7 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li className="disabledd">
+                <li>
                   <NavLink
                     // disabled={true}
                     to={'/student-personal-finance'}
