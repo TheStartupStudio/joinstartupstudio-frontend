@@ -459,7 +459,7 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li className="disabledd">
+                <li>
                   <NavLink
                     to={'/student-wellnes'}
                     activeClassName="sidenav active"
@@ -467,14 +467,14 @@ function Sidebar(props) {
                   >
                     <div className="d-flex" style={{ alignItems: 'center' }}>
                       <div className="ms-4 ps-2 py-1 text-uppercase">
-                        WELLNES JOURNAL
+                        WELLNESS JOURNAL
                       </div>
                     </div>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
-                    disabled={true}
+                    // disabled={true}
                     to={'/student-personal-finance'}
                     activeClassName="sidenav active"
                   >
@@ -485,19 +485,19 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li className="disabledd">
-                  <NavLink
-                    disabled={true}
-                    to={'/student-leadership'}
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1 text-uppercase ">
-                        LEADERSHIP JOURNAL
-                      </div>
-                    </div>
-                  </NavLink>
-                </li>
+                {/*<li className="disabledd">*/}
+                {/*  <NavLink*/}
+                {/*    disabled={true}*/}
+                {/*    to={'/student-leadership'}*/}
+                {/*    activeClassName="sidenav active"*/}
+                {/*  >*/}
+                {/*    <div className="d-flex" style={{ alignItems: 'center' }}>*/}
+                {/*      <div className="ms-4 ps-2 py-1 text-uppercase ">*/}
+                {/*        LEADERSHIP JOURNAL*/}
+                {/*      </div>*/}
+                {/*    </div>*/}
+                {/*  </NavLink>*/}
+                {/*</li>*/}
               </div>
               {/*<NavListParent*/}
               {/*  listName={'myLearnToStartEdu'}*/}
