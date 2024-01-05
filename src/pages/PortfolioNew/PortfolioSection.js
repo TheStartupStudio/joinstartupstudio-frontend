@@ -54,7 +54,8 @@ const PortfolioSection = (props) => {
         borderRadius: 6,
         border: '1px solid #BBBDBF',
         background: '#FFFFFF 0% 0% no-repeat padding-box',
-        margin: '30px 0'
+        margin: '30px 0',
+        width: '100%'
       }}
     >
       {!isPreview ? (

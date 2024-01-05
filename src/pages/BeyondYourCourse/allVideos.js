@@ -52,7 +52,7 @@ export default function GuidanceEncouragement() {
       setPageDescription('beyond_your_course.master_classes_description')
       getMasterClassVideos()
     } else if (window.location.href.includes('startup-live/videos')) {
-      setPageTitle('STARTUP LIVE ARCHIVE VIDEOS')
+      setPageTitle('STORY IN MOTION GUEST Q&AS')
       setPageDescription('startup_live.startup_archive_description')
       getStartupLiveVideos()
     }
@@ -93,11 +93,11 @@ export default function GuidanceEncouragement() {
   }
 
   return (
-    <div id='main-body'>
-      <div className='container-fluid'>
-        <div className='row'>
-          <div className='col-12 col-xl-9'>
-            <div className='account-page-padding page-border'>
+    <div id="main-body">
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-12 col-xl-12">
+            <div className="account-page-padding page-border">
               <div
                 style={
                   pageVideos && pageVideos.length < 1
@@ -106,16 +106,16 @@ export default function GuidanceEncouragement() {
                 }
               >
                 <div>
-                  <h3 className='page-title'>
+                  <h3 className="page-title">
                     {pageTitle && <span> {pageTitle} </span>}
                   </h3>
-                  <p className='page-description'>
+                  <p className="page-description">
                     {pageDescription && (
                       <IntlMessages id={`${pageDescription}`} />
                     )}
                   </p>
                 </div>
-                <div className='row'>
+                <div className="row">
                   {currentPageVideos?.map((video, index) => (
                     <Video
                       id={video.id}
@@ -138,35 +138,35 @@ export default function GuidanceEncouragement() {
                 </div>
               </div>
               {pageVideos.length > videosPerPage && (
-                <div className='d-flex justify-content-center mt-4'>
+                <div className="d-flex justify-content-center mt-4">
                   <ReactPaginate
-                    nextLabel='next'
+                    nextLabel="next"
                     onPageChange={handlePageClick}
                     pageRangeDisplayed={3}
                     marginPagesDisplayed={2}
                     pageCount={pageCount}
-                    previousLabel='prev'
-                    pageClassName='page-item'
-                    pageLinkClassName='page-link px-3'
-                    previousClassName='page-item me-2'
-                    previousLinkClassName='page-link'
-                    nextClassName='page-item ms-2'
-                    nextLinkClassName='page-link'
-                    breakLabel='...'
-                    breakClassName='page-item'
-                    breakLinkClassName='page-link px-3'
-                    containerClassName='pagination custom-pagination mb-0'
-                    activeClassName='active'
+                    previousLabel="prev"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link px-3"
+                    previousClassName="page-item me-2"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item ms-2"
+                    nextLinkClassName="page-link"
+                    breakLabel="..."
+                    breakClassName="page-item"
+                    breakLinkClassName="page-link px-3"
+                    containerClassName="pagination custom-pagination mb-0"
+                    activeClassName="active"
                     renderOnZeroPageCount={null}
                   />
                 </div>
               )}
             </div>
           </div>
-          <div className='col-12 col-xl-3 px-2 mt-3'>
-            <ShowMessenger />
-            {/* <NotesButton /> */}
-          </div>
+          {/* <div className='col-12 col-xl-3 px-2 mt-3'> */}
+          {/* <ShowMessenger /> */}
+          {/* <NotesButton /> */}
+          {/* </div> */}
         </div>
       </div>
     </div>

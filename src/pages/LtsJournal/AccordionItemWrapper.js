@@ -4,7 +4,11 @@ import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
 const AccordionItemWrapper = (props) => {
   return (
-    <div className={`accordion accordion-border ${props.isOpened ? 'expanded' : ''}`}>
+    <div
+      className={`accordion accordion-border ${
+        props.isOpened ? 'expanded' : ''
+      }`}
+    >
       <div
         className="accordion-header-box"
         onClick={() => props.handleAccordionClick()}
@@ -14,11 +18,13 @@ const AccordionItemWrapper = (props) => {
           {props.isExpanded ? (
             <FontAwesomeIcon
               icon={faAngleDown}
+              color={'#838EAB'}
               className="me-2 me-md-0 arrow"
             />
           ) : (
             <FontAwesomeIcon
               icon={faAngleDown}
+              color={'#838EAB'}
               className="me-2 me-md-0 arrow"
             />
           )}

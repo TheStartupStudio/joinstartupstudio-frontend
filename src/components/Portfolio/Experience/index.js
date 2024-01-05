@@ -20,17 +20,18 @@ export const Experience = (props) => {
   const [isPublished, setIsPublished] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // useEffect(() => {
-  //   setExperiences(props.experiences)
-  // }, [props.experiences])
+  useEffect(() => {
+    setExperiences(props.experiences)
+  }, [props.experiences])
+
   const [isPreview, setIsPreview] = useState(null)
 
   useEffect(() => {
     setIsPreview(props.isPreview)
   }, [props.isPreview])
-  useEffect(() => {
-    getUserExperiences()
-  }, [])
+  // useEffect(() => {
+  //   getUserExperiences()
+  // }, [])
 
   useEffect(() => {
     props.user !== undefined && setIsPublished(props.user?.show_experience)
@@ -84,72 +85,11 @@ export const Experience = (props) => {
     // props.addExperience(experience)
   }
   // console.log('user', props.user)
-  const Experiences = () => {
-    return (
-      <PortfolioSection
-        title={'Experience'}
-        isAdd={true}
-        showInMyPortfolio={true}
-        onAdd={() => setShowExperienceModal(true)}
-        isShownInPortfolio={isPublished}
-        handleShowInPortfolio={() => updateShowPreference()}
-        isPreview={isPreview}
-      >
-        <div
-          className="
-        experiences-container
-        mx-0 mt-4
-        "
-        >
-          <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
-            {experiences.map((experience, index, { length }) => {
-              return (
-                <div
-                  style={{
-                    border: '1px solid #E5E5E5',
-                    borderRadius: 6,
-                    background: '#F8F8F8 0% 0% no-repeat padding-box',
-                    minHeight: 230
-                  }}
-                >
-                  <ExperienceDetails
-                    experience={experience}
-                    key={experience.id}
-                    index={index}
-                    length={length}
-                    setCurrentExperience={(experience) =>
-                      setCurrentExperience(experience)
-                    }
-                    editing={true}
-                  />
-                </div>
-              )
-            })}
-          </div>
-        </div>
-        <ExperienceModal
-          show={showExperienceModal}
-          onHide={() => {
-            setCurrentExperience([])
-            setShowExperienceModal(false)
-          }}
-          updateExperience={(exp) => updateExperience(exp)}
-          addExperience={(exp) => addExperience(exp)}
-          deleteBackground={(id) => deleteExperience(id)}
-          currentExperience={currentExperience}
-        />
-        <link
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          rel="stylesheet"
-        />
-      </PortfolioSection>
-    )
-  }
 
   return (
     <>
       {!isLoading ? (
-        experiences.length ? (
+        experiences?.length ? (
           <PortfolioSection
             title={'Experience'}
             isAdd={true}
@@ -166,9 +106,10 @@ export const Experience = (props) => {
         "
             >
               <div className="w-100 mx-auto  px-md-0 mx-md-0 row gap-4">
-                {experiences.map((experience, index, { length }) => {
+                {experiences?.map((experience, index, { length }) => {
                   return (
                     <div
+                      key={index}
                       style={{
                         border: '1px solid #E5E5E5',
                         borderRadius: 6,
@@ -209,10 +150,16 @@ export const Experience = (props) => {
             />
           </PortfolioSection>
         ) : (
-          <EmptyExperienceSection
-            user={props.user}
-            addExperience={addExperience}
-          />
+          <>
+            {!props.isPeerOrPublicView ? (
+              <EmptyExperienceSection
+                user={props.user}
+                addExperience={addExperience}
+              />
+            ) : (
+              <></>
+            )}
+          </>
         )
       ) : (
         <></>
