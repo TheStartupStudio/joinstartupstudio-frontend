@@ -486,7 +486,7 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li className="disabledd">
+                {/* <li className="disabledd">
                   <NavLink
                     disabled={true}
                     to={'/student-leadership'}
@@ -498,9 +498,8 @@ function Sidebar(props) {
                       </div>
                     </div>
                   </NavLink>
-                </li>
+                </li> */}
               </div>
-              
 
               <li
                 className="dropdownMenuSidebarHover"
