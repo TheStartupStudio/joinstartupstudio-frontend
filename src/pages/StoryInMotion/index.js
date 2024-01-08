@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import IntlMessages from '../../utils/IntlMessages'
-import image from '../../assets/images/Podcast-Cover.png'
 import image2 from '../../assets/images/SIM Podcast Cover-1200px.png'
 import { Link } from 'react-router-dom'
-import NoteAndChat from '../../components/NoteAndChat/noteAndChat'
 import Waveform from './waveform'
 import Amazon_Music from '../../assets/images/Amazon Music.png'
 import Apple_Podcasts from '../../assets/images/Apple Podcasts.png'
@@ -19,21 +17,14 @@ import { LastSaved } from './lastSaved'
 import './StoryInMotion.css'
 import { useDispatch } from 'react-redux'
 import { NotesButton } from '../../components/Notes'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faChevronLeft,
+  faChevronRight
+} from '@fortawesome/free-solid-svg-icons'
+import Video from '../../components/Video'
 const redirect = (input) => {
   window.open(input, '_blank')
-  // if (input == 'Amazon_Music') {
-  //   window.open('http://amazon.com', '_blank')
-  // } else if (input == 'Apple_Podcasts') {
-  //   window.open('http://apple.com', '_blank')
-  // } else if (input == 'Google_Podcasts_2x') {
-  //   window.open('http://google.com', '_blank')
-  // } else if (input == 'Overcast_2x') {
-  //   window.open('https://overcast.fm/', '_blank')
-  // } else if (input == 'Spotify_2x') {
-  //   window.open('http://Spotify.com', '_blank')
-  // } else if (input == 'Stitcher_2x') {
-  //   window.open('http://Stitcher.com', '_blank')
-  // }
 }
 
 let Style = {
@@ -50,6 +41,167 @@ let Style = {
   }
 }
 
+function StoryInMotionGuestQA() {
+  const [startupLiveVideos, setStartupLiveVideos] = useState([])
+  const [startVideoIndex, setStartVideoIndex] = useState(0)
+  const [endVideoIndex, setEndVideoIndex] = useState(4)
+
+  const getEncouragementVideos = async () => {
+    await axiosInstance
+      .get(`/contents/user-contents/startup-live`)
+      .then((response) => {
+        setStartupLiveVideos(response.data)
+      })
+      .catch((err) => err)
+  }
+
+  useEffect(() => {
+    getEncouragementVideos()
+  }, [])
+
+  const handlePreviousVideo = async (page, startIndex, endIndex) => {
+    if (startIndex > 0) {
+      if (page === 1) {
+        setStartVideoIndex(startIndex - 1)
+        setEndVideoIndex(endIndex - 1)
+      }
+    }
+  }
+
+  const handleNextVideo = async (page, startIndex, endIndex) => {
+    if (page === 1) {
+      if (endIndex < startupLiveVideos.length) {
+        setStartVideoIndex(startIndex + 1)
+        setEndVideoIndex(endIndex + 1)
+      }
+    }
+  }
+
+  return (
+    <div className="page-padding">
+      <div className="guidance-videos-top mt-5 mb-3 guidance-encouragement-page-titles">
+        <h3>
+          <IntlMessages id="storyInMotion.guest_q&a_videos" />
+        </h3>
+        <Link className="guidance-link" to={`/startup-live/videos`}>
+          <IntlMessages id="general.view_all" />
+        </Link>
+      </div>
+
+      <div className="beyond-videos-desktop">
+        <div className="arrow-icon-1">
+          <button
+            className={`videos-track ${
+              window.location.pathname.includes('/beyond-your-course') &&
+              'slider-arrow-first'
+            }`}
+            onClick={() => {
+              handlePreviousVideo(1, startVideoIndex, endVideoIndex)
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faChevronLeft}
+              className="videos-track-icon"
+            />
+          </button>
+        </div>
+        <div className="card-group desktop-menu card-group-beyond-your-course w-100">
+          {startupLiveVideos
+            ?.slice(startVideoIndex, endVideoIndex)
+            .map((video, index) => (
+              <Video
+                id={video.id}
+                key={index}
+                thumbnail={video.thumbnail}
+                title={video.title}
+                description={video.description}
+                page={'encouragement'}
+                isMainPage={true}
+                videoData={video}
+              />
+            ))}
+        </div>
+        <div className="arrow-icon-1 justify-content-start">
+          <button
+            className={`videos-track ${
+              window.location.pathname.includes('/beyond-your-course') &&
+              'slider-arrow-second'
+            }`}
+            style={{ width: '2%' }}
+            onClick={() => {
+              handleNextVideo(1, startVideoIndex, endVideoIndex)
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              className="videos-track-icon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+function FavoriteEpisodes(props) {
+  return (
+    <div className="col-12 pb-5 py-lg-0 col-lg-3 border-start">
+      <div className="my-lg-4 col-11 mx-auto text-center">
+        <img
+          src={image2}
+          className="border story-in-motion-logo"
+          alt={'story in motion'}
+        />
+      </div>
+      <div className="mb-4 mt-4 col-10 mx-auto"></div>
+      {props.lastSaved.length > 0 && (
+        <>
+          <h4 className="text-center h4 mb-4 postcast-faworite-widget">
+            <IntlMessages id={'storyInMotion.favorite'} />
+          </h4>
+          {props.lastSaved.slice(-2).map((lastSaved) => (
+            <LastSaved
+              data={lastSaved}
+              icon={
+                (lastSaved?.url == props.selectedTrack?.url) & props.isPlaying
+              }
+              key={lastSaved?.id}
+              id={lastSaved?.id}
+              title={lastSaved?.title}
+              date={lastSaved?.date}
+              saved={lastSaved?.saved}
+              description={lastSaved?.description || '1'}
+              url={lastSaved?.url}
+              remove={(data) => {
+                props.removeSaved(data)
+              }}
+              onClick={(data) => {
+                props.setSelectedTrack(lastSaved)
+                props.setMusicPlaying((now) => !now)
+
+                if (data === 'play') {
+                  props.setIsPlaying(true)
+                } else if (data === 'pause') {
+                  props.setIsPlaying(false)
+                }
+              }}
+            />
+          ))}
+        </>
+      )}
+      {props.lastSaved.length >= 2 && (
+        <div className="view_all text-center">
+          <Link to={'/savedMedia'} className="view_all text-center">
+            <span>View all</span>
+          </Link>
+        </div>
+      )}
+    </div>
+  )
+}
+
+const MemoizedFavorites = React.memo(FavoriteEpisodes)
+const MemoizedStoryInMotionGuestQA = React.memo(StoryInMotionGuestQA)
+
 function StoryInMotion() {
   const [tracks, setracks] = useState()
   const [selectedTrack, setSelectedTrack] = useState()
@@ -57,11 +209,11 @@ function StoryInMotion() {
   const [MusicPlaying, setMusicPlaying] = useState(false)
   const [lastSaved, setLastSaved] = useState([])
   const [page, setPage] = useState(0)
+  // eslint-disable-next-line
   const [size, setSize] = useState(4)
   const [allPage, setAllPage] = useState()
   const [loading, setLoading] = useState(false)
 
-  const style = {}
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(changeSidebarState(false))
@@ -120,35 +272,69 @@ function StoryInMotion() {
       }
     })
   }
+  // eslint-disable-next-line
   useEffect(async () => {
     await gettracks()
     await getLastetSaved()
+    // eslint-disable-next-line
   }, [])
 
-  const removeSaved = async (podcast) => {
-    const FoundTrackIndex = tracks?.filter((item, index) => {
-      if (podcast.url == item.url) {
-        return item
-      }
-    })
+  // const removeSaved = async (podcast) => {
+  //   const FoundTrackIndex = tracks?.filter((item, index) => {
+  //     if (podcast.url == item.url) {
+  //       return item
+  //     }
+  //   })
 
-    if (FoundTrackIndex) {
-      setracks(
-        tracks.map((track) => {
-          if (FoundTrackIndex.length > 0 && track.id == FoundTrackIndex[0].id) {
-            track.saved = false
-          }
-          return track
-        })
-      )
-      setLastSaved(
-        lastSaved.filter(
-          (track) =>
-            FoundTrackIndex.length > 0 && track.id != FoundTrackIndex[0].id
+  //   if (FoundTrackIndex) {
+  //     setracks(
+  //       tracks.map((track) => {
+  //         if (FoundTrackIndex.length > 0 && track.id == FoundTrackIndex[0].id) {
+  //           track.saved = false
+  //         }
+  //         return track
+  //       })
+  //     )
+  //     setLastSaved(
+  //       lastSaved.filter(
+  //         (track) =>
+  //           FoundTrackIndex.length > 0 && track.id != FoundTrackIndex[0].id
+  //       )
+  //     )
+  //   }
+  // }
+  const removeSaved = useCallback(
+    async (podcast) => {
+      const FoundTrackIndex = tracks?.filter((item, index) => {
+        if (podcast.url === item.url) {
+          return item
+        }
+        return null
+      })
+
+      if (FoundTrackIndex) {
+        setracks((prevTracks) =>
+          prevTracks.map((track) => {
+            if (
+              FoundTrackIndex.length > 0 &&
+              track.id === FoundTrackIndex[0].id
+            ) {
+              track.saved = false
+            }
+            return track
+          })
         )
-      )
-    }
-  }
+
+        setLastSaved((prevLastSaved) =>
+          prevLastSaved.filter(
+            (track) =>
+              FoundTrackIndex.length > 0 && track.id !== FoundTrackIndex[0].id
+          )
+        )
+      }
+    },
+    [tracks]
+  )
 
   return (
     <div>
@@ -290,64 +476,18 @@ function StoryInMotion() {
                   </span>
                 )}
               </div>
+              <MemoizedStoryInMotionGuestQA />
             </div>
-            <div className="col-12 pb-5 py-lg-0 col-lg-3 border-start">
-              <div className="my-lg-4 col-11 mx-auto text-center">
-                <img src={image2} className="border story-in-motion-logo" />
-              </div>
-              <div className="mb-4 mt-4 col-10 mx-auto">
-                {/* <NoteAndChat
-                  page='story-in-motion'
-                  notesTitle={'my_saved.alredy_saved_PODCASTS_note'}
-                /> */}
-              </div>
-              {lastSaved && (
-                <>
-                  <h4 className="text-center h4 mb-4 postcast-faworite-widget">
-                    <IntlMessages id={'storyInMotion.favorite'} />
-                  </h4>
-                  {lastSaved.slice(-2).map((lastSaved) => (
-                    <LastSaved
-                      data={lastSaved}
-                      icon={(lastSaved?.url == selectedTrack?.url) & isPlaying}
-                      key={lastSaved?.id}
-                      id={lastSaved?.id}
-                      title={lastSaved?.title}
-                      date={lastSaved?.date}
-                      saved={lastSaved?.saved}
-                      description={lastSaved?.description || '1'}
-                      url={lastSaved?.url}
-                      remove={(data) => {
-                        removeSaved(data)
-                      }}
-                      onClick={(data) => {
-                        // (data = 'play') => {
-                        // if (data == 'pause') {
-                        setSelectedTrack(lastSaved)
-                        setMusicPlaying((now) => !now)
-                        // } else if (data == 'play') {
-                        if (data === 'play') {
-                          setIsPlaying(true)
-                        } else if (data === 'pause') {
-                          setIsPlaying(false)
-                        }
-
-                        // setIsPlaying(true)
-                        // setSelectedTrack(e)
-                        // }
-                      }}
-                    />
-                  ))}
-                </>
-              )}
-              {lastSaved.length >= 2 && (
-                <div className="view_all text-center">
-                  <Link to={'/savedMedia'} className="view_all text-center">
-                    <span>View all</span>
-                  </Link>
-                </div>
-              )}
-            </div>
+            <MemoizedFavorites
+              removeSaved={removeSaved}
+              setLastSaved={setLastSaved}
+              lastSaved={lastSaved}
+              setSelectedTrack={setSelectedTrack}
+              selectedTrack={selectedTrack}
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+              setMusicPlaying={setMusicPlaying}
+            />
           </div>
           <NotesButton />
         </div>

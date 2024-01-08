@@ -132,6 +132,36 @@ const fetchCompletedPortfolioContent = async (studentID) => {
     throw error
   }
 }
+const createMasterClassWatchedVideo = async (contentID) => {
+  try {
+    const response = await axiosInstance.post(
+      `/contents/interaction/${contentID}`
+    )
+
+    if (response.status === 200) {
+      return response.data
+    } else {
+      throw new Error('Failed to create watched masterclass videos')
+    }
+  } catch (error) {
+    throw error
+  }
+}
+const createPodcastWatchedVideo = async (podcastID) => {
+  try {
+    const response = await axiosInstance.post(
+      `/podcast/interaction/${podcastID}`
+    )
+
+    if (response.status === 200) {
+      return response.data
+    } else {
+      throw new Error('Failed to create watched podcast videos')
+    }
+  } catch (error) {
+    throw error
+  }
+}
 
 const platformBadgesService = {
   fetchWatchedMasterClassVidoes,
@@ -141,7 +171,9 @@ const platformBadgesService = {
   fetchCompletedSprints,
   fetchCompletedFeedbacks,
   fetchCompletedMentorMeetings,
-  fetchCompletedPortfolioContent
+  fetchCompletedPortfolioContent,
+  createMasterClassWatchedVideo,
+  createPodcastWatchedVideo
 }
 
 export default platformBadgesService

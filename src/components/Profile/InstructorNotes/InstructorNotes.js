@@ -11,7 +11,6 @@ import { toast } from 'react-toastify'
 
 const InstructorNotes = (props) => {
   const [newNoteModal, setNewNoteModal] = useState(false)
-  const [instructorNotes, setInstructorNotes] = useState(false)
   const [receivedNotes, setReceivedNotes] = useState([])
   const [sliceIndex, setSliceIndex] = useState(3)
   const { id } = useParams()
@@ -46,8 +45,8 @@ const InstructorNotes = (props) => {
 
   return (
     <div className="p-3">
-    <div className="border p-3 my-account">
-      <div
+      <div className="border p-3 my-account">
+        <div
           className={`my-account col-md-6   ${'intructor-notes__btn-active'}  `}
           onClick={props.instructorNotesHandler}
         >
@@ -87,13 +86,11 @@ const InstructorNotes = (props) => {
           close={() => setNewNoteModal(false)}
         />
       </div>
-      {instructorNotes && (
-        <div className="end-button me-3">
-          <button className="btn" onClick={() => setNewNoteModal(true)}>
-            Add a note
-          </button>
-        </div>
-      )}
+      <div className="end-button me-3">
+        <button className="btn" onClick={() => setNewNoteModal(true)}>
+          Add a note
+        </button>
+      </div>
     </div>
   )
 }

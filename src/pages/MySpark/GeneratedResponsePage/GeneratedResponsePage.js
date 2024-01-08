@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { Alert, Container, Row } from 'react-bootstrap'
 import '../style.css'
@@ -21,6 +21,7 @@ import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 function GeneratedResponsePage(props) {
   const [archivedDocument, setArchivedDocument] = useState({})
+  const [unChangedArchivedDocument, setUnChangedArchivedDocument] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [showMyContentModal, setShowMyContentModal] = useState(false)
   const [showDeleteSparkModal, setShowDeleteSparkModal] = useState(false)
@@ -80,17 +81,12 @@ function GeneratedResponsePage(props) {
   const [editingContent, setEditingContent] = useState('')
 
   useEffect(() => {
-    if (archivedDocument?.myContent?.length > 0) {
-      shouldDisplayItem('create-own-content', false)
-    }
-  }, [archivedDocument?.myContent])
-
-  useEffect(() => {
     if (fromPage === 'widgets') {
       const icon = addDocumentIcon(data)
       let document = { ...data }
       document.icon = icon
       setArchivedDocument(document)
+      setUnChangedArchivedDocument(document)
       setIsLoading(false)
 
       if (document?.type === 'image') {
@@ -146,6 +142,7 @@ function GeneratedResponsePage(props) {
             let document = { ...res.data }
             document.icon = icon
             setArchivedDocument(document)
+            setUnChangedArchivedDocument(document)
             if (document?.myContent?.length > 0) {
               setIsMyContentAdded(true)
               buttonAlignment('download', 'end')
@@ -232,23 +229,25 @@ function GeneratedResponsePage(props) {
 
   const handleSaveEditedContent = () => {
     setArchivedDocument({ ...archivedDocument, myContent: editingContent })
-    axiosInstance
-      .patch(`/mySparkArchive/${archivedDocument?.id}`, {
-        myContent: editingContent
-      })
-      .then((res) => {
-        const icon = addDocumentIcon(res?.data?.data)
-        let document = { ...res?.data?.data }
-        document.icon = icon
-        setArchivedDocument(document)
-        toast.success('Your generated spark edited successfully')
-        setIsLoading(false)
-      })
-      .catch((e) => {
-        console.log(e)
-        toast.error('Your generated spark failed to edit')
-        setIsLoading(false)
-      })
+    if (archivedDocument?.id) {
+      axiosInstance
+        .patch(`/mySparkArchive/${archivedDocument?.id}`, {
+          myContent: editingContent
+        })
+        .then((res) => {
+          const icon = addDocumentIcon(res?.data?.data)
+          let document = { ...res?.data?.data }
+          document.icon = icon
+          setArchivedDocument(document)
+          toast.success('Your generated spark edited successfully')
+          setIsLoading(false)
+        })
+        .catch((e) => {
+          console.log(e)
+          toast.error('Your generated spark failed to edit')
+          setIsLoading(false)
+        })
+    }
   }
 
   const handleSaveToArchive = () => {
@@ -276,23 +275,38 @@ function GeneratedResponsePage(props) {
       })
   }
   const timeAgo = moment(archivedDocument?.updatedAt).fromNow()
+  const htmlRef = useRef(null)
+
+  const copyToClipboard = () => {
+    const range = document.createRange()
+    const container = htmlRef.current
+    if (container && container.style) {
+      container.style.backgroundColor = 'white'
+    }
+    if (container && range) {
+      range.selectNode(container)
+    }
+    const selection = window.getSelection()
+    if (selection) {
+      selection.removeAllRanges()
+      selection.addRange(range)
+      try {
+        document.execCommand('copy')
+        selection.removeAllRanges()
+        container.style.backgroundColor = 'transparent'
+        toast.success('Copied to clipboard successfully!')
+      } catch (err) {
+        console.error('Unable to copy to clipboard', err)
+        selection.removeAllRanges()
+        container.style.backgroundColor = 'transparent'
+        toast.error('Error copying to clipboard')
+      }
+    }
+  }
 
   const handleCopyClick = () => {
     if (!isEmptyObject(archivedDocument)) {
-      navigator.clipboard
-        .writeText(
-          `My Spark Content: \n ${archivedDocument?.mySparkContent} ${
-            archivedDocument?.myContent?.length
-              ? `\n\n My Content: \n ${archivedDocument?.myContent}`
-              : ''
-          }`
-        )
-        .then(() => {
-          toast.success('Text copied to clipboard')
-        })
-        .catch((err) => {
-          toast.error('Unable to copy text to clipboard')
-        })
+      copyToClipboard()
     }
   }
 
@@ -327,6 +341,8 @@ function GeneratedResponsePage(props) {
   const isSavedArchive = () => {
     return !!archivedDocument.id
   }
+
+  const myContentDisplayed = !!archivedDocument?.myContent && isMyContentAdded
 
   return (
     <>
@@ -418,14 +434,13 @@ function GeneratedResponsePage(props) {
                             <ContentContainer
                               content={archivedDocument?.mySparkContent}
                               title={'My Spark Content'}
-                              // isImage={isImage()}
                               archivedDocument={archivedDocument}
+                              type={'mySparkContent'}
                             />
                           </div>
 
                           {archivedDocument?.type !== 'image' &&
-                            !!archivedDocument?.myContent &&
-                            isMyContentAdded && (
+                            myContentDisplayed && (
                               <ContentContainer
                                 content={archivedDocument?.myContent}
                                 title={'My Content'}
@@ -434,6 +449,8 @@ function GeneratedResponsePage(props) {
                                   setShowMyContentModal(true)
                                   setIsEdit(true)
                                 }}
+                                htmlRef={htmlRef}
+                                type={'myContent'}
                               />
                             )}
 
@@ -454,6 +471,7 @@ function GeneratedResponsePage(props) {
                           </div>
                         </div>
                       </div>
+
                       <div className={'d-flex justify-content-center'}>
                         <div style={{ width: '70%' }}>
                           {showItem('create-own-content') && (
@@ -471,40 +489,62 @@ function GeneratedResponsePage(props) {
                                 name={'Copy'}
                                 width={windowWidth < 700 ? '100%' : '70%'}
                                 backgroundColor={
-                                  isSavedArchive() ? '#51C7DF' : '#BBBDBF'
+                                  isSavedArchive() || myContentDisplayed
+                                    ? '#51C7DF'
+                                    : '#BBBDBF'
                                 }
                                 align={alignButton('copy')}
-                                onClick={() => handleCopyClick()}
+                                onClick={() =>
+                                  !myContentDisplayed
+                                    ? setShowFinalStepModal(true)
+                                    : handleCopyClick()
+                                }
                               />
                             )}
 
                             {showItem('first-line') && <VerticalSeparator />}
 
                             {showItem('download-button') && (
-                              <PDFDownloadLink
-                                document={
-                                  <PdfDocument
-                                    archivedDocument={archivedDocument}
-                                  />
-                                }
-                                fileName={`${archivedDocument?.widgetName}.pdf`}
-                                className={'w-100 d-flex'}
-                              >
-                                {({ blob, url, loading, error }) => (
+                              <>
+                                {myContentDisplayed ||
+                                archivedDocument?.type === 'image' ? (
+                                  <PDFDownloadLink
+                                    document={
+                                      <PdfDocument
+                                        archivedDocument={archivedDocument}
+                                      />
+                                    }
+                                    fileName={`${archivedDocument?.widgetName}.pdf`}
+                                    className={'w-100 d-flex'}
+                                  >
+                                    {({ blob, url, loading, error }) => (
+                                      <LtsButton
+                                        name={'Download'}
+                                        width={
+                                          windowWidth < 700 ? '100%' : '70%'
+                                        }
+                                        align={alignButton('download')}
+                                        backgroundColor={
+                                          isSavedArchive() || myContentDisplayed
+                                            ? '#99CC33'
+                                            : '#BBBDBF'
+                                        }
+                                      />
+                                    )}
+                                  </PDFDownloadLink>
+                                ) : (
                                   <LtsButton
-                                    name={
-                                      loading
-                                        ? 'Loading document...'
-                                        : 'Download'
+                                    onClick={() => setShowFinalStepModal(true)}
+                                    backgroundColor={
+                                      isSavedArchive() || myContentDisplayed
+                                        ? '#99CC33'
+                                        : '#BBBDBF'
                                     }
                                     width={windowWidth < 700 ? '100%' : '70%'}
-                                    align={alignButton('download')}
-                                    backgroundColor={
-                                      isSavedArchive() ? '#99CC33' : '#BBBDBF'
-                                    }
+                                    name={'Download'}
                                   />
                                 )}
-                              </PDFDownloadLink>
+                              </>
                             )}
 
                             {showItem('second-line') && <VerticalSeparator />}
@@ -515,11 +555,13 @@ function GeneratedResponsePage(props) {
                                   name={'Save to archive'}
                                   width={windowWidth < 700 ? '100%' : '70%'}
                                   backgroundColor={
-                                    isSavedArchive() ? '#FF3399' : '#BBBDBF'
+                                    isSavedArchive() || myContentDisplayed
+                                      ? '#FF3399'
+                                      : '#BBBDBF'
                                   }
                                   align={alignButton('saveToArchive')}
                                   onClick={() =>
-                                    !existMyContent &&
+                                    !myContentDisplayed &&
                                     archivedDocument?.type !== 'image'
                                       ? setShowFinalStepModal(true)
                                       : handleSaveToArchive()
@@ -559,7 +601,12 @@ function GeneratedResponsePage(props) {
                     show={showMyContentModal}
                     onHide={() => {
                       setShowMyContentModal(false)
-                      setIsEdit(true)
+
+                      setShowFinalStepModal(false)
+
+                      if (editingContent === '' || editingContent === null) {
+                        shouldDisplayItem('create-own-content', true)
+                      }
                     }}
                     content={
                       isEdit ? editingContent : archivedDocument?.myContent
@@ -576,31 +623,39 @@ function GeneratedResponsePage(props) {
                       if (isEdit) {
                         handleSaveEditedContent()
                         setIsEdit(false)
+                        // debugger
+                        if (archivedDocument.myContent) {
+                          shouldDisplayItem('create-own-content', false)
+                        }
                         setShowMyContentModal(false)
                       } else {
                         handleAddMyContent()
                         setIsEdit(false)
+                        if (archivedDocument.myContent) {
+                          shouldDisplayItem('create-own-content', false)
+                        }
                         setShowMyContentModal(false)
                       }
                     }}
                   />
                 )}
 
-                {showDeleteSparkModal && (
-                  <DeleteSparkArchiveModal
-                    show={showDeleteSparkModal}
-                    onHide={() => setShowDeleteSparkModal(false)}
-                    title={archivedDocument?.widgetName}
-                    onDelete={(e) => handleDeleteArchive(e)}
-                  />
-                )}
-                {showFinalStepModal && (
+                {showFinalStepModal && !showMyContentModal && (
                   <FinalStepModal
                     show={showFinalStepModal}
                     onHide={() => setShowFinalStepModal(false)}
                     confirmFinalStep={() => {
                       setShowMyContentModal(true)
                     }}
+                  />
+                )}
+                {showDeleteSparkModal && (
+                  <DeleteSparkArchiveModal
+                    show={showDeleteSparkModal}
+                    onHide={() => setShowDeleteSparkModal(false)}
+                    title={archivedDocument?.widgetName}
+                    onDelete={(e) => handleDeleteArchive(e)}
+                    deleteFrom={'generatedPage'}
                   />
                 )}
               </div>

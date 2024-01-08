@@ -8,13 +8,14 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import { addDocumentIcons } from '../mySparkHelpersFuncs'
 import { toast } from 'react-toastify'
 import { debounce } from 'lodash'
+import DeleteSparkArchiveModal from '../Modals/DeleteArchiveModal'
 
 function ArchivePage(props) {
   const [archivedDocuments, setArchivedDocuments] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [showDeleteSparkModal, setShowDeleteSparkModal] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [archiveToDelete, setArchiveToDelete] = useState(null)
 
   const debouncedSearch = debounce((value) => {
     getData(value)
@@ -34,7 +35,6 @@ function ArchivePage(props) {
     axiosInstance
       .get(url)
       .then((res) => {
-        console.log('Response:', res.data)
         const { sparks, totalItems } = res.data
         const documents = addDocumentIcons(sparks)
         setTotalPages(Math.ceil(totalItems / DEFAULT_PAGE_SIZE))
@@ -52,8 +52,9 @@ function ArchivePage(props) {
     axiosInstance
       .delete(url)
       .then((res) => {
+        debugger
         toast.success(
-          `Your archived spark with id: ${archiveId} deleted successfully`
+          `Your archived ${res?.data?.data?.type} deleted successfully`
         )
         let newArchivedDocuments = [...archivedDocuments]
         newArchivedDocuments = newArchivedDocuments.filter((doc) => {
@@ -62,13 +63,13 @@ function ArchivePage(props) {
         setArchivedDocuments(newArchivedDocuments)
 
         setIsLoading(false)
-        setShowDeleteSparkModal(false)
+        setArchiveToDelete(null)
       })
       .catch((e) => {
         console.log(e)
-        toast.error('Your generated spark failed to delete')
+        toast.error('Your archived spark failed to delete')
         setIsLoading(false)
-        setShowDeleteSparkModal(false)
+        setArchiveToDelete(null)
       })
   }
 
@@ -117,13 +118,22 @@ function ArchivePage(props) {
                         <ArchiveCard
                           key={index}
                           document={document}
-                          onDeleteSpark={(archiveId) =>
-                            handleDeleteArchive(archiveId)
-                          }
-                          showDeleteSparkModal={showDeleteSparkModal}
+                          onDeleteSpark={(archive) => {
+                            setArchiveToDelete(archive)
+                          }}
                         />
                       )
                     })}
+                    {archiveToDelete && (
+                      <DeleteSparkArchiveModal
+                        show={archiveToDelete}
+                        onHide={() => setArchiveToDelete(null)}
+                        title={archiveToDelete?.widgetName}
+                        onDelete={() => {
+                          handleDeleteArchive(archiveToDelete?.id)
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               </div>

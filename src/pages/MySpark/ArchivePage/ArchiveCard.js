@@ -15,15 +15,8 @@ import { formatAIResponse } from '../mySparkHelpersFuncs'
 
 const ArchiveCard = (props) => {
   const [scrollPosition, setScrollPosition] = useState(0)
-  const [showDeleteSparkModal, setShowDeleteSparkModal] = useState(false)
   const containerRef = useRef()
   const history = useHistory()
-
-  useEffect(() => {
-    if (props.showDeleteSparkModal) {
-      setShowDeleteSparkModal(false)
-    }
-  }, [props.showDeleteSparkModal])
 
   const handleScroll = (direction) => {
     const container = containerRef.current
@@ -147,18 +140,10 @@ const ArchiveCard = (props) => {
       </div>
       <div className={'archive-card__footer'}>
         <div className={'time-ago'}>{timeAgo}</div>
-        <div onClick={() => setShowDeleteSparkModal(true)}>
+        <div onClick={() => props.onDeleteSpark(props.document)}>
           <FontAwesomeIcon icon={faTrash} className="me-2 me-md-0 trash-icon" />
         </div>
       </div>
-      {showDeleteSparkModal && (
-        <DeleteSparkArchiveModal
-          show={showDeleteSparkModal}
-          onHide={() => setShowDeleteSparkModal(false)}
-          title={props?.document?.widgetName}
-          onDelete={() => props.onDeleteSpark(props?.document?.id)}
-        />
-      )}
     </div>
   )
 }

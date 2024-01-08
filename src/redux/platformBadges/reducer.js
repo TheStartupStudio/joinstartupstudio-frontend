@@ -79,6 +79,26 @@ const platformBadgesReducer = (state = initialState, action) => {
         masterclassVideos: payload,
         error: payload
       }
+    case types.CREATE_WATCHED_PODCAST_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.CREATE_WATCHED_PODCAST_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        podcastVideos: [...state.podcastVideos, payload],
+        error: null
+      }
+    case types.CREATE_WATCHED_PODCAST_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        podcastVideos: payload,
+        error: payload
+      }
     case types.FETCH_PROFFICIENT_IAMR_SKILL_PENDING:
       return {
         ...state,
