@@ -305,9 +305,7 @@ function Header(props) {
     }
     dispatch(changeSidebarState(!sideBarState))
   }
-  const navigate = useHistory()
 
-  const userActivity = useSelector((state) => state.user.userActivity)
   return (
     <div>
       {window.location.href.includes('demo') ? null : verifiedEmail === false &&
@@ -633,38 +631,17 @@ function Header(props) {
                       </Link>
                       <div
                         className="dropdown-item py-2 dropdown-menu-hover"
-                        // to="/logout"
                         onClick={() => {
-                          // console.log('asd')
-                          // console.log(userActivity)
-                          //
-                          // dispatch(
-                          //   updateUserActivity({
-                          //     ...userActivity,
-                          //     logoutTime: new Date(),
-                          //     activeMinutes:
-                          //       (!!userActivity.activeMinutes
-                          //         ? +userActivity.activeMinutes
-                          //         : 0) +
-                          //       (new Date() - new Date(userActivity.loginTime))
-                          //   })
-                          // )
-                          // axiosInstance
-                          //   .put(`/myPerformanceData/updateActivity`, {
-                          //     logoutTime: new Date(),
-                          //     activeMinutes:
-                          //       +userActivity.activeMinutes +
-                          //       (new Date() - new Date(userActivity.loginTime))
-                          //   })
-                          //   .then(({ data }) => {
-                          //     // debugger
-                          //     console.log(data)
-                          //     if (data) {
-                          //       debugger
-                          //       // dispatch(updateUserActivity(data))
-                          //       navigate.push('/logout')
-                          //     }
-                          //   })
+                          axiosInstance
+                            .put('/myPerformanceData/updateActivity', {
+                              isActive: false
+                            })
+                            .then((response) => {
+                              if (response) history.push('/logout')
+                            })
+                            .catch((error) => {
+                              console.error('Error updating activity:', error)
+                            })
                         }}
                       >
                         <IntlMessages id="navigation.logout" />
@@ -937,15 +914,23 @@ function Header(props) {
             >
               SUPPORT
             </Link>
-            <Link
+            <div
               className="dropdown-item py-2 dropdown-menu-hover"
-              to="/logout"
               onClick={() => {
-                console.log('asd')
+                axiosInstance
+                  .put('/myPerformanceData/updateActivity', {
+                    isActive: false
+                  })
+                  .then((response) => {
+                    if (response) history.push('/logout')
+                  })
+                  .catch((error) => {
+                    console.error('Error updating activity:', error)
+                  })
               }}
             >
               <IntlMessages id="navigation.logout" />
-            </Link>
+            </div>
           </div>
         </div>
       </nav>

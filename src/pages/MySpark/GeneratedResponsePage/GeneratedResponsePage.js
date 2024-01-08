@@ -80,6 +80,16 @@ function GeneratedResponsePage(props) {
   const { fromPage, data } = locationState ?? {}
   const [editingContent, setEditingContent] = useState('')
 
+  // useEffect(() => {
+  //   if (archivedDocument?.myContent?.length > 0) {
+  //     shouldDisplayItem('create-own-content', false)
+  //   } else {
+  //     shouldDisplayItem('create-own-content', true)
+  //   }
+  // }, [archivedDocument?.myContent])
+
+  // console.log('editingContent', editingContent)
+
   useEffect(() => {
     if (fromPage === 'widgets') {
       const icon = addDocumentIcon(data)

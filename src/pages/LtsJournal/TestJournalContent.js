@@ -96,7 +96,6 @@ function TestJournalContent(props) {
       id: null
     }
     const instructorDebriefData = instructorDebrief.id ? isEdit : isCreate
-    console.log(instructorDebriefData)
     const url = `/ltsJournals/${
       props.view === 'task' ? +props.match.params.id : 0
     }/${
@@ -149,7 +148,6 @@ function TestJournalContent(props) {
       return data
     } catch (err) {}
   }
-
   async function getJournalWeek() {
     try {
       let { data } = await axiosInstance.get(

@@ -172,6 +172,8 @@ function MyTrainingContent(props) {
         `/ltsJournals/${+props.match.params.id}/userEntries`
       )
 
+      console.log(data)
+
       let groupedByJournalEntry = {}
 
       if (data) {
@@ -222,6 +224,7 @@ function MyTrainingContent(props) {
     setLoading(true)
     Promise.all([getJournal(), getUserJournalEntries()])
       .then(([journalData, userJournalEntries]) => {
+        console.log(userJournalEntries)
         setJournal(journalData)
 
         if (
@@ -342,6 +345,9 @@ function MyTrainingContent(props) {
 
   function updateReflection(entry, userJournalEntry) {
     return (data) => {
+      console.log('data', data)
+      console.log('entry', entry)
+      console.log('userJournalEntry', userJournalEntry)
       setUserJournalEntries({
         ...userJournalEntries,
         [entry.id]: userJournalEntries[entry.id].map((mapUserJournalEntry) => {

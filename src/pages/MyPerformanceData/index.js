@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row } from 'react-bootstrap'
-
 import './style.css'
-
-import { useHistory } from 'react-router-dom'
 import useWindowWidth from '../../utils/hooks/useWindowWidth'
 import OptionSelector from '../../components/OptionSelector'
-import BarChartComponent from '../../components/Charts/BarChartComponent'
 import axiosInstance from '../../utils/AxiosInstance'
-import useTabActive from '../../utils/hooks/useTabActive'
+import BarChartJs from '../../components/Charts/BarChartJs'
+import SelectInput from '../../components/SelectInput'
 
 const ProgressCard = ({ title, progress }) => {
   return (
@@ -111,7 +108,8 @@ const ProgressBar = ({ progress }) => {
   )
   const progressStyle = {
     width: `${progress}%`,
-    background: `linear-gradient(to right, #FFC0CB, #DDA0DD, #9400D3)`,
+    // background: `linear-gradient(to right, #FFC0CB, #DDA0DD, #9400D3)`,
+    background: `linear-gradient(to right, #FF3399, #51C7DF)`,
     height: 40,
     position: 'relative',
     overflow: 'unset'
@@ -220,7 +218,6 @@ const DisplayCircleData = ({
 }
 
 function MyPerformanceData() {
-  const history = useHistory()
   const windowWidth = useWindowWidth()
   const [filterBy, setFilterBy] = React.useState('')
   const [curriculumCompletion, setCurriculumCompletion] = React.useState('lts1')
@@ -228,7 +225,6 @@ function MyPerformanceData() {
   const [instructorDebriefData, setInstructorDebriefData] = useState({})
   const [sectionTwoData, setSectionTwoData] = useState([])
   const [sectionOneData, setSectionOneData] = useState([])
-  const tabActive = useTabActive()
 
   const handleFilterChange = (event) => {
     setFilterBy(event.target.value)
@@ -240,7 +236,6 @@ function MyPerformanceData() {
 
   useEffect(() => {
     axiosInstance.get('/myPerformanceData/sectionOne').then(({ data }) => {
-      console.log(data)
       setSectionOneData(data)
     })
     axiosInstance.get('/myPerformanceData/sectionTwo').then(({ data }) => {
@@ -249,13 +244,11 @@ function MyPerformanceData() {
     axiosInstance
       .get('/myPerformanceData/sectionTwo/mr1/certification')
       .then(({ data }) => {
-        console.log(data)
         setCertification(data.certification)
       })
     axiosInstance
       .get('/myPerformanceData/sectionThree/lts1/instructorDebriefData')
       .then(({ data }) => {
-        console.log(data)
         setInstructorDebriefData(data)
       })
   }, [])
@@ -331,9 +324,10 @@ function MyPerformanceData() {
                   />
                 </div>
                 <div className={'col-md-8 p-3'}>
+                  {/*// d-flex align-items-center flex-column justify-content-center*/}
                   <div
                     className={
-                      'mb-2 border-2 performance-data-card bg-white w-100 h-100 d-flex align-items-center flex-column justify-content-center'
+                      'position-relative mb-2 border-2 performance-data-card bg-white w-100 h-100 '
                     }
                   >
                     <div
@@ -342,14 +336,41 @@ function MyPerformanceData() {
                     >
                       Certification
                     </div>
-                    <BarChartComponent
-                      data={certification}
-                      handleChangeDataType={(e) => handleChangeMRType(e)}
-                      dataTypes={[
-                        { name: 'MR1', value: 'mr1' },
-                        { name: 'MR2', value: 'mr2' }
-                      ]}
-                    />
+
+                    <div className={'d-flex justify-content-end w-100 pe-2 '}>
+                      <SelectInput
+                        options={[
+                          { name: 'MR1', value: 'mr1' },
+                          { name: 'MR2', value: 'mr2' }
+                        ]}
+                        onChange={(e) => handleChangeMRType(e)}
+                      />
+                    </div>
+                    <div
+                      className={
+                        ' d-flex align-items-center flex-column justify-content-center'
+                      }
+                    >
+                      <BarChartJs
+                        data={certification}
+                        handleChangeDataType={(e) => handleChangeMRType(e)}
+                        dataTypes={[
+                          { name: 'MR1', value: 'mr1' },
+                          { name: 'MR2', value: 'mr2' }
+                        ]}
+                      />
+                    </div>
+
+                    {/*<GoogleBarChart />*/}
+                    {/*<BarChart />*/}
+                    {/*<BarChartComponent*/}
+                    {/*  data={certification}*/}
+                    {/*  handleChangeDataType={(e) => handleChangeMRType(e)}*/}
+                    {/*  dataTypes={[*/}
+                    {/*    { name: 'MR1', value: 'mr1' },*/}
+                    {/*    { name: 'MR2', value: 'mr2' }*/}
+                    {/*  ]}*/}
+                    {/*/>*/}
                   </div>
                 </div>
               </div>

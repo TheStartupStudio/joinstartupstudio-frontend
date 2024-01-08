@@ -59,19 +59,6 @@ function StartupLive() {
     dispatch(changeSidebarState(false))
   })
 
-  const renderer = ({ days, hours, minutes, seconds, completed }) => {
-    if (completed) {
-      return ' SOON'
-    } else {
-      return (
-        <span>
-          {' IN ' + days + ' DAYS ' + hours + ' HOURS ' + minutes + ' MINUTES '}
-          {minutes === 0 ? seconds + ' SECONDS' : ''}
-        </span>
-      )
-    }
-  }
-
   const [spotlightSimpleModal, setSpotlightSimpleModal] = useState({
     type: '',
     show: null
