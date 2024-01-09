@@ -15,7 +15,9 @@ const SkillContent = ({ skill }) => {
         className="video_inner media-lightbox__video-player "
         style={{ padding: '20px 5px 20px 20px' }}
         // url={skill?.video}
-        url={'https://d5tx03iw7t69i.cloudfront.net/iamr/Market-Ready 1&2 Certification Introduction (1).mov'}
+        url={
+          'https://d5tx03iw7t69i.cloudfront.net/iamr/Market-Ready 1&2 Certification Introduction (1).mov'
+        }
         controls={true}
         light={
           'https://d5tx03iw7t69i.cloudfront.net/Journal/MarketReadyGuide/MRG-Thumbnail.jpg'
@@ -29,7 +31,7 @@ const SkillContent = ({ skill }) => {
       />
       <p className="page-content-title mb-2"></p>
       <p className="page-content-text ps-3">
-        Watch the video to learn how the Certification System work
+        Watch the video to learn how the Certification System works
       </p>
     </div>
   )

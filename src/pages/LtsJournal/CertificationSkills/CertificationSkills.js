@@ -8,9 +8,9 @@ const CertificationSkills = ({ journal, isEditable }) => {
 
   const [showExplanationModal, setShowExplanationModal] = useState(false)
 
-  const [selectedSkill, setSelectedSkill] = useState({});
+  const [selectedSkill, setSelectedSkill] = useState({})
 
-  const [loadingSkill, setLoadingSkill]= useState(false)
+  const [loadingSkill, setLoadingSkill] = useState(false)
   const handleOpenExplanationModal = () => {
     setShowExplanationModal(true)
   }
@@ -108,12 +108,7 @@ const CertificationSkills = ({ journal, isEditable }) => {
               >
                 <CertificationSkillBox
                   title={skill?.title}
-                  isEditable={isEditable}
-                  onSelectContent={() => {
-                    if (!loadingSkill) {
-                      updateContentSelection(skill);
-                    }
-                  }}
+                  onSelectContent={() => updateContentSelection(skill)}
                   proficient={skill?.status === 'proficient'}
                   needsImprovement={skill?.status === 'needs_improvement'}
                 />

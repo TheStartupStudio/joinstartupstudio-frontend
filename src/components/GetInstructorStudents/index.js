@@ -113,7 +113,7 @@ const StudentOfInstructors = (props) => {
 
   const handleSubmitNotification = () => {
     try {
-      socket?.emit('sendNotification', {
+      socket?.emit('sendNotifications', {
         notifications: notifications,
         sender: loggedUser,
         receiver: null,
@@ -188,7 +188,7 @@ const StudentOfInstructors = (props) => {
                     : setStateToShow('CountStudent')
                 }
               >
-                {toShow == 'CountStudent' ? 'Close' : 'Count student'}
+                {toShow == 'CountStudent' ? 'Close' : 'Student count'}
               </button>
             </div>
             <div className="col-12 col-md-6 px-md-4">
