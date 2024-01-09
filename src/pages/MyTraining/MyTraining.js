@@ -177,30 +177,6 @@ const MyTraining = (props) => {
                       </FormattedMessage>
                     </label>
                   </div>
-                  <div
-                    style={{
-                      background: '#51C7DF 0% 0% no-repeat padding-box',
-                      border: '1px solid #51C7DF',
-                      color: '#fff',
-                      textAlign: 'center',
-                      textTransform: 'uppercase',
-                      fontSize: 12,
-                      padding: '4px 10px',
-                      marginBottom: 10,
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => {
-                      if (props.match.params.type === 'task') {
-                        history.push(`${props.backRoute}/week`)
-                        // setView('week')
-                      } else if (props.match.params.type === 'week') {
-                        history.push(`${props.backRoute}/task`)
-                        // setView('task')
-                      }
-                    }}
-                  >
-                    Change view
-                  </div>
 
                   {filteredJournals.map((journalItem, journalItemIdx) => (
                     <div

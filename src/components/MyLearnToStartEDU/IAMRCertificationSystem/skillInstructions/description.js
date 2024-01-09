@@ -1,11 +1,10 @@
 const Description = ({ skill }) => {
   return (
-    <div className='page-content-text'>
+    <div className="page-content-text">
       <p> {skill.description} </p>
-      <p className='mb-1'>
-        In order to earn proficiency in the skill of structured problem-solving,
-        you must prove <strong> at least three </strong> of the following
-        abilities:
+      <p className="mb-1">
+        In order to earn proficiency in the skill of research literacy, you must
+        prove <strong> at least three </strong> of the following abilities:
       </p>
       <ul>
         {skill.SkillTags.map((tag) => (
@@ -16,11 +15,10 @@ const Description = ({ skill }) => {
         On the Student Uploads page, you can upload as many pieces of evidence
         as you like to prove <strong>at least three</strong> of these abilities.
         You can tag one piece of evidence with more than one ability. For
-        example, if you upload a video, you can tag it with &ldquo;Demonstrate
-        efficient use of time&rdquo; only, or you could tag it with
-        &ldquo;Demonstrate efficient use of time&rdquo; and &ldquo;Develop
-        knowledge and skills according to a timeline of steps&rdquo; or more
-        tags.
+        example, if you upload a video, you can tag it with &ldquo;Utilize
+        verified sources of information&rdquo; only, or you could tag it with
+        &ldquo;Utilize verified sources of information&rdquo; and &ldquo;Cite
+        all sources in an appropriate manner&rdquo; or more tags.
       </p>
       <p>
         You will input a title for your upload, and this is the title your
