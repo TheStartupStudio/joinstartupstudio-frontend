@@ -41,7 +41,7 @@ const DisplayCircleData = ({
             className="d-flex justify-content-center align-items-center"
             style={{ height: '30px' }}
           >
-            <span className=" spinner-border-primary spinner-border-sm " />
+            <span className=" spinner-border spinner-border-sm " />
           </div>
         ) : (
           <div
