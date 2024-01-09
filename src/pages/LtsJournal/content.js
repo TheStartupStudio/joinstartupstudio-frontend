@@ -450,17 +450,26 @@ function LtsJournalContent(props) {
               title={'BRAND VIDEO SPRINT'}
             >
               {openAccordion === `accordion-brand` && (
-                <div className="accordion-content">
-                  <div className="col-12">
-                    <JournalBrands
-                      hasAccordion={1}
-                      loadData={loadData}
-                      brands={journal.brandsJournal}
-                      journalId={props.match.params.journalId}
-                      hasActions={false}
-                    />
+                <>
+                  <div className="accordion-content">
+                    <div>
+                      <div>
+                        <div>
+                          <div className="col-12">
+                            <div className="">
+                              <JournalBrands
+                                hasAccordion={1}
+                                loadData={loadData}
+                                brands={journal.brandsJournal}
+                                journalId={props.match.params.journalId}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </AccordionItemWrapper>
           </div>
