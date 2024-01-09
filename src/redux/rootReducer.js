@@ -12,6 +12,7 @@ import usersReducer from './users/Reducer'
 import reflectionsTableReducer from './reflectionsTable/Reducer'
 import rwlJournalReducer from './rwl/reducer'
 import platformBadgesReducer from './platformBadges/reducer'
+import performanceDataReducer from './myPerformanceData/reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   users: usersReducer,
   reflectionsTable: reflectionsTableReducer,
   rwlJournal: rwlJournalReducer,
-  platformBadges:platformBadgesReducer
+  platformBadges:platformBadgesReducer,
+  performanceData:performanceDataReducer
 })
 export default rootReducer

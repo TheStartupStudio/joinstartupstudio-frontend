@@ -1,0 +1,165 @@
+import * as types from './types'
+
+const initialState = {
+  loading: false,
+  sectionOneData: [],
+  sectionTwoData: [],
+  certification: [],
+  instructorDebriefData: [],
+  masterclassPercentage: 0,
+  podcastPercentage: 0,
+  qaPercentage: 0,
+  error: null,
+  message: ''
+}
+
+const performanceDataReducer = (state = initialState, action) => {
+  const { type, payload } = action
+
+  switch (type) {
+    case types.SET_SECTION_ONE_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.SET_SECTION_ONE_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        sectionOneData: payload,
+        error: null
+      }
+    case types.SET_SECTION_ONE_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        sectionOneData: payload,
+        error: payload
+      }
+    case types.SET_SECTION_TWO_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.SET_SECTION_TWO_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        sectionTwoData: payload,
+        error: null
+      }
+    case types.SET_SECTION_TWO_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        sectionTwoData: payload,
+        error: payload
+      }
+    case types.SET_CERTIFICATION_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.SET_CERTIFICATION_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        certification: payload,
+        error: null
+      }
+    case types.SET_CERTIFICATION_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        certification: payload,
+        error: payload
+      }
+    case types.SET_INSTRUCTOR_DEBRIEF_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.SET_INSTRUCTOR_DEBRIEF_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        instructorDebriefData: payload,
+        error: null
+      }
+    case types.SET_INSTRUCTOR_DEBRIEF_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        instructorDebriefData: payload,
+        error: payload
+      }
+    case types.SET_MASTERCLASS_PERCENTAGE_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.SET_MASTERCLASS_PERCENTAGE_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        masterclassPercentage: payload,
+        error: null
+      }
+    case types.SET_MASTERCLASS_PERCENTAGE_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        masterclassPercentage: payload,
+        error: payload
+      }
+    case types.SET_PODCAST_PERCENTAGE_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.SET_PODCAST_PERCENTAGE_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        podcastPercentage: payload,
+        error: null
+      }
+    case types.SET_PODCAST_PERCENTAGE_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        podcastPercentage: payload,
+        error: payload
+      }
+    case types.SET_QA_PERCENTAGE_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.SET_QA_PERCENTAGE_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        qaPercentage: payload,
+        error: null
+      }
+    case types.SET_QA_PERCENTAGE_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        qaPercentage: payload,
+        error: payload
+      }
+    default:
+      return state
+  }
+}
+
+export default performanceDataReducer

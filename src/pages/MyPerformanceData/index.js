@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row } from 'react-bootstrap'
 import './style.css'
-import useWindowWidth from '../../utils/hooks/useWindowWidth'
 import OptionSelector from '../../components/OptionSelector'
 import axiosInstance from '../../utils/AxiosInstance'
 import BarChartJs from '../../components/Charts/BarChartJs'
 import SelectInput from '../../components/SelectInput'
+import ContentStreamed from './contentStreamed'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  fetchCertificationData,
+  fetchInstructorDebriefData,
+  fetchSectionOneData,
+  fetchSectionTwoData
+} from '../../redux/myPerformanceData/actions'
 
 const ProgressCard = ({ title, progress }) => {
   return (
@@ -179,97 +186,30 @@ const DisplayRectangleData = ({ name, value, backgroundColor }) => {
   )
 }
 
-const DisplayCircleData = ({
-  backgroundColor,
-  color,
-  title,
-  percentage,
-  marginTop
-}) => {
-  return (
-    <div className={'d-flex justify-content-center'} style={{ marginTop }}>
-      <div
-        className={'p-2'}
-        style={{
-          width: 200,
-          height: 200,
-          borderRadius: '50%',
-          backgroundColor: backgroundColor ?? '#54c7df',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          boxShadow:
-            'rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px'
-        }}
-      >
-        <div className={'text-center'} style={{ color: '#fff', fontSize: 20 }}>
-          {title}
-        </div>
-        <div
-          className={'text-center'}
-          style={{ color: '#fff', fontWeight: 600, fontSize: 24 }}
-        >
-          {percentage}%
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function MyPerformanceData() {
-  const windowWidth = useWindowWidth()
-  const [filterBy, setFilterBy] = React.useState('')
+  const dispatch = useDispatch()
   const [curriculumCompletion, setCurriculumCompletion] = React.useState('lts1')
-  const [certification, setCertification] = useState([])
-  const [instructorDebriefData, setInstructorDebriefData] = useState({})
-  const [sectionTwoData, setSectionTwoData] = useState([])
-  const [sectionOneData, setSectionOneData] = useState([])
-
-  const handleFilterChange = (event) => {
-    setFilterBy(event.target.value)
-  }
+  const {
+    sectionOneData,
+    sectionTwoData,
+    certification,
+    instructorDebriefData
+  } = useSelector((state) => state.performanceData)
 
   const handleCurriculumCompletionChange = (event) => {
     setCurriculumCompletion(event.target.value)
   }
 
-  useEffect(() => {
-    axiosInstance.get('/myPerformanceData/sectionOne').then(({ data }) => {
-      setSectionOneData(data)
-    })
-    axiosInstance.get('/myPerformanceData/sectionTwo').then(({ data }) => {
-      setSectionTwoData(data)
-    })
-    axiosInstance
-      .get('/myPerformanceData/sectionTwo/mr1/certification')
-      .then(({ data }) => {
-        setCertification(data.certification)
-      })
-    axiosInstance
-      .get('/myPerformanceData/sectionThree/lts1/instructorDebriefData')
-      .then(({ data }) => {
-        setInstructorDebriefData(data)
-      })
-  }, [])
-
   const handleChangeMRType = (type) => {
-    axiosInstance
-      .get(`/myPerformanceData/sectionTwo/${type}/certification`)
-      .then(({ data }) => {
-        setCertification(data.certification)
-      })
+    dispatch(fetchCertificationData(type))
   }
 
   useEffect(() => {
-    axiosInstance
-      .get(
-        `/myPerformanceData/sectionThree/${curriculumCompletion}/instructorDebriefData`
-      )
-      .then(({ data }) => {
-        setInstructorDebriefData(data)
-      })
-  }, [curriculumCompletion])
+    dispatch(fetchSectionOneData())
+    dispatch(fetchSectionTwoData())
+    dispatch(fetchCertificationData('mr1'))
+    dispatch(fetchInstructorDebriefData(curriculumCompletion))
+  }, [dispatch, curriculumCompletion])
 
   return (
     <Container fluid>
@@ -360,90 +300,11 @@ function MyPerformanceData() {
                         ]}
                       />
                     </div>
-
-                    {/*<GoogleBarChart />*/}
-                    {/*<BarChart />*/}
-                    {/*<BarChartComponent*/}
-                    {/*  data={certification}*/}
-                    {/*  handleChangeDataType={(e) => handleChangeMRType(e)}*/}
-                    {/*  dataTypes={[*/}
-                    {/*    { name: 'MR1', value: 'mr1' },*/}
-                    {/*    { name: 'MR2', value: 'mr2' }*/}
-                    {/*  ]}*/}
-                    {/*/>*/}
                   </div>
                 </div>
               </div>
               <div className={'row g-2 '} style={{ minHeight: 300 }}>
-                <div className={'col-md-8 p-3'}>
-                  <div
-                    className={
-                      'mb-2 border-2 performance-data-card w-100 h-100 bg-white'
-                    }
-                  >
-                    <div className={'row p-4 h-100'}>
-                      <div className={'col-md-6'}>
-                        <div
-                          style={{
-                            fontWeight: 700,
-                            fontSize: 20,
-                            textTransform: 'uppercase'
-                          }}
-                        >
-                          Content streamed
-                        </div>
-                      </div>
-                      <div className={'col-md-6'}>
-                        <OptionSelector
-                          align={'end'}
-                          width={windowWidth < 995 ? '100%' : '75%'}
-                          defaultValue={'Filter by'}
-                          options={[
-                            { label: 'Instructor', value: 'instructor' },
-                            { label: 'LTS1', value: 'lts-1' },
-                            { label: 'LTS2', value: 'lts-2' },
-                            { label: 'LTS3', value: 'lts-3' },
-                            { label: 'FinLit', value: 'finlit' }
-                          ]}
-                          value={filterBy}
-                          onChange={handleFilterChange}
-                        />
-                      </div>
-                      <div className={'row pt-4'}>
-                        <div className={'col-lg-6 col-md-12'}>
-                          <div className={'p-2'}>
-                            <DisplayCircleData
-                              backgroundColor={'#54c7df'}
-                              title={'Masterclasses'}
-                              percentage={100}
-                            />
-                          </div>
-                        </div>
-                        <div className={'col-lg-6 col-md-12'}>
-                          <div className={'p-2'}>
-                            <DisplayCircleData
-                              backgroundColor={'#ff3399'}
-                              title={'Story in Motion Episodes'}
-                              percentage={100}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className={'row'}>
-                        <div className={'col-md-12'} style={{ gap: 20 }}>
-                          <div className={'p-2'}>
-                            <DisplayCircleData
-                              marginTop={windowWidth < 995 ? '' : '-10%'}
-                              backgroundColor={'#99cc33'}
-                              title={'Q&As'}
-                              percentage={100}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <ContentStreamed />
                 <div
                   className={'col-md-4 p-3 d-flex flex-column'}
                   style={{ gap: 20 }}
