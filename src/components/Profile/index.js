@@ -31,7 +31,13 @@ function Profile(props) {
   const [studentQuestions, setStudentQuestions] = useState({})
   const [feedbackRequests, setFeedbackRequests] = useState({})
   const [briefingModal, setBriefingModal] = useState(false)
+  const [briefingClicked, setBriefingClicked] = useState(false)
 
+  // useEffect(() => {
+  //   axiosInstance.post('/briefings/increaseBriefings').then((res) => {
+  //     debugger
+  //   })
+  // }, [briefingClicked])
   const handleOpenBriefingModal = () => {
     setBriefingModal(true)
   }
@@ -273,6 +279,9 @@ function Profile(props) {
             onClick={(event) => {
               event.stopPropagation()
               handleOpenBriefingModal()
+              axiosInstance
+                .post('/briefing/increaseBriefings')
+                .then((res) => {})
             }}
           >
             Briefing

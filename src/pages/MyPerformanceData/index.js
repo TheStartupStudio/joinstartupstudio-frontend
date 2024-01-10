@@ -13,6 +13,7 @@ import {
   fetchSectionOneData,
   fetchSectionTwoData
 } from '../../redux/myPerformanceData/actions'
+import useWindowWidth from '../../utils/hooks/useWindowWidth'
 
 const ProgressCard = ({ title, progress }) => {
   return (
@@ -187,15 +188,16 @@ const DisplayRectangleData = ({ name, value, backgroundColor }) => {
 }
 
 function MyPerformanceData() {
-  const dispatch = useDispatch()
   const [curriculumCompletion, setCurriculumCompletion] = React.useState('lts1')
+  const [instructorDebriefData, setInstructorDebriefData] = useState({})
+
+  const dispatch = useDispatch()
   const {
     sectionOneData,
     sectionTwoData,
-    certification,
-    instructorDebriefData
+    certification
+    // instructorDebriefData
   } = useSelector((state) => state.performanceData)
-
   const handleCurriculumCompletionChange = (event) => {
     setCurriculumCompletion(event.target.value)
   }
@@ -208,9 +210,17 @@ function MyPerformanceData() {
     dispatch(fetchSectionOneData())
     dispatch(fetchSectionTwoData())
     dispatch(fetchCertificationData('mr1'))
-    dispatch(fetchInstructorDebriefData(curriculumCompletion))
+    // dispatch(fetchInstructorDebriefData(curriculumCompletion))
   }, [dispatch, curriculumCompletion])
-
+  useEffect(() => {
+    axiosInstance
+      .get(
+        `/myPerformanceData/sectionThree/${curriculumCompletion}/instructorDebriefData`
+      )
+      .then(({ data }) => {
+        setInstructorDebriefData(data)
+      })
+  }, [curriculumCompletion])
   return (
     <Container fluid>
       <Row className={'g-2'}>
@@ -240,12 +250,12 @@ function MyPerformanceData() {
                 />
                 <DisplayRectangleData
                   name={'Time spent on the platform'}
-                  value={sectionOneData?.userActiveTime ?? '5hrs 35min'}
+                  value={sectionOneData?.userActiveTime ?? ''}
                   backgroundColor={'#ffd1e8'}
                 />
                 <DisplayRectangleData
                   name={'Number of New Briefings'}
-                  value={sectionOneData?.numOfBriefings ?? '17'}
+                  value={sectionOneData?.numOfBriefings ?? ''}
                   backgroundColor={'#edfcd0'}
                 />
               </div>
