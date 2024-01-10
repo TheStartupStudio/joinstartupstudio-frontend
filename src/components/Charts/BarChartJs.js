@@ -37,8 +37,8 @@ const options = {
 }
 
 export default function BarChartJs({ data, dataTypes, handleChangeDataType }) {
-  const uniqueYears = [...new Set(data.map((item) => item.year))].sort()
-  const uniqueStatuses = [...new Set(data.map((item) => item.status))]
+  const uniqueYears = [...new Set(data?.map((item) => item.year))].sort()
+  const uniqueStatuses = [...new Set(data?.map((item) => item.status))]
 
   const datasets = uniqueStatuses.map((status) => {
     let backgroundColor
