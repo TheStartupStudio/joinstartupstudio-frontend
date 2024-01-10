@@ -6,19 +6,6 @@ import '../BriefingModal.css'
 import './SpotlightModal.css'
 
 const ModalWrapper = (props) => {
-  const ContentItem = (contentData) => {
-    return (
-      <div className={'content-item-container'}>
-        <span className={'content-item-title'}>
-          {contentData?.content?.title}:
-        </span>
-        <span className={'content-item-description'}>
-          {contentData?.content?.description}
-        </span>
-      </div>
-    )
-  }
-
   return (
     <>
       <Modal
@@ -31,15 +18,6 @@ const ModalWrapper = (props) => {
 
         // className={props.class ? props.class : 'general-modal-wrapper'}
       >
-        {/*<Modal.Header>*/}
-        {/*  <Modal.Title>{props.title}</Modal.Title>*/}
-        {/*  <button*/}
-        {/*    type="button"*/}
-        {/*    className="btn-close mb-1 close-general-modal"*/}
-        {/*    aria-label="Close"*/}
-        {/*    onClick={props.onHide}*/}
-        {/*  />*/}
-        {/*</Modal.Header>*/}
         {props.showHeader ?? (
           <Modal.Header>
             <Modal.Title>{props.title}</Modal.Title>

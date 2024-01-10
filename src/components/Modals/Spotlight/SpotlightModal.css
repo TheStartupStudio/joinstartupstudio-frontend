@@ -60,12 +60,6 @@
   align-items: center;
 }
 
-.my-spark__content-modal .modal-dialog {
-  height: 100% !important;
-  display: flex;
-  align-items: center;
-}
-
 .my-spark__content-modal .modal-content {
   padding: 20px 40px !important;
 }
