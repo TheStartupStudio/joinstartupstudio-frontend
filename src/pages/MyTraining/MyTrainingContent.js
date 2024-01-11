@@ -224,7 +224,8 @@ function MyTrainingContent(props) {
     setLoading(true)
     Promise.all([getJournal(), getUserJournalEntries()])
       .then(([journalData, userJournalEntries]) => {
-        console.log(userJournalEntries)
+        // console.log(userJournalEntries)
+        console.log(journalData)
         setJournal(journalData)
 
         if (

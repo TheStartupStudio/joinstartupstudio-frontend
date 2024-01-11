@@ -333,7 +333,7 @@ function MyPerformanceData() {
                   />
                   <ProgressCard
                     progress={instructorDebriefData?.news_briefing ?? 0}
-                    title={'New Briefing in Task'}
+                    title={'New Briefings in Task'}
                   />
                   <ProgressCard
                     progress={instructorDebriefData?.student_voice ?? 0}

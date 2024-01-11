@@ -20,25 +20,23 @@ const options = {
     }
   },
   scales: {
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: false,
-          max: 100,
-          min: 0,
-          display: false
-        },
-        border: {
-          display: false
-        }
+    y: {
+      beginAtZero: true,
+      max: 100,
+      min: 0,
+      stepSize: 10,
+      ticks: {
+        max: 100,
+        min: 0,
+        stepSize: 10
       }
-    ]
+    }
   }
 }
 
 export default function BarChartJs({ data, dataTypes, handleChangeDataType }) {
-  const uniqueYears = [...new Set(data?.map((item) => item.year))].sort()
-  const uniqueStatuses = [...new Set(data?.map((item) => item.status))]
+  const uniqueYears = ['LS', 'MS', 'HS', 'LTS1', 'LTS2', 'LTS3', 'LTS4']
+  const uniqueStatuses = ['developing', 'proficient', 'certified']
 
   const datasets = uniqueStatuses.map((status) => {
     let backgroundColor

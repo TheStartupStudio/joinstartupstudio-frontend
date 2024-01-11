@@ -110,8 +110,8 @@ function LtsJournalReflection(props) {
         let { data } = await axiosInstance.post(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`,
           from == 'debounce'
-            ? { content: value, isMyTraining: myTraining }
-            : { content, isMyTraining: myTraining }
+            ? { content: value, trainingId: myTraining ? journalId : null }
+            : { content, trainingId: myTraining ? journalId : null }
         )
 
         props.saved && props.saved(data)
@@ -120,8 +120,8 @@ function LtsJournalReflection(props) {
         await axiosInstance.put(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`,
           from == 'debounce'
-            ? { content: value, isMyTraining: myTraining }
-            : { content, isMyTraining: myTraining }
+            ? { content: value, trainingId: myTraining ? journalId : null }
+            : { content, trainingId: myTraining ? journalId : null }
         )
         props.saved &&
           props.saved({
