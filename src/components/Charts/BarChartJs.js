@@ -47,14 +47,8 @@ const chartOptions = (...options) => {
   }
 }
 
-export default function BarChartJs({
-  data,
-  dataTypes,
-  handleChangeDataType,
-  loading
-}) {
+export default function BarChartJs({ data, loading }) {
   const [certifiedStudents, setCertifiedStudents] = useState([])
-  console.log(certifiedStudents)
   useEffect(() => {
     let transformedCertifiedDataType = {
       ...data,
@@ -77,11 +71,8 @@ export default function BarChartJs({
     setCertifiedStudents(transformedCertifiedDataType)
   }, [data])
 
-  // console.log(certifiedStudents)
   const uniqueYears = ['ES1', 'LTS1', 'LTS2', 'LTS3', 'LTS4']
-  // const uniqueStatuses = ['developing', 'proficient', 'certified']
   const uniqueStatuses = ['MR1', 'MR2']
-
   const datasets = uniqueStatuses.map((type) => {
     let backgroundColor
     switch (type) {
@@ -92,7 +83,7 @@ export default function BarChartJs({
         backgroundColor = '#99cc33'
         break
       default:
-        backgroundColor = getRandomColor()
+        break
     }
 
     return {
@@ -112,19 +103,10 @@ export default function BarChartJs({
     datasets
   }
 
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF'
-    let color = '#'
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)]
-    }
-    return color
-  }
-
   return (
     <>
       <Bar
-        options={chartOptions(certifiedStudents?.totalCounts, 'test')}
+        options={chartOptions(certifiedStudents?.totalCounts)}
         data={chartData}
       />
     </>

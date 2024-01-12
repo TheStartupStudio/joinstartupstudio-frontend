@@ -20,10 +20,10 @@ const fetchSectionTwo = async () => {
     throw error
   }
 }
-const fetchCertificateData = async (type) => {
+const fetchCertificateData = async () => {
   try {
     const response = await axiosInstance.get(
-      `/myPerformanceData/sectionTwo/${type}/certification`
+      `/myPerformanceData/sectionTwo/certification`
     )
     if (response.status === 200) {
       return response.data

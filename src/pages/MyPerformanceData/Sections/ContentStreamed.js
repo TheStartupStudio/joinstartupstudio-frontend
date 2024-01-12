@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import OptionSelector from '../../components/OptionSelector'
+import OptionSelector from '../../../components/OptionSelector'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchMasterclassPercentage,
   fetchPodcastPercentage,
   fetchQAPercentage
-} from '../../redux/myPerformanceData/actions'
-import useWindowWidth from '../../utils/hooks/useWindowWidth'
+} from '../../../redux/myPerformanceData/actions'
+import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import CustomSpinner from '../../../components/CustomSpinner'
 
 const DisplayCircleData = ({
   backgroundColor,
@@ -37,12 +38,7 @@ const DisplayCircleData = ({
           {title}
         </div>
         {loading ? (
-          <div
-            className="d-flex justify-content-center align-items-center"
-            style={{ height: '30px' }}
-          >
-            <span className=" spinner-border spinner-border-sm " />
-          </div>
+          <CustomSpinner />
         ) : (
           <div
             className={'text-center'}
@@ -132,7 +128,7 @@ const ContentStreamed = () => {
                       ? masterclassPercentage.toFixed(2)
                       : 0
                   }
-                  loading={myPerformanceData.loading}
+                  loading={myPerformanceData.masterclassLoading}
                 />
               </div>
             </div>
@@ -144,7 +140,7 @@ const ContentStreamed = () => {
                   percentage={
                     !isNaN(podcastPercentage) ? podcastPercentage.toFixed(2) : 0
                   }
-                  loading={myPerformanceData.loading}
+                  loading={myPerformanceData.podcastLoading}
                 />
               </div>
             </div>
@@ -159,7 +155,7 @@ const ContentStreamed = () => {
                   percentage={
                     !isNaN(qaPercentage) ? qaPercentage.toFixed(2) : 0
                   }
-                  loading={myPerformanceData.loading}
+                  loading={myPerformanceData.qaLoading}
                 />
               </div>
             </div>

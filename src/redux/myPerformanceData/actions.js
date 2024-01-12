@@ -23,11 +23,11 @@ export const fetchSectionTwoData = () => {
     }
   }
 }
-export const fetchCertificationData = (type) => {
+export const fetchCertificationData = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchCertificationPending())
-      const data = await performanceDataService.fetchCertificateData(type)
+      const data = await performanceDataService.fetchCertificateData()
       dispatch(fetchCertificationFulfilled(data))
     } catch (error) {
       dispatch(fetchCertificationRejected(error))
@@ -38,7 +38,7 @@ export const fetchInstructorDebriefData = (type) => {
   return async (dispatch) => {
     try {
       dispatch(fetchInstructorDebriefDataPending())
-      const data = await performanceDataService.fetchCertificateData(type)
+      const data = await performanceDataService.fetchInstructorDebriefData(type)
       dispatch(fetchInstructorDebriefDataFulfilled(data))
     } catch (error) {
       dispatch(fetchInstructorDebriefDataRejected(error))
@@ -106,9 +106,11 @@ export function fetchCertificationFulfilled(payload) {
 export function fetchCertificationRejected(error) {
   return { type: types.SET_CERTIFICATION_REJECTED, error }
 }
-export const fetchInstructorDebriefDataPending = () => ({
-  type: types.SET_INSTRUCTOR_DEBRIEF_PENDING
-})
+export const fetchInstructorDebriefDataPending = () => {
+  return {
+    type: types.SET_INSTRUCTOR_DEBRIEF_PENDING
+  }
+}
 export function fetchInstructorDebriefDataFulfilled(payload) {
   return { type: types.SET_INSTRUCTOR_DEBRIEF_FULFILLED, payload }
 }

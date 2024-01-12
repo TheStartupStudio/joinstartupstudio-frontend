@@ -14,7 +14,10 @@ const initialState = {
   sectionOneLoading: false,
   sectionTwoLoading: false,
   certificationLoading: false,
-  instructorDebriefLoading: false
+  instructorDebriefLoading: false,
+  masterclassLoading: false,
+  podcastLoading: false,
+  qaLoading: false
 }
 
 const performanceDataReducer = (state = initialState, action) => {
@@ -104,60 +107,60 @@ const performanceDataReducer = (state = initialState, action) => {
     case types.SET_MASTERCLASS_PERCENTAGE_PENDING:
       return {
         ...state,
-        loading: true,
+        masterclassLoading: true,
         error: null
       }
     case types.SET_MASTERCLASS_PERCENTAGE_FULFILLED:
       return {
         ...state,
-        loading: false,
+        masterclassLoading: false,
         masterclassPercentage: payload,
         error: null
       }
     case types.SET_MASTERCLASS_PERCENTAGE_REJECTED:
       return {
         ...state,
-        loading: false,
+        masterclassLoading: false,
         masterclassPercentage: payload,
         error: payload
       }
     case types.SET_PODCAST_PERCENTAGE_PENDING:
       return {
         ...state,
-        loading: true,
+        podcastLoading: true,
         error: null
       }
     case types.SET_PODCAST_PERCENTAGE_FULFILLED:
       return {
         ...state,
-        loading: false,
+        podcastLoading: false,
         podcastPercentage: payload,
         error: null
       }
     case types.SET_PODCAST_PERCENTAGE_REJECTED:
       return {
         ...state,
-        loading: false,
+        podcastLoading: false,
         podcastPercentage: payload,
         error: payload
       }
     case types.SET_QA_PERCENTAGE_PENDING:
       return {
         ...state,
-        loading: true,
+        qaLoading: true,
         error: null
       }
     case types.SET_QA_PERCENTAGE_FULFILLED:
       return {
         ...state,
-        loading: false,
+        qaLoading: false,
         qaPercentage: payload,
         error: null
       }
     case types.SET_QA_PERCENTAGE_REJECTED:
       return {
         ...state,
-        loading: false,
+        qaLoading: false,
         qaPercentage: payload,
         error: payload
       }
