@@ -10,7 +10,11 @@ const initialState = {
   podcastPercentage: 0,
   qaPercentage: 0,
   error: null,
-  message: ''
+  message: '',
+  sectionOneLoading: false,
+  sectionTwoLoading: false,
+  certificationLoading: false,
+  instructorDebriefLoading: false
 }
 
 const performanceDataReducer = (state = initialState, action) => {
@@ -20,80 +24,80 @@ const performanceDataReducer = (state = initialState, action) => {
     case types.SET_SECTION_ONE_PENDING:
       return {
         ...state,
-        loading: true,
+        sectionOneLoading: true,
         error: null
       }
     case types.SET_SECTION_ONE_FULFILLED:
       return {
         ...state,
-        loading: false,
+        sectionOneLoading: false,
         sectionOneData: payload,
         error: null
       }
     case types.SET_SECTION_ONE_REJECTED:
       return {
         ...state,
-        loading: false,
+        sectionOneLoading: false,
         sectionOneData: payload,
         error: payload
       }
     case types.SET_SECTION_TWO_PENDING:
       return {
         ...state,
-        loading: true,
+        sectionTwoLoading: true,
         error: null
       }
     case types.SET_SECTION_TWO_FULFILLED:
       return {
         ...state,
-        loading: false,
+        sectionTwoLoading: false,
         sectionTwoData: payload,
         error: null
       }
     case types.SET_SECTION_TWO_REJECTED:
       return {
         ...state,
-        loading: false,
+        sectionTwoLoading: false,
         sectionTwoData: payload,
         error: payload
       }
     case types.SET_CERTIFICATION_PENDING:
       return {
         ...state,
-        loading: true,
+        certificationLoading: true,
         error: null
       }
     case types.SET_CERTIFICATION_FULFILLED:
       return {
         ...state,
-        loading: false,
+        certificationLoading: false,
         certification: payload,
         error: null
       }
     case types.SET_CERTIFICATION_REJECTED:
       return {
         ...state,
-        loading: false,
+        certificationLoading: false,
         certification: payload,
         error: payload
       }
     case types.SET_INSTRUCTOR_DEBRIEF_PENDING:
       return {
         ...state,
-        loading: true,
+        instructorDebriefLoading: true,
         error: null
       }
     case types.SET_INSTRUCTOR_DEBRIEF_FULFILLED:
       return {
         ...state,
-        loading: false,
+        instructorDebriefLoading: false,
         instructorDebriefData: payload,
         error: null
       }
     case types.SET_INSTRUCTOR_DEBRIEF_REJECTED:
       return {
         ...state,
-        loading: false,
+        instructorDebriefLoading: false,
         instructorDebriefData: payload,
         error: payload
       }

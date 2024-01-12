@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,42 +12,83 @@ import { Bar } from 'react-chartjs-2'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top'
-    }
-  },
-  scales: {
-    y: {
-      beginAtZero: true,
-      max: 100,
-      min: 0,
-      stepSize: 10,
-      ticks: {
-        max: 100,
+const chartOptions = (...options) => {
+  const [totalCounts] = options
+
+  return {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top'
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: totalCounts ?? 10,
         min: 0,
-        stepSize: 10
+        ticks: {
+          max: totalCounts ?? 10,
+          min: 0,
+          precision: 0
+        },
+        title: {
+          display: true,
+          text: 'Total Students'
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Year'
+        }
       }
     }
   }
 }
 
-export default function BarChartJs({ data, dataTypes, handleChangeDataType }) {
-  const uniqueYears = ['LS', 'MS', 'HS', 'LTS1', 'LTS2', 'LTS3', 'LTS4']
-  const uniqueStatuses = ['developing', 'proficient', 'certified']
+export default function BarChartJs({
+  data,
+  dataTypes,
+  handleChangeDataType,
+  loading
+}) {
+  const [certifiedStudents, setCertifiedStudents] = useState([])
+  console.log(certifiedStudents)
+  useEffect(() => {
+    let transformedCertifiedDataType = {
+      ...data,
+      certification: data?.certification?.map((d) => {
+        if (d.type === 'student-certification-1') {
+          return {
+            ...d,
+            type: 'MR1'
+          }
+        } else if (d.type === 'student-certification-2') {
+          return {
+            ...d,
+            type: 'MR2'
+          }
+        }
+        return d
+      })
+    }
 
-  const datasets = uniqueStatuses.map((status) => {
+    setCertifiedStudents(transformedCertifiedDataType)
+  }, [data])
+
+  // console.log(certifiedStudents)
+  const uniqueYears = ['ES1', 'LTS1', 'LTS2', 'LTS3', 'LTS4']
+  // const uniqueStatuses = ['developing', 'proficient', 'certified']
+  const uniqueStatuses = ['MR1', 'MR2']
+
+  const datasets = uniqueStatuses.map((type) => {
     let backgroundColor
-    switch (status) {
-      case 'developing':
-        backgroundColor = '#ff3399'
-        break
-      case 'proficient':
+    switch (type) {
+      case 'MR1':
         backgroundColor = '#51c7df'
         break
-      case 'certified':
+      case 'MR2':
         backgroundColor = '#99cc33'
         break
       default:
@@ -55,10 +96,12 @@ export default function BarChartJs({ data, dataTypes, handleChangeDataType }) {
     }
 
     return {
-      label: status.charAt(0).toUpperCase() + status.slice(1),
-      data: uniqueYears.map((year) => {
-        const item = data.find((d) => d.status === status && d.year === year)
-        return item ? parseFloat(item.percentage) : 0
+      label: type.charAt(0).toUpperCase() + type.slice(1),
+      data: uniqueYears?.map((year) => {
+        const item = certifiedStudents?.certification?.find(
+          (d) => d.type === type && d.year === year
+        )
+        return item ? item.count : 0
       }),
       backgroundColor
     }
@@ -80,7 +123,10 @@ export default function BarChartJs({ data, dataTypes, handleChangeDataType }) {
 
   return (
     <>
-      <Bar options={options} data={chartData} />
+      <Bar
+        options={chartOptions(certifiedStudents?.totalCounts, 'test')}
+        data={chartData}
+      />
     </>
   )
 }

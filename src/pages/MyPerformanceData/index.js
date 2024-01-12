@@ -15,7 +15,7 @@ import {
 } from '../../redux/myPerformanceData/actions'
 import useWindowWidth from '../../utils/hooks/useWindowWidth'
 
-const ProgressCard = ({ title, progress }) => {
+const ProgressCard = ({ title, progress, loading }) => {
   return (
     <div
       className={
@@ -26,9 +26,9 @@ const ProgressCard = ({ title, progress }) => {
         {title}
       </div>
       <div className={'w-100 pt-4 pb-3'}>
-        <ProgressBar progress={progress} />
+        <ProgressBar progress={loading ? 0 : progress} />
       </div>
-      <div style={{ fontWeight: 600 }}>{progress}%</div>
+      <div style={{ fontWeight: 600 }}>{loading ? 0 : progress}%</div>
     </div>
   )
 }
@@ -162,7 +162,7 @@ const ProgressBar = ({ progress }) => {
   )
 }
 
-const DisplayRectangleData = ({ name, value, backgroundColor }) => {
+const DisplayRectangleData = ({ name, value, backgroundColor, loading }) => {
   return (
     <div className={'col-md-4 d-flex align-items-center p-3'}>
       <div
@@ -176,12 +176,21 @@ const DisplayRectangleData = ({ name, value, backgroundColor }) => {
         <div className={'text-center'} style={{ fontWeight: 600 }}>
           {name}
         </div>
-        <div
-          className={'text-center'}
-          style={{ fontWeight: 700, fontSize: 40 }}
-        >
-          {value}
-        </div>
+        {loading ? (
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: '30px' }}
+          >
+            <span className=" spinner-border spinner-border-sm " />
+          </div>
+        ) : (
+          <div
+            className={'text-center'}
+            style={{ fontWeight: 700, fontSize: 40 }}
+          >
+            {value}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -195,9 +204,15 @@ function MyPerformanceData() {
   const {
     sectionOneData,
     sectionTwoData,
-    certification
-    // instructorDebriefData
+    certification,
+    // instructorDebriefData,
+    // loading,
+    sectionOneLoading,
+    sectionTwoLoading,
+    certificationLoading,
+    instructorDebriefLoading
   } = useSelector((state) => state.performanceData)
+
   const handleCurriculumCompletionChange = (event) => {
     setCurriculumCompletion(event.target.value)
   }
@@ -247,16 +262,19 @@ function MyPerformanceData() {
                   name={'Number of Active Students'}
                   value={sectionOneData?.activeStudents}
                   backgroundColor={'#ace7ec'}
+                  loading={sectionOneLoading}
                 />
                 <DisplayRectangleData
                   name={'Time spent on the platform'}
                   value={sectionOneData?.userActiveTime ?? ''}
                   backgroundColor={'#ffd1e8'}
+                  loading={sectionOneLoading}
                 />
                 <DisplayRectangleData
                   name={'Number of New Briefings'}
                   value={sectionOneData?.numOfBriefings ?? ''}
                   backgroundColor={'#edfcd0'}
+                  loading={sectionOneLoading}
                 />
               </div>
               <div className={'row g-2 '} style={{ minHeight: 300 }}>
@@ -267,10 +285,12 @@ function MyPerformanceData() {
                   <ProgressCard
                     progress={sectionTwoData?.trainingCompletion}
                     title={'Training completion'}
+                    loading={sectionTwoLoading}
                   />
                   <ProgressCard
                     progress={sectionTwoData?.instructorNotesCompletion}
                     title={'Instructor notes completion'}
+                    loading={sectionTwoLoading}
                   />
                 </div>
                 <div className={'col-md-8 p-3'}>
@@ -287,28 +307,39 @@ function MyPerformanceData() {
                       Certification
                     </div>
 
-                    <div className={'d-flex justify-content-end w-100 pe-2 '}>
-                      <SelectInput
-                        options={[
-                          { name: 'MR1', value: 'mr1' },
-                          { name: 'MR2', value: 'mr2' }
-                        ]}
-                        onChange={(e) => handleChangeMRType(e)}
-                      />
-                    </div>
+                    {/*<div className={'d-flex justify-content-end w-100 pe-2 '}>*/}
+                    {/*  <SelectInput*/}
+                    {/*    options={[*/}
+                    {/*      { name: 'MR1', value: 'mr1' },*/}
+                    {/*      { name: 'MR2', value: 'mr2' }*/}
+                    {/*    ]}*/}
+                    {/*    onChange={(e) => handleChangeMRType(e)}*/}
+                    {/*  />*/}
+                    {/*</div>*/}
                     <div
                       className={
                         ' d-flex align-items-center flex-column justify-content-center'
                       }
                     >
-                      <BarChartJs
-                        data={certification}
-                        handleChangeDataType={(e) => handleChangeMRType(e)}
-                        dataTypes={[
-                          { name: 'MR1', value: 'mr1' },
-                          { name: 'MR2', value: 'mr2' }
-                        ]}
-                      />
+                      {!certificationLoading ? (
+                        <BarChartJs
+                          data={certification}
+                          handleChangeDataType={(e) => handleChangeMRType(e)}
+                          dataTypes={[
+                            { name: 'MR1', value: 'mr1' },
+                            { name: 'MR2', value: 'mr2' }
+                          ]}
+                        />
+                      ) : (
+                        <div
+                          className="d-flex justify-content-center align-items-center"
+                          style={{ height: '30px' }}
+                        >
+                          <div className="custom-spinner" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

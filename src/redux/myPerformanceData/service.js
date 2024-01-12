@@ -26,7 +26,7 @@ const fetchCertificateData = async (type) => {
       `/myPerformanceData/sectionTwo/${type}/certification`
     )
     if (response.status === 200) {
-      return response.data.certification
+      return response.data
     }
   } catch (error) {
     throw error
