@@ -166,9 +166,7 @@ function Router(props) {
         })
     }
     const handleVisibilityChange = () => {
-      if (document.hidden) {
-        handleGetData()
-      }
+      handleGetData()
     }
 
     window.addEventListener('beforeunload', () => handleGetData())
@@ -229,7 +227,6 @@ function Router(props) {
                 path="/preview-portfolio"
                 component={PreviewPortfolioNew}
               />
-
               <Route
                 exact
                 path="/user-portfolio/:username"
