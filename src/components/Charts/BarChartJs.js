@@ -71,7 +71,7 @@ export default function BarChartJs({ data, loading }) {
     setCertifiedStudents(transformedCertifiedDataType)
   }, [data])
 
-  const uniqueYears = ['ES1', 'LTS1', 'LTS2', 'LTS3', 'LTS4']
+  const uniqueYears = ['LTS1', 'LTS2', 'LTS3', 'LTS4']
   const uniqueStatuses = ['MR1', 'MR2']
   const datasets = uniqueStatuses.map((type) => {
     let backgroundColor
