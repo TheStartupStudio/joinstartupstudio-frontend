@@ -387,17 +387,18 @@ function Sidebar(props) {
                     </div>
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink
-                    to={'/my-performance-data'}
-                    activeClassName="sidenav active"
-                  >
-                    <div className="d-flex" style={{ alignItems: 'center' }}>
-                      <div className="ms-4 ps-2 py-1 text-uppercase ">
-                        My performance data
+                <div className="disabledd"> 
+                  <li>
+                    <NavLink
+                      to={'/my-performance-data'}
+                      activeClassName="sidenav active"
+                    >
+                      <div className="d-flex" style={{ alignItems: 'center' }}>
+                        <div className="ms-4 ps-2 py-1 text-uppercase ">
+                          My performance data
+                        </div>
                       </div>
-                    </div>
-                  </NavLink>
+                    </NavLink>
                   {/*<div*/}
                   {/*  className="sidenav"*/}
                   {/*  style={{*/}
@@ -413,7 +414,8 @@ function Sidebar(props) {
                   {/*    </div>*/}
                   {/*  </div>*/}
                   {/*</div>*/}
-                </li>
+                  </li>
+                </div>
               </div>
               <li
                 className="dropdownMenuSidebarHover"
