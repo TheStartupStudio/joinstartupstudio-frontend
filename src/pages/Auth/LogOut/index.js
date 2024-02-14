@@ -5,9 +5,10 @@ import { userLogout } from '../../../redux'
 
 export default function Logout() {
   const dispatch = useDispatch()
+
   useEffect(function () {
     dispatch(userLogout())
   })
 
-  return <Redirect to='/' />
+  return <Redirect to="/" />
 }

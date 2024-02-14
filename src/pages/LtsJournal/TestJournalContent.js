@@ -51,25 +51,51 @@ function TestJournalContent(props) {
     checkbox2: false,
     checkbox3: false,
     textEditorContent: '',
-    journalId: +props.match.params.id
+    journalId: +props.match.params.id,
+    journalCategory: null
   })
 
   useEffect(() => {
     getInstructorDebriefData()
   }, [props.match.params.id, props.match.params.weekId])
+  const insertJournalCategory = (category) => {
+    let result = ''
+
+    switch (category) {
+      case 'hs1':
+        result = 'lts1'
+        break
+      case 'hs2':
+        result = 'lts2'
+        break
+      case 'hs3&hs4':
+        result = 'lts3&4'
+        break
+      case 'financial-literacy':
+        result = 'finlit'
+        break
+      default:
+        break
+    }
+
+    return result
+  }
 
   const newInstructorBriefData = {
     checkbox1: instructorDebrief?.checkbox1,
     checkbox2: instructorDebrief?.checkbox2,
     checkbox3: instructorDebrief?.checkbox3,
-    textEditorContent: instructorDebrief?.textEditorContent
+    textEditorContent: instructorDebrief?.textEditorContent,
+    journalCategory: insertJournalCategory(journal?.category)
   }
 
   const onSubmitInstructorDebrief = (data) => {
     const isEdit = { ...data, id: instructorDebrief.id }
-    const isCreate = { ...data, id: null }
+    const isCreate = {
+      ...data,
+      id: null
+    }
     const instructorDebriefData = instructorDebrief.id ? isEdit : isCreate
-
     const url = `/ltsJournals/${
       props.view === 'task' ? +props.match.params.id : 0
     }/${
@@ -410,27 +436,6 @@ function TestJournalContent(props) {
     setInstructorDebrief(newInstructorDebrief)
     // debounce(onSubmitInstructorDebrief, newInstructorDebrief)
   }
-  const {
-    Bold,
-    Italic,
-    AlignLeft,
-    AlignCenter,
-    AlignRight,
-    AlignJustify,
-    Indent,
-    Outdent,
-    OrderedList,
-    UnorderedList,
-    Undo,
-    Redo,
-    FontSize,
-    FontName,
-    FormatBlock,
-    Link,
-    Unlink,
-    InsertImage,
-    ViewHtml
-  } = EditorTools
 
   const closeOthers = () => {
     setOpenAccordion(null)
@@ -521,26 +526,6 @@ function TestJournalContent(props) {
         </div>
         <div className={'journal-paragraph my-4'}>{journal?.paragraph}</div>
         <div className={'custom-breakdowns-container'}>
-          {/*<div style={{ order: 0 }}>*/}
-          {/*  {!loading &&*/}
-          {/*    journal?.breakdowns*/}
-          {/*      ?.slice()*/}
-          {/*      ?.sort((a, b) => a.breakdownOrder - b.breakdownOrder)*/}
-          {/*      ?.map((breakdown, index) => {*/}
-          {/*        return (*/}
-          {/*          <React.Fragment key={index}>*/}
-          {/*            <BreakdownTextAccordion*/}
-          {/*              title={breakdown?.title}*/}
-          {/*              content={breakdown?.content}*/}
-          {/*              breakdown={breakdown}*/}
-          {/*              isOpen={openAccordion === index}*/}
-          {/*              toggleAccordion={() => handleAccordionClick(index)}*/}
-          {/*              closeOthers={closeOthers}*/}
-          {/*            />*/}
-          {/*          </React.Fragment>*/}
-          {/*        )*/}
-          {/*      })}*/}
-          {/*</div>*/}
           {!journal?.hasInstructorDebrief && !journal?.tasks?.length && (
             <>
               <CurriculumOverview
@@ -1069,101 +1054,6 @@ function TestJournalContent(props) {
         <div className="col-12">
           <div className="journal-entries__back">
             <NavLink to={props.backRoute}>Back</NavLink>
-          </div>
-
-          {/*<h4 className="page-card__content-title">{journal.title}</h4>*/}
-
-          {/*{journal?.content?.includes('<div') ||*/}
-          {/*journal?.content?.includes('<p') ? (*/}
-          {/*  parse(`${journal.content}`)*/}
-          {/*) : (*/}
-          {/*  <p className="page-card__content-description">{journal.content}</p>*/}
-          {/*)}*/}
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-12">
-          <div className="journal-entries">
-            {/*{journal.entries &&*/}
-            {/*  journal.entries.map((entry) => (*/}
-            {/*    <div className="journal-entries__entry" key={entry.id}>*/}
-            {/*      <h5*/}
-            {/*        className={*/}
-            {/*          'journal-entries__entry-title' +*/}
-            {/*          (entry.title.indexOf('**') !== -1*/}
-            {/*            ? ' journal-entries__entry-title--md'*/}
-            {/*            : '')*/}
-            {/*        }*/}
-            {/*        dangerouslySetInnerHTML={{*/}
-            {/*          __html:*/}
-            {/*            entry.title.indexOf('<h2>') === -1*/}
-            {/*              ? markdown(entry.title)*/}
-            {/*              : entry.title.replace(*/}
-            {/*                  new RegExp('\r?\n', 'g'),*/}
-            {/*                  '<br />'*/}
-            {/*                )*/}
-            {/*        }}*/}
-            {/*      ></h5>*/}
-
-            {/*      <div className="journal-entries__entry-reflections">*/}
-            {/*        /!* List created reflections *!/*/}
-            {/*        {userJournalEntries[entry.id] &&*/}
-            {/*          userJournalEntries[entry.id].map((userJournalEntry) => (*/}
-            {/*            <LtsJournalReflection*/}
-            {/*              key={userJournalEntry.id}*/}
-            {/*              journal={journal}*/}
-            {/*              journalEntry={entry}*/}
-            {/*              entry={userJournalEntry}*/}
-            {/*              deleted={deleteReflection(entry, userJournalEntry)}*/}
-            {/*              saved={updateReflection(entry, userJournalEntry)}*/}
-            {/*            />*/}
-            {/*          ))}*/}
-
-            {/*        /!* Add new reflection *!/*/}
-            {/*        {(!userJournalEntries[entry.id] ||*/}
-            {/*          showAddReflection[entry.id]) && (*/}
-            {/*          <LtsJournalReflection*/}
-            {/*            journal={journal}*/}
-            {/*            journalEntry={entry}*/}
-            {/*            entry={null}*/}
-            {/*            saved={addReflection(entry)}*/}
-            {/*            showCancel={!!userJournalEntries[entry.id]}*/}
-            {/*            cancel={(e) => {*/}
-            {/*              setShowAddReflection({*/}
-            {/*                ...showAddReflection,*/}
-            {/*                [entry.id]: false*/}
-            {/*              })*/}
-            {/*            }}*/}
-            {/*          />*/}
-            {/*        )}*/}
-
-            {/*        /!* Show add new reflection *!/*/}
-            {/*        <div*/}
-            {/*          className={`journal-entries__entry-reflections-actions ${*/}
-            {/*            userJournalEntries[entry.id] &&*/}
-            {/*            !showAddReflection[entry.id]*/}
-            {/*              ? 'active'*/}
-            {/*              : ''*/}
-            {/*          }`}*/}
-            {/*        >*/}
-            {/*          <a*/}
-            {/*            href="#"*/}
-            {/*            className="journal-entries__entry-reflections-action"*/}
-            {/*            onClick={(e) => {*/}
-            {/*              e.preventDefault()*/}
-            {/*              setShowAddReflection({*/}
-            {/*                ...showAddReflection,*/}
-            {/*                [entry.id]: true*/}
-            {/*              })*/}
-            {/*            }}*/}
-            {/*          >*/}
-            {/*            Add reflection <FontAwesomeIcon icon={faPlus} />*/}
-            {/*          </a>*/}
-            {/*        </div>*/}
-            {/*      </div>*/}
-            {/*    </div>*/}
-            {/*  ))}*/}
           </div>
         </div>
       </div>

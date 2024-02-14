@@ -4,6 +4,8 @@ import LtsButton from '../../../components/LTSButtons/LTSButton'
 import ReactQuill from 'react-quill'
 
 function MyContentModal(props) {
+  // console.log(props)
+
   return (
     <ModalWrapper
       title={'Write your own' + ' ' + props.title}

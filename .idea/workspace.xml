@@ -6,7 +6,32 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/index.js" afterDir="false" />
+=======
+>>>>>>> dev
+>>>>>>> origin
       <change beforePath="$PROJECT_DIR$/src/pages/Spotlight/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Spotlight/index.js" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Header/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Profile/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Auth/LogOut/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/LogOut/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Auth/Login/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/Login/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MyPerformanceData/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyPerformanceData/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/NotificationSection-dashboard/NotificationBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/NotificationSection-dashboard/NotificationBox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/user/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/user/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Reducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/user/Types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/AxiosInstance.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/AxiosInstance.js" afterDir="false" />
+>>>>>>> origin/performance-data
+=======
+      <change beforePath="$PROJECT_DIR$/src/pages/Spotlight/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Spotlight/index.js" afterDir="false" />
+>>>>>>> origin/performance-data
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +41,15 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/performance-data
+=======
+        <entry key="$PROJECT_DIR$" value="my-spark" />
+=======
+>>>>>>> origin
 <<<<<<< HEAD
         <entry key="$PROJECT_DIR$" value="my-connections" />
 =======
@@ -29,6 +63,16 @@
         <entry key="$PROJECT_DIR$" value="spotlight" />
 >>>>>>> dev
 >>>>>>> bledon-live-fixes
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        <entry key="$PROJECT_DIR$" value="my-spark" />
+>>>>>>> origin/performance-data
+=======
+>>>>>>> origin/performance-data
+=======
+>>>>>>> dev
+>>>>>>> origin
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -41,6 +85,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/performance-data
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/components/Modals",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Dell\\AppData\\Roaming\\npm\\node_modules\\prettier",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+=======
+>>>>>>> origin
 <<<<<<< HEAD
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
@@ -67,6 +133,11 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
   </component>
 =======
+<<<<<<< HEAD
+=======
+>>>>>>> origin/performance-data
+=======
+>>>>>>> origin/performance-data
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
@@ -80,11 +151,23 @@
     &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Program Files\\nodejs\\node_modules\\prettier&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+<<<<<<< HEAD
+=======
+>>>>>>> dev
+>>>>>>> origin
   }
 }</component>
 >>>>>>> dev
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/performance-data
+=======
+=======
+>>>>>>> origin
 <<<<<<< HEAD
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
@@ -106,6 +189,15 @@
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\ArchiveManager\FeedbackManager" />
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/performance-data
+=======
+>>>>>>> origin/performance-data
+=======
+>>>>>>> dev
+>>>>>>> origin
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
     </key>
   </component>

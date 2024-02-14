@@ -103,11 +103,15 @@ function LtsJournalReflection(props) {
       setFoulWords(null)
     }
 
+    const myTraining = history.location.pathname.includes('my-training')
+
     try {
       if (!entryId) {
         let { data } = await axiosInstance.post(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`,
-          from == 'debounce' ? { content: value } : { content }
+          from == 'debounce'
+            ? { content: value, trainingId: myTraining ? journalId : null }
+            : { content, trainingId: myTraining ? journalId : null }
         )
 
         props.saved && props.saved(data)
@@ -115,7 +119,9 @@ function LtsJournalReflection(props) {
       } else {
         await axiosInstance.put(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`,
-          from == 'debounce' ? { content: value } : { content }
+          from == 'debounce'
+            ? { content: value, trainingId: myTraining ? journalId : null }
+            : { content, trainingId: myTraining ? journalId : null }
         )
         props.saved &&
           props.saved({
@@ -179,6 +185,7 @@ function LtsJournalReflection(props) {
     // navigate to some other page or do some routing action now
     // history.push("/any/other/path")
   }
+
   const debounce = useCallback(
     _.debounce(async (func, value) => {
       func('debounce', value)

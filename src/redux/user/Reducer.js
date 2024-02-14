@@ -61,6 +61,7 @@ const userReducer = (state = initialState, action) => {
         successMessage: null,
         errorMessage: null
       }
+
     case USER_LOGOUT:
       localStorage.clear()
 

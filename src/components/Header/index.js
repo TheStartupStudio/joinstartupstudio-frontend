@@ -36,6 +36,7 @@ import StudentOfInstructors from '../GetInstructorStudents/index.js'
 import useOnClickOutside from 'use-onclickoutside'
 import { useHistory, useLocation } from 'react-router-dom'
 import PeerSharingModal from '../Modals/PeerSharingModal'
+import { updateUserActivity } from '../../redux/user/Actions'
 
 function Header(props) {
   const { user } = useSelector((state) => state.user.user)
@@ -201,7 +202,7 @@ function Header(props) {
     checkIfUserHasVerifiedEmail()
 
     axiosInstance.get(`/notifications/${user.id}`).then((res) => {
-      if (res.data.notifications.length > 0) {
+      if (res.data.notifications?.length > 0) {
         setNotifications(res.data.notifications)
       }
 
@@ -628,12 +629,23 @@ function Header(props) {
                       >
                         SUPPORT
                       </Link>
-                      <Link
+                      <div
                         className="dropdown-item py-2 dropdown-menu-hover"
-                        to="/logout"
+                        onClick={() => {
+                          axiosInstance
+                            .put('/myPerformanceData/updateActivity', {
+                              isActive: false
+                            })
+                            .then((response) => {
+                              if (response) history.push('/logout')
+                            })
+                            .catch((error) => {
+                              console.error('Error updating activity:', error)
+                            })
+                        }}
                       >
                         <IntlMessages id="navigation.logout" />
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 </li>
@@ -902,12 +914,23 @@ function Header(props) {
             >
               SUPPORT
             </Link>
-            <Link
+            <div
               className="dropdown-item py-2 dropdown-menu-hover"
-              to="/logout"
+              onClick={() => {
+                axiosInstance
+                  .put('/myPerformanceData/updateActivity', {
+                    isActive: false
+                  })
+                  .then((response) => {
+                    if (response) history.push('/logout')
+                  })
+                  .catch((error) => {
+                    console.error('Error updating activity:', error)
+                  })
+              }}
             >
               <IntlMessages id="navigation.logout" />
-            </Link>
+            </div>
           </div>
         </div>
       </nav>
@@ -945,4 +968,5 @@ function Header(props) {
     </div>
   )
 }
+
 export default Header

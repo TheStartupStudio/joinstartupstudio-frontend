@@ -14,17 +14,17 @@ const SkillUploads = ({ skill }) => {
     skillId: skill?.id,
     setSelectedUpload
   })
-
+  console.log(uploads)
   return (
-    <div className='skill-uploads'>
-      <div className='d-flex w-100 justify-content-between'>
-        <p className='skill-title'>
+    <div className="skill-uploads">
+      <div className="d-flex w-100 justify-content-between">
+        <p className="skill-title">
           {selectedUpload && (
             <FontAwesomeIcon
               icon={faChevronLeft}
-              color='#01c5d1'
-              className='me-2'
-              title='Back'
+              color="#01c5d1"
+              className="me-2"
+              title="Back"
               cursor={'pointer'}
               onClick={() => {
                 setSelectedUpload()
@@ -32,9 +32,9 @@ const SkillUploads = ({ skill }) => {
             />
           )}
           <span className="text-info fw-bold">{skill.category} - </span>
-          <span className='fw-bold'>{skill?.title} - </span> STUDENT UPLOADS
+          <span className="fw-bold">{skill?.title} - </span> STUDENT UPLOADS
         </p>
-        <p className='skill-title text-end'>
+        <p className="skill-title text-end">
           {selectedUpload && (
             <UploadStatus
               status={selectedUpload.status}

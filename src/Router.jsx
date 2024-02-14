@@ -1,7 +1,13 @@
 /* Top Level Route file */
 
-import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import {
+  Switch,
+  Route,
+  Redirect,
+  useLocation,
+  useHistory
+} from 'react-router-dom'
 import { useSelector, connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import AppLocale from './lang'
@@ -18,6 +24,8 @@ import IamrContents from './pages/Iamr/IamrContentsAccordion'
 import ImrContent from './pages/Iamr/ImrContent'
 import TestJournal from './pages/LtsJournal/TestJournal'
 import UserProfile from './pages/Profile/userProfile'
+import axiosInstance from './utils/AxiosInstance'
+// import MyTraining from './pages/LtsJournal/MyTraining'
 
 const MyTraining = React.lazy(() => import('./pages/MyTraining/MyTraining'))
 const Login = React.lazy(() => import('./pages/Auth/Login'))
@@ -72,6 +80,9 @@ const AllVideos = React.lazy(() => import('./pages/BeyondYourCourse/allVideos'))
 const BeyondYourCourse = React.lazy(() => import('./pages/BeyondYourCourse'))
 const BeyondYourCourseVideo = React.lazy(() =>
   import('../src/pages/BeyondYourCourse/beyondYourCourseVideo')
+)
+const MyPerformanceData = React.lazy(() =>
+  import('../src/pages/MyPerformanceData')
 )
 const Profile = React.lazy(() => import('./pages/Profile/index'))
 const ProfilePreview = React.lazy(() =>
@@ -139,6 +150,35 @@ function Router(props) {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
   const clientBaseURL = `${process.env.REACT_APP_CLIENT_BASE_URL}`
 
+  const history = useHistory()
+
+  useEffect(() => {
+    const handleGetData = () => {
+      axiosInstance
+        .put('/myPerformanceData/updateActivity', {
+          isActive: false
+        })
+        .then((response) => {
+          // console.log(response)
+        })
+        .catch((error) => {
+          console.error('Error updating activity:', error)
+        })
+    }
+    const handleVisibilityChange = () => {
+      handleGetData()
+    }
+
+    window.addEventListener('beforeunload', () => handleGetData())
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    const unlisten = history.listen(() => handleGetData())
+
+    return () => {
+      unlisten()
+      window.removeEventListener('beforeunload', () => handleGetData())
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [history])
   return (
     <IntlProvider
       locale={currentAppLocale.locale}
@@ -337,6 +377,10 @@ function Router(props) {
                 component={(props) => (
                   <LtsJournal {...props} category="student-personal-finance" />
                 )}
+              />
+              <Route
+                path="/my-performance-data/"
+                component={MyPerformanceData}
               />
               <Route
                 path="/student-leadership/"

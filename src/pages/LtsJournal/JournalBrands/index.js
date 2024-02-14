@@ -32,114 +32,84 @@ const JournalBrands = (props) => {
           .map((brand) => (
             <div className="col-12 col-sm-6 col-md-4">
               <div className="brand__item">
-                {props.hasActions && (
-                  <span
-                    className="remove-brand-item"
-                    onClick={(e) => deleteBrand(brand.id)}
-                  >
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      className="edit-modal-sm ms-4"
-                    />
-                  </span>
-                )}
+                <span
+                  className="remove-brand-item"
+                  onClick={(e) => deleteBrand(brand.id)}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="edit-modal-sm ms-4"
+                  />
+                </span>
                 <img
-                  onClick={
-                    props.hasActions
-                      ? () => {
-                          setImage(brand.image)
-                          setBrandId(brand.id)
-                          setShowEditJournalBrandImageModal(true)
-                        }
-                      : undefined
-                  }
+                  onClick={() => {
+                    setImage(brand.image)
+                    setBrandId(brand.id)
+                    setShowEditJournalBrandImageModal(true)
+                  }}
                   className="journal__image"
                   src={brand.image}
                   alt=""
-                  style={!props.hasActions && { cursor: 'default' }}
                 />
                 <div
                   className="brand__box"
-                  onClick={
-                    props.hasActions
-                      ? (e) => {
-                          setColumn('type')
-                          setBrandId(brand.id)
-                          setContent(brand.type)
-                          setShowEditJournalBrandBoxModal(true)
-                        }
-                      : undefined
-                  }
+                  onClick={(e) => {
+                    setColumn('type')
+                    setBrandId(brand.id)
+                    setContent(brand.type)
+                    setShowEditJournalBrandBoxModal(true)
+                  }}
                   dangerouslySetInnerHTML={{
                     __html: `<strong>TYPE OF SHOT:</strong> ${brand.type}`
                   }}
-                  style={!props.hasActions && { cursor: 'default' }}
                 ></div>
                 <div
                   className="brand__box"
-                  onClick={
-                    props.hasActions
-                      ? (e) => {
-                          setColumn('action')
-                          setBrandId(brand.id)
-                          setContent(brand.action)
-                          setShowEditJournalBrandBoxModal(true)
-                        }
-                      : undefined
-                  }
+                  onClick={(e) => {
+                    setColumn('action')
+                    setBrandId(brand.id)
+                    setContent(brand.action)
+                    setShowEditJournalBrandBoxModal(true)
+                  }}
                   dangerouslySetInnerHTML={{
                     __html: `<strong>ACTION:</strong> ${brand.action}`
                   }}
-                  style={!props.hasActions && { cursor: 'default' }}
                 ></div>
                 <div
                   className="brand__box"
-                  onClick={
-                    props.hasActions
-                      ? (e) => {
-                          setColumn('narration')
-                          setBrandId(brand.id)
-                          setContent(brand.narration)
-                          setShowEditJournalBrandBoxModal(true)
-                        }
-                      : undefined
-                  }
+                  onClick={(e) => {
+                    setColumn('narration')
+                    setBrandId(brand.id)
+                    setContent(brand.narration)
+                    setShowEditJournalBrandBoxModal(true)
+                  }}
                   dangerouslySetInnerHTML={{
                     __html: `<strong>NARRATION:</strong> ${brand.narration}`
                   }}
-                  style={!props.hasActions && { cursor: 'default' }}
                 ></div>
                 <div
                   className="brand__box"
-                  onClick={
-                    props.hasActions
-                      ? (e) => {
-                          setColumn('music')
-                          setBrandId(brand.id)
-                          setContent(brand.music)
-                          setShowEditJournalBrandBoxModal(true)
-                        }
-                      : undefined
-                  }
+                  onClick={(e) => {
+                    setColumn('music')
+                    setBrandId(brand.id)
+                    setContent(brand.music)
+                    setShowEditJournalBrandBoxModal(true)
+                  }}
                   dangerouslySetInnerHTML={{
                     __html: `<strong>MUSIC:</strong> ${brand.music}`
                   }}
-                  style={!props.hasActions && { cursor: 'default' }}
                 ></div>
               </div>
             </div>
           ))}
         <div className="col-12">
-          {props.hasActions && (
-            <a
-              className="add-new-brand"
-              onClick={(e) => setShowNewJournalModal(true)}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-              Add another full section of Image and the boxes below it
-            </a>
-          )}
-
+          <a
+            className="add-new-brand"
+            onClick={(e) => setShowNewJournalModal(true)}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+            Add another full section of Image and the boxes below it
+          </a>
           <NewJournalBrandModal
             hasAccordion={props.hasAccordion}
             onShow={() => {

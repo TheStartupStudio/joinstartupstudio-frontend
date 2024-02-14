@@ -10,7 +10,10 @@ import {
   USER_CHANGE_PROFILE_IMAGE,
   USER_EDIT_ERROR,
   NEED_RESET,
-  UPDATE_USER_TNC
+  UPDATE_USER_TNC,
+  SESSION_START_TIME,
+  SESSION_END_TIME,
+  USER_ACTIVITY
 } from './Types'
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -99,6 +102,7 @@ export const userLogin = (old_password) => async (dispatch) => {
         type: USER_LOGIN_SUCCESS,
         payload: userData
       })
+
       dispatch({
         type: LOGIN_LOADING,
         payload: false
