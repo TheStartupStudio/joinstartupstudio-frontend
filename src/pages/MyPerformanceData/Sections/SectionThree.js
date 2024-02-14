@@ -37,17 +37,17 @@ function SectionThree(props) {
           onChange={handleCurriculumCompletionChange}
         />
         <ProgressCard
-          progress={instructorDebriefData?.news_briefing}
-          title={'New Briefings in Task'}
+          progress={instructorDebriefData?.news_briefing ?? 0}
+          title={'News Briefings in Task'}
           loading={instructorDebriefLoading}
         />
         <ProgressCard
-          progress={instructorDebriefData?.student_voice}
+          progress={instructorDebriefData?.student_voice ?? 0}
           title={'Student Voice'}
           loading={instructorDebriefLoading}
         />
         <ProgressCard
-          progress={instructorDebriefData?.time_for_portfolio}
+          progress={instructorDebriefData?.time_for_portfolio ?? 0}
           title={'Time for Portfolio/Journal'}
           loading={instructorDebriefLoading}
         />

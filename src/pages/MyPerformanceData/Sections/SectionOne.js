@@ -26,7 +26,7 @@ function SectionOne() {
         loading={sectionOneLoading}
       />
       <DisplayRectangleData
-        name={'Number of New Briefings'}
+        name={'Number of News Briefings'}
         value={sectionOneData?.numOfBriefings ?? ''}
         backgroundColor={'#edfcd0'}
         loading={sectionOneLoading}
