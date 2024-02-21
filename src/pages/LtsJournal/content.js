@@ -193,12 +193,13 @@ function LtsJournalContent(props) {
       }
     }
   }
-  const [isStudentPersonalFinance, setIsStudentPersonalFinance] =
-    useState(false)
+  const [isAddReflection, setIsAddReflection] = useState(false)
 
   useEffect(() => {
     if (location?.pathname?.includes('student-personal-finance')) {
-      setIsStudentPersonalFinance(true)
+      setIsAddReflection(false)
+    } else {
+      setIsAddReflection(true)
     }
   }, [location.pathname])
 
@@ -341,7 +342,7 @@ function LtsJournalContent(props) {
                   handleShowAddReflection(reflection)
                 }
                 showAddReflection={showAddReflection}
-                isStudentPersonalJournal={isStudentPersonalFinance}
+                isAddReflection={isAddReflection}
               />
             </div>
           </div>

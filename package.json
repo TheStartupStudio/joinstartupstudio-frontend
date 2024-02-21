@@ -111,7 +111,7 @@
     "@react-pdf/pdfkit": "2.1.0"
   },
   "scripts": {
-    "start": "set PORT=3000 &&  react-scripts start",
+    "start": "set PORT=3000 &&  react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "buildDev": "env-cmd -f .env react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",

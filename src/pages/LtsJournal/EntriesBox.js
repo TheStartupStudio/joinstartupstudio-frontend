@@ -30,7 +30,7 @@ const EntriesBox = (props) => {
     isEditable,
     isDeletable,
     accordion,
-    isStudentPersonalJournal
+    isAddReflection
   } = props
   const [isSaving, setIsSaving] = useState(false)
   const [isNew, setIsNew] = useState(true)
@@ -282,7 +282,7 @@ const EntriesBox = (props) => {
               {/*Show add new reflection*/}
 
               {/*// temp solution to remove [+] button from some entry boxes*/}
-              {isStudentPersonalJournal ? (
+              {isAddReflection === false ? (
                 <></>
               ) : (
                 <div
