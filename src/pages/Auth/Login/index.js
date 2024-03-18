@@ -67,7 +67,6 @@ function Login() {
           )
           localStorage.setItem('email', user.email)
 
-          debugger
           if (response.signInUserSession.idToken.jwtToken) {
             const newTime = await axiosInstance.put(
               '/myPerformanceData/updateActivity/startTime',
@@ -78,8 +77,6 @@ function Login() {
                 }
               }
             )
-            debugger
-            console.log(newTime)
           }
 
           // if (response) {
