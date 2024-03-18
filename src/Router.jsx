@@ -143,7 +143,6 @@ const JournalsManagement2 = React.lazy(() =>
 
 const IAMRinbox = React.lazy(() => import('./pages/IAMRinbox'))
 const StudentIAMR = React.lazy(() => import('../src/pages/StudentIAMR'))
-const TestPage = React.lazy(() => import('../src/pages/LtsJournal/TestPage'))
 
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
@@ -437,10 +436,6 @@ function Router(props) {
               {/*    <TestJournal {...props} category="new-hs1" />*/}
               {/*  )}*/}
               {/*/>*/}
-              <Route
-                path="/new-hs1-journal/:journalId"
-                component={<TestPage />}
-              />
               <Route
                 path="/hs1-journal/"
                 component={(props) => <LtsJournal {...props} category="hs1" />}
