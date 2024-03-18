@@ -66,12 +66,21 @@ function Login() {
             response.attributes['custom:language']
           )
           localStorage.setItem('email', user.email)
-          // if (response.signInUserSession.idToken.jwtToken) {
-          //   const newTime = await axiosInstance.get(
-          //     '/myPerformanceData/loginTime'
-          //   )
-          //   console.log(newTime)
-          // }
+
+          debugger
+          if (response.signInUserSession.idToken.jwtToken) {
+            const newTime = await axiosInstance.put(
+              '/myPerformanceData/updateActivity/startTime',
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${response.signInUserSession.idToken.jwtToken}`
+                }
+              }
+            )
+            debugger
+            console.log(newTime)
+          }
 
           // if (response) {
           //   console.log(response)

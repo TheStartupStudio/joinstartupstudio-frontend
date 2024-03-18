@@ -108,7 +108,7 @@ const SpotlightApplyModal = (props) => {
       title={props.title}
       show={props.show}
       onHide={props.onHide}
-      class={'spotlight-apply-modal'}
+      classes={'spotlight-apply-modal'}
     >
       <div className="row">
         <div className="col-12 col-lg-6">

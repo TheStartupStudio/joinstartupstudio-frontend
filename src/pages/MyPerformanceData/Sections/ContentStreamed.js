@@ -55,7 +55,7 @@ const DisplayCircleData = ({
 const ContentStreamed = () => {
   const dispatch = useDispatch()
   const windowWidth = useWindowWidth()
-  const [filterBy, setFilterBy] = useState('instructor')
+  const [filterBy, setFilterBy] = useState('')
   const [masterclassPercentage, setMasterclassPercentage] = useState(0)
   const [podcastPercentage, setPodcastPercentage] = useState(0)
   const [qaPercentage, setQaPercentage] = useState(0)
@@ -70,9 +70,9 @@ const ContentStreamed = () => {
   }
 
   useEffect(() => {
-    dispatch(fetchMasterclassPercentage('instructor'))
-    dispatch(fetchPodcastPercentage('instructor'))
-    dispatch(fetchQAPercentage('instructor'))
+    dispatch(fetchMasterclassPercentage(''))
+    dispatch(fetchPodcastPercentage(''))
+    dispatch(fetchQAPercentage(''))
   }, [dispatch])
 
   useEffect(() => {
@@ -105,8 +105,8 @@ const ContentStreamed = () => {
             <OptionSelector
               align={'end'}
               width={windowWidth < 995 ? '100%' : '75%'}
-              defaultValue={'Filter by'}
               options={[
+                { label: 'Filter by', value: '', disabled: true },
                 { label: 'Instructor', value: 'instructor' },
                 { label: 'LTS1', value: 'LTS1' },
                 { label: 'LTS2', value: 'LTS2' },

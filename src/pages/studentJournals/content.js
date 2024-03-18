@@ -277,7 +277,7 @@ function LtsJournalContent(props) {
         </div>
       </div>
 
-      <div class="row">
+      <div className="row">
         <div className="col-12">
           <div className="journal-entries">
             <EntriesBox

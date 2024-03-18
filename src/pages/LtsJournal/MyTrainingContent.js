@@ -134,7 +134,7 @@ const MyTrainingContent = (props) => {
                     >
                       In completing this task did you:
                     </div>
-                    <div class="d-flex mb-1 ">
+                    <div className="d-flex mb-1 ">
                       <div
                         style={{
                           width: '25px',
@@ -170,7 +170,7 @@ const MyTrainingContent = (props) => {
                         Give each student an opportunity to use their voice.
                       </div>
                     </div>
-                    <div class="d-flex mb-1">
+                    <div className="d-flex mb-1">
                       <div
                         style={{
                           width: '25px',
@@ -206,7 +206,7 @@ const MyTrainingContent = (props) => {
                         Conduct at least one news briefing to start class.
                       </div>
                     </div>
-                    <div class="d-flex mb-1 ">
+                    <div className="d-flex mb-1 ">
                       <div
                         style={{
                           width: '25px',

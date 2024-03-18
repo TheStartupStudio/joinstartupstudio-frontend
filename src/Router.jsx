@@ -1,6 +1,6 @@
 /* Top Level Route file */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import {
   Switch,
   Route,
@@ -148,37 +148,134 @@ const TestPage = React.lazy(() => import('../src/pages/LtsJournal/TestPage'))
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
-  const clientBaseURL = `${process.env.REACT_APP_CLIENT_BASE_URL}`
-
-  const history = useHistory()
+  const [isFirstRendered, setIsFirstRendered] = useState(false)
 
   useEffect(() => {
-    const handleGetData = () => {
-      axiosInstance
-        .put('/myPerformanceData/updateActivity', {
-          isActive: false
-        })
-        .then((response) => {
-          // console.log(response)
-        })
-        .catch((error) => {
-          console.error('Error updating activity:', error)
-        })
-    }
-    const handleVisibilityChange = () => {
-      handleGetData()
-    }
+    axiosInstance
+      .put('/myPerformanceData/updateActivity/startTime', {
+        isActive: false
+      })
+      .then((response) => {
+        // console.log(response)
+        setIsFirstRendered(true)
+      })
+      .catch((error) => {
+        console.error('Error updating activity:', error)
+      })
+  }, [])
 
-    window.addEventListener('beforeunload', () => handleGetData())
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    const unlisten = history.listen(() => handleGetData())
+  const handleUpdateEndTime = () => {
+    axiosInstance
+      .put('/myPerformanceData/updateActivity/endTime', {
+        isActive: false
+      })
+      .then((response) => {
+        // console.log(response)
+        // setIsFirstRendered(true)
+      })
+      .catch((error) => {
+        console.error('Error updating activity:', error)
+      })
+  }
+  const handleUpdateStartTime = () => {
+    axiosInstance
+      .put('/myPerformanceData/updateActivity/startTime', {
+        isActive: false
+      })
+      .then((response) => {
+        // console.log(response)
+        // setIsFirstRendered(true)
+      })
+      .catch((error) => {
+        console.error('Error updating activity:', error)
+      })
+  }
+  const handleUpdateActivity = (type) => {
+    console.log(`type: ${type} - API Called`)
+    axiosInstance
+      .put(`/myPerformanceData/updateActivity`, {
+        isActive: false
+      })
+      .then((response) => {
+        // console.log(response)
+      })
+      .catch((error) => {
+        console.error('Error updating activity:', error)
+      })
+  }
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     handleUpdateActivity('interval')
+  //   }, 10000)
+  // }, [])
 
-    return () => {
-      unlisten()
-      window.removeEventListener('beforeunload', () => handleGetData())
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
+  useEffect(() => {
+    if (isFirstRendered) {
+      let intervalId = setInterval(() => {
+        handleUpdateActivity('interval')
+      }, 60000)
+
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === 'hidden') {
+          clearInterval(intervalId)
+        } else {
+          intervalId = setInterval(() => {
+            handleUpdateActivity('interval')
+          }, 60000)
+        }
+      }
+
+      document.addEventListener('visibilitychange', handleVisibilityChange)
+
+      const handleUnload = () => {
+        clearInterval(intervalId)
+      }
+
+      window.addEventListener('beforeunload', handleUnload)
+
+      return () => {
+        clearInterval(intervalId)
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+        window.removeEventListener('beforeunload', handleUnload)
+      }
     }
-  }, [history])
+  }, [isFirstRendered])
+
+  // useEffect(() => {
+  //   if (isFirstRendered) {
+  //     const handleVisibilityChange = () => {
+  //       if (document.visibilityState === 'hidden') {
+  //         handleUpdateActivity('visibilityChange')
+  //         debugger
+  //       }
+  //     }
+  //
+  //     const handleBeforeUnload = (e) => {
+  //       console.log(e)
+  //       handleUpdateActivity('beforeUnload')
+  //       debugger
+  //     }
+  //     const handlePopstate = (e) => {
+  //       console.log(e)
+  //       handleUpdateActivity('popState')
+  //       debugger
+  //     }
+  //     const handleUnload = (e) => {
+  //       console.log(e)
+  //       handleUpdateActivity('unload')
+  //       debugger
+  //     }
+  //
+  //     document.addEventListener('visibilitychange', handleVisibilityChange)
+  //     window.addEventListener('beforeunload', handleBeforeUnload)
+  //
+  //     return () => {
+  //       document.removeEventListener('visibilitychange', handleVisibilityChange)
+  //       window.removeEventListener('beforeunload', handleBeforeUnload)
+  //     }
+  //   }
+  // }, [isFirstRendered])
+
   return (
     <IntlProvider
       locale={currentAppLocale.locale}

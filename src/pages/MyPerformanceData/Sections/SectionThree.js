@@ -7,7 +7,7 @@ import { fetchInstructorDebriefData } from '../../../redux/myPerformanceData/act
 
 function SectionThree(props) {
   const dispatch = useDispatch()
-  const [curriculumCompletion, setCurriculumCompletion] = React.useState('lts1')
+  const [curriculumCompletion, setCurriculumCompletion] = React.useState('')
   const { instructorDebriefData, instructorDebriefLoading } = useSelector(
     (state) => state.performanceData
   )
@@ -26,8 +26,8 @@ function SectionThree(props) {
       <div className={'col-md-4 p-3 d-flex flex-column'} style={{ gap: 20 }}>
         <OptionSelector
           width={'100%'}
-          defaultValue={'Curriculum Completion'}
           options={[
+            { label: 'Curriculum Completion', value: '', disabled: true },
             { label: 'LTS1', value: 'lts1' },
             { label: 'LTS2', value: 'lts2' },
             { label: 'LTS3&4', value: 'lts3&4' },

@@ -6,7 +6,7 @@ const BreakdownCheckboxes = (props) => {
       <div>{props.data?.title}</div>
       {props.data?.checkboxes?.map((data, index) => {
         return (
-          <div class="form-check  ">
+          <div className="form-check  ">
             <input
               className="form-check-input "
               type="checkbox"

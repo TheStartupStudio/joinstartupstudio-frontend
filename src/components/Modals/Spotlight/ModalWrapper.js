@@ -14,7 +14,9 @@ const ModalWrapper = (props) => {
         backdrop="static"
         keyboard={false}
         id="general-modal-wrapper"
-        className={`general-modal-wrapper ${props.class ? props.class : ''}`}
+        className={`general-modal-wrapper ${
+          props.classes ? props.classes : ''
+        }`}
 
         // className={props.class ? props.class : 'general-modal-wrapper'}
       >
