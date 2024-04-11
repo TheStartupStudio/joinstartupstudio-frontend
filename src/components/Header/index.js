@@ -629,7 +629,7 @@ function Header(props) {
                       >
                         SUPPORT
                       </Link>
-                      <div
+                      <Link
                         className="dropdown-item py-2 dropdown-menu-hover"
                         onClick={() => {
                           axiosInstance
@@ -645,7 +645,7 @@ function Header(props) {
                         }}
                       >
                         <IntlMessages id="navigation.logout" />
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 </li>

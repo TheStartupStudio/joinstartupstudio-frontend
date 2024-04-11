@@ -29,7 +29,10 @@ import axiosInstance from './utils/AxiosInstance'
 
 const MyTraining = React.lazy(() => import('./pages/MyTraining/MyTraining'))
 const Login = React.lazy(() => import('./pages/Auth/Login'))
-const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
+// const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
+const ChooseLogin = React.lazy(() =>
+  import('./pages/Auth/Login/ChooseLogin/HSChooseLogin')
+)
 const SecurePage = React.lazy(() => import('../src/pages/Secure'))
 const ForgotPassword = React.lazy(() =>
   import('./pages/Auth/Login/forgotPassword')

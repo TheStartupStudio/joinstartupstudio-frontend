@@ -11,6 +11,9 @@ function PublicHeader() {
   const location = useLocation()
   return (
     <div>
+      {location.pathname !== '/ims-login' &&
+        location.pathname !== '/' &&
+        location.pathname !== '/forgot-password' && (
       <nav
         className={`navbar navbar-expand-lg justify-content-between py-4 px-4 px-md-5 ${
           showMenuMobile && 'desktop-menu mt-lg-5'
@@ -81,6 +84,7 @@ function PublicHeader() {
         </li> */}
         </ul>
       </nav>
+        )}
       {showMenuMobile && (
         <nav className="mobile-menu">
           <Navbar

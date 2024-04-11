@@ -21,6 +21,7 @@ import { faBell } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
 import axiosInstance from '../../utils/AxiosInstance'
+import RecentAchievements from './RecentAchievements'
 
 function Dashboard() {
   const dispatch = useDispatch()
@@ -110,6 +111,7 @@ function Dashboard() {
             {/*    <ActiveStudents />*/}
             {/*  </div>*/}
             {/*</div>*/}
+            <RecentAchievements />
           </div>
         </div>
         <div className="col-12 col-xl-3 px-0">
