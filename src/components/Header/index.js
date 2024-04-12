@@ -1,84 +1,48 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, NavLink, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import ReactGA from 'react-ga'
 import { Auth } from 'aws-amplify'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faBars } from '@fortawesome/free-solid-svg-icons'
-import {
-  changeSidebarState,
-  getAllNotes,
-  getAllPodcast,
-  updateTnC
-} from '../../redux'
-// import Language from '../Language'
+import { getAllNotes, updateTnC } from '../../redux'
 import ContactUsModal from '../Modals/contactUsModal'
 import MisconductModal from '../Modals/misconductModal'
 import axiosInstance from '../../utils/AxiosInstance'
 import IntlMessages from '../../utils/IntlMessages'
 import triangleAlertIcon from '../../assets/images/alert-triangle-icon.svg'
-import notesIcon from '../../assets/images/notes-icon.svg'
-import notesIconHovered from '../../assets/images/notes-icon-active.svg'
-import mySparkBlack from '../../assets/icons/Asset 1.svg'
-import mySparkWhite from '../../assets/icons/Group 3819.svg'
-// import journalIcon from '../../assets/images/journals-icon.svg'
-// import journalIconHovered from '../../assets/images/journals-icon-active.svg'
-import focusIcon from '../../assets/images/focus_icon.png'
-import focusIconWhite from '../../assets/images/focus_icon_white.png'
-import avator from '../../assets/images/profile-image.png'
-import { faHeart as heart } from '@fortawesome/free-regular-svg-icons'
-import { faUsers } from '@fortawesome/free-solid-svg-icons'
-import { faBell } from '@fortawesome/free-solid-svg-icons'
 import socket from '../../utils/notificationSocket'
-import Notifications from './notifications'
 import TermAndCondition from './TermAndCondition'
 import StudentOfInstructors from '../GetInstructorStudents/index.js'
 import useOnClickOutside from 'use-onclickoutside'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import PeerSharingModal from '../Modals/PeerSharingModal'
-import { updateUserActivity } from '../../redux/user/Actions'
+import MobileNavbar from './MobileNavbar.js'
+import Navbar from './Navbar.js'
 
-function Header(props) {
+function Header() {
+  const dispatch = useDispatch()
+  const history = useHistory()
   const { user } = useSelector((state) => state.user.user)
   const mainState = useSelector((state) => state)
   const currentLanguage = useSelector((state) => state.lang.locale)
   const sideBarState = useSelector((state) => state.general.sidebarState)
   const notes = useSelector((state) => state.course)
   const [TnCModal, setOpenTnCModal] = useState(false)
-  const history = useHistory()
-  const location = useLocation()
   const [firstNote, setFirstNote] = useState('')
-  // const [noteActive, setNoteActive] = useState(false)
-  // const [noteHovered, setNoteHovered] = useState(false)
-  // const [noteActiveMobile, setNoteActiveMobile] = useState(false)
-  const [mediaHovered, setMediaHovered] = useState(false)
-  // const [spotlightHovered, setSpotlightHovered] = useState(false)
-  // const [spotlightHoveredMobile, setSpotlightHoveredMobile] = useState(false)
-  // const [communityHovered, setCommunityHovered] = useState(false)
-  // const [firstJournal, setFirstJournal] = useState('')
-  // const [journalActive, setJournalActive] = useState(false)
-  // const [journalHovered, setJournalHovered] = useState(false)
   const [verifiedEmail, setVerifiedEmail] = useState(null)
   const [currentUser, setCurrentUser] = useState({})
   const [userMessage, setUserMessage] = useState('')
   const [showContactModal, setShowContactModal] = useState(false)
   const [showMisconductReportModal, setShowMisconductReportModal] =
     useState(false)
-  const [showMobileDropDown, setShowMobileDropDown] = useState(false)
-  const [showDropDown, setShowDropDown] = useState(false)
   const [countStudentOfInstructor, setCountStudentOfInstructor] =
     useState(false)
-  // const profileImage = useSelector((state) => state.user.profileImage)
-  const name = useSelector((state) => state.user.user.user.name)
   const [notifications, setNotifications] = useState([])
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [showNotifications, setShowNotifications] = useState(false)
   const [allowToShow, setAllowToShow] = useState(false)
-  const [backButton, setBackButton] = useState(false)
   const notificationsRef = useRef(null)
   const [peerSharingModal, setPeerSharingModal] = useState(false)
   const [peerSharingAccepted, setPeerSharingAccepted] = useState(false)
-  const params = useParams()
 
   useEffect(() => {
     axiosInstance.get('/peerSharing/').then(({ data }) => {
@@ -100,9 +64,6 @@ function Header(props) {
       })
   }
 
-  const openPeerSharingModal = () => {
-    setPeerSharingModal(true)
-  }
   const closePeerSharingModal = () => {
     setPeerSharingModal(false)
   }
@@ -111,11 +72,7 @@ function Header(props) {
       setShowNotifications(false)
     }, 100)
   })
-  // useEffect(() => {
-  //   if (peerSharingAccepted) {
-  //     setPeerSharingModal(false)
-  //   }
-  // }, [peerSharingAccepted])
+
   const hasAccess = () => {
     axiosInstance
       .get('/studentsInstructorss/has-access')
@@ -134,45 +91,11 @@ function Header(props) {
    * since state is not updating immediately
    */
 
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    const urlSegments = location.pathname.split('/')
-
-    if (
-      urlSegments[1] === 'iamr-certification-system' &&
-      (urlSegments[2] === 'student-certification-1' ||
-        urlSegments[2] === 'student-certification-2')
-    ) {
-      setBackButton(true)
-    } else {
-      setBackButton(false)
-    }
-  }, [location.pathname])
-
-  // const noteActive =
-  //   window.location.pathname.includes('/my-notes') ||
-  //   window.location.pathname.includes('/sample-note')
-  //     ? true
-  //     : false
-  // const journalActive = window.location.pathname.includes(`/my-journal`)
-  //   ? true
-  //   : false
-
   useEffect(() => {
     isUserAgredToTnC()
     ReactGA.initialize('UA-130670492-3')
     ReactGA.pageview(window.location.href)
   })
-
-  // useEffect(() => {
-  //   if (window.location.pathname.includes('/my-notes')) {
-  //     setNoteActive(true)
-  //   } else if (window.location.pathname.includes(`/my-journal`)) {
-  //     setJournalActive(true)
-  //   }
-  //   getFirstJournal()
-  // }, [])
 
   useEffect(() => {
     socket?.emit('newNotificationUser', {
@@ -196,7 +119,7 @@ function Header(props) {
     return () => {
       socket.disconnect()
     }
-  }, [])
+  }, [user.id, user.name])
 
   useEffect(() => {
     checkIfUserHasVerifiedEmail()
@@ -223,7 +146,7 @@ function Header(props) {
         })
       )
     },
-    [user.sub]
+    [user.sub, dispatch]
   )
 
   useEffect(() => {
@@ -233,29 +156,12 @@ function Header(props) {
     }
   }, [notes.notes])
 
-  const closeDropDownMenu = () => {
-    if (showDropDown) {
-      setTimeout(() => {
-        setShowDropDown(false)
-      }, 200)
-    }
-  }
-
   const isUserAgredToTnC = () => {
     var pathArray = window.location.pathname.split('/')[1]
-    if (!user.TnC && pathArray != 'terms') {
+    if (!user.TnC && pathArray !== 'terms') {
       setOpenTnCModal(true)
     }
   }
-
-  // const getFirstJournal = async () => {
-  //   await axiosInstance
-  //     .get(`/journals/?month=1`)
-  //     .then((response) => {
-  //       setFirstJournal(response.data[0].Journals[0].id)
-  //     })
-  //     .catch((err) => err)
-  // }
 
   const checkIfUserHasVerifiedEmail = async () => {
     await Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -287,23 +193,11 @@ function Header(props) {
       })
   }
 
-  const showModal = () => {
-    setShowContactModal(true)
-  }
-
-  const showMisconductModal = () => {
-    setShowMisconductReportModal(true)
-  }
-
   const closeModal = () => {
     setShowContactModal(false)
   }
-
-  const handleMobileNavBar = () => {
-    if (showMobileDropDown == true) {
-      setShowMobileDropDown(false)
-    }
-    dispatch(changeSidebarState(!sideBarState))
+  const openPeerSharingModal = () => {
+    setPeerSharingModal(true)
   }
 
   return (
@@ -329,611 +223,35 @@ function Header(props) {
           )}
         </div>
       ) : null}
-      <nav className="navbar navbar-expand-lg navbar-light bg-light desktop-menu px-xl-2">
-        <div className="container-fluid">
-          <button
-            type="button"
-            id="sidebarCollapse"
-            className="btn"
-            style={{
-              backgroundColor: '#01c5d1'
-            }}
-            onClick={() => {
-              handleMobileNavBar()
-            }}
-          >
-            <FontAwesomeIcon icon={faBars} />
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav  mt-1">
-              {backButton && (
-                <div style={{ display: 'inherit' }}>
-                  <li className="nav-item my-auto">
-                    <button
-                      className={`nav-link icon-menu px-2 me-2 my-auto `}
-                      onClick={() => history.push('/iamr-certification-system')}
-                      style={{ border: 'none' }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faAngleLeft}
-                        style={{
-                          fontSize: '26px'
-                        }}
-                        className="pt-1"
-                      />
-                    </button>
-                  </li>
-                </div>
-              )}
-            </ul>
-            <ul className="navbar-nav ms-auto mt-1">
-              <li className="nav-item my-auto me-2 position-relative">
-                <a
-                  className={`nav-link icon-menu px-2 my-auto nav-notifications position-relative ${
-                    showNotifications ? 'active' : ''
-                  }`}
-                  onClick={() =>
-                    !showNotifications && setShowNotifications(true)
-                  }
-                >
-                  <FontAwesomeIcon
-                    icon={faBell}
-                    style={{
-                      fontSize: '26px',
-                      color: '#333D3D'
-                    }}
-                    className="nav-bell-icon pt-1"
-                  />
-                  {unreadNotifications > 0 && (
-                    <span className="badge nofitication-badge">
-                      {unreadNotifications}
-                    </span>
-                  )}
-                </a>
-                {showNotifications && (
-                  <Notifications
-                    unreadNotifications={unreadNotifications}
-                    notifications={notifications}
-                    setShowNotifications={setShowNotifications}
-                    setUnreadNotifications={setUnreadNotifications}
-                    notificationsRef={notificationsRef}
-                  />
-                )}
-              </li>
-              <div
-                onClick={() => setShowNotifications(false)}
-                style={{ display: 'inherit' }}
-              >
-                <li className="nav-item my-auto">
-                  {/*<NavLink*/}
-                  {/*  className={`nav-link icon-menu px-2 me-2 my-auto`}*/}
-                  {/*  to={*/}
-                  {/*    peerSharingAccepted ? '/my-classroom' : location.pathname*/}
-                  {/*  }*/}
-                  {/*  onClick={() => {*/}
-                  {/*    if (!peerSharingAccepted) {*/}
-                  {/*      openPeerSharingModal()*/}
-                  {/*    }*/}
-                  {/*  }}*/}
-                  {/*>*/}
-                  {/*  <FontAwesomeIcon*/}
-                  {/*    icon={faUsers}*/}
-                  {/*    style={{*/}
-                  {/*      fontSize: '26px'*/}
-                  {/*    }}*/}
-                  {/*    className="pt-1"*/}
-                  {/*  />*/}
-                  {/*</NavLink>*/}
-                  <NavLink
-                    className={`nav-link icon-menu px-2 me-2 my-auto`}
-                    to={'/my-classroom'}
-                  >
-                    <FontAwesomeIcon
-                      icon={faUsers}
-                      style={{
-                        fontSize: '26px'
-                      }}
-                      className="pt-1"
-                    />
-                  </NavLink>
-                </li>
-                <li className="nav-item spotlight-nav my-auto">
-                  <NavLink
-                    className={`nav-link icon-menu px-2 my-auto`}
-                    to={'/spotlight'}
-                  >
-                    <div>
-                      <img
-                        src={focusIconWhite}
-                        className="d-none focus-icon"
-                        width="28px"
-                        alt="note"
-                      />
-                      <img
-                        src={focusIcon}
-                        className="not-focus-icon"
-                        width="28px"
-                        alt="note"
-                      />
-                    </div>
-                  </NavLink>
-                </li>
-                <div
-                  className="my-auto mx-3"
-                  style={{ borderRight: '1px solid #BBBDBF', height: '20px' }}
-                ></div>
-                <li className="nav-item my-auto me-2">
-                  <NavLink
-                    onMouseOver={() => setMediaHovered(true)}
-                    onMouseLeave={() => setMediaHovered(false)}
-                    className={`nav-link icon-menu px-2 my-auto `}
-                    to={'/savedMedia'}
-                  >
-                    <FontAwesomeIcon
-                      icon={heart}
-                      style={{ fontSize: '26px' }}
-                      className="pt-1"
-                    />
-                  </NavLink>
-                </li>
-                {/*  */}
+      <Navbar
+        notifications={notifications}
+        setPeerSharingModal={setPeerSharingModal}
+        closePeerSharingModal={closePeerSharingModal}
+        peerSharingAccepted={peerSharingAccepted}
+        mainState={mainState}
+        user={user}
+        setCountStudentOfInstructor={setCountStudentOfInstructor}
+        sideBarState={sideBarState}
+        openPeerSharingModal={openPeerSharingModal}
+        allowToShow={allowToShow}
+        firstNote={firstNote}
+      />
 
-                <li className="nav-item notes-nav my-auto me-2 ">
-                  <NavLink
-                    className={`nav-link icon-menu`}
-                    to={
-                      firstNote !== ''
-                        ? `${`/my-notes/${firstNote}`}`
-                        : '/my-notes'
-                    }
-                  >
-                    <div>
-                      <img
-                        src={notesIconHovered}
-                        className="d-none focus-icon"
-                        width="25px"
-                        alt="note"
-                      />
-                      <img
-                        src={notesIcon}
-                        className="not-focus-icon"
-                        width="25px"
-                        alt="note"
-                      />
-                    </div>
-                  </NavLink>
-                </li>
-                <li className="nav-item notes-nav my-auto me-5 ">
-                  <NavLink
-                    className={`nav-link icon-menu`}
-                    to={'/my-spark/widgets'}
-                  >
-                    <div>
-                      <img
-                        src={mySparkWhite}
-                        className="d-none focus-icon"
-                        width="21px"
-                        alt="note"
-                      />
-                      <img
-                        src={mySparkBlack}
-                        className="not-focus-icon"
-                        width="21px"
-                        alt="note"
-                      />
-                    </div>
-                  </NavLink>
-                </li>
-
-                {/* <li className='nav-item dropdown mt-md-1 mt-xl-3 me-3'>
-                <Language />
-              </li> */}
-                <li className="nav-item dropdown ms-2">
-                  {/* <Dropdown showModal={showModal} close={closeProfileDropDown} /> */}
-                  <div
-                    className="dropdown-li"
-                    tabIndex="0"
-                    onBlur={() => closeDropDownMenu()}
-                  >
-                    <button
-                      className="btn btn-secondary dropdown-toggle menu-dropdown"
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                      onClick={() => setShowDropDown((preState) => !preState)}
-                    >
-                      <div className="profile-dropdown me-1 ms-3 desktop-menu d-none d-xl-block">
-                        {/* <img
-                        src={
-                          profileImage && profileImage !== 'undefined'
-                            ? profileImage
-                            : localStorage.getItem('profileImage') !== 'null'
-                            ? localStorage.getItem('profileImage')
-                            : avator
-                        }
-                        alt='Profile Image'
-                      /> */}
-                        <img
-                          src={
-                            mainState.user.user.user.profileImage
-                              ? mainState.user.user.user.profileImage
-                              : avator
-                          }
-                          alt="Profile Image"
-                        />
-                      </div>
-                      <div className="profile-dropdown-info desktop-menu">
-                        <h5>{name ? name : localStorage.getItem('name')}</h5>
-                        <p>{user.email}</p>
-                      </div>
-                    </button>
-                    <div
-                      className={`dropdown-menu${
-                        showDropDown ? 'show1' : ''
-                      } p-0 text-uppercase`}
-                      aria-labelledby="dropdownMenuButton"
-                    >
-                      <Link
-                        className="dropdown-item py-2 dropdown-menu-hover"
-                        to="/account"
-                        onClick={() => setShowDropDown((preState) => !preState)}
-                      >
-                        <IntlMessages id="my_account.page_title" />
-                      </Link>
-
-                      {
-                        <Link
-                          className="dropdown-item py-2 dropdown-menu-hover"
-                          to="/edit-portfolio"
-                          onClick={() =>
-                            setShowDropDown((preState) => !preState)
-                          }
-                        >
-                          MY PORTFOLIO
-                        </Link>
-                      }
-                      <li>
-                        <Link
-                          onClick={() =>
-                            setShowDropDown((preState) => !preState)
-                          }
-                          to="/resources"
-                          className="dropdown-item py-2 dropdown-menu-hover"
-                        >
-                          MY RESOURCES
-                        </Link>
-                      </li>
-                      {allowToShow ? (
-                        <Link
-                          className="dropdown-item py-2 dropdown-menu-hover"
-                          to="#"
-                          onClick={() => {
-                            setCountStudentOfInstructor(true)
-                            setShowDropDown((preState) => !preState)
-                          }}
-                        >
-                          Admin panel
-                        </Link>
-                      ) : (
-                        ''
-                      )}
-                      <Link
-                        className="dropdown-item py-2 dropdown-menu-hover"
-                        to="#"
-                        onClick={() => {
-                          showModal()
-                          setShowDropDown((preState) => !preState)
-                        }}
-                      >
-                        SUPPORT
-                      </Link>
-                      <Link
-                        className="dropdown-item py-2 dropdown-menu-hover"
-                        onClick={() => {
-                          axiosInstance
-                            .put('/myPerformanceData/updateActivity', {
-                              isActive: false
-                            })
-                            .then((response) => {
-                              if (response) history.push('/logout')
-                            })
-                            .catch((error) => {
-                              console.error('Error updating activity:', error)
-                            })
-                        }}
-                      >
-                        <IntlMessages id="navigation.logout" />
-                      </Link>
-                    </div>
-                  </div>
-                </li>
-              </div>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light mobile-menu">
-        <div className="container-fluid">
-          <button
-            type="button"
-            id="sidebarCollapse"
-            className="btn"
-            style={{
-              backgroundColor: '#01c5d1'
-            }}
-            onClick={() => {
-              dispatch(changeSidebarState(!sideBarState))
-              setShowDropDown(false)
-            }}
-          >
-            <FontAwesomeIcon icon={faBars} />
-          </button>
-          <div className="col-2 d-flex ms-auto flex-row-reverse">
-            <button
-              className="btn d-inline-block"
-              type="button"
-              // style={{ display: 'none' }}
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              onClick={() => {
-                setShowDropDown((preState) => !preState)
-              }}
-            >
-              <FontAwesomeIcon icon={faBars} />
-            </button>
-            <ul className="navbar-nav my-auto">
-              <li className="nav-item my-auto position-relative nav-notifications-li">
-                <a
-                  className={`nav-link icon-menu px-2 my-auto nav-notifications position-relative ${
-                    showNotifications ? 'active' : ''
-                  }`}
-                  onClick={() => setShowNotifications(!showNotifications)}
-                >
-                  <FontAwesomeIcon
-                    icon={faBell}
-                    style={{
-                      fontSize: '26px',
-                      color: '#333D3D'
-                    }}
-                    className="nav-bell-icon pt-1"
-                  />
-                  {unreadNotifications > 0 && (
-                    <span className="badge nofitication-badge">
-                      {unreadNotifications}
-                    </span>
-                  )}
-                </a>
-                {showNotifications && (
-                  <Notifications
-                    unreadNotifications={unreadNotifications}
-                    notifications={notifications}
-                    setShowNotifications={setShowNotifications}
-                    setUnreadNotifications={setUnreadNotifications}
-                  />
-                )}
-              </li>
-              <div
-                onClick={() => setShowNotifications(false)}
-                style={{ display: 'inherit' }}
-              >
-                <li className="nav-item spotlight-nav my-auto">
-                  <NavLink
-                    className={`nav-link icon-menu px-2 me-2 my-auto`}
-                    to={'/spotlight'}
-                  >
-                    <div>
-                      <img
-                        src={focusIconWhite}
-                        className="d-none focus-icon"
-                        width="28px"
-                        alt="note"
-                      />
-                      <img
-                        src={focusIcon}
-                        className="not-focus-icon"
-                        width="28px"
-                        alt="note"
-                      />
-                    </div>
-                  </NavLink>
-                </li>
-                <li className="nav-item my-auto">
-                  <NavLink
-                    className={`nav-link icon-menu px-2 me-2 my-auto`}
-                    to={'/savedMedia'}
-                  >
-                    <FontAwesomeIcon
-                      icon={heart}
-                      style={{ fontSize: '26px' }}
-                      className="pt-1"
-                    />
-                  </NavLink>
-                </li>
-                {/*  */}
-                <li className="nav-item notes-nav my-auto">
-                  <NavLink
-                    className={`nav-link px-2 me-1 icon-menu`}
-                    to={
-                      firstNote !== ''
-                        ? `${`/my-notes/${firstNote}`}`
-                        : '/my-notes'
-                    }
-                  >
-                    <div>
-                      <img
-                        src={notesIconHovered}
-                        className="d-none focus-icon"
-                        width="25px"
-                        alt="note"
-                      />
-                      <img
-                        src={notesIcon}
-                        className="not-focus-icon"
-                        width="25px"
-                        alt="note"
-                      />
-                    </div>
-                  </NavLink>
-                </li>
-                <li className="nav-item notes-nav my-auto ">
-                  <NavLink
-                    className={`nav-link px-2 me-1 icon-menu`}
-                    to={'/my-spark/widgets'}
-                  >
-                    <div>
-                      <img
-                        src={mySparkWhite}
-                        className="d-none focus-icon"
-                        width="21px"
-                        alt="note"
-                      />
-                      <img
-                        src={mySparkBlack}
-                        className="not-focus-icon"
-                        width="21px"
-                        alt="note"
-                      />
-                    </div>
-                  </NavLink>
-                </li>
-              </div>
-            </ul>
-          </div>
-        </div>
-        <div className="dropdown-li">
-          <button
-            className="btn btn-secondary  menu-dropdown"
-            type="button"
-            // style={{ display: 'none' }}
-            id="dropdownMenuButton"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            onClick={() => setShowDropDown((preState) => !preState)}
-          >
-            <div className="profile-dropdown me-1 ms-3 desktop-menu">
-              {/* <img
-                src={
-                  profileImage && profileImage !== 'undefined'
-                    ? profileImage
-                    : localStorage.getItem('profileImage') !== 'null'
-                    ? localStorage.getItem('profileImage')
-                    : avator
-                }
-                alt='Profile Image'
-              /> */}
-              <img
-                src={
-                  mainState.user.user.user.profileImage
-                    ? mainState.user.user.user.profileImage
-                    : avator
-                }
-                alt="Profile Image"
-              />
-            </div>
-            <div className="profile-dropdown-info desktop-menu">
-              <h5>{name}</h5>
-              <p>{user.email}</p>
-            </div>
-          </button>
-          <div
-            className={`dropdown-menu${
-              showDropDown ? 'show1' : ''
-            } p-0 text-uppercase`}
-            aria-labelledby="dropdownMenuButton"
-          >
-            <Link
-              className="dropdown-item py-2 dropdown-menu-hover"
-              to="/account"
-              onClick={() => setShowDropDown((preState) => !preState)}
-            >
-              <IntlMessages id="my_account.page_title" />
-            </Link>
-            {
-              <Link
-                className="dropdown-item py-2 dropdown-menu-hover"
-                to="/edit-portfolio"
-                onClick={() => setShowDropDown((preState) => !preState)}
-              >
-                MY PORTFOLIO
-              </Link>
-            }
-            {allowToShow ? (
-              <Link
-                className="dropdown-item py-2 dropdown-menu-hover"
-                to="#"
-                onClick={() => {
-                  setCountStudentOfInstructor(true)
-                  setShowDropDown((preState) => !preState)
-                }}
-              >
-                Admin panel
-              </Link>
-            ) : (
-              ''
-            )}
-            {/* <Link
-              className='dropdown-item py-2 dropdown-menu-hover'
-              to='/MyStartupProfile'
-              onClick={() => setShowDropDown((preState) => !preState)}
-            >
-              MY PROJECTS
-            </Link> */}
-            {/*<Link*/}
-            {/*  className="dropdown-item py-2 dropdown-menu-hover"*/}
-            {/*  to="/my-connections"*/}
-            {/*  onClick={() => setShowDropDown((preState) => !preState)}*/}
-            {/*>*/}
-            {/*  MY COMMUNITY*/}
-            {/*</Link>*/}
-            {/*<Link*/}
-            {/*  className="dropdown-item py-2 dropdown-menu-hover"*/}
-            {/*  to="#"*/}
-            {/*  onClick={showModal}*/}
-            {/*>*/}
-            {/*  <IntlMessages id="navigation.contact_us" />*/}
-            {/*</Link>*/}
-            {/*<Link*/}
-            {/*  className="dropdown-item py-2 dropdown-menu-hover"*/}
-            {/*  to="#"*/}
-            {/*  onClick={showMisconductModal}*/}
-            {/*>*/}
-            {/*  REPORT MISCONDUCT*/}
-            {/*</Link>*/}
-            <Link
-              className="dropdown-item py-2 dropdown-menu-hover"
-              to="#"
-              onClick={() => {
-                showModal()
-                setShowDropDown((preState) => !preState)
-              }}
-            >
-              SUPPORT
-            </Link>
-            <div
-              className="dropdown-item py-2 dropdown-menu-hover"
-              onClick={() => {
-                axiosInstance
-                  .put('/myPerformanceData/updateActivity', {
-                    isActive: false
-                  })
-                  .then((response) => {
-                    if (response) history.push('/logout')
-                  })
-                  .catch((error) => {
-                    console.error('Error updating activity:', error)
-                  })
-              }}
-            >
-              <IntlMessages id="navigation.logout" />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <MobileNavbar
+        firstNote={firstNote}
+        setFirstNote={setFirstNote}
+        setUnreadNotifications={setUnreadNotifications}
+        notifications={notifications}
+        unreadNotifications={unreadNotifications}
+        sideBarState={sideBarState}
+        showNotifications={showNotifications}
+        setShowNotifications={setShowNotifications}
+        mainState={mainState}
+        allowToShow={allowToShow}
+        setCountStudentOfInstructor={setCountStudentOfInstructor}
+        setShowContactModal={setShowContactModal}
+        user={user}
+      />
 
       <ContactUsModal
         show={showContactModal}
