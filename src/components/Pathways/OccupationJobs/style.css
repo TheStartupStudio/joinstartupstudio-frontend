@@ -1,0 +1,28 @@
+.table thead tr th {
+  background-color: #51c6de;
+  color: #fff;
+  font-size: 13px;
+  padding: 2%;
+}
+
+.table tbody {
+  background-color: #fff !important;
+}
+.table tbody tr td,
+.table tbody tr td a {
+  padding: 2%;
+  color: #636061;
+}
+.occupation-content {
+  font-size: 13px;
+  color: #636061;
+}
+.table-helper {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.table-helper tbody tr td,
+.table-helper tbody tr td a,
+.table-helper thead tr th {
+  padding: 1% !important;
+}

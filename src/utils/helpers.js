@@ -9,6 +9,65 @@ import _ from 'lodash'
 import UserContactForm from '../components/UserContactForm'
 import { format } from 'date-fns'
 import { toast } from 'react-toastify'
+import {
+  faChartBar,
+  faCircle,
+  faCity,
+  faMountain,
+  faPaintBrush,
+  faPaintRoller,
+  faUser,
+  faUsers,
+  faAppleAlt,
+  faBalanceScale,
+  faBuilding,
+  faCalculator,
+  faDesktop,
+  faFilm,
+  faGraduationCap,
+  faHandHoldingMedical,
+  faHandHoldingUsd,
+  faHeartbeat,
+  faPeopleArrows,
+  faPlay,
+  faStar,
+  faSwimmer,
+  faTree,
+  faTruckMoving,
+  faUserTie,
+  faWrench,
+  faHeadset,
+  faBook
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+const iconMap = {
+  architectureAndEngineering: faCity,
+  artAndDesign: faPaintBrush,
+  buildingAndGroundsCleaning: faPaintRoller,
+  bussinesAndFinancial: faChartBar,
+  communityAndSocialService: faUsers,
+  computerAndInformationTech: faDesktop,
+  contructionAndExtraction: faBuilding,
+  educationalInstructionAndLibrary: faGraduationCap,
+  entertainmentAndSport: faSwimmer,
+  farmingAndFishinAndForest: faTree,
+  foodpreparationAndServing: faAppleAlt,
+  healthcare: faHeartbeat,
+  installationMaintenanceAndRepair: faWrench,
+  legal: faBalanceScale,
+  lifePhysicalAndSocialScience: faPeopleArrows,
+  management: faUserTie,
+  math: faCalculator,
+  mediaAndCommunication: faPlay,
+  military: faStar,
+  officeAndAdministrativeSupport: faHeadset,
+  personalCareAndService: faHandHoldingMedical,
+  production: faFilm,
+  protectiveService: faUser,
+  sales: faHandHoldingUsd,
+  transportationAndMaterialMoving: faTruckMoving
+}
 
 export const IsUserLevelAuthorized = () => {
   const loggedUserLevel = useSelector((state) => state?.user?.user?.user?.level)
@@ -181,4 +240,10 @@ export const getCertificationType = (skillType) => {
     return 2
   }
   return null
+}
+
+export const getIconComponent = (iconIdentifier, color) => {
+  const icon = iconMap[iconIdentifier]
+  console.log('icon', icon)
+  return icon ? <FontAwesomeIcon icon={icon} style={{ color: color }} /> : null
 }

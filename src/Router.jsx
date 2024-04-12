@@ -66,6 +66,7 @@ const IamrCertificationSystem = React.lazy(() =>
     './pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationSystem/IamrCertificationSystem'
   )
 )
+const Pathways = React.lazy(() => import('./pages/Pathways'))
 
 const EditPortfolio = React.lazy(() =>
   import('./pages/Portfolio/editPortfolio')
@@ -252,6 +253,15 @@ function Router(props) {
                 exact
                 path="/beyond-your-course/:id"
                 component={BeyondYourCourse}
+              />
+              <Route
+                exact
+                path="/pathways"
+                component={(props) => <Pathways {...props} />}
+              />
+              <Route
+                path="/pathways/:occupationId?/:occupationJobId?"
+                component={(props) => <Pathways {...props} />}
               />
               <Route path="/story-in-motion" component={StoryInMotion} />
               {/* <Route path='/PrivateProject' component={PrivateProject} /> */}
