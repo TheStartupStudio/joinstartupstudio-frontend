@@ -13,6 +13,7 @@ import reflectionsTableReducer from './reflectionsTable/Reducer'
 import rwlJournalReducer from './rwl/reducer'
 import platformBadgesReducer from './platformBadges/reducer'
 import performanceDataReducer from './myPerformanceData/reducer'
+import myImmersionReducer from './myImmersion/reducer'
 import PathwaysReducer from './pathways/reducer'
 
 const rootReducer = combineReducers({
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   reflectionsTable: reflectionsTableReducer,
   rwlJournal: rwlJournalReducer,
   platformBadges: platformBadgesReducer,
+  myImmersion: myImmersionReducer,
   performanceData: performanceDataReducer,
   pathways: PathwaysReducer
 })

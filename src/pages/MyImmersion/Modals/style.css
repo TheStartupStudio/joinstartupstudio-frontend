@@ -1,0 +1,16 @@
+.submit-industry-problem-modal .modal-dialog {
+  max-width: 1000px !important;
+}
+
+.submit-industry-problem-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.body-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 2%;
+  height: 100%;
+}

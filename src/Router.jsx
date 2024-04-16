@@ -44,7 +44,8 @@ const CreateAccount = React.lazy(() =>
   import('./pages/Auth/Login/createAccount')
 )
 const NotFound = React.lazy(() => import('../src/pages/NotFound'))
-
+const MyImmersion = React.lazy(() => import('./pages/MyImmersion'))
+const Steps = React.lazy(() => import('./pages/MyImmersion/Steps'))
 const Terms = React.lazy(() => import('./pages/Terms'))
 const Register = React.lazy(() => import('./pages/Register'))
 const Dashboard = React.lazy(() => import('./pages/Dashboard'))
@@ -254,6 +255,8 @@ function Router(props) {
                 path="/beyond-your-course/:id"
                 component={BeyondYourCourse}
               />
+              <Route exact path="/my-immersion" component={MyImmersion} />
+              <Route path="/my-immersion/:step" component={Steps} />
               <Route
                 exact
                 path="/pathways"
@@ -518,6 +521,7 @@ function Router(props) {
                 path="/password-change-required"
                 component={PasswordChangeRequired}
               />
+              <Route path="/my-immersion" component={MyImmersion} />
               <Route component={NotFound} />
             </Switch>
           </PublicLayout>

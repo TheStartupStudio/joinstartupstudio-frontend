@@ -80,7 +80,7 @@ const Body = (props) => {
           to={'/story-in-motion'}
         />
         <DropdownItem title={'PATHWAYS'} to={'/pathways'} />
-        <DropdownItem title={'IMMERSION'} to={'/immersion'} />
+        <DropdownItem title={'IMMERSION'} to={'/my-immersion'} />
         <DropdownItem title={'COURSE CREDENTIALS'} to={'/course-credentials'} />
         <DropdownItem title={'SPOTLIGHT'} to={'/spotlight'} />
       </ParentDropdownItem>
