@@ -64,7 +64,7 @@ const Body = (props) => {
       />
       <ParentDropdownItem id={'collapseClassroom'}>
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
-        <DropdownItem title={'MY IAMR INBOX'} to="/iamr-inbox" />
+        <DropdownItem title={'MY INBOX'} to="/iamr-inbox" />
       </ParentDropdownItem>
 
       <ParentSidebarItem
