@@ -99,7 +99,7 @@
   font: normal normal 300 12px/14px Montserrat;
   letter-spacing: 0px;
   color: #3d3d3d;
-  opacity: 1;
+  opacity: 1;;
 }
 
 .inbox-tickets-container .single-ticket {
@@ -356,6 +356,14 @@
   right: 22px;
   top: 32px;
   cursor: pointer;
+}
+
+.menu_accordion-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3%;
 }
 
 /* medias */
