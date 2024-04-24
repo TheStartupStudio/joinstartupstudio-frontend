@@ -64,6 +64,7 @@ const Body = (props) => {
       />
       <ParentDropdownItem id={'collapseClassroom'}>
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
+        <DropdownItem disabled={true} title={'MY EVALUATIONS'} to={'/my-evaluations'} />
         <DropdownItem title={'MY IAMR INBOX'} to="/iamr-inbox" />
       </ParentDropdownItem>
 
@@ -79,25 +80,36 @@ const Body = (props) => {
           title={<IntlMessages id="my_saved.STORY_IN_MOTION" />}
           to={'/story-in-motion'}
         />
-        <DropdownItem title={'PATHWAYS'} to={'/pathways'} />
-        <DropdownItem title={'IMMERSION'} to={'/immersion'} />
-        <DropdownItem title={'COURSE CREDENTIALS'} to={'/course-credentials'} />
-        <DropdownItem title={'SPOTLIGHT'} to={'/spotlight'} />
+        <DropdownItem title={'MY PATHWAYS'} to={'/pathways'} />
+        <DropdownItem title={'MY IMMERSION'} to={'/immersion'} />
+        <DropdownItem title={'MY COURSE & CREDENTIALS'} to={'/course-credentials'} />
+        <DropdownItem title={'MY SPOTLIGHT'} to={'/spotlight'} />
       </ParentDropdownItem>
       <ParentSidebarItem
-        ariaControls="studentJournals"
-        href="#studentJournals"
+        ariaControls="journals"
+        href="#journals"
         srcImage={FolderSidebarImage}
-        title="STUDENT JOURNALS"
+        title="JOURNALS"
         isDropdown={true}
       />
-      <ParentDropdownItem id={'studentJournals'}>
+      <ParentDropdownItem id={'journals'}>
         <DropdownItem title={'LTS JOURNAL'} to={'/student-lts'} />
         <DropdownItem title={'WELLNESS JOURNAL'} to={'/student-wellnes'} />
         <DropdownItem
           title={'PERSONAL FINANCE JOURNAL'}
           to={'/student-personal-finance'}
         />
+      </ParentDropdownItem>
+      <ParentSidebarItem
+        ariaControls="mySpark"
+        href="#mySpark"
+        srcImage={FolderSidebarImage}
+        title="MY SPARK"
+        isDropdown={true}
+      />
+      <ParentDropdownItem id={'mySpark'}>
+        <DropdownItem title={'SPARK WIDGETS'} to={'/my-spark/widgets'} />
+        <DropdownItem title={'SPARK ARCHIVE'} to={'/my-spark/archive'} />
       </ParentDropdownItem>
     </ul>
   )

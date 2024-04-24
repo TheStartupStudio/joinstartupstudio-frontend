@@ -1,9 +1,9 @@
 import { NavLink } from 'react-router-dom'
 
-const DropdownItem = ({ title, to }) => {
+const DropdownItem = ({ title, to,disabled }) => {
   return (
-    <li>
-      <NavLink to={to} activeClassName="sidenav active">
+    <li className={`${disabled ? 'disabledd' : ''}`}>
+      <NavLink to={to} activeClassName="sidenav active ">
         <div className="d-flex" style={{ alignItems: 'center' }}>
           <div className="ms-4 ps-2 py-1 text-uppercase">{title}</div>
         </div>
