@@ -3,6 +3,7 @@ import '../index.css'
 
 function MenuOption({ allowedToShow, questionMenu, title, categoryOption }) {
   const { questionsMenuSelected, selectQuestionsMenu } = useIamrInboxContext()
+  console.log('questionsMenuSelected', questionsMenuSelected)
   return (
     <>
       {allowedToShow && (
