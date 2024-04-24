@@ -3,32 +3,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import IntlMessages from '../../utils/IntlMessages'
 import Profile from '../../components/Profile'
 import { changeSidebarState } from '../../redux'
-import { ActiveStudents } from '../../components/ActiveStudents'
-import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
-
 import {
   closeTaskModal,
   getEventsStart,
-  getPeriodsStart,
+   getPeriodsStart,
   openTaskModal
 } from '../../redux/dashboard/Actions'
 import LevelWrapper from '../../components/LevelWrapper'
-
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
-import NotificationBox from '../NotificationSection-dashboard/NotificationBox'
-import { faBell } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
-import axiosInstance from '../../utils/AxiosInstance'
-import RecentAchievements from './RecentAchievements'
 
 function Dashboard() {
   const dispatch = useDispatch()
   const periods = useSelector((state) => state.dashboard.periods)
   const events = useSelector((state) => state.dashboard.events)
-  const loggedUser = useSelector((state) => state.user.user.user)
-  // useEffect(() => {
+   // useEffect(() => {
   //   if (loggedUser) {
   //     const newTime = axiosInstance.get('/myPerformanceData/loginTime')
   //     console.log(newTime)
@@ -111,7 +101,7 @@ function Dashboard() {
             {/*    <ActiveStudents />*/}
             {/*  </div>*/}
             {/*</div>*/}
-            <RecentAchievements />
+
           </div>
         </div>
         <div className="col-12 col-xl-3 px-0">

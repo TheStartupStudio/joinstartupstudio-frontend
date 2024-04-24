@@ -98,6 +98,10 @@ const Body = (props) => {
           title={'PERSONAL FINANCE JOURNAL'}
           to={'/student-personal-finance'}
         />
+        <DropdownItem
+          title={'LEADERSHIP JOURNAL'}
+          to={'/student-leadership'}
+        />
       </ParentDropdownItem>
     </ul>
   )
