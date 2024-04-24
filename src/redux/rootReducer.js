@@ -14,6 +14,7 @@ import rwlJournalReducer from './rwl/reducer'
 import performanceDataReducer from './myPerformanceData/reducer'
 import myImmersionReducer from './myImmersion/reducer'
 import PathwaysReducer from './pathways/reducer'
+import platformBadgesReducer from './platformBadges/reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   rwlJournal: rwlJournalReducer,
   myImmersion: myImmersionReducer,
   performanceData: performanceDataReducer,
-  pathways: PathwaysReducer
+  pathways: PathwaysReducer,
+  platformBadges:platformBadgesReducer
 })
 export default rootReducer
