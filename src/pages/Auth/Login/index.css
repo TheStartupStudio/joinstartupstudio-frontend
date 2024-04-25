@@ -104,13 +104,9 @@
   }
 }
 
-.ims-login-role {
-}
 
 .ims-login-role:hover {
   background-color: #51c7df;
-}
-.main-login-role {
 }
 
 .main-login-role:hover {
@@ -140,3 +136,43 @@ svg {
 .instructor-logo-clicked [class^='st'] {
   /*fill: white;*/
 }
+/* ------------ */
+.social-media-item {
+  margin-right: 20px;
+  color: black;
+  font-size: 20px;
+}
+.button-type_container {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+/* Choose login style */
+.choose-login_container {
+  background-image: url('../../../assets/images/Login/sus-mark-trans-bkg.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-position-x: right;
+  background-size: cover;
+}
+
+/* Login style */
+.login_container {
+  background-image: url('../../../assets/images/Login/Cogs_Background.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-position-x: right;
+  background-size: cover;
+}
+
+@media (max-width: 767.98px) {
+  .center-content {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+

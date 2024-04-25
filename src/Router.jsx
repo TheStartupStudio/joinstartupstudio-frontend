@@ -29,7 +29,10 @@ import axiosInstance from './utils/AxiosInstance'
 
 const MyTraining = React.lazy(() => import('./pages/MyTraining/MyTraining'))
 const Login = React.lazy(() => import('./pages/Auth/Login'))
-const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
+// const ChooseLogin = React.lazy(() => import('./pages/Auth/Login/ChooseLogin'))
+const ChooseLogin = React.lazy(() =>
+  import('./pages/Auth/Login/ChooseLogin/HSChooseLogin')
+)
 const SecurePage = React.lazy(() => import('../src/pages/Secure'))
 const ForgotPassword = React.lazy(() =>
   import('./pages/Auth/Login/forgotPassword')
@@ -41,7 +44,8 @@ const CreateAccount = React.lazy(() =>
   import('./pages/Auth/Login/createAccount')
 )
 const NotFound = React.lazy(() => import('../src/pages/NotFound'))
-
+const MyImmersion = React.lazy(() => import('./pages/MyImmersion'))
+const Steps = React.lazy(() => import('./pages/MyImmersion/Steps'))
 const Terms = React.lazy(() => import('./pages/Terms'))
 const Register = React.lazy(() => import('./pages/Register'))
 const Dashboard = React.lazy(() => import('./pages/Dashboard'))
@@ -63,6 +67,7 @@ const IamrCertificationSystem = React.lazy(() =>
     './pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationSystem/IamrCertificationSystem'
   )
 )
+const Pathways = React.lazy(() => import('./pages/Pathways'))
 
 const EditPortfolio = React.lazy(() =>
   import('./pages/Portfolio/editPortfolio')
@@ -346,6 +351,17 @@ function Router(props) {
                 path="/beyond-your-course/:id"
                 component={BeyondYourCourse}
               />
+              <Route exact path="/my-immersion" component={MyImmersion} />
+              <Route path="/my-immersion/:step" component={Steps} />
+              <Route
+                exact
+                path="/pathways"
+                component={(props) => <Pathways {...props} />}
+              />
+              <Route
+                path="/pathways/:occupationId?/:occupationJobId?"
+                component={(props) => <Pathways {...props} />}
+              />
               <Route path="/story-in-motion" component={StoryInMotion} />
               {/* <Route path='/PrivateProject' component={PrivateProject} /> */}
               <Route path="/UserProject/:uid" component={UserPortfolioProj} />
@@ -597,6 +613,7 @@ function Router(props) {
                 path="/password-change-required"
                 component={PasswordChangeRequired}
               />
+              <Route path="/my-immersion" component={MyImmersion} />
               <Route component={NotFound} />
             </Switch>
           </PublicLayout>

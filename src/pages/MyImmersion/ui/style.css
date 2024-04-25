@@ -1,0 +1,43 @@
+.immersion-upload-file-input {
+  border: 1px solid #ccc;
+  display: inline-flex;
+  min-width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  height: 50px;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.file-input-placeholder {
+  flex-grow: 1;
+}
+
+.file-input-icon {
+  font-size: 28px;
+  margin-left: 10px;
+  color: #6c6c6c;
+}
+
+.file-input {
+  opacity: 0 !important;
+  width: 0.1px;
+  height: 0.1px;
+  position: absolute;
+}
+
+.submit-button {
+  background: #51c7df;
+  height: 50px;
+  color: #fff;
+  width: 40%;
+  font-size: 14px;
+}
+.submit-button:disabled {
+  background: #a8a8a8;
+  color: #fff;
+  cursor: not-allowed;
+}

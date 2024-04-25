@@ -23,7 +23,7 @@ function InboxTickets() {
     setApprovalRequests,
     loading,
     setLoading,
-    resetAllQuestions,
+    resetAllQuestions
   } = useIamrInboxContext()
   // const questionsMenuSelected = 'student-questions'
   const [filterExpanded, setFilterExpanded] = useState(false)
@@ -51,6 +51,8 @@ function InboxTickets() {
       : approvalRequests
 
   const PER_PAGE = 5
+
+  console.log('tickets', tickets)
 
   const pageCount =
     tickets.count < PER_PAGE ? 1 : Math.ceil(tickets.count / PER_PAGE)
@@ -168,7 +170,7 @@ function InboxTickets() {
     isSearching,
     certificationFeedbackPage,
     setCertificationFeedbackQuestions,
-    setLoading,
+    setLoading
   ])
   //fetchApprovalRequests
   useEffect(() => {
@@ -234,7 +236,7 @@ function InboxTickets() {
     setCertificationFeedbackQuestions,
     setStudentQuestions,
     setLoading,
-    resetAllQuestions,
+    resetAllQuestions
   ])
 
   const getTicketsByPage = (page, type) => {
@@ -263,7 +265,7 @@ function InboxTickets() {
               style={{
                 color: '#707070',
                 fontSize: '22px',
-                marginRight: '5px',
+                marginRight: '5px'
               }}
             />
             <p className="m-0">{selectedFilter ?? 'FILTER'}</p>

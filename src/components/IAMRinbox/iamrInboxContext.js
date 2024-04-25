@@ -3,7 +3,7 @@ import {
   useReducer,
   useContext,
   useMemo,
-  useCallback,
+  useCallback
 } from 'react'
 import iamrInboxReducer, { initialState } from './iamrInboxReducer'
 
@@ -16,7 +16,7 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_STUDENT_QUESTIONS',
-        payload,
+        payload
       })
     },
     [dispatch]
@@ -26,7 +26,7 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_CERTIFICATION_FEEDBACK_QUESTIONS',
-        payload,
+        payload
       })
     },
     [dispatch]
@@ -36,7 +36,7 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_APPROVAL_REQUESTS',
-        payload,
+        payload
       })
     },
     [dispatch]
@@ -48,7 +48,7 @@ export const IamrInboxProvider = ({ children }) => {
 
       dispatch({
         type: 'SET_QUESTIONS_MENU_SELECTED',
-        payload: payload,
+        payload: payload
       })
     },
     [state, dispatch]
@@ -58,7 +58,7 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_LOADING',
-        payload: payload,
+        payload: payload
       })
     },
     [dispatch]
@@ -68,7 +68,7 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_REPLYING',
-        payload: payload,
+        payload: payload
       })
     },
     [dispatch]
@@ -98,7 +98,7 @@ export const IamrInboxProvider = ({ children }) => {
 
       dispatch({
         type: type,
-        payload: { ...questions, rows: newRows },
+        payload: { ...questions, rows: newRows }
       })
     },
     [dispatch, state]
@@ -132,25 +132,27 @@ export const IamrInboxProvider = ({ children }) => {
           ? 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS'
           : 'UPDATE_APPROVAL_REQUEST';
 
+      console.log('ticket.type', ticket.type)
+
       dispatch({
         type: type,
         payload: {
           ...questions,
           unreadCount: questions.unreadCount - 1,
-          rows: newRows,
-        },
+          rows: newRows
+        }
       })
     },
     [
       state.certificationFeedbackQuestions,
       state.studentQuestions,
-      state.approvalRequests,
+      state.approvalRequests
     ]
   )
 
   const resetAllQuestions = useCallback(() => {
     dispatch({
-      type: 'RESET_ALL_QUESTIONS',
+      type: 'RESET_ALL_QUESTIONS'
     })
   }, [dispatch])
 
@@ -171,7 +173,7 @@ export const IamrInboxProvider = ({ children }) => {
       newMessage,
       resetAllQuestions,
       ticketOpened,
-      dispatch,
+      dispatch
     }
   }, [
     state,
@@ -183,7 +185,7 @@ export const IamrInboxProvider = ({ children }) => {
     setReplying,
     newMessage,
     resetAllQuestions,
-    ticketOpened,
+    ticketOpened
   ])
 
   return (

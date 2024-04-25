@@ -7,6 +7,7 @@ const EnLangs = {
   'general.go_next': 'Next',
   'general.save': 'Save',
   'general.saving': 'Saving...',
+  'general.ready': 'Ready',
   'general.start': 'Start!',
   'general.click_here': 'Click here',
   'general.submit': 'Submit!',
