@@ -46,13 +46,11 @@ function InboxTickets() {
   const tickets =
     questionsMenuSelected === 'student-questions'
       ? studentQuestions
-      : questionsMenuSelected === 'certification-feedback-requests'
+      : questionsMenuSelected === 'certification-feedback-questions'
       ? certificationFeedbackQuestions
       : approvalRequests
 
   const PER_PAGE = 5
-
-  console.log('tickets', tickets)
 
   const pageCount =
     tickets.count < PER_PAGE ? 1 : Math.ceil(tickets.count / PER_PAGE)
@@ -104,7 +102,7 @@ function InboxTickets() {
       ? setUserSearchPage(selected)
       : questionsMenuSelected === 'student-questions'
       ? setQuestionsPage(selected)
-      : questionsMenuSelected === 'certification-feedback-requests'
+      : questionsMenuSelected === 'certification-feedback-questions'
       ? setCertificationFeedbackPage(selected)
       : setApprovalRequestsPage(selected)
   }, 500)
