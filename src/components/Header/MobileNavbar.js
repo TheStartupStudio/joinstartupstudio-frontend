@@ -192,8 +192,8 @@ const MobileNavbar = (props) => {
           <div className="profile-dropdown me-1 ms-3 desktop-menu">
             <img
               src={
-                props.mainState.user.user.user.profileImage
-                  ? props.mainState.user.user.user.profileImage
+                props.mainState?.user?.user?.user?.profileImage
+                  ? props.mainState?.user?.user?.user?.profileImage
                   : avator
               }
               alt="Profile"
@@ -201,7 +201,7 @@ const MobileNavbar = (props) => {
           </div>
           <div className="profile-dropdown-info desktop-menu">
             {/* <h5>{name}</h5> */}
-            <p>{props.user.email}</p>
+            <p>{props?.user?.email}</p>
           </div>
         </button>
         <div

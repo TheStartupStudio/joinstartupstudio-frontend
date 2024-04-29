@@ -109,10 +109,10 @@ function Profile(props) {
   }, [props.chatOpened])
 
   useEffect(() => {
-    if (user.last_login === null) {
+    if (user?.last_login === null) {
       return setLastLogin('None')
     }
-    const milliseconds = user.last_login * 1000
+    const milliseconds = user?.last_login * 1000
     const monthNames = [
       'January',
       'February',

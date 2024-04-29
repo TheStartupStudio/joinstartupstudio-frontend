@@ -27,6 +27,7 @@ import EmptyAccomplishmentSection from './EmptyAccomplishmentSection'
 // import EmptyCertificationSection from './EmptyCertificationSection'
 import EmptyExperienceSection from './EmptyExperienceSection'
 import EmptyCertificationSection from './EmptyCertificationSection'
+import { ShareMyPortfolioWidget } from '../../components/Portfolio/preview/shareMyPortfolioWidget'
 
 export const VerifyButton = (props) => {
   return (
@@ -71,6 +72,7 @@ function EditPortfolio() {
   const [aggred, setAggred] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const userId = useSelector((state) => state.user.user.user.id)
+  const isOwnPortfolio = !!user && userId === user?.id
 
   const dispatch = useDispatch()
 
@@ -275,6 +277,11 @@ function EditPortfolio() {
               </span>
             </div>
           </div>
+          {isOwnPortfolio && (
+            <div className={'d-flex justify-content-end'}>
+              <ShareMyPortfolioWidget user={user} />
+            </div>
+          )}
 
           {/* <div
             style={{

@@ -62,7 +62,7 @@ const TaskEventModal = (props) => {
   ]
 
   const userLevel = defaultData.filter(
-    (data) => data.value === loggedUser.level
+    (data) => data.value === loggedUser?.level
   )
   useEffect(() => {
     props.show === false && setState(initialState)

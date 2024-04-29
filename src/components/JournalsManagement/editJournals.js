@@ -187,7 +187,7 @@ export default function EditJournals(props) {
                   ...provided,
                   boxShadow: 'none',
                   border: 'none',
-                  height: 15,
+                  // height: 15,
                   fontSize: '14px',
                   height: '50px'
                 }),

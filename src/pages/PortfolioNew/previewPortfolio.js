@@ -13,6 +13,7 @@ import { DeleteConfirmation } from '../../components/Portfolio/Confirm_modal'
 import PreviewPortfolioBody from './PreviewPortfolioBody'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { ShareMyPortfolioWidget } from '../../components/Portfolio/preview/shareMyPortfolioWidget'
 
 const PreviewPortfolio = (props) => {
   const [user, setUser] = useState(null)
@@ -385,6 +386,11 @@ const PreviewPortfolio = (props) => {
                   <IntlMessages id="portfolio.publish_checkbox" />
                 </span>
               </div>
+              {isOwnPortfolio && (
+                <div className={'d-flex justify-content-end'}>
+                  <ShareMyPortfolioWidget user={user} />
+                </div>
+              )}
             </div>
           )}
           {!!user ? (

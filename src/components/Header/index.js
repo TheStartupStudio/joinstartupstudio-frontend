@@ -98,40 +98,44 @@ function Header() {
   })
 
   useEffect(() => {
-    socket?.emit('newNotificationUser', {
-      name: user.name,
-      id: user.id
-    })
+    if (user) {
+      socket?.emit('newNotificationUser', {
+        name: user.name,
+        id: user.id
+      })
 
-    socket?.on('getNotification', (data) => {
-      setNotifications((notifications) => [
-        {
-          ...data.notification,
-          Sender: { ...data.Sender }
-        },
-        ...notifications
-      ])
-      setUnreadNotifications(
-        (unreadNotifications) => Number(unreadNotifications) + 1
-      )
-    })
+      socket?.on('getNotification', (data) => {
+        setNotifications((notifications) => [
+          {
+            ...data.notification,
+            Sender: { ...data.Sender }
+          },
+          ...notifications
+        ])
+        setUnreadNotifications(
+          (unreadNotifications) => Number(unreadNotifications) + 1
+        )
+      })
 
-    return () => {
-      socket.disconnect()
+      return () => {
+        socket.disconnect()
+      }
     }
-  }, [user.id, user.name])
+  }, [user?.id, user?.name])
 
   useEffect(() => {
-    checkIfUserHasVerifiedEmail()
+    if (user) {
+      checkIfUserHasVerifiedEmail()
 
-    axiosInstance.get(`/notifications/${user.id}`).then((res) => {
-      if (res.data.notifications?.length > 0) {
-        setNotifications(res.data.notifications)
-      }
+      axiosInstance.get(`/notifications/${user.id}`).then((res) => {
+        if (res.data.notifications?.length > 0) {
+          setNotifications(res.data.notifications)
+        }
 
-      setUnreadNotifications(res.data.unreadNotifications)
-    })
-  }, [user.id])
+        setUnreadNotifications(res.data.unreadNotifications)
+      })
+    }
+  }, [user?.id])
 
   useEffect(() => {
     hasAccess()
@@ -142,11 +146,11 @@ function Header() {
       // dispatch(getAllPodcast({}))
       dispatch(
         getAllNotes({
-          userId: user.sub
+          userId: user?.sub
         })
       )
     },
-    [user.sub, dispatch]
+    [user?.sub, dispatch]
   )
 
   useEffect(() => {
@@ -158,7 +162,7 @@ function Header() {
 
   const isUserAgredToTnC = () => {
     var pathArray = window.location.pathname.split('/')[1]
-    if (!user.TnC && pathArray !== 'terms') {
+    if (!user?.TnC && pathArray !== 'terms') {
       setOpenTnCModal(true)
     }
   }

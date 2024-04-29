@@ -265,8 +265,8 @@ const Navbar = (props) => {
                     <div className="profile-dropdown me-1 ms-3 desktop-menu d-none d-xl-block">
                       <img
                         src={
-                          props.mainState.user.user.user.profileImage
-                            ? props.mainState.user.user.user.profileImage
+                          props.mainState?.user?.user?.user?.profileImage
+                            ? props.mainState?.user?.user?.user?.profileImage
                             : avator
                         }
                         alt="Profile"
@@ -274,11 +274,11 @@ const Navbar = (props) => {
                     </div>
                     <div className="profile-dropdown-info desktop-menu">
                       <h5>
-                        {props.user.name
-                          ? props.user.name
+                        {props.user?.name
+                          ? props.user?.name
                           : localStorage.getItem('name')}
                       </h5>
-                      <p>{props.user.email}</p>
+                      <p>{props.user?.email}</p>
                     </div>
                   </button>
                   <div

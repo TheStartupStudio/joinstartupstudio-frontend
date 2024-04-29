@@ -39,6 +39,7 @@ function LtsJournal(props) {
           platform: props.category === 'market-ready' ? 'student' : 'instructor'
         }
       })
+
       setJournalsData(data)
       setJournals(data)
       setLoaded(true)
