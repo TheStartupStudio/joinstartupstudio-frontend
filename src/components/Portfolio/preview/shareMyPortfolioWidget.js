@@ -8,9 +8,9 @@ export const ShareMyPortfolioWidget = (props) => {
   const [showShareMyPortfolioModal, shareMyPortfolioModal] = useState(false)
 
   return (
-    <>
+    <div className={`${!props.toggle ? 'disabled' : ''}`}>
       {' '}
-      <div className="d-flex ">
+      <div className="d-flex">
         <div className="ps-2 d-flex flex-wrap flex-column ">
           <div className={'d-flex align-items-center gap-2'}>
             <FontAwesomeIcon
@@ -45,7 +45,7 @@ export const ShareMyPortfolioWidget = (props) => {
         from={'portfolio'}
         userLink={props.user && props.user.username}
       />
-    </>
+    </div>
   )
 }
 

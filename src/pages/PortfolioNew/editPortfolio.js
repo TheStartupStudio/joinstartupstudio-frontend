@@ -105,6 +105,9 @@ function EditPortfolio() {
     getUser()
   }, [])
 
+  console.log('toggle', toggle)
+
+
   const updateStatus = async () => {
     await axiosInstance
       .put(`/portfolio`, {
@@ -281,7 +284,7 @@ function EditPortfolio() {
           </div>
           {isOwnPortfolio && (
   <div className={'d-flex justify-content-end'}>
-    <ShareMyPortfolioWidget user={user} />
+    <ShareMyPortfolioWidget user={user} toggle={toggle} />
   </div>
 )}
 
