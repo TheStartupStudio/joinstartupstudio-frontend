@@ -10,7 +10,7 @@ export const ShareMyPortfolioWidget = (propsi) => {
   return (
     <>
       {' '}
-      <div className='d-flex'>
+      <div className='d-flex justify-content-end'>
         <div className='px-0 mx-0 gx-0 shareMyPortfolio'>
           <FontAwesomeIcon
             icon={faShareAltSquare}
