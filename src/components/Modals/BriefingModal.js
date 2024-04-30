@@ -38,6 +38,7 @@ const ContentItem = ({ content }) => {
 };
 
 const BriefingModal = (props) => {
+  console.log('props briefing', props)
   const dispatch = useDispatch();
   const briefings = useSelector((state) => state?.header?.briefings);
 
@@ -46,6 +47,8 @@ const BriefingModal = (props) => {
   }, [dispatch]);
 
   const briefing = briefings ? briefings[0] : null;
+
+  console.log('briefing', briefing)
 
   return (
     <Modal

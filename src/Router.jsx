@@ -148,7 +148,7 @@ const JournalsManagement2 = React.lazy(() =>
 
 const IAMRinbox = React.lazy(() => import('./pages/IAMRinbox'))
 const StudentIAMR = React.lazy(() => import('../src/pages/StudentIAMR'))
-
+const Briefings = React.lazy(()=>import('../src/pages/Briefings'))
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
@@ -579,6 +579,11 @@ function Router(props) {
                 path="/student-iamr/:studentId/:id?/:type?"
                 component={StudentIAMR}
               />
+              <Route
+                path="/briefings"
+                component={Briefings}
+              />
+
               <Redirect from="/register" exact to="/dashboard" />
               <Redirect from="/ims-login" exact to="/dashboard" />
               <Redirect from="/" exact to="/dashboard" />
