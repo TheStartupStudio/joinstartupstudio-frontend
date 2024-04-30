@@ -4,32 +4,32 @@ import { faShareAltSquare } from '@fortawesome/free-solid-svg-icons'
 import './css/shareMyPortfolio.css'
 import ShareMyPortfolio from '../../Modals/Profile/shareMyPortfolio'
 
-export const ShareMyPortfolioWidget = (propsi) => {
+export const ShareMyPortfolioWidget = (props) => {
   const [showShareMyPortfolioModal, shareMyPortfolioModal] = useState(false)
 
   return (
     <>
       {' '}
-      <div className='d-flex justify-content-end'>
-        <div className='px-0 mx-0 gx-0 shareMyPortfolio'>
-          <FontAwesomeIcon
-            icon={faShareAltSquare}
-            style={{ width: '30px', height: '35px', cursor: 'pointer' }}
-            className='float-end'
-            onClick={() => shareMyPortfolioModal(true)}
-          />
-        </div>
-        <div className='ps-2 d-flex flex-wrap'>
+      <div className="d-flex ">
+        <div className="ps-2 d-flex flex-wrap flex-column ">
+          <div className={'d-flex align-items-center gap-2'}>
+            <FontAwesomeIcon
+              icon={faShareAltSquare}
+              style={{ width: '30px', height: '35px', cursor: 'pointer' }}
+              className="float-end"
+              onClick={() => shareMyPortfolioModal(true)}
+            />
+            <span
+              className="title pb-md-0 mb-md-0"
+              onClick={() => shareMyPortfolioModal(true)}
+              style={{ cursor: 'pointer' }}
+            >
+              Share My Portfolio
+            </span>
+          </div>
+
           <span
-            className='title pb-md-0 mb-md-0'
-            onClick={() => shareMyPortfolioModal(true)}
-            style={{ cursor: 'pointer' }}
-          >
-            Share My Portfolio
-          </span>
-          <p className='w-100 py-0 my-0 gy-0' />
-          <span
-            className='d-block desc'
+            className="d-block desc text-end"
             style={{ cursor: 'pointer' }}
             onClick={() => shareMyPortfolioModal(true)}
           >
@@ -43,8 +43,9 @@ export const ShareMyPortfolioWidget = (propsi) => {
           shareMyPortfolioModal(false)
         }}
         from={'portfolio'}
-        userLink={propsi.user && propsi.user.username}
+        userLink={props.user && props.user.username}
       />
     </>
   )
 }
+
