@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Modal } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
 import 'react-quill/dist/quill.snow.css';
 import './BriefingModal.css';
-import { getBriefingsStart } from '../../redux/header/Actions';
 
 const processText = (text) => {
   const lines = text.split('\n').map((line) => line.trim()); 
@@ -38,17 +36,7 @@ const ContentItem = ({ content }) => {
 };
 
 const BriefingModal = (props) => {
-  console.log('props briefing', props)
-  const dispatch = useDispatch();
-  const briefings = useSelector((state) => state?.header?.briefings);
-
-  useEffect(() => {
-    dispatch(getBriefingsStart());
-  }, [dispatch]);
-
-  const briefing = briefings ? briefings[0] : null;
-
-  console.log('briefing', briefing)
+  const {briefing} = props
 
   return (
     <Modal

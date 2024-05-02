@@ -1,12 +1,12 @@
 import { Col, Form } from 'react-bootstrap'
 import React, { useEffect, useState } from 'react'
-import axiosInstance from '../../utils/AxiosInstance'
-import { toast } from 'react-toastify'
+
 
 const BriefingComponent = (props) => {
   const [briefing, setBriefing] = useState({
     date: '',
     title: '',
+    link:'',
     source: '',
     synopsis: '',
     discussionQuestion: '',
@@ -24,7 +24,7 @@ const BriefingComponent = (props) => {
 
   useEffect(() => {
     props.handleChange({ ...briefing, id: briefing.id })
-  }, [briefing])
+  }, [props,briefing])
 
   const onChangeBriefing = (name, value) => {
     setBriefing({ ...briefing, [name]: value })
@@ -61,6 +61,19 @@ const BriefingComponent = (props) => {
               />
             </Col>
             <Col sm={12} md={6}>
+              <label htmlFor="title" className="brand-text">
+                Link
+              </label>
+              <input
+                name="link"
+                className="mt-2 mb-2 col-12  p-md-2 w-100"
+                placeholder={'Link'}
+                style={{ resize: 'none' }}
+                value={briefing.link}
+                onChange={(e) => onChangeBriefing('link', e.target.value)}
+              />
+            </Col>
+            <Col sm={12} md={6}>
               <label htmlFor="link" className="brand-text">
                 Title
               </label>
@@ -71,28 +84,6 @@ const BriefingComponent = (props) => {
                 placeholder={'Title'}
                 value={briefing.title}
                 onChange={(e) => onChangeBriefing('title', e.target.value)}
-              />
-            </Col>
-            <Col sm={12} md={6}>
-              <label htmlFor="link" className="brand-text">
-                Synopsis
-              </label>
-              {/* <input
-                className="mt-2 mb-2 col-12 p-md-2"
-                type="text"
-                name="synopsis"
-                placeholder={'Synopsis'}
-                value={briefing.synopsis}
-                onChange={(e) => onChangeBriefing('synopsis', e.target.value)}
-              /> */}
-              <textarea
-                className="mt-2 mb-2 col-12 p-md-2"
-                name="synopsis"
-                placeholder={'Synopsis'}
-                value={briefing.synopsis}
-                onChange={(e) => onChangeBriefing('synopsis', e.target.value)}
-                cols={50}
-                rows={7}
               />
             </Col>
             <Col sm={12} md={6}>
@@ -110,6 +101,21 @@ const BriefingComponent = (props) => {
                 }
               />
             </Col>
+            <Col sm={12} md={6}>
+              <label htmlFor="link" className="brand-text">
+                Synopsis
+              </label>
+              <textarea
+                className="mt-2 mb-2 col-12 p-md-2"
+                name="synopsis"
+                placeholder={'Synopsis'}
+                value={briefing.synopsis}
+                onChange={(e) => onChangeBriefing('synopsis', e.target.value)}
+                cols={50}
+                rows={7}
+              />
+            </Col>
+           
             <Col sm={12} md={6}>
               <label htmlFor="link" className="brand-text">
                 Discussion points
