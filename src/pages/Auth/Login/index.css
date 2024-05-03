@@ -104,7 +104,6 @@
   }
 }
 
-
 .ims-login-role:hover {
   background-color: #51c7df;
 }
@@ -176,3 +175,14 @@ svg {
   }
 }
 
+/* choose login */
+
+.login-role {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+}
