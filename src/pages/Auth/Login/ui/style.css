@@ -31,7 +31,14 @@
   color: #333d3d;
   opacity: 1;
 }
-
+.public-login-form h2 {
+  text-align: center;
+  text-transform: uppercase;
+}
+.public-login-form h6 {
+  color: #707070;
+  text-align: center;
+}
 /*Login input style  */
 
 .input-with-gradient-border {

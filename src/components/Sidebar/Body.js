@@ -64,7 +64,11 @@ const Body = (props) => {
       />
       <ParentDropdownItem id={'collapseClassroom'}>
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
-        <DropdownItem disabled={true} title={'MY EVALUATIONS'} to={'/my-evaluations'} />
+        <DropdownItem
+          disabled={true}
+          title={'MY EVALUATIONS'}
+          to={'/my-evaluations'}
+        />
         <DropdownItem title={'MY IAMR INBOX'} to="/iamr-inbox" />
       </ParentDropdownItem>
 
@@ -80,10 +84,14 @@ const Body = (props) => {
           title={<IntlMessages id="my_saved.STORY_IN_MOTION" />}
           to={'/story-in-motion'}
         />
-        <DropdownItem title={'MY PATHWAYS'} to={'/pathways'} />
-        <DropdownItem title={'MY IMMERSION'} to={'/my-immersion'} />
-        <DropdownItem title={'MY COURSE & CREDENTIALS'} to={'/course-credentials'} />
-        <DropdownItem title={'MY SPOTLIGHT'} to={'/spotlight'} />
+        <DropdownItem title={'PATHWAYS'} to={'/pathways'} />
+        <DropdownItem title={'IMMERSION'} to={'/my-immersion'} />
+        <DropdownItem
+          disabled={true}
+          title={'COURSE & CREDENTIALS'}
+          to={'/course-credentials'}
+        />
+        <DropdownItem title={'SPOTLIGHT'} to={'/spotlight'} />
       </ParentDropdownItem>
       <ParentSidebarItem
         ariaControls="journals"
@@ -99,10 +107,7 @@ const Body = (props) => {
           title={'PERSONAL FINANCE JOURNAL'}
           to={'/student-personal-finance'}
         />
-        <DropdownItem
-          title={'LEADERSHIP JOURNAL'}
-          to={'/student-leadership'}
-        />
+        <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
       </ParentDropdownItem>
       <ParentSidebarItem
         ariaControls="mySpark"

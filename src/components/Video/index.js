@@ -62,7 +62,7 @@ export default function VideoView(props) {
         >
           <Link to={url ? url : '#'}>
             <div
-              className='beyond-your-course-video-thumb'
+              className="beyond-your-course-video-thumb"
               style={{ width: '100%' }}
             >
               <div style={{ position: 'absolute', right: '10px', top: '10px' }}>
@@ -71,7 +71,7 @@ export default function VideoView(props) {
                   style={{
                     width: '25px',
                     height: '25px',
-                    color: videoData.favorite ? '#F2359D' : '#FFFFFF'
+                    color: videoData.favorite ? '#F2359D' : 'grey'
                   }}
                   onClick={() =>
                     props.type !== 'widget'
@@ -89,17 +89,17 @@ export default function VideoView(props) {
               >
                 <img
                   src={props.thumbnail}
-                  width='100%'
-                  height='250px'
-                  alt='video'
+                  width="100%"
+                  height="250px"
+                  alt="video"
                 />
-                <div className='beyond-your-course-video-thumb-icon'>
+                <div className="beyond-your-course-video-thumb-icon">
                   <FontAwesomeIcon icon={faPlay} />
                 </div>
               </div>
             </div>
             <div
-              className='card-body-video'
+              className="card-body-video"
               onClick={() => setShowVideoModal(true)}
             >
               <>
@@ -107,7 +107,7 @@ export default function VideoView(props) {
                   <IntlMessages id={props.title} />
                 </h5>
                 <p
-                  className='card-text'
+                  className="card-text"
                   style={{
                     textAlign:
                       props.page === 'master-classes' ? 'center' : 'left'
@@ -120,19 +120,19 @@ export default function VideoView(props) {
           </Link>
           {props.type === 'widget' && (
             <hr
-              className='mx-auto mt-1 mt-2 mb-3'
+              className="mx-auto mt-1 mt-2 mb-3"
               style={{ color: '#333D3D83' }}
             />
           )}
         </div>
       ) : (
-        <div className='card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2'>
+        <div className="card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2">
           <div
-            className='card mobile-card'
+            className="card mobile-card"
             // style={{ paddingRight: '20px' }}
           >
             <Link to={url ? url : '#'}>
-              <div className='beyond-your-course-video-thumb beyound-all-videos-thumb'>
+              <div className="beyond-your-course-video-thumb beyound-all-videos-thumb">
                 <div
                   style={{
                     position: 'absolute',
@@ -172,21 +172,21 @@ export default function VideoView(props) {
                       //   : props.thumbnail
                     }
                     // style={{ height: '200px' }}
-                    width='100%'
+                    width="100%"
                     // height=''
-                    alt='#'
+                    alt="#"
                     style={{
                       objectFit:
                         props.page === 'startup-live' ? 'contain' : 'cover'
                     }}
                   />
-                  <div className='beyond-your-course-video-thumb-icon'>
+                  <div className="beyond-your-course-video-thumb-icon">
                     <FontAwesomeIcon icon={faPlay} />
                   </div>
                 </div>
               </div>
               <div
-                className='card-body-video'
+                className="card-body-video"
                 onClick={() => {
                   setShowVideoModal(true)
                 }}
@@ -197,7 +197,7 @@ export default function VideoView(props) {
                       <IntlMessages id={props.title} />
                     </h5>
                     <p
-                      className='card-text'
+                      className="card-text"
                       style={{
                         textAlign:
                           props.page === 'master-classes' ? 'center' : 'left'
