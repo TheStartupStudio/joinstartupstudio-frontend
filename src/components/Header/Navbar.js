@@ -29,7 +29,7 @@ const Navbar = (props) => {
   const [backButton, setBackButton] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
   const [showDropDown, setShowDropDown] = useState(false)
-
+  const [allowToShow,setAllowToShow] = useState(false)
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
 
   useEffect(() => {
@@ -64,6 +64,25 @@ const Navbar = (props) => {
       }, 200)
     }
   }
+
+  const hasAccess = () => {
+    axiosInstance
+      .get('/studentsInstructorss/has-access')
+      .then((response) => {
+        console.log('response', response)
+        if (response.data.allow) {
+          setAllowToShow(true)
+        } else {
+          setAllowToShow(false)
+        }
+      })
+      .catch((e) => e)
+  }
+
+  useEffect(()=>{
+    hasAccess()
+  },[])
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light desktop-menu px-xl-2">
       <div className="container-fluid">
@@ -302,6 +321,15 @@ const Navbar = (props) => {
                         MY PORTFOLIO
                       </Link>
                     }
+                    {allowToShow && (
+                     <Link
+                     onClick={() => setShowDropDown((preState) => !preState)}
+                     to="/briefings"
+                     className="dropdown-item py-2 dropdown-menu-hover"
+                   >
+                     MY NEWS BRIEFINGS ARCHIVE
+                   </Link> 
+                    )}
                     <li>
                       <Link
                         onClick={() => setShowDropDown((preState) => !preState)}
