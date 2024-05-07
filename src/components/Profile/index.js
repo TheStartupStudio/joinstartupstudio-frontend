@@ -31,13 +31,8 @@ function Profile(props) {
   const [studentQuestions, setStudentQuestions] = useState({})
   const [feedbackRequests, setFeedbackRequests] = useState({})
   const [briefingModal, setBriefingModal] = useState(false)
-  const [briefingClicked, setBriefingClicked] = useState(false)
+  const briefing = useSelector((state) => state?.header?.selectedBriefing)
 
-  // useEffect(() => {
-  //   axiosInstance.post('/briefings/increaseBriefings').then((res) => {
-  //     debugger
-  //   })
-  // }, [briefingClicked])
   const handleOpenBriefingModal = () => {
     setBriefingModal(true)
   }
@@ -280,7 +275,7 @@ function Profile(props) {
               event.stopPropagation()
               handleOpenBriefingModal()
               axiosInstance
-                .post('/briefing/increaseBriefings')
+                .post('/briefings/increaseBriefings')
                 .then((res) => {})
             }}
           >
@@ -334,31 +329,6 @@ function Profile(props) {
             <span className="ml-2">Requests</span>
           </a>
         </div>
-        {/* <p
-          className='overlay-comming-soon position-absolute my-auto mx-auto text-center'
-          style={{
-            fontWeight: 'bold',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            zIndex: 4,
-            fontSize: '20px',
-            color: 'white',
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          Coming soon
-        </p>
-        <div
-          className='overlay-comming-soon position-absolute'
-          style={{
-            height: '100%',
-            width: '100%',
-            zIndex: 2,
-            backgroundColor: '#828888',
-            opacity: '0.9'
-          }}
-        ></div> */}
       </div>
       {/* end of certification status */}
       {/* read and more */}
@@ -442,7 +412,11 @@ function Profile(props) {
           </div>
         </div>
       </div>
-      <BriefingModal show={briefingModal} onHide={handleCloseBriefingModal} />
+      <BriefingModal
+        briefing={briefing}
+        show={briefingModal}
+        onHide={handleCloseBriefingModal}
+      />
     </Row>
   )
 }

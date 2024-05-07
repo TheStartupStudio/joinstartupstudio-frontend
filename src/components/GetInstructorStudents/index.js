@@ -5,23 +5,25 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import './index.css'
-import { useHistory } from 'react-router-dom'
-import Notifications from '../Header/notifications'
 import NotificationComponent from './Notification.component'
 import socket from '../../utils/notificationSocket'
 import { useDispatch, useSelector } from 'react-redux'
 import NotificationTypes from '../../utils/notificationTypes'
 import BriefingComponent from './Briefing.component'
-import { changeSidebarState } from '../../redux'
-import { getEventsStart, getPeriodsStart } from '../../redux/dashboard/Actions'
 import {
   editBriefingStart,
-  getBriefingsStart,
-  postBriefingStart
+  getSelectedBriefingStart
 } from '../../redux/header/Actions'
-import { editBriefing } from '../../redux/header/Service'
+
+
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided
+  })
+}
 
 const StudentOfInstructors = (props) => {
+  const dispatch = useDispatch()
   const [universities, setUniversities] = useState([])
   const [loading, setLoading] = useState(false)
   const [selectedInstructors, setSelectedInstructors] = useState([])
@@ -30,7 +32,20 @@ const StudentOfInstructors = (props) => {
   const [totalNumber, setTotalNumber] = useState(-1)
   const [dashboardData, setDashboardData] = useState([])
   const [toShow, setStateToShow] = useState('none')
-  const history = useHistory()
+  const [notifications, setNotifications] = useState([
+    {
+      title: '',
+      description: '',
+      url: ''
+    }
+  ])
+  const selectedBriefing = useSelector((state) => state.header.selectedBriefing)
+  const loggedUser = useSelector((state) => state.user.user.user)
+  const [briefing, setBriefing] = useState( null)
+  const {
+    handleSubmit,
+  } = useForm()
+
 
   const getData = async () => {
     await axiosInstance.get('/studentsInstructorss/init').then((res) => {
@@ -38,12 +53,6 @@ const StudentOfInstructors = (props) => {
     })
     await axiosInstance.get('/dashboard').then((res) => {
       setDashboardData(res.data)
-    })
-  }
-
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided
     })
   }
 
@@ -64,14 +73,8 @@ const StudentOfInstructors = (props) => {
     if (props.allow) {
       getData()
     }
-  }, [])
+  }, [props.allow])
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors }
-  } = useForm()
 
   const changeDashboard = (value) => {
     axiosInstance
@@ -83,14 +86,6 @@ const StudentOfInstructors = (props) => {
         toast.error('Dashboard widget update failed.')
       })
   }
-
-  const [notifications, setNotifications] = useState([
-    {
-      title: '',
-      description: '',
-      url: ''
-    }
-  ])
 
   const onAddNewNotification = () => {
     setNotifications([
@@ -108,8 +103,6 @@ const StudentOfInstructors = (props) => {
     newNotifications[index] = notification
     setNotifications(newNotifications)
   }
-
-  const loggedUser = useSelector((state) => state.user.user.user)
 
   const handleSubmitNotification = () => {
     try {
@@ -133,24 +126,21 @@ const StudentOfInstructors = (props) => {
     setNotifications(newNotifications)
   }
 
-  const dispatch = useDispatch()
-
-  const briefings = useSelector((state) => state.header.briefings)
-  const [briefing, setBriefing] = useState(null)
   useEffect(() => {
-    dispatch(getBriefingsStart())
-  }, [])
+    dispatch(getSelectedBriefingStart())
+  }, [dispatch])
 
   const handleChangeBriefing = (briefing) => {
-    setBriefing(briefing)
-  }
+      setBriefing(briefing)
+    }
 
   const onSubmitBriefing = () => {
-    if (briefings.length) {
+    if (briefing) {
       dispatch(editBriefingStart(briefing, briefing.id))
-    } else {
-      dispatch(postBriefingStart(briefing))
     }
+    //  else {
+    //    dispatch(postBriefingStart(briefing))
+    //   }
   }
   return (
     <Modal
@@ -612,7 +602,7 @@ const StudentOfInstructors = (props) => {
               handleChange={(e) => {
                 handleChangeBriefing(e)
               }}
-              briefing={briefings[0]}
+              briefing={selectedBriefing}
             />
 
             <div>
