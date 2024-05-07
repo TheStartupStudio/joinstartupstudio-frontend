@@ -247,3 +247,10 @@ export const getIconComponent = (iconIdentifier, color) => {
   console.log('icon', icon)
   return icon ? <FontAwesomeIcon icon={icon} style={{ color: color }} /> : null
 }
+
+export const truncateText = (text, maxLength) => {
+  if (text.length > maxLength) {
+    return text.slice(0, maxLength) + '...';
+  }
+  return text;
+};
