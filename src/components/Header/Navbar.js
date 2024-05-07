@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux'
 import { changeSidebarState } from '../../redux'
 
 const Navbar = (props) => {
+  console.log('props', props)
   const history = useHistory()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -167,7 +168,7 @@ const Navbar = (props) => {
             </li>
 
             <div
-              onClick={() => setShowNotifications(false)}
+              // onClick={() => setShowNotifications(false)}
               style={{ display: 'inherit' }}
             >
               <div
@@ -179,9 +180,7 @@ const Navbar = (props) => {
                   className={`nav-link icon-menu px-2 my-auto nav-notifications position-relative ${
                     showNotifications ? 'active' : ''
                   }`}
-                  onClick={() =>
-                    !showNotifications && setShowNotifications(true)
-                  }
+                  onClick={() => setShowNotifications((state) => !state)}
                   href
                 >
                   <FontAwesomeIcon
@@ -192,18 +191,18 @@ const Navbar = (props) => {
                     }}
                     className="nav-bell-icon pt-1"
                   />
-                  {unreadNotifications > 0 && (
+                  {props.unreadNotifications > 0 && (
                     <span className="badge nofitication-badge">
-                      {unreadNotifications}
+                      {props.unreadNotifications}
                     </span>
                   )}
                 </a>
                 {showNotifications && (
                   <Notifications
-                    unreadNotifications={unreadNotifications}
+                    unreadNotifications={props.unreadNotifications}
                     notifications={props.notifications}
                     setShowNotifications={setShowNotifications}
-                    setUnreadNotifications={setUnreadNotifications}
+                    setUnreadNotifications={props.setUnreadNotifications}
                     notificationsRef={notificationsRef}
                   />
                 )}
