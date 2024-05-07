@@ -28,7 +28,6 @@ const Navbar = (props) => {
   const notificationsRef = useRef(null)
   const [backButton, setBackButton] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
-  const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [showDropDown, setShowDropDown] = useState(false)
 
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
