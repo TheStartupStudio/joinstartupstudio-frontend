@@ -3,13 +3,12 @@ import { useDispatch } from 'react-redux'
 import { changeSidebarState } from '../../redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import EditJournals from '../../components/JournalsManagement/editJournals'
-import LTSButton from '../../components/LTSButtons/LTSButton'
 
 function JournalsManagement() {
   const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(changeSidebarState(false))
-  })
+  // useEffect(() => {
+  //   dispatch(changeSidebarState(false))
+  // }, [])
 
   return (
     <div className="container-fluid">
