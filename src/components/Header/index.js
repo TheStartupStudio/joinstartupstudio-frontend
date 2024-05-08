@@ -229,6 +229,8 @@ function Header() {
       ) : null}
       <Navbar
         notifications={notifications}
+        unreadNotifications={unreadNotifications}
+        setUnreadNotifications={setUnreadNotifications}
         setPeerSharingModal={setPeerSharingModal}
         closePeerSharingModal={closePeerSharingModal}
         peerSharingAccepted={peerSharingAccepted}
@@ -244,9 +246,9 @@ function Header() {
       <MobileNavbar
         firstNote={firstNote}
         setFirstNote={setFirstNote}
+        unreadNotifications={unreadNotifications}
         setUnreadNotifications={setUnreadNotifications}
         notifications={notifications}
-        unreadNotifications={unreadNotifications}
         sideBarState={sideBarState}
         showNotifications={showNotifications}
         setShowNotifications={setShowNotifications}

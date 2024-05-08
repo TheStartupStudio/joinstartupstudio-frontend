@@ -114,7 +114,7 @@
   "scripts": {
     "start": "set PORT=3000 &&  react-scripts start",
     "build": "react-scripts build",
-    "buildDev": "env-cmd -f .env react-scripts --openssl-legacy-provider build",
+    "buildDev": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
