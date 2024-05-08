@@ -145,6 +145,9 @@ const JournalsManagement = React.lazy(() =>
 const JournalsManagement2 = React.lazy(() =>
   import('./pages/JournalsManagement/JournalsManagement2')
 )
+const MentorshipJournalManagement = React.lazy(() =>
+  import('./pages/JournalsManagement/MentorshipJournalManagement')
+)
 
 const IAMRinbox = React.lazy(() => import('./pages/IAMRinbox'))
 const StudentIAMR = React.lazy(() => import('../src/pages/StudentIAMR'))
@@ -542,6 +545,11 @@ function Router(props) {
                 exact
                 path="/edit-journals2"
                 component={JournalsManagement2}
+              />
+              <Route
+                exact
+                path="/edit-mentorship-journal"
+                component={MentorshipJournalManagement}
               />
               <Route
                 exact
