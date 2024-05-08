@@ -5,25 +5,24 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import './index.css'
+import { useHistory } from 'react-router-dom'
+import Notifications from '../Header/notifications'
 import NotificationComponent from './Notification.component'
 import socket from '../../utils/notificationSocket'
 import { useDispatch, useSelector } from 'react-redux'
 import NotificationTypes from '../../utils/notificationTypes'
 import BriefingComponent from './Briefing.component'
+import { changeSidebarState } from '../../redux'
+import { getEventsStart, getPeriodsStart } from '../../redux/dashboard/Actions'
 import {
   editBriefingStart,
-  getSelectedBriefingStart
+  getBriefingsStart,
+  postBriefingStart
 } from '../../redux/header/Actions'
-
-
-const customStyles = {
-  option: (provided, state) => ({
-    ...provided
-  })
-}
+import { editBriefing } from '../../redux/header/Service'
+import JournalsManagement from '../../pages/JournalsManagement'
 
 const StudentOfInstructors = (props) => {
-  const dispatch = useDispatch()
   const [universities, setUniversities] = useState([])
   const [loading, setLoading] = useState(false)
   const [selectedInstructors, setSelectedInstructors] = useState([])
@@ -32,20 +31,11 @@ const StudentOfInstructors = (props) => {
   const [totalNumber, setTotalNumber] = useState(-1)
   const [dashboardData, setDashboardData] = useState([])
   const [toShow, setStateToShow] = useState('none')
-  const [notifications, setNotifications] = useState([
-    {
-      title: '',
-      description: '',
-      url: ''
-    }
-  ])
-  const selectedBriefing = useSelector((state) => state.header.selectedBriefing)
-  const loggedUser = useSelector((state) => state.user.user.user)
-  const [briefing, setBriefing] = useState( null)
-  const {
-    handleSubmit,
-  } = useForm()
+  const history = useHistory()
 
+  const JournalsManagement2 = React.lazy(() =>
+    import('../../pages/JournalsManagement/JournalsManagement2')
+  )
 
   const getData = async () => {
     await axiosInstance.get('/studentsInstructorss/init').then((res) => {
@@ -53,6 +43,12 @@ const StudentOfInstructors = (props) => {
     })
     await axiosInstance.get('/dashboard').then((res) => {
       setDashboardData(res.data)
+    })
+  }
+
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided
     })
   }
 
@@ -73,8 +69,14 @@ const StudentOfInstructors = (props) => {
     if (props.allow) {
       getData()
     }
-  }, [props.allow])
+  }, [])
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm()
 
   const changeDashboard = (value) => {
     axiosInstance
@@ -86,6 +88,14 @@ const StudentOfInstructors = (props) => {
         toast.error('Dashboard widget update failed.')
       })
   }
+
+  const [notifications, setNotifications] = useState([
+    {
+      title: '',
+      description: '',
+      url: ''
+    }
+  ])
 
   const onAddNewNotification = () => {
     setNotifications([
@@ -104,9 +114,11 @@ const StudentOfInstructors = (props) => {
     setNotifications(newNotifications)
   }
 
+  const loggedUser = useSelector((state) => state.user.user.user)
+
   const handleSubmitNotification = () => {
     try {
-      socket?.emit('sendNotifications', {
+      socket?.emit('sendNotification', {
         notifications: notifications,
         sender: loggedUser,
         receiver: null,
@@ -126,21 +138,24 @@ const StudentOfInstructors = (props) => {
     setNotifications(newNotifications)
   }
 
+  const dispatch = useDispatch()
+
+  const briefings = useSelector((state) => state.header.briefings)
+  const [briefing, setBriefing] = useState(null)
   useEffect(() => {
-    dispatch(getSelectedBriefingStart())
-  }, [dispatch])
+    dispatch(getBriefingsStart())
+  }, [])
 
   const handleChangeBriefing = (briefing) => {
-      setBriefing(briefing)
-    }
+    setBriefing(briefing)
+  }
 
   const onSubmitBriefing = () => {
-    if (briefing) {
+    if (briefings.length) {
       dispatch(editBriefingStart(briefing, briefing.id))
+    } else {
+      dispatch(postBriefingStart(briefing))
     }
-    //  else {
-    //    dispatch(postBriefingStart(briefing))
-    //   }
   }
   return (
     <Modal
@@ -178,7 +193,7 @@ const StudentOfInstructors = (props) => {
                     : setStateToShow('CountStudent')
                 }
               >
-                {toShow == 'CountStudent' ? 'Close' : 'Student count'}
+                {toShow == 'CountStudent' ? 'Close' : 'Student Count'}
               </button>
             </div>
             <div className="col-12 col-md-6 px-md-4">
@@ -226,6 +241,24 @@ const StudentOfInstructors = (props) => {
                 }
               >
                 {toShow == 'briefing' ? 'Close' : 'Briefing section'}
+              </button>
+            </div>
+          </div>
+          <div className="row px-md-4 mt-md-4">
+            <div className="col-12 col-md-6 px-md-4">
+              <button
+                className={`btn  w-100 brand-button ${
+                  toShow == 'journal-edit'
+                    ? 'brand-button-active'
+                    : 'brand-button'
+                }`}
+                onClick={() =>
+                  toShow == 'journal-edit'
+                    ? setStateToShow('none')
+                    : setStateToShow('journal-edit')
+                }
+              >
+                {toShow == 'journal-edit' ? 'Close' : 'Edit Journals'}
               </button>
             </div>
           </div>
@@ -602,7 +635,7 @@ const StudentOfInstructors = (props) => {
               handleChange={(e) => {
                 handleChangeBriefing(e)
               }}
-              briefing={selectedBriefing}
+              briefing={briefings[0]}
             />
 
             <div>
@@ -615,6 +648,8 @@ const StudentOfInstructors = (props) => {
             </div>
           </>
         )}
+        {console.log(toShow, 'toSHow')}
+        {toShow === 'journal-edit' && <JournalsManagement2 />}
       </Modal.Body>
       <Modal.Footer style={{ border: '0px' }}>
         {toShow == 'CountStudent' && (
