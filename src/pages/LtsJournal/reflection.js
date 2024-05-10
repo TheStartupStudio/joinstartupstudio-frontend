@@ -23,8 +23,8 @@ import _ from 'lodash'
 import { ReflectionInfoBox } from '../../components/Modals/ReflectionInfoBox'
 
 function LtsJournalReflection(props) {
-  const journalId = props.journal.id
-  const journalEntryId = props.journalEntry.id
+  const journalId = props.journal?.id
+  const journalEntryId = props.journalEntry?.id
   const entryId = props.entry?.id
   const history = useHistory()
   const currentLanguage = useSelector((state) => state.lang.locale)
