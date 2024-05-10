@@ -156,20 +156,24 @@ function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user } = useSelector((state) => state.user)
   const [isFirstRendered, setIsFirstRendered] = useState(false)
-
+  console.log(isAuthenticated, user)
   useEffect(() => {
-    axiosInstance
-      .put('/myPerformanceData/updateActivity/startTime', {
-        isActive: false
-      })
-      .then((response) => {
-        // console.log(response)
-        setIsFirstRendered(true)
-      })
-      .catch((error) => {
-        console.error('Error updating activity:', error)
-      })
-  }, [])
+    if (user && isAuthenticated) {
+      // debugger
+      axiosInstance
+        .put('/myPerformanceData/updateActivity/startTime', {
+          isActive: false
+        })
+        .then((response) => {
+          // console.log(response)
+          // debugger
+          setIsFirstRendered(true)
+        })
+        .catch((error) => {
+          console.error('Error updating activity:', error)
+        })
+    }
+  }, [user, isAuthenticated])
 
   const handleUpdateEndTime = () => {
     axiosInstance
@@ -216,72 +220,72 @@ function Router(props) {
   //   }, 10000)
   // }, [])
 
-  useEffect(() => {
-    if (isFirstRendered) {
-      let intervalId = setInterval(() => {
-        handleUpdateActivity('interval')
-      }, 60000)
-
-      const handleVisibilityChange = () => {
-        if (document.visibilityState === 'hidden') {
-          clearInterval(intervalId)
-        } else {
-          intervalId = setInterval(() => {
-            handleUpdateActivity('interval')
-          }, 60000)
-        }
-      }
-
-      document.addEventListener('visibilitychange', handleVisibilityChange)
-
-      const handleUnload = () => {
-        clearInterval(intervalId)
-      }
-
-      window.addEventListener('beforeunload', handleUnload)
-
-      return () => {
-        clearInterval(intervalId)
-        document.removeEventListener('visibilitychange', handleVisibilityChange)
-        window.removeEventListener('beforeunload', handleUnload)
-      }
-    }
-  }, [isFirstRendered])
-
   // useEffect(() => {
   //   if (isFirstRendered) {
+  //     let intervalId = setInterval(() => {
+  //       handleUpdateActivity('interval')
+  //     }, 60000)
+  //
   //     const handleVisibilityChange = () => {
   //       if (document.visibilityState === 'hidden') {
-  //         handleUpdateActivity('visibilityChange')
-  //         debugger
+  //         clearInterval(intervalId)
+  //       } else {
+  //         intervalId = setInterval(() => {
+  //           handleUpdateActivity('interval')
+  //         }, 60000)
   //       }
   //     }
   //
-  //     const handleBeforeUnload = (e) => {
-  //       console.log(e)
-  //       handleUpdateActivity('beforeUnload')
-  //       debugger
-  //     }
-  //     const handlePopstate = (e) => {
-  //       console.log(e)
-  //       handleUpdateActivity('popState')
-  //       debugger
-  //     }
-  //     const handleUnload = (e) => {
-  //       console.log(e)
-  //       handleUpdateActivity('unload')
-  //       debugger
+  //     document.addEventListener('visibilitychange', handleVisibilityChange)
+  //
+  //     const handleUnload = () => {
+  //       clearInterval(intervalId)
   //     }
   //
-  //     document.addEventListener('visibilitychange', handleVisibilityChange)
-  //     window.addEventListener('beforeunload', handleBeforeUnload)
+  //     window.addEventListener('beforeunload', handleUnload)
   //
   //     return () => {
+  //       clearInterval(intervalId)
   //       document.removeEventListener('visibilitychange', handleVisibilityChange)
-  //       window.removeEventListener('beforeunload', handleBeforeUnload)
+  //       window.removeEventListener('beforeunload', handleUnload)
   //     }
   //   }
   // }, [isFirstRendered])
+
+  useEffect(() => {
+    if (isFirstRendered) {
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === 'hidden') {
+          handleUpdateActivity('visibilityChange')
+          // debugger
+        }
+      }
+
+      const handleBeforeUnload = (e) => {
+        console.log(e)
+        handleUpdateActivity('beforeUnload')
+        // debugger
+      }
+      const handlePopstate = (e) => {
+        console.log(e)
+        handleUpdateActivity('popState')
+        // debugger
+      }
+      const handleUnload = (e) => {
+        console.log(e)
+        handleUpdateActivity('unload')
+        // debugger
+      }
+
+      document.addEventListener('visibilitychange', handleVisibilityChange)
+      window.addEventListener('beforeunload', handleBeforeUnload)
+
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+        window.removeEventListener('beforeunload', handleBeforeUnload)
+      }
+    }
+  }, [isFirstRendered])
 
   return (
     <IntlProvider

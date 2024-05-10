@@ -50,6 +50,10 @@ export default function MentorshipJournal(props) {
     getJournals2()
   }, [])
 
+  useEffect(() => {
+    if (selectedJournal.value?.ltsJournalAccordions)
+      setAccordions(selectedJournal.value?.ltsJournalAccordions)
+  }, [selectedJournal.value?.ltsJournalAccordions])
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -156,13 +160,13 @@ export default function MentorshipJournal(props) {
         }
       })
       .then((response) => {
-        setImageUploadingLoader(false)
+        // setImageUploadingLoader(false)
         debugger
         // setUploadedImageUrl(response.data.fileLocation)
         toast.success('Image uploaded successfully!')
       })
       .catch((err) => {
-        setImageUploadingLoader(false)
+        // setImageUploadingLoader(false)
         return toast.error('Image upload failed, please try again!')
       })
   }
@@ -259,6 +263,17 @@ export default function MentorshipJournal(props) {
     ])
   }
 
+  const onAddInterview = () => {
+    const newInterview = { mentorImage: '', mentorName: '' }
+
+    const updatedAccordions = accordions.map((accordion) => ({
+      ...accordion,
+      interviews: [...(accordion.interviews || []), newInterview]
+    }))
+
+    setNewAccordions(updatedAccordions)
+  }
+
   const onSaveAccordion = async (accordion, indexToRemove) => {
     // debugger
     await axiosInstance
@@ -272,16 +287,17 @@ export default function MentorshipJournal(props) {
           (_, index) => index !== indexToRemove
         )
         setNewAccordions(updatedAccordions)
-        setSelectedJournal((prevSelectedJournal) => ({
-          ...prevSelectedJournal,
-          value: {
-            ...prevSelectedJournal?.value,
-            ltsJournalAccordions: [
-              ...prevSelectedJournal?.value?.ltsJournalAccordions,
-              data
-            ]
-          }
-        }))
+        // setSelectedJournal((prevSelectedJournal) => ({
+        //   ...prevSelectedJournal,
+        //   value: {
+        //     ...prevSelectedJournal?.value,
+        //     ltsJournalAccordions: [
+        //       ...prevSelectedJournal?.value?.ltsJournalAccordions,
+        //       data
+        //     ]
+        //   }
+        // }))
+        setAccordions((prevState) => [...prevState, data])
       })
       .catch((e) => e)
   }
@@ -483,105 +499,8 @@ export default function MentorshipJournal(props) {
             value={selectedJournal?.value?.title}
             onChange={handleJournalUpdate}
           />
-          {/*{selectedJournal.value?.ltsJournalAccordions &&*/}
-          {/*selectedJournal.value?.ltsJournalAccordions?.length*/}
-          {/*  ? selectedJournal.value?.ltsJournalAccordions.map((accordion) => (*/}
-          {/*      <div className="col-12 mt-2">*/}
-          {/*        <AccordionItemWrapper*/}
-          {/*          isOpened={openAccordion === `accordion-${accordion.id}`}*/}
-          {/*          handleAccordionClick={() =>*/}
-          {/*            handleAccordionClick(`accordion-${accordion.id}`)*/}
-          {/*          }*/}
-          {/*          isExanded={false}*/}
-          {/*          title={accordion.title}*/}
-          {/*        >*/}
-          {/*          {openAccordion === `accordion-${accordion.id}` && (*/}
-          {/*            <div className={'row'}>*/}
-          {/*              <div className={'col-md-4'}>*/}
-          {/*                <div className="upload-organization-logo p-0 mb-1">*/}
-          {/*                  {general.imageCropperData ? (*/}
-          {/*                    <div*/}
-          {/*                      // className="img-placeholder position-relative"*/}
-          {/*                      className="img-placeholder position-relative"*/}
-          {/*                      style={{ height: '150px' }}*/}
-          {/*                    >*/}
-          {/*                      <img*/}
-          {/*                        src={*/}
-          {/*                          // data.imageUrl*/}
-          {/*                          //   ? data.imageUrl*/}
-          {/*                          //   :*/}
-          {/*                          selectedImage*/}
-          {/*                        }*/}
-          {/*                        style={{*/}
-          {/*                          width: '100%',*/}
-          {/*                          height: '100%'*/}
-          {/*                        }}*/}
-          {/*                        alt="Thumb"*/}
-          {/*                      />*/}
-          {/*                    </div>*/}
-          {/*                  ) : (*/}
-          {/*                    <>*/}
-          {/*                      {selectedImage ? (*/}
-          {/*                        <img*/}
-          {/*                          src={*/}
-          {/*                            // data.imageUrl*/}
-          {/*                            //   ? data.imageUrl*/}
-          {/*                            //   :*/}
-          {/*                            selectedImage*/}
-          {/*                          }*/}
-          {/*                          style={{*/}
-          {/*                            width: '100%',*/}
-          {/*                            height: '100%'*/}
-          {/*                          }}*/}
-          {/*                          alt="Thumb"*/}
-          {/*                        />*/}
-          {/*                      ) : (*/}
-          {/*                        <label*/}
-          {/*                          className={'upload-image-box '}*/}
-          {/*                          onClick={() => inputImage.current.click()}*/}
-          {/*                        >*/}
-          {/*                          <input*/}
-          {/*                            ref={inputImage}*/}
-          {/*                            onChange={imageChange}*/}
-          {/*                            accept="image/*"*/}
-          {/*                            type="file"*/}
-          {/*                            className="d-none h-100"*/}
-          {/*                          />*/}
-
-          {/*                          <div*/}
-          {/*                            className={*/}
-          {/*                              'border-dashed d-flex align-items-center flex-column justify-content-between py-3 px-2 '*/}
-          {/*                            }*/}
-          {/*                          >*/}
-          {/*                            <div className={'upload-image_box-title'}>*/}
-          {/*                              Mentor Logo*/}
-          {/*                            </div>*/}
-          {/*                            <SlCloudUpload*/}
-          {/*                              className={'upload-to-cloud_logo'}*/}
-          {/*                            />*/}
-
-          {/*                            <div*/}
-          {/*                              className={'upload-image_click-here'}*/}
-          {/*                            >*/}
-          {/*                              Click to upload file*/}
-          {/*                            </div>*/}
-          {/*                          </div>*/}
-          {/*                        </label>*/}
-          {/*                      )}*/}
-          {/*                    </>*/}
-          {/*                  )}*/}
-          {/*                </div>*/}
-          {/*              </div>*/}
-          {/*              <div className={'col-md-8'}>Videos</div>*/}
-          {/*            </div>*/}
-          {/*          )}*/}
-          {/*        </AccordionItemWrapper>*/}
-          {/*      </div>*/}
-          {/*    ))*/}
-          {/*  : null}  */}
-          {selectedJournal.value?.ltsJournalAccordions &&
-          selectedJournal.value?.ltsJournalAccordions?.length
-            ? selectedJournal.value?.ltsJournalAccordions?.map((accordion) => (
+          {accordions && accordions?.length
+            ? accordions?.map((accordion) => (
                 <div className="col-12 mt-2">
                   <AccordionItemWrapper
                     isOpened={openAccordion === `accordion-${accordion.id}`}
@@ -671,6 +590,14 @@ export default function MentorshipJournal(props) {
                         <div className={'col-md-8'}>Videos</div>
                       </div>
                     )}
+                    <div className={'mt-2'}>
+                      <LtsButton
+                        name={'Add new interview'}
+                        width={'30%'}
+                        align={'end'}
+                        onClick={() => onAddInterview()}
+                      />
+                    </div>
                   </AccordionItemWrapper>
                 </div>
               ))
