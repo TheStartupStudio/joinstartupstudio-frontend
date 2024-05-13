@@ -15,7 +15,6 @@ import {
   getSelectedBriefingStart
 } from '../../redux/header/Actions'
 
-
 const customStyles = {
   option: (provided, state) => ({
     ...provided
@@ -41,11 +40,8 @@ const StudentOfInstructors = (props) => {
   ])
   const selectedBriefing = useSelector((state) => state.header.selectedBriefing)
   const loggedUser = useSelector((state) => state.user.user.user)
-  const [briefing, setBriefing] = useState( null)
-  const {
-    handleSubmit,
-  } = useForm()
-
+  const [briefing, setBriefing] = useState(null)
+  const { handleSubmit } = useForm()
 
   const getData = async () => {
     await axiosInstance.get('/studentsInstructorss/init').then((res) => {
@@ -74,7 +70,6 @@ const StudentOfInstructors = (props) => {
       getData()
     }
   }, [props.allow])
-
 
   const changeDashboard = (value) => {
     axiosInstance
@@ -131,8 +126,8 @@ const StudentOfInstructors = (props) => {
   }, [dispatch])
 
   const handleChangeBriefing = (briefing) => {
-      setBriefing(briefing)
-    }
+    setBriefing(briefing)
+  }
 
   const onSubmitBriefing = () => {
     if (briefing) {
