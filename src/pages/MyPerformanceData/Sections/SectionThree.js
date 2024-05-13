@@ -30,8 +30,7 @@ function SectionThree(props) {
             { label: 'Curriculum Completion', value: '', disabled: true },
             { label: 'LTS1', value: 'lts1' },
             { label: 'LTS2', value: 'lts2' },
-            { label: 'LTS3&4', value: 'lts3&4' },
-            { label: 'FinLit', value: 'finlit' }
+            { label: 'LTS3&4', value: 'lts3&4' }
           ]}
           value={curriculumCompletion}
           onChange={handleCurriculumCompletionChange}
