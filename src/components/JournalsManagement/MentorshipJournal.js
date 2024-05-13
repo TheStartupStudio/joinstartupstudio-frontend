@@ -24,6 +24,7 @@ import { SlCloudUpload } from 'react-icons/sl'
 import ImageCropper from '../ImageCropper'
 import { ReflectionInfoBox } from '../Modals/ReflectionInfoBox'
 import LtsJournalReflection from '../../pages/LtsJournal/reflection'
+import ReactTable from '../ReactTable/ReactTable'
 
 export default function MentorshipJournal(props) {
   const [journals, setJournals] = useState([])
@@ -396,21 +397,42 @@ export default function MentorshipJournal(props) {
     formData.append('video', video)
     console.log('formData', formData)
     debugger
-    // try {
-    //   const response = await axiosInstance.post('/upload/video', formData, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   });
-    //
-    //   // setVideoUploadingLoader(false);
-    //   // debugger;
-    //   // setUploadedVideoUrl(response.data.fileLocation);
-    //   toast.success('Video uploaded successfully!');
-    // } catch (error) {
-    //   // setVideoUploadingLoader(false);
-    //   toast.error('Video upload failed, please try again!');
-    // }
+    try {
+      const uploadedVideo = await axiosInstance.post(
+        '/upload/journal-video/',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
+
+      const createContentData = {
+        url: uploadedVideo.data.fileLocation,
+
+        thumbnail: '',
+        description: '',
+        subtitle: '',
+        type: 'video',
+        title: ''
+      }
+      debugger
+
+      const createdContent = await axiosInstance.post(
+        '/contents/',
+        createContentData
+      )
+
+      debugger
+      // setVideoUploadingLoader(false);
+      // debugger;
+      // setUploadedVideoUrl(response.data.fileLocation);
+      toast.success('Video uploaded successfully!')
+    } catch (error) {
+      // setVideoUploadingLoader(false);
+      toast.error('Video upload failed, please try again!')
+    }
   }
 
   return (
@@ -558,308 +580,249 @@ export default function MentorshipJournal(props) {
             value={selectedJournal?.value?.title}
             onChange={handleJournalUpdate}
           />
+          {accordions && accordions?.length && (
+            <ReactTable accordions={accordions} />
+          )}
 
-          {accordions && accordions?.length
-            ? accordions?.map((accordion, index) => (
-                <div className="col-12 mt-2">
-                  <AccordionItemWrapper
-                    isOpened={openAccordion === `accordion-${accordion.id}`}
-                    handleAccordionClick={() =>
-                      handleAccordionClick(`accordion-${accordion.id}`)
-                    }
-                    isExanded={false}
-                    title={accordion.title}
-                  >
-                    {openAccordion === `accordion-${accordion.id}` && (
-                      <>
-                        {accordion.interviewedMentor ? (
-                          <React.Fragment>
-                            <div className={'row'}>
-                              <div className={'col-md-4'}>
-                                <div className="upload-organization-logo p-0 mb-1">
-                                  {general.imageCropperData ? (
-                                    <div
-                                      // className="img-placeholder position-relative"
-                                      className="img-placeholder position-relative"
-                                      style={{ height: '150px' }}
-                                    >
-                                      <img
-                                        src={
-                                          // data.imageUrl
-                                          //   ? data.imageUrl
-                                          //   :
-                                          selectedImage
-                                        }
-                                        style={{
-                                          width: '100%',
-                                          height: '100%'
-                                        }}
-                                        alt="Thumb"
-                                      />
-                                    </div>
-                                  ) : (
-                                    <>
-                                      {selectedImage ? (
-                                        <img
-                                          src={
-                                            // data.imageUrl
-                                            //   ? data.imageUrl
-                                            //   :
-                                            selectedImage
-                                          }
-                                          style={{
-                                            width: '100%',
-                                            height: '100%'
-                                          }}
-                                          alt="Thumb"
-                                        />
-                                      ) : (
-                                        <label
-                                          className={'upload-image-box '}
-                                          onClick={() =>
-                                            inputImage.current.click()
-                                          }
-                                        >
-                                          <input
-                                            ref={inputImage}
-                                            onChange={imageChange}
-                                            accept="image/*"
-                                            type="file"
-                                            className="d-none h-100"
-                                          />
+          {/*{accordions && accordions?.length*/}
+          {/*  ? accordions?.map((accordion, index) => (*/}
+          {/*      <div className="col-12 mt-2">*/}
+          {/*        <AccordionItemWrapper*/}
+          {/*          isOpened={openAccordion === `accordion-${accordion.id}`}*/}
+          {/*          handleAccordionClick={() =>*/}
+          {/*            handleAccordionClick(`accordion-${accordion.id}`)*/}
+          {/*          }*/}
+          {/*          isExanded={false}*/}
+          {/*          title={accordion.title}*/}
+          {/*        >*/}
+          {/*          {openAccordion === `accordion-${accordion.id}` && (*/}
+          {/*            <>*/}
+          {/*              {accordion.interviewedMentor ? (*/}
+          {/*                <React.Fragment>*/}
+          {/*                  <div className={'row'}>*/}
+          {/*                    <div className={'col-md-4'}>*/}
+          {/*                      <div className="upload-organization-logo p-0 mb-1">*/}
+          {/*                        {general.imageCropperData ? (*/}
+          {/*                          <div*/}
+          {/*                            // className="img-placeholder position-relative"*/}
+          {/*                            className="img-placeholder position-relative"*/}
+          {/*                            style={{ height: '150px' }}*/}
+          {/*                          >*/}
+          {/*                            <img*/}
+          {/*                              src={*/}
+          {/*                                // data.imageUrl*/}
+          {/*                                //   ? data.imageUrl*/}
+          {/*                                //   :*/}
+          {/*                                selectedImage*/}
+          {/*                              }*/}
+          {/*                              style={{*/}
+          {/*                                width: '100%',*/}
+          {/*                                height: '100%'*/}
+          {/*                              }}*/}
+          {/*                              alt="Thumb"*/}
+          {/*                            />*/}
+          {/*                          </div>*/}
+          {/*                        ) : (*/}
+          {/*                          <>*/}
+          {/*                            {selectedImage ? (*/}
+          {/*                              <img*/}
+          {/*                                src={*/}
+          {/*                                  // data.imageUrl*/}
+          {/*                                  //   ? data.imageUrl*/}
+          {/*                                  //   :*/}
+          {/*                                  selectedImage*/}
+          {/*                                }*/}
+          {/*                                style={{*/}
+          {/*                                  width: '100%',*/}
+          {/*                                  height: '100%'*/}
+          {/*                                }}*/}
+          {/*                                alt="Thumb"*/}
+          {/*                              />*/}
+          {/*                            ) : (*/}
+          {/*                              <label*/}
+          {/*                                className={'upload-image-box '}*/}
+          {/*                                onClick={() =>*/}
+          {/*                                  inputImage.current.click()*/}
+          {/*                                }*/}
+          {/*                              >*/}
+          {/*                                <input*/}
+          {/*                                  ref={inputImage}*/}
+          {/*                                  onChange={imageChange}*/}
+          {/*                                  accept="image/*"*/}
+          {/*                                  type="file"*/}
+          {/*                                  className="d-none h-100"*/}
+          {/*                                />*/}
 
-                                          <div
-                                            className={
-                                              'border-dashed d-flex align-items-center flex-column justify-content-between py-3 px-2 '
-                                            }
-                                          >
-                                            <div
-                                              className={
-                                                'upload-image_box-title'
-                                              }
-                                            >
-                                              Mentor Logo
-                                            </div>
-                                            <SlCloudUpload
-                                              className={'upload-to-cloud_logo'}
-                                            />
+          {/*                                <div*/}
+          {/*                                  className={*/}
+          {/*                                    'border-dashed d-flex align-items-center flex-column justify-content-between py-3 px-2 '*/}
+          {/*                                  }*/}
+          {/*                                >*/}
+          {/*                                  <div*/}
+          {/*                                    className={*/}
+          {/*                                      'upload-image_box-title'*/}
+          {/*                                    }*/}
+          {/*                                  >*/}
+          {/*                                    Mentor Logo*/}
+          {/*                                  </div>*/}
+          {/*                                  <SlCloudUpload*/}
+          {/*                                    className={'upload-to-cloud_logo'}*/}
+          {/*                                  />*/}
 
-                                            <div
-                                              className={
-                                                'upload-image_click-here'
-                                              }
-                                            >
-                                              Click to upload file
-                                            </div>
-                                          </div>
-                                        </label>
-                                      )}
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                              <div className={'col-md-8'}>
-                                {accordion?.interviewedMentor?.podcasts?.map(
-                                  (podcast, index) => {
-                                    return (
-                                      <div>
-                                        <div
-                                          className={
-                                            'd-flex gap-1 align-items-center'
-                                          }
-                                        >
-                                          {/*<FontAwesomeIcon*/}
-                                          {/*  icon={faPlay}*/}
-                                          {/*  onClick={() => {*/}
-                                          {/*    // data.url(data.data.url)*/}
-                                          {/*    // // data.url(data.data.url)*/}
-                                          {/*    // data.setAudioPlaying(true)*/}
-                                          {/*    // setSong(data.data.url)*/}
-                                          {/*    // handlePlayPause()*/}
-                                          {/*  }}*/}
-                                          {/*  style={{*/}
-                                          {/*    fontSize: '17px',*/}
-                                          {/*    color: 'rgb(153, 204, 51)'*/}
-                                          {/*  }}*/}
-                                          {/*></FontAwesomeIcon>*/}
+          {/*                                  <div*/}
+          {/*                                    className={*/}
+          {/*                                      'upload-image_click-here'*/}
+          {/*                                    }*/}
+          {/*                                  >*/}
+          {/*                                    Click to upload file*/}
+          {/*                                  </div>*/}
+          {/*                                </div>*/}
+          {/*                              </label>*/}
+          {/*                            )}*/}
+          {/*                          </>*/}
+          {/*                        )}*/}
+          {/*                      </div>*/}
+          {/*                    </div>*/}
+          {/*                    <div className={'col-md-8'}>*/}
+          {/*                      {accordion?.interviewedMentor?.podcasts?.map(*/}
+          {/*                        (podcast, index) => {*/}
+          {/*                          return (*/}
+          {/*                            <div>*/}
+          {/*                              <div*/}
+          {/*                                className={*/}
+          {/*                                  'd-flex gap-1 align-items-center'*/}
+          {/*                                }*/}
+          {/*                              >*/}
+          {/*                                /!*<FontAwesomeIcon*!/*/}
+          {/*                                /!*  icon={faPlay}*!/*/}
+          {/*                                /!*  onClick={() => {*!/*/}
+          {/*                                /!*    // data.url(data.data.url)*!/*/}
+          {/*                                /!*    // // data.url(data.data.url)*!/*/}
+          {/*                                /!*    // data.setAudioPlaying(true)*!/*/}
+          {/*                                /!*    // setSong(data.data.url)*!/*/}
+          {/*                                /!*    // handlePlayPause()*!/*/}
+          {/*                                /!*  }}*!/*/}
+          {/*                                /!*  style={{*!/*/}
+          {/*                                /!*    fontSize: '17px',*!/*/}
+          {/*                                /!*    color: 'rgb(153, 204, 51)'*!/*/}
+          {/*                                /!*  }}*!/*/}
+          {/*                                /!*></FontAwesomeIcon>*!/*/}
 
-                                          <div>
-                                            <input
-                                              type="file"
-                                              accept="video/*"
-                                              onChange={(e) =>
-                                                videoUpload(e.target.files[0])
-                                              }
-                                            />
-                                            {/*{uploadedVideoUrl && (*/}
-                                            {/*  <div>*/}
-                                            {/*    <video*/}
-                                            {/*      controls*/}
-                                            {/*      src={uploadedVideoUrl}*/}
-                                            {/*      width="320"*/}
-                                            {/*      height="240"*/}
-                                            {/*    >*/}
-                                            {/*      Your browser does not support*/}
-                                            {/*      the video tag.*/}
-                                            {/*    </video>*/}
-                                            {/*  </div>*/}
-                                            {/*)}*/}
-                                            {/*{videoUploadingLoader && (*/}
-                                            {/*  <div>Loading...</div>*/}
-                                            {/*)}*/}
-                                          </div>
+          {/*                                <div>*/}
+          {/*                                  <input*/}
+          {/*                                    type="file"*/}
+          {/*                                    accept="video/*"*/}
+          {/*                                    onChange={(e) =>*/}
+          {/*                                      videoUpload(e.target.files[0])*/}
+          {/*                                    }*/}
+          {/*                                  />*/}
+          {/*                                  /!*{uploadedVideoUrl && (*!/*/}
+          {/*                                  /!*  <div>*!/*/}
+          {/*                                  /!*    <video*!/*/}
+          {/*                                  /!*      controls*!/*/}
+          {/*                                  /!*      src={uploadedVideoUrl}*!/*/}
+          {/*                                  /!*      width="320"*!/*/}
+          {/*                                  /!*      height="240"*!/*/}
+          {/*                                  /!*    >*!/*/}
+          {/*                                  /!*      Your browser does not support*!/*/}
+          {/*                                  /!*      the video tag.*!/*/}
+          {/*                                  /!*    </video>*!/*/}
+          {/*                                  /!*  </div>*!/*/}
+          {/*                                  /!*)}*!/*/}
+          {/*                                  /!*{videoUploadingLoader && (*!/*/}
+          {/*                                  /!*  <div>Loading...</div>*!/*/}
+          {/*                                  /!*)}*!/*/}
+          {/*                                </div>*/}
 
-                                          <div>Podcast title:</div>
-                                          <input
-                                            type={'text'}
-                                            value={podcast.podcastUrl}
-                                            onChange={(e) =>
-                                              onChangeAccordionTitles(
-                                                index,
-                                                e.target.value
-                                              )
-                                            }
-                                            className={
-                                              'w-100 py-2 px-3 mt-2 text-uppercase'
-                                            }
-                                            style={{
-                                              // background: '#3c3c3c',
-                                              // color: '#fff',
-                                              font: 'normal normal 600 16px / 22px Montserrat'
-                                            }}
-                                          />
-                                          {/*{podcast.videoUrl}*/}
-                                        </div>
-                                        {/*<LtsJournalReflection />*/}
-                                        {/*<div>{podcast}</div>*/}
-                                      </div>
-                                    )
-                                  }
-                                )}
-                                <LtsButton
-                                  name={'Add new podcast'}
-                                  width={'30%'}
-                                  align={'end'}
-                                  onClick={() => onAddPodcastReflection(index)}
-                                />
-                                {/*<LtsButton*/}
-                                {/*  name={'Add new video'}*/}
-                                {/*  width={'30%'}*/}
-                                {/*  align={'end'}*/}
-                                {/*  onClick={() => onAddInterviewMentor(index)}*/}
-                                {/*/>*/}
-                                {/*<div>*/}
-                                {/*  <Select*/}
-                                {/*    value={{*/}
-                                {/*      label: 'Select part'*/}
-                                {/*    }}*/}
-                                {/*    // onChange={handleSelectInterViewPart}*/}
-                                {/*    options={interviewParts}*/}
-                                {/*    placeholder={'Select part'}*/}
-                                {/*    // openMenuOnClick={false}*/}
-                                {/*    // isDisabled={selectDisabled}*/}
-                                {/*    theme={(theme) => ({*/}
-                                {/*      ...theme,*/}
-                                {/*      borderRadius: 0,*/}
-                                {/*      outLine: 'none',*/}
-                                {/*      colors: {*/}
-                                {/*        ...theme.colors,*/}
-                                {/*        // primary25: 'hotpink',*/}
-                                {/*        primary: '#e4e4e4',*/}
-                                {/*        neutral0: '#e4e4e4',*/}
-                                {/*        opacity: 1,*/}
-                                {/*        zIndex: 100*/}
-                                {/*      },*/}
-                                {/*      spacing: {*/}
-                                {/*        ...theme.spacing,*/}
-                                {/*        controlHeight: 32*/}
-                                {/*      },*/}
-                                {/*      zIndex: 100*/}
-                                {/*    })}*/}
-                                {/*    styles={{*/}
-                                {/*      control: (provided, state) => ({*/}
-                                {/*        ...provided,*/}
-                                {/*        boxShadow: 'none',*/}
-                                {/*        border: 'none',*/}
-                                {/*        fontSize: '14px',*/}
-                                {/*        height: '50px'*/}
-                                {/*      }),*/}
-                                {/*      menu: (base) => ({*/}
-                                {/*        ...base,*/}
-                                {/*        border: 'none',*/}
-                                {/*        boxShadow: 'none',*/}
-                                {/*        fontSize: '14px'*/}
-                                {/*      }),*/}
-                                {/*      valueContainer: (base) => ({*/}
-                                {/*        ...base,*/}
-                                {/*        paddingLeft: 50*/}
-                                {/*      })*/}
-                                {/*    }}*/}
-                                {/*    components={{*/}
-                                {/*      ValueContainer,*/}
-                                {/*      DropdownIndicator: () => null,*/}
-                                {/*      IndicatorSeparator: () => null*/}
-                                {/*    }}*/}
-                                {/*    classNamePrefix="vyrill"*/}
-                                {/*    // autoFocus={false}*/}
-                                {/*  />*/}
-                                {/*</div>*/}
-                              </div>
-                            </div>
-                          </React.Fragment>
-                        ) : (
-                          <></>
-                        )}
+          {/*                                <div>Podcast title:</div>*/}
+          {/*                                <input*/}
+          {/*                                  type={'text'}*/}
+          {/*                                  value={podcast.podcastUrl}*/}
+          {/*                                  onChange={(e) =>*/}
+          {/*                                    onChangeAccordionTitles(*/}
+          {/*                                      index,*/}
+          {/*                                      e.target.value*/}
+          {/*                                    )*/}
+          {/*                                  }*/}
+          {/*                                  className={*/}
+          {/*                                    'w-100 py-2 px-3 mt-2 text-uppercase'*/}
+          {/*                                  }*/}
+          {/*                                  style={{*/}
+          {/*                                    // background: '#3c3c3c',*/}
+          {/*                                    // color: '#fff',*/}
+          {/*                                    font: 'normal normal 600 16px / 22px Montserrat'*/}
+          {/*                                  }}*/}
+          {/*                                />*/}
+          {/*                                /!*{podcast.videoUrl}*!/*/}
+          {/*                              </div>*/}
+          {/*                              /!*<LtsJournalReflection />*!/*/}
+          {/*                              /!*<div>{podcast}</div>*!/*/}
+          {/*                            </div>*/}
+          {/*                          )*/}
+          {/*                        }*/}
+          {/*                      )}*/}
+          {/*                      <LtsButton*/}
+          {/*                        name={'Add new podcast'}*/}
+          {/*                        width={'30%'}*/}
+          {/*                        align={'end'}*/}
+          {/*                        onClick={() => onAddPodcastReflection(index)}*/}
+          {/*                      />*/}
+          {/*                    </div>*/}
+          {/*                  </div>*/}
+          {/*                </React.Fragment>*/}
+          {/*              ) : (*/}
+          {/*                <></>*/}
+          {/*              )}*/}
 
-                        <LtsButton
-                          name={'Add new interview'}
-                          width={'30%'}
-                          align={'end'}
-                          onClick={() => onAddInterviewMentor(index)}
-                        />
-                      </>
-                    )}
-                  </AccordionItemWrapper>
-                </div>
-              ))
-            : null}
-          <div>
-            {newAccordions.map((accordion, index) => {
-              return (
-                <React.Fragment>
-                  <input
-                    type={'text'}
-                    value={accordion.title}
-                    onChange={(e) =>
-                      onChangeAccordionTitles(index, e.target.value)
-                    }
-                    className={'w-100 py-2 px-3 mt-2 text-uppercase'}
-                    style={{
-                      background: '#3c3c3c',
-                      color: '#fff',
-                      font: 'normal normal 600 16px / 22px Montserrat'
-                    }}
-                  />
-                  <div className={'mt-2'}>
-                    <LtsButton
-                      name={'Save'}
-                      width={'30%'}
-                      align={'end'}
-                      onClick={() => onSaveAccordion(accordion, index)}
-                    />
-                  </div>
-                </React.Fragment>
-              )
-            })}
-          </div>
-          <div className={'mt-2'}>
-            <LtsButton
-              name={'Add new accordion'}
-              width={'30%'}
-              align={'end'}
-              onClick={() => onAddAccordion()}
-            />
-          </div>
+          {/*              <LtsButton*/}
+          {/*                name={'Add new interview'}*/}
+          {/*                width={'30%'}*/}
+          {/*                align={'end'}*/}
+          {/*                onClick={() => onAddInterviewMentor(index)}*/}
+          {/*              />*/}
+          {/*            </>*/}
+          {/*          )}*/}
+          {/*        </AccordionItemWrapper>*/}
+          {/*      </div>*/}
+          {/*    ))*/}
+          {/*  : null}*/}
+          {/*<div>*/}
+          {/*  {newAccordions.map((accordion, index) => {*/}
+          {/*    return (*/}
+          {/*      <React.Fragment>*/}
+          {/*        <input*/}
+          {/*          type={'text'}*/}
+          {/*          value={accordion.title}*/}
+          {/*          onChange={(e) =>*/}
+          {/*            onChangeAccordionTitles(index, e.target.value)*/}
+          {/*          }*/}
+          {/*          className={'w-100 py-2 px-3 mt-2 text-uppercase'}*/}
+          {/*          style={{*/}
+          {/*            background: '#3c3c3c',*/}
+          {/*            color: '#fff',*/}
+          {/*            font: 'normal normal 600 16px / 22px Montserrat'*/}
+          {/*          }}*/}
+          {/*        />*/}
+          {/*        <div className={'mt-2'}>*/}
+          {/*          <LtsButton*/}
+          {/*            name={'Save'}*/}
+          {/*            width={'30%'}*/}
+          {/*            align={'end'}*/}
+          {/*            onClick={() => onSaveAccordion(accordion, index)}*/}
+          {/*          />*/}
+          {/*        </div>*/}
+          {/*      </React.Fragment>*/}
+          {/*    )*/}
+          {/*  })}*/}
+          {/*</div>*/}
+          {/*<div className={'mt-2'}>*/}
+          {/*  <LtsButton*/}
+          {/*    name={'Add new accordion'}*/}
+          {/*    width={'30%'}*/}
+          {/*    align={'end'}*/}
+          {/*    onClick={() => onAddAccordion()}*/}
+          {/*  />*/}
+          {/*</div>*/}
 
           <button
             className="float-end mt-2 px-md-5 save-button add-new-note-button-text"
