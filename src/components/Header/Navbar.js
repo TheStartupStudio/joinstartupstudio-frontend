@@ -21,7 +21,6 @@ import { useDispatch } from 'react-redux'
 import { changeSidebarState } from '../../redux'
 
 const Navbar = (props) => {
-  console.log('props', props)
   const history = useHistory()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -29,7 +28,7 @@ const Navbar = (props) => {
   const [backButton, setBackButton] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
   const [showDropDown, setShowDropDown] = useState(false)
-  const [allowToShow,setAllowToShow] = useState(false)
+  const [allowToShow, setAllowToShow] = useState(false)
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
 
   useEffect(() => {
@@ -79,9 +78,9 @@ const Navbar = (props) => {
       .catch((e) => e)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     hasAccess()
-  },[])
+  }, [])
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light desktop-menu px-xl-2">
@@ -322,13 +321,13 @@ const Navbar = (props) => {
                       </Link>
                     }
                     {allowToShow && (
-                     <Link
-                     onClick={() => setShowDropDown((preState) => !preState)}
-                     to="/briefings"
-                     className="dropdown-item py-2 dropdown-menu-hover"
-                   >
-                     MY NEWS BRIEFINGS ARCHIVE
-                   </Link> 
+                      <Link
+                        onClick={() => setShowDropDown((preState) => !preState)}
+                        to="/briefings"
+                        className="dropdown-item py-2 dropdown-menu-hover"
+                      >
+                        MY NEWS BRIEFINGS ARCHIVE
+                      </Link>
                     )}
                     <li>
                       <Link
