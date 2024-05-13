@@ -23,17 +23,25 @@ function SectionTwo(props) {
     dispatch(fetchSectionTwoData())
     dispatch(fetchCertificationData())
   }, [dispatch])
+  function handleProgressValue(value) {
+    if (isNaN(value) || value === undefined || value === null) {
+      return 0
+    }
+    return value
+  }
 
   return (
     <div className={'row g-2 '} style={{ minHeight: 300 }}>
       <div className={'col-md-4 p-3 d-flex flex-column'} style={{ gap: 20 }}>
         <ProgressCard
-          progress={sectionTwoData?.trainingCompletion}
+          progress={handleProgressValue(sectionTwoData?.trainingCompletion)}
           title={'Training completion'}
           loading={sectionTwoLoading}
         />
         <ProgressCard
-          progress={sectionTwoData?.instructorNotesCompletion}
+          progress={handleProgressValue(
+            sectionTwoData?.instructorNotesCompletion
+          )}
           title={'Instructor notes completion'}
           loading={sectionTwoLoading}
         />

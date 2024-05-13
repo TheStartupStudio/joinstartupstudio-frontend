@@ -19,7 +19,12 @@ function SectionThree(props) {
   useEffect(() => {
     dispatch(fetchInstructorDebriefData(curriculumCompletion))
   }, [curriculumCompletion])
-
+  function handleProgressValue(value) {
+    if (isNaN(value) || value === undefined || value === null) {
+      return 0
+    }
+    return value
+  }
   return (
     <div className={'row g-2 '} style={{ minHeight: 300 }}>
       <ContentStreamed />
@@ -36,17 +41,19 @@ function SectionThree(props) {
           onChange={handleCurriculumCompletionChange}
         />
         <ProgressCard
-          progress={instructorDebriefData?.news_briefing ?? 0}
+          progress={handleProgressValue(instructorDebriefData?.news_briefing)}
           title={'News Briefings in Task'}
           loading={instructorDebriefLoading}
         />
         <ProgressCard
-          progress={instructorDebriefData?.student_voice ?? 0}
+          progress={handleProgressValue(instructorDebriefData?.student_voice)}
           title={'Student Voice'}
           loading={instructorDebriefLoading}
         />
         <ProgressCard
-          progress={instructorDebriefData?.time_for_portfolio ?? 0}
+          progress={handleProgressValue(
+            instructorDebriefData?.time_for_portfolio
+          )}
           title={'Time for Portfolio/Journal'}
           loading={instructorDebriefLoading}
         />

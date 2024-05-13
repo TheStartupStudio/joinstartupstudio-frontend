@@ -117,16 +117,17 @@ function LtsJournalReflection(props) {
         props.saved && props.saved(data)
         setNotSaved(false)
       } else {
-        await axiosInstance.put(
+        let { data } = await axiosInstance.put(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`,
           from == 'debounce'
             ? { content: value, trainingId: myTraining ? journalId : null }
             : { content, trainingId: myTraining ? journalId : null }
         )
+
         props.saved &&
           props.saved({
             ...props,
-            content,
+            data,
             updatedAt: moment().locale(currentLanguage).toString()
           })
 

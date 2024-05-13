@@ -221,9 +221,11 @@ function LtsJournalContent(props) {
       setUserJournalEntries({
         ...userJournalEntries,
         [entry.id]: userJournalEntries[entry.id].map((mapUserJournalEntry) => {
-          return mapUserJournalEntry.id === userJournalEntry.id
-            ? data.entry
-            : mapUserJournalEntry
+          if (mapUserJournalEntry.id === userJournalEntry.id) {
+            return data.data.entry
+          } else {
+            return mapUserJournalEntry
+          }
         })
       })
 
