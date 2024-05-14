@@ -47,7 +47,6 @@ const StudentOfInstructors = (props) => {
   const loggedUser = useSelector((state) => state.user.user.user)
   const [briefing, setBriefing] = useState(null)
   const { handleSubmit } = useForm()
-  const briefings = useSelector((state) => state.header.briefings)
 
   const getData = async () => {
     await axiosInstance.get('/studentsInstructorss/init').then((res) => {
@@ -164,7 +163,7 @@ const StudentOfInstructors = (props) => {
         />
       </Modal.Header>
       <Modal.Body style={{ minHeight: '150px' }}>
-        <>
+        <div>
           <div className="row px-md-4 mt-md-4">
             <div className="col-12 col-md-6 px-md-4">
               <button
@@ -230,7 +229,25 @@ const StudentOfInstructors = (props) => {
               </button>
             </div>
           </div>
-        </>
+          <div className="row px-md-4 mt-md-4">
+            <div className="col-12 col-md-6 px-md-4">
+              <button
+                className={`btn  w-100 brand-button ${
+                  toShow == 'edit-journals'
+                    ? 'brand-button-active'
+                    : 'brand-button'
+                }`}
+                onClick={() =>
+                  toShow == 'edit-journals'
+                    ? setStateToShow('none')
+                    : setStateToShow('edit-journals')
+                }
+              >
+                {toShow == 'edit-journals' ? 'Close' : 'Edit Journals'}
+              </button>
+            </div>
+          </div>
+        </div>
         <div className="row"></div>
         {toShow != 'none' && <hr />}
         {toShow == 'dashboard' && (
@@ -616,6 +633,7 @@ const StudentOfInstructors = (props) => {
             </div>
           </>
         )}
+        {toShow === 'edit-journals' && <JournalsManagement2 />}
       </Modal.Body>
       <Modal.Footer style={{ border: '0px' }}>
         {toShow == 'CountStudent' && (
