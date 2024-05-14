@@ -113,8 +113,8 @@
   },
 
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
+    "start": "react-scripts  start",
+    "build": "react-scripts  build",
 
     "buildDev": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",
