@@ -14,6 +14,11 @@ import {
   editBriefingStart,
   getSelectedBriefingStart
 } from '../../redux/header/Actions'
+import { editBriefing } from '../../redux/header/Service'
+import JournalsManagement from '../../pages/JournalsManagement'
+const JournalsManagement2 = React.lazy(() =>
+  import('../../pages/JournalsManagement/JournalsManagement2')
+)
 
 const customStyles = {
   option: (provided, state) => ({
@@ -42,6 +47,7 @@ const StudentOfInstructors = (props) => {
   const loggedUser = useSelector((state) => state.user.user.user)
   const [briefing, setBriefing] = useState(null)
   const { handleSubmit } = useForm()
+  const briefings = useSelector((state) => state.header.briefings)
 
   const getData = async () => {
     await axiosInstance.get('/studentsInstructorss/init').then((res) => {
