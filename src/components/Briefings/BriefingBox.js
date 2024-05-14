@@ -4,6 +4,9 @@ import { truncateText } from '../../utils/helpers'
 import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPen } from '@fortawesome/free-solid-svg-icons'
+import './style.css'
 
 const BriefingBox = ({ briefing, handleOpenBriefingModal }) => {
   const dispatch = useDispatch()
@@ -17,6 +20,9 @@ const BriefingBox = ({ briefing, handleOpenBriefingModal }) => {
 
   return (
     <div className="skill-box">
+      <div className="briefing_edit-button ">
+        <FontAwesomeIcon icon={faPen} />
+      </div>
       <h5>{truncateText(title, 50)}</h5>
       <hr />
       <p>
