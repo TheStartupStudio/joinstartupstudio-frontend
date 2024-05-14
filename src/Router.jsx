@@ -203,13 +203,22 @@ function Router(props) {
   // }
   const handleUpdateActivity = (type) => {
     if (isAuthenticated && user) {
-      console.log(`type: ${type} - API Called`)
+      const now = new Date()
+      const hour = String(now.getHours()).padStart(2, '0')
+      const minute = String(now.getMinutes()).padStart(2, '0')
+      console.log(`type: ${type} - API Called at ${hour}:${minute}`)
       axiosInstance
         .put(`/myPerformanceData/updateActivity`, {
           isActive: false
         })
         .then((response) => {
-          // console.log(response)
+          const millisecondsToTime = (milliseconds) => {
+            const minutes = Math.floor(milliseconds / 60000) // 1 minute = 60000 milliseconds
+            const seconds = ((milliseconds % 60000) / 1000).toFixed(0)
+            return `${minutes} minutes and ${seconds} seconds`
+          }
+
+          console.log(millisecondsToTime(response.data.activeMinutes))
           setIsFirstRendered(true)
         })
         .catch((error) => {
@@ -217,11 +226,12 @@ function Router(props) {
         })
     }
   }
+  let intervalTimeout = 10000
   useEffect(() => {
     if (isAuthenticated && user) {
       setInterval(() => {
         handleUpdateActivity('interval')
-      }, 60000)
+      }, intervalTimeout)
     }
   }, [])
 
@@ -229,32 +239,50 @@ function Router(props) {
     if (isFirstRendered) {
       let intervalId = setInterval(() => {
         handleUpdateActivity('interval')
-      }, 60000)
+      }, intervalTimeout)
 
-      const handleVisibilityChange = () => {
-        if (document.visibilityState === 'hidden') {
-          clearInterval(intervalId)
-          // debugger
-        } else {
-          intervalId = setInterval(() => {
-            handleUpdateActivity('interval')
-          }, 60000)
-        }
-      }
+      // const handleVisibilityChange = () => {
+      //   if (document.visibilityState === 'hidden') {
+      //     clearInterval(intervalId)
+      //     // debugger
+      //   } else {
+      //     intervalId = setInterval(() => {
+      //       handleUpdateActivity('interval')
+      //     }, 60000)
+      //   }
+      // }
 
-      document.addEventListener('visibilitychange', handleVisibilityChange)
+      // document.addEventListener('visibilitychange', handleVisibilityChange)
 
       const handleUnload = () => {
         clearInterval(intervalId)
         // debugger
       }
 
-      window.addEventListener('beforeunload', handleUnload)
+      const handleOnline = () => {
+        console.log('onOnline')
+        if (!intervalId) {
+          intervalId = setInterval(() => {
+            handleUpdateActivity('interval')
+          }, intervalTimeout)
+        }
+      }
 
+      const handleOffline = () => {
+        console.log('onOffline')
+        clearInterval(intervalId)
+        // intervalId = null
+      }
+
+      window.addEventListener('beforeunload', handleUnload)
+      window.addEventListener('beforeunload', handleUnload)
+      window.addEventListener('online', handleOnline)
       return () => {
         clearInterval(intervalId)
-        document.removeEventListener('visibilitychange', handleVisibilityChange)
+        // document.removeEventListener('visibilitychange', handleVisibilityChange)
         window.removeEventListener('beforeunload', handleUnload)
+        window.removeEventListener('online', handleOnline)
+        window.removeEventListener('offline', handleOffline)
       }
     }
   }, [isFirstRendered])
