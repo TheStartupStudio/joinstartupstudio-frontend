@@ -484,6 +484,51 @@ export default function MentorshipJournal(props) {
     setSelectedAccordion(row)
   }
 
+  console.log('selectedAccordion', selectedAccordion)
+  const onSaveDescription = async () => {
+    debugger
+    try {
+      const putResponse = await axiosInstance.put(
+        `/manageJournals/interviewed-mentors/${selectedAccordion.interviewedMentor.id}`,
+        {
+          mentorDescription:
+            selectedAccordion?.interviewedMentor?.mentorDescription
+        }
+      )
+
+      debugger
+      setSelectedAccordion({
+        ...selectedAccordion,
+        interviewedMentor: {
+          ...selectedAccordion.interviewedMentor,
+          mentorDescription: putResponse.data
+        }
+      })
+      return putResponse
+      // if (putResponse && putResponse.data) {
+      //   setSelectedAccordion({...selectedAccordion, interviewedMentor: {
+      //     ...selectedAccordion.interviewedMentor,
+      //       putResponse.data
+      //     } });
+      // }
+    } catch (error) {
+      console.error('Error saving description:', error)
+    }
+  }
+
+  const onChangeDescription = (description) => {
+    const updatedAccordion = { ...selectedAccordion }
+    if (!updatedAccordion.interviewedMentor) {
+      updatedAccordion.interviewedMentor = {}
+    }
+    if (!updatedAccordion.interviewedMentor.mentorDescription) {
+      updatedAccordion.interviewedMentor.mentorDescription = []
+    }
+    updatedAccordion.interviewedMentor.mentorDescription = description
+
+    setSelectedAccordion(updatedAccordion)
+  }
+
   return (
     <div>
       {!fetchingJournals ? (
@@ -582,7 +627,7 @@ export default function MentorshipJournal(props) {
                     'HTML Code Copied, you can paste it on the journal content!'
                   )
                   navigator.clipboard.writeText(
-                    `<img src="${uploadedImageUrl}" class="w-100"><br>`
+                    `<img src='${uploadedImageUrl}' class='w-100'><br>`
                   )
                 }}
               >
@@ -903,78 +948,174 @@ export default function MentorshipJournal(props) {
                 )}
                 {selectedAccordion?.interviewedMentor && (
                   <>
-                    {selectedAccordion?.interviewedMentor?.mentorLogoUrl && (
-                      <>
-                        {selectedImage ||
-                        selectedAccordion?.interviewedMentor?.mentorLogoUrl ? (
-                          <label
-                            className={'upload-image-box p-0'}
-                            onClick={() => inputImage.current.click()}
-                          >
-                            <input
-                              ref={inputImage}
-                              onChange={(event) =>
-                                imageUpload(event.target.files[0])
-                              }
-                              accept="image/*"
-                              type="file"
-                              className="d-none h-100"
-                            />
-                            <img
-                              src={
-                                selectedAccordion?.interviewedMentor
-                                  ?.mentorLogoUrl
-                                  ? selectedAccordion?.interviewedMentor
-                                      ?.mentorLogoUrl
-                                  : selectedImage
-                              }
-                              style={{
-                                width: '100%',
-                                height: '100%'
-                              }}
-                              alt="Thumb"
-                            />
-                          </label>
-                        ) : (
-                          <label
-                            className={'upload-image-box '}
-                            onClick={() => inputImage.current.click()}
-                          >
-                            <input
-                              ref={inputImage}
-                              onChange={(event) =>
-                                imageUpload(event.target.files[0])
-                              }
-                              accept="image/*"
-                              type="file"
-                              className="d-none h-100"
-                            />
-
-                            <div
-                              className={
-                                'border-dashed d-flex align-items-center flex-column justify-content-between py-3 px-2 '
-                              }
+                    <div>
+                      {selectedAccordion?.interviewedMentor?.mentorLogoUrl && (
+                        <>
+                          {selectedImage ||
+                          selectedAccordion?.interviewedMentor
+                            ?.mentorLogoUrl ? (
+                            <label
+                              className={'upload-image-box p-0'}
+                              onClick={() => inputImage.current.click()}
                             >
-                              <div className={'upload-image_box-title'}>
-                                Mentor Logo
-                              </div>
-                              <SlCloudUpload
-                                className={'upload-to-cloud_logo'}
+                              <input
+                                ref={inputImage}
+                                onChange={(event) =>
+                                  imageUpload(event.target.files[0])
+                                }
+                                accept="image/*"
+                                type="file"
+                                className="d-none h-100"
+                              />
+                              <img
+                                src={
+                                  selectedAccordion?.interviewedMentor
+                                    ?.mentorLogoUrl
+                                    ? selectedAccordion?.interviewedMentor
+                                        ?.mentorLogoUrl
+                                    : selectedImage
+                                }
+                                style={{
+                                  width: '100%',
+                                  height: '100%'
+                                }}
+                                alt="Thumb"
+                              />
+                            </label>
+                          ) : (
+                            <label
+                              className={'upload-image-box '}
+                              onClick={() => inputImage.current.click()}
+                            >
+                              <input
+                                ref={inputImage}
+                                onChange={(event) =>
+                                  imageUpload(event.target.files[0])
+                                }
+                                accept="image/*"
+                                type="file"
+                                className="d-none h-100"
                               />
 
-                              <div className={'upload-image_click-here'}>
-                                Click to upload file
+                              <div
+                                className={
+                                  'border-dashed d-flex align-items-center flex-column justify-content-between py-3 px-2 '
+                                }
+                              >
+                                <div className={'upload-image_box-title'}>
+                                  Mentor Logo
+                                </div>
+                                <SlCloudUpload
+                                  className={'upload-to-cloud_logo'}
+                                />
+
+                                <div className={'upload-image_click-here'}>
+                                  Click to upload file
+                                </div>
                               </div>
-                            </div>
-                          </label>
-                        )}
-                      </>
-                    )}
+                            </label>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div>
+                      <MentorDescription
+                        description={
+                          selectedAccordion?.interviewedMentor
+                            ?.mentorDescription
+                        }
+                        onChange={onChangeDescription}
+                      />
+
+                      <LtsButton
+                        name={'Save Description'}
+                        onClick={() => {
+                          onSaveDescription()
+                          debugger
+                        }}
+                      />
+                    </div>
                   </>
                 )}
               </>
             )}
           </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+const MentorDescription = (props) => {
+  const [newDescription, setNewDescription] = useState('')
+  const [description, setDescription] = useState([])
+  const [editIndex, setEditIndex] = useState(null) // Track the index of the description being edited
+
+  // console.log('description', description)
+  useEffect(() => {
+    if (props.description) setDescription(props.description)
+  }, [])
+
+  useEffect(() => {
+    props.onChange(description)
+  }, [description])
+
+  const handleAddDescription = () => {
+    if (newDescription.trim() === '') {
+      return
+    }
+
+    const updatedDescription = [
+      ...description,
+      { title: newDescription.trim() }
+    ]
+    props.onAddDescription?.(updatedDescription)
+    setDescription(updatedDescription)
+    setNewDescription('')
+  }
+
+  const handleEditDescription = (index) => {
+    setEditIndex(index)
+    setNewDescription(description[index].title) // Set the input value to the selected description
+  }
+
+  const handleSaveEdit = () => {
+    const updatedDescription = [...description]
+    updatedDescription[editIndex].title = newDescription.trim()
+    props.onAddDescription?.(updatedDescription)
+    setDescription(updatedDescription)
+    setEditIndex(null)
+    setNewDescription('')
+  }
+
+  return (
+    <div>
+      <ul>
+        {description &&
+          description.map((desc, index) => (
+            <li key={index} onClick={() => handleEditDescription(index)}>
+              {editIndex === index ? (
+                <input
+                  type="text"
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  onBlur={handleSaveEdit}
+                />
+              ) : (
+                desc.title
+              )}
+            </li>
+          ))}
+      </ul>
+      {editIndex === null && (
+        <div>
+          <input
+            type="text"
+            value={newDescription}
+            onChange={(e) => setNewDescription(e.target.value)}
+            placeholder="Enter new description"
+          />
+          <button onClick={handleAddDescription}>Add Description</button>
         </div>
       )}
     </div>
