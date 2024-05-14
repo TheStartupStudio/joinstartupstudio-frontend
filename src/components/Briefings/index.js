@@ -14,7 +14,7 @@ const BriefingsArchive = () => {
 
   useEffect(() => {
     dispatch(getBriefingsStart())
-  }, [dispatch])
+  }, [])
 
   const handleOpenBriefingModal = (briefing) => {
     setSelectedBriefing(briefing)
