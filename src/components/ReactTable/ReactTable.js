@@ -1,12 +1,20 @@
 import React from 'react'
 import { useTable } from 'react-table'
 
-const ReactTable = ({ accordions }) => {
+const ReactTable = ({ accordions, onAdd, onSelectRow }) => {
   const columns = React.useMemo(
     () => [
       {
         Header: 'Title',
-        accessor: 'title'
+        accessor: 'title',
+        Cell: ({ row }) => (
+          <div
+            onClick={() => onSelectRow(row.original)}
+            style={{ cursor: 'pointer' }}
+          >
+            {row.original.title}
+          </div>
+        )
       },
       {
         Header: 'Actions',
@@ -39,8 +47,12 @@ const ReactTable = ({ accordions }) => {
   }
 
   const handleAddNew = () => {
-    // Handle adding new record
-    console.log('Add new record')
+    onAdd()
+  }
+
+  const handleSelectRow = (row) => {
+    console.log(row)
+    // onRowClick(row.original) // Pass the original data of the clicked row
   }
 
   return (
