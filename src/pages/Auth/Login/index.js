@@ -71,17 +71,17 @@ function Login() {
           )
           localStorage.setItem('email', user.email)
 
-          if (response.signInUserSession.idToken.jwtToken) {
-            const newTime = await axiosInstance.put(
-              '/myPerformanceData/updateActivity/startTime',
-              {},
-              {
-                headers: {
-                  Authorization: `Bearer ${response.signInUserSession.idToken.jwtToken}`
-                }
-              }
-            )
-          }
+          // if (response.signInUserSession.idToken.jwtToken) {
+          //   const newTime = await axiosInstance.put(
+          //     '/myPerformanceData/updateActivity/startTime',
+          //     {},
+          //     {
+          //       headers: {
+          //         Authorization: `Bearer ${response.signInUserSession.idToken.jwtToken}`
+          //       }
+          //     }
+          //   )
+          // }
 
           // if (response) {
           //   console.log(response)
@@ -114,78 +114,78 @@ function Login() {
 
   return (
     <div
-    className="container-fluid md-px-5 ps-md-5 login_container"
-    style={{ backgroundColor: '#F8F7F7', minHeight: ' calc(100vh - 42px)' }}
-  >
-    <div className="row ps-md-5 center-content">
-      <div className="col-md-5 ms-sm-1">
-        <FormWrapper
-          className="col-lg-9 mx-auto px-4 pb-3 pt-4"
-          style={{ height: '60vh', minHeight: '60vh' }}
-        >
-          <FormattedMessage id="login.email" defaultMessage="login.email">
-            {(placeholder) => (
-              <CustomLoginInput
-                cn={'mt-2 mb-3'}
-                placeholder={placeholder}
-                inputName="email"
-                inputType="email"
-                enterLogin={enterLogin}
-                onChange={(event) => handleChange(event)}
-              />
-            )}
-          </FormattedMessage>
-
-          <FormattedMessage
-            id="login.password"
-            defaultMessage="login.password"
+      className="container-fluid md-px-5 ps-md-5 login_container"
+      style={{ backgroundColor: '#F8F7F7', minHeight: ' calc(100vh - 42px)' }}
+    >
+      <div className="row ps-md-5 center-content">
+        <div className="col-md-5 ms-sm-1">
+          <FormWrapper
+            className="col-lg-9 mx-auto px-4 pb-3 pt-4"
+            style={{ height: '60vh', minHeight: '60vh' }}
           >
-            {(placeholder) => (
-              <CustomLoginInput
-                placeholder={placeholder}
-                enterLogin={enterLogin}
-                inputName="password"
-                inputType={'password'}
-                onChange={(event) => handleChange(event)}
-              />
-            )}
-          </FormattedMessage>
-
-          <button
-            type="submit"
-            className="mt-2"
-            disabled={isLoading}
-            onClick={handleSubmit}
-          >
-            {isLoading ? (
-              <span className="spinner-border spinner-border-sm" />
-            ) : (
-              <span className="d-flex align-items-center justify-content-center">
-                <IntlMessages id="general.login" />
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className="ms-2 fw-bold"
+            <FormattedMessage id="login.email" defaultMessage="login.email">
+              {(placeholder) => (
+                <CustomLoginInput
+                  cn={'mt-2 mb-3'}
+                  placeholder={placeholder}
+                  inputName="email"
+                  inputType="email"
+                  enterLogin={enterLogin}
+                  onChange={(event) => handleChange(event)}
                 />
-              </span>
-            )}
-          </button>
-          <p className="text-center public-page-text my-4">
-            <IntlMessages id="login.forgot_password" />
-            <NavLink to={'/forgot-password'} className="ml-2 link fw-bold">
-              <IntlMessages id="general.click_here" />
-            </NavLink>
-          </p>
-          <p className=" text-center public-page-text">
-            <IntlMessages id="login.security" />
-            <br />
-            <a href="/lts-secure" className="ml-2 link fw-bold">
-              <IntlMessages id="login.protect_data" />
-            </a>
-          </p>
-        </FormWrapper>
+              )}
+            </FormattedMessage>
+
+            <FormattedMessage
+              id="login.password"
+              defaultMessage="login.password"
+            >
+              {(placeholder) => (
+                <CustomLoginInput
+                  placeholder={placeholder}
+                  enterLogin={enterLogin}
+                  inputName="password"
+                  inputType={'password'}
+                  onChange={(event) => handleChange(event)}
+                />
+              )}
+            </FormattedMessage>
+
+            <button
+              type="submit"
+              className="mt-2"
+              disabled={isLoading}
+              onClick={handleSubmit}
+            >
+              {isLoading ? (
+                <span className="spinner-border spinner-border-sm" />
+              ) : (
+                <span className="d-flex align-items-center justify-content-center">
+                  <IntlMessages id="general.login" />
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    className="ms-2 fw-bold"
+                  />
+                </span>
+              )}
+            </button>
+            <p className="text-center public-page-text my-4">
+              <IntlMessages id="login.forgot_password" />
+              <NavLink to={'/forgot-password'} className="ml-2 link fw-bold">
+                <IntlMessages id="general.click_here" />
+              </NavLink>
+            </p>
+            <p className=" text-center public-page-text">
+              <IntlMessages id="login.security" />
+              <br />
+              <a href="/lts-secure" className="ml-2 link fw-bold">
+                <IntlMessages id="login.protect_data" />
+              </a>
+            </p>
+          </FormWrapper>
+        </div>
       </div>
     </div>
-  </div>
   )
 }
 
