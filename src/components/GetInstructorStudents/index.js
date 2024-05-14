@@ -22,6 +22,12 @@ import {
 import { editBriefing } from '../../redux/header/Service'
 import JournalsManagement from '../../pages/JournalsManagement'
 
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided
+  })
+}
+
 const StudentOfInstructors = (props) => {
   const [universities, setUniversities] = useState([])
   const [loading, setLoading] = useState(false)
@@ -36,6 +42,10 @@ const StudentOfInstructors = (props) => {
   const JournalsManagement2 = React.lazy(() =>
     import('../../pages/JournalsManagement/JournalsManagement2')
   )
+
+  const selectedBriefing = useSelector((state) => state.header.selectedBriefing)
+
+  const [briefing, setBriefing] = useState(null)
 
   const getData = async () => {
     await axiosInstance.get('/studentsInstructorss/init').then((res) => {
@@ -141,7 +151,7 @@ const StudentOfInstructors = (props) => {
   const dispatch = useDispatch()
 
   const briefings = useSelector((state) => state.header.briefings)
-  const [briefing, setBriefing] = useState(null)
+
   useEffect(() => {
     dispatch(getBriefingsStart())
   }, [])
