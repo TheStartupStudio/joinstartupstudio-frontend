@@ -17,7 +17,6 @@ const fetchIndustryProblems = async (currentPage, itemsPerPage) => {
     const response = await axiosInstance.get(
       `/immersion/problems?page=${currentPage}&limit=${itemsPerPage}`
     )
-    console.log('response', response)
     if (response.status === 200) {
       return response.data
     }
@@ -43,7 +42,7 @@ const fetchExperiences = async (currentPage, itemsPerPage) => {
 const fetchAllIndustries = async () => {
   try {
     const response = await axiosInstance.get(`/immersion/industries`)
-    console.log('response', response)
+
     if (response.status === 200) {
       return response.data
     }

@@ -156,35 +156,64 @@ function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user } = useSelector((state) => state.user)
   const [isFirstRendered, setIsFirstRendered] = useState(false)
+  const [existUserActivity, setExistUserActivity] = useState(null)
+  const [intervalId, setIntervalId] = useState(null)
+
   useEffect(() => {
     if (user && isAuthenticated) {
+      axiosInstance
+        .get('/myPerformanceData/userActivity')
+        .then(({ data }) => {
+          // debugger
+          setExistUserActivity(data)
+          // console.log(millisecondsToTime(data.activeMinutes))
+          setIsFirstRendered(true)
+          restartInterval().then((data) => {
+            if (data) {
+              setIntervalId(startInterval('beginning'))
+            }
+          })
+        })
+        .catch((error) => {
+          console.error('Error fetching user activity:', error)
+        })
+    }
+  }, [user, isAuthenticated])
+
+  useEffect(() => {
+    if (!user) {
+      // debugger
+      clearInterval(intervalId)
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (!existUserActivity && user && isAuthenticated) {
       axiosInstance
         .put('/myPerformanceData/updateActivity/startTime', {
           isActive: false
         })
         .then((response) => {
-          console.log(millisecondsToTime(response.data.activeMinutes))
-
+          // console.log(millisecondsToTime(response.data.activeMinutes))
           setIsFirstRendered(true)
         })
         .catch((error) => {
           console.error('Error updating activity:', error)
         })
     }
-  }, [user, isAuthenticated])
+  }, [existUserActivity, user, isAuthenticated])
 
   const handleUpdateEndTime = () => {
     const now = new Date()
     const hour = String(now.getHours()).padStart(2, '0')
     const minute = String(now.getMinutes()).padStart(2, '0')
-    console.log(` API Called at ${hour}:${minute}`)
+    // console.log(` API Called at ${hour}:${minute}`)
     axiosInstance
       .put('/myPerformanceData/updateActivity/endTime', {
         isActive: false
       })
       .then((response) => {
-
-        console.log(millisecondsToTime(response.data.activeMinutes))
+        // console.log(millisecondsToTime(response.data.activeMinutes))
       })
       .catch((error) => {
         console.error('Error updating activity:', error)
@@ -195,55 +224,17 @@ function Router(props) {
     const seconds = ((milliseconds % 60000) / 1000).toFixed(0)
     return `${minutes} minutes and ${seconds} seconds`
   }
-  const handleUpdateStartTime = () => {
-    axiosInstance
-      .put('/myPerformanceData/updateActivity/startTime', {
-        isActive: true
-      })
-      .then((response) => {
 
-        console.log(millisecondsToTime(response.data.activeMinutes))
-      })
-      .catch((error) => {
-        console.error('Error updating activity:', error)
-      })
-  }
-  const handleUpdateActivity = (type) => {
-    if (isAuthenticated && user) {
-      const now = new Date()
-      const hour = String(now.getHours()).padStart(2, '0')
-      const minute = String(now.getMinutes()).padStart(2, '0')
-      console.log(`type: ${type} - API Called at ${hour}:${minute}`)
-      axiosInstance
-        .put(`/myPerformanceData/updateActivity`, {
-          isActive: false
-        })
-        .then((response) => {
+  let intervalTimeout = 60000
 
-
-          console.log(millisecondsToTime(response.data.activeMinutes))
-          // setIsFirstRendered(true)
-        })
-        .catch((error) => {
-          console.error('Error updating activity:', error)
-        })
-    }
-  }
-  let intervalTimeout = 10000
-
-
-  const startInterval = () => {
+  const startInterval = (from) => {
     return setInterval(() => {
-      // handleUpdateActivity('interval')
-      // handleUpdateEndTime()
+      // console.log('from', from)
 
       axiosInstance
         .put(`/myPerformanceData/updateActivity/endTime`)
         .then((response) => {
-
-
-          console.log(millisecondsToTime(response.data.activeMinutes))
-          // setIsFirstRendered(true)
+          // console.log(millisecondsToTime(response.data.activeMinutes))
         })
         .catch((error) => {
           console.error('Error updating activity:', error)
@@ -252,98 +243,59 @@ function Router(props) {
   }
 
   const restartInterval = () => {
-  return axiosInstance
+    return axiosInstance
       .put(`/myPerformanceData/updateActivity/restartInterval`, {
-        isActive: true,
+        isActive: true
       })
       .then((response) => {
-        // debugger
-        return response.data;
-      });
-  };
-
-
+        return response.data
+      })
+  }
 
   useEffect(() => {
-    if (isFirstRendered) {
-      let intervalId = startInterval()
-
-
-
-
-
-
-
-
-      const handleVisibilityChange = () => {
-        if (document.hidden === true) {
-          clearInterval(intervalId);
-          // handleUpdateEndTime()
-          axiosInstance
-            .put(`/myPerformanceData/updateActivity/endTime`, {
-              isActive: false,
-              endTime: new Date()
-            })
-            .then((response) => {
-
-
-              console.log(millisecondsToTime(response.data.activeMinutes))
-              // setIsFirstRendered(true)
-            })
-            .catch((error) => {
-              console.error('Error updating activity:', error)
-            })
-          console.log('hidden');
-        } else if (document.hidden === false) {
-
-
-          restartInterval().then((data) => {
-
-            if(data) {
-              intervalId = startInterval()
-            }
-          });
-
-          console.log('visible');
-        }
-
-      };
-
-
-      const handleUnload = () => {
-        clearInterval(intervalId)
-      }
-
-      // const handleOnline = () => {
-      //   // console.log('onOnline')
-      //   if (!intervalId) {
-      //     intervalId = setInterval(() => {
-      //       handleUpdateActivity('online')
-      //     }, intervalTimeout)
-      //   }
-      // }
-      //
-      // const handleOffline = () => {
-      //   console.log('onOffline')
-      //   clearInterval(intervalId)
-      //   // intervalId = null
-      // }
-
-      document.addEventListener('visibilitychange', handleVisibilityChange)
-      window.addEventListener('beforeunload', handleUnload)
-      // window.addEventListener('online', handleOnline)
-      // window.addEventListener('offline', handleOffline)
-      return () => {
-        clearInterval(intervalId)
-        document.removeEventListener('visibilitychange', handleVisibilityChange)
-        window.removeEventListener('beforeunload', handleUnload)
-        // window.removeEventListener('online', handleOnline)
-        // window.removeEventListener('offline', handleOffline)
+    if (user && isAuthenticated) {
+      if (isFirstRendered) {
+        setIntervalId(startInterval('after logged in and firstRendering'))
       }
     }
-  }, [isFirstRendered])
+  }, [user, isAuthenticated, isFirstRendered])
 
+  useEffect(() => {
+    if (user && isAuthenticated) {
+      if (isFirstRendered) {
+        const handleVisibilityChange = () => {
+          if (document.hidden === true) {
+            clearInterval(intervalId)
+            handleUpdateEndTime()
+          } else if (document.hidden === false) {
+            restartInterval().then((data) => {
+              if (data) {
+                setIntervalId(startInterval('on visibility'))
+              }
+            })
+          }
+        }
 
+        const handleUnload = () => {
+          clearInterval(intervalId)
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        window.addEventListener('beforeunload', handleUnload)
+
+        return () => {
+          clearInterval(intervalId)
+          document.removeEventListener(
+            'visibilitychange',
+            handleVisibilityChange
+          )
+          window.removeEventListener('beforeunload', handleUnload)
+        }
+      }
+    } else {
+      clearInterval(intervalId)
+    }
+  }, [isFirstRendered, user, isAuthenticated, intervalId])
 
   return (
     <IntlProvider
