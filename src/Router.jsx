@@ -156,7 +156,7 @@ function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user } = useSelector((state) => state.user)
   const [isFirstRendered, setIsFirstRendered] = useState(false)
-  console.log(isAuthenticated, user)
+  // console.log(isAuthenticated, user)
   useEffect(() => {
     if (user && isAuthenticated) {
       // debugger
@@ -165,6 +165,7 @@ function Router(props) {
           isActive: false
         })
         .then((response) => {
+          console.log(millisecondsToTime(response.data.activeMinutes))
           // console.log(response)
           // debugger
           setIsFirstRendered(true)
@@ -175,32 +176,45 @@ function Router(props) {
     }
   }, [user, isAuthenticated])
 
-  // const handleUpdateEndTime = () => {
-  //   axiosInstance
-  //     .put('/myPerformanceData/updateActivity/endTime', {
-  //       isActive: false
-  //     })
-  //     .then((response) => {
-  //       // console.log(response)
-  //       // setIsFirstRendered(true)
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error updating activity:', error)
-  //     })
-  // }
-  // const handleUpdateStartTime = () => {
-  //   axiosInstance
-  //     .put('/myPerformanceData/updateActivity/startTime', {
-  //       isActive: false
-  //     })
-  //     .then((response) => {
-  //       // console.log(response)
-  //       // setIsFirstRendered(true)
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error updating activity:', error)
-  //     })
-  // }
+  const handleUpdateEndTime = () => {
+    const now = new Date()
+    const hour = String(now.getHours()).padStart(2, '0')
+    const minute = String(now.getMinutes()).padStart(2, '0')
+    console.log(` API Called at ${hour}:${minute}`)
+    axiosInstance
+      .put('/myPerformanceData/updateActivity/endTime', {
+        isActive: false
+      })
+      .then((response) => {
+        // console.log(response)
+        // setIsFirstRendered(true)
+        // debugger
+        console.log(millisecondsToTime(response.data.activeMinutes))
+      })
+      .catch((error) => {
+        console.error('Error updating activity:', error)
+      })
+  }
+  const millisecondsToTime = (milliseconds) => {
+    const minutes = Math.floor(milliseconds / 60000) // 1 minute = 60000 milliseconds
+    const seconds = ((milliseconds % 60000) / 1000).toFixed(0)
+    return `${minutes} minutes and ${seconds} seconds`
+  }
+  const handleUpdateStartTime = () => {
+    axiosInstance
+      .put('/myPerformanceData/updateActivity/startTime', {
+        isActive: true
+      })
+      .then((response) => {
+        // console.log(response)
+        // setIsFirstRendered(true)
+        // debugger
+        console.log(millisecondsToTime(response.data.activeMinutes))
+      })
+      .catch((error) => {
+        console.error('Error updating activity:', error)
+      })
+  }
   const handleUpdateActivity = (type) => {
     if (isAuthenticated && user) {
       const now = new Date()
@@ -212,14 +226,10 @@ function Router(props) {
           isActive: false
         })
         .then((response) => {
-          const millisecondsToTime = (milliseconds) => {
-            const minutes = Math.floor(milliseconds / 60000) // 1 minute = 60000 milliseconds
-            const seconds = ((milliseconds % 60000) / 1000).toFixed(0)
-            return `${minutes} minutes and ${seconds} seconds`
-          }
+
 
           console.log(millisecondsToTime(response.data.activeMinutes))
-          setIsFirstRendered(true)
+          // setIsFirstRendered(true)
         })
         .catch((error) => {
           console.error('Error updating activity:', error)
@@ -227,65 +237,155 @@ function Router(props) {
     }
   }
   let intervalTimeout = 10000
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      setInterval(() => {
-        handleUpdateActivity('interval')
-      }, intervalTimeout)
-    }
-  }, [])
+  console.log('isFirstRendered', isFirstRendered)
+  // useEffect(() => {
+  //   if(isFirstRendered) {
+  //       // debugger
+  //       setInterval(() => {
+  //         handleUpdateActivity('first rendering')
+  //       }, intervalTimeout)
+  //     }
+  //
+  // }, [])
+
+  const startInterval = () => {
+    return setInterval(() => {
+      // handleUpdateActivity('interval')
+      // handleUpdateEndTime()
+
+      axiosInstance
+        .put(`/myPerformanceData/updateActivity/endTime`)
+        .then((response) => {
+
+
+          console.log(millisecondsToTime(response.data.activeMinutes))
+          // setIsFirstRendered(true)
+        })
+        .catch((error) => {
+          console.error('Error updating activity:', error)
+        })
+    }, intervalTimeout)
+  }
+
+  const restartInterval = () => {
+  return axiosInstance
+      .put(`/myPerformanceData/updateActivity/restartInterval`, {
+        isActive: true,
+      })
+      .then((response) => {
+        // debugger
+        return response.data;
+      });
+  };
+
+
 
   useEffect(() => {
     if (isFirstRendered) {
-      let intervalId = setInterval(() => {
-        handleUpdateActivity('interval')
-      }, intervalTimeout)
+      let intervalId = startInterval()
 
+
+
+
+
+
+
+
+      const handleVisibilityChange = () => {
+        if (document.hidden === true) {
+          clearInterval(intervalId);
+          // handleUpdateEndTime()
+          axiosInstance
+            .put(`/myPerformanceData/updateActivity/endTime`, {
+              isActive: false,
+              endTime: new Date()
+            })
+            .then((response) => {
+
+
+              console.log(millisecondsToTime(response.data.activeMinutes))
+              // setIsFirstRendered(true)
+            })
+            .catch((error) => {
+              console.error('Error updating activity:', error)
+            })
+          console.log('hidden');
+        } else if (document.hidden === false) {
+         // const data = restartInterval();
+         //  // handleUpdateStartTime()
+
+          restartInterval().then((data) => {
+            // console.log(data); // Use the data here
+            // debugger
+            if(data) {
+              intervalId = startInterval()
+            }
+          });
+          // debugger
+          // if(data) {
+          //
+          // intervalId = startInterval()
+          // }
+
+          console.log('visible');
+        }
+        // else if (document.visibilityState === 'visible') {
+        //   startInterval(); // Restart the interval when visibility is visible
+        //   console.log('visible');
+        // }
+      };
       // const handleVisibilityChange = () => {
       //   if (document.visibilityState === 'hidden') {
       //     clearInterval(intervalId)
-      //     // debugger
-      //   } else {
-      //     intervalId = setInterval(() => {
-      //       handleUpdateActivity('interval')
-      //     }, 60000)
+      //     console.log('hidden')
       //   }
       // }
 
-      // document.addEventListener('visibilitychange', handleVisibilityChange)
 
       const handleUnload = () => {
         clearInterval(intervalId)
         // debugger
       }
 
-      const handleOnline = () => {
-        console.log('onOnline')
-        if (!intervalId) {
-          intervalId = setInterval(() => {
-            handleUpdateActivity('interval')
-          }, intervalTimeout)
-        }
-      }
+      // const handleOnline = () => {
+      //   // console.log('onOnline')
+      //   if (!intervalId) {
+      //     intervalId = setInterval(() => {
+      //       handleUpdateActivity('online')
+      //     }, intervalTimeout)
+      //   }
+      // }
+      //
+      // const handleOffline = () => {
+      //   console.log('onOffline')
+      //   clearInterval(intervalId)
+      //   // intervalId = null
+      // }
 
-      const handleOffline = () => {
-        console.log('onOffline')
-        clearInterval(intervalId)
-        // intervalId = null
-      }
-
+      document.addEventListener('visibilitychange', handleVisibilityChange)
       window.addEventListener('beforeunload', handleUnload)
-      window.addEventListener('beforeunload', handleUnload)
-      window.addEventListener('online', handleOnline)
+      // window.addEventListener('online', handleOnline)
+      // window.addEventListener('offline', handleOffline)
       return () => {
         clearInterval(intervalId)
-        // document.removeEventListener('visibilitychange', handleVisibilityChange)
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
         window.removeEventListener('beforeunload', handleUnload)
-        window.removeEventListener('online', handleOnline)
-        window.removeEventListener('offline', handleOffline)
+        // window.removeEventListener('online', handleOnline)
+        // window.removeEventListener('offline', handleOffline)
       }
     }
   }, [isFirstRendered])
+
+  // useEffect(()=>{
+  //
+  //   console.log(document.visibilityState)
+  //   console.log(document.hidden)
+  //   // document.visibilityState
+  // },[document.visibilityState])
+  // document.addEventListener("visibilitychange", function() {
+  //   console.log('hidden',document.hidden);
+  //   console.log('visible',document.visibilityState);
+  // }, false);
 
   // useEffect(() => {
   //   if (isFirstRendered) {
