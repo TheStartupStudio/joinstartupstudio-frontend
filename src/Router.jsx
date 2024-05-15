@@ -156,18 +156,15 @@ function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user } = useSelector((state) => state.user)
   const [isFirstRendered, setIsFirstRendered] = useState(false)
-  // console.log(isAuthenticated, user)
   useEffect(() => {
     if (user && isAuthenticated) {
-      // debugger
       axiosInstance
         .put('/myPerformanceData/updateActivity/startTime', {
           isActive: false
         })
         .then((response) => {
           console.log(millisecondsToTime(response.data.activeMinutes))
-          // console.log(response)
-          // debugger
+
           setIsFirstRendered(true)
         })
         .catch((error) => {
@@ -186,9 +183,7 @@ function Router(props) {
         isActive: false
       })
       .then((response) => {
-        // console.log(response)
-        // setIsFirstRendered(true)
-        // debugger
+
         console.log(millisecondsToTime(response.data.activeMinutes))
       })
       .catch((error) => {
@@ -196,7 +191,7 @@ function Router(props) {
       })
   }
   const millisecondsToTime = (milliseconds) => {
-    const minutes = Math.floor(milliseconds / 60000) // 1 minute = 60000 milliseconds
+    const minutes = Math.floor(milliseconds / 60000)
     const seconds = ((milliseconds % 60000) / 1000).toFixed(0)
     return `${minutes} minutes and ${seconds} seconds`
   }
@@ -206,9 +201,7 @@ function Router(props) {
         isActive: true
       })
       .then((response) => {
-        // console.log(response)
-        // setIsFirstRendered(true)
-        // debugger
+
         console.log(millisecondsToTime(response.data.activeMinutes))
       })
       .catch((error) => {
@@ -237,16 +230,7 @@ function Router(props) {
     }
   }
   let intervalTimeout = 10000
-  console.log('isFirstRendered', isFirstRendered)
-  // useEffect(() => {
-  //   if(isFirstRendered) {
-  //       // debugger
-  //       setInterval(() => {
-  //         handleUpdateActivity('first rendering')
-  //       }, intervalTimeout)
-  //     }
-  //
-  // }, [])
+
 
   const startInterval = () => {
     return setInterval(() => {
@@ -311,40 +295,23 @@ function Router(props) {
             })
           console.log('hidden');
         } else if (document.hidden === false) {
-         // const data = restartInterval();
-         //  // handleUpdateStartTime()
+
 
           restartInterval().then((data) => {
-            // console.log(data); // Use the data here
-            // debugger
+
             if(data) {
               intervalId = startInterval()
             }
           });
-          // debugger
-          // if(data) {
-          //
-          // intervalId = startInterval()
-          // }
 
           console.log('visible');
         }
-        // else if (document.visibilityState === 'visible') {
-        //   startInterval(); // Restart the interval when visibility is visible
-        //   console.log('visible');
-        // }
+
       };
-      // const handleVisibilityChange = () => {
-      //   if (document.visibilityState === 'hidden') {
-      //     clearInterval(intervalId)
-      //     console.log('hidden')
-      //   }
-      // }
 
 
       const handleUnload = () => {
         clearInterval(intervalId)
-        // debugger
       }
 
       // const handleOnline = () => {
@@ -376,55 +343,7 @@ function Router(props) {
     }
   }, [isFirstRendered])
 
-  // useEffect(()=>{
-  //
-  //   console.log(document.visibilityState)
-  //   console.log(document.hidden)
-  //   // document.visibilityState
-  // },[document.visibilityState])
-  // document.addEventListener("visibilitychange", function() {
-  //   console.log('hidden',document.hidden);
-  //   console.log('visible',document.visibilityState);
-  // }, false);
 
-  // useEffect(() => {
-  //   if (isFirstRendered) {
-  //     const handleVisibilityChange = () => {
-  //       if (document.visibilityState === 'hidden') {
-  //         handleUpdateActivity('visibilityChange')
-  //         // debugger
-  //       }
-  //     }
-  //
-  //     const handleBeforeUnload = (e) => {
-  //       console.log(e)
-  //       handleUpdateActivity('beforeUnload')
-  //       // debugger
-  //     }
-  //     const handlePopstate = (e) => {
-  //       console.log(e)
-  //       handleUpdateActivity('popState')
-  //       // debugger
-  // {
-  //   /*    }*/
-  // }
-  // {
-  //   /*    const handleUnload = (e) => {*/
-  // }
-  //       console.log(e)
-  //       handleUpdateActivity('unload')
-  //       // debugger
-  //     }
-  //
-  //     document.addEventListener('visibilitychange', handleVisibilityChange)
-  //     window.addEventListener('beforeunload', handleBeforeUnload)
-  //
-  //     return () => {
-  //       document.removeEventListener('visibilitychange', handleVisibilityChange)
-  //       window.removeEventListener('beforeunload', handleBeforeUnload)
-  //     }
-  //   }
-  // }, [isFirstRendered])
 
   return (
     <IntlProvider
