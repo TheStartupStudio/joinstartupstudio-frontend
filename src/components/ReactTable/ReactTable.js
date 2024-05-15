@@ -1,59 +1,75 @@
 import React from 'react'
 import { useTable } from 'react-table'
 
-const ReactTable = ({ accordions, onAdd, onSelectRow }) => {
+const ReactTable = ({
+  data,
+  onAdd,
+  onSelectRow,
+  getColumns,
+  handleEdit,
+  handleDelete,
+  onView
+}) => {
+  console.log('data', data)
   const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Title',
-        accessor: 'title',
-        Cell: ({ row }) => (
-          <div
-            onClick={() => onSelectRow(row.original)}
-            style={{ cursor: 'pointer' }}
-          >
-            {row.original.title}
-          </div>
-        )
-      },
-      {
-        Header: 'Actions',
-        accessor: 'id', // Assuming each accordion item has a unique id
-        Cell: ({ value }) => (
-          <div>
-            <button onClick={() => handleEdit(value)}>Edit</button>
-            <button onClick={() => handleDelete(value)}>Delete</button>
-          </div>
-        )
-      }
-    ],
-    []
+    () => getColumns({ onSelectRow, handleEdit, handleDelete, onView }),
+    [onSelectRow, handleEdit, handleDelete, onView]
   )
+  // const columns = React.useMemo(
+  //   () => [
+  //     {
+  //       Header: 'Title',
+  //       accessor: 'title',
+  //       Cell: ({ row }) => {
+  //         console.log(row)
+  //         return (
+  //           <div
+  //             onClick={() => onSelectRow(row.original)}
+  //             style={{ cursor: 'pointer' }}
+  //           >
+  //             {row.original.title}
+  //           </div>
+  //         )
+  //       }
+  //     },
+  //     {
+  //       Header: 'Actions',
+  //       accessor: 'id',
+  //       Cell: ({ value }) => (
+  //         <div>
+  //           <button onClick={() => handleEdit(value)}>Edit</button>
+  //           <button onClick={() => handleDelete(value)}>Delete</button>
+  //         </div>
+  //       )
+  //     }
+  //   ],
+  //   []
+  // )
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
-      data: accordions
+      data: data ?? []
     })
 
-  const handleEdit = (id) => {
-    // Handle edit action based on the id
-    console.log('Edit id:', id)
-  }
-
-  const handleDelete = (id) => {
-    // Handle delete action based on the id
-    console.log('Delete id:', id)
-  }
+  // const handleEdit = (id) => {
+  //   // Handle edit action based on the id
+  //   console.log('Edit id:', id)
+  // }
+  //
+  // const handleDelete = (id) => {
+  //   // Handle delete action based on the id
+  //   console.log('Delete id:', id)
+  // }
 
   const handleAddNew = () => {
     onAdd()
   }
 
-  const handleSelectRow = (row) => {
-    console.log(row)
-    // onRowClick(row.original) // Pass the original data of the clicked row
-  }
+  // const handleSelectRow = (row) => {
+  //   console.log(row)
+  //   // onRowClick(row.original) // Pass the original data of the clicked row
+  // }
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import axiosInstance from '../../utils/AxiosInstance'
 import Select, { components } from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -25,6 +25,7 @@ import ImageCropper from '../ImageCropper'
 import { ReflectionInfoBox } from '../Modals/ReflectionInfoBox'
 import LtsJournalReflection from '../../pages/LtsJournal/reflection'
 import ReactTable from '../ReactTable/ReactTable'
+import MediaLightbox from '../MediaLightbox'
 
 export default function MentorshipJournal(props) {
   const [journals, setJournals] = useState([])
@@ -39,6 +40,9 @@ export default function MentorshipJournal(props) {
   const [accordions, setAccordions] = useState([])
   const [newAccordions, setNewAccordions] = useState([])
   const [selectedAccordion, setSelectedAccordion] = useState({})
+  const [selectedInterview, setSelectedInterview] = useState({})
+  const [video, setVideo] = useState(null)
+
   // console.log('selectedJournal', selectedJournal)
   // console.log('accordions', accordions)
   console.log('selectedAccordion', selectedAccordion)
@@ -307,11 +311,13 @@ export default function MentorshipJournal(props) {
       { title: '', journalId: selectedJournal?.value?.id }
     ])
   }
-  const onAddInterviewMentor = async () => {
+  const onAddInterviewMentor = async (accordion) => {
+    // debugger
     try {
       const newInterview = {
         mentorLogoUrl: '',
-        mentorDescription: [{ title: '' }]
+        mentorDescription: [{ title: '' }],
+        accordionId: accordion.id
       }
 
       // Make the API call to create a new interviewed mentor
@@ -320,7 +326,7 @@ export default function MentorshipJournal(props) {
         newInterview
       )
       const createdInterviewedMentor = response.data
-      debugger
+      // debugger
 
       // Update state with the new interviewed mentor
       setSelectedAccordion({
@@ -336,25 +342,33 @@ export default function MentorshipJournal(props) {
     }
   }
 
-  const onAddPodcastReflection = (accordionIndex) => {
-    const newPodcast = { podcastUrl: '', reflection: '' }
+  const onAddInterview = async (mentor) => {
+    try {
+      const newInterview = {
+        part: 'part-1',
+        description: '',
+        mentorId: mentor.id
+      }
 
-    setAccordions((prevState) =>
-      prevState.map((accordion, index) =>
-        index === accordionIndex
-          ? {
-              ...accordion,
-              interviewedMentor: {
-                ...accordion.interviewedMentor,
-                podcasts: [
-                  ...(accordion.interviewedMentor?.podcasts || []),
-                  newPodcast
-                ]
-              }
-            }
-          : accordion
+      // Send POST request to backend route
+      const response = await axiosInstance.post(
+        '/manageJournals/mentor-interview',
+        newInterview
       )
-    )
+      debugger
+      // Assuming the response contains the created interview data, update the state
+      setSelectedAccordion((prevState) => ({
+        ...prevState,
+        interviewedMentor: {
+          ...prevState.interviewedMentor,
+          interviews: [...prevState.interviewedMentor.interviews, response.data]
+        }
+      }))
+
+      console.log('Interview added successfully:', response.data)
+    } catch (error) {
+      console.error('Error adding interview:', error)
+    }
   }
 
   const onSaveAccordion = async (accordion, indexToRemove) => {
@@ -480,13 +494,18 @@ export default function MentorshipJournal(props) {
       toast.error('Video upload failed, please try again!')
     }
   }
-  const onSelectRow = (row) => {
-    setSelectedAccordion(row)
+  const onSelectRow = (row, type) => {
+    console.log(row)
+    if (type !== 'interview') {
+      setSelectedAccordion(row)
+    } else {
+      setSelectedInterview(row)
+    }
   }
 
   console.log('selectedAccordion', selectedAccordion)
   const onSaveDescription = async () => {
-    debugger
+    // debugger
     try {
       const putResponse = await axiosInstance.put(
         `/manageJournals/interviewed-mentors/${selectedAccordion.interviewedMentor.id}`,
@@ -529,6 +548,93 @@ export default function MentorshipJournal(props) {
     setSelectedAccordion(updatedAccordion)
   }
 
+  const getColumns = ({ onSelectRow, handleEdit, handleDelete }) => [
+    {
+      Header: 'Title',
+      accessor: 'title',
+      Cell: ({ row }) => {
+        // console.log(row)
+        return (
+          <div
+            onClick={() => onSelectRow(row.original)}
+            style={{ cursor: 'pointer' }}
+          >
+            {row.original.title}
+          </div>
+        )
+      }
+    },
+    {
+      Header: 'Actions',
+      accessor: 'id',
+      Cell: ({ value }) => (
+        <div>
+          <button onClick={() => handleEdit(value)}>Edit</button>
+          <button onClick={() => handleDelete(value)}>Delete</button>
+        </div>
+      )
+    }
+  ]
+  const getInterviewColumns = ({
+    onSelectRow,
+    handleEdit,
+    handleDelete,
+    onView
+  }) => [
+    {
+      Header: 'Description',
+      accessor: 'description',
+      Cell: ({ row }) => {
+        return (
+          <div
+            onClick={() => onSelectRow(row.original)}
+            style={{ cursor: 'pointer' }}
+          >
+            {row.original?.description}
+          </div>
+        )
+      }
+    },
+    {
+      Header: 'Interview',
+      accessor: 'interview',
+      Cell: ({ row }) => {
+        return (
+          <div
+            onClick={() => onView(row.original?.interview)}
+            style={{ cursor: 'pointer' }}
+          >
+            <LtsButton name={'View'} />
+          </div>
+        )
+      }
+    },
+    {
+      Header: 'Entry',
+      accessor: 'entry',
+      Cell: ({ row }) => {
+        return <>{row.original?.entry?.id ? <div>1</div> : <div>0</div>}</>
+      }
+    },
+    {
+      Header: 'Actions',
+      accessor: 'id',
+      Cell: ({ value }) => (
+        <div>
+          <button onClick={() => handleEdit(value)}>Edit</button>
+          <button onClick={() => handleDelete(value)}>Delete</button>
+        </div>
+      )
+    }
+  ]
+  const onViewInterview = (interview) => {
+    setVideo(interview)
+  }
+
+  console.log(selectedAccordion?.interviewedMentor?.mentorLogoUrl?.length > 0)
+  console.log(selectedAccordion?.interviewedMentor?.mentorLogoUrl)
+  console.log(selectedAccordion?.interviewedMentor)
+  console.log(selectedImage?.length > 0)
   return (
     <div>
       {!fetchingJournals ? (
@@ -676,11 +782,15 @@ export default function MentorshipJournal(props) {
               onChange={handleJournalUpdate}
             />
             {accordions && accordions?.length && (
-              <ReactTable
-                accordions={accordions}
-                onAdd={onAddAccordion}
-                onSelectRow={onSelectRow}
-              />
+              <>
+                <ReactTable
+                  data={accordions}
+                  getColumns={getColumns}
+                  onAdd={onAddAccordion}
+                  onSelectRow={onSelectRow}
+                />
+                {/*{selectedInterview}*/}
+              </>
             )}
 
             {/*{accordions && accordions?.length*/}
@@ -949,11 +1059,10 @@ export default function MentorshipJournal(props) {
                 {selectedAccordion?.interviewedMentor && (
                   <>
                     <div>
-                      {selectedAccordion?.interviewedMentor?.mentorLogoUrl && (
+                      {selectedAccordion?.interviewedMentor && (
                         <>
-                          {selectedImage ||
-                          selectedAccordion?.interviewedMentor
-                            ?.mentorLogoUrl ? (
+                          {selectedAccordion?.interviewedMentor?.mentorLogoUrl
+                            ?.length > 0 ? (
                             <label
                               className={'upload-image-box p-0'}
                               onClick={() => inputImage.current.click()}
@@ -1018,22 +1127,50 @@ export default function MentorshipJournal(props) {
                         </>
                       )}
                     </div>
-                    <div>
-                      <MentorDescription
-                        description={
-                          selectedAccordion?.interviewedMentor
-                            ?.mentorDescription
-                        }
-                        onChange={onChangeDescription}
-                      />
+                    <div className={'row'}>
+                      <div className={'col-md-12'}>
+                        <MentorDescription
+                          description={
+                            selectedAccordion?.interviewedMentor
+                              ?.mentorDescription
+                          }
+                          onChange={onChangeDescription}
+                        />
 
-                      <LtsButton
-                        name={'Save Description'}
-                        onClick={() => {
-                          onSaveDescription()
-                          debugger
-                        }}
-                      />
+                        <LtsButton
+                          name={'Save Description'}
+                          onClick={() => {
+                            onSaveDescription()
+                            // debugger
+                          }}
+                        />
+                      </div>
+                      <div className={'col-md-12'}>
+                        {/*{selectedAccordion &&*/}
+                        {/*  selectedAccordion?.interviewedMentor?.interviews*/}
+                        {/*    ?.length > 0 && (*/}
+                        <ReactTable
+                          data={
+                            selectedAccordion?.interviewedMentor?.interviews
+                          }
+                          getColumns={getInterviewColumns}
+                          onAdd={() =>
+                            onAddInterview(selectedAccordion?.interviewedMentor)
+                          }
+                          onSelectRow={(data) => onSelectRow(data, 'interview')}
+                          onView={onViewInterview}
+                        />
+                        <MediaLightbox
+                          video={video}
+                          // key={index}
+                          show={!!video}
+                          onClose={() => setVideo(false)}
+                          // watchData={videoWatchData}
+                          // onVideoData={saveWatchData}
+                          // onVideoWatched={saveVideoWatched}
+                        />
+                        {/*// )}*/}
+                      </div>
                     </div>
                   </>
                 )}
