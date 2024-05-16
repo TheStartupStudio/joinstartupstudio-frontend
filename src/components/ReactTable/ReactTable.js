@@ -6,45 +6,15 @@ const ReactTable = ({
   onAdd,
   onSelectRow,
   getColumns,
-  handleEdit,
-  handleDelete,
+  onEdit,
+  onDelete,
   onView
 }) => {
-  console.log('data', data)
+  // console.log('data', data)
   const columns = React.useMemo(
-    () => getColumns({ onSelectRow, handleEdit, handleDelete, onView }),
-    [onSelectRow, handleEdit, handleDelete, onView]
+    () => getColumns({ onSelectRow, onEdit, onDelete, onView }),
+    [onSelectRow, onEdit, onDelete, onView]
   )
-  // const columns = React.useMemo(
-  //   () => [
-  //     {
-  //       Header: 'Title',
-  //       accessor: 'title',
-  //       Cell: ({ row }) => {
-  //         console.log(row)
-  //         return (
-  //           <div
-  //             onClick={() => onSelectRow(row.original)}
-  //             style={{ cursor: 'pointer' }}
-  //           >
-  //             {row.original.title}
-  //           </div>
-  //         )
-  //       }
-  //     },
-  //     {
-  //       Header: 'Actions',
-  //       accessor: 'id',
-  //       Cell: ({ value }) => (
-  //         <div>
-  //           <button onClick={() => handleEdit(value)}>Edit</button>
-  //           <button onClick={() => handleDelete(value)}>Delete</button>
-  //         </div>
-  //       )
-  //     }
-  //   ],
-  //   []
-  // )
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({

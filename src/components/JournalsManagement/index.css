@@ -96,8 +96,115 @@ textarea {
 }
 
 .upload-to-cloud_logo {
-  /*background: #766C6EFD 0% 0% no-repeat padding-box;*/
   width: 50px;
   height: 50px;
   color: #766C6EFD
+}
+
+/*// Upload video // */
+
+.interview-modal-box {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.upload-btn {
+  display: inline-block;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+  background-color: #0056b3;
+}
+
+#video-upload {
+  display: none;
+}
+
+/*// Entry slider //*/
+.toggle-container {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label {
+  margin-right: 10px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: background-color 0.3s ease;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.switch input:checked + .slider {
+  background-color: #007bff;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/*// description */
+
+.description-input {
+  margin-top: 20px;
+}
+
+.description-input label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.description-input input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background: #fff
+}
+
+/* Optional: Style placeholder text */
+.description-input input::placeholder {
+  color: #aaa;
 }

@@ -26,6 +26,7 @@ import { ReflectionInfoBox } from '../Modals/ReflectionInfoBox'
 import LtsJournalReflection from '../../pages/LtsJournal/reflection'
 import ReactTable from '../ReactTable/ReactTable'
 import MediaLightbox from '../MediaLightbox'
+import InterviewModal from './InterviewModal'
 
 export default function MentorshipJournal(props) {
   const [journals, setJournals] = useState([])
@@ -42,20 +43,24 @@ export default function MentorshipJournal(props) {
   const [selectedAccordion, setSelectedAccordion] = useState({})
   const [selectedInterview, setSelectedInterview] = useState({})
   const [video, setVideo] = useState(null)
+  const [showInterviewModal, setShowInterviewModal] = useState(false)
+  const [editingInterview, setEditingInterview] = useState(null)
 
-  // console.log('selectedJournal', selectedJournal)
-  // console.log('accordions', accordions)
-  console.log('selectedAccordion', selectedAccordion)
-  const [interviewParts, setInterviewParts] = useState([
-    {
-      value: '',
-      label: 'part-1'
-    },
-    {
-      value: '',
-      label: 'part-2'
-    }
-  ])
+  console.log('editingInterview', editingInterview)
+
+  useEffect(() => {
+    if (editingInterview) handleShowInterviewModal()
+  }, [editingInterview])
+  const handleShowInterviewModal = () => {
+    // console.log('rowData', rowData)
+    // setEditingInterview(rowData)
+    setShowInterviewModal(true)
+  }
+  const handleHideInterviewModal = () => {
+    setShowInterviewModal(false)
+  }
+
+  // console.log('selectedAccordion', selectedAccordion)
 
   useEffect(() => {
     getJournals2()
@@ -375,17 +380,6 @@ export default function MentorshipJournal(props) {
     }
   }
 
-  const onAddInterview = () => {
-    const newInterview = { mentorImage: '', mentorName: '' }
-
-    const updatedAccordions = accordions.map((accordion) => ({
-      ...accordion,
-      interviews: [...(accordion.interviews || []), newInterview]
-    }))
-
-    setNewAccordions(updatedAccordions)
-  }
-
   const onSaveAccordion = async (accordion, indexToRemove) => {
     // debugger
     await axiosInstance
@@ -394,22 +388,11 @@ export default function MentorshipJournal(props) {
         title: accordion.title
       })
       .then(({ data }) => {
-        // debugger
         const updatedAccordions = newAccordions.filter(
           (_, index) => index !== indexToRemove
         )
         setNewAccordions(updatedAccordions)
         setAccordions([...accordions, data])
-        // setSelectedJournal((prevSelectedJournal) => ({
-        //   ...prevSelectedJournal,
-        //   value: {
-        //     ...prevSelectedJournal?.value,
-        //     ltsJournalAccordions: [
-        //       ...prevSelectedJournal?.value?.ltsJournalAccordions,
-        //       data
-        //     ]
-        //   }
-        // }))
       })
       .catch((e) => e)
   }
@@ -446,69 +429,6 @@ export default function MentorshipJournal(props) {
     }
   }
 
-  const onSaveData = async () => {
-    // try {
-    //   // const imageUrl = await onSaveImage()
-    //   const imageUrl = '';
-    //   return imageUrl
-    //
-    //   // let newWorkExperienceData = { ...workExperienceData }
-    //   // newWorkExperienceData.imageUrl = imageUrl
-    //   // setWorkExperienceData(newWorkExperienceData)
-    //
-    //   // const existImageUrl = typeof imageUrl !== undefined && imageUrl !== null
-    //   // if (existImageUrl) props.onSave?.(newWorkExperienceData)
-    //   else {
-    //     toast.error('You need to upload an organization logo')
-    //   }
-    // } catch (error) {
-    //   console.error(error.message)
-    // }
-  }
-
-  const videoUpload = async (video) => {
-    // setVideoUploadingLoader(true);
-    const formData = new FormData()
-    formData.append('video', video)
-    console.log('formData', formData)
-    debugger
-    try {
-      const uploadedVideo = await axiosInstance.post(
-        '/upload/journal-video/',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      )
-
-      const createContentData = {
-        url: uploadedVideo.data.fileLocation,
-
-        thumbnail: '',
-        description: '',
-        subtitle: '',
-        type: 'video',
-        title: ''
-      }
-      debugger
-
-      const createdContent = await axiosInstance.post(
-        '/contents/',
-        createContentData
-      )
-
-      debugger
-      // setVideoUploadingLoader(false);
-      // debugger;
-      // setUploadedVideoUrl(response.data.fileLocation);
-      toast.success('Video uploaded successfully!')
-    } catch (error) {
-      // setVideoUploadingLoader(false);
-      toast.error('Video upload failed, please try again!')
-    }
-  }
   const onSelectRow = (row, type) => {
     console.log(row)
     if (type !== 'interview') {
@@ -563,7 +483,7 @@ export default function MentorshipJournal(props) {
     setSelectedAccordion(updatedAccordion)
   }
 
-  const getColumns = ({ onSelectRow, handleEdit, handleDelete }) => [
+  const getColumns = ({ onSelectRow, onEdit, onDelete }) => [
     {
       Header: 'Title',
       accessor: 'title',
@@ -584,18 +504,13 @@ export default function MentorshipJournal(props) {
       accessor: 'id',
       Cell: ({ value }) => (
         <div>
-          <button onClick={() => handleEdit(value)}>Edit</button>
-          <button onClick={() => handleDelete(value)}>Delete</button>
+          <button onClick={() => onEdit?.(value)}>Edit</button>
+          <button onClick={() => onDelete?.(value)}>Delete</button>
         </div>
       )
     }
   ]
-  const getInterviewColumns = ({
-    onSelectRow,
-    handleEdit,
-    handleDelete,
-    onView
-  }) => [
+  const getInterviewColumns = ({ onSelectRow, onEdit, onDelete, onView }) => [
     {
       Header: 'Description',
       accessor: 'description',
@@ -634,10 +549,10 @@ export default function MentorshipJournal(props) {
     {
       Header: 'Actions',
       accessor: 'id',
-      Cell: ({ value }) => (
+      Cell: ({ row }) => (
         <div>
-          <button onClick={() => handleEdit(value)}>Edit</button>
-          <button onClick={() => handleDelete(value)}>Delete</button>
+          <button onClick={() => onEdit?.(row.original)}>Edit</button>
+          <button onClick={() => onDelete?.(row.original)}>Delete</button>
         </div>
       )
     }
@@ -646,10 +561,25 @@ export default function MentorshipJournal(props) {
     setVideo(interview)
   }
 
-  console.log(selectedAccordion?.interviewedMentor?.mentorLogoUrl?.length > 0)
-  console.log(selectedAccordion?.interviewedMentor?.mentorLogoUrl)
-  console.log(selectedAccordion?.interviewedMentor)
-  console.log(selectedImage?.length > 0)
+  const onSaveInterview = async (interview, mentor) => {
+    const newInterview = {
+      interviewId: interview.id,
+      part: interview.part,
+      description: interview.description,
+      mentorId: mentor.id
+    }
+    const response = await axiosInstance.post(
+      '/manageJournals/mentor-interview',
+      newInterview
+    )
+    setSelectedAccordion((prevState) => ({
+      ...prevState,
+      interviewedMentor: {
+        ...prevState.interviewedMentor,
+        interviews: [...prevState.interviewedMentor.interviews, response.data]
+      }
+    }))
+  }
   return (
     <div>
       {!fetchingJournals ? (
@@ -808,246 +738,6 @@ export default function MentorshipJournal(props) {
               </>
             )}
 
-            {/*{accordions && accordions?.length*/}
-            {/*  ? accordions?.map((accordion, index) => (*/}
-            {/*      <div className="col-12 mt-2">*/}
-            {/*        <AccordionItemWrapper*/}
-            {/*          isOpened={openAccordion === `accordion-${accordion.id}`}*/}
-            {/*          handleAccordionClick={() =>*/}
-            {/*            handleAccordionClick(`accordion-${accordion.id}`)*/}
-            {/*          }*/}
-            {/*          isExanded={false}*/}
-            {/*          title={accordion.title}*/}
-            {/*        >*/}
-            {/*          {openAccordion === `accordion-${accordion.id}` && (*/}
-            {/*            <>*/}
-            {/*              {accordion.interviewedMentor ? (*/}
-            {/*                <React.Fragment>*/}
-            {/*                  <div className={'row'}>*/}
-            {/*                    <div className={'col-md-4'}>*/}
-            {/*                      <div className="upload-organization-logo p-0 mb-1">*/}
-            {/*                        {general.imageCropperData ? (*/}
-            {/*                          <div*/}
-            {/*                            // className="img-placeholder position-relative"*/}
-            {/*                            className="img-placeholder position-relative"*/}
-            {/*                            style={{ height: '150px' }}*/}
-            {/*                          >*/}
-            {/*                            <img*/}
-            {/*                              src={*/}
-            {/*                                // data.imageUrl*/}
-            {/*                                //   ? data.imageUrl*/}
-            {/*                                //   :*/}
-            {/*                                selectedImage*/}
-            {/*                              }*/}
-            {/*                              style={{*/}
-            {/*                                width: '100%',*/}
-            {/*                                height: '100%'*/}
-            {/*                              }}*/}
-            {/*                              alt="Thumb"*/}
-            {/*                            />*/}
-            {/*                          </div>*/}
-            {/*                        ) : (*/}
-            {/*                          <>*/}
-            {/*                            {selectedImage ? (*/}
-            {/*                              <img*/}
-            {/*                                src={*/}
-            {/*                                  // data.imageUrl*/}
-            {/*                                  //   ? data.imageUrl*/}
-            {/*                                  //   :*/}
-            {/*                                  selectedImage*/}
-            {/*                                }*/}
-            {/*                                style={{*/}
-            {/*                                  width: '100%',*/}
-            {/*                                  height: '100%'*/}
-            {/*                                }}*/}
-            {/*                                alt="Thumb"*/}
-            {/*                              />*/}
-            {/*                            ) : (*/}
-            {/*                              <label*/}
-            {/*                                className={'upload-image-box '}*/}
-            {/*                                onClick={() =>*/}
-            {/*                                  inputImage.current.click()*/}
-            {/*                                }*/}
-            {/*                              >*/}
-            {/*                                <input*/}
-            {/*                                  ref={inputImage}*/}
-            {/*                                  onChange={imageChange}*/}
-            {/*                                  accept="image/*"*/}
-            {/*                                  type="file"*/}
-            {/*                                  className="d-none h-100"*/}
-            {/*                                />*/}
-
-            {/*                                <div*/}
-            {/*                                  className={*/}
-            {/*                                    'border-dashed d-flex align-items-center flex-column justify-content-between py-3 px-2 '*/}
-            {/*                                  }*/}
-            {/*                                >*/}
-            {/*                                  <div*/}
-            {/*                                    className={*/}
-            {/*                                      'upload-image_box-title'*/}
-            {/*                                    }*/}
-            {/*                                  >*/}
-            {/*                                    Mentor Logo*/}
-            {/*                                  </div>*/}
-            {/*                                  <SlCloudUpload*/}
-            {/*                                    className={'upload-to-cloud_logo'}*/}
-            {/*                                  />*/}
-
-            {/*                                  <div*/}
-            {/*                                    className={*/}
-            {/*                                      'upload-image_click-here'*/}
-            {/*                                    }*/}
-            {/*                                  >*/}
-            {/*                                    Click to upload file*/}
-            {/*                                  </div>*/}
-            {/*                                </div>*/}
-            {/*                              </label>*/}
-            {/*                            )}*/}
-            {/*                          </>*/}
-            {/*                        )}*/}
-            {/*                      </div>*/}
-            {/*                    </div>*/}
-            {/*                    <div className={'col-md-8'}>*/}
-            {/*                      {accordion?.interviewedMentor?.podcasts?.map(*/}
-            {/*                        (podcast, index) => {*/}
-            {/*                          return (*/}
-            {/*                            <div>*/}
-            {/*                              <div*/}
-            {/*                                className={*/}
-            {/*                                  'd-flex gap-1 align-items-center'*/}
-            {/*                                }*/}
-            {/*                              >*/}
-            {/*                                /!*<FontAwesomeIcon*!/*/}
-            {/*                                /!*  icon={faPlay}*!/*/}
-            {/*                                /!*  onClick={() => {*!/*/}
-            {/*                                /!*    // data.url(data.data.url)*!/*/}
-            {/*                                /!*    // // data.url(data.data.url)*!/*/}
-            {/*                                /!*    // data.setAudioPlaying(true)*!/*/}
-            {/*                                /!*    // setSong(data.data.url)*!/*/}
-            {/*                                /!*    // handlePlayPause()*!/*/}
-            {/*                                /!*  }}*!/*/}
-            {/*                                /!*  style={{*!/*/}
-            {/*                                /!*    fontSize: '17px',*!/*/}
-            {/*                                /!*    color: 'rgb(153, 204, 51)'*!/*/}
-            {/*                                /!*  }}*!/*/}
-            {/*                                /!*></FontAwesomeIcon>*!/*/}
-
-            {/*                                <div>*/}
-            {/*                                  <input*/}
-            {/*                                    type="file"*/}
-            {/*                                    accept="video/*"*/}
-            {/*                                    onChange={(e) =>*/}
-            {/*                                      videoUpload(e.target.files[0])*/}
-            {/*                                    }*/}
-            {/*                                  />*/}
-            {/*                                  /!*{uploadedVideoUrl && (*!/*/}
-            {/*                                  /!*  <div>*!/*/}
-            {/*                                  /!*    <video*!/*/}
-            {/*                                  /!*      controls*!/*/}
-            {/*                                  /!*      src={uploadedVideoUrl}*!/*/}
-            {/*                                  /!*      width="320"*!/*/}
-            {/*                                  /!*      height="240"*!/*/}
-            {/*                                  /!*    >*!/*/}
-            {/*                                  /!*      Your browser does not support*!/*/}
-            {/*                                  /!*      the video tag.*!/*/}
-            {/*                                  /!*    </video>*!/*/}
-            {/*                                  /!*  </div>*!/*/}
-            {/*                                  /!*)}*!/*/}
-            {/*                                  /!*{videoUploadingLoader && (*!/*/}
-            {/*                                  /!*  <div>Loading...</div>*!/*/}
-            {/*                                  /!*)}*!/*/}
-            {/*                                </div>*/}
-
-            {/*                                <div>Podcast title:</div>*/}
-            {/*                                <input*/}
-            {/*                                  type={'text'}*/}
-            {/*                                  value={podcast.podcastUrl}*/}
-            {/*                                  onChange={(e) =>*/}
-            {/*                                    onChangeAccordionTitles(*/}
-            {/*                                      index,*/}
-            {/*                                      e.target.value*/}
-            {/*                                    )*/}
-            {/*                                  }*/}
-            {/*                                  className={*/}
-            {/*                                    'w-100 py-2 px-3 mt-2 text-uppercase'*/}
-            {/*                                  }*/}
-            {/*                                  style={{*/}
-            {/*                                    // background: '#3c3c3c',*/}
-            {/*                                    // color: '#fff',*/}
-            {/*                                    font: 'normal normal 600 16px / 22px Montserrat'*/}
-            {/*                                  }}*/}
-            {/*                                />*/}
-            {/*                                /!*{podcast.videoUrl}*!/*/}
-            {/*                              </div>*/}
-            {/*                              /!*<LtsJournalReflection />*!/*/}
-            {/*                              /!*<div>{podcast}</div>*!/*/}
-            {/*                            </div>*/}
-            {/*                          )*/}
-            {/*                        }*/}
-            {/*                      )}*/}
-            {/*                      <LtsButton*/}
-            {/*                        name={'Add new podcast'}*/}
-            {/*                        width={'30%'}*/}
-            {/*                        align={'end'}*/}
-            {/*                        onClick={() => onAddPodcastReflection(index)}*/}
-            {/*                      />*/}
-            {/*                    </div>*/}
-            {/*                  </div>*/}
-            {/*                </React.Fragment>*/}
-            {/*              ) : (*/}
-            {/*                <></>*/}
-            {/*              )}*/}
-
-            {/*              <LtsButton*/}
-            {/*                name={'Add new interview'}*/}
-            {/*                width={'30%'}*/}
-            {/*                align={'end'}*/}
-            {/*                onClick={() => onAddInterviewMentor(index)}*/}
-            {/*              />*/}
-            {/*            </>*/}
-            {/*          )}*/}
-            {/*        </AccordionItemWrapper>*/}
-            {/*      </div>*/}
-            {/*    ))*/}
-            {/*  : null}*/}
-            {/*<div>*/}
-            {/*  {newAccordions.map((accordion, index) => {*/}
-            {/*    return (*/}
-            {/*      <React.Fragment>*/}
-            {/*        <input*/}
-            {/*          type={'text'}*/}
-            {/*          value={accordion.title}*/}
-            {/*          onChange={(e) =>*/}
-            {/*            onChangeAccordionTitles(index, e.target.value)*/}
-            {/*          }*/}
-            {/*          className={'w-100 py-2 px-3 mt-2 text-uppercase'}*/}
-            {/*          style={{*/}
-            {/*            background: '#3c3c3c',*/}
-            {/*            color: '#fff',*/}
-            {/*            font: 'normal normal 600 16px / 22px Montserrat'*/}
-            {/*          }}*/}
-            {/*        />*/}
-            {/*        <div className={'mt-2'}>*/}
-            {/*          <LtsButton*/}
-            {/*            name={'Save'}*/}
-            {/*            width={'30%'}*/}
-            {/*            align={'end'}*/}
-            {/*            onClick={() => onSaveAccordion(accordion, index)}*/}
-            {/*          />*/}
-            {/*        </div>*/}
-            {/*      </React.Fragment>*/}
-            {/*    )*/}
-            {/*  })}*/}
-            {/*</div>*/}
-            {/*<div className={'mt-2'}>*/}
-            {/*  <LtsButton*/}
-            {/*    name={'Add new accordion'}*/}
-            {/*    width={'30%'}*/}
-            {/*    align={'end'}*/}
-            {/*    onClick={() => onAddAccordion()}*/}
-            {/*  />*/}
-            {/*</div>*/}
-
             <button
               className="float-end mt-2 px-md-5 save-button add-new-note-button-text"
               style={{ fontSize: '16px', height: 'auto' }}
@@ -1154,27 +844,40 @@ export default function MentorshipJournal(props) {
 
                         <LtsButton
                           name={'Save Description'}
-                          onClick={() => {
-                            onSaveDescription()
-                            // debugger
-                          }}
+                          onClick={onSaveDescription}
                         />
                       </div>
                       <div className={'col-md-12'}>
-                        {/*{selectedAccordion &&*/}
-                        {/*  selectedAccordion?.interviewedMentor?.interviews*/}
-                        {/*    ?.length > 0 && (*/}
                         <ReactTable
                           data={
                             selectedAccordion?.interviewedMentor?.interviews
                           }
                           getColumns={getInterviewColumns}
-                          onAdd={() =>
-                            onAddInterview(selectedAccordion?.interviewedMentor)
-                          }
+                          onAdd={handleShowInterviewModal}
                           onSelectRow={(data) => onSelectRow(data, 'interview')}
                           onView={onViewInterview}
+                          onEdit={(interview) => {
+                            handleShowInterviewModal()
+                            setEditingInterview(interview)
+                          }}
                         />
+                        {showInterviewModal && (
+                          <InterviewModal
+                            show={showInterviewModal}
+                            onHide={() => {
+                              handleHideInterviewModal()
+                              setEditingInterview(null)
+                            }}
+                            onSave={(interview) =>
+                              onSaveInterview(
+                                interview,
+                                selectedAccordion?.interviewedMentor
+                              )
+                            }
+                            editingInterview={editingInterview}
+                            // isEdit={}
+                          />
+                        )}
                         <MediaLightbox
                           video={video}
                           // key={index}
