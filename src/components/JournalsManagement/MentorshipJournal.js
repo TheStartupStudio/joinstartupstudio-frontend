@@ -212,7 +212,10 @@ export default function MentorshipJournal(props) {
       if (putResponse && putResponse.data) {
         setSelectedAccordion({
           ...selectedAccordion,
-          interviewedMentor: putResponse.data
+          interviewedMentor: {
+            ...selectedAccordion.interviewedMentor,
+            ...putResponse.data
+          }
         })
         setImageUploadingLoader(false)
         toast.success('Image uploaded and updated successfully!')
@@ -268,7 +271,6 @@ export default function MentorshipJournal(props) {
           // }))
 
           let imageData = await readFile(file)
-          debugger
           dispatch(setImageCropperData(imageData))
           previewImage(file)
         }
@@ -364,7 +366,6 @@ export default function MentorshipJournal(props) {
         '/manageJournals/mentor-interview',
         newInterview
       )
-      debugger
       // Assuming the response contains the created interview data, update the state
       setSelectedAccordion((prevState) => ({
         ...prevState,
@@ -450,7 +451,6 @@ export default function MentorshipJournal(props) {
         }
       )
 
-      debugger
       setSelectedAccordion({
         ...selectedAccordion,
         interviewedMentor: {
@@ -595,7 +595,6 @@ export default function MentorshipJournal(props) {
       description: interview.description,
       mentorId: mentor.id
     }
-    debugger
     try {
       const response = await axiosInstance.put(
         `/manageJournals/mentor-interview/${interview.id}`,
