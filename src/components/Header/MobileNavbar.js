@@ -254,7 +254,7 @@ const MobileNavbar = (props) => {
             className="dropdown-item py-2 dropdown-menu-hover"
             onClick={() => {
               axiosInstance
-                .put('/myPerformanceData/updateActivity', {
+                .put('/myPerformanceData/updateActivity/endTime', {
                   isActive: false
                 })
                 .then((response) => {
@@ -262,6 +262,9 @@ const MobileNavbar = (props) => {
                 })
                 .catch((error) => {
                   console.error('Error updating activity:', error)
+                })
+                .finally(() => {
+                  // history.push('/logout')
                 })
             }}
           >

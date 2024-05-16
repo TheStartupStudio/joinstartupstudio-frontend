@@ -61,6 +61,10 @@ export default function MentorshipJournal(props) {
     getJournals2()
   }, [])
 
+  useEffect(() => {
+    if (selectedJournal.value?.ltsJournalAccordions)
+      setAccordions(selectedJournal.value?.ltsJournalAccordions)
+  }, [selectedJournal.value?.ltsJournalAccordions])
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -369,6 +373,17 @@ export default function MentorshipJournal(props) {
     } catch (error) {
       console.error('Error adding interview:', error)
     }
+  }
+
+  const onAddInterview = () => {
+    const newInterview = { mentorImage: '', mentorName: '' }
+
+    const updatedAccordions = accordions.map((accordion) => ({
+      ...accordion,
+      interviews: [...(accordion.interviews || []), newInterview]
+    }))
+
+    setNewAccordions(updatedAccordions)
   }
 
   const onSaveAccordion = async (accordion, indexToRemove) => {
