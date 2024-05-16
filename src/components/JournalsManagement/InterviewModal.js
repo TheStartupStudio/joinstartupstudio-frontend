@@ -17,9 +17,6 @@ const InterviewModal = (props) => {
     title: '',
     part: ''
   })
-  const [video, setVideo] = useState(null)
-
-  console.log('video', video)
 
   console.log('interview', interview)
   console.log('editingInterview', props.editingInterview)
@@ -30,13 +27,39 @@ const InterviewModal = (props) => {
         ...interview,
         type: props.editingInterview?.interview?.type,
         url: props.editingInterview?.interview?.url,
-        part: props.editingInterview?.interview?.part,
-        description: props.editingInterview.description
+        part: props.editingInterview?.part,
+        description: props.editingInterview.description,
+        id: props.editingInterview?.id,
+        interviewId: props.editingInterview?.interviewId
       })
   }, [])
+
+  const isEdit = () => !!interview?.id
+
+  const validateInputs = () => {
+    let isValid = true
+    const errors = []
+
+    if (!interview.part) {
+      errors.push('Please select a part.')
+      isValid = false
+    }
+    if (!interview.description.trim()) {
+      errors.push('Please enter a description.')
+      isValid = false
+    }
+
+    if (!isValid) {
+      toast.error(errors.join('\n'))
+    }
+
+    return isValid
+  }
+
   const videoUpload = async (video) => {
     const formData = new FormData()
     formData.append('video', video)
+
     try {
       const uploadedVideo = await axiosInstance.post(
         '/upload/journal-video/',
@@ -47,7 +70,7 @@ const InterviewModal = (props) => {
           }
         }
       )
-      const createContentData = {
+      const updateContentData = {
         url: uploadedVideo.data.fileLocation,
         thumbnail: '',
         subtitle: '',
@@ -55,24 +78,44 @@ const InterviewModal = (props) => {
         title: ''
       }
 
-      const createdContent = await axiosInstance.post(
-        '/contents/',
-        createContentData
-      )
-      setInterview({ ...interview, ...createdContent.data })
-      toast.success('Video uploaded successfully!')
+      if (!isEdit()) {
+        const createdContent = await axiosInstance.post(
+          '/contents/',
+          updateContentData
+        )
+        setInterview({
+          ...interview,
+          ...createdContent.data,
+          interviewId: createdContent.data.id,
+          id: null
+        })
+        toast.success('Video uploaded successfully!')
+      } else {
+        const updatedContent = await axiosInstance.put(
+          `/contents/${interview?.id}`,
+          { ...interview, url: updateContentData.url }
+        )
+        debugger
+        setInterview({
+          ...interview,
+          ...updatedContent.data
+          // interviewId: updatedContent.data.id
+        })
+        toast.success('Video updated successfully!')
+      }
     } catch (error) {
       // setVideoUploadingLoader(false);
       toast.error('Video upload failed, please try again!')
     }
   }
 
+  console.log('isEdit', isEdit())
   const handleDescriptionChange = (value) => {
     setInterview({ ...interview, description: value })
   }
 
   const handleChangePart = (value) => {
-    setInterview({ ...interview, selectedPart: value })
+    setInterview({ ...interview, part: value })
   }
   return (
     <ModalWrapper onHide={props.onHide} show={props.show}>
@@ -88,11 +131,20 @@ const InterviewModal = (props) => {
           value={interview.part}
           onChange={(e) => handleChangePart(e.target.value)}
         />
-        <div onClick={() => setVideo(interview)} style={{ cursor: 'pointer' }}>
-          <LtsButton name={'View uploaded video'} width={'60%'} />
-        </div>
+
+        {interview.url && (
+          <video
+            key={interview.url}
+            width="100%"
+            height="250"
+            controls
+            className={'mt-4'}
+          >
+            <source src={interview.url} type="video/mp4" />
+          </video>
+        )}
         <>
-          <h2>Upload Video</h2>
+          <h2>{!interview.url ? 'Upload Video' : 'Update Video'}</h2>
           <label htmlFor="video-upload" className="upload-btn">
             Choose File
             <input
@@ -120,18 +172,15 @@ const InterviewModal = (props) => {
           name={'Save'}
           align={'end'}
           width={'20%'}
-          onClick={() => props.onSave(interview)}
+          onClick={() => {
+            if (!validateInputs()) {
+              return
+            } else {
+              !isEdit() ? props.onSave(interview) : props.onUpdate(interview)
+            }
+          }}
         />
       </div>
-      <MediaLightbox
-        video={video}
-        // key={index}
-        show={!!video}
-        onClose={() => setVideo(false)}
-        // watchData={videoWatchData}
-        // onVideoData={saveWatchData}
-        // onVideoWatched={saveVideoWatched}
-      />
     </ModalWrapper>
   )
 }

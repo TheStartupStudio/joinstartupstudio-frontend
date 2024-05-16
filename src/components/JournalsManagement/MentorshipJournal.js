@@ -540,12 +540,19 @@ export default function MentorshipJournal(props) {
       }
     },
     {
-      Header: 'Entry',
-      accessor: 'entry',
+      Header: 'Part',
+      accessor: 'part',
       Cell: ({ row }) => {
-        return <>{row.original?.entry?.id ? <div>1</div> : <div>0</div>}</>
+        return <>{row.original?.part}</>
       }
     },
+    // {
+    //   Header: 'Entry',
+    //   accessor: 'entry',
+    //   Cell: ({ row }) => {
+    //     return <>{row.original?.entry?.id ? <div>1</div> : <div>0</div>}</>
+    //   }
+    // },
     {
       Header: 'Actions',
       accessor: 'id',
@@ -563,7 +570,7 @@ export default function MentorshipJournal(props) {
 
   const onSaveInterview = async (interview, mentor) => {
     const newInterview = {
-      interviewId: interview.id,
+      interviewId: interview.interviewId,
       part: interview.part,
       description: interview.description,
       mentorId: mentor.id
@@ -572,6 +579,7 @@ export default function MentorshipJournal(props) {
       '/manageJournals/mentor-interview',
       newInterview
     )
+    handleHideInterviewModal()
     setSelectedAccordion((prevState) => ({
       ...prevState,
       interviewedMentor: {
@@ -579,6 +587,62 @@ export default function MentorshipJournal(props) {
         interviews: [...prevState.interviewedMentor.interviews, response.data]
       }
     }))
+  }
+  const onUpdateInterview = async (interview, mentor) => {
+    const updatedInterview = {
+      interviewId: interview.interviewId,
+      part: interview.part,
+      description: interview.description,
+      mentorId: mentor.id
+    }
+    debugger
+    try {
+      const response = await axiosInstance.put(
+        `/manageJournals/mentor-interview/${interview.id}`,
+        updatedInterview
+      )
+      handleHideInterviewModal()
+
+      const interviewIndex = mentor.interviews.findIndex(
+        (interview) => interview.id === response.data.id
+      )
+
+      if (interviewIndex !== -1) {
+        const updatedInterviews = [...mentor.interviews]
+        updatedInterviews[interviewIndex] = response.data
+
+        setSelectedAccordion((prevState) => ({
+          ...prevState,
+          interviewedMentor: {
+            ...prevState.interviewedMentor,
+            interviews: updatedInterviews
+          }
+        }))
+      }
+    } catch (error) {
+      console.error(error)
+      // Handle error
+    }
+  }
+
+  const onDeleteInterview = async (interview) => {
+    try {
+      await axiosInstance.delete(
+        `/manageJournals/mentor-interview/${interview.id}`
+      )
+
+      setSelectedAccordion((prevState) => ({
+        ...prevState,
+        interviewedMentor: {
+          ...prevState.interviewedMentor,
+          interviews: prevState.interviewedMentor.interviews.filter(
+            (item) => item.id !== interview.id
+          )
+        }
+      }))
+    } catch (error) {
+      console.error(error)
+    }
   }
   return (
     <div>
@@ -860,6 +924,9 @@ export default function MentorshipJournal(props) {
                             handleShowInterviewModal()
                             setEditingInterview(interview)
                           }}
+                          onDelete={(interview) => {
+                            onDeleteInterview(interview)
+                          }}
                         />
                         {showInterviewModal && (
                           <InterviewModal
@@ -874,6 +941,12 @@ export default function MentorshipJournal(props) {
                                 selectedAccordion?.interviewedMentor
                               )
                             }
+                            onUpdate={(interview) => {
+                              onUpdateInterview(
+                                interview,
+                                selectedAccordion?.interviewedMentor
+                              )
+                            }}
                             editingInterview={editingInterview}
                             // isEdit={}
                           />
