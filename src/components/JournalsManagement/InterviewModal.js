@@ -5,7 +5,6 @@ import './index.css'
 import OptionSelector from '../OptionSelector'
 import LtsButton from '../LTSButtons/LTSButton'
 import React, { useEffect, useState } from 'react'
-import MediaLightbox from '../MediaLightbox'
 
 const InterviewModal = (props) => {
   const [interview, setInterview] = useState({
@@ -18,8 +17,8 @@ const InterviewModal = (props) => {
     part: ''
   })
 
-  console.log('interview', interview)
-  console.log('editingInterview', props.editingInterview)
+  // console.log('interview', interview)
+  // console.log('editingInterview', props.editingInterview)
 
   useEffect(() => {
     if (props.editingInterview)
@@ -176,7 +175,9 @@ const InterviewModal = (props) => {
             if (!validateInputs()) {
               return
             } else {
-              !isEdit() ? props.onSave(interview) : props.onUpdate(interview)
+              !isEdit()
+                ? props.onSave?.(interview)
+                : props.onUpdate?.(interview)
             }
           }}
         />
