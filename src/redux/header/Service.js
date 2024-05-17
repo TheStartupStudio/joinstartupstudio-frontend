@@ -16,25 +16,32 @@ export const updateSelectedBriefing = async (briefingID) => {
   )
   return response.data
 }
-
-export const postBriefing = async (briefing) => {
-  const response = await axiosInstance.post('/briefings', briefing)
-  return response
-}
-
 export const editBriefing = async (briefing, briefingId) => {
-  const response = await axiosInstance.put(`/briefings/${briefingId}`, briefing)
-  return response
+  const response = await axiosInstance.patch(
+    `/briefings/${briefingId}`,
+    briefing
+  )
+  return response.data
 }
 
-export const deleteBriefing = async (briefingId) => {
-  const response = await axiosInstance.delete(`/briefings/${briefingId}`)
-  return response
+export const createBriefing = async (briefing) => {
+  const response = await axiosInstance.post('/briefings', briefing)
+  return response.data
 }
-export const updateBriefingInArray = (briefings, selectedBriefing) => {
+
+export const deleteBriefing = async (briefingID) => {
+  const response = await axiosInstance.delete(`/briefings/${briefingID}`)
+  return { ...response.data, briefingID }
+}
+export const updateSelectedBriefingInArray = (briefings, selectedBriefing) => {
   return briefings.map((briefing) =>
     briefing.id === selectedBriefing.id
       ? { ...briefing, isSelected: true }
       : { ...briefing, isSelected: false }
+  )
+}
+export const updatedBriefingInArray = (briefings, updatedBriefing) => {
+  return briefings.map((briefing) =>
+    briefing.id === updatedBriefing.id ? updatedBriefing : briefing
   )
 }
