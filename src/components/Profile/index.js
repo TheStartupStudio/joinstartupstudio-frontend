@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -21,8 +21,10 @@ import watch from '../../assets/images/read_watch_listen_Watch_with typo.png'
 import './index.css'
 import BriefingModal from '../Modals/BriefingModal'
 import { Link } from 'react-router-dom'
+import { getSelectedBriefingStart } from '../../redux/header/Actions'
 
 function Profile(props) {
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user.user)
   const [lastLogin, setLastLogin] = useState(null)
   const [newMessages, setNewMessages] = useState([])
@@ -32,6 +34,10 @@ function Profile(props) {
   const [feedbackRequests, setFeedbackRequests] = useState({})
   const [briefingModal, setBriefingModal] = useState(false)
   const briefing = useSelector((state) => state?.header?.selectedBriefing)
+
+  useEffect(() => {
+    dispatch(getSelectedBriefingStart())
+  }, [dispatch])
 
   const handleOpenBriefingModal = () => {
     setBriefingModal(true)
