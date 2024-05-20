@@ -4,9 +4,9 @@ import {
   deleteBriefing,
   getBriefings,
   editBriefing,
-  postBriefing,
   getSelectedBriefing,
-  updateSelectedBriefing
+  updateSelectedBriefing,
+  createBriefing
 } from './Service'
 
 export const getBriefingsStart = () => async (dispatch) => {
@@ -37,8 +37,6 @@ export const getSelectedBriefingStart = () => async (dispatch) => {
   dispatch({ type: types.SELECTED_BRIEFING_START })
   try {
     const data = await getSelectedBriefing()
-    console.log('data', data)
-
     dispatch(getSelectedBriefingSuccess(data))
   } catch (error) {
     dispatch(getSelectedBriefingError(error))
@@ -62,7 +60,6 @@ export const updateSelectedBriefingStart = (briefingID) => async (dispatch) => {
   dispatch({ type: types.UPDATE_SELECTED_BRIEFING_START })
   try {
     const data = await updateSelectedBriefing(briefingID)
-
     dispatch(updateSelectedBriefingSuccess(data))
   } catch (error) {
     dispatch(updateSelectedBriefingError(error))
@@ -83,46 +80,20 @@ export const updateSelectedBriefingError = (error) => async (dispatch) => {
   })
 }
 
-export const postBriefingStart = (briefing) => async (dispatch) => {
-  dispatch({ type: types.POST_BRIEFING_START })
-  try {
-    const response = await postBriefing(briefing)
-    const briefingData = response.data
-    dispatch(postBriefingSuccess(briefingData))
-  } catch (error) {
-    dispatch(postBriefingError(error))
-  }
-}
-
-export const postBriefingSuccess = (briefing) => {
-  return {
-    type: types.POST_BRIEFING_SUCCESS,
-    payload: { briefing }
-  }
-}
-
-export const postBriefingError = (error) => async (dispatch) => {
-  dispatch({
-    type: types.POST_BRIEFING_ERROR,
-    payload: error?.response?.data?.message || 'Server Error'
-  })
-}
-
 export const editBriefingStart = (briefing, briefingId) => async (dispatch) => {
   dispatch({ type: types.EDIT_BRIEFING_START })
   try {
-    const response = await editBriefing(briefing, briefingId)
-    const briefingData = response.data
-    dispatch(editBriefingSuccess(briefingData))
+    const data = await editBriefing(briefing, briefingId)
+    dispatch(editBriefingSuccess(data))
   } catch (error) {
     dispatch(editBriefingError(error))
   }
 }
 
-export const editBriefingSuccess = (briefing) => {
+export const editBriefingSuccess = (payload) => {
   return {
     type: types.EDIT_BRIEFING_SUCCESS,
-    payload: { briefing }
+    payload
   }
 }
 
@@ -132,22 +103,44 @@ export const editBriefingError = (error) => async (dispatch) => {
     payload: error?.response?.data?.message || 'Server Error'
   })
 }
-
-export const deleteBriefingStart = (briefingId) => async (dispatch) => {
-  dispatch({ type: types.EDIT_BRIEFING_START })
+export const createBriefingStart = (briefing) => async (dispatch) => {
+  dispatch({ type: types.POST_BRIEFING_START })
   try {
-    const response = await deleteBriefing(briefingId)
-    const briefingData = response.data
-    dispatch(deleteBriefingSuccess(briefingData))
+    const data = await createBriefing(briefing)
+
+    dispatch(createBriefingSuccess(data))
+  } catch (error) {
+    dispatch(createBriefingError(error))
+  }
+}
+
+export const createBriefingSuccess = (payload) => {
+  return {
+    type: types.POST_BRIEFING_SUCCESS,
+    payload
+  }
+}
+
+export const createBriefingError = (error) => async (dispatch) => {
+  dispatch({
+    type: types.POST_BRIEFING_ERROR,
+    payload: error?.response?.data?.message || 'Server Error'
+  })
+}
+export const deleteBriefingStart = (briefingId) => async (dispatch) => {
+  dispatch({ type: types.DELETE_BRIEFING_START })
+  try {
+    const data = await deleteBriefing(briefingId)
+    dispatch(deleteBriefingSuccess(data))
   } catch (error) {
     dispatch(deleteBriefingError(error))
   }
 }
 
-export const deleteBriefingSuccess = (deletedBriefing) => {
+export const deleteBriefingSuccess = (payload) => {
   return {
     type: types.DELETE_BRIEFING_SUCCESS,
-    payload: { deletedBriefing }
+    payload
   }
 }
 
