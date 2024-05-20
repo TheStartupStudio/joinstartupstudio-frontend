@@ -94,6 +94,7 @@ function AccordionModal(props) {
         show={showInterviewedMentorModal}
         selectedAccordion={props.selectedAccordion}
         setSelectedAccordion={props.setSelectedAccordion}
+        title={'Update interviewed mentor'}
       />
     </ModalWrapper>
   )

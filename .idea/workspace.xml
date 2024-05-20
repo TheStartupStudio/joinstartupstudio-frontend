@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/JournalsManagement/AccordionModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/AccordionModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/AccordionModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewedMentorModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewedMentorModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/MentorshipJournal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/MentorshipJournal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/LTSButtons/LTSButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/LTSButtons/LTSButton.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ReactTable/ReactTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ReactTable/ReactTable.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +94,7 @@
       <workItem from="1686812950335" duration="14626000" />
       <workItem from="1715858899038" duration="10388000" />
       <workItem from="1715932725555" duration="4942000" />
-      <workItem from="1716189136164" duration="14184000" />
+      <workItem from="1716189136164" duration="16264000" />
     </task>
     <servers />
   </component>

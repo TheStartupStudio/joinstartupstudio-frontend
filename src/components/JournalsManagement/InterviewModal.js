@@ -5,6 +5,7 @@ import './index.css'
 import OptionSelector from '../OptionSelector'
 import LtsButton from '../LTSButtons/LTSButton'
 import React, { useEffect, useState } from 'react'
+import { ProgressBar } from 'react-bootstrap'
 
 const InterviewModal = (props) => {
   const [interview, setInterview] = useState({
@@ -17,8 +18,7 @@ const InterviewModal = (props) => {
     part: ''
   })
 
-  // console.log('interview', interview)
-  // console.log('editingInterview', props.editingInterview)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   useEffect(() => {
     if (props.editingInterview)
@@ -66,6 +66,12 @@ const InterviewModal = (props) => {
         {
           headers: {
             'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            )
+            setUploadProgress(progress)
           }
         }
       )
@@ -94,11 +100,9 @@ const InterviewModal = (props) => {
           `/contents/${interview?.id}`,
           { ...interview, url: updateContentData.url }
         )
-        debugger
         setInterview({
           ...interview,
           ...updatedContent.data
-          // interviewId: updatedContent.data.id
         })
         toast.success('Video updated successfully!')
       }
@@ -108,7 +112,6 @@ const InterviewModal = (props) => {
     }
   }
 
-  console.log('isEdit', isEdit())
   const handleDescriptionChange = (value) => {
     setInterview({ ...interview, description: value })
   }
@@ -117,7 +120,7 @@ const InterviewModal = (props) => {
     setInterview({ ...interview, part: value })
   }
   return (
-    <ModalWrapper onHide={props.onHide} show={props.show}>
+    <ModalWrapper onHide={props.onHide} show={props.show} title={props.title}>
       <div className="interview-modal-box">
         <OptionSelector
           align={'end'}
@@ -130,7 +133,6 @@ const InterviewModal = (props) => {
           value={interview.part}
           onChange={(e) => handleChangePart(e.target.value)}
         />
-
         {interview.url && (
           <video
             key={interview.url}
@@ -154,6 +156,9 @@ const InterviewModal = (props) => {
             />
           </label>
         </>
+        <div className={'my-2'}>
+          <LabeledProgressBar percentage={uploadProgress} />
+        </div>
 
         <div className="description-input text-start">
           <label htmlFor="description text-start">Description:</label>
@@ -187,3 +192,24 @@ const InterviewModal = (props) => {
 }
 
 export default InterviewModal
+
+function LabeledProgressBar({ percentage }) {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    if (percentage > 0) {
+      setIsVisible(true)
+      if (percentage === 100) {
+        setTimeout(() => {
+          setIsVisible(false)
+        }, 2000)
+      }
+    }
+  }, [percentage])
+
+  return isVisible ? (
+    <div className="my-2">
+      <ProgressBar now={percentage} label={`${percentage}%`} />
+    </div>
+  ) : null
+}
