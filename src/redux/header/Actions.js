@@ -57,7 +57,6 @@ export const getSelectedBriefingError = (error) => async (dispatch) => {
   })
 }
 export const updateSelectedBriefingStart = (briefingID) => async (dispatch) => {
-  dispatch({ type: types.UPDATE_SELECTED_BRIEFING_START })
   try {
     const data = await updateSelectedBriefing(briefingID)
     dispatch(updateSelectedBriefingSuccess(data))

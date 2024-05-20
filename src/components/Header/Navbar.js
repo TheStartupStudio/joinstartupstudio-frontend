@@ -68,7 +68,6 @@ const Navbar = (props) => {
     axiosInstance
       .get('/studentsInstructorss/has-access')
       .then((response) => {
-        console.log('response', response)
         if (response.data.allow) {
           setAllowToShow(true)
         } else {
@@ -366,7 +365,7 @@ const Navbar = (props) => {
                       className="dropdown-item py-2 dropdown-menu-hover"
                       onClick={() => {
                         axiosInstance
-                          .put('/myPerformanceData/updateActivity', {
+                          .put('/myPerformanceData/updateActivity/endTime', {
                             isActive: false
                           })
                           .then((response) => {
@@ -375,6 +374,7 @@ const Navbar = (props) => {
                           .catch((error) => {
                             console.error('Error updating activity:', error)
                           })
+                          .finally(() => {})
                       }}
                     >
                       <IntlMessages id="navigation.logout" />

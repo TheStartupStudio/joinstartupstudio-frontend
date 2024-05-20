@@ -346,9 +346,6 @@ function MyTrainingContent(props) {
 
   function updateReflection(entry, userJournalEntry) {
     return (data) => {
-      console.log('data', data)
-      console.log('entry', entry)
-      console.log('userJournalEntry', userJournalEntry)
       setUserJournalEntries({
         ...userJournalEntries,
         [entry.id]: userJournalEntries[entry.id].map((mapUserJournalEntry) => {
