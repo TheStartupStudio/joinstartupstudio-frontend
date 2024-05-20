@@ -1,5 +1,6 @@
 import React from 'react'
 import { useTable } from 'react-table'
+import LtsButton from '../LTSButtons/LTSButton'
 
 const ReactTable = ({
   data,
@@ -8,7 +9,8 @@ const ReactTable = ({
   getColumns,
   onEdit,
   onDelete,
-  onView
+  onView,
+  addNew
 }) => {
   // console.log('data', data)
   const columns = React.useMemo(
@@ -42,8 +44,13 @@ const ReactTable = ({
   // }
 
   return (
-    <div>
-      <button onClick={handleAddNew}>Add New</button>
+    <div className={'my-2'}>
+      <LtsButton
+        onClick={handleAddNew}
+        name={`Add new ${addNew}`}
+        align={'end'}
+        width={'30%'}
+      />
       <table {...getTableProps()} className="table">
         <thead>
           {headerGroups.map((headerGroup) => (

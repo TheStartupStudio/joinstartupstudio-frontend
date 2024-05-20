@@ -4,6 +4,7 @@ function LtsButton(props) {
   return (
     <div className={`d-flex justify-content-${props.align ?? 'center'} w-100 `}>
       <div
+        type={props.type ?? 'text'}
         aria-expanded={props.ariaExpanded}
         style={{
           backgroundColor: props.backgroundColor ?? '#51c7df',

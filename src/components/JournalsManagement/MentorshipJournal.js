@@ -28,6 +28,8 @@ import ReactTable from '../ReactTable/ReactTable'
 import MediaLightbox from '../MediaLightbox'
 import InterviewModal from './InterviewModal'
 import InterviewedMentorModal from './InterviewedMentorModal'
+import AccordionModal from './AccordionModal'
+import { FaEdit, FaTrash } from 'react-icons/fa'
 
 export default function MentorshipJournal(props) {
   const [journals, setJournals] = useState([])
@@ -48,7 +50,22 @@ export default function MentorshipJournal(props) {
   const [editingInterview, setEditingInterview] = useState(null)
   const [showInterviewedMentorModal, setShowInterviewedMentorModal] =
     useState(false)
-  console.log('editingInterview', editingInterview)
+  // console.log('editingInterview', editingInterview)
+
+  const [showAccordionModal, setShowAccordionModal] = useState(false)
+  const [accordionToEdit, setAccordionToEdit] = useState(null)
+
+  console.log('selectedJournal', selectedJournal)
+  console.log('selectedAccordion', selectedAccordion)
+  const handleShowAccordionModal = (accordion = null) => {
+    // setAccordionToEdit({ accordion, journalId: selectedJournal?.value?.id })
+    setShowAccordionModal(true)
+  }
+
+  const handleHideAccordionModal = () => {
+    setShowAccordionModal(false)
+    setSelectedAccordion(null)
+  }
 
   useEffect(() => {
     if (editingInterview) handleShowInterviewModal()
@@ -322,13 +339,26 @@ export default function MentorshipJournal(props) {
     if (selectedJournal.value?.ltsJournalAccordions)
       setAccordions(selectedJournal.value?.ltsJournalAccordions)
   }, [selectedJournal.value?.ltsJournalAccordions])
-  const onAddAccordion = () => {
-    setNewAccordions([
-      ...newAccordions,
-      { title: '', journalId: selectedJournal?.value?.id }
-    ])
-  }
 
+  // console.log('accordions', )
+  const onAddAccordion = (newAccordion) => {
+    setAccordions([...accordions, newAccordion])
+  }
+  const onUpdateAccordion = (updatedAccordion) => {
+    setAccordions(
+      accordions.map((acc) =>
+        acc.id === updatedAccordion.id ? updatedAccordion : acc
+      )
+    )
+  }
+  const handleDeleteAccordion = async (row) => {
+    try {
+      await axiosInstance.delete(`/manageJournals/accordion/${row?.id}`)
+      setAccordions(accordions.filter((acc) => acc.id !== row?.id))
+    } catch (error) {
+      console.error('Error deleting accordion:', error)
+    }
+  }
   const onSelectRow = (row, type) => {
     console.log(row)
     if (type !== 'interview') {
@@ -354,15 +384,7 @@ export default function MentorshipJournal(props) {
       Header: 'Title',
       accessor: 'title',
       Cell: ({ row }) => {
-        // console.log(row)
-        return (
-          <div
-            onClick={() => onSelectRow(row.original)}
-            style={{ cursor: 'pointer' }}
-          >
-            {row.original.title}
-          </div>
-        )
+        return <div>{row.original.title}</div>
       }
     },
     {
@@ -370,8 +392,23 @@ export default function MentorshipJournal(props) {
       accessor: 'id',
       Cell: ({ row }) => (
         <div>
-          <button onClick={() => onEdit?.(row.original)}>Edit</button>
-          <button onClick={() => onDelete?.(row.original)}>Delete</button>
+          <button
+            onClick={() => onEdit?.(row.original)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              marginRight: '8px'
+            }}
+          >
+            <FaEdit size={20} color="#99CC33" />
+          </button>
+          <button
+            onClick={() => onDelete?.(row.original)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            <FaTrash size={20} color="#FE43A1" />
+          </button>
         </div>
       )
     }
@@ -528,9 +565,13 @@ export default function MentorshipJournal(props) {
                 <ReactTable
                   data={accordions}
                   getColumns={getColumns}
-                  onAdd={onAddAccordion}
-                  onSelectRow={onSelectRow}
-                  onEdit={(row) => handleShowInterviewedMentorModal(row)}
+                  addNew={'accordion'}
+                  onAdd={handleShowAccordionModal}
+                  onEdit={(row) => {
+                    handleShowAccordionModal(row)
+                    setSelectedAccordion(row)
+                  }}
+                  onDelete={handleDeleteAccordion}
                 />
                 {/*{selectedInterview}*/}
               </>
@@ -548,12 +589,24 @@ export default function MentorshipJournal(props) {
             </button>
           </div>
 
-          <InterviewedMentorModal
-            onHide={handleHideInterviewedMentorModal}
-            show={showInterviewedMentorModal}
+          <AccordionModal
+            show={showAccordionModal}
+            onHide={handleHideAccordionModal}
+            // onSuccess={handleSuccess}
+            accordion={accordionToEdit}
             selectedAccordion={selectedAccordion}
             setSelectedAccordion={setSelectedAccordion}
+            selectedJournal={selectedJournal}
+            onAddAccordion={onAddAccordion}
+            onUpdateAccordion={onUpdateAccordion}
           />
+
+          {/*<InterviewedMentorModal*/}
+          {/*  onHide={handleHideInterviewedMentorModal}*/}
+          {/*  show={showInterviewedMentorModal}*/}
+          {/*  selectedAccordion={selectedAccordion}*/}
+          {/*  setSelectedAccordion={setSelectedAccordion}*/}
+          {/*/>*/}
         </div>
       )}
     </div>

@@ -14,6 +14,7 @@ import { readFile } from '../../utils/canvasUtils'
 import { setImageCropperData } from '../../redux'
 import { components } from 'react-select'
 import searchIcon from '../../assets/images/search-icon.png'
+import { FaEdit, FaEye, FaTrash } from 'react-icons/fa'
 
 function InterviewedMentorModal(props) {
   const { selectedAccordion, setSelectedAccordion } = props
@@ -318,6 +319,8 @@ function InterviewedMentorModal(props) {
     try {
       const newInterview = {
         mentorLogoUrl: '',
+        // mentorDescription: [{ title: '' }],
+        mentorName: '',
         mentorDescription: [{ title: '' }],
         accordionId: accordion.id
       }
@@ -438,7 +441,8 @@ function InterviewedMentorModal(props) {
         `/manageJournals/interviewed-mentors/${selectedAccordion.interviewedMentor.id}`,
         {
           mentorDescription:
-            selectedAccordion?.interviewedMentor?.mentorDescription
+            selectedAccordion?.interviewedMentor?.mentorDescription,
+          mentorName: selectedAccordion?.interviewedMentor?.mentorName
         }
       )
 
@@ -474,6 +478,14 @@ function InterviewedMentorModal(props) {
     setSelectedAccordion(updatedAccordion)
   }
 
+  const onChangeMentorName = (e) => {
+    const updatedAccordion = { ...selectedAccordion }
+
+    updatedAccordion.interviewedMentor.mentorName = e.target.value
+
+    setSelectedAccordion(updatedAccordion)
+  }
+
   const getInterviewColumns = ({ onSelectRow, onEdit, onDelete, onView }) => [
     {
       Header: 'Description',
@@ -494,12 +506,17 @@ function InterviewedMentorModal(props) {
       accessor: 'interview',
       Cell: ({ row }) => {
         return (
-          <div
-            onClick={() => onView(row.original?.interview)}
-            style={{ cursor: 'pointer' }}
+          <button
+            onClick={() => onView?.(row.original?.interview)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              marginRight: '8px'
+            }}
           >
-            <LtsButton name={'View'} />
-          </div>
+            <FaEye size={20} color="#51c7df" />
+          </button>
         )
       }
     },
@@ -507,23 +524,36 @@ function InterviewedMentorModal(props) {
       Header: 'Part',
       accessor: 'part',
       Cell: ({ row }) => {
-        return <>{row.original?.part}</>
+        if (row?.original?.part === 'part-1') {
+          return 'Part 1'
+        } else if (row?.original?.part === 'part-2') {
+          return 'Part 2'
+        }
       }
     },
-    // {
-    //   Header: 'Entry',
-    //   accessor: 'entry',
-    //   Cell: ({ row }) => {
-    //     return <>{row.original?.entry?.id ? <div>1</div> : <div>0</div>}</>
-    //   }
-    // },
+
     {
       Header: 'Actions',
       accessor: 'id',
       Cell: ({ row }) => (
         <div>
-          <button onClick={() => onEdit?.(row.original)}>Edit</button>
-          <button onClick={() => onDelete?.(row.original)}>Delete</button>
+          <button
+            onClick={() => onEdit?.(row.original)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              marginRight: '8px'
+            }}
+          >
+            <FaEdit size={20} color="#99CC33" />
+          </button>
+          <button
+            onClick={() => onDelete?.(row.original)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            <FaTrash size={20} color="#FE43A1" />
+          </button>
         </div>
       )
     }
@@ -610,14 +640,17 @@ function InterviewedMentorModal(props) {
   return (
     <ModalWrapper onHide={props.onHide} show={props.show}>
       <>
-        <div className={'col-md-6'}>
+        <div className={'col-md-12'}>
           {selectedAccordion && (
             <>
-              <div>{selectedAccordion.title}</div>
+              <div>
+                <strong className={'me-2'}>Accordion title:</strong>
+                {selectedAccordion?.title}
+              </div>
               {!selectedAccordion?.interviewedMentor && (
                 <LtsButton
-                  name={'Add new interview'}
-                  width={'30%'}
+                  name={'Add interviewed mentor'}
+                  width={'40%'}
                   align={'end'}
                   onClick={() => onAddInterviewMentor(selectedAccordion)}
                 />
@@ -630,7 +663,7 @@ function InterviewedMentorModal(props) {
                         {selectedAccordion?.interviewedMentor?.mentorLogoUrl
                           ?.length > 0 ? (
                           <label
-                            className={'upload-image-box p-0'}
+                            className={'upload-image-box p-0 '}
                             onClick={() => inputImage.current.click()}
                           >
                             <input
@@ -694,7 +727,19 @@ function InterviewedMentorModal(props) {
                     )}
                   </div>
                   <div className={'row'}>
-                    <div className={'col-md-12'}>
+                    <div className={'col-md-8'}>
+                      <label>
+                        Mentor name:
+                        <input
+                          value={
+                            selectedAccordion?.interviewedMentor?.mentorName
+                          }
+                          onChange={onChangeMentorName}
+                          placeholder={'Mentor name'}
+                          className={'ms-2'}
+                          style={{ height: 40 }}
+                        />
+                      </label>
                       <MentorDescription
                         description={
                           selectedAccordion?.interviewedMentor
@@ -706,10 +751,13 @@ function InterviewedMentorModal(props) {
                       <LtsButton
                         name={'Save Description'}
                         onClick={onSaveDescription}
+                        align={'start'}
+                        width={'40%'}
                       />
                     </div>
                     <div className={'col-md-12'}>
                       <ReactTable
+                        addNew={'interview'}
                         data={selectedAccordion?.interviewedMentor?.interviews}
                         getColumns={getInterviewColumns}
                         onAdd={handleShowInterviewModal}
@@ -764,22 +812,6 @@ function InterviewedMentorModal(props) {
           )}
         </div>
       </>
-      <div className={'mt-2'}>
-        <LtsButton
-          name={'Save'}
-          align={'end'}
-          width={'20%'}
-          // onClick={() => {
-          //   if (!validateInputs()) {
-          //     return
-          //   } else {
-          //     !isEdit()
-          //       ? props.onSave?.(interview)
-          //       : props.onUpdate?.(interview)
-          //   }
-          // }}
-        />
-      </div>
     </ModalWrapper>
   )
 }
@@ -816,7 +848,7 @@ const MentorDescription = (props) => {
 
   const handleEditDescription = (index) => {
     setEditIndex(index)
-    setNewDescription(description[index].title) // Set the input value to the selected description
+    setNewDescription(description[index].title)
   }
 
   const handleSaveEdit = () => {
@@ -830,34 +862,69 @@ const MentorDescription = (props) => {
 
   return (
     <div>
-      <ul>
+      {editIndex === null && (
+        <div className={'row my-2'}>
+          <div className={'col-md-12'}>
+            <div className={'row'}>
+              <div className={'col-md-6'}>
+                <input
+                  type="text"
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  placeholder="Enter new description"
+                  className={'h-100 w-100 me-1'}
+                />
+              </div>
+              <div className={'col-md-6'}>
+                <LtsButton
+                  onClick={handleAddDescription}
+                  name={'Add description'}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className={'mt-2 mb-1'}>List of mentor description:</div>
+
+      <ul className={'my-2'} style={{ paddingLeft: 0, listStyle: 'none' }}>
         {description &&
           description.map((desc, index) => (
-            <li key={index} onClick={() => handleEditDescription(index)}>
+            <li
+              key={index}
+              onClick={() => handleEditDescription(index)}
+              style={{ cursor: 'pointer' }}
+              className={'my-2'}
+            >
               {editIndex === index ? (
                 <input
                   type="text"
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
                   onBlur={handleSaveEdit}
+                  style={{
+                    outline: 'none',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    padding: '4px 8px'
+                  }}
                 />
               ) : (
-                desc.title
+                <div
+                  style={{
+                    outline: 'none',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    padding: '4px 8px',
+                    height: 30
+                  }}
+                >
+                  {desc.title}
+                </div>
               )}
             </li>
           ))}
       </ul>
-      {editIndex === null && (
-        <div>
-          <input
-            type="text"
-            value={newDescription}
-            onChange={(e) => setNewDescription(e.target.value)}
-            placeholder="Enter new description"
-          />
-          <button onClick={handleAddDescription}>Add Description</button>
-        </div>
-      )}
     </div>
   )
 }
