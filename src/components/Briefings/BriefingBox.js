@@ -26,9 +26,11 @@ const BriefingBox = ({
 
   return (
     <div className="skill-box">
-      <div className="briefing_edit-button ">
-        <FontAwesomeIcon icon={faPen} onClick={() => setEditModal(true)} />
-      </div>
+      {isSuperAdmin && (
+        <div className="briefing_edit-button ">
+          <FontAwesomeIcon icon={faPen} onClick={() => setEditModal(true)} />
+        </div>
+      )}
       <h5>{truncateText(title, 50)}</h5>
       <hr />
       <p>

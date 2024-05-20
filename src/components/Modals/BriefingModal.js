@@ -74,6 +74,12 @@ const BriefingModal = (props) => {
         />
         <ContentItem
           content={{
+            title: 'Link',
+            description: briefing?.link
+          }}
+        />
+        <ContentItem
+          content={{
             title: 'Source',
             description: briefing?.source
           }}

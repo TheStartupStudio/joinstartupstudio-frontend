@@ -38,12 +38,14 @@ const BriefingsArchive = () => {
           <LoadingAnimation show={loading} />
         ) : (
           <>
-            <div
-              className="add-briefing-container p-3"
-              onClick={() => setAddBriefingModal(true)}
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </div>
+            {isSuperAdmin && (
+              <div
+                className="add-briefing-container p-3"
+                onClick={() => setAddBriefingModal(true)}
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </div>
+            )}
             <div className="pt-4 ">
               <h2 className="fw-bold">MY NEWS BRIEFING ARCHIVE</h2>
               <p>Welcome to Your Dashboard</p>
