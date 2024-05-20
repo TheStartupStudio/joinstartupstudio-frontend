@@ -40,6 +40,7 @@ import {
   faBook
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import moment from 'moment'
 
 const iconMap = {
   architectureAndEngineering: faCity,
@@ -258,4 +259,9 @@ export const truncateText = (text, maxLength) => {
 export const formatDateString = (dateString) => {
   const date = new Date(dateString)
   return date.toLocaleDateString('en-CA')
+}
+
+export const getFormattedDate = (date) => {
+  const formattedDate = moment(date).format('YYYY-MM-DD')
+  return formattedDate
 }

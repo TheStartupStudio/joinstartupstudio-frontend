@@ -1,6 +1,6 @@
 import React from 'react'
 import { Editor, EditorTools } from '@progress/kendo-react-editor'
-import { formatDateString } from '../../utils/helpers'
+import { formatDateString, getFormattedDate } from '../../utils/helpers'
 
 const TextInput = ({ title, name, value, handleChange, showError, error }) => (
   <div className="edit_content-item-container">
@@ -24,7 +24,7 @@ const DateInput = ({ title, name, value, handleChange, showError, error }) => (
       type="date"
       name={name}
       onChange={handleChange}
-      value={formatDateString(value)}
+      value={getFormattedDate(value)}
     />
     {showError && error && <small className="ps-1">{error}</small>}
   </div>
