@@ -591,9 +591,9 @@ function Router(props) {
                 path="/student-iamr/:studentId/:id?/:type?"
                 component={StudentIAMR}
               />
-              {user.isSuperAdmin && (
-                <Route path="/briefings" component={Briefings} />
-              )}
+              {/* {user.isSuperAdmin && ( */}
+              <Route path="/briefings" component={Briefings} />
+              {/* )} */}
               <Redirect from="/register" exact to="/dashboard" />
               <Redirect from="/ims-login" exact to="/dashboard" />
               <Redirect from="/" exact to="/dashboard" />
