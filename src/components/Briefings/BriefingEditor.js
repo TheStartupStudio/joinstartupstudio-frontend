@@ -32,7 +32,7 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
     discussionPoints: '',
     discussionQuestion: '',
     user_id: user.id,
-    isSelected: true
+    isSelected: false
   }
   const { formData, handleChange, handleChangeEditor } = useForm(
     initialState,

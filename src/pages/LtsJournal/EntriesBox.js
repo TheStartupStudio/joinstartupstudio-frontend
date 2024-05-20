@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import markdown from './markdown'
 import LtsJournalReflection from './reflection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faInfoCircle, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
-import moment from 'moment'
+import { getFormattedDate } from '../../utils/helpers'
 
 const debounce = (func, delay) => {
   let timer
@@ -18,7 +18,6 @@ const debounce = (func, delay) => {
 
 const EntriesBox = (props) => {
   const {
-    entry,
     userJournalEntries,
     journal,
     deleteReflection,
@@ -32,6 +31,7 @@ const EntriesBox = (props) => {
     accordion,
     isAddReflection
   } = props
+
   const [isSaving, setIsSaving] = useState(false)
   const [isNew, setIsNew] = useState(true)
   const currentDate = new Date()
@@ -114,14 +114,6 @@ const EntriesBox = (props) => {
 
   const debouncedSave = debounce(onSave, 1000)
 
-  // const debouncedStartDateChange = debounce((value) => {
-  //   handleDataChanges('startDate', value)
-  // }, 0)
-
-  // const debouncedEndDateChange = debounce((value) => {
-  //   handleDataChanges('endDate', value)
-  // }, 0)
-
   const handleDataChanges = (name, value) => {
     const newDates = { ...accordionDates, [name]: value }
     setAccordionDates(newDates)
@@ -131,26 +123,8 @@ const EntriesBox = (props) => {
     }
   }
 
-  function getFormattedDate(date) {
-    const formattedDate = moment(date).format('YYYY-MM-DD')
-    return formattedDate
-  }
-
   return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
-      {/* {journal.title && (
-          <div
-            className="journal-entry__parent-title"
-            style={{
-              marginTop: 0,
-              marginBottom: 0,
-              fontSize: 14,
-              textTransform: 'uppercase'
-            }}
-          >
-            <h5 style={{ fontSize: 14, padding: 6 }}>{journal.title}</h5>
-          </div>
-        )} */}
       {journal.title === 'MY PROJECT SPRINTS' && loading ? (
         <div
           className="d-flex justify-content-center align-items-center"
@@ -177,12 +151,10 @@ const EntriesBox = (props) => {
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChanges('startDate', newValue)
-                    // debouncedStartDateChange(newValue)
                   }}
                   disabled={!props.isEditable}
                 />
               </div>
-              {/*{moment(props.start).format('DD-MM-YYYY')}*/}
             </div>
           </div>
           <div className="col-6" style={{ paddingLeft: 0 }}>
@@ -200,7 +172,6 @@ const EntriesBox = (props) => {
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChanges('endDate', newValue)
-                    // debouncedEndDateChange(newValue)
                   }}
                   disabled={!props.isEditable}
                 />
