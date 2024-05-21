@@ -9,8 +9,7 @@ const ReactTable = ({
   getColumns,
   onEdit,
   onDelete,
-  onView,
-  addNew
+  onView
 }) => {
   // console.log('data', data)
   const columns = React.useMemo(
@@ -45,12 +44,12 @@ const ReactTable = ({
 
   return (
     <div className={'my-2'}>
-      <LtsButton
-        onClick={handleAddNew}
-        name={`Add new ${addNew}`}
-        align={'end'}
-        width={'30%'}
-      />
+      {/*<LtsButton*/}
+      {/*  onClick={handleAddNew}*/}
+      {/*  name={`Add new ${addNew}`}*/}
+      {/*  align={'end'}*/}
+      {/*  width={'30%'}*/}
+      {/*/>*/}
       <table {...getTableProps()} className="table">
         <thead>
           {headerGroups.map((headerGroup) => (

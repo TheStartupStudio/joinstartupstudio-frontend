@@ -422,8 +422,13 @@ function InterviewedMentorModal(props) {
                       />
                     </div>
                     <div className={'col-md-12'}>
+                      <LtsButton
+                        onClick={handleShowInterviewModal}
+                        name={`Add new interview`}
+                        align={'end'}
+                        width={'30%'}
+                      />
                       <ReactTable
-                        addNew={'interview'}
                         // data={selectedAccordion?.interviewedMentor?.interviews}
                         data={selectedAccordion?.interviewedMentor?.interviews?.sort(
                           (a, b) =>

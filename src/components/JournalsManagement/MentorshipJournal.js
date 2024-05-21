@@ -39,50 +39,18 @@ export default function MentorshipJournal(props) {
   const [fetchingJournals, setFetchingJournals] = useState(true)
   const [imageUploadingLoader, setImageUploadingLoader] = useState(false)
   const [uploadedImageUrl, setUploadedImageUrl] = useState(false)
-  const randomUUID = uuidv4()
-  const [openAccordion, setOpenAccordion] = useState(null)
   const [accordions, setAccordions] = useState([])
-  const [newAccordions, setNewAccordions] = useState([])
   const [selectedAccordion, setSelectedAccordion] = useState({})
-  const [selectedInterview, setSelectedInterview] = useState({})
-  const [video, setVideo] = useState(null)
-  const [showInterviewModal, setShowInterviewModal] = useState(false)
-  const [editingInterview, setEditingInterview] = useState(null)
-  const [showInterviewedMentorModal, setShowInterviewedMentorModal] =
-    useState(false)
-  // console.log('editingInterview', editingInterview)
 
   const [showAccordionModal, setShowAccordionModal] = useState(false)
-  const [accordionToEdit, setAccordionToEdit] = useState(null)
 
-  console.log('selectedJournal', selectedJournal)
-  console.log('selectedAccordion', selectedAccordion)
-  const handleShowAccordionModal = (accordion = null) => {
-    // setAccordionToEdit({ accordion, journalId: selectedJournal?.value?.id })
+  const handleShowAccordionModal = () => {
     setShowAccordionModal(true)
   }
 
   const handleHideAccordionModal = () => {
     setShowAccordionModal(false)
     setSelectedAccordion(null)
-  }
-
-  useEffect(() => {
-    if (editingInterview) handleShowInterviewModal()
-  }, [editingInterview])
-
-  const handleShowInterviewedMentorModal = (row) => {
-    setSelectedAccordion(row)
-    setShowInterviewedMentorModal(true)
-  }
-  const handleHideInterviewedMentorModal = () => {
-    setShowInterviewedMentorModal(false)
-  }
-  const handleShowInterviewModal = () => {
-    setShowInterviewModal(true)
-  }
-  const handleHideInterviewModal = () => {
-    setShowInterviewModal(false)
   }
 
   useEffect(() => {
@@ -93,13 +61,6 @@ export default function MentorshipJournal(props) {
     if (selectedJournal.value?.ltsJournalAccordions)
       setAccordions(selectedJournal.value?.ltsJournalAccordions)
   }, [selectedJournal.value?.ltsJournalAccordions])
-  const handleAccordionClick = (accordion) => {
-    if (openAccordion === accordion) {
-      setOpenAccordion(null)
-    } else {
-      setOpenAccordion(accordion)
-    }
-  }
 
   useEffect(() => {
     if (journals?.length) {
@@ -132,26 +93,8 @@ export default function MentorshipJournal(props) {
       value: e.value,
       label: e.label
     })
-
-    // setBreakdowns(
-    //   e.value?.breakdowns
-    //     ?.slice()
-    //     ?.sort((a, b) => a?.breakdownOrder - b?.breakdownOrder)
-    // )
   }
 
-  const handleJournalPart = (e) => {
-    setSelectedJournal({
-      value: e.value,
-      label: e.label
-    })
-
-    // setBreakdowns(
-    //   e.value?.breakdowns
-    //     ?.slice()
-    //     ?.sort((a, b) => a?.breakdownOrder - b?.breakdownOrder)
-    // )
-  }
   const history = useHistory()
 
   useEffect(() => {
@@ -204,52 +147,21 @@ export default function MentorshipJournal(props) {
     const formData = new FormData()
     formData.append('img', image)
 
-    try {
-      const response = await axiosInstance.post(
-        '/upload/journal-img',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+    await axiosInstance
+      .post('/upload/journal-img', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
-      )
-
-      const fileLocation = response.data.fileLocation
-
-      // Update mentorLogoUrl using a PUT request
-      const updatedAccordion = {
-        ...selectedAccordion,
-        interviewedMentor: {
-          ...selectedAccordion.interviewedMentor,
-          mentorLogoUrl: fileLocation
-        }
-      }
-
-      const putResponse = await axiosInstance.put(
-        `/manageJournals/interviewed-mentors/${selectedAccordion.interviewedMentor.id}`,
-        {
-          mentorLogoUrl: fileLocation
-        }
-      )
-      if (putResponse && putResponse.data) {
-        setSelectedAccordion({
-          ...selectedAccordion,
-          interviewedMentor: {
-            ...selectedAccordion.interviewedMentor,
-            ...putResponse.data
-          }
-        })
+      })
+      .then((response) => {
         setImageUploadingLoader(false)
-        toast.success('Image uploaded and updated successfully!')
-      } else {
-        toast.error('Failed to update state with PUT response data')
-      }
-    } catch (error) {
-      setImageUploadingLoader(false)
-      toast.error('Image upload and update failed, please try again!')
-      console.error('Error uploading and updating image:', error)
-    }
+        setUploadedImageUrl(response.data.fileLocation)
+        toast.success('Image uploaded successfully!')
+      })
+      .catch((err) => {
+        setImageUploadingLoader(false)
+        return toast.error('Image upload failed, please try again!')
+      })
   }
 
   const handleJournalUpdate = (event) => {
@@ -259,57 +171,6 @@ export default function MentorshipJournal(props) {
       ...prevState,
       value: { ...prevState.value, [name]: value }
     }))
-  }
-
-  const dispatch = useDispatch()
-  const [selectedImage, setSelectedImage] = useState('')
-
-  const general = useSelector((state) => state.general)
-  const inputImage = useRef(null)
-  const imageChange = async (e) => {
-    const file = e.target.files[0]
-    if (e.target.files && e.target.files.length > 0) {
-      const fileSize = file.size / 1024 / 1024
-      if (fileSize > 0.5) {
-        return toast.error('Image size exceeds 512KB.')
-      }
-
-      var img = document.createElement('img')
-
-      var reader = new FileReader()
-      reader.onloadend = function (ended) {
-        img.src = ended.target.result
-        const formData = new FormData()
-        formData.append('image', ended.target.result)
-      }
-
-      reader.readAsDataURL(e.target.files[0])
-      img.onload = async function () {
-        if (this.width < 120 || this.height < 100) {
-          return toast.error('Minimum required format: 120x100px.')
-        } else {
-          // setExperienceData((prevValues) => ({
-          //   ...prevValues,
-          //   image_url: null
-          // }))
-
-          let imageData = await readFile(file)
-          dispatch(setImageCropperData(imageData))
-          previewImage(file)
-        }
-      }
-    }
-  }
-
-  const previewImage = (file) => {
-    const reader = new FileReader()
-    if (file) {
-      reader.readAsDataURL(file)
-    }
-
-    reader.onloadend = () => {
-      setSelectedImage(reader.result)
-    }
   }
 
   const ValueContainer = ({ children, ...props }) => {
@@ -335,12 +196,7 @@ export default function MentorshipJournal(props) {
       )
     )
   }
-  useEffect(() => {
-    if (selectedJournal.value?.ltsJournalAccordions)
-      setAccordions(selectedJournal.value?.ltsJournalAccordions)
-  }, [selectedJournal.value?.ltsJournalAccordions])
 
-  // console.log('accordions', )
   const onAddAccordion = (newAccordion) => {
     setAccordions([...accordions, newAccordion])
   }
@@ -359,25 +215,6 @@ export default function MentorshipJournal(props) {
       console.error('Error deleting accordion:', error)
     }
   }
-  const onSelectRow = (row, type) => {
-    console.log(row)
-    if (type !== 'interview') {
-      setSelectedAccordion(row)
-    } else {
-      setSelectedInterview(row)
-    }
-  }
-
-  // const onSelectRow = (row, type) => {
-  //   console.log(row)
-  //   if (type !== 'interview') {
-  //     setSelectedAccordion(row)
-  //   } else {
-  //     setSelectedInterview(row)
-  //   }
-  // }
-
-  console.log('selectedAccordion', selectedAccordion)
 
   const getColumns = ({ onSelectRow, onEdit, onDelete }) => [
     {
@@ -560,15 +397,19 @@ export default function MentorshipJournal(props) {
               value={selectedJournal?.value?.title}
               onChange={handleJournalUpdate}
             />
+            <LtsButton
+              onClick={onAddAccordion}
+              name={`Add new accordion`}
+              align={'end'}
+              width={'30%'}
+            />
             {accordions && accordions?.length > 0 && (
               <>
                 <ReactTable
-                  // data={accordions}
                   data={accordions?.sort(
                     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
                   )}
                   getColumns={getColumns}
-                  addNew={'accordion'}
                   onAdd={handleShowAccordionModal}
                   onEdit={(row) => {
                     handleShowAccordionModal(row)
@@ -576,7 +417,6 @@ export default function MentorshipJournal(props) {
                   }}
                   onDelete={handleDeleteAccordion}
                 />
-                {/*{selectedInterview}*/}
               </>
             )}
 
@@ -595,21 +435,12 @@ export default function MentorshipJournal(props) {
           <AccordionModal
             show={showAccordionModal}
             onHide={handleHideAccordionModal}
-            // onSuccess={handleSuccess}
-            accordion={accordionToEdit}
             selectedAccordion={selectedAccordion}
             setSelectedAccordion={setSelectedAccordion}
             selectedJournal={selectedJournal}
             onAddAccordion={onAddAccordion}
             onUpdateAccordion={onUpdateAccordion}
           />
-
-          {/*<InterviewedMentorModal*/}
-          {/*  onHide={handleHideInterviewedMentorModal}*/}
-          {/*  show={showInterviewedMentorModal}*/}
-          {/*  selectedAccordion={selectedAccordion}*/}
-          {/*  setSelectedAccordion={setSelectedAccordion}*/}
-          {/*/>*/}
         </div>
       )}
     </div>
