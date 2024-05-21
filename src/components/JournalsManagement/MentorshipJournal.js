@@ -560,10 +560,13 @@ export default function MentorshipJournal(props) {
               value={selectedJournal?.value?.title}
               onChange={handleJournalUpdate}
             />
-            {accordions && accordions?.length && (
+            {accordions && accordions?.length > 0 && (
               <>
                 <ReactTable
-                  data={accordions}
+                  // data={accordions}
+                  data={accordions?.sort(
+                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                  )}
                   getColumns={getColumns}
                   addNew={'accordion'}
                   onAdd={handleShowAccordionModal}

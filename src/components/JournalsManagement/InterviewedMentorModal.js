@@ -424,7 +424,11 @@ function InterviewedMentorModal(props) {
                     <div className={'col-md-12'}>
                       <ReactTable
                         addNew={'interview'}
-                        data={selectedAccordion?.interviewedMentor?.interviews}
+                        // data={selectedAccordion?.interviewedMentor?.interviews}
+                        data={selectedAccordion?.interviewedMentor?.interviews?.sort(
+                          (a, b) =>
+                            new Date(b.createdAt) - new Date(a.createdAt)
+                        )}
                         getColumns={getInterviewColumns}
                         onAdd={handleShowInterviewModal}
                         onView={onViewInterview}
