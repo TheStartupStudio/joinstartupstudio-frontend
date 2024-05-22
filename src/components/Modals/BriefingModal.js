@@ -1,42 +1,47 @@
-import React from 'react';
-import { Modal } from 'react-bootstrap';
-import 'react-quill/dist/quill.snow.css';
-import './BriefingModal.css';
+import React from 'react'
+import { Modal } from 'react-bootstrap'
+import 'react-quill/dist/quill.snow.css'
+import './BriefingModal.css'
 
-const processText = (text) => {
-  const lines = text.split('\n').map((line) => line.trim()); 
-  const validLines = lines.filter((line) => line.length > 0); 
-  
-  return validLines.map((line) => {
-    const match = line.match(/^\d+\.\s*(.*)$/); 
-    return match ? match[1] : line; 
-  });
-};
+const extractTextWithBulletPoints = (htmlString) => {
+  const tempElement = document.createElement('div')
+  tempElement.innerHTML = htmlString
+
+  const listItems = tempElement.querySelectorAll('li')
+  let textContent = '<br />'
+
+  listItems.forEach((item, index) => {
+    textContent += `<p class='ms-4 my-1 py-1'> • ${item.textContent.trim()}<br/></p>`
+  })
+
+  return textContent.trim()
+}
 
 const ContentItem = ({ content }) => {
-  const { title, description } = content;
+  const { title, description } = content
 
-  const listItemTitles = ['synopsis', 'discussion points'];
-  const shouldRenderList = listItemTitles.includes(title.toLowerCase());
+  const listItemTitles = ['synopsis', 'discussion points']
+  const shouldRenderList = listItemTitles.includes(title.toLowerCase())
 
   return (
-    <div className="content-item-container">
+    <div className="content-item-container ">
       <span className="content-item-title">{title}:</span>
       {shouldRenderList ? (
-        <ul className="content-item-description">
-          {processText(description).map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
+        <span
+          className="content-item-description "
+          dangerouslySetInnerHTML={{
+            __html: extractTextWithBulletPoints(description)
+          }}
+        />
       ) : (
-        <span className="content-item-description">{description}</span>
+        <span className="content-item-description ">{description}</span>
       )}
     </div>
-  );
-};
+  )
+}
 
 const BriefingModal = (props) => {
-  const {briefing} = props
+  const { briefing } = props
 
   return (
     <Modal
@@ -60,45 +65,52 @@ const BriefingModal = (props) => {
         <ContentItem
           content={{
             title: 'Date',
-            description: new Date(briefing?.date).toLocaleDateString(
-              'en-US',
-              { month: 'long', day: 'numeric', year: 'numeric' }
-            ),
+            description: new Date(briefing?.date).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric'
+            })
+          }}
+        />
+        <ContentItem
+          content={{
+            title: 'Link',
+            description: briefing?.link
           }}
         />
         <ContentItem
           content={{
             title: 'Source',
-            description: briefing?.source,
+            description: briefing?.source
           }}
         />
         <ContentItem
           content={{
             title: 'Title',
-            description: briefing?.title,
+            description: briefing?.title
           }}
         />
         <ContentItem
           content={{
             title: 'Synopsis',
-          description: briefing?.synopsis,
+            description: briefing?.synopsis
           }}
         />
         <ContentItem
           content={{
             title: 'Discussion Question',
-          description: briefing?.discussionQuestion,
+            description: briefing?.discussionQuestion
           }}
         />
         <ContentItem
           content={{
             title: 'Discussion Points',
-          description: briefing?.discussionPoints,
+            description: briefing?.discussionPoints
           }}
         />
       </Modal.Body>
     </Modal>
-  );
-};
+  )
+}
 
-export default BriefingModal;
+export default BriefingModal

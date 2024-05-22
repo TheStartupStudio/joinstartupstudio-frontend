@@ -40,6 +40,7 @@ import {
   faBook
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import moment from 'moment'
 
 const iconMap = {
   architectureAndEngineering: faCity,
@@ -250,7 +251,17 @@ export const getIconComponent = (iconIdentifier, color) => {
 
 export const truncateText = (text, maxLength) => {
   if (text.length > maxLength) {
-    return text.slice(0, maxLength) + '...';
+    return text.slice(0, maxLength) + '...'
   }
-  return text;
-};
+  return text
+}
+
+export const formatDateString = (dateString) => {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-CA')
+}
+
+export const getFormattedDate = (date) => {
+  const formattedDate = moment(date).format('YYYY-MM-DD')
+  return formattedDate
+}

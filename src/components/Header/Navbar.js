@@ -17,7 +17,7 @@ import notesIconHovered from '../../assets/images/notes-icon-active.svg'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
 import avator from '../../assets/images/profile-image.png'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { changeSidebarState } from '../../redux'
 
 const Navbar = (props) => {
@@ -28,8 +28,8 @@ const Navbar = (props) => {
   const [backButton, setBackButton] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
   const [showDropDown, setShowDropDown] = useState(false)
-  const [allowToShow, setAllowToShow] = useState(false)
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
+  const { isSuperAdmin } = useSelector((state) => state.user.user)
 
   useEffect(() => {
     const urlSegments = location.pathname.split('/')
@@ -63,23 +63,6 @@ const Navbar = (props) => {
       }, 200)
     }
   }
-
-  const hasAccess = () => {
-    axiosInstance
-      .get('/studentsInstructorss/has-access')
-      .then((response) => {
-        if (response.data.allow) {
-          setAllowToShow(true)
-        } else {
-          setAllowToShow(false)
-        }
-      })
-      .catch((e) => e)
-  }
-
-  useEffect(() => {
-    hasAccess()
-  }, [])
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light desktop-menu px-xl-2">
@@ -310,24 +293,22 @@ const Navbar = (props) => {
                       <IntlMessages id="my_account.page_title" />
                     </Link>
 
-                    {
-                      <Link
-                        className="dropdown-item py-2 dropdown-menu-hover"
-                        to="/edit-portfolio"
-                        onClick={() => setShowDropDown((preState) => !preState)}
-                      >
-                        MY PORTFOLIO
-                      </Link>
-                    }
-                    {allowToShow && (
-                      <Link
-                        onClick={() => setShowDropDown((preState) => !preState)}
-                        to="/briefings"
-                        className="dropdown-item py-2 dropdown-menu-hover"
-                      >
-                        MY NEWS BRIEFINGS ARCHIVE
-                      </Link>
-                    )}
+                    <Link
+                      className="dropdown-item py-2 dropdown-menu-hover"
+                      to="/edit-portfolio"
+                      onClick={() => setShowDropDown((preState) => !preState)}
+                    >
+                      MY PORTFOLIO
+                    </Link>
+
+                    <Link
+                      onClick={() => setShowDropDown((preState) => !preState)}
+                      to="/briefings"
+                      className="dropdown-item py-2 dropdown-menu-hover"
+                    >
+                      MY NEWS BRIEFINGS ARCHIVE
+                    </Link>
+
                     <li>
                       <Link
                         onClick={() => setShowDropDown((preState) => !preState)}
@@ -337,7 +318,7 @@ const Navbar = (props) => {
                         MY RESOURCES
                       </Link>
                     </li>
-                    {props.allowToShow ? (
+                    {isSuperAdmin && (
                       <Link
                         className="dropdown-item py-2 dropdown-menu-hover"
                         to="#"
@@ -348,8 +329,6 @@ const Navbar = (props) => {
                       >
                         Admin panel
                       </Link>
-                    ) : (
-                      ''
                     )}
                     <Link
                       className="dropdown-item py-2 dropdown-menu-hover"

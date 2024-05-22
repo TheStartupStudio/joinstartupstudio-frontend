@@ -121,7 +121,7 @@ const ContentStreamed = () => {
             />
           </div>
           <div className={'row pt-4'}>
-            <div className={'col-lg-6 col-md-12'}>
+            {/* <div className={'col-lg-6 col-md-12'}>
               <DisplayCircleData
                 backgroundColor={'#54c7df'}
                 title={'Masterclasses'}
@@ -133,6 +133,20 @@ const ContentStreamed = () => {
                     : masterclassPercentage
                 }
                 loading={myPerformanceData.masterclassLoading}
+              />
+            </div> */}
+            <div className={'col-lg-6 col-md-12'}>
+              <DisplayCircleData
+                backgroundColor={'#99cc33'}
+                title={'Q&As'}
+                percentage={
+                  typeof qaPercentage !== 'string'
+                    ? !isNaN(qaPercentage)
+                      ? +qaPercentage.toFixed(2)
+                      : 0
+                    : qaPercentage
+                }
+                loading={myPerformanceData.qaLoading}
               />
             </div>
 
@@ -148,23 +162,6 @@ const ContentStreamed = () => {
                     : podcastPercentage
                 }
                 loading={myPerformanceData.podcastLoading}
-              />
-            </div>
-          </div>
-          <div className={'row'}>
-            <div className={'col-md-12'} style={{ gap: 20 }}>
-              <DisplayCircleData
-                marginTop={windowWidth < 995 ? '' : '-10%'}
-                backgroundColor={'#99cc33'}
-                title={'Q&As'}
-                percentage={
-                  typeof qaPercentage !== 'string'
-                    ? !isNaN(qaPercentage)
-                      ? +qaPercentage.toFixed(2)
-                      : 0
-                    : qaPercentage
-                }
-                loading={myPerformanceData.qaLoading}
               />
             </div>
           </div>

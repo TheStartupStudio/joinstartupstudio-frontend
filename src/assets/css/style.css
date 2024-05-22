@@ -4437,3 +4437,7 @@ ul.sidebar-menu-item .collapse a {
   justify-content: center;
   align-items: center;
 }
+
+.k-animation-container-shown {
+  z-index: 99999999 !important;
+}

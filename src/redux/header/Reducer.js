@@ -1,4 +1,7 @@
-import { updateBriefingInArray } from './Service'
+import {
+  updateSelectedBriefingInArray,
+  updatedBriefingInArray
+} from './Service'
 import * as types from './Types'
 
 import { toast } from 'react-toastify'
@@ -59,7 +62,7 @@ const headerReducer = (state = initialState, action) => {
       }
 
     case types.UPDATE_SELECTED_BRIEFING_SUCCESS:
-      const updatedSelectedBriefings = updateBriefingInArray(
+      const updatedSelectedBriefings = updateSelectedBriefingInArray(
         state.briefings,
         payload
       )
@@ -89,7 +92,7 @@ const headerReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        briefings: [...state.briefings, payload.briefing],
+        briefings: [payload, ...state.briefings],
         loading: false,
         error: null
       }
@@ -107,20 +110,15 @@ const headerReducer = (state = initialState, action) => {
         error: null
       }
     case types.EDIT_BRIEFING_SUCCESS:
-      const updatedBriefing = payload.briefing
-      const updatedBriefings = state.briefings.map((briefing) => {
-        if (briefing.id === updatedBriefing.id) {
-          return updatedBriefing
-        }
-        return briefing
-      })
       toast.success('Briefing updated successfully.')
+
       return {
         ...state,
-        briefings: updatedBriefings,
+        briefings: updatedBriefingInArray(state.briefings, payload),
         loading: false,
         error: null
       }
+
     case types.EDIT_BRIEFING_ERROR:
       toast.error('Briefing update failed.')
 
@@ -136,16 +134,18 @@ const headerReducer = (state = initialState, action) => {
         error: null
       }
     case types.DELETE_BRIEFING_SUCCESS:
-      const deletedBriefing = payload.briefing
+      toast.success('Briefing deleted successfully!')
+
       return {
         ...state,
         briefings: state.briefings.filter(
-          (briefing) => briefing.id !== deletedBriefing.id
+          (briefing) => briefing.id !== payload.briefingID
         ),
         loading: false,
         error: null
       }
     case types.DELETE_BRIEFING_ERROR:
+      toast.error('Briefing deletion failed!')
       return {
         ...state,
         loading: false,
