@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
@@ -18,6 +18,10 @@ import CertificationSkills from '../LtsJournal/CertificationSkills/Certification
 import TableWrapper from '../LtsJournal/TableWrapper/index'
 import TableReflections from '../LtsJournal/TableReflections'
 import Rwl from '../LtsJournal/rwl'
+import InstructorFeedback from '../LtsJournal/InstructorFeedback/InstructorFeedback'
+import { FaPlay } from 'react-icons/fa'
+import InterviewSection from '../LtsJournal/InterviewSection'
+import './content.css'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -28,6 +32,8 @@ function LtsJournalContent(props) {
   let [showVideo, setShowVideo] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [video, setVideo] = useState(null)
+  const navigate = useHistory()
 
   useEffect(() => {
     setIsExpanded(false)
@@ -210,6 +216,10 @@ function LtsJournalContent(props) {
 
       setJournal(updatedJournal)
     }
+  }
+
+  const navigateToStoryInMotion = () => {
+    navigate.push('/story-in-motion')
   }
 
   return (
@@ -399,6 +409,136 @@ function LtsJournalContent(props) {
           </div>
         ) : null}
 
+        {journal.ltsJournalAccordions && journal.ltsJournalAccordions.length
+          ? journal.ltsJournalAccordions
+              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map((accordion) => {
+                return (
+                  <div className="col-12">
+                    <AccordionItemWrapper
+                      isOpened={openAccordion === `accordion-${accordion.id}`}
+                      handleAccordionClick={() =>
+                        handleAccordionClick(`accordion-${accordion.id}`)
+                      }
+                      isExanded={false}
+                      title={accordion.title}
+                      accordionStyle={{ backgroundColor: '#fff' }}
+                    >
+                      {openAccordion === `accordion-${accordion.id}` && (
+                        <div className={'row py-2 px-3'}>
+                          <div
+                            className={'col-lg-4 col-md-12'}
+                            style={{ borderRight: ' 2px solid #E5E5E5' }}
+                          >
+                            <div className={'my-2'}>
+                              <div
+                                className={
+                                  'd-flex flex-column align-items-center'
+                                }
+                              >
+                                <label
+                                  className={
+                                    'upload-image-box position-relative p-0 my-2'
+                                  }
+                                  onClick={navigateToStoryInMotion}
+                                >
+                                  <img
+                                    src={
+                                      accordion?.interviewedMentor
+                                        ?.mentorLogoUrl?.length > 0
+                                        ? accordion?.interviewedMentor
+                                            ?.mentorLogoUrl
+                                        : 'https://static.vecteezy.com/system/resources/previews/021/548/095/non_2x/default-profile-picture-avatar-user-avatar-icon-person-icon-head-icon-profile-picture-icons-default-anonymous-user-male-and-female-businessman-photo-placeholder-social-network-avatar-portrait-free-vector.jpg'
+                                    }
+                                    style={{
+                                      width: '100%',
+                                      height: '100%'
+                                    }}
+                                    alt="Thumb"
+                                  />
+                                  <FaPlay
+                                    className="position-absolute"
+                                    style={{
+                                      top: '50%',
+                                      left: '50%',
+                                      transform: 'translate(-50%, -50%)',
+                                      width: '50px',
+                                      height: '50px',
+                                      opacity: 0.7,
+                                      color: 'white',
+                                      marginLeft: 3
+                                    }}
+                                  />
+                                </label>
+                                <div
+                                  className={'my-2'}
+                                  onClick={navigateToStoryInMotion}
+                                  style={{
+                                    font: 'normal normal 400 12px/14px Montserrat',
+                                    color: '#FE43A1',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  Click to view full episodes
+                                </div>
+                              </div>
+                              <div>
+                                <div className={'mentor-title'}>
+                                  {accordion?.interviewedMentor?.mentorName}
+                                </div>
+                                {accordion?.interviewedMentor?.mentorDescription?.map(
+                                  (desc) => {
+                                    return (
+                                      <div className={'mentor-description'}>
+                                        {desc.title}
+                                      </div>
+                                    )
+                                  }
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <div className={'col-lg-8 col-md-12'}>
+                            <div>
+                              <InterviewSection
+                                part="part-1"
+                                interviews={
+                                  accordion?.interviewedMentor?.interviews
+                                }
+                                setVideo={setVideo}
+                                journal={journal}
+                              />
+                              <div className={'pt-3'}>
+                                <InterviewSection
+                                  part="part-2"
+                                  interviews={
+                                    accordion?.interviewedMentor?.interviews
+                                  }
+                                  setVideo={setVideo}
+                                  journal={journal}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          {video && (
+                            <MediaLightbox
+                              video={video}
+                              // key={index}
+                              show={!!video}
+                              onClose={() => setVideo(false)}
+                              // watchData={videoWatchData}
+                              // onVideoData={saveWatchData}
+                              // onVideoWatched={saveVideoWatched}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </AccordionItemWrapper>
+                  </div>
+                )
+              })
+          : null}
+
         {journal.reflectionsTable && journal.reflectionsTable.length ? (
           <>
             {journal.reflectionsTable.map((reflectionTable, tableIndex) => (
@@ -494,6 +634,9 @@ function LtsJournalContent(props) {
         ) : null}
       </div>
       {props.match.params.journalId === '1001028' && <Rwl isEditable={false} />}
+      {journal?.instructorFeedback && (
+        <InstructorFeedback data={journal?.instructorFeedback} />
+      )}
     </>
   )
 }
