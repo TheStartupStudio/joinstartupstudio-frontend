@@ -6,73 +6,79 @@ import ReactQuill from 'react-quill'
 import moment from 'moment/moment'
 import { useSelector } from 'react-redux'
 import IntlMessages from '../../utils/IntlMessages'
+import { useRouteMatch } from 'react-router-dom'
 
 const JournalTextEditor = ({
   userData,
   handleChange,
   handleSave,
   value,
-  title
+  title,
+  previewMode
 }) => {
   const currentLanguage = useSelector((state) => state.lang.locale)
-  const [contentValue, setContentValue] = useState('')
+  const [content, setContent] = useState('')
 
   useEffect(() => {
-    if (value) setContentValue(value)
-  }, [value])
+    if (!!userData) {
+      setContent(value)
+    } else {
+      setContent('')
+    }
+  }, [userData, value])
 
   const handleChangeContent = (value) => {
-    console.log('value', value)
-    setContentValue(value)
+    setContent(value)
   }
-  // console.log(props)
   const onSaveContent = () => {
-    handleSave?.({ content: contentValue })
+    handleSave?.({ content: content })
   }
 
   return (
     <div>
       <div className="journal_text_editor-title">{title}</div>
-      <div className="journal_text_editor-input_box journal-entries__entry-reflection-body">
-        {!userData ? (
+      {previewMode !== 'on' && (
+        <div className="journal_text_editor-input_box journal-entries__entry-reflection-body">
           <ReactQuill
             theme="snow"
             name="textQuillStandart"
             modules={quillModules}
             formats={quillFormats}
             onChange={handleChangeContent}
-            value={contentValue}
+            value={content}
           />
-        ) : (
-          <div>{'Display journal content'}</div>
-        )}
-        <div className="journal_text_editor-save_button-box">
-          <LtsButton name="Save" onClick={onSaveContent} />
+          <div className="journal_text_editor-save_button-box">
+            <LtsButton name="Save" onClick={onSaveContent} />
+          </div>
         </div>
-      </div>
-      <div
-        className="journal_text_editor-footer d-flex justify-content-between align-items-center"
-        style={{
-          width: '100%',
-          padding: 6,
-          borderTop: '2px solid rgb(229, 229, 229)'
-        }}
-      >
-        {new Date() && (
-          <span>
-            <strong>Submitted:</strong>
-            {moment(new Date())
-              .locale(currentLanguage)
-              .format('MMM DD, YYYY HH:mm')}
-          </span>
-        )}
-        <span>
-          <FaPencil
-            className="journal_text_editor-footer_pencil-icon"
-            width={16}
-            height={16}
+      )}
+      {previewMode === 'on' && (
+        <div className="journal_text_editor-input_box journal-entries__entry-reflection-body">
+          <div
+            dangerouslySetInnerHTML={{ __html: content }}
+            className={'journal_text_editor-display_content'}
           />
-        </span>
+        </div>
+      )}
+
+      <div className={'journal_text_editor-footer-box'}>
+        <div className="journal_text_editor-footer d-flex justify-content-between align-items-center">
+          {userData?.submitted && (
+            <span>
+              <strong>Submitted:</strong>
+              {moment(userData?.submitted)
+                .locale(currentLanguage)
+                .format('MMM DD, YYYY HH:mm')}
+            </span>
+          )}
+          {/*<span>*/}
+          {/*<FaPencil*/}
+          {/*  className="journal_text_editor-footer_pencil-icon"*/}
+          {/*  width={16}*/}
+          {/*  height={16}*/}
+          {/*/>*/}
+          {/*</span>*/}
+        </div>
       </div>
     </div>
   )

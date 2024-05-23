@@ -28,7 +28,6 @@ export default function EditJournals(props) {
   const [selectedAccordion, setSelectedAccordion] = useState({})
 
   const [showAccordionModal, setShowAccordionModal] = useState(false)
-
   const handleShowAccordionModal = () => {
     setShowAccordionModal(true)
   }
@@ -408,12 +407,14 @@ export default function EditJournals(props) {
       )}
       <div className={'row mt-4'}>
         <div className={'col-md-6'}>
-          <LtsButton
-            onClick={handleShowAccordionModal}
-            name={`Add new accordion`}
-            align={'end'}
-            width={'30%'}
-          />
+          {selectedJournal?.value?.category === 'my-mentorship' && (
+            <LtsButton
+              onClick={handleShowAccordionModal}
+              name={`Add new accordion`}
+              align={'end'}
+              width={'30%'}
+            />
+          )}
           {accordions && accordions?.length > 0 && (
             <ReactTable
               // data={accordions}
