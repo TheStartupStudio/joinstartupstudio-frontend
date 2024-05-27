@@ -1,14 +1,13 @@
 import { useMemo } from 'react'
 import { Route, useParams } from 'react-router-dom'
 import { useIamrContext } from '../iamrContext/context'
-import LoadingAnimation from '../loadingAnimation'
-import SkillJournal from '../skillJournal'
 import SkillContent from '../skillContent'
 import CertificationStatus from '../certificationStatus'
 import SkillUploads from '../skillUploads'
 import IAMRWelcomePage from '../iamrWelcome'
+import LoadingAnimation from '../../../ui/loadingAnimation'
 
-const SkillsRouter = ({groupingStrings}) => {
+const SkillsRouter = ({ groupingStrings }) => {
   const { loading } = useIamrContext()
   const { id, type } = useParams()
   const { findOneSkill } = useIamrContext()
@@ -19,12 +18,12 @@ const SkillsRouter = ({groupingStrings}) => {
 
   const MemoizedSkillsRouter = useMemo(() => {
     return (
-      <div className='py-4'>
+      <div className="py-4">
         {loading ? (
           <LoadingAnimation show={loading} />
         ) : !skill && type && type !== 'certification-status' ? (
-          <div className='py-5'>
-            <p className='page-content-title text-center my-5 fw-bold'>
+          <div className="py-5">
+            <p className="page-content-title text-center my-5 fw-bold">
               Skill not found!
             </p>
           </div>
@@ -38,7 +37,9 @@ const SkillsRouter = ({groupingStrings}) => {
             <Route
               exact
               path={`/student-iamr/:studentId/:id/content`}
-              component={() => <SkillContent skill={skill} groupingStrings={groupingStrings} />}
+              component={() => (
+                <SkillContent skill={skill} groupingStrings={groupingStrings} />
+              )}
             />
             <Route
               path={`/student-iamr/:studentId/:id/certification-status`}

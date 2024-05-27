@@ -1,9 +1,10 @@
-import useIamrInboxContext from '../iamrInboxContext'
+import useInboxContext from '../inboxContext'
 import '../index.css'
 
 function MenuOption({ allowedToShow, questionMenu, title, categoryOption }) {
-  const { questionsMenuSelected, selectQuestionsMenu } = useIamrInboxContext()
+  const { questionsMenuSelected, selectQuestionsMenu } = useInboxContext()
   console.log('questionsMenuSelected', questionsMenuSelected)
+  console.log('categoryOption', categoryOption)
   return (
     <>
       {allowedToShow && (

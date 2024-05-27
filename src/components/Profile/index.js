@@ -50,7 +50,7 @@ function Profile(props) {
     const questionAndFeedbacksHandler = async () => {
       await axiosInstance.get('/instructor/iamr/tickets').then((res) => {
         setStudentQuestions(res.data.student_questions)
-        setFeedbackRequests(res.data.certification_feedback_questions)
+        setFeedbackRequests(res.data.certification_feedback_requests)
       })
     }
     questionAndFeedbacksHandler()
@@ -320,7 +320,7 @@ function Profile(props) {
         >
           <img src={Questions} style={{ width: '180px' }} alt="" />
 
-          <a href={`/iamr-inbox`} className="iamr-inbox_link m-0">
+          <a href={`/my-inbox`} className="iamr-inbox_link m-0">
             {studentQuestions.unreadCount ? studentQuestions?.unreadCount : 0}
             <span className="ml-2">Questions</span>
           </a>
@@ -330,7 +330,7 @@ function Profile(props) {
           style={{ marginTop: '-3rem' }}
         >
           <img src={Feedbacks} style={{ width: '180px' }} alt="" />
-          <a href="/iamr-inbox" className="iamr-inbox_link">
+          <a href="/my-inbox" className="iamr-inbox_link">
             {feedbackRequests.unreadCount ? feedbackRequests.unreadCount : 0}
             <span className="ml-2">Requests</span>
           </a>

@@ -1,7 +1,7 @@
 const LoadingAnimation = ({ show }) => {
   return show ? (
-    <div className='d-flex justify-content-center align-items-center flex-column my-5 py-5'>
-      <div className='lds-facebook'>
+    <div className="d-flex justify-content-center align-items-center flex-column my-5 py-5">
+      <div className="lds-facebook">
         <div></div>
         <div></div>
         <div></div>

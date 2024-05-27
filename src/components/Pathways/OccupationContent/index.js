@@ -1,6 +1,6 @@
 import React from 'react'
 import OccupationRouter from '../OccupationRouter'
-import LoadingAnimation from '../../IAMRinbox/loadingAnimation'
+import LoadingAnimation from '../../../ui/loadingAnimation'
 
 const OccupationContent = ({
   occupationGroup,

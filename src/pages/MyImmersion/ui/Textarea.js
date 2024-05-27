@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Textarea = ({ placeholder, name, onChange }) => {
+const Textarea = ({ placeholder, name, onChange, value }) => {
   return (
     <textarea
       style={{ fontSize: '13px' }}
@@ -10,6 +10,7 @@ const Textarea = ({ placeholder, name, onChange }) => {
       id=""
       cols="30"
       rows="6"
+      value={value}
       placeholder={placeholder}
     ></textarea>
   )

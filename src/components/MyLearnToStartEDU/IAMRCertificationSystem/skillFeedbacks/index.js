@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import LoadingAnimation from '../loadingAnimation'
 import TicketChat from '../ticketChat'
 import Dropdown from '../customComponents/dropdown'
 import DropdownOption from './dropdownOption'
 import './index.css'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../../../utils/AxiosInstance'
+import LoadingAnimation from '../../../../ui/loadingAnimation'
 
 const SkillFeedbacks = ({ skill }) => {
   const [tickets, setTickets] = useState([])
@@ -41,7 +41,7 @@ const SkillFeedbacks = ({ skill }) => {
   return (
     <>
       <p className="skill-title">
-      <span className="text-info fw-bold">{skill.category} - </span> 
+        <span className="text-info fw-bold">{skill.category} - </span>
         <span className="fw-bold">{skill?.title} - </span> FEEDBACK
       </p>
       {loading ? (

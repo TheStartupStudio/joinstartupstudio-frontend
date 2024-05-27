@@ -29,18 +29,21 @@ tr td:first-child {
 tr:nth-child(even) {
   background-color: #f6f9fc;
 }
-
 button {
+  border: none;
+  cursor: pointer;
+}
+
+.submit-btn {
   background-color: #4caf50;
   color: white;
   padding: 10px 20px;
   margin: 4px 0;
-  border: none;
+
   border-radius: 4px;
-  cursor: pointer;
 }
 
-button:hover {
+.submit-btn:hover {
   background-color: #45a049;
 }
 

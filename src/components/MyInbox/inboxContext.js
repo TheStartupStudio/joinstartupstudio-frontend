@@ -5,12 +5,12 @@ import {
   useMemo,
   useCallback
 } from 'react'
-import iamrInboxReducer, { initialState } from './iamrInboxReducer'
+import inboxReducer, { initialState } from './inboxReducer'
 
-const IamrInboxContext = createContext(initialState)
+const InboxContext = createContext(initialState)
 
-export const IamrInboxProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(iamrInboxReducer, initialState)
+export const InboxProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(inboxReducer, initialState)
 
   const setStudentQuestions = useCallback(
     (payload) => {
@@ -36,6 +36,24 @@ export const IamrInboxProvider = ({ children }) => {
     (payload) => {
       dispatch({
         type: 'SET_APPROVAL_REQUESTS',
+        payload
+      })
+    },
+    [dispatch]
+  )
+  const setIndustryProblems = useCallback(
+    (payload) => {
+      dispatch({
+        type: 'SET_INDUSTRY_PROBLEMS',
+        payload
+      })
+    },
+    [dispatch]
+  )
+  const setImmersionExperiences = useCallback(
+    (payload) => {
+      dispatch({
+        type: 'SET_IMMERSION_EXPERIENCE',
         payload
       })
     },
@@ -76,13 +94,18 @@ export const IamrInboxProvider = ({ children }) => {
 
   const newMessage = useCallback(
     ({ message, ticket }) => {
+      console.log('ticket', ticket)
       //prettier-ignore
       const questions =
         ticket.type === 'instruction'
           ? state.studentQuestions
           : ticket.type === 'feedback' || ticket.type === 'certification_submit'
-          ? state.certificationFeedbackQuestions
-          : state.approvalRequests;
+          ? state.certificationFeedbackQuestions 
+          : ticket.type === 'approval' 
+          ? state.approvalRequests 
+          : ticket.type === 'industry_problem' 
+          ? state.industryProblems
+          : state.immersionExperience
 
       const newRows = questions.rows.map((x) =>
         x.id === ticket.id ? { ...x, TicketAnswers: message } : x
@@ -93,8 +116,12 @@ export const IamrInboxProvider = ({ children }) => {
           ticket.type === 'instruction'
             ? 'UPDATE_STUDENT_QUESTIONS'
             : ticket.type === 'feedback' || ticket.type === 'certification_submit'
-            ? 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS'
-            : 'UPDATE_APPROVAL_REQUEST';
+            ? 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS' 
+            : ticket.type === 'approval' 
+            ? 'UPDATE_APPROVAL_REQUEST' 
+            : ticket.type === 'industry_problem' 
+            ? 'UPDATE_INDUSTRY_PROBLEMS'
+            : 'UPDATE_IMMERSION_EXPERIENCE'
 
       dispatch({
         type: type,
@@ -111,8 +138,12 @@ export const IamrInboxProvider = ({ children }) => {
         ticket.type === 'instruction'
           ? state.studentQuestions
           : ticket.type === 'feedback' || ticket.type === 'certification_submit'
-          ? state.certificationFeedbackQuestions
-          : state.approvalRequests;
+          ? state.certificationFeedbackQuestions 
+          : ticket.type === 'approval' 
+          ? state.approvalRequests 
+          : ticket.type === 'industry_problem' 
+          ? state.industryProblems
+          : state.immersionExperience
 
       const foundIndex = questions.rows.find(
         (row) => row.id === ticket.id && !row.read_by_instructor
@@ -126,11 +157,15 @@ export const IamrInboxProvider = ({ children }) => {
 
       //prettier-ignore
       const type =
-        ticket.type === 'instruction'
-          ? 'UPDATE_STUDENT_QUESTIONS'
-          : ticket.type === 'feedback' || ticket.type === 'certification_submit'
-          ? 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS'
-          : 'UPDATE_APPROVAL_REQUEST';
+      ticket.type === 'instruction'
+        ? 'UPDATE_STUDENT_QUESTIONS'
+        : ticket.type === 'feedback' || ticket.type === 'certification_submit'
+        ? 'UPDATE_CERTIFICATION_FEEDBACK_QUESTIONS' 
+        : ticket.type === 'approval' 
+        ? 'UPDATE_APPROVAL_REQUEST' 
+        : ticket.type === 'industry_problem' 
+        ? 'UPDATE_INDUSTRY_PROBLEMS'
+        : 'UPDATE_IMMERSION_EXPERIENCE'
 
       console.log('ticket.type', ticket.type)
 
@@ -146,7 +181,9 @@ export const IamrInboxProvider = ({ children }) => {
     [
       state.certificationFeedbackQuestions,
       state.studentQuestions,
-      state.approvalRequests
+      state.approvalRequests,
+      state.industryProblems,
+      state.immersionExperience
     ]
   )
 
@@ -162,11 +199,15 @@ export const IamrInboxProvider = ({ children }) => {
       certificationFeedbackQuestions: state.certificationFeedbackQuestions,
       approvalRequests: state.approvalRequests,
       questionsMenuSelected: state.questionsMenuSelected,
+      industryProblems: state.industryProblems,
+      immersionExperiences: state.immersionExperiences,
       loading: state.loading,
       replying: state.replying,
       setStudentQuestions,
       setCertificationFeedbackQuestions,
       setApprovalRequests,
+      setIndustryProblems,
+      setImmersionExperiences,
       selectQuestionsMenu,
       setLoading,
       setReplying,
@@ -181,6 +222,8 @@ export const IamrInboxProvider = ({ children }) => {
     selectQuestionsMenu,
     setCertificationFeedbackQuestions,
     setApprovalRequests,
+    setIndustryProblems,
+    setImmersionExperiences,
     setLoading,
     setReplying,
     newMessage,
@@ -188,15 +231,11 @@ export const IamrInboxProvider = ({ children }) => {
     ticketOpened
   ])
 
-  return (
-    <IamrInboxContext.Provider value={value}>
-      {children}
-    </IamrInboxContext.Provider>
-  )
+  return <InboxContext.Provider value={value}>{children}</InboxContext.Provider>
 }
 
-const useIamrInboxContext = () => {
-  const context = useContext(IamrInboxContext)
+const useInboxContext = () => {
+  const context = useContext(InboxContext)
 
   // Check if context is being used inside IamrInboxProvider
   // setStudentQuestions function only exists if component has been wrapped in IamrInboxProvider
@@ -207,4 +246,4 @@ const useIamrInboxContext = () => {
   return context
 }
 
-export default useIamrInboxContext
+export default useInboxContext

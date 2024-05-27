@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { useParams } from 'react-router-dom'
 import './index.css'
-import LoadingAnimation from '../loadingAnimation'
 import { showErrors } from '../../../utils/helpers'
 import { toast } from 'react-toastify'
 import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
 import { useSelector } from 'react-redux'
+import LoadingAnimation from '../../../ui/loadingAnimation'
 
 const CertificationStatus = () => {
   const [loading, setLoading] = useState(true)

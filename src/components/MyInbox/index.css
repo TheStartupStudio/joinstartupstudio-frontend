@@ -99,7 +99,7 @@
   font: normal normal 300 12px/14px Montserrat;
   letter-spacing: 0px;
   color: #3d3d3d;
-  opacity: 1;;
+  opacity: 1;
 }
 
 .inbox-tickets-container .single-ticket {
@@ -169,16 +169,19 @@
 .status.not_started {
   color: #bbbdbf;
 }
-.status.submitted {
+.status.submitted,
+.status.pending {
   color: #51c7df;
 }
 .status.saved {
   color: #231f20;
 }
-.status.received_feedback {
+.status.received_feedback,
+.status.rejected {
   color: #ff3399;
 }
-.status.proficient {
+.status.proficient,
+.status.approved {
   color: #99cc33;
 }
 

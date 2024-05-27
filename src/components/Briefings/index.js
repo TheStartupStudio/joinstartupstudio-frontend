@@ -3,11 +3,11 @@ import './style.css'
 import BriefingModal from '../Modals/BriefingModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { getBriefingsStart } from '../../redux/header/Actions'
-import LoadingAnimation from '../IAMRinbox/loadingAnimation'
 import BriefingBox from './BriefingBox'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import BriefingEditor from './BriefingEditor'
+import LoadingAnimation from '../../ui/loadingAnimation'
 
 const BriefingsArchive = () => {
   const dispatch = useDispatch()

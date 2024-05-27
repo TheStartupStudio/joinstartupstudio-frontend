@@ -8,7 +8,6 @@ import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import axiosInstance from '../../utils/AxiosInstance'
-import LoadingAnimation from '../../components/StudentIAMR/loadingAnimation'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   closeTaskModal,
@@ -18,6 +17,7 @@ import {
 } from '../../redux/dashboard/Actions'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
 import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
+import LoadingAnimation from '../../ui/loadingAnimation'
 
 export default function StudentIAMR() {
   return (

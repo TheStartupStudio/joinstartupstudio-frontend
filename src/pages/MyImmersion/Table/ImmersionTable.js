@@ -85,6 +85,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         disableResizing: true,
         Cell: ({ cell }) => (
           <button
+            className="submit-btn"
             style={{ backgroundColor: '#99cc33', color: 'white' }}
             onClick={() => {
               const { companyName, problemID, companyID, submitted } =
@@ -148,6 +149,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         width: 200,
         Cell: ({ cell }) => (
           <button
+            className="submit-btn"
             style={{ backgroundColor: '#99cc33', color: 'white' }}
             onClick={() => {
               const { companyName, problemID, companyID, submitted } =
@@ -265,6 +267,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
           problemID={problemId}
           companyID={companyId}
           problemIsSubmitted={problemIsSubmitted}
+          mode="immersion"
         />
       )}
     </>

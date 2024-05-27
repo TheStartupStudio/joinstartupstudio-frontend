@@ -3,7 +3,6 @@ import './index.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import ReactPlayer from 'react-player'
-import LoadingAnimation from '../loadingAnimation'
 import TicketChat from '../ticketChat'
 import Dropdown from '../customComponents/dropdown'
 import DropdownOption from './dropdownOption'
@@ -11,6 +10,7 @@ import NewTicketModal from './newTicketModal'
 import { useParams } from 'react-router-dom'
 import Description from './description'
 import axiosInstance from '../../../../utils/AxiosInstance'
+import LoadingAnimation from '../../../../ui/loadingAnimation'
 
 const SkillInstructions = ({ skill, groupingStrings }) => {
   const [tickets, setTickets] = useState([])

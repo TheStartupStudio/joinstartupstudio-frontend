@@ -259,3 +259,11 @@ export const formatDateString = (dateString) => {
   const date = new Date(dateString)
   return date.toLocaleDateString('en-CA')
 }
+
+export const fileNameExtracter = (url) => {
+  const extractedString = url.split('/')[5]
+
+  return extractedString?.length > 30
+    ? `${extractedString.substring(0, 40)}...pdf`
+    : extractedString
+}

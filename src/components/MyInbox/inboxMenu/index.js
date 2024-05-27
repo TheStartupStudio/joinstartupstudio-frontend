@@ -1,17 +1,22 @@
 import { useSelector } from 'react-redux'
-import useIamrInboxContext from '../iamrInboxContext'
+import useInboxContext from '../inboxContext'
 import { Accordion } from 'react-bootstrap'
 import '../index.css'
 import MenuList from './menuList'
 import MenuOption from './menuOption'
 
 function InboxMenu() {
-  const { studentQuestions, certificationFeedbackQuestions, approvalRequests } =
-    useIamrInboxContext()
+  const {
+    studentQuestions,
+    certificationFeedbackQuestions,
+    approvalRequests,
+    industryProblems,
+    immersionExperiences
+  } = useInboxContext()
+  const { isSuperAdmin } = useSelector((state) => state.user.user)
 
-  const loggedUser = useSelector((state) => state.user.user.user)
-
-  const allowedUsers = [122, 933, 128]
+  console.log('industryProblems', industryProblems)
+  console.log('approvalRequests', approvalRequests)
 
   return (
     <div className="col-12 col-lg-3 inbox-menu">
@@ -24,23 +29,24 @@ function InboxMenu() {
         >
           <MenuOption
             allowedToShow={true}
+            questionMenu={'student_questions'}
             title={'STUDENT QUESTIONS'}
-            categoryOption={studentQuestions.unreadCount}
-            questionMenu={'student-questions'}
+            categoryOption={studentQuestions?.unreadCount}
           />
           <MenuOption
             allowedToShow={true}
+            questionMenu={'certification_feedback_requests'}
             title={'CERTIFICATION /FEEDBACK REQUESTS'}
-            categoryOption={certificationFeedbackQuestions.unreadCount}
-            questionMenu={'certification-feedback-questions'}
+            categoryOption={certificationFeedbackQuestions?.unreadCount}
           />
           <MenuOption
-            allowedToShow={allowedUsers.includes(loggedUser.id)}
+            allowedToShow={isSuperAdmin}
+            questionMenu={'approval_requests'}
             title={'APPROVAL REQUESTS'}
-            categoryOption={approvalRequests.unreadCount}
-            questionMenu={'approval-requests'}
+            categoryOption={approvalRequests?.unreadCount}
           />
         </MenuList>
+
         <MenuList
           title={'IMMERSION'}
           iconStyles={'me-2 me-md-0'}
@@ -48,22 +54,22 @@ function InboxMenu() {
         >
           <MenuOption
             allowedToShow={true}
+            questionMenu={'industry_problem_submissions'}
             title={'INDUSTRY PROBLEM SUBMISSIONS'}
-            categoryOption={studentQuestions.unreadCount}
-            questionMenu={'industry-problem-submissions'}
+            categoryOption={industryProblems?.unreadCount}
           />
           <MenuOption
             allowedToShow={true}
+            questionMenu={'immersion_experience_applications'}
             title={'IMMERSION APPLICATIONS'}
-            categoryOption={certificationFeedbackQuestions.unreadCount}
-            questionMenu={'immersion-applications'}
+            categoryOption={immersionExperiences?.unreadCount}
           />
-          <MenuOption
+          {/* <MenuOption
             allowedToShow={true}
+            questionMenu={'spotlight_submission'}
             title={'SPOTLIGHT SUBMISSIONS'}
-            categoryOption={approvalRequests.unreadCount}
-            questionMenu={'spotlight-submission'}
-          />
+            categoryOption={approvalRequests?.unreadCount}
+          /> */}
         </MenuList>
       </Accordion>
     </div>
