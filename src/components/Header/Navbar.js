@@ -25,7 +25,7 @@ const Navbar = (props) => {
   const location = useLocation()
   const dispatch = useDispatch()
   const notificationsRef = useRef(null)
-  const [backButton, setBackButton] = useState(false)
+  const [backButton, setBackButton] = useState({ state: false, location: '' })
   const [showNotifications, setShowNotifications] = useState(false)
   const [showDropDown, setShowDropDown] = useState(false)
   const [allowToShow, setAllowToShow] = useState(false)
@@ -35,13 +35,15 @@ const Navbar = (props) => {
     const urlSegments = location.pathname.split('/')
 
     if (
-      urlSegments[1] === 'iamr-certification-system' &&
+      urlSegments[1] === 'iamr' &&
       (urlSegments[2] === 'student-certification-1' ||
         urlSegments[2] === 'student-certification-2')
     ) {
-      setBackButton(true)
+      setBackButton({ state: true, location: 'iamr' })
+    } else if (urlSegments[2] && urlSegments[2].includes('step')) {
+      setBackButton({ state: true, location: 'my-immersion' })
     } else {
-      setBackButton(false)
+      setBackButton({ state: false, location: '' })
     }
   }, [location.pathname])
 
@@ -99,12 +101,12 @@ const Navbar = (props) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav  mt-1">
-            {backButton && (
+            {backButton.state && (
               <div style={{ display: 'inherit' }}>
                 <li className="nav-item my-auto">
                   <button
                     className={`nav-link icon-menu px-2 me-2 my-auto `}
-                    onClick={() => history.push('/iamr-certification-system')}
+                    onClick={() => history.push('/' + backButton.location)}
                     style={{ border: 'none' }}
                   >
                     <FontAwesomeIcon

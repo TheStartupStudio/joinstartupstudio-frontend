@@ -51,11 +51,76 @@ const fetchAllIndustries = async () => {
   }
 }
 
+const fetchUserProblemSolution = async (user_ID, solution_ID) => {
+  try {
+    const response = await axiosInstance.get(
+      `/immersion/problems/${user_ID}/${solution_ID}`
+    )
+
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+const fetchUserExperienceApplication = async (user_ID, experience_ID) => {
+  try {
+    const response = await axiosInstance.get(
+      `/immersion/experiences/${user_ID}/${experience_ID}`
+    )
+
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    throw error
+  }
+}
+const handleExperienceStatus = async (id, status) => {
+  try {
+    const response = await axiosInstance.patch(`/immersion/experiences/${id}`, {
+      status
+    })
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    throw error
+  }
+}
+const handleIndustryProblemStatus = async (id, status) => {
+  try {
+    const response = await axiosInstance.patch(`/immersion/problems/${id}`, {
+      status
+    })
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+const updateStatusInArray = (array, selectedItem, status) => {
+  return array.map((item) =>
+    item.id === selectedItem.id
+      ? { ...item, status: status }
+      : { ...item, isSelected: false }
+  )
+}
+
 const myImmersionService = {
   fetchStep,
   fetchIndustryProblems,
   fetchExperiences,
-  fetchAllIndustries
+  fetchAllIndustries,
+  fetchUserProblemSolution,
+  fetchUserExperienceApplication,
+  handleExperienceStatus,
+  handleIndustryProblemStatus,
+  updateStatusInArray
 }
 
 export default myImmersionService

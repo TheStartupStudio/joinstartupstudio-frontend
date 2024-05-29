@@ -94,7 +94,6 @@ export const InboxProvider = ({ children }) => {
 
   const newMessage = useCallback(
     ({ message, ticket }) => {
-      console.log('ticket', ticket)
       //prettier-ignore
       const questions =
         ticket.type === 'instruction'
@@ -166,8 +165,6 @@ export const InboxProvider = ({ children }) => {
         : ticket.type === 'industry_problem' 
         ? 'UPDATE_INDUSTRY_PROBLEMS'
         : 'UPDATE_IMMERSION_EXPERIENCE'
-
-      console.log('ticket.type', ticket.type)
 
       dispatch({
         type: type,

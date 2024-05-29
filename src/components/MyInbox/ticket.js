@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useState } from 'react'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './index.css'
@@ -10,39 +10,10 @@ import SubmitIndustryProblemModal from '../../pages/MyImmersion/Modals/SubmitInd
 import SubmitExperienceModal from '../../pages/MyImmersion/Modals/SubmitExperienceModal'
 
 function Ticket({ ticket, setSelectedTicket }) {
-  const [industryProblemModal, setIndustryProblemModal] = useState(false)
-  const [submitExperienceModal, setSubmitExperienceModal] = useState(false)
-  console.log('industryProblemModal', industryProblemModal)
-  const [solutionData, setSolutionData] = useState({})
-  const [experienceData, setExperienceData] = useState({})
   console.log('ticket', ticket)
   const history = useHistory()
-
-  useEffect(() => {
-    if (ticket.industry_solution_id) {
-      axiosInstance
-        .get(
-          `/immersion/problems/${ticket.user_id}/${ticket.industry_solution_id}`
-        )
-        .then((res) => {
-          setSolutionData(res.data)
-          console.log('res', res)
-        })
-    }
-  }, [ticket.industry_solution_id, ticket.user_id])
-
-  useEffect(() => {
-    if (ticket.immersion_experience_id) {
-      axiosInstance
-        .get(
-          `/immersion/experiences/${ticket.user_id}/${ticket.immersion_experience_id}`
-        )
-        .then((res) => {
-          setExperienceData(res.data)
-          console.log('res', res)
-        })
-    }
-  }, [ticket.immersion_experience_id, ticket.user_id])
+  const [industryProblemModal, setIndustryProblemModal] = useState(false)
+  const [submitExperienceModal, setSubmitExperienceModal] = useState(false)
 
   let uploadUrl
   if (ticket?.type === 'approval') {
@@ -63,7 +34,7 @@ function Ticket({ ticket, setSelectedTicket }) {
         onClick={() => {
           ticket.type === 'certification_submit' || ticket.type === 'approval'
             ? history.push(uploadUrl)
-            : ticket.type === 'approval'
+            : ticket.type === 'instruction'
             ? setSelectedTicket(ticket)
             : ticket.type === 'industry_problem'
             ? setIndustryProblemModal(true)
@@ -108,23 +79,20 @@ function Ticket({ ticket, setSelectedTicket }) {
       </div>
       {industryProblemModal && (
         <SubmitIndustryProblemModal
-          {...solutionData}
+          {...ticket}
           show={industryProblemModal}
-          User={ticket.User}
           onHide={() => setIndustryProblemModal(false)}
-          problemID={1}
-          companyID={1}
-          problemIsSubmitted={false}
-          mode="ticket"
+          User={ticket.User}
+          mode="edit"
         />
       )}
       {submitExperienceModal && (
         <SubmitExperienceModal
-          {...experienceData}
+          {...ticket}
           show={submitExperienceModal}
           onHide={() => setSubmitExperienceModal(false)}
           User={ticket.User}
-          mode="ticket"
+          mode="edit"
         />
       )}
     </>

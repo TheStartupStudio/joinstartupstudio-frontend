@@ -13,7 +13,7 @@ const initialState = {
     limit: 5,
     totalPages: 0,
     submitted: false,
-    userSolutions: []
+    userSolution: []
   },
   experiences: {
     data: [],
@@ -21,7 +21,8 @@ const initialState = {
     currentPage: 1,
     limit: 5,
     totalPages: 0,
-    submitted: false
+    submitted: false,
+    userExperience: {}
   },
 
   error: null,
@@ -116,6 +117,117 @@ const myImmersionReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         industries: payload,
+        error: payload
+      }
+
+    case types.FETCH_USER_PROBLEM_SOLUTION_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.FETCH_USER_PROBLEM_SOLUTION_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        industryProblems: {
+          ...state.industryProblems,
+          userSolution: payload
+        },
+        error: null
+      }
+    case types.FETCH_USER_PROBLEM_SOLUTION_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        industryProblems: {
+          ...state.industryProblems,
+          userSolution: payload
+        },
+
+        error: payload
+      }
+
+    case types.FETCH_USER_EXPERIENCE_APPLICATION_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.FETCH_USER_EXPERIENCE_APPLICATION_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        experiences: {
+          ...state.experiences,
+          userExperience: payload
+        },
+        industries: payload,
+        error: null
+      }
+    case types.FETCH_USER_EXPERIENCE_APPLICATION_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        experiences: {
+          ...state.experiences,
+          userExperience: payload
+        },
+
+        error: payload
+      }
+
+    case types.HANDLE_EXPERIENCE_STATUS_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.HANDLE_EXPERIENCE_STATUS_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        experiences: {
+          ...state.experiences,
+          ...payload
+        },
+        error: null
+      }
+    case types.HANDLE_EXPERIENCE_STATUS_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        experiences: {
+          ...state.experiences,
+          ...payload
+        },
+        error: payload
+      }
+
+    case types.HANDLE_INDUSTRY_PROBLEM_STATUS_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.HANDLE_INDUSTRY_PROBLEM_STATUS_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        industryProblems: {
+          ...state.industryProblems,
+          ...payload
+        },
+        error: null
+      }
+    case types.HANDLE_INDUSTRY_PROBLEM_STATUS_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        industryProblems: {
+          ...state.industryProblems,
+          ...payload
+        },
         error: payload
       }
     default:

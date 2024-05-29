@@ -4,6 +4,8 @@ import { Accordion } from 'react-bootstrap'
 import '../index.css'
 import MenuList from './menuList'
 import MenuOption from './menuOption'
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 function InboxMenu() {
   const {
@@ -11,17 +13,37 @@ function InboxMenu() {
     certificationFeedbackQuestions,
     approvalRequests,
     industryProblems,
-    immersionExperiences
+    immersionExperiences,
+    selectQuestionsMenu
   } = useInboxContext()
   const { isSuperAdmin } = useSelector((state) => state.user.user)
+  const location = useLocation()
+  const [activeEventKey, setActiveEventKey] = useState('0')
 
-  console.log('industryProblems', industryProblems)
-  console.log('approvalRequests', approvalRequests)
+  useEffect(() => {
+    const hash = location.hash.substring(1)
+    if (hash) {
+      selectQuestionsMenu(hash)
+
+      if (
+        hash === 'student_questions' ||
+        hash === 'certification_feedback_requests' ||
+        hash === 'approval_requests'
+      ) {
+        setActiveEventKey('0')
+      } else if (
+        hash === 'industry_problem_submissions' ||
+        hash === 'immersion_experience_applications'
+      ) {
+        setActiveEventKey('1')
+      }
+    }
+  }, [location, selectQuestionsMenu])
 
   return (
     <div className="col-12 col-lg-3 inbox-menu">
       <h4>INBOX</h4>
-      <Accordion defaultActiveKey="0">
+      <Accordion activeKey={activeEventKey} onSelect={setActiveEventKey}>
         <MenuList
           title={'CERTIFICATION'}
           iconStyles={'me-2 me-md-0'}

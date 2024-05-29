@@ -9,6 +9,7 @@ import SearchBar from './searchBar'
 import FilterDropdown from './filterDropdown'
 import TicketChat from '../ticketChat'
 import LoadingAnimation from '../../../ui/loadingAnimation'
+import '../index.css'
 
 function InboxTickets() {
   const {
@@ -35,8 +36,6 @@ function InboxTickets() {
     currentPage,
     searchKeyword
   )
-
-  console.log('data', data)
 
   useEffect(() => {
     if (data) {
