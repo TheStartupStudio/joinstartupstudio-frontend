@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/utils/hooks/useUserActivity.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Router.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Router.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalTextEditor/JournalTextEditor.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalTextEditor/JournalTextEditor.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalTextEditor/JournalTextEditor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalTextEditor/JournalTextEditor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/MentorshipJournal.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/JournalsManagement/MentorshipJournalManagement.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/InstructorFeedback/InstructorFeedback.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/InstructorFeedback/InstructorFeedback.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewModal.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +97,7 @@
       <workItem from="1715932725555" duration="4942000" />
       <workItem from="1716189136164" duration="22111000" />
       <workItem from="1716450314642" duration="13861000" />
-      <workItem from="1716475776652" duration="637000" />
+      <workItem from="1716475776652" duration="8504000" />
     </task>
     <servers />
   </component>
