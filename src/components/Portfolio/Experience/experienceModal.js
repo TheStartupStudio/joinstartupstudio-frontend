@@ -17,6 +17,7 @@ import ImageCropper from '../../ImageCropper'
 import { readFile } from '../../../utils/canvasUtils'
 import { useDispatch, useSelector } from 'react-redux'
 import { setImageCropperData, setCroppedImage } from '../../../redux'
+import DatePickerField from '../../TypeFields/DatePickerField'
 
 export const ExperienceModal = (props) => {
   const defaultExperienceData = {
@@ -70,7 +71,7 @@ export const ExperienceModal = (props) => {
       }))
     } else {
       if (name === 'present') {
-        endDateRef.current.value = ''
+        // endDateRef.current.value = ''
         setExperienceData((prevValues) => ({
           ...prevValues,
           end_date: null,
@@ -178,14 +179,14 @@ export const ExperienceModal = (props) => {
       .post(`/userBackground`, newExperience)
       .then((res) => {
         setLoading(false)
-        toast.success(<IntlMessages id='alert.my_account.success_change' />)
+        toast.success(<IntlMessages id="alert.my_account.success_change" />)
         props.addExperience(res.data)
         props.onHide()
         setSelectedImage()
         setExperienceData(defaultExperienceData)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
       })
   }
@@ -238,7 +239,7 @@ export const ExperienceModal = (props) => {
       .put(`/userBackground/${newExperience.id}`, newExperience)
       .then((res) => {
         setLoading(false)
-        toast.success(<IntlMessages id='alert.my_account.success_change' />)
+        toast.success(<IntlMessages id="alert.my_account.success_change" />)
         props.updateExperience(newExperience)
         props.onHide()
         setSelectedImage()
@@ -246,7 +247,7 @@ export const ExperienceModal = (props) => {
         setIsUpdating(false)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
       })
   }
@@ -268,7 +269,7 @@ export const ExperienceModal = (props) => {
         setIsUpdating(false)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
         props.onHide()
         setShowDeleteDialogModal(false)
@@ -279,23 +280,30 @@ export const ExperienceModal = (props) => {
       })
   }
 
+  const handleDateChange = (name, value) => {
+    setExperienceData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
+
   return (
     <>
       <Modal
         show={props.show}
         onHide={props.onHide}
-        backdrop='static'
+        backdrop="static"
         keyboard={false}
-        className='edit-modal edit-profile-modal edit-experience-modal'
+        className="edit-modal edit-profile-modal edit-experience-modal"
       >
-        <Modal.Header className='pb-0 mx-4 general-modal-header'>
-          <h3 className='mt-4 mb-0 contact-bio'>
+        <Modal.Header className="pb-0 mx-4 general-modal-header">
+          <h3 className="mt-4 mb-0 contact-bio">
             {!isUpdating ? 'ADD NEW EXPERIENCE' : 'EDIT EXPERIENCE'}
           </h3>
           <button
-            type='button'
-            className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
-            aria-label='Close'
+            type="button"
+            className="btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto"
+            aria-label="Close"
             onClick={() => {
               props.onHide()
               setSelectedImage()
@@ -304,16 +312,16 @@ export const ExperienceModal = (props) => {
             }}
           />
         </Modal.Header>
-        <Modal.Body className='px-4'>
-          <div className='row'>
-            <div className='col-12'>
+        <Modal.Body className="px-4">
+          <div className="row">
+            <div className="col-12">
               <h4>EXPERIENCE</h4>
             </div>
-            <div className='col-12 col-lg-3 upload-container my-2'>
-              <div className='upload-image me-2 mb-1'>
+            <div className="col-12 col-lg-3 upload-container my-2">
+              <div className="upload-image d-flex me-2 mb-1">
                 {general.imageCropperData ? (
                   <div
-                    className='img-placeholder position-relative'
+                    className="img-placeholder position-relative"
                     style={{ height: '150px' }}
                   >
                     <ImageCropper
@@ -333,12 +341,12 @@ export const ExperienceModal = (props) => {
                             : selectedImage
                         }
                         style={{ width: '100%', height: '100%' }}
-                        alt='Thumb'
+                        alt="Thumb"
                       />
                     ) : (
                       <FontAwesomeIcon
                         icon={faPlus}
-                        className=''
+                        className=""
                         style={{
                           width: '56px',
                           height: '56px',
@@ -352,166 +360,150 @@ export const ExperienceModal = (props) => {
                 )}
               </div>
               {/* <p>Max image width: 85px</p> */}
-              <p className='mt-2'>Max image size: 512KB</p>
-              <p className='mb-1'>Max image width: 85px</p>
-              <label className='text-center py-2'>
+              <p className="mt-2">Max image size: 512KB</p>
+              <p className="mb-1">Max image width: 85px</p>
+              <label className="text-center py-2">
                 <input
-                  type='file'
-                  id='inputGroupFile'
-                  name='profile_image'
-                  accept='image/*'
-                  className='d-none'
+                  type="file"
+                  id="inputGroupFile"
+                  name="profile_image"
+                  accept="image/*"
+                  className="d-none"
                   ref={inputImage}
                   onChange={imageChange}
                 />
-                <div className='image-upload d-flex'>
+                <div className="image-upload d-flex">
                   <p>Choose Image</p>
                   <FontAwesomeIcon
                     icon={faFileUpload}
-                    className='edit-modal-sm ms-4'
+                    className="edit-modal-sm ms-4"
                     style={{ height: '27px', width: '20px' }}
                   />
                 </div>
               </label>
             </div>
-            <div className='col-lg-9 col-12'>
+            <div className="col-lg-9 col-12">
               <input
-                className='my-2'
-                type='text'
-                name='title'
+                className="my-2"
+                type="text"
+                name="title"
                 value={experienceData?.title}
                 onChange={handleChange}
-                placeholder='Title (Example: Copywriter)'
+                placeholder="Title (Example: Copywriter)"
               />
               <input
-                className='my-2'
-                type='text'
-                name='company'
+                className="my-2"
+                type="text"
+                name="company"
                 value={experienceData?.company}
                 onChange={handleChange}
-                placeholder='Company (Example: The Marie Forleo Show)'
+                placeholder="Company (Example: The Marie Forleo Show)"
               />
               <input
-                className='my-2'
-                type='text'
-                name='location'
+                className="my-2"
+                type="text"
+                name="location"
                 value={experienceData?.location}
                 onChange={handleChange}
-                placeholder='Location (Example: Dublin, Ireland)'
+                placeholder="Location (Example: Dublin, Ireland)"
               />
-              <div className='row mt-2'>
-                <div className='col-12 col-lg-4'>
-                  <label htmlFor='start_date'>Start Date</label>
-                  <input
-                    className='my-2'
-                    type='month'
-                    name='start_date'
-                    max={new Date().toLocaleDateString('fr-CA', {
-                      year: 'numeric',
-                      month: '2-digit'
-                    })}
-                    id='start_date'
+              <div className="row mt-2">
+                <div className="col-12 col-lg-4">
+                  <DatePickerField
+                    label={'Start date'}
                     value={experienceData?.start_date}
-                    onChange={handleChange}
+                    onChange={(value) => {
+                      handleDateChange('start_date', value)
+                    }}
                   />
                 </div>
-                <div className='col-12 col-lg-4'>
-                  <label htmlFor='end_date'>End Date</label>
+
+                {!experienceData?.present && (
+                  <div className="col-12 col-lg-4">
+                    <DatePickerField
+                      label={'End date'}
+                      value={experienceData?.end_date}
+                      onChange={(value) => {
+                        handleDateChange('end_date', value)
+                      }}
+                      isDisabled={experienceData?.present}
+                    />
+                  </div>
+                )}
+                <div className="col-12 col-lg-4 my-auto pt-lg-4">
                   <input
-                    className='my-2'
-                    type='month'
-                    name='end_date'
-                    ref={endDateRef}
-                    max={new Date().toLocaleDateString('fr-CA', {
-                      year: 'numeric',
-                      month: '2-digit'
-                    })}
-                    id='end_date'
-                    value={
-                      experienceData?.end_date ? experienceData?.end_date : ''
-                    }
-                    onChange={handleChange}
-                    disabled={experienceData?.present}
-                    placeholder='Title (Example: Copywriter)'
-                  />
-                </div>
-                <div className='col-12 col-lg-4 my-auto pt-lg-4'>
-                  <input
-                    className='my-2'
-                    type='checkbox'
-                    name='present'
-                    id='present'
+                    className="my-2"
+                    type="checkbox"
+                    name="present"
+                    id="present"
                     value={experienceData?.present}
                     checked={experienceData?.present}
                     // disabled={experienceData?.end_date}
-                    onChange={(e) => {
-                      cleanEndDate()
-                      handleChange(e)
-                    }}
+                    onChange={handleChange}
                   />
-                  <label htmlFor='present'>Current Position</label>
+                  <label htmlFor="present">Current Position</label>
                 </div>
               </div>
             </div>
-            <div className='col-12'>
+            <div className="col-12">
               <textarea
-                className='mt-2'
-                type='text'
-                name='description'
-                placeholder='Description'
+                className="mt-2"
+                type="text"
+                name="description"
+                placeholder="Description"
                 value={experienceData?.description}
                 onChange={handleChange}
               />
             </div>
-            <div className='row w-100 m-0 p-0 mt-2 attach-link'>
-              <div className='col-12'>
+            <div className="row w-100 m-0 p-0 mt-2 attach-link">
+              <div className="col-12">
                 <h5>Upload Media</h5>
               </div>
-              <div className='col-12'>
+              <div className="col-12">
                 <p>Link to photos, document, presentations, or websites.</p>
               </div>
-              <div className='col-12 col-lg-6'>
+              <div className="col-12 col-lg-6">
                 <FontAwesomeIcon
                   icon={faLink}
-                  className='linkIcons'
+                  className="linkIcons"
                   style={{ width: '22px', height: '22px', color: '#707070' }}
                 />
                 <input
-                  type='text'
-                  name='file'
+                  type="text"
+                  name="file"
                   value={
                     experienceData?.external_links?.file
                       ? experienceData?.external_links.file
                       : ''
                   }
                   onChange={handleChange}
-                  placeholder='Link to File'
+                  placeholder="Link to File"
                 />
               </div>
-              <div className='col-12 col-lg-6 my-4 my-3 my-lg-0'>
+              <div className="col-12 col-lg-6 my-4 my-3 my-lg-0">
                 <input
-                  type='text'
-                  name='link'
+                  type="text"
+                  name="link"
                   value={
                     experienceData?.external_links?.link
                       ? experienceData?.external_links?.link
                       : ''
                   }
                   onChange={handleChange}
-                  placeholder='http://yourwebsitelink.com'
+                  placeholder="http://yourwebsitelink.com"
                 />
                 <FontAwesomeIcon
                   icon={faGlobe}
-                  className='linkIcons'
+                  className="linkIcons"
                   style={{ width: '22px', height: '22px', color: '#707070' }}
                 />
               </div>
             </div>
-            <div className='row mx-0'>
-              <div className='col-6 p-0'>
+            <div className="row mx-0">
+              <div className="col-6 p-0">
                 {isUpdating && (
                   <button
-                    className='float-start edit-account mt-4'
+                    className="float-start edit-account mt-4"
                     style={{ background: '#BBBDBF' }}
                     disabled={loading}
                     onClick={() => {
@@ -523,16 +515,16 @@ export const ExperienceModal = (props) => {
                   </button>
                 )}
               </div>
-              <div className='col-6 p-0'>
+              <div className="col-6 p-0">
                 <button
-                  className='float-end edit-account mt-4'
+                  className="float-end edit-account mt-4"
                   disabled={loading}
                   onClick={() =>
                     !isUpdating ? addExperience() : updateExperience()
                   }
                 >
                   {loading ? (
-                    <span className='spinner-border spinner-border-sm' />
+                    <span className="spinner-border spinner-border-sm" />
                   ) : (
                     'SAVE'
                   )}
