@@ -27,6 +27,7 @@ import EmptyAccomplishmentSection from './EmptyAccomplishmentSection'
 // import EmptyCertificationSection from './EmptyCertificationSection'
 import EmptyExperienceSection from './EmptyExperienceSection'
 import EmptyCertificationSection from './EmptyCertificationSection'
+import { ShareMyPortfolioWidget } from '../../components/Portfolio/preview/shareMyPortfolioWidget'
 
 export const VerifyButton = (props) => {
   return (
@@ -77,6 +78,8 @@ function EditPortfolio() {
   const authorizedLevel = IsUserLevelAuthorized()
   const paramId = useParams().id
 
+  const isOwnPortfolio = !!user && userId === user?.id
+
   useEffect(() => {
     window.location.href.includes('recommendation') &&
       setRecommendationRequestId(paramId)
@@ -101,6 +104,9 @@ function EditPortfolio() {
   useEffect(() => {
     getUser()
   }, [])
+
+  console.log('toggle', toggle)
+
 
   const updateStatus = async () => {
     await axiosInstance
@@ -231,6 +237,7 @@ function EditPortfolio() {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ width: '30%' }}>
+            
             <div>
               <span className="my_portfolio_publish pe-xxl-0">
                 <IntlMessages id="portfolio.Publish.My.Portfolio" />
@@ -275,6 +282,11 @@ function EditPortfolio() {
               </span>
             </div>
           </div>
+          {isOwnPortfolio && (
+  <div className={'d-flex justify-content-end'}>
+    <ShareMyPortfolioWidget user={user} toggle={toggle} />
+  </div>
+)}
 
           {/* <div
             style={{
