@@ -35,7 +35,7 @@ function TicketChat({ ticket, updateTickets }) {
             // later this will change
             receivers: [loggedUser.Instructor.User],
             type: notificationTypes.IAMR_STUDENT_QUESTION.key,
-            url: '/iamr-inbox'
+            url: '/my-inbox'
           })
         }
       })

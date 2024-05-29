@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom/cjs/react-router-dom'
 import OccupationList from '../OccupationList'
 import OccupationSidebar from '../OccupationSidebar'
 import OccupationContent from '../OccupationContent'
-import LoadingAnimation from '../../IAMRinbox/loadingAnimation'
+import LoadingAnimation from '../../../ui/loadingAnimation'
 
 const PathwaysRouter = ({
   pathways,

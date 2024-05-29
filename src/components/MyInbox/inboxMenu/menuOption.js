@@ -1,9 +1,22 @@
-import useIamrInboxContext from '../iamrInboxContext'
+import { useHistory } from 'react-router-dom'
+import useInboxContext from '../inboxContext'
 import '../index.css'
 
 function MenuOption({ allowedToShow, questionMenu, title, categoryOption }) {
-  const { questionsMenuSelected, selectQuestionsMenu } = useIamrInboxContext()
-  console.log('questionsMenuSelected', questionsMenuSelected)
+  const history = useHistory()
+  const { questionsMenuSelected, selectQuestionsMenu } = useInboxContext()
+
+  const handleClick = () => {
+    selectQuestionsMenu(questionMenu)
+    if (window.location.hash) {
+      history.replace(
+        '/my-inbox',
+        document.title,
+        window.location.pathname + window.location.search
+      )
+    }
+  }
+
   return (
     <>
       {allowedToShow && (
@@ -11,7 +24,7 @@ function MenuOption({ allowedToShow, questionMenu, title, categoryOption }) {
           className={`menu-option d-flex justify-content-between ${
             questionsMenuSelected === `${questionMenu}` ? 'selected' : ''
           }`}
-          onClick={() => selectQuestionsMenu(questionMenu)}
+          onClick={handleClick}
         >
           <h5 className="my-auto">{title}</h5>
           <div className="unread-tickets-number my-auto">{categoryOption}</div>

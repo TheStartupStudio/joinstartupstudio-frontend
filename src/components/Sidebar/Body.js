@@ -69,7 +69,7 @@ const Body = (props) => {
           title={'MY EVALUATIONS'}
           to={'/my-evaluations'}
         />
-        <DropdownItem title={'MY INBOX'} to="/iamr-inbox" />
+        <DropdownItem title={'MY INBOX'} to="/my-inbox" />
       </ParentDropdownItem>
 
       <ParentSidebarItem

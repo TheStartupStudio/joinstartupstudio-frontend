@@ -146,7 +146,7 @@ const JournalsManagement2 = React.lazy(() =>
   import('./pages/JournalsManagement/JournalsManagement2')
 )
 
-const IAMRinbox = React.lazy(() => import('./pages/IAMRinbox'))
+const MyInbox = React.lazy(() => import('./pages/MyInbox'))
 const StudentIAMR = React.lazy(() => import('../src/pages/StudentIAMR'))
 const Briefings = React.lazy(() => import('../src/pages/Briefings'))
 function Router(props) {
@@ -447,7 +447,7 @@ function Router(props) {
                 exact
                 component={MySparkWidgetDetails}
               />
-              <Route path="/iamr-inbox" component={IAMRinbox} />
+              <Route path="/my-inbox" component={MyInbox} />
               <Route
                 path="/student-iamr/:studentId/:id?/:type?"
                 component={StudentIAMR}

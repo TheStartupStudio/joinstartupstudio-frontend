@@ -67,5 +67,29 @@ export default {
   DEFAULT_NOTIFICATION: {
     key: 'DEFAULT_NOTIFICATION',
     value: ' sent you a notifications'
+  },
+  INDUSTRY_PROBLEM: {
+    key: 'INDUSTRY_PROBLEM',
+    value: ' has submitted an industry problem'
+  },
+  INDUSTRY_PROBLEM_DENIED: {
+    key: 'INDUSTRY_PROBLEM_DENIED',
+    value: ' has denied your industry problem submission'
+  },
+  INDUSTRY_PROBLEM_APPROVED: {
+    key: 'INDUSTRY_PROBLEM_APPROVED',
+    value: ' has approved your industry problem submission'
+  },
+  IMMERSION_EXPERIENCE: {
+    key: 'IMMERSION_EXPERIENCE',
+    value: ' applied for immersion experience'
+  },
+  IMMERSION_EXPERIENCE_DENIED: {
+    key: 'IMMERSION_EXPERIENCE_DENIED',
+    value: ' has denied your experience application'
+  },
+  IMMERSION_EXPERIENCE_APPROVED: {
+    key: 'IMMERSION_EXPERIENCE_APPROVED',
+    value: ' has approved your experience application'
   }
 }

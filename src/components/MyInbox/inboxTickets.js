@@ -2,15 +2,15 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import searchIcon from '../../assets/images/search-icon.png'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import useIamrInboxContext from './iamrInboxContext'
+import useIamrInboxContext from './inboxContext'
 import Ticket from './ticket'
 import TicketChat from './ticketChat'
 import './index.css'
 import ReactPaginate from 'react-paginate'
 import { debounce } from 'lodash'
 import axiosInstance from '../../utils/AxiosInstance'
-import LoadingAnimation from './loadingAnimation'
 import useOnClickOutside from 'use-onclickoutside'
+import LoadingAnimation from '../../ui/loadingAnimation'
 
 function InboxTickets() {
   const {

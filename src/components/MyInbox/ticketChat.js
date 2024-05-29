@@ -5,7 +5,7 @@ import {
   faCaretLeft
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import useIamrInboxContext from './iamrInboxContext'
+import useIamrInboxContext from './inboxContext'
 import './index.css'
 import imgTest from '../../assets/images/performance.png'
 import TicketMessage from './ticketMessage'
@@ -13,9 +13,9 @@ import TextareaAutosize from 'react-textarea-autosize'
 import linkifyHtml from 'linkify-html'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
-import LoadingAnimation from './loadingAnimation'
 import NotificationTypes from '../../utils/notificationTypes'
 import socket from '../../utils/notificationSocket'
+import LoadingAnimation from '../../ui/loadingAnimation'
 
 function TicketChat({ ticket, close, isTicketOpened }) {
   const { ticketOpened, replying, setReplying, newMessage } =
