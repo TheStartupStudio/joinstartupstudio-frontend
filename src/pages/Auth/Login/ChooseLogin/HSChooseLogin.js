@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 import IntlMessages from '../../../../utils/IntlMessages'
 import SUSLogo from '../../../../assets/images/LTS-logo-horizontal.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import instructorNormal from '../../../../assets/images/LTS INSTRUCTOR.png'
-import learnerNormal from '../../../../assets/images/LTS LEARNER.png'
-import instructorHover from '../../../../assets/images/LTS INSTRUCTOR FILLED.png'
-import learnerHover from '../../../../assets/images/LTS LEARNER FILLED.png'
+import instructorNormal from '../../../../assets/images/Login/LTS Instructor.png'
+import learnerNormal from '../../../../assets/images/Login/LTS Learner.png'
 import '../index.css'
 import {
   faVimeo,
@@ -35,35 +33,15 @@ const SociaMediaItem = ({ href, icon }) => {
 }
 
 const LoginRole = (props) => {
-  const [hover, setHover] = useState(false)
-
-  const handleMouseEnter = () => {
-    setHover(true)
-  }
-
-  const handleMouseLeave = () => {
-    setHover(false)
-  }
-
-  const icon = () => {
-    if (hover) {
-      return props.hoverIcon
-    } else if (!hover) {
-      return props.normalIcon
-    }
-  }
-
   return (
     <div
       onClick={() => {
         props.handleLoginRole(props.role)
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className="login-role cursor-pointer"
+      className={`login-role cursor-pointer ${props.className}`}
     >
       <img
-        src={icon()}
+        src={props.icon}
         style={{ width: '100%', objectFit: 'contain' }}
         alt=""
       />
@@ -131,20 +109,20 @@ const ChooseLogin = () => {
             <div className="button-type_container">
               <LoginRole
                 role={'ims'}
-                normalIcon={instructorNormal}
-                hoverIcon={instructorHover}
+                icon={instructorNormal}
                 handleLoginRole={(role) => {
                   handleLoginRole(role)
                 }}
+                className={'ims-login-role'}
               />
 
               <LoginRole
                 role={'main'}
-                normalIcon={learnerNormal}
-                hoverIcon={learnerHover}
+                icon={learnerNormal}
                 handleLoginRole={(role) => {
                   handleLoginRole(role)
                 }}
+                className={'main-login-role'}
               />
             </div>
             <p className="my-4 text-center public-page-text">
