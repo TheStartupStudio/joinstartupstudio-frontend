@@ -331,7 +331,7 @@ function Profile(props) {
         >
           <img src={Feedbacks} style={{ width: '180px' }} alt="" />
           <a href="/iamr-inbox" className="iamr-inbox_link">
-            {feedbackRequests.unreadCount ? feedbackRequests.unreadCount : 0}
+            {feedbackRequests?.unreadCount ? feedbackRequests?.unreadCount : 0}
             <span className="ml-2">Requests</span>
           </a>
         </div>
