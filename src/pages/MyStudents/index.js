@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
-import { ActiveStudents } from '../../components/ActiveStudents'
+import React from 'react'
 import StudentsTable from '../../components/StudentsTable/studentsTable'
 import StudentData from '../../components/MyStudents/studentData'
-import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
 import './index.css'
 import { StudentCountProvider } from '../../components/MyStudents/studentCountContext'
 

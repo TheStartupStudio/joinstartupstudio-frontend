@@ -75,7 +75,7 @@ function Header() {
 
   const hasAccess = () => {
     axiosInstance
-      .get('/studentsInstructorss/has-access')
+      .get('/studentsInstructorss/admin')
       .then((response) => {
         if (response.data.allow) {
           setAllowToShow(true)

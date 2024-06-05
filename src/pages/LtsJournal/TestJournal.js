@@ -24,7 +24,7 @@ import LtsJournalContent from './content'
 import TestJournalType from './TestJournalType'
 
 function TestJournal(props) {
-  
+  console.log('props', props)
   return (
     <>
       <Switch>

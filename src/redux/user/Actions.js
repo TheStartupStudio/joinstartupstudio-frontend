@@ -172,9 +172,9 @@ export const userLogin = (old_password) => async (dispatch) => {
 
     // Get super admin status
     const accessResponse = await axiosInstance.get(
-      '/studentsInstructorss/has-access'
+      '/studentsInstructorss/admin'
     )
-    const isSuperAdmin = accessResponse.data.allow // Allow doesn't block login
+    const isAdmin = accessResponse.data.allow
 
     const payloadData = {
       ...user.data,
@@ -185,13 +185,13 @@ export const userLogin = (old_password) => async (dispatch) => {
     const userData = {
       token: user.data.cognito_Id,
       user: payloadData,
-      isSuperAdmin // Super admin doesn't block login
+      isAdmin
     }
 
     const user_token = {
       user: payloadData,
       token: localStorage.getItem('access_token'),
-      isSuperAdmin // Store but not block login
+      isAdmin
     }
 
     // Save data to local storage

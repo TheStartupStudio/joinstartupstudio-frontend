@@ -76,7 +76,7 @@ const CertificationStatus = () => {
 
   const hasAccessHandler = async () => {
     await axiosInstance
-      .get('/studentsInstructorss/has-access')
+      .get('/studentsInstructorss/admin')
       .then((data) => setHasAccess(data.data.allow))
   }
 
