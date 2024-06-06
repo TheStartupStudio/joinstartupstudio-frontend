@@ -10,15 +10,8 @@ import {
   editBriefingStart
 } from '../../redux/header/Actions'
 import { useForm, useValidation } from './useForm'
-import { DateInput, TextEditor, TextInput } from './ContentItems'
-
-const isEmptyObject = (obj) => {
-  if (obj === null || obj === undefined) {
-    return true
-  }
-
-  return Object.keys(obj).length === 0 && obj.constructor === Object
-}
+import { DateInput, TextEditor, TextInput } from '../../ui/ContentItems'
+import useIsFormEmpty from '../../utils/hooks/useIsFormEmpty'
 
 const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
   const dispatch = useDispatch()
@@ -57,19 +50,7 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
     onHide()
   }
 
-  const isFormEmpty =
-    formData &&
-    Object.keys(formData).every((key) => {
-      const value = formData[key]
-      if (key === 'date' && typeof value === 'object') {
-        return Object.keys(value).length === 0
-      } else {
-        return (
-          (typeof value === 'string' && !value.trim()) || isEmptyObject(value)
-        )
-      }
-    })
-
+  const isFormEmpty = useIsFormEmpty(formData)
   const isFormEdited = JSON.stringify(formData) === JSON.stringify(briefing)
   const isDisabled = mode === 'edit' ? isFormEdited : isFormEmpty
 
@@ -84,9 +65,7 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
       <Modal.Header className="position-relative ">
         <Modal.Title className="px-3 py-3">EDIT BRIEFING</Modal.Title>
         <div
-          className={`close-briefing-editor p-3 ${
-            isDisabled ? 'disabled' : ''
-          }`}
+          className={`check-button ${isDisabled ? 'disabled' : ''}`}
           onClick={!isDisabled ? submitHandler : null}
         >
           <FontAwesomeIcon icon={faCheck} />

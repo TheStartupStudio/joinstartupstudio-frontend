@@ -4,12 +4,15 @@ import { ProgressCard } from '../MyPerformanceDataComponents'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchCertificationData,
+  fetchInstructorCertificationData,
+  fetchInstructorSectionTwoData,
   fetchSectionTwoData
 } from '../../../redux/myPerformanceData/actions'
 import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 import CustomSpinner from '../../../components/CustomSpinner'
 
-function SectionTwo(props) {
+function SectionTwo({ instructorId }) {
+  console.log('instructorId', instructorId)
   const windowWidth = useWindowWidth()
   const dispatch = useDispatch()
   const {
@@ -19,10 +22,19 @@ function SectionTwo(props) {
     certificationLoading
   } = useSelector((state) => state.performanceData)
 
+  console.log('sectionTwoData', sectionTwoData)
+  console.log('certification', certification)
+
   useEffect(() => {
-    dispatch(fetchSectionTwoData())
-    dispatch(fetchCertificationData())
-  }, [dispatch])
+    if (instructorId) {
+      dispatch(fetchInstructorSectionTwoData(instructorId))
+      dispatch(fetchInstructorCertificationData(instructorId))
+    } else {
+      dispatch(fetchSectionTwoData())
+      dispatch(fetchCertificationData())
+    }
+  }, [dispatch, instructorId])
+
   function handleProgressValue(value) {
     if (isNaN(value) || value === undefined || value === null) {
       return 0

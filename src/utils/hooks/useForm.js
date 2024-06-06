@@ -30,11 +30,17 @@ export const useForm = (initialState, actualState, mode, loading) => {
     setFormData((prevState) => ({ ...prevState, [name]: value }))
   }
 
+  const handleChangeSelect = (event) => {
+    const { value, name } = event
+    setFormData((prevState) => ({ ...prevState, [name]: value }))
+  }
+
   return {
     formData,
     handleChange,
     handleChangeFile,
     handleChangeCheckbox,
-    handleChangeEditor
+    handleChangeEditor,
+    handleChangeSelect
   }
 }

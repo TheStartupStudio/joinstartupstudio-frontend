@@ -1,12 +1,13 @@
 import React from 'react'
 import { Editor, EditorTools } from '@progress/kendo-react-editor'
-import { formatDateString, getFormattedDate } from '../../utils/helpers'
+import { getFormattedDate } from '../utils/helpers'
+import ReactSelect from 'react-select'
 
 const TextInput = ({ title, name, value, handleChange, showError, error }) => (
-  <div className="edit_content-item-container">
-    <label className="edit_content-item-title">{title}:</label>
+  <div className="content-item__container">
+    <label className="content-item__title">{title}:</label>
     <input
-      className="edit_content-item-description"
+      className="content-item__description"
       type="text"
       name={name}
       onChange={handleChange}
@@ -17,10 +18,10 @@ const TextInput = ({ title, name, value, handleChange, showError, error }) => (
 )
 
 const DateInput = ({ title, name, value, handleChange, showError, error }) => (
-  <div className="edit_content-item-container">
-    <label className="edit_content-item-title">{title}:</label>
+  <div className="content-item__container">
+    <label className="content-item__title">{title}:</label>
     <input
-      className="edit_content-item-description"
+      className="content-item__description"
       type="date"
       name={name}
       onChange={handleChange}
@@ -31,8 +32,8 @@ const DateInput = ({ title, name, value, handleChange, showError, error }) => (
 )
 
 const TextEditor = ({ title, name, value, handleChange, showError, error }) => (
-  <div className="edit_content-item-container">
-    <label className="edit_content-item-title">{title}:</label>
+  <div className="content-item__container">
+    <label className="content-item__title">{title}:</label>
     <Editor
       name={name}
       resizable={true}
@@ -60,4 +61,28 @@ const TextEditor = ({ title, name, value, handleChange, showError, error }) => (
   </div>
 )
 
-export { TextInput, DateInput, TextEditor }
+const SelectInput = ({
+  title,
+  name,
+  value,
+  options,
+  handleChange,
+  showError,
+  error
+}) => (
+  <div className="content-item__container">
+    <label className="content-item__title">{title}:</label>
+    <ReactSelect
+      className="basic-single"
+      classNamePrefix="select"
+      defaultValue={value}
+      isSearchable={false}
+      name={name}
+      options={options}
+      onChange={handleChange}
+    />
+    {showError && error && <small className="ps-1">{error}</small>}
+  </div>
+)
+
+export { TextInput, DateInput, TextEditor, SelectInput }

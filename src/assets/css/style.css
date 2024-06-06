@@ -3047,6 +3047,56 @@ wave > wave:first-child {
   text-align: right;
   font-size: 30px;
 }
+.content-item__container {
+  margin: 8px 0;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  border: 1px solid #ccc;
+
+  border-radius: 10px;
+  background-color: #f6f7f7;
+}
+.content-item__title {
+  font: normal normal normal 14px/20px Montserrat;
+  letter-spacing: 0.68px;
+  color: #707070;
+  padding: 5px;
+}
+.content-item__container small {
+  color: red;
+  font-size: 12px;
+}
+.content-item__description {
+  font: normal normal 600 14px/20px Montserrat;
+  letter-spacing: 0.68px;
+  color: #707070;
+  border: none;
+  background-color: #fff;
+  padding: 5px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  width: 100%;
+}
+.content-item__description input {
+  border: none;
+  padding: 5px;
+  background-color: #fff;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.check-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border-bottom-left-radius: 40%;
+  border-top-right-radius: 10%;
+  box-shadow: 0 0 10px 0 #cfcfcf;
+  background-color: white;
+  cursor: pointer;
+  padding: 15px;
+}
 .saved-video-thumb-icon {
   color: #fff;
   position: absolute;

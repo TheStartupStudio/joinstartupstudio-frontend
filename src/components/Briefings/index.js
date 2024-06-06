@@ -15,7 +15,7 @@ const BriefingsArchive = () => {
   const [selectedBriefing, setSelectedBriefing] = useState(null)
   const [addBriefingModal, setAddBriefingModal] = useState(false)
   const { briefings, loading } = useSelector((state) => state.header)
-  const { isSuperAdmin, user } = useSelector((state) => state.user.user)
+  const { isAdmin, user } = useSelector((state) => state.user.user)
 
   useEffect(() => {
     dispatch(getBriefingsStart())
@@ -38,7 +38,7 @@ const BriefingsArchive = () => {
           <LoadingAnimation show={loading} />
         ) : (
           <>
-            {isSuperAdmin && (
+            {isAdmin && (
               <div
                 className="add-briefing-container p-3"
                 onClick={() => setAddBriefingModal(true)}
@@ -55,7 +55,7 @@ const BriefingsArchive = () => {
                 <BriefingBox
                   briefing={briefing}
                   handleOpenBriefingModal={handleOpenBriefingModal}
-                  isSuperAdmin={isSuperAdmin}
+                  isAdmin={isAdmin}
                   user={user}
                 />
               ))}

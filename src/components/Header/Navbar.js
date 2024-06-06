@@ -29,7 +29,7 @@ const Navbar = (props) => {
   const [showNotifications, setShowNotifications] = useState(false)
   const [showDropDown, setShowDropDown] = useState(false)
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
-  const { isSuperAdmin } = useSelector((state) => state.user.user)
+  const { isAdmin } = useSelector((state) => state.user.user)
 
   useEffect(() => {
     const urlSegments = location.pathname.split('/')
@@ -320,7 +320,7 @@ const Navbar = (props) => {
                         MY RESOURCES
                       </Link>
                     </li>
-                    {isSuperAdmin && (
+                    {isAdmin && (
                       <Link
                         className="dropdown-item py-2 dropdown-menu-hover"
                         to="#"

@@ -30,7 +30,7 @@ const Upload = ({ upload, skill, editUpload }) => {
 
   const hasAccessHandler = async () => {
     await axiosInstance
-      .get('/studentsInstructorss/has-access')
+      .get('/studentsInstructorss/admin')
       .then((data) => setHasAccess(data.data.allow))
   }
 

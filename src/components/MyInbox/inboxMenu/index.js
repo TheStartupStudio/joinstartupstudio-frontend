@@ -16,7 +16,7 @@ function InboxMenu() {
     immersionExperiences,
     selectQuestionsMenu
   } = useInboxContext()
-  const { isSuperAdmin } = useSelector((state) => state.user.user)
+  const { isAdmin } = useSelector((state) => state.user.user)
   const location = useLocation()
   const [activeEventKey, setActiveEventKey] = useState('0')
 
@@ -62,7 +62,7 @@ function InboxMenu() {
             categoryOption={certificationFeedbackQuestions?.unreadCount}
           />
           <MenuOption
-            allowedToShow={isSuperAdmin}
+            allowedToShow={isAdmin}
             questionMenu={'approval_requests'}
             title={'APPROVAL REQUESTS'}
             categoryOption={approvalRequests?.unreadCount}
