@@ -7,56 +7,15 @@ import axiosInstance from '../../utils/AxiosInstance'
 import LtsEduLogo from '../../assets/images/LTS-EDU-logo.png'
 import LtsCheckbox from '../../ui/LtsCheckbox'
 import SidebarItems from './TaskJournals1/SidebarItems'
-import AddLessonModal from './TaskJournals1/addLessonModal'
-const addLessonData = [
-  {
-    id: 1,
-    title: 'lesson1',
-    lessonPlan: 'lesson plan 1',
-    assignment: 'Assignments 1',
-    order: 1,
-    journalTaskId: 1001001
-  },
-  {
-    id: 2,
-    title: 'lesson2',
-    lessonPlan: 'lesson plan 2',
-    assignment: 'Assignments 2',
-    order: 2,
-    journalTaskId: 1001002
-  },
-  {
-    id: 3,
-    title: 'lesson3',
-    lessonPlan: 'lesson plan 3',
-    assignment: 'Assignments 3',
-    order: 3,
-    journalTaskId: 1001003
-  },
-  {
-    id: 4,
-    title: 'lesson4',
-    lessonPlan: 'lesson plan 4',
-    assignment: 'Assignments 4',
-    order: 4,
-    journalTaskId: 1001004
-  },
-  {
-    id: 5,
-    title: 'lesson5',
-    lessonPlan: 'lesson plan 5',
-    assignment: 'Assignments 5',
-    order: 5,
-    journalTaskId: 1001005
-  }
-]
 
 const TestJournalType = (props) => {
+  const history = useHistory()
   const [journals, setJournals] = useState([])
   const [weeks, setWeeks] = useState([])
   const [addLesson, setAddLesson] = useState(false)
-  const [addLessonModal, setAddLessonModal] = useState(false)
-  const history = useHistory()
+  const [filteredWeeks, setFilteredWeeks] = useState(weeks)
+  const [filteredJournals, setFilteredJournals] = useState(journals)
+  const [searchKeyword, setSearchKeyword] = useState('')
 
   async function getJournals2(redir = true) {
     try {
@@ -140,9 +99,6 @@ const TestJournalType = (props) => {
     return journalData
   }
 
-  const [filteredWeeks, setFilteredWeeks] = useState(weeks)
-  const [filteredJournals, setFilteredJournals] = useState(journals)
-
   useEffect(() => {
     setFilteredWeeks(weeks)
   }, [weeks])
@@ -150,7 +106,6 @@ const TestJournalType = (props) => {
     setFilteredJournals(journals)
   }, [journals])
 
-  const [searchKeyword, setSearchKeyword] = useState('')
   const handleJournalSearch = (e) => {
     e.preventDefault()
     const keyword = e.target.value.toLowerCase()
@@ -321,7 +276,7 @@ const TestJournalType = (props) => {
                   </div>
 
                   <div className="d-flex align-items-center justify-content-end">
-                    <p>View add lesson</p>
+                    <p className="m-0">View add lesson</p>
                     <LtsCheckbox
                       toggle={() => setAddLesson((state) => !state)}
                       checked={addLesson}
@@ -334,9 +289,7 @@ const TestJournalType = (props) => {
                         url={props.match.url}
                         paramType={props.match.params.type}
                         filteredJournals={filteredJournals}
-                        addLessonData={addLessonData}
                         addLesson={addLesson}
-                        setAddLessonModal={setAddLessonModal}
                       />
                     )}
                   {props.match.params.type === 'task' &&
@@ -426,13 +379,6 @@ const TestJournalType = (props) => {
           </div>
         </div>
       </div>
-      {setAddLessonModal && (
-        <AddLessonModal
-          show={addLessonModal}
-          onHide={() => setAddLessonModal(false)}
-          mode="add"
-        />
-      )}
     </div>
   )
 }

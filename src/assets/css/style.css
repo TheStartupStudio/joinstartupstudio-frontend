@@ -3476,10 +3476,6 @@ wave > wave:first-child {
 /*
   Accordion Menu
 */
-.accordion-menu {
-}
-.accordion-menu__item {
-}
 .accordion-menu__item-transition {
   /* margin-bottom: addLesson ? '20px' : '0px',  */
   transition: margin-bottom 0.5s ease;

@@ -58,6 +58,35 @@
 #textEditorContent {
   height: 170px;
 }
+/* add lesson */
+.add-lesson-container {
+  transition: opacity 1s ease-in-out, height 1s ease-in-out;
+  overflow: hidden;
+}
+.add-lesson-container p {
+  font-size: 13px;
+  padding: 0px 10px;
+}
+.add-lesson-container p:hover {
+  color: #51c7df;
+}
+.add-lesson-container-transition {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  width: 100%;
+  transition: bottom 0.5s ease;
+}
+
+.add-lesson-container.hidden {
+  opacity: 0;
+  height: 0;
+}
+
+.add-lesson-container.visible {
+  opacity: 1;
+  height: auto;
+}
 
 @media screen and (max-width: 545px) {
   #textEditorContent {
@@ -67,36 +96,33 @@
 @media screen and (max-width: 1137px) {
   #textEditorContent {
     height: 160px;
-    padding-bottom:15px
+    padding-bottom: 15px;
   }
 }
 @media screen and (max-width: 785px) {
   #textEditorContent {
     height: 150px;
-    padding-bottom:20px
+    padding-bottom: 20px;
   }
 }
 .instructor-debrief-editor .ql-container {
-    height: 0% !important;
-    min-height: 120px !important;
+  height: 0% !important;
+  min-height: 120px !important;
 }
 @media screen and (max-width: 1173px) {
-    .instructor-debrief-button {
-        margin-top: 10px !important;
-    }
+  .instructor-debrief-button {
+    margin-top: 10px !important;
+  }
 }
 
 @media screen and (max-width: 435px) {
-    .instructor-debrief-button {
-        margin-top: 40px !important;
-    }
+  .instructor-debrief-button {
+    margin-top: 40px !important;
+  }
 }
 
 @media screen and (max-width: 310px) {
-    .instructor-debrief-button {
-        margin-top: 80px !important;
-    }
+  .instructor-debrief-button {
+    margin-top: 80px !important;
+  }
 }
-
-
-

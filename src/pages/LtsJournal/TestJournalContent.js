@@ -1042,6 +1042,36 @@ function TestJournalContent(props) {
               </AccordionItemWrapper>
             )}
           </div>
+          <div style={{ order: 4 }}>
+            {!loading && journal?.studentAssignments && (
+              <AccordionItemWrapper
+                isOpened={openAccordion === 'studentAssignment'}
+                handleAccordionClick={() =>
+                  handleAccordionClick('studentAssignment')
+                }
+                isExanded={isExpanded}
+                title={'ASSIGNMENT TO POST FOR STUDENTS'}
+              >
+                {openAccordion === 'studentAssignment' && (
+                  <div className="accordion-content">
+                    <div
+                      style={{
+                        fontFamily: 'Montserrat',
+                        backgroundColor: '#fff',
+                        marginBottom: 20,
+                        textAlign: 'start',
+                        width: '100%',
+                        flexDirection: 'column'
+                      }}
+                      dangerouslySetInnerHTML={{
+                        __html: journal?.studentAssignments
+                      }}
+                    />
+                  </div>
+                )}
+              </AccordionItemWrapper>
+            )}
+          </div>
         </div>
 
         <BreakdownPopup

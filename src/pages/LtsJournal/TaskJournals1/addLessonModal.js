@@ -1,18 +1,82 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
+import { TextEditor, TextInput } from '../../../ui/ContentItems'
+import { useForm } from '../../../utils/hooks/useForm'
+import { useValidation } from '../../../utils/hooks/useValidation'
+import useIsFormEmpty from '../../../utils/hooks/useIsFormEmpty'
+import { toast } from 'react-toastify'
 import {
-  TextEditor,
-  TextInput
-} from '../../../components/Briefings/ContentItems'
+  createLesson,
+  deleteLesson,
+  editLesson
+} from '../../../redux/taskLessons/actions'
+import { useDispatch } from 'react-redux'
 
-const AddLessonModal = ({ show, onHide, mode }) => {
+const AddLessonModal = ({ show, data, onHide, mode, taskJournalId, user }) => {
+  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
+  const [formSubmitted, setFormSubmitted] = useState(false)
+
   const initialState = {
+    taskJournalId: taskJournalId,
+    userId: user.id,
     title: '',
     lessonPlan: '',
     assignment: ''
   }
+
+  const { formData, handleChange, handleChangeEditor } = useForm(
+    initialState,
+    data,
+    mode,
+    loading
+  )
+
+  const { errors, handleSubmit } = useValidation(formData, setFormSubmitted)
+
+  const deleteLessonHandler = () => {
+    const res = dispatch(deleteLesson(formData.id))
+
+    if (res) {
+      toast.success('Lesson deleted successfully!')
+      onHide()
+    } else {
+      toast.error('Something went wrong')
+    }
+  }
+
+  const submitHandler = () => {
+    handleSubmit(async () => {
+      setLoading(true)
+      if (mode === 'add') {
+        const res = dispatch(createLesson({ ...formData, taskJournalId }))
+        if (res) {
+          toast.success('Lesson addedd successfully!')
+          onHide()
+          setLoading(false)
+        } else {
+          toast.error('Something went wrong!')
+        }
+      } else {
+        const res = dispatch(
+          editLesson(formData.id, { ...formData, taskJournalId })
+        )
+        if (res) {
+          toast.success('Lesson updated successfully!')
+          onHide()
+          setLoading(false)
+        } else {
+          toast.error('Something went wrong!')
+        }
+      }
+    })
+  }
+
+  const isFormEmpty = useIsFormEmpty(formData)
+  const isFormEdited = JSON.stringify(formData) === JSON.stringify(data)
+  const isDisabled = mode === 'edit' ? isFormEdited : isFormEmpty
 
   return (
     <Modal
@@ -23,16 +87,15 @@ const AddLessonModal = ({ show, onHide, mode }) => {
       id="edit_briefing-modal"
     >
       <Modal.Header className="position-relative ">
-        <Modal.Title className="px-3 py-3">EDIT BRIEFING</Modal.Title>
-        <div
-          className={`close-briefing-editor p-3 `}
-          // className={`close-briefing-editor p-3 ${
-          //   isDisabled ? 'disabled' : ''
-          // }`}
-          // onClick={!isDisabled ? submitHandler : null}
+        <Modal.Title className="px-3 py-3">
+          {mode === 'add' ? 'ADD LESSON' : 'EDIT LESSON'}
+        </Modal.Title>
+        <di
+          className={`check-button  ${isDisabled ? 'disabled' : ''}`}
+          onClick={!isDisabled ? submitHandler : null}
         >
           <FontAwesomeIcon icon={faCheck} />
-        </div>
+        </di>
       </Modal.Header>
       <Modal.Body className="briefing-modal-body">
         <Row>
@@ -40,10 +103,10 @@ const AddLessonModal = ({ show, onHide, mode }) => {
             <TextInput
               title="Title"
               name="title"
-              // value={formData.link}
-              // handleChange={handleChange}
-              // showError={formSubmitted}
-              // error={errors.link}
+              value={formData.title}
+              handleChange={handleChange}
+              showError={formSubmitted}
+              error={errors.title}
             />
           </Col>
         </Row>
@@ -52,10 +115,10 @@ const AddLessonModal = ({ show, onHide, mode }) => {
             <TextEditor
               title="Lesson Plan / Task"
               name="lessonPlan"
-              //  value={formData.discussionPoints}
-              //  handleChange={handleChangeEditor}
-              //  showError={formSubmitted}
-              //  error={errors.discussionPoints}
+              value={formData.lessonPlan}
+              handleChange={handleChangeEditor}
+              showError={formSubmitted}
+              error={errors.lessonPlan}
             />
           </Col>
         </Row>
@@ -64,13 +127,21 @@ const AddLessonModal = ({ show, onHide, mode }) => {
             <TextEditor
               title="Assignment"
               name="assignment"
-              //  value={formData.discussionPoints}
-              //  handleChange={handleChangeEditor}
-              //  showError={formSubmitted}
-              //  error={errors.discussionPoints}
+              value={formData.assignment}
+              handleChange={handleChangeEditor}
+              showError={formSubmitted}
+              error={errors.assignment}
             />
           </Col>
         </Row>
+        {mode === 'edit' && (
+          <p
+            className="d-flex justify-content-end cursor-pointer pt-3"
+            onClick={() => deleteLessonHandler()}
+          >
+            DELETE LESSON
+          </p>
+        )}
       </Modal.Body>
     </Modal>
   )
