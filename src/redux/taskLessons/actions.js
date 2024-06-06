@@ -1,11 +1,11 @@
 import taskLessonService from './service'
 import * as types from './types'
 
-export const fetchLessons = () => {
+export const fetchLessons = (type, category) => {
   return async (dispatch) => {
     try {
       dispatch(fetchLessonsPending())
-      const data = await taskLessonService.fetchLessons()
+      const data = await taskLessonService.fetchLessons(type, category)
       dispatch(fetchLessonsFulfilled(data))
     } catch (error) {
       dispatch(fetchLessonsRejected(error))

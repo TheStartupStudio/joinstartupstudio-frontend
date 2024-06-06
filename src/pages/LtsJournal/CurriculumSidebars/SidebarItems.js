@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchLessons } from '../../../redux/taskLessons/actions'
 import LoadingAnimation from '../../../ui/loadingAnimation'
 import LtsCheckbox from '../../../ui/LtsCheckbox'
+import getLessonByType from './getLessonsByType'
 
-const SidebarItems = ({ url, filteredJournals }) => {
+const SidebarItems = ({ url, filteredJournals, type, category }) => {
   const dispatch = useDispatch()
   const [selectedLesson, setSelectedLesson] = useState(null)
   const [addLessonModal, setAddLessonModal] = useState(false)
@@ -17,8 +18,8 @@ const SidebarItems = ({ url, filteredJournals }) => {
   const { lessons, loading } = useSelector((state) => state.lessons)
 
   useEffect(() => {
-    dispatch(fetchLessons())
-  }, [dispatch])
+    dispatch(fetchLessons(type, category))
+  }, [dispatch, type, category])
 
   const handleOpenModal = (lesson, journalId) => {
     setSelectedLesson(lesson ? lesson : null)
@@ -46,11 +47,10 @@ const SidebarItems = ({ url, filteredJournals }) => {
       </div>
       <div>
         {filteredJournals.map((journalItem) => {
-          const hasLesson = lessons.some(
-            (lesson) => lesson.taskJournalId === journalItem.id
-          )
-          const lesson = lessons.find(
-            (lesson) => lesson.taskJournalId === journalItem.id
+          const { hasLesson, lesson } = getLessonByType(
+            lessons,
+            journalItem,
+            type
           )
           return (
             <>
@@ -94,7 +94,9 @@ const SidebarItems = ({ url, filteredJournals }) => {
         <AddLessonModal
           show={addLessonModal}
           data={selectedLesson}
-          taskJournalId={journalId}
+          journalId={journalId}
+          type={type}
+          category={category}
           user={user}
           onHide={handleCloseModal}
           mode={selectedLesson ? 'edit' : 'add'}

@@ -6,11 +6,9 @@ export const useForm = (initialState, initialData, mode, loading) => {
   useEffect(() => {
     if (mode === 'edit' && initialData && !loading) {
       setFormData(initialData)
-    } else if (!loading) {
-      setFormData(initialState)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialData, mode, loading])
+  }, [initialData, initialData, mode, loading])
 
   const handleChange = (event) => {
     const { name, value } = event.target

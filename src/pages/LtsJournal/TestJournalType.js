@@ -5,7 +5,8 @@ import searchIcon from '../../assets/images/search-icon.png'
 import { FormattedMessage } from 'react-intl'
 import axiosInstance from '../../utils/AxiosInstance'
 import LtsEduLogo from '../../assets/images/LTS-EDU-logo.png'
-import SidebarItems from './TaskJournals1/SidebarItems'
+import SidebarItems from './CurriculumSidebars/SidebarItems'
+import FinancialSidebar from './CurriculumSidebars/FinancialSidebar'
 
 const TestJournalType = (props) => {
   const history = useHistory()
@@ -60,13 +61,13 @@ const TestJournalType = (props) => {
   const dataByClass = {}
 
   journals.forEach((journalItem) => {
-    const { id, title, class: journalClass } = journalItem
+    const { id, title, class: journalClass, order } = journalItem
 
     if (!dataByClass[journalClass]) {
       dataByClass[journalClass] = []
     }
 
-    dataByClass[journalClass].push({ id, title })
+    dataByClass[journalClass].push({ id, title, order })
   })
 
   const journalTitle = () => {
@@ -278,90 +279,30 @@ const TestJournalType = (props) => {
                     props.category !== 'financial-literacy' && (
                       <SidebarItems
                         url={props.match.url}
-                        paramType={props.match.params.type}
                         filteredJournals={filteredJournals}
+                        category={props.category}
+                        type={props.match.params.type}
                       />
                     )}
                   {props.match.params.type === 'task' &&
-                    props.category === 'financial-literacy' &&
-                    Object.entries(dataByClass).map(
-                      ([journalClass, items], index) => {
-                        const filteredItems = items.filter((item) =>
-                          item.title
-                            .toLowerCase()
-                            .includes(searchKeyword.toLowerCase())
-                        )
-
-                        if (filteredItems.length === 0) {
-                          return null
-                        }
-
-                        return (
-                          <div key={journalClass}>
-                            {journalClass !== 'null' && (
-                              <div
-                                className={`accordion-menu__item text-uppercase`}
-                                style={{
-                                  font: 'normal normal 500 14px/14px Montserrat',
-                                  letterSpacing: 0.56,
-                                  color: '#231F20',
-                                  padding: '10px 0 15px 0'
-                                }}
-                              >
-                                {journalClass}
-                              </div>
-                            )}
-                            {filteredItems.map((item, index) => (
-                              <div
-                                key={item.id}
-                                className={`accordion-menu__item`}
-                              >
-                                <NavLink to={`${props.match.url}/${item.id}`}>
-                                  {!item.title
-                                    .toLowerCase()
-                                    .includes('task') ? (
-                                    <span className="text-uppercase ml-1">
-                                      {item.title}
-                                    </span>
-                                  ) : (
-                                    <span
-                                      className={'ml-1'}
-                                      style={{
-                                        marginLeft: 13,
-                                        display: 'flex',
-                                        flexWrap: 'wrap'
-                                      }}
-                                    >
-                                      {item.title}
-                                    </span>
-                                  )}
-                                </NavLink>
-                              </div>
-                            ))}
-                          </div>
-                        )
-                      }
+                    props.category === 'financial-literacy' && (
+                      <FinancialSidebar
+                        url={props.match.url}
+                        dataByClass={dataByClass}
+                        searchKeyword={searchKeyword}
+                        category={'financial-literacy'}
+                        type={props.match.params.type}
+                      />
                     )}
 
-                  {props.match.params.type === 'week' &&
-                    filteredWeeks?.map((journalItem, journalItemIdx) => (
-                      <div
-                        key={journalItem.id}
-                        className={`accordion-menu__item`}
-                      >
-                        <NavLink to={`${props.match.url}/${journalItem.id}`}>
-                          <span
-                            className={'text-uppercase'}
-                            style={{
-                              font: 'normal normal 500 14px/16px Montserrat',
-                              letterSpacing: 0.56
-                            }}
-                          >
-                            {journalItem.title}
-                          </span>
-                        </NavLink>
-                      </div>
-                    ))}
+                  {props.match.params.type === 'week' && (
+                    <SidebarItems
+                      url={props.match.url}
+                      filteredJournals={filteredWeeks}
+                      category={props.category}
+                      type={props.match.params.type}
+                    />
+                  )}
                 </div>
                 {/* page-card__sidebar */}
               </div>

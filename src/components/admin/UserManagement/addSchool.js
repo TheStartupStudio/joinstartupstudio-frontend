@@ -22,7 +22,7 @@ const AddSchool = ({ data, show, onHide, mode }) => {
 
   const { formData, handleChange, handleChangeSelect } = useForm(
     initialState,
-    {},
+    null,
     mode,
     loading
   )

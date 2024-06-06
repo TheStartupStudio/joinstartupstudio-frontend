@@ -14,18 +14,33 @@ import {
 } from '../../../redux/taskLessons/actions'
 import { useDispatch } from 'react-redux'
 
-const AddLessonModal = ({ show, data, onHide, mode, taskJournalId, user }) => {
+const AddLessonModal = ({
+  show,
+  data,
+  onHide,
+  mode,
+  journalId,
+  user,
+  type,
+  category
+}) => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   const initialState = {
-    taskJournalId: taskJournalId,
+    type,
+    category,
+    taskJournalId: category === 'task' ? journalId : null,
+    weekJournalId: category === 'week' ? journalId : null,
     userId: user.id,
     title: '',
     lessonPlan: '',
     assignment: ''
   }
+
+  console.log('type', type)
+  console.log('category', category)
 
   const { formData, handleChange, handleChangeEditor } = useForm(
     initialState,
@@ -33,6 +48,8 @@ const AddLessonModal = ({ show, data, onHide, mode, taskJournalId, user }) => {
     mode,
     loading
   )
+
+  console.log('formData', formData)
 
   const { errors, handleSubmit } = useValidation(formData, setFormSubmitted)
 
@@ -51,7 +68,18 @@ const AddLessonModal = ({ show, data, onHide, mode, taskJournalId, user }) => {
     handleSubmit(async () => {
       setLoading(true)
       if (mode === 'add') {
-        const res = dispatch(createLesson({ ...formData, taskJournalId }))
+        const lessonData = {
+          ...formData,
+          type,
+          category,
+          ...(type === 'task'
+            ? { taskJournalId: journalId }
+            : { taskJournalId: null }),
+          ...(type === 'week'
+            ? { weekJournalId: journalId }
+            : { weekJournalId: null })
+        }
+        const res = dispatch(createLesson(lessonData))
         if (res) {
           toast.success('Lesson addedd successfully!')
           onHide()
@@ -61,7 +89,7 @@ const AddLessonModal = ({ show, data, onHide, mode, taskJournalId, user }) => {
         }
       } else {
         const res = dispatch(
-          editLesson(formData.id, { ...formData, taskJournalId })
+          editLesson(formData.id, { ...formData, journalId })
         )
         if (res) {
           toast.success('Lesson updated successfully!')

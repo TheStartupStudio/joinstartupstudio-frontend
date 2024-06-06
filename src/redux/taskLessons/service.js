@@ -1,8 +1,11 @@
 import axiosInstance from '../../utils/AxiosInstance'
 
-const fetchLessons = async () => {
+const fetchLessons = async (type, category) => {
+  console.log('service ', type, category)
   try {
-    const response = await axiosInstance.get(`/lessons`)
+    const response = await axiosInstance.get(
+      `/lessons?type=${type}&category=${category}`
+    )
 
     if (response.status === 200) {
       return response.data
