@@ -5,14 +5,13 @@ import searchIcon from '../../assets/images/search-icon.png'
 import { FormattedMessage } from 'react-intl'
 import axiosInstance from '../../utils/AxiosInstance'
 import LtsEduLogo from '../../assets/images/LTS-EDU-logo.png'
-import LtsCheckbox from '../../ui/LtsCheckbox'
 import SidebarItems from './TaskJournals1/SidebarItems'
 
 const TestJournalType = (props) => {
   const history = useHistory()
   const [journals, setJournals] = useState([])
   const [weeks, setWeeks] = useState([])
-  const [addLesson, setAddLesson] = useState(false)
+
   const [filteredWeeks, setFilteredWeeks] = useState(weeks)
   const [filteredJournals, setFilteredJournals] = useState(journals)
   const [searchKeyword, setSearchKeyword] = useState('')
@@ -275,21 +274,12 @@ const TestJournalType = (props) => {
                     Change view
                   </div>
 
-                  <div className="d-flex align-items-center justify-content-end">
-                    <p className="m-0">View add lesson</p>
-                    <LtsCheckbox
-                      toggle={() => setAddLesson((state) => !state)}
-                      checked={addLesson}
-                    />
-                  </div>
-
                   {props.match.params.type === 'task' &&
                     props.category !== 'financial-literacy' && (
                       <SidebarItems
                         url={props.match.url}
                         paramType={props.match.params.type}
                         filteredJournals={filteredJournals}
-                        addLesson={addLesson}
                       />
                     )}
                   {props.match.params.type === 'task' &&

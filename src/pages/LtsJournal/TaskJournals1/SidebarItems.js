@@ -5,11 +5,13 @@ import AddLessonModal from './addLessonModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchLessons } from '../../../redux/taskLessons/actions'
 import LoadingAnimation from '../../../ui/loadingAnimation'
+import LtsCheckbox from '../../../ui/LtsCheckbox'
 
-const SidebarItems = ({ url, filteredJournals, addLesson }) => {
+const SidebarItems = ({ url, filteredJournals }) => {
   const dispatch = useDispatch()
   const [selectedLesson, setSelectedLesson] = useState(null)
   const [addLessonModal, setAddLessonModal] = useState(false)
+  const [addLesson, setAddLesson] = useState(false)
   const [journalId, setJournalId] = useState(null)
   const { user } = useSelector((state) => state.user.user)
   const { lessons, loading } = useSelector((state) => state.lessons)
@@ -35,6 +37,13 @@ const SidebarItems = ({ url, filteredJournals, addLesson }) => {
 
   return (
     <>
+      <div className="d-flex align-items-center justify-content-end">
+        <p className="m-0">View add lesson</p>
+        <LtsCheckbox
+          toggle={() => setAddLesson((state) => !state)}
+          checked={addLesson}
+        />
+      </div>
       <div>
         {filteredJournals.map((journalItem) => {
           const hasLesson = lessons.some(
