@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './assets/css/style.css'
 import './assets/css/media.css'
 import './assets/css/extra.css'
+import './assets/css/ltsUiItems.css'
 
 const { PUBLIC_URL } = process.env
 

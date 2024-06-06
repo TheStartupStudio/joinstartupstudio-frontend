@@ -1,30 +1,62 @@
 import React, { useEffect, useState } from 'react'
-import {
-  NavLink,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch
-} from 'react-router-dom'
+import { NavLink, Route, Switch, useHistory } from 'react-router-dom'
 import TestJournalContent from './TestJournalContent'
 import searchIcon from '../../assets/images/search-icon.png'
 import { FormattedMessage } from 'react-intl'
 import axiosInstance from '../../utils/AxiosInstance'
 import LtsEduLogo from '../../assets/images/LTS-EDU-logo.png'
-import Accordion from 'react-bootstrap/Accordion'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown, faFileAlt } from '@fortawesome/free-solid-svg-icons'
-import moment from 'moment/moment'
+import LtsCheckbox from '../../ui/LtsCheckbox'
+import SidebarItems from './TaskJournals1/SidebarItems'
+import AddLessonModal from './TaskJournals1/addLessonModal'
+const addLessonData = [
+  {
+    id: 1,
+    title: 'lesson1',
+    lessonPlan: 'lesson plan 1',
+    assignment: 'Assignments 1',
+    order: 1,
+    journalTaskId: 1001001
+  },
+  {
+    id: 2,
+    title: 'lesson2',
+    lessonPlan: 'lesson plan 2',
+    assignment: 'Assignments 2',
+    order: 2,
+    journalTaskId: 1001002
+  },
+  {
+    id: 3,
+    title: 'lesson3',
+    lessonPlan: 'lesson plan 3',
+    assignment: 'Assignments 3',
+    order: 3,
+    journalTaskId: 1001003
+  },
+  {
+    id: 4,
+    title: 'lesson4',
+    lessonPlan: 'lesson plan 4',
+    assignment: 'Assignments 4',
+    order: 4,
+    journalTaskId: 1001004
+  },
+  {
+    id: 5,
+    title: 'lesson5',
+    lessonPlan: 'lesson plan 5',
+    assignment: 'Assignments 5',
+    order: 5,
+    journalTaskId: 1001005
+  }
+]
 
 const TestJournalType = (props) => {
   const [journals, setJournals] = useState([])
   const [weeks, setWeeks] = useState([])
-  const match = useRouteMatch()
+  const [addLesson, setAddLesson] = useState(false)
+  const [addLessonModal, setAddLessonModal] = useState(false)
   const history = useHistory()
-  const isWeek = match.path.includes('week')
-  const isTask = match.path.includes('task')
-  let [journalActive, setJournalActive] = useState(false)
-  const [view, setView] = useState('task')
 
   async function getJournals2(redir = true) {
     try {
@@ -35,16 +67,7 @@ const TestJournalType = (props) => {
           platform: props.category === 'market-ready' ? 'student' : 'instructor'
         }
       })
-      setJournals([...data].sort((a, b) => a.id - b.id))
-      // if (history.location.pathname.includes('task')) {
-      //   if (data.length > 0 && redir) {
-      //     if (data[0].children && data[0].children.length > 0) {
-      //       history.push(`task/${data[0].children[0].id}`)
-      //     } else {
-      //       history.push(`task/${data[0].id}`)
-      //     }
-      //   }
-      // }
+      setJournals([...data].sort((a, b) => a.order - b.order))
     } catch (err) {}
   }
   useEffect(() => {
@@ -75,10 +98,6 @@ const TestJournalType = (props) => {
     props.match.params.type === 'task' && getJournals2()
     props.match.params.type === 'week' && getJournals2Weeks()
   }, [props.match.params.type])
-
-  const onChangeView = (view) => {
-    setView(view)
-  }
 
   const dataByClass = {}
 
@@ -301,25 +320,25 @@ const TestJournalType = (props) => {
                     Change view
                   </div>
 
+                  <div className="d-flex align-items-center justify-content-end">
+                    <p>View add lesson</p>
+                    <LtsCheckbox
+                      toggle={() => setAddLesson((state) => !state)}
+                      checked={addLesson}
+                    />
+                  </div>
+
                   {props.match.params.type === 'task' &&
-                    props.category !== 'financial-literacy' &&
-                    filteredJournals.map((journalItem, journalItemIdx) => (
-                      <div
-                        key={journalItem.id}
-                        className={`accordion-menu__item text-uppercase`}
-                      >
-                        <NavLink to={`${props.match.url}/${journalItem.id}`}>
-                          <span
-                            style={{
-                              font: 'normal normal 500 14px/16px Montserrat',
-                              letterSpacing: 0.56
-                            }}
-                          >
-                            {journalItem.title}
-                          </span>
-                        </NavLink>
-                      </div>
-                    ))}
+                    props.category !== 'financial-literacy' && (
+                      <SidebarItems
+                        url={props.match.url}
+                        paramType={props.match.params.type}
+                        filteredJournals={filteredJournals}
+                        addLessonData={addLessonData}
+                        addLesson={addLesson}
+                        setAddLessonModal={setAddLessonModal}
+                      />
+                    )}
                   {props.match.params.type === 'task' &&
                     props.category === 'financial-literacy' &&
                     Object.entries(dataByClass).map(
@@ -407,6 +426,13 @@ const TestJournalType = (props) => {
           </div>
         </div>
       </div>
+      {setAddLessonModal && (
+        <AddLessonModal
+          show={addLessonModal}
+          onHide={() => setAddLessonModal(false)}
+          mode="add"
+        />
+      )}
     </div>
   )
 }

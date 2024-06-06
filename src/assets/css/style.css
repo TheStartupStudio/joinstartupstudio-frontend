@@ -3430,6 +3430,11 @@ wave > wave:first-child {
 }
 .accordion-menu__item {
 }
+.accordion-menu__item-transition {
+  /* margin-bottom: addLesson ? '20px' : '0px',  */
+  transition: margin-bottom 0.5s ease;
+  position: relative;
+}
 
 /* editet for welcome video */
 .accordion-menu__item-lts-journals span {
