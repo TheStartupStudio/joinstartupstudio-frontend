@@ -61,7 +61,6 @@ function WidgetDetails(props) {
     }
 
     const { prompt, nonPrompt } = reduceInputs(widgetInputs, nonPromptFields)
-    // console.log('prompt', prompt)
     setRequestData({
       prompt: {
         ...prompt,

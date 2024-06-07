@@ -5,9 +5,8 @@ const PositionSelector = (props) => {
     props.selectedPosition ?? 'start'
   )
 
-  // console.log(props.selectedPosition)
   //
-  // console.log('selectedPosition', selectedPosition)
+
   const handleChangeSelectedPosition = (position) => {
     // console.log(position)
     setSelectedPosition(position)

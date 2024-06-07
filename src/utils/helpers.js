@@ -245,7 +245,6 @@ export const getCertificationType = (skillType) => {
 
 export const getIconComponent = (iconIdentifier, color) => {
   const icon = iconMap[iconIdentifier]
-  console.log('icon', icon)
   return icon ? <FontAwesomeIcon icon={icon} style={{ color: color }} /> : null
 }
 

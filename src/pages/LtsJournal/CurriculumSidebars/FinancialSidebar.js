@@ -53,7 +53,6 @@ const FinancialSidebar = ({
       </div>
       <div>
         {Object.entries(dataByClass).map(([journalClass, items], index) => {
-          console.log('items', items)
           const filteredItems = items.filter((item) =>
             item.title.toLowerCase().includes(searchKeyword.toLowerCase())
           )
@@ -99,7 +98,7 @@ const FinancialSidebar = ({
                         <span
                           className={'ml-1'}
                           style={{
-                            marginLeft: 13,
+                            marginLeft: 14,
                             display: 'flex',
                             flexWrap: 'wrap'
                           }}
@@ -108,10 +107,9 @@ const FinancialSidebar = ({
                         </span>
                       )}
                     </NavLink>
-                    {console.log('item', item)}
                     {item.order !== 1 && (
                       <div
-                        className={`accordion-menu__item cursor-pointer d-flex align-items-center text-uppercase add-lesson-container add-lesson-container-transition ${
+                        className={`accordion-menu__item cursor-pointer ms-3 d-flex align-items-center text-uppercase add-lesson-container add-lesson-container-transition ${
                           addLesson ? 'visible' : 'hidden'
                         }`}
                       >

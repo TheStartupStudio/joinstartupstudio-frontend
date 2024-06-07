@@ -14,7 +14,6 @@ const SkillUploads = ({ skill }) => {
     skillId: skill?.id,
     setSelectedUpload
   })
-  console.log(uploads)
   return (
     <div className="skill-uploads">
       <div className="d-flex w-100 justify-content-between">

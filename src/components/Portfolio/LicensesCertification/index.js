@@ -36,7 +36,6 @@ export default function LicencesCertification(props) {
 
   useEffect(() => {
     if (props.userCertifications) {
-      console.log(props.userCertifications)
       setUserCertification(props.userCertifications)
     }
   }, [props.userCertifications])
@@ -151,9 +150,7 @@ export default function LicencesCertification(props) {
   const handleAddCertification = (certification) => {
     setUserCertification((data) => [...data, certification])
   }
-  // console.log('isLoading', isLoading)
 
-  // console.log(!isLoading, userCertification?.length)
   return (
     <>
       {!isLoading ? (

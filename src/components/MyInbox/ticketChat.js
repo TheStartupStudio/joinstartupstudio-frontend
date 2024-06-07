@@ -67,7 +67,6 @@ function TicketChat({ ticket, close, isTicketOpened }) {
     await axiosInstance
       .post(`instructor/iamr/tickets/reply/${ticket.id}`, { message })
       .then((res) => {
-        console.log('res', res)
         const { id, name, profile_image } = loggedUser
         const message = { ...res.data, User: { id, name, profile_image } }
         setMessages((messages) => [...messages, message])

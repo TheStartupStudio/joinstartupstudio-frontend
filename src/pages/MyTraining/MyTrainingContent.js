@@ -131,9 +131,7 @@ function MyTrainingContent(props) {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
-  // let [showAddReflection, setShowAddReflection] = useState({})
 
-  // console.log(selectedPedagogy)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -171,8 +169,6 @@ function MyTrainingContent(props) {
       let { data } = await axiosInstance.get(
         `/ltsJournals/${+props.match.params.id}/userEntries`
       )
-
-      console.log(data)
 
       let groupedByJournalEntry = {}
 
@@ -224,8 +220,6 @@ function MyTrainingContent(props) {
     setLoading(true)
     Promise.all([getJournal(), getUserJournalEntries()])
       .then(([journalData, userJournalEntries]) => {
-        // console.log(userJournalEntries)
-        console.log(journalData)
         setJournal(journalData)
 
         if (

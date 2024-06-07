@@ -152,11 +152,7 @@ export const Skills = (props) => {
     getUserSkills()
     GetSkillsFromDB()
   }, [])
-  // useEffect(() => {
-  //   getIAMRSkills()
-  //   // console.log('inside SKILLS')
-  // }, [])
-  const history = useHistory()
+
   // const isPreview = history.location.pathname.includes('preview')
 
   const windowWidth = useWindowWidth()
@@ -188,7 +184,6 @@ export const Skills = (props) => {
       return '75%'
     }
   }
-  // console.log(approvedSkills)
   return (
     <>
       {!isLoading ? (

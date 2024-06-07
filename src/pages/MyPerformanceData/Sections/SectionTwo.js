@@ -12,7 +12,6 @@ import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 import CustomSpinner from '../../../components/CustomSpinner'
 
 function SectionTwo({ instructorId }) {
-  console.log('instructorId', instructorId)
   const windowWidth = useWindowWidth()
   const dispatch = useDispatch()
   const {
@@ -21,9 +20,6 @@ function SectionTwo({ instructorId }) {
     sectionTwoLoading,
     certificationLoading
   } = useSelector((state) => state.performanceData)
-
-  console.log('sectionTwoData', sectionTwoData)
-  console.log('certification', certification)
 
   useEffect(() => {
     if (instructorId) {

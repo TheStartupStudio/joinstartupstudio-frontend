@@ -17,7 +17,6 @@ const useUserActivity = () => {
         .put('/myPerformanceData/updateActivity/endTime')
         .then((response) => {
           setActiveMinutes(response.data.activeMinutes)
-          // console.log(millisecondsToTime(response.data.activeMinutes))
         })
         .catch((error) => {
           console.error('Error updating activity:', error)
@@ -37,7 +36,6 @@ const useUserActivity = () => {
     axiosInstance
       .put('/myPerformanceData/updateActivity/endTime', { isActive: false })
       .then((response) => {
-        // console.log(millisecondsToTime(response.data.activeMinutes))
         setActiveMinutes(response.data.activeMinutes)
       })
       .catch((error) => {

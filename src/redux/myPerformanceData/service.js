@@ -81,7 +81,6 @@ const fetchInstructorDebriefData = async (curriculumCompletion) => {
   }
 }
 const fetchInstructorDebriefDataWithId = async (curriculumCompletion, id) => {
-  console.log('curriculumCompletion', curriculumCompletion)
   try {
     const response = await axiosInstance.get(
       `/myPerformanceData/sectionThree/${curriculumCompletion}/instructorDebriefData/${id}`

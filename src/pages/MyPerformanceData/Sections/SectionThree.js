@@ -11,7 +11,6 @@ import {
 function SectionThree({ instructorId }) {
   const dispatch = useDispatch()
   const [curriculumCompletion, setCurriculumCompletion] = React.useState('')
-  console.log('curriculumCompletion', curriculumCompletion)
   const { instructorDebriefData, instructorDebriefLoading } = useSelector(
     (state) => state.performanceData
   )

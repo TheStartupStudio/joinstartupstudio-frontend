@@ -5,7 +5,6 @@ import StudentsTable from '../../StudentsTable/studentsTable'
 
 const InstructorData = () => {
   const { id } = useParams()
-  console.log('id', id)
 
   return (
     <div>

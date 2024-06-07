@@ -77,7 +77,6 @@ export default function EditJournals2(props) {
   }, [journals])
 
   const handleJournalSelect = (e) => {
-    console.log(e, 'eeee')
     setSelectedJournal({
       value: e.value,
       label: e.label
@@ -90,10 +89,7 @@ export default function EditJournals2(props) {
     )
   }
 
-  const history = useHistory()
-
   useEffect(() => {
-    console.log('hereeee', selectedJournal)
     const journalId = selectedJournal?.value?.id
     if (journalId && selectedJournal?.value?.type) {
       setJournalType('journal')
@@ -355,7 +351,6 @@ export default function EditJournals2(props) {
 
   return (
     <div>
-      {console.log(selectedJournal, 'selectedJournal')}
       {!fetchingJournals ? (
         <div className="row">
           <div className="col-9">

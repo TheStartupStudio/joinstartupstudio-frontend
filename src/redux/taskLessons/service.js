@@ -1,7 +1,6 @@
 import axiosInstance from '../../utils/AxiosInstance'
 
 const fetchLessons = async (type, category) => {
-  console.log('service ', type, category)
   try {
     const response = await axiosInstance.get(
       `/lessons?type=${type}&category=${category}`

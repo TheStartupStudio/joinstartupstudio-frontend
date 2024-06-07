@@ -39,17 +39,12 @@ const AddLessonModal = ({
     assignment: ''
   }
 
-  console.log('type', type)
-  console.log('category', category)
-
   const { formData, handleChange, handleChangeEditor } = useForm(
     initialState,
     data,
     mode,
     loading
   )
-
-  console.log('formData', formData)
 
   const { errors, handleSubmit } = useValidation(formData, setFormSubmitted)
 
