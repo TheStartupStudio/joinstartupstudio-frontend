@@ -33,7 +33,7 @@ function Ticket({ ticket, setSelectedTicket }) {
         onClick={() => {
           ticket.type === 'certification_submit' || ticket.type === 'approval'
             ? history.push(uploadUrl)
-            : ticket.type === 'instruction'
+            : ticket.type === 'instruction' || ticket.type === 'feedback'
             ? setSelectedTicket(ticket)
             : ticket.type === 'industry_problem'
             ? setIndustryProblemModal(true)
