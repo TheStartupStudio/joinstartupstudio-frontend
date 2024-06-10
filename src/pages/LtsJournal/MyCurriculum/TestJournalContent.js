@@ -1,30 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import axiosInstance from '../../utils/AxiosInstance'
+import axiosInstance from '../../../utils/AxiosInstance'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import MediaLightbox from '../../components/MediaLightbox'
-import triangleIcon from '../../assets/images/triangle.png'
-import BreakdownTextAccordion from './BreakdownTextAccordion'
-import './BreakdownTextAccordion.css'
-import KendoTextEditor from '../../components/JournalsManagement/TextEditor'
-import { EditorTools } from '@progress/kendo-react-editor'
-import LtsDiagram from '../../assets/images/LearntoStart-Diagram-3D.png'
-import LtsCertification from '../../assets/images/Certified-L1-800px.png'
-import BreakdownPopup from '../../components/Modals/BreakdownPopup'
+import MediaLightbox from '../../../components/MediaLightbox'
+import triangleIcon from '../../../assets/images/triangle.png'
+import LtsDiagram from '../../../assets/images/LearntoStart-Diagram-3D.png'
+import LtsCertification from '../../../assets/images/Certified-L1-800px.png'
+import BreakdownPopup from '../../../components/Modals/BreakdownPopup'
 import './TestJournalContent.css'
-import AccordionItemWrapper from './AccordionItemWrapper'
-import SelectTaskButton from './SelectTaskButton'
-import StepsBox from './Steps/StepsBox'
+import AccordionItemWrapper from '../UI/AccordionItemWrapper'
+import SelectTaskButton from '../UI/SelectTaskButton'
+import StepsBox from '../Steps/StepsBox'
 import CurriculumOverview from './CurriculumOverview'
-import ExpectedOutcomes from './ExpectedOutcomes'
-import ProgramOpportunities from './ProgramOpportunities'
-import { useHistory } from 'react-router-dom'
+import ExpectedOutcomes from '../ExpectedOutcomes'
+import ProgramOpportunities from '../ProgramOpportunities'
 import ReactQuill from 'react-quill'
 import { toast } from 'react-toastify'
+
 function TestJournalContent(props) {
-  let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
   let [videoWatchData, setVideoWatchData] = useState([])
   let [userJournalEntries, setUserJournalEntries] = useState({})
@@ -37,7 +32,7 @@ function TestJournalContent(props) {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
-  const history = useHistory()
+
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -57,7 +52,9 @@ function TestJournalContent(props) {
 
   useEffect(() => {
     getInstructorDebriefData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.match.params.id, props.match.params.weekId])
+
   const insertJournalCategory = (category) => {
     let result = ''
 
@@ -125,20 +122,20 @@ function TestJournalContent(props) {
       })
   }
 
-  async function saveWatchData(data) {
-    await axiosInstance.put(
-      `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
-      {
-        videoWatchData: JSON.stringify(data)
-      }
-    )
-  }
+  // async function saveWatchData(data) {
+  //   await axiosInstance.put(
+  //     `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
+  //     {
+  //       videoWatchData: JSON.stringify(data)
+  //     }
+  //   )
+  // }
 
-  async function saveVideoWatched() {
-    await axiosInstance.put(
-      `/ltsJournals/${props.match.params.id}/watchedVideo`
-    )
-  }
+  // async function saveVideoWatched() {
+  //   await axiosInstance.put(
+  //     `/ltsJournals/${props.match.params.id}/watchedVideo`
+  //   )
+  // }
 
   async function getJournal() {
     try {
@@ -368,62 +365,62 @@ function TestJournalContent(props) {
     setSelectedStepIndex(null)
   }, [openAccordion])
 
-  function deleteReflection(entry, userJournalEntry) {
-    return (data) => {
-      let filtered = userJournalEntries[entry.id].filter(
-        (mapUserJournalEntry) => {
-          return mapUserJournalEntry.id !== userJournalEntry.id
-        }
-      )
+  // function deleteReflection(entry, userJournalEntry) {
+  //   return (data) => {
+  //     let filtered = userJournalEntries[entry.id].filter(
+  //       (mapUserJournalEntry) => {
+  //         return mapUserJournalEntry.id !== userJournalEntry.id
+  //       }
+  //     )
 
-      if (filtered.length) {
-        setUserJournalEntries({
-          ...userJournalEntries,
-          [entry.id]: filtered
-        })
-      } else {
-        delete userJournalEntries[entry.id]
+  //     if (filtered.length) {
+  //       setUserJournalEntries({
+  //         ...userJournalEntries,
+  //         [entry.id]: filtered
+  //       })
+  //     } else {
+  //       delete userJournalEntries[entry.id]
 
-        setUserJournalEntries({
-          ...userJournalEntries
-        })
-      }
-    }
-  }
+  //       setUserJournalEntries({
+  //         ...userJournalEntries
+  //       })
+  //     }
+  //   }
+  // }
 
-  function addReflection(entry) {
-    return (data) => {
-      setUserJournalEntries({
-        ...userJournalEntries,
-        [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry]
-      })
-      setShowAddReflection({ ...showAddReflection, [entry.id]: false })
+  // function addReflection(entry) {
+  //   return (data) => {
+  //     setUserJournalEntries({
+  //       ...userJournalEntries,
+  //       [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry]
+  //     })
+  //     setShowAddReflection({ ...showAddReflection, [entry.id]: false })
 
-      props.saved && props.saved(data.journal)
-    }
-  }
+  //     props.saved && props.saved(data.journal)
+  //   }
+  // }
 
-  function updateReflection(entry, userJournalEntry) {
-    return (data) => {
-      setUserJournalEntries({
-        ...userJournalEntries,
-        [entry.id]: userJournalEntries[entry.id].map((mapUserJournalEntry) => {
-          return mapUserJournalEntry.id === userJournalEntry.id
-            ? data.entry
-            : mapUserJournalEntry
-        })
-      })
+  // function updateReflection(entry, userJournalEntry) {
+  //   return (data) => {
+  //     setUserJournalEntries({
+  //       ...userJournalEntries,
+  //       [entry.id]: userJournalEntries[entry.id].map((mapUserJournalEntry) => {
+  //         return mapUserJournalEntry.id === userJournalEntry.id
+  //           ? data.entry
+  //           : mapUserJournalEntry
+  //       })
+  //     })
 
-      props.saved && props.saved(data.journal)
-    }
-  }
+  //     props.saved && props.saved(data.journal)
+  //   }
+  // }
 
   if (!journal) {
     return null
   }
 
   let videos = (
-    journal.videos && journal.videos.constructor == Array
+    journal.videos && journal.videos.constructor === Array
       ? journal.videos
       : [journal.video]
   ).filter(Boolean)
@@ -437,9 +434,9 @@ function TestJournalContent(props) {
     // debounce(onSubmitInstructorDebrief, newInstructorDebrief)
   }
 
-  const closeOthers = () => {
-    setOpenAccordion(null)
-  }
+  // const closeOthers = () => {
+  //   setOpenAccordion(null)
+  // }
 
   const selectStep = (step, index) => {
     setSelectedStep(step)
@@ -471,7 +468,7 @@ function TestJournalContent(props) {
         >
           <div className={'video-container full-width'}>
             {videos &&
-              videos.constructor == Array &&
+              videos.constructor === Array &&
               videos.map((video, index) => (
                 <MediaLightbox
                   video={video}
@@ -483,7 +480,7 @@ function TestJournalContent(props) {
                   // onVideoWatched={saveVideoWatched}
                 />
               ))}
-            {videos && videos.constructor == Array && videos.length > 0 && (
+            {videos && videos.constructor === Array && videos.length > 0 && (
               <div
                 className={`journal-entries__videos journal-entries__videos--${
                   videos.length > 1 ? 'multiple' : 'single'
@@ -493,19 +490,19 @@ function TestJournalContent(props) {
                   <div
                     key={index}
                     className={`journal-entries__video${
-                      journal.content == '' ? '--welcome-video' : ''
+                      journal.content === '' ? '--welcome-video' : ''
                     }`}
                   >
                     <div
                       className={`journal-entries__video-thumbnail${
-                        journal.content == '' ? '--welcome-video' : ''
+                        journal.content === '' ? '--welcome-video' : ''
                       }`}
                       onClick={() => setShowVideo(video.id)}
                     >
-                      <img src={video.thumbnail} />
+                      <img src={video.thumbnail} alt="thumbnail" />
                       <div
                         className={`journal-entries__video-thumbnail-icon${
-                          journal.content == '' ? '--welcome-video' : ''
+                          journal.content === '' ? '--welcome-video' : ''
                         }`}
                       >
                         <FontAwesomeIcon icon={faPlay} />

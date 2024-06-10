@@ -529,6 +529,15 @@ export default function EditJournals2(props) {
               return (
                 <>
                   <h2>{step?.type.split('-').join(' ')}</h2>
+                  <div>Step title</div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={step?.title}
+                    onChange={(e) =>
+                      handleChangeSteps(index, 'title', e.target.value)
+                    }
+                  />
                   <div>Step content</div>
                   <KendoTextEditor
                     value={step?.stepContent}

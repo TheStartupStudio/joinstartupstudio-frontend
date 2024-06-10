@@ -40,31 +40,6 @@ const EntriesBox = (props) => {
   const [accordionDates, setAccordionDates] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  // useEffect(() => {
-  //   if (props.entries) {
-  //     if (isStudentPersonalJournal) {
-  //       console.log(
-  //         props.entries.map((e) => {
-  //           return {
-  //             ...e,
-  //             id: Math.random()
-  //           }
-  //         })
-  //       )
-  //       setEntries(
-  //         props.entries.map((e) => {
-  //           return {
-  //             ...e,
-  //             id: Math.random()
-  //           }
-  //         })
-  //       )
-  //     } else {
-  //       setEntries(props.entries)
-  //     }
-  //   }
-  // }, [props.entries])
-
   useEffect(() => {
     if (journal?.id && accordion?.id && journal.id === 1001033) {
       setLoading(true)

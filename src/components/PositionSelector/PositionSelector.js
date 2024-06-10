@@ -5,15 +5,13 @@ const PositionSelector = (props) => {
     props.selectedPosition ?? 'start'
   )
 
-  //
-
   const handleChangeSelectedPosition = (position) => {
-    // console.log(position)
     setSelectedPosition(position)
   }
   useEffect(() => {
     props.handleChangeSelectedPosition(selectedPosition)
   }, [selectedPosition])
+
   return (
     <div className="col-md-12">
       <label

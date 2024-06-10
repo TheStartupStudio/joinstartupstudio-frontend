@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './AccordionItem.css'
 
 const AccordionItems = ({ index }) => {
-  const [evaluationDropdown, setEvaluationDropdown] = useState(false)
   const [activePage, setActivePage] = useState('')
 
   return (

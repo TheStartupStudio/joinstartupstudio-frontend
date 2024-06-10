@@ -21,7 +21,7 @@ import Navbar from './Navbar.js'
 function Header() {
   const dispatch = useDispatch()
   const history = useHistory()
-  const { user } = useSelector((state) => state.user.user)
+  const { user, isAdmin } = useSelector((state) => state.user.user)
   const mainState = useSelector((state) => state)
   const currentLanguage = useSelector((state) => state.lang.locale)
   const sideBarState = useSelector((state) => state.general.sidebarState)
@@ -39,7 +39,6 @@ function Header() {
   const [notifications, setNotifications] = useState([])
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [showNotifications, setShowNotifications] = useState(false)
-  const [allowToShow, setAllowToShow] = useState(false)
   const notificationsRef = useRef(null)
   const [peerSharingModal, setPeerSharingModal] = useState(false)
   const [peerSharingAccepted, setPeerSharingAccepted] = useState(false)
@@ -72,19 +71,6 @@ function Header() {
       setShowNotifications(false)
     }, 100)
   })
-
-  const hasAccess = () => {
-    axiosInstance
-      .get('/studentsInstructorss/admin')
-      .then((response) => {
-        if (response.data.allow) {
-          setAllowToShow(true)
-        } else {
-          setAllowToShow(false)
-        }
-      })
-      .catch((e) => e)
-  }
 
   /**
    * we are using these temporary vars
@@ -136,10 +122,6 @@ function Header() {
       })
     }
   }, [user?.id])
-
-  useEffect(() => {
-    hasAccess()
-  }, [])
 
   useEffect(
     function () {
@@ -239,7 +221,7 @@ function Header() {
         setCountStudentOfInstructor={setCountStudentOfInstructor}
         sideBarState={sideBarState}
         openPeerSharingModal={openPeerSharingModal}
-        allowToShow={allowToShow}
+        allowToShow={isAdmin}
         firstNote={firstNote}
       />
 
@@ -253,7 +235,7 @@ function Header() {
         showNotifications={showNotifications}
         setShowNotifications={setShowNotifications}
         mainState={mainState}
-        allowToShow={allowToShow}
+        allowToShow={isAdmin}
         setCountStudentOfInstructor={setCountStudentOfInstructor}
         setShowContactModal={setShowContactModal}
         user={user}
@@ -279,7 +261,7 @@ function Header() {
         }}
       />
       <StudentOfInstructors
-        allow={() => allowToShow}
+        allow={() => isAdmin}
         onShow={countStudentOfInstructor}
         onHide={() => setCountStudentOfInstructor(false)}
       />

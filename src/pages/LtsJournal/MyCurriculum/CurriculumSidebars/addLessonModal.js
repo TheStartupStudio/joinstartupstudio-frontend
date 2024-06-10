@@ -2,16 +2,16 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { TextEditor, TextInput } from '../../../ui/ContentItems'
-import { useForm } from '../../../utils/hooks/useForm'
-import { useValidation } from '../../../utils/hooks/useValidation'
-import useIsFormEmpty from '../../../utils/hooks/useIsFormEmpty'
+import { TextEditor, TextInput } from '../../../../ui/ContentItems'
+import { useForm } from '../../../../utils/hooks/useForm'
+import { useValidation } from '../../../../utils/hooks/useValidation'
+import useIsFormEmpty from '../../../../utils/hooks/useIsFormEmpty'
 import { toast } from 'react-toastify'
 import {
   createLesson,
   deleteLesson,
   editLesson
-} from '../../../redux/taskLessons/actions'
+} from '../../../../redux/taskLessons/actions'
 import { useDispatch } from 'react-redux'
 
 const AddLessonModal = ({

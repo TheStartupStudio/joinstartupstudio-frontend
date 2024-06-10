@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, Route, Switch, useHistory } from 'react-router-dom'
+import { Route, Switch, useHistory } from 'react-router-dom'
 import TestJournalContent from './TestJournalContent'
-import searchIcon from '../../assets/images/search-icon.png'
+import searchIcon from '../../../assets/images/search-icon.png'
 import { FormattedMessage } from 'react-intl'
-import axiosInstance from '../../utils/AxiosInstance'
-import LtsEduLogo from '../../assets/images/LTS-EDU-logo.png'
+import axiosInstance from '../../../utils/AxiosInstance'
+import LtsEduLogo from '../../../assets/images/LTS-EDU-logo.png'
 import SidebarItems from './CurriculumSidebars/SidebarItems'
 import FinancialSidebar from './CurriculumSidebars/FinancialSidebar'
 
@@ -47,7 +47,7 @@ const TestJournalType = (props) => {
           platform: props.category === 'market-ready' ? 'student' : 'instructor'
         }
       })
-      setWeeks([...data].sort((a, b) => a.id - b.id))
+      setWeeks([...data].sort((a, b) => a.order - b.order))
     } catch (err) {}
   }
 

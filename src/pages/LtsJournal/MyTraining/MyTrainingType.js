@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import searchIcon from '../../assets/images/search-icon.png'
-import LtsEduLogo from '../../assets/images/LTS-EDU-logo.png'
-import {
-  Route,
-  Switch,
-  useHistory
-} from 'react-router-dom/cjs/react-router-dom.min'
+import searchIcon from '../../../assets/images/search-icon.png'
+import LtsEduLogo from '../../../assets/images/LTS-EDU-logo.png'
+import { Route, Switch } from 'react-router-dom/cjs/react-router-dom.min'
 import { FormattedMessage } from 'react-intl'
 import { NavLink } from 'react-bootstrap'
-import axiosInstance from '../../utils/AxiosInstance'
+import axiosInstance from '../../../utils/AxiosInstance'
 import MyTrainingContent from './MyTrainingContent'
 
 const MyTrainingType = (props) => {
-  const history = useHistory()
   const [journals, setJournals] = useState([])
 
   useEffect(() => {

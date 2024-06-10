@@ -3,7 +3,6 @@ import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
-import './BreakdownTextAccordion.css'
 import TestJournalType from './TestJournalType'
 
 function TestJournal(props) {

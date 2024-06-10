@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import AccordionItemWrapper from '../AccordionItemWrapper'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faList, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch } from 'react-redux'
 import {
   removeUserSelection,
@@ -9,6 +8,7 @@ import {
 } from '../../../redux/rwl/actions'
 import ArticleModal from './modals/articleModal'
 import { faFileAlt } from '@fortawesome/free-regular-svg-icons'
+import AccordionItemWrapper from '../UI/AccordionItemWrapper'
 
 const RwlListContainer = ({
   title,

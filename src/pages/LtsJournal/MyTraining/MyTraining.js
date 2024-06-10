@@ -1,7 +1,6 @@
 import { Switch, Route } from 'react-router-dom'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
-import './BreakdownTextAccordion.css'
 import MyTrainingType from './MyTrainingType'
 
 function MyTraining(props) {
