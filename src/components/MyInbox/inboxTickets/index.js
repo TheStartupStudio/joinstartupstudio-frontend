@@ -84,28 +84,64 @@ function InboxTickets() {
   const handlePageChange = (selected) => {
     setCurrentPage(selected.selected)
   }
-  const filterBySelected = (read_by_instructor) => {
-    if (!selectedFilter || selectedFilter === 'all') return true
-    return selectedFilter === 'read' ? read_by_instructor : !read_by_instructor
-  }
 
   const handleSearch = debounce((value) => {
     setSearchKeyword(value.trim())
   }, 500)
 
-  const renderTickets =
-    isMenuOpened &&
-    data &&
-    !loading &&
-    data[questionsMenuSelected]?.rows
-      .filter((ticket) => filterBySelected(ticket.read_by_instructor))
-      .map((ticket) => (
-        <Ticket
-          key={ticket.id}
-          ticket={ticket}
-          setSelectedTicket={setSelectedTicket}
-        />
-      ))
+  // const renderTickets =
+  //   isMenuOpened &&
+  //   data &&
+  //   !loading &&
+  //   data[questionsMenuSelected]?.rows
+  //     .filter((ticket) => filterBySelected(ticket.read_by_instructor))
+  //     .map((ticket) => (
+  //       <Ticket
+  //         key={ticket.id}
+  //         ticket={ticket}
+  //         setSelectedTicket={setSelectedTicket}
+  //       />
+  //     ))
+
+  const renderTickets = useMemo(() => {
+    const filterBySelected = (read_by_instructor) => {
+      if (!selectedFilter || selectedFilter === 'all') return true
+      return selectedFilter === 'read'
+        ? read_by_instructor
+        : !read_by_instructor
+    }
+
+    if (!isMenuOpened || loading || !data || !data[questionsMenuSelected]) {
+      return null
+    }
+
+    const filteredTickets = data[questionsMenuSelected].rows.filter((ticket) =>
+      filterBySelected(ticket.read_by_instructor)
+    )
+
+    if (filteredTickets.length === 0) {
+      return (
+        <div className="col-12 text-center mt-3">
+          <p>No tickets available.</p>
+        </div>
+      )
+    }
+
+    return filteredTickets.map((ticket) => (
+      <Ticket
+        key={ticket.id}
+        ticket={ticket}
+        setSelectedTicket={setSelectedTicket}
+      />
+    ))
+  }, [
+    isMenuOpened,
+    loading,
+    data,
+    questionsMenuSelected,
+    setSelectedTicket,
+    selectedFilter
+  ])
 
   const showPagination = useMemo(() => {
     return (
