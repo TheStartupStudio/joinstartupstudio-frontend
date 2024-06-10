@@ -26,7 +26,7 @@ function InboxTickets() {
   const [currentPage, setCurrentPage] = useState(0)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [selectedFilter, setSelectedFilter] = useState()
-  const [selectedTicket, setSelectedTicket] = useState()
+  const [selectedTicket, setSelectedTicket] = useState(null)
   const [filterExpanded, setFilterExpanded] = useState(false)
   const dropdownRef = useRef(null)
 
@@ -54,6 +54,12 @@ function InboxTickets() {
     setImmersionExperiences,
     setIndustryProblems
   ])
+
+  useEffect(() => {
+    if (selectedTicket) {
+      setSelectedTicket(null)
+    }
+  }, [questionsMenuSelected])
 
   const isTicketOpened = useMemo(() => {
     return (
@@ -134,7 +140,7 @@ function InboxTickets() {
             <TicketChat
               ticket={selectedTicket}
               isTicketOpened={isTicketOpened}
-              close={() => setSelectedTicket()}
+              close={() => setSelectedTicket(null)}
             />
           )}
 
