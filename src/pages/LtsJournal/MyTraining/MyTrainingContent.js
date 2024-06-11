@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import KendoTextEditor from '../../components/JournalsManagement/TextEditor'
-import triangleIcon from '../../assets/images/triangle.png'
-import MediaLightbox from '../../components/MediaLightbox'
+import triangleIcon from '../../../assets/images/triangle.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
-import AccordionItemWrapper from './AccordionItemWrapper'
-import axiosInstance from '../../utils/AxiosInstance'
+import axiosInstance from '../../../utils/AxiosInstance'
+import MediaLightbox from '../../../components/MediaLightbox'
+import AccordionItemWrapper from '../UI/AccordionItemWrapper'
 
 const MyTrainingContent = (props) => {
   let openAccordion = 'instructor'
@@ -46,7 +45,7 @@ const MyTrainingContent = (props) => {
         >
           <div className={'video-container'}>
             {videos &&
-              videos.constructor == Array &&
+              videos.constructor === Array &&
               videos.map((video, index) => (
                 <MediaLightbox
                   video={video}
@@ -58,7 +57,7 @@ const MyTrainingContent = (props) => {
                   // onVideoWatched={saveVideoWatched}
                 />
               ))}
-            {videos && videos.constructor == Array && videos.length > 0 && (
+            {videos && videos.constructor === Array && videos.length > 0 && (
               <div
                 className={`journal-entries__videos journal-entries__videos--${
                   videos.length > 1 ? 'multiple' : 'single'
@@ -68,19 +67,19 @@ const MyTrainingContent = (props) => {
                   <div
                     key={index}
                     className={`journal-entries__video${
-                      journal.content == '' ? '--welcome-video' : ''
+                      journal.content === '' ? '--welcome-video' : ''
                     }`}
                   >
                     <div
                       className={`journal-entries__video-thumbnail${
-                        journal.content == '' ? '--welcome-video' : ''
+                        journal.content === '' ? '--welcome-video' : ''
                       }`}
                       onClick={() => setShowVideo(video.id)}
                     >
-                      <img src={video.thumbnail} />
+                      <img src={video.thumbnail} alt="thumbnail" />
                       <div
                         className={`journal-entries__video-thumbnail-icon${
-                          journal.content == '' ? '--welcome-video' : ''
+                          journal.content === '' ? '--welcome-video' : ''
                         }`}
                       >
                         <FontAwesomeIcon icon={faPlay} />

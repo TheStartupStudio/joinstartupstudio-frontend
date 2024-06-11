@@ -8,7 +8,7 @@ import {
   fetchInstructorSectionTwoData,
   fetchSectionTwoData
 } from '../../../redux/myPerformanceData/actions'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 import CustomSpinner from '../../../components/CustomSpinner'
 
 function SectionTwo({ instructorId }) {

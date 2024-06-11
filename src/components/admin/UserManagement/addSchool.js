@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
 import { SelectInput, TextInput } from '../../../ui/ContentItems'
-import { useForm } from '../../../utils/hooks/useForm'
-import { useValidation } from '../../../utils/hooks/useValidation'
+import { useForm } from '../../../hooks/useForm'
+import { useValidation } from '../../../hooks/useValidation'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
-import useIsFormEmpty from '../../../utils/hooks/useIsFormEmpty'
+import useIsFormEmpty from '../../../hooks/useIsFormEmpty'
 
 const AddSchool = ({ data, show, onHide, mode }) => {
   const [loading, setLoading] = useState(false)

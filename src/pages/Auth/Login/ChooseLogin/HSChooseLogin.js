@@ -12,6 +12,7 @@ import {
   faSpotify
 } from '@fortawesome/free-brands-svg-icons'
 import FormWrapper from '../ui/FormWrapper'
+import { Col, Row } from 'react-bootstrap'
 
 const socialIcons = {
   linkedin: faLinkedin,
@@ -61,23 +62,19 @@ const ChooseLogin = () => {
   }
 
   return (
-    <div
-      className="container-fluid md-px-5 ps-md-5 choose-login_container"
-      style={{
-        backgroundColor: '#F8F7F7',
-        minHeight: ' calc(100vh - 42px)'
-      }}
-    >
-      <div className="row center-content justify-evenly">
-        <div className="col-md-6">
+    <div className="container-fluid md-px-5 ps-md-5 choose-login_container">
+      <Row className="m-0 p-0 align-items-center center-content justify-evenly">
+        <Col md="6" sm="12">
           <div className="row">
-            <div className="col-md-9 mx-auto">
+            <div className="col-sm-12 col-md-9  mx-auto">
               <div className="login-left-content">
-                <img className="login-logo" src={SUSLogo} alt="logo" />
+                <div className="login-logo">
+                  <img src={SUSLogo} alt="logo" />
+                </div>
                 <h1 className="login-title" style={{ color: '#000' }}>
                   Welcome...
                 </h1>
-                <p className="w-50" style={{ color: '#000' }}>
+                <p style={{ color: '#000' }}>
                   ...to your Learn to Start Platform. Please choose your role
                   and log in to access.
                 </p>
@@ -99,9 +96,9 @@ const ChooseLogin = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="col-md-5">
-          <FormWrapper className="col-lg-9 mx-auto px-4 pb-3 pt-4 ">
+        </Col>
+        <Col md="5" sm="12">
+          <FormWrapper className="col-lg-9 col-md-12 col-sm-12 mx-auto px-4 pb-3 pt-4 ">
             <h2 className="text-center">
               <IntlMessages id="general.ready" /> ?
             </h2>
@@ -133,8 +130,8 @@ const ChooseLogin = () => {
               </a>
             </p>
           </FormWrapper>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   )
 }

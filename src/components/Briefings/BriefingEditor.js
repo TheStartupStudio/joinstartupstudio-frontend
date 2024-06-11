@@ -11,7 +11,7 @@ import {
 } from '../../redux/header/Actions'
 import { useForm, useValidation } from './useForm'
 import { DateInput, TextEditor, TextInput } from '../../ui/ContentItems'
-import useIsFormEmpty from '../../utils/hooks/useIsFormEmpty'
+import useIsFormEmpty from '../../hooks/useIsFormEmpty'
 
 const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
   const dispatch = useDispatch()

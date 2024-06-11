@@ -1,6 +1,5 @@
 import React from 'react'
-import AccordionItemWrapper from './AccordionItemWrapper'
-import StepsBox from './Steps/StepsBox'
+import AccordionItemWrapper from '../UI/AccordionItemWrapper'
 
 const CurriculumOverview = (props) => {
   return (
@@ -24,6 +23,7 @@ const CurriculumOverview = (props) => {
                       objectFit: 'contain',
                       marginBottom: 10
                     }}
+                    alt="url"
                   />
                   <div
                     style={{

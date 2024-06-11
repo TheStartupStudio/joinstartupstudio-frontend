@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom'
 import { HiDocumentPlus } from 'react-icons/hi2'
 import AddLessonModal from './addLessonModal'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchLessons } from '../../../redux/taskLessons/actions'
-import LoadingAnimation from '../../../ui/loadingAnimation'
-import LtsCheckbox from '../../../ui/LtsCheckbox'
+import { fetchLessons } from '../../../../redux/taskLessons/actions'
+import LoadingAnimation from '../../../../ui/loadingAnimation'
+import LtsCheckbox from '../../../../ui/LtsCheckbox'
 import getLessonByType from './getLessonsByType'
 
 const SidebarItems = ({ url, filteredJournals, type, category }) => {

@@ -33,7 +33,7 @@ function Ticket({ ticket, setSelectedTicket }) {
         onClick={() => {
           ticket.type === 'certification_submit' || ticket.type === 'approval'
             ? history.push(uploadUrl)
-            : ticket.type === 'instruction'
+            : ticket.type === 'instruction' || ticket.type === 'feedback'
             ? setSelectedTicket(ticket)
             : ticket.type === 'industry_problem'
             ? setIndustryProblemModal(true)
@@ -54,7 +54,22 @@ function Ticket({ ticket, setSelectedTicket }) {
           <p className="last-message">{ticket.TicketAnswers?.message}</p>
         </div>
         <div className="ticket-status d-flex align-items-center">
-          <p className="my-auto">
+          <p className="my-auto pe-2" style={{ color: '#ccc' }}>
+            {ticket.type === 'industry_problem'
+              ? ticket.user_industry_solution.status === 'approved'
+                ? 'Application Approved'
+                : ticket.user_industry_solution.status === 'pending'
+                ? 'Application Submitted'
+                : 'Application Returned'
+              : ticket.type === 'immersion_experience'
+              ? ticket.user_immersion_experience.status === 'approved'
+                ? 'Application Approved'
+                : ticket.user_immersion_experience.status === 'pending'
+                ? 'Application Submitted'
+                : 'Application Returned'
+              : null}
+          </p>
+          <p className="my-auto pl-2">
             {beautifulDateFormat(
               ticket.TicketAnswers?.createdAt ?? ticket.createdAt
             )}

@@ -64,6 +64,14 @@ export default {
     key: 'IAMR_STUDENT_QUESTION_UPDATE',
     value: ' updated questions'
   },
+  IAMR_STUDENT_FEEDBACK_REPLY: {
+    key: 'IAMR_STUDENT_FEEDBACK_REPLY',
+    value: ' has replied to your feedback on their submission.'
+  },
+  IAMR_STUDENT_FEEDBACK_REPLY_UPDATE: {
+    key: 'IAMR_STUDENT_FEEDBACK_REPLY_UPDATE',
+    value: ' has updated feedback on their submission.'
+  },
   DEFAULT_NOTIFICATION: {
     key: 'DEFAULT_NOTIFICATION',
     value: ' sent you a notifications'
@@ -91,5 +99,13 @@ export default {
   IMMERSION_EXPERIENCE_APPROVED: {
     key: 'IMMERSION_EXPERIENCE_APPROVED',
     value: ' has approved your experience application'
+  },
+  IAMR_SAVED_UPLOAD: {
+    key: 'IAMR_SAVED_UPLOAD',
+    value: ' saved an upload.'
+  },
+  IAMR_UPDATE_SAVED_UPLOAD: {
+    key: 'IAMR_UPDATE_SAVED_UPLOAD',
+    value: ' updated a saved upload.'
   }
 }

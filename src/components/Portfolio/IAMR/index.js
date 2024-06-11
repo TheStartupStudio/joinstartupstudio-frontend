@@ -12,7 +12,7 @@ import { NavLink } from 'react-router-dom'
 import './index.css'
 import { useSelector } from 'react-redux'
 import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 
 export const IAMR = (props) => {
   const [iamrModal, setIamrModal] = useState(false)

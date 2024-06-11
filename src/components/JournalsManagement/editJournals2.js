@@ -549,7 +549,6 @@ export default function EditJournals2(props) {
                       handleChangeSteps(index, 'title', e.target.value)
                     }
                   />
-
                   <div>Step content</div>
                   <KendoTextEditor
                     value={step?.stepContent}
