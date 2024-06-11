@@ -8,7 +8,7 @@ import './style/editPortfolio.css'
 import { toast } from 'react-toastify'
 
 import { useSelector } from 'react-redux'
-import useWindowWidth from '../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../hooks/useWindowWidth'
 import { DeleteConfirmation } from '../../components/Portfolio/Confirm_modal'
 import PreviewPortfolioBody from './PreviewPortfolioBody'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

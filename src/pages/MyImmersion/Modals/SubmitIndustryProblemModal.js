@@ -9,7 +9,7 @@ import {
   handleIndustryProblemStatus
 } from '../../../redux/myImmersion/actions'
 import LoadingAnimation from '../../../ui/loadingAnimation'
-import { useForm } from '../../../utils/hooks/useForm'
+import { useForm } from '../../../hooks/useForm'
 import {
   ParentGuardianButton,
   ProfileHolder,

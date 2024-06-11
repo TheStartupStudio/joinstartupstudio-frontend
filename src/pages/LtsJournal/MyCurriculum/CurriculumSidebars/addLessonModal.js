@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
 import { TextEditor, TextInput } from '../../../../ui/ContentItems'
-import { useForm } from '../../../../utils/hooks/useForm'
-import { useValidation } from '../../../../utils/hooks/useValidation'
-import useIsFormEmpty from '../../../../utils/hooks/useIsFormEmpty'
+import { useForm } from '../../../../hooks/useForm'
+import { useValidation } from '../../../../hooks/useValidation'
+import useIsFormEmpty from '../../../../hooks/useIsFormEmpty'
 import { toast } from 'react-toastify'
 import {
   createLesson,

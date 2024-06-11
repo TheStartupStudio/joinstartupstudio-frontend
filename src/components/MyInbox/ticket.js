@@ -10,7 +10,6 @@ import SubmitIndustryProblemModal from '../../pages/MyImmersion/Modals/SubmitInd
 import SubmitExperienceModal from '../../pages/MyImmersion/Modals/SubmitExperienceModal'
 
 function Ticket({ ticket, setSelectedTicket }) {
-  console.log('ticket', ticket)
   const history = useHistory()
   const [industryProblemModal, setIndustryProblemModal] = useState(false)
   const [submitExperienceModal, setSubmitExperienceModal] = useState(false)

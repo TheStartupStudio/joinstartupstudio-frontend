@@ -1,10 +1,24 @@
 import { useState } from 'react'
 
-export const useValidation = (formData, setFormSubmitted) => {
+// This is for Editor
+const stripHtmlTags = (html) => {
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+  return tmp.textContent || tmp.innerText || ''
+}
+
+export const useValidation = (
+  formData,
+  setFormSubmitted,
+  optionalFields = []
+) => {
   const [errors, setErrors] = useState({})
 
   const isFormValid = Object.keys(formData).every((key) => {
     const value = formData[key]
+    if (typeof value === 'string' && key !== 'isSelected') {
+      return stripHtmlTags(value).trim() !== ''
+    }
     return !(value === undefined || value === null || value === '')
   })
 
@@ -14,10 +28,18 @@ export const useValidation = (formData, setFormSubmitted) => {
       if (key === 'isSelected') {
         continue
       }
+      if (optionalFields.includes(key)) {
+        continue
+      }
 
       const value = formData[key]
+      console.log('value', value)
 
-      if (value === false || value === '') {
+      if (
+        (typeof value === 'string' && stripHtmlTags(value).trim() === '') ||
+        value === false ||
+        value === ''
+      ) {
         if (typeof value === 'boolean') {
           newErrors[key] = `${key} cannot be false`
         } else {

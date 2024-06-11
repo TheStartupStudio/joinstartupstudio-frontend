@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { format, parse } from 'date-fns'
 import { useHistory } from 'react-router-dom'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 
 export const EducationDetails = (props) => {
   const [education, setEducation] = useState()
@@ -93,11 +93,25 @@ export const EducationDetails = (props) => {
                   }}
                 >
                   {}
-                  {format((parse(formatDate(education.start_date), 'yyyy-MM', new Date())), 'yyyy')}
+                  {format(
+                    parse(
+                      formatDate(education.start_date),
+                      'yyyy-MM',
+                      new Date()
+                    ),
+                    'yyyy'
+                  )}
                   <span style={{ fontSize: '16px' }}> - </span>
 
                   {education.end_date
-                    ? format((parse(formatDate(education.end_date), 'yyyy-MM', new Date())), 'yyyy')
+                    ? format(
+                        parse(
+                          formatDate(education.end_date),
+                          'yyyy-MM',
+                          new Date()
+                        ),
+                        'yyyy'
+                      )
                     : 'Present'}
                 </div>
               </div>

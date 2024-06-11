@@ -1,7 +1,7 @@
 import React from 'react'
 import Box from './Box'
 import { useLocation } from 'react-router-dom'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 
 const Boxes = (props) => {
   const location = useLocation()
