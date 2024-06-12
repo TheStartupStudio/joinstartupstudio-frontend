@@ -175,14 +175,14 @@ const MeetingManager = (props) => {
         .get(`/ltsJournals/${params.journalId}/student/${0}`)
         .then((res) => {
           const data = res.data
-          console.log(data)
+
           if (data?.userTeamMeetings && data?.userTeamMeetings?.length) {
             const latestElement = getLatestUpdatedElement(
               data?.userTeamMeetings
             )
             if (latestElement) {
               setIsEdit(latestElement.hasOwnProperty('teamMeetingId'))
-              console.log(latestElement)
+
               setSelectedArchive(latestElement)
               // const latestUpdatedElement = getLatestUpdatedElement(teamMeetings)
               // setSelectedArchive(latestUpdatedElement)

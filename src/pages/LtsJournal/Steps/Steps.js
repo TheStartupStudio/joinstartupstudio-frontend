@@ -1,7 +1,7 @@
 import React from 'react'
 import Step from './Step'
 import { useLocation } from 'react-router-dom'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 
 const Steps = (props) => {
   const location = useLocation()

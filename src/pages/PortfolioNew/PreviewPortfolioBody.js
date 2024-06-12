@@ -6,7 +6,7 @@ import { Experience } from '../../components/Portfolio/Experience'
 import { Education } from '../../components/Portfolio/Education'
 import { Accomplishment } from '../../components/Portfolio/Accomplishment'
 import LicencesCertification from '../../components/Portfolio/LicensesCertification/index'
-import useWindowWidth from '../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../hooks/useWindowWidth'
 const PreviewTypeButton = ({ onClick, selected, label, windowWidth }) => {
   const buttonStyle = {
     background: selected ? '#51C7DF' : '#fff',

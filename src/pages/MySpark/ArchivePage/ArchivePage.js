@@ -81,7 +81,7 @@ function ArchivePage(props) {
             <div className="row ps-2">
               <div className="col-md-6">
                 <h3 className="page-title mb-0">
-                  MY SPARK | <span class={'rose-text'}>Archive</span>
+                  MY SPARK | <span className={'rose-text'}>Archive</span>
                 </h3>
               </div>
             </div>

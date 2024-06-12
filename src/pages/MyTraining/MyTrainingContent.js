@@ -6,15 +6,12 @@ import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MediaLightbox from '../../components/MediaLightbox'
 import triangleIcon from '../../assets/images/triangle.png'
-import { EditorTools } from '@progress/kendo-react-editor'
 import './MyTrainingContent.css'
 import PedagogyBoxes from './PedagogyBoxes/PedagogyBoxes'
-import AccordionItemWrapper from '../LtsJournal/AccordionItemWrapper'
 import StepsBox from '../LtsJournal/Steps/StepsBox'
 import CoreVectorsImage from '../../assets/images/CoreVectors - LTS-1200px.png'
-import LtsJournalReflection from '../LtsJournal/reflection'
-import markdown from '../LtsJournal/markdown'
 import EntriesBox from '../LtsJournal/EntriesBox'
+import AccordionItemWrapper from '../LtsJournal/UI/AccordionItemWrapper'
 
 const WelcomeToTraining = () => {
   return (
@@ -128,12 +125,8 @@ function MyTrainingContent(props) {
   const [selectedPedagogy, setSelectedPedagogy] = useState(null)
   const [selectedPedagogyIndex, setSelectedPedagogyIndex] = useState(null)
   const [openPopup, setOpenPopup] = useState(false)
-  const [selectedTask, setSelectedTask] = useState(null)
-  const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
-  // let [showAddReflection, setShowAddReflection] = useState({})
 
-  // console.log(selectedPedagogy)
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -171,8 +164,6 @@ function MyTrainingContent(props) {
       let { data } = await axiosInstance.get(
         `/ltsJournals/${+props.match.params.id}/userEntries`
       )
-
-      console.log(data)
 
       let groupedByJournalEntry = {}
 
@@ -224,8 +215,6 @@ function MyTrainingContent(props) {
     setLoading(true)
     Promise.all([getJournal(), getUserJournalEntries()])
       .then(([journalData, userJournalEntries]) => {
-        // console.log(userJournalEntries)
-        console.log(journalData)
         setJournal(journalData)
 
         if (
@@ -346,9 +335,6 @@ function MyTrainingContent(props) {
 
   function updateReflection(entry, userJournalEntry) {
     return (data) => {
-      console.log('data', data)
-      console.log('entry', entry)
-      console.log('userJournalEntry', userJournalEntry)
       setUserJournalEntries({
         ...userJournalEntries,
         [entry.id]: userJournalEntries[entry.id].map((mapUserJournalEntry) => {
@@ -372,32 +358,6 @@ function MyTrainingContent(props) {
       : [journal.video]
   ).filter(Boolean)
 
-  const {
-    Bold,
-    Italic,
-    AlignLeft,
-    AlignCenter,
-    AlignRight,
-    AlignJustify,
-    Indent,
-    Outdent,
-    OrderedList,
-    UnorderedList,
-    Undo,
-    Redo,
-    FontSize,
-    FontName,
-    FormatBlock,
-    Link,
-    Unlink,
-    InsertImage,
-    ViewHtml
-  } = EditorTools
-
-  const closeOthers = () => {
-    setOpenAccordion(null)
-  }
-
   const selectStep = (step, index) => {
     setSelectedStep(step)
     setSelectedStepIndex(index)
@@ -413,15 +373,6 @@ function MyTrainingContent(props) {
   }
   const handleOpenPopup = () => {
     setOpenPopup(true)
-  }
-
-  const handleClosePopup = () => {
-    setOpenPopup(false)
-  }
-
-  const handleSelectTask = (task, index) => {
-    setSelectedTask({ task, index })
-    setSelectedTaskIndex(index)
   }
 
   const trainingIndex = props.trainings.findIndex(
@@ -611,7 +562,7 @@ function MyTrainingContent(props) {
                               entries={journal.entries}
                               entryBoxTitle={journal?.title}
                               journal={journal}
-                              isEditable={true}
+                              isAddReflection={false}
                               userJournalEntries={userJournalEntries}
                               deleteReflection={(entry, userJournalEntry) =>
                                 deleteReflection(entry, userJournalEntry)
@@ -739,15 +690,6 @@ function MyTrainingContent(props) {
           <div className="journal-entries__back">
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
-
-          {/*<h4 className="page-card__content-title">{journal.title}</h4>*/}
-
-          {/*{journal?.content?.includes('<div') ||*/}
-          {/*journal?.content?.includes('<p') ? (*/}
-          {/*  parse(`${journal.content}`)*/}
-          {/*) : (*/}
-          {/*  <p className="page-card__content-description">{journal.content}</p>*/}
-          {/*)}*/}
         </div>
       </div>
     </>

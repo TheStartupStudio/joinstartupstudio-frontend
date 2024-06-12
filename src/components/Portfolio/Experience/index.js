@@ -77,14 +77,11 @@ export const Experience = (props) => {
 
   const deleteExperience = (id) => {
     setExperiences(experiences.filter((exp) => exp.id !== id))
-    // props.deleteExperience(id)
   }
 
   const addExperience = async (experience) => {
     setExperiences([...experiences, experience])
-    // props.addExperience(experience)
   }
-  // console.log('user', props.user)
 
   return (
     <>

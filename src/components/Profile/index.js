@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -21,8 +21,10 @@ import watch from '../../assets/images/read_watch_listen_Watch_with typo.png'
 import './index.css'
 import BriefingModal from '../Modals/BriefingModal'
 import { Link } from 'react-router-dom'
+import { getSelectedBriefingStart } from '../../redux/header/Actions'
 
 function Profile(props) {
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user.user)
   const [lastLogin, setLastLogin] = useState(null)
   const [newMessages, setNewMessages] = useState([])
@@ -31,13 +33,12 @@ function Profile(props) {
   const [studentQuestions, setStudentQuestions] = useState({})
   const [feedbackRequests, setFeedbackRequests] = useState({})
   const [briefingModal, setBriefingModal] = useState(false)
-  const [briefingClicked, setBriefingClicked] = useState(false)
+  const briefing = useSelector((state) => state?.header?.selectedBriefing)
 
-  // useEffect(() => {
-  //   axiosInstance.post('/briefings/increaseBriefings').then((res) => {
-  //     debugger
-  //   })
-  // }, [briefingClicked])
+  useEffect(() => {
+    dispatch(getSelectedBriefingStart())
+  }, [dispatch])
+
   const handleOpenBriefingModal = () => {
     setBriefingModal(true)
   }
@@ -49,7 +50,7 @@ function Profile(props) {
     const questionAndFeedbacksHandler = async () => {
       await axiosInstance.get('/instructor/iamr/tickets').then((res) => {
         setStudentQuestions(res.data.student_questions)
-        setFeedbackRequests(res.data.certification_feedback_questions)
+        setFeedbackRequests(res.data.certification_feedback_requests)
       })
     }
     questionAndFeedbacksHandler()
@@ -109,10 +110,10 @@ function Profile(props) {
   }, [props.chatOpened])
 
   useEffect(() => {
-    if (user.last_login === null) {
+    if (user?.last_login === null) {
       return setLastLogin('None')
     }
-    const milliseconds = user.last_login * 1000
+    const milliseconds = user?.last_login * 1000
     const monthNames = [
       'January',
       'February',
@@ -280,7 +281,7 @@ function Profile(props) {
               event.stopPropagation()
               handleOpenBriefingModal()
               axiosInstance
-                .post('/briefing/increaseBriefings')
+                .post('/briefings/increaseBriefings')
                 .then((res) => {})
             }}
           >
@@ -319,7 +320,7 @@ function Profile(props) {
         >
           <img src={Questions} style={{ width: '180px' }} alt="" />
 
-          <a href={`/iamr-inbox`} className="iamr-inbox_link m-0">
+          <a href={`/my-inbox`} className="iamr-inbox_link m-0">
             {studentQuestions.unreadCount ? studentQuestions?.unreadCount : 0}
             <span className="ml-2">Questions</span>
           </a>
@@ -329,36 +330,11 @@ function Profile(props) {
           style={{ marginTop: '-3rem' }}
         >
           <img src={Feedbacks} style={{ width: '180px' }} alt="" />
-          <a href="/iamr-inbox" className="iamr-inbox_link">
+          <a href="/my-inbox" className="iamr-inbox_link">
             {feedbackRequests.unreadCount ? feedbackRequests.unreadCount : 0}
             <span className="ml-2">Requests</span>
           </a>
         </div>
-        {/* <p
-          className='overlay-comming-soon position-absolute my-auto mx-auto text-center'
-          style={{
-            fontWeight: 'bold',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            zIndex: 4,
-            fontSize: '20px',
-            color: 'white',
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          Coming soon
-        </p>
-        <div
-          className='overlay-comming-soon position-absolute'
-          style={{
-            height: '100%',
-            width: '100%',
-            zIndex: 2,
-            backgroundColor: '#828888',
-            opacity: '0.9'
-          }}
-        ></div> */}
       </div>
       {/* end of certification status */}
       {/* read and more */}
@@ -442,7 +418,11 @@ function Profile(props) {
           </div>
         </div>
       </div>
-      <BriefingModal show={briefingModal} onHide={handleCloseBriefingModal} />
+      <BriefingModal
+        briefing={briefing}
+        show={briefingModal}
+        onHide={handleCloseBriefingModal}
+      />
     </Row>
   )
 }

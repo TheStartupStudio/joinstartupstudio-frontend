@@ -1,48 +1,37 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
-import { faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MediaLightbox from '../../components/MediaLightbox'
 import parse from 'html-react-parser'
 import EntriesBox from './EntriesBox'
 import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections/index.js'
-import _, { debounce, isEqual } from 'lodash'
+import _ from 'lodash'
 import MeetingManager from './ArchiveManager/MeetingManager/MeetingManager'
 import FeedbackManager from './ArchiveManager/FeedbackManager/FeedbackManager'
-import AccordionItemWrapper from './AccordionItemWrapper'
 import MentorMeetingManager from './ArchiveManager/MentorMeetingManager/MentorMeetingManager'
 import ContentUploads from './ContentUploads/ContentUploads'
 import CertificationSkills from './CertificationSkills/CertificationSkills'
 import AccordionItems from './MyGoals/AccordionItems'
 import JournalBrands from './JournalBrands/index'
-import * as actions from '../../redux/reflectionsTable/Actions'
-import { useDispatch } from 'react-redux'
 import Rwl from './rwl'
-
 import JournalTables from './JournalTables/JournalTables'
-import IntlMessages from '../../utils/IntlMessages'
+import AccordionItemWrapper from './UI/AccordionItemWrapper.js'
 
 function LtsJournalContent(props) {
+  const location = useLocation()
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
   let [videoWatchData, setVideoWatchData] = useState([])
   let [userJournalEntries, setUserJournalEntries] = useState({})
   let [loading, setLoading] = useState(false)
   let [showVideo, setShowVideo] = useState(false)
-
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
-  const dispatch = useDispatch()
-  const location = useLocation()
 
-  // useEffect(() => {
-  //   if (isStudentPersonalFinance) {
-  //     setShowAddReflection({ ...showAddReflection, [entry.id]: false })
-  //   }
-  // }, [location.pathname])
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
       setOpenAccordion(null)
@@ -59,27 +48,20 @@ function LtsJournalContent(props) {
     setShowAddReflection(showAddReflection)
   }
 
-  async function saveWatchData(data) {
-    await axiosInstance.put(
-      `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
-      {
-        videoWatchData: JSON.stringify(data)
-      }
-    )
-  }
+  // async function saveWatchData(data) {
+  //   await axiosInstance.put(
+  //     `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
+  //     {
+  //       videoWatchData: JSON.stringify(data)
+  //     }
+  //   )
+  // }
 
-  async function saveVideoWatched() {
-    await axiosInstance.put(
-      `/ltsJournals/${props.match.params.journalId}/watchedVideo`
-    )
-  }
-
-  const debounce = useCallback(
-    _.debounce(async (func, value) => {
-      func('debounce', value)
-    }, 1000),
-    []
-  )
+  // async function saveVideoWatched() {
+  //   await axiosInstance.put(
+  //     `/ltsJournals/${props.match.params.journalId}/watchedVideo`
+  //   )
+  // }
 
   async function getJournal() {
     try {
@@ -193,12 +175,13 @@ function LtsJournalContent(props) {
       }
     }
   }
-  const [isStudentPersonalFinance, setIsStudentPersonalFinance] =
-    useState(false)
+  const [isAddReflection, setIsAddReflection] = useState(false)
 
   useEffect(() => {
     if (location?.pathname?.includes('student-personal-finance')) {
-      setIsStudentPersonalFinance(true)
+      setIsAddReflection(false)
+    } else {
+      setIsAddReflection(true)
     }
   }, [location.pathname])
 
@@ -220,9 +203,11 @@ function LtsJournalContent(props) {
       setUserJournalEntries({
         ...userJournalEntries,
         [entry.id]: userJournalEntries[entry.id].map((mapUserJournalEntry) => {
-          return mapUserJournalEntry.id === userJournalEntry.id
-            ? data.entry
-            : mapUserJournalEntry
+          if (mapUserJournalEntry.id === userJournalEntry.id) {
+            return data.data.entry
+          } else {
+            return mapUserJournalEntry
+          }
         })
       })
 
@@ -282,7 +267,7 @@ function LtsJournalContent(props) {
                     }`}
                     onClick={() => setShowVideo(video.id)}
                   >
-                    <img src={video.thumbnail} />
+                    <img src={video.thumbnail} alt="thumbnail" />
                     <div
                       className={`journal-entries__video-thumbnail-icon${
                         journal.content == '' ? '--welcome-video' : ''
@@ -341,7 +326,7 @@ function LtsJournalContent(props) {
                   handleShowAddReflection(reflection)
                 }
                 showAddReflection={showAddReflection}
-                isStudentPersonalJournal={isStudentPersonalFinance}
+                isAddReflection={isAddReflection}
               />
             </div>
           </div>

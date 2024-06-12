@@ -48,4 +48,3 @@ export const ShareMyPortfolioWidget = (props) => {
     </div>
   )
 }
-

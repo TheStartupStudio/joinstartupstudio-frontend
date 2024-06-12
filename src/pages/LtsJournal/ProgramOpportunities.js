@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import AccordionItemWrapper from './AccordionItemWrapper'
-import StepsBox from './Steps/StepsBox'
+import AccordionItemWrapper from './UI/AccordionItemWrapper'
 
 const ProgramOpportunities = (props) => {
   const [selectedImage, setSelectedImage] = useState(null)
@@ -59,31 +58,30 @@ const ProgramOpportunities = (props) => {
                       gap: 6,
                       filter: filterImage(index)
                     }}
+                    alt="url"
                   />
                 </div>
               )
             })}
           </div>
           <div className="accordion-content">
-            {props.data?.map((data, index) => {
+            {props.data?.map((index) => {
               if (index === selectedImageIndex) {
                 return (
-                  <>
-                    <div>
-                      <div
-                        style={{
-                          fontFamily: 'Montserrat',
-                          backgroundColor: '#fff',
-                          marginBottom: 20,
-                          textAlign: 'start',
-                          width: '100%'
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: selectedImage?.content
-                        }}
-                      />
-                    </div>
-                  </>
+                  <div>
+                    <div
+                      style={{
+                        fontFamily: 'Montserrat',
+                        backgroundColor: '#fff',
+                        marginBottom: 20,
+                        textAlign: 'start',
+                        width: '100%'
+                      }}
+                      dangerouslySetInnerHTML={{
+                        __html: selectedImage?.content
+                      }}
+                    />
+                  </div>
                 )
               }
             })}

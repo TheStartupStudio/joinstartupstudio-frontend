@@ -3,15 +3,15 @@ import './myLTSEDU.css'
 
 const MyLearnToStartEDU = (props) => {
   return (
-    <div class={'m-2'}>
-      <div class="container">
+    <div className={'m-2'}>
+      <div className="container">
         <div
           style={{
             font: 'normal normal bold 24px Montserrat',
             letterSpacing: 0.96,
             color: '#231F20',
             textTransform: 'uppercase',
-            marginBottom: 20,
+            marginBottom: 20
           }}
         >
           {props.title}
@@ -20,7 +20,7 @@ const MyLearnToStartEDU = (props) => {
         <div
           style={{
             background: '#F8F7F7 0% 0% no-repeat padding-box',
-            padding: 20,
+            padding: 20
           }}
         >
           <div
@@ -29,7 +29,7 @@ const MyLearnToStartEDU = (props) => {
 
               display: 'grid',
               gridTemplateColumns: '1fr 1fr',
-              gap: 5,
+              gap: 5
             }}
           >
             {props.children}

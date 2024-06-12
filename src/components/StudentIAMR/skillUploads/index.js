@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import LoadingAnimation from '../loadingAnimation'
 import Upload from './upload'
 import UploadsList from './uploadsList'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,6 +6,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import useUploads from './useUploads'
 import { UploadStatus } from './helpers'
 import './index.css'
+import LoadingAnimation from '../../../ui/loadingAnimation'
 
 const SkillUploads = ({ skill }) => {
   const [selectedUpload, setSelectedUpload] = useState(false)
@@ -14,7 +14,6 @@ const SkillUploads = ({ skill }) => {
     skillId: skill?.id,
     setSelectedUpload
   })
-  console.log(uploads)
   return (
     <div className="skill-uploads">
       <div className="d-flex w-100 justify-content-between">

@@ -11,11 +11,11 @@ const MyLtsGridItem = (props) => {
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
-          cursor:'pointer'
+          cursor: 'pointer'
         }}
       >
         <div
-          class="row py-4 px-3 w-100"
+          className="row py-4 px-3 w-100"
           style={{
             background: '#F8F7F7 0% 0% no-repeat padding-box',
             minHeight: 150

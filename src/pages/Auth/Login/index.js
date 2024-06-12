@@ -10,10 +10,15 @@ import { validateEmail } from '../../../utils/helpers'
 import './index.css'
 import triangleIcon from '../../../assets/images/triangle.png'
 import axiosInstance from '../../../utils/AxiosInstance'
+import FormWrapper from './ui/FormWrapper'
+import CustomLoginInput from './ui/CustomLoginInput'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import {
   updateStartTime,
   updateUserActivity
 } from '../../../redux/user/Actions'
+import { Col, Row } from 'react-bootstrap'
 
 function Login() {
   const [user, setUser] = useState({})
@@ -66,11 +71,17 @@ function Login() {
             response.attributes['custom:language']
           )
           localStorage.setItem('email', user.email)
+
           // if (response.signInUserSession.idToken.jwtToken) {
-          //   const newTime = await axiosInstance.get(
-          //     '/myPerformanceData/loginTime'
+          //   const newTime = await axiosInstance.put(
+          //     '/myPerformanceData/updateActivity/startTime',
+          //     {},
+          //     {
+          //       headers: {
+          //         Authorization: `Bearer ${response.signInUserSession.idToken.jwtToken}`
+          //       }
+          //     }
           //   )
-          //   console.log(newTime)
           // }
 
           // if (response) {
@@ -104,51 +115,43 @@ function Login() {
 
   return (
     <div
-      className="container-fluid md-px-5 ps-md-5"
-      style={{ backgroundColor: '#F8F7F7', minHeight: ' calc(100vh - 90px)' }}
+      className="container-fluid md-px-5 ps-md-5 login_container"
+      // style={{ backgroundColor: '#F8F7F7', minHeight: ' calc(100vh - 42px)' }}
     >
-      {/* <div className='login-create-account'>
-				<Link to='/create-account'>Create your Account</Link>
-			</div> */}
-      <div className="row pt-5 center-content">
-        <div className="col-md-6 d-flex justify-content-center">
-          <img src={triangleIcon} style={{ width: '400px', height: '100%' }} />
-        </div>
-        <div className="col-md-5">
-          <div
-            className="col-lg-9 mx-auto public-page-form px-4 pb-3 pt-4"
-            style={{ backgroundColor: 'white' }}
+      <Row className="m-0 p-0 ps-md-5 center-content">
+        <Col md="7" lg="6" xl="5" className="ms-sm-1">
+          <FormWrapper
+            className="col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4"
+            // style={{ height: '60vh', minHeight: '60vh' }}
           >
-            {/* <h3 className='text-center'>
-              <IntlMessages id='login.title' />
-            </h3> */}
             <FormattedMessage id="login.email" defaultMessage="login.email">
               {(placeholder) => (
-                <input
-                  className="mt-2 mb-3"
-                  type="text"
-                  name="email"
+                <CustomLoginInput
+                  cn={'mt-2 mb-3'}
                   placeholder={placeholder}
-                  onKeyDown={enterLogin}
+                  inputName="email"
+                  inputType="email"
+                  enterLogin={enterLogin}
                   onChange={(event) => handleChange(event)}
                 />
               )}
             </FormattedMessage>
+
             <FormattedMessage
               id="login.password"
               defaultMessage="login.password"
             >
               {(placeholder) => (
-                <input
-                  className="mb-3"
-                  type="password"
-                  name="password"
+                <CustomLoginInput
                   placeholder={placeholder}
-                  onKeyDown={enterLogin}
+                  enterLogin={enterLogin}
+                  inputName="password"
+                  inputType={'password'}
                   onChange={(event) => handleChange(event)}
                 />
               )}
             </FormattedMessage>
+
             <button
               type="submit"
               className="mt-2"
@@ -158,30 +161,31 @@ function Login() {
               {isLoading ? (
                 <span className="spinner-border spinner-border-sm" />
               ) : (
-                <IntlMessages id="general.start" />
+                <span className="d-flex align-items-center justify-content-center">
+                  <IntlMessages id="general.login" />
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    className="ms-2 fw-bold"
+                  />
+                </span>
               )}
             </button>
-            <p className="my-4">
-              <IntlMessages id="login.security" />
-              <a href="/lts-secure" className="ml-2 link">
-                <IntlMessages id="login.protect_data" />
-              </a>
-            </p>
-            <p className="text-center public-page-text">
+            <p className="text-center public-page-text my-4">
               <IntlMessages id="login.forgot_password" />
-              <NavLink to={'/forgot-password'} className="ml-2 link">
+              <NavLink to={'/forgot-password'} className="ml-2 link fw-bold">
                 <IntlMessages id="general.click_here" />
               </NavLink>
             </p>
-          </div>
-          {/* <p className='text-center mt-3 public-page-text link'>
-            <IntlMessages id='login.register' />
-            <a href='/create-account' className='ml-2 link'>
-              <IntlMessages id='login.register_link' />
-            </a>
-          </p> */}
-        </div>
-      </div>
+            <p className=" text-center public-page-text">
+              <IntlMessages id="login.security" />
+              <br />
+              <a href="/lts-secure" className="ml-2 link fw-bold">
+                <IntlMessages id="login.protect_data" />
+              </a>
+            </p>
+          </FormWrapper>
+        </Col>
+      </Row>
     </div>
   )
 }

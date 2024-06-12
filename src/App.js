@@ -2,10 +2,10 @@
  * Entry application component used to compose providers and render Routes.
  * */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { BrowserRouter, useHistory, useLocation } from 'react-router-dom'
-import Router from './Router'
+import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
 import jQuery from 'jquery'
+import NewRouter from './newRouter'
 
 window.jQuery = jQuery
 
@@ -13,7 +13,7 @@ function App({ basename }) {
   return (
     <React.Suspense fallback={''}>
       <BrowserRouter basename={basename}>
-        <Router />
+        <NewRouter />
       </BrowserRouter>
     </React.Suspense>
   )

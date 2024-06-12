@@ -8,7 +8,7 @@ const FinalStepModal = (props) => {
       show={props.show}
       onHide={props.onHide}
       showHeader={false}
-      class={'my-spark__content-modal'}
+      classes={'my-spark__content-modal'}
     >
       <div className="mt-4 mb-5 blocked-user-modal px-md-3 text-center">
         <div

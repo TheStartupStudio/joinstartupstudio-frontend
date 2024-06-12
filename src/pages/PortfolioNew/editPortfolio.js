@@ -72,13 +72,12 @@ function EditPortfolio() {
   const [aggred, setAggred] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const userId = useSelector((state) => state.user.user.user.id)
+  const isOwnPortfolio = !!user && userId === user?.id
 
   const dispatch = useDispatch()
 
   const authorizedLevel = IsUserLevelAuthorized()
   const paramId = useParams().id
-
-  const isOwnPortfolio = !!user && userId === user?.id
 
   useEffect(() => {
     window.location.href.includes('recommendation') &&
@@ -106,7 +105,6 @@ function EditPortfolio() {
   }, [])
 
   console.log('toggle', toggle)
-
 
   const updateStatus = async () => {
     await axiosInstance
@@ -237,7 +235,6 @@ function EditPortfolio() {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ width: '30%' }}>
-            
             <div>
               <span className="my_portfolio_publish pe-xxl-0">
                 <IntlMessages id="portfolio.Publish.My.Portfolio" />
@@ -283,10 +280,10 @@ function EditPortfolio() {
             </div>
           </div>
           {isOwnPortfolio && (
-  <div className={'d-flex justify-content-end'}>
-    <ShareMyPortfolioWidget user={user} toggle={toggle} />
-  </div>
-)}
+            <div className={'d-flex justify-content-end'}>
+              <ShareMyPortfolioWidget user={user} toggle={toggle} />
+            </div>
+          )}
 
           {/* <div
             style={{

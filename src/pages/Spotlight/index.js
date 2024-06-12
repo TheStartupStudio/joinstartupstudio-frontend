@@ -87,9 +87,9 @@ function StartupLive() {
 
   const SpotlightGridItem = (props) => {
     return (
-      <div class="col-lg-6 col-md-12 ">
+      <div className="col-lg-6 col-md-12 ">
         <div
-          class="p-3 px-5 border d-flex flex-column align-items-center justify-content-center"
+          className="p-3 px-5 border d-flex flex-column align-items-center justify-content-center"
           style={{ backgroundColor: '#F8F7F7', minHeight: 210 }}
         >
           <div className="text-center">
@@ -176,7 +176,7 @@ function StartupLive() {
               <div>
                 <div className="d-flex justify-content-between guidance-videos-top mt-5 guidance-encouragement-page-titles ">
                   <h3>SPOTLIGHT® Archive</h3>
-                  <div class={'d-flex align-items-end  blue-text'}>
+                  <div className={'d-flex align-items-end  blue-text'}>
                     View all
                   </div>
                 </div>

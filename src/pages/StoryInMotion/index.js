@@ -116,8 +116,9 @@ function StoryInMotionGuestQA() {
                 title={video.title}
                 description={video.description}
                 page={'encouragement'}
-                isMainPage={true}
+                isMainPage={false}
                 videoData={video}
+                type={'startup-live'}
               />
             ))}
         </div>

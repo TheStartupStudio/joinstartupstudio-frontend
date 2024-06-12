@@ -714,6 +714,11 @@ a.sidenav.active {
   width: 85%;
   height: auto;
 }
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 .player-wrapper {
   position: relative;
   padding-top: 56.25%;
@@ -1933,6 +1938,10 @@ ul.content-list-of-month li:hover span {
   input:not(.public-page-form input[type='radio']):not(
     .public-page-form input[type='check']
   ),
+.public-login-form
+  input:not(.public-login-form input[type='radio']):not(
+    .public-login-form input[type='check']
+  ),
 .form-item {
   font-size: 12px;
   font-weight: normal;
@@ -3038,6 +3047,56 @@ wave > wave:first-child {
   text-align: right;
   font-size: 30px;
 }
+.content-item__container {
+  margin: 8px 0;
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  border: 1px solid #ccc;
+
+  border-radius: 10px;
+  background-color: #f6f7f7;
+}
+.content-item__title {
+  font: normal normal normal 14px/20px Montserrat;
+  letter-spacing: 0.68px;
+  color: #707070;
+  padding: 5px;
+}
+.content-item__container small {
+  color: red;
+  font-size: 12px;
+}
+.content-item__description {
+  font: normal normal 600 14px/20px Montserrat;
+  letter-spacing: 0.68px;
+  color: #707070;
+  border: none;
+  background-color: #fff;
+  padding: 5px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  width: 100%;
+}
+.content-item__description input {
+  border: none;
+  padding: 5px;
+  background-color: #fff;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.check-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border-bottom-left-radius: 40%;
+  border-top-right-radius: 10%;
+  box-shadow: 0 0 10px 0 #cfcfcf;
+  background-color: white;
+  cursor: pointer;
+  padding: 15px;
+}
 .saved-video-thumb-icon {
   color: #fff;
   position: absolute;
@@ -3417,9 +3476,10 @@ wave > wave:first-child {
 /*
   Accordion Menu
 */
-.accordion-menu {
-}
-.accordion-menu__item {
+.accordion-menu__item-transition {
+  /* margin-bottom: addLesson ? '20px' : '0px',  */
+  transition: margin-bottom 0.5s ease;
+  position: relative;
 }
 
 /* editet for welcome video */
@@ -4427,4 +4487,8 @@ ul.sidebar-menu-item .collapse a {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.k-animation-container-shown {
+  z-index: 99999999 !important;
 }

@@ -64,8 +64,48 @@ export default {
     key: 'IAMR_STUDENT_QUESTION_UPDATE',
     value: ' updated questions'
   },
+  IAMR_STUDENT_FEEDBACK_REPLY: {
+    key: 'IAMR_STUDENT_FEEDBACK_REPLY',
+    value: ' has replied to your feedback on their submission.'
+  },
+  IAMR_STUDENT_FEEDBACK_REPLY_UPDATE: {
+    key: 'IAMR_STUDENT_FEEDBACK_REPLY_UPDATE',
+    value: ' has updated feedback on their submission.'
+  },
   DEFAULT_NOTIFICATION: {
     key: 'DEFAULT_NOTIFICATION',
     value: ' sent you a notifications'
+  },
+  INDUSTRY_PROBLEM: {
+    key: 'INDUSTRY_PROBLEM',
+    value: ' has submitted an industry problem'
+  },
+  INDUSTRY_PROBLEM_DENIED: {
+    key: 'INDUSTRY_PROBLEM_DENIED',
+    value: ' has denied your industry problem submission'
+  },
+  INDUSTRY_PROBLEM_APPROVED: {
+    key: 'INDUSTRY_PROBLEM_APPROVED',
+    value: ' has approved your industry problem submission'
+  },
+  IMMERSION_EXPERIENCE: {
+    key: 'IMMERSION_EXPERIENCE',
+    value: ' applied for immersion experience'
+  },
+  IMMERSION_EXPERIENCE_DENIED: {
+    key: 'IMMERSION_EXPERIENCE_DENIED',
+    value: ' has denied your experience application'
+  },
+  IMMERSION_EXPERIENCE_APPROVED: {
+    key: 'IMMERSION_EXPERIENCE_APPROVED',
+    value: ' has approved your experience application'
+  },
+  IAMR_SAVED_UPLOAD: {
+    key: 'IAMR_SAVED_UPLOAD',
+    value: ' saved an upload.'
+  },
+  IAMR_UPDATE_SAVED_UPLOAD: {
+    key: 'IAMR_UPDATE_SAVED_UPLOAD',
+    value: ' updated a saved upload.'
   }
 }

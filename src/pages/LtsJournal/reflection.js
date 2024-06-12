@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
 import {
   faInfo,
-  faInfoCircle,
   faPencilAlt,
   faSpinner
 } from '@fortawesome/free-solid-svg-icons'
@@ -23,8 +22,8 @@ import _ from 'lodash'
 import { ReflectionInfoBox } from '../../components/Modals/ReflectionInfoBox'
 
 function LtsJournalReflection(props) {
-  const journalId = props.journal.id
-  const journalEntryId = props.journalEntry.id
+  const journalId = props.journal?.id
+  const journalEntryId = props.journalEntry?.id
   const entryId = props.entry?.id
   const history = useHistory()
   const currentLanguage = useSelector((state) => state.lang.locale)
@@ -82,15 +81,15 @@ function LtsJournalReflection(props) {
     'align'
   ]
 
-  const deleteReflection = async () => {
-    try {
-      await axiosInstance.delete(
-        `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`
-      )
+  // const deleteReflection = async () => {
+  //   try {
+  //     await axiosInstance.delete(
+  //       `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`
+  //     )
 
-      props.deleted && props.deleted({ entryId })
-    } catch (err) {}
-  }
+  //     props.deleted && props.deleted({ entryId })
+  //   } catch (err) {}
+  // }
 
   const handleSubmit = async (from, value) => {
     if (saving) return
@@ -117,16 +116,17 @@ function LtsJournalReflection(props) {
         props.saved && props.saved(data)
         setNotSaved(false)
       } else {
-        await axiosInstance.put(
+        let { data } = await axiosInstance.put(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`,
           from == 'debounce'
             ? { content: value, trainingId: myTraining ? journalId : null }
             : { content, trainingId: myTraining ? journalId : null }
         )
+
         props.saved &&
           props.saved({
             ...props,
-            content,
+            data,
             updatedAt: moment().locale(currentLanguage).toString()
           })
 
@@ -178,20 +178,18 @@ function LtsJournalReflection(props) {
     }
   })
 
-  function handleConfirm() {
-    if (unblockHandle) {
-      unblockHandle.current()
-    }
-    // navigate to some other page or do some routing action now
-    // history.push("/any/other/path")
-  }
+  // function handleConfirm() {
+  //   if (unblockHandle) {
+  //     unblockHandle.current()
+  //   }
+  // }
 
-  const debounce = useCallback(
-    _.debounce(async (func, value) => {
-      func('debounce', value)
-    }, 5000),
-    []
-  )
+  // const debounce = useCallback(
+  //   _.debounce(async (func, value) => {
+  //     func('debounce', value)
+  //   }, 5000),
+  //   []
+  // )
   return (
     <>
       <ToastContainer
@@ -205,51 +203,6 @@ function LtsJournalReflection(props) {
           !entryId ? 'journal-entries__entry-reflection--new' : ''
         } ${editing ? 'journal-entries__entry-reflection--editing' : ''}`}
       >
-        {/* <div className="journal-entries__entry-reflection-header">
-          <div className="journal-entries__entry-reflection-date">
-            {entryId && (
-              <>
-                {props.entry?.createdAt && (
-                  <span>
-                    <strong>
-                      <IntlMessages id="journals.started" />
-                    </strong>
-                    {moment(props.entry?.createdAt)
-                      .locale(currentLanguage)
-                      .format('MMM DD, YYYY HH:mm')}
-                  </span>
-                )}
-                {props.entry?.updatedAt && (
-                  <span>
-                    <strong>
-                      <IntlMessages id="journals.edited" />
-                    </strong>
-                    {moment(props.entry?.updatedAt)
-                      .locale(currentLanguage)
-                      .format('MMM DD, YYYY HH:mm')}
-                  </span>
-                )}
-              </>
-            )}
-          </div>
-          <div className="journal-entries__entry-reflection-actions">
-            {entryId && !editing && (
-              <FontAwesomeIcon
-                onClick={() => setEditing(true)}
-                icon={faPencilAlt}
-              />
-            )}
-            {(!entryId || editing) && (
-              <>
-                {saving && (
-                  <div className="" style={{ color: '#01c5d1' }}>
-                    <FontAwesomeIcon icon={faSpinner} className="" spin />
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div> */}
         <div
           className="journal-entries__entry-reflection-body"
           style={{ borderRadius: 0, border: '0px' }}

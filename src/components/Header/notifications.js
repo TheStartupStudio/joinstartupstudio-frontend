@@ -9,27 +9,10 @@ import { format } from 'date-fns'
 const Notifications = (props) => {
   const history = useHistory()
   const [loading, setLoading] = useState(false)
-  // const [userHasAccess, setUserHasAccess] = useState(false);
 
   useEffect(() => {
     return () => {}
   }, [])
-
-  // useEffect(() => {
-  //   const hasAccess = async () => {
-  //     axiosInstance
-  //       .get("/studentsInstructorss/has-access")
-  //       .then((response) => {
-  //         if (response.data.allow) {
-  //           setUserHasAccess(true);
-  //         } else {
-  //           setUserHasAccess(false);
-  //         }
-  //       })
-  //       .catch((e) => e);
-  //   };
-  //   hasAccess();
-  // }, []);
 
   const formatDate = (date) => {
     if (!date) return
@@ -80,10 +63,6 @@ const Notifications = (props) => {
         {props.notifications.length > 0 ? (
           <>
             {props.notifications.map((notification) => {
-              // const isCertificationSubmit =
-              //   notification.type === "CERTIFICATION_SUBMIT";
-
-              // if (userHasAccess || !isCertificationSubmit) {
               return (
                 <React.Fragment key={notification.id}>
                   <a
@@ -103,9 +82,6 @@ const Notifications = (props) => {
                   </span>
                 </React.Fragment>
               )
-              // } else {
-              //   return null;
-              // }
             })}
           </>
         ) : (

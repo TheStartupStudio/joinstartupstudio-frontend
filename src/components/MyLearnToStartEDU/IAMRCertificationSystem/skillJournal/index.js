@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import ReactPlayer from 'react-player'
 import './index.css'
 import JournalEntry from './journalEntry'
-import LoadingAnimation from '../loadingAnimation'
 import Input from '../customComponents/input'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -10,6 +9,7 @@ import { toast } from 'react-toastify'
 import UserEntryInput from './userEntryInput'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import { showErrors } from '../../../../utils/helpers'
+import LoadingAnimation from '../../../../ui/loadingAnimation'
 
 const SkillJournal = ({ skill }) => {
   const [journalEntries, setJournalEntries] = useState([])

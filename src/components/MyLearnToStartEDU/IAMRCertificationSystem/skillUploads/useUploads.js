@@ -73,8 +73,8 @@ export default function useUploads({ skillId, setSelectedUpload }) {
   //       showErrors(e)
   //     })
   // }
-  
-  const deleteUpload = async (id,skillId, onFinishCb) => {
+
+  const deleteUpload = async (id, skillId, onFinishCb) => {
     const not_started = { skill_id: +skillId, SkillStatus: ['not_started'] }
     await axiosInstance
       .delete(`/iamr/uploads/${id}/${skillId}`)
@@ -104,7 +104,7 @@ export default function useUploads({ skillId, setSelectedUpload }) {
           notificationSocket.emit('sendNotification', {
             sender: loggedUser,
             receivers: [loggedUser.Instructor.User],
-            type: notificationTypes.IAMR_STUDENT_QUESTION_UPDATE.key,
+            type: notificationTypes.IAMR_UPDATE_SAVED_UPLOAD.key,
             url: `/student-iamr/${loggedUser.id}/${skillId}/uploads/${data.upload.id}`
           })
         }

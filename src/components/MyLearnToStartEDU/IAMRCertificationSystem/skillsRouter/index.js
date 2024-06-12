@@ -3,7 +3,6 @@ import { Route, useParams } from 'react-router-dom'
 import CertificationStatus from '../certificationStatus'
 import { useIamrContext } from '../iamrContext/context'
 import IAMRWelcomePage from '../iamrWelcome'
-import LoadingAnimation from '../loadingAnimation'
 import SkillContent from '../skillContent'
 import SkillFeedbacks from '../skillFeedbacks'
 import SkillInstructions from '../skillInstructions'
@@ -11,6 +10,7 @@ import SkillJournal from '../skillJournal'
 import SkillUploads from '../skillUploads'
 import { useState } from 'react'
 import axiosInstance from '../../../../utils/AxiosInstance'
+import LoadingAnimation from '../../../../ui/loadingAnimation'
 
 const SkillsRouter = ({ groupingStrings }) => {
   const { loading } = useIamrContext()
@@ -59,7 +59,12 @@ const SkillsRouter = ({ groupingStrings }) => {
             <Route
               exact
               path={`/iamr-certification-system/:certificationType/:id/instructions/:ticketId?`}
-              component={() => <SkillInstructions skill={skill} groupingStrings={groupingStrings} />}
+              component={() => (
+                <SkillInstructions
+                  skill={skill}
+                  groupingStrings={groupingStrings}
+                />
+              )}
             />
             <Route
               exact

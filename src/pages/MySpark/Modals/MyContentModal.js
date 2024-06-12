@@ -4,14 +4,12 @@ import LtsButton from '../../../components/LTSButtons/LTSButton'
 import ReactQuill from 'react-quill'
 
 function MyContentModal(props) {
-  // console.log(props)
-
   return (
     <ModalWrapper
       title={'Write your own' + ' ' + props.title}
       show={props.show}
       onHide={props.onHide}
-      class={'my-spark__content-modal'}
+      classes={'my-spark__content-modal'}
     >
       <div className={''}>
         <div>

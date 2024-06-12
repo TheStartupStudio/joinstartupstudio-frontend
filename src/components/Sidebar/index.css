@@ -30,3 +30,7 @@
   color: gray;
   cursor: not-allowed;
 }
+.icon_container {
+  height: 35px;
+  width: 35px;
+}

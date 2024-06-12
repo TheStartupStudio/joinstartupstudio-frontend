@@ -7,9 +7,9 @@ import EditJournals2 from '../../components/JournalsManagement/editJournals2'
 
 function JournalsManagement2() {
   const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(changeSidebarState(false))
-  })
+  // useEffect(() => {
+  //   dispatch(changeSidebarState(false))
+  // }, [])
 
   return (
     <div className="container-fluid">

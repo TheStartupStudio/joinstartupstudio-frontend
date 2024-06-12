@@ -11,8 +11,11 @@ import headerReducer from './header/Reducer'
 import usersReducer from './users/Reducer'
 import reflectionsTableReducer from './reflectionsTable/Reducer'
 import rwlJournalReducer from './rwl/reducer'
-import platformBadgesReducer from './platformBadges/reducer'
 import performanceDataReducer from './myPerformanceData/reducer'
+import myImmersionReducer from './myImmersion/reducer'
+import PathwaysReducer from './pathways/reducer'
+import platformBadgesReducer from './platformBadges/reducer'
+import taskLessonReducer from './taskLessons/reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -26,7 +29,10 @@ const rootReducer = combineReducers({
   users: usersReducer,
   reflectionsTable: reflectionsTableReducer,
   rwlJournal: rwlJournalReducer,
-  platformBadges:platformBadgesReducer,
-  performanceData:performanceDataReducer
+  myImmersion: myImmersionReducer,
+  performanceData: performanceDataReducer,
+  pathways: PathwaysReducer,
+  platformBadges: platformBadgesReducer,
+  lessons: taskLessonReducer
 })
 export default rootReducer

@@ -4,12 +4,14 @@ import { ProgressCard } from '../MyPerformanceDataComponents'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchCertificationData,
+  fetchInstructorCertificationData,
+  fetchInstructorSectionTwoData,
   fetchSectionTwoData
 } from '../../../redux/myPerformanceData/actions'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 import CustomSpinner from '../../../components/CustomSpinner'
 
-function SectionTwo(props) {
+function SectionTwo({ instructorId }) {
   const windowWidth = useWindowWidth()
   const dispatch = useDispatch()
   const {
@@ -20,20 +22,34 @@ function SectionTwo(props) {
   } = useSelector((state) => state.performanceData)
 
   useEffect(() => {
-    dispatch(fetchSectionTwoData())
-    dispatch(fetchCertificationData())
-  }, [dispatch])
+    if (instructorId) {
+      dispatch(fetchInstructorSectionTwoData(instructorId))
+      dispatch(fetchInstructorCertificationData(instructorId))
+    } else {
+      dispatch(fetchSectionTwoData())
+      dispatch(fetchCertificationData())
+    }
+  }, [dispatch, instructorId])
+
+  function handleProgressValue(value) {
+    if (isNaN(value) || value === undefined || value === null) {
+      return 0
+    }
+    return value
+  }
 
   return (
     <div className={'row g-2 '} style={{ minHeight: 300 }}>
       <div className={'col-md-4 p-3 d-flex flex-column'} style={{ gap: 20 }}>
         <ProgressCard
-          progress={sectionTwoData?.trainingCompletion}
+          progress={handleProgressValue(sectionTwoData?.trainingCompletion)}
           title={'Training completion'}
           loading={sectionTwoLoading}
         />
         <ProgressCard
-          progress={sectionTwoData?.instructorNotesCompletion}
+          progress={handleProgressValue(
+            sectionTwoData?.instructorNotesCompletion
+          )}
           title={'Instructor notes completion'}
           loading={sectionTwoLoading}
         />
