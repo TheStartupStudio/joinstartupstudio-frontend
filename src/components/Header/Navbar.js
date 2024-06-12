@@ -143,15 +143,16 @@ const Navbar = (props) => {
               <NavLink
                 className={`nav-link icon-menu m-0 p-0 my-auto`}
                 to={
-                  props.peerSharingAccepted
-                    ? '/my-classroom'
-                    : location.pathname
+                  '/my-classroom'
+                  // props.peerSharingAccepted
+                  //   ? '/my-classroom'
+                  //   : location.pathname
                 }
-                onClick={() => {
-                  if (!props.peerSharingAccepted) {
-                    props.openPeerSharingModal()
-                  }
-                }}
+                // onClick={() => {
+                //   if (!props.peerSharingAccepted) {
+                //     props.openPeerSharingModal()
+                //   }
+                // }}
               >
                 <img
                   src={HSCommunity}
@@ -332,7 +333,7 @@ const Navbar = (props) => {
                         Admin panel
                       </Link>
                     )}
-                    <Link
+                    {/* <Link
                       className="dropdown-item py-2 dropdown-menu-hover"
                       to="#"
                       onClick={() => {
@@ -341,7 +342,7 @@ const Navbar = (props) => {
                       }}
                     >
                       SUPPORT
-                    </Link>
+                    </Link> */}
                     <Link
                       className="dropdown-item py-2 dropdown-menu-hover"
                       onClick={() => {
