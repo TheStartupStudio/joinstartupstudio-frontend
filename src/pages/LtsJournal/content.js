@@ -24,6 +24,7 @@ import Rwl from './rwl'
 
 import JournalTables from './JournalTables/JournalTables'
 import IntlMessages from '../../utils/IntlMessages'
+import InterviewedMentors from './InterviewedMentors'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -373,6 +374,33 @@ function LtsJournalContent(props) {
             </div>
           </div>
         ) : null}
+
+        {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
+          ? journal?.ltsJournalAccordions
+              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              ?.map((accordion) => {
+                return (
+                  <div className="col-12">
+                    <AccordionItemWrapper
+                      isOpened={openAccordion === `accordion-${accordion.id}`}
+                      handleAccordionClick={() =>
+                        handleAccordionClick(`accordion-${accordion.id}`)
+                      }
+                      isExanded={false}
+                      title={accordion.title}
+                      accordionStyle={{ backgroundColor: '#fff' }}
+                    >
+                      {openAccordion === `accordion-${accordion.id}` && (
+                        <InterviewedMentors
+                          accordion={accordion}
+                          journal={journal}
+                        />
+                      )}
+                    </AccordionItemWrapper>
+                  </div>
+                )
+              })
+          : null}
 
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (

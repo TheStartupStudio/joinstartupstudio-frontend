@@ -1232,6 +1232,9 @@ const EsLangs = {
   'my_journal.save_journal': 'Guardar diarios',
   'my_journal.search_journals': 'Buscar diarios',
   'my_journal.created_page': 'Mi Diario:',
+  'my_journal.mentorship_title': 'MY MENTORSHIP JOURNAL PAGE',
+  'my_journal.mentorship_description':
+    'The Learn to Start Model is a guide in the lifelong process of developing the answers to the only three questions that matter: Who am I? What can I do? How do I prove it? You will use this journal to guide your development to those answers.',
 
   //Journals
   'journals.category_1': 'PURPOSE',
