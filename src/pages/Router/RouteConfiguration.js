@@ -244,6 +244,16 @@ export const authRoutesWithProps = [
     props: { category: 'hs2' }
   },
   {
+    path: '/new-hs3-journal/',
+    component: TestJournal,
+    props: { category: 'hs3' }
+  },
+  {
+    path: '/new-hs4-journal/',
+    component: TestJournal,
+    props: { category: 'hs4' }
+  },
+  {
     path: '/new-hs1-journal/:type/',
     component: TestJournal,
     props: { category: 'new-hs1' }
@@ -254,9 +264,14 @@ export const authRoutesWithProps = [
     props: { category: 'new-hs2' }
   },
   {
-    path: '/hs3-hs4-journal/',
+    path: '/new-hs3journal/:type/',
     component: TestJournal,
-    props: { category: 'hs3&hs4' }
+    props: { category: 'new-hs3' }
+  },
+  {
+    path: '/new-hs4-journal/:type/',
+    component: TestJournal,
+    props: { category: 'new-hs4' }
   },
   {
     path: '/financial-literacy/',

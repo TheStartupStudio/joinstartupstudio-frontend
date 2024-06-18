@@ -84,10 +84,15 @@ const TestJournalType = (props) => {
         title: 'LTS YEAR TWO CURRICULUM',
         description: `Welcome to Year Two of the LTS Program.`
       }
-    } else if (props.category === 'hs3&hs4') {
+    } else if (props.category === 'hs3') {
       journalData = {
-        title: 'LTS YEAR THREE & FOUR CURRICULUM',
-        description: `Welcome to Years Three & Four of the LTS Program.`
+        title: 'LTS YEAR THREE CURRICULUM',
+        description: `Welcome to Year Three of the LTS Program.`
+      }
+    } else if (props.category === 'hs4') {
+      journalData = {
+        title: 'LTS YEAR FOUR CURRICULUM',
+        description: `Welcome to Year Four of the LTS Program.`
       }
     } else if (props.category === 'financial-literacy') {
       journalData = {

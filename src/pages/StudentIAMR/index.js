@@ -16,7 +16,6 @@ import {
   openTaskModal
 } from '../../redux/dashboard/Actions'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
-import CertificationRequestsWidget from '../../components/MyStudents/certificationRequests/certificationRequestsWidget'
 import LoadingAnimation from '../../ui/loadingAnimation'
 
 export default function StudentIAMR() {

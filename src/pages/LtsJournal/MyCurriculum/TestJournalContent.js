@@ -21,8 +21,6 @@ import { toast } from 'react-toastify'
 
 function TestJournalContent(props) {
   let [journal, setJournal] = useState({})
-  let [videoWatchData, setVideoWatchData] = useState([])
-  let [userJournalEntries, setUserJournalEntries] = useState({})
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -65,8 +63,11 @@ function TestJournalContent(props) {
       case 'hs2':
         result = 'lts2'
         break
-      case 'hs3&hs4':
-        result = 'lts3&4'
+      case 'hs3':
+        result = 'lts3'
+        break
+      case 'hs4':
+        result = 'lts4'
         break
       case 'financial-literacy':
         result = 'finlit'
@@ -122,21 +123,6 @@ function TestJournalContent(props) {
       })
   }
 
-  // async function saveWatchData(data) {
-  //   await axiosInstance.put(
-  //     `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
-  //     {
-  //       videoWatchData: JSON.stringify(data)
-  //     }
-  //   )
-  // }
-
-  // async function saveVideoWatched() {
-  //   await axiosInstance.put(
-  //     `/ltsJournals/${props.match.params.id}/watchedVideo`
-  //   )
-  // }
-
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
@@ -150,15 +136,6 @@ function TestJournalContent(props) {
       let { data } = await axiosInstance.get(
         `/ltsJournals/week/${+props.match.params.weekId}`
       )
-      // if (history.location.pathname.includes('week')) {
-      //   if (data.length > 0 && redir) {
-      //     if (data[0].children && data[0].children.length > 0) {
-      //       history.push(`week/${data[0].children[0].id}`)
-      //     } else {
-      //       history.push(`week/${data[0].id}`)
-      //     }
-      //   }
-      // }
       return data
     } catch (err) {}
   }
@@ -237,18 +214,18 @@ function TestJournalContent(props) {
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
 
-        if (
-          journalData.userEntry &&
-          journalData.userEntry.length > 0 &&
-          journalData.userEntry[0].videoWatchData
-        ) {
-          try {
-            setVideoWatchData(
-              JSON.parse(journalData.userEntry[0].videoWatchData)
-            )
-          } catch (err) {}
-        }
-        setUserJournalEntries(userJournalEntries)
+        // if (
+        //   journalData.userEntry &&
+        //   journalData.userEntry.length > 0 &&
+        //   journalData.userEntry[0].videoWatchData
+        // ) {
+        //   try {
+        //     setVideoWatchData(
+        //       JSON.parse(journalData.userEntry[0].videoWatchData)
+        //     )
+        //   } catch (err) {}
+        // }
+        // setUserJournalEntries(userJournalEntries)
 
         if (props.contentContainer && props.contentContainer.current) {
           props.contentContainer.current.scrollTop = 0
@@ -293,18 +270,18 @@ function TestJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
-        if (
-          journalData.userEntry &&
-          journalData.userEntry.length > 0 &&
-          journalData.userEntry[0].videoWatchData
-        ) {
-          try {
-            setVideoWatchData(
-              JSON.parse(journalData.userEntry[0].videoWatchData)
-            )
-          } catch (err) {}
-        }
-        setUserJournalEntries(userJournalEntries)
+        // if (
+        //   journalData.userEntry &&
+        //   journalData.userEntry.length > 0 &&
+        //   journalData.userEntry[0].videoWatchData
+        // ) {
+        //   try {
+        //     setVideoWatchData(
+        //       JSON.parse(journalData.userEntry[0].videoWatchData)
+        //     )
+        //   } catch (err) {}
+        // }
+        // setUserJournalEntries(userJournalEntries)
         if (journalData?.hasInstructorDebrief) {
           const isInstructorDebrief =
             Object.keys(instructorDebriefData)?.length > 1
@@ -365,56 +342,6 @@ function TestJournalContent(props) {
     setSelectedStepIndex(null)
   }, [openAccordion])
 
-  // function deleteReflection(entry, userJournalEntry) {
-  //   return (data) => {
-  //     let filtered = userJournalEntries[entry.id].filter(
-  //       (mapUserJournalEntry) => {
-  //         return mapUserJournalEntry.id !== userJournalEntry.id
-  //       }
-  //     )
-
-  //     if (filtered.length) {
-  //       setUserJournalEntries({
-  //         ...userJournalEntries,
-  //         [entry.id]: filtered
-  //       })
-  //     } else {
-  //       delete userJournalEntries[entry.id]
-
-  //       setUserJournalEntries({
-  //         ...userJournalEntries
-  //       })
-  //     }
-  //   }
-  // }
-
-  // function addReflection(entry) {
-  //   return (data) => {
-  //     setUserJournalEntries({
-  //       ...userJournalEntries,
-  //       [entry.id]: [...(userJournalEntries[entry.id] || []), data.entry]
-  //     })
-  //     setShowAddReflection({ ...showAddReflection, [entry.id]: false })
-
-  //     props.saved && props.saved(data.journal)
-  //   }
-  // }
-
-  // function updateReflection(entry, userJournalEntry) {
-  //   return (data) => {
-  //     setUserJournalEntries({
-  //       ...userJournalEntries,
-  //       [entry.id]: userJournalEntries[entry.id].map((mapUserJournalEntry) => {
-  //         return mapUserJournalEntry.id === userJournalEntry.id
-  //           ? data.entry
-  //           : mapUserJournalEntry
-  //       })
-  //     })
-
-  //     props.saved && props.saved(data.journal)
-  //   }
-  // }
-
   if (!journal) {
     return null
   }
@@ -433,10 +360,6 @@ function TestJournalContent(props) {
     setInstructorDebrief(newInstructorDebrief)
     // debounce(onSubmitInstructorDebrief, newInstructorDebrief)
   }
-
-  // const closeOthers = () => {
-  //   setOpenAccordion(null)
-  // }
 
   const selectStep = (step, index) => {
     setSelectedStep(step)
@@ -475,9 +398,6 @@ function TestJournalContent(props) {
                   key={index}
                   show={showVideo === video.id}
                   onClose={() => setShowVideo(false)}
-                  // watchData={videoWatchData}
-                  // onVideoData={saveWatchData}
-                  // onVideoWatched={saveVideoWatched}
                 />
               ))}
             {videos && videos.constructor === Array && videos.length > 0 && (
