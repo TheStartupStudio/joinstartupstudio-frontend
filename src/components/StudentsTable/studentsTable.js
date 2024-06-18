@@ -20,7 +20,6 @@ import Certification2Badge from '../../assets/images/market-ready-2-badge.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPeriodsStart } from '../../redux/dashboard/Actions'
 import { NextYearModal } from './nextYearModal'
-import { C } from '@fullcalendar/core/internal-common'
 
 export default function StudentsTable({ instructorId }) {
   const dispatchRedux = useDispatch()
@@ -62,7 +61,6 @@ export default function StudentsTable({ instructorId }) {
   const [receivedTransfersCount, setReceivedTransfersCount] = useState(0)
   const [yearOptions, setYearOptions] = useState([])
   const [periodOptions, setPeriodOptions] = useState([])
-  const [nextYearOptions, setNextYearOptions] = useState([])
 
   const filteringCondition = (student) => {
     return student?.name
@@ -76,25 +74,25 @@ export default function StudentsTable({ instructorId }) {
     dispatchRedux(getPeriodsStart())
   }, [])
 
-  // useEffect(() => {
-  //   if (students?.length) {
-  //     dispatch({ type: 'studentsCount', studentsCount: students?.length })
-  //     var today = moment().startOf('day')
+  useEffect(() => {
+    if (students?.length) {
+      dispatch({ type: 'studentsCount', studentsCount: students?.length })
+      var today = moment().startOf('day')
 
-  //     const count = students?.filter((student) => {
-  //       var createdDate = moment(student.createdAt, 'YYYY-MM-DD').startOf('day')
-  //       var diff = today.diff(createdDate, 'days')
+      const count = students?.filter((student) => {
+        var createdDate = moment(student.createdAt, 'YYYY-MM-DD').startOf('day')
+        var diff = today.diff(createdDate, 'days')
 
-  //       if (diff <= 7) {
-  //         return true
-  //       }
+        if (diff <= 7) {
+          return true
+        }
 
-  //       return false
-  //     }).length
+        return false
+      }).length
 
-  //     dispatch({ type: 'recentlyActive', recentlyActive: count })
-  //   }
-  // }, [students?.length, dispatch])
+      dispatch({ type: 'recentlyActive', recentlyActive: count })
+    }
+  }, [students?.length, dispatch])
 
   useEffect(() => {
     setReceivedTransfersCount(
@@ -142,7 +140,7 @@ export default function StudentsTable({ instructorId }) {
           let newArrray = []
           res.data.instructorsnew.map((instructor) => {
             newArrray.push({
-              value: instructor.instructorInfo.id,
+              value: instructor.instructorInfo?.id,
               label: instructor.name
             })
           })
