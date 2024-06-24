@@ -313,12 +313,17 @@ const JournalTables = (props) => {
                                         position: 'relative'
                                       }}
                                     >
-                                      <div style={{ paddingRight: 15 }}>
+                                      <div
+                                        style={{
+                                          paddingRight: 15,
+                                          wordWrap: 'break-word',
+                                          overflowWrap: 'break-word'
+                                        }}
+                                      >
                                         {cell.inputType === 'text'
                                           ? cell.userCells?.content
                                           : cell.userCells?.amount}
                                       </div>
-
                                       <EditButton
                                         editClicked={editClicked}
                                         selectedCell={selectedCell}

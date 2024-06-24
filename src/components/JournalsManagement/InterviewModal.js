@@ -119,6 +119,7 @@ const InterviewModal = (props) => {
   const handleChangePart = (value) => {
     setInterview({ ...interview, part: value })
   }
+
   return (
     <ModalWrapper onHide={props.onHide} show={props.show} title={props.title}>
       <div className="interview-modal-box">
