@@ -86,10 +86,6 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseExample'}>
-        <DropdownItem
-          title={<IntlMessages id="my_saved.STORY_IN_MOTION" />}
-          to={'/story-in-motion'}
-        />
         <DropdownItem title={'PATHWAYS'} to={'/pathways'} />
         <DropdownItem title={'IMMERSION'} to={'/my-immersion'} />
         <DropdownItem

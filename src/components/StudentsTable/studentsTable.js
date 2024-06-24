@@ -33,7 +33,6 @@ export default function StudentsTable({ instructorId }) {
   const [isSearching, setIsSearching] = useState(false)
   const [loading, setLoading] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState(['level', 'year'])
-  console.log('selectedOptions', selectedOptions)
   const [selectedRows, setSelectedRows] = useState([])
   const [showToggleActivationModal, setShowToggleActivationModal] =
     useState(false)
@@ -75,7 +74,7 @@ export default function StudentsTable({ instructorId }) {
   }, [])
 
   useEffect(() => {
-    if (students?.length) {
+    if (students?.length && !instructorId) {
       dispatch({ type: 'studentsCount', studentsCount: students?.length })
       var today = moment().startOf('day')
 

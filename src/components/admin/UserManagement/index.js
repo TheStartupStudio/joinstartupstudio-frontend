@@ -193,13 +193,13 @@ const UserManagementComponent = () => {
         cell: (row) => (
           <div>
             {row.teachers.map((teacher) => (
-              <div key={teacher.id}>
+              <div key={teacher?.id}>
                 <a
-                  href={`/instructor-data/${teacher.User.id}`}
+                  href={`/instructor-data/${teacher?.User?.id}`}
                   // style={{ color: '#231F20' }}
                   className="teachers_name"
                 >
-                  {teacher.User.name}
+                  {teacher.User?.name}
                 </a>
               </div>
             ))}

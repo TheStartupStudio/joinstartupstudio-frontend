@@ -30,7 +30,7 @@ function InboxTickets() {
   const [filterExpanded, setFilterExpanded] = useState(false)
   const dropdownRef = useRef(null)
 
-  const { data, error } = useFetchTickets(
+  const { data, error, setData } = useFetchTickets(
     questionsMenuSelected,
     setLoading,
     currentPage,
@@ -89,6 +89,22 @@ function InboxTickets() {
     setSearchKeyword(value.trim())
   }, 500)
 
+  const updateTicketStatus = (ticketId) => {
+    setData((prevData) => {
+      const updatedData = { ...prevData }
+      Object.keys(updatedData).forEach((key) => {
+        if (updatedData[key]?.rows) {
+          updatedData[key].rows = updatedData[key].rows.map((ticket) =>
+            ticket.id === ticketId
+              ? { ...ticket, read_by_instructor: true }
+              : ticket
+          )
+        }
+      })
+      return updatedData
+    })
+  }
+
   // const renderTickets =
   //   isMenuOpened &&
   //   data &&
@@ -132,6 +148,7 @@ function InboxTickets() {
         key={ticket.id}
         ticket={ticket}
         setSelectedTicket={setSelectedTicket}
+        updateTicketStatus={updateTicketStatus}
       />
     ))
   }, [
@@ -177,6 +194,7 @@ function InboxTickets() {
               ticket={selectedTicket}
               isTicketOpened={isTicketOpened}
               close={() => setSelectedTicket(null)}
+              updateTicketStatus={updateTicketStatus}
             />
           )}
 

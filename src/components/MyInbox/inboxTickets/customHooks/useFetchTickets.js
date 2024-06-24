@@ -68,7 +68,7 @@ function useFetchTickets(
     fetchData()
   }, [questionsMenuSelected, page, searchKeyword])
 
-  return { data, error }
+  return { data, error, setData }
 }
 
 export default useFetchTickets

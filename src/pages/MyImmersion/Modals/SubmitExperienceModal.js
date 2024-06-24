@@ -189,7 +189,7 @@ const SubmitExperienceModal = (props) => {
                 <div className="d-flex">
                   <SubmitButton
                     text={'DENY'}
-                    disabled={formData.status === 'rejected'}
+                    disabled={formData.status !== 'pending'}
                     type="button"
                     onClick={() => submitHandler('rejected')}
                     className={'deny-button'}
@@ -197,7 +197,7 @@ const SubmitExperienceModal = (props) => {
 
                   <SubmitButton
                     text={'APPROVE'}
-                    disabled={formData.status === 'approved'}
+                    disabled={formData.status !== 'pending'}
                     type="button"
                     onClick={() => submitHandler('approved')}
                     className={'approve-button'}
