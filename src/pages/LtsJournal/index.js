@@ -85,8 +85,10 @@ function LtsJournal(props) {
     'student-wellnes': 'student_journals.student-wellnes_title',
     'student-personal-finance':
       'student_journals.student-personal-finance_title',
-    'student-leadership': 'student_journals.student-leadership_title'
+    'student-leadership': 'student_journals.student-leadership_title',
+    'my-mentorship': 'my_journal.mentorship_title'
   }
+
   let descriptionMapping = {
     hs1: 'my_journal.hs1_description',
     hs2: 'my_journal.hs2_description',
@@ -98,7 +100,8 @@ function LtsJournal(props) {
     'student-wellnes': 'student_journals.student-wellnes_description',
     'student-personal-finance':
       'student_journals.student-personal-finance_description',
-    'student-leadership': 'student_journals.student-leadership_description'
+    'student-leadership': 'student_journals.student-leadership_description',
+    'my-mentorship': 'my_journal.mentorship_description'
   }
 
   const handleJournalSearch = (e) => {
@@ -120,7 +123,6 @@ function LtsJournal(props) {
       ])
     }
   }
-
   return (
     <div id="main-body">
       <div className="container-fluid">
