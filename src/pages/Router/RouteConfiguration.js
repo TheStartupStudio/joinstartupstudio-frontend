@@ -204,6 +204,11 @@ export const authRoutesWithProps = [
     props: { category: 'my-training' }
   },
   {
+    path: '/my-mentorship/',
+    component: MyTraining,
+    props: { category: 'my-mentorship' }
+  },
+  {
     path: '/market-ready/',
     component: LtsJournal,
     props: { category: 'market-ready' }
