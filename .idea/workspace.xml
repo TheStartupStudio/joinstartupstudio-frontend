@@ -5,33 +5,67 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/InterviewedMentors.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/ClonedTables.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/DisplayCellData.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTable.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableCell.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableCellInput.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableRow.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableRows.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableRowsCloned.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/TableCellTitle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/UserJournalTableCell.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/AddEntryButton.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/AddMyMentor.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/PortfolioActions.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SwitchIcon.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/TooltipAction.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/LabeledInput.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/PortfolioDataContainer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/PortfolioInfo.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/PortfolioInfoBox.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/EditPortfolioSubmission.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/HorizontalSeparator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/PortfolioHeader.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/PortfolioProgressIndicator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/ProgressIcon.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/SectionDescription.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/ConfirmDeleteRecordModal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/ConfirmVisibilityModal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/MyFailureModal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/MyMentorModal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/PortfolioModalWrapper.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/PortfolioVisibilityModal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/SharePortfolioModal.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/PortfolioNavigator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/PortfolioSubmission.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/ReactAvatarEditor/AvatarEditor.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/ReactAvatarEditor/AvatarEditorComponent.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/ReactAvatarEditor/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/ReactImageCropper.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UploadImageBox.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UserImage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UserInfo.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UserSocialMedia.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyFailure.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyFailures.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyMentor.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyMentors.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyRelationships.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/UserStory.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/redux/portfolio/Actions.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/redux/portfolio/Constants.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/redux/portfolio/Service.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Router.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Router.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/Body.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/Body.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lang/locales/en_US.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/lang/locales/en_US.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lang/locales/es_ES.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/lang/locales/es_ES.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/studentJournals/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/studentJournals/content.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/rootReducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="false" />
+    <option name="myAllFileTypesSelected" value="true" />
+    <option name="mySelectedFileTypes">
+      <set />
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -54,7 +88,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/LtsJournal/JournalTables",
+    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/redux",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -67,11 +101,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\redux" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\JournalTables" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\studentJournals" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
@@ -119,6 +153,7 @@
       <workItem from="1716189136164" duration="22111000" />
       <workItem from="1716450314642" duration="13861000" />
       <workItem from="1716475776652" duration="8504000" />
+      <workItem from="1718893352755" duration="2789000" />
     </task>
     <servers />
   </component>

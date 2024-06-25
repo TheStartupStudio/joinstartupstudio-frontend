@@ -15,8 +15,6 @@ window.jQuery = jQuery
 function App({ basename }) {
   const { activeMinutes } = useUserActivity()
 
-  // console.log('activeMinutes', activeMinutes)
-
   return (
     <React.Suspense fallback={''}>
       <BrowserRouter basename={basename}>
