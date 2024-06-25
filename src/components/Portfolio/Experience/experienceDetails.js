@@ -10,7 +10,7 @@ import {
 import { format, parse } from 'date-fns'
 import { useHistory } from 'react-router-dom'
 import { formatDate } from '../../../utils/helpers'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 
 export const ExperienceDetails = (props) => {
   const [experience, setExperience] = useState()
@@ -109,10 +109,24 @@ export const ExperienceDetails = (props) => {
                     color: '#231F20'
                   }}
                 >
-                  {format((parse(formatDate(experience.start_date), 'yyyy-MM', new Date())), 'MMMM yyyy')}
+                  {format(
+                    parse(
+                      formatDate(experience.start_date),
+                      'yyyy-MM',
+                      new Date()
+                    ),
+                    'MMMM yyyy'
+                  )}
                   <span style={{ fontSize: '16px' }}> - </span>
                   {experience?.end_date
-                    ? format((parse(formatDate(experience.end_date), 'yyyy-MM', new Date())), 'MMMM yyyy')
+                    ? format(
+                        parse(
+                          formatDate(experience.end_date),
+                          'yyyy-MM',
+                          new Date()
+                        ),
+                        'MMMM yyyy'
+                      )
                     : 'Present'}
                 </div>
               </div>

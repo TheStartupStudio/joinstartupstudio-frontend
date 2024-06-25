@@ -1,6 +1,5 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
-import SectionButton from '../../../PortfolioNew/HsPortfolio/Components/SectionButton'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import SectionActions from '../Actions/SectionActions'
 

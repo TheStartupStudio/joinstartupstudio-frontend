@@ -4,12 +4,13 @@ import SidebarItem from './SidebarItem'
 import ParentSidebarItem from './ParentSidebarItem'
 import ParentDropdownItem from './ParentDropdownItem'
 import DropdownItem from './DropdownItem'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setAccordionToggled } from '../../redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
 import IntlMessages from '../../utils/IntlMessages'
 
 const Body = (props) => {
+  const { isAdmin } = useSelector((state) => state.user.user)
   const dispatch = useDispatch()
   const location = useLocation()
   return (
@@ -63,13 +64,18 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseClassroom'}>
+        <DropdownItem
+          allowed={isAdmin}
+          title={'USER MANAGEMENT'}
+          to={'/user-management'}
+        />
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
         <DropdownItem
           disabled={true}
           title={'MY EVALUATIONS'}
           to={'/my-evaluations'}
         />
-        <DropdownItem title={'MY INBOX'} to="/iamr-inbox" />
+        <DropdownItem title={'MY INBOX'} to="/my-inbox" />
       </ParentDropdownItem>
 
       <ParentSidebarItem
@@ -80,10 +86,6 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseExample'}>
-        <DropdownItem
-          title={<IntlMessages id="my_saved.STORY_IN_MOTION" />}
-          to={'/story-in-motion'}
-        />
         <DropdownItem title={'PATHWAYS'} to={'/pathways'} />
         <DropdownItem title={'IMMERSION'} to={'/my-immersion'} />
         <DropdownItem

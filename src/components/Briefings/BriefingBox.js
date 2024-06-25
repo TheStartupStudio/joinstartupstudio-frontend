@@ -9,12 +9,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons'
 import './style.css'
 import BriefingEditor from './BriefingEditor'
 
-const BriefingBox = ({
-  briefing,
-  handleOpenBriefingModal,
-  isSuperAdmin,
-  user
-}) => {
+const BriefingBox = ({ briefing, handleOpenBriefingModal, isAdmin, user }) => {
   const dispatch = useDispatch()
   const { id, title, date, isSelected } = briefing
   const [editModal, setEditModal] = useState(false)
@@ -26,7 +21,7 @@ const BriefingBox = ({
 
   return (
     <div className="skill-box">
-      {isSuperAdmin && (
+      {isAdmin && (
         <div className="briefing_edit-button ">
           <FontAwesomeIcon icon={faPen} onClick={() => setEditModal(true)} />
         </div>
@@ -43,7 +38,7 @@ const BriefingBox = ({
         >
           Read briefing...
         </p>
-        {isSuperAdmin && (
+        {isAdmin && (
           <p
             className={`text-danger cursor-pointer ${
               isSelected ? 'disabled' : ''

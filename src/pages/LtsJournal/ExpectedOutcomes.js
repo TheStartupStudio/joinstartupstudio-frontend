@@ -1,6 +1,5 @@
 import React from 'react'
-import AccordionItemWrapper from './AccordionItemWrapper'
-import StepsBox from './Steps/StepsBox'
+import AccordionItemWrapper from './UI/AccordionItemWrapper'
 
 const ExpectedOutcomes = (props) => {
   return (
@@ -30,6 +29,7 @@ const ExpectedOutcomes = (props) => {
                           padding: data.padding ?? 0,
                           objectFit: 'contain'
                         }}
+                        alt="url"
                       />
                     </div>
                   }

@@ -4,8 +4,8 @@ import PortfolioHeader from './Components/Header/PortfolioHeader'
 import { useDispatch, useSelector } from 'react-redux'
 import PortfolioActions from './Components/Actions/PortfolioActions'
 import PortfolioNavigator from './Components/PortfolioNavigator'
-import { changeViewMode } from '../../redux'
 import {
+  changeViewMode,
   getPortfolioPrivacy,
   setPublishModal,
   setShareModal,

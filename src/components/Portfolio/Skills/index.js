@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import IntlMessages from '../../../utils/IntlMessages'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { SkillBoxEditModal } from './skillBoxEditModal'
 import RemoveSkill from './RemoveSkill'
 import axiosInstance from '../../../utils/AxiosInstance'
 import './index.css'
 import SkillBoxButton from './skillBox'
 import { toast } from 'react-toastify'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 import PortfolioSection from '../../../pages/PortfolioNew/PortfolioSection'
-import { VerifyButton } from '../../../pages/PortfolioNew/editPortfolio'
-import { useHistory } from 'react-router-dom'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
 
 export const Skills = (props) => {
   const [showSkillBoxModal, setShowSkillBoxModal] = useState(false)
@@ -152,11 +147,7 @@ export const Skills = (props) => {
     getUserSkills()
     GetSkillsFromDB()
   }, [])
-  // useEffect(() => {
-  //   getIAMRSkills()
-  //   // console.log('inside SKILLS')
-  // }, [])
-  const history = useHistory()
+
   // const isPreview = history.location.pathname.includes('preview')
 
   const windowWidth = useWindowWidth()
@@ -188,7 +179,6 @@ export const Skills = (props) => {
       return '75%'
     }
   }
-  // console.log(approvedSkills)
   return (
     <>
       {!isLoading ? (

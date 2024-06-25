@@ -8,8 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 function ContentContainer(props) {
-  // console.log(props)
-
   return (
     <div
       className={

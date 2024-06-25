@@ -1,16 +1,23 @@
 import React, { useEffect } from 'react'
 import { DisplayRectangleData } from '../MyPerformanceDataComponents'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchSectionOneData } from '../../../redux/myPerformanceData/actions'
-function SectionOne() {
+import {
+  fetchInstructorSectionOneData,
+  fetchSectionOneData
+} from '../../../redux/myPerformanceData/actions'
+function SectionOne({ instructorId }) {
   const dispatch = useDispatch()
   const { sectionOneData, sectionOneLoading } = useSelector(
     (state) => state.performanceData
   )
 
   useEffect(() => {
-    dispatch(fetchSectionOneData())
-  }, [dispatch])
+    if (instructorId) {
+      dispatch(fetchInstructorSectionOneData(instructorId))
+    } else {
+      dispatch(fetchSectionOneData())
+    }
+  }, [dispatch, instructorId])
 
   return (
     <div className={'row g-2'}>

@@ -57,7 +57,6 @@ function JournalsBody(props) {
         }
       })
 
-      console.log(data)
       setUser(data.user)
       setJournalsData(data.journals)
       setJournals(data.journals)

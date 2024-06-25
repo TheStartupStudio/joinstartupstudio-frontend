@@ -18,6 +18,7 @@ import {
   updateStartTime,
   updateUserActivity
 } from '../../../redux/user/Actions'
+import { Col, Row } from 'react-bootstrap'
 
 function Login() {
   const [user, setUser] = useState({})
@@ -115,13 +116,13 @@ function Login() {
   return (
     <div
       className="container-fluid md-px-5 ps-md-5 login_container"
-      style={{ backgroundColor: '#F8F7F7', minHeight: ' calc(100vh - 42px)' }}
+      // style={{ backgroundColor: '#F8F7F7', minHeight: ' calc(100vh - 42px)' }}
     >
-      <div className="row ps-md-5 center-content">
-        <div className="col-md-5 ms-sm-1">
+      <Row className="m-0 p-0 ps-md-5 center-content">
+        <Col md="7" lg="6" xl="5" className="ms-sm-1">
           <FormWrapper
-            className="col-lg-9 mx-auto px-4 pb-3 pt-4"
-            style={{ height: '60vh', minHeight: '60vh' }}
+            className="col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4"
+            // style={{ height: '60vh', minHeight: '60vh' }}
           >
             <FormattedMessage id="login.email" defaultMessage="login.email">
               {(placeholder) => (
@@ -183,8 +184,8 @@ function Login() {
               </a>
             </p>
           </FormWrapper>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   )
 }

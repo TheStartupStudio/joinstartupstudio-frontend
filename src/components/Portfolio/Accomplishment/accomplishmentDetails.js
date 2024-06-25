@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import './style.css'
-import { faGlobe, faFile } from '@fortawesome/free-solid-svg-icons'
 import { format, parse } from 'date-fns'
 import { useHistory } from 'react-router-dom'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 import { formatDate } from '../../../utils/helpers'
 
 export const AccomplishmentDetails = (props) => {

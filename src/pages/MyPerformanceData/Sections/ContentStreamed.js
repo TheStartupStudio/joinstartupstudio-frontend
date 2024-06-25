@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import OptionSelector from '../../../components/OptionSelector'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  fetchInstructorMasterclassPercentage,
+  fetchInstructorPodcastPercentage,
+  fetchInstructorQAPercentage,
   fetchMasterclassPercentage,
   fetchPodcastPercentage,
   fetchQAPercentage
 } from '../../../redux/myPerformanceData/actions'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 import CustomSpinner from '../../../components/CustomSpinner'
 
 const DisplayCircleData = ({
@@ -56,7 +59,7 @@ const DisplayCircleData = ({
   )
 }
 
-const ContentStreamed = () => {
+const ContentStreamed = ({ instructorId }) => {
   const dispatch = useDispatch()
   const windowWidth = useWindowWidth()
   const [filterBy, setFilterBy] = useState('')
@@ -68,9 +71,19 @@ const ContentStreamed = () => {
   const handleFilterChange = (event) => {
     setFilterBy(event.target.value)
 
-    dispatch(fetchMasterclassPercentage(event.target.value))
-    dispatch(fetchPodcastPercentage(event.target.value))
-    dispatch(fetchQAPercentage(event.target.value))
+    if (instructorId) {
+      dispatch(
+        fetchInstructorMasterclassPercentage(event.target.value, instructorId)
+      )
+      dispatch(
+        fetchInstructorPodcastPercentage(event.target.value, instructorId)
+      )
+      dispatch(fetchInstructorQAPercentage(event.target.value, instructorId))
+    } else {
+      dispatch(fetchMasterclassPercentage(event.target.value))
+      dispatch(fetchPodcastPercentage(event.target.value))
+      dispatch(fetchQAPercentage(event.target.value))
+    }
   }
 
   useEffect(() => {

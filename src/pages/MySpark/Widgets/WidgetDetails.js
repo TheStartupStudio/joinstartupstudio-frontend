@@ -10,7 +10,7 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import LtsButton from '../../../components/LTSButtons/LTSButton'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 
 function WidgetDetails(props) {
   const [widgetInputs, setWidgetInputs] = useState([])
@@ -61,7 +61,6 @@ function WidgetDetails(props) {
     }
 
     const { prompt, nonPrompt } = reduceInputs(widgetInputs, nonPromptFields)
-    // console.log('prompt', prompt)
     setRequestData({
       prompt: {
         ...prompt,

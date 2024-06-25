@@ -2,7 +2,7 @@ import React from 'react'
 import { Route } from 'react-router-dom/cjs/react-router-dom'
 import OccupationJobs from '../OccupationJobs'
 import OccupationJobDetails from '../OccupationJobDetails'
-import LoadingAnimation from '../../IAMRinbox/loadingAnimation'
+import LoadingAnimation from '../../../ui/loadingAnimation'
 
 const OccupationRouter = ({
   occupationGroup,

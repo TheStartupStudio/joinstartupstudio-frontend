@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  NavLink,
-  Link,
-  useParams,
-  useHistory,
-  Switch,
-  Route,
-  useLocation
-} from 'react-router-dom'
+import { NavLink, useHistory, Switch, Route } from 'react-router-dom'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
 import Accordion from 'react-bootstrap/Accordion'
-import { setAccordionToggled, changeSidebarState } from '../../redux'
+import { changeSidebarState } from '../../redux'
 import moment from 'moment'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown, faFileAlt } from '@fortawesome/free-solid-svg-icons'
@@ -23,6 +15,7 @@ import searchIcon from '../../assets/images/search-icon.png'
 import LtsJournalContent from './content'
 
 function LtsJournal(props) {
+  const dispatch = useDispatch()
   const history = useHistory()
   let [journals, setJournals] = useState([])
   let [loaded, setLoaded] = useState(false)
@@ -52,15 +45,8 @@ function LtsJournal(props) {
         }
       }
 
-      if (journalActive == 'no') activeteFirstJournal()
+      if (journalActive === 'no') activeteFirstJournal()
     } catch (err) {}
-  }
-
-  function noJournalSelected() {
-    setJournalActive('no')
-    if (loaded) {
-      activeteFirstJournal()
-    }
   }
 
   function activeteFirstJournal() {
@@ -74,28 +60,13 @@ function LtsJournal(props) {
   }
 
   function journalChanged(journal) {
-    // let updatedJournals = updateJournalEntry(journals, journal);
-    // setJournals(updatedJournals);
     getJournals(false)
   }
-  const dispatch = useDispatch()
   useEffect(() => {
     dispatch(changeSidebarState(false))
   })
 
-  function updateJournalEntry(journals, journal) {
-    return journals.map((item) => {
-      return {
-        ...item,
-        ...(item.id == journal.journalId ? { userEntry: [journal] } : {}),
-        ...(item.children
-          ? { children: updateJournalEntry(item.children, journal) }
-          : {})
-      }
-    })
-  }
-
-  useEffect(function () {
+  useEffect(() => {
     getJournals()
   }, [])
 
@@ -132,6 +103,7 @@ function LtsJournal(props) {
     'student-leadership': 'student_journals.student-leadership_description',
     'my-mentorship': 'my_journal.mentorship_description'
   }
+
   const handleJournalSearch = (e) => {
     e.preventDefault()
     const keyword = e.target.value.toLowerCase()
@@ -150,13 +122,6 @@ function LtsJournal(props) {
         )
       ])
     }
-    // else {
-    // setJournals([
-    //   ...journalsData.filter((journal) =>
-    //     journal.title.toLowerCase().includes(keyword)
-    //   )
-    // ])
-    // }
   }
   return (
     <div id="main-body">
@@ -192,12 +157,6 @@ function LtsJournal(props) {
                         </>
                       )}
                     />
-                    {/* <Route
-                      component={(renderprops) => {
-                        noJournalSelected()
-                        return <div></div>
-                      }}
-                    /> */}
                   </Switch>
                 </div>{' '}
                 {/* page-card__content */}
@@ -319,24 +278,6 @@ function LtsJournal(props) {
                             >
                               <span>{journalItem.title}</span>
                             </Accordion.Toggle>
-                            // <NavLink
-                            //   className={
-                            //     window.location.pathname.includes(
-                            //       'lts-journal'
-                            //     ) ||
-                            //     window.location.pathname.includes(
-                            //       'personal-finance-journal'
-                            //     )
-                            //       ? 'accordion-menu__item-toggle'
-                            //       : ''
-                            //   }
-                            //   to={`${props.match.url}/${journalItem.id}`}
-                            // >
-                            //   <span
-                            //   >
-                            //     {journalItem.title}
-                            //   </span>
-                            // </NavLink>
                           )}
                         </div>
                       ))}

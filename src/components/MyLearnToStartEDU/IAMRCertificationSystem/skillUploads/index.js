@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import LoadingAnimation from '../loadingAnimation'
 import Upload from './upload'
 import UploadsList from './uploadsList'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,6 +6,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import useUploads from './useUploads'
 import { UploadStatus } from './helpers'
 import './index.css'
+import LoadingAnimation from '../../../../ui/loadingAnimation'
 
 const SkillUploads = ({ skill }) => {
   const [showUpload, setShowUpload] = useState(false)
@@ -45,7 +45,7 @@ const SkillUploads = ({ skill }) => {
               }}
             />
           )}
-          <span className="text-info fw-bold">{skill.category} - </span> 
+          <span className="text-info fw-bold">{skill.category} - </span>
           <span className="fw-bold">{skill?.title} - </span> STUDENT UPLOADS
         </p>
         <p className="skill-title text-end">

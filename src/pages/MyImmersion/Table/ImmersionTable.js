@@ -5,6 +5,7 @@ import ProblemModal from '../Modals/ProblemModal'
 import { Button } from 'react-bootstrap'
 import SubmitIndustryProblemModal from '../Modals/SubmitIndustryProblemModal'
 import SubmitExperienceModal from '../Modals/SubmitExperienceModal'
+import { formatDateString } from '../../../utils/helpers'
 
 const ImmersionTable = React.memo(({ data, step }) => {
   const [problemModal, setProblemModal] = useState(false)
@@ -57,7 +58,6 @@ const ImmersionTable = React.memo(({ data, step }) => {
           <Button
             className="bg-transparent text-info border-info"
             onClick={() => {
-              console.log('cell.row.original', cell.row.original)
               const { companyName, problemDescription } = cell.row.original
 
               setCurrentCompanyName(companyName)
@@ -77,7 +77,12 @@ const ImmersionTable = React.memo(({ data, step }) => {
       {
         Header: 'Completion Date for Solution',
         accessor: 'completionDate',
-        disableResizing: true
+        disableResizing: true,
+        Cell: ({ value }) => (
+          <div className="text-center">
+            {value ? formatDateString(value) : 'N/A'}
+          </div>
+        )
       },
       {
         Header: '',
@@ -85,6 +90,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         disableResizing: true,
         Cell: ({ cell }) => (
           <button
+            className="submit-btn"
             style={{ backgroundColor: '#99cc33', color: 'white' }}
             onClick={() => {
               const { companyName, problemID, companyID, submitted } =
@@ -118,7 +124,6 @@ const ImmersionTable = React.memo(({ data, step }) => {
           <Button
             className="bg-transparent text-info border-info"
             onClick={() => {
-              console.log('cell.row.original', cell.row.original)
               const { companyName, problemDescription } = cell.row.original
 
               setCurrentCompanyName(companyName)
@@ -136,11 +141,21 @@ const ImmersionTable = React.memo(({ data, step }) => {
       },
       {
         Header: 'Date of Application',
-        accessor: 'dateOfApplication'
+        accessor: 'dateOfApplication',
+        Cell: ({ value }) => (
+          <div className="text-center">
+            {value ? formatDateString(value) : 'N/A'}
+          </div>
+        )
       },
       {
         Header: 'Date of Immersion Experience',
-        accessor: 'dateOfImmersionExperience'
+        accessor: 'dateOfImmersionExperience',
+        Cell: ({ value }) => (
+          <div className="text-center">
+            {value ? formatDateString(value) : 'N/A'}
+          </div>
+        )
       },
       {
         Header: '',
@@ -148,17 +163,15 @@ const ImmersionTable = React.memo(({ data, step }) => {
         width: 200,
         Cell: ({ cell }) => (
           <button
+            className="submit-btn"
             style={{ backgroundColor: '#99cc33', color: 'white' }}
             onClick={() => {
-              const { companyName, problemID, companyID, submitted } =
-                cell.row.original
+              const { companyName, problemID, companyID } = cell.row.original
               setProblemId(problemID)
               setCompanyId(companyID)
               setCurrentCompanyName(companyName)
               setExperienceModal(true)
-              // setProblemIsSubmitted(submitted)
             }}
-            // disabled={cell.row.original.submitted}
           >
             {cell.row.original.submitted ? 'APPLIED' : 'APPLY'}
           </button>
@@ -167,45 +180,6 @@ const ImmersionTable = React.memo(({ data, step }) => {
     ],
     []
   )
-  // const columnsStep4 = useMemo(
-  //   () => [
-  //     {
-  //       Header: 'Name of the Company',
-  //       accessor: 'companyName'
-  //     },
-  //     {
-  //       Header: 'Employment Description',
-  //       accessor: 'employmentDescription',
-  //       Cell: ({ value }) => (
-  //         <Button className="bg-transparent text-info border-info">
-  //           CLICK TO VIEW
-  //         </Button>
-  //       )
-  //     },
-  //     {
-  //       Header: 'Industry',
-  //       accessor: 'industry'
-  //     },
-  //     {
-  //       Header: 'Date of Application',
-  //       accessor: 'dateOfApplication'
-  //     },
-  //     {
-  //       Header: 'Starting date for Employment',
-  //       accessor: 'dateOfImmersionExperience'
-  //     },
-  //     {
-  //       Header: '',
-  //       id: 'apply',
-  //       Cell: () => (
-  //         <button style={{ background: '#99cc33', color: 'white' }}>
-  //           APPLY
-  //         </button>
-  //       )
-  //     }
-  //   ],
-  //   []
-  // )
 
   const columns = React.useMemo(() => {
     return step === 'step-1' ? columnsStep1 : columnsStep2
@@ -255,6 +229,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
           currentCompanyName={currentCompanyName}
           problemDescription={currentProblemDescription}
           onHide={() => setExperienceModal(false)}
+          mode="add"
         />
       )}
       {industryProblemModal && (
@@ -265,6 +240,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
           problemID={problemId}
           companyID={companyId}
           problemIsSubmitted={problemIsSubmitted}
+          mode="add"
         />
       )}
     </>

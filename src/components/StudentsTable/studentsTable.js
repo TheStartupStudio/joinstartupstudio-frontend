@@ -20,9 +20,8 @@ import Certification2Badge from '../../assets/images/market-ready-2-badge.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPeriodsStart } from '../../redux/dashboard/Actions'
 import { NextYearModal } from './nextYearModal'
-import { C } from '@fullcalendar/core/internal-common'
 
-export default function StudentsTable(props) {
+export default function StudentsTable({ instructorId }) {
   const dispatchRedux = useDispatch()
   const [currentEditingStudent, setCurrentEditingStudent] = useState()
   const [tooglingActivationStudent, setTooglingActivationStudent] = useState()
@@ -61,7 +60,6 @@ export default function StudentsTable(props) {
   const [receivedTransfersCount, setReceivedTransfersCount] = useState(0)
   const [yearOptions, setYearOptions] = useState([])
   const [periodOptions, setPeriodOptions] = useState([])
-  const [nextYearOptions, setNextYearOptions] = useState([])
 
   const filteringCondition = (student) => {
     return student?.name
@@ -76,7 +74,7 @@ export default function StudentsTable(props) {
   }, [])
 
   useEffect(() => {
-    if (students?.length) {
+    if (students?.length && !instructorId) {
       dispatch({ type: 'studentsCount', studentsCount: students?.length })
       var today = moment().startOf('day')
 
@@ -93,7 +91,7 @@ export default function StudentsTable(props) {
 
       dispatch({ type: 'recentlyActive', recentlyActive: count })
     }
-  }, [students?.length])
+  }, [students?.length, dispatch])
 
   useEffect(() => {
     setReceivedTransfersCount(
@@ -128,14 +126,20 @@ export default function StudentsTable(props) {
   }
 
   const getStudents = async () => {
+    let url = ''
+    if (instructorId) {
+      url = `/instructor/my-students/${instructorId}`
+    } else {
+      url = `/instructor/my-students`
+    }
     await axiosInstance
-      .get('/instructor/my-students')
+      .get(url)
       .then((res) => {
         if (res.data.students?.length) {
           let newArrray = []
           res.data.instructorsnew.map((instructor) => {
             newArrray.push({
-              value: instructor.instructorInfo.id,
+              value: instructor.instructorInfo?.id,
               label: instructor.name
             })
           })
@@ -257,14 +261,24 @@ export default function StudentsTable(props) {
   }
 
   const getTransferedStudents = async () => {
+    let sendRequestUrl = ''
+    let receiverRequestUrl = ''
+    if (instructorId) {
+      sendRequestUrl = `/instructor/transfers/sent-requests/${instructorId}`
+      receiverRequestUrl = `/instructor/transfers/received-requests/${instructorId}`
+    } else {
+      sendRequestUrl = `/instructor/transfers/sent-requests`
+      receiverRequestUrl = `/instructor/transfers/received-requests`
+    }
+
     axiosInstance
-      .get('/instructor/transfers/sent-requests')
+      .get(sendRequestUrl)
       .then((res) => {
         setSentTransferRequests(res.data)
       })
       .catch((e) => e)
     axiosInstance
-      .get('/instructor/transfers/received-requests')
+      .get(receiverRequestUrl)
       .then((res) => {
         setReceivedTransferRequests(res.data)
       })
@@ -1245,6 +1259,7 @@ export default function StudentsTable(props) {
           columns={tableColumns}
           data={tableData()}
           pagination
+          paginationPerPage={5}
           selectableRows
           onSelectedRowsChange={(rows) =>
             setSelectedRows(

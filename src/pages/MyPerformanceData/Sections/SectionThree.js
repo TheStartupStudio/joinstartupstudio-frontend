@@ -3,9 +3,12 @@ import ContentStreamed from './ContentStreamed'
 import OptionSelector from '../../../components/OptionSelector'
 import { ProgressCard } from '../MyPerformanceDataComponents'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchInstructorDebriefData } from '../../../redux/myPerformanceData/actions'
+import {
+  fetchInstructorDebriefData,
+  fetchInstructorDebriefDataWithId
+} from '../../../redux/myPerformanceData/actions'
 
-function SectionThree(props) {
+function SectionThree({ instructorId }) {
   const dispatch = useDispatch()
   const [curriculumCompletion, setCurriculumCompletion] = React.useState('')
   const { instructorDebriefData, instructorDebriefLoading } = useSelector(
@@ -17,8 +20,15 @@ function SectionThree(props) {
   }
 
   useEffect(() => {
-    dispatch(fetchInstructorDebriefData(curriculumCompletion))
-  }, [curriculumCompletion])
+    if (instructorId) {
+      dispatch(
+        fetchInstructorDebriefDataWithId(curriculumCompletion, instructorId)
+      )
+    } else {
+      dispatch(fetchInstructorDebriefData(curriculumCompletion))
+    }
+  }, [dispatch, curriculumCompletion, instructorId])
+
   function handleProgressValue(value) {
     if (isNaN(value) || value === undefined || value === null) {
       return 0
@@ -27,7 +37,7 @@ function SectionThree(props) {
   }
   return (
     <div className={'row g-2 '} style={{ minHeight: 300 }}>
-      <ContentStreamed />
+      <ContentStreamed instructorId={instructorId} />
       <div className={'col-md-4 p-3 d-flex flex-column'} style={{ gap: 20 }}>
         <OptionSelector
           width={'100%'}

@@ -245,7 +245,6 @@ export const getCertificationType = (skillType) => {
 
 export const getIconComponent = (iconIdentifier, color) => {
   const icon = iconMap[iconIdentifier]
-  console.log('icon', icon)
   return icon ? <FontAwesomeIcon icon={icon} style={{ color: color }} /> : null
 }
 
@@ -264,4 +263,56 @@ export const formatDateString = (dateString) => {
 export const getFormattedDate = (date) => {
   const formattedDate = moment(date).format('YYYY-MM-DD')
   return formattedDate
+}
+export const fileNameExtracter = (url) => {
+  const extractedString = url?.split('/')[5]
+
+  return extractedString?.length > 30
+    ? `${extractedString.substring(0, 40)}...pdf`
+    : extractedString
+}
+
+export const uploadImage = async (imageFile) => {
+  // debugger
+  try {
+    const response = await axiosInstance.post(
+      // '/upload/img-transform',
+      '/upload/img',
+      imageFile,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
+    if (response.data.success) {
+      return response.data.fileLocation
+    } else {
+      console.error('Upload failed:', response.data)
+      toast.error('Image upload failed, please try again!')
+      return null
+    }
+  } catch (err) {
+    toast.error('Image upload failed, please try again!')
+    return null
+  }
+}
+
+export const deleteImage = async (fileLocation) => {
+  try {
+    const response = await axiosInstance.delete('/upload/img', {
+      data: { fileLocation }
+    })
+    if (response.data.success) {
+      toast.success('Image deleted successfully!')
+      return true
+    } else {
+      console.error('Delete failed:', response.data)
+      toast.error('Image deletion failed, please try again!')
+      return false
+    }
+  } catch (err) {
+    toast.error('Image deletion failed, please try again!')
+    return false
+  }
 }

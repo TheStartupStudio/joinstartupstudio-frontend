@@ -2,29 +2,26 @@ import React, { useState } from 'react'
 import ModalWrapper from './ModalWrapper'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
-import IntlMessages from '../../../utils/IntlMessages'
 import './SpotlightModal.css'
 import '../../../pages/StartupProfile/style/index.css'
 import SpotlightSimpleModal from './SpotlightSimpleModal'
+import { UploadFileInput } from '../../../pages/MyImmersion/ContentItems'
+import { useForm } from '../../../hooks/useForm'
+import { useValidation } from '../../../hooks/useValidation'
 
 const SpotlightApplyModal = (props) => {
-  const [fileName, setfileName] = useState()
-  const [file, setfile] = useState()
-  const [fileName1, setfileName1] = useState()
-  const [file1, setfile1] = useState()
   const [loading, setLoading] = useState(false)
   const [agreed, setAgreed] = useState(false)
-  const [data, setData] = useState({
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  const initialState = {
     who_is_pitching: '',
     product: '',
     describe: '',
     outcome: '',
-    product_or_service: '',
+    // product_or_service: '',
     Business_Plan: '',
     Pitch_Deck: ''
-  })
+  }
   const [spotlightSimpleModal, setSpotlightSimpleModal] = useState({
     type: '',
     show: null
@@ -42,67 +39,79 @@ const SpotlightApplyModal = (props) => {
     newSpotlightSimpleModal.show = false
     setSpotlightSimpleModal(newSpotlightSimpleModal)
   }
-  const [spotlightApplyModal, setSpotlightApplyModal] = useState(false)
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setData((old) => ({
-      ...old,
-      [name]: value
-    }))
-  }
+
+  const { formData, handleChange, handleChangeFile } = useForm(
+    initialState,
+    'new',
+    loading
+  )
+  const { handleSubmit } = useValidation(formData, setFormSubmitted)
 
   const verify = () => {
     if (!agreed) {
       setLoading(false)
       return toast.error('Please agree with term and condition.')
     } else if (
-      data.who_is_pitching.length == 0 ||
-      data.product.length == 0 ||
-      data.describe.length == 0 ||
-      data.outcome.length == 0
-      // ||
-      // data.product_or_service == 0
+      formData.who_is_pitching.length == 0 ||
+      formData.product.length == 0 ||
+      formData.describe.length == 0 ||
+      formData.outcome.length == 0
     ) {
       setLoading(false)
       return toast.error('Please fill in all the fields.')
-    } else if (file.length == 0 || file1.length == 0) {
+    } else if (
+      formData.Business_Plan.length == 0 ||
+      formData.Pitch_Deck.length == 0
+    ) {
       setLoading(false)
       return toast.error('Please fill in all the fields.')
     }
-    handleSubmit()
+    submitHandler()
   }
-  const handleSubmit = async () => {
-    const formData = new FormData()
-    formData.append('document', file)
-    await axiosInstance
-      .post('/upload/document', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+
+  const submitHandler = async () => {
+    // e.preventDefault()
+    handleSubmit(async () => {
+      setLoading(true)
+      const data = new FormData()
+
+      if (formData.Business_Plan instanceof File) {
+        data.append('documents', formData.Business_Plan)
+      }
+      if (formData.Pitch_Deck instanceof File) {
+        data.append('documents', formData.Pitch_Deck)
+      }
+
+      try {
+        const response = await axiosInstance.post('/upload/documents', data, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+
+        const { fileLocations } = response.data
+
+        const updatedData = {
+          ...formData,
+          Business_Plan: fileLocations[0],
+          Pitch_Deck: fileLocations[1]
         }
-      })
-      .then(async (firstResponse) => {
-        const formData1 = new FormData()
-        formData1.append('document', file1)
+
         await axiosInstance
-          .post('/upload/document', formData1, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+          .post('/users/sendPitch', {
+            updatedData
           })
-          .then(async (response) => {
-            await axiosInstance
-              .post('/users/sendPitch', {
-                ...data,
-                Business_Plan: firstResponse.data.fileLocation,
-                Pitch_Deck: response.data.fileLocation
-              })
-              .then((response) => {
-                setLoading(false)
-              })
+          .then((response) => {
+            toast.success(response.data.message)
+            props.onHide()
+            setLoading(false)
           })
-      })
-      .catch((err) => err)
+      } catch (error) {
+        console.error(error)
+        toast.error('Failed to submit solution')
+        setLoading(false)
+      }
+    })
   }
+
   return (
     <ModalWrapper
       title={props.title}
@@ -111,9 +120,10 @@ const SpotlightApplyModal = (props) => {
       classes={'spotlight-apply-modal'}
     >
       <div className="row">
+        <h1>baba</h1>
         <div className="col-12 col-lg-6">
           <input
-            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input"
+            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input border"
             style={{ backgroundColor: '#fff' }}
             type="text"
             name="who_is_pitching"
@@ -122,7 +132,7 @@ const SpotlightApplyModal = (props) => {
             placeholder={'Who is pitching?'}
           />
           <input
-            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input"
+            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input border"
             type="text"
             name="product"
             onChange={(e) => handleChange(e)}
@@ -130,7 +140,7 @@ const SpotlightApplyModal = (props) => {
             placeholder={'What is your product or service called?'}
           />
           <textarea
-            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-inputtextarea"
+            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-inputtextarea border"
             type="text"
             onChange={(e) => handleChange(e)}
             rows={5}
@@ -139,7 +149,7 @@ const SpotlightApplyModal = (props) => {
             placeholder={'Briefly describe your product or service.'}
           />
           <textarea
-            className="mt-0 mb-2 w-100 ps-2 py-3 pitch-inputtextarea"
+            className="mt-0 mb-2 w-100 ps-2 py-3 pitch-inputtextarea border"
             type="text"
             onChange={(e) => handleChange(e)}
             required
@@ -151,61 +161,20 @@ const SpotlightApplyModal = (props) => {
           />
         </div>
         <div className="col-12 col-lg-6">
-          {/*<input*/}
-          {/*  className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input"*/}
-          {/*  type="text"*/}
-          {/*  onChange={(e) => handleChange(e)}*/}
-          {/*  name="product_or_service"*/}
-          {/*  placeholder={'What is your product or service called?'}*/}
-          {/*/>*/}
-          <div className="">
-            <label className="edit-label text-center mt-2 pitch-input">
-              <input
-                type="file"
-                onChange={(e) => {
-                  setfileName(e.target.files[0].name)
-                  setfile(e.target.files[0])
-                }}
-                id="inputGroupFile"
-                name="profile_image"
-                accept="application/pdf"
-                className="d-none "
-              />
-              <div className="mt-md-1 d-flex justify-content-center edit-bio-upload-image pb-5">
-                <span className="ps-2 my-auto">
-                  {fileName ? fileName : 'Upload Pitch Deck (PDF)'}
-                </span>
-                <FontAwesomeIcon
-                  icon={faFileUpload}
-                  className="edit-modal-sm ms-auto float-end my-auto "
-                />
-              </div>
-            </label>
-          </div>
-          <div className="mt-3">
-            <label className="edit-label text-center pitch-input">
-              <input
-                type="file"
-                id="inputGroupFile"
-                name="Business_Plan"
-                accept="application/pdf"
-                className="d-none"
-                onChange={(e) => {
-                  setfileName1(e.target.files[0].name)
-                  setfile1(e.target.files[0])
-                }}
-              />
-              <div className="mt-md-1 d-flex justify-content-center edit-bio-upload-image">
-                <span className="ps-2 my-auto">
-                  {fileName1 ? fileName1 : 'Upload Business Plan (PDF)'}
-                </span>
-                <FontAwesomeIcon
-                  icon={faFileUpload}
-                  className="edit-modal-sm ms-auto float-end"
-                />
-              </div>
-            </label>
-          </div>
+          <UploadFileInput
+            filename={formData.Pitch_Deck.name}
+            placeholder={'Upload Pitch Deck (PDF)'}
+            name="Pitch_Deck"
+            onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
+            mode={'new'}
+          />
+          <UploadFileInput
+            filename={formData.Business_Plan.name}
+            placeholder={'Upload Business Plan (PDF)'}
+            name="Business_Plan"
+            onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
+            mode={'new'}
+          />
           <div className="mt-2">
             <p className="span-subscribed-to-the-Learn-to-Start">
               You must be subscribed to the Learn to Start platform for a
@@ -236,22 +205,6 @@ const SpotlightApplyModal = (props) => {
         </div>
       </div>
       <div className="w-100 pb-5">
-        {/*<div className="row float-start">*/}
-        {/*  <button*/}
-        {/*    className="download-parent-guardian-form ms-2 px-5"*/}
-        {/*    disabled={loading}*/}
-        {/*    onClick={() => {*/}
-        {/*      setLoading(true)*/}
-        {/*      verify()*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    {loading ? (*/}
-        {/*      <span className="spinner-border spinner-border-sm" />*/}
-        {/*    ) : (*/}
-        {/*      <>{'Download Parent/Guardian Form'}</>*/}
-        {/*    )}*/}
-        {/*  </button>*/}
-        {/*</div>*/}
         <div className="row float-end">
           <button
             className="edit-account me-5"

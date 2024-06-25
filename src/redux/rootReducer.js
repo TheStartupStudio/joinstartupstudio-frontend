@@ -16,6 +16,7 @@ import myImmersionReducer from './myImmersion/reducer'
 import PathwaysReducer from './pathways/reducer'
 import platformBadgesReducer from './platformBadges/reducer'
 import portfolioReducer from './portfolio/Reducer'
+import taskLessonReducer from './taskLessons/reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   performanceData: performanceDataReducer,
   pathways: PathwaysReducer,
   platformBadges: platformBadgesReducer,
+  lessons: taskLessonReducer,
   portfolio: portfolioReducer
 })
 export default rootReducer

@@ -55,16 +55,70 @@ export const fetchAllIndustries = () => {
   }
 }
 
+export const fetchUserProblemSolution = (user_ID, solution_ID) => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchUserProblemSolutionPending())
+      const data = await myImmersionService.fetchUserProblemSolution(
+        user_ID,
+        solution_ID
+      )
+      dispatch(fetchUserProblemSolutionFulfilled(data))
+    } catch (error) {
+      dispatch(fetchUserProblemSolutionsRejected(error))
+    }
+  }
+}
+export const fetchUserExperienceApplication = (user_ID, experience_ID) => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchUserExperienceApplicationPending())
+      const data = await myImmersionService.fetchUserExperienceApplication(
+        user_ID,
+        experience_ID
+      )
+      dispatch(fetchUserExperienceApplicationFulfilled(data))
+    } catch (error) {
+      dispatch(fetchUserExperienceApplicationRejected(error))
+    }
+  }
+}
+export const handleIndustryProblemStatus = (id, status) => {
+  return async (dispatch) => {
+    try {
+      dispatch(handleIndustryProblemStatusPending())
+      const data = await myImmersionService.handleIndustryProblemStatus(
+        id,
+        status
+      )
+      dispatch(handleIndustryProblemStatusFulfilled(data))
+    } catch (error) {
+      dispatch(handleIndustryProblemStatusRejected(error))
+    }
+  }
+}
+export const handleExperienceStatus = (id, status) => {
+  return async (dispatch) => {
+    try {
+      dispatch(handleExperienceStatusPending())
+      const data = await myImmersionService.handleExperienceStatus(id, status)
+      dispatch(handleExperienceStatusFulfilled(data))
+    } catch (error) {
+      dispatch(handleExperienceStatusRejected(error))
+    }
+  }
+}
+
 export const fetchStepPending = () => ({
   type: types.FETCH_STEP_PENDING
 })
-
 export function fetchStepFulfilled(payload) {
   return { type: types.FETCH_STEP_FULFILLED, payload }
 }
 export function fetchStepRejected(error) {
   return { type: types.FETCH_STEP_REJECTED, error }
 }
+
 export const fetchAllIndustryProblemsPending = () => ({
   type: types.FETCH_ALL_INDUSTRY_PROBLEMS_PENDING
 })
@@ -74,6 +128,7 @@ export function fetchAllIndustryProblemsFulfilled(payload) {
 export function fetchAllIndustryProblemsRejected(error) {
   return { type: types.FETCH_ALL_INDUSTRY_PROBLEMS_REJECTED, error }
 }
+
 export const fetchExperiencesPending = () => ({
   type: types.FETCH_ALL_EXPERIENCES_PENDING
 })
@@ -92,4 +147,44 @@ export function fetchAllIndustriesFulfilled(payload) {
 }
 export function fetchAllIndustriesRejected(error) {
   return { type: types.FETCH_ALL_INDUSTRIES_REJECTED, error }
+}
+
+export const fetchUserProblemSolutionPending = () => ({
+  type: types.FETCH_USER_PROBLEM_SOLUTION_PENDING
+})
+export function fetchUserProblemSolutionFulfilled(payload) {
+  return { type: types.FETCH_USER_PROBLEM_SOLUTION_FULFILLED, payload }
+}
+export function fetchUserProblemSolutionsRejected(error) {
+  return { type: types.FETCH_USER_PROBLEM_SOLUTION_REJECTED, error }
+}
+
+export const fetchUserExperienceApplicationPending = () => ({
+  type: types.FETCH_USER_EXPERIENCE_APPLICATION_PENDING
+})
+export function fetchUserExperienceApplicationFulfilled(payload) {
+  return { type: types.FETCH_USER_EXPERIENCE_APPLICATION_FULFILLED, payload }
+}
+export function fetchUserExperienceApplicationRejected(error) {
+  return { type: types.FETCH_USER_EXPERIENCE_APPLICATION_REJECTED, error }
+}
+
+export const handleExperienceStatusPending = () => ({
+  type: types.HANDLE_EXPERIENCE_STATUS_PENDING
+})
+export function handleExperienceStatusFulfilled(payload) {
+  return { type: types.HANDLE_EXPERIENCE_STATUS_FULFILLED, payload }
+}
+export function handleExperienceStatusRejected(error) {
+  return { type: types.HANDLE_EXPERIENCE_STATUS_REJECTED, error }
+}
+
+export const handleIndustryProblemStatusPending = () => ({
+  type: types.HANDLE_INDUSTRY_PROBLEM_STATUS_PENDING
+})
+export function handleIndustryProblemStatusFulfilled(payload) {
+  return { type: types.HANDLE_INDUSTRY_PROBLEM_STATUS_FULFILLED, payload }
+}
+export function handleIndustryProblemStatusRejected(error) {
+  return { type: types.HANDLE_INDUSTRY_PROBLEM_STATUS_REJECTED, error }
 }

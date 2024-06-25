@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 import IntlMessages from '../../../../utils/IntlMessages'
 import SUSLogo from '../../../../assets/images/LTS-logo-horizontal.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import instructorNormal from '../../../../assets/images/LTS INSTRUCTOR.png'
-import learnerNormal from '../../../../assets/images/LTS LEARNER.png'
-import instructorHover from '../../../../assets/images/LTS INSTRUCTOR FILLED.png'
-import learnerHover from '../../../../assets/images/LTS LEARNER FILLED.png'
+import instructorNormal from '../../../../assets/images/Login/LTS Instructor.png'
+import learnerNormal from '../../../../assets/images/Login/LTS Learner.png'
 import '../index.css'
 import {
   faVimeo,
@@ -14,6 +12,7 @@ import {
   faSpotify
 } from '@fortawesome/free-brands-svg-icons'
 import FormWrapper from '../ui/FormWrapper'
+import { Col, Row } from 'react-bootstrap'
 
 const socialIcons = {
   linkedin: faLinkedin,
@@ -35,35 +34,15 @@ const SociaMediaItem = ({ href, icon }) => {
 }
 
 const LoginRole = (props) => {
-  const [hover, setHover] = useState(false)
-
-  const handleMouseEnter = () => {
-    setHover(true)
-  }
-
-  const handleMouseLeave = () => {
-    setHover(false)
-  }
-
-  const icon = () => {
-    if (hover) {
-      return props.hoverIcon
-    } else if (!hover) {
-      return props.normalIcon
-    }
-  }
-
   return (
     <div
       onClick={() => {
         props.handleLoginRole(props.role)
       }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className="login-role cursor-pointer"
+      className={`login-role cursor-pointer ${props.className}`}
     >
       <img
-        src={icon()}
+        src={props.icon}
         style={{ width: '100%', objectFit: 'contain' }}
         alt=""
       />
@@ -83,23 +62,19 @@ const ChooseLogin = () => {
   }
 
   return (
-    <div
-      className="container-fluid md-px-5 ps-md-5 choose-login_container"
-      style={{
-        backgroundColor: '#F8F7F7',
-        minHeight: ' calc(100vh - 42px)'
-      }}
-    >
-      <div className="row center-content justify-evenly">
-        <div className="col-md-6">
+    <div className="container-fluid md-px-5 ps-md-5 choose-login_container">
+      <Row className="m-0 p-0 align-items-center center-content justify-evenly">
+        <Col md="6" sm="12">
           <div className="row">
-            <div className="col-md-9 mx-auto">
+            <div className="col-sm-12 col-md-9  mx-auto">
               <div className="login-left-content">
-                <img className="login-logo" src={SUSLogo} alt="logo" />
+                <div className="login-logo">
+                  <img src={SUSLogo} alt="logo" />
+                </div>
                 <h1 className="login-title" style={{ color: '#000' }}>
                   Welcome...
                 </h1>
-                <p className="w-50" style={{ color: '#000' }}>
+                <p style={{ color: '#000' }}>
                   ...to your Learn to Start Platform. Please choose your role
                   and log in to access.
                 </p>
@@ -121,9 +96,9 @@ const ChooseLogin = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="col-md-5">
-          <FormWrapper className="col-lg-9 mx-auto px-4 pb-3 pt-4 ">
+        </Col>
+        <Col md="5" sm="12">
+          <FormWrapper className="col-lg-9 col-md-12 col-sm-12 mx-auto px-4 pb-3 pt-4 ">
             <h2 className="text-center">
               <IntlMessages id="general.ready" /> ?
             </h2>
@@ -131,20 +106,20 @@ const ChooseLogin = () => {
             <div className="button-type_container">
               <LoginRole
                 role={'ims'}
-                normalIcon={instructorNormal}
-                hoverIcon={instructorHover}
+                icon={instructorNormal}
                 handleLoginRole={(role) => {
                   handleLoginRole(role)
                 }}
+                className={'ims-login-role'}
               />
 
               <LoginRole
                 role={'main'}
-                normalIcon={learnerNormal}
-                hoverIcon={learnerHover}
+                icon={learnerNormal}
                 handleLoginRole={(role) => {
                   handleLoginRole(role)
                 }}
+                className={'main-login-role'}
               />
             </div>
             <p className="my-4 text-center public-page-text">
@@ -155,8 +130,8 @@ const ChooseLogin = () => {
               </a>
             </p>
           </FormWrapper>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   )
 }

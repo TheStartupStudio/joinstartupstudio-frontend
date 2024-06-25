@@ -17,7 +17,7 @@ import videoScriptIcon from '../../assets/images/My Spark Widget Icons/11.Video-
 import imageIcon from '../../assets/images/My Spark Widget Icons/12.Image.svg'
 import { useHistory } from 'react-router-dom'
 import LTSButton from '../../components/LTSButtons/LTSButton'
-import useWindowWidth from '../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../hooks/useWindowWidth'
 
 function MySpark() {
   const widgets = [

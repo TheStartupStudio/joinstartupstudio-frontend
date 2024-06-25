@@ -5,7 +5,7 @@ import SectionOne from './Sections/SectionOne'
 import SectionTwo from './Sections/SectionTwo'
 import SectionThree from './Sections/SectionThree'
 
-function MyPerformanceData() {
+function MyPerformanceData({ instructorId }) {
   return (
     <Container fluid>
       <Row className={'g-2'}>
@@ -27,9 +27,9 @@ function MyPerformanceData() {
               className="row ps-2 pb-4"
               style={{ backgroundColor: '#f8f7f7', minHeight: 200 }}
             >
-              <SectionOne />
-              <SectionTwo />
-              <SectionThree />
+              <SectionOne instructorId={instructorId} />
+              <SectionTwo instructorId={instructorId} />
+              <SectionThree instructorId={instructorId} />
             </div>
           </div>
         </div>
