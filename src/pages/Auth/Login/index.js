@@ -97,8 +97,9 @@ function Login() {
           dispatch(userLogin(user.password)).then((res) => {
             if (res === 'passwordResetRequired') {
               history.push('/password-change-required')
+            } else {
+              history.push('/dashboard')
             }
-            history.push('/dashboard')
           })
         })
         .catch((err) => {
