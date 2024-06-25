@@ -94,6 +94,9 @@ const IamrCertificationSystem = React.lazy(() =>
     '../MyLearnToStartEDU/MyCertificationGuide/IamrCertificationSystem/IamrCertificationSystem'
   )
 )
+const Portfolio2024 = React.lazy(() =>
+  import('../../pages/Portfolio2024/index')
+)
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData },
@@ -107,8 +110,9 @@ export const authRoutes = [
   { path: '/my-immersion', component: MyImmersion, exact: true },
   { path: '/my-immersion/:step', component: Steps },
   { path: '/terms', component: Terms },
-  { path: '/preview-portfolio', component: PreviewPortfolioNew },
-  { path: '/edit-portfolio', component: EditPortfolioNew, exact: true },
+  // { path: '/preview-portfolio', component: PreviewPortfolioNew },
+  { path: '/old-portfolio', component: EditPortfolioNew, exact: true },
+  { path: '/edit-portfolio', component: Portfolio2024, exact: true },
   { path: '/resources', component: Resources },
   { path: '/my-students', component: MyStudents },
   { path: '/iamr-certification-guide', component: IamrCertificationGuide },
