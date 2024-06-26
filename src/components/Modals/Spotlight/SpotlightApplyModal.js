@@ -120,7 +120,6 @@ const SpotlightApplyModal = (props) => {
       classes={'spotlight-apply-modal'}
     >
       <div className="row">
-        <h1>baba</h1>
         <div className="col-12 col-lg-6">
           <input
             className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input border"
