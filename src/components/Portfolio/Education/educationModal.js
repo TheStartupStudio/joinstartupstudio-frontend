@@ -17,6 +17,7 @@ import ImageCropper from '../../ImageCropper'
 import { readFile } from '../../../utils/canvasUtils'
 import { useDispatch, useSelector } from 'react-redux'
 import { setImageCropperData } from '../../../redux'
+import DatePickerField from '../../TypeFields/DatePickerField'
 
 export const EducationModal = (props) => {
   const defaultEducationData = {
@@ -49,7 +50,7 @@ export const EducationModal = (props) => {
   useEffect(() => {
     if (props.currentEducation.length === 0) return
     setEducationData({
-      ...props.currentEducation,
+      ...props.currentEducation
       // start_date: formatDate(props.currentEducation.start_date),
       // end_date: formatDate(props.currentEducation.end_date)
     })
@@ -70,7 +71,7 @@ export const EducationModal = (props) => {
       }))
     } else {
       if (name === 'present') {
-        endDateRef.current.value = ''
+        // endDateRef.current.value = ''
         setEducationData((prevValues) => ({
           ...prevValues,
           end_date: null,
@@ -274,7 +275,12 @@ export const EducationModal = (props) => {
         setIsUpdating(false)
       })
   }
-
+  const handleDateChange = (name, value) => {
+    setEducationData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
   return (
     <>
       <Modal
@@ -306,7 +312,7 @@ export const EducationModal = (props) => {
               <h4>EDUCATION</h4>
             </div>
             <div className="col-12 col-lg-3 upload-container my-2">
-              <div className="upload-image me-2 mb-1">
+              <div className="upload-image d-flex me-2 mb-1">
                 {general.imageCropperData ? (
                   <div
                     className="img-placeholder position-relative"
@@ -397,39 +403,26 @@ export const EducationModal = (props) => {
               />
               <div className="row mt-2">
                 <div className="col-12 col-lg-4">
-                  <label htmlFor="start_date">Start Date</label>
-                  <input
-                    className="my-2"
-                    type="month"
-                    name="start_date"
-                    id="start_date"
-                    max={new Date().toLocaleDateString('fr-CA', {
-                      year: 'numeric',
-                      month: '2-digit'
-                    })}
-                    value={formatDate(educationData?.start_date)}
-                    onChange={handleChange}
+                  <DatePickerField
+                    label={'Start date'}
+                    value={educationData?.start_date}
+                    onChange={(value) => {
+                      handleDateChange('start_date', value)
+                    }}
                   />
                 </div>
-                <div className="col-12 col-lg-4">
-                  <label htmlFor="end_date">End Date</label>
-                  <input
-                    className="my-2"
-                    type="month"
-                    name="end_date"
-                    max={new Date().toLocaleDateString('fr-CA', {
-                      year: 'numeric',
-                      month: '2-digit'
-                    })}
-                    value={
-                      formatDate(educationData?.end_date ? educationData.end_date : '')
-                    }
-                    ref={endDateRef}
-                    id="end_date"
-                    onChange={handleChange}
-                    disabled={educationData?.present}
-                  />
-                </div>
+                {!educationData?.present && (
+                  <div className="col-12 col-lg-4">
+                    <DatePickerField
+                      label={'End date'}
+                      value={educationData?.end_date}
+                      onChange={(value) => {
+                        handleDateChange('end_date', value)
+                      }}
+                      isDisabled={educationData?.present}
+                    />
+                  </div>
+                )}
                 <div className="col-12 col-lg-4 my-auto pt-lg-4">
                   <input
                     className="my-2"
@@ -439,10 +432,7 @@ export const EducationModal = (props) => {
                     value={educationData?.present}
                     checked={educationData?.present}
                     // disabled={educationData?.end_date}
-                    onChange={(e) => {
-                      cleanEndDate()
-                      handleChange(e)
-                    }}
+                    onChange={handleChange}
                   />
                   <label htmlFor="present">Current Position</label>
                 </div>

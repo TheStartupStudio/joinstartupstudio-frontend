@@ -423,7 +423,7 @@ const PreviewPortfolio = (props) => {
               <FontAwesomeIcon icon={faSpinner} className="" spin />
             </div>
           )}
-          <PreviewPortfolioBody
+          {/* <PreviewPortfolioBody
             user={user}
             isPreviewPortfolio={isPreviewPortfolio}
             userData={userData}
@@ -436,7 +436,7 @@ const PreviewPortfolio = (props) => {
             educations={educations}
             accomplishments={accomplishments}
             userCertifications={userCertifications}
-          />
+          /> */}
         </div>
       }
       <DeleteConfirmation
