@@ -464,8 +464,6 @@ const JournalTables = (props) => {
         toast.error('Error occurred during deleting table')
       })
   }
-
-  console.log('tables', tables)
   return (
     <div className={'table-container'}>
       {tables?.map((table, tableIndex) => {

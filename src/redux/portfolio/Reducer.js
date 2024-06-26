@@ -170,8 +170,6 @@ const portfolioReducer = (state = initialState, action) => {
         showSharePortfolioModal: false
       }
     case UPDATE_PORTFOLIO_PRIVACY_SUCCESS:
-      // console.log('payload', payload)
-      //payload.type === 'unPublishing'
       return {
         ...state,
         publishToPeers: payload.data.publishToPeers,

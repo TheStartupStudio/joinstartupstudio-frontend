@@ -22,7 +22,6 @@ import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
 
 const SubmitIndustryProblemModal = (props) => {
-  console.log('props', props)
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.user.user)
   const { loading, industryProblems } = useSelector(

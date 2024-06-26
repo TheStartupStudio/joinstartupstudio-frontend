@@ -94,7 +94,6 @@ function InboxTickets() {
       const updatedData = { ...prevData }
       Object.keys(updatedData).forEach((key) => {
         if (updatedData[key]?.rows) {
-          console.log('updatedData[key]?.rows', updatedData[key]?.rows)
           updatedData[key].rows = updatedData[key].rows.map((ticket) =>
             ticket.id === ticketId
               ? { ...ticket, read_by_instructor: true }
