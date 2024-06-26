@@ -61,6 +61,7 @@
     "moment": "^2.29.1",
     "re-resizable": "^6.9.5",
     "react": "^17.0.2",
+    "react-avatar-editor": "^13.0.2",
     "react-big-calendar": "^1.6.9",
     "react-bootstrap": "^1.6.1",
     "react-chartjs-2": "^4.3.1",
@@ -112,7 +113,7 @@
     "@react-pdf/pdfkit": "2.1.0"
   },
   "scripts": {
-    "start": "set PORT=3000 &&  react-scripts  start",
+    "start": "set PORT=3000 &&  react-scripts   start",
     "build": "react-scripts  build",
     "buildDev": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",

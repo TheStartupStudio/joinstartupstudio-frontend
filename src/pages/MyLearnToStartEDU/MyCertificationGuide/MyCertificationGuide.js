@@ -1,10 +1,6 @@
 import React from 'react'
-import '../myLTSEDU.css'
 import MyLearnToStartEDU from '../MyLearnToStartEDU'
 import MyLtsGridItem from '../MyLtsGridItem'
-
-// import numberOne from '../../../assets/images/number-1.png'
-// import numberTwo from '../../../assets/images/number-2.png'
 import numberOne from '../../../assets/images/number-one.png'
 import numberTwo from '../../../assets/images/number-two.png'
 

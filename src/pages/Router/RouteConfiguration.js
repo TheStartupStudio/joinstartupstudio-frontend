@@ -94,6 +94,9 @@ const IamrCertificationSystem = React.lazy(() =>
     '../MyLearnToStartEDU/MyCertificationGuide/IamrCertificationSystem/IamrCertificationSystem'
   )
 )
+const Portfolio2024 = React.lazy(() =>
+  import('../../pages/Portfolio2024/index')
+)
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData },
@@ -107,8 +110,9 @@ export const authRoutes = [
   { path: '/my-immersion', component: MyImmersion, exact: true },
   { path: '/my-immersion/:step', component: Steps },
   { path: '/terms', component: Terms },
-  { path: '/preview-portfolio', component: PreviewPortfolioNew },
-  { path: '/edit-portfolio', component: EditPortfolioNew, exact: true },
+  // { path: '/preview-portfolio', component: PreviewPortfolioNew },
+  { path: '/old-portfolio', component: EditPortfolioNew, exact: true },
+  { path: '/edit-portfolio', component: Portfolio2024, exact: true },
   { path: '/resources', component: Resources },
   { path: '/my-students', component: MyStudents },
   { path: '/iamr-certification-guide', component: IamrCertificationGuide },
@@ -204,6 +208,11 @@ export const authRoutesWithProps = [
     props: { category: 'my-training' }
   },
   {
+    path: '/my-mentorship/',
+    component: MyTraining,
+    props: { category: 'my-mentorship' }
+  },
+  {
     path: '/market-ready/',
     component: LtsJournal,
     props: { category: 'market-ready' }
@@ -244,6 +253,16 @@ export const authRoutesWithProps = [
     props: { category: 'hs2' }
   },
   {
+    path: '/new-hs3-journal/',
+    component: TestJournal,
+    props: { category: 'hs3' }
+  },
+  {
+    path: '/new-hs4-journal/',
+    component: TestJournal,
+    props: { category: 'hs4' }
+  },
+  {
     path: '/new-hs1-journal/:type/',
     component: TestJournal,
     props: { category: 'new-hs1' }
@@ -254,9 +273,14 @@ export const authRoutesWithProps = [
     props: { category: 'new-hs2' }
   },
   {
-    path: '/hs3-hs4-journal/',
+    path: '/new-hs3journal/:type/',
     component: TestJournal,
-    props: { category: 'hs3&hs4' }
+    props: { category: 'new-hs3' }
+  },
+  {
+    path: '/new-hs4-journal/:type/',
+    component: TestJournal,
+    props: { category: 'new-hs4' }
   },
   {
     path: '/financial-literacy/',

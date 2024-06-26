@@ -9,7 +9,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import SubmitIndustryProblemModal from '../../pages/MyImmersion/Modals/SubmitIndustryProblemModal'
 import SubmitExperienceModal from '../../pages/MyImmersion/Modals/SubmitExperienceModal'
 
-function Ticket({ ticket, setSelectedTicket }) {
+function Ticket({ ticket, setSelectedTicket, updateTicketStatus }) {
   const history = useHistory()
   const [industryProblemModal, setIndustryProblemModal] = useState(false)
   const [submitExperienceModal, setSubmitExperienceModal] = useState(false)
@@ -23,6 +23,7 @@ function Ticket({ ticket, setSelectedTicket }) {
 
   const readByInstructorHandler = async () => {
     await axiosInstance.get(`/instructor/iamr/tickets/${ticket.id}`)
+    updateTicketStatus(ticket.id)
   }
   return (
     <>

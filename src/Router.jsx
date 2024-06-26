@@ -327,6 +327,12 @@ function Router(props) {
                 )}
               />
               <Route
+                path="/my-mentorship/"
+                component={(props) => (
+                  <LtsJournal {...props} category="my-mentorship" />
+                )}
+              />
+              <Route
                 path="/market-ready/"
                 component={(props) => (
                   <LtsJournal {...props} category="market-ready" />

@@ -49,6 +49,28 @@ textarea {
 .TnC_modal_dialog.modal {
   text-align: center;
 }
+.comm-icon,
+.spark-icon,
+.hs-icon {
+  height: 45px;
+  width: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hs-icon img {
+  scale: 1.1;
+}
+.spark-icon img {
+  scale: 0.8;
+}
+
+.comm-icon img {
+  margin-top: -3px !important;
+  margin-left: -3px !important;
+  scale: 1.5;
+}
+
 @media screen and (min-width: 768px) {
   .TnC_modal_dialog.modal:before {
     display: inline-block;

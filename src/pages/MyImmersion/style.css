@@ -177,6 +177,7 @@ th:last-child {
   height: 50px;
   font-size: 13px;
   color: #ccc;
+  background-color: #fff;
 }
 
 .file-input-placeholder {

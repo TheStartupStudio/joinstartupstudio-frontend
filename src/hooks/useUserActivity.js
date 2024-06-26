@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import axiosInstance from '../AxiosInstance'
 import { useSelector } from 'react-redux'
+import axiosInstance from '../utils/AxiosInstance'
 
 const useUserActivity = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user)

@@ -325,8 +325,8 @@ opacity: 1;
   opacity: 1;
   /*border: 1px solid #bbbdbf !important;*/
   resize: none;
-  background: #FFFFFF 0% 0% no-repeat padding-box !important;
-  border: 1px solid #BBBDBF !important;
+  background: #ffffff 0% 0% no-repeat padding-box !important;
+  /* border: 1px solid #BBBDBF !important; */
 }
 
 .spotlight-checkbox {

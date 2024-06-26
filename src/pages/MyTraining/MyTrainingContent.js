@@ -672,9 +672,12 @@ function MyTrainingContent(props) {
                             portion for each. Now, you have a model for
                             students.
                           </p>
-                          <button className="default-btn">
+                          <a
+                            href={'/iamr-certification-system'}
+                            className="default-btn"
+                          >
                             MY CERTIFICATION
-                          </button>
+                          </a>
                         </div>
                       )}
                     </AccordionItemWrapper>

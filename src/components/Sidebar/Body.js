@@ -86,10 +86,6 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseExample'}>
-        <DropdownItem
-          title={<IntlMessages id="my_saved.STORY_IN_MOTION" />}
-          to={'/story-in-motion'}
-        />
         <DropdownItem title={'PATHWAYS'} to={'/pathways'} />
         <DropdownItem title={'IMMERSION'} to={'/my-immersion'} />
         <DropdownItem
@@ -108,6 +104,7 @@ const Body = (props) => {
       />
       <ParentDropdownItem id={'journals'}>
         <DropdownItem title={'LTS JOURNAL'} to={'/student-lts'} />
+        <DropdownItem title={'MY MENTORSHIP'} to={'/my-mentorship'} />
         <DropdownItem title={'WELLNESS JOURNAL'} to={'/student-wellnes'} />
         <DropdownItem
           title={'PERSONAL FINANCE JOURNAL'}

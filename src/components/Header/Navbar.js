@@ -20,6 +20,25 @@ import avator from '../../assets/images/profile-image.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeSidebarState } from '../../redux'
 
+const NavbarIcon = (props) => {
+  return (
+    <li className="nav-item  my-auto">
+      <NavLink
+        className={`nav-link m-0 p-0 icon-menu ${props.cn}`}
+        to={props.to}
+      >
+        <img
+          src={props.srcWithFocus}
+          width={props.width}
+          height={props.height}
+          style={props.style}
+          alt={props.alt}
+        />
+      </NavLink>
+    </li>
+  )
+}
+
 const Navbar = (props) => {
   const history = useHistory()
   const location = useLocation()
@@ -105,74 +124,25 @@ const Navbar = (props) => {
             )}
           </ul>
           <ul className="navbar-nav ms-auto mt-1">
-            <li className="nav-item spotlight-nav my-auto">
-              <NavLink
-                className={`nav-link m-0 p-0 icon-menu my-auto`}
-                to={'/story-in-motion'}
-              >
-                <img
-                  src={HSGooglePlay}
-                  // className="d-none focus-icon"
-                  width="45px"
-                  alt="note"
-                />
-              </NavLink>
-            </li>
-            <li className="nav-item  my-auto ">
-              <NavLink
-                className={`nav-link  m-0 p-0 icon-menu`}
-                to={'/my-spark/widgets'}
-              >
-                <div>
-                  <img
-                    src={HSmySpark}
-                    className="d-none focus-icon"
-                    width="45px"
-                    alt="note"
-                  />
-                  <img
-                    src={HSmySpark}
-                    className="not-focus-icon"
-                    width="45px"
-                    alt="note"
-                  />
-                </div>
-              </NavLink>
-            </li>
-            <li className="nav-item  my-auto">
-              <NavLink
-                className={`nav-link icon-menu m-0 p-0 my-auto`}
-                to={
-                  '/my-classroom'
-                  // props.peerSharingAccepted
-                  //   ? '/my-classroom'
-                  //   : location.pathname
-                }
-                // onClick={() => {
-                //   if (!props.peerSharingAccepted) {
-                //     props.openPeerSharingModal()
-                //   }
-                // }}
-              >
-                <img
-                  src={HSCommunity}
-                  className="d-none focus-icon"
-                  width="45px"
-                  alt="note"
-                />
-                <img
-                  src={HSCommunity}
-                  className="not-focus-icon"
-                  width="45px"
-                  alt="note"
-                />
-              </NavLink>
-            </li>
+            <NavbarIcon
+              to={'/story-in-motion'}
+              cn={'hs-icon'}
+              srcWithFocus={HSGooglePlay}
+            />
+            <NavbarIcon
+              to={'/my-spark/widgets'}
+              cn={'spark-icon'}
+              srcWithFocus={HSmySpark}
+            />
+            <NavbarIcon
+              to={'/my-classroom'}
+              cn={'comm-icon my-auto'}
+              srcWithFocus={HSCommunity}
+              width={'55px'}
+              height={'45px'}
+            />
 
-            <div
-              // onClick={() => setShowNotifications(false)}
-              style={{ display: 'inherit' }}
-            >
+            <div style={{ display: 'inherit' }}>
               <div
                 className="my-auto mx-3"
                 style={{ borderRight: '1px solid #BBBDBF', height: '20px' }}
@@ -188,7 +158,7 @@ const Navbar = (props) => {
                   <FontAwesomeIcon
                     icon={faBell}
                     style={{
-                      fontSize: '26px',
+                      fontSize: '30px',
                       color: '#333D3D'
                     }}
                     className="nav-bell-icon pt-1"
@@ -216,7 +186,7 @@ const Navbar = (props) => {
                 >
                   <FontAwesomeIcon
                     icon={heart}
-                    style={{ fontSize: '26px' }}
+                    style={{ fontSize: '30px' }}
                     className="pt-1"
                   />
                 </NavLink>
@@ -235,13 +205,13 @@ const Navbar = (props) => {
                     <img
                       src={notesIconHovered}
                       className="d-none focus-icon"
-                      width="25px"
+                      width="27px"
                       alt="note"
                     />
                     <img
                       src={notesIcon}
                       className="not-focus-icon"
-                      width="25px"
+                      width="27px"
                       alt="note"
                     />
                   </div>

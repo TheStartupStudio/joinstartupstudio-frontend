@@ -636,6 +636,9 @@ const EnLangs = {
   'my_journal.my-training_title': 'MY TRAINING',
   'my_journal.my-training_description':
     'Welcome to your LTS Training. Here you will be introduced to what it means to be a LTS Instructor and you will prepare for your experience in this new type of classroom.',
+  'my_journal.mentorship_title': 'MY MENTORSHIP JOURNAL PAGE',
+  'my_journal.mentorship_description':
+    'The Learn to Start Model is a guide in the lifelong process of developing the answers to the only three questions that matter: Who am I? What can I do? How do I prove it? You will use this journal to guide your development to those answers.',
 
   'my_journal.not_started_journal': 'NOT STARTED',
   'my_journal.edit_journal': 'Edit Journal',
