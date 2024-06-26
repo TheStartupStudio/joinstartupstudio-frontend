@@ -209,7 +209,7 @@ export const authRoutesWithProps = [
   },
   {
     path: '/my-mentorship/',
-    component: MyTraining,
+    component: LtsJournal,
     props: { category: 'my-mentorship' }
   },
   {
