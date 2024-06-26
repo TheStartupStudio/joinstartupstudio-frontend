@@ -312,7 +312,7 @@ function Profile(props) {
           className="text-center certification-progress mt-4"
           style={{ fontSize: '20px', height: 'auto' }}
         >
-          IAMR Inbox
+          Inbox
         </p>
         <div
           className="col-6 text-center fw-bold"
