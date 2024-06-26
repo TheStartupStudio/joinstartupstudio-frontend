@@ -180,7 +180,7 @@ function EditPortfolioSubmission(props) {
                 <FiLink />
                 <input
                   className={'insert-submission-link'}
-                  placeholder={'image-url'}
+                  placeholder={'/content-url'}
                   onChange={(e) => props.onChangeVideoUrl(e.target.value)}
                   value={props.videoUrl}
                 />
