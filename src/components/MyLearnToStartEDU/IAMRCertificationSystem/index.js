@@ -15,10 +15,11 @@ import { Col, Row } from 'react-bootstrap'
 import { Link, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import { useEffect } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getCertificationType } from '../../../utils/helpers'
 import { useIamrContext } from './iamrContext/context'
 import CompletionModal from './customComponents/completionModal'
+import { setBackButton } from '../../../redux/backButtonReducer'
 
 const CertificationCard = ({
   certificationType,
@@ -45,21 +46,21 @@ const CertificationCard = ({
       <Link
         to={`iamr-certification-system/${certificationType}/${firstElId}/content`}
         onClick={(e) => handleClick(e)}
-        className="col-md-6 col-sm-12"
+        className='col-md-6 col-sm-12'
       >
-        <div className="iamr-box d-flex">
-          <div className="w-50">
+        <div className='iamr-box d-flex'>
+          <div className='w-50'>
             <img
               src={stats.image}
               alt={`certification-badge ${certificationType}`}
-              className="w-100"
+              className='w-100'
             />
           </div>
-          <span className="w-50">
-            <p className="fw-bold mb-1" style={{ color: '#231f20' }}>
+          <span className='w-50'>
+            <p className='fw-bold mb-1' style={{ color: '#231f20' }}>
               {stats.title}
             </p>
-            <p className="certified-skills">
+            <p className='certified-skills'>
               <span style={{ color: stats.color }}>
                 {stats.completedSkills}
               </span>
@@ -113,6 +114,23 @@ const IAMRCertificationSystem = () => {
   ])
 
   const marketReady = getCertificationType(certificationType)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (
+      urlSegments[2] === 'student-certification-1' ||
+      urlSegments[2] === 'student-certification-2'
+    ) {
+      dispatch(setBackButton(true, 'iamr-certification-system'))
+    } else {
+      dispatch(setBackButton(true, 'my-certification-guide'))
+    }
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch, urlSegments])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -196,14 +214,14 @@ const IAMRCertificationSystem = () => {
   }
 
   return (
-    <div className="iamr-container p-3">
+    <div className='iamr-container p-3'>
       {urlSegments[1] === 'iamr-certification-system' &&
       urlSegments.length <= 3 ? (
-        <div className="row">
-          <div className="col-12 col-xl-12 px-0">
-            <div className="iamr-page-padding iamr-page-header ">
-              <h3 className="page-title">MY MARKET-READY CERTIFICATION</h3>
-              <p className="page-description">
+        <div className='row'>
+          <div className='col-12 col-xl-12 px-0'>
+            <div className='iamr-page-padding iamr-page-header '>
+              <h3 className='page-title'>MY MARKET-READY CERTIFICATION</h3>
+              <p className='page-description'>
                 In this section of the platform, you will prove your proficiency
                 in each of the employability skills.
               </p>
@@ -225,11 +243,11 @@ const IAMRCertificationSystem = () => {
           ))}
         </div>
       ) : (
-        <Row className="w-100 ml-0 d-flex">
-          <div className="page-title__container">
+        <Row className='w-100 ml-0 d-flex'>
+          <div className='page-title__container'>
             <h3>MY MARKET-READY {marketReady} CERTIFICATION</h3>
           </div>
-          <div className="d-flex pe-0">
+          <div className='d-flex pe-0'>
             <div
               className={`page-border accordion pb-4 ${
                 expanded ? 'expanded' : ''
@@ -238,13 +256,13 @@ const IAMRCertificationSystem = () => {
             >
               <FontAwesomeIcon
                 icon={expanded ? faChevronLeft : faChevronRight}
-                color="#01c5d1"
-                className="mx-2 back"
+                color='#01c5d1'
+                className='mx-2 back'
                 title={!expanded ? 'Show skills' : 'Hide'}
                 cursor={'pointer'}
                 onClick={() => setExpanded((prev) => !prev)}
               />
-              <h4 className="mt-2">SKILLS</h4>
+              <h4 className='mt-2'>SKILLS</h4>
               <SkillsAccordion
                 hideExpanded={() => expanded && setExpanded(false)}
                 certificationType={certificationType}

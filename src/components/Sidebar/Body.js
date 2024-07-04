@@ -15,33 +15,25 @@ const Body = (props) => {
   const location = useLocation()
   return (
     <ul
-      className="list-unstyled components sidebar-menu-item"
-      id="side-menu-main"
+      className='list-unstyled components sidebar-menu-item'
+      id='side-menu-main'
     >
-      <li>
-        <div
-          className="accordion accordion-flush"
-          id="accordionFlushExample"
-        ></div>
-        <SidebarItem
-          onClick={() => {
-            dispatch(setAccordionToggled(false))
-            props.hideHeaderIcons()
-          }}
-          to={'/dashboard'}
-          className={`${
-            location.pathname.includes('dashboard') ? 'active' : ''
-          }`}
-          srcImage={FolderSidebarImage}
-          title="MY Dashboard"
-          isDropdown={false}
-        />
-      </li>
-      <ParentSidebarItem
-        href="#myLtsEDU"
-        aria-controls="myLtsEDU"
+      <SidebarItem
+        onClick={() => {
+          dispatch(setAccordionToggled(false))
+          props.hideHeaderIcons()
+        }}
+        to={'/dashboard'}
+        className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
         srcImage={FolderSidebarImage}
-        title="MY Learn to Start EDU"
+        title='MY Dashboard'
+        isDropdown={false}
+      />
+      <ParentSidebarItem
+        href='#myLtsEDU'
+        aria-controls='myLtsEDU'
+        srcImage={FolderSidebarImage}
+        title='MY Learn to Start EDU'
         isDropdown={true}
       />
       <ParentDropdownItem id={'myLtsEDU'}>
@@ -57,10 +49,10 @@ const Body = (props) => {
         />
       </ParentDropdownItem>
       <ParentSidebarItem
-        ariaControls="collapseClassroom"
-        href="#collapseClassroom"
+        ariaControls='collapseClassroom'
+        href='#collapseClassroom'
         srcImage={FolderSidebarImage}
-        title="MY CLASSROOM"
+        title='MY CLASSROOM'
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseClassroom'}>
@@ -75,14 +67,14 @@ const Body = (props) => {
           title={'MY EVALUATIONS'}
           to={'/my-evaluations'}
         />
-        <DropdownItem title={'MY INBOX'} to="/my-inbox" />
+        <DropdownItem title={'MY INBOX'} to='/my-inbox' />
       </ParentDropdownItem>
 
       <ParentSidebarItem
-        ariaControls="collapseExample"
-        href="#collapseExample"
+        ariaControls='collapseExample'
+        href='#collapseExample'
         srcImage={FolderSidebarImage}
-        title="MY MARKET RESOURCES"
+        title='MY MARKET RESOURCES'
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseExample'}>
@@ -96,15 +88,15 @@ const Body = (props) => {
         <DropdownItem title={'SPOTLIGHT'} to={'/spotlight'} />
       </ParentDropdownItem>
       <ParentSidebarItem
-        ariaControls="journals"
-        href="#journals"
+        ariaControls='journals'
+        href='#journals'
         srcImage={FolderSidebarImage}
-        title="JOURNALS"
+        title='JOURNALS'
         isDropdown={true}
       />
       <ParentDropdownItem id={'journals'}>
         <DropdownItem title={'LTS JOURNAL'} to={'/student-lts'} />
-        <DropdownItem title={'MY MENTORSHIP'} to={'/my-mentorship'} />
+        <DropdownItem title={'MENTORSHIP'} to={'/my-mentorship'} />
         <DropdownItem title={'WELLNESS JOURNAL'} to={'/student-wellnes'} />
         <DropdownItem
           title={'PERSONAL FINANCE JOURNAL'}
@@ -112,7 +104,16 @@ const Body = (props) => {
         />
         <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
       </ParentDropdownItem>
-      <ParentSidebarItem
+      <SidebarItem
+        to={'/edit-portfolio'}
+        className={`${
+          location.pathname.includes('edit-portfolio') ? 'active' : ''
+        }`}
+        srcImage={FolderSidebarImage}
+        title='MY PORTFOLIO'
+        isDropdown={false}
+      />
+      {/* <ParentSidebarItem
         ariaControls="mySpark"
         href="#mySpark"
         srcImage={FolderSidebarImage}
@@ -122,7 +123,7 @@ const Body = (props) => {
       <ParentDropdownItem id={'mySpark'}>
         <DropdownItem title={'SPARK WIDGETS'} to={'/my-spark/widgets'} />
         <DropdownItem title={'SPARK ARCHIVE'} to={'/my-spark/archive'} />
-      </ParentDropdownItem>
+      </ParentDropdownItem> */}
     </ul>
   )
 }

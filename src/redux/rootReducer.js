@@ -17,6 +17,7 @@ import PathwaysReducer from './pathways/reducer'
 import platformBadgesReducer from './platformBadges/reducer'
 import portfolioReducer from './portfolio/Reducer'
 import taskLessonReducer from './taskLessons/reducer'
+import backButtonReducer from './backButtonReducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   pathways: PathwaysReducer,
   platformBadges: platformBadgesReducer,
   lessons: taskLessonReducer,
-  portfolio: portfolioReducer
+  portfolio: portfolioReducer,
+  backButton: backButtonReducer
 })
 export default rootReducer

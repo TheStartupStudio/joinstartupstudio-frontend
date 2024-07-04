@@ -9,6 +9,8 @@ import { addDocumentIcons } from '../mySparkHelpersFuncs'
 import { toast } from 'react-toastify'
 import { debounce } from 'lodash'
 import DeleteSparkArchiveModal from '../Modals/DeleteArchiveModal'
+import { useDispatch } from 'react-redux'
+import { setBackButton } from '../../../redux/backButtonReducer'
 
 function ArchivePage(props) {
   const [archivedDocuments, setArchivedDocuments] = useState([])
@@ -16,6 +18,16 @@ function ArchivePage(props) {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [archiveToDelete, setArchiveToDelete] = useState(null)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setBackButton(true, 'my-spark/widgets'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   const debouncedSearch = debounce((value) => {
     getData(value)
@@ -76,17 +88,17 @@ function ArchivePage(props) {
   return (
     <Container fluid>
       <Row>
-        <div className="col-12 col-xl-12 px-0">
-          <div className="account-page-padding page-border">
-            <div className="row ps-2">
-              <div className="col-md-6">
-                <h3 className="page-title mb-0">
+        <div className='col-12 col-xl-12 px-0'>
+          <div className='account-page-padding page-border'>
+            <div className='row ps-2'>
+              <div className='col-md-6'>
+                <h3 className='page-title mb-0'>
                   MY SPARK | <span className={'rose-text'}>Archive</span>
                 </h3>
               </div>
             </div>
-            <div className="row ps-2">
-              <div className="col-md-12 mt-4">
+            <div className='row ps-2'>
+              <div className='col-md-12 mt-4'>
                 <div className={'my-spark-archive__container'}>
                   <div className={'my-spark-archive__header-text'}>
                     <div className={'content-text'}>Content</div>
@@ -99,7 +111,7 @@ function ArchivePage(props) {
                       <div className={'my-spark-archive__search-filter'}>
                         <FontAwesomeIcon
                           icon={faSearch}
-                          className="me-2 me-md-0 search-icon"
+                          className='me-2 me-md-0 search-icon'
                         />
 
                         <input

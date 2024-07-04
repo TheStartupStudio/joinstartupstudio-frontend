@@ -11,13 +11,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import LtsButton from '../../../components/LTSButtons/LTSButton'
 import useWindowWidth from '../../../hooks/useWindowWidth'
+import { useDispatch } from 'react-redux'
+import { setBackButton } from '../../../redux/backButtonReducer'
 
 function WidgetDetails(props) {
   const [widgetInputs, setWidgetInputs] = useState([])
   const [requestData, setRequestData] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const windowWidth = useWindowWidth()
-
+  const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
   const widgetName = location?.state?.widgetName
@@ -39,6 +41,14 @@ function WidgetDetails(props) {
       { prompt: {}, nonPrompt: {} }
     )
   }
+
+  useEffect(() => {
+    dispatch(setBackButton(true, 'my-spark/widgets'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   useEffect(() => {
     let nonPromptFields = []
@@ -165,11 +175,11 @@ function WidgetDetails(props) {
   return (
     <Container fluid className={''}>
       <Row>
-        <div className="col-12 col-xl-12 px-0">
-          <div className="account-page-padding page-border ">
-            <div className="row ps-2">
-              <div className="col-md-6">
-                <h3 className="page-title mb-0">MY SPARK</h3>
+        <div className='col-12 col-xl-12 px-0'>
+          <div className='account-page-padding page-border '>
+            <div className='row ps-2'>
+              <div className='col-md-6'>
+                <h3 className='page-title mb-0'>MY SPARK</h3>
               </div>
             </div>
 
@@ -217,10 +227,10 @@ function WidgetDetails(props) {
                   />
                 </div>
                 {isLoading && (
-                  <div className="my-spark__loader ">
+                  <div className='my-spark__loader '>
                     <FontAwesomeIcon
                       icon={faSpinner}
-                      className="my-spark__spinner"
+                      className='my-spark__spinner'
                       spin
                       size={'lg'}
                     />

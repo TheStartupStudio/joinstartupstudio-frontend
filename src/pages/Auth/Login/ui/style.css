@@ -49,6 +49,11 @@
     linear-gradient(to right, #db438a, #5db1cc);
   background-origin: border-box;
   background-clip: content-box, border-box;
+  display: flex;
+  align-items: center;
+}
+.input-with-gradient-border svg {
+  margin-right: 3%;
 }
 
 .input-with-gradient-border input {

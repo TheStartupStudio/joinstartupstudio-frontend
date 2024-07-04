@@ -97,7 +97,7 @@ const AddLessonModal = ({
     })
   }
 
-  const isFormEmpty = useIsFormEmpty(formData)
+  const isFormEmpty = useIsFormEmpty(formData, ['type', 'userId', 'category'])
   const isFormEdited = JSON.stringify(formData) === JSON.stringify(data)
   const isDisabled = mode === 'edit' ? isFormEdited : isFormEmpty
 
@@ -113,12 +113,18 @@ const AddLessonModal = ({
         <Modal.Title className="px-3 py-3">
           {mode === 'add' ? 'ADD LESSON' : 'EDIT LESSON'}
         </Modal.Title>
-        <di
-          className={`check-button  ${isDisabled ? 'disabled' : ''}`}
-          onClick={!isDisabled ? submitHandler : null}
-        >
-          <FontAwesomeIcon icon={faCheck} />
-        </di>
+        {isDisabled ? (
+          <di className={`check-button fw-bold`} onClick={() => onHide()}>
+            X
+          </di>
+        ) : (
+          <di
+            className={`check-button  ${isDisabled ? 'disabled' : ''}`}
+            onClick={!isDisabled ? submitHandler : null}
+          >
+            <FontAwesomeIcon icon={faCheck} />
+          </di>
+        )}
       </Modal.Header>
       <Modal.Body className="briefing-modal-body">
         <Row>

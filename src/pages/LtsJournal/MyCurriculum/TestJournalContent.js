@@ -6,8 +6,8 @@ import { injectIntl } from 'react-intl'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MediaLightbox from '../../../components/MediaLightbox'
 import triangleIcon from '../../../assets/images/triangle.png'
-import LtsDiagram from '../../../assets/images/LearntoStart-Diagram-3D.png'
-import LtsCertification from '../../../assets/images/Certified-L1-800px.png'
+import LtsDiagram from '../../../assets/images/LTS Model - Triangle - All.png'
+import LtsCertification from '../../../assets/images/iamr/Certified L1.png'
 import BreakdownPopup from '../../../components/Modals/BreakdownPopup'
 import './TestJournalContent.css'
 import AccordionItemWrapper from '../UI/AccordionItemWrapper'
@@ -18,8 +18,11 @@ import ExpectedOutcomes from '../ExpectedOutcomes'
 import ProgramOpportunities from '../ProgramOpportunities'
 import ReactQuill from 'react-quill'
 import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { setBackButton } from '../../../redux/backButtonReducer'
 
 function TestJournalContent(props) {
+  const dispatch = useDispatch()
   let [journal, setJournal] = useState({})
   let [loading, setLoading] = useState(true)
   let [showVideo, setShowVideo] = useState(false)
@@ -30,6 +33,14 @@ function TestJournalContent(props) {
   const [selectedTask, setSelectedTask] = useState(null)
   const [selectedTaskIndex, setSelectedTaskIndex] = useState(null)
   const [selectedStepIndex, setSelectedStepIndex] = useState(null)
+
+  useEffect(() => {
+    dispatch(setBackButton(true, 'my-curriculum'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
@@ -118,7 +129,6 @@ function TestJournalContent(props) {
         toast.success('The message was submmited successfully!')
       })
       .catch((error) => {
-        console.error('Error submitting instructor debrief:', error)
         toast.error('Error submitting instructor debrief.')
       })
   }
@@ -419,7 +429,7 @@ function TestJournalContent(props) {
                       }`}
                       onClick={() => setShowVideo(video.id)}
                     >
-                      <img src={video.thumbnail} alt="thumbnail" />
+                      <img src={video.thumbnail} alt='thumbnail' />
                       <div
                         className={`journal-entries__video-thumbnail-icon${
                           journal.content === '' ? '--welcome-video' : ''
@@ -519,7 +529,7 @@ function TestJournalContent(props) {
                   title={'task breakdown'}
                 >
                   {openAccordion === 'steps' && (
-                    <div className="accordion-content">
+                    <div className='accordion-content'>
                       <StepsBox
                         containsTitle={false}
                         steps={journal?.steps}
@@ -542,7 +552,7 @@ function TestJournalContent(props) {
                   {openAccordion === 'steps' && (
                     <div>
                       {journal?.tasks?.length === 1 && (
-                        <div className="accordion-content">
+                        <div className='accordion-content'>
                           <StepsBox
                             task={journal?.tasks[0]}
                             steps={journal?.tasks[0]?.steps}
@@ -578,7 +588,7 @@ function TestJournalContent(props) {
                               return (
                                 <div
                                   key={task.id}
-                                  className="accordion-content"
+                                  className='accordion-content'
                                 >
                                   <StepsBox
                                     task={task}
@@ -615,7 +625,7 @@ function TestJournalContent(props) {
                 >
                   {openAccordion === 'connection' && (
                     <>
-                      <div className="accordion-content">
+                      <div className='accordion-content'>
                         <div
                           style={{
                             display: 'flex',
@@ -730,7 +740,7 @@ function TestJournalContent(props) {
                 >
                   {openAccordion === 'connection' && (
                     <>
-                      <div className="accordion-content">
+                      <div className='accordion-content'>
                         <div
                           style={{
                             display: 'flex',
@@ -768,7 +778,7 @@ function TestJournalContent(props) {
                 title={'Instructor debrief'}
               >
                 {openAccordion === 'instructor' && (
-                  <div className="accordion-content">
+                  <div className='accordion-content'>
                     <div
                       style={{
                         font: 'normal normal 500 11px/17px Montserrat',
@@ -794,7 +804,7 @@ function TestJournalContent(props) {
                       >
                         In completing this task did you:
                       </div>
-                      <div className="d-flex mb-1 ">
+                      <div className='d-flex mb-1 '>
                         <div
                           style={{
                             width: '25px',
@@ -804,10 +814,10 @@ function TestJournalContent(props) {
                         >
                           <input
                             style={{ width: '15px', height: '15px' }}
-                            className="form-check-input "
-                            type="checkbox"
+                            className='form-check-input '
+                            type='checkbox'
                             checked={instructorDebrief.checkbox1}
-                            id="flexCheckDefault"
+                            id='flexCheckDefault'
                             onChange={(e) =>
                               handleChangeInstructorDebrief2(
                                 'checkbox1',
@@ -817,8 +827,8 @@ function TestJournalContent(props) {
                           />
                         </div>
                         <div
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
+                          className='form-check-label'
+                          htmlFor='flexCheckDefault'
                           style={{
                             font: 'normal normal 500 12px/18px Montserrat !important',
                             letterSpacing: 0.24,
@@ -830,7 +840,7 @@ function TestJournalContent(props) {
                           Give each student an opportunity to use their voice.
                         </div>
                       </div>
-                      <div className="d-flex mb-1">
+                      <div className='d-flex mb-1'>
                         <div
                           style={{
                             width: '25px',
@@ -840,10 +850,10 @@ function TestJournalContent(props) {
                         >
                           <input
                             style={{ width: '15px', height: '15px' }}
-                            className="form-check-input "
-                            type="checkbox"
+                            className='form-check-input '
+                            type='checkbox'
                             checked={instructorDebrief.checkbox2}
-                            id="flexCheckDefault"
+                            id='flexCheckDefault'
                             onChange={(e) =>
                               handleChangeInstructorDebrief2(
                                 'checkbox2',
@@ -853,8 +863,8 @@ function TestJournalContent(props) {
                           />
                         </div>
                         <div
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
+                          className='form-check-label'
+                          htmlFor='flexCheckDefault'
                           style={{
                             font: 'normal normal 500 12px/18px Montserrat !important',
                             letterSpacing: 0.24,
@@ -866,7 +876,7 @@ function TestJournalContent(props) {
                           Conduct at least one news briefing to start class.
                         </div>
                       </div>
-                      <div className="d-flex mb-1 ">
+                      <div className='d-flex mb-1 '>
                         <div
                           style={{
                             width: '25px',
@@ -876,10 +886,10 @@ function TestJournalContent(props) {
                         >
                           <input
                             style={{ width: '15px', height: '15px' }}
-                            className="form-check-input "
-                            type="checkbox"
+                            className='form-check-input '
+                            type='checkbox'
                             checked={instructorDebrief.checkbox3}
-                            id="flexCheckDefault"
+                            id='flexCheckDefault'
                             onChange={(e) =>
                               handleChangeInstructorDebrief2(
                                 'checkbox3',
@@ -890,8 +900,8 @@ function TestJournalContent(props) {
                         </div>
 
                         <div
-                          className="form-check-label"
-                          htmlFor="flexCheckDefault"
+                          className='form-check-label'
+                          htmlFor='flexCheckDefault'
                           style={{
                             font: 'normal normal 500 12px/18px Montserrat !important',
                             letterSpacing: 0.24,
@@ -922,10 +932,10 @@ function TestJournalContent(props) {
                         task in the curriculum to the LTS team.
                       </div>
                       <ReactQuill
-                        theme="snow"
+                        theme='snow'
                         name={'textEditorContent'}
                         id={'textEditorContent'}
-                        className="instructor-debrief-editor w-100 rounded-0 "
+                        className='instructor-debrief-editor w-100 rounded-0 '
                         onChange={(e) =>
                           handleChangeInstructorDebrief2('textEditorContent', e)
                         }
@@ -946,7 +956,7 @@ function TestJournalContent(props) {
                           fontWeight: 600,
                           zIndex: 999
                         }}
-                        className="px-4 py-2 border-0 color transform my-1"
+                        className='px-4 py-2 border-0 color transform my-1'
                         onClick={() =>
                           onSubmitInstructorDebrief(newInstructorBriefData)
                         }
@@ -970,7 +980,7 @@ function TestJournalContent(props) {
                 title={'ASSIGNMENT TO POST FOR STUDENTS'}
               >
                 {openAccordion === 'studentAssignment' && (
-                  <div className="accordion-content">
+                  <div className='accordion-content'>
                     <div
                       style={{
                         fontFamily: 'Montserrat',
@@ -997,9 +1007,9 @@ function TestJournalContent(props) {
           popupContent={selectedStep?.popupContent}
         />
       </>
-      <div className="row">
-        <div className="col-12">
-          <div className="journal-entries__back">
+      <div className='row'>
+        <div className='col-12'>
+          <div className='journal-entries__back'>
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
         </div>
