@@ -96,7 +96,7 @@ const Body = (props) => {
       />
       <ParentDropdownItem id={'journals'}>
         <DropdownItem title={'LTS JOURNAL'} to={'/student-lts'} />
-        <DropdownItem title={'MENTORSHIP'} to={'/my-mentorship'} />
+        <DropdownItem title={'MENTORSHIP JOURNAL'} to={'/my-mentorship'} />
         <DropdownItem title={'WELLNESS JOURNAL'} to={'/student-wellnes'} />
         <DropdownItem
           title={'PERSONAL FINANCE JOURNAL'}

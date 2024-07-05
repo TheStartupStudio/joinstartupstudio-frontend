@@ -185,12 +185,12 @@ const TaskEventModal = (props) => {
     if (isAddingOnClick()) {
       setState(initialState)
     }
-    if (state.periods.length > 0) {
-      dispatch(postEventStart(newEventObj))
-      setState(initialState)
-    } else {
-      toast.error('You must select at least one period')
-    }
+    // if (state.periods.length > 0) {
+    dispatch(postEventStart(newEventObj))
+    setState(initialState)
+    // } else {
+    // toast.error('You must select at least one period')
+    // }
   }
 
   const onEditEvent = () => {
@@ -248,39 +248,39 @@ const TaskEventModal = (props) => {
     <Modal
       show={props.show}
       onHide={props.onHide}
-      backdrop="static"
+      backdrop='static'
       keyboard={false}
-      className="edit-modal general-modal-header task-event-modal"
+      className='edit-modal general-modal-header task-event-modal'
     >
-      <Modal.Header className="add-new-note-title general-modal-header my-auto p-0 mx-4">
-        <h3 className="mb-0 pt-4 mt-2 ">
+      <Modal.Header className='add-new-note-title general-modal-header my-auto p-0 mx-4'>
+        <h3 className='mb-0 pt-4 mt-2 '>
           {isEdit() ? (
             <IntlMessages id={`calendar_task-events.edit_${tab}`} />
           ) : (
-            <IntlMessages id="calendar_task-events.add_a_new_task/event" />
+            <IntlMessages id='calendar_task-events.add_a_new_task/event' />
           )}
         </h3>
         <button
-          type="button"
-          className="btn-close me-1"
-          aria-label="Close"
+          type='button'
+          className='btn-close me-1'
+          aria-label='Close'
           onClick={props.onHide}
         />
       </Modal.Header>
-      <Modal.Body className="mt-4 mb-3 mx-4 add-new-note event-input-container">
-        <div className="row w-100 m-0 mb-4">
-          <div className="col-md-6">
+      <Modal.Body className='mt-4 mb-3 mx-4 add-new-note event-input-container'>
+        <div className='row w-100 m-0 mb-4'>
+          <div className='col-md-6'>
             <button
               style={tab == 'task' ? activeTabStyle : inActiveTabStyle}
-              className="btn w-100"
+              className='btn w-100'
               onClick={() => toggleTab('task')}
             >
               Task
             </button>
           </div>
-          <div className="col-md-6">
+          <div className='col-md-6'>
             <button
-              className="btn w-100"
+              className='btn w-100'
               style={tab == 'event' ? activeTabStyle : inActiveTabStyle}
               onClick={() => toggleTab('event')}
             >
@@ -288,8 +288,8 @@ const TaskEventModal = (props) => {
             </button>
           </div>
         </div>
-        <div className="row px-2 add-new-note event-input-container">
-          <div className="col-md-12">
+        <div className='row px-2 add-new-note event-input-container'>
+          <div className='col-md-12'>
             <label
               htmlFor={tab === 'task' ? 'taskName' : 'eventName'}
               style={{ fontSize: '14px', fontWeight: 'bold' }}
@@ -299,8 +299,8 @@ const TaskEventModal = (props) => {
             <FormattedMessage id={`calendar_task-events.name_of_${tab}`}>
               {(placeholder) => (
                 <input
-                  className="my-1 mb-4 py-2 px-2 w-100 event-input text-dark "
-                  type="text"
+                  className='my-1 mb-4 py-2 px-2 w-100 event-input text-dark '
+                  type='text'
                   name={tab === 'task' ? 'taskName' : 'eventName'}
                   style={{
                     height: 48,
@@ -321,7 +321,7 @@ const TaskEventModal = (props) => {
             `}
           >
             <label
-              htmlFor="date"
+              htmlFor='date'
               style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               Start{' '}
@@ -330,8 +330,8 @@ const TaskEventModal = (props) => {
             <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
               {(placeholder) => (
                 <input
-                  className="my-1 mb-4 py-2 px-2 w-100 event-input "
-                  type="date"
+                  className='my-1 mb-4 py-2 px-2 w-100 event-input '
+                  type='date'
                   name={tab === 'task' ? 'taskDate' : 'eventDate'}
                   style={{
                     height: 48,
@@ -344,7 +344,7 @@ const TaskEventModal = (props) => {
                   }}
                   placeholder={placeholder}
                   id={tab === 'task' ? 'taskDate' : 'eventDate'}
-                  pattern="\d{4}-\d{2}-\d{2}"
+                  pattern='\d{4}-\d{2}-\d{2}'
                   onChange={(e) =>
                     handleInputChange('startDate', e.target.value)
                   }
@@ -354,9 +354,9 @@ const TaskEventModal = (props) => {
             </FormattedMessage>
           </div>
           {
-            <div className="col-md-6 event-input-container">
+            <div className='col-md-6 event-input-container'>
               <label
-                htmlFor="date"
+                htmlFor='date'
                 style={{ fontSize: '14px', fontWeight: 'bold' }}
               >
                 End{' '}
@@ -365,8 +365,8 @@ const TaskEventModal = (props) => {
               <FormattedMessage id={`calendar_task-events.date_of_${tab}`}>
                 {(placeholder) => (
                   <input
-                    className="my-1 mb-4 py-2 px-2 w-100 event-input"
-                    type="date"
+                    className='my-1 mb-4 py-2 px-2 w-100 event-input'
+                    type='date'
                     name={tab === 'task' ? 'taskDate' : 'eventDate'}
                     style={{
                       height: 48,
@@ -375,7 +375,7 @@ const TaskEventModal = (props) => {
                     }}
                     placeholder={placeholder}
                     id={tab === 'task' ? 'taskDate' : 'eventDate'}
-                    pattern="\d{4}-\d{2}-\d{2}"
+                    pattern='\d{4}-\d{2}-\d{2}'
                     onChange={(e) =>
                       handleInputChange('endDate', e.target.value)
                     }
@@ -385,9 +385,9 @@ const TaskEventModal = (props) => {
               </FormattedMessage>
             </div>
           }
-          <div className="col-md-6 event-input-container">
+          <div className='col-md-6 event-input-container'>
             <label
-              htmlFor="date"
+              htmlFor='date'
               style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               <FormattedMessage
@@ -403,9 +403,9 @@ const TaskEventModal = (props) => {
               )}
             </FormattedMessage>
           </div>
-          <div className="col-md-6 ">
+          <div className='col-md-6 '>
             <label
-              htmlFor="date"
+              htmlFor='date'
               style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               <FormattedMessage
@@ -422,11 +422,11 @@ const TaskEventModal = (props) => {
             </FormattedMessage>
           </div>
           <div
-            className="col-md-12 event-input-container"
+            className='col-md-12 event-input-container'
             style={{ minHeight: 260 }}
           >
             <label
-              htmlFor="description"
+              htmlFor='description'
               style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               <FormattedMessage
@@ -436,12 +436,12 @@ const TaskEventModal = (props) => {
             <FormattedMessage id={`calendar_task-events.description_of_${tab}`}>
               {(placeholder) => (
                 <ReactQuill
-                  theme="snow"
+                  theme='snow'
                   name={'description'}
                   id={'description'}
                   // name={tab === 'task' ? 'taskDescription' : 'eventDescription'}
                   // id={tab === 'task' ? 'taskDescription' : 'eventDescription'}
-                  className="my-1 mb-4 py-0 px-0 w-100 rounded-0 scroll-add-new-note-modal "
+                  className='my-1 mb-4 py-0 px-0 w-100 rounded-0 scroll-add-new-note-modal '
                   style={{
                     height: '150px',
                     '::placeholder': {
@@ -459,21 +459,21 @@ const TaskEventModal = (props) => {
             </FormattedMessage>
           </div>
           <div
-            className="col-md-12 event-input-container"
+            className='col-md-12 event-input-container'
             style={{ minHeight: 260 }}
           >
             <label
-              htmlFor="requirements"
+              htmlFor='requirements'
               style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
-              <FormattedMessage id="calendar_task-events.requirements" />
+              <FormattedMessage id='calendar_task-events.requirements' />
             </label>
-            <FormattedMessage id="calendar_task-events.requirements">
+            <FormattedMessage id='calendar_task-events.requirements'>
               {(placeholder) => (
                 <ReactQuill
-                  theme="snow"
-                  className="my-1 mb-4 py-0 w-100 rounded-0 scroll-add-new-note-modal "
-                  name="requirements"
+                  theme='snow'
+                  className='my-1 mb-4 py-0 w-100 rounded-0 scroll-add-new-note-modal '
+                  name='requirements'
                   style={{
                     height: '150px',
                     '::placeholder': {
@@ -483,7 +483,7 @@ const TaskEventModal = (props) => {
                     }
                   }}
                   placeholder={placeholder}
-                  id="requirements"
+                  id='requirements'
                   onChange={(e) => handleInputChange('requirements', e)}
                   value={state.requirements}
                 />
@@ -491,15 +491,15 @@ const TaskEventModal = (props) => {
             </FormattedMessage>
           </div>
 
-          <div className="col-md-12">
+          <div className='col-md-12'>
             <label
-              htmlFor="chooseClasses"
+              htmlFor='chooseClasses'
               style={{ fontSize: '14px', fontWeight: 'bold' }}
             >
               {isEdit() ? (
-                <FormattedMessage id="calendar_task-events.chosen_classes" />
+                <FormattedMessage id='calendar_task-events.chosen_classes' />
               ) : (
-                <FormattedMessage id="calendar_task-events.choose_classes" />
+                <FormattedMessage id='calendar_task-events.choose_classes' />
               )}
             </label>
             <MultiSelect
@@ -512,13 +512,13 @@ const TaskEventModal = (props) => {
       </Modal.Body>
       <div
         style={{ border: '0px' }}
-        className="mt-0 pt-0 border-0 border-none mx-4 pe-1 mb-4"
+        className='mt-0 pt-0 border-0 border-none mx-4 pe-1 mb-4'
       >
         <button
-          className="float-end m-0 px-md-5 save-button add-new-note-button-text ms-1"
+          className='float-end m-0 px-md-5 save-button add-new-note-button-text ms-1'
           onClick={isEdit() ? onEditEvent : onPostEvent}
         >
-          <IntlMessages id="general.save" />
+          <IntlMessages id='general.save' />
         </button>
       </div>
     </Modal>

@@ -13,6 +13,7 @@ import CustomLoginInput from './ui/CustomLoginInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { Col, Row } from 'react-bootstrap'
+import { setLoginLoading } from '../../../redux/user/Actions'
 
 function Login() {
   const [user, setUser] = useState({})
@@ -64,6 +65,9 @@ function Login() {
           dispatch(userLogin(user.password)).then((res) => {
             if (res === 'passwordResetRequired') {
               history.push('/password-change-required')
+            } else if (!res) {
+              toast.error('Wrong email or password!')
+              dispatch(setLoginLoading(false))
             } else {
               history.push('/dashboard')
             }

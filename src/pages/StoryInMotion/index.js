@@ -390,7 +390,7 @@ function StoryInMotion() {
                     }}
                     alt='Apple_Podcasts'
                   />
-                  <img
+                  {/* <img
                     src={Google_Podcasts_2x}
                     className='mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1'
                     onClick={() => {
@@ -407,7 +407,7 @@ function StoryInMotion() {
                       redirect('https://overcast.fm/itunes1615119248')
                     }}
                     alt='Overcast_2x'
-                  />
+                  /> */}
                   <img
                     src={Spotify_2x}
                     className='mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1'
@@ -418,7 +418,7 @@ function StoryInMotion() {
                     }}
                     alt='Spotify_2x'
                   />
-                  <img
+                  {/* <img
                     src={Stitcher_2x}
                     className='mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1'
                     onClick={() => {
@@ -427,7 +427,7 @@ function StoryInMotion() {
                       )
                     }}
                     alt='Stitcher_2x'
-                  />
+                  /> */}
                 </div>
                 <p className='mt-4 story-in-motion-Previous-Podcast-Episodes'>
                   <IntlMessages id='storyInMotion.previous_podcast_episodes' />

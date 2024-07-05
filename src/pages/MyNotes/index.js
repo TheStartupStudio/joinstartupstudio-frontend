@@ -293,10 +293,14 @@ function MyNotes(props) {
                     <Accordion>
                       {notes &&
                         notes
-                          ?.filter((searchedNote) =>
-                            searchedNote.value
-                              .toLowerCase()
-                              .includes(searchedNotes.toLowerCase())
+                          ?.filter(
+                            (searchedNote) =>
+                              searchedNote.value
+                                .toLowerCase()
+                                .includes(searchedNotes.toLowerCase()) ||
+                              searchedNote.title
+                                .toLowerCase()
+                                .includes(searchedNotes.toLowerCase())
                           )
                           .map((note, index) => {
                             return (
@@ -321,7 +325,7 @@ function MyNotes(props) {
                                         to={`/my-notes/${note.id}`}
                                       >
                                         {note.title && (
-                                          <h5 className="pb-1">
+                                          <h5 className='pb-1'>
                                             {note.createdFrom ===
                                             ' my-notes' ? (
                                               note.title
@@ -585,10 +589,14 @@ function MyNotes(props) {
                       <Accordion>
                         {notes &&
                           notes
-                            ?.filter((searchedNote) =>
-                              searchedNote.value
-                                .toLowerCase()
-                                .includes(searchedNotes.toLowerCase())
+                            ?.filter(
+                              (searchedNote) =>
+                                searchedNote.value
+                                  .toLowerCase()
+                                  .includes(searchedNotes.toLowerCase()) ||
+                                searchedNote.title
+                                  .toLowerCase()
+                                  .includes(searchedNotes.toLowerCase())
                             )
                             .map((note, index) => {
                               return (
