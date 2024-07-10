@@ -10,6 +10,7 @@ import BriefingEditor from './BriefingEditor'
 import LoadingAnimation from '../../ui/loadingAnimation'
 
 const BriefingsArchive = () => {
+  console.log('hello')
   const dispatch = useDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedBriefing, setSelectedBriefing] = useState(null)
@@ -32,25 +33,25 @@ const BriefingsArchive = () => {
   }
 
   return (
-    <div className="col-12 col-md-12 col-xl-9 pe-0 me-0 ">
-      <div className="account-page-padding page-border position-relative">
+    <div className='col-12 col-md-12 col-xl-9 pe-0 me-0 '>
+      <div className='account-page-padding page-border position-relative'>
         {loading ? (
           <LoadingAnimation show={loading} />
         ) : (
           <>
             {isAdmin && (
               <div
-                className="add-briefing-container p-3"
+                className='add-briefing-container p-3'
                 onClick={() => setAddBriefingModal(true)}
               >
                 <FontAwesomeIcon icon={faPlus} />
               </div>
             )}
-            <div className="pt-4 ">
-              <h2 className="fw-bold">MY NEWS BRIEFING ARCHIVE</h2>
+            <div className='pt-4 '>
+              <h2 className='fw-bold'>MY NEWS BRIEFING ARCHIVE</h2>
               <p>Welcome to Your Dashboard</p>
             </div>
-            <div className="skills-box">
+            <div className='skills-box'>
               {briefings.map((briefing) => (
                 <BriefingBox
                   briefing={briefing}
@@ -75,7 +76,7 @@ const BriefingsArchive = () => {
         <BriefingEditor
           show={addBriefingModal}
           onHide={() => setAddBriefingModal(false)}
-          mode="add"
+          mode='add'
           user={user}
         />
       )}
