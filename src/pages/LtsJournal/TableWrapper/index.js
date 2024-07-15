@@ -11,16 +11,16 @@ const TableWrapper = ({
   additionalStyle
 }) => {
   return (
-    <div className="table-wrapper" style={{ ...additionalStyle }}>
+    <div className='table-wrapper' style={{ ...additionalStyle }}>
       {title?.length && (
-        <div className="table-wrapper__title">
+        <div className='table-wrapper__title'>
           <h5>{title}</h5>
           <div>
             {isDelete && (
               <FontAwesomeIcon
                 onClick={onDelete}
                 icon={faTrashAlt}
-                className="plus-icon float-end "
+                className='plus-icon float-end cursor-pointer'
                 style={{
                   width: '18px',
                   height: '18px',
@@ -31,7 +31,7 @@ const TableWrapper = ({
           </div>
         </div>
       )}
-      <div className="table-wrapper__content">{children}</div>
+      <div className='table-wrapper__content'>{children}</div>
     </div>
   )
 }

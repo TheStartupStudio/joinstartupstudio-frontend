@@ -11,7 +11,8 @@ const MeetingTable = ({
   teamMeetings,
   selectedArchive,
   handleOpenDeleteArchiveModal,
-  isEditable
+  isEditable,
+  setLoading
 }) => {
   return (
     <TableWrapper
@@ -33,6 +34,7 @@ const MeetingTable = ({
                   handleChangeTeamMeeting('meetingDate', value)
                 }
                 isDisabled={!isEditable}
+                setLoading={setLoading}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -48,21 +50,25 @@ const MeetingTable = ({
                 title={'Purpose:'}
                 type={'text'}
                 value={selectedArchive?.purpose}
+                inputTag={'input'}
                 handleChange={(value) =>
                   handleChangeTeamMeeting('purpose', value)
                 }
                 isDisabled={!isEditable}
+                setLoading={setLoading}
               />
             </JournalTableCell>
             <JournalTableCell isGray>
               <JournalTableCellInput
                 title={'Attendance:'}
                 type={'text'}
+                inputTag={'input'}
                 value={selectedArchive?.attendance}
                 handleChange={(value) =>
                   handleChangeTeamMeeting('attendance', value)
                 }
                 isDisabled={!isEditable}
+                setLoading={setLoading}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -73,11 +79,13 @@ const MeetingTable = ({
                 isBold={true}
                 title={'Meeting agenda:'}
                 type={'text'}
+                inputTag={'input'}
                 value={selectedArchive?.meetingAgenda}
                 handleChange={(value) =>
                   handleChangeTeamMeeting('meetingAgenda', value)
                 }
                 isDisabled={!isEditable}
+                setLoading={setLoading}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -87,11 +95,13 @@ const MeetingTable = ({
                 isBold={true}
                 title={'Notes:'}
                 type={'text'}
+                inputTag={'input'}
                 value={selectedArchive?.notes}
                 handleChange={(value) =>
                   handleChangeTeamMeeting('notes', value)
                 }
                 isDisabled={!isEditable}
+                setLoading={setLoading}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -101,11 +111,13 @@ const MeetingTable = ({
                 isBold={true}
                 title={'Results of Meeting:'}
                 type={'text'}
+                inputTag={'input'}
                 value={selectedArchive?.resultsOfMeeting}
                 handleChange={(value) =>
                   handleChangeTeamMeeting('resultsOfMeeting', value)
                 }
                 isDisabled={!isEditable}
+                setLoading={setLoading}
               />
             </JournalTableCell>
           </JournalTableRow>

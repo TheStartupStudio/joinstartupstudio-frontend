@@ -399,7 +399,7 @@ function TestJournalContent(props) {
           className={'d-flex justify-content-between w-100'}
           style={{ marginTop: 40, gap: 4 }}
         >
-          <div className={'video-container full-width'}>
+          <div className={' full-width'}>
             {videos &&
               videos.constructor === Array &&
               videos.map((video, index) => (
@@ -443,13 +443,13 @@ function TestJournalContent(props) {
               </div>
             )}
           </div>
-          <div className={'lts-triangle-container'}>
+          {/* <div className={'lts-triangle-container'}>
             <img
               alt={'triangleIcon'}
               className={'triangle-icon'}
               src={triangleIcon}
             />
-          </div>
+          </div> */}
         </div>
         <div className={'journal-paragraph my-4'}>{journal?.paragraph}</div>
         <div className={'custom-breakdowns-container'}>

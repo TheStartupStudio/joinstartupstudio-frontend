@@ -387,7 +387,7 @@ function MyTrainingContent(props) {
           className={'d-flex justify-content-between w-100'}
           style={{ marginTop: 40, gap: 4 }}
         >
-          <div className={'video-container'}>
+          <div className={' full-width'}>
             {videos &&
               videos.constructor == Array &&
               videos.map((video, index) => (
@@ -411,19 +411,19 @@ function MyTrainingContent(props) {
                   <div
                     key={index}
                     className={`journal-entries__video${
-                      journal.content == '' ? '--welcome-video' : ''
+                      journal.content === '' ? '--welcome-video' : ''
                     }`}
                   >
                     <div
                       className={`journal-entries__video-thumbnail${
-                        journal.content == '' ? '--welcome-video' : ''
+                        journal.content === '' ? '--welcome-video' : ''
                       }`}
                       onClick={() => setShowVideo(video.id)}
                     >
-                      <img src={video.thumbnail} />
+                      <img src={video.thumbnail} alt='thumbnail' />
                       <div
                         className={`journal-entries__video-thumbnail-icon${
-                          journal.content == '' ? '--welcome-video' : ''
+                          journal.content === '' ? '--welcome-video' : ''
                         }`}
                       >
                         <FontAwesomeIcon icon={faPlay} />
@@ -434,13 +434,13 @@ function MyTrainingContent(props) {
               </div>
             )}
           </div>
-          <div className={'lts-triangle-container'}>
+          {/* <div className={'lts-triangle-container'}>
             <img
               alt={'triangleIcon'}
               className={'triangle-icon'}
               src={triangleIcon}
             />
-          </div>
+          </div> */}
         </div>
         <div className={'journal-paragraph my-4'}>{journal?.openingText}</div>
         <div className={'custom-breakdowns-container'}>
@@ -460,7 +460,7 @@ function MyTrainingContent(props) {
                       {openAccordion === 'pedagogy' && (
                         <>
                           {trainingIndex === 0 && <WelcomeToTraining />}
-                          <div className="accordion-content">
+                          <div className='accordion-content'>
                             <PedagogyBoxes
                               containsTitle={false}
                               boxes={journal?.pedagogyOptions}
@@ -624,7 +624,7 @@ function MyTrainingContent(props) {
                             resume.
                           </p>
                           <a
-                            className="btn btn-info text-light default-btn"
+                            className='btn btn-info text-light default-btn'
                             href={`/preview-portfolio`}
                           >
                             MY PORTFOLIO
@@ -674,7 +674,7 @@ function MyTrainingContent(props) {
                           </p>
                           <a
                             href={'/iamr-certification-system'}
-                            className="default-btn"
+                            className='default-btn'
                           >
                             MY CERTIFICATION
                           </a>
@@ -688,9 +688,9 @@ function MyTrainingContent(props) {
           )}
         </div>
       </>
-      <div className="row">
-        <div className="col-12">
-          <div className="journal-entries__back">
+      <div className='row'>
+        <div className='col-12'>
+          <div className='journal-entries__back'>
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
         </div>

@@ -22,7 +22,8 @@ const ArchiveSelector = (props) => {
     const selectedValue = `${archiveOptionTitle()} ${foundedArchiveIndex + 1}`
     const selectArchive = `Select ${archiveOptionTitle()} `
     setSelectedValue(foundedArchiveIndex > -1 ? selectedValue : selectArchive)
-  }, [props.selectedArchive])
+  }, [props.selectedArchive, archives])
+
   const handleChangeArchive = (value) => {
     setSelectArchive(value)
   }
@@ -56,24 +57,24 @@ const ArchiveSelector = (props) => {
   }, [props.archives])
 
   return (
-    <div className="col-md-12">
-      <div className="custom-dropdown">
+    <div className='col-md-12'>
+      <div className='custom-dropdown'>
         <div
-          className="selected-option"
+          className='selected-option'
           onClick={() => setDropdownOpen((prev) => !prev)}
         >
           {selectArchive ? selectedValue : 'Select an option'}
         </div>
         {dropdownOpen && (
-          <div className="options">
+          <div className='options'>
             {archives?.map((archive, index) => (
               <div
                 onClick={() => handleSelectArchive(archive)}
                 key={archive.id}
-                className="option w-100 bg-white"
+                className='option w-100 bg-white'
               >
                 <input
-                  type="checkbox"
+                  type='checkbox'
                   checked={archive.id === props.selectedArchive.id}
                   onChange={() => handleCheckboxChange(archive.title)}
                 />

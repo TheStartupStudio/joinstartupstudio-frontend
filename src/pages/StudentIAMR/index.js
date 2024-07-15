@@ -17,6 +17,7 @@ import {
 } from '../../redux/dashboard/Actions'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
 import LoadingAnimation from '../../ui/loadingAnimation'
+import { setBackButton } from '../../redux/backButtonReducer'
 
 export default function StudentIAMR() {
   return (
@@ -46,6 +47,14 @@ function StudentIamrContainer() {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
   }, [])
+
+  useEffect(() => {
+    dispatch(setBackButton(true, 'my-students'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   useEffect(() => {
     setLoading(true)

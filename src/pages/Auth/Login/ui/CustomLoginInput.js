@@ -26,13 +26,13 @@ const CustomLoginInput = ({
         showPassword ? (
           <FontAwesomeIcon
             icon={faEye}
-            className='cursor-pointer'
+            className='pw-revelared__icon cursor-pointer bg-transparent'
             onClick={() => setShowPassword((state) => !state)}
           />
         ) : (
           <FontAwesomeIcon
             icon={faEyeSlash}
-            className='cursor-pointer'
+            className='pw-revelared__icon cursor-pointer bg-transparent'
             onClick={() => setShowPassword((state) => !state)}
           />
         )

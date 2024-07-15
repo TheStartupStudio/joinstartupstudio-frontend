@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { EditJournalBrandImageModal } from '../../../components/Modals/JournalBrands/EditJournalBrandImageModal'
 import { EditJournalBrandBoxModal } from '../../../components/Modals/JournalBrands/EditJournalBrandBoxModal'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
 
 const JournalBrands = (props) => {
   const [showNewJournalModal, setShowNewJournalModal] = useState(false)
@@ -19,26 +20,27 @@ const JournalBrands = (props) => {
   const [content, setContent] = useState(null)
 
   const deleteBrand = async (id) => {
-    await axiosInstance
-      .delete(`/LtsJournals/journal-brand/${id}`)
-      .then(() => props.loadData())
+    await axiosInstance.delete(`/LtsJournals/journal-brand/${id}`).then(() => {
+      toast.success('Brand removed successfully!')
+      props.loadData()
+    })
   }
 
   return (
-    <div className="journal_brands--wrapper">
-      <div className="row">
+    <div className='journal_brands--wrapper'>
+      <div className='row'>
         {props.brands
           .filter((brand) => !brand.isDefault)
           .map((brand) => (
-            <div className="col-12 col-sm-6 col-md-4">
-              <div className="brand__item">
+            <div className='col-12 col-sm-6 col-md-4'>
+              <div className='brand__item'>
                 <span
-                  className="remove-brand-item"
+                  className='remove-brand-item cursor-pointer'
                   onClick={(e) => deleteBrand(brand.id)}
                 >
                   <FontAwesomeIcon
                     icon={faTrash}
-                    className="edit-modal-sm ms-4"
+                    className='edit-modal-sm ms-4'
                   />
                 </span>
                 <img
@@ -47,12 +49,12 @@ const JournalBrands = (props) => {
                     setBrandId(brand.id)
                     setShowEditJournalBrandImageModal(true)
                   }}
-                  className="journal__image"
+                  className='journal__image'
                   src={brand.image}
-                  alt=""
+                  alt=''
                 />
                 <div
-                  className="brand__box"
+                  className='brand__box '
                   onClick={(e) => {
                     setColumn('type')
                     setBrandId(brand.id)
@@ -64,7 +66,7 @@ const JournalBrands = (props) => {
                   }}
                 ></div>
                 <div
-                  className="brand__box"
+                  className='brand__box'
                   onClick={(e) => {
                     setColumn('action')
                     setBrandId(brand.id)
@@ -76,7 +78,7 @@ const JournalBrands = (props) => {
                   }}
                 ></div>
                 <div
-                  className="brand__box"
+                  className='brand__box'
                   onClick={(e) => {
                     setColumn('narration')
                     setBrandId(brand.id)
@@ -88,7 +90,7 @@ const JournalBrands = (props) => {
                   }}
                 ></div>
                 <div
-                  className="brand__box"
+                  className='brand__box'
                   onClick={(e) => {
                     setColumn('music')
                     setBrandId(brand.id)
@@ -102,12 +104,13 @@ const JournalBrands = (props) => {
               </div>
             </div>
           ))}
-        <div className="col-12">
+        <div className='col-12 my-3'>
           <a
-            className="add-new-brand"
+            className='add-new-brand cursor-pointer'
             onClick={(e) => setShowNewJournalModal(true)}
+            href
           >
-            <FontAwesomeIcon icon={faPlus} />
+            <FontAwesomeIcon icon={faPlus} className='me-2' />
             Add another full section of Image and the boxes below it
           </a>
           <NewJournalBrandModal

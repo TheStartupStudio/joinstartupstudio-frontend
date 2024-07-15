@@ -57,9 +57,15 @@
 }
 
 .input-with-gradient-border input {
+  position: relative;
   border: none !important;
   background-color: transparent !important;
   border-radius: 15px;
+}
+.pw-revelared__icon {
+  position: absolute;
+  top: 10;
+  right: 63%;
 }
 
 @media (max-width: 778px) {

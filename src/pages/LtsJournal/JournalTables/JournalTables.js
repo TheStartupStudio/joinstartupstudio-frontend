@@ -465,7 +465,6 @@ const JournalTables = (props) => {
       })
   }
 
-  console.log('tables', tables)
   return (
     <div className={'table-container'}>
       {tables?.map((table, tableIndex) => {
@@ -540,7 +539,7 @@ const JournalTables = (props) => {
                   <div className={' d-flex justify-content-end p-2'}>
                     <FontAwesomeIcon
                       icon={faPlus}
-                      className="plus-ico "
+                      className='plus-ico '
                       style={{
                         width: '28px',
                         height: '28px',
