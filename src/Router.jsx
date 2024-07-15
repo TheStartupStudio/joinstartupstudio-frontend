@@ -134,6 +134,7 @@ const JournalsManagement2 = React.lazy(() =>
 )
 
 const MyInbox = React.lazy(() => import('./pages/MyInbox'))
+const MyEvaluation = React.lazy(() => import('./pages/MyEvaluation'))
 const StudentIAMR = React.lazy(() => import('../src/pages/StudentIAMR'))
 const Briefings = React.lazy(() => import('../src/pages/Briefings'))
 const UserManagement = React.lazy(() =>
@@ -157,292 +158,293 @@ function Router(props) {
         {isAuthenticated ? (
           <Layout>
             <Switch>
-              <Route path="/dashboard" component={Dashboard} />
-              <Route path="/savedMedia" component={SavedMedia} />
-              <Route path="/csv-upload" component={CSVUpload} />
-              <Route path="/portfolio" component={Portfolio} />
-              <Route path="/my-curriculum" component={MyCurriculum} />
+              <Route path='/dashboard' component={Dashboard} />
+              <Route path='/savedMedia' component={SavedMedia} />
+              <Route path='/csv-upload' component={CSVUpload} />
+              <Route path='/portfolio' component={Portfolio} />
+              <Route path='/my-curriculum' component={MyCurriculum} />
               <Route
-                path="/my-certification-guide"
+                path='/my-certification-guide'
                 component={MyCertificationGuide}
               />
               <Route
-                path="/iamr-certification-guide"
+                path='/iamr-certification-guide'
                 component={IamrCertificationGuide}
               />
               <Route
                 exact
-                path="/iamr-certification-system"
+                path='/iamr-certification-system'
                 component={IamrCertificationSystem}
               />
               <Route
-                path="/iamr-certification-system/:certificationType?/:id?/:type?"
+                path='/iamr-certification-system/:certificationType?/:id?/:type?'
                 component={IamrCertificationSystem}
               />
-              <Route path="/my-students" component={MyStudents} />
-              <Route path="/resources" component={Resources} />
+              <Route path='/my-students' component={MyStudents} />
+              <Route path='/resources' component={Resources} />
               <Route
                 exact
-                path="/edit-portfolio"
+                path='/edit-portfolio'
                 component={EditPortfolioNew}
               />
               <Route
                 exact
-                path="/edit-portfolio/recommendation/:id"
+                path='/edit-portfolio/recommendation/:id'
                 component={EditPortfolioNew}
               />
               <Route
-                path="/preview-portfolio"
+                path='/preview-portfolio'
                 component={PreviewPortfolioNew}
               />
               <Route
                 exact
-                path="/user-portfolio/:username"
+                path='/user-portfolio/:username'
                 component={(props) => {
                   return <PreviewPortfolioNew {...props} isPublicView={false} />
                 }}
               />
-              <Route exact path="/terms" component={Terms} />
+              <Route exact path='/terms' component={Terms} />
               <Route
                 exact
-                path="/beyond-your-course"
+                path='/beyond-your-course'
                 component={BeyondYourCourse}
               />
               <Route
                 exact
-                path="/beyond-your-course/:id"
+                path='/beyond-your-course/:id'
                 component={BeyondYourCourse}
               />
-              <Route exact path="/my-immersion" component={MyImmersion} />
-              <Route path="/my-immersion/:step" component={Steps} />
+              <Route exact path='/my-immersion' component={MyImmersion} />
+              <Route path='/my-immersion/:step' component={Steps} />
               <Route
                 exact
-                path="/pathways"
+                path='/pathways'
                 component={(props) => <Pathways {...props} />}
               />
               <Route
-                path="/pathways/:occupationId?/:occupationJobId?"
+                path='/pathways/:occupationId?/:occupationJobId?'
                 component={(props) => <Pathways {...props} />}
               />
-              <Route path="/story-in-motion" component={StoryInMotion} />
+              <Route path='/story-in-motion' component={StoryInMotion} />
               {/* <Route path='/PrivateProject' component={PrivateProject} /> */}
-              <Route path="/UserProject/:uid" component={UserPortfolioProj} />
+              <Route path='/UserProject/:uid' component={UserPortfolioProj} />
               {/* <Route path='/MyStartupProfile' component={MyProjects} /> */}
-              <Route path="/PreviewMyStartupProfile/:id" component={Preview} />
-              <Route path="/:page/videos" component={AllVideos} />
+              <Route path='/PreviewMyStartupProfile/:id' component={Preview} />
+              <Route path='/:page/videos' component={AllVideos} />
               {/* <Route exact path="/startup-live" component={StartupLive} /> */}
-              <Route exact path="/spotlight" component={Spotlight} />
-              <Route exact path="/startup-livestream" component={LiveStream} />
-              <Route exact path="/account" component={Profile} />
-              <Route exact path="/account/:id" component={UserProfile} />
-              <Route exact path="/profile-preview" component={ProfilePreview} />
+              <Route exact path='/spotlight' component={Spotlight} />
+              <Route exact path='/startup-livestream' component={LiveStream} />
+              <Route exact path='/account' component={Profile} />
+              <Route exact path='/account/:id' component={UserProfile} />
+              <Route exact path='/profile-preview' component={ProfilePreview} />
               <Route
-                path="/my-training"
+                path='/my-training'
                 component={(props) => (
-                  <MyTraining {...props} category="my-training" />
+                  <MyTraining {...props} category='my-training' />
                 )}
               />
               <Route
-                path="/students-journals/:studentId"
+                path='/students-journals/:studentId'
                 component={(props) => (
-                  <StudentJournals {...props} category="my-training" />
+                  <StudentJournals {...props} category='my-training' />
                 )}
               />
               {/* Students journals */}
               <Route
-                path="/new-hs1-journal/"
-                component={(props) => <TestJournal {...props} category="hs1" />}
+                path='/new-hs1-journal/'
+                component={(props) => <TestJournal {...props} category='hs1' />}
               />{' '}
               <Route
-                path="/new-hs2-journal/"
-                component={(props) => <TestJournal {...props} category="hs2" />}
+                path='/new-hs2-journal/'
+                component={(props) => <TestJournal {...props} category='hs2' />}
               />{' '}
               <Route
-                path="/hs3-hs4-journal/"
+                path='/hs3-hs4-journal/'
                 component={(props) => (
-                  <TestJournal {...props} category="hs3&hs4" />
+                  <TestJournal {...props} category='hs3&hs4' />
                 )}
               />
               <Route
-                path="/financial-literacy/"
+                path='/financial-literacy/'
                 component={(props) => (
-                  <TestJournal {...props} category="financial-literacy" />
+                  <TestJournal {...props} category='financial-literacy' />
                 )}
               />{' '}
               <Route
-                path="/new-hs1-journal/:type/"
+                path='/new-hs1-journal/:type/'
                 component={(props) => (
-                  <TestJournal {...props} category="new-hs1" />
+                  <TestJournal {...props} category='new-hs1' />
                 )}
               />
               <Route
-                path="/new-hs2-journal/:type/"
+                path='/new-hs2-journal/:type/'
                 component={(props) => (
-                  <TestJournal {...props} category="new-hs2" />
+                  <TestJournal {...props} category='new-hs2' />
                 )}
               />
               <Route
-                path="/hs1-journal/"
-                component={(props) => <LtsJournal {...props} category="hs1" />}
+                path='/hs1-journal/'
+                component={(props) => <LtsJournal {...props} category='hs1' />}
               />
               <Route
-                path="/hs2-journal/"
-                component={(props) => <LtsJournal {...props} category="hs2" />}
+                path='/hs2-journal/'
+                component={(props) => <LtsJournal {...props} category='hs2' />}
               />
               <Route
-                path="/hs3-journal/"
-                component={(props) => <LtsJournal {...props} category="hs3" />}
+                path='/hs3-journal/'
+                component={(props) => <LtsJournal {...props} category='hs3' />}
               />
               <Route
-                path="/hs4-journal/"
-                component={(props) => <LtsJournal {...props} category="hs4" />}
+                path='/hs4-journal/'
+                component={(props) => <LtsJournal {...props} category='hs4' />}
               />
               <Route
-                path="/student-lts/"
+                path='/student-lts/'
                 component={(props) => (
-                  <LtsJournal {...props} category="student-lts" />
+                  <LtsJournal {...props} category='student-lts' />
                 )}
               />
               <Route
-                path="/student-wellnes/"
+                path='/student-wellnes/'
                 component={(props) => (
-                  <LtsJournal {...props} category="student-wellnes" />
+                  <LtsJournal {...props} category='student-wellnes' />
                 )}
               />
               <Route
-                path="/student-personal-finance/"
+                path='/student-personal-finance/'
                 component={(props) => (
-                  <LtsJournal {...props} category="student-personal-finance" />
+                  <LtsJournal {...props} category='student-personal-finance' />
                 )}
               />
               <Route
-                path="/my-performance-data/:id?"
+                path='/my-performance-data/:id?'
                 component={MyPerformanceData}
               />
-              <Route path="/instructor-data/:id?" component={InstructorData} />
+              <Route path='/instructor-data/:id?' component={InstructorData} />
               <Route
-                path="/student-leadership/"
+                path='/student-leadership/'
                 component={(props) => (
-                  <LtsJournal {...props} category="student-leadership" />
+                  <LtsJournal {...props} category='student-leadership' />
                 )}
               />
               <Route
-                path="/my-mentorship/"
+                path='/my-mentorship/'
                 component={(props) => (
-                  <LtsJournal {...props} category="my-mentorship" />
+                  <LtsJournal {...props} category='my-mentorship' />
                 )}
               />
               <Route
-                path="/market-ready/"
+                path='/market-ready/'
                 component={(props) => (
-                  <LtsJournal {...props} category="market-ready" />
+                  <LtsJournal {...props} category='market-ready' />
                 )}
               />
               <Route
                 exact
-                path="/My-Market-Ready-Guide"
+                path='/My-Market-Ready-Guide'
                 component={MyMarketReadyGuide}
               />
               <Route
-                path="/:page/video/:id"
+                path='/:page/video/:id'
                 component={BeyondYourCourseVideo}
               />
-              <Route path="/sample-note" component={SampleNote} />
-              <Route exact path="/my-notes/:id?" component={MyNotes} />
+              <Route path='/sample-note' component={SampleNote} />
+              <Route exact path='/my-notes/:id?' component={MyNotes} />
               <Route
                 exact
-                path="/my-journal/:month/:id"
+                path='/my-journal/:month/:id'
                 component={MyJournals}
               />
-              <Route exact path="/my-account" component={Profile} />
-              <Route path="/verify" component={VerifyEmail} />
-              <Route path="/logout" component={Logout} />
-              <Route exact path="/my-classroom" component={MyClassroom} />
+              <Route exact path='/my-account' component={Profile} />
+              <Route path='/verify' component={VerifyEmail} />
+              <Route path='/logout' component={Logout} />
+              <Route exact path='/my-classroom' component={MyClassroom} />
               <Route
                 exact
-                path="/edit-journals"
+                path='/edit-journals'
                 component={JournalsManagement}
               />
               <Route
                 exact
-                path="/edit-journals2"
+                path='/edit-journals2'
                 component={JournalsManagement2}
               />
               <Route
                 exact
-                path="/edit-journals2/:type/:journalId"
+                path='/edit-journals2/:type/:journalId'
                 component={JournalsManagement2}
               />
               <Route
                 exact
-                path="/my-classroom/request/:id"
+                path='/my-classroom/request/:id'
                 component={MyClassroom}
               />
               <Route
-                path="/my-spark/generate-page/response"
+                path='/my-spark/generate-page/response'
                 exact
                 component={MySparkGeneratePage}
               />
               <Route
-                path="/my-spark/generate-page/:id"
+                path='/my-spark/generate-page/:id'
                 exact
                 component={MySparkGeneratePage}
               />
-              <Route exact path="/my-spark/widgets" component={MySpark} />
+              <Route exact path='/my-spark/widgets' component={MySpark} />
               <Route
-                path="/my-spark/archive"
+                path='/my-spark/archive'
                 exact
                 component={MySparkArchivePage}
               />
               <Route
-                path="/my-spark/widgets/:widgetName"
+                path='/my-spark/widgets/:widgetName'
                 exact
                 component={MySparkWidgetDetails}
               />
-              <Route path="/my-inbox" component={MyInbox} />
+              <Route path='/my-evaluation' component={MyEvaluation} />
+              <Route path='/my-inbox' component={MyInbox} />
               <Route
-                path="/student-iamr/:studentId/:id?/:type?"
+                path='/student-iamr/:studentId/:id?/:type?'
                 component={StudentIAMR}
               />
-              <Route path="/briefings" component={Briefings} />
+              <Route path='/briefings' component={Briefings} />
               {user.isAdmin && (
-                <Route path="/user-management" component={UserManagement} />
+                <Route path='/user-management' component={UserManagement} />
               )}
-              <Redirect from="/register" exact to="/dashboard" />
-              <Redirect from="/ims-login" exact to="/dashboard" />
-              <Redirect from="/" exact to="/dashboard" />
-              <Route path="/iamr" component={Iamr} />
+              <Redirect from='/register' exact to='/dashboard' />
+              <Redirect from='/ims-login' exact to='/dashboard' />
+              <Redirect from='/' exact to='/dashboard' />
+              <Route path='/iamr' component={Iamr} />
               <Route component={NotFound} />
             </Switch>
           </Layout>
         ) : (
           <PublicLayout>
             <Switch>
-              <Route path="/verify-email" component={VerifyEmailByCode} />
-              <Route exact path="/lts-secure" component={SecurePage} />
-              <Route exact path="/forgot-password" component={ForgotPassword} />
-              <Route exact path="/reset-password" component={ResetPassword} />
-              <Route exact path="/create-account" component={CreateAccount} />
-              <Route exact path="/terms" component={Terms} />
-              <Route path="/register" component={Register} />
-              <Route exact path="/trial-ended" component={Resubscribe} />
-              <Route exact path="/subscription-ended" component={Resubscribe} />
-              <Route path="/logout" component={Logout} />
-              <Route exact path="/" component={ChooseLogin} />
-              <Route path="/ims-login" component={Login} />
-              <Route path="/verify" component={VerifyEmail} />
+              <Route path='/verify-email' component={VerifyEmailByCode} />
+              <Route exact path='/lts-secure' component={SecurePage} />
+              <Route exact path='/forgot-password' component={ForgotPassword} />
+              <Route exact path='/reset-password' component={ResetPassword} />
+              <Route exact path='/create-account' component={CreateAccount} />
+              <Route exact path='/terms' component={Terms} />
+              <Route path='/register' component={Register} />
+              <Route exact path='/trial-ended' component={Resubscribe} />
+              <Route exact path='/subscription-ended' component={Resubscribe} />
+              <Route path='/logout' component={Logout} />
+              <Route exact path='/' component={ChooseLogin} />
+              <Route path='/ims-login' component={Login} />
+              <Route path='/verify' component={VerifyEmail} />
               <Route
                 exact
-                path="/user-portfolio/:username"
+                path='/user-portfolio/:username'
                 component={(props) => {
                   return <PreviewPortfolioNew {...props} isPublicView={true} />
                 }}
               />
               <Route
-                path="/password-change-required"
+                path='/password-change-required'
                 component={PasswordChangeRequired}
               />
-              <Route path="/my-immersion" component={MyImmersion} />
+              <Route path='/my-immersion' component={MyImmersion} />
               <Route component={NotFound} />
             </Switch>
           </PublicLayout>
