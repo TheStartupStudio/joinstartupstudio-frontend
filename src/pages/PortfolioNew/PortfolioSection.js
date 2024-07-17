@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHistory } from 'react-router-dom'
-import useWindowWidth from '../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../hooks/useWindowWidth'
 
 export const ActionIcon = (props) => {
   return (

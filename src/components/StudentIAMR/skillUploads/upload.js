@@ -11,7 +11,7 @@ import UploadLink from './uploadLink'
 import ConfirmUploadModal from './confirmUploadModal'
 import DenyUploadModal from './denyUploadModal'
 import axiosInstance from '../../../utils/AxiosInstance'
-import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 const Upload = ({ upload, skill, editUpload }) => {
   const [expandedSkillDropdown, setExpandedSkillDropdown] = useState(false)
@@ -20,19 +20,9 @@ const Upload = ({ upload, skill, editUpload }) => {
   const [showRejectUploadModal, setShowRejectUploadModal] = useState(false)
   const [showConfirmUploadModal, setShowConfirmUploadModal] = useState(false)
   const [showDenyUploadModal, setShowDenyUploadModal] = useState(false)
-  const [hasAccess, setHasAccess] = useState(false)
+  const { isAdmin } = useSelector((state) => state.user.user)
 
   const isApprovable = upload.status === 'submitted'
-
-  useEffect(() => {
-    hasAccessHandler()
-  }, [])
-
-  const hasAccessHandler = async () => {
-    await axiosInstance
-      .get('/studentsInstructorss/has-access')
-      .then((data) => setHasAccess(data.data.allow))
-  }
 
   const denyApprovalRequest = async (status) => {
     await axiosInstance.patch(
@@ -125,7 +115,7 @@ const Upload = ({ upload, skill, editUpload }) => {
             </div>
           </div>
         )}
-        {hasAccess && upload.status === 'proficient' && (
+        {isAdmin && upload.status === 'proficient' && (
           <div className="row m-0 my-4">
             <div className="col-12 col-sm-6 m-0 p-0">
               <button

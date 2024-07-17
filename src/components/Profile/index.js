@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -21,8 +21,10 @@ import watch from '../../assets/images/read_watch_listen_Watch_with typo.png'
 import './index.css'
 import BriefingModal from '../Modals/BriefingModal'
 import { Link } from 'react-router-dom'
+import { getSelectedBriefingStart } from '../../redux/header/Actions'
 
 function Profile(props) {
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user.user)
   const [lastLogin, setLastLogin] = useState(null)
   const [newMessages, setNewMessages] = useState([])
@@ -31,13 +33,12 @@ function Profile(props) {
   const [studentQuestions, setStudentQuestions] = useState({})
   const [feedbackRequests, setFeedbackRequests] = useState({})
   const [briefingModal, setBriefingModal] = useState(false)
-  const [briefingClicked, setBriefingClicked] = useState(false)
+  const briefing = useSelector((state) => state?.header?.selectedBriefing)
 
-  // useEffect(() => {
-  //   axiosInstance.post('/briefings/increaseBriefings').then((res) => {
-  //     debugger
-  //   })
-  // }, [briefingClicked])
+  useEffect(() => {
+    dispatch(getSelectedBriefingStart())
+  }, [dispatch])
+
   const handleOpenBriefingModal = () => {
     setBriefingModal(true)
   }
@@ -49,7 +50,7 @@ function Profile(props) {
     const questionAndFeedbacksHandler = async () => {
       await axiosInstance.get('/instructor/iamr/tickets').then((res) => {
         setStudentQuestions(res.data.student_questions)
-        setFeedbackRequests(res.data.certification_feedback_questions)
+        setFeedbackRequests(res.data.certification_feedback_requests)
       })
     }
     questionAndFeedbacksHandler()
@@ -152,7 +153,7 @@ function Profile(props) {
   }
 
   return (
-    <Row className="mx-0">
+    <Row className='mx-0'>
       <Col
         lg={6}
         sm={12}
@@ -161,15 +162,15 @@ function Profile(props) {
           borderRadius: 0,
           minHeight: '166px'
         }}
-        className="notification-box"
+        className='notification-box'
       >
-        <div className="dashboard-profile">
+        <div className='dashboard-profile'>
           <img
             src={user?.profile_image ? user?.profile_image : avator}
-            alt="Profile"
-            className="ms-2"
+            alt='Profile'
+            className='ms-2'
           />
-          <div className="profile-margin">
+          <div className='profile-margin'>
             <h3>{user?.name}</h3>
             <p>{user?.profession}</p>
             {user?.social_links?.linkedIn && (
@@ -179,9 +180,9 @@ function Profile(props) {
                     ? user.social_links.linkedIn
                     : `https://${user.social_links.linkedIn}`
                 }
-                rel="noreferrer"
-                target="_blank"
-                className="link me-1"
+                rel='noreferrer'
+                target='_blank'
+                className='link me-1'
               >
                 <FontAwesomeIcon icon={faLinkedinIn} />
               </a>
@@ -193,9 +194,9 @@ function Profile(props) {
                     ? user.social_links.twitter
                     : `https://${user.social_links.twitter}`
                 }
-                rel="noreferrer"
-                target="_blank"
-                className="link mx-1"
+                rel='noreferrer'
+                target='_blank'
+                className='link mx-1'
               >
                 <FontAwesomeIcon icon={faTwitter} />
               </a>
@@ -207,9 +208,9 @@ function Profile(props) {
                     ? user.social_links.instagram
                     : `https://${user.social_links.instagram}`
                 }
-                rel="noreferrer"
-                target="_blank"
-                className="link mx-1"
+                rel='noreferrer'
+                target='_blank'
+                className='link mx-1'
               >
                 <FontAwesomeIcon icon={faInstagram} />
               </a>
@@ -221,9 +222,9 @@ function Profile(props) {
                     ? user.social_links.website
                     : `https://${user.social_links.website}`
                 }
-                rel="noreferrer"
-                target="_blank"
-                className="link mx-1"
+                rel='noreferrer'
+                target='_blank'
+                className='link mx-1'
               >
                 <FontAwesomeIcon icon={faGlobe} />
               </a>
@@ -235,15 +236,15 @@ function Profile(props) {
                     ? user.social_links.facebook
                     : `https://${user.social_links.facebook}`
                 }
-                rel="noreferrer"
-                target="_blank"
-                className="link mx-1"
+                rel='noreferrer'
+                target='_blank'
+                className='link mx-1'
               >
                 <FontAwesomeIcon icon={faFacebookF} />
               </a>
             )}
-            <div className="dashboard_lastLogin w-100">
-              <span className="me-1">Last Login:</span>
+            <div className='dashboard_lastLogin w-100'>
+              <span className='me-1'>Last Login:</span>
               {lastLogin}
             </div>
           </div>
@@ -255,22 +256,22 @@ function Profile(props) {
           cursor: 'pointer'
         }}
         onClick={() => redirect(dashboardWidget?.link)}
-        className="mx-0 px-0 col-12 col-lg-6 row mt-4 mt-md-0 widget-interesting text-center "
+        className='mx-0 px-0 col-12 col-lg-6 row mt-4 mt-md-0 widget-interesting text-center '
       >
-        <div className="col-4 col-md-4 mx-auto my-auto fw-bold py-4 ">
-          <div className="h-auto w-auto user-select-none">
-            <p className="my-0 mx-auto" style={{ color: '#FE43A1' }}>
+        <div className='col-4 col-md-4 mx-auto my-auto fw-bold py-4 '>
+          <div className='h-auto w-auto user-select-none'>
+            <p className='my-0 mx-auto' style={{ color: '#FE43A1' }}>
               READ
             </p>
-            <p className="my-0 mx-auto" style={{ color: '#99CC33' }}>
+            <p className='my-0 mx-auto' style={{ color: '#99CC33' }}>
               WATCH
             </p>
-            <p className="my-0 mx-auto" style={{ color: '#51C7DF' }}>
+            <p className='my-0 mx-auto' style={{ color: '#51C7DF' }}>
               LISTEN
             </p>
           </div>
           <button
-            className="py-2 border-0 color transform text-uppercase text-center  w-100 my-1"
+            className='py-2 border-0 color transform text-uppercase text-center  w-100 my-1'
             style={{
               backgroundColor: 'rgb(81, 199, 223)',
               color: 'rgb(255, 255, 255)',
@@ -280,7 +281,7 @@ function Profile(props) {
               event.stopPropagation()
               handleOpenBriefingModal()
               axiosInstance
-                .post('/briefing/increaseBriefings')
+                .post('/briefings/increaseBriefings')
                 .then((res) => {})
             }}
           >
@@ -288,7 +289,7 @@ function Profile(props) {
           </button>
         </div>
         <div
-          className="col-8 col-md-8 text-start my-auto info-text-dashboard"
+          className='col-8 col-md-8 text-start my-auto info-text-dashboard'
           style={{ fontSize: '14px', wordBreak: 'break-word' }}
         >
           {dashboardWidget?.description}
@@ -305,65 +306,40 @@ function Profile(props) {
           height: '250px',
           fontWeight: '600'
         }}
-        className="notification-box col-lg-6 col-sm-12 mt-4 row position-relative"
+        className='notification-box col-lg-6 col-sm-12 mt-4 row position-relative'
       >
         <p
-          className="text-center certification-progress mt-4"
+          className='text-center certification-progress mt-4'
           style={{ fontSize: '20px', height: 'auto' }}
         >
-          IAMR Inbox
+          Inbox
         </p>
         <div
-          className="col-6 text-center fw-bold"
+          className='col-6 text-center fw-bold'
           style={{ marginTop: '-3rem' }}
         >
-          <img src={Questions} style={{ width: '180px' }} alt="" />
+          <img src={Questions} style={{ width: '180px' }} alt='' />
 
-          <a href={`/iamr-inbox`} className="iamr-inbox_link m-0">
+          <a href={`/my-inbox`} className='iamr-inbox_link m-0'>
             {studentQuestions.unreadCount ? studentQuestions?.unreadCount : 0}
-            <span className="ml-2">Questions</span>
+            <span className='ml-2'>Questions</span>
           </a>
         </div>
         <div
-          className="col-6 text-center fw-bold"
+          className='col-6 text-center fw-bold'
           style={{ marginTop: '-3rem' }}
         >
-          <img src={Feedbacks} style={{ width: '180px' }} alt="" />
-          <a href="/iamr-inbox" className="iamr-inbox_link">
+          <img src={Feedbacks} style={{ width: '180px' }} alt='' />
+          <a href='/my-inbox' className='iamr-inbox_link'>
             {feedbackRequests.unreadCount ? feedbackRequests.unreadCount : 0}
-            <span className="ml-2">Requests</span>
+            <span className='ml-2'>Requests</span>
           </a>
         </div>
-        {/* <p
-          className='overlay-comming-soon position-absolute my-auto mx-auto text-center'
-          style={{
-            fontWeight: 'bold',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            zIndex: 4,
-            fontSize: '20px',
-            color: 'white',
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          Coming soon
-        </p>
-        <div
-          className='overlay-comming-soon position-absolute'
-          style={{
-            height: '100%',
-            width: '100%',
-            zIndex: 2,
-            backgroundColor: '#828888',
-            opacity: '0.9'
-          }}
-        ></div> */}
       </div>
       {/* end of certification status */}
       {/* read and more */}
       <div
-        className="col-lg-6 col-12 mt-4 row px-md-4 gx-0 float-end ps-auto ms-auto"
+        className='col-lg-6 col-12 mt-4 row px-md-4 gx-0 float-end ps-auto ms-auto'
         style={{
           backgroundColor: '#F8F7F7',
           minHeight: '166px',
@@ -372,21 +348,21 @@ function Profile(props) {
         }}
       >
         <div
-          className="read-section w-100 border-bottom row gx-0"
+          className='read-section w-100 border-bottom row gx-0'
           style={{ height: '33.3%' }}
         >
-          <div className=" col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4">
-            <div className="read-bg__img"></div>
+          <div className=' col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4'>
+            <div className='read-bg__img'></div>
           </div>
           <div
             style={{ float: 'right' }}
             className={'text-start my-auto col-7 read-watch-listen-text-div'}
           >
-            <p className="my-0 text-start read-watch-listen-title">
+            <p className='my-0 text-start read-watch-listen-title'>
               {dashboardWidget?.read?.title}
             </p>
             <p
-              className="text-start my-0 read-watch-listen-author"
+              className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
               {dashboardWidget?.read?.author}
@@ -395,11 +371,11 @@ function Profile(props) {
         </div>
         {/* second */}
         <div
-          className="read-section w-100 border-bottom row gx-0"
+          className='read-section w-100 border-bottom row gx-0'
           style={{ height: '33.3%' }}
         >
-          <div className="col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4">
-            <div className="watch-bg__img"></div>
+          <div className='col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4'>
+            <div className='watch-bg__img'></div>
           </div>
           <div
             style={{ float: 'right' }}
@@ -407,11 +383,11 @@ function Profile(props) {
               'text-start my-auto col-7 col-md-9 read-watch-listen-text-div'
             }
           >
-            <p className="my-0 text-start w-100 read-watch-listen-title">
+            <p className='my-0 text-start w-100 read-watch-listen-title'>
               {dashboardWidget?.watch?.title}
             </p>
             <p
-              className="text-start my-0 read-watch-listen-author"
+              className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
               {dashboardWidget?.watch?.author}
@@ -420,21 +396,21 @@ function Profile(props) {
         </div>
         {/* third  */}
         <div
-          className="read-section w-100 row gx-0"
+          className='read-section w-100 row gx-0'
           style={{ borderBottom: '0px', height: '33.3%' }}
         >
-          <div className="col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4">
-            <div className="listen-bg__img"></div>
+          <div className='col-5 col-md-3 text-start text-md-start read-watch-listen-image-div p-4'>
+            <div className='listen-bg__img'></div>
           </div>
           <div
             style={{ float: 'right' }}
             className={'text-center my-auto col-7 read-watch-listen-text-div'}
           >
-            <p className="my-0 text-start read-watch-listen-title">
+            <p className='my-0 text-start read-watch-listen-title'>
               {dashboardWidget?.listen?.title}
             </p>
             <p
-              className="text-start my-0 read-watch-listen-author"
+              className='text-start my-0 read-watch-listen-author'
               style={{ fontSize: '10px' }}
             >
               {dashboardWidget?.listen?.author}
@@ -442,7 +418,11 @@ function Profile(props) {
           </div>
         </div>
       </div>
-      <BriefingModal show={briefingModal} onHide={handleCloseBriefingModal} />
+      <BriefingModal
+        briefing={briefing}
+        show={briefingModal}
+        onHide={handleCloseBriefingModal}
+      />
     </Row>
   )
 }

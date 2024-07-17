@@ -33,7 +33,7 @@ const MentorMeetingTable = ({
                 handleChange={(value) =>
                   handleChangeMentorMeeting('meetingDate', value)
                 }
-                isDisabled={!isEditable}
+                // isDisabled={!isEditable}
               />
             </JournalTableCell>
           </JournalTableRow>

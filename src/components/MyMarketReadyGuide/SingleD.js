@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { SingleB } from "./SingleB";
-import Accordion from "react-bootstrap/Accordion";
-import Dropdown from "../IAMR/customComponents/dropdown";
-import { faBox } from "@fortawesome/free-solid-svg-icons";
-import "./index.css";
+import React, { useState } from 'react'
+import './index.css'
 
 export const SingleD = ({ title, index }) => {
-  const [evaluationDropdown, setEvaluationDropdown] = useState(false);
-  const [activePage, setActivePage] = useState("");
+  const [activePage, setActivePage] = useState('')
 
-  useEffect(() => console.log(activePage), [activePage]);
   return (
     <div className="mt-2">
       <div className="accordion-item">
@@ -35,7 +29,7 @@ export const SingleD = ({ title, index }) => {
         >
           <div
             className="accordion-body py-4"
-            style={{ height: "auto" }}
+            style={{ height: 'auto' }}
             eventKey={`${index}`}
           >
             <select
@@ -72,7 +66,7 @@ export const SingleD = ({ title, index }) => {
               <option value="Modeling">Modeling</option>
             </select>
 
-            {activePage == "Time Management" && (
+            {activePage == 'Time Management' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Demonstrate efficient use of time.</h5>
@@ -149,7 +143,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Structured Problem-Solving" && (
+            {activePage == 'Structured Problem-Solving' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>
@@ -248,7 +242,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Public Speaking" && (
+            {activePage == 'Public Speaking' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Control the narrative of the story being told.</h5>
@@ -348,7 +342,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Adaptability" && (
+            {activePage == 'Adaptability' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Engage with new contexts and perspectives.</h5>
@@ -463,7 +457,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Learning Agility" && (
+            {activePage == 'Learning Agility' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Apply lessons learned from experiences.</h5>
@@ -574,7 +568,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Research Literacy" && (
+            {activePage == 'Research Literacy' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>
@@ -701,7 +695,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Comprehension" && (
+            {activePage == 'Comprehension' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Determine the causes of a problem.</h5>
@@ -857,7 +851,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Innovation" && (
+            {activePage == 'Innovation' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Change the lens through which a problem is viewed.</h5>
@@ -983,7 +977,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Project Management" && (
+            {activePage == 'Project Management' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Create and execute a project timeline.</h5>
@@ -1088,7 +1082,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Self-Discipline" && (
+            {activePage == 'Self-Discipline' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>
@@ -1181,7 +1175,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Risk-Taking" && (
+            {activePage == 'Risk-Taking' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Assign value to and take advantage of opportunities.</h5>
@@ -1276,7 +1270,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Influence and Collaboration" && (
+            {activePage == 'Influence and Collaboration' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Spread new ideas to new populations.</h5>
@@ -1377,7 +1371,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Digital Etiquette" && (
+            {activePage == 'Digital Etiquette' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Take control over any digital presence.</h5>
@@ -1500,7 +1494,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Communication Across Mediums" && (
+            {activePage == 'Communication Across Mediums' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>
@@ -1600,7 +1594,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Proactivity" && (
+            {activePage == 'Proactivity' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Set goals and create timelines for achieving them.</h5>
@@ -1694,7 +1688,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Data Analysis" && (
+            {activePage == 'Data Analysis' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Use an evidence-based approach to problem-solving.</h5>
@@ -1792,7 +1786,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Digital Literacy" && (
+            {activePage == 'Digital Literacy' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>
@@ -1899,7 +1893,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Conflict Management" && (
+            {activePage == 'Conflict Management' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Cross cultural, social and political divisions.</h5>
@@ -1986,7 +1980,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Financial Literacy" && (
+            {activePage == 'Financial Literacy' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>
@@ -2080,7 +2074,7 @@ export const SingleD = ({ title, index }) => {
               </div>
             )}
 
-            {activePage == "Modeling" && (
+            {activePage == 'Modeling' && (
               <div className="skills-box">
                 <div className="skill-box">
                   <h5>Institute processes for problem-solving.</h5>
@@ -2172,5 +2166,5 @@ export const SingleD = ({ title, index }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

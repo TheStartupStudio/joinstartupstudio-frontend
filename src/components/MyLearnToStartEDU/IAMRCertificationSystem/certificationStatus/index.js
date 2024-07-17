@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import './index.css'
-import LoadingAnimation from '../loadingAnimation'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { useSelector } from 'react-redux'
@@ -9,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons'
 import DownloadFormatModal from './downloadFormatModal'
 import Certification from './Certification'
+import LoadingAnimation from '../../../../ui/loadingAnimation'
 
 const CertificationStatus = () => {
   const { user } = useSelector((state) => state.user)

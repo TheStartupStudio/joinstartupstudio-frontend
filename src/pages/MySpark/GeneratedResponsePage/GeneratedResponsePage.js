@@ -17,7 +17,7 @@ import { toast } from 'react-toastify'
 import FinalStepModal from '../Modals/FinalStepModal'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import PdfDocument from './PdfDocument'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 
 function GeneratedResponsePage(props) {
   const [archivedDocument, setArchivedDocument] = useState({})

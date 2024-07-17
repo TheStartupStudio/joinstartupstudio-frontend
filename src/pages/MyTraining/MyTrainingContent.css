@@ -13,9 +13,8 @@
   align-items: end;
   height: 100%;
 }
-.journal-entries__video{
-  max-width:100%
-  
+.journal-entries__video {
+  max-width: 100%;
 }
 .journal-entries__video-thumbnail {
   max-width: 100%;
@@ -66,15 +65,18 @@
   width: 150px;
   height: 37px;
   background: #51c7df;
-  font-weight:600;
-  font-size:11px;
+  font-weight: 600;
+  font-size: 11px;
   border: none;
-  margin:30px 0 20px 0;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center
+  margin: 30px 0 20px 0;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.default-btn:hover {
+  color: white;
 }
 @media (max-width: 767.98px) {
   .editor-table-data {

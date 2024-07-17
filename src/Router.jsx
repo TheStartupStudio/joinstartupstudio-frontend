@@ -1,13 +1,7 @@
 /* Top Level Route file */
 
-import React, { useEffect, useLayoutEffect, useState } from 'react'
-import {
-  Switch,
-  Route,
-  Redirect,
-  useLocation,
-  useHistory
-} from 'react-router-dom'
+import React from 'react'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import { useSelector, connect } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import AppLocale from './lang'
@@ -16,16 +10,9 @@ import PublicLayout from './pages/Layout/publicLayout'
 import CSVUpload from './components/CSVUpload'
 import VerifyEmailByCode from './pages/Register/verifyEmailByCode'
 import LtsJournal from './pages/LtsJournal'
-import MyCourseEntrepreneurship from './pages/MyCourseEntrepreneurship'
-import PublishedProject from './pages/StartupProfile/components/published'
-import EditProject from './pages/StartupProfile/pages/edit'
 import StudentJournals from './pages/studentJournals'
-import IamrContents from './pages/Iamr/IamrContentsAccordion'
-import ImrContent from './pages/Iamr/ImrContent'
 import TestJournal from './pages/LtsJournal/TestJournal'
 import UserProfile from './pages/Profile/userProfile'
-import axiosInstance from './utils/AxiosInstance'
-// import MyTraining from './pages/LtsJournal/MyTraining'
 
 const MyTraining = React.lazy(() => import('./pages/MyTraining/MyTraining'))
 const Login = React.lazy(() => import('./pages/Auth/Login'))
@@ -146,139 +133,19 @@ const JournalsManagement2 = React.lazy(() =>
   import('./pages/JournalsManagement/JournalsManagement2')
 )
 
-const IAMRinbox = React.lazy(() => import('./pages/IAMRinbox'))
+const MyInbox = React.lazy(() => import('./pages/MyInbox'))
 const StudentIAMR = React.lazy(() => import('../src/pages/StudentIAMR'))
+const Briefings = React.lazy(() => import('../src/pages/Briefings'))
+const UserManagement = React.lazy(() =>
+  import('../src/pages/admin/UserManagement')
+)
+const InstructorData = React.lazy(() =>
+  import('../src/components/admin/UserManagement/instructorData')
+)
 
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
-  const [isFirstRendered, setIsFirstRendered] = useState(false)
-
-  useEffect(() => {
-    axiosInstance
-      .put('/myPerformanceData/updateActivity/startTime', {
-        isActive: false
-      })
-      .then((response) => {
-        // console.log(response)
-        setIsFirstRendered(true)
-      })
-      .catch((error) => {
-        console.error('Error updating activity:', error)
-      })
-  }, [])
-
-  const handleUpdateEndTime = () => {
-    axiosInstance
-      .put('/myPerformanceData/updateActivity/endTime', {
-        isActive: false
-      })
-      .then((response) => {
-        // console.log(response)
-        // setIsFirstRendered(true)
-      })
-      .catch((error) => {
-        console.error('Error updating activity:', error)
-      })
-  }
-  const handleUpdateStartTime = () => {
-    axiosInstance
-      .put('/myPerformanceData/updateActivity/startTime', {
-        isActive: false
-      })
-      .then((response) => {
-        // console.log(response)
-        // setIsFirstRendered(true)
-      })
-      .catch((error) => {
-        console.error('Error updating activity:', error)
-      })
-  }
-  const handleUpdateActivity = (type) => {
-    console.log(`type: ${type} - API Called`)
-    axiosInstance
-      .put(`/myPerformanceData/updateActivity`, {
-        isActive: false
-      })
-      .then((response) => {
-        // console.log(response)
-      })
-      .catch((error) => {
-        console.error('Error updating activity:', error)
-      })
-  }
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     handleUpdateActivity('interval')
-  //   }, 10000)
-  // }, [])
-
-  useEffect(() => {
-    if (isFirstRendered) {
-      let intervalId = setInterval(() => {
-        handleUpdateActivity('interval')
-      }, 60000)
-
-      const handleVisibilityChange = () => {
-        if (document.visibilityState === 'hidden') {
-          clearInterval(intervalId)
-        } else {
-          intervalId = setInterval(() => {
-            handleUpdateActivity('interval')
-          }, 60000)
-        }
-      }
-
-      document.addEventListener('visibilitychange', handleVisibilityChange)
-
-      const handleUnload = () => {
-        clearInterval(intervalId)
-      }
-
-      window.addEventListener('beforeunload', handleUnload)
-
-      return () => {
-        clearInterval(intervalId)
-        document.removeEventListener('visibilitychange', handleVisibilityChange)
-        window.removeEventListener('beforeunload', handleUnload)
-      }
-    }
-  }, [isFirstRendered])
-
-  // useEffect(() => {
-  //   if (isFirstRendered) {
-  //     const handleVisibilityChange = () => {
-  //       if (document.visibilityState === 'hidden') {
-  //         handleUpdateActivity('visibilityChange')
-  //         debugger
-  //       }
-  //     }
-  //
-  //     const handleBeforeUnload = (e) => {
-  //       console.log(e)
-  //       handleUpdateActivity('beforeUnload')
-  //       debugger
-  //     }
-  //     const handlePopstate = (e) => {
-  //       console.log(e)
-  //       handleUpdateActivity('popState')
-  //       debugger
-  //     }
-  //     const handleUnload = (e) => {
-  //       console.log(e)
-  //       handleUpdateActivity('unload')
-  //       debugger
-  //     }
-  //
-  //     document.addEventListener('visibilitychange', handleVisibilityChange)
-  //     window.addEventListener('beforeunload', handleBeforeUnload)
-  //
-  //     return () => {
-  //       document.removeEventListener('visibilitychange', handleVisibilityChange)
-  //       window.removeEventListener('beforeunload', handleBeforeUnload)
-  //     }
-  //   }
-  // }, [isFirstRendered])
+  const { isAuthenticated, user } = useSelector((state) => state.user)
 
   return (
     <IntlProvider
@@ -336,11 +203,6 @@ function Router(props) {
                 }}
               />
               <Route exact path="/terms" component={Terms} />
-              {/*<Route*/}
-              {/*  exact*/}
-              {/*  path="/user-portfolio/:username"*/}
-              {/*  component={PreviewPublicPortfolio}*/}
-              {/*/>*/}
               <Route
                 exact
                 path="/beyond-your-course"
@@ -380,39 +242,12 @@ function Router(props) {
                   <MyTraining {...props} category="my-training" />
                 )}
               />
-              {/* Students journals */}
-              {/* <Route
-                path='/student-journals/:id/'
-                component={StudentJournals}
-              /> */}
               <Route
                 path="/students-journals/:studentId"
                 component={(props) => (
                   <StudentJournals {...props} category="my-training" />
                 )}
               />
-              {/* <Route
-                path='/students/:studentId/'
-                component={(props) => <StudentJournals {...props} category='hs1' />}
-              />
-              <Route
-                path='/students/:studentId/'
-                component={(props) => <StudentJournals {...props} category='hs2' />}
-              />
-              <Route
-                path='/students/:studentId/'
-                component={(props) => <StudentJournals {...props} category='hs3' />}
-              />
-              <Route
-                path='/students/:studentId/'
-                component={(props) => <StudentJournals {...props} category='hs4' />}
-              />
-              <Route
-                path='/students/:studentId/'
-                component={(props) => (
-                  <StudentJournals {...props} category='market-ready' />
-                )}
-              /> */}
               {/* Students journals */}
               <Route
                 path="/new-hs1-journal/"
@@ -446,12 +281,6 @@ function Router(props) {
                   <TestJournal {...props} category="new-hs2" />
                 )}
               />
-              {/*<Route*/}
-              {/*  path="/new-hs1-journal/week/"*/}
-              {/*  component={(props) => (*/}
-              {/*    <TestJournal {...props} category="new-hs1" />*/}
-              {/*  )}*/}
-              {/*/>*/}
               <Route
                 path="/hs1-journal/"
                 component={(props) => <LtsJournal {...props} category="hs1" />}
@@ -487,13 +316,20 @@ function Router(props) {
                 )}
               />
               <Route
-                path="/my-performance-data/"
+                path="/my-performance-data/:id?"
                 component={MyPerformanceData}
               />
+              <Route path="/instructor-data/:id?" component={InstructorData} />
               <Route
                 path="/student-leadership/"
                 component={(props) => (
                   <LtsJournal {...props} category="student-leadership" />
+                )}
+              />
+              <Route
+                path="/my-mentorship/"
+                component={(props) => (
+                  <LtsJournal {...props} category="my-mentorship" />
                 )}
               />
               <Route
@@ -507,17 +343,6 @@ function Router(props) {
                 path="/My-Market-Ready-Guide"
                 component={MyMarketReadyGuide}
               />
-              {/* <Route
-                exact
-                path='/MyStartupProfile'
-                component={MyStartupProfile}
-              /> */}
-              {/* <Route exact path='/editProject/:id' component={EditProject} />
-              <Route
-                exact
-                path='/PublishedProject/:id'
-                component={PublishedProject}
-              /> */}
               <Route
                 path="/:page/video/:id"
                 component={BeyondYourCourseVideo}
@@ -574,11 +399,15 @@ function Router(props) {
                 exact
                 component={MySparkWidgetDetails}
               />
-              <Route path="/iamr-inbox" component={IAMRinbox} />
+              <Route path="/my-inbox" component={MyInbox} />
               <Route
                 path="/student-iamr/:studentId/:id?/:type?"
                 component={StudentIAMR}
               />
+              <Route path="/briefings" component={Briefings} />
+              {user.isAdmin && (
+                <Route path="/user-management" component={UserManagement} />
+              )}
               <Redirect from="/register" exact to="/dashboard" />
               <Redirect from="/ims-login" exact to="/dashboard" />
               <Redirect from="/" exact to="/dashboard" />

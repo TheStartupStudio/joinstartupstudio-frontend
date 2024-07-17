@@ -5,7 +5,6 @@ import copy from '../../../assets/images/copy.svg'
 import { toast } from 'react-toastify'
 import { FormattedMessage } from 'react-intl'
 import ModalWrapper from '../Spotlight/ModalWrapper'
-
 const ShareMyPortfolio = (props) => {
   return (
     <ModalWrapper

@@ -14,6 +14,7 @@ import ReactSelect from 'react-select'
 import { Col } from 'react-bootstrap'
 import SkeletonLoader from './SkeletonLoader/SkeletonLoader'
 import SkeletonTableLoader from './SkeletonLoader/SkeletonTableLoader'
+import { setBackButton } from '../../redux/backButtonReducer'
 
 const DropdownSelector = ({ myImmersion, industry, setIndustry }) => {
   const industriesOptions = useMemo(() => {
@@ -24,7 +25,7 @@ const DropdownSelector = ({ myImmersion, industry, setIndustry }) => {
   }, [myImmersion.industries])
 
   return (
-    <Col md="4" sm="5" xs="6" xl="3" className="py-3 ps-3">
+    <Col md='4' sm='5' xs='6' xl='3' className='py-3 ps-3'>
       <ReactSelect
         options={industriesOptions}
         value={'Bulk Actions'}
@@ -32,7 +33,7 @@ const DropdownSelector = ({ myImmersion, industry, setIndustry }) => {
         onChange={(newValue) => {
           setIndustry(newValue.value)
         }}
-        className="mb-0 me-0 custom-dropdown"
+        className='mb-0 me-0 custom-dropdown'
         // styles={dropDownStyles}
         autoFocus={false}
         isSearchable={false}
@@ -48,6 +49,14 @@ const Steps = () => {
   const [currPage, setCurrPage] = useState(1)
   const [industry, setIndustry] = useState('')
   const itemsPerPage = 5
+
+  useEffect(() => {
+    dispatch(setBackButton(true, 'my-immersion'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   const filteredData =
     industry !== ''
@@ -84,14 +93,14 @@ const Steps = () => {
       {myImmersion.loading ? (
         <SkeletonLoader />
       ) : (
-        <div className="container-fluid iamr-page">
-          <div className="pt-4">
-            <h2 className="fw-bold">{myImmersion.step?.title}</h2>
+        <div className='container-fluid iamr-page'>
+          <div className='pt-4'>
+            <h2 className='fw-bold'>{myImmersion.step?.title}</h2>
             <p>{myImmersion.step?.subtitle}</p>
           </div>
 
-          <hr className="m-0" />
-          <div className="steps-container">
+          <hr className='m-0' />
+          <div className='steps-container'>
             <div style={{ background: '#fff' }}>
               <DropdownSelector
                 myImmersion={myImmersion}

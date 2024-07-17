@@ -11,13 +11,12 @@ import { useState, useEffect } from 'react'
 import StartupLiveEn from '../../assets/images/startup-live-en.jpg'
 import { faHeart as heartSaved } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
-import { NotesButton } from '../Notes'
+import { toast } from 'react-toastify'
 
 export default function VideoView(props) {
   const [showVideoModal, setShowVideoModal] = useState(false)
   const [showNotesButton, setShowNotesButton] = useState(false)
   const url = ''
-  // props.page === 'startup-live' ? `/${props.page}/video/${props.id}` : ''
   const [videoData, setVideoData] = useState([])
 
   useEffect(() => {
@@ -38,14 +37,23 @@ export default function VideoView(props) {
     if (value) {
       await axiosInstance
         .post(`/favorites`, { contentId: videoData.id })
-        .then((response) => response)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success('Your changes has been saved successfully')
+          }
+          return response
+        })
         .catch((err) =>
           setVideoData({ ...videoData, favorite: oldFavoriteValue })
         )
     } else {
       await axiosInstance
         .delete(`/favorites/${videoData.id}`)
-        .then(() => {})
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success('Your changes has been saved successfully')
+          }
+        })
         .catch((err) =>
           setVideoData({ ...videoData, favorite: oldFavoriteValue })
         )
@@ -71,7 +79,7 @@ export default function VideoView(props) {
                   style={{
                     width: '25px',
                     height: '25px',
-                    color: videoData.favorite ? '#F2359D' : '#FFFFFF'
+                    color: videoData.favorite ? '#F2359D' : 'grey'
                   }}
                   onClick={() =>
                     props.type !== 'widget'
@@ -127,10 +135,7 @@ export default function VideoView(props) {
         </div>
       ) : (
         <div className='card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2'>
-          <div
-            className='card mobile-card'
-            // style={{ paddingRight: '20px' }}
-          >
+          <div className='card mobile-card'>
             <Link to={url ? url : '#'}>
               <div className='beyond-your-course-video-thumb beyound-all-videos-thumb'>
                 <div
@@ -165,15 +170,8 @@ export default function VideoView(props) {
                   }}
                 >
                   <img
-                    src={
-                      props.thumbnail
-                      // window.location.href.includes('startup-live')
-                      //   ? StartupLiveEn
-                      //   : props.thumbnail
-                    }
-                    // style={{ height: '200px' }}
+                    src={props.thumbnail}
                     width='100%'
-                    // height=''
                     alt='#'
                     style={{
                       objectFit:

@@ -24,6 +24,8 @@ export default function EditJournals2(props) {
   const [fetchingJournals, setFetchingJournals] = useState(true)
   const [imageUploadingLoader, setImageUploadingLoader] = useState(false)
   const [uploadedImageUrl, setUploadedImageUrl] = useState(false)
+  const [journalType, setJournalType] = useState(null)
+  const [journalId, setJournalId] = useState(null)
   const randomUUID = uuidv4()
 
   const breakdownInitialState = [
@@ -87,16 +89,18 @@ export default function EditJournals2(props) {
     )
   }
 
-  const history = useHistory()
-
   useEffect(() => {
     const journalId = selectedJournal?.value?.id
     if (journalId && selectedJournal?.value?.type) {
+      setJournalType('journal')
+      setJournalId(journalId)
       const url = `/edit-journals2/${selectedJournal?.value?.type}/${journalId}`
-      history.push(url)
+      // history.push(url)
     } else if (journalId) {
+      setJournalId(journalId)
+      setJournalType('my-training')
       const url = `/edit-journals2/my-training/${journalId}`
-      history.push(url)
+      // history.push(url)
     }
   }, [selectedJournal?.value?.id])
 
@@ -152,11 +156,11 @@ export default function EditJournals2(props) {
       console.error(error)
     }
   }
-  const { journalId, type } = useParams()
+  // const { journalId, type } = useParams()
 
   const handleSubmit = async () => {
     setLoading(true)
-    if (!type.includes('my-training')) {
+    if (!journalType.includes('my-training')) {
       await axiosInstance
         .put(`LtsJournals/${journalId}/editJournal2`, {
           breakdowns: breakdowns,
@@ -168,7 +172,8 @@ export default function EditJournals2(props) {
           ltsConnection: selectedJournal?.value?.ltsConnection,
           curriculumOverview: selectedJournal?.value?.curriculumOverview,
           programOpportunities: selectedJournal?.value?.programOpportunities,
-          expectedOutcomes: selectedJournal?.value?.expectedOutcomes
+          expectedOutcomes: selectedJournal?.value?.expectedOutcomes,
+          studentAssignments: selectedJournal?.value?.studentAssignments
         })
         .then((res) => {
           setJournals(
@@ -342,6 +347,16 @@ export default function EditJournals2(props) {
     newExpectedOutcome[name] = value
     newExpectedOutcomes[index] = newExpectedOutcome
     newJournal.expectedOutcomes = newExpectedOutcomes
+    setSelectedJournal(newJournal)
+  }
+  const handleChangeStudentAssignments = (value) => {
+    let newJournal = {
+      ...selectedJournal,
+      value: {
+        ...selectedJournal.value,
+        studentAssignments: value
+      }
+    }
     setSelectedJournal(newJournal)
   }
 
@@ -525,6 +540,15 @@ export default function EditJournals2(props) {
               return (
                 <>
                   <h2>{step?.type.split('-').join(' ')}</h2>
+                  <div>Step title</div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={step?.title}
+                    onChange={(e) =>
+                      handleChangeSteps(index, 'title', e.target.value)
+                    }
+                  />
                   <div>Step content</div>
                   <KendoTextEditor
                     value={step?.stepContent}
@@ -600,6 +624,16 @@ export default function EditJournals2(props) {
                 </>
               )
             })}
+          {/* {selectedJournal.value?.studentAssignments && ( */}
+          <>
+            <h2>Student assignment content</h2>
+            <KendoTextEditor
+              value={selectedJournal?.value?.studentAssignments || ''}
+              handleChange={handleChangeStudentAssignments}
+              minHeight={150}
+            />
+          </>
+          {/* )} */}
           <>
             <h2>Lts Connection Model</h2>
             {selectedJournal?.value?.ltsConnection && (

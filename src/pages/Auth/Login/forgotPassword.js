@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { FormattedMessage } from 'react-intl'
@@ -8,6 +8,7 @@ import LTSJourneyEn from '../../../assets/images/lts-journey-en.png'
 import LTSJourneyEs from '../../../assets/images/lts-journey-es.png'
 import IntlMessages from '../../../utils/IntlMessages'
 import Footer from '../../../components/Footer'
+import axiosInstance from '../../../utils/AxiosInstance'
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -22,7 +23,7 @@ const ForgotPassword = () => {
     setUserEmail(event.target.value)
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     setLoading(true)
     event.preventDefault()
     if (userEmail === '') {
@@ -30,22 +31,36 @@ const ForgotPassword = () => {
     } else if (!validateEmail(userEmail)) {
       toast.error(<IntlMessages id='alert.email_not_valid' />)
     } else {
-      Auth.forgotPassword(userEmail)
-        .then(() => {
-          toast.success(<IntlMessages id='alert.check_email_redirect' />)
-          setTimeout(() => {
-            window.location.href = `/`
-          }, 2000)
+      try {
+        const res = await axiosInstance.post('/check-email', {
+          email: userEmail
         })
-        .catch((err) => {
-          if (err.code === 'LimitExceededException') {
-            toast.error('Attempt limit exceeded, please try after some time.')
-          } else {
-            toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-          }
-        })
+
+        if (res.data.exists) {
+          Auth.forgotPassword(userEmail)
+            .then(() => {
+              toast.success(<IntlMessages id='alert.check_email_redirect' />)
+              setLoading(false)
+              setTimeout(() => {
+                window.location.href = `/`
+              }, 2000)
+            })
+            .catch((err) => {
+              if (err.code === 'LimitExceededException') {
+                toast.error(
+                  'Attempt limit exceeded, please try after some time.'
+                )
+              } else {
+                toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+              }
+            })
+        } else {
+          setLoading(false)
+          return toast.error(res.data.message)
+        }
+      } catch (error) {}
     }
-    setLoading(false)
+    // setLoading(false)
   }
 
   return (
@@ -54,7 +69,7 @@ const ForgotPassword = () => {
         className='container-fluid my-auto px-5 d-flex align-items-center justify-content-center'
         style={{
           backgroundColor: '#F8F7F7',
-          minHeight: ' calc(100vh - 150px)'
+          minHeight: ' calc(100vh - 42px)'
         }}
       >
         {/* <div className='row '>
@@ -109,7 +124,7 @@ const ForgotPassword = () => {
           </div>
           <p className='text-center mt-3 mb-0 pb-4 public-page-text link'>
             <IntlMessages id='forgot_password.mistake' />
-            <NavLink to='/' className='ml-2 link'>
+            <NavLink to='/ims-login' className='ml-2 link'>
               <IntlMessages id='general.login' />
             </NavLink>
           </p>

@@ -1,52 +1,78 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import './style.css'
 import { Col } from 'react-bootstrap'
-import { useSelector } from 'react-redux'
-import UploadFileInput from '../ui/UploadFileInput'
-import TermsAndConditionsCheckbox from '../ui/TermsAndConditions'
-import ParentGuardianButton from '../ui/ParentGuardianButton'
-import SubmitButton from '../ui/SubmitButton'
-import Textarea from '../ui/Textarea'
-import ProfileHolder from '../ui/ProfileHolder'
-import axiosInstance from '../../../utils/AxiosInstance'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import {
+  fetchUserProblemSolution,
+  handleIndustryProblemStatus
+} from '../../../redux/myImmersion/actions'
+import LoadingAnimation from '../../../ui/loadingAnimation'
+import { useForm } from '../../../hooks/useForm'
+import {
+  ParentGuardianButton,
+  ProfileHolder,
+  SubmitButton,
+  TermsAndConditionsCheckbox,
+  Textarea,
+  UploadFileInput
+} from '../ContentItems'
+import notificationTypes from '../../../utils/notificationTypes'
+import notificationSocket from '../../../utils/notificationSocket'
 
 const SubmitIndustryProblemModal = (props) => {
+  console.log('props', props)
+  const dispatch = useDispatch()
   const { user } = useSelector((state) => state.user.user)
+  const { loading, industryProblems } = useSelector(
+    (state) => state.myImmersion
+  )
 
-  const [formData, setFormData] = useState({
-    industry_problem_ID: props.companyID,
-    company_ID: props.companyID,
+  const initialState = {
     solutionDescription: '',
-    status: 'pending',
+    status: '',
     parentGuardianApprovalForm: '',
     pitchDeck: '',
     pitchVideo: '',
     termsAndConditions: false,
-    submissionDate: Date.now()
-  })
-
-  const handleChange = (e) => {
-    const { name, checked, type } = e.target
-
-    if (type === 'checkbox') {
-      setFormData({ ...formData, [name]: checked })
-    } else {
-      const { value } = e.target
-      setFormData({ ...formData, [name]: value })
-    }
+    submissionDate: new Date()
   }
 
-  const submitHandler = async (e) => {
-    e.preventDefault()
+  useEffect(() => {
+    if (props.mode === 'edit') {
+      dispatch(
+        fetchUserProblemSolution(props.user_id, props.industry_solution_id)
+      )
+    }
+  }, [dispatch, props.user_id, props.industry_solution_id, props.mode])
 
-    await axiosInstance.post('/immersion/problems', formData).then((res) => {
-      if (res.status === 200) {
-        toast.success('Solution submitted successfuly')
-        props.onHide()
-      }
-    })
+  const { formData, handleChange, handleChangeFile, handleChangeCheckbox } =
+    useForm(initialState, industryProblems.userSolution, props.mode, loading)
+
+  const submitHandler = (status) => {
+    const res = dispatch(
+      handleIndustryProblemStatus(industryProblems.userSolution?.id, status)
+    )
+
+    if (res) {
+      toast.success('User solution status updated successfully!')
+      props.updateUserSolutionStatus(props.id, status)
+      props.onHide()
+      const type =
+        status === 'approved'
+          ? notificationTypes.INDUSTRY_PROBLEM_APPROVED.key
+          : notificationTypes.INDUSTRY_PROBLEM_DENIED.key
+
+      notificationSocket?.emit('sendNotification', {
+        sender: user,
+        receivers: [{ id: props.user_id }],
+        type: type,
+        url: '/my-immersion/step-1'
+      })
+    } else {
+      toast.error('Failed to update user solution status.')
+    }
   }
 
   return (
@@ -59,79 +85,121 @@ const SubmitIndustryProblemModal = (props) => {
       className="submit-industry-problem-modal"
       centered
     >
-      <Modal.Body style={{ padding: '3%' }}>
-        <Modal.Header>
-          <Modal.Title>SUBMIT YOUR SOLUTION</Modal.Title>
-          <span
-            style={{ fontSize: '20px', fontWeight: '700' }}
-            className="cursor-pointer"
-            onClick={() => props.onHide()}
-          >
-            X
-          </span>
-        </Modal.Header>
+      {loading ? (
+        <LoadingAnimation show={true} />
+      ) : (
+        <Modal.Body style={{ padding: '3%' }}>
+          <Modal.Header>
+            <Modal.Title>
+              {props.mode === 'edit' ? 'USER SOLUTION' : 'SUBMIT YOUR SOLUTION'}
+            </Modal.Title>
+            <span
+              style={{ fontSize: '20px', fontWeight: '700' }}
+              className="cursor-pointer"
+              onClick={() => props.onHide()}
+            >
+              X
+            </span>
+          </Modal.Header>
 
-        <div className="body-container">
-          <Col style={{ maxHeight: '70%' }}>
-            <ProfileHolder
-              profileImage={user?.profileImage}
-              name={user?.name}
-            />
-            <div>
-              <p className="mb-1">{props.currentCompanyName} Problem</p>
-              <Textarea
-                placeholder={'Briefly describe solution'}
-                name="solutionDescription"
-                onChange={handleChange}
+          <div className="body-container">
+            <Col style={{ maxHeight: '70%' }}>
+              <ProfileHolder
+                profileImage={
+                  props.mode === 'edit'
+                    ? props.User.profile_image
+                    : user?.profileImage
+                }
+                name={props.mode === 'edit' ? props.User.name : user?.name}
               />
-            </div>
-          </Col>
-          <Col className="d-flex flex-column justify-content-between">
-            <div>
-              <UploadFileInput
-                placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
-                name="parentGuardianApprovalForm"
-                onChange={handleChange}
-              />
-              <UploadFileInput
-                placeholder={'Upload Pitch Desk (PDF)'}
-                name="pitchDeck"
-                onChange={handleChange}
-              />
-              <UploadFileInput
-                placeholder={'Upload Pitch Video'}
-                name="pitchVideo"
-                onChange={handleChange}
-              />
-              <p style={{ fontSize: '11px' }}>
-                You must be subscribed to the Learn to Start platform for a
-                minimum of a 1 year prior applying. Applicants must be 18 years
-                old or have a parent/guardian form to be considered for
-                Sportlight.
-              </p>
-            </div>
+              <div>
+                <p className="mb-1">
+                  {props.ImmersionCompany?.name ?? props.currentCompanyName}{' '}
+                  Problem
+                </p>
+                <Textarea
+                  placeholder={'Briefly describe solution'}
+                  name="solutionDescription"
+                  value={formData.solutionDescription}
+                  onChange={props.mode !== 'edit' ? handleChange : () => {}}
+                />
+              </div>
+            </Col>
+            <Col className="d-flex flex-column justify-content-between">
+              <div>
+                <UploadFileInput
+                  filename={formData.parentGuardianApprovalForm}
+                  placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
+                  name="parentGuardianApprovalForm"
+                  onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
+                  mode={props.mode}
+                />
+                <UploadFileInput
+                  filename={formData.pitchDeck}
+                  placeholder={'Upload Pitch Deck (PDF)'}
+                  name="pitchDeck"
+                  onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
+                  mode={props.mode}
+                />
+                <UploadFileInput
+                  filename={formData.pitchVideo}
+                  placeholder={'Upload Pitch Video'}
+                  name="pitchVideo"
+                  onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
+                  mode={props.mode}
+                />
+                <p style={{ fontSize: '11px' }}>
+                  You must be subscribed to the Learn to Start platform for a
+                  minimum of a 1 year prior applying. Applicants must be 18
+                  years old or have a parent/guardian form to be considered for
+                  Sportlight.
+                </p>
+              </div>
 
-            <TermsAndConditionsCheckbox
-              text={'I agree to the Spotlight'}
-              blueText={'Terms & Conditions'}
-              name={'termsAndConditions'}
-              onChange={handleChange}
-              checked={formData.termsAndConditions}
-            />
-          </Col>
-          <Col>
-            <ParentGuardianButton text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
-          </Col>
-          <Col className="d-flex justify-content-end">
-            <SubmitButton
-              text={'SAVE'}
-              disabled={props.problemIsSubmitted}
-              type="button"
-              onClick={submitHandler}
-            />
-          </Col>
-        </div>
-      </Modal.Body>
+              <TermsAndConditionsCheckbox
+                text={'I agree to the Spotlight'}
+                blueText={'Terms & Conditions'}
+                name={'termsAndConditions'}
+                onChange={
+                  props.mode !== 'edit' ? handleChangeCheckbox : () => {}
+                }
+                checked={formData.termsAndConditions}
+              />
+            </Col>
+            <Col>
+              <ParentGuardianButton text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
+            </Col>
+            <Col className="d-flex justify-content-end">
+              {props.mode === 'edit' ? (
+                <div className="d-flex">
+                  <SubmitButton
+                    text={'DENY'}
+                    disabled={formData.status !== 'pending'}
+                    type="button"
+                    onClick={() => submitHandler('rejected')}
+                    className={'deny-button'}
+                  />
+
+                  <SubmitButton
+                    text={'APPROVE'}
+                    disabled={formData.status !== 'pending'}
+                    type="button"
+                    onClick={() => submitHandler('approved')}
+                    className={'approve-button'}
+                  />
+                </div>
+              ) : (
+                <SubmitButton
+                  text={'SAVE'}
+                  disabled={true}
+                  type="button"
+                  className={'submit-button'}
+                />
+              )}
+            </Col>
+          </div>
+        </Modal.Body>
+      )}
     </Modal>
   )
 }

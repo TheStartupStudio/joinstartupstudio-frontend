@@ -53,6 +53,15 @@ export function createEventId() {
 }
 
 const FullCalendarComponent = (props) => {
+  const dispatch = useDispatch()
+
+  const [events, setEvents] = useState([])
+  const [eventPeriods, setEventPeriods] = useState(null)
+  const [foundedEvent, setFoundedEvent] = useState(null)
+  const [startDate, setStartDate] = useState(null)
+  const [weekendsVisible, setWeekendsVisible] = useState(true)
+  const [currentEvents, setCurrentEvents] = useState([])
+
   const calendarEventModal = useSelector(
     (state) => state.dashboard.calendarEventModal
   )
@@ -63,9 +72,6 @@ const FullCalendarComponent = (props) => {
   const closeCalendarModal = () => {
     dispatch(closeCalendarEventModal())
   }
-  const [weekendsVisible, setWeekendsVisible] = useState(true)
-  const [currentEvents, setCurrentEvents] = useState([])
-  const dispatch = useDispatch()
 
   const handleEvents = (events) => {
     setCurrentEvents(events)
@@ -91,9 +97,9 @@ const FullCalendarComponent = (props) => {
 
     return (
       <div className={'custom-popover'}>
-        <div className="d-flex g-2 w-100" style={{ margin: 0, padding: 0 }}>
+        <div className='d-flex g-2 w-100' style={{ margin: 0, padding: 0 }}>
           <ul
-            className="event-ul"
+            className='event-ul'
             style={{
               width: '100%',
               margin: 0,
@@ -102,7 +108,7 @@ const FullCalendarComponent = (props) => {
             }}
           >
             <li
-              className="event-li"
+              className='event-li'
               style={{
                 color: backgroundColor(),
                 listStyleType: 'square',
@@ -112,7 +118,7 @@ const FullCalendarComponent = (props) => {
               }}
             >
               <span
-                className="event-span"
+                className='event-span'
                 style={{
                   fontSize: '12.5px',
                   fontWeight: 400,
@@ -120,11 +126,11 @@ const FullCalendarComponent = (props) => {
                   padding: 0
                 }}
               >
-                {foundedEvent?.type == 'task' ? 'Task' : 'Event'}:{' '}
+                {foundedEvent?.type === 'event' ? 'Event' : 'Task'}:{' '}
                 {foundedEvent?.name}
               </span>
               <div
-                className="event-name"
+                className='event-name'
                 style={{
                   fontSize: '12px',
                   fontWeight: 500,
@@ -135,7 +141,7 @@ const FullCalendarComponent = (props) => {
                 {foundedEvent?.user?.name}
               </div>
               <div
-                className="event-time"
+                className='event-time'
                 style={{
                   fontSize: '10px',
                   color: '#231F20',
@@ -152,12 +158,11 @@ const FullCalendarComponent = (props) => {
     )
   }
 
-  const [events, setEvents] = useState([])
   useEffect(() => {
     const convertedEvents = props.events?.map((event) => {
       const start = moment(event.startDate).toDate()
       const end = moment(event.endDate).toDate()
-      const className = event.type === 'task' ? 'event-task' : 'event-event'
+      const className = event.type === 'event' ? 'event-event' : 'event-task'
       const title = event.name
       const id = event.id
 
@@ -173,14 +178,11 @@ const FullCalendarComponent = (props) => {
     setEvents(convertedEvents)
   }, [props.events])
 
-  const [foundedEvent, setFoundedEvent] = useState(null)
   useEffect(() => {
     const event = props.events.find((event) => event.id == foundedEvent?.id)
 
     setFoundedEvent(event)
-  }, [props.events])
-
-  const [eventPeriods, setEventPeriods] = useState(null)
+  }, [props.events, foundedEvent?.id])
 
   const findEventPeriods = (id) => {
     const eventPeriodsObj = props.eventsPeriods?.find((event) => event.id == id)
@@ -190,13 +192,6 @@ const FullCalendarComponent = (props) => {
   const foundEvent = (event) => {
     return props.events?.find((ev) => ev?.id == +event.event?.id)
   }
-
-  const [startDate, setStartDate] = useState(null)
-
-  // useEffect(() => {
-  //   debugger
-  //   // setStartDate(props.startDate)
-  // }, [props.startDate])
 
   const addOnDayClick = (event) => {
     setStartDate(event.startStr)
@@ -306,6 +301,7 @@ const FullCalendarComponent = (props) => {
     const condition =
       arg?.jsEvent?.target?.classList?.value?.includes('fc-event')
     const event = props.events?.find((event) => event.id == arg.event?.id)
+
     if (condition) {
       tippy(arg.el, {
         theme: 'custom',
@@ -315,8 +311,66 @@ const FullCalendarComponent = (props) => {
         content: () => {
           const tooltip = document.createElement('div')
           tooltip.innerHTML =
-            event.type === 'task'
+            event.type === 'event'
               ? `<div style="width: 195px">
+                               
+                                  <div className={"d-flex g-2 w-100  "} style='margin:0px; padding:0px'>
+                                        <div
+                                        style=
+                                        "    text-transform: uppercase;
+                                              text-align: center;
+                                              margin-bottom: 4px;
+                                              padding-bottom: 6px;
+                                              border-bottom: 1px solid #e3e3e3;
+                                              font-size: 12px;
+                                              font-weight: 400;
+                                              padding-top: 3px;
+                                         "
+                                        >
+                                          ${convertDate(event?.startDate)}
+                                          ${
+                                            event?.endDate
+                                              ? ' - ' +
+                                                convertDate(event?.endDate)
+                                              : ''
+                                          },
+                                          ${getFullYear(event?.startDate)}
+                                         
+                                        </div>
+                                        
+                                      
+                                        <ul 
+                                        class="event-ul"
+                                        style={"width:100%; margin:0px; padding-left:1rem; font-size:14px"}
+                                        >
+                                          <li class="event-li" style="color:#FF3399;list-style-type:square;
+                                           font-size: 20px;
+                                            margin:0px; padding:0px
+                                            ">
+                                            <span class="event-span" style="font-size: 12.5px;
+                                            font-weight:400;
+                                            margin:0px; padding:0px">
+                                            Event: ${event?.name}
+                                            </span>
+                                             <div class="event-name" style="font-size:12px;font-weight:500; color:#231F20; font: normal normal normal Montserrat;">
+                                        ${event?.user?.name}
+                                        </div>
+                                          <div class="event-time" className={"ml-2"} style="font-size: 10px; color:#231F20; font-weight:normal">
+                                          ${convertToAMPM(
+                                            event?.startTime.slice(0, 5)
+                                          )} -
+                                          ${convertToAMPM(
+                                            event?.endTime.slice(0, 5)
+                                          )}
+                                        </div>
+                                          </li>
+                                        
+                                        
+                                          </ul>
+                                          
+                                 
+                            </div>`
+              : `<div style="width: 195px">
                                
                                   <div className={"d-flex g-2 w-100  "} style='margin:0px; padding:0px'>
                                        <div>
@@ -376,64 +430,6 @@ const FullCalendarComponent = (props) => {
                                           
                                  
                             </div>`
-              : `<div style="width: 195px">
-                               
-                                  <div className={"d-flex g-2 w-100  "} style='margin:0px; padding:0px'>
-                                        <div
-                                        style=
-                                        "    text-transform: uppercase;
-                                              text-align: center;
-                                              margin-bottom: 4px;
-                                              padding-bottom: 6px;
-                                              border-bottom: 1px solid #e3e3e3;
-                                              font-size: 12px;
-                                              font-weight: 400;
-                                              padding-top: 3px;
-                                         "
-                                        >
-                                          ${convertDate(event?.startDate)}
-                                          ${
-                                            event?.endDate
-                                              ? ' - ' +
-                                                convertDate(event?.endDate)
-                                              : ''
-                                          },
-                                          ${getFullYear(event?.startDate)}
-                                         
-                                        </div>
-                                        
-                                      
-                                        <ul 
-                                        class="event-ul"
-                                        style={"width:100%; margin:0px; padding-left:1rem; font-size:14px"}
-                                        >
-                                          <li class="event-li" style="color:#FF3399;list-style-type:square;
-                                           font-size: 20px;
-                                            margin:0px; padding:0px
-                                            ">
-                                            <span class="event-span" style="font-size: 12.5px;
-                                            font-weight:400;
-                                            margin:0px; padding:0px">
-                                            Event: ${event?.name}
-                                            </span>
-                                             <div class="event-name" style="font-size:12px;font-weight:500; color:#231F20; font: normal normal normal Montserrat;">
-                                        ${event?.user?.name}
-                                        </div>
-                                          <div class="event-time" className={"ml-2"} style="font-size: 10px; color:#231F20; font-weight:normal">
-                                          ${convertToAMPM(
-                                            event?.startTime.slice(0, 5)
-                                          )} -
-                                          ${convertToAMPM(
-                                            event?.endTime.slice(0, 5)
-                                          )}
-                                        </div>
-                                          </li>
-                                        
-                                        
-                                          </ul>
-                                          
-                                 
-                            </div>`
           return tooltip
         }
       })
@@ -465,7 +461,7 @@ const FullCalendarComponent = (props) => {
       <FullCalendar
         dayCellClassNames={'fc-cell-custom '}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
+        initialView='dayGridMonth'
         editable={true}
         selectable={true}
         selectMirror={true}

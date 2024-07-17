@@ -5,17 +5,23 @@ const ParentSidebarItem = ({
   ariaControls,
   srcImage,
   title,
-  isDropdown
+  isDropdown,
+  to = null
 }) => (
   <li
-    className="dropdownMenuSidebarHover"
-    data-bs-toggle="collapse"
+    className='dropdownMenuSidebarHover'
+    data-bs-toggle='collapse'
     href={href}
-    role="button"
-    aria-expanded="true"
+    role='button'
+    aria-expanded='true'
     aria-controls={ariaControls}
   >
-    <SidebarItem srcImage={srcImage} title={title} isDropdown={isDropdown} />
+    <SidebarItem
+      srcImage={srcImage}
+      title={title}
+      to={to}
+      isDropdown={isDropdown}
+    />
   </li>
 )
 

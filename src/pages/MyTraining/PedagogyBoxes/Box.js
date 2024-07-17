@@ -1,5 +1,5 @@
 import React from 'react'
-import useWindowWidth from '../../../utils/hooks/useWindowWidth'
+import useWindowWidth from '../../../hooks/useWindowWidth'
 
 const Box = (props) => {
   const windowWidth = useWindowWidth()

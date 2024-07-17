@@ -7,15 +7,17 @@ import './style/previewPortfolio.css'
 import './style/editPortfolio.css'
 import { toast } from 'react-toastify'
 
-import { useSelector } from 'react-redux'
-import useWindowWidth from '../../utils/hooks/useWindowWidth'
+import { useDispatch, useSelector } from 'react-redux'
+import useWindowWidth from '../../hooks/useWindowWidth'
 import { DeleteConfirmation } from '../../components/Portfolio/Confirm_modal'
 import PreviewPortfolioBody from './PreviewPortfolioBody'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { ShareMyPortfolioWidget } from '../../components/Portfolio/preview/shareMyPortfolioWidget'
+import { setBackButton } from '../../redux/backButtonReducer'
 
 const PreviewPortfolio = (props) => {
+  const dispatch = useDispatch()
   const [user, setUser] = useState(null)
   const [toggle, setToggle] = useState(0)
   const [selected, setSelected] = useState('experience')
@@ -55,6 +57,16 @@ const PreviewPortfolio = (props) => {
 
   const isPreviewPortfolio = isPreview || isPeerView || isPublicView
   const [renderPortfolio, setShouldRenderPortfolio] = useState(true)
+
+  useEffect(() => {
+    
+      dispatch(setBackButton(true, 'my-students'))
+    
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   const updateStatus = async () => {
     await axiosInstance
@@ -423,7 +435,7 @@ const PreviewPortfolio = (props) => {
               <FontAwesomeIcon icon={faSpinner} className="" spin />
             </div>
           )}
-          <PreviewPortfolioBody
+          {/* <PreviewPortfolioBody
             user={user}
             isPreviewPortfolio={isPreviewPortfolio}
             userData={userData}
@@ -436,7 +448,7 @@ const PreviewPortfolio = (props) => {
             educations={educations}
             accomplishments={accomplishments}
             userCertifications={userCertifications}
-          />
+          /> */}
         </div>
       }
       <DeleteConfirmation

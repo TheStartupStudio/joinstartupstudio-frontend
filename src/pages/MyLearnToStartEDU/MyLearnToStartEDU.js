@@ -1,5 +1,4 @@
 import React from 'react'
-import './myLTSEDU.css'
 
 const MyLearnToStartEDU = (props) => {
   return (

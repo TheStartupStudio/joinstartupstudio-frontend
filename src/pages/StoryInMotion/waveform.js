@@ -82,6 +82,7 @@ export default function Waveform({
       wavesurfer.current = WaveSurfer.create({
         container: document.querySelector('#waveform'),
         backend: 'MediaElement',
+        normalize: true,
         interact: false
       })
       wavesurfer.current.load(url)
@@ -144,17 +145,17 @@ export default function Waveform({
   return (
     <div>
       <div
-        id="waveform"
+        id='waveform'
         style={{ overflow: 'none' }}
-        className="waveform formWaveSurferOptions wform "
+        className='waveform formWaveSurferOptions wform '
         // ref={waveformRef}
       />
-      <div className="controls row">
-        <span className="float-start col-1 col-sm-4 my-auto">
+      <div className='controls row'>
+        <span className='float-start col-1 col-sm-4 my-auto'>
           {now ? getMinutes(now) : '00:00'}
         </span>
 
-        <div className="col-9 col-sm-4 text-center">
+        <div className='col-9 col-sm-4 text-center'>
           <FontAwesomeIcon
             icon={faStepBackward}
             style={darts}
@@ -164,14 +165,14 @@ export default function Waveform({
             <FontAwesomeIcon
               icon={faPause}
               style={darts}
-              className="mx-4"
+              className='mx-4'
               onClick={() => isPlayingParent(false)}
             />
           ) : (
             <FontAwesomeIcon
               icon={faPlay}
               style={darts}
-              className="mx-4"
+              className='mx-4'
               onClick={() => {
                 isPlayingParent(true)
               }}
@@ -185,8 +186,8 @@ export default function Waveform({
             />
           </span> */}
         </div>
-        <span className="float-end col-1 col-sm-4 my-auto">
-          <span className="float-end my-auto">
+        <span className='float-end col-1 col-sm-4 my-auto'>
+          <span className='float-end my-auto'>
             {duration ? getMinutes(duration) : '00:00'}
           </span>
         </span>

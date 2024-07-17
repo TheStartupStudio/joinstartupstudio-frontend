@@ -12,3 +12,8 @@
   color: #333d3d83;
   opacity: 1;
 }
+.disabled {
+  opacity: 0.5; 
+  pointer-events: none; 
+  cursor: not-allowed; 
+}

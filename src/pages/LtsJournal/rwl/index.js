@@ -8,14 +8,11 @@ import {
 } from '../../../redux/rwl/actions'
 
 const Rwl = ({ isEditable }) => {
-  console.log('isEditable', isEditable)
   const dispatch = useDispatch()
   const [readSelectedItems, setReadSelectedItems] = useState([])
   const [watchSelectedItems, setWatchSelectedItems] = useState([])
   const [listenSelectedItems, setListenSelectedItems] = useState([])
-  const { userSelections, items, loading, error } = useSelector(
-    (state) => state.rwlJournal
-  )
+  const { userSelections, items } = useSelector((state) => state.rwlJournal)
 
   useEffect(() => {
     const newReadItems = []

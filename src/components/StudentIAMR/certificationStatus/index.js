@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { useParams } from 'react-router-dom'
 import './index.css'
-import LoadingAnimation from '../loadingAnimation'
 import { showErrors } from '../../../utils/helpers'
 import { toast } from 'react-toastify'
 import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
 import { useSelector } from 'react-redux'
+import LoadingAnimation from '../../../ui/loadingAnimation'
 
 const CertificationStatus = () => {
   const [loading, setLoading] = useState(true)
   const [certificationStatus, setCertificationStatus] = useState()
   const [approvalRequestStatus, setApprovalRequestStatus] = useState()
-  const [hasAccess, setHasAccess] = useState(false)
-  const loggedUser = useSelector((state) => state.user.user.user)
+  const { user, isAdmin } = useSelector((state) => state.user.user)
 
   const { studentId, id } = useParams()
 
@@ -25,7 +24,7 @@ const CertificationStatus = () => {
       ? 'student-certification-2'
       : ''
 
-  const { status, unApprovedSkills } = certificationStatus || {}
+  const { unApprovedSkills } = certificationStatus || {}
   const { status: approvedStatus, unCompletedSkills } =
     approvalRequestStatus || {}
 
@@ -34,7 +33,6 @@ const CertificationStatus = () => {
       getCertificationStatus()
       getApprovalRequestStatus()
       setLoading(true)
-      hasAccessHandler()
       return
     }
     setLoading(false)
@@ -74,12 +72,6 @@ const CertificationStatus = () => {
     setLoading(false)
   }
 
-  const hasAccessHandler = async () => {
-    await axiosInstance
-      .get('/studentsInstructorss/has-access')
-      .then((data) => setHasAccess(data.data.allow))
-  }
-
   const approvalRequestStutusHandler = async (status) => {
     setLoading(true)
 
@@ -95,7 +87,7 @@ const CertificationStatus = () => {
       setApprovalRequestStatus(data)
 
       notificationSocket?.emit('sendNotification', {
-        sender: loggedUser,
+        sender: user,
         receivers: [{ id: studentId }],
         type: type,
         url: `/iamr/${certificationType}/${id}/certification-status`
@@ -126,7 +118,7 @@ const CertificationStatus = () => {
               <p>The user needs to resubmit the approval request</p>
             )}
 
-            {hasAccess &&
+            {isAdmin &&
               approvedStatus === 'denied' &&
               unCompletedSkills?.length > 0 && (
                 <>
@@ -142,7 +134,7 @@ const CertificationStatus = () => {
                 </>
               )}
 
-            {hasAccess &&
+            {isAdmin &&
               approvedStatus !== 'denied' &&
               (unCompletedSkills?.length > 0 ? (
                 <>
@@ -172,7 +164,7 @@ const CertificationStatus = () => {
                 )
               ))}
 
-            {hasAccess && unCompletedSkills?.length === 0
+            {isAdmin && unCompletedSkills?.length === 0
               ? (!approvedStatus || approvedStatus === 'pending') &&
                 unApprovedSkills?.length === 0 && (
                   <div>

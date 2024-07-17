@@ -57,7 +57,6 @@ function JournalsBody(props) {
         }
       })
 
-      console.log(data)
       setUser(data.user)
       setJournalsData(data.journals)
       setJournals(data.journals)
@@ -139,9 +138,11 @@ function JournalsBody(props) {
   })
 
   const options = [
-    { value: 'student-lts', label: 'MY LEARN TO START JOURNAL' },
-    { value: 'student-wellnes', label: 'MY WELLNESS JOURNAL' },
-    { value: 'personal-finance', label: 'MY PERSONAL FINANCE JOURNAL' }
+    { value: 'student-lts', label: 'LTS Journal' },
+    { value: 'student-wellnes', label: 'Wellness Journal' },
+    { value: 'personal-finance', label: 'Personal Finance Journal' },
+    { value: 'student-leadership', label: 'Leadership Journal' },
+    { value: 'my-mentorship', label: 'Mentorship Journal' }
     // { value: 'market-ready', label: 'MY MARKET-READY JOURNAL' },
     // { value: 'entrepreneurship', label: 'MY COURSE IN ENTREPRENEURSHIP' }
   ]

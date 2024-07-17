@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import markdown from './markdown'
 import LtsJournalReflection from './reflection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faInfoCircle, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
-import moment from 'moment'
+import { getFormattedDate } from '../../utils/helpers'
 
 const debounce = (func, delay) => {
   let timer
@@ -18,7 +18,6 @@ const debounce = (func, delay) => {
 
 const EntriesBox = (props) => {
   const {
-    entry,
     userJournalEntries,
     journal,
     deleteReflection,
@@ -32,6 +31,7 @@ const EntriesBox = (props) => {
     accordion,
     isAddReflection
   } = props
+
   const [isSaving, setIsSaving] = useState(false)
   const [isNew, setIsNew] = useState(true)
   const currentDate = new Date()
@@ -39,31 +39,6 @@ const EntriesBox = (props) => {
   nextDay.setDate(currentDate.getDate() + 1)
   const [accordionDates, setAccordionDates] = useState(null)
   const [loading, setLoading] = useState(false)
-
-  // useEffect(() => {
-  //   if (props.entries) {
-  //     if (isStudentPersonalJournal) {
-  //       console.log(
-  //         props.entries.map((e) => {
-  //           return {
-  //             ...e,
-  //             id: Math.random()
-  //           }
-  //         })
-  //       )
-  //       setEntries(
-  //         props.entries.map((e) => {
-  //           return {
-  //             ...e,
-  //             id: Math.random()
-  //           }
-  //         })
-  //       )
-  //     } else {
-  //       setEntries(props.entries)
-  //     }
-  //   }
-  // }, [props.entries])
 
   useEffect(() => {
     if (journal?.id && accordion?.id && journal.id === 1001033) {
@@ -107,20 +82,11 @@ const EntriesBox = (props) => {
         setIsSaving(false)
       })
       .catch((error) => {
-        console.error('Error:', error)
         setIsSaving(false)
       })
   }
 
   const debouncedSave = debounce(onSave, 1000)
-
-  // const debouncedStartDateChange = debounce((value) => {
-  //   handleDataChanges('startDate', value)
-  // }, 0)
-
-  // const debouncedEndDateChange = debounce((value) => {
-  //   handleDataChanges('endDate', value)
-  // }, 0)
 
   const handleDataChanges = (name, value) => {
     const newDates = { ...accordionDates, [name]: value }
@@ -131,37 +97,19 @@ const EntriesBox = (props) => {
     }
   }
 
-  function getFormattedDate(date) {
-    const formattedDate = moment(date).format('YYYY-MM-DD')
-    return formattedDate
-  }
-
   return entries && entries.length > 0 ? (
     <div style={{ border: '1px solid #BBBDBF' }}>
-      {/* {journal.title && (
-          <div
-            className="journal-entry__parent-title"
-            style={{
-              marginTop: 0,
-              marginBottom: 0,
-              fontSize: 14,
-              textTransform: 'uppercase'
-            }}
-          >
-            <h5 style={{ fontSize: 14, padding: 6 }}>{journal.title}</h5>
-          </div>
-        )} */}
       {journal.title === 'MY PROJECT SPRINTS' && loading ? (
         <div
-          className="d-flex justify-content-center align-items-center"
+          className='d-flex justify-content-center align-items-center'
           style={{ height: '50px' }}
         >
-          <span className=" spinner-border-primary spinner-border-sm " />
+          <span className=' spinner-border-primary spinner-border-sm ' />
         </div>
       ) : journal.title === 'MY PROJECT SPRINTS' && !loading ? (
-        <div className="row" style={{ paddingBottom: '1px' }}>
-          <div className="col-6" style={{ paddingRight: 0 }}>
-            <div className="table-reflections__date">
+        <div className='row' style={{ paddingBottom: '1px' }}>
+          <div className='col-6' style={{ paddingRight: 0 }}>
+            <div className='table-reflections__date'>
               <b>Start date:</b>
               <div className={` w-100`}>
                 <input
@@ -177,16 +125,14 @@ const EntriesBox = (props) => {
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChanges('startDate', newValue)
-                    // debouncedStartDateChange(newValue)
                   }}
                   disabled={!props.isEditable}
                 />
               </div>
-              {/*{moment(props.start).format('DD-MM-YYYY')}*/}
             </div>
           </div>
-          <div className="col-6" style={{ paddingLeft: 0 }}>
-            <div className="table-reflections__date">
+          <div className='col-6' style={{ paddingLeft: 0 }}>
+            <div className='table-reflections__date'>
               <b>End date:</b>{' '}
               <div className={` w-100`}>
                 <input
@@ -200,7 +146,6 @@ const EntriesBox = (props) => {
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChanges('endDate', newValue)
-                    // debouncedEndDateChange(newValue)
                   }}
                   disabled={!props.isEditable}
                 />
@@ -213,12 +158,12 @@ const EntriesBox = (props) => {
       {entries &&
         entries?.map((entry, index) => (
           <div
-            className="journal-entries__entry"
+            className='journal-entries__entry'
             key={entry.id}
             style={{ marginBottom: 0 }}
           >
             {entry.parentTitle && (
-              <div className="journal-entry__parent-title">
+              <div className='journal-entry__parent-title'>
                 <h5>{entry.parentTitle}</h5>
               </div>
             )}{' '}
@@ -243,10 +188,10 @@ const EntriesBox = (props) => {
                     : entry.title.replace(new RegExp('\r?\n', 'g'), '<br />')
               }}
             ></h4>
-            <div className="journal-entries__entry-reflections">
+            <div className='journal-entries__entry-reflections'>
               {/* List created reflections */}
               {userJournalEntries[entry.id] &&
-                userJournalEntries[entry.id].map((userJournalEntry) => (
+                userJournalEntries[entry.id].map((userJournalEntry, index) => (
                   <LtsJournalReflection
                     key={userJournalEntry.id}
                     journal={journal}
@@ -257,6 +202,7 @@ const EntriesBox = (props) => {
                     isDeletable={isDeletable}
                     deleted={deleteReflection(entry, userJournalEntry)}
                     saved={updateReflection(entry, userJournalEntry)}
+                    popupContent={index === 0 ? entry.popupContent : null}
                   />
                 ))}
               {/* Add new reflection */}
@@ -271,6 +217,7 @@ const EntriesBox = (props) => {
                   showCancel={!!userJournalEntries[entry.id]}
                   isEditable={isEditable}
                   isDeletable={isDeletable}
+                  popupContent={null}
                   cancel={(e) => {
                     handleShowAddReflection({
                       ...showAddReflection,
@@ -294,7 +241,7 @@ const EntriesBox = (props) => {
                 >
                   <a
                     href
-                    className="journal-entries__entry-reflections-action"
+                    className='journal-entries__entry-reflections-action'
                     onClick={(e) => {
                       e.preventDefault()
                       handleShowAddReflection({
@@ -310,7 +257,7 @@ const EntriesBox = (props) => {
             </div>
             {entry.contentAfter && (
               <div
-                className="page-card__content-description journal-entry__content-after"
+                className='page-card__content-description journal-entry__content-after'
                 dangerouslySetInnerHTML={{
                   __html: entry.contentAfter
                 }}

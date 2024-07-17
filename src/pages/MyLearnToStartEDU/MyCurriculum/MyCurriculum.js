@@ -1,14 +1,12 @@
 import React from 'react'
-import '../myLTSEDU.css'
 import MyLearnToStartEDU from '../MyLearnToStartEDU'
 import MyLtsGridItem from '../MyLtsGridItem'
-import EmptyGridItem from '../EmptyGridItem'
-
 import NumberImage from '../NumberImage'
-import lts1 from '../../../assets/images/LTS 1.png'
-import lts2 from '../../../assets/images/LTS 2.png'
-import lts3 from '../../../assets/images/LTS 3&4.png'
-import financialLiteracy from '../../../assets/images/LTS FINANCIAL LITERACY.png'
+import lts1 from '../../../assets/images/MyCurriculum/LTS1 Logo.png'
+import lts2 from '../../../assets/images/MyCurriculum/LTS2 Logo.png'
+import lts3 from '../../../assets/images/MyCurriculum/LTS3 Logo.png'
+import lts4 from '../../../assets/images/MyCurriculum/LTS4 Logo.png'
+import financialLiteracy from '../../../assets/images/MyCurriculum/LTS-FinancialLit Logo.png'
 
 const MyCurriculum = () => {
   return (
@@ -30,11 +28,18 @@ const MyCurriculum = () => {
         to="/new-hs2-journal/task"
       />
       <MyLtsGridItem
-        title={'LTS 3 & 4'}
-        description={`LTS3&4 are autonomous years for students 
+        title={'LTS 3'}
+        description={`LTS3 is autonomous year for students 
         to complete the IAMR Certification system.`}
         itemNumberImage={<NumberImage image={lts3} />}
-        to="/hs3-hs4-journal/task"
+        to="/new-hs3-journal/task"
+      />
+      <MyLtsGridItem
+        title={'LTS 4'}
+        description={`LTS4 is autonomous year for students 
+        to complete the IAMR Certification system.`}
+        itemNumberImage={<NumberImage image={lts4} />}
+        to="/new-hs4-journal/task"
       />
       <MyLtsGridItem
         title={'FINANCIAL LITERACY'}
@@ -43,8 +48,13 @@ const MyCurriculum = () => {
         them for post-graduation and beyond.`}
         itemNumberImage={<NumberImage image={financialLiteracy} />}
         to="/financial-literacy/task"
-      />{' '}
-      {/*<EmptyGridItem />*/}
+      />
+      <MyLtsGridItem
+        title={''}
+        description={``}
+        itemNumberImage={<NumberImage image={null} />}
+        to="#"
+      />
     </MyLearnToStartEDU>
   )
 }

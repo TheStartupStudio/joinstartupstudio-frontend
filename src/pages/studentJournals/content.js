@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { injectIntl } from 'react-intl'
@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import MediaLightbox from '../../components/MediaLightbox'
 import parse from 'html-react-parser'
 import EntriesBox from '../LtsJournal/EntriesBox'
-import AccordionItemWrapper from '../LtsJournal/AccordionItemWrapper'
 import AccordionItems from '../LtsJournal/MyGoals/AccordionItems'
 import JournalBrands from '../LtsJournal/JournalBrands'
 import MeetingManager from '../LtsJournal/ArchiveManager/MeetingManager/MeetingManager'
@@ -18,6 +17,13 @@ import CertificationSkills from '../LtsJournal/CertificationSkills/Certification
 import TableWrapper from '../LtsJournal/TableWrapper/index'
 import TableReflections from '../LtsJournal/TableReflections'
 import Rwl from '../LtsJournal/rwl'
+import InstructorFeedback from '../LtsJournal/InstructorFeedback/InstructorFeedback'
+import { FaPlay } from 'react-icons/fa'
+import InterviewSection from '../LtsJournal/InterviewSection'
+import './content.css'
+import AccordionItemWrapper from '../LtsJournal/UI/AccordionItemWrapper'
+import InterviewedMentors from '../LtsJournal/InterviewedMentors'
+import JournalTables from '../LtsJournal/JournalTables/JournalTables'
 
 function LtsJournalContent(props) {
   let [showAddReflection, setShowAddReflection] = useState({})
@@ -28,6 +34,8 @@ function LtsJournalContent(props) {
   let [showVideo, setShowVideo] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [video, setVideo] = useState(null)
+  const navigate = useHistory()
 
   useEffect(() => {
     setIsExpanded(false)
@@ -212,6 +220,10 @@ function LtsJournalContent(props) {
     }
   }
 
+  const navigateToStoryInMotion = () => {
+    navigate.push('/story-in-motion')
+  }
+
   return (
     <>
       <div className="row">
@@ -276,6 +288,19 @@ function LtsJournalContent(props) {
           )}
         </div>
       </div>
+      {journal?.journalTables ? (
+        <div className="col-12">
+          <>
+            <JournalTables
+              loadData={loadData}
+              tables={journal?.journalTables}
+              paragraphs={journal?.journalParagraphs}
+              loading={loading}
+              backgroundColor={'#fff'}
+            />
+          </>
+        </div>
+      ) : null}
 
       <div className="row">
         <div className="col-12">
@@ -399,6 +424,33 @@ function LtsJournalContent(props) {
           </div>
         ) : null}
 
+        {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
+          ? journal?.ltsJournalAccordions
+              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              ?.map((accordion) => {
+                return (
+                  <div className="col-12">
+                    <AccordionItemWrapper
+                      isOpened={openAccordion === `accordion-${accordion.id}`}
+                      handleAccordionClick={() =>
+                        handleAccordionClick(`accordion-${accordion.id}`)
+                      }
+                      isExanded={false}
+                      title={accordion.title}
+                      accordionStyle={{ backgroundColor: '#fff' }}
+                    >
+                      {openAccordion === `accordion-${accordion.id}` && (
+                        <InterviewedMentors
+                          accordion={accordion}
+                          journal={journal}
+                        />
+                      )}
+                    </AccordionItemWrapper>
+                  </div>
+                )
+              })
+          : null}
+
         {journal.reflectionsTable && journal.reflectionsTable.length ? (
           <>
             {journal.reflectionsTable.map((reflectionTable, tableIndex) => (
@@ -494,6 +546,9 @@ function LtsJournalContent(props) {
         ) : null}
       </div>
       {props.match.params.journalId === '1001028' && <Rwl isEditable={false} />}
+      {journal?.instructorFeedback && (
+        <InstructorFeedback data={journal?.instructorFeedback} />
+      )}
     </>
   )
 }

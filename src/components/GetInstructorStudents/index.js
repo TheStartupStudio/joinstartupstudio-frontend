@@ -5,21 +5,19 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import './index.css'
-import { useHistory } from 'react-router-dom'
-import Notifications from '../Header/notifications'
 import NotificationComponent from './Notification.component'
 import socket from '../../utils/notificationSocket'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import NotificationTypes from '../../utils/notificationTypes'
-import BriefingComponent from './Briefing.component'
-import { changeSidebarState } from '../../redux'
-import { getEventsStart, getPeriodsStart } from '../../redux/dashboard/Actions'
-import {
-  editBriefingStart,
-  getBriefingsStart,
-  postBriefingStart
-} from '../../redux/header/Actions'
-import { editBriefing } from '../../redux/header/Service'
+const JournalsManagement2 = React.lazy(() =>
+  import('../../pages/JournalsManagement/JournalsManagement2')
+)
+
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided
+  })
+}
 
 const StudentOfInstructors = (props) => {
   const [universities, setUniversities] = useState([])
@@ -30,7 +28,15 @@ const StudentOfInstructors = (props) => {
   const [totalNumber, setTotalNumber] = useState(-1)
   const [dashboardData, setDashboardData] = useState([])
   const [toShow, setStateToShow] = useState('none')
-  const history = useHistory()
+  const [notifications, setNotifications] = useState([
+    {
+      title: '',
+      description: '',
+      url: ''
+    }
+  ])
+  const loggedUser = useSelector((state) => state.user.user.user)
+  const { handleSubmit } = useForm()
 
   const getData = async () => {
     await axiosInstance.get('/studentsInstructorss/init').then((res) => {
@@ -38,12 +44,6 @@ const StudentOfInstructors = (props) => {
     })
     await axiosInstance.get('/dashboard').then((res) => {
       setDashboardData(res.data)
-    })
-  }
-
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided
     })
   }
 
@@ -64,33 +64,18 @@ const StudentOfInstructors = (props) => {
     if (props.allow) {
       getData()
     }
-  }, [])
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors }
-  } = useForm()
+  }, [props.allow])
 
   const changeDashboard = (value) => {
     axiosInstance
       .put(`/dashboard/${dashboardData?.id}`, dashboardData)
-      .then((res) => {
+      .then(() => {
         toast.success('Dashboard widget updated successfully.')
       })
       .catch((e) => {
         toast.error('Dashboard widget update failed.')
       })
   }
-
-  const [notifications, setNotifications] = useState([
-    {
-      title: '',
-      description: '',
-      url: ''
-    }
-  ])
 
   const onAddNewNotification = () => {
     setNotifications([
@@ -109,8 +94,6 @@ const StudentOfInstructors = (props) => {
     setNotifications(newNotifications)
   }
 
-  const loggedUser = useSelector((state) => state.user.user.user)
-
   const handleSubmitNotification = () => {
     try {
       socket?.emit('sendNotifications', {
@@ -127,31 +110,12 @@ const StudentOfInstructors = (props) => {
     }
   }
 
-  const removeNotification = (e, index) => {
+  const removeNotification = (index) => {
     const newNotifications = [...notifications]
     newNotifications.splice(index, 1)
     setNotifications(newNotifications)
   }
 
-  const dispatch = useDispatch()
-
-  const briefings = useSelector((state) => state.header.briefings)
-  const [briefing, setBriefing] = useState(null)
-  useEffect(() => {
-    dispatch(getBriefingsStart())
-  }, [])
-
-  const handleChangeBriefing = (briefing) => {
-    setBriefing(briefing)
-  }
-
-  const onSubmitBriefing = () => {
-    if (briefings.length) {
-      dispatch(editBriefingStart(briefing, briefing.id))
-    } else {
-      dispatch(postBriefingStart(briefing))
-    }
-  }
   return (
     <Modal
       show={props.onShow}
@@ -173,36 +137,38 @@ const StudentOfInstructors = (props) => {
         />
       </Modal.Header>
       <Modal.Body style={{ minHeight: '150px' }}>
-        <>
+        <div>
           <div className="row px-md-4 mt-md-4">
             <div className="col-12 col-md-6 px-md-4">
               <button
                 className={`btn w-100  ${
-                  toShow == 'CountStudent'
+                  toShow === 'CountStudent'
                     ? 'brand-button-active'
                     : 'brand-button'
                 }`}
                 onClick={() =>
-                  toShow == 'CountStudent'
+                  toShow === 'CountStudent'
                     ? setStateToShow('none')
                     : setStateToShow('CountStudent')
                 }
               >
-                {toShow == 'CountStudent' ? 'Close' : 'Student count'}
+                {toShow === 'CountStudent' ? 'Close' : 'Student count'}
               </button>
             </div>
             <div className="col-12 col-md-6 px-md-4">
               <button
                 className={`btn  w-100 brand-button ${
-                  toShow == 'dashboard' ? 'brand-button-active' : 'brand-button'
+                  toShow === 'dashboard'
+                    ? 'brand-button-active'
+                    : 'brand-button'
                 }`}
                 onClick={() =>
-                  toShow == 'dashboard'
+                  toShow === 'dashboard'
                     ? setStateToShow('none')
                     : setStateToShow('dashboard')
                 }
               >
-                {toShow == 'dashboard' ? 'Close' : 'Edit dashboard'}
+                {toShow === 'dashboard' ? 'Close' : 'Edit dashboard'}
               </button>
             </div>
           </div>
@@ -210,39 +176,41 @@ const StudentOfInstructors = (props) => {
             <div className="col-12 col-md-6 px-md-4">
               <button
                 className={`btn  w-100 brand-button ${
-                  toShow == 'notifications'
+                  toShow === 'notifications'
                     ? 'brand-button-active'
                     : 'brand-button'
                 }`}
                 onClick={() =>
-                  toShow == 'notifications'
+                  toShow === 'notifications'
                     ? setStateToShow('none')
                     : setStateToShow('notifications')
                 }
               >
-                {toShow == 'notifications' ? 'Close' : 'Notifications box'}
+                {toShow === 'notifications' ? 'Close' : 'Notifications box'}
               </button>
             </div>
 
             <div className="col-12 col-md-6 px-md-4">
               <button
                 className={`btn  w-100 brand-button ${
-                  toShow == 'briefing' ? 'brand-button-active' : 'brand-button'
+                  toShow === 'edit-journals'
+                    ? 'brand-button-active'
+                    : 'brand-button'
                 }`}
                 onClick={() =>
-                  toShow == 'briefing'
+                  toShow === 'edit-journals'
                     ? setStateToShow('none')
-                    : setStateToShow('briefing')
+                    : setStateToShow('edit-journals')
                 }
               >
-                {toShow == 'briefing' ? 'Close' : 'Briefing section'}
+                {toShow === 'edit-journals' ? 'Close' : 'Edit Journals'}
               </button>
             </div>
           </div>
-        </>
+        </div>
         <div className="row"></div>
-        {toShow != 'none' && <hr />}
-        {toShow == 'dashboard' && (
+        {toShow !== 'none' && <hr />}
+        {toShow === 'dashboard' && (
           <>
             <Form onSubmit={handleSubmit(changeDashboard)}>
               <div className="mb-4 py-2 px-md-2 row">
@@ -442,7 +410,7 @@ const StudentOfInstructors = (props) => {
             </Form>
           </>
         )}
-        {toShow == 'CountStudent' && (
+        {toShow === 'CountStudent' && (
           <>
             <div className="mb-4 py-2 px-md-2 row">
               <>
@@ -466,12 +434,12 @@ const StudentOfInstructors = (props) => {
                   }}
                 />
                 <div className="row col-12 col-md-7">
-                  {universities?.filter((uni) => uni.value == isUniChosed)[0]
-                    ?.universityInstructors.length != 0 &&
+                  {universities?.filter((uni) => uni.value === isUniChosed)[0]
+                    ?.universityInstructors.length !== 0 &&
                   !(
-                    selectedInstructorsName.length == 0 &&
-                    isUniChosed == 0 &&
-                    totalNumber == -1
+                    selectedInstructorsName.length === 0 &&
+                    isUniChosed === 0 &&
+                    totalNumber === -1
                   ) ? (
                     <>
                       <p className="text-starts fw-bold mb-3">Instructors</p>
@@ -480,7 +448,7 @@ const StudentOfInstructors = (props) => {
                     ''
                   )}
                   {universities
-                    .filter((univerity) => univerity.value == isUniChosed)[0]
+                    .filter((univerity) => univerity.value === isUniChosed)[0]
                     ?.universityInstructors.map((instructor, index) => (
                       <div className="mb-2">
                         <label htmlFor={`instructor ${instructor.User.id}`}>
@@ -532,24 +500,24 @@ const StudentOfInstructors = (props) => {
                       </div>
                     ))}
                 </div>
-                {totalNumber != -1 ? (
+                {totalNumber !== -1 ? (
                   <p className="fw-bolder text-center w-100">
                     Total active students: {totalNumber}
                   </p>
                 ) : (
                   ''
                 )}
-                {universities?.filter((uni) => uni.value == isUniChosed)[0]
-                  ?.universityInstructors.length == 0 ? (
+                {universities?.filter((uni) => uni.value === isUniChosed)[0]
+                  ?.universityInstructors.length === 0 ? (
                   <p className="text-center fw-bold">
                     This university don't have any instructor
                   </p>
                 ) : (
                   ''
                 )}
-                {selectedInstructorsName.length == 0 &&
-                isUniChosed == 0 &&
-                totalNumber == -1 ? (
+                {selectedInstructorsName.length === 0 &&
+                isUniChosed === 0 &&
+                totalNumber === -1 ? (
                   <p className="text-center fw-bold">
                     You don't have selected anything
                   </p>
@@ -557,7 +525,7 @@ const StudentOfInstructors = (props) => {
                   ''
                 )}
                 <div className="col-12 col-md-5 text-center ">
-                  {selectedInstructorsName?.length != 0 ? (
+                  {selectedInstructorsName?.length !== 0 ? (
                     <span className="fw-bolder">Selected Users</span>
                   ) : (
                     ''
@@ -581,8 +549,8 @@ const StudentOfInstructors = (props) => {
                 handleChange={(e) => {
                   handleChangeNotifications(e, index)
                 }}
-                handleRemove={(e) => {
-                  removeNotification(e, index)
+                handleRemove={() => {
+                  removeNotification(index)
                 }}
                 notification={notification}
                 notifications={notifications}
@@ -606,28 +574,10 @@ const StudentOfInstructors = (props) => {
             </div>
           </>
         )}
-        {toShow === 'briefing' && (
-          <>
-            <BriefingComponent
-              handleChange={(e) => {
-                handleChangeBriefing(e)
-              }}
-              briefing={briefings[0]}
-            />
-
-            <div>
-              <button
-                className="float-end m-0 px-md-5 w-100 save-button add-new-note-button-text"
-                onClick={onSubmitBriefing}
-              >
-                {loading ? 'loading' : 'Submit'}
-              </button>
-            </div>
-          </>
-        )}
+        {toShow === 'edit-journals' && <JournalsManagement2 />}
       </Modal.Body>
       <Modal.Footer style={{ border: '0px' }}>
-        {toShow == 'CountStudent' && (
+        {toShow === 'CountStudent' && (
           <button
             className="float-end m-0 px-md-5 w-100 save-button add-new-note-button-text"
             onClick={submit}

@@ -9,12 +9,15 @@ import podcastReducer from './podcast/Reducer'
 import dashboardReducer from './dashboard/Reducer'
 import headerReducer from './header/Reducer'
 import usersReducer from './users/Reducer'
-import reflectionsTableReducer from './reflectionsTable/Reducer' 
+import reflectionsTableReducer from './reflectionsTable/Reducer'
 import rwlJournalReducer from './rwl/reducer'
 import performanceDataReducer from './myPerformanceData/reducer'
 import myImmersionReducer from './myImmersion/reducer'
 import PathwaysReducer from './pathways/reducer'
 import platformBadgesReducer from './platformBadges/reducer'
+import portfolioReducer from './portfolio/Reducer'
+import taskLessonReducer from './taskLessons/reducer'
+import backButtonReducer from './backButtonReducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -31,6 +34,9 @@ const rootReducer = combineReducers({
   myImmersion: myImmersionReducer,
   performanceData: performanceDataReducer,
   pathways: PathwaysReducer,
-  platformBadges:platformBadgesReducer
+  platformBadges: platformBadgesReducer,
+  lessons: taskLessonReducer,
+  portfolio: portfolioReducer,
+  backButton: backButtonReducer
 })
 export default rootReducer

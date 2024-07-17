@@ -1,0 +1,58 @@
+.skills-box {
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+.skill-box {
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px 0 #cfcfcf;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-box {
+  position: relative;
+}
+
+.skill-box h5 {
+  font-weight: bold;
+  font-size: 16px;
+  min-height: 40px;
+}
+.skill-box .skill-actions {
+  margin-top: 10px;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline !important;
+}
+.read-button {
+  border: none;
+  font-size: 14px;
+  background-color: #fff;
+  color: #51c7df;
+  cursor: pointer;
+}
+.skill-box .briefing_edit-button,
+.add-briefing-container {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border-bottom-left-radius: 40%;
+  box-shadow: 0 0 10px 0 #cfcfcf;
+  background-color: white;
+  cursor: pointer;
+}
+.briefing_edit-button svg {
+  width: 40px !important;
+  height: 40px;
+  padding: 12px;
+}
+.add-briefing-container svg {
+  width: 40px;
+}
