@@ -30,6 +30,21 @@ const Body = (props) => {
         isDropdown={false}
       />
       <ParentSidebarItem
+        ariaControls='myUserManagament'
+        href='#myUserManagament'
+        srcImage={FolderSidebarImage}
+        title='My User Managament'
+        isDropdown={true}
+      />
+      <ParentDropdownItem id={'myUserManagament'}>
+        <DropdownItem title={'MY SCHOOL'} to={'/my-school'} />
+        <DropdownItem title={'MY IMMERSION'} to={'/my-immersion'} />
+        <DropdownItem
+          title={'My courses & management'}
+          to={'/student-wellnes'}
+        />
+      </ParentDropdownItem>
+      <ParentSidebarItem
         href='#myLtsEDU'
         aria-controls='myLtsEDU'
         srcImage={FolderSidebarImage}
@@ -104,6 +119,7 @@ const Body = (props) => {
         />
         <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
       </ParentDropdownItem>
+
       <SidebarItem
         to={'/edit-portfolio'}
         className={`${

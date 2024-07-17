@@ -98,10 +98,12 @@ const IamrCertificationSystem = React.lazy(() =>
 const Portfolio2024 = React.lazy(() =>
   import('../../pages/Portfolio2024/index')
 )
+const MySchoolContainer = React.lazy(() => import('../admin/MySchool'))
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData },
-  { path: '/user-management', component: UserManagement }
+  { path: '/user-management', component: UserManagement },
+  { path: '/my-school', component: MySchoolContainer }
 ]
 
 export const authRoutes = [
