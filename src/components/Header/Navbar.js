@@ -300,10 +300,11 @@ const Navbar = (props) => {
                             isActive: false
                           })
                           .then((response) => {
-                            if (response) history.push('/logout')
+                            history.push('/logout')
                           })
                           .catch((error) => {
                             console.error('Error updating activity:', error)
+                            history.push('/logout')
                           })
                           .finally(() => {})
                       }}
