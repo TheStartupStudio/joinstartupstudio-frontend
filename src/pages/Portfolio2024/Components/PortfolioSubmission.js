@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import imagePlaceholder from '../../../assets/images/image-placeholder.jpeg'
+import { useHistory } from 'react-router-dom'
 
 function PortfolioSubmission(props) {
+  const navigate = useHistory()
+
+  // console.log(props.thumbnailUrl)
+
   return (
     <div
       className={`portfolio-submission-container ${

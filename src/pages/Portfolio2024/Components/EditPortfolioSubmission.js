@@ -26,8 +26,8 @@ function EditPortfolioSubmission(props) {
     imageProperties
 
   useEffect(() => {
-    if (imageFile) props.onChangeImageCrop?.(imageFile)
-  }, [imageFile])
+    if (croppedImage) props.onChangeImageCrop?.(croppedImage)
+  }, [croppedImage])
 
   useEffect(() => {
     updateCroppedImage()
@@ -55,7 +55,8 @@ function EditPortfolioSubmission(props) {
 
       setImageProperties((prevState) => ({
         ...prevState,
-        croppedImage: window.URL.createObjectURL(blob)
+        // croppedImage: window.URL.createObjectURL(blob)
+        croppedImage: formData
       }))
     }
   }
@@ -164,6 +165,7 @@ function EditPortfolioSubmission(props) {
                         })
                         setIsDeletingSubmission(false)
                         setIsEditingSubmission(true)
+                        props.deleteImageFile()
                       }
                     }}
                   />

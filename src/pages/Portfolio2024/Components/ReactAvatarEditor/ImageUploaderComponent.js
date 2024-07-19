@@ -1,13 +1,13 @@
 import React, { createRef, useEffect, useState } from 'react'
 import AvatarEditor from 'react-avatar-editor'
 
-const AvatarEditorComponent = (props) => {
+const ImageUploaderComponent = (props) => {
   const [containerBorderRadius, setContainerBorderRadius] = useState(28)
   const { width, height, imageProperties, setImageProperties, setImageFile } =
     props
   const editorRef = createRef()
   const { originalImage, position, scale, rotate } = imageProperties
-  console.log('imageProperties', imageProperties)
+  // console.log('imageProperties', imageProperties)
   // useEffect(() => {
   //   if (props.containerBorderRadius)
   //     setContainerBorderRadius(props.containerBorderRadius)
@@ -65,4 +65,4 @@ const AvatarEditorComponent = (props) => {
   )
 }
 
-export default AvatarEditorComponent
+export default ImageUploaderComponent

@@ -35,7 +35,7 @@ function PortfolioProgressIndicator(props) {
             dispatch(changeActiveSection('what-section'))
           }}
           activeSection={activeSection === 'what-section'}
-          disabled={true}
+          // disabled={true}
         />
         <HorizontalSeparator />
         <ProgressIcon

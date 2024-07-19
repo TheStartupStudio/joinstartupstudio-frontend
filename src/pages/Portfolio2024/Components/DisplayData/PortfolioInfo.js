@@ -1,4 +1,5 @@
 import React from 'react'
+import '../../index.css'
 
 function PortfolioInfoBox(props) {
   return (
@@ -11,7 +12,7 @@ function PortfolioInfoBox(props) {
       </div>
       <div
         className={'portfolio-info-content'}
-        style={{ height: props.inputHeight }}
+        style={{ minHeight: props.inputHeight }}
         dangerouslySetInnerHTML={{ __html: props.content }}
       />
     </React.Fragment>

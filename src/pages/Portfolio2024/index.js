@@ -1,105 +1,226 @@
 import React, { useEffect } from 'react'
-import './index.css'
+import { connect } from 'react-redux'
 import PortfolioHeader from './Components/Header/PortfolioHeader'
-import { useDispatch, useSelector } from 'react-redux'
 import PortfolioActions from './Components/Actions/PortfolioActions'
 import PortfolioNavigator from './Components/PortfolioNavigator'
+import WhoAmI from './Sections/WhoAmISection/WhoAmI'
+import PortfolioVisibilityModal from './Components/Modals/PortfolioVisibilityModal'
+import SharePortfolioModal from './Components/Modals/SharePortfolioModal'
+import PortfolioActionsSkeleton from './PortfolioActionsSkeleton'
+
 import {
   changeViewMode,
-  getPortfolioPrivacy,
+  getMyCompetitiveness,
+  getMyCredentials,
+  getMyEducations,
+  getMyFailures,
+  getMyImmersions,
+  getMyMentors,
+  getMyRelationships,
+  getMyWorkExperiences,
+  getSharingSettings,
+  getUserStory,
   setPublishModal,
   setShareModal,
   setShareModalContent
 } from '../../redux/portfolio/Actions'
-import WhoAmI from './Sections/WhoAmISection/WhoAmI'
-import PortfolioVisibilityModal from './Components/Modals/PortfolioVisibilityModal'
-import SharePortfolioModal from './Components/Modals/SharePortfolioModal'
+import PortfolioDataContainer from './Components/DisplayData/PortfolioDataContainer'
+import PortfolioSubmission from './Components/PortfolioSubmission'
+import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
+import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
 
-function Index(props) {
-  const dispatch = useDispatch()
-  const loggedUser = useSelector((state) => state.user.user.user)
-  const activeSection = useSelector((state) => state.portfolio.activeSection)
-  const publishPortfolioModal = useSelector(
-    (state) => state.portfolio.publishPortfolioModal
-  )
-
-  const publishToPeers = useSelector((state) => state.portfolio.publishToPeers)
-  const publishToPublic = useSelector(
-    (state) => state.portfolio.publishToPublic
-  )
-
-  const showSharePortfolioModal = useSelector(
-    (state) => state.portfolio.showSharePortfolioModal
-  )
-  const sharePortfolioModalContent = useSelector(
-    (state) => state.portfolio.showSharePortfolioModalContent
-  )
+const Index = ({
+  loggedUser,
+  activeSection,
+  publishPortfolioModal,
+  sharingSettings,
+  areLoadingSharingSettings,
+  showSharePortfolioModal,
+  sharePortfolioModalContent,
+  userStory,
+  myRelationships,
+  myFailures,
+  myMentors,
+  isLoadingUserStory,
+  isLoadingMyRelationships,
+  isLoadingMyFailures,
+  isLoadingMyMentors,
+  fetchUserStory,
+  fetchMyFailures,
+  fetchMyMentors,
+  fetchMyRelationships,
+  fetchSharingSettings,
+  setShareContent,
+  setPublishModalVisibility,
+  setShareModalVisibility,
+  changeMode,
+  // HOW DO I PROVE IT ? //,
+  fetchMyEducations,
+  fetchMyCredentials,
+  fetchMyImmersions,
+  fetchMyWorkExperiences,
+  fetchMyCompetitiveness,
+  educations,
+  credentials
+}) => {
+  useEffect(() => {
+    fetchUserStory()
+    fetchMyFailures()
+    fetchMyMentors()
+    fetchMyRelationships()
+    fetchSharingSettings()
+    // fetchMyEducations()
+    // fetchMyCredentials()
+  }, [])
 
   useEffect(() => {
-    if (publishToPeers && !publishToPublic) {
-      dispatch(
-        setShareModalContent({
-          ...sharePortfolioModalContent,
-          description: 'Share the link below with peers.'
-        })
-      )
-    } else if (publishToPublic) {
-      dispatch(
-        setShareModalContent({
-          ...sharePortfolioModalContent,
-          description: 'Share the link below with anyone.'
-        })
-      )
+    if (sharingSettings?.isPeerShared && !sharingSettings?.isPublicShared) {
+      setShareContent({
+        ...sharePortfolioModalContent,
+        description: 'Share the link below with peers.'
+      })
+    } else if (sharingSettings?.isPublicShared) {
+      setShareContent({
+        ...sharePortfolioModalContent,
+        description: 'Share the link below with anyone.'
+      })
     }
-  }, [publishToPeers, publishToPublic])
+  }, [sharingSettings])
 
-  useEffect(() => {
-    dispatch(getPortfolioPrivacy())
-  }, [dispatch])
-
-  // console.log('publishToPeers', publishToPeers)
-  // console.log('publishToPublic', publishToPublic)
   return (
-    <div className={'portfolio-container'}>
-      <PortfolioActions
-        actions={[
-          { type: 'edit', action: () => dispatch(changeViewMode('edit')) },
-          {
-            type: 'preview',
-            action: () => dispatch(changeViewMode('preview'))
-          },
-          {
-            type: 'publish',
-            action: () => dispatch(setPublishModal(true)),
-            isDisplayed: true
-          },
-          {
-            type: 'share',
-            action: () => dispatch(setShareModal(true)),
-            isDisplayed: publishToPublic || publishToPeers
-          }
-        ]}
-      />
-      <PortfolioHeader user={loggedUser} />
-      {activeSection === 'who-section' && <WhoAmI />}
-      {activeSection === 'what-section' && 'What section'}
+    <div className="portfolio-container">
+      {!areLoadingSharingSettings ? (
+        <PortfolioActions
+          actions={[
+            { type: 'edit', action: () => changeMode('edit') },
+            { type: 'preview', action: () => changeMode('preview') },
+            {
+              type: 'publish',
+              action: () => setPublishModalVisibility(true),
+              isDisplayed: true
+            },
+            {
+              type: 'share',
+              action: () => setShareModalVisibility(true),
+              isDisplayed:
+                sharingSettings?.isPublicShared || sharingSettings?.isPeerShared
+            }
+          ]}
+        />
+      ) : (
+        <PortfolioActionsSkeleton />
+      )}
+      <PortfolioHeader userStory={userStory} user={loggedUser} />
+      {activeSection === 'who-section' && (
+        <WhoAmI
+          data={{ userStory, myRelationships, myMentors, myFailures }}
+          loadings={{
+            userStory: isLoadingUserStory,
+            myRelationships: isLoadingMyRelationships,
+            myMentors: isLoadingMyMentors,
+            myFailures: isLoadingMyFailures
+          }}
+          user={loggedUser}
+        />
+      )}
+      {activeSection === 'what-section' && (
+        <>
+          <WhatCanIDo />
+        </>
+      )}
+      {activeSection === 'how-section' && (
+        <>
+          <HowDoIProve
+            data={{
+              myAlignments: {
+                educations,
+                credentials
+              }
+            }}
+          />
+        </>
+      )}
       <PortfolioNavigator />
       <PortfolioVisibilityModal
         show={publishPortfolioModal}
-        onHide={() => dispatch(setPublishModal(false))}
-        title={'Share your portfolio'}
-        publishToPublic={publishToPublic}
-        publishToPeers={publishToPeers}
+        onHide={() => setPublishModalVisibility(false)}
+        title="Share your portfolio"
+        sharingSettings={sharingSettings}
       />
       <SharePortfolioModal
         show={showSharePortfolioModal}
-        onHide={() => dispatch(setShareModal(false))}
-        publishToPublic={publishToPublic}
-        publishToPeers={publishToPeers}
+        onHide={() => setShareModalVisibility(false)}
         modalContent={sharePortfolioModalContent}
+        sharingSettings={sharingSettings}
       />
     </div>
   )
 }
 
-export default Index
+const mapStateToProps = (state) => {
+  const {
+    user: { user: loggedUser }
+  } = state.user
+
+  const {
+    activeSection,
+    publishPortfolioModal,
+    sharingSettings,
+    areLoadingSharingSettings,
+    showSharePortfolioModal,
+    showSharePortfolioModalContent: sharePortfolioModalContent,
+    whoSection: {
+      userStory,
+      myRelationships,
+      myFailures,
+      myMentors,
+      userStory: { isLoading: isLoadingUserStory },
+      myRelationships: { isLoading: isLoadingMyRelationships },
+      myFailures: { isLoading: isLoadingMyFailures },
+      myMentors: { isLoading: isLoadingMyMentors }
+    },
+    howSection: {
+      myAlignments: { educations, credentials }
+    }
+  } = state.portfolio
+  return {
+    loggedUser,
+    activeSection,
+    publishPortfolioModal,
+    sharingSettings,
+    areLoadingSharingSettings,
+    showSharePortfolioModal,
+    sharePortfolioModalContent,
+    userStory,
+    myRelationships,
+    myFailures,
+    myMentors,
+    isLoadingUserStory,
+    isLoadingMyRelationships,
+    isLoadingMyFailures,
+    isLoadingMyMentors,
+    // HOW DO I PROVE IT //
+    educations,
+    credentials
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchUserStory: () => dispatch(getUserStory()),
+  fetchMyFailures: () => dispatch(getMyFailures()),
+  fetchMyMentors: () => dispatch(getMyMentors()),
+  fetchMyRelationships: () => dispatch(getMyRelationships()),
+  fetchSharingSettings: () => dispatch(getSharingSettings()),
+  setShareContent: (content) => dispatch(setShareModalContent(content)),
+  setPublishModalVisibility: (visible) => dispatch(setPublishModal(visible)),
+  setShareModalVisibility: (visible) => dispatch(setShareModal(visible)),
+  changeMode: (mode) => dispatch(changeViewMode(mode)),
+  // HOW DO I PROVE IT //
+  fetchMyEducations: () => dispatch(getMyEducations()),
+  fetchMyCredentials: () => dispatch(getMyCredentials()),
+  fetchMyImmersions: () => dispatch(getMyImmersions()),
+  fetchMyWorkExperiences: () => dispatch(getMyWorkExperiences()),
+  fetchMyCompetitiveness: () => dispatch(getMyCompetitiveness())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index)

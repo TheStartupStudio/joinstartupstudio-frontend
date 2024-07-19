@@ -49,9 +49,10 @@ function MyMentor(props) {
         <div className={'mentor-name'}>{myMentor?.mentorName}</div>
         <div className={'mentor-role'}>{myMentor?.mentorRole}</div>
         <div className={'mentor-company'}>{myMentor?.mentorCompany}</div>
-        <div className={'mentor-description'}>
-          {myMentor?.mentorDescription}
-        </div>
+        <div
+          className={'mentor-description'}
+          dangerouslySetInnerHTML={{ __html: myMentor?.mentorDescription }}
+        />
       </div>
       <SectionActions actions={actions} />
       <MyMentorModal

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PortfolioModalWrapper from './PortfolioModalWrapper'
 import ReactQuill from 'react-quill'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   createMyMentor,
   deleteMyMentor,
@@ -10,11 +10,16 @@ import {
 } from '../../../../redux/portfolio/Actions'
 import LabeledInput from '../DisplayData/LabeledInput'
 import LtsButton from '../../../../components/LTSButtons/LTSButton'
-import AvatarEditor from '../ReactAvatarEditor/AvatarEditor'
+import ImageUploader from '../ReactAvatarEditor/ImageUploader'
 import { deleteImage, uploadImage } from '../../../../utils/helpers'
 import ConfirmDeleteRecordModal from './ConfirmDeleteRecordModal'
+import ReactImageUpload from '../ReactAvatarEditor/ReactImageUpload'
+import useImageEditor from '../../../../hooks/useImageEditor'
 
 function MyMentorModal(props) {
+  const isSaving = useSelector(
+    (state) => state.portfolio.whoSection.myMentors.isSaving
+  )
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
   const [imageFile, setImageFile] = useState(null)
   const [mentorImage, setMentorImage] = useState('')
@@ -24,6 +29,41 @@ function MyMentorModal(props) {
   const [mentorDescription, setMentorDescription] = useState('')
   const [id, setId] = useState(null)
   const dispatch = useDispatch()
+  const deleteAvatarImage = (deleteSuccess) => {
+    console.log('deleteSuccess', deleteSuccess)
+    if (deleteSuccess) {
+      const updatedMentorData = {
+        mentorImage: null
+      }
+
+      if (isEdit()) {
+        dispatch(deleteMentorImage(updatedMentorData, id))
+      } else {
+        console.error(
+          'Error: Trying to delete image for a mentor that does not exist'
+        )
+      }
+    } else {
+      console.error('Error: Image deletion failed')
+    }
+  }
+  const deleteAvatarImageFile = (imageFile) => {
+    console.log('imageFile', imageFile)
+  }
+  const {
+    editorRef,
+    imageProperties,
+    setImageProperties,
+    handleImageLoadSuccess,
+    handleFileInputChange,
+    handleLabelClick,
+    handlePositionChange,
+    updateCroppedImage: updateCroppedProfileImage,
+    imageUrl: userImageUrl,
+    setImageUrl: setImageUrl,
+    avatarEditorActions
+  } = useImageEditor(deleteAvatarImage, deleteAvatarImageFile)
+
   useEffect(() => {
     if (props.data) {
       setMentorDescription(props.data?.mentorDescription)
@@ -32,6 +72,10 @@ function MyMentorModal(props) {
       setMentorCompany(props.data?.mentorCompany)
       setMentorImage(props.data?.mentorImage)
       setId(props.data?.id)
+      setImageUrl(props.data?.mentorImage)
+      if (props.data?.mentorImage) {
+        setImageProperties({ ...imageProperties, originalImage: '' })
+      }
     }
   }, [props.data])
 
@@ -39,9 +83,13 @@ function MyMentorModal(props) {
 
   const saveMyMentorData = async () => {
     let newMentorImage
-    if (imageFile) {
-      newMentorImage = await uploadImage(imageFile)
+    // if (imageFile) {
+    //   newMentorImage = await uploadImage(imageFile)
+    // }
+    if (!!imageProperties.croppedImage) {
+      newMentorImage = await uploadImage(imageProperties.croppedImage)
     }
+
     const mentorData = {
       mentorImage: newMentorImage ? newMentorImage : mentorImage,
       mentorDescription,
@@ -61,7 +109,9 @@ function MyMentorModal(props) {
     {
       type: 'save',
       action: () => saveMyMentorData(),
-      isDisplayed: true
+      isDisplayed: true,
+      containSpinner: true,
+      isSaving: isSaving
     },
     {
       type: 'hide',
@@ -77,15 +127,6 @@ function MyMentorModal(props) {
   const handleDeleteMentor = () => {
     dispatch(deleteMyMentor(id))
   }
-
-  const avatarEditorActions = [
-    {
-      type: 'trash',
-      action: () => handleDeleteImage(),
-      isDisplayed: true,
-      description: 'Click here to delete image'
-    }
-  ]
 
   const handleDeleteImage = async () => {
     const deleteSuccess = await deleteImage(mentorImage)
@@ -113,11 +154,27 @@ function MyMentorModal(props) {
             'col-md-4 d-flex align-items-center flex-column justify-content-center'
           }
         >
-          <AvatarEditor
-            onChangeImageCrop={updateCroppedImage}
-            value={mentorImage}
+          <ReactImageUpload
+            value={userImageUrl}
+            {...imageProperties}
+            onChangeImageCrop={updateCroppedProfileImage}
+            onImageLoadSuccess={handleImageLoadSuccess}
+            onLabelClick={handleLabelClick}
+            onFileInputChange={handleFileInputChange}
+            onPositionChange={handlePositionChange}
             actions={avatarEditorActions}
+            title={'Mentor Image'}
+            // type={'circle'}
+            editorRef={editorRef}
           />
+          {/*<ImageUploader*/}
+          {/*  onChangeImageCrop={updateCroppedImage}*/}
+          {/*  value={mentorImage}*/}
+          {/*  actions={avatarEditorActions}*/}
+          {/*  width={'100%'}*/}
+          {/*  height={'100%'}*/}
+          {/*  isRelativeSize={false}*/}
+          {/*/>*/}
         </div>
         <div className={'col-md-8'}>
           <div className={''}>

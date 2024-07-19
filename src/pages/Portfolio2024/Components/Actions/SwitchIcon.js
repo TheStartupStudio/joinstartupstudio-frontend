@@ -1,19 +1,25 @@
 import React from 'react'
 import '../../index.css'
 
-const SwitchIcon = ({ id, isChecked, onToggle }) => (
-  <div className="custom-switch-container">
-    <input
-      type="checkbox"
-      id={id}
-      className="custom-switch-checkbox"
-      checked={isChecked}
-      onChange={onToggle}
-    />
-    <label htmlFor={id} className="custom-switch-label">
-      <span className="custom-switch-icon"></span>
-    </label>
-  </div>
-)
+const SwitchIcon = (props) => {
+  // const icon = `${isChecked ? offIcon : onIcon}`
+  // console.log('icon', icon ?? 'custom-switch-label')
+  return (
+    <div className="custom-switch-container">
+      {/*<div>{props.type}</div>*/}
+      <input
+        type="checkbox"
+        id={props.id}
+        className="custom-switch-checkbox"
+        checked={props.isChecked}
+        onChange={props.onToggle}
+      />
+
+      <label htmlFor={props.id} className={props.icon}>
+        <span className="custom-switch-icon"></span>
+      </label>
+    </div>
+  )
+}
 
 export default SwitchIcon

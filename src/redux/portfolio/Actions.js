@@ -1,4 +1,3 @@
-import axiosInstance from '../../utils/AxiosInstance'
 import {
   CHANGE_ACTIVE_SECTION,
   CHANGE_ACTIVE_SECTION_SUCCESS,
@@ -46,10 +45,10 @@ import {
   GET_MY_MENTORS_SUCCESS,
   SAVE_MY_MENTORS,
   SAVE_MY_MENTORS_SUCCESS,
-  UPDATE_PORTFOLIO_PRIVACY,
-  UPDATE_PORTFOLIO_PRIVACY_SUCCESS,
-  GET_PORTFOLIO_PRIVACY,
-  GET_PORTFOLIO_PRIVACY_SUCCESS,
+  UPDATE_SHARING_SETTINGS,
+  UPDATE_SHARING_SETTINGS_SUCCESS,
+  GET_SHARING_SETTINGS,
+  GET_SHARING_SETTINGS_SUCCESS,
   SET_VISIBILITY_MODAL,
   SET_VISIBILITY_MODAL_SUCCESS,
   SET_VISIBILITY_MODAL_CONTENT,
@@ -85,28 +84,145 @@ import {
   SHOW_EDIT_FAILURE_MODAL,
   HIDE_EDIT_FAILURE_MODAL,
   SHOW_ADD_FAILURE_MODAL,
-  HIDE_ADD_FAILURE_MODAL
+  HIDE_ADD_FAILURE_MODAL,
+  GET_SHARING_SETTINGS_ERROR,
+  GET_PUBLIC_PORTFOLIO,
+  GET_PUBLIC_PORTFOLIO_SUCCESS,
+  GET_PUBLIC_PORTFOLIO_ERROR,
+  GET_MY_PROJECTS,
+  GET_MY_PROJECTS_SUCCESS,
+  GET_MY_PROJECTS_ERROR,
+  GET_SKILLS,
+  GET_SKILLS_SUCCESS,
+  GET_SKILLS_ERROR,
+  //// How do I prove it ////
+  GET_MY_EDUCATIONS,
+  GET_MY_EDUCATIONS_SUCCESS,
+  GET_MY_EDUCATIONS_ERROR,
+  UPDATE_MY_EDUCATION,
+  UPDATE_MY_EDUCATION_SUCCESS,
+  UPDATE_MY_EDUCATION_ERROR,
+  ADD_MY_EDUCATION,
+  ADD_MY_EDUCATION_SUCCESS,
+  ADD_MY_EDUCATION_ERROR,
+  DELETE_MY_EDUCATION,
+  DELETE_MY_EDUCATION_SUCCESS,
+  DELETE_MY_EDUCATION_ERROR,
+  GET_MY_CREDENTIALS,
+  GET_MY_CREDENTIALS_SUCCESS,
+  GET_MY_CREDENTIALS_ERROR,
+  UPDATE_MY_CREDENTIAL,
+  UPDATE_MY_CREDENTIAL_SUCCESS,
+  UPDATE_MY_CREDENTIAL_ERROR,
+  ADD_MY_CREDENTIAL,
+  ADD_MY_CREDENTIAL_SUCCESS,
+  ADD_MY_CREDENTIAL_ERROR,
+  DELETE_MY_CREDENTIAL,
+  DELETE_MY_CREDENTIAL_SUCCESS,
+  DELETE_MY_CREDENTIAL_ERROR,
+  GET_MY_IMMERSIONS,
+  GET_MY_IMMERSIONS_SUCCESS,
+  GET_MY_IMMERSIONS_ERROR,
+  UPDATE_MY_IMMERSION,
+  UPDATE_MY_IMMERSION_SUCCESS,
+  UPDATE_MY_IMMERSION_ERROR,
+  ADD_MY_IMMERSION,
+  ADD_MY_IMMERSION_SUCCESS,
+  ADD_MY_IMMERSION_ERROR,
+  DELETE_MY_IMMERSION,
+  DELETE_MY_IMMERSION_SUCCESS,
+  DELETE_MY_IMMERSION_ERROR,
+  GET_MY_WORK_EXPERIENCES,
+  GET_MY_WORK_EXPERIENCES_SUCCESS,
+  GET_MY_WORK_EXPERIENCES_ERROR,
+  UPDATE_MY_WORK_EXPERIENCE,
+  UPDATE_MY_WORK_EXPERIENCE_SUCCESS,
+  UPDATE_MY_WORK_EXPERIENCE_ERROR,
+  ADD_MY_WORK_EXPERIENCE,
+  ADD_MY_WORK_EXPERIENCE_SUCCESS,
+  ADD_MY_WORK_EXPERIENCE_ERROR,
+  DELETE_MY_WORK_EXPERIENCE,
+  DELETE_MY_WORK_EXPERIENCE_SUCCESS,
+  DELETE_MY_WORK_EXPERIENCE_ERROR,
+  ADD_MY_COMPETITIVENESS_ERROR,
+  DELETE_MY_COMPETITIVENESS,
+  ADD_MY_COMPETITIVENESS_SUCCESS,
+  ADD_MY_COMPETITIVENESS,
+  UPDATE_MY_COMPETITIVENESS_ERROR,
+  UPDATE_MY_COMPETITIVENESS_SUCCESS,
+  UPDATE_MY_COMPETITIVENESS,
+  GET_MY_COMPETITIVENESS_ERROR,
+  GET_MY_COMPETITIVENESS_SUCCESS,
+  GET_MY_COMPETITIVENESS,
+  DELETE_MY_COMPETITIVENESS_SUCCESS,
+  DELETE_MY_COMPETITIVENESS_ERROR,
+  SHOW_EDIT_EDUCATION_MODAL,
+  HIDE_EDIT_EDUCATION_MODAL,
+  SHOW_ADD_EDUCATION_MODAL,
+  HIDE_ADD_EDUCATION_MODAL,
+  SHOW_EDIT_CREDENTIAL_MODAL,
+  HIDE_EDIT_CREDENTIAL_MODAL,
+  SHOW_ADD_CREDENTIAL_MODAL,
+  HIDE_ADD_CREDENTIAL_MODAL
 } from './Constants'
 import {
   createMyFailuresAPI,
   createMyMentorsAPI,
   createMyRelationshipsAPI,
+  createSharingSettingsAPI,
   createUserStory,
   createUserStoryAPI,
   deleteMyFailuresAPI,
   deleteMyMentorsAPI,
   getMyFailuresAPI,
   getMyMentorsAPI,
+  getMyProjectsAPI,
   getMyRelationshipsAPI,
-  getPortfolioPrivacyAPI,
+  getPublicPortfolioAPI,
+  getSharingSettingsAPI,
+  getSkillsAPI,
   getUserStoryAPI,
   updateMyFailuresAPI,
   updateMyMentorsAPI,
   updateMyRelationshipsAPI,
-  updatePortfolioPrivacyAPI,
-  updateUserStoryAPI
+  updateSharingSettingsAPI,
+  updateUserStoryAPI,
+  // How do I prove it //
+  getMyEducationsAPI,
+  updateMyEducationAPI,
+  addMyEducationAPI,
+  deleteMyEducationAPI,
+  getMyCredentialsAPI,
+  updateMyCredentialAPI,
+  addMyCredentialAPI,
+  deleteMyCredentialAPI,
+  getMyImmersionsAPI,
+  updateMyImmersionAPI,
+  addMyImmersionAPI,
+  deleteMyImmersionAPI,
+  getMyWorkExperiencesAPI,
+  updateMyWorkExperienceAPI,
+  addMyWorkExperienceAPI,
+  deleteMyWorkExperienceAPI,
+  getMyCompetitivenessAPI,
+  updateMyCompetitivenessAPI,
+  addMyCompetitivenessAPI,
+  deleteMyCompetitivenessAPI
 } from './Service'
 
+export const getPublicPortfolio = () => async (dispatch) => {
+  dispatch({ type: GET_PUBLIC_PORTFOLIO })
+  try {
+    const response = await getPublicPortfolioAPI()
+    dispatch(getPublicPortfolioSuccess(response.data))
+  } catch (e) {}
+}
+export const getPublicPortfolioSuccess = (data) => {
+  return {
+    type: GET_PUBLIC_PORTFOLIO_SUCCESS,
+    payload: { data }
+  }
+}
 export const changeViewMode = (mode) => async (dispatch) => {
   dispatch({ type: CHANGE_VIEW_MODE })
   try {
@@ -158,30 +274,6 @@ export const sharePortfolioSuccess = (share) => {
     payload: { share }
   }
 }
-
-// Edit User Story Actions
-// export const editUserStory = (userStory) => async (dispatch) => {
-//   dispatch({ type: EDIT_USER_STORY })
-//   try {
-//     dispatch(editUserStorySuccess(userStory))
-//   } catch (e) {
-//     dispatch(editUserStoryError(e))
-//   }
-// }
-//
-// export const editUserStorySuccess = (userStory) => {
-//   return {
-//     type: EDIT_USER_STORY_SUCCESS,
-//     payload: { userStory }
-//   }
-// }
-//
-// export const editUserStoryError = (error) => {
-//   return {
-//     type: EDIT_USER_STORY_ERROR,
-//     payload: { error }
-//   }
-// }
 
 // Edit My Relationship Actions
 export const editMyRelationship = (relationship) => async (dispatch) => {
@@ -597,35 +689,49 @@ export const deleteMyMentorError = (error) => {
   }
 }
 
-// PORTFOLIO PRIVACY
-export const updatePortfolioPrivacy =
-  (portfolioPrivacy, type) => async (dispatch) => {
-    dispatch({ type: UPDATE_PORTFOLIO_PRIVACY })
+// PORTFOLIO SHARING SETTINGS
+export const updateSharingSettings =
+  (portfolioPrivacy, type, isEdit) => async (dispatch) => {
+    dispatch({ type: UPDATE_SHARING_SETTINGS })
     try {
-      const response = await updatePortfolioPrivacyAPI(portfolioPrivacy)
-      dispatch(updatePortfolioPrivacySuccess(response.data, type))
+      let response
+      if (portfolioPrivacy?.id) {
+        response = await updateSharingSettingsAPI(portfolioPrivacy)
+      } else {
+        response = await createSharingSettingsAPI(portfolioPrivacy)
+      }
+      dispatch(updateSharingSettingsSuccess(response.data, type))
     } catch (e) {}
   }
 
-export const updatePortfolioPrivacySuccess = (response, type) => {
+export const updateSharingSettingsSuccess = (response, type) => {
   return {
-    type: UPDATE_PORTFOLIO_PRIVACY_SUCCESS,
+    type: UPDATE_SHARING_SETTINGS_SUCCESS,
     payload: { data: response, type }
   }
 }
 
-export const getPortfolioPrivacy = (portfolioPrivacy) => async (dispatch) => {
-  dispatch({ type: GET_PORTFOLIO_PRIVACY })
+export const getSharingSettings = (portfolioPrivacy) => async (dispatch) => {
+  dispatch({ type: GET_SHARING_SETTINGS })
   try {
-    const response = await getPortfolioPrivacyAPI(portfolioPrivacy)
-    dispatch(getPortfolioPrivacySuccess(response.data))
-  } catch (e) {}
+    const response = await getSharingSettingsAPI(portfolioPrivacy)
+    dispatch(getSharingSettingsSuccess(response.data))
+  } catch (e) {
+    dispatch(getSharingSettingsError(e))
+  }
 }
 
-export const getPortfolioPrivacySuccess = (response) => {
+export const getSharingSettingsSuccess = (response) => {
   return {
-    type: GET_PORTFOLIO_PRIVACY_SUCCESS,
+    type: GET_SHARING_SETTINGS_SUCCESS,
     payload: { data: response }
+  }
+}
+
+export const getSharingSettingsError = (error) => {
+  return {
+    type: GET_SHARING_SETTINGS_ERROR,
+    payload: { error }
   }
 }
 
@@ -735,3 +841,607 @@ export const showAddFailureModal = () => ({
 export const hideAddFailureModal = () => ({
   type: HIDE_ADD_FAILURE_MODAL
 })
+
+export const showEditEducationModal = (id) => ({
+  type: SHOW_EDIT_EDUCATION_MODAL,
+  payload: id
+})
+
+export const hideEditEducationModal = () => ({
+  type: HIDE_EDIT_EDUCATION_MODAL
+})
+
+export const showAddEducationModal = () => ({
+  type: SHOW_ADD_EDUCATION_MODAL
+})
+
+export const hideAddEducationModal = () => ({
+  type: HIDE_ADD_EDUCATION_MODAL
+})
+
+export const showEditCredentialModal = (id) => {
+  return {
+    type: SHOW_EDIT_CREDENTIAL_MODAL,
+    payload: id
+  }
+}
+
+export const hideEditCredentialModal = () => ({
+  type: HIDE_EDIT_CREDENTIAL_MODAL
+})
+
+export const showAddCredentialModal = () => ({
+  type: SHOW_ADD_CREDENTIAL_MODAL
+})
+
+export const hideAddCredentialModal = () => ({
+  type: HIDE_ADD_CREDENTIAL_MODAL
+})
+/// WHAT CAN I DO SECTION ///
+export const getSkills = () => async (dispatch) => {
+  dispatch({ type: GET_SKILLS })
+  try {
+    const response = await getSkillsAPI()
+    let newResponse = { ...response }
+    newResponse.data = response.data.skills.reduce((acc, skill) => {
+      const category = skill.category
+
+      if (!acc[category]) {
+        acc[category] = []
+      }
+
+      acc[category].push(skill)
+
+      return acc
+    }, {})
+    dispatch(getSkillsSuccess(newResponse.data))
+  } catch (e) {
+    dispatch(getSkillsError(e))
+  }
+}
+
+export const getSkillsSuccess = (response) => {
+  return {
+    type: GET_SKILLS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const getSkillsError = (error) => {
+  return {
+    type: GET_SKILLS_ERROR,
+    payload: { error }
+  }
+}
+export const getProjects = () => async (dispatch) => {
+  dispatch({ type: GET_MY_PROJECTS })
+  try {
+    const response = await getMyProjectsAPI()
+    dispatch(getProjectsSuccess(response.data))
+  } catch (e) {
+    dispatch(getProjectsError(e))
+  }
+}
+
+export const getProjectsSuccess = (response) => {
+  return {
+    type: GET_MY_PROJECTS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const getProjectsError = (error) => {
+  return {
+    type: GET_MY_PROJECTS_ERROR,
+    payload: { error }
+  }
+}
+///////////////////////////////////
+///// HOW DO I PROVE IT ///////////
+///////////////////////////////////
+
+// Get Educations
+export const getMyEducations = () => async (dispatch) => {
+  dispatch({ type: GET_MY_EDUCATIONS })
+  try {
+    const response = await getMyEducationsAPI()
+    dispatch(getMyEducationsSuccess(response.data))
+  } catch (e) {
+    dispatch(getMyEducationsError(e))
+  }
+}
+
+export const getMyEducationsSuccess = (response) => {
+  return {
+    type: GET_MY_EDUCATIONS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const getMyEducationsError = (error) => {
+  return {
+    type: GET_MY_EDUCATIONS_ERROR,
+    payload: { error }
+  }
+}
+
+// Update Education
+export const updateMyEducation = (education) => async (dispatch) => {
+  dispatch({ type: UPDATE_MY_EDUCATION })
+  try {
+    const response = await updateMyEducationAPI(education)
+    dispatch(updateMyEducationSuccess(response.data))
+  } catch (e) {
+    dispatch(updateMyEducationError(e))
+  }
+}
+
+export const updateMyEducationSuccess = (response) => {
+  return {
+    type: UPDATE_MY_EDUCATION_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const updateMyEducationError = (error) => {
+  return {
+    type: UPDATE_MY_EDUCATION_ERROR,
+    payload: { error }
+  }
+}
+
+// Add Education
+export const addMyEducation = (education) => async (dispatch) => {
+  dispatch({ type: ADD_MY_EDUCATION })
+  try {
+    const response = await addMyEducationAPI(education)
+    dispatch(addMyEducationSuccess(response.data))
+  } catch (e) {
+    dispatch(addMyEducationError(e))
+  }
+}
+
+export const addMyEducationSuccess = (response) => {
+  return {
+    type: ADD_MY_EDUCATION_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const addMyEducationError = (error) => {
+  return {
+    type: ADD_MY_EDUCATION_ERROR,
+    payload: { error }
+  }
+}
+
+// Delete Education
+export const deleteMyEducation = (educationId) => async (dispatch) => {
+  dispatch({ type: DELETE_MY_EDUCATION })
+  try {
+    const response = await deleteMyEducationAPI(educationId)
+    dispatch(deleteMyEducationSuccess(response.data))
+  } catch (e) {
+    dispatch(deleteMyEducationError(e))
+  }
+}
+
+export const deleteMyEducationSuccess = (response) => {
+  return {
+    type: DELETE_MY_EDUCATION_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const deleteMyEducationError = (error) => {
+  return {
+    type: DELETE_MY_EDUCATION_ERROR,
+    payload: { error }
+  }
+}
+
+// Get Credentials
+export const getMyCredentials = () => async (dispatch) => {
+  dispatch({ type: GET_MY_CREDENTIALS })
+  try {
+    const response = await getMyCredentialsAPI()
+    dispatch(getMyCredentialsSuccess(response.data))
+  } catch (e) {
+    dispatch(getMyCredentialsError(e))
+  }
+}
+
+export const getMyCredentialsSuccess = (response) => {
+  return {
+    type: GET_MY_CREDENTIALS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const getMyCredentialsError = (error) => {
+  return {
+    type: GET_MY_CREDENTIALS_ERROR,
+    payload: { error }
+  }
+}
+
+// Update Credential
+export const updateMyCredential = (credential) => async (dispatch) => {
+  dispatch({ type: UPDATE_MY_CREDENTIAL })
+  try {
+    debugger
+    const response = await updateMyCredentialAPI(credential)
+    debugger
+
+    dispatch(updateMyCredentialSuccess(response.data))
+  } catch (e) {
+    dispatch(updateMyCredentialError(e))
+  }
+}
+
+export const updateMyCredentialSuccess = (response) => {
+  return {
+    type: UPDATE_MY_CREDENTIAL_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const updateMyCredentialError = (error) => {
+  return {
+    type: UPDATE_MY_CREDENTIAL_ERROR,
+    payload: { error }
+  }
+}
+
+// Add Credential
+export const addMyCredential = (credential) => async (dispatch) => {
+  dispatch({ type: ADD_MY_CREDENTIAL })
+  try {
+    const response = await addMyCredentialAPI(credential)
+    dispatch(addMyCredentialSuccess(response.data))
+  } catch (e) {
+    dispatch(addMyCredentialError(e))
+  }
+}
+
+export const addMyCredentialSuccess = (response) => {
+  return {
+    type: ADD_MY_CREDENTIAL_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const addMyCredentialError = (error) => {
+  return {
+    type: ADD_MY_CREDENTIAL_ERROR,
+    payload: { error }
+  }
+}
+
+// Delete Credential
+export const deleteMyCredential = (credentialId) => async (dispatch) => {
+  dispatch({ type: DELETE_MY_CREDENTIAL })
+  try {
+    const response = await deleteMyCredentialAPI(credentialId)
+    dispatch(deleteMyCredentialSuccess(response.data))
+  } catch (e) {
+    dispatch(deleteMyCredentialError(e))
+  }
+}
+
+export const deleteMyCredentialSuccess = (response) => {
+  return {
+    type: DELETE_MY_CREDENTIAL_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const deleteMyCredentialError = (error) => {
+  return {
+    type: DELETE_MY_CREDENTIAL_ERROR,
+    payload: { error }
+  }
+}
+
+// Get Immersions
+export const getMyImmersions = () => async (dispatch) => {
+  dispatch({ type: GET_MY_IMMERSIONS })
+  try {
+    const response = await getMyImmersionsAPI()
+    dispatch(getMyImmersionsSuccess(response.data))
+  } catch (e) {
+    dispatch(getMyImmersionsError(e))
+  }
+}
+
+export const getMyImmersionsSuccess = (response) => {
+  return {
+    type: GET_MY_IMMERSIONS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const getMyImmersionsError = (error) => {
+  return {
+    type: GET_MY_IMMERSIONS_ERROR,
+    payload: { error }
+  }
+}
+
+// Update Immersion
+export const updateMyImmersion = (immersion) => async (dispatch) => {
+  dispatch({ type: UPDATE_MY_IMMERSION })
+  try {
+    const response = await updateMyImmersionAPI(immersion)
+    dispatch(updateMyImmersionSuccess(response.data))
+  } catch (e) {
+    dispatch(updateMyImmersionError(e))
+  }
+}
+
+export const updateMyImmersionSuccess = (response) => {
+  return {
+    type: UPDATE_MY_IMMERSION_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const updateMyImmersionError = (error) => {
+  return {
+    type: UPDATE_MY_IMMERSION_ERROR,
+    payload: { error }
+  }
+}
+
+// Add Immersion
+export const addMyImmersion = (immersion) => async (dispatch) => {
+  dispatch({ type: ADD_MY_IMMERSION })
+  try {
+    const response = await addMyImmersionAPI(immersion)
+    dispatch(addMyImmersionSuccess(response.data))
+  } catch (e) {
+    dispatch(addMyImmersionError(e))
+  }
+}
+
+export const addMyImmersionSuccess = (response) => {
+  return {
+    type: ADD_MY_IMMERSION_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const addMyImmersionError = (error) => {
+  return {
+    type: ADD_MY_IMMERSION_ERROR,
+    payload: { error }
+  }
+}
+
+// Delete Immersion
+export const deleteMyImmersion = (immersionId) => async (dispatch) => {
+  dispatch({ type: DELETE_MY_IMMERSION })
+  try {
+    const response = await deleteMyImmersionAPI(immersionId)
+    dispatch(deleteMyImmersionSuccess(response.data))
+  } catch (e) {
+    dispatch(deleteMyImmersionError(e))
+  }
+}
+
+export const deleteMyImmersionSuccess = (response) => {
+  return {
+    type: DELETE_MY_IMMERSION_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const deleteMyImmersionError = (error) => {
+  return {
+    type: DELETE_MY_IMMERSION_ERROR,
+    payload: { error }
+  }
+}
+
+// Get Work Experiences
+export const getMyWorkExperiences = () => async (dispatch) => {
+  dispatch({ type: GET_MY_WORK_EXPERIENCES })
+  try {
+    const response = await getMyWorkExperiencesAPI()
+    dispatch(getMyWorkExperiencesSuccess(response.data))
+  } catch (e) {
+    dispatch(getMyWorkExperiencesError(e))
+  }
+}
+
+export const getMyWorkExperiencesSuccess = (response) => {
+  return {
+    type: GET_MY_WORK_EXPERIENCES_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const getMyWorkExperiencesError = (error) => {
+  return {
+    type: GET_MY_WORK_EXPERIENCES_ERROR,
+    payload: { error }
+  }
+}
+
+// Update Work Experience
+export const updateMyWorkExperience = (workExperience) => async (dispatch) => {
+  dispatch({ type: UPDATE_MY_WORK_EXPERIENCE })
+  try {
+    const response = await updateMyWorkExperienceAPI(workExperience)
+    dispatch(updateMyWorkExperienceSuccess(response.data))
+  } catch (e) {
+    dispatch(updateMyWorkExperienceError(e))
+  }
+}
+
+export const updateMyWorkExperienceSuccess = (response) => {
+  return {
+    type: UPDATE_MY_WORK_EXPERIENCE_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const updateMyWorkExperienceError = (error) => {
+  return {
+    type: UPDATE_MY_WORK_EXPERIENCE_ERROR,
+    payload: { error }
+  }
+}
+
+// Add Work Experience
+export const addMyWorkExperience = (workExperience) => async (dispatch) => {
+  dispatch({ type: ADD_MY_WORK_EXPERIENCE })
+  try {
+    const response = await addMyWorkExperienceAPI(workExperience)
+    dispatch(addMyWorkExperienceSuccess(response.data))
+  } catch (e) {
+    dispatch(addMyWorkExperienceError(e))
+  }
+}
+
+export const addMyWorkExperienceSuccess = (response) => {
+  return {
+    type: ADD_MY_WORK_EXPERIENCE_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const addMyWorkExperienceError = (error) => {
+  return {
+    type: ADD_MY_WORK_EXPERIENCE_ERROR,
+    payload: { error }
+  }
+}
+
+// Delete Work Experience
+export const deleteMyWorkExperience =
+  (workExperienceId) => async (dispatch) => {
+    dispatch({ type: DELETE_MY_WORK_EXPERIENCE })
+    try {
+      const response = await deleteMyWorkExperienceAPI(workExperienceId)
+      dispatch(deleteMyWorkExperienceSuccess(response.data))
+    } catch (e) {
+      dispatch(deleteMyWorkExperienceError(e))
+    }
+  }
+
+export const deleteMyWorkExperienceSuccess = (response) => {
+  return {
+    type: DELETE_MY_WORK_EXPERIENCE_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const deleteMyWorkExperienceError = (error) => {
+  return {
+    type: DELETE_MY_WORK_EXPERIENCE_ERROR,
+    payload: { error }
+  }
+}
+
+// Get Competitiveness
+export const getMyCompetitiveness = () => async (dispatch) => {
+  dispatch({ type: GET_MY_COMPETITIVENESS })
+  try {
+    const response = await getMyCompetitivenessAPI()
+    dispatch(getMyCompetitivenessSuccess(response.data))
+  } catch (e) {
+    dispatch(getMyCompetitivenessError(e))
+  }
+}
+
+export const getMyCompetitivenessSuccess = (response) => {
+  return {
+    type: GET_MY_COMPETITIVENESS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const getMyCompetitivenessError = (error) => {
+  return {
+    type: GET_MY_COMPETITIVENESS_ERROR,
+    payload: { error }
+  }
+}
+
+// Update Competitiveness
+export const updateMyCompetitiveness =
+  (competitiveness) => async (dispatch) => {
+    dispatch({ type: UPDATE_MY_COMPETITIVENESS })
+    try {
+      const response = await updateMyCompetitivenessAPI(competitiveness)
+      dispatch(updateMyCompetitivenessSuccess(response.data))
+    } catch (e) {
+      dispatch(updateMyCompetitivenessError(e))
+    }
+  }
+
+export const updateMyCompetitivenessSuccess = (response) => {
+  return {
+    type: UPDATE_MY_COMPETITIVENESS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const updateMyCompetitivenessError = (error) => {
+  return {
+    type: UPDATE_MY_COMPETITIVENESS_ERROR,
+    payload: { error }
+  }
+}
+
+// Add Competitiveness
+export const addMyCompetitiveness = (competitiveness) => async (dispatch) => {
+  dispatch({ type: ADD_MY_COMPETITIVENESS })
+  try {
+    const response = await addMyCompetitivenessAPI(competitiveness)
+    dispatch(addMyCompetitivenessSuccess(response.data))
+  } catch (e) {
+    dispatch(addMyCompetitivenessError(e))
+  }
+}
+
+export const addMyCompetitivenessSuccess = (response) => {
+  return {
+    type: ADD_MY_COMPETITIVENESS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const addMyCompetitivenessError = (error) => {
+  return {
+    type: ADD_MY_COMPETITIVENESS_ERROR,
+    payload: { error }
+  }
+}
+
+// Delete Competitiveness
+export const deleteMyCompetitiveness =
+  (competitivenessId) => async (dispatch) => {
+    dispatch({ type: DELETE_MY_COMPETITIVENESS })
+    try {
+      const response = await deleteMyCompetitivenessAPI(competitivenessId)
+      dispatch(deleteMyCompetitivenessSuccess(response.data))
+    } catch (e) {
+      dispatch(deleteMyCompetitivenessError(e))
+    }
+  }
+
+export const deleteMyCompetitivenessSuccess = (response) => {
+  return {
+    type: DELETE_MY_COMPETITIVENESS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const deleteMyCompetitivenessError = (error) => {
+  return {
+    type: DELETE_MY_COMPETITIVENESS_ERROR,
+    payload: { error }
+  }
+}

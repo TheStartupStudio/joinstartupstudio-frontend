@@ -83,7 +83,7 @@ function MyRelationships(props) {
           </div>
           <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
             <LabeledInput
-              title={'Leadership philsophy'}
+              title={'Leadership philosophy'}
               titleClassNames="text-center py-3 text-uppercase"
               titleHeight={70}
               inputHeight={120}
@@ -118,7 +118,7 @@ function MyRelationships(props) {
                 height={190}
                 titleHeight={40}
                 inputHeight={120}
-                title={'Leadership philsophy'}
+                title={'Leadership philosophy'}
                 content={leadershipPhilosophy}
               />
             </div>

@@ -3,6 +3,8 @@ import Tooltip from 'react-bootstrap/Tooltip'
 import { FaCheck, FaEye, FaPlus, FaTrash } from 'react-icons/fa6'
 import { FaPencilAlt } from 'react-icons/fa'
 import TooltipAction from './TooltipAction'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 function SectionActions(props) {
   const foundedAction = (type) =>
@@ -19,6 +21,7 @@ function SectionActions(props) {
         className={`portfolio-actions ${
           props.positionRelative ? 'position-relative' : ''
         }`}
+        style={{ ...props.styles }}
       >
         <React.Fragment>
           {editButton?.isDisplayed && (
@@ -26,7 +29,7 @@ function SectionActions(props) {
               onClick={() => editButton?.action()}
               icon={<FaPencilAlt className={'action-icon pencil-icon'} />}
               tooltipContent={
-                <Tooltip id="tooltip" className={'tooltip-content'}>
+                <Tooltip id='tooltip' className={'tooltip-content'}>
                   Click here to return to edit mode
                 </Tooltip>
               }
@@ -36,20 +39,40 @@ function SectionActions(props) {
           {saveButton?.isDisplayed && (
             <TooltipAction
               onClick={() => saveButton?.action()}
-              icon={<FaCheck className={'action-icon public-icon'} />}
+              icon={
+                !saveButton?.isSaving ? (
+                  <FaCheck className={'action-icon public-icon'} />
+                ) : (
+                  <div className='text-center' style={{ color: '#01c5d1' }}>
+                    <FontAwesomeIcon icon={faSpinner} className='' spin />
+                  </div>
+                )
+              }
               tooltipContent={
-                <Tooltip id="tooltip" className={'tooltip-content '}>
+                <Tooltip id='tooltip' className={'tooltip-content '}>
                   Click here to save
                 </Tooltip>
               }
             />
           )}
+
+          {/*{saveButton?.isDisplayed && !saveButton?.containSpinner && (*/}
+          {/*  <TooltipAction*/}
+          {/*    onClick={() => saveButton?.action()}*/}
+          {/*    icon={<FaCheck className={'action-icon public-icon'} />}*/}
+          {/*    tooltipContent={*/}
+          {/*      <Tooltip id="tooltip" className={'tooltip-content '}>*/}
+          {/*        Click here to save*/}
+          {/*      </Tooltip>*/}
+          {/*    }*/}
+          {/*  />*/}
+          {/*)}*/}
           {hideButton?.isDisplayed && (
             <TooltipAction
               onClick={() => hideButton?.action()}
               icon={<FaEye className={'action-icon public-icon'} />}
               tooltipContent={
-                <Tooltip id="tooltip" className={'tooltip-content '}>
+                <Tooltip id='tooltip' className={'tooltip-content '}>
                   Click here to HIDE this section
                 </Tooltip>
               }
@@ -60,7 +83,7 @@ function SectionActions(props) {
               onClick={() => addButton?.action()}
               icon={<FaPlus className={'action-icon public-icon'} />}
               tooltipContent={
-                <Tooltip id="tooltip" className={'tooltip-content '}>
+                <Tooltip id='tooltip' className={'tooltip-content '}>
                   {addButton?.description ?? `Click here to add a new item`}
                 </Tooltip>
               }
@@ -71,7 +94,7 @@ function SectionActions(props) {
               onClick={() => trashButton?.action()}
               icon={<FaTrash className={'action-icon public-icon'} />}
               tooltipContent={
-                <Tooltip id="tooltip" className={'tooltip-content '}>
+                <Tooltip id='tooltip' className={'tooltip-content '}>
                   {trashButton?.description ?? `Click here to delete item`}
                 </Tooltip>
               }

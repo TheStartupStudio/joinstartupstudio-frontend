@@ -7,7 +7,7 @@ import '../index.css'
 import { toast } from 'react-toastify'
 import { readFile } from '../../../utils/canvasUtils'
 import { setImageCropperData } from '../../../redux'
-import AvatarEditor from './ReactAvatarEditor/AvatarEditor'
+import AvatarEditor from './ReactAvatarEditor/ImageUploader'
 function UploadImageBox(props) {
   const general = useSelector((state) => state.general)
   const [selectedImage, setSelectedImage] = useState('')

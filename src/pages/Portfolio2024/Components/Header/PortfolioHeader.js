@@ -24,6 +24,7 @@ function PortfolioHeader(props) {
           sectionTitle={'Who am i?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through <strong>Story</strong>, <strong>Relationship</strong>, <strong>Mentorship</strong>, and <strong>Failure</strong>.`}
           triangleIcon={whoTriangle}
+          user={props.user}
         />
       )}
       {activeSection === 'what-section' && (
@@ -31,6 +32,7 @@ function PortfolioHeader(props) {
           sectionTitle={'What can I do?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through the outcomes of <strong>Learn</strong>, <strong>Develop</strong>, and <strong>Brand</strong>.`}
           triangleIcon={whatTriangle}
+          user={props.user}
         />
       )}
       {activeSection === 'how-section' && (
@@ -38,6 +40,7 @@ function PortfolioHeader(props) {
           sectionTitle={'How Can I Prove it?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through the outcomes of <strong>Alignment</strong>, <strong>Productivity</strong>, and <strong>Competitiveness</strong>.`}
           triangleIcon={howTriangle}
+          user={props.user}
         />
       )}
       {activeSection === 'start-section' && (
@@ -45,6 +48,7 @@ function PortfolioHeader(props) {
           sectionTitle={'Start'}
           sectionDescription={`My ability to prove the quality of my outcomes through the test metrics of <strong>sustainability</strong>, <strong>profitability</strong>, and <strong>efficiency</strong>.`}
           triangleIcon={startTriangle}
+          user={props.user}
         />
       )}
     </div>
