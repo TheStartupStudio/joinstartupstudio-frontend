@@ -22,11 +22,11 @@ import {
   GET_MY_MENTORS_SUCCESS,
   SAVE_MY_MENTORS,
   SAVE_MY_MENTORS_SUCCESS,
-  UPDATE_PORTFOLIO_PRIVACY_SUCCESS,
-  GET_PORTFOLIO_PRIVACY_SUCCESS,
+  UPDATE_SHARING_SETTINGS_SUCCESS,
+  GET_SHARING_SETTINGS_SUCCESS,
   SET_VISIBILITY_MODAL_SUCCESS,
   SET_VISIBILITY_MODAL_CONTENT_SUCCESS,
-  UPDATE_PORTFOLIO_PRIVACY,
+  UPDATE_SHARING_SETTINGS,
   SET_SHARE_MODAL_SUCCESS,
   SET_SHARE_MODAL_CONTENT_SUCCESS,
   SET_PUBLISH_MODAL_SUCCESS,
@@ -57,7 +57,91 @@ import {
   SHOW_EDIT_FAILURE_MODAL,
   HIDE_EDIT_FAILURE_MODAL,
   HIDE_ADD_FAILURE_MODAL,
-  SHOW_ADD_FAILURE_MODAL
+  SHOW_ADD_FAILURE_MODAL,
+  UPDATE_SHARING_SETTINGS_ERROR,
+  GET_SHARING_SETTINGS_ERROR,
+  GET_SHARING_SETTINGS,
+  GET_USER_STORY_ERROR,
+  SAVE_USER_STORY_ERROR,
+  GET_MY_FAILURES_ERROR,
+  CREATE_MY_FAILURE_ERROR,
+  UPDATE_MY_FAILURE_ERROR,
+  GET_SKILLS,
+  GET_SKILLS_SUCCESS,
+  GET_MY_PROJECTS,
+  GET_MY_PROJECTS_SUCCESS,
+  // HOW DO I PROVE IT //
+  GET_MY_EDUCATIONS,
+  GET_MY_EDUCATIONS_SUCCESS,
+  GET_MY_EDUCATIONS_ERROR,
+  UPDATE_MY_EDUCATION,
+  UPDATE_MY_EDUCATION_SUCCESS,
+  UPDATE_MY_EDUCATION_ERROR,
+  ADD_MY_EDUCATION,
+  ADD_MY_EDUCATION_SUCCESS,
+  ADD_MY_EDUCATION_ERROR,
+  DELETE_MY_EDUCATION,
+  DELETE_MY_EDUCATION_SUCCESS,
+  DELETE_MY_EDUCATION_ERROR,
+  GET_MY_CREDENTIALS,
+  GET_MY_CREDENTIALS_SUCCESS,
+  GET_MY_CREDENTIALS_ERROR,
+  UPDATE_MY_CREDENTIAL,
+  UPDATE_MY_CREDENTIAL_SUCCESS,
+  UPDATE_MY_CREDENTIAL_ERROR,
+  ADD_MY_CREDENTIAL,
+  ADD_MY_CREDENTIAL_SUCCESS,
+  ADD_MY_CREDENTIAL_ERROR,
+  DELETE_MY_CREDENTIAL,
+  DELETE_MY_CREDENTIAL_SUCCESS,
+  DELETE_MY_CREDENTIAL_ERROR,
+  GET_MY_IMMERSIONS,
+  GET_MY_IMMERSIONS_SUCCESS,
+  GET_MY_IMMERSIONS_ERROR,
+  UPDATE_MY_IMMERSION,
+  UPDATE_MY_IMMERSION_SUCCESS,
+  UPDATE_MY_IMMERSION_ERROR,
+  ADD_MY_IMMERSION,
+  ADD_MY_IMMERSION_SUCCESS,
+  ADD_MY_IMMERSION_ERROR,
+  DELETE_MY_IMMERSION,
+  DELETE_MY_IMMERSION_SUCCESS,
+  DELETE_MY_IMMERSION_ERROR,
+  GET_MY_WORK_EXPERIENCES,
+  GET_MY_WORK_EXPERIENCES_SUCCESS,
+  GET_MY_WORK_EXPERIENCES_ERROR,
+  UPDATE_MY_WORK_EXPERIENCE,
+  UPDATE_MY_WORK_EXPERIENCE_SUCCESS,
+  UPDATE_MY_WORK_EXPERIENCE_ERROR,
+  ADD_MY_WORK_EXPERIENCE,
+  ADD_MY_WORK_EXPERIENCE_SUCCESS,
+  ADD_MY_WORK_EXPERIENCE_ERROR,
+  DELETE_MY_WORK_EXPERIENCE,
+  DELETE_MY_WORK_EXPERIENCE_SUCCESS,
+  DELETE_MY_WORK_EXPERIENCE_ERROR,
+  ADD_MY_COMPETITIVENESS_ERROR,
+  DELETE_MY_COMPETITIVENESS,
+  ADD_MY_COMPETITIVENESS_SUCCESS,
+  ADD_MY_COMPETITIVENESS,
+  UPDATE_MY_COMPETITIVENESS_ERROR,
+  UPDATE_MY_COMPETITIVENESS_SUCCESS,
+  UPDATE_MY_COMPETITIVENESS,
+  GET_MY_COMPETITIVENESS_ERROR,
+  GET_MY_COMPETITIVENESS_SUCCESS,
+  GET_MY_COMPETITIVENESS,
+  DELETE_MY_COMPETITIVENESS_SUCCESS,
+  DELETE_MY_COMPETITIVENESS_ERROR,
+  HIDE_ADD_EDUCATION_MODAL,
+  SHOW_EDIT_EDUCATION_MODAL,
+  HIDE_EDIT_EDUCATION_MODAL,
+  SHOW_ADD_EDUCATION_MODAL,
+  SHOW_ADD_CREDENTIAL_MODAL,
+  HIDE_ADD_CREDENTIAL_MODAL,
+  SHOW_EDIT_CREDENTIAL_MODAL,
+  HIDE_EDIT_CREDENTIAL_MODAL,
+  UPDATE_MY_MENTOR_ERROR,
+  CREATE_MY_MENTOR_ERROR,
+  GET_MY_MENTORS_ERROR
 } from './Constants'
 
 const initialState = {
@@ -65,8 +149,12 @@ const initialState = {
   activeSection: 'who-section',
   publishModal: false,
   shareModal: false,
-  publishToPeers: false,
-  publishToPublic: false,
+  sharingSettings: {
+    isPeerShared: false,
+    isPublicShared: false
+  },
+  areLoadingSharingSettings: false,
+  error: {},
   publishPortfolioModal: false,
   confirmVisibilityModal: false,
   confirmVisibilityModalContent: {
@@ -82,6 +170,8 @@ const initialState = {
   whoSection: {
     userStory: {
       isLoading: false,
+      isSaving: false,
+      error: null,
       data: {
         videoUrl: '',
         videoThumbnail: '',
@@ -91,6 +181,8 @@ const initialState = {
     },
     myRelationships: {
       isLoading: false,
+      isSaving: false,
+      error: null,
       data: {
         teamRole: '',
         collaborationStyle: '',
@@ -99,6 +191,8 @@ const initialState = {
     },
     myFailures: {
       isLoading: false,
+      isSaving: false,
+      error: null,
       showEditFailureModal: null,
       showAddFailureModal: null,
       data: [
@@ -112,6 +206,67 @@ const initialState = {
     },
     myMentors: {
       isLoading: false,
+      isSaving: false,
+      error: null,
+      showEditMentorModal: null,
+      showAddMentorModal: null,
+      data: [
+        {
+          mentorName: '',
+          mentorImage: '',
+          mentorRole: '',
+          mentorCompany: '',
+          mentorDescription: ''
+        }
+      ]
+    }
+  },
+  skills: [],
+  whatSection: {
+    myProjects: {
+      isLoading: false,
+      isSaving: false,
+      error: null,
+      data: []
+    }
+  },
+  howSection: {
+    myAlignments: {
+      educations: {
+        isLoading: false,
+        isSaving: false,
+        error: null,
+        showEditModal: null,
+        showAddModal: null,
+        data: []
+      },
+      credentials: {
+        isLoading: false,
+        isSaving: false,
+        error: null,
+        showEditModal: null,
+        showAddModal: null,
+        data: []
+      }
+    },
+    myProductivity: {
+      immersions: {
+        isLoading: false,
+        isSaving: false,
+        error: null,
+        data: []
+      },
+      workExperience: {
+        isLoading: false,
+        isSaving: false,
+        error: null,
+        data: []
+      }
+    },
+    myMentors: {
+      isLoading: false,
+      isSaving: false,
+      error: null,
       showEditMentorModal: null,
       showAddMentorModal: null,
       data: [
@@ -147,31 +302,47 @@ const portfolioReducer = (state = initialState, action) => {
         confirmVisibilityModalContent: payload.content
       }
     case SET_SHARE_MODAL_SUCCESS:
-      // debugger
       return {
         ...state,
         showSharePortfolioModal: payload.visibility
       }
     case SET_SHARE_MODAL_CONTENT_SUCCESS:
-      // debugger
       return {
         ...state,
         showSharePortfolioModalContent: payload.content
       }
-    case GET_PORTFOLIO_PRIVACY_SUCCESS:
+    case GET_SHARING_SETTINGS:
       return {
         ...state,
-        publishToPeers: payload.data.publishToPeers,
-        publishToPublic: payload.data.publishToPublic
+        areLoadingSharingSettings: true
       }
-    case UPDATE_PORTFOLIO_PRIVACY:
+    case GET_SHARING_SETTINGS_SUCCESS:
+      return {
+        ...state,
+        sharingSettings: payload.data,
+        areLoadingSharingSettings: false
+      }
+
+    case GET_SHARING_SETTINGS_ERROR:
+      return {
+        ...state,
+        error: payload.error,
+        areLoadingSharingSettings: false
+      }
+    case UPDATE_SHARING_SETTINGS:
       return {
         ...state,
         showSharePortfolioModal: false
       }
-    case UPDATE_PORTFOLIO_PRIVACY_SUCCESS:
-      // console.log('payload', payload)
-      //payload.type === 'unPublishing'
+    case UPDATE_SHARING_SETTINGS_SUCCESS:
+      return {
+        ...state,
+        sharingSettings: payload.data,
+        showSharePortfolioModal: payload.type !== 'unPublishing',
+        confirmVisibilityModal: false,
+        publishPortfolioModal: false
+      }
+    case UPDATE_SHARING_SETTINGS_ERROR:
       return {
         ...state,
         publishToPeers: payload.data.publishToPeers,
@@ -187,14 +358,10 @@ const portfolioReducer = (state = initialState, action) => {
         whoSection: {
           ...state.whoSection,
           userStory: {
-            ...state.whoSection.userStory,
-            showEditButton: payload.mode === 'edit',
-            showSaveButton: payload.mode === 'preview'
+            ...state.whoSection.userStory
           },
           myRelationships: {
-            ...state.whoSection.myRelationships,
-            showEditButton: payload.mode === 'edit',
-            showSaveButton: payload.mode === 'preview'
+            ...state.whoSection.myRelationships
           }
         }
       }
@@ -221,22 +388,9 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           [payload.type]: {
             ...state.whoSection[payload.type],
-            showEditButton: false,
-            showSaveButton: true,
             isLoading: false
           }
         }
-      }
-
-    case SAVE_WHO_SECTION_SUCCESS:
-      return {
-        ...state,
-        whoSection: { ...state.whoSection, [payload.type]: payload.data }
-      }
-    case SAVE_PERSONAL_BRAND_STORY_SUCCESS:
-      return {
-        ...state,
-        whoSection: { ...state.whoSection, youtubeLink: payload.youtubeLink }
       }
 
     // PORTFOLIO SECTIONS
@@ -263,6 +417,18 @@ const portfolioReducer = (state = initialState, action) => {
           }
         }
       }
+    case GET_USER_STORY_ERROR:
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          userStory: {
+            ...state.whoSection.userStory,
+            data: payload.error,
+            isLoading: false
+          }
+        }
+      }
     case SAVE_USER_STORY:
       return {
         ...state,
@@ -270,7 +436,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           userStory: {
             ...state.whoSection.userStory,
-            isLoading: true
+            isSaving: true
           }
         }
       }
@@ -282,7 +448,19 @@ const portfolioReducer = (state = initialState, action) => {
           userStory: {
             ...state.whoSection.userStory,
             data: payload.data,
-            isLoading: false
+            isSaving: false
+          }
+        }
+      }
+    case SAVE_USER_STORY_ERROR:
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          userStory: {
+            ...state.whoSection.userStory,
+            error: payload.error,
+            isSaving: false
           }
         }
       }
@@ -404,6 +582,18 @@ const portfolioReducer = (state = initialState, action) => {
           }
         }
       }
+    case GET_MY_FAILURES_ERROR:
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myFailures: {
+            ...state.whoSection.myFailures,
+            error: payload.error,
+            isLoading: false
+          }
+        }
+      }
     case CREATE_MY_FAILURE:
       return {
         ...state,
@@ -411,7 +601,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myFailures: {
             ...state.whoSection.myFailures,
-            isLoading: true
+            isSaving: true
           }
         }
       }
@@ -428,7 +618,25 @@ const portfolioReducer = (state = initialState, action) => {
           myFailures: {
             ...state.whoSection.myFailures,
             data: updatedData,
-            isLoading: false,
+            isSaving: false,
+            showAddFailureModal: false,
+            error: null
+          }
+        }
+      }
+    }
+
+    case CREATE_MY_FAILURE_ERROR: {
+      const { error } = payload
+
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myFailures: {
+            ...state.whoSection.myFailures,
+            isSaving: false,
+            error: error,
             showAddFailureModal: false
           }
         }
@@ -441,7 +649,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myFailures: {
             ...state.whoSection.myFailures,
-            isLoading: true
+            isSaving: true
           }
         }
       }
@@ -456,7 +664,23 @@ const portfolioReducer = (state = initialState, action) => {
           myFailures: {
             ...state.whoSection.myFailures,
             data: updatedData,
-            isLoading: false,
+            isSaving: false,
+            showEditFailureModal: false
+          }
+        }
+      }
+    }
+    case UPDATE_MY_FAILURE_ERROR: {
+      const { error } = payload
+
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myFailures: {
+            ...state.whoSection.myFailures,
+            isSaving: false,
+            error: error,
             showEditFailureModal: false
           }
         }
@@ -516,7 +740,8 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myMentors: {
             ...state.whoSection.myMentors,
-            isLoading: true
+            isLoading: true,
+            error: null
           }
         }
       }
@@ -528,10 +753,25 @@ const portfolioReducer = (state = initialState, action) => {
           myMentors: {
             ...state.whoSection.myMentors,
             data: payload.data,
-            isLoading: false
+            isLoading: false,
+            error: null
           }
         }
       }
+    case GET_MY_MENTORS_ERROR: {
+      const { error } = payload
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myMentors: {
+            ...state.whoSection.myMentors,
+            isLoading: false,
+            error: error
+          }
+        }
+      }
+    }
     case CREATE_MY_MENTOR:
       return {
         ...state,
@@ -539,7 +779,8 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myMentors: {
             ...state.whoSection.myMentors,
-            isLoading: true
+            isSaving: true,
+            error: null
           }
         }
       }
@@ -557,8 +798,24 @@ const portfolioReducer = (state = initialState, action) => {
           myMentors: {
             ...state.whoSection.myMentors,
             data: updatedData,
-            isLoading: false,
-            showAddMentorModal: null
+            isSaving: false,
+            showAddMentorModal: null,
+            error: null
+          }
+        }
+      }
+    }
+
+    case CREATE_MY_MENTOR_ERROR: {
+      const { error } = payload
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myMentors: {
+            ...state.whoSection.myMentors,
+            isSaving: false,
+            error: error
           }
         }
       }
@@ -571,7 +828,8 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myMentors: {
             ...state.whoSection.myMentors,
-            isLoading: true
+            isSaving: true,
+            error: null
           }
         }
       }
@@ -588,8 +846,24 @@ const portfolioReducer = (state = initialState, action) => {
           myMentors: {
             ...state.whoSection.myMentors,
             data: updatedData,
-            isLoading: false,
-            showEditMentorModal: false
+            isSaving: false,
+            showEditMentorModal: false,
+            error: null
+          }
+        }
+      }
+    }
+
+    case UPDATE_MY_MENTOR_ERROR: {
+      const { error } = payload
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myMentors: {
+            ...state.whoSection.myMentors,
+            isSaving: false,
+            error: error
           }
         }
       }
@@ -602,7 +876,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myMentors: {
             ...state.whoSection.myMentors,
-            isLoading: true
+            isSaving: true
           }
         }
       }
@@ -619,7 +893,7 @@ const portfolioReducer = (state = initialState, action) => {
           myMentors: {
             ...state.whoSection.myMentors,
             data: updatedData,
-            isLoading: false
+            isSaving: false
           }
         }
       }
@@ -632,7 +906,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myMentors: {
             ...state.whoSection.myMentors,
-            isLoading: false,
+            isSaving: false,
             error: payload.error
           }
         }
@@ -645,7 +919,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myMentors: {
             ...state.whoSection.myMentors,
-            isLoading: true
+            isSaving: true
           }
         }
       }
@@ -662,7 +936,7 @@ const portfolioReducer = (state = initialState, action) => {
           myMentors: {
             ...state.whoSection.myMentors,
             data: updatedData,
-            isLoading: false,
+            isSaving: false,
             showMentorModal: false
           }
         }
@@ -676,7 +950,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myMentors: {
             ...state.whoSection.myMentors,
-            isLoading: false,
+            isSaving: false,
             error: payload.error
           }
         }
@@ -689,7 +963,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myFailures: {
             ...state.whoSection.myFailures,
-            isLoading: true
+            isSaving: true
           }
         }
       }
@@ -706,7 +980,9 @@ const portfolioReducer = (state = initialState, action) => {
           myFailures: {
             ...state.whoSection.myFailures,
             data: updatedData,
-            isLoading: false
+            isSaving: false,
+            showEditFailureModal: false,
+            showAddFailureModal: false
           }
         }
       }
@@ -719,8 +995,10 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myFailures: {
             ...state.whoSection.myFailures,
-            isLoading: false,
-            error: payload.error
+            isSaving: false,
+            error: payload.error,
+            showEditFailureModal: false,
+            showAddFailureModal: false
           }
         }
       }
@@ -732,7 +1010,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myFailures: {
             ...state.whoSection.myFailures,
-            isLoading: true
+            isSaving: true
           }
         }
       }
@@ -749,7 +1027,7 @@ const portfolioReducer = (state = initialState, action) => {
           myFailures: {
             ...state.whoSection.myFailures,
             data: updatedData,
-            isLoading: false
+            isSaving: false
           }
         }
       }
@@ -762,11 +1040,1013 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myFailures: {
             ...state.whoSection.myFailures,
-            isLoading: false,
+            isSaving: false,
             error: payload.error
           }
         }
       }
+
+    ////////////////////// WHAT CAN I DO /////////////////////////
+    case GET_SKILLS:
+      return {
+        ...state
+      }
+    case GET_SKILLS_SUCCESS:
+      return {
+        ...state,
+        skills: payload.data
+      }
+
+    case GET_MY_PROJECTS:
+      return {
+        ...state
+      }
+    case GET_MY_PROJECTS_SUCCESS:
+      return {
+        ...state,
+        whatSection: {
+          ...state.whatSection,
+          myProjects: {
+            ...state.whatSection.myProjects,
+            data: payload.data
+          }
+        }
+      }
+
+    ///////////////// HOW DO I PROVE IT ////////////////////
+
+    case SHOW_ADD_EDUCATION_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            educations: {
+              ...state.howSection?.myAlignments?.educations,
+              isLoading: true,
+              error: null,
+              showAddModal: true
+            }
+          }
+        }
+      }
+    case HIDE_ADD_EDUCATION_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            educations: {
+              ...state.howSection?.myAlignments?.educations,
+              isLoading: true,
+              error: null,
+              showAddModal: null
+            }
+          }
+        }
+      }
+
+    case SHOW_EDIT_EDUCATION_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            educations: {
+              ...state.howSection?.myAlignments?.educations,
+              isLoading: true,
+              error: null,
+              showEditModal: action.payload
+            }
+          }
+        }
+      }
+    case HIDE_EDIT_EDUCATION_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            educations: {
+              ...state.howSection?.myAlignments?.educations,
+              isLoading: true,
+              error: null,
+              showEditModal: null
+            }
+          }
+        }
+      }
+
+    case SHOW_ADD_CREDENTIAL_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: true,
+              error: null,
+              showAddModal: true
+            }
+          }
+        }
+      }
+    case HIDE_ADD_CREDENTIAL_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: true,
+              error: null,
+              showAddModal: null
+            }
+          }
+        }
+      }
+
+    case SHOW_EDIT_CREDENTIAL_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: true,
+              error: null,
+              showEditModal: action.payload
+            }
+          }
+        }
+      }
+    case HIDE_EDIT_CREDENTIAL_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: true,
+              error: null,
+              showEditModal: null
+            }
+          }
+        }
+      }
+
+    case GET_MY_EDUCATIONS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            educations: {
+              ...state.howSection?.myAlignments?.educations,
+              isLoading: true,
+              error: null
+            }
+          }
+        }
+      }
+    case GET_MY_EDUCATIONS_SUCCESS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            educations: {
+              ...state.howSection?.myAlignments?.educations,
+              isLoading: true,
+              error: null,
+              data: payload.data
+            }
+          }
+        }
+      }
+    case GET_MY_EDUCATIONS_ERROR:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            educations: {
+              ...state.howSection?.myAlignments?.educations,
+              isLoading: true,
+              error: payload.error
+            }
+          }
+        }
+      }
+
+    case UPDATE_MY_EDUCATION:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            educations: {
+              ...state.howSection?.myAlignments?.educations,
+              isSaving: true,
+              error: null
+            }
+          }
+        }
+      }
+
+    case UPDATE_MY_EDUCATION_SUCCESS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection.myAlignments,
+            educations: {
+              ...state.howSection.myAlignments.educations,
+              isSaving: false,
+              data: updateRow(
+                state.howSection.myAlignments.educations.data,
+                payload.data.id,
+                payload.data
+              ),
+              showEditModal: false
+            }
+          }
+        }
+      }
+    case UPDATE_MY_EDUCATION_ERROR:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection.myAlignments,
+            educations: {
+              ...state.howSection.myAlignments.educations,
+              isSaving: false,
+              error: payload.error,
+              showEditModal: false
+            }
+          }
+        }
+      }
+
+    case ADD_MY_EDUCATION:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection.myAlignments,
+            educations: {
+              ...state.howSection.myAlignments.educations,
+              isSaving: true,
+              error: null,
+              showEditModal: false
+            }
+          }
+        }
+      }
+    case ADD_MY_EDUCATION_SUCCESS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection.myAlignments,
+            educations: {
+              ...state.howSection.myAlignments.educations,
+              isSaving: false,
+              data: createRow(
+                state.howSection.myAlignments.educations.data,
+                payload.data
+              ),
+              showAddModal: false
+            }
+          }
+        }
+      }
+    case ADD_MY_EDUCATION_ERROR:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection.myAlignments,
+            educations: {
+              ...state.howSection.myAlignments.educations,
+              isSaving: false,
+              error: action.payload.error,
+              showAddModal: false
+            }
+          }
+        }
+      }
+
+    case DELETE_MY_EDUCATION:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection.myAlignments,
+            educations: {
+              ...state.howSection.myAlignments.educations,
+              isLoading: true,
+              error: null
+            }
+          }
+        }
+      }
+    case DELETE_MY_EDUCATION_SUCCESS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection.myAlignments,
+            educations: {
+              ...state.howSection.myAlignments.educations,
+              isLoading: false,
+              data: removeRow(
+                state.howSection.myAlignments.educations.data,
+                payload.data.id
+              ),
+              showEditModal: false
+            }
+          }
+        }
+      }
+    case DELETE_MY_EDUCATION_ERROR:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection.myAlignments,
+            educations: {
+              ...state.howSection.myAlignments.educations,
+              isLoading: false,
+              error: payload.error,
+              showEditModal: false
+            }
+          }
+        }
+      }
+
+    // Credentials cases
+    case GET_MY_CREDENTIALS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: true,
+              error: null
+            }
+          }
+        }
+      }
+
+    case GET_MY_CREDENTIALS_SUCCESS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: true,
+              error: null,
+              data: payload.data
+            }
+          }
+        }
+      }
+    case GET_MY_CREDENTIALS_ERROR:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: true,
+              error: payload.error
+            }
+          }
+        }
+      }
+
+    case UPDATE_MY_CREDENTIAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isSaving: true,
+              error: null
+            }
+          }
+        }
+      }
+    case UPDATE_MY_CREDENTIAL_SUCCESS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isSaving: false,
+              showEditModal: false,
+              data: updateRow(
+                state.howSection.myAlignments.credentials.data,
+                payload.data.id,
+                payload.data
+              )
+            }
+          }
+        }
+      }
+    case UPDATE_MY_CREDENTIAL_ERROR:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isSaving: false,
+              error: payload.error,
+              showEditModal: false
+            }
+          }
+        }
+      }
+
+    case ADD_MY_CREDENTIAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isSaving: true,
+              error: null
+            }
+          }
+        }
+      }
+    case ADD_MY_CREDENTIAL_SUCCESS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isSaving: false,
+              data: createRow(
+                state.howSection.myAlignments.credentials.data,
+                payload.data
+              ),
+              showAddModal: false
+            }
+          }
+        }
+      }
+    case ADD_MY_CREDENTIAL_ERROR:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isSaving: false,
+              error: payload.error,
+              showAddModal: false
+            }
+          }
+        }
+      }
+
+    case DELETE_MY_CREDENTIAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: true,
+              error: null
+            }
+          }
+        }
+      }
+    case DELETE_MY_CREDENTIAL_SUCCESS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: false,
+              data: removeRow(
+                state.howSection.myAlignments.credentials.data,
+                payload.data.id
+              ),
+              showEditModal: false
+            }
+          }
+        }
+      }
+    case DELETE_MY_CREDENTIAL_ERROR:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myAlignments: {
+            ...state.howSection?.myAlignments,
+            credentials: {
+              ...state.howSection?.myAlignments?.credentials,
+              isLoading: false,
+              error: action.payload.error,
+              showEditModal: false
+            }
+          }
+        }
+      }
+
+    // Immersions cases
+    case GET_MY_IMMERSIONS:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isLoading: true,
+            error: null
+          }
+        }
+      }
+    case GET_MY_IMMERSIONS_SUCCESS:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isLoading: false,
+            data: action.payload.data
+          }
+        }
+      }
+    case GET_MY_IMMERSIONS_ERROR:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isLoading: false,
+            error: action.payload.error
+          }
+        }
+      }
+
+    case UPDATE_MY_IMMERSION:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isSaving: true,
+            error: null
+          }
+        }
+      }
+    case UPDATE_MY_IMMERSION_SUCCESS:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isSaving: false,
+            data: updateRow(
+              state.myProductivity.immersions.data,
+              action.payload.data.id,
+              action.payload.data
+            )
+          }
+        }
+      }
+    case UPDATE_MY_IMMERSION_ERROR:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isSaving: false,
+            error: action.payload.error
+          }
+        }
+      }
+
+    case ADD_MY_IMMERSION:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isSaving: true,
+            error: null
+          }
+        }
+      }
+    case ADD_MY_IMMERSION_SUCCESS:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isSaving: false,
+            data: createRow(
+              state.myProductivity.immersions.data,
+              action.payload.data
+            )
+          }
+        }
+      }
+    case ADD_MY_IMMERSION_ERROR:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isSaving: false,
+            error: action.payload.error
+          }
+        }
+      }
+
+    case DELETE_MY_IMMERSION:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isLoading: true,
+            error: null
+          }
+        }
+      }
+    case DELETE_MY_IMMERSION_SUCCESS:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isLoading: false,
+            data: removeRow(
+              state.myProductivity.immersions.data,
+              action.payload.data.id
+            )
+          }
+        }
+      }
+    case DELETE_MY_IMMERSION_ERROR:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          immersions: {
+            ...state.myProductivity.immersions,
+            isLoading: false,
+            error: action.payload.error
+          }
+        }
+      }
+
+    // Work Experience cases
+    case GET_MY_WORK_EXPERIENCES:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isLoading: true,
+            error: null
+          }
+        }
+      }
+    case GET_MY_WORK_EXPERIENCES_SUCCESS:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isLoading: false,
+            data: action.payload.data
+          }
+        }
+      }
+    case GET_MY_WORK_EXPERIENCES_ERROR:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isLoading: false,
+            error: action.payload.error
+          }
+        }
+      }
+
+    case UPDATE_MY_WORK_EXPERIENCE:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isSaving: true,
+            error: null
+          }
+        }
+      }
+    case UPDATE_MY_WORK_EXPERIENCE_SUCCESS:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isSaving: false,
+            data: updateRow(
+              state.myProductivity.workExperience.data,
+              action.payload.data.id,
+              action.payload.data
+            )
+          }
+        }
+      }
+    case UPDATE_MY_WORK_EXPERIENCE_ERROR:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isSaving: false,
+            error: action.payload.error
+          }
+        }
+      }
+
+    case ADD_MY_WORK_EXPERIENCE:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isSaving: true,
+            error: null
+          }
+        }
+      }
+    case ADD_MY_WORK_EXPERIENCE_SUCCESS:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isSaving: false,
+            data: createRow(
+              state.myProductivity.workExperience.data,
+              action.payload.data
+            )
+          }
+        }
+      }
+    case ADD_MY_WORK_EXPERIENCE_ERROR:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isSaving: false,
+            error: action.payload.error
+          }
+        }
+      }
+
+    case DELETE_MY_WORK_EXPERIENCE:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isLoading: true,
+            error: null
+          }
+        }
+      }
+    case DELETE_MY_WORK_EXPERIENCE_SUCCESS:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isLoading: false,
+            data: removeRow(
+              state.myProductivity.workExperience.data,
+              action.payload.data.id
+            )
+          }
+        }
+      }
+    case DELETE_MY_WORK_EXPERIENCE_ERROR:
+      return {
+        ...state,
+        myProductivity: {
+          ...state.myProductivity,
+          workExperience: {
+            ...state.myProductivity.workExperience,
+            isLoading: false,
+            error: action.payload.error
+          }
+        }
+      }
+
+    case GET_MY_COMPETITIVENESS:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isLoading: true,
+          error: null
+        }
+      }
+    case GET_MY_COMPETITIVENESS_SUCCESS:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isLoading: false,
+          data: action.payload.data
+        }
+      }
+    case GET_MY_COMPETITIVENESS_ERROR:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isLoading: false,
+          error: action.payload.error
+        }
+      }
+
+    case UPDATE_MY_COMPETITIVENESS:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isSaving: true,
+          error: null
+        }
+      }
+    case UPDATE_MY_COMPETITIVENESS_SUCCESS:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isSaving: false,
+          data: updateRow(
+            state.myCompetitiveness.data,
+            action.payload.data.id,
+            action.payload.data
+          )
+        }
+      }
+    case UPDATE_MY_COMPETITIVENESS_ERROR:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isSaving: false,
+          error: action.payload.error
+        }
+      }
+
+    case ADD_MY_COMPETITIVENESS:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isSaving: true,
+          error: null
+        }
+      }
+    case ADD_MY_COMPETITIVENESS_SUCCESS:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isSaving: false,
+          data: createRow(state.myCompetitiveness.data, action.payload.data)
+        }
+      }
+    case ADD_MY_COMPETITIVENESS_ERROR:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isSaving: false,
+          error: action.payload.error
+        }
+      }
+
+    case DELETE_MY_COMPETITIVENESS:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isLoading: true,
+          error: null
+        }
+      }
+    case DELETE_MY_COMPETITIVENESS_SUCCESS:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isLoading: false,
+          data: removeRow(state.myCompetitiveness.data, action.payload.data.id)
+        }
+      }
+    case DELETE_MY_COMPETITIVENESS_ERROR:
+      return {
+        ...state,
+        myCompetitiveness: {
+          ...state.myCompetitiveness,
+          isLoading: false,
+          error: action.payload.error
+        }
+      }
+
     default:
       return state
   }

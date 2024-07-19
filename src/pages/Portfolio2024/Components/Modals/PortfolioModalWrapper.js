@@ -1,6 +1,5 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import SectionActions from '../Actions/SectionActions'
 
 function PortfolioModalWrapper(props) {
@@ -23,7 +22,7 @@ function PortfolioModalWrapper(props) {
               color: '#231F20',
               borderBottom: '1px solid #e3e3e3'
             }}
-            className={'text-uppercase pb-3'}
+            className={'text-uppercase pb-4'}
           >
             {props.title}
           </div>

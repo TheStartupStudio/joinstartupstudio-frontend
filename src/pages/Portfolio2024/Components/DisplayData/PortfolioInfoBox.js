@@ -5,7 +5,7 @@ function PortfolioInfoBox(props) {
   return (
     <div
       className={'portfolio-info-container'}
-      style={{ height: props.height }}
+      style={{ minHeight: props.height }}
     >
       <PortfolioInfo {...props} />
     </div>

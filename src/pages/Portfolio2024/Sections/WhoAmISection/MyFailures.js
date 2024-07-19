@@ -17,11 +17,12 @@ function MyFailures(props) {
   const showFailureModal = useSelector(
     (state) => state.portfolio.whoSection.myFailures.showAddFailureModal
   )
+
   const [myFailures, setMyFailures] = useState(null)
 
   useEffect(() => {
-    if (props.myFailures) setMyFailures(props.myFailures)
-  }, [props.myFailures])
+    if (props.data) setMyFailures(props.data)
+  }, [props.data])
 
   const handleShowFailureModal = () => {
     dispatch(showAddFailureModal())
@@ -44,9 +45,13 @@ function MyFailures(props) {
     }
   ]
 
+  const isSaving = useSelector(
+    (state) => state.portfolio.whoSection.myFailures.isSaving
+  )
+
   return (
     <div className={'d-flex flex-column gap-4'}>
-      {myFailures?.data?.map((myFailure, index) => {
+      {myFailures?.map((myFailure, index) => {
         return (
           <React.Fragment key={index}>
             <MyFailure data={myFailure} isEditSection={isEditSection} />
@@ -61,12 +66,14 @@ function MyFailures(props) {
       )}
       <SectionActions actions={actions} />
 
-      <MyFailureModal
-        onHide={handleHideFailureModal}
-        show={showFailureModal}
-        title={'Add Failure'}
-        data={props.data}
-      />
+      {showFailureModal && (
+        <MyFailureModal
+          onHide={handleHideFailureModal}
+          show={showFailureModal}
+          title={'Add Failure'}
+          isSaving={isSaving}
+        />
+      )}
     </div>
   )
 }

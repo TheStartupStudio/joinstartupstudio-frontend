@@ -112,7 +112,7 @@ export const authRoutes = [
   { path: '/terms', component: Terms },
   // { path: '/preview-portfolio', component: PreviewPortfolioNew },
   { path: '/old-portfolio', component: EditPortfolioNew, exact: true },
-  { path: '/edit-portfolio', component: Portfolio2024, exact: true },
+  { path: '/my-portfolio', component: Portfolio2024, exact: true },
   { path: '/resources', component: Resources },
   { path: '/my-students', component: MyStudents },
   { path: '/iamr-certification-guide', component: IamrCertificationGuide },
@@ -173,16 +173,17 @@ export const authRoutes = [
     path: '/iamr-certification-system/:certificationType?/:id?/:type?',
     component: IamrCertificationSystem
   },
-  {
-    path: '/edit-portfolio/recommendation/:id',
-    component: EditPortfolioNew,
-    exact: true
-  },
+  // {
+  //   path: '/edit-portfolio/recommendation/:id',
+  //   component: EditPortfolioNew,
+  //   exact: true
+  // },
   {
     path: '/iamr-certification-system',
     component: IamrCertificationSystem,
     exact: true
-  }
+  },
+  { path: '/archived-portfolio', component: EditPortfolioNew, exact: true }
 ]
 
 export const authRoutesWithProps = [

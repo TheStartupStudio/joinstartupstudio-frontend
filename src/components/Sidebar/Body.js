@@ -123,6 +123,17 @@ const Body = (props) => {
         <DropdownItem title={'SPARK WIDGETS'} to={'/my-spark/widgets'} />
         <DropdownItem title={'SPARK ARCHIVE'} to={'/my-spark/archive'} />
       </ParentDropdownItem>
+      <SidebarItem
+        onClick={() => {
+          dispatch(setAccordionToggled(false))
+          props.hideHeaderIcons()
+        }}
+        to={'/my-portfolio'}
+        className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+        srcImage={FolderSidebarImage}
+        title="MY PORTFOLIO"
+        isDropdown={false}
+      />
     </ul>
   )
 }

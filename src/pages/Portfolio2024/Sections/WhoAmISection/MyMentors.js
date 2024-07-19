@@ -10,8 +10,8 @@ function MyMentors(props) {
   const [isEditSection, setIsEditSection] = useState(false)
 
   useEffect(() => {
-    if (props.myMentors) setMyMentors(props.myMentors)
-  }, [props.myMentors])
+    if (props.data) setMyMentors(props.data)
+  }, [props.data])
   const mode = useSelector((state) => state.portfolio.mode)
 
   const actions = [
@@ -30,7 +30,7 @@ function MyMentors(props) {
   return (
     <div className={'container'}>
       <div className={'row '}>
-        {myMentors?.data?.map((mentor, index) => {
+        {myMentors?.map((mentor, index) => {
           return (
             <React.Fragment key={index}>
               <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>

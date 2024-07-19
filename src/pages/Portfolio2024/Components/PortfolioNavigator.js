@@ -9,8 +9,16 @@ function PortfolioNavigator(props) {
 
   const sections = [
     { type: 'who-section', name: 'Who Am I?' },
-    { type: 'what-section', name: 'What Can I Do?', disabled: true },
-    { type: 'how-section', name: 'How Do I Prove It?', disabled: true },
+    {
+      type: 'what-section',
+      name: 'What Can I Do?'
+      // disabled: true
+    },
+    {
+      type: 'how-section',
+      name: 'How Do I Prove It?',
+      disabled: true
+    },
     { type: 'start-section', name: 'Start', disabled: true }
   ]
   const activeSectionIndex = sections.findIndex(

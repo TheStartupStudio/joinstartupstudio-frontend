@@ -19,6 +19,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import avator from '../../assets/images/profile-image.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeSidebarState } from '../../redux'
+import { getUserStory } from '../../redux/portfolio/Actions'
 
 const NavbarIcon = (props) => {
   return (
@@ -49,6 +50,7 @@ const Navbar = (props) => {
   const [showDropDown, setShowDropDown] = useState(false)
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
   const { isAdmin } = useSelector((state) => state.user.user)
+  const userStory = useSelector((state) => state.portfolio.whoSection.userStory)
 
   useEffect(() => {
     const urlSegments = location.pathname.split('/')
@@ -69,6 +71,10 @@ const Navbar = (props) => {
   const showModal = () => {
     props.setShowContactModal(true)
   }
+
+  useEffect(() => {
+    dispatch(getUserStory())
+  }, [])
 
   const handleMobileNavBar = () => {
     if (showMobileDropDown === true) {
@@ -235,9 +241,15 @@ const Navbar = (props) => {
                   >
                     <div className="profile-dropdown me-1 ms-3 desktop-menu d-none d-xl-block">
                       <img
+                        // src={
+                        //   props.mainState?.user?.user?.user?.profileImage
+                        //     ? props.mainState?.user?.user?.user?.profileImage
+                        //     : avator
+                        // }
+
                         src={
-                          props.mainState?.user?.user?.user?.profileImage
-                            ? props.mainState?.user?.user?.user?.profileImage
+                          userStory?.data?.userImageUrl
+                            ? userStory?.data?.userImageUrl
                             : avator
                         }
                         alt="Profile"
@@ -268,7 +280,7 @@ const Navbar = (props) => {
 
                     <Link
                       className="dropdown-item py-2 dropdown-menu-hover"
-                      to="/edit-portfolio"
+                      to="/archived-portfolio"
                       onClick={() => setShowDropDown((preState) => !preState)}
                     >
                       MY PORTFOLIO

@@ -1,37 +1,69 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faFacebookSquare,
-  faInstagram,
-  faLinkedin,
-  faTwitterSquare
-} from '@fortawesome/free-brands-svg-icons'
-import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
+import { FaInstagram, FaLinkedinIn, FaGlobe } from 'react-icons/fa'
+import { FaSquareFacebook, FaSquareXTwitter } from 'react-icons/fa6'
+import '../../Portfolio2024/index.css'
 
-const UserSocialMedia = () => {
+const ensureUrlProtocol = (url) => {
+  if (url?.startsWith('http://') || url?.startsWith('https://')) {
+    return url
+  } else {
+    return `https://${url}`
+  }
+}
+
+const UserSocialMedia = (props) => {
+  const {
+    linkedIn = null,
+    facebook = null,
+    instagram = null,
+    xTwitter = null,
+    website = null
+  } = props.data || {}
+
+  const socialMediaMap = new Map([
+    [
+      'LinkedIn',
+      { Icon: FaLinkedinIn, url: linkedIn && ensureUrlProtocol(linkedIn) }
+    ],
+    [
+      'Instagram',
+      { Icon: FaInstagram, url: instagram && ensureUrlProtocol(instagram) }
+    ],
+    [
+      'Twitter',
+      { Icon: FaSquareXTwitter, url: xTwitter && ensureUrlProtocol(xTwitter) }
+    ],
+    [
+      'Facebook',
+      { Icon: FaSquareFacebook, url: facebook && ensureUrlProtocol(facebook) }
+    ],
+    ['Website', { Icon: FaGlobe, url: website && ensureUrlProtocol(website) }]
+  ])
+
   return (
-    <div className={'user-social-media'}>
-      <a target="_blank">
-        <FontAwesomeIcon icon={faLinkedin} className={'social-media-icon'} />
-      </a>
-      <a target="_blank">
-        <FontAwesomeIcon
-          icon={faTwitterSquare}
-          className={'social-media-icon'}
-        />
-      </a>
-      <a target="_blank">
-        <FontAwesomeIcon icon={faInstagram} className={'social-media-icon'} />
-      </a>
-      <a target="_blank">
-        <FontAwesomeIcon
-          icon={faFacebookSquare}
-          className={'social-media-icon'}
-        />
-      </a>
-      <a target="_blank">
-        <FontAwesomeIcon icon={faGlobe} className={'social-media-icon'} />
-      </a>
+    <div className="user-social-media d-flex">
+      {[...socialMediaMap].map(([key, { Icon, url }], index) => (
+        <span key={index} className="social-media-icon-wrapper">
+          {url ? (
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={key}
+            >
+              <Icon className="social-media-icon" />
+            </a>
+          ) : (
+            <div
+              className="social-media-icon-disabled"
+              aria-label={key}
+              style={{ pointerEvents: 'none' }}
+            >
+              <Icon className="social-media-icon" />
+            </div>
+          )}
+        </span>
+      ))}
     </div>
   )
 }

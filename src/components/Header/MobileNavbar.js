@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
 import { Link } from 'react-router-dom'
@@ -6,7 +6,7 @@ import { NavLink, useHistory } from 'react-router-dom/cjs/react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faBell } from '@fortawesome/free-solid-svg-icons'
 import Notifications from './notifications'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { changeSidebarState } from '../../redux'
 import focusIcon from '../../assets/images/focus_icon.png'
 import focusIconWhite from '../../assets/images/focus_icon_white.png'
@@ -16,6 +16,7 @@ import notesIconHovered from '../../assets/images/notes-icon-active.svg'
 import mySparkBlack from '../../assets/icons/Asset 1.svg'
 import mySparkWhite from '../../assets/icons/Group 3819.svg'
 import avator from '../../assets/images/profile-image.png'
+import { getUserStory } from '../../redux/portfolio/Actions'
 
 const MobileNavbar = (props) => {
   const dispatch = useDispatch()
@@ -24,6 +25,11 @@ const MobileNavbar = (props) => {
   const showModal = () => {
     props.setShowContactModal(true)
   }
+
+  useEffect(() => {
+    dispatch(getUserStory())
+  }, [])
+  const userStory = useSelector((state) => state.portfolio.whoSection.userStory)
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light mobile-menu">
       <div className="container-fluid">
@@ -191,9 +197,14 @@ const MobileNavbar = (props) => {
         >
           <div className="profile-dropdown me-1 ms-3 desktop-menu">
             <img
+              // src={
+              //   props.mainState?.user?.user?.user?.profileImage
+              //     ? props.mainState?.user?.user?.user?.profileImage
+              //     : avator
+              // }
               src={
-                props.mainState?.user?.user?.user?.profileImage
-                  ? props.mainState?.user?.user?.user?.profileImage
+                userStory?.data?.userImageUrl
+                  ? userStory?.data?.userImageUrl
                   : avator
               }
               alt="Profile"
@@ -220,7 +231,7 @@ const MobileNavbar = (props) => {
           {
             <Link
               className="dropdown-item py-2 dropdown-menu-hover"
-              to="/edit-portfolio"
+              to="/archived-portfolio"
               onClick={() => setShowDropDown((preState) => !preState)}
             >
               MY PORTFOLIO

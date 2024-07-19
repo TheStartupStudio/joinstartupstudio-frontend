@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PortfolioModalWrapper from './PortfolioModalWrapper'
 import EditPortfolioSubmission from '../EditPortfolioSubmission'
 import ReactQuill from 'react-quill'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   createMyFailure,
   deleteMentorImage,
@@ -32,6 +32,7 @@ function MyFailureModal(props) {
       setAssessment(props.data?.assessment)
       setOutcome(props.data?.outcome)
       setId(props.data?.id)
+      setConfirmDeleteModal(false)
     }
   }, [props.data])
   const isEdit = () => !!id
@@ -60,6 +61,8 @@ function MyFailureModal(props) {
     {
       type: 'save',
       action: () => saveMyFailureData(),
+      isSaving: props.isSaving,
+      containSpinner: true,
       isDisplayed: true
     },
     {
@@ -96,6 +99,10 @@ function MyFailureModal(props) {
     }
   }
 
+  const handleDeleteImageFile = async () => {
+    setImageFile(null)
+  }
+
   return (
     <PortfolioModalWrapper {...props} actions={actions}>
       <div className={'row'}>
@@ -109,6 +116,7 @@ function MyFailureModal(props) {
               value={thumbnailUrl}
               title={'MY FAILURE STORY'}
               deleteImage={handleDeleteImage}
+              deleteImageFile={handleDeleteImageFile}
             />
           </div>
         </div>
