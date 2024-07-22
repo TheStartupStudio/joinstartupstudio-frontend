@@ -8,6 +8,7 @@ import {
   updateMyCredential
 } from '../../../../redux/portfolio/Actions'
 import CredentialCardModal from './CredentialCardModal'
+import { convertDateToMonthYear } from '../../../../utils/helpers'
 
 function CredentialCard(props) {
   const { credential, isEditSection } = props
@@ -64,7 +65,7 @@ function CredentialCard(props) {
                 </div>
               </div>
               <div className={'text-end organization-date'}>
-                {credential.dateAwarded}
+                {convertDateToMonthYear(credential.dateAwarded)}
               </div>
             </div>
             <div>

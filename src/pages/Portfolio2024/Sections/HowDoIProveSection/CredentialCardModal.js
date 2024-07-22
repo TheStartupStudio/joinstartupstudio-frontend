@@ -13,6 +13,7 @@ import {
 } from '../../../../redux/portfolio/Actions'
 import { useDispatch } from 'react-redux'
 import useImageEditor from '../../../../hooks/useImageEditor'
+import { formatDateToInputValue, uploadImage } from '../../../../utils/helpers'
 
 const EducationCardModal = (props) => {
   const dispatch = useDispatch()
@@ -26,7 +27,8 @@ const EducationCardModal = (props) => {
     updateCroppedImage,
     imageUrl,
     setImageUrl,
-    avatarEditorActions
+    avatarEditorActions,
+    editorRef
   } = useImageEditor()
 
   const [credentialData, setCredentialData] = useState(
@@ -34,7 +36,7 @@ const EducationCardModal = (props) => {
       credentialTitle: '',
       certifyingOrganization: '',
       website: '',
-      dateAwarded: '',
+      dateAwarded: formatDateToInputValue(new Date()),
       description: '',
       imageUrl: ''
     }
@@ -43,7 +45,12 @@ const EducationCardModal = (props) => {
   // useEffect(()=>{},[educationData])
   useEffect(() => {
     if (props.data) {
-      setCredentialData(props.data)
+      setCredentialData({
+        ...props.data,
+        dateAwarded: formatDateToInputValue(
+          props.data?.dateAwarded || new Date()
+        )
+      })
       setImageUrl(props.data.imageUrl)
     }
   }, [props.data])
@@ -54,6 +61,20 @@ const EducationCardModal = (props) => {
     setCredentialData(updatedData)
   }
 
+  const onSaveCredential = async () => {
+    let uploadedImageUrl
+    if (imageProperties.croppedImage) {
+      uploadedImageUrl = await uploadImage(imageProperties.croppedImage)
+    }
+
+    const newCredentialData = {
+      ...credentialData,
+      imageUrl: uploadedImageUrl ? uploadedImageUrl : credentialData.imageUrl
+    }
+    debugger
+    props.onSave?.(newCredentialData)
+  }
+
   const modalActions = [
     {
       type: 'hide',
@@ -62,12 +83,7 @@ const EducationCardModal = (props) => {
     },
     {
       type: 'save',
-      action: () =>
-        props.onSave({
-          ...credentialData,
-          imageUrl,
-          imageFile: imageProperties.originalImage
-        }),
+      action: () => onSaveCredential(),
       isDisplayed: true
     }
   ]
@@ -120,7 +136,7 @@ const EducationCardModal = (props) => {
         <div className={'row'}>
           <div className={' col-md-4 '}>
             {/*<div className="upload-image me-2 mb-1">*/}
-            <div className="p-0 mb-1">
+            <div className='p-0 mb-1'>
               <ReactImageUpload
                 value={imageUrl}
                 {...imageProperties}
@@ -131,6 +147,7 @@ const EducationCardModal = (props) => {
                 onPositionChange={handlePositionChange}
                 actions={avatarEditorActions}
                 title={'Credential Image'}
+                editorRef={editorRef}
               />
             </div>
           </div>

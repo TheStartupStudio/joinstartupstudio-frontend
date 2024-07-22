@@ -330,71 +330,8 @@ export const deleteMyEducationAPI = async (educationId) => {
 
 export const getMyCredentialsAPI = async () => {
   try {
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    await delay(2000)
-
-    const data = [
-      {
-        id: 1,
-        credentialTitle: 'Certified JavaScript Developer',
-        dateAwarded: '2023-06-15',
-        certifyingOrganization: 'JavaScript Institute',
-        website: 'https://www.javascriptinstitute.com',
-        imageUrl:
-          'https://www.javascriptinstitute.com/images/certified_js_developer.png',
-        description:
-          'Certification awarded for demonstrating expertise in JavaScript programming and development.'
-      },
-      {
-        id: 2,
-        credentialTitle: 'AWS Certified Solutions Architect',
-        dateAwarded: '2022-09-10',
-        certifyingOrganization: 'Amazon Web Services',
-        website:
-          'https://aws.amazon.com/certification/certified-solutions-architect/',
-        imageUrl:
-          'https://aws.amazon.com/images/certified_solutions_architect.png',
-        description:
-          'Certification awarded for demonstrating expertise in designing and deploying scalable systems on AWS.'
-      },
-      {
-        id: 3,
-        credentialTitle: 'Certified Data Science Professional',
-        dateAwarded: '2021-12-01',
-        certifyingOrganization: 'Data Science Council of America',
-        website: 'https://www.datasciencecouncil.com',
-        imageUrl:
-          'https://www.datasciencecouncil.com/images/certified_data_science_professional.png',
-        description:
-          'Certification awarded for demonstrating knowledge in data analysis, machine learning, and statistical methods.'
-      },
-      {
-        id: 4,
-        credentialTitle: 'Google Cloud Professional Data Engineer',
-        dateAwarded: '2023-03-22',
-        certifyingOrganization: 'Google Cloud',
-        website: 'https://cloud.google.com/certification/data-engineer',
-        imageUrl:
-          'https://cloud.google.com/images/professional_data_engineer.png',
-        description:
-          'Certification awarded for expertise in building and maintaining data structures and databases on Google Cloud.'
-      },
-      {
-        id: 5,
-        credentialTitle: 'PMP: Project Management Professional',
-        dateAwarded: '2022-05-18',
-        certifyingOrganization: 'Project Management Institute',
-        website: 'https://www.pmi.org/certifications/project-management-pmp',
-        imageUrl: 'https://www.pmi.org/images/pmp_certification.png',
-        description:
-          'Certification awarded for demonstrating the skills and knowledge required to manage projects effectively.'
-      }
-    ]
-
-    return { data }
-
-    // const response = await axiosInstance.get('/hsPortfolio/credentials')
-    // return response
+    const response = await axiosInstance.get('/hsPortfolio/credentials')
+    return response
   } catch (e) {
     console.log('Error occurred during fetching credentials', e)
   }
@@ -403,7 +340,7 @@ export const getMyCredentialsAPI = async () => {
 export const updateMyCredentialAPI = async (credential) => {
   try {
     const response = await axiosInstance.put(
-      '/hsPortfolio/credentials',
+      `/hsPortfolio/credentials/${credential.id}`,
       credential
     )
     return response

@@ -70,7 +70,7 @@ const Index = ({
     fetchMyRelationships()
     fetchSharingSettings()
     fetchMyEducations()
-    // fetchMyCredentials()
+    fetchMyCredentials()
   }, [])
 
   useEffect(() => {

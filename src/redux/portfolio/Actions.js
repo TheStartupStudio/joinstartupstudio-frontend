@@ -1071,7 +1071,6 @@ export const deleteMyEducation = (educationId) => async (dispatch) => {
   dispatch({ type: DELETE_MY_EDUCATION })
   try {
     const response = await deleteMyEducationAPI(educationId)
-    debugger
     dispatch(deleteMyEducationSuccess(response.data))
   } catch (e) {
     dispatch(deleteMyEducationError(e))
@@ -1121,9 +1120,7 @@ export const getMyCredentialsError = (error) => {
 export const updateMyCredential = (credential) => async (dispatch) => {
   dispatch({ type: UPDATE_MY_CREDENTIAL })
   try {
-    debugger
     const response = await updateMyCredentialAPI(credential)
-    debugger
 
     dispatch(updateMyCredentialSuccess(response.data))
   } catch (e) {
@@ -1149,6 +1146,7 @@ export const updateMyCredentialError = (error) => {
 export const addMyCredential = (credential) => async (dispatch) => {
   dispatch({ type: ADD_MY_CREDENTIAL })
   try {
+    debugger
     const response = await addMyCredentialAPI(credential)
     dispatch(addMyCredentialSuccess(response.data))
   } catch (e) {

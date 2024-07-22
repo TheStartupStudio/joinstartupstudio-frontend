@@ -41,10 +41,8 @@ const EducationCardModal = (props) => {
     }
   )
 
-  console.log('educationData', educationData)
   useEffect(() => {
     if (props.data) {
-      debugger
       setEducationData({
         ...props.data,
         startDate: formatDateToInputValue(props.data?.startDate || new Date()),
