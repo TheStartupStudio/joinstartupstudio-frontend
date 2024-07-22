@@ -238,6 +238,7 @@ const Navbar = (props) => {
                     aria-labelledby='dropdownMenuButton'
                   >
                     <Link
+                      style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
                       to='/account'
                       onClick={() => setShowDropDown((preState) => !preState)}
@@ -246,6 +247,7 @@ const Navbar = (props) => {
                     </Link>
 
                     <Link
+                      style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
                       to='/edit-portfolio'
                       onClick={() => setShowDropDown((preState) => !preState)}
@@ -254,6 +256,7 @@ const Navbar = (props) => {
                     </Link>
 
                     <Link
+                      style={{ width: '95%' }}
                       onClick={() => setShowDropDown((preState) => !preState)}
                       to='/briefings'
                       className='dropdown-item py-2 dropdown-menu-hover'
@@ -263,6 +266,7 @@ const Navbar = (props) => {
 
                     <li>
                       <Link
+                        style={{ width: '95%' }}
                         onClick={() => setShowDropDown((preState) => !preState)}
                         to='/resources'
                         className='dropdown-item py-2 dropdown-menu-hover'
@@ -272,6 +276,7 @@ const Navbar = (props) => {
                     </li>
                     {isAdmin && (
                       <Link
+                        style={{ width: '95%' }}
                         className='dropdown-item py-2 dropdown-menu-hover'
                         to='#'
                         onClick={() => {
@@ -293,6 +298,7 @@ const Navbar = (props) => {
                       SUPPORT
                     </Link> */}
                     <Link
+                      style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
                       onClick={() => {
                         axiosInstance

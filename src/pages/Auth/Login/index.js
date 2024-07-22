@@ -86,7 +86,10 @@ function Login() {
   }
 
   return (
-    <div className='container-fluid md-px-5 ps-md-5 login_container'>
+    <div
+      className='container-fluid md-px-5 ps-md-5 login_container'
+      style={{ backgroundColor: '#e4e9f4' }}
+    >
       <Row className='m-0 p-0 ps-md-5 center-content'>
         <Col md='7' lg='6' xl='5' className='ms-sm-1'>
           <FormWrapper className='col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4'>

@@ -1,56 +1,73 @@
 @media (max-width: 991.9px) {
+  .dropdown-menushow1 {
+    top: 3rem;
+    right: .5rem;
+  }
+
   .edit-account {
     height: 40px;
     width: 135px;
   }
+
   .navbar-nav {
     flex-direction: row;
   }
+
   .connection-modal p {
     font-size: 12px !important;
   }
 }
+
 @media (min-width: 100px) and (max-width: 768px) {
   .portfolio-video-height .react-player__preview {
     background-size: contain !important;
     background-repeat: no-repeat;
   }
 }
+
 @media (min-width: 268px) and (max-width: 295.9px) {
   nav.navbar.navbar-expand-lg.navbar-light.bg-light {
     padding: 15px 10px !important;
   }
 }
+
 @media (min-width: 1209px) and (max-width: 1281px) {
   .lastet_progress_bar {
     padding-right: 0px !important;
     padding-left: 0px !important;
   }
 }
+
 @media (min-width: 1281px) {
   .lastet_progress_bar {
     padding-right: 0.5rem !important;
     padding-left: 0.5rem !important;
   }
 }
+
 @media (min-width: 767.98px) {
   #prev-button-mobile {
     display: none;
   }
+
   .session-margin {
     margin-top: -10%;
   }
+
   .edit-note {
     margin-top: 7% !important;
   }
 }
+
 @media (min-width: 1200px) and (max-width: 1400px) {
   .dropdown-li {
     width: 263px;
   }
+
   .arrow-icon {
     left: 65%;
   }
+
   .react-datepicker__day-name,
   .react-datepicker__day,
   .react-datepicker__time-name {
@@ -70,6 +87,7 @@
     width: 29%;
   }
 }
+
 /* @media (min-width: 1281px) {
   .react-datepicker__navigation--previous {
     left: unset !important;
@@ -95,31 +113,44 @@
   .beyond-your-course-video {
     display: flex;
   }
+
   .beyond-your-course-video-title {
     margin-left: 0.25rem !important;
   }
 }
+
 @media (min-width: 2200px) and (max-width: 2600px) {
   #content {
     width: calc(100% - 450px);
   }
+
   #sidebar {
     width: 450px;
   }
+
   .sidebar-header img {
     width: 250px;
     margin-top: 40px;
   }
 }
+
 @media (max-width: 267.9px) {
   nav.navbar.navbar-expand-lg.navbar-light.bg-light {
     padding: 15px 4px !important;
   }
 }
+
 @media (min-width: 992px) and (max-width: 1269px) {
+
+  .dropdown-menushow1 {
+    top: 5rem;
+    right: .5rem;
+  }
+
   .videos-track-icon {
     top: -20% !important;
   }
+
   /* .beyond-your-course-video-thumb-icon {
     top: 55%;
     left: 55%;
@@ -128,10 +159,12 @@
     height: 45px;
   } */
 }
+
 @media (min-width: 450px) {
   .guidance-videos-top {
     display: flex;
   }
+
   .guidance-link {
     margin-left: auto;
   }
@@ -140,23 +173,28 @@
     font-size: 12px !important;
   }
 }
+
 @media (min-width: 790px) and (max-width: 880px) {
   .react-datepicker__navigation--previous {
     left: 62% !important;
   }
 }
+
 @media (min-width: 768px) and (max-width: 9.9px) {
   .react-datepicker__navigation--previous {
     left: 58% !important;
   }
 }
+
 @media (min-width: 768px) and (max-width: 880px) {
+
   .react-datepicker__day,
   .react-datepicker__month-text,
   .react-datepicker__quarter-text,
   .react-datepicker__year-text {
     font-size: 7px !important;
   }
+
   .react-datepicker__day-name,
   .react-datepicker__day,
   .react-datepicker__time-name {
@@ -164,35 +202,43 @@
     line-height: 1.7rem !important;
     margin: 3.5px !important;
   }
+
   .react-datepicker__day-names {
     font-size: 7px !important;
   }
+
   .react-datepicker__navigation {
     top: 20px !important;
   }
 }
+
 /* @media (max-width: 970.9px) {
   .react-datepicker__current-month {
     font-size: 13px !important;
   }
 } */
 @media (min-width: 880px) and (max-width: 970.9px) {
+
   .react-datepicker__day-name,
   .react-datepicker__day,
   .react-datepicker__time-name {
     width: 7px !important;
     margin: 2.5px !important;
   }
+
   .react-datepicker__day-names {
     font-size: 9px !important;
   }
+
   .react-datepicker__navigation {
     top: 20px !important;
   }
+
   .react-datepicker__navigation--previous {
     left: 67% !important;
   }
 }
+
 /* @media (min-width: 971px) and (max-width: 1023px) {
   .react-datepicker__navigation-icon--next {
     left: 100px;
@@ -267,6 +313,7 @@
   }
 } */
 @media (min-width: 1040px) and (max-width: 2560px) {
+
   /* .react-datepicker__current-month {
     padding-left: 40px;
   } */
@@ -274,12 +321,15 @@
     /* margin-left: -25px !important; */
     margin-left: 0px;
   }
+
   .react-datepicker__navigation--next {
     /* margin-right: 40px !important; */
     right: -30px;
   }
 }
+
 @media (min-width: 1040.1px) and (max-width: 1200px) {
+
   .react-datepicker__day-name,
   .react-datepicker__day,
   .react-datepicker__time-name {
@@ -295,17 +345,21 @@
     width: 40px; */
     height: 40px;
   }
+
   .sidebar-scroll {
     height: 100vh;
   }
 }
+
 @media (min-width: 576px) {
   .guidance-videos {
     width: 33.33333%;
     display: inline-block;
   }
 }
+
 @media (min-width: 441px) and (max-width: 500.98px) {
+
   /* .react-datepicker__current-month {
     padding-left: 80px;
   } */
@@ -316,6 +370,7 @@
     line-height: 2rem !important;
     font-size: 12px !important;
   }
+
   /* .react-datepicker__navigation-icon {
     margin-top: 35px;
   } */
@@ -326,7 +381,9 @@
     margin-right: 77px !important;
   } */
 }
+
 @media (min-width: 375px) and (max-width: 440.98px) {
+
   /* .react-datepicker__current-month {
     padding-left: 40px;
   } */
@@ -337,6 +394,7 @@
     line-height: 2rem !important;
     font-size: 12px !important;
   }
+
   /* .react-datepicker__navigation-icon {
     margin-top: 35px;
   }
@@ -347,15 +405,19 @@
     margin-right: 50px;
   } */
 }
+
 @media (min-width: 319px) and (max-width: 340px) {
   .react-datepicker__navigation--previous {
     margin-left: 120px !important;
   }
+
   .react-datepicker__navigation--next {
     margin-right: 0px !important;
   }
 }
+
 @media (min-width: 350px) and (max-width: 374.98px) {
+
   /* .react-datepicker__current-month {
     padding-left: 8px;
   } */
@@ -366,6 +428,7 @@
     line-height: 2rem !important;
     font-size: 12px !important;
   }
+
   /* .react-datepicker__navigation-icon {
     margin-top: 35px;
   }
@@ -376,7 +439,9 @@
     margin-right: 8px !important;
   } */
 }
+
 @media (max-width: 320.98px) {
+
   .react-datepicker__day-name,
   .react-datepicker__day,
   .react-datepicker__time-name {
@@ -384,6 +449,7 @@
     line-height: 2rem !important;
     font-size: 12px !important;
   }
+
   /* .react-datepicker__navigation-icon {
     margin-top: 35px;
   }
@@ -394,10 +460,12 @@
     right: 0px !important;
   } */
 }
+
 @media (max-width: 450px) {
   .card-group {
     margin-top: 10px;
   }
+
   .connection-modal p {
     font-size: 10px !important;
   }
@@ -406,6 +474,7 @@
     font-size: 12px !important;
   }
 }
+
 @media (max-width: 576px) {
   .card-group {
     display: flex;
@@ -417,74 +486,85 @@
   #content {
     width: 100%;
   }
+
   #content.active {
     width: calc(100% - 250px);
   }
+
   #sidebar {
     margin-left: -250px;
     position: fixed !important;
   }
+
   #sidebar.active {
     margin-left: 0;
   }
+
   #sidebarCollapse span {
     display: none;
   }
+
   button#sidebarCollapse {
     display: block;
     color: #ffff;
   }
+
   #footer {
     bottom: 0;
     z-index: 10;
   }
+
   #prev-button {
     display: none;
   }
+
   #prev-button-mobile {
     display: show;
     margin-top: 10px;
   }
+
   li.nav-item.dropdown-li:after {
     display: none;
   }
+
   .sidebar-bottom img {
     width: 90%;
   }
+
   .footer-menu {
     position: inherit;
     top: 0;
     right: 0;
   }
+
   .footer-menu ul {
     display: flex;
     justify-content: center;
     margin-top: 10px;
   }
+
   .footer-copyright p {
     text-align: center;
   }
+
   .desktop-footer {
     display: none;
   }
+
   .mobile-footer {
     display: block;
   }
+
   .page-title {
     font-size: 18px;
   }
+
   /* .page-description {
     font-size: 13px;
   } */
   .customDatePickerWidth,
-  .customDatePickerWidth > div.react-datepicker-wrapper,
-  .customDatePickerWidth
-    > div
-    > div.react-datepicker__input-container
-    .customDatePickerWidth
-    > div
-    > div.react-datepicker__input-container
-    input,
+  .customDatePickerWidth>div.react-datepicker-wrapper,
+  .customDatePickerWidth>div>div.react-datepicker__input-container .customDatePickerWidth>div>div.react-datepicker__input-container input,
   .react-datepicker,
   .react-datepicker__day-name,
   .react-datepicker__day,
@@ -493,16 +573,20 @@
     line-height: 2.5rem !important;
     font-size: 12px !important;
   }
+
   .session-margin {
     margin-top: 10%;
   }
+
   .public-page-text-align {
     text-align: center;
   }
+
   .navbar-nav {
     margin-top: -12px;
   }
 }
+
 @media (min-width: 900px) {
   .modal-dialog {
     max-width: 840px;
@@ -511,6 +595,7 @@
   #subscription-modal {
     max-width: 550px !important;
   }
+
   /*#briefing-modal {*/
   /*  max-width: 900px !important;*/
   /*}*/
@@ -532,7 +617,9 @@
     width: 536px;
   } */
 }
+
 @media (max-width: 900px) {
+
   /*  .edit-modal h4,
   h3,
   .my-account span,
@@ -546,26 +633,36 @@
   .sidebar-bottom img {
     margin-top: 0% !important;
   }
+
   .modal-content {
     margin-top: 40%;
   }
 }
+
 @media (min-width: 991.9px) {
+
+
+
   .university-logo {
     text-align: center !important;
   }
+
   .navbar-expand-lg .navbar-nav .dropdown-menu {
     position: absolute;
   }
+
   .create-portfolio p {
     text-align: left;
   }
+
   .mobile-menu {
     display: none;
   }
+
   .beyond-videos-desktop {
     display: flex;
   }
+
   .beyond-videos-mobile {
     display: none;
   }
@@ -585,6 +682,7 @@
   .startuplive-archive-videos .beyond-your-course-videos {
     width: 33%;
   }
+
   /* .all-videos-beyond-your-course-videos {
     width: 24%;
     width: 33%;
@@ -594,70 +692,104 @@
   .edit-button {
     width: 256px !important;
   }
+
   .align-right {
     text-align: right;
   }
+
   .notification-box {
     border-right: solid 20px white;
   }
 }
-@media (max-width: 744px) {
+
+@media (max-width: 991px) {
   .dropdown-menushow1 {
-    width: 100% !important;
+    /* width: 100% !important; */
+    /* width: 15rem; */
+    width: max-content;
     margin-right: 0px !important;
     margin-left: -15px !important;
-    right: 0;
+    right: .5rem !important;
   }
 }
+
 @media (min-width: 1px) and (max-width: 600px) {
   .jira-button {
     display: none;
   }
 }
+
 @media (max-width: 991.98px) {
+
+
   #content {
     width: calc(100% - 250px);
   }
+
   #sidebar {
     width: 250px;
     padding: 20px 20px;
   }
+
   #language.dropdown {
     width: 82px !important;
   }
+
   #language.dropdown .dropdown-menu {
     padding-right: 0px !important;
     width: 98px !important;
     min-width: 98px !important;
   }
+
   nav.navbar.navbar-expand-lg.navbar-light.bg-light {
     padding: 15px 15px;
   }
+
   .navbar-expand-lg .navbar-nav .dropdown-menu {
     position: absolute;
   }
+
   .navbar-nav .dropdown-li .dropdown-menu {
     margin-top: 0px;
   }
+
   .dropdown-menu {
     padding-right: 10px !important;
     text-align: right;
   }
+
   .dropdown-menushow1 {
-    margin-top: 14px;
-    margin-left: 460px;
+    width: 15rem;
+    top: 4.8rem;
+    right: .5rem;
   }
-  li.nav-item.dropdown-li > div {
+
+  li.nav-item.dropdown-li>div {
     float: right;
     margin-top: 15px;
   }
+
+
   .desktop-menu {
     display: none !important;
   }
 
+  .dropdown-menushow1 {
+    width: 15rem;
+    top: 5rem;
+    right: .5rem;
+  }
+
+  .dropdown-menushow1 * {
+    width: 95%;
+  }
+
+
+
   .beyond-videos-desktop {
     display: none;
   }
+
   .beyond-videos-mobile {
     display: flex;
   }
@@ -665,34 +797,44 @@
   .portfolio-mobile-text-align {
     text-align: end;
   }
+
   .portfolio-save {
     width: 256px !important;
   }
+
   .portfolio-social-media-align {
     justify-content: center;
   }
+
   .portfolio-performance {
     width: 93%;
   }
+
   .performance-title {
     text-align: end;
     margin-right: 35px;
   }
+
   .public-performance-title {
     text-align: end;
   }
+
   .performance-video {
     margin-right: 20px;
   }
+
   .public-portfolio {
     width: 93%;
   }
+
   .align-items-center.published-portfolio {
     width: 100%;
   }
+
   .article-view {
     display: flex;
   }
+
   /* .videos-track-icon {
     top: -5% !important;
   } */
@@ -705,37 +847,47 @@
   .text-align-right-footer {
     text-align: center;
   }
+
   .university-logo {
     text-align: left !important;
     margin-top: 20px;
     padding-left: 0px !important;
   }
+
   .modal-content {
     margin-top: 10% !important;
   }
+
   .document-modal {
     height: 350px !important;
   }
+
   .profile-ml {
     margin-left: 0px !important;
   }
+
   .portfolio-video-height {
     height: 315px !important;
   }
+
   .label1 {
     width: 100%;
   }
+
   .notification-box {
     border-right: none;
   }
+
   .dashboard-notification {
     margin-top: 15px;
   }
 }
+
 @media (max-width: 1097px) {
   .course-button a {
     height: auto;
   }
+
   /* .react-datepicker__navigation--previous {
     left: 110px !important;
   }
@@ -743,20 +895,25 @@
     right: 0px !important;
   } */
 }
+
 @media (max-width: 1199.98px) {
   #content {
     width: calc(100% - 250px);
   }
+
   #sidebar {
     width: 250px;
   }
+
   ul.sidebar-menu-item a {
     font-size: 14px;
   }
+
   .menu-dropdown {
     width: 245px;
   }
 }
+
 @media (max-width: 1200px) {
   #sidebar {
     padding: 0;
@@ -792,6 +949,7 @@
     margin-left: 6%;
   }
 }
+
 @media (max-width: 1125px) {
   .my-notes-title-wraper {
     height: 500px;
@@ -807,89 +965,112 @@
     height: 312px !important;
   }
 }
+
 @media (max-width: 825px) {
   .footer-copyright p {
     text-align: left;
   }
 }
+
 @media (min-width: 1px) and (max-width: 767.9px) {
   .jira-button {
     display: none;
   }
 }
+
 @media (max-width: 289.9px) {
   .cancel-subscription-button {
     width: 200px;
   }
+
   .portfolio-colors-input {
     margin-right: 50px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 50px;
   }
 }
+
 @media (min-width: 290px) and (max-width: 314.9px) {
   .cancel-subscription-button {
     width: 250px;
   }
+
   .portfolio-colors-input {
     margin-right: 70px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 70px;
   }
 }
+
 @media (min-width: 315px) and (max-width: 329.9px) {
   .cancel-subscription-button {
     width: 260px;
   }
+
   .portfolio-colors-input {
     margin-right: 82px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 82px;
   }
 }
+
 @media (min-width: 330px) and (max-width: 344.9px) {
   .cancel-subscription-button {
     width: 265px;
   }
+
   .portfolio-colors-input {
     margin-right: 88px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 88px;
   }
 }
+
 @media (min-width: 345px) and (max-width: 369.9px) {
   .cancel-subscription-button {
     width: 270px;
   }
+
   .portfolio-colors-input {
     margin-right: 98px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 98px;
   }
 }
+
 @media (min-width: 370px) and (max-width: 394.9px) {
   .cancel-subscription-button {
     width: 280px;
   }
+
   .portfolio-colors-input {
     margin-right: 110px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 110px;
   }
 }
+
 @media (max-width: 300px) {
+
   /* .react-datepicker__current-month {
     padding-left: 5px;
   } */
   .calendar-under-threehoundertpx {
     width: 90% !important;
   }
+
   /* .react-datepicker__week {
     width: 80% !important;
   } */
@@ -900,6 +1081,7 @@
     line-height: 2rem !important;
     font-size: 12px !important;
   }
+
   /* .react-datepicker__navigation-icon {
     margin-top: 35px;
   }
@@ -910,7 +1092,9 @@
     margin-right: 9px !important;
   } */
 }
+
 @media (min-width: 395px) and (max-width: 421.9px) {
+
   /* .react-datepicker__current-month {
     padding-left: 35px;
   } */
@@ -921,6 +1105,7 @@
     line-height: 2rem !important;
     font-size: 12px !important;
   }
+
   /* .react-datepicker__navigation-icon {
     margin-top: 35px;
   }
@@ -934,14 +1119,17 @@
   .portfolio-colors-input {
     margin-right: 120px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 120px;
   }
 }
+
 @media (min-width: 400px) and (max-width: 430px) {
   .cancel-subscription-button {
     width: 300px;
   }
+
   /* .react-datepicker__navigation-icon {
     margin-top: 40px;
   }
@@ -949,41 +1137,51 @@
     margin-left: 130px;
   } */
 }
+
 @media (min-width: 422px) and (max-width: 449.9px) {
   .portfolio-colors-input {
     margin-right: 135px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 135px;
   }
 }
+
 @media (min-width: 450px) and (max-width: 479.9px) {
   .portfolio-colors-input {
     margin-right: 150px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 150px;
   }
 }
+
 @media (min-width: 480px) and (max-width: 509.9px) {
   .portfolio-colors-input {
     margin-right: 165px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 165px;
   }
+
   /* .react-datepicker__navigation-icon {
     margin-top: 40px;
   } */
 }
+
 @media (min-width: 510px) and (max-width: 549.9px) {
   .portfolio-colors-input {
     margin-right: 180px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 180px;
   }
 }
+
 /* @media (min-width: 413px) and (max-width: 440px) {
   .react-datepicker__current-month {
     padding-left: 70px;
@@ -1016,207 +1214,249 @@
   .portfolio-colors-input {
     margin-right: 200px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 200px;
   }
 }
+
 @media (min-width: 595px) and (max-width: 623.9px) {
   .portfolio-colors-input {
     margin-right: 212px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 212px;
   }
 }
+
 @media (min-width: 624px) and (max-width: 634.9px) {
   .portfolio-colors-input {
     margin-right: 225px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 225px;
   }
 }
+
 @media (min-width: 635px) and (max-width: 654.9px) {
   .portfolio-colors-input {
     margin-right: 232px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 232px;
   }
+
   .react-datepicker__navigation--previous {
     left: 500px !important;
   }
 }
+
 @media (min-width: 655px) and (max-width: 674.9px) {
   .portfolio-colors-input {
     margin-right: 240px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 240px;
   }
+
   .react-datepicker__navigation--previous {
     left: 540px !important;
   }
 }
+
 @media (min-width: 675px) and (max-width: 699.9px) {
   .portfolio-colors-input {
     margin-right: 252px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 252px;
   }
+
   .react-datepicker__navigation--previous {
     left: 560px !important;
   }
 }
+
 @media (min-width: 700px) and (max-width: 719.9px) {
   .portfolio-colors-input {
     margin-right: 265px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 265px;
   }
+
   .react-datepicker__navigation--previous {
     left: 585px !important;
   }
 }
+
 @media (min-width: 720px) and (max-width: 744.9px) {
   .portfolio-colors-input {
     margin-right: 272px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 271px;
   }
+
   .react-datepicker__navigation--previous {
     left: 600px !important;
   }
 }
+
 @media (min-width: 745px) and (max-width: 767.9px) {
   .portfolio-colors-input {
     margin-right: 285px;
   }
+
   .react-datepicker__navigation--previous {
     left: 620px !important;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 285px;
   }
 
   .customDatePickerWidth,
-  .customDatePickerWidth > div.react-datepicker-wrapper,
-  .customDatePickerWidth
-    > div
-    > div.react-datepicker__input-container
-    .customDatePickerWidth
-    > div
-    > div.react-datepicker__input-container
-    input,
+  .customDatePickerWidth>div.react-datepicker-wrapper,
+  .customDatePickerWidth>div>div.react-datepicker__input-container .customDatePickerWidth>div>div.react-datepicker__input-container input,
   .react-datepicker,
   .react-datepicker__month-container {
     width: 100% !important;
   }
 }
+
 @media (min-width: 767.9px) and (max-width: 793.9px) {
   .portfolio-colors-input {
     margin-right: 165px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 163px;
   }
 }
+
 @media (min-width: 794px) and (max-width: 814.9px) {
   .portfolio-colors-input {
     margin-right: 185px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 183px;
   }
+
   .portfolio-profile-image-mobile img {
     margin-top: -90px;
   }
 }
+
 @media (max-width: 550px) {
   .page-border {
     border: 0px;
   }
 }
+
 @media (min-width: 768px) and (max-width: 793.9px) {
   .portfolio-profile-image-mobile img {
     margin-top: -100px;
   }
 }
+
 @media (min-width: 535px) and (max-width: 767.9px) {
   .portfolio-profile-image-mobile img {
     margin-top: -60px;
   }
 }
+
 @media (min-width: 500px) and (max-width: 535px) {
   .portfolio-profile-image-mobile img {
     margin-top: -75px;
   }
 }
+
 @media (min-width: 475px) and (max-width: 499px) {
   .portfolio-profile-image-mobile img {
     margin-top: -85px;
   }
 }
+
 @media (min-width: 450px) and (max-width: 474.9px) {
   .portfolio-profile-image-mobile img {
     margin-top: -105px;
   }
 }
+
 @media (min-width: 425px) and (max-width: 449.9px) {
   .portfolio-profile-image-mobile img {
     margin-top: -120px;
   }
 }
+
 @media (min-width: 390px) and (max-width: 424.9px) {
   .portfolio-profile-image-mobile img {
     margin-top: -140px;
   }
 }
+
 @media (min-width: 350px) and (max-width: 389.9px) {
   .portfolio-profile-image-mobile img {
     margin-top: -170px;
   }
 }
+
 @media (min-width: 280px) and (max-width: 349.9px) {
   .portfolio-profile-image-mobile img {
     margin-top: -190px;
   }
 }
+
 @media (min-width: 815px) and (max-width: 828.9px) {
   .portfolio-colors-input {
     margin-right: 195px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 194px;
   }
+
   .portfolio-profile-image-mobile img {
     margin-top: -130px;
   }
 }
+
 @media (min-width: 829px) and (max-width: 864.9px) {
   .portfolio-colors-input {
     margin-right: 200px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 199px;
   }
+
   .portfolio-profile-image-mobile img {
     margin-top: -125px;
   }
 }
+
 @media (min-width: 865px) and (max-width: 899.9px) {
   .portfolio-colors-input {
     margin-right: 215px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 214px;
   }
+
   .portfolio-profile-image-mobile img {
     margin-top: -115px;
   }
+
   /* .react-datepicker__month-container {
     width: 100px !important;
   } */
@@ -1226,15 +1466,18 @@
     width: 7px !important;
     margin: 2.5px !important;
   }
+
   /* .react-datepicker__current-month {
     font-size: 13px !important;
   } */
   .react-datepicker__day-names {
     font-size: 9px !important;
   }
+
   .react-datepicker__navigation {
     top: 20px !important;
   }
+
   /* .react-datepicker__navigation--previous {
     left: 56px !important;
   } */
@@ -1242,6 +1485,7 @@
     right: 40px;
   } */
 }
+
 /* @media (min-width: 500px) and (max-width: 660px) {
   .react-datepicker__navigation-icon {
     margin-top: 30px;
@@ -1254,70 +1498,91 @@
   .portfolio-colors-input {
     margin-right: 230px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 229px;
   }
+
   .portfolio-profile-image-mobile img {
     margin-top: -110px;
   }
 }
+
 @media (min-width: 922px) and (max-width: 949.9px) {
   .portfolio-colors-input {
     margin-right: 240px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 239px;
   }
+
   .portfolio-profile-image-mobile img {
     margin-top: -115px;
   }
 }
+
 @media (min-width: 950px) and (max-width: 971.9px) {
   .portfolio-colors-input {
     margin-right: 255px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 254px;
   }
+
   .portfolio-profile-image-mobile img {
     margin-top: -135px;
   }
 }
+
 @media (min-width: 972px) and (max-width: 982.9px) {
   .portfolio-colors-input {
     margin-right: 270px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 269px;
   }
+
   .portfolio-profile-image-mobile img {
     margin-top: -120px;
   }
 }
+
 @media (min-width: 983px) and (max-width: 991.9px) {
+
   .portfolio-colors-input {
     margin-right: 280px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 279px;
   }
+
   .navbar-nav .dropdown-li .dropdown-menu {
     margin-top: 0px;
   }
 }
+
 @media (min-width: 992px) and (max-width: 1109px) {
   .card-body-video-small h5 {
     font-size: 11px !important;
   }
 }
+
 @media (min-width: 992px) and (max-width: 1258px) {
   .pp-left-padding {
     padding-left: 14%;
   }
+
+
+
   .profile-ml {
     margin-left: 90px !important;
   }
 }
+
 @media (min-width: 1380.98px) and (max-width: 2850) {
   .right-my-course-video iframe {
     height: 500px !important;
@@ -1328,177 +1593,221 @@
   .portfolio-colors-input {
     margin-right: 35px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 35px;
   }
 }
+
 @media (min-width: 1030px) and (max-width: 1060px) {
   .portfolio-colors-input {
     margin-right: 42px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 40px;
   }
 }
+
 @media (min-width: 1060px) and (max-width: 1100px) {
   .portfolio-colors-input {
     margin-right: 46px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 45px;
   }
 }
+
 @media (min-width: 1101px) and (max-width: 1140px) {
   .portfolio-colors-input {
     margin-right: 51px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 50px;
   }
 }
+
 @media (min-width: 1141px) and (max-width: 1180px) {
   .portfolio-colors-input {
     margin-right: 55px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 54px;
   }
 }
+
 @media (min-width: 1181px) and (max-width: 1230.9px) {
   .portfolio-colors-input {
     margin-right: 59px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 58px;
   }
 }
+
 @media (min-width: 1231px) and (max-width: 1265.9px) {
   .portfolio-colors-input {
     margin-right: 66px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 65px;
   }
 }
+
 @media (min-width: 1266px) and (max-width: 1300.9px) {
   .portfolio-colors-input {
     margin-right: 71px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 70px;
   }
 }
+
 @media (min-width: 1301px) and (max-width: 1330.9px) {
   .portfolio-colors-input {
     margin-right: 75px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 74px;
   }
 }
+
 @media (min-width: 1314px) and (max-width: 1024.9px) {
   .tablet {
     display: show;
   }
+
   .desktop-slider {
     display: none;
   }
+
   .mobile-slider {
     display: none;
   }
 }
+
 @media (min-width: 1331px) and (max-width: 1360.9px) {
   .portfolio-colors-input {
     margin-right: 79px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 78px;
   }
 }
+
 @media (min-width: 1390px) and (max-width: 1425.9px) {
   .portfolio-colors-input {
     margin-right: 86px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 85px;
   }
 }
+
 @media (min-width: 1426px) and (max-width: 1495.9px) {
   .portfolio-colors-input {
     margin-right: 91px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 90px;
   }
 }
+
 @media (min-width: 1496px) and (max-width: 1520.9px) {
   .portfolio-colors-input {
     margin-right: 93px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 92px;
   }
 }
+
 @media (min-width: 1521px) and (max-width: 1545.9px) {
   .portfolio-colors-input {
     margin-right: 95px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 94px;
   }
 }
+
 @media (min-width: 1546px) and (max-width: 1565.9px) {
   .portfolio-colors-input {
     margin-right: 99px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 98px;
   }
 }
+
 @media (min-width: 1566px) and (max-width: 1599.9px) {
   .portfolio-colors-input {
     margin-right: 103px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 102px;
   }
 }
+
 @media (min-width: 1600px) and (max-width: 1640.9px) {
   .portfolio-colors-input {
     margin-right: 107px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 106px;
   }
 }
+
 @media (min-width: 1641px) and (max-width: 1699.9px) {
   .portfolio-colors-input {
     margin-right: 113px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 112px;
   }
 }
+
 @media (min-width: 1700px) and (max-width: 1750.9px) {
   .portfolio-colors-input {
     margin-right: 121px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 120px;
   }
 }
+
 @media (min-width: 1751px) and (max-width: 1799.9px) {
   .portfolio-colors-input {
     margin-right: 127px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 126px;
   }
 }
+
 @media (min-width: 1800px) {
   .portfolio-colors-input {
     margin-right: 135px;
   }
+
   .portfolio-colors-rectangle {
     margin-right: 134px;
   }
@@ -1507,17 +1816,20 @@
   .ProjectCard {
     width: 22% !important;
   }
+
   .beyond-your-course-video-thumb img,
   .arrow-icon-1 {
     height: 200px !important;
   }
 }
+
 @media (min-width: 1500px) {
   .customDatePickerWidth {
     max-width: 310px;
     margin: 0 auto;
   }
 }
+
 @media (max-width: 768px) {
   #myProjectImage {
     max-width: 144px;
@@ -1538,6 +1850,7 @@
   .round-image-wrapper {
     padding: 0;
   }
+
   .round-image-wrapper img {
     position: relative !important;
   }
@@ -1546,39 +1859,51 @@
     height: 80px;
     width: 80px;
   }
+
   .page-description {
     font-size: 10px;
   }
+
   .dashboard-notification p {
     font-size: 12px !important;
   }
+
   .footer-copyright p {
     font-size: 12px !important;
   }
+
   .my-account h2 {
     font-size: 20px;
   }
+
   p.ms-1.ms-md-5.mb-3 span {
     font-size: 14px !important;
   }
+
   p.mx-auto.mt-4.px-5 {
     font-size: 14px !important;
   }
+
   .add-note-button {
     font-size: 10px !important;
   }
+
   .card-body-video p {
     font-size: 14px !important;
   }
+
   p.card-text {
     font-size: 14px !important;
   }
+
   .update-password h3 {
     font-size: 16px !important;
   }
+
   .contact-bio span {
     font-size: 14px;
   }
+
   .edit-modal input,
   .edit-label {
     height: 35px;
@@ -1589,6 +1914,7 @@
     height: 35px;
     font-size: 11px;
   }
+
   .contact-us input::placeholder {
     font-size: 11px;
   }
@@ -1596,6 +1922,7 @@
   .contact-us textarea {
     font-size: 11px;
   }
+
   .contact-us textarea::placeholder {
     font-size: 11px;
   }
@@ -1610,6 +1937,7 @@
     height: 35px;
     width: 135px;
   }
+
   .ql-container {
     font-size: 10px !important;
   }
@@ -1633,18 +1961,28 @@
 }
 
 @media (min-width: 1000px) and (max-width: 1243px) {
+
   .react-datepicker__navigation {
     margin-top: 0px !important;
   }
+
+  .dropdown-menushow1 {
+    top: 3rem;
+    right: 0rem;
+  }
+
+
   .react-datepicker__navigation--next {
     margin-left: 40px;
   }
+
   .react-datepicker__month {
     width: 100%;
     display: inline-flexbox;
     justify-content: space-between !important;
   }
 }
+
 /* @media (min-width: 1000px) and (max-width: 1014px) {
   .react-datepicker__navigation {
     margin-top: -10px !important;
@@ -1664,12 +2002,14 @@
   }
 } */
 @media (min-width: 760px) and (max-width: 790px) {
+
   /* .react-datepicker__navigation {
     margin-top: -10px !important;
   } */
   .react-datepicker__navigation--next {
     margin-left: 40px;
   }
+
   /* .react-datepicker__day-names {
     display: flex;
     width: 80%;
@@ -1681,37 +2021,47 @@
     justify-content: space-between !important;
   } */
 }
+
 @media (max-width: 550px) {
   .secure-page-padding {
     padding: 0% 0% 0%;
   }
+
   .register-header span,
   h4 {
     font-size: 14px !important;
     line-height: 1.4 !important;
   }
+
   .register-header img {
     margin-top: -290%;
   }
+
   .register-page-welocme-text-header span:nth-child(n) {
     font-size: 40px !important;
   }
+
   .register-page-welocme-text-header-image img {
     width: 100% !important;
   }
+
   .main-section-title-text-register {
     font-size: 30px;
   }
+
   .content-text-wrapper span,
   h4 {
     font-size: 14px;
   }
+
   .content-text-wrapper img {
     width: 100% !important;
   }
-  .register-section li > span {
+
+  .register-section li>span {
     font-size: 14px;
   }
+
   .lts-registration-logo-end img {
     width: 95%;
   }
@@ -1751,6 +2101,7 @@
   .beyond-your-course-video-thumb img {
     height: 120px;
   }
+
   .arrow-icon-1 {
     height: 120px;
     display: flex;
@@ -1763,6 +2114,7 @@
   .beyond-your-course-video-thumb img {
     height: 150px;
   }
+
   .arrow-icon-1 {
     height: 150px;
     display: flex;
@@ -1780,6 +2132,7 @@
   .beyond-your-course-video-thumb img {
     height: 250px;
   }
+
   .arrow-icon-1 {
     height: 250px;
     display: flex;
@@ -1801,6 +2154,7 @@
 } */
 
 @media (min-width: 1000px) {
+
   .beyond-your-course-video-thumb img,
   .arrow-icon-1 {
     height: 130px !important;
@@ -1808,6 +2162,7 @@
 }
 
 @media (min-width: 768px) and (max-width: 1000px) {
+
   .beyond-your-course-video-thumb img,
   .arrow-icon-1 {
     height: 350px !important;
@@ -1832,16 +2187,25 @@
     width: 100%;
   }
 }
+
 @media (min-width: 991px) {
+
+
+
+
   .beyound-all-videos-thumb img {
     height: 180px !important;
   }
+
   .beyound-all-videos-thumb.spotlight img {
     height: 115px !important;
   }
 }
 
 @media (max-width: 992px) {
+
+
+
   .beyound-all-videos-thumb img {
     height: auto !important;
   }
@@ -1875,7 +2239,9 @@
     font-size: 30px;
   }
 }
+
 @media (max-width: 1560px) {
+
   .react-datepicker__week,
   .react-datepicker__day-names {
     display: grid;
@@ -1928,10 +2294,7 @@
     top: 49px;
   }
 
-  .dropdown-menushow1 {
-    top: 42px;
-    right: -12px;
-  }
+
 
   /* .sl-offline-image-preview {
     height: 600px;
@@ -1958,6 +2321,7 @@
   .nav-notifications-li {
     position: inherit !important;
   }
+
   .notifications-wrapper {
     left: 50%;
     top: 73px;
@@ -2001,6 +2365,11 @@
 } */
 
 @media (min-width: 1200px) {
+  .dropdown-menushow1 {
+    top: 5rem;
+    right: 0;
+  }
+
   .notes-nav .icon-menu {
     padding-top: 8px;
     padding-bottom: 7px;
