@@ -8,15 +8,21 @@ import LtsButton from '../../../../components/LTSButtons/LTSButton'
 import ConfirmDeleteRecordModal from '../../Components/Modals/ConfirmDeleteRecordModal'
 
 function ProjectModal(props) {
+  const [isEdit, setIsEdit] = useState(null)
+  const [isSaving, setIsSaving] = useState(false)
+  useEffect(() => {
+    props.isEdit && setIsEdit(props.isEdit)
+  }, [props.isEdit])
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
   const projectModalActions = [
     {
       type: 'save',
       action: () => {
-        return props.isEdit ? onUpdateProject() : onAddProject()
+        return isEdit ? onUpdateProject?.() : onAddProject?.()
       },
       containSpinner: true,
-      isDisplayed: true
+      isDisplayed: true,
+      isSaving
     },
     {
       type: 'hide',
@@ -83,6 +89,7 @@ function ProjectModal(props) {
   }
 
   const onAddProject = async () => {
+    setIsSaving(true)
     const updatedProjects = await Promise.all(
       project.map(async (proj) => {
         const updatedEvidences = await handleEvidenceUpload(proj.evidences)
@@ -92,13 +99,21 @@ function ProjectModal(props) {
     await axiosInstance
       .post('/hsPortfolio/myProjects', updatedProjects)
       .then((res) => {
-        props.onAddProject(res.data.project)
+        setIsSaving(false)
+        if (props.onAddProject) {
+          props.onAddProject(res.data.project)
+        }
+        // else {
+        //   setProject(res.data.project.children)
+        //   setIsEdit(res.data.project.id)
+        // }
         props.onHide()
         toast.success('Project updated successfully!')
       })
   }
 
   const onUpdateProject = async () => {
+    setIsSaving(true)
     try {
       const updatedProjects = await Promise.all(
         project.map(async (proj) => {
@@ -115,6 +130,7 @@ function ProjectModal(props) {
         .then((res) => {
           props.onUpdateProject(res.data.project)
           props.onHide()
+          setIsSaving(false)
           toast.success('Project created successfully!')
         })
     } catch (error) {
@@ -132,8 +148,6 @@ function ProjectModal(props) {
       })
     )
   }
-
-  console.log('project', project)
 
   const onDeleteProject = async () => {
     try {
@@ -192,7 +206,7 @@ function ProjectModal(props) {
       show={props.show}
       onHide={props.onHide}
       actions={projectModalActions}
-      class={'add-project-modal'}
+      class={'add-project-modal '}
     >
       {renderEditProject(
         'learn',
@@ -228,7 +242,7 @@ function ProjectModal(props) {
         }
       )}
 
-      {props.isEdit && (
+      {isEdit && (
         <div className={' mt-5'} onClick={() => setConfirmDeleteModal(true)}>
           <LtsButton variant={'text'} align={'end'} name={'DELETE PROJECT'} />
         </div>

@@ -129,7 +129,9 @@ const Body = (props) => {
           props.hideHeaderIcons()
         }}
         to={'/my-portfolio'}
-        className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+        className={`${
+          location.pathname.includes('my-portfolio') ? 'active' : ''
+        }`}
         srcImage={FolderSidebarImage}
         title='MY PORTFOLIO'
         isDropdown={false}

@@ -5,107 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/Market-READY label.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/images/LTS Model - Triangle - All.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/images/iamr/Certified L1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MyEvaluation/evaluateStudentModal.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MyEvaluation/evaluationMenu/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MyEvaluation/evaluationMenu/menuList.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MyEvaluation/evaluationMenu/menuOption.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MyEvaluation/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MyEvaluation/student.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/MyEvaluation/students.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/TypeFields/DatePickerField.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/TypeFields/styles.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/MyEvaluation/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/redux/backButtonReducer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Overlay/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Overlay/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.prettierrc" beforeDir="false" afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Router.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Router.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ArchiveSelector/ArchiveSelector.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ArchiveSelector/ArchiveSelector.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Calendar/FullCalendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Calendar/FullCalendar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Header/Navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header/Navbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/CalendarEventModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/JournalBrands/NewJournalBrandModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/JournalBrands/NewJournalBrandModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/Profile/editProfileModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/Profile/editProfileModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/Profile/shareMyPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/Profile/shareMyPortfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MyInbox/inboxTickets/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MyInbox/inboxTickets/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MyInbox/ticket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MyInbox/ticket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MyLearnToStartEDU/IAMRCertificationSystem/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MyLearnToStartEDU/IAMRCertificationSystem/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Pathways/OccupationJobDetails/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Pathways/OccupationJobDetails/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Pathways/OccupationJobs/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Pathways/OccupationJobs/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Accomplishment/accomplishmentModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Accomplishment/accomplishmentModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Education/educationModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Education/educationModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/Experience/experienceModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/Experience/experienceModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/preview/css/shareMyPortfolio.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/preview/css/shareMyPortfolio.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Portfolio/preview/shareMyPortfolioWidget.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Portfolio/preview/shareMyPortfolioWidget.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Profile/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Sidebar/Body.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/Body.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/Footer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/Footer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/ParentSidebarItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/ParentSidebarItem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/SidebarItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/SidebarItem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/StudentsTable/studentsTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/StudentsTable/studentsTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Video/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Video/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/admin/UserManagement/instructorData.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/admin/UserManagement/instructorData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Auth/Login/forgotPassword.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/Login/forgotPassword.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Auth/Login/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/Login/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Auth/Login/passwordChangeRequired.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/Login/passwordChangeRequired.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Auth/Login/ui/CustomLoginInput.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/Login/ui/CustomLoginInput.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Auth/Login/ui/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Auth/Login/ui/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/BeyondYourCourse/allVideos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/BeyondYourCourse/allVideos.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager/MeetingManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager/MeetingManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager/MeetingTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MeetingManager/MeetingTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/CertificationSkills/CertificationSkills.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/CertificationSkills/CertificationSkills.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/EntriesBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/EntriesBox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalBrands/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalBrands/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalBrands/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalBrands/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/SidebarItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/SidebarItems.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/addLessonModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/addLessonModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournalContent.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournalContent.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournalContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournalContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournalType.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournalType.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyTraining/MyTrainingType.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyTraining/MyTrainingType.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ProgramOpportunities.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ProgramOpportunities.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/TableComponents.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/TableComponents.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableWrapper/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/reflection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/reflection.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyImmersion/Modals/SubmitIndustryProblemModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyImmersion/Modals/SubmitIndustryProblemModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyImmersion/Steps.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyImmersion/Steps.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationGuide.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationGuide.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationSystem/IamrCertificationSystem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyLearnToStartEDU/MyCertificationGuide/IamrCertificationSystem/IamrCertificationSystem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyNotes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyNotes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MySpark/ArchivePage/ArchivePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/ArchivePage/ArchivePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MySpark/Widgets/WidgetDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/Widgets/WidgetDetails.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyStudents/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyStudents/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyTraining/MyTrainingContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyTraining/MyTrainingContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/editPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/editPortfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PortfolioNew/previewPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PortfolioNew/previewPortfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Profile/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Profile/userProfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Profile/userProfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Saved/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Saved/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/StoryInMotion/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/StoryInMotion/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/StoryInMotion/waveform.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/StoryInMotion/waveform.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/StudentIAMR/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/StudentIAMR/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/studentJournals/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/studentJournals/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/journal/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/journal/Actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/journal/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/journal/Reducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/journal/Types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/journal/Types.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/rootReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/user/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/user/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Reducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/user/Types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/user/Types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/EditProjectSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/EditProjectSection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/Evidences.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/Evidences.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/Project.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/Project.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/ProjectModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/ProjectModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/WhatCanIDo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/WhatCanIDo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,22 +46,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/components",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Dell\\AppData\\Roaming\\npm\\node_modules\\prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Dell/Desktop/Learn to start/lts-ims/src/components&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\Dell\\AppData\\Roaming\\npm\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2023.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
@@ -212,6 +123,7 @@
       <workItem from="1720164433682" duration="1239000" />
       <workItem from="1720614606349" duration="608000" />
       <workItem from="1721036272998" duration="1343000" />
+      <workItem from="1721634831645" duration="7332000" />
     </task>
     <servers />
   </component>
