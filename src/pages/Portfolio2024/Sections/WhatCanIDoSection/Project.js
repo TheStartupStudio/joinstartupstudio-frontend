@@ -5,16 +5,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import ProjectModal from './ProjectModal'
 
 function Project(props) {
+  const [id, setId] = useState(null)
   const [project, setProject] = useState(null)
 
   const [showAddProjectModal, setShowAddProjectModal] = useState(false)
 
   const handleShowAddProjectModal = () => {
-    // setProject(props.project)
     setShowAddProjectModal(true)
   }
   const handleHideAddProjectModal = () => setShowAddProjectModal(false)
-
+  useEffect(() => {
+    if (props.id) setId(props.id)
+  }, [props.id])
   useEffect(() => {
     if (props.project?.children) {
       setProject(props.project?.children)
@@ -156,9 +158,15 @@ function Project(props) {
           onShow={handleShowAddProjectModal}
           show={showAddProjectModal}
           project={project.children ? project.children : project}
-          isEdit={true}
+          isEdit={id}
           modalTitle={'Edit Project'}
           onUpdateProject={onUpdateProject}
+          onAddProject={(project) => {
+            if (project.children.length > 0) {
+              setProject(project.children)
+              setId(project.id)
+            }
+          }}
           onDeleteProject={props.onDeleteProject}
         />
       )}

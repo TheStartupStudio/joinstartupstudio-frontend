@@ -6,13 +6,16 @@ import AddEntryButton from '../../Components/Actions/AddEntryButton'
 import Project from './Project'
 
 const WhatCanIDo = ({ fetchProjects, myProjects }) => {
-  const [projects, setProjects] = useState(null)
+  const [projects, setProjects] = useState([])
 
   useEffect(() => {
     if (myProjects?.data) {
       setProjects(myProjects?.data)
     }
-  }, [myProjects])
+    // else {
+    //   setProjects(initialProjects)
+    // }
+  }, [myProjects?.data])
   const mode = useSelector((state) => state.portfolio.mode)
   const [showAddProjectModal, setShowAddProjectModal] = useState(false)
 
@@ -30,11 +33,14 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
     setProjects(filteredProjects)
   }
 
+  console.log('projects', projects)
+
   return (
     <div className={'position-relative'}>
       {projects?.map((project, index) => (
         <React.Fragment key={project.id}>
           <Project
+            id={project.id}
             project={project}
             index={index}
             onDeleteProject={onDeleteProject}

@@ -913,11 +913,62 @@ export const getSkillsError = (error) => {
     payload: { error }
   }
 }
+
 export const getProjects = () => async (dispatch) => {
   dispatch({ type: GET_MY_PROJECTS })
   try {
     const response = await getMyProjectsAPI()
-    dispatch(getProjectsSuccess(response.data))
+    if (response.data.length) {
+      dispatch(getProjectsSuccess(response.data))
+    } else {
+      const evidences = [
+        {
+          type: 'evidence-1',
+          imageUrl: null,
+          linkInputValue: '',
+          selectedSkills: [],
+          imageFile: null
+        },
+        {
+          type: 'evidence-2',
+          imageUrl: null,
+          linkInputValue: '',
+          selectedSkills: [],
+          imageFile: null
+        },
+        {
+          type: 'evidence-3',
+          imageUrl: null,
+          linkInputValue: '',
+          selectedSkills: [],
+          imageFile: null
+        }
+      ]
+      const initialData = [
+        {
+          children: [
+            {
+              type: 'learn',
+              showSection: true,
+              evidences
+            },
+            {
+              type: 'develop',
+              showSection: true,
+              editorContent: '',
+              evidences
+            },
+            {
+              type: 'brand',
+              showSection: true,
+              editorContent: '',
+              evidences
+            }
+          ]
+        }
+      ]
+      dispatch(getProjectsSuccess(initialData))
+    }
   } catch (e) {
     dispatch(getProjectsError(e))
   }

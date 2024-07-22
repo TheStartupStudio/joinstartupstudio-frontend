@@ -36,6 +36,7 @@ const Evidences = (props) => {
   const [activeEvidence, setActiveEvidence] = useState(null)
   const [evidencesData, setEvidencesData] = useState(initialEvidenceData)
 
+  console.log('evidencesData', evidencesData)
   useEffect(() => {
     onChange?.(evidencesData)
   }, [evidencesData])
@@ -62,9 +63,14 @@ const Evidences = (props) => {
 
   const onChangeEvidenceData = (data, type) => {
     setEvidencesData((prevState) => {
-      return prevState.map((item) =>
-        item.type === type ? { ...item, ...data } : item
-      )
+      return prevState.map((item) => {
+        if (item.type === type) {
+          const updatedData = { ...item, ...data }
+          return updatedData
+        } else {
+          return item
+        }
+      })
     })
   }
 

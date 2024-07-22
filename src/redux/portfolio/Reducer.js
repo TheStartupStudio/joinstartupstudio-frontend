@@ -227,6 +227,7 @@ const initialState = {
       isLoading: false,
       isSaving: false,
       error: null,
+      // data: []
       data: []
     }
   },
