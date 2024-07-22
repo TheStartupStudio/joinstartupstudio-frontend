@@ -8,6 +8,7 @@ import {
   updateMyEducation
 } from '../../../../redux/portfolio/Actions'
 import EducationCardModal from './EducationCardModal'
+import { convertDateToMonthYear } from '../../../../utils/helpers'
 
 function EducationCard(props) {
   const { education, isEditSection } = props
@@ -65,7 +66,10 @@ function EducationCard(props) {
                 </div>
               </div>
               <div className={'text-end organization-date'}>
-                {education.startDate} - {education.endDate}
+                {convertDateToMonthYear(education.startDate)} -{' '}
+                {!education?.currentPosition
+                  ? convertDateToMonthYear(education.endDate)
+                  : 'Current position'}
               </div>
             </div>
             <div>

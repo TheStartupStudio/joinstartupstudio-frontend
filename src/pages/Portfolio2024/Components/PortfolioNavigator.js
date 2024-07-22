@@ -16,8 +16,8 @@ function PortfolioNavigator(props) {
     },
     {
       type: 'how-section',
-      name: 'How Do I Prove It?',
-      disabled: true
+      name: 'How Do I Prove It?'
+      // disabled: true
     },
     { type: 'start-section', name: 'Start', disabled: true }
   ]

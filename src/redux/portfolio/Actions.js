@@ -1071,6 +1071,7 @@ export const deleteMyEducation = (educationId) => async (dispatch) => {
   dispatch({ type: DELETE_MY_EDUCATION })
   try {
     const response = await deleteMyEducationAPI(educationId)
+    debugger
     dispatch(deleteMyEducationSuccess(response.data))
   } catch (e) {
     dispatch(deleteMyEducationError(e))

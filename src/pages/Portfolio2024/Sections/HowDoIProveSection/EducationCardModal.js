@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 import LtsButton from '../../../../components/LTSButtons/LTSButton'
 import ConfirmDeleteRecordModal from '../../Components/Modals/ConfirmDeleteRecordModal'
 import { deleteMyEducation } from '../../../../redux/portfolio/Actions'
-import { uploadImage } from '../../../../utils/helpers'
+import { formatDateToInputValue, uploadImage } from '../../../../utils/helpers'
 import useImageEditor from '../../../../hooks/useImageEditor'
 
 const EducationCardModal = (props) => {
@@ -33,17 +33,23 @@ const EducationCardModal = (props) => {
       organizationName: '',
       location: '',
       website: '',
-      startDate: '',
-      endDate: '',
+      startDate: formatDateToInputValue(new Date()),
+      endDate: formatDateToInputValue(new Date()),
       description: '',
       imageUrl: '',
       currentPosition: false
     }
   )
 
+  console.log('educationData', educationData)
   useEffect(() => {
     if (props.data) {
-      setEducationData(props.data)
+      debugger
+      setEducationData({
+        ...props.data,
+        startDate: formatDateToInputValue(props.data?.startDate || new Date()),
+        endDate: formatDateToInputValue(props.data?.endDate || new Date())
+      })
       setImageUrl(props.data.imageUrl)
     }
   }, [props.data])
@@ -55,11 +61,14 @@ const EducationCardModal = (props) => {
   }
 
   const onSaveEducation = async () => {
-    const uploadedImageUrl = await uploadImage(imageProperties.croppedImage)
+    let uploadedImageUrl
+    if (imageProperties.croppedImage) {
+      uploadedImageUrl = await uploadImage(imageProperties.croppedImage)
+    }
 
     const newEducationData = {
       ...educationData,
-      imageUrl: uploadedImageUrl
+      imageUrl: uploadedImageUrl ? uploadedImageUrl : educationData.imageUrl
     }
     props.onSave?.(newEducationData)
   }
@@ -108,7 +117,7 @@ const EducationCardModal = (props) => {
                   className={`date-input my-1 py-2 px-2 text-dark `}
                   type={'date'}
                   name={'startDate'}
-                  value={educationData?.startDate || new Date()}
+                  value={educationData?.startDate}
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChange(newValue, 'startDate')
@@ -127,7 +136,7 @@ const EducationCardModal = (props) => {
                     className={`date-input my-1 py-2 px-2 text-dark `}
                     type={'date'}
                     name={'endDate'}
-                    value={educationData?.endDate || new Date()}
+                    value={educationData?.endDate}
                     onChange={(e) => {
                       const newValue = e.target.value
                       handleDataChange(newValue, 'endDate')
@@ -140,7 +149,7 @@ const EducationCardModal = (props) => {
 
           <div className={'d-flex align-items-center'}>
             <input
-              type="checkbox"
+              type='checkbox'
               checked={educationData.currentPosition}
               onChange={(e) => {
                 const newValue = e.target.checked
@@ -156,7 +165,7 @@ const EducationCardModal = (props) => {
         <div className={'row'}>
           <div className={' col-md-4 '}>
             {/*<div className="upload-image me-2 mb-1">*/}
-            <div className="p-0 mb-1">
+            <div className='p-0 mb-1'>
               <ReactImageUpload
                 value={imageUrl}
                 {...imageProperties}

@@ -69,7 +69,7 @@ const Index = ({
     fetchMyMentors()
     fetchMyRelationships()
     fetchSharingSettings()
-    // fetchMyEducations()
+    fetchMyEducations()
     // fetchMyCredentials()
   }, [])
 
@@ -88,7 +88,7 @@ const Index = ({
   }, [sharingSettings])
 
   return (
-    <div className="portfolio-container">
+    <div className='portfolio-container'>
       {!areLoadingSharingSettings ? (
         <PortfolioActions
           actions={[
@@ -144,7 +144,7 @@ const Index = ({
       <PortfolioVisibilityModal
         show={publishPortfolioModal}
         onHide={() => setPublishModalVisibility(false)}
-        title="Share your portfolio"
+        title='Share your portfolio'
         sharingSettings={sharingSettings}
       />
       <SharePortfolioModal

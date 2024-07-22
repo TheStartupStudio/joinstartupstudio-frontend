@@ -224,9 +224,8 @@ export const getMyProjectsAPI = async () => {
 export const getMyEducationsAPI = async () => {
   try {
     const response = await axiosInstance.get(
-      '/hsPortfolio/workEducations/education'
+      `/hsPortfolio/workEducations/${'education'}`
     )
-    debugger
     return response
     // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
     // await delay(2000)
@@ -296,28 +295,11 @@ export const getMyEducationsAPI = async () => {
 
 export const updateMyEducationAPI = async (education) => {
   try {
-    // const response = await axiosInstance.put(
-    //   '/hsPortfolio/educations',
-    //   education
-    // )
-    // return response
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    await delay(2000)
-
-    const updatedEducation = {
-      ...education,
-      id: education.id,
-      imageUrl: education.imageUrl || null,
-      startDate: education.startDate,
-      endDate: education.endDate,
-      organizationName: education.organizationName,
-      location: education.location,
-      website: education.website,
-      description: education.description,
-      currentPosition: education.currentPosition
-    }
-
-    return { data: updatedEducation }
+    const response = await axiosInstance.put(
+      `/hsPortfolio/workEducations/${'education'}/${education.id}`,
+      education
+    )
+    return response
   } catch (e) {
     console.log('Error occurred during updating education', e)
   }
@@ -329,24 +311,7 @@ export const addMyEducationAPI = async (education) => {
       ...education,
       type: 'education'
     })
-    debugger
     return response
-    // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    // await delay(2000)
-
-    // const newEducation = {
-    //   id: Math.floor(Math.random() * 10000), // Dummy id generation
-    //   imageUrl: education.imageUrl || null,
-    //   startDate: education.startDate,
-    //   endDate: education.endDate,
-    //   organizationName: education.organizationName,
-    //   location: education.location,
-    //   website: education.website,
-    //   description: education.description,
-    //   currentPosition: education.currentPosition
-    // }
-
-    // return { data: newEducation }
   } catch (e) {
     console.log('Error occurred during adding education', e)
   }
@@ -354,15 +319,10 @@ export const addMyEducationAPI = async (education) => {
 
 export const deleteMyEducationAPI = async (educationId) => {
   try {
-    // const response = await axiosInstance.delete(
-    //   `/hsPortfolio/educations/${educationId}`
-    // )
-    // return response
-
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    await delay(2000)
-
-    return { data: { success: true, id: educationId } }
+    const response = await axiosInstance.delete(
+      `/hsPortfolio/workEducations/${educationId}`
+    )
+    return response
   } catch (e) {
     console.log('Error occurred during deleting education', e)
   }
