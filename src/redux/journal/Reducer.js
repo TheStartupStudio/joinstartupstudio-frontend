@@ -8,7 +8,8 @@ import {
   JOURNAL_FINISHED_ERROR,
   GET_FINISHED_JOURNAL_SUCCESS,
   SAVE_FINISHED_JOURNAL_SUCCESS,
-  SAVE_FINISHED_COURSE_SUCCESS
+  SAVE_FINISHED_COURSE_SUCCESS,
+  SET_JOURNAL_TITLES
 } from './Types'
 
 const initialState = {
@@ -18,7 +19,9 @@ const initialState = {
   finishedCourses: '',
   successMessage: null,
   errorMessage: null,
-  journalFinished: false
+  journalFinished: false,
+
+  journalTitles: []
 }
 
 const journalReducer = (state = initialState, action) => {
@@ -99,6 +102,11 @@ const journalReducer = (state = initialState, action) => {
       return {
         ...state,
         journalFinished: ''
+      }
+    case SET_JOURNAL_TITLES:
+      return {
+        ...state,
+        journalTitles: payload
       }
     default:
       return state

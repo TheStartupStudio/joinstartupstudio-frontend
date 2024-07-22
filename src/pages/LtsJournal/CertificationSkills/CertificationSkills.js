@@ -111,6 +111,7 @@ const CertificationSkills = ({ journal, isEditable }) => {
                   onSelectContent={() => updateContentSelection(skill)}
                   proficient={skill?.status === 'proficient'}
                   needsImprovement={skill?.status === 'needs_improvement'}
+                  isEditable={isEditable}
                 />
                 <button
                   className={'explanation-button'}

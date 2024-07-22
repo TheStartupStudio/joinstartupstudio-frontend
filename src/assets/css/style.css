@@ -1130,6 +1130,17 @@ input[type='file'] {
   border-radius: 50%;
   animation: spinner-border 0.75s linear infinite;
 }
+.spinner-border-info {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: text-bottom;
+  border: 0.25em solid #51c7df;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border 0.75s linear infinite;
+}
+
 .spinner-border-sm {
   width: 1rem;
   height: 1rem;
@@ -3458,9 +3469,10 @@ wave > wave:first-child {
 }
 .search-input__icon {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 30%;
+  transform: translateY(-30%);
   left: 10px;
+  scale: 0.7;
 }
 .search-input__input {
   width: 100%;
@@ -3531,7 +3543,7 @@ wave > wave:first-child {
 }
 .accordion-menu__item > a:not(.accordion-menu__item-toggle):hover,
 .accordion-menu__item > a:not(.accordion-menu__item-toggle).active {
-  color: #51c7df;
+  color: #51c7df !important;
 }
 
 .accordion-menu__item-toggle {
@@ -3547,7 +3559,8 @@ wave > wave:first-child {
   padding: 4px 0;
   transition: color 0.2s;
 }
-.accordion-menu__item-toggle:hover {
+.accordion-menu__item-toggle:hover,
+.accordion-menu__item-toggle.active {
   color: #21c5d0;
 }
 .accordion-menu__item-toggle > svg {
@@ -3643,7 +3656,7 @@ strong {
 
 .journal-entries__video-thumbnail--welcome-video {
   position: relative;
-  max-width: 500px;
+  /* max-width: 500px; */
   width: 100%;
   /* margin: 0 auto; */
   cursor: pointer;

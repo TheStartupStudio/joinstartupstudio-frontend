@@ -7,13 +7,13 @@ import { StudentCountProvider } from '../../components/MyStudents/studentCountCo
 const MyStudents = () => {
   return (
     <StudentCountProvider>
-      <div id="main-body">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12 col-md-12 col-xl-9">
-              <div className="account-page-padding">
-                <h3 className="page-title">STUDENT MANAGEMENT</h3>
-                <h3 className="page-description ">
+      <div id='main-body'>
+        <div className='container-fluid'>
+          <div className='row'>
+            <div className='col-12 col-md-12 col-xl-9'>
+              <div className='account-page-padding'>
+                <h3 className='page-title'>STUDENT MANAGEMENT</h3>
+                <h3 className='page-description '>
                   Manage your student enrollment.
                 </h3>
                 {/* <div className='mt-5 pt-1'>
@@ -31,15 +31,15 @@ const MyStudents = () => {
                 </div> */}
               </div>
             </div>
-            <div className="col-12 col-xl-3">
-              <div className="account-page-padding">
+            <div className='col-12 col-xl-3'>
+              <div className='account-page-padding'>
                 <StudentData />
                 {/* <CertificationRequestsWidget /> */}
               </div>
             </div>
-            <div className="col-12">
-              <div className="account-page-padding pt-0">
-                <h3 className="page-title">VIEW ALL STUDENTS</h3>
+            <div className='col-12'>
+              <div className='account-page-padding pt-0'>
+                <h3 className='page-title'>VIEW ALL STUDENTS</h3>
                 <StudentsTable />
               </div>
             </div>

@@ -15,13 +15,13 @@ const Body = (props) => {
   const location = useLocation()
   return (
     <ul
-      className="list-unstyled components sidebar-menu-item"
-      id="side-menu-main"
+      className='list-unstyled components sidebar-menu-item'
+      id='side-menu-main'
     >
       <li>
         <div
-          className="accordion accordion-flush"
-          id="accordionFlushExample"
+          className='accordion accordion-flush'
+          id='accordionFlushExample'
         ></div>
         <SidebarItem
           onClick={() => {
@@ -33,15 +33,15 @@ const Body = (props) => {
             location.pathname.includes('dashboard') ? 'active' : ''
           }`}
           srcImage={FolderSidebarImage}
-          title="MY Dashboard"
+          title='MY Dashboard'
           isDropdown={false}
         />
       </li>
       <ParentSidebarItem
-        href="#myLtsEDU"
-        aria-controls="myLtsEDU"
+        href='#myLtsEDU'
+        aria-controls='myLtsEDU'
         srcImage={FolderSidebarImage}
-        title="MY Learn to Start EDU"
+        title='MY Learn to Start EDU'
         isDropdown={true}
       />
       <ParentDropdownItem id={'myLtsEDU'}>
@@ -57,10 +57,10 @@ const Body = (props) => {
         />
       </ParentDropdownItem>
       <ParentSidebarItem
-        ariaControls="collapseClassroom"
-        href="#collapseClassroom"
+        ariaControls='collapseClassroom'
+        href='#collapseClassroom'
         srcImage={FolderSidebarImage}
-        title="MY CLASSROOM"
+        title='MY CLASSROOM'
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseClassroom'}>
@@ -75,14 +75,14 @@ const Body = (props) => {
           title={'MY EVALUATIONS'}
           to={'/my-evaluations'}
         />
-        <DropdownItem title={'MY INBOX'} to="/my-inbox" />
+        <DropdownItem title={'MY INBOX'} to='/my-inbox' />
       </ParentDropdownItem>
 
       <ParentSidebarItem
-        ariaControls="collapseExample"
-        href="#collapseExample"
+        ariaControls='collapseExample'
+        href='#collapseExample'
         srcImage={FolderSidebarImage}
-        title="MY MARKET RESOURCES"
+        title='MY MARKET RESOURCES'
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseExample'}>
@@ -96,10 +96,10 @@ const Body = (props) => {
         <DropdownItem title={'SPOTLIGHT'} to={'/spotlight'} />
       </ParentDropdownItem>
       <ParentSidebarItem
-        ariaControls="journals"
-        href="#journals"
+        ariaControls='journals'
+        href='#journals'
         srcImage={FolderSidebarImage}
-        title="JOURNALS"
+        title='JOURNALS'
         isDropdown={true}
       />
       <ParentDropdownItem id={'journals'}>
@@ -113,10 +113,10 @@ const Body = (props) => {
         <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
       </ParentDropdownItem>
       <ParentSidebarItem
-        ariaControls="mySpark"
-        href="#mySpark"
+        ariaControls='mySpark'
+        href='#mySpark'
         srcImage={FolderSidebarImage}
-        title="MY SPARK"
+        title='MY SPARK'
         isDropdown={true}
       />
       <ParentDropdownItem id={'mySpark'}>
@@ -131,7 +131,7 @@ const Body = (props) => {
         to={'/my-portfolio'}
         className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
         srcImage={FolderSidebarImage}
-        title="MY PORTFOLIO"
+        title='MY PORTFOLIO'
         isDropdown={false}
       />
     </ul>

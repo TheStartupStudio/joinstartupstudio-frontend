@@ -78,18 +78,18 @@ function StoryInMotionGuestQA() {
   }
 
   return (
-    <div className="page-padding">
-      <div className="guidance-videos-top mt-5 mb-3 guidance-encouragement-page-titles">
+    <div className='page-padding'>
+      <div className='guidance-videos-top mt-5 mb-3 guidance-encouragement-page-titles'>
         <h3>
-          <IntlMessages id="storyInMotion.guest_q&a_videos" />
+          <IntlMessages id='storyInMotion.guest_q&a_videos' />
         </h3>
-        <Link className="guidance-link" to={`/startup-live/videos`}>
-          <IntlMessages id="general.view_all" />
+        <Link className='guidance-link' to={`/startup-live/videos`}>
+          <IntlMessages id='general.view_all' />
         </Link>
       </div>
 
-      <div className="beyond-videos-desktop">
-        <div className="arrow-icon-1">
+      <div className='beyond-videos-desktop'>
+        <div className='arrow-icon-1'>
           <button
             className={`videos-track ${
               window.location.pathname.includes('/beyond-your-course') &&
@@ -101,11 +101,11 @@ function StoryInMotionGuestQA() {
           >
             <FontAwesomeIcon
               icon={faChevronLeft}
-              className="videos-track-icon"
+              className='videos-track-icon'
             />
           </button>
         </div>
-        <div className="card-group desktop-menu card-group-beyond-your-course w-100">
+        <div className='card-group desktop-menu card-group-beyond-your-course w-100'>
           {startupLiveVideos
             ?.slice(startVideoIndex, endVideoIndex)
             .map((video, index) => (
@@ -122,7 +122,7 @@ function StoryInMotionGuestQA() {
               />
             ))}
         </div>
-        <div className="arrow-icon-1 justify-content-start">
+        <div className='arrow-icon-1 justify-content-start'>
           <button
             className={`videos-track ${
               window.location.pathname.includes('/beyond-your-course') &&
@@ -135,7 +135,7 @@ function StoryInMotionGuestQA() {
           >
             <FontAwesomeIcon
               icon={faChevronRight}
-              className="videos-track-icon"
+              className='videos-track-icon'
             />
           </button>
         </div>
@@ -145,18 +145,18 @@ function StoryInMotionGuestQA() {
 }
 function FavoriteEpisodes(props) {
   return (
-    <div className="col-12 pb-5 py-lg-0 col-lg-3 border-start">
-      <div className="my-lg-4 col-11 mx-auto text-center">
+    <div className='col-12 pb-5 py-lg-0 col-lg-3 border-start'>
+      <div className='my-lg-4 col-11 mx-auto text-center'>
         <img
           src={image2}
-          className="border story-in-motion-logo"
+          className='border story-in-motion-logo'
           alt={'story in motion'}
         />
       </div>
-      <div className="mb-4 mt-4 col-10 mx-auto"></div>
+      <div className='mb-4 mt-4 col-10 mx-auto'></div>
       {props.lastSaved.length > 0 && (
         <>
-          <h4 className="text-center h4 mb-4 postcast-faworite-widget">
+          <h4 className='text-center h4 mb-4 postcast-faworite-widget'>
             <IntlMessages id={'storyInMotion.favorite'} />
           </h4>
           {props.lastSaved.slice(-2).map((lastSaved) => (
@@ -190,8 +190,11 @@ function FavoriteEpisodes(props) {
         </>
       )}
       {props.lastSaved.length >= 2 && (
-        <div className="view_all text-center">
-          <Link to={'/savedMedia'} className="view_all text-center">
+        <div className='view_all text-center'>
+          <Link
+            to={'/savedMedia#story-in-motion'}
+            className='view_all text-center'
+          >
             <span>View all</span>
           </Link>
         </div>
@@ -339,23 +342,23 @@ function StoryInMotion() {
 
   return (
     <div>
-      <div id="main-body">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12 col-lg-9 px-0">
-              <div className="page-padding">
-                <h3 className="pageTitle">
-                  <IntlMessages id="sidebar.story_in_motion" />
+      <div id='main-body'>
+        <div className='container-fluid'>
+          <div className='row'>
+            <div className='col-12 col-lg-9 px-0'>
+              <div className='page-padding'>
+                <h3 className='pageTitle'>
+                  <IntlMessages id='sidebar.story_in_motion' />
                 </h3>
-                <p className="page-description-story-in-motion">
-                  <IntlMessages id="storyInMotion.page_description2" />
+                <p className='page-description-story-in-motion'>
+                  <IntlMessages id='storyInMotion.page_description2' />
                 </p>
-                <h3 className="mt-5 pt-2 page-description-this-week-podcast">
-                  <IntlMessages id="storyInMotion.page_week_podcast" />
+                <h3 className='mt-5 pt-2 page-description-this-week-podcast'>
+                  <IntlMessages id='storyInMotion.page_week_podcast' />
                 </h3>
-                <p className="story-in-motion-now-playing">
-                  <IntlMessages id="storyInMotion.page_week_now_playing" />
-                  <span className="mx-2">{selectedTrack?.title}</span>
+                <p className='story-in-motion-now-playing'>
+                  <IntlMessages id='storyInMotion.page_week_now_playing' />
+                  <span className='mx-2'>{selectedTrack?.title}</span>
                 </p>
                 <Waveform
                   url={selectedTrack?.url}
@@ -363,75 +366,75 @@ function StoryInMotion() {
                   isPlaying={isPlaying}
                   setMusicIsPlaying={MusicPlaying}
                 />
-                <p className="story-in-motion-also-avalible mb-2 pb-0 ">
-                  <IntlMessages id="storyInMotion.page_also_avalible" />
+                <p className='story-in-motion-also-avalible mb-2 pb-0 '>
+                  <IntlMessages id='storyInMotion.page_also_avalible' />
                 </p>
-                <div className="d-md-flex justify-content-between text-center podcast-platforms-img">
+                <div className='d-md-flex justify-content-between text-center podcast-platforms-img'>
                   <img
                     src={Amazon_Music}
-                    className="mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1"
+                    className='mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1'
                     onClick={() => {
                       redirect(
                         'https://music.amazon.com/podcasts/ff04a067-2539-4c4e-9403-295a2aad3227/story-in-motion---conversations-on-empowerment-wellness-and-performance'
                       )
                     }}
-                    alt="Amazon_Music"
+                    alt='Amazon_Music'
                   />
                   <img
                     src={Apple_Podcasts}
-                    className="mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1"
+                    className='mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1'
                     onClick={() => {
                       redirect(
                         'https://podcasts.apple.com/us/podcast/story-in-motion-conversations-on-empowerment-wellness-and-performance/id1615119248'
                       )
                     }}
-                    alt="Apple_Podcasts"
+                    alt='Apple_Podcasts'
                   />
-                  <img
+                  {/* <img
                     src={Google_Podcasts_2x}
-                    className="mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1"
+                    className='mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1'
                     onClick={() => {
                       redirect(
                         'https://podcasts.google.com/feed/aHR0cHM6Ly9mZWVkcy5idXp6c3Byb3V0LmNvbS8xOTQxNzcxLnJzcw=='
                       )
                     }}
-                    alt="Google_Podcasts_2x"
+                    alt='Google_Podcasts_2x'
                   />
                   <img
                     src={Overcast_2x}
-                    className="mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1"
+                    className='mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1'
                     onClick={() => {
                       redirect('https://overcast.fm/itunes1615119248')
                     }}
-                    alt="Overcast_2x"
-                  />
+                    alt='Overcast_2x'
+                  /> */}
                   <img
                     src={Spotify_2x}
-                    className="mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1"
+                    className='mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1'
                     onClick={() => {
                       redirect(
                         'https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3'
                       )
                     }}
-                    alt="Spotify_2x"
+                    alt='Spotify_2x'
                   />
-                  <img
+                  {/* <img
                     src={Stitcher_2x}
-                    className="mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1"
+                    className='mt-2 mt-sm-0 me-2 me-sm-0 mx-1 my-1'
                     onClick={() => {
                       redirect(
                         'https://www.stitcher.com/show/story-in-motion-conversations-on-empowerment-wellness-and'
                       )
                     }}
-                    alt="Stitcher_2x"
-                  />
+                    alt='Stitcher_2x'
+                  /> */}
                 </div>
-                <p className="mt-4 story-in-motion-Previous-Podcast-Episodes">
-                  <IntlMessages id="storyInMotion.previous_podcast_episodes" />
+                <p className='mt-4 story-in-motion-Previous-Podcast-Episodes'>
+                  <IntlMessages id='storyInMotion.previous_podcast_episodes' />
                 </p>
                 {tracks?.map((e, index) => {
                   return (
-                    <div className="row">
+                    <div className='row'>
                       <PodCast
                         icon={(e?.url == selectedTrack?.url) & isPlaying}
                         key={index}
@@ -461,7 +464,7 @@ function StoryInMotion() {
                   )
                 })}
               </div>
-              <div className="text-center w-100 mb-5">
+              <div className='text-center w-100 mb-5'>
                 {allPage > page && (
                   <span
                     style={Style.loadMore}
@@ -470,7 +473,7 @@ function StoryInMotion() {
                     }}
                   >
                     {loading ? (
-                      <IntlMessages id="general.loading" />
+                      <IntlMessages id='general.loading' />
                     ) : (
                       <IntlMessages id={'storyInMotion.load_more'} />
                     )}

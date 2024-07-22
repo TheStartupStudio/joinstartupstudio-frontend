@@ -39,7 +39,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 import { ShareMyPortfolioWidget } from '../../components/Portfolio/preview/shareMyPortfolioWidget'
-import { editSocialMedia } from '../../redux/user/Actions'
+import { editSocialMedia, userUpdateProfession } from '../../redux/user/Actions'
 import StudentData from '../../components/MyStudents/studentData'
 import { StudentCountProvider } from '../../components/MyStudents/studentCountContext'
 
@@ -97,7 +97,7 @@ function Profile(props) {
       .then()
       .catch((e) => {
         setIsContactable(!oldContactableValue)
-        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
       })
   }
 
@@ -147,14 +147,14 @@ function Profile(props) {
         .then(async (res) => {
           if (res.data.message === 'more') {
             toast.error(
-              <IntlMessages id="my_account.add_my_profile_tags_more" />
+              <IntlMessages id='my_account.add_my_profile_tags_more' />
             )
             await getUserTags()
             setLoading(false)
             closeModal('addUserTagModal')
             closeModal('tags')
           } else {
-            toast.success(<IntlMessages id="alerts.success_change" />)
+            toast.success(<IntlMessages id='alerts.success_change' />)
             await getUserTags()
             setLoading(false)
             closeModal('addUserTagModal')
@@ -163,7 +163,7 @@ function Profile(props) {
         })
         .catch((err) => {
           setLoading(false)
-          toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+          toast.error(<IntlMessages id='alerts.something_went_wrong' />)
           closeModal('addUserTagModal')
           setTagName('')
         })
@@ -183,15 +183,15 @@ function Profile(props) {
       phone_number: changedUser.phone_number
     }
     if (editPage == 'phone' && !validateNumber(changedUser.phone_number)) {
-      toast.error(<IntlMessages id="profile.incorrect_number" />)
+      toast.error(<IntlMessages id='profile.incorrect_number' />)
       setLoading(false)
       return
     }
     if (user.email !== changedUser.email) {
       if (!changedUser.email || changedUser.email === '') {
-        toast.error(<IntlMessages id="alerts.email_required" />)
+        toast.error(<IntlMessages id='alerts.email_required' />)
       } else if (editPage == 'email' && !validateEmail(changedUser.email)) {
-        toast.error(<IntlMessages id="alerts.valid_email" />)
+        toast.error(<IntlMessages id='alerts.valid_email' />)
       } else {
         await axiosInstance
           .put(`/users/change-email`, { new_email: changedUser.email })
@@ -231,19 +231,30 @@ function Profile(props) {
         setUser(res.data)
         setSocialMedia(res.data.social_links)
         setLoading(false)
-        if (localStorage.getItem('name') !== res.data.name) {
+        const user = JSON.parse(localStorage.getItem('user'))
+        const userProfession = user ? user.user?.profession : null
+
+        if (userProfession !== res.data.profession) {
+          const updatedUser = {
+            ...user,
+            profession: res.data.profession
+          }
+
+          localStorage.setItem('user', JSON.stringify(updatedUser))
+          dispatch(userUpdateProfession(res.data.profession))
+        } else if (localStorage.getItem('name') !== res.data.name) {
           localStorage.setItem('name', res.data.name)
           dispatch(userUpdate(res.data.name))
         } else if (profileImage !== res.data.profile_image) {
           localStorage.setItem('profileImage', res.data.profile_image)
           dispatch(userUpdateProfileImage(res.data.profile_image))
         }
-        toast.success(<IntlMessages id="alert.my_account.success_change" />)
+        toast.success(<IntlMessages id='alert.my_account.success_change' />)
         closeModal('profileModal')
         dispatch(editSocialMedia(params.social_links))
       })
       .catch((err) => {
-        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
         setLoading(false)
       })
   }
@@ -305,12 +316,12 @@ function Profile(props) {
       .post(`/tags/user`, data)
       .then(async (res) => {
         if (res.data.message === 'more') {
-          toast.error(<IntlMessages id="my_account.add_my_profile_tags_more" />)
+          toast.error(<IntlMessages id='my_account.add_my_profile_tags_more' />)
           await getUserTags()
           setLoading(false)
           closeModal('tags')
         } else {
-          toast.success(<IntlMessages id="alerts.success_change" />)
+          toast.success(<IntlMessages id='alerts.success_change' />)
           await getUserTags()
           setLoading(false)
           closeModal('tags')
@@ -324,7 +335,7 @@ function Profile(props) {
       .delete('/tags/', { data })
       .then(async () => {
         if (showToast == true) {
-          toast.success(<IntlMessages id="alerts.success_change" />)
+          toast.success(<IntlMessages id='alerts.success_change' />)
         }
         await getUserTags()
         setLoading(false)
@@ -334,53 +345,54 @@ function Profile(props) {
   }
 
   return (
-    <div className="container-fluid mx-auto">
-      <div className="row mx-auto">
-        <div className="col-12 col-xl-9">
-          <div className="col-12 col-md-12 px-0">
-            <div className="account-page-padding page-border">
-              <div className="row pe-0">
-                <div className="col-md-8 pe-0">
-                  <h3 className="page-title mb-0">
-                    <IntlMessages id="my_account.page_title" />
+    <div className='container-fluid mx-auto'>
+      <div className='row mx-auto'>
+        <div className='col-12 col-xl-9'>
+          <div className='col-12 col-md-12 px-0'>
+            <div className='account-page-padding page-border'>
+              <div className='row pe-0'>
+                <div className='col-md-8 pe-0'>
+                  <h3 className='page-title mb-0'>
+                    <IntlMessages id='my_account.page_title' />
                   </h3>
-                  <p className="page-description">
-                    <IntlMessages id="my_account.page_description" />
+                  <p className='page-description'>
+                    <IntlMessages id='my_account.page_description' />
                   </p>
                 </div>
                 <div
-                  className="col-md-4 update-password"
+                  className='col-md-4 update-password'
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
                     setShowEditPasswordModal(true)
                   }}
                 >
-                  <h3 className="float-md-end">
-                    <IntlMessages id="my_account.update_password" />
+                  <h3 className='float-md-end'>
+                    <IntlMessages id='my_account.update_password' />
                   </h3>
                 </div>
               </div>
-              <div style={{ backgroundColor: '#f8f7f7' }} className="pb-3">
-                <div className="my-account mx-0 mt-4">
-                  <div className="row p-sm-3 p-3">
-                    <div className="col-12 text-center text-md-auto col-md-4 col-lg-3 gx-5">
-                      <div className="round-image-wrapper">
+              <div style={{ backgroundColor: '#f8f7f7' }} className='pb-3'>
+                <div className='my-account mx-0 mt-4'>
+                  <div className='row p-sm-3 p-3'>
+                    <div className='col-12 text-center text-md-auto col-md-4 col-lg-3 gx-5'>
+                      <div className='round-image-wrapper'>
+                        {console.log('user', user)}
                         <Image
                           src={
                             user.profile_image
                               ? user.profile_image
                               : defaultImage
                           }
-                          className="editbio-user-image mx-auto my-account"
+                          className='editbio-user-image mx-auto my-account'
                         />
                       </div>
                     </div>
-                    <div className="col-10 col-md-6 col-lg-6 offset-lg-0">
-                      <h2 className="mt-4 mb-0">{user.name}</h2>
-                      <h5 className="mb-0">
+                    <div className='col-10 col-md-6 col-lg-6 offset-lg-0'>
+                      <h2 className='mt-4 mb-0'>{user.name}</h2>
+                      <h5 className='mb-0'>
                         {user.profession ? user.profession : ''}
                       </h5>
-                  
+
                       {/*<div className='mt-1'>*/}
                       {/*  {socialMedia?.linkedIn && (*/}
                       {/*    <a*/}
@@ -464,39 +476,38 @@ function Profile(props) {
                       {/*  )}*/}
                       {/*</div>*/}
                     </div>
-                    <div className="col-2 col-md-2 col-lg-3 mt-md-0">
+                    <div className='col-2 col-md-2 col-lg-3 mt-md-0'>
                       <div
-                        className="float-lg-end float-end mx-2 mx-md-0 mt-4 mt-sm-0 pt-md-4 px-md-4"
+                        className='float-lg-end float-end mx-2 mx-md-0 mt-4 mt-sm-0 pt-md-4 px-md-4'
                         onClick={() => openEditProfileModal('profile')}
                         style={{ cursor: 'pointer' }}
                       >
                         <FontAwesomeIcon
-                          className="edit-pencil"
+                          className='edit-pencil'
                           icon={faPencilAlt}
                         />
                       </div>
                     </div>
 
                     <div className='mt-3'>
-                   {user.bio ? (
-                     <p>{user.bio}</p>
-                   ) : (
-                     <>
-                       <p>You can write your biography here.</p>
-                     </>
-                   )}
+                      {user.bio ? (
+                        <p>{user.bio}</p>
+                      ) : (
+                        <>
+                          <p>You can write your biography here.</p>
+                        </>
+                      )}
+                    </div>
                   </div>
-                  </div>
-                 
                 </div>
                 <div
-                  className="my-account mt-4 mb-2 mx-3 pr-2"
+                  className='my-account mt-4 mb-2 mx-3 pr-2'
                   style={{ border: '2px solid #bbbdbf' }}
                 >
-                  <div className="row">
-                    <div className="row justify-content-between">
-                      <h4 className="m-3 col-12 col-lg-5">
-                        <IntlMessages id="my_account.email_address" />
+                  <div className='row'>
+                    <div className='row justify-content-between'>
+                      <h4 className='m-3 col-12 col-lg-5'>
+                        <IntlMessages id='my_account.email_address' />
                       </h4>
 
                       {/* <div className="col-12 col-lg-6 my-auto">
@@ -535,7 +546,7 @@ function Profile(props) {
                     </div> */}
                     </div>
 
-                    <InputGroup className="mt-3 mb-3">
+                    <InputGroup className='mt-3 mb-3'>
                       <InputGroup.Text
                         style={{
                           border: 0,
@@ -543,13 +554,13 @@ function Profile(props) {
                         }}
                       >
                         <FontAwesomeIcon
-                          className="edit-pencil mx-1"
+                          className='edit-pencil mx-1'
                           icon={faEnvelope}
                         />
                       </InputGroup.Text>
                       <Form.Control
-                        className="my-profile-input"
-                        type="text"
+                        className='my-profile-input'
+                        type='text'
                         value={user.email}
                       />
                       <Button
@@ -557,7 +568,7 @@ function Profile(props) {
                         onClick={() => openEditProfileModal('email')}
                       >
                         <FontAwesomeIcon
-                          className="edit-pencil float-end mx-md-4"
+                          className='edit-pencil float-end mx-md-4'
                           icon={faPencilAlt}
                         />
                       </Button>
@@ -661,7 +672,7 @@ function Profile(props) {
             </div>
           </div>
         </div>
-        <div className="col-12 col-xl-3 border-md-0">
+        <div className='col-12 col-xl-3 border-md-0'>
           {/* <div>
             <span className='link_to_my_portfolio'>
               <IntlMessages id='my_account.link_to_my_Portfolio_text' />

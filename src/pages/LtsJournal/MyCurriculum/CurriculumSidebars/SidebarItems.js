@@ -38,8 +38,8 @@ const SidebarItems = ({ url, filteredJournals, type, category }) => {
 
   return (
     <>
-      <div className="d-flex align-items-center justify-content-end">
-        <p className="m-0">View add lesson</p>
+      <div className='d-flex align-items-center justify-content-end'>
+        <p className='m-0'>View add lesson</p>
         <LtsCheckbox
           toggle={() => setAddLesson((state) => !state)}
           checked={addLesson}
@@ -56,7 +56,7 @@ const SidebarItems = ({ url, filteredJournals, type, category }) => {
             <>
               <div
                 key={journalItem.id}
-                className={`accordion-menu__item text-uppercase accordion-menu__item-transition ${
+                className={`accordion-menu__item text-uppercase accordion-menu__item-transition  ${
                   addLesson && journalItem.order !== 1 ? 'mb-4' : ''
                 }`}
               >
@@ -78,7 +78,7 @@ const SidebarItems = ({ url, filteredJournals, type, category }) => {
                   >
                     <HiDocumentPlus />
                     <p
-                      className="m-0"
+                      className='m-0'
                       onClick={() => handleOpenModal(lesson, journalItem.id)}
                     >
                       {hasLesson ? lesson.title : 'Add Lesson'}

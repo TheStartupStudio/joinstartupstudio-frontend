@@ -9,7 +9,12 @@ import axiosInstance from '../../utils/AxiosInstance'
 import SubmitIndustryProblemModal from '../../pages/MyImmersion/Modals/SubmitIndustryProblemModal'
 import SubmitExperienceModal from '../../pages/MyImmersion/Modals/SubmitExperienceModal'
 
-function Ticket({ ticket, setSelectedTicket, updateTicketStatus }) {
+function Ticket({
+  ticket,
+  setSelectedTicket,
+  updateTicketStatus,
+  updateUserSolutionStatus
+}) {
   const history = useHistory()
   const [industryProblemModal, setIndustryProblemModal] = useState(false)
   const [submitExperienceModal, setSubmitExperienceModal] = useState(false)
@@ -99,6 +104,7 @@ function Ticket({ ticket, setSelectedTicket, updateTicketStatus }) {
           onHide={() => setIndustryProblemModal(false)}
           User={ticket.User}
           mode="edit"
+          updateUserSolutionStatus={updateUserSolutionStatus}
         />
       )}
       {submitExperienceModal && (
@@ -108,6 +114,7 @@ function Ticket({ ticket, setSelectedTicket, updateTicketStatus }) {
           onHide={() => setSubmitExperienceModal(false)}
           User={ticket.User}
           mode="edit"
+          updateUserSolutionStatus={updateUserSolutionStatus}
         />
       )}
     </>

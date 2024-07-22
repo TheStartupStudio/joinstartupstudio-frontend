@@ -22,6 +22,7 @@ import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
 
 const SubmitIndustryProblemModal = (props) => {
+  console.log('props', props)
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.user.user)
   const { loading, industryProblems } = useSelector(
@@ -56,6 +57,7 @@ const SubmitIndustryProblemModal = (props) => {
 
     if (res) {
       toast.success('User solution status updated successfully!')
+      props.updateUserSolutionStatus(props.id, status)
       props.onHide()
       const type =
         status === 'approved'

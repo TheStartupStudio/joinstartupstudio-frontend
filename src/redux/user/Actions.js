@@ -13,7 +13,9 @@ import {
   UPDATE_USER_TNC,
   SESSION_START_TIME,
   SESSION_END_TIME,
-  USER_ACTIVITY
+  USER_ACTIVITY,
+  SET_LOGIN_LOADING,
+  USER_CHANGE_PROFESSION
 } from './Types'
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -132,6 +134,9 @@ export const userLogin = (old_password) => async (dispatch) => {
     // Check current user attributes
     const currentUser = await Auth.currentAuthenticatedUser({
       bypassCache: true
+    }).then((res) => {
+      console.log('res auth', res)
+      return res
     })
 
     if (currentUser.attributes['custom:isVerified'] === 0) {
@@ -206,6 +211,9 @@ export const userLogin = (old_password) => async (dispatch) => {
       type: LOGIN_LOADING,
       payload: false
     })
+    if (user) {
+      return 'instructor'
+    }
   } catch (err) {
     dispatch({
       type: USER_LOGIN_ERROR,
@@ -225,6 +233,19 @@ export const userUpdate = (data) => async (dispatch) => {
   try {
     dispatch({
       type: USER_CHANGE_NAME,
+      payload: data
+    })
+  } catch ({ response }) {
+    dispatch({
+      type: USER_EDIT_ERROR,
+      payload: 'Server Error'
+    })
+  }
+}
+export const userUpdateProfession = (data) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_CHANGE_PROFESSION,
       payload: data
     })
   } catch ({ response }) {
@@ -289,5 +310,16 @@ export const updateTnC = () => async (dispatch) => {
     })
   } catch (err) {
     console.log(err)
+  }
+}
+
+export const setLoginLoading = (payload) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SET_LOGIN_LOADING,
+      payload: payload
+    })
+  } catch (error) {
+    console.log(error)
   }
 }

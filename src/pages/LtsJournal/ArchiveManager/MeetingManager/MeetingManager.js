@@ -311,6 +311,7 @@ const MeetingManager = (props) => {
               handleChangeTeamMeeting={(name, value) =>
                 handleChangeTeamMeeting(name, value)
               }
+              setLoading={setLoading}
             />
           }
         />

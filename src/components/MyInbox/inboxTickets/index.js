@@ -94,6 +94,7 @@ function InboxTickets() {
       const updatedData = { ...prevData }
       Object.keys(updatedData).forEach((key) => {
         if (updatedData[key]?.rows) {
+          console.log('updatedData[key]?.rows', updatedData[key]?.rows)
           updatedData[key].rows = updatedData[key].rows.map((ticket) =>
             ticket.id === ticketId
               ? { ...ticket, read_by_instructor: true }
@@ -104,20 +105,27 @@ function InboxTickets() {
       return updatedData
     })
   }
-
-  // const renderTickets =
-  //   isMenuOpened &&
-  //   data &&
-  //   !loading &&
-  //   data[questionsMenuSelected]?.rows
-  //     .filter((ticket) => filterBySelected(ticket.read_by_instructor))
-  //     .map((ticket) => (
-  //       <Ticket
-  //         key={ticket.id}
-  //         ticket={ticket}
-  //         setSelectedTicket={setSelectedTicket}
-  //       />
-  //     ))
+  const updateUserSolutionStatus = (ticketId, newSolutionStatus) => {
+    setData((prevData) => {
+      const updatedData = { ...prevData }
+      Object.keys(updatedData).forEach((key) => {
+        if (updatedData[key]?.rows) {
+          updatedData[key].rows = updatedData[key].rows.map((ticket) =>
+            ticket.id === ticketId
+              ? {
+                  ...ticket,
+                  user_industry_solution: {
+                    ...ticket.user_industry_solution,
+                    status: newSolutionStatus
+                  }
+                }
+              : ticket
+          )
+        }
+      })
+      return updatedData
+    })
+  }
 
   const renderTickets = useMemo(() => {
     const filterBySelected = (read_by_instructor) => {
@@ -149,6 +157,7 @@ function InboxTickets() {
         ticket={ticket}
         setSelectedTicket={setSelectedTicket}
         updateTicketStatus={updateTicketStatus}
+        updateUserSolutionStatus={updateUserSolutionStatus}
       />
     ))
   }, [

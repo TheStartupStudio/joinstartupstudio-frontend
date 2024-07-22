@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
 import IntlMessages from '../../utils/IntlMessages'
 import { changeSidebarState } from '../../redux'
-import StartupLiveEn from '../../assets/images/startup-live-en.jpg'
-import StartupLiveEs from '../../assets/images/startup-live-es.jpg'
-import { ShowMessenger } from '../../utils/helpers'
 import Video from '../../components/Video'
-import { NotesButton } from '../../components/Notes'
 import ReactPaginate from 'react-paginate'
 import '../Saved/index.css'
+import { setBackButton } from '../../redux/backButtonReducer'
 
 export default function GuidanceEncouragement() {
   const [pageTitle, setPageTitle] = useState('')
@@ -26,6 +20,14 @@ export default function GuidanceEncouragement() {
   const videosPerPage = 9
 
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setBackButton(true, 'story-in-motion'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
@@ -93,11 +95,11 @@ export default function GuidanceEncouragement() {
   }
 
   return (
-    <div id="main-body">
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-12 col-xl-12">
-            <div className="account-page-padding page-border">
+    <div id='main-body'>
+      <div className='container-fluid'>
+        <div className='row'>
+          <div className='col-12 col-xl-12'>
+            <div className='account-page-padding page-border'>
               <div
                 style={
                   pageVideos && pageVideos.length < 1
@@ -106,16 +108,16 @@ export default function GuidanceEncouragement() {
                 }
               >
                 <div>
-                  <h3 className="page-title">
+                  <h3 className='page-title'>
                     {pageTitle && <span> {pageTitle} </span>}
                   </h3>
-                  <p className="page-description">
+                  <p className='page-description'>
                     {pageDescription && (
                       <IntlMessages id={`${pageDescription}`} />
                     )}
                   </p>
                 </div>
-                <div className="row">
+                <div className='row'>
                   {currentPageVideos?.map((video, index) => (
                     <Video
                       id={video.id}
@@ -138,25 +140,25 @@ export default function GuidanceEncouragement() {
                 </div>
               </div>
               {pageVideos.length > videosPerPage && (
-                <div className="d-flex justify-content-center mt-4">
+                <div className='d-flex justify-content-center mt-4'>
                   <ReactPaginate
-                    nextLabel="next"
+                    nextLabel='next'
                     onPageChange={handlePageClick}
                     pageRangeDisplayed={3}
                     marginPagesDisplayed={2}
                     pageCount={pageCount}
-                    previousLabel="prev"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link px-3"
-                    previousClassName="page-item me-2"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item ms-2"
-                    nextLinkClassName="page-link"
-                    breakLabel="..."
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link px-3"
-                    containerClassName="pagination custom-pagination mb-0"
-                    activeClassName="active"
+                    previousLabel='prev'
+                    pageClassName='page-item'
+                    pageLinkClassName='page-link px-3'
+                    previousClassName='page-item me-2'
+                    previousLinkClassName='page-link'
+                    nextClassName='page-item ms-2'
+                    nextLinkClassName='page-link'
+                    breakLabel='...'
+                    breakClassName='page-item'
+                    breakLinkClassName='page-link px-3'
+                    containerClassName='pagination custom-pagination mb-0'
+                    activeClassName='active'
                     renderOnZeroPageCount={null}
                   />
                 </div>

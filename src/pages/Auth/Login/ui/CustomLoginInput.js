@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './style.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 const CustomLoginInput = ({
   placeholder,
@@ -9,15 +11,32 @@ const CustomLoginInput = ({
   inputType,
   inputName
 }) => {
+  const [showPassword, setShowPassword] = useState(false)
   return (
     <div className={`input-with-gradient-border ${cn}`}>
       <input
-        type={inputType}
+        type={showPassword ? 'text' : inputType}
         name={inputName}
         placeholder={placeholder}
         onKeyDown={enterLogin}
         onChange={onChange}
+        className='bg-primary'
       />
+      {inputType === 'password' ? (
+        showPassword ? (
+          <FontAwesomeIcon
+            icon={faEye}
+            className='pw-revelared__icon cursor-pointer bg-transparent'
+            onClick={() => setShowPassword((state) => !state)}
+          />
+        ) : (
+          <FontAwesomeIcon
+            icon={faEyeSlash}
+            className='pw-revelared__icon cursor-pointer bg-transparent'
+            onClick={() => setShowPassword((state) => !state)}
+          />
+        )
+      ) : null}
     </div>
   )
 }

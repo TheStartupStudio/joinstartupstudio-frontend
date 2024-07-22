@@ -12,10 +12,10 @@ export default function IamrSkills() {
 
 function IamrCertificationSystem() {
   return (
-    <div className="container-fluid iamr-page">
-      <div className="row">
-        <div className="col-12 col-xl-12 px-0">
-          <div className="page-border">
+    <div className='container-fluid iamr-page'>
+      <div className='row'>
+        <div className='col-12 col-xl-12 px-0'>
+          <div className='page-border'>
             <IAMRCertificationSystem />
           </div>
         </div>

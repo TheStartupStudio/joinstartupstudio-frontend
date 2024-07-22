@@ -8,7 +8,8 @@ import {
   JOURNAL_FINISHED_ERROR,
   GET_FINISHED_JOURNAL_SUCCESS,
   SAVE_FINISHED_JOURNAL_SUCCESS,
-  SAVE_FINISHED_COURSE_SUCCESS
+  SAVE_FINISHED_COURSE_SUCCESS,
+  SET_JOURNAL_TITLES
 } from './Types'
 
 import axiosInstance from '../../utils/AxiosInstance'
@@ -91,6 +92,26 @@ export const getJournal = (data) => async (dispatch) => {
     const response = await axiosInstance.get(`/userItems/${data.journalId}`)
     dispatch({
       type: JOURNAL_GET_SUCCESS,
+      payload: response.data
+    })
+  } catch (err) {
+    dispatch({
+      type: JOURNAL_GET_ERROR,
+      payload: err?.response?.data?.message || 'Server Error'
+    })
+  }
+}
+
+export const getJournalTitles = (category) => async (dispatch) => {
+  try {
+    const response = await axiosInstance.get(`/tsJournals/journal-titles`, {
+      params: {
+        category: category,
+        platform: 'instructor'
+      }
+    })
+    dispatch({
+      type: SET_JOURNAL_TITLES,
       payload: response.data
     })
   } catch (err) {

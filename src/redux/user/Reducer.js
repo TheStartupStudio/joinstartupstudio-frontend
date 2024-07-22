@@ -9,7 +9,9 @@ import {
   EDIT_SOCIAL_MEDIA,
   USER_CHANGE_PROFILE_IMAGE,
   NEED_RESET,
-  UPDATE_USER_TNC
+  UPDATE_USER_TNC,
+  SET_LOGIN_LOADING,
+  USER_CHANGE_PROFESSION
 } from './Types'
 
 const user = JSON.parse(localStorage.getItem('user'))
@@ -29,6 +31,11 @@ const userReducer = (state = initialState, action) => {
   const { type, payload } = action
   switch (type) {
     case LOGIN_LOADING:
+      return {
+        ...state,
+        loginLoading: payload
+      }
+    case SET_LOGIN_LOADING:
       return {
         ...state,
         loginLoading: payload
@@ -104,6 +111,27 @@ const userReducer = (state = initialState, action) => {
           user: {
             ...state.user.user,
             name: payload
+          }
+        }
+      }
+    }
+    case USER_CHANGE_PROFESSION: {
+      const userObject = {
+        token: localStorage.getItem('access_token'),
+        user: {
+          ...state.user.user,
+          profession: payload
+        }
+      }
+      localStorage.setItem('user', JSON.stringify(userObject))
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          user: {
+            ...state.user.user,
+            profession: payload
           }
         }
       }

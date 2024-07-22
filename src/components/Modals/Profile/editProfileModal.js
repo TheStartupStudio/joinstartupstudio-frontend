@@ -172,6 +172,8 @@ const EditProfileModal = (props) => {
                   <span className='loading-image loading-image-sm' />
                 ) : (
                   <div>
+                    {console.log('general', general)}
+                    {console.log('userData', userData)}
                     {general.imageCropperData ? (
                       <div
                         className='position-relative'

@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import DeleteDialogModal from '../BackgroundModals/deleteDialogModal'
 import DeleteConfirmedModal from '../BackgroundModals/deleteConfirmedModal'
 import { formatDate } from '../../../utils/helpers'
+import DatePickerField from '../../TypeFields/DatePickerField'
 
 export const AccomplishmentModal = (props) => {
   const defaultAccompData = {
@@ -28,7 +29,7 @@ export const AccomplishmentModal = (props) => {
   useEffect(() => {
     if (props.currentAccomp.length === 0) return
     setAccompData({
-      ...props.currentAccomp,
+      ...props.currentAccomp
       // date_issued: formatDate(props.currentAccomp.date_issued)
     })
     setIsUpdating(true)
@@ -59,13 +60,13 @@ export const AccomplishmentModal = (props) => {
       .post(`/userBackground`, newAccomp)
       .then((res) => {
         setLoading(false)
-        toast.success(<IntlMessages id='alert.my_account.success_change' />)
+        toast.success(<IntlMessages id="alert.my_account.success_change" />)
         props.addAccomp(res.data)
         props.onHide()
         setAccompData(defaultAccompData)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
       })
   }
@@ -85,14 +86,14 @@ export const AccomplishmentModal = (props) => {
       .put(`/userBackground/${newAccomp.id}`, newAccomp)
       .then((res) => {
         setLoading(false)
-        toast.success(<IntlMessages id='alert.my_account.success_change' />)
+        toast.success(<IntlMessages id="alert.my_account.success_change" />)
         props.updateAccomp(newAccomp)
         props.onHide()
         setAccompData(defaultAccompData)
         setIsUpdating(false)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
       })
   }
@@ -113,7 +114,7 @@ export const AccomplishmentModal = (props) => {
         setIsUpdating(false)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
         setLoading(false)
         props.onHide()
         setShowDeleteDialogModal(false)
@@ -122,24 +123,29 @@ export const AccomplishmentModal = (props) => {
         setIsUpdating(false)
       })
   }
-
+  const handleDateChange = (name, value) => {
+    setAccompData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
   return (
     <>
       <Modal
         show={props.show}
         onHide={props.onHide}
-        backdrop='static'
+        backdrop="static"
         keyboard={false}
-        className='edit-modal edit-profile-modal edit-experience-modal'
+        className="edit-modal edit-profile-modal edit-experience-modal"
       >
-        <Modal.Header className='pb-0 mx-4 general-modal-header'>
-          <h3 className='mt-4 mb-0 contact-bio'>
+        <Modal.Header className="pb-0 mx-4 general-modal-header">
+          <h3 className="mt-4 mb-0 contact-bio">
             {!isUpdating ? 'ADD NEW ACCOMPLISHMENT' : 'EDIT ACCOMPLISHMENT '}
           </h3>
           <button
-            type='button'
-            className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
-            aria-label='Close'
+            type="button"
+            className="btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto"
+            aria-label="Close"
             onClick={() => {
               props.onHide()
               setAccompData(defaultAccompData)
@@ -147,63 +153,57 @@ export const AccomplishmentModal = (props) => {
             }}
           />
         </Modal.Header>
-        <Modal.Body className='px-4'>
-          <div className='row'>
-            <div className='col-12'>
+        <Modal.Body className="px-4">
+          <div className="row">
+            <div className="col-12">
               <h4>ACCOMPLISHMENT DETAILS</h4>
             </div>
 
-            <div className='col-12'>
+            <div className="col-12">
               <input
-                className='my-2'
-                type='text'
-                name='title'
+                className="my-2"
+                type="text"
+                name="title"
                 value={accompData?.title}
                 onChange={handleChange}
-                placeholder='Title (Example: Social Media Marketing Achievement Award)'
+                placeholder="Title (Example: Social Media Marketing Achievement Award)"
               />
               <input
-                className='my-2'
-                type='text'
-                name='company'
+                className="my-2"
+                type="text"
+                name="company"
                 value={accompData?.company}
                 onChange={handleChange}
-                placeholder='Issuer (Example: ASSMD)'
+                placeholder="Issuer (Example: ASSMD)"
               />
-              <div className='row mt-2'>
-                <div className='col-12 col-lg-4'>
-                  <label htmlFor='start_date'>Date Issued</label>
-                  <input
-                    className='my-2'
-                    type='month'
-                    name='date_issued'
-                    id='start_date'
-                    max={new Date().toLocaleDateString('fr-CA', {
-                      year: 'numeric',
-                      month: '2-digit'
-                    })}
-                    value={formatDate(accompData?.date_issued)}
-                    onChange={handleChange}
+              <div className="row mt-2">
+                <div className="col-12 col-lg-4 w-100">
+                  <DatePickerField
+                    label={'Date Issued'}
+                    value={accompData?.date_issued}
+                    onChange={(value) => {
+                      handleDateChange('date_issued', value)
+                    }}
                   />
                 </div>
               </div>
             </div>
-            <div className='col-12'>
+            <div className="col-12">
               <textarea
-                className='mt-2'
-                type='text'
-                name='description'
-                placeholder='Description'
+                className="mt-2"
+                type="text"
+                name="description"
+                placeholder="Description"
                 value={accompData?.description}
                 onChange={handleChange}
               />
             </div>
 
-            <div className='row mx-0'>
-              <div className='col-6 p-0'>
+            <div className="row mx-0">
+              <div className="col-6 p-0">
                 {isUpdating && (
                   <button
-                    className='float-start edit-account mt-4'
+                    className="float-start edit-account mt-4"
                     style={{ background: '#BBBDBF' }}
                     disabled={loading}
                     onClick={() => {
@@ -215,16 +215,16 @@ export const AccomplishmentModal = (props) => {
                   </button>
                 )}
               </div>
-              <div className='col-6 p-0'>
+              <div className="col-6 p-0">
                 <button
-                  className='float-end edit-account mt-4'
+                  className="float-end edit-account mt-4"
                   disabled={loading}
                   onClick={() =>
                     !isUpdating ? addAccomplishment() : updateAccomplishment()
                   }
                 >
                   {loading ? (
-                    <span className='spinner-border spinner-border-sm' />
+                    <span className="spinner-border spinner-border-sm" />
                   ) : (
                     'SAVE'
                   )}

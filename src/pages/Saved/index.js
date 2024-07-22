@@ -2,21 +2,22 @@ import React, { useState, useEffect } from 'react'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
 import Podcast from './podcast'
-// import Video from './video'
-import Player from './player'
 import Waveform from './waveform'
-import { isEmpty } from '@aws-amplify/core'
 import Video from '../../components/Video'
-import { NotesButton } from '../../components/Notes'
-import { ShowMessenger } from '../../utils/helpers'
 import ReactPaginate from 'react-paginate'
 import './index.css'
+import { useDispatch } from 'react-redux'
+import { setBackButton } from '../../redux/backButtonReducer'
+import { useHistory } from 'react-router-dom'
+
 const SavedMedia = () => {
+  const dispatch = useDispatch()
+  const hash = window.location.hash.substring(1)
+
   const [selected, setSelected] = useState('video')
   const [playingUrl, setPlayingUrl] = useState('')
-  const [video, setVideo] = useState([])
+  const history = useHistory()
 
-  const [saved, setSaved] = useState()
   const [loading, setLoading] = useState(false)
   const [audioPlaying, setAudioPlaying] = useState(false)
   const [getingDataLoading, setGetingDataLoading] = useState(true)
@@ -36,6 +37,18 @@ const SavedMedia = () => {
   const [videosPageCount, setVideosPageCount] = useState(0)
   const [videosItemOffset, setVideosItemOffset] = useState(0)
   const videosPerPage = 9
+
+  useEffect(() => {
+    if (hash) {
+      dispatch(setBackButton(true, hash))
+    } else {
+      dispatch(setBackButton(true, ''))
+    }
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch, hash])
 
   // const [hasPodcast, setHasPodcast] = useState(false)
 
@@ -144,10 +157,6 @@ const SavedMedia = () => {
     setLoading(false)
   }
 
-  const setUrl = (url) => {
-    setPlayingUrl(url)
-  }
-
   const updatePodcasts = async (id) => {
     const updatedPodcasts = podcast.filter((podcast) => podcast.SavedId !== id)
     setPodcast(updatedPodcasts)
@@ -166,7 +175,7 @@ const SavedMedia = () => {
   return (
     <div className='container-fluid'>
       <div className='row'>
-        <div className='col-12 col-xl-9'>
+        <div className='col-12 col-xl-12'>
           <div className='account-page-padding page-border'>
             <h3 className='page-title'>
               <IntlMessages id='my_saved.MEDIA' />
@@ -183,7 +192,7 @@ const SavedMedia = () => {
                   setSelected('video')
                 }}
               >
-                <IntlMessages id={'my_saved.MEDIA_VIDEOS'}></IntlMessages>
+                <IntlMessages id={'my_saved.MEDIA_VIDEOS'} />
               </div>
               <div
                 className={`col-6 text-center px-0 py-2 gx-0 mx-0  ${
@@ -193,7 +202,7 @@ const SavedMedia = () => {
                   setSelected('podcast')
                 }}
               >
-                <IntlMessages id={'my_saved.MEDIA_PODCASTS'}></IntlMessages>
+                <IntlMessages id={'my_saved.MEDIA_PODCASTS'} />
               </div>
             </div>
             {/* <Player url={playingUrl} isPlaying={audioPlaying} /> */}
@@ -204,7 +213,6 @@ const SavedMedia = () => {
             />
             <div style={{ minHeight: '100vh' }} className='mt-4'>
               {selected === 'video' ? (
-                // <Video data={video} loading={loading} />
                 <div className='row mx-2'>
                   {currentSavedVideos?.map((video, index) => (
                     <Video
@@ -313,10 +321,10 @@ const SavedMedia = () => {
             </div>
           </div>
         </div>
-        <div className='col-12 col-xl-3 px-2 mt-3'>
-          <ShowMessenger />
-          <NotesButton />
-        </div>
+        {/* <div className='col-12 col-xl-3 px-2 mt-3'> */}
+        {/* <ShowMessenger /> */}
+        {/* <NotesButton /> */}
+        {/* </div> */}
       </div>
     </div>
   )

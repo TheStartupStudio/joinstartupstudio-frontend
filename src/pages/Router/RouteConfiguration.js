@@ -8,6 +8,7 @@ import VerifyEmailByCode from '../Register/verifyEmailByCode'
 
 const Iamr = React.lazy(() => import('../Iamr'))
 const Terms = React.lazy(() => import('../Terms'))
+const MyEvaluation = React.lazy(() => import('../MyEvaluation'))
 const MyInbox = React.lazy(() => import('../MyInbox'))
 const MyNotes = React.lazy(() => import('../MyNotes'))
 const MySpark = React.lazy(() => import('../MySpark'))
@@ -137,6 +138,7 @@ export const authRoutes = [
   { path: '/briefings', component: Briefings },
   { path: '/iamr', component: Iamr },
   { path: '/student-iamr/:studentId/:id?/:type?', component: StudentIAMR },
+  { path: '/my-evaluation', component: MyEvaluation },
   { path: '/my-inbox', component: MyInbox },
   { path: '/my-spark/archive', component: MySparkArchivePage, exact: true },
   { path: '/my-spark/widgets', component: MySpark, exact: true },
@@ -210,7 +212,7 @@ export const authRoutesWithProps = [
   },
   {
     path: '/my-mentorship/',
-    component: MyTraining,
+    component: LtsJournal,
     props: { category: 'my-mentorship' }
   },
   {

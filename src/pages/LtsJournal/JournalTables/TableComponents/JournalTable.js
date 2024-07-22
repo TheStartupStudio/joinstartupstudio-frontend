@@ -45,7 +45,7 @@ const JournalTable = ({
     }
   }
   const tableRows = isClonedTable ? table?.clonedRows : table?.rows
-  console.log('tableRows', tableRows)
+
   return (
     <>
       <>
