@@ -61,16 +61,36 @@ const Index = ({
   fetchMyWorkExperiences,
   fetchMyCompetitiveness,
   educations,
-  credentials
+  credentials,
+  immersions,
+  workExperiences
 }) => {
+  // useEffect(() => {
+  // fetchUserStory()
+  // fetchMyFailures()
+  // fetchMyMentors()
+  // fetchMyRelationships()
+  // fetchSharingSettings()
+  // fetchMyEducations()
+  // fetchMyCredentials()
+  // fetchMyImmersions()
+  // fetchMyWorkExperiences()
+  // }, [])
+
   useEffect(() => {
-    fetchUserStory()
-    fetchMyFailures()
-    fetchMyMentors()
-    fetchMyRelationships()
-    fetchSharingSettings()
-    fetchMyEducations()
-    fetchMyCredentials()
+    const fetchDataSequentially = async () => {
+      await fetchUserStory()
+      await fetchMyFailures()
+      await fetchMyMentors()
+      await fetchMyRelationships()
+      await fetchSharingSettings()
+      await fetchMyEducations()
+      await fetchMyCredentials()
+      await fetchMyImmersions()
+      await fetchMyWorkExperiences()
+    }
+
+    fetchDataSequentially()
   }, [])
 
   useEffect(() => {
@@ -135,6 +155,10 @@ const Index = ({
               myAlignments: {
                 educations,
                 credentials
+              },
+              myProductivity: {
+                immersions,
+                workExperiences
               }
             }}
           />
@@ -180,9 +204,11 @@ const mapStateToProps = (state) => {
       myMentors: { isLoading: isLoadingMyMentors }
     },
     howSection: {
-      myAlignments: { educations, credentials }
+      myAlignments: { educations, credentials },
+      myProductivity: { immersions, workExperiences }
     }
   } = state.portfolio
+
   return {
     loggedUser,
     activeSection,
@@ -201,7 +227,9 @@ const mapStateToProps = (state) => {
     isLoadingMyMentors,
     // HOW DO I PROVE IT //
     educations,
-    credentials
+    credentials,
+    immersions,
+    workExperiences
   }
 }
 

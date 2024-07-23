@@ -8,6 +8,7 @@ import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoa
 import MyAlignments from './MyAlignments'
 import { getProjects } from '../../../../redux/portfolio/Actions'
 import { connect } from 'react-redux'
+import MyProductivity from './MyProductivity'
 
 function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
   const [loadings, setLoadings] = useState(null)
@@ -49,27 +50,14 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
         MyAlignments,
         data?.myAlignments
       )}
-      {/*{renderSection(*/}
-      {/*  loadings?.myRelationships,*/}
-      {/*  'my-relationship',*/}
-      {/*  'My Relationships',*/}
-      {/*  MyRelationships,*/}
-      {/*  data?.myRelationships?.data*/}
-      {/*)}*/}
-      {/*{renderSection(*/}
-      {/*  loadings?.myFailures,*/}
-      {/*  'my-failures',*/}
-      {/*  'My Failures',*/}
-      {/*  MyFailures,*/}
-      {/*  data?.myFailures?.data*/}
-      {/*)}*/}
-      {/*{renderSection(*/}
-      {/*  loadings?.myMentors,*/}
-      {/*  'my-mentors',*/}
-      {/*  'My Mentors',*/}
-      {/*  MyMentors,*/}
-      {/*  data?.myMentors?.data*/}
-      {/*)}*/}
+      {renderSection(
+        loadings?.userStory,
+        'my-productivity',
+        'My Productivity',
+        'My skills and expertise inside of my field of interest.',
+        MyProductivity,
+        data?.myProductivity
+      )}
     </div>
   )
 }

@@ -163,7 +163,15 @@ import {
   SHOW_EDIT_CREDENTIAL_MODAL,
   HIDE_EDIT_CREDENTIAL_MODAL,
   SHOW_ADD_CREDENTIAL_MODAL,
-  HIDE_ADD_CREDENTIAL_MODAL
+  HIDE_ADD_CREDENTIAL_MODAL,
+  SHOW_EDIT_IMMERSION_MODAL,
+  HIDE_EDIT_IMMERSION_MODAL,
+  SHOW_ADD_IMMERSION_MODAL,
+  HIDE_ADD_IMMERSION_MODAL,
+  SHOW_EDIT_WORK_EXPERIENCE_MODAL,
+  HIDE_EDIT_WORK_EXPERIENCE_MODAL,
+  SHOW_ADD_WORK_EXPERIENCE_MODAL,
+  HIDE_ADD_WORK_EXPERIENCE_MODAL
 } from './Constants'
 import {
   createMyFailuresAPI,
@@ -876,6 +884,43 @@ export const showAddCredentialModal = () => ({
 
 export const hideAddCredentialModal = () => ({
   type: HIDE_ADD_CREDENTIAL_MODAL
+})
+
+//
+export const showEditImmersionModal = (id) => ({
+  type: SHOW_EDIT_IMMERSION_MODAL,
+  payload: id
+})
+
+export const hideEditImmersionModal = () => ({
+  type: HIDE_EDIT_IMMERSION_MODAL
+})
+
+export const showAddImmersionModal = () => ({
+  type: SHOW_ADD_IMMERSION_MODAL
+})
+
+export const hideAddImmersionModal = () => ({
+  type: HIDE_ADD_IMMERSION_MODAL
+})
+
+export const showEditWorkExperienceModal = (id) => {
+  return {
+    type: SHOW_EDIT_WORK_EXPERIENCE_MODAL,
+    payload: id
+  }
+}
+
+export const hideEditWorkExperienceModal = () => ({
+  type: HIDE_EDIT_WORK_EXPERIENCE_MODAL
+})
+
+export const showAddWorkExperienceModal = () => ({
+  type: SHOW_ADD_WORK_EXPERIENCE_MODAL
+})
+
+export const hideAddWorkExperienceModal = () => ({
+  type: HIDE_ADD_WORK_EXPERIENCE_MODAL
 })
 /// WHAT CAN I DO SECTION ///
 export const getSkills = () => async (dispatch) => {
