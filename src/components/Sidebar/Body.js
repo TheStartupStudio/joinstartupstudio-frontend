@@ -71,9 +71,9 @@ const Body = (props) => {
         />
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
         <DropdownItem
-          disabled={true}
+          // disabled={true}
           title={'MY EVALUATIONS'}
-          to={'/my-evaluations'}
+          to={'/my-evaluation'}
         />
         <DropdownItem title={'MY INBOX'} to='/my-inbox' />
       </ParentDropdownItem>
