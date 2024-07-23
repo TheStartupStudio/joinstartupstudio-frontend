@@ -1,12 +1,50 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
 import { convertDateToMonthYear } from '../../../../utils/helpers'
 import SectionActions from '../../Components/Actions/SectionActions'
 import EducationCardModal from './EducationCardModal'
 import PortfolioSubmission from '../../Components/PortfolioSubmission'
+import {
+  hideEditImmersionModal,
+  hideEditWorkExperienceModal,
+  showEditImmersionModal,
+  showEditWorkExperienceModal,
+  updateMyEducation,
+  updateMyImmersion
+} from '../../../../redux/portfolio/Actions'
+import { useDispatch, useSelector } from 'react-redux'
+import ImmersionCardModal from './ImmersionCardModal'
 
 function ImmersionCard(props) {
   const { data, isEditSection } = props
+
+  const [dataToEdit, setDataToEdit] = useState({})
+
+  const dispatch = useDispatch()
+  const mode = useSelector((state) => state.portfolio.mode)
+  const showModalId = useSelector(
+    (state) =>
+      state.portfolio.howSection?.myProductivity?.immersions?.showEditModal
+  )
+
+  const handleShowImmersionModal = (education) => {
+    dispatch(showEditImmersionModal(education?.id))
+    setDataToEdit(education)
+  }
+  const handleHideImmersionModal = () => {
+    dispatch(hideEditImmersionModal())
+  }
+  const alignmentActions = [
+    {
+      type: 'edit',
+      action: () => handleShowImmersionModal(data),
+      isDisplayed: mode === 'edit' && isEditSection === true
+    }
+  ]
+
+  const onSave = (data) => {
+    dispatch(updateMyImmersion(data))
+  }
   return (
     <div className={'mb-3'}>
       <PortfolioDataContainer background={'#fff'}>
@@ -58,16 +96,16 @@ function ImmersionCard(props) {
             </div>
           </div>
         </div>
-        {/*<SectionActions actions={alignmentActions} />*/}
-        {/*{showEducationModalId === dataToEdit?.id && (*/}
-        {/*  <EducationCardModal*/}
-        {/*    onHide={handleHideEducationModal}*/}
-        {/*    show={showEducationModalId === dataToEdit?.id}*/}
-        {/*    title={'EDIT EDUCATIONAL EXPERIENCE'}*/}
-        {/*    data={dataToEdit}*/}
-        {/*    onSave={onSave}*/}
-        {/*  />*/}
-        {/*)}*/}
+        <SectionActions actions={alignmentActions} />
+        {showModalId && showModalId === dataToEdit?.id && (
+          <ImmersionCardModal
+            onHide={handleHideImmersionModal}
+            show={showModalId === dataToEdit?.id}
+            title={'EDIT IMMERSION EXPERIENCE'}
+            data={dataToEdit}
+            onSave={onSave}
+          />
+        )}
       </PortfolioDataContainer>
     </div>
   )

@@ -887,10 +887,12 @@ export const hideAddCredentialModal = () => ({
 })
 
 //
-export const showEditImmersionModal = (id) => ({
-  type: SHOW_EDIT_IMMERSION_MODAL,
-  payload: id
-})
+export const showEditImmersionModal = (id) => {
+  return {
+    type: SHOW_EDIT_IMMERSION_MODAL,
+    payload: id
+  }
+}
 
 export const hideEditImmersionModal = () => ({
   type: HIDE_EDIT_IMMERSION_MODAL

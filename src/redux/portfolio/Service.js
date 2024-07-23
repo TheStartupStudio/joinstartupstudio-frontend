@@ -378,6 +378,7 @@ export const getMyImmersionsAPI = async () => {
     await delay(2000)
     const data = [
       {
+        id: 1,
         organizationLogo: 'https://example.com/logo1.png',
         startDate: '2021-01-01',
         endDate: '2021-06-30',
@@ -392,6 +393,7 @@ export const getMyImmersionsAPI = async () => {
         immersionVideoUrl: 'https://example.com/video1.mp4'
       },
       {
+        id: 2,
         organizationLogo: 'https://example.com/logo2.png',
         startDate: '2020-03-01',
         endDate: '2020-12-31',
@@ -406,6 +408,7 @@ export const getMyImmersionsAPI = async () => {
         immersionVideoUrl: 'https://example.com/video2.mp4'
       },
       {
+        id: 3,
         organizationLogo: 'https://example.com/logo3.png',
         startDate: '2022-07-01',
         endDate: '',
@@ -419,6 +422,7 @@ export const getMyImmersionsAPI = async () => {
         immersionVideoUrl: 'https://example.com/video3.mp4'
       },
       {
+        id: 4,
         organizationLogo: 'https://example.com/logo4.png',
         startDate: '2019-05-15',
         endDate: '2020-02-20',
@@ -432,6 +436,7 @@ export const getMyImmersionsAPI = async () => {
         immersionVideoUrl: 'https://example.com/video4.mp4'
       },
       {
+        id: 5,
         organizationLogo: 'https://example.com/logo5.png',
         startDate: '2023-04-01',
         endDate: '',
@@ -494,6 +499,7 @@ export const getMyWorkExperiencesAPI = async () => {
     await delay(2000)
     const data = [
       {
+        id: 1,
         organizationName: 'Tech Innovators',
         location: 'San Francisco, CA',
         website: 'https://techinnovators.com',
@@ -505,6 +511,7 @@ export const getMyWorkExperiencesAPI = async () => {
         currentPosition: false
       },
       {
+        id: 2,
         organizationName: 'Health First',
         location: 'New York, NY',
         website: 'https://healthfirst.com',
@@ -516,6 +523,7 @@ export const getMyWorkExperiencesAPI = async () => {
         currentPosition: false
       },
       {
+        id: 3,
         organizationName: 'Green Earth Initiative',
         location: 'Austin, TX',
         website: 'https://greenearth.com',
@@ -527,6 +535,7 @@ export const getMyWorkExperiencesAPI = async () => {
         currentPosition: true
       },
       {
+        id: 4,
         organizationName: 'EduGrowth',
         location: 'Seattle, WA',
         website: 'https://edugrowth.com',
@@ -538,6 +547,7 @@ export const getMyWorkExperiencesAPI = async () => {
         currentPosition: false
       },
       {
+        id: 5,
         organizationName: 'Clean Water Project',
         location: 'Denver, CO',
         website: 'https://cleanwater.com',
