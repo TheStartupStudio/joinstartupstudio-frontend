@@ -9,11 +9,16 @@ import LtsButton from '../../../../components/LTSButtons/LTSButton'
 import ConfirmDeleteRecordModal from '../../Components/Modals/ConfirmDeleteRecordModal'
 import {
   deleteMyCredential,
+  deleteMyEducation,
   deleteMyFailure
 } from '../../../../redux/portfolio/Actions'
 import { useDispatch } from 'react-redux'
 import useImageEditor from '../../../../hooks/useImageEditor'
-import { formatDateToInputValue, uploadImage } from '../../../../utils/helpers'
+import {
+  deleteImage,
+  formatDateToInputValue,
+  uploadImage
+} from '../../../../utils/helpers'
 
 const EducationCardModal = (props) => {
   const dispatch = useDispatch()
@@ -90,10 +95,16 @@ const EducationCardModal = (props) => {
 
   const isEdit = () => !!credentialData.id
 
-  const handleDeleteCredential = (id) => {
-    dispatch(deleteMyCredential(id))
+  const handleDeleteCredential = async (id) => {
+    if (credentialData?.imageUrl) {
+      const deletedImage = await deleteImage(credentialData?.imageUrl)
+      if (deletedImage) {
+        dispatch(deleteMyCredential(id))
+      }
+    } else {
+      dispatch(deleteMyCredential(id))
+    }
   }
-
   return (
     <PortfolioModalWrapper
       show={props.show}

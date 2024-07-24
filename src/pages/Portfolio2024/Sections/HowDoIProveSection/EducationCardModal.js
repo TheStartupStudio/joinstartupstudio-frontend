@@ -8,8 +8,15 @@ import LabeledInput from '../../Components/DisplayData/LabeledInput'
 import { useDispatch } from 'react-redux'
 import LtsButton from '../../../../components/LTSButtons/LTSButton'
 import ConfirmDeleteRecordModal from '../../Components/Modals/ConfirmDeleteRecordModal'
-import { deleteMyEducation } from '../../../../redux/portfolio/Actions'
-import { formatDateToInputValue, uploadImage } from '../../../../utils/helpers'
+import {
+  deleteMyEducation,
+  deleteMyWorkExperience
+} from '../../../../redux/portfolio/Actions'
+import {
+  deleteImage,
+  formatDateToInputValue,
+  uploadImage
+} from '../../../../utils/helpers'
 import useImageEditor from '../../../../hooks/useImageEditor'
 
 const EducationCardModal = (props) => {
@@ -36,7 +43,7 @@ const EducationCardModal = (props) => {
       startDate: formatDateToInputValue(new Date()),
       endDate: formatDateToInputValue(new Date()),
       description: '',
-      imageUrl: '',
+      imageUrl: null,
       currentPosition: false
     }
   )
@@ -86,8 +93,15 @@ const EducationCardModal = (props) => {
 
   const isEdit = () => !!educationData?.id
 
-  const handleDeleteEducation = (id) => {
-    dispatch(deleteMyEducation(id))
+  const handleDeleteEducation = async (id) => {
+    if (educationData?.imageUrl) {
+      const deletedImage = await deleteImage(educationData?.imageUrl)
+      if (deletedImage) {
+        dispatch(deleteMyEducation(id))
+      }
+    } else {
+      dispatch(deleteMyEducation(id))
+    }
   }
 
   return (

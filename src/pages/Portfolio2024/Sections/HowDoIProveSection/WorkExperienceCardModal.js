@@ -12,7 +12,11 @@ import {
   deleteMyEducation,
   deleteMyWorkExperience
 } from '../../../../redux/portfolio/Actions'
-import { formatDateToInputValue, uploadImage } from '../../../../utils/helpers'
+import {
+  deleteImage,
+  formatDateToInputValue,
+  uploadImage
+} from '../../../../utils/helpers'
 import useImageEditor from '../../../../hooks/useImageEditor'
 
 const WorkExperienceCardModal = (props) => {
@@ -23,7 +27,7 @@ const WorkExperienceCardModal = (props) => {
       if (isEdit()) {
         props.onSave({
           id: workExperienceData?.id,
-          organizationLogo: null
+          imageUrl: null
         })
       } else {
         console.error(
@@ -57,7 +61,7 @@ const WorkExperienceCardModal = (props) => {
       startDate: formatDateToInputValue(new Date()),
       endDate: formatDateToInputValue(new Date()),
       description: '',
-      imageUrl: '',
+      imageUrl: null,
       currentPosition: false
     }
   )
@@ -109,8 +113,15 @@ const WorkExperienceCardModal = (props) => {
 
   const isEdit = () => !!workExperienceData?.id
 
-  const handleDeleteWorkExperience = (id) => {
-    dispatch(deleteMyWorkExperience(id))
+  const handleDeleteWorkExperience = async (id) => {
+    if (workExperienceData?.imageUrl) {
+      const deletedImage = await deleteImage(workExperienceData?.imageUrl)
+      if (deletedImage) {
+        dispatch(deleteMyWorkExperience(id))
+      }
+    } else {
+      dispatch(deleteMyWorkExperience(id))
+    }
   }
 
   return (

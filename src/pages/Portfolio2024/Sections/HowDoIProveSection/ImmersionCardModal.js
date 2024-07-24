@@ -8,7 +8,10 @@ import LabeledInput from '../../Components/DisplayData/LabeledInput'
 import { useDispatch } from 'react-redux'
 import LtsButton from '../../../../components/LTSButtons/LTSButton'
 import ConfirmDeleteRecordModal from '../../Components/Modals/ConfirmDeleteRecordModal'
-import { deleteMyImmersion } from '../../../../redux/portfolio/Actions'
+import {
+  deleteMyImmersion,
+  deleteMyWorkExperience
+} from '../../../../redux/portfolio/Actions'
 import {
   deleteImage,
   formatDateToInputValue,
@@ -132,8 +135,37 @@ const ImmersionCardModal = (props) => {
 
   const isEdit = () => !!immersionData?.id
 
-  const handleDeleteImmersion = (id) => {
-    dispatch(deleteMyImmersion(id))
+  // const handleDeleteImmersion = (id) => {
+  //   dispatch(deleteMyImmersion(id))
+  // }
+
+  const handleDeleteImmersion = async (id) => {
+    try {
+      if (immersionData) {
+        let deletedImmersionThumbnail = false
+        let deletedOrganizationLogo = false
+
+        if (immersionData.immersionThumbnailUrl) {
+          deletedImmersionThumbnail = await deleteImage(
+            immersionData.immersionThumbnailUrl
+          )
+        }
+
+        if (immersionData.organizationLogo) {
+          deletedOrganizationLogo = await deleteImage(
+            immersionData.organizationLogo
+          )
+        }
+
+        if (deletedImmersionThumbnail || deletedOrganizationLogo) {
+          dispatch(deleteMyImmersion(id))
+        }
+      } else {
+        dispatch(deleteMyImmersion(id))
+      }
+    } catch (error) {
+      console.error('Error deleting immersion:', error)
+    }
   }
 
   const handleDeleteImage = async () => {

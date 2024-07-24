@@ -2007,14 +2007,13 @@ const portfolioReducer = (state = initialState, action) => {
           }
         }
       }
-
     case UPDATE_MY_WORK_EXPERIENCE:
       return {
         ...state,
         howSection: {
           ...state.howSection,
           myProductivity: {
-            ...state.howSection.workExperiences,
+            ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: true,
@@ -2029,7 +2028,7 @@ const portfolioReducer = (state = initialState, action) => {
         howSection: {
           ...state.howSection,
           myProductivity: {
-            ...state.howSection.workExperiences,
+            ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: false,
@@ -2049,7 +2048,7 @@ const portfolioReducer = (state = initialState, action) => {
         howSection: {
           ...state.howSection,
           myProductivity: {
-            ...state.howSection.workExperiences,
+            ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: false,
@@ -2066,7 +2065,7 @@ const portfolioReducer = (state = initialState, action) => {
         howSection: {
           ...state.howSection,
           myProductivity: {
-            ...state.howSection.workExperiences,
+            ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: true,
@@ -2081,7 +2080,7 @@ const portfolioReducer = (state = initialState, action) => {
         howSection: {
           ...state.howSection,
           myProductivity: {
-            ...state.howSection.workExperiences,
+            ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: false,
@@ -2100,7 +2099,7 @@ const portfolioReducer = (state = initialState, action) => {
         howSection: {
           ...state.howSection,
           myProductivity: {
-            ...state.howSection.workExperiences,
+            ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: false,
@@ -2117,7 +2116,7 @@ const portfolioReducer = (state = initialState, action) => {
         howSection: {
           ...state.howSection,
           myProductivity: {
-            ...state.howSection.workExperiences,
+            ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isLoading: true,
@@ -2132,7 +2131,7 @@ const portfolioReducer = (state = initialState, action) => {
         howSection: {
           ...state.howSection,
           myProductivity: {
-            ...state.howSection.workExperiences,
+            ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isLoading: false,
@@ -2151,7 +2150,7 @@ const portfolioReducer = (state = initialState, action) => {
         howSection: {
           ...state.howSection,
           myProductivity: {
-            ...state.howSection.workExperiences,
+            ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isLoading: false,
