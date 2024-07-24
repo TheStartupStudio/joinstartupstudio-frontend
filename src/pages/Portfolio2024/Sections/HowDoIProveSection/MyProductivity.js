@@ -11,19 +11,15 @@ import {
   showAddWorkExperienceModal
 } from '../../../../redux/portfolio/Actions'
 import AddEntryButton from '../../Components/Actions/AddEntryButton'
-import CredentialCardModal from './CredentialCardModal'
-import EducationCardModal from './EducationCardModal'
 import ImmersionCard from './ImmersionCard'
 import ImmersionCardModal from './ImmersionCardModal'
 import WorkExperienceCard from './WorkExperienceCard'
 import WorkExperienceCardModal from './WorkExperienceCardModal'
 
 function MyProductivity(props) {
+  const dispatch = useDispatch()
   const immersions = props.data?.immersions?.data
   const workExperiences = props.data?.workExperiences?.data
-
-  console.log('immersions', immersions)
-  const dispatch = useDispatch()
   const [isEditImmersionSection, setIsEditImmersionSection] = useState(false)
   const [isEditWorkExperienceSection, setIsEditWorkExperienceSection] =
     useState(false)

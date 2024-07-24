@@ -208,10 +208,10 @@ import {
   updateMyImmersionAPI,
   addMyImmersionAPI,
   deleteMyImmersionAPI,
-  getMyWorkExperiencesAPI,
-  updateMyWorkExperienceAPI,
-  addMyWorkExperienceAPI,
-  deleteMyWorkExperienceAPI,
+  getWorkExperiencesAPI,
+  updateWorkExperienceAPI,
+  addWorkExperienceAPI,
+  deleteWorkExperienceAPI,
   getMyCompetitivenessAPI,
   updateMyCompetitivenessAPI,
   addMyCompetitivenessAPI,
@@ -1315,7 +1315,6 @@ export const addMyImmersionError = (error) => {
   }
 }
 
-// Delete Immersion
 export const deleteMyImmersion = (immersionId) => async (dispatch) => {
   dispatch({ type: DELETE_MY_IMMERSION })
   try {
@@ -1340,11 +1339,10 @@ export const deleteMyImmersionError = (error) => {
   }
 }
 
-// Get Work Experiences
 export const getMyWorkExperiences = () => async (dispatch) => {
   dispatch({ type: GET_MY_WORK_EXPERIENCES })
   try {
-    const response = await getMyWorkExperiencesAPI()
+    const response = await getWorkExperiencesAPI()
     dispatch(getMyWorkExperiencesSuccess(response.data))
   } catch (e) {
     dispatch(getMyWorkExperiencesError(e))
@@ -1369,7 +1367,7 @@ export const getMyWorkExperiencesError = (error) => {
 export const updateMyWorkExperience = (workExperience) => async (dispatch) => {
   dispatch({ type: UPDATE_MY_WORK_EXPERIENCE })
   try {
-    const response = await updateMyWorkExperienceAPI(workExperience)
+    const response = await updateWorkExperienceAPI(workExperience)
     dispatch(updateMyWorkExperienceSuccess(response.data))
   } catch (e) {
     dispatch(updateMyWorkExperienceError(e))
@@ -1394,7 +1392,7 @@ export const updateMyWorkExperienceError = (error) => {
 export const addMyWorkExperience = (workExperience) => async (dispatch) => {
   dispatch({ type: ADD_MY_WORK_EXPERIENCE })
   try {
-    const response = await addMyWorkExperienceAPI(workExperience)
+    const response = await addWorkExperienceAPI(workExperience)
     dispatch(addMyWorkExperienceSuccess(response.data))
   } catch (e) {
     dispatch(addMyWorkExperienceError(e))
@@ -1420,7 +1418,7 @@ export const deleteMyWorkExperience =
   (workExperienceId) => async (dispatch) => {
     dispatch({ type: DELETE_MY_WORK_EXPERIENCE })
     try {
-      const response = await deleteMyWorkExperienceAPI(workExperienceId)
+      const response = await deleteWorkExperienceAPI(workExperienceId)
       dispatch(deleteMyWorkExperienceSuccess(response.data))
     } catch (e) {
       dispatch(deleteMyWorkExperienceError(e))

@@ -2,19 +2,15 @@ import React, { useState } from 'react'
 import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
 import { convertDateToMonthYear } from '../../../../utils/helpers'
 import SectionActions from '../../Components/Actions/SectionActions'
-import EducationCardModal from './EducationCardModal'
 import PortfolioSubmission from '../../Components/PortfolioSubmission'
 import {
   hideEditImmersionModal,
-  hideEditWorkExperienceModal,
   showEditImmersionModal,
-  showEditWorkExperienceModal,
-  updateMyEducation,
   updateMyImmersion
 } from '../../../../redux/portfolio/Actions'
 import { useDispatch, useSelector } from 'react-redux'
 import ImmersionCardModal from './ImmersionCardModal'
-
+import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 function ImmersionCard(props) {
   const { data, isEditSection } = props
 
@@ -52,7 +48,7 @@ function ImmersionCard(props) {
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}
-              src={data.organizationLogo}
+              src={data?.organizationLogo ?? imagePlaceholder}
               alt={'education image'}
             />
           </div>
@@ -75,20 +71,22 @@ function ImmersionCard(props) {
                 <div className={'organization-description-label mb-2'}>
                   The Problem
                 </div>
-                <div className={'organization-description'}>{data.problem}</div>
+                <div className={'organization-description'}>
+                  {data?.problem}
+                </div>
 
                 <div className={'organization-description-label mb-2 mt-3'}>
                   My solution
                 </div>
                 <div className={'organization-description'}>
-                  {data.solution}
+                  {data?.solution}
                 </div>
               </div>
             </div>
             <div className={'text-end organization-date w-50'}>
-              {convertDateToMonthYear(data.startDate)} -{' '}
+              {convertDateToMonthYear(data?.startDate)} -{' '}
               {!data?.currentPosition
-                ? convertDateToMonthYear(data.endDate)
+                ? convertDateToMonthYear(data?.endDate)
                 : 'Current position'}
               <div className={'mt-3'}>
                 <PortfolioSubmission

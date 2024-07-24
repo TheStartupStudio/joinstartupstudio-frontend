@@ -9,6 +9,7 @@ import {
 } from '../../../../redux/portfolio/Actions'
 import EducationCardModal from './EducationCardModal'
 import { convertDateToMonthYear } from '../../../../utils/helpers'
+import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 
 function EducationCard(props) {
   const { education, isEditSection } = props
@@ -48,7 +49,7 @@ function EducationCard(props) {
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}
-              src={education.imageUrl}
+              src={education?.organizationLogo ?? imagePlaceholder}
               alt={'education image'}
             />
           </div>
@@ -56,19 +57,19 @@ function EducationCard(props) {
             <div className={'d-flex justify-content-between gap-2'}>
               <div>
                 <div className={'organization-name mb-2'}>
-                  {education.organizationName}
+                  {education?.organizationName}
                 </div>
                 <div className={'organization-location mb-2'}>
-                  {education.location}
+                  {education?.location}
                 </div>
                 <div className={'organization-website mb-3'}>
-                  {education.website}
+                  {education?.website}
                 </div>
               </div>
               <div className={'text-end organization-date'}>
-                {convertDateToMonthYear(education.startDate)} -{' '}
+                {convertDateToMonthYear(education?.startDate)} -{' '}
                 {!education?.currentPosition
-                  ? convertDateToMonthYear(education.endDate)
+                  ? convertDateToMonthYear(education?.endDate)
                   : 'Current position'}
               </div>
             </div>
@@ -77,7 +78,7 @@ function EducationCard(props) {
                 Description:
               </div>{' '}
               <div className={'organization-description'}>
-                {education.description}
+                {education?.description}
               </div>
             </div>
           </div>

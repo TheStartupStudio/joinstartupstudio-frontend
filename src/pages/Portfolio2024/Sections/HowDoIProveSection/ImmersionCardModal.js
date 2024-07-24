@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import 'react-quill/dist/quill.snow.css'
 import { BsCalendar3 } from 'react-icons/bs'
 import ReactImageUpload from '../../Components/ReactAvatarEditor/ReactImageUpload'
@@ -8,9 +8,9 @@ import LabeledInput from '../../Components/DisplayData/LabeledInput'
 import { useDispatch } from 'react-redux'
 import LtsButton from '../../../../components/LTSButtons/LTSButton'
 import ConfirmDeleteRecordModal from '../../Components/Modals/ConfirmDeleteRecordModal'
-import { deleteMyEducation } from '../../../../redux/portfolio/Actions'
+import { deleteMyImmersion } from '../../../../redux/portfolio/Actions'
 import {
-  convertImageFileToFormData,
+  deleteImage,
   formatDateToInputValue,
   uploadImage
 } from '../../../../utils/helpers'
@@ -20,6 +20,26 @@ import EditPortfolioSubmission from '../../Components/EditPortfolioSubmission'
 const ImmersionCardModal = (props) => {
   const dispatch = useDispatch()
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
+
+  const deleteAvatarImage = (deleteSuccess) => {
+    if (deleteSuccess) {
+      if (isEdit()) {
+        props.onSave({
+          id: immersionData?.id,
+          organizationLogo: null
+        })
+      } else {
+        console.error(
+          'Error: Trying to delete image for a mentor that does not exist'
+        )
+      }
+    } else {
+      console.error('Error: Image deletion failed')
+    }
+  }
+  const deleteAvatarImageFile = (imageFile) => {
+    console.log('imageFile', imageFile)
+  }
   const {
     imageProperties,
     handleImageLoadSuccess,
@@ -31,7 +51,7 @@ const ImmersionCardModal = (props) => {
     setImageUrl,
     avatarEditorActions,
     editorRef
-  } = useImageEditor()
+  } = useImageEditor(deleteAvatarImage, deleteAvatarImageFile)
 
   const [immersionThumbnailImageFile, setImmersionThumbnailImageFile] =
     useState(null)
@@ -46,8 +66,8 @@ const ImmersionCardModal = (props) => {
       problem: '',
       solution: '',
       currentlyAttending: false,
-      immersionThumbnailUrl: '',
-      immersionVideoUrl: ''
+      immersionThumbnailUrl: null,
+      immersionVideoUrl: null
     }
   )
 
@@ -58,7 +78,7 @@ const ImmersionCardModal = (props) => {
         startDate: formatDateToInputValue(props.data?.startDate || new Date()),
         endDate: formatDateToInputValue(props.data?.endDate || new Date())
       })
-      setImageUrl(props.data.imageUrl)
+      setImageUrl(props.data?.organizationLogo)
     }
   }, [props.data])
 
@@ -72,7 +92,7 @@ const ImmersionCardModal = (props) => {
     setImmersionData(updatedData)
   }
 
-  const onSaveEducation = async () => {
+  const onSaveImmersion = async () => {
     let uploadedImageUrl
     let uploadedImmersionThumbnailUrl
     if (imageProperties.croppedImage) {
@@ -85,7 +105,7 @@ const ImmersionCardModal = (props) => {
       )
     }
 
-    const newEducationData = {
+    const newImmersionData = {
       ...immersionData,
       organizationLogo: uploadedImageUrl
         ? uploadedImageUrl
@@ -94,8 +114,7 @@ const ImmersionCardModal = (props) => {
         ? uploadedImmersionThumbnailUrl
         : immersionData.immersionThumbnailUrl
     }
-    debugger
-    props.onSave?.(newEducationData)
+    props.onSave?.(newImmersionData)
   }
 
   const modalActions = [
@@ -106,15 +125,39 @@ const ImmersionCardModal = (props) => {
     },
     {
       type: 'save',
-      action: () => onSaveEducation(),
+      action: () => onSaveImmersion(),
       isDisplayed: true
     }
   ]
 
   const isEdit = () => !!immersionData?.id
 
-  const handleDeleteEducation = (id) => {
-    dispatch(deleteMyEducation(id))
+  const handleDeleteImmersion = (id) => {
+    dispatch(deleteMyImmersion(id))
+  }
+
+  const handleDeleteImage = async () => {
+    const deleteSuccess = await deleteImage(
+      immersionData?.immersionThumbnailUrl
+    )
+    if (deleteSuccess) {
+      if (isEdit()) {
+        props.onSave({
+          id: immersionData?.id,
+          immersionThumbnailUrl: null
+        })
+      } else {
+        console.error(
+          'Error: Trying to delete image for a failure that does not exist'
+        )
+      }
+    } else {
+      console.error('Error: Image deletion failed')
+    }
+  }
+
+  const handleDeleteImageFile = async () => {
+    setImmersionData({ ...immersionData, immersionThumbnailUrl: null })
   }
 
   return (
@@ -244,16 +287,24 @@ const ImmersionCardModal = (props) => {
               <div>
                 <EditPortfolioSubmission
                   height={250}
-                  title={'Click the edit icon to link to your slide deck'}
-                  titleClasses={'submission-title_edit-mode'}
-                  videoUrl={immersionData?.videoUrl}
+                  title={
+                    !immersionData?.immersionThumbnailUrl
+                      ? 'Click the edit icon to link to your slide deck'
+                      : 'My immersion experience'
+                  }
+                  titleClasses={
+                    !immersionData?.immersionThumbnailUrl
+                      ? 'submission-title_edit-mode'
+                      : ''
+                  }
+                  videoUrl={immersionData?.immersionVideoUrl}
                   onChangeVideoUrl={(videoUrl) =>
                     handleDataChange?.('videoUrl', videoUrl)
                   }
                   onChangeImageCrop={updateCroppedImmersionImage}
-                  value={immersionData?.thumbnailUrl}
-                  // deleteImage={handleDeleteImage}
-                  // deleteImageFile={handleDeleteImageFile}
+                  value={immersionData?.immersionThumbnailUrl}
+                  deleteImage={handleDeleteImage}
+                  deleteImageFile={handleDeleteImageFile}
                 />
               </div>
             </div>
@@ -289,17 +340,17 @@ const ImmersionCardModal = (props) => {
       </div>
       {isEdit() && (
         <div className={' mt-5'} onClick={() => setConfirmDeleteModal(true)}>
-          <LtsButton variant={'text'} align={'end'} name={'DELETE EDUCATION'} />
+          <LtsButton variant={'text'} align={'end'} name={'DELETE IMMERSION'} />
         </div>
       )}
       <ConfirmDeleteRecordModal
         onHide={() => setConfirmDeleteModal(false)}
         show={confirmDeleteModal}
         modalContent={{
-          title: 'YOU’RE ABOUT TO DELETE THIS EXPERIENCE?',
+          title: 'YOU’RE ABOUT TO DELETE THIS IMMERSION?',
           description:
-            'If you delete the experience, it is not recoverable and will no longer appear in your portfolio.',
-          action: () => handleDeleteEducation(immersionData?.id)
+            'If you delete the immersion, it is not recoverable and will no longer appear in your portfolio.',
+          action: () => handleDeleteImmersion(immersionData?.id)
         }}
       />
     </PortfolioModalWrapper>

@@ -3,16 +3,13 @@ import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataCo
 import SectionActions from '../../Components/Actions/SectionActions'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  hideEditEducationModal,
   hideEditWorkExperienceModal,
-  showEditEducationModal,
   showEditWorkExperienceModal,
-  updateMyEducation,
   updateMyWorkExperience
 } from '../../../../redux/portfolio/Actions'
-import EducationCardModal from './EducationCardModal'
 import { convertDateToMonthYear } from '../../../../utils/helpers'
 import WorkExperienceCardModal from './WorkExperienceCardModal'
+import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 
 function WorkExperienceCard(props) {
   const { data, isEditSection } = props
@@ -24,12 +21,12 @@ function WorkExperienceCard(props) {
 
   const showModalId = useSelector(
     (state) =>
-      state.portfolio.howSection?.myAlignments?.workExperiences?.showEditModal
+      state.portfolio.howSection?.myProductivity?.workExperiences?.showEditModal
   )
 
-  const handleShowWorkExperienceModal = (education) => {
-    dispatch(showEditWorkExperienceModal(education?.id))
-    setDataToEdit(education)
+  const handleShowWorkExperienceModal = (work) => {
+    dispatch(showEditWorkExperienceModal(work?.id))
+    setDataToEdit(work)
   }
   const handleHideWorkExperienceModal = () => {
     dispatch(hideEditWorkExperienceModal())
@@ -45,7 +42,6 @@ function WorkExperienceCard(props) {
   const onSave = (data) => {
     dispatch(updateMyWorkExperience(data))
   }
-
   return (
     <div className={'mb-3'}>
       <PortfolioDataContainer background={'#fff'}>
@@ -53,8 +49,8 @@ function WorkExperienceCard(props) {
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}
-              src={data.imageUrl}
-              alt={'education image'}
+              src={data?.imageUrl ?? imagePlaceholder}
+              alt={'work experience image'}
             />
           </div>
           <div className={'flex-grow-1'}>

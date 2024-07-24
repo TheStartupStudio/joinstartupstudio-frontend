@@ -1835,7 +1835,8 @@ const portfolioReducer = (state = initialState, action) => {
                 state.howSection.myProductivity.immersions.data,
                 payload.data.id,
                 payload.data
-              )
+              ),
+              showEditModal: null
             }
           }
         }
@@ -1850,7 +1851,8 @@ const portfolioReducer = (state = initialState, action) => {
             immersions: {
               ...state.howSection.myProductivity.immersions,
               isSaving: false,
-              error: payload.error
+              error: payload.error,
+              showEditModal: false
             }
           }
         }
@@ -1884,7 +1886,8 @@ const portfolioReducer = (state = initialState, action) => {
               data: createRow(
                 state.howSection.myProductivity.immersions.data,
                 payload.data
-              )
+              ),
+              showAddModal: null
             }
           }
         }
@@ -1899,7 +1902,8 @@ const portfolioReducer = (state = initialState, action) => {
             immersions: {
               ...state.howSection.myProductivity.immersions,
               isSaving: false,
-              error: payload.error
+              error: payload.error,
+              showAddModal: null
             }
           }
         }
@@ -1933,7 +1937,8 @@ const portfolioReducer = (state = initialState, action) => {
               data: removeRow(
                 state.howSection.myProductivity.immersions.data,
                 payload.data.id
-              )
+              ),
+              showEditModal: null
             }
           }
         }
@@ -1948,7 +1953,8 @@ const portfolioReducer = (state = initialState, action) => {
             immersions: {
               ...state.howSection.myProductivity.immersions,
               isLoading: false,
-              error: payload.error
+              error: payload.error,
+              showEditModal: null
             }
           }
         }
@@ -2028,10 +2034,11 @@ const portfolioReducer = (state = initialState, action) => {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: false,
               data: updateRow(
-                state.howSection.myProductivity.workExperience.data,
+                state.howSection.myProductivity.workExperiences.data,
                 payload.data.id,
                 payload.data
-              )
+              ),
+              showEditModal: null
             }
           }
         }
@@ -2046,7 +2053,8 @@ const portfolioReducer = (state = initialState, action) => {
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: false,
-              error: payload.error
+              error: payload.error,
+              showEditModal: null
             }
           }
         }
@@ -2078,9 +2086,10 @@ const portfolioReducer = (state = initialState, action) => {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: false,
               data: createRow(
-                state.howSection.myProductivity.workExperience.data,
+                state.howSection.myProductivity.workExperiences.data,
                 payload.data
-              )
+              ),
+              showAddModal: null
             }
           }
         }
@@ -2095,7 +2104,8 @@ const portfolioReducer = (state = initialState, action) => {
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isSaving: false,
-              error: action.payload.error
+              error: action.payload.error,
+              showAddModal: null
             }
           }
         }
@@ -2129,7 +2139,8 @@ const portfolioReducer = (state = initialState, action) => {
               data: removeRow(
                 state.howSection.myProductivity.workExperiences.data,
                 payload.data.id
-              )
+              ),
+              showEditModal: null
             }
           }
         }
@@ -2144,7 +2155,8 @@ const portfolioReducer = (state = initialState, action) => {
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
               isLoading: false,
-              error: payload.error
+              error: payload.error,
+              showEditModal: null
             }
           }
         }

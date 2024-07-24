@@ -18,6 +18,25 @@ import useImageEditor from '../../../../hooks/useImageEditor'
 const WorkExperienceCardModal = (props) => {
   const dispatch = useDispatch()
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
+  const deleteAvatarImage = (deleteSuccess) => {
+    if (deleteSuccess) {
+      if (isEdit()) {
+        props.onSave({
+          id: workExperienceData?.id,
+          organizationLogo: null
+        })
+      } else {
+        console.error(
+          'Error: Trying to delete image for a mentor that does not exist'
+        )
+      }
+    } else {
+      console.error('Error: Image deletion failed')
+    }
+  }
+  const deleteAvatarImageFile = (imageFile) => {
+    console.log('imageFile', imageFile)
+  }
   const {
     imageProperties,
     handleImageLoadSuccess,
@@ -29,8 +48,7 @@ const WorkExperienceCardModal = (props) => {
     setImageUrl,
     avatarEditorActions,
     editorRef
-  } = useImageEditor()
-
+  } = useImageEditor(deleteAvatarImage, deleteAvatarImageFile)
   const [workExperienceData, setWorkExperienceData] = useState(
     props.data || {
       organizationName: '',
