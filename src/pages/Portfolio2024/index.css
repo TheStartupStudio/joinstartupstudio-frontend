@@ -484,6 +484,9 @@
 .edit-education-modal .modal-content {
     padding: 10px !important;
 }
+.edit-immersion-modal .modal-dialog {
+    min-width: 1000px !important;
+}
 .share-portfolio-modal  .modal-dialog {
     min-height: 100% !important;
 }
@@ -900,6 +903,14 @@
     justify-content: center;
 }
 
+.portfolio-submission-title.submission-title_edit-mode {
+    font: normal normal normal 16px/18px Montserrat;
+    letter-spacing: 0.64px;
+    color: #766C6EFD;
+    text-transform: none;
+    padding: 10px;
+    height: 20%
+}
 .insert-submission-link-box {
     background: #FFFFFF 0% 0% no-repeat padding-box;
     box-shadow: 0px 3px 6px #00000029;

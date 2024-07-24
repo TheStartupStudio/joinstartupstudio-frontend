@@ -374,85 +374,85 @@ export const deleteMyCredentialAPI = async (credentialId) => {
 
 export const getMyImmersionsAPI = async () => {
   try {
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    await delay(2000)
-    const data = [
-      {
-        id: 1,
-        organizationLogo: 'https://example.com/logo1.png',
-        startDate: '2021-01-01',
-        endDate: '2021-06-30',
-        organizationName: 'Tech Innovators',
-        location: 'San Francisco, CA',
-        website: 'https://techinnovators.com',
-        problem: 'Limited access to advanced technology in rural areas.',
-        solution:
-          'Developed mobile tech labs to bring advanced technology to rural communities.',
-        currentlyAttending: false,
-        immersionThumbnailUrl: 'https://example.com/thumbnail1.png',
-        immersionVideoUrl: 'https://example.com/video1.mp4'
-      },
-      {
-        id: 2,
-        organizationLogo: 'https://example.com/logo2.png',
-        startDate: '2020-03-01',
-        endDate: '2020-12-31',
-        organizationName: 'Health First',
-        location: 'New York, NY',
-        website: 'https://healthfirst.com',
-        problem: 'High rates of preventable diseases.',
-        solution:
-          'Launched a city-wide health awareness campaign and free health check-ups.',
-        currentlyAttending: false,
-        immersionThumbnailUrl: 'https://example.com/thumbnail2.png',
-        immersionVideoUrl: 'https://example.com/video2.mp4'
-      },
-      {
-        id: 3,
-        organizationLogo: 'https://example.com/logo3.png',
-        startDate: '2022-07-01',
-        endDate: '',
-        organizationName: 'Green Earth Initiative',
-        location: 'Austin, TX',
-        website: 'https://greenearth.com',
-        problem: 'Increasing pollution levels.',
-        solution: 'Implemented urban gardening and recycling programs.',
-        currentlyAttending: true,
-        immersionThumbnailUrl: 'https://example.com/thumbnail3.png',
-        immersionVideoUrl: 'https://example.com/video3.mp4'
-      },
-      {
-        id: 4,
-        organizationLogo: 'https://example.com/logo4.png',
-        startDate: '2019-05-15',
-        endDate: '2020-02-20',
-        organizationName: 'EduGrowth',
-        location: 'Seattle, WA',
-        website: 'https://edugrowth.com',
-        problem: 'Low literacy rates in underserved communities.',
-        solution: 'Provided free tutoring and educational resources.',
-        currentlyAttending: false,
-        immersionThumbnailUrl: 'https://example.com/thumbnail4.png',
-        immersionVideoUrl: 'https://example.com/video4.mp4'
-      },
-      {
-        id: 5,
-        organizationLogo: 'https://example.com/logo5.png',
-        startDate: '2023-04-01',
-        endDate: '',
-        organizationName: 'Clean Water Project',
-        location: 'Denver, CO',
-        website: 'https://cleanwater.com',
-        problem: 'Lack of access to clean drinking water.',
-        solution: 'Installed water purification systems in affected areas.',
-        currentlyAttending: true,
-        immersionThumbnailUrl: 'https://example.com/thumbnail5.png',
-        immersionVideoUrl: 'https://example.com/video5.mp4'
-      }
-    ]
-    return { data: data }
-    // const response = await axiosInstance.get('/hsPortfolio/immersions')
-    // return response
+    // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+    // await delay(2000)
+    // const data = [
+    //   {
+    //     id: 1,
+    //     organizationLogo: 'https://example.com/logo1.png',
+    //     startDate: '2021-01-01',
+    //     endDate: '2021-06-30',
+    //     organizationName: 'Tech Innovators',
+    //     location: 'San Francisco, CA',
+    //     website: 'https://techinnovators.com',
+    //     problem: 'Limited access to advanced technology in rural areas.',
+    //     solution:
+    //       'Developed mobile tech labs to bring advanced technology to rural communities.',
+    //     currentlyAttending: false,
+    //     immersionThumbnailUrl: 'https://example.com/thumbnail1.png',
+    //     immersionVideoUrl: 'https://example.com/video1.mp4'
+    //   },
+    //   {
+    //     id: 2,
+    //     organizationLogo: 'https://example.com/logo2.png',
+    //     startDate: '2020-03-01',
+    //     endDate: '2020-12-31',
+    //     organizationName: 'Health First',
+    //     location: 'New York, NY',
+    //     website: 'https://healthfirst.com',
+    //     problem: 'High rates of preventable diseases.',
+    //     solution:
+    //       'Launched a city-wide health awareness campaign and free health check-ups.',
+    //     currentlyAttending: false,
+    //     immersionThumbnailUrl: 'https://example.com/thumbnail2.png',
+    //     immersionVideoUrl: 'https://example.com/video2.mp4'
+    //   },
+    //   {
+    //     id: 3,
+    //     organizationLogo: 'https://example.com/logo3.png',
+    //     startDate: '2022-07-01',
+    //     endDate: '',
+    //     organizationName: 'Green Earth Initiative',
+    //     location: 'Austin, TX',
+    //     website: 'https://greenearth.com',
+    //     problem: 'Increasing pollution levels.',
+    //     solution: 'Implemented urban gardening and recycling programs.',
+    //     currentlyAttending: true,
+    //     immersionThumbnailUrl: 'https://example.com/thumbnail3.png',
+    //     immersionVideoUrl: 'https://example.com/video3.mp4'
+    //   },
+    //   {
+    //     id: 4,
+    //     organizationLogo: 'https://example.com/logo4.png',
+    //     startDate: '2019-05-15',
+    //     endDate: '2020-02-20',
+    //     organizationName: 'EduGrowth',
+    //     location: 'Seattle, WA',
+    //     website: 'https://edugrowth.com',
+    //     problem: 'Low literacy rates in underserved communities.',
+    //     solution: 'Provided free tutoring and educational resources.',
+    //     currentlyAttending: false,
+    //     immersionThumbnailUrl: 'https://example.com/thumbnail4.png',
+    //     immersionVideoUrl: 'https://example.com/video4.mp4'
+    //   },
+    //   {
+    //     id: 5,
+    //     organizationLogo: 'https://example.com/logo5.png',
+    //     startDate: '2023-04-01',
+    //     endDate: '',
+    //     organizationName: 'Clean Water Project',
+    //     location: 'Denver, CO',
+    //     website: 'https://cleanwater.com',
+    //     problem: 'Lack of access to clean drinking water.',
+    //     solution: 'Installed water purification systems in affected areas.',
+    //     currentlyAttending: true,
+    //     immersionThumbnailUrl: 'https://example.com/thumbnail5.png',
+    //     immersionVideoUrl: 'https://example.com/video5.mp4'
+    //   }
+    // ]
+    // return { data: data }
+    const response = await axiosInstance.get('/hsPortfolio/immersions')
+    return response
   } catch (e) {
     console.log('Error occurred during fetching immersions', e)
   }

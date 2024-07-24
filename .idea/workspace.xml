@@ -6,11 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/EditPortfolioSubmission.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/EditPortfolioSubmission.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCardModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCardModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Service.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/helpers.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +119,7 @@
       <workItem from="1720164433682" duration="1239000" />
       <workItem from="1720614606349" duration="608000" />
       <workItem from="1721036272998" duration="1343000" />
-      <workItem from="1721634831645" duration="33056000" />
+      <workItem from="1721634831645" duration="37752000" />
     </task>
     <servers />
   </component>

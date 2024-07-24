@@ -334,3 +334,9 @@ export const formatDateToInputValue = (date) => {
 
   return [year, month, day].join('-')
 }
+
+export const convertImageFileToFormData = (imageFile) => {
+  const formData = new FormData()
+  formData.append('img', imageFile)
+  return formData
+}

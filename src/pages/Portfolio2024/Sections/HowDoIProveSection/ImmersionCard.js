@@ -52,7 +52,7 @@ function ImmersionCard(props) {
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}
-              src={data.imageUrl}
+              src={data.organizationLogo}
               alt={'education image'}
             />
           </div>
@@ -91,7 +91,11 @@ function ImmersionCard(props) {
                 ? convertDateToMonthYear(data.endDate)
                 : 'Current position'}
               <div className={'mt-3'}>
-                <PortfolioSubmission title={'My immersion experience'} />
+                <PortfolioSubmission
+                  title={'My immersion experience'}
+                  thumbnailUrl={data?.immersionThumbnailUrl}
+                  videoUrl={data?.immersionVideoUrl}
+                />
               </div>
             </div>
           </div>

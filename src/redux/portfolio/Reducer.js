@@ -1662,7 +1662,6 @@ const portfolioReducer = (state = initialState, action) => {
       }
 
     case SHOW_EDIT_IMMERSION_MODAL:
-      debugger
       return {
         ...state,
         howSection: {

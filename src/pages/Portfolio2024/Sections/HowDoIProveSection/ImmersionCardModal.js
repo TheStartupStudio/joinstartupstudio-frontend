@@ -9,8 +9,13 @@ import { useDispatch } from 'react-redux'
 import LtsButton from '../../../../components/LTSButtons/LTSButton'
 import ConfirmDeleteRecordModal from '../../Components/Modals/ConfirmDeleteRecordModal'
 import { deleteMyEducation } from '../../../../redux/portfolio/Actions'
-import { formatDateToInputValue, uploadImage } from '../../../../utils/helpers'
+import {
+  convertImageFileToFormData,
+  formatDateToInputValue,
+  uploadImage
+} from '../../../../utils/helpers'
 import useImageEditor from '../../../../hooks/useImageEditor'
+import EditPortfolioSubmission from '../../Components/EditPortfolioSubmission'
 
 const ImmersionCardModal = (props) => {
   const dispatch = useDispatch()
@@ -28,22 +33,27 @@ const ImmersionCardModal = (props) => {
     editorRef
   } = useImageEditor()
 
-  const [educationData, setEducationData] = useState(
+  const [immersionThumbnailImageFile, setImmersionThumbnailImageFile] =
+    useState(null)
+  const [immersionData, setImmersionData] = useState(
     props.data || {
+      organizationLogo: null,
+      startDate: formatDateToInputValue(new Date()),
+      endDate: formatDateToInputValue(new Date()),
       organizationName: '',
       location: '',
       website: '',
-      startDate: formatDateToInputValue(new Date()),
-      endDate: formatDateToInputValue(new Date()),
-      description: '',
-      imageUrl: '',
-      currentPosition: false
+      problem: '',
+      solution: '',
+      currentlyAttending: false,
+      immersionThumbnailUrl: '',
+      immersionVideoUrl: ''
     }
   )
 
   useEffect(() => {
     if (props.data) {
-      setEducationData({
+      setImmersionData({
         ...props.data,
         startDate: formatDateToInputValue(props.data?.startDate || new Date()),
         endDate: formatDateToInputValue(props.data?.endDate || new Date())
@@ -52,22 +62,39 @@ const ImmersionCardModal = (props) => {
     }
   }, [props.data])
 
+  const updateCroppedImmersionImage = (file) => {
+    setImmersionThumbnailImageFile(file)
+  }
+
   const handleDataChange = (value, key) => {
-    const updatedData = { ...educationData }
+    const updatedData = { ...immersionData }
     updatedData[key] = value
-    setEducationData(updatedData)
+    setImmersionData(updatedData)
   }
 
   const onSaveEducation = async () => {
     let uploadedImageUrl
+    let uploadedImmersionThumbnailUrl
     if (imageProperties.croppedImage) {
       uploadedImageUrl = await uploadImage(imageProperties.croppedImage)
     }
 
-    const newEducationData = {
-      ...educationData,
-      imageUrl: uploadedImageUrl ? uploadedImageUrl : educationData.imageUrl
+    if (immersionThumbnailImageFile) {
+      uploadedImmersionThumbnailUrl = await uploadImage(
+        immersionThumbnailImageFile
+      )
     }
+
+    const newEducationData = {
+      ...immersionData,
+      organizationLogo: uploadedImageUrl
+        ? uploadedImageUrl
+        : immersionData.imageUrl,
+      immersionThumbnailUrl: uploadedImmersionThumbnailUrl
+        ? uploadedImmersionThumbnailUrl
+        : immersionData.immersionThumbnailUrl
+    }
+    debugger
     props.onSave?.(newEducationData)
   }
 
@@ -84,7 +111,7 @@ const ImmersionCardModal = (props) => {
     }
   ]
 
-  const isEdit = () => !!educationData?.id
+  const isEdit = () => !!immersionData?.id
 
   const handleDeleteEducation = (id) => {
     dispatch(deleteMyEducation(id))
@@ -96,7 +123,7 @@ const ImmersionCardModal = (props) => {
       onHide={props.onHide}
       title={props.title}
       actions={modalActions}
-      class={'edit-education-modal'}
+      class={'edit-immersion-modal'}
     >
       <div className={'portfolio-section-container w-100 pt-1 pb-1 px-1'}>
         <div
@@ -115,7 +142,7 @@ const ImmersionCardModal = (props) => {
                   className={`date-input my-1 py-2 px-2 text-dark `}
                   type={'date'}
                   name={'startDate'}
-                  value={educationData?.startDate}
+                  value={immersionData?.startDate}
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChange(newValue, 'startDate')
@@ -123,7 +150,7 @@ const ImmersionCardModal = (props) => {
                 />
               </span>
             </div>
-            {!educationData.currentPosition && (
+            {!immersionData.currentlyAttending && (
               <div className={'select-date d-flex align-items-center'}>
                 <span>
                   <BsCalendar3 className={'calendar_icon '} />
@@ -134,7 +161,7 @@ const ImmersionCardModal = (props) => {
                     className={`date-input my-1 py-2 px-2 text-dark `}
                     type={'date'}
                     name={'endDate'}
-                    value={educationData?.endDate}
+                    value={immersionData?.endDate}
                     onChange={(e) => {
                       const newValue = e.target.value
                       handleDataChange(newValue, 'endDate')
@@ -148,20 +175,20 @@ const ImmersionCardModal = (props) => {
           <div className={'d-flex align-items-center'}>
             <input
               type='checkbox'
-              checked={educationData.currentPosition}
+              checked={immersionData.currentlyAttending}
               onChange={(e) => {
                 const newValue = e.target.checked
-                handleDataChange(newValue, 'currentPosition')
+                handleDataChange(newValue, 'currentlyAttending')
               }}
               className={'me-2 current-position-checkbox'}
             />
             <span className={'current-position-label'}>
-              My current position
+              Currently attending
             </span>
           </div>
         </div>
         <div className={'row'}>
-          <div className={' col-md-4 '}>
+          <div className={' col-md-3 '}>
             {/*<div className="upload-image me-2 mb-1">*/}
             <div className='p-0 mb-1'>
               <ReactImageUpload
@@ -178,52 +205,86 @@ const ImmersionCardModal = (props) => {
               />
             </div>
           </div>
-          <div className={'col-md-8 '}>
-            <>
-              <LabeledInput
-                title={'Organization name'}
-                name={'organizationName'}
-                width={'100%'}
-                value={educationData?.organizationName}
-                type={'text'}
-                onChange={(e) => handleDataChange(e, 'organizationName')}
-                labelAlign={'start'}
+          <div className={'col-md-9 '}>
+            <div className={'d-flex gap-5'}>
+              <div className={'w-75'}>
+                <LabeledInput
+                  title={'Organization name'}
+                  name={'organizationName'}
+                  width={'100%'}
+                  value={immersionData?.organizationName}
+                  type={'text'}
+                  onChange={(e) => handleDataChange(e, 'organizationName')}
+                  labelAlign={'start'}
+                />
+                <div className={'mt-2'}>
+                  <LabeledInput
+                    type={'text'}
+                    title={'Location'}
+                    name={'location'}
+                    width={'100%'}
+                    value={immersionData?.location}
+                    onChange={(e) => handleDataChange(e, 'location')}
+                    labelAlign={'start'}
+                  />
+                </div>
+                <div className={'mt-2'}>
+                  <LabeledInput
+                    type={'text'}
+                    title={'Website'}
+                    name={'website'}
+                    width={'100%'}
+                    titleClassNames={'bold-text '}
+                    value={immersionData?.website}
+                    onChange={(e) => handleDataChange(e, 'website')}
+                    labelAlign={'start'}
+                  />
+                </div>
+              </div>
+              <div>
+                <EditPortfolioSubmission
+                  height={250}
+                  title={'Click the edit icon to link to your slide deck'}
+                  titleClasses={'submission-title_edit-mode'}
+                  videoUrl={immersionData?.videoUrl}
+                  onChangeVideoUrl={(videoUrl) =>
+                    handleDataChange?.('videoUrl', videoUrl)
+                  }
+                  onChangeImageCrop={updateCroppedImmersionImage}
+                  value={immersionData?.thumbnailUrl}
+                  // deleteImage={handleDeleteImage}
+                  // deleteImageFile={handleDeleteImageFile}
+                />
+              </div>
+            </div>
+            <div className={'mt-4'}>
+              <div
+                className={'portfolio-info-title '}
+                style={{ textTransform: 'none' }}
+              >
+                {'The problem'}
+              </div>
+              <ReactQuill
+                className={'portfolio-quill mt-2'}
+                value={immersionData?.problem ?? ''}
+                onChange={(value) => handleDataChange(value, 'problem')}
               />
-              <div className={'mt-2'}>
-                <LabeledInput
-                  type={'text'}
-                  title={'Location'}
-                  name={'location'}
-                  width={'100%'}
-                  value={educationData?.location}
-                  onChange={(e) => handleDataChange(e, 'location')}
-                  labelAlign={'start'}
-                />
+            </div>
+
+            <div className={'mt-4'}>
+              <div
+                className={'portfolio-info-title'}
+                style={{ textTransform: 'none' }}
+              >
+                {'The solution'}
               </div>
-              <div className={'mt-2'}>
-                <LabeledInput
-                  type={'text'}
-                  title={'Website'}
-                  name={'website'}
-                  width={'100%'}
-                  titleClassNames={'bold-text '}
-                  value={educationData?.website}
-                  onChange={(e) => handleDataChange(e, 'website')}
-                  labelAlign={'start'}
-                />
-              </div>
-            </>
+              <ReactQuill
+                className={'portfolio-quill mt-2'}
+                value={immersionData?.solution ?? ''}
+                onChange={(value) => handleDataChange(value, 'solution')}
+              />
+            </div>
           </div>
-        </div>
-        <div className={'mt-4'}>
-          <div className={'portfolio-info-title text-uppercase'}>
-            {'Description'}
-          </div>
-          <ReactQuill
-            className={'portfolio-quill'}
-            value={educationData?.description ?? ''}
-            onChange={(value) => handleDataChange(value, 'description')}
-          />
         </div>
       </div>
       {isEdit() && (
@@ -238,7 +299,7 @@ const ImmersionCardModal = (props) => {
           title: 'YOU’RE ABOUT TO DELETE THIS EXPERIENCE?',
           description:
             'If you delete the experience, it is not recoverable and will no longer appear in your portfolio.',
-          action: () => handleDeleteEducation(educationData?.id)
+          action: () => handleDeleteEducation(immersionData?.id)
         }}
       />
     </PortfolioModalWrapper>
