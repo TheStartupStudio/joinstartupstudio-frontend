@@ -63,20 +63,9 @@ const Index = ({
   educations,
   credentials,
   immersions,
-  workExperiences
+  workExperiences,
+  myCompetitiveness
 }) => {
-  // useEffect(() => {
-  // fetchUserStory()
-  // fetchMyFailures()
-  // fetchMyMentors()
-  // fetchMyRelationships()
-  // fetchSharingSettings()
-  // fetchMyEducations()
-  // fetchMyCredentials()
-  // fetchMyImmersions()
-  // fetchMyWorkExperiences()
-  // }, [])
-
   useEffect(() => {
     const fetchDataSequentially = async () => {
       await fetchUserStory()
@@ -88,6 +77,7 @@ const Index = ({
       await fetchMyCredentials()
       await fetchMyImmersions()
       await fetchMyWorkExperiences()
+      await fetchMyCompetitiveness()
     }
 
     fetchDataSequentially()
@@ -106,7 +96,6 @@ const Index = ({
       })
     }
   }, [sharingSettings])
-
   return (
     <div className='portfolio-container'>
       {!areLoadingSharingSettings ? (
@@ -159,7 +148,8 @@ const Index = ({
               myProductivity: {
                 immersions,
                 workExperiences
-              }
+              },
+              myCompetitiveness
             }}
           />
         </>
@@ -205,7 +195,8 @@ const mapStateToProps = (state) => {
     },
     howSection: {
       myAlignments: { educations, credentials },
-      myProductivity: { immersions, workExperiences }
+      myProductivity: { immersions, workExperiences },
+      myCompetitiveness
     }
   } = state.portfolio
 
@@ -229,7 +220,8 @@ const mapStateToProps = (state) => {
     educations,
     credentials,
     immersions,
-    workExperiences
+    workExperiences,
+    myCompetitiveness
   }
 }
 

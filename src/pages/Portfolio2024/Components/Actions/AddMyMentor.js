@@ -30,7 +30,7 @@ function AddMyMentor(props) {
       type: 'add',
       action: () => handleShowMentorModal(),
       isDisplayed: mode === 'edit' && props.isEditSection === true,
-      description: 'Click here to add a new mentor'
+      description: `Click here to add a new ${props.type ?? 'mentor'}`
     }
   ]
   return (
@@ -41,13 +41,16 @@ function AddMyMentor(props) {
         src={imagePlaceholder}
       />
       <div className={'add-new-mentor px-2 pt-3'}>
-        {'Click the add button to add a new mentor relationship.'}
+        {`Click the add button to add a new ${
+          props.type ?? 'mentor'
+        } relationship.`}
       </div>
       <SectionActions actions={actions} />
       <MyMentorModal
         onHide={handleHideMentorModal}
         show={showMentorModal}
-        title={'Add Mentor'}
+        title={`Add ${props.type ?? 'mentor'}`}
+        category={props.category}
       />
     </div>
   )

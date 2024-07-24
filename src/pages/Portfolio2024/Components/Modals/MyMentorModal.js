@@ -96,7 +96,7 @@ function MyMentorModal(props) {
       mentorName,
       mentorRole,
       mentorCompany,
-      category: 'my-mentors'
+      category: props.category ?? 'my-mentors'
     }
     if (isEdit()) {
       dispatch(updateMyMentor(mentorData, id))
@@ -128,24 +128,6 @@ function MyMentorModal(props) {
     dispatch(deleteMyMentor(id))
   }
 
-  const handleDeleteImage = async () => {
-    const deleteSuccess = await deleteImage(mentorImage)
-    if (deleteSuccess) {
-      const updatedMentorData = {
-        mentorImage: null
-      }
-
-      if (isEdit()) {
-        dispatch(deleteMentorImage(updatedMentorData, id))
-      } else {
-        console.error(
-          'Error: Trying to delete image for a mentor that does not exist'
-        )
-      }
-    } else {
-      console.error('Error: Image deletion failed')
-    }
-  }
   return (
     <PortfolioModalWrapper {...props} actions={actions}>
       <div className={'row'}>

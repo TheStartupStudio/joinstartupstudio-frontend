@@ -10,7 +10,7 @@ import {
 
 function MyMentor(props) {
   const dispatch = useDispatch()
-  const [myMentor, setMyMentor] = useState({})
+  const [data, setData] = useState({})
   const mode = useSelector((state) => state.portfolio.mode)
   const showMentorModalId = useSelector(
     (state) => state.portfolio.whoSection.myMentors.showEditMentorModal
@@ -25,14 +25,14 @@ function MyMentor(props) {
 
   useEffect(() => {
     if (props.data) {
-      setMyMentor(props.data)
+      setData(props.data)
     }
   }, [props.data])
 
   const actions = [
     {
       type: 'edit',
-      action: () => handleShowMentorModal(myMentor?.id),
+      action: () => handleShowMentorModal(data?.id),
       isDisplayed: mode === 'edit' && props.isEditSection === true
     }
   ]
@@ -42,24 +42,25 @@ function MyMentor(props) {
       <img
         className={'my-mentors-image'}
         alt={'submission-image'}
-        src={myMentor?.mentorImage ? myMentor?.mentorImage : imagePlaceholder}
+        src={data?.mentorImage ? data?.mentorImage : imagePlaceholder}
       />
 
       <div className={'mentor-info-box'}>
-        <div className={'mentor-name'}>{myMentor?.mentorName}</div>
-        <div className={'mentor-role'}>{myMentor?.mentorRole}</div>
-        <div className={'mentor-company'}>{myMentor?.mentorCompany}</div>
+        <div className={'mentor-name'}>{data?.mentorName}</div>
+        <div className={'mentor-role'}>{data?.mentorRole}</div>
+        <div className={'mentor-company'}>{data?.mentorCompany}</div>
         <div
           className={'mentor-description'}
-          dangerouslySetInnerHTML={{ __html: myMentor?.mentorDescription }}
+          dangerouslySetInnerHTML={{ __html: data?.mentorDescription }}
         />
       </div>
       <SectionActions actions={actions} />
       <MyMentorModal
         onHide={handleHideMentorModal}
-        show={showMentorModalId === myMentor?.id}
-        title={'Edit Mentor'}
-        data={myMentor}
+        show={showMentorModalId === data?.id}
+        title={`Edit ${props.type ?? 'mentor'}`}
+        data={data}
+        category={props.category}
       />
     </div>
   )

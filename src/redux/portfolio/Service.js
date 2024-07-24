@@ -403,45 +403,48 @@ export const deleteWorkExperienceAPI = async (educationId) => {
 
 export const getMyCompetitivenessAPI = async () => {
   try {
-    const response = await axiosInstance.get('/hsPortfolio/competitiveness')
+    const response = await axiosInstance.get('/hsPortfolio/myCompetitiveness')
     return response
   } catch (e) {
-    console.log('Error occurred during fetching competitiveness', e)
+    console.log('Error occurred during fetching my competitiveness', e)
   }
 }
 
-export const updateMyCompetitivenessAPI = async (competitiveness) => {
-  try {
-    const response = await axiosInstance.put(
-      '/hsPortfolio/competitiveness',
-      competitiveness
-    )
-    return response
-  } catch (e) {
-    console.log('Error occurred during updating competitiveness', e)
-  }
-}
-
-export const addMyCompetitivenessAPI = async (competitiveness) => {
+export const createMyCompetitivenessAPI = async (myCompetitiveness) => {
   try {
     const response = await axiosInstance.post(
-      '/hsPortfolio/competitiveness',
-      competitiveness
+      '/hsPortfolio/myCompetitiveness',
+      myCompetitiveness
     )
+
     return response
   } catch (e) {
-    console.log('Error occurred during adding competitiveness', e)
+    console.log('Error occurred during creating my competitiveness', e)
   }
 }
 
-export const deleteMyCompetitivenessAPI = async (competitivenessId) => {
+export const updateMyCompetitivenessAPI = async (myCompetitiveness, id) => {
   try {
-    const response = await axiosInstance.delete(
-      `/hsPortfolio/competitiveness/${competitivenessId}`
+    const response = await axiosInstance.put(
+      `/hsPortfolio/myCompetitiveness/${id}`,
+      myCompetitiveness
     )
+
     return response
   } catch (e) {
-    console.log('Error occurred during deleting competitiveness', e)
+    console.log('Error occurred during creating my competitiveness', e)
+  }
+}
+
+export const deleteMyCompetitivenessAPI = async (id) => {
+  try {
+    const response = await axiosInstance.delete(
+      `/hsPortfolio/myCompetitiveness/${id}`
+    )
+
+    return response
+  } catch (e) {
+    console.log('Error occurred during creating my competitiveness', e)
   }
 }
 // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))

@@ -9,10 +9,10 @@ import MyAlignments from './MyAlignments'
 import { getProjects } from '../../../../redux/portfolio/Actions'
 import { connect } from 'react-redux'
 import MyProductivity from './MyProductivity'
+import MyCompetitiveness from './MyCompetitiveness'
 
 function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
   const [loadings, setLoadings] = useState(null)
-  console.log('data', data)
   // useEffect(() => {
   //   if (propsLoadings) {
   //     setLoadings(propsLoadings)
@@ -57,6 +57,14 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
         'My skills and expertise inside of my field of interest.',
         MyProductivity,
         data?.myProductivity
+      )}
+      {renderSection(
+        loadings?.userStory,
+        'my-competitiveness',
+        'My Competitiveness',
+        'The value of the outcomes you produce inside of your field of interest',
+        MyCompetitiveness,
+        data?.myCompetitiveness?.data
       )}
     </div>
   )

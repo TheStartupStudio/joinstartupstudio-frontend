@@ -214,7 +214,7 @@ import {
   deleteWorkExperienceAPI,
   getMyCompetitivenessAPI,
   updateMyCompetitivenessAPI,
-  addMyCompetitivenessAPI,
+  createMyCompetitivenessAPI,
   deleteMyCompetitivenessAPI
 } from './Service'
 
@@ -1444,6 +1444,7 @@ export const getMyCompetitiveness = () => async (dispatch) => {
   dispatch({ type: GET_MY_COMPETITIVENESS })
   try {
     const response = await getMyCompetitivenessAPI()
+
     dispatch(getMyCompetitivenessSuccess(response.data))
   } catch (e) {
     dispatch(getMyCompetitivenessError(e))
@@ -1494,7 +1495,7 @@ export const updateMyCompetitivenessError = (error) => {
 export const addMyCompetitiveness = (competitiveness) => async (dispatch) => {
   dispatch({ type: ADD_MY_COMPETITIVENESS })
   try {
-    const response = await addMyCompetitivenessAPI(competitiveness)
+    const response = await createMyCompetitivenessAPI(competitiveness)
     dispatch(addMyCompetitivenessSuccess(response.data))
   } catch (e) {
     dispatch(addMyCompetitivenessError(e))
