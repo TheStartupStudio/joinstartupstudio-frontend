@@ -12,7 +12,7 @@ import { convertDateToMonthYear } from '../../../../utils/helpers'
 import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 
 function CredentialCard(props) {
-  const { credential, isEditSection } = props
+  const { item: credential, isEditSection } = props
   const [dataToEdit, setDataToEdit] = useState({})
 
   const dispatch = useDispatch()

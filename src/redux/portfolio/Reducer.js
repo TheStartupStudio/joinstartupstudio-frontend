@@ -1243,7 +1243,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              isLoading: true,
+              isLoading: false,
               error: null,
               data: payload.data
             }
@@ -1259,7 +1259,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              isLoading: true,
+              isLoading: false,
               error: payload.error
             }
           }
@@ -1448,7 +1448,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: true,
+              isLoading: false,
               error: null,
               data: payload.data
             }
@@ -1464,7 +1464,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: true,
+              isLoading: false,
               error: payload.error
             }
           }

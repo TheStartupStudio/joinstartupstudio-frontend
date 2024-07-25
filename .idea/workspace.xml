@@ -6,8 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/LabeledInput.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/LabeledInput.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/MyMentorModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/MyMentorModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/CredentialCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/CredentialCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/EducationCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/EducationCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/HowDoIProve.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/HowDoIProve.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyAlignments.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyAlignments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyProductivity.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyProductivity.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +54,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Dell\\AppData\\Roaming\\npm\\node_modules\\prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -114,7 +120,7 @@
       <workItem from="1720164433682" duration="1239000" />
       <workItem from="1720614606349" duration="608000" />
       <workItem from="1721036272998" duration="1343000" />
-      <workItem from="1721634831645" duration="64510000" />
+      <workItem from="1721634831645" duration="69003000" />
     </task>
     <servers />
   </component>

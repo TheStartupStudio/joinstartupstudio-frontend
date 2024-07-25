@@ -108,7 +108,7 @@ function SectionActions(props) {
               icon={<IoMdOpen className={'action-icon public-icon'} />}
               tooltipContent={
                 <Tooltip id='tooltip' className={'tooltip-content '}>
-                  {openButton?.description ?? `Click here to delete item`}
+                  {openButton?.description ?? `Click here to open item`}
                 </Tooltip>
               }
             />

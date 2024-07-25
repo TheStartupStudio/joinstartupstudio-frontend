@@ -64,7 +64,12 @@ const Index = ({
   credentials,
   immersions,
   workExperiences,
-  myCompetitiveness
+  myCompetitiveness,
+  isLoadingEducations,
+  isLoadingImmersions,
+  isLoadingCredentials,
+  isLoadingWorkExperiences,
+  isLoadingCompetitiveness
 }) => {
   useEffect(() => {
     const fetchDataSequentially = async () => {
@@ -75,9 +80,9 @@ const Index = ({
       await fetchSharingSettings()
       await fetchMyEducations()
       await fetchMyCredentials()
-      // await fetchMyImmersions()
-      // await fetchMyWorkExperiences()
-      // await fetchMyCompetitiveness()
+      await fetchMyImmersions()
+      await fetchMyWorkExperiences()
+      await fetchMyCompetitiveness()
     }
 
     fetchDataSequentially()
@@ -144,12 +149,23 @@ const Index = ({
               myAlignments: {
                 educations,
                 credentials
-              }
-              // myProductivity: {
-              //   immersions,
-              //   workExperiences
-              // },
-              // myCompetitiveness
+              },
+              myProductivity: {
+                immersions,
+                workExperiences
+              },
+              myCompetitiveness
+            }}
+            loadings={{
+              myAlignments: {
+                educations: isLoadingEducations,
+                credentials: isLoadingCredentials
+              },
+              myProductivity: {
+                immersions: isLoadingImmersions,
+                workExperiences: isLoadingWorkExperiences
+              },
+              myCompetitiveness: isLoadingCompetitiveness
             }}
           />
         </>
@@ -194,9 +210,20 @@ const mapStateToProps = (state) => {
       myMentors: { isLoading: isLoadingMyMentors }
     },
     howSection: {
-      myAlignments: { educations, credentials },
-      myProductivity: { immersions, workExperiences },
-      myCompetitiveness
+      myAlignments: {
+        educations,
+        credentials,
+        educations: { isLoading: isLoadingEducations },
+        credentials: { isLoading: isLoadingCredentials }
+      },
+      myProductivity: {
+        immersions,
+        workExperiences,
+        immersions: { isLoading: isLoadingImmersions },
+        workExperiences: { isLoading: isLoadingWorkExperiences }
+      },
+      myCompetitiveness,
+      myCompetitiveness: { isLoading: isLoadingCompetitiveness }
     }
   } = state.portfolio
 
@@ -221,7 +248,12 @@ const mapStateToProps = (state) => {
     credentials,
     immersions,
     workExperiences,
-    myCompetitiveness
+    myCompetitiveness,
+    isLoadingEducations,
+    isLoadingImmersions,
+    isLoadingCredentials,
+    isLoadingWorkExperiences,
+    isLoadingCompetitiveness
   }
 }
 

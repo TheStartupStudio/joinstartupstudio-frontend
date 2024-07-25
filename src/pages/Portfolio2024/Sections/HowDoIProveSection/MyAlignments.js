@@ -15,8 +15,12 @@ import EducationCard from './EducationCard'
 import AddEntryButton from '../../Components/Actions/AddEntryButton'
 import CredentialCard from './CredentialCard'
 import CredentialCardModal from './CredentialCardModal'
+import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
 
 function MyAlignments(props) {
+  const { educations: loadingEducations, credentials: loadingCredentials } =
+    props.loadings ?? {}
+
   const educations = props.data?.educations?.data
   const credentials = props.data?.credentials?.data
   const dispatch = useDispatch()
@@ -78,72 +82,87 @@ function MyAlignments(props) {
   const onSaveCredential = (data) => {
     dispatch(addMyCredential(data))
   }
-  return (
-    <>
+
+  const renderSection = (
+    title,
+    items,
+    ItemComponent,
+    isEditSection,
+    sectionActions,
+    handleShowModal,
+    showModal,
+    handleHideModal,
+    modalTitle,
+    onSave,
+    ModalComponent,
+    isLoading
+  ) => {
+    if (isLoading) {
+      return <PortfolioSectionDataLoader />
+    }
+    return (
       <PortfolioDataContainer
         background={'#fff'}
-        title={'Education'}
+        title={title}
         titleAlign={'start'}
       >
-        {educations?.map((education, index) => {
-          return (
-            <React.Fragment key={education.id}>
-              <EducationCard
-                education={education}
-                isEditSection={isEditEducationSection}
-              />
-            </React.Fragment>
-          )
-        })}
-        <SectionActions actions={educationActions} />
-        {isEditEducationSection && (
+        {items?.map((item) => (
+          <React.Fragment key={item.id}>
+            <ItemComponent item={item} isEditSection={isEditSection} />
+          </React.Fragment>
+        ))}
+        <SectionActions actions={sectionActions} />
+        {isEditSection && (
           <AddEntryButton
-            title={`Add new Education Experience`}
-            onClick={handleShowEducationModal}
+            title={`Add new ${title}`}
+            onClick={handleShowModal}
           />
         )}
-        {showEducationModal && (
-          <EducationCardModal
-            onHide={handleHideEducationModal}
-            show={showEducationModal}
-            title={'ADD EDUCATIONAL EXPERIENCE'}
-            onSave={onSaveEducation}
+        {showModal && (
+          <ModalComponent
+            onHide={handleHideModal}
+            show={showModal}
+            title={modalTitle}
+            onSave={onSave}
           />
         )}
       </PortfolioDataContainer>
-      <div className={'mt-5'}>
-        <PortfolioDataContainer
-          background={'#fff'}
-          title={'Credentials'}
-          titleAlign={'start'}
-        >
-          {credentials?.map((credential, index) => {
-            return (
-              <React.Fragment key={credential.id}>
-                <CredentialCard
-                  credential={credential}
-                  isEditSection={isEditCredentialSection}
-                />
-              </React.Fragment>
-            )
-          })}
-          <SectionActions actions={credentialActions} />
-          {isEditCredentialSection && (
-            <AddEntryButton
-              title={`Add new Credential`}
-              onClick={handleShowCredentialModal}
-            />
+    )
+  }
+  return (
+    <>
+      <>
+        {renderSection(
+          'Education',
+          educations,
+          EducationCard,
+          isEditEducationSection,
+          educationActions,
+          handleShowEducationModal,
+          showEducationModal,
+          handleHideEducationModal,
+          'ADD EDUCATIONAL EXPERIENCE',
+          onSaveEducation,
+          EducationCardModal,
+          loadingEducations
+        )}
+        <div className={'mt-5'}>
+          {renderSection(
+            'Credentials',
+            credentials,
+            CredentialCard,
+            isEditCredentialSection,
+            credentialActions,
+            handleShowCredentialModal,
+            showCredentialModal,
+            handleHideCredentialModal,
+            'ADD CREDENTIAL',
+            onSaveCredential,
+            CredentialCardModal,
+            loadingCredentials
           )}
-          {showCredentialModal && (
-            <CredentialCardModal
-              onHide={handleHideCredentialModal}
-              show={showCredentialModal}
-              title={'ADD CREDENTIAL'}
-              onSave={onSaveCredential}
-            />
-          )}
-        </PortfolioDataContainer>
-      </div>
+        </div>
+      </>
     </>
   )
 }

@@ -12,7 +12,7 @@ import { convertDateToMonthYear } from '../../../../utils/helpers'
 import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 
 function EducationCard(props) {
-  const { education, isEditSection } = props
+  const { item: education, isEditSection } = props
 
   const [dataToEdit, setDataToEdit] = useState({})
 
