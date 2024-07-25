@@ -61,6 +61,7 @@ const WorkExperienceCardModal = (props) => {
       startDate: formatDateToInputValue(new Date()),
       endDate: formatDateToInputValue(new Date()),
       description: '',
+      jobTitle: '',
       imageUrl: null,
       currentPosition: false
     }
@@ -250,14 +251,31 @@ const WorkExperienceCardModal = (props) => {
           </div>
         </div>
         <div className={'mt-4'}>
-          <div className={'portfolio-info-title text-uppercase'}>
-            {'Description'}
+          <div className={'mt-2'}>
+            <LabeledInput
+              type={'text'}
+              title={'Job title'}
+              name={'jobTitle'}
+              width={'100%'}
+              titleClassNames={'bold-text '}
+              value={workExperienceData?.jobTitle}
+              onChange={(e) => handleDataChange(e, 'jobTitle')}
+              labelAlign={'start'}
+            />
           </div>
-          <ReactQuill
-            className={'portfolio-quill'}
-            value={workExperienceData?.description ?? ''}
-            onChange={(value) => handleDataChange(value, 'description')}
-          />
+          <div className={'mt-3'}>
+            <div
+              className={'portfolio-info-title mb-1'}
+              style={{ textTransform: 'none' }}
+            >
+              {'Description'}
+            </div>
+            <ReactQuill
+              className={'portfolio-quill'}
+              value={workExperienceData?.description ?? ''}
+              onChange={(value) => handleDataChange(value, 'description')}
+            />
+          </div>
         </div>
       </div>
       {isEdit() && (

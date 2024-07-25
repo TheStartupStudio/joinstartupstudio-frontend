@@ -85,9 +85,9 @@ function ImmersionCard(props) {
             </div>
             <div className={'text-end organization-date w-50'}>
               {convertDateToMonthYear(data?.startDate)} -{' '}
-              {!data?.currentPosition
+              {!data?.currentlyAttending
                 ? convertDateToMonthYear(data?.endDate)
-                : 'Current position'}
+                : 'Currently attending'}
               <div className={'mt-3'}>
                 <PortfolioSubmission
                   title={'My immersion experience'}

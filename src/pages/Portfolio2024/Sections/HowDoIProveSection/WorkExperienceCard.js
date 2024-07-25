@@ -70,16 +70,17 @@ function WorkExperienceCard(props) {
                 {convertDateToMonthYear(data.startDate)} -{' '}
                 {!data?.currentPosition
                   ? convertDateToMonthYear(data.endDate)
-                  : 'Current position'}
+                  : 'Present'}
               </div>
             </div>
             <div>
               <div className={'organization-description-label mb-2'}>
-                Description:
+                {data.jobTitle}
               </div>{' '}
-              <div className={'organization-description'}>
-                {data.description}
-              </div>
+              <div
+                className={'organization-description'}
+                dangerouslySetInnerHTML={{ __html: data.description }}
+              />
             </div>
           </div>
         </div>

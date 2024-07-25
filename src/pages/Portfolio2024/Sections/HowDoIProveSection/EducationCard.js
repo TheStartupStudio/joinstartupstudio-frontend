@@ -70,7 +70,7 @@ function EducationCard(props) {
                 {convertDateToMonthYear(education?.startDate)} -{' '}
                 {!education?.currentPosition
                   ? convertDateToMonthYear(education?.endDate)
-                  : 'Current position'}
+                  : 'Present'}
               </div>
             </div>
             <div>
