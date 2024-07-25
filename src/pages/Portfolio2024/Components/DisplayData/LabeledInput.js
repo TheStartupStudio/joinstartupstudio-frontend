@@ -40,33 +40,45 @@ const LabeledInput = ({
       >
         {title}
       </div>
-      {type !== 'text' ? (
-        <textarea
-          name={name}
-          id={name}
+      {!readOnly ? (
+        type !== 'text' ? (
+          <textarea
+            name={name}
+            id={name}
+            style={{
+              backgroundColor: '#fff',
+              minHeight: inputHeight,
+              resize: 'none'
+            }}
+            className='w-100 rounded-0 p-2'
+            onChange={(e) => onChange?.(e.target.value, 'mentorName')}
+            value={value ?? ''}
+            readOnly={readOnly}
+          />
+        ) : (
+          <input
+            name={name}
+            id={name}
+            style={{
+              backgroundColor: '#fff',
+              minHeight: inputHeight
+            }}
+            className=' w-100 rounded-0 py-1 px-2'
+            onChange={(e) => onChange?.(e.target.value, 'mentorName')}
+            value={value ?? ''}
+            placeholder={placeholder}
+            readOnly={readOnly}
+          />
+        )
+      ) : (
+        <div
+          dangerouslySetInnerHTML={{ __html: value }}
           style={{
             backgroundColor: '#fff',
-            minHeight: inputHeight,
+            minHeight: inputHeight ?? 35,
             resize: 'none'
           }}
           className='w-100 rounded-0 p-2'
-          onChange={(e) => onChange?.(e.target.value, 'mentorName')}
-          value={value ?? ''}
-          readOnly={readOnly}
-        />
-      ) : (
-        <input
-          name={name}
-          id={name}
-          style={{
-            backgroundColor: '#fff',
-            minHeight: inputHeight
-          }}
-          className=' w-100 rounded-0 py-1 px-2'
-          onChange={(e) => onChange?.(e.target.value, 'mentorName')}
-          value={value ?? ''}
-          placeholder={placeholder}
-          readOnly={readOnly}
         />
       )}
     </div>

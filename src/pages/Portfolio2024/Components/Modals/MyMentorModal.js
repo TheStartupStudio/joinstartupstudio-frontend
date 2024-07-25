@@ -228,6 +228,7 @@ const MyMentorModal = (props) => {
             containerClassNames='mt-3'
             readOnly={readOnly}
             labelAlign={'start'}
+            inputHeight={100}
           />
         )}
       </div>
