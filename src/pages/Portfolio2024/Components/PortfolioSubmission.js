@@ -5,26 +5,27 @@ import { useHistory } from 'react-router-dom'
 function PortfolioSubmission(props) {
   const navigate = useHistory()
 
-  // console.log(props.thumbnailUrl)
-
+  const navigateTo = () => {
+    if (props.videoUrl?.length > 0) {
+      return props.videoUrl?.startsWith('http')
+        ? props.videoUrl
+        : `https://${props.videoUrl}`
+    }
+  }
   return (
     <div
       className={`portfolio-submission-container ${
-        props.videoUrl?.length ? 'cursor-pointer' : ''
+        props.videoUrl?.length > 0 ? 'cursor-pointer' : ''
       }`}
     >
       <a
-        href={
-          props.videoUrl?.startsWith('http')
-            ? props.videoUrl
-            : `https://${props.videoUrl}`
-        }
+        href={navigateTo()}
         style={{
           textDecoration: 'inherit',
           color: 'inherit',
-          cursor: 'pointer'
+          cursor: props.videoUrl?.length > 0 ? 'pointer' : 'unset'
         }}
-        target="_blank"
+        target='_blank'
       >
         <img
           className={'portfolio-submission-image'}

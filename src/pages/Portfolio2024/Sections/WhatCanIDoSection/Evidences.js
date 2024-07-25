@@ -36,7 +36,6 @@ const Evidences = (props) => {
   const [activeEvidence, setActiveEvidence] = useState(null)
   const [evidencesData, setEvidencesData] = useState(initialEvidenceData)
 
-  console.log('evidencesData', evidencesData)
   useEffect(() => {
     onChange?.(evidencesData)
   }, [evidencesData])

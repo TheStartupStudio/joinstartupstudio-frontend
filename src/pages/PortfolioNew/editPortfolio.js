@@ -104,19 +104,17 @@ function EditPortfolio() {
     getUser()
   }, [])
 
-  console.log('toggle', toggle)
-
   const updateStatus = async () => {
     await axiosInstance
       .put(`/portfolio`, {
         is_published: !toggle
       })
       .then((response) => {
-        toast.success(<IntlMessages id="alerts.success_change" />)
+        toast.success(<IntlMessages id='alerts.success_change' />)
         setToggle(!toggle)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id="alerts.success_change" />)
+        toast.error(<IntlMessages id='alerts.success_change' />)
         setToggle(!toggle)
       })
   }
@@ -128,11 +126,11 @@ function EditPortfolio() {
     await axiosInstance
       .put(`/portfolio/peerSharing/`, data)
       .then((response) => {
-        toast.success(<IntlMessages id="alerts.success_change" />)
+        toast.success(<IntlMessages id='alerts.success_change' />)
         setTogglePeerSharing(!togglePeerSharing)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id="alerts.success_change" />)
+        toast.error(<IntlMessages id='alerts.success_change' />)
         setTogglePeerSharing(!togglePeerSharing)
       })
   }
@@ -209,20 +207,20 @@ function EditPortfolio() {
     <div className={'edit-portfolio-container'}>
       <div>
         <div>
-          <span className="my_portfolio_title">
+          <span className='my_portfolio_title'>
             <IntlMessages
-              id="register.my_portfolio"
-              className="title my_portfolio_title"
+              id='register.my_portfolio'
+              className='title my_portfolio_title'
             />
           </span>
-          <span className="mx-2 my_portfolio_bar d-sm-inline">|</span>
-          <span className="text-uppercase title_preview_portfolio d-block d-sm-inline">
+          <span className='mx-2 my_portfolio_bar d-sm-inline'>|</span>
+          <span className='text-uppercase title_preview_portfolio d-block d-sm-inline'>
             <Link to={'/preview-portfolio'}>
-              <IntlMessages id="portfolio.preview" />
+              <IntlMessages id='portfolio.preview' />
             </Link>
           </span>
-          <p className="my_portfolio_edit">
-            <IntlMessages id="portfolio.my_portfolio_edit" />
+          <p className='my_portfolio_edit'>
+            <IntlMessages id='portfolio.my_portfolio_edit' />
           </p>
         </div>
       </div>
@@ -236,11 +234,11 @@ function EditPortfolio() {
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ width: '30%' }}>
             <div>
-              <span className="my_portfolio_publish pe-xxl-0">
-                <IntlMessages id="portfolio.Publish.My.Portfolio" />
-                <label className="px-0 ps-sm-1 ps-md-1 form-switch">
+              <span className='my_portfolio_publish pe-xxl-0'>
+                <IntlMessages id='portfolio.Publish.My.Portfolio' />
+                <label className='px-0 ps-sm-1 ps-md-1 form-switch'>
                   <input
-                    type="checkbox"
+                    type='checkbox'
                     checked={toggle}
                     onChange={() => {
                       if (toggle) {
@@ -253,17 +251,17 @@ function EditPortfolio() {
                   <i></i>
                 </label>
               </span>
-              <span className="ps-xl-0 d-block mt-1 mt-sm-1 publish_checkbox_info">
-                <IntlMessages id="portfolio.publish_checkbox" />
+              <span className='ps-xl-0 d-block mt-1 mt-sm-1 publish_checkbox_info'>
+                <IntlMessages id='portfolio.publish_checkbox' />
               </span>
             </div>
             <div>
-              <span className="my_portfolio_publish pe-xxl-0 ">
+              <span className='my_portfolio_publish pe-xxl-0 '>
                 {/*<IntlMessages id="portfolio.Publish.My.Portfolio" />*/}
                 Allow My Peers to View My Portfolio
-                <label className="px-0 ps-sm-1 ps-md-1 form-switch">
+                <label className='px-0 ps-sm-1 ps-md-1 form-switch'>
                   <input
-                    type="checkbox"
+                    type='checkbox'
                     checked={togglePeerSharing}
                     onChange={() => {
                       updatePeerSharing()
@@ -376,8 +374,8 @@ function EditPortfolio() {
         loading={isLoading}
         setLoading={(data) => setIsLoading(data)}
         type={true}
-        title={<IntlMessages id="portfolio.confirmation_modal" />}
-        body={<IntlMessages id="portfolio.confirmation_modal_second_part" />}
+        title={<IntlMessages id='portfolio.confirmation_modal' />}
+        body={<IntlMessages id='portfolio.confirmation_modal_second_part' />}
       />
     </div>
   )

@@ -163,7 +163,19 @@ import {
   SHOW_EDIT_CREDENTIAL_MODAL,
   HIDE_EDIT_CREDENTIAL_MODAL,
   SHOW_ADD_CREDENTIAL_MODAL,
-  HIDE_ADD_CREDENTIAL_MODAL
+  HIDE_ADD_CREDENTIAL_MODAL,
+  SHOW_EDIT_IMMERSION_MODAL,
+  HIDE_EDIT_IMMERSION_MODAL,
+  SHOW_ADD_IMMERSION_MODAL,
+  HIDE_ADD_IMMERSION_MODAL,
+  SHOW_EDIT_WORK_EXPERIENCE_MODAL,
+  HIDE_EDIT_WORK_EXPERIENCE_MODAL,
+  SHOW_ADD_WORK_EXPERIENCE_MODAL,
+  HIDE_ADD_WORK_EXPERIENCE_MODAL,
+  SHOW_EDIT_COMPETITIVENESS_MODAL,
+  HIDE_EDIT_COMPETITIVENESS_MODAL,
+  SHOW_ADD_COMPETITIVENESS_MODAL,
+  HIDE_ADD_COMPETITIVENESS_MODAL
 } from './Constants'
 import {
   createMyFailuresAPI,
@@ -200,13 +212,13 @@ import {
   updateMyImmersionAPI,
   addMyImmersionAPI,
   deleteMyImmersionAPI,
-  getMyWorkExperiencesAPI,
-  updateMyWorkExperienceAPI,
-  addMyWorkExperienceAPI,
-  deleteMyWorkExperienceAPI,
+  getWorkExperiencesAPI,
+  updateWorkExperienceAPI,
+  addWorkExperienceAPI,
+  deleteWorkExperienceAPI,
   getMyCompetitivenessAPI,
   updateMyCompetitivenessAPI,
-  addMyCompetitivenessAPI,
+  createMyCompetitivenessAPI,
   deleteMyCompetitivenessAPI
 } from './Service'
 
@@ -877,6 +889,62 @@ export const showAddCredentialModal = () => ({
 export const hideAddCredentialModal = () => ({
   type: HIDE_ADD_CREDENTIAL_MODAL
 })
+
+//
+export const showEditImmersionModal = (id) => {
+  return {
+    type: SHOW_EDIT_IMMERSION_MODAL,
+    payload: id
+  }
+}
+
+export const hideEditImmersionModal = () => ({
+  type: HIDE_EDIT_IMMERSION_MODAL
+})
+
+export const showAddImmersionModal = () => ({
+  type: SHOW_ADD_IMMERSION_MODAL
+})
+
+export const hideAddImmersionModal = () => ({
+  type: HIDE_ADD_IMMERSION_MODAL
+})
+
+export const showEditWorkExperienceModal = (id) => {
+  return {
+    type: SHOW_EDIT_WORK_EXPERIENCE_MODAL,
+    payload: id
+  }
+}
+
+export const hideEditWorkExperienceModal = () => ({
+  type: HIDE_EDIT_WORK_EXPERIENCE_MODAL
+})
+
+export const showAddWorkExperienceModal = () => ({
+  type: SHOW_ADD_WORK_EXPERIENCE_MODAL
+})
+
+export const hideAddWorkExperienceModal = () => ({
+  type: HIDE_ADD_WORK_EXPERIENCE_MODAL
+})
+
+export const showEditCompetitivenessModal = (id) => ({
+  type: SHOW_EDIT_COMPETITIVENESS_MODAL,
+  payload: id
+})
+
+export const hideEditCompetitivenessModal = () => ({
+  type: HIDE_EDIT_COMPETITIVENESS_MODAL
+})
+
+export const showAddCompetitivenessModal = () => ({
+  type: SHOW_ADD_COMPETITIVENESS_MODAL
+})
+
+export const hideAddCompetitivenessModal = () => ({
+  type: HIDE_ADD_COMPETITIVENESS_MODAL
+})
 /// WHAT CAN I DO SECTION ///
 export const getSkills = () => async (dispatch) => {
   dispatch({ type: GET_SKILLS })
@@ -1120,9 +1188,7 @@ export const getMyCredentialsError = (error) => {
 export const updateMyCredential = (credential) => async (dispatch) => {
   dispatch({ type: UPDATE_MY_CREDENTIAL })
   try {
-    debugger
     const response = await updateMyCredentialAPI(credential)
-    debugger
 
     dispatch(updateMyCredentialSuccess(response.data))
   } catch (e) {
@@ -1269,7 +1335,6 @@ export const addMyImmersionError = (error) => {
   }
 }
 
-// Delete Immersion
 export const deleteMyImmersion = (immersionId) => async (dispatch) => {
   dispatch({ type: DELETE_MY_IMMERSION })
   try {
@@ -1294,11 +1359,10 @@ export const deleteMyImmersionError = (error) => {
   }
 }
 
-// Get Work Experiences
 export const getMyWorkExperiences = () => async (dispatch) => {
   dispatch({ type: GET_MY_WORK_EXPERIENCES })
   try {
-    const response = await getMyWorkExperiencesAPI()
+    const response = await getWorkExperiencesAPI()
     dispatch(getMyWorkExperiencesSuccess(response.data))
   } catch (e) {
     dispatch(getMyWorkExperiencesError(e))
@@ -1323,7 +1387,7 @@ export const getMyWorkExperiencesError = (error) => {
 export const updateMyWorkExperience = (workExperience) => async (dispatch) => {
   dispatch({ type: UPDATE_MY_WORK_EXPERIENCE })
   try {
-    const response = await updateMyWorkExperienceAPI(workExperience)
+    const response = await updateWorkExperienceAPI(workExperience)
     dispatch(updateMyWorkExperienceSuccess(response.data))
   } catch (e) {
     dispatch(updateMyWorkExperienceError(e))
@@ -1348,7 +1412,7 @@ export const updateMyWorkExperienceError = (error) => {
 export const addMyWorkExperience = (workExperience) => async (dispatch) => {
   dispatch({ type: ADD_MY_WORK_EXPERIENCE })
   try {
-    const response = await addMyWorkExperienceAPI(workExperience)
+    const response = await addWorkExperienceAPI(workExperience)
     dispatch(addMyWorkExperienceSuccess(response.data))
   } catch (e) {
     dispatch(addMyWorkExperienceError(e))
@@ -1374,7 +1438,7 @@ export const deleteMyWorkExperience =
   (workExperienceId) => async (dispatch) => {
     dispatch({ type: DELETE_MY_WORK_EXPERIENCE })
     try {
-      const response = await deleteMyWorkExperienceAPI(workExperienceId)
+      const response = await deleteWorkExperienceAPI(workExperienceId)
       dispatch(deleteMyWorkExperienceSuccess(response.data))
     } catch (e) {
       dispatch(deleteMyWorkExperienceError(e))
@@ -1400,6 +1464,7 @@ export const getMyCompetitiveness = () => async (dispatch) => {
   dispatch({ type: GET_MY_COMPETITIVENESS })
   try {
     const response = await getMyCompetitivenessAPI()
+
     dispatch(getMyCompetitivenessSuccess(response.data))
   } catch (e) {
     dispatch(getMyCompetitivenessError(e))
@@ -1422,27 +1487,27 @@ export const getMyCompetitivenessError = (error) => {
 
 // Update Competitiveness
 export const updateMyCompetitiveness =
-  (competitiveness) => async (dispatch) => {
+  (competitiveness, id, category) => async (dispatch) => {
     dispatch({ type: UPDATE_MY_COMPETITIVENESS })
     try {
-      const response = await updateMyCompetitivenessAPI(competitiveness)
-      dispatch(updateMyCompetitivenessSuccess(response.data))
+      const response = await updateMyCompetitivenessAPI(competitiveness, id)
+      dispatch(updateMyCompetitivenessSuccess(response.data, category))
     } catch (e) {
-      dispatch(updateMyCompetitivenessError(e))
+      dispatch(updateMyCompetitivenessError(e, category))
     }
   }
 
-export const updateMyCompetitivenessSuccess = (response) => {
+export const updateMyCompetitivenessSuccess = (response, category) => {
   return {
     type: UPDATE_MY_COMPETITIVENESS_SUCCESS,
-    payload: { data: response }
+    payload: { data: response, category }
   }
 }
 
-export const updateMyCompetitivenessError = (error) => {
+export const updateMyCompetitivenessError = (error, category) => {
   return {
     type: UPDATE_MY_COMPETITIVENESS_ERROR,
-    payload: { error }
+    payload: { error, category }
   }
 }
 
@@ -1450,7 +1515,7 @@ export const updateMyCompetitivenessError = (error) => {
 export const addMyCompetitiveness = (competitiveness) => async (dispatch) => {
   dispatch({ type: ADD_MY_COMPETITIVENESS })
   try {
-    const response = await addMyCompetitivenessAPI(competitiveness)
+    const response = await createMyCompetitivenessAPI(competitiveness)
     dispatch(addMyCompetitivenessSuccess(response.data))
   } catch (e) {
     dispatch(addMyCompetitivenessError(e))
@@ -1486,13 +1551,37 @@ export const deleteMyCompetitiveness =
 export const deleteMyCompetitivenessSuccess = (response) => {
   return {
     type: DELETE_MY_COMPETITIVENESS_SUCCESS,
-    payload: { data: response }
+    payload: { data: response, id: response.id }
   }
 }
 
 export const deleteMyCompetitivenessError = (error) => {
   return {
     type: DELETE_MY_COMPETITIVENESS_ERROR,
+    payload: { error }
+  }
+}
+export const deleteMyCompetitivenessImage =
+  (mentorImage, id) => async (dispatch) => {
+    dispatch({ type: DELETE_MY_MENTOR_IMAGE })
+    try {
+      const response = await updateMyCompetitivenessAPI(mentorImage, id)
+      dispatch(deleteMyCompetitivenessImageSuccess(response.data, id))
+    } catch (e) {
+      dispatch(deleteMyCompetitivenessImageError(e))
+    }
+  }
+
+export const deleteMyCompetitivenessImageSuccess = (response, id) => {
+  return {
+    type: DELETE_MY_MENTOR_IMAGE_SUCCESS,
+    payload: { data: response, id }
+  }
+}
+
+export const deleteMyCompetitivenessImageError = (error) => {
+  return {
+    type: DELETE_MY_MENTOR_IMAGE_ERROR,
     payload: { error }
   }
 }

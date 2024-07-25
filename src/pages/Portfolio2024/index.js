@@ -61,16 +61,26 @@ const Index = ({
   fetchMyWorkExperiences,
   fetchMyCompetitiveness,
   educations,
-  credentials
+  credentials,
+  immersions,
+  workExperiences,
+  myCompetitiveness
 }) => {
   useEffect(() => {
-    fetchUserStory()
-    fetchMyFailures()
-    fetchMyMentors()
-    fetchMyRelationships()
-    fetchSharingSettings()
-    // fetchMyEducations()
-    // fetchMyCredentials()
+    const fetchDataSequentially = async () => {
+      await fetchUserStory()
+      await fetchMyFailures()
+      await fetchMyMentors()
+      await fetchMyRelationships()
+      await fetchSharingSettings()
+      await fetchMyEducations()
+      await fetchMyCredentials()
+      // await fetchMyImmersions()
+      // await fetchMyWorkExperiences()
+      // await fetchMyCompetitiveness()
+    }
+
+    fetchDataSequentially()
   }, [])
 
   useEffect(() => {
@@ -86,9 +96,8 @@ const Index = ({
       })
     }
   }, [sharingSettings])
-
   return (
-    <div className="portfolio-container">
+    <div className='portfolio-container'>
       {!areLoadingSharingSettings ? (
         <PortfolioActions
           actions={[
@@ -136,6 +145,11 @@ const Index = ({
                 educations,
                 credentials
               }
+              // myProductivity: {
+              //   immersions,
+              //   workExperiences
+              // },
+              // myCompetitiveness
             }}
           />
         </>
@@ -144,7 +158,7 @@ const Index = ({
       <PortfolioVisibilityModal
         show={publishPortfolioModal}
         onHide={() => setPublishModalVisibility(false)}
-        title="Share your portfolio"
+        title='Share your portfolio'
         sharingSettings={sharingSettings}
       />
       <SharePortfolioModal
@@ -180,9 +194,12 @@ const mapStateToProps = (state) => {
       myMentors: { isLoading: isLoadingMyMentors }
     },
     howSection: {
-      myAlignments: { educations, credentials }
+      myAlignments: { educations, credentials },
+      myProductivity: { immersions, workExperiences },
+      myCompetitiveness
     }
   } = state.portfolio
+
   return {
     loggedUser,
     activeSection,
@@ -201,7 +218,10 @@ const mapStateToProps = (state) => {
     isLoadingMyMentors,
     // HOW DO I PROVE IT //
     educations,
-    credentials
+    credentials,
+    immersions,
+    workExperiences,
+    myCompetitiveness
   }
 }
 

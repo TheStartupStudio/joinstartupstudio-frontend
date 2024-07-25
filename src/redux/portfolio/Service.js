@@ -219,76 +219,14 @@ export const getMyProjectsAPI = async () => {
   }
 }
 
-////////////// HOW DO I PROVE IT ///////////////////////
+////////////// HOW DO I PROVE IT //////////////////
 
 export const getMyEducationsAPI = async () => {
   try {
     const response = await axiosInstance.get(
-      '/hsPortfolio/workEducations/education'
+      `/hsPortfolio/workEducations/${'education'}`
     )
-    debugger
     return response
-    // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    // await delay(2000)
-    //
-    // const data = [
-    //   {
-    //     id: 1,
-    //     imageUrl: null,
-    //     startDate: '2020-09-01',
-    //     endDate: '2024-06-01',
-    //     organizationName: 'University A',
-    //     location: 'City A',
-    //     website: 'https://universitya.edu',
-    //     description: 'Bachelor of Science in Computer Science',
-    //     currentPosition: false
-    //   },
-    //   {
-    //     id: 2,
-    //     imageUrl: null,
-    //     startDate: '2016-09-01',
-    //     endDate: '2020-06-01',
-    //     organizationName: 'High School B',
-    //     location: 'City B',
-    //     website: 'https://highschoolb.edu',
-    //     description: 'High School Diploma',
-    //     currentPosition: false
-    //   },
-    //   {
-    //     id: 3,
-    //     imageUrl: null,
-    //     startDate: '2024-09-01',
-    //     endDate: '2026-06-01',
-    //     organizationName: 'Graduate School C',
-    //     location: 'City C',
-    //     website: 'https://graduateschoolc.edu',
-    //     description: 'Master of Science in Artificial Intelligence',
-    //     currentPosition: false
-    //   },
-    //   {
-    //     id: 4,
-    //     imageUrl: null,
-    //     startDate: '2014-09-01',
-    //     endDate: '2016-06-01',
-    //     organizationName: 'Community College D',
-    //     location: 'City D',
-    //     website: 'https://communitycolleged.edu',
-    //     description: 'Associate Degree in Information Technology',
-    //     currentPosition: false
-    //   },
-    //   {
-    //     id: 5,
-    //     imageUrl: null,
-    //     startDate: '2026-09-01',
-    //     endDate: '2029-06-01',
-    //     organizationName: 'PhD Program E',
-    //     location: 'City E',
-    //     website: 'https://phdprograme.edu',
-    //     description: 'Doctor of Philosophy in Robotics',
-    //     currentPosition: true
-    //   }
-    // ]
-    // return { data }
   } catch (e) {
     console.log('Error occurred during fetching educations', e)
   }
@@ -296,28 +234,11 @@ export const getMyEducationsAPI = async () => {
 
 export const updateMyEducationAPI = async (education) => {
   try {
-    // const response = await axiosInstance.put(
-    //   '/hsPortfolio/educations',
-    //   education
-    // )
-    // return response
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    await delay(2000)
-
-    const updatedEducation = {
-      ...education,
-      id: education.id,
-      imageUrl: education.imageUrl || null,
-      startDate: education.startDate,
-      endDate: education.endDate,
-      organizationName: education.organizationName,
-      location: education.location,
-      website: education.website,
-      description: education.description,
-      currentPosition: education.currentPosition
-    }
-
-    return { data: updatedEducation }
+    const response = await axiosInstance.put(
+      `/hsPortfolio/workEducations/${'education'}/${education.id}`,
+      education
+    )
+    return response
   } catch (e) {
     console.log('Error occurred during updating education', e)
   }
@@ -329,24 +250,7 @@ export const addMyEducationAPI = async (education) => {
       ...education,
       type: 'education'
     })
-    debugger
     return response
-    // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    // await delay(2000)
-
-    // const newEducation = {
-    //   id: Math.floor(Math.random() * 10000), // Dummy id generation
-    //   imageUrl: education.imageUrl || null,
-    //   startDate: education.startDate,
-    //   endDate: education.endDate,
-    //   organizationName: education.organizationName,
-    //   location: education.location,
-    //   website: education.website,
-    //   description: education.description,
-    //   currentPosition: education.currentPosition
-    // }
-
-    // return { data: newEducation }
   } catch (e) {
     console.log('Error occurred during adding education', e)
   }
@@ -354,15 +258,10 @@ export const addMyEducationAPI = async (education) => {
 
 export const deleteMyEducationAPI = async (educationId) => {
   try {
-    // const response = await axiosInstance.delete(
-    //   `/hsPortfolio/educations/${educationId}`
-    // )
-    // return response
-
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    await delay(2000)
-
-    return { data: { success: true, id: educationId } }
+    const response = await axiosInstance.delete(
+      `/hsPortfolio/workEducations/${educationId}`
+    )
+    return response
   } catch (e) {
     console.log('Error occurred during deleting education', e)
   }
@@ -370,71 +269,8 @@ export const deleteMyEducationAPI = async (educationId) => {
 
 export const getMyCredentialsAPI = async () => {
   try {
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-    await delay(2000)
-
-    const data = [
-      {
-        id: 1,
-        credentialTitle: 'Certified JavaScript Developer',
-        dateAwarded: '2023-06-15',
-        certifyingOrganization: 'JavaScript Institute',
-        website: 'https://www.javascriptinstitute.com',
-        imageUrl:
-          'https://www.javascriptinstitute.com/images/certified_js_developer.png',
-        description:
-          'Certification awarded for demonstrating expertise in JavaScript programming and development.'
-      },
-      {
-        id: 2,
-        credentialTitle: 'AWS Certified Solutions Architect',
-        dateAwarded: '2022-09-10',
-        certifyingOrganization: 'Amazon Web Services',
-        website:
-          'https://aws.amazon.com/certification/certified-solutions-architect/',
-        imageUrl:
-          'https://aws.amazon.com/images/certified_solutions_architect.png',
-        description:
-          'Certification awarded for demonstrating expertise in designing and deploying scalable systems on AWS.'
-      },
-      {
-        id: 3,
-        credentialTitle: 'Certified Data Science Professional',
-        dateAwarded: '2021-12-01',
-        certifyingOrganization: 'Data Science Council of America',
-        website: 'https://www.datasciencecouncil.com',
-        imageUrl:
-          'https://www.datasciencecouncil.com/images/certified_data_science_professional.png',
-        description:
-          'Certification awarded for demonstrating knowledge in data analysis, machine learning, and statistical methods.'
-      },
-      {
-        id: 4,
-        credentialTitle: 'Google Cloud Professional Data Engineer',
-        dateAwarded: '2023-03-22',
-        certifyingOrganization: 'Google Cloud',
-        website: 'https://cloud.google.com/certification/data-engineer',
-        imageUrl:
-          'https://cloud.google.com/images/professional_data_engineer.png',
-        description:
-          'Certification awarded for expertise in building and maintaining data structures and databases on Google Cloud.'
-      },
-      {
-        id: 5,
-        credentialTitle: 'PMP: Project Management Professional',
-        dateAwarded: '2022-05-18',
-        certifyingOrganization: 'Project Management Institute',
-        website: 'https://www.pmi.org/certifications/project-management-pmp',
-        imageUrl: 'https://www.pmi.org/images/pmp_certification.png',
-        description:
-          'Certification awarded for demonstrating the skills and knowledge required to manage projects effectively.'
-      }
-    ]
-
-    return { data }
-
-    // const response = await axiosInstance.get('/hsPortfolio/credentials')
-    // return response
+    const response = await axiosInstance.get('/hsPortfolio/credentials')
+    return response
   } catch (e) {
     console.log('Error occurred during fetching credentials', e)
   }
@@ -443,7 +279,7 @@ export const getMyCredentialsAPI = async () => {
 export const updateMyCredentialAPI = async (credential) => {
   try {
     const response = await axiosInstance.put(
-      '/hsPortfolio/credentials',
+      `/hsPortfolio/credentials/${credential.id}`,
       credential
     )
     return response
@@ -487,7 +323,7 @@ export const getMyImmersionsAPI = async () => {
 export const updateMyImmersionAPI = async (immersion) => {
   try {
     const response = await axiosInstance.put(
-      '/hsPortfolio/immersions',
+      `/hsPortfolio/immersions/${immersion.id}`,
       immersion
     )
     return response
@@ -519,91 +355,95 @@ export const deleteMyImmersionAPI = async (immersionId) => {
   }
 }
 
-export const getMyWorkExperiencesAPI = async () => {
+export const getWorkExperiencesAPI = async () => {
   try {
-    const response = await axiosInstance.get('/hsPortfolio/work_experience')
+    const response = await axiosInstance.get(
+      `/hsPortfolio/workEducations/${'work'}`
+    )
     return response
   } catch (e) {
-    console.log('Error occurred during fetching work experience', e)
+    console.log('Error occurred during fetching work experiences', e)
   }
 }
 
-export const updateMyWorkExperienceAPI = async (workExperience) => {
+export const updateWorkExperienceAPI = async (education) => {
   try {
     const response = await axiosInstance.put(
-      '/hsPortfolio/work_experience',
-      workExperience
+      `/hsPortfolio/workEducations/${'work'}/${education.id}`,
+      education
     )
     return response
   } catch (e) {
-    console.log('Error occurred during updating work experience', e)
+    console.log('Error occurred during updating work', e)
   }
 }
 
-export const addMyWorkExperienceAPI = async (workExperience) => {
+export const addWorkExperienceAPI = async (education) => {
   try {
-    const response = await axiosInstance.post(
-      '/hsPortfolio/work_experience',
-      workExperience
-    )
+    const response = await axiosInstance.post('/hsPortfolio/workEducations', {
+      ...education,
+      type: 'work'
+    })
     return response
   } catch (e) {
-    console.log('Error occurred during adding work experience', e)
+    console.log('Error occurred during adding work', e)
   }
 }
 
-export const deleteMyWorkExperienceAPI = async (workExperienceId) => {
+export const deleteWorkExperienceAPI = async (educationId) => {
   try {
     const response = await axiosInstance.delete(
-      `/hsPortfolio/work_experience/${workExperienceId}`
+      `/hsPortfolio/workEducations/${educationId}`
     )
     return response
   } catch (e) {
-    console.log('Error occurred during deleting work experience', e)
+    console.log('Error occurred during deleting education', e)
   }
 }
 
 export const getMyCompetitivenessAPI = async () => {
   try {
-    const response = await axiosInstance.get('/hsPortfolio/competitiveness')
+    const response = await axiosInstance.get('/hsPortfolio/myCompetitiveness')
     return response
   } catch (e) {
-    console.log('Error occurred during fetching competitiveness', e)
+    console.log('Error occurred during fetching my competitiveness', e)
   }
 }
 
-export const updateMyCompetitivenessAPI = async (competitiveness) => {
-  try {
-    const response = await axiosInstance.put(
-      '/hsPortfolio/competitiveness',
-      competitiveness
-    )
-    return response
-  } catch (e) {
-    console.log('Error occurred during updating competitiveness', e)
-  }
-}
-
-export const addMyCompetitivenessAPI = async (competitiveness) => {
+export const createMyCompetitivenessAPI = async (myCompetitiveness) => {
   try {
     const response = await axiosInstance.post(
-      '/hsPortfolio/competitiveness',
-      competitiveness
+      '/hsPortfolio/myCompetitiveness',
+      myCompetitiveness
     )
+
     return response
   } catch (e) {
-    console.log('Error occurred during adding competitiveness', e)
+    console.log('Error occurred during creating my competitiveness', e)
   }
 }
 
-export const deleteMyCompetitivenessAPI = async (competitivenessId) => {
+export const updateMyCompetitivenessAPI = async (myCompetitiveness, id) => {
   try {
-    const response = await axiosInstance.delete(
-      `/hsPortfolio/competitiveness/${competitivenessId}`
+    const response = await axiosInstance.put(
+      `/hsPortfolio/myCompetitiveness/${id}`,
+      myCompetitiveness
     )
     return response
   } catch (e) {
-    console.log('Error occurred during deleting competitiveness', e)
+    console.log('Error occurred during creating my competitiveness', e)
+  }
+}
+
+export const deleteMyCompetitivenessAPI = async (id) => {
+  try {
+    const response = await axiosInstance.delete(
+      `/hsPortfolio/myCompetitiveness/${id}`
+    )
+
+    return response
+  } catch (e) {
+    console.log('Error occurred during creating my competitiveness', e)
   }
 }
 // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))

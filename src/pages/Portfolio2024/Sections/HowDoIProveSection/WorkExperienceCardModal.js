@@ -19,9 +19,28 @@ import {
 } from '../../../../utils/helpers'
 import useImageEditor from '../../../../hooks/useImageEditor'
 
-const EducationCardModal = (props) => {
+const WorkExperienceCardModal = (props) => {
   const dispatch = useDispatch()
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
+  const deleteAvatarImage = (deleteSuccess) => {
+    if (deleteSuccess) {
+      if (isEdit()) {
+        props.onSave({
+          id: workExperienceData?.id,
+          imageUrl: null
+        })
+      } else {
+        console.error(
+          'Error: Trying to delete image for a mentor that does not exist'
+        )
+      }
+    } else {
+      console.error('Error: Image deletion failed')
+    }
+  }
+  const deleteAvatarImageFile = (imageFile) => {
+    console.log('imageFile', imageFile)
+  }
   const {
     imageProperties,
     handleImageLoadSuccess,
@@ -33,9 +52,8 @@ const EducationCardModal = (props) => {
     setImageUrl,
     avatarEditorActions,
     editorRef
-  } = useImageEditor()
-
-  const [educationData, setEducationData] = useState(
+  } = useImageEditor(deleteAvatarImage, deleteAvatarImageFile)
+  const [workExperienceData, setWorkExperienceData] = useState(
     props.data || {
       organizationName: '',
       location: '',
@@ -43,6 +61,7 @@ const EducationCardModal = (props) => {
       startDate: formatDateToInputValue(new Date()),
       endDate: formatDateToInputValue(new Date()),
       description: '',
+      jobTitle: '',
       imageUrl: null,
       currentPosition: false
     }
@@ -50,7 +69,7 @@ const EducationCardModal = (props) => {
 
   useEffect(() => {
     if (props.data) {
-      setEducationData({
+      setWorkExperienceData({
         ...props.data,
         startDate: formatDateToInputValue(props.data?.startDate || new Date()),
         endDate: formatDateToInputValue(props.data?.endDate || new Date())
@@ -60,20 +79,22 @@ const EducationCardModal = (props) => {
   }, [props.data])
 
   const handleDataChange = (value, key) => {
-    const updatedData = { ...educationData }
+    const updatedData = { ...workExperienceData }
     updatedData[key] = value
-    setEducationData(updatedData)
+    setWorkExperienceData(updatedData)
   }
 
-  const onSaveEducation = async () => {
+  const onSaveWorkExperience = async () => {
     let uploadedImageUrl
     if (imageProperties.croppedImage) {
       uploadedImageUrl = await uploadImage(imageProperties.croppedImage)
     }
 
     const newEducationData = {
-      ...educationData,
-      imageUrl: uploadedImageUrl ? uploadedImageUrl : educationData.imageUrl
+      ...workExperienceData,
+      imageUrl: uploadedImageUrl
+        ? uploadedImageUrl
+        : workExperienceData.imageUrl
     }
     props.onSave?.(newEducationData)
   }
@@ -86,21 +107,21 @@ const EducationCardModal = (props) => {
     },
     {
       type: 'save',
-      action: () => onSaveEducation(),
+      action: () => onSaveWorkExperience(),
       isDisplayed: true
     }
   ]
 
-  const isEdit = () => !!educationData?.id
+  const isEdit = () => !!workExperienceData?.id
 
-  const handleDeleteEducation = async (id) => {
-    if (educationData?.imageUrl) {
-      const deletedImage = await deleteImage(educationData?.imageUrl)
+  const handleDeleteWorkExperience = async (id) => {
+    if (workExperienceData?.imageUrl) {
+      const deletedImage = await deleteImage(workExperienceData?.imageUrl)
       if (deletedImage) {
-        dispatch(deleteMyEducation(id))
+        dispatch(deleteMyWorkExperience(id))
       }
     } else {
-      dispatch(deleteMyEducation(id))
+      dispatch(deleteMyWorkExperience(id))
     }
   }
 
@@ -129,7 +150,7 @@ const EducationCardModal = (props) => {
                   className={`date-input my-1 py-2 px-2 text-dark `}
                   type={'date'}
                   name={'startDate'}
-                  value={educationData?.startDate}
+                  value={workExperienceData?.startDate}
                   onChange={(e) => {
                     const newValue = e.target.value
                     handleDataChange(newValue, 'startDate')
@@ -137,7 +158,7 @@ const EducationCardModal = (props) => {
                 />
               </span>
             </div>
-            {!educationData.currentPosition && (
+            {!workExperienceData.currentPosition && (
               <div className={'select-date d-flex align-items-center'}>
                 <span>
                   <BsCalendar3 className={'calendar_icon '} />
@@ -148,7 +169,7 @@ const EducationCardModal = (props) => {
                     className={`date-input my-1 py-2 px-2 text-dark `}
                     type={'date'}
                     name={'endDate'}
-                    value={educationData?.endDate}
+                    value={workExperienceData?.endDate}
                     onChange={(e) => {
                       const newValue = e.target.value
                       handleDataChange(newValue, 'endDate')
@@ -162,7 +183,7 @@ const EducationCardModal = (props) => {
           <div className={'d-flex align-items-center'}>
             <input
               type='checkbox'
-              checked={educationData.currentPosition}
+              checked={workExperienceData.currentPosition}
               onChange={(e) => {
                 const newValue = e.target.checked
                 handleDataChange(newValue, 'currentPosition')
@@ -198,7 +219,7 @@ const EducationCardModal = (props) => {
                 title={'Organization name'}
                 name={'organizationName'}
                 width={'100%'}
-                value={educationData?.organizationName}
+                value={workExperienceData?.organizationName}
                 type={'text'}
                 onChange={(e) => handleDataChange(e, 'organizationName')}
                 labelAlign={'start'}
@@ -209,7 +230,7 @@ const EducationCardModal = (props) => {
                   title={'Location'}
                   name={'location'}
                   width={'100%'}
-                  value={educationData?.location}
+                  value={workExperienceData?.location}
                   onChange={(e) => handleDataChange(e, 'location')}
                   labelAlign={'start'}
                 />
@@ -221,7 +242,7 @@ const EducationCardModal = (props) => {
                   name={'website'}
                   width={'100%'}
                   titleClassNames={'bold-text '}
-                  value={educationData?.website}
+                  value={workExperienceData?.website}
                   onChange={(e) => handleDataChange(e, 'website')}
                   labelAlign={'start'}
                 />
@@ -230,32 +251,53 @@ const EducationCardModal = (props) => {
           </div>
         </div>
         <div className={'mt-4'}>
-          <div className={'portfolio-info-title text-uppercase'}>
-            {'Description'}
+          <div className={'mt-2'}>
+            <LabeledInput
+              type={'text'}
+              title={'Job title'}
+              name={'jobTitle'}
+              width={'100%'}
+              titleClassNames={'bold-text '}
+              value={workExperienceData?.jobTitle}
+              onChange={(e) => handleDataChange(e, 'jobTitle')}
+              labelAlign={'start'}
+            />
           </div>
-          <ReactQuill
-            className={'portfolio-quill'}
-            value={educationData?.description ?? ''}
-            onChange={(value) => handleDataChange(value, 'description')}
-          />
+          <div className={'mt-3'}>
+            <div
+              className={'portfolio-info-title mb-1'}
+              style={{ textTransform: 'none' }}
+            >
+              {'Description'}
+            </div>
+            <ReactQuill
+              className={'portfolio-quill'}
+              value={workExperienceData?.description ?? ''}
+              onChange={(value) => handleDataChange(value, 'description')}
+            />
+          </div>
         </div>
       </div>
       {isEdit() && (
         <div className={' mt-5'} onClick={() => setConfirmDeleteModal(true)}>
-          <LtsButton variant={'text'} align={'end'} name={'DELETE EDUCATION'} />
+          <LtsButton
+            variant={'text'}
+            align={'end'}
+            name={'DELETE WORK EXPERIENCE'}
+          />
         </div>
       )}
       <ConfirmDeleteRecordModal
         onHide={() => setConfirmDeleteModal(false)}
         show={confirmDeleteModal}
         modalContent={{
-          title: 'YOU’RE ABOUT TO DELETE THIS EXPERIENCE?',
+          title: 'YOU’RE ABOUT TO DELETE THIS WORK EXPERIENCE?',
           description:
-            'If you delete the experience, it is not recoverable and will no longer appear in your portfolio.',
-          action: () => handleDeleteEducation(educationData?.id)
+            'If you delete the work experience, it is not recoverable and will no longer appear in your portfolio.',
+          action: () => handleDeleteWorkExperience(workExperienceData?.id)
         }}
       />
     </PortfolioModalWrapper>
   )
 }
-export default EducationCardModal
+export default WorkExperienceCardModal

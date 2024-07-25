@@ -141,7 +141,22 @@ import {
   HIDE_EDIT_CREDENTIAL_MODAL,
   UPDATE_MY_MENTOR_ERROR,
   CREATE_MY_MENTOR_ERROR,
-  GET_MY_MENTORS_ERROR
+  GET_MY_MENTORS_ERROR,
+  SHOW_ADD_IMMERSION_MODAL,
+  HIDE_ADD_IMMERSION_MODAL,
+  SHOW_EDIT_IMMERSION_MODAL,
+  HIDE_EDIT_IMMERSION_MODAL,
+  SHOW_ADD_WORK_EXPERIENCE_MODAL,
+  HIDE_ADD_WORK_EXPERIENCE_MODAL,
+  SHOW_EDIT_WORK_EXPERIENCE_MODAL,
+  HIDE_EDIT_WORK_EXPERIENCE_MODAL,
+  DELETE_MY_COMPETITIVENESS_IMAGE,
+  DELETE_MY_COMPETITIVENESS_IMAGE_SUCCESS,
+  DELETE_MY_COMPETITIVENESS_IMAGE_ERROR,
+  HIDE_EDIT_COMPETITIVENESS_MODAL,
+  SHOW_EDIT_COMPETITIVENESS_MODAL,
+  HIDE_ADD_COMPETITIVENESS_MODAL,
+  SHOW_ADD_COMPETITIVENESS_MODAL
 } from './Constants'
 
 const initialState = {
@@ -251,34 +266,30 @@ const initialState = {
       }
     },
     myProductivity: {
+      workExperiences: {
+        isLoading: false,
+        isSaving: false,
+        error: null,
+        showEditModal: null,
+        showAddModal: null,
+        data: []
+      },
       immersions: {
         isLoading: false,
         isSaving: false,
         error: null,
-        data: []
-      },
-      workExperience: {
-        isLoading: false,
-        isSaving: false,
-        error: null,
+        showEditModal: null,
+        showAddModal: null,
         data: []
       }
     },
-    myMentors: {
+    myCompetitiveness: {
       isLoading: false,
       isSaving: false,
       error: null,
-      showEditMentorModal: null,
-      showAddMentorModal: null,
-      data: [
-        {
-          mentorName: '',
-          mentorImage: '',
-          mentorRole: '',
-          mentorCompany: '',
-          mentorDescription: ''
-        }
-      ]
+      showEditCompetitivenessModal: null,
+      showAddCompetitivenessModal: null,
+      data: []
     }
   }
 }
@@ -1614,40 +1625,182 @@ const portfolioReducer = (state = initialState, action) => {
         }
       }
 
+    // MY PRODUCTIVITY MODALS
+
+    case SHOW_ADD_IMMERSION_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            immersions: {
+              ...state.howSection?.myProductivity?.immersions,
+              isLoading: true,
+              error: null,
+              showAddModal: true
+            }
+          }
+        }
+      }
+    case HIDE_ADD_IMMERSION_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            immersions: {
+              ...state.howSection?.myProductivity?.immersions,
+              isLoading: true,
+              error: null,
+              showAddModal: null
+            }
+          }
+        }
+      }
+
+    case SHOW_EDIT_IMMERSION_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            immersions: {
+              ...state.howSection?.myProductivity?.immersions,
+              isLoading: true,
+              error: null,
+              showEditModal: action.payload
+            }
+          }
+        }
+      }
+    case HIDE_EDIT_IMMERSION_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            immersions: {
+              ...state.howSection?.myProductivity?.immersions,
+              isLoading: true,
+              error: null,
+              showEditModal: null
+            }
+          }
+        }
+      }
+
+    case SHOW_ADD_WORK_EXPERIENCE_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            workExperiences: {
+              ...state.howSection?.myProductivity?.workExperiences,
+              isLoading: true,
+              error: null,
+              showAddModal: true
+            }
+          }
+        }
+      }
+    case HIDE_ADD_WORK_EXPERIENCE_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            workExperiences: {
+              ...state.howSection?.myProductivity?.workExperiences,
+              isLoading: true,
+              error: null,
+              showAddModal: null
+            }
+          }
+        }
+      }
+
+    case SHOW_EDIT_WORK_EXPERIENCE_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            workExperiences: {
+              ...state.howSection?.myProductivity?.workExperiences,
+              isLoading: true,
+              error: null,
+              showEditModal: action.payload
+            }
+          }
+        }
+      }
+    case HIDE_EDIT_WORK_EXPERIENCE_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            workExperiences: {
+              ...state.howSection?.myProductivity?.workExperiences,
+              isLoading: true,
+              error: null,
+              showEditModal: null
+            }
+          }
+        }
+      }
+
     // Immersions cases
     case GET_MY_IMMERSIONS:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isLoading: true,
-            error: null
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            immersions: {
+              isLoading: true,
+              error: null,
+              data: state.howSection?.myProductivity?.immersions?.data || []
+            }
           }
         }
       }
     case GET_MY_IMMERSIONS_SUCCESS:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isLoading: false,
-            data: action.payload.data
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            immersions: {
+              isLoading: false,
+              data: payload.data
+            }
           }
         }
       }
     case GET_MY_IMMERSIONS_ERROR:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isLoading: false,
-            error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            immersions: {
+              isLoading: false,
+              error: payload.error,
+              data: state.howSection?.myProductivity?.immersions?.data || []
+            }
           }
         }
       }
@@ -1655,40 +1808,51 @@ const portfolioReducer = (state = initialState, action) => {
     case UPDATE_MY_IMMERSION:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isSaving: true,
-            error: null
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            immersions: {
+              ...state.howSection.myProductivity.immersions,
+              isSaving: true,
+              error: null
+            }
           }
         }
       }
     case UPDATE_MY_IMMERSION_SUCCESS:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isSaving: false,
-            data: updateRow(
-              state.myProductivity.immersions.data,
-              action.payload.data.id,
-              action.payload.data
-            )
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            immersions: {
+              ...state.howSection.myProductivity.immersions,
+              isSaving: false,
+              data: updateRow(
+                state.howSection.myProductivity.immersions.data,
+                payload.data.id,
+                payload.data
+              ),
+              showEditModal: null
+            }
           }
         }
       }
     case UPDATE_MY_IMMERSION_ERROR:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isSaving: false,
-            error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            immersions: {
+              ...state.howSection.myProductivity.immersions,
+              isSaving: false,
+              error: payload.error,
+              showEditModal: false
+            }
           }
         }
       }
@@ -1696,39 +1860,50 @@ const portfolioReducer = (state = initialState, action) => {
     case ADD_MY_IMMERSION:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isSaving: true,
-            error: null
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            immersions: {
+              ...state.howSection.myProductivity.immersions,
+              isSaving: true,
+              error: null
+            }
           }
         }
       }
     case ADD_MY_IMMERSION_SUCCESS:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isSaving: false,
-            data: createRow(
-              state.myProductivity.immersions.data,
-              action.payload.data
-            )
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            immersions: {
+              ...state.howSection.myProductivity.immersions,
+              isSaving: false,
+              data: createRow(
+                state.howSection.myProductivity.immersions.data,
+                payload.data
+              ),
+              showAddModal: null
+            }
           }
         }
       }
     case ADD_MY_IMMERSION_ERROR:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isSaving: false,
-            error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            immersions: {
+              ...state.howSection.myProductivity.immersions,
+              isSaving: false,
+              error: payload.error,
+              showAddModal: null
+            }
           }
         }
       }
@@ -1736,39 +1911,50 @@ const portfolioReducer = (state = initialState, action) => {
     case DELETE_MY_IMMERSION:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isLoading: true,
-            error: null
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            immersions: {
+              ...state.howSection.myProductivity.immersions,
+              isLoading: true,
+              error: null
+            }
           }
         }
       }
     case DELETE_MY_IMMERSION_SUCCESS:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isLoading: false,
-            data: removeRow(
-              state.myProductivity.immersions.data,
-              action.payload.data.id
-            )
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            immersions: {
+              ...state.howSection.myProductivity.immersions,
+              isLoading: false,
+              data: removeRow(
+                state.howSection.myProductivity.immersions.data,
+                payload.data.id
+              ),
+              showEditModal: null
+            }
           }
         }
       }
     case DELETE_MY_IMMERSION_ERROR:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          immersions: {
-            ...state.myProductivity.immersions,
-            isLoading: false,
-            error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            immersions: {
+              ...state.howSection.myProductivity.immersions,
+              isLoading: false,
+              error: payload.error,
+              showEditModal: null
+            }
           }
         }
       }
@@ -1777,77 +1963,97 @@ const portfolioReducer = (state = initialState, action) => {
     case GET_MY_WORK_EXPERIENCES:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isLoading: true,
-            error: null
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            workExperiences: {
+              isLoading: true,
+              error: null,
+              data:
+                state.howSection?.myProductivity?.workExperiences?.data || []
+            }
           }
         }
       }
     case GET_MY_WORK_EXPERIENCES_SUCCESS:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isLoading: false,
-            data: action.payload.data
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            workExperiences: {
+              isLoading: false,
+              data: payload.data
+            }
           }
         }
       }
     case GET_MY_WORK_EXPERIENCES_ERROR:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isLoading: false,
-            error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection?.myProductivity,
+            workExperiences: {
+              isLoading: false,
+              error: payload.error,
+              data:
+                state.howSection?.myProductivity?.workExperiences?.data || []
+            }
           }
         }
       }
-
     case UPDATE_MY_WORK_EXPERIENCE:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isSaving: true,
-            error: null
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            workExperiences: {
+              ...state.howSection.myProductivity.workExperiences,
+              isSaving: true,
+              error: null
+            }
           }
         }
       }
     case UPDATE_MY_WORK_EXPERIENCE_SUCCESS:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isSaving: false,
-            data: updateRow(
-              state.myProductivity.workExperience.data,
-              action.payload.data.id,
-              action.payload.data
-            )
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            workExperiences: {
+              ...state.howSection.myProductivity.workExperiences,
+              isSaving: false,
+              data: updateRow(
+                state.howSection.myProductivity.workExperiences.data,
+                payload.data.id,
+                payload.data
+              ),
+              showEditModal: null
+            }
           }
         }
       }
     case UPDATE_MY_WORK_EXPERIENCE_ERROR:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isSaving: false,
-            error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            workExperiences: {
+              ...state.howSection.myProductivity.workExperiences,
+              isSaving: false,
+              error: payload.error,
+              showEditModal: null
+            }
           }
         }
       }
@@ -1855,39 +2061,50 @@ const portfolioReducer = (state = initialState, action) => {
     case ADD_MY_WORK_EXPERIENCE:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isSaving: true,
-            error: null
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            workExperiences: {
+              ...state.howSection.myProductivity.workExperiences,
+              isSaving: true,
+              error: null
+            }
           }
         }
       }
     case ADD_MY_WORK_EXPERIENCE_SUCCESS:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isSaving: false,
-            data: createRow(
-              state.myProductivity.workExperience.data,
-              action.payload.data
-            )
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            workExperiences: {
+              ...state.howSection.myProductivity.workExperiences,
+              isSaving: false,
+              data: createRow(
+                state.howSection.myProductivity.workExperiences.data,
+                payload.data
+              ),
+              showAddModal: null
+            }
           }
         }
       }
     case ADD_MY_WORK_EXPERIENCE_ERROR:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isSaving: false,
-            error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            workExperiences: {
+              ...state.howSection.myProductivity.workExperiences,
+              isSaving: false,
+              error: action.payload.error,
+              showAddModal: null
+            }
           }
         }
       }
@@ -1895,156 +2112,320 @@ const portfolioReducer = (state = initialState, action) => {
     case DELETE_MY_WORK_EXPERIENCE:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isLoading: true,
-            error: null
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            workExperiences: {
+              ...state.howSection.myProductivity.workExperiences,
+              isLoading: true,
+              error: null
+            }
           }
         }
       }
     case DELETE_MY_WORK_EXPERIENCE_SUCCESS:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isLoading: false,
-            data: removeRow(
-              state.myProductivity.workExperience.data,
-              action.payload.data.id
-            )
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            workExperiences: {
+              ...state.howSection.myProductivity.workExperiences,
+              isLoading: false,
+              data: removeRow(
+                state.howSection.myProductivity.workExperiences.data,
+                payload.data.id
+              ),
+              showEditModal: null
+            }
           }
         }
       }
     case DELETE_MY_WORK_EXPERIENCE_ERROR:
       return {
         ...state,
-        myProductivity: {
-          ...state.myProductivity,
-          workExperience: {
-            ...state.myProductivity.workExperience,
-            isLoading: false,
-            error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myProductivity: {
+            ...state.howSection.myProductivity,
+            workExperiences: {
+              ...state.howSection.myProductivity.workExperiences,
+              isLoading: false,
+              error: payload.error,
+              showEditModal: null
+            }
+          }
+        }
+      }
+    // MY COMPETITIVENESS
+
+    case SHOW_ADD_COMPETITIVENESS_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            showAddCompetitivenessModal: true
+          }
+        }
+      }
+    case HIDE_ADD_COMPETITIVENESS_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            showAddCompetitivenessModal: null
           }
         }
       }
 
+    case SHOW_EDIT_COMPETITIVENESS_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            showEditCompetitivenessModal: action.payload
+          }
+        }
+      }
+    case HIDE_EDIT_COMPETITIVENESS_MODAL:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            showEditCompetitivenessModal: null
+          }
+        }
+      }
     case GET_MY_COMPETITIVENESS:
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isLoading: true,
-          error: null
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isLoading: true,
+            error: null
+          }
         }
       }
     case GET_MY_COMPETITIVENESS_SUCCESS:
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isLoading: false,
-          data: action.payload.data
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            data: payload.data,
+            isLoading: false,
+            error: null
+          }
         }
       }
-    case GET_MY_COMPETITIVENESS_ERROR:
+    case GET_MY_COMPETITIVENESS_ERROR: {
+      const { error } = payload
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isLoading: false,
-          error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isLoading: false,
+            error: error
+          }
         }
       }
+    }
+    case ADD_MY_COMPETITIVENESS:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isSaving: true,
+            error: null
+          }
+        }
+      }
+
+    case ADD_MY_COMPETITIVENESS_SUCCESS: {
+      const existingData = state.howSection.myCompetitiveness.data
+      const { data } = payload
+
+      const updatedData = createRow(existingData, data)
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            data: updatedData,
+            isSaving: false,
+            showAddCompetitivenessModal: null,
+            error: null
+          }
+        }
+      }
+    }
+
+    case ADD_MY_COMPETITIVENESS_ERROR: {
+      const { error } = payload
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isSaving: false,
+            error: error
+          }
+        }
+      }
+    }
 
     case UPDATE_MY_COMPETITIVENESS:
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isSaving: true,
-          error: null
-        }
-      }
-    case UPDATE_MY_COMPETITIVENESS_SUCCESS:
-      return {
-        ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isSaving: false,
-          data: updateRow(
-            state.myCompetitiveness.data,
-            action.payload.data.id,
-            action.payload.data
-          )
-        }
-      }
-    case UPDATE_MY_COMPETITIVENESS_ERROR:
-      return {
-        ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isSaving: false,
-          error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isSaving: true,
+            error: null
+          }
         }
       }
 
-    case ADD_MY_COMPETITIVENESS:
+    case UPDATE_MY_COMPETITIVENESS_SUCCESS: {
+      const existingData = state.howSection.myCompetitiveness.data
+      const { data, category } = payload
+
+      const updatedData = updateRow(existingData, data?.id, data)
+
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isSaving: true,
-          error: null
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            data: updatedData,
+            isSaving: false,
+            showEditCompetitivenessModal: null,
+            error: null
+          }
         }
       }
-    case ADD_MY_COMPETITIVENESS_SUCCESS:
+    }
+
+    case UPDATE_MY_COMPETITIVENESS_ERROR: {
+      const { error } = payload
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isSaving: false,
-          data: createRow(state.myCompetitiveness.data, action.payload.data)
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isSaving: false,
+            error: error
+          }
         }
       }
-    case ADD_MY_COMPETITIVENESS_ERROR:
+    }
+
+    case DELETE_MY_COMPETITIVENESS_IMAGE:
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isSaving: false,
-          error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isSaving: true
+          }
+        }
+      }
+
+    case DELETE_MY_COMPETITIVENESS_IMAGE_SUCCESS: {
+      const existingData = state.howSection.myCompetitiveness.data
+      const { data } = payload
+      const updatedData = updateRow(existingData, data.id, data)
+
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            data: updatedData,
+            isSaving: false
+          }
+        }
+      }
+    }
+
+    case DELETE_MY_COMPETITIVENESS_IMAGE_ERROR:
+      return {
+        ...state,
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isSaving: false,
+            error: payload.error
+          }
         }
       }
 
     case DELETE_MY_COMPETITIVENESS:
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isLoading: true,
-          error: null
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isSaving: true
+          }
         }
       }
-    case DELETE_MY_COMPETITIVENESS_SUCCESS:
+
+    case DELETE_MY_COMPETITIVENESS_SUCCESS: {
+      const existingData = state.howSection.myCompetitiveness.data
+      const { id, data } = payload
+      const updatedData = removeRow(existingData, id)
+
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isLoading: false,
-          data: removeRow(state.myCompetitiveness.data, action.payload.data.id)
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            data: updatedData,
+            isSaving: false,
+            showCompetitivenessModal: null
+          }
         }
       }
+    }
+
     case DELETE_MY_COMPETITIVENESS_ERROR:
       return {
         ...state,
-        myCompetitiveness: {
-          ...state.myCompetitiveness,
-          isLoading: false,
-          error: action.payload.error
+        howSection: {
+          ...state.howSection,
+          myCompetitiveness: {
+            ...state.howSection.myCompetitiveness,
+            isSaving: false,
+            error: payload.error
+          }
         }
       }
 

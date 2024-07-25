@@ -8,6 +8,8 @@ import {
   updateMyCredential
 } from '../../../../redux/portfolio/Actions'
 import CredentialCardModal from './CredentialCardModal'
+import { convertDateToMonthYear } from '../../../../utils/helpers'
+import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 
 function CredentialCard(props) {
   const { credential, isEditSection } = props
@@ -46,7 +48,7 @@ function CredentialCard(props) {
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}
-              src={credential.imageUrl}
+              src={credential?.imageUrl ?? imagePlaceholder}
               alt={'education image'}
             />
           </div>
@@ -54,17 +56,17 @@ function CredentialCard(props) {
             <div className={'d-flex justify-content-between gap-2'}>
               <div>
                 <div className={'organization-name mb-2'}>
-                  {credential.credentialTitle}
+                  {credential?.credentialTitle}
                 </div>
                 <div className={'organization-location mb-2'}>
-                  {credential.certifyingOrganization}
+                  {credential?.certifyingOrganization}
                 </div>
                 <div className={'organization-website mb-3'}>
-                  {credential.website}
+                  {credential?.website}
                 </div>
               </div>
               <div className={'text-end organization-date'}>
-                {credential.dateAwarded}
+                {convertDateToMonthYear(credential?.dateAwarded)}
               </div>
             </div>
             <div>
@@ -72,7 +74,7 @@ function CredentialCard(props) {
                 Description:
               </div>
               <div className={'organization-description'}>
-                {credential.description}
+                {credential?.description}
               </div>
             </div>
           </div>

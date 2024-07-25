@@ -4,36 +4,56 @@ import SectionActions from '../../Components/Actions/SectionActions'
 import { useDispatch, useSelector } from 'react-redux'
 import MyMentorModal from '../../Components/Modals/MyMentorModal'
 import {
+  hideEditCompetitivenessModal,
   hideEditMentorModal,
+  showEditCompetitivenessModal,
   showEditMentorModal
 } from '../../../../redux/portfolio/Actions'
 
 function MyMentor(props) {
   const dispatch = useDispatch()
-  const [myMentor, setMyMentor] = useState({})
+  const [data, setData] = useState({})
   const mode = useSelector((state) => state.portfolio.mode)
-  const showMentorModalId = useSelector(
-    (state) => state.portfolio.whoSection.myMentors.showEditMentorModal
+
+  const showModalId = useSelector((state) =>
+    props.category === 'my-competitiveness'
+      ? state.portfolio.howSection.myCompetitiveness
+          .showEditCompetitivenessModal
+      : state.portfolio.whoSection.myMentors.showEditMentorModal
   )
 
-  const handleShowMentorModal = (id) => {
-    dispatch(showEditMentorModal(id))
+  const handleShowModal = (id) => {
+    if (props.category === 'my-competitiveness') {
+      dispatch(showEditCompetitivenessModal(id))
+    } else {
+      dispatch(showEditMentorModal(id))
+    }
   }
-  const handleHideMentorModal = () => {
-    dispatch(hideEditMentorModal())
+
+  const handleHideModal = () => {
+    if (props.category === 'my-competitiveness') {
+      dispatch(hideEditCompetitivenessModal())
+    } else {
+      dispatch(hideEditMentorModal())
+    }
   }
 
   useEffect(() => {
     if (props.data) {
-      setMyMentor(props.data)
+      setData(props.data)
     }
   }, [props.data])
 
   const actions = [
     {
       type: 'edit',
-      action: () => handleShowMentorModal(myMentor?.id),
+      action: () => handleShowModal(data?.id),
       isDisplayed: mode === 'edit' && props.isEditSection === true
+    },
+    {
+      type: 'open',
+      action: () => handleShowModal(data?.id),
+      isDisplayed: mode === 'preview'
     }
   ]
 
@@ -42,25 +62,33 @@ function MyMentor(props) {
       <img
         className={'my-mentors-image'}
         alt={'submission-image'}
-        src={myMentor?.mentorImage ? myMentor?.mentorImage : imagePlaceholder}
+        src={data?.mentorImage ? data?.mentorImage : imagePlaceholder}
       />
 
       <div className={'mentor-info-box'}>
-        <div className={'mentor-name'}>{myMentor?.mentorName}</div>
-        <div className={'mentor-role'}>{myMentor?.mentorRole}</div>
-        <div className={'mentor-company'}>{myMentor?.mentorCompany}</div>
-        <div
-          className={'mentor-description'}
-          dangerouslySetInnerHTML={{ __html: myMentor?.mentorDescription }}
-        />
+        <div className={'mentor-name'}>{data?.mentorName}</div>
+        <div className={'mentor-role'}>{data?.mentorRole}</div>
+        {/*<div className={'mentor-company'}>{data?.mentorCompany}</div>*/}
+        {/*<div*/}
+        {/*  className={'mentor-description'}*/}
+        {/*  dangerouslySetInnerHTML={{ __html: data?.mentorDescription }}*/}
+        {/*/>*/}
       </div>
       <SectionActions actions={actions} />
-      <MyMentorModal
-        onHide={handleHideMentorModal}
-        show={showMentorModalId === myMentor?.id}
-        title={'Edit Mentor'}
-        data={myMentor}
-      />
+      {showModalId === data?.id && (
+        <MyMentorModal
+          onHide={handleHideModal}
+          show={showModalId === data?.id}
+          title={
+            mode === 'preview'
+              ? `Preview ${props.type ?? 'mentor'}`
+              : `Edit ${props.type ?? 'mentor'}`
+          }
+          data={data}
+          category={props.category}
+          mode={mode}
+        />
+      )}
     </div>
   )
 }
