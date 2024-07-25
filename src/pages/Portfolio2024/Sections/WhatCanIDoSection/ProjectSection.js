@@ -22,7 +22,6 @@ const ProjectSection = ({
     }
   ]
 
-  // console.log('evidences', evidences)
   return (
     <div className={'portfolio-info-container mb-3'}>
       <div className={'mb-3'}>

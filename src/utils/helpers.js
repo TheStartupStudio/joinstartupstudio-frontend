@@ -273,7 +273,6 @@ export const fileNameExtracter = (url) => {
 }
 
 export const uploadImage = async (imageFile) => {
-  // debugger
   try {
     const response = await axiosInstance.post(
       // '/upload/img-transform',

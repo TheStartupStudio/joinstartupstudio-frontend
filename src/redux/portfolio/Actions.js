@@ -1214,7 +1214,6 @@ export const updateMyCredentialError = (error) => {
 export const addMyCredential = (credential) => async (dispatch) => {
   dispatch({ type: ADD_MY_CREDENTIAL })
   try {
-    debugger
     const response = await addMyCredentialAPI(credential)
     dispatch(addMyCredentialSuccess(response.data))
   } catch (e) {
@@ -1499,7 +1498,6 @@ export const updateMyCompetitiveness =
   }
 
 export const updateMyCompetitivenessSuccess = (response, category) => {
-  debugger
   return {
     type: UPDATE_MY_COMPETITIVENESS_SUCCESS,
     payload: { data: response, category }

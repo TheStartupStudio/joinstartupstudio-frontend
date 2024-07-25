@@ -76,7 +76,6 @@ const EducationCardModal = (props) => {
       ...credentialData,
       imageUrl: uploadedImageUrl ? uploadedImageUrl : credentialData.imageUrl
     }
-    debugger
     props.onSave?.(newCredentialData)
   }
 

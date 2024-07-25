@@ -31,7 +31,7 @@ const ReactImageUpload = ({
   // const { containerRef, containerSize } = useContainerSize()
   return (
     <div className='avatar-section position-relative' ref={null}>
-      {originalImage !== '' && readOnly ? (
+      {originalImage !== '' && !readOnly ? (
         <div
           style={{
             width: isRelativeSize && 200,

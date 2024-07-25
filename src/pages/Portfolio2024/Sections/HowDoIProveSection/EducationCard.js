@@ -49,7 +49,7 @@ function EducationCard(props) {
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}
-              src={education?.organizationLogo ?? imagePlaceholder}
+              src={education?.imageUrl ?? imagePlaceholder}
               alt={'education image'}
             />
           </div>

@@ -33,8 +33,6 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
     setProjects(filteredProjects)
   }
 
-  console.log('projects', projects)
-
   return (
     <div className={'position-relative'}>
       {projects?.map((project, index) => (

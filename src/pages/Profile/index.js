@@ -376,7 +376,6 @@ function Profile(props) {
                   <div className='row p-sm-3 p-3'>
                     <div className='col-12 text-center text-md-auto col-md-4 col-lg-3 gx-5'>
                       <div className='round-image-wrapper'>
-                        {console.log('user', user)}
                         <Image
                           src={
                             user.profile_image

@@ -18,7 +18,6 @@ function MyFailure(props) {
     (state) => state.portfolio.whoSection.myFailures.showEditFailureModal
   )
 
-  // console.log(showFailureModalId)
   const handleShowFailureModal = (id) => {
     dispatch(showEditFailureModal(id))
   }

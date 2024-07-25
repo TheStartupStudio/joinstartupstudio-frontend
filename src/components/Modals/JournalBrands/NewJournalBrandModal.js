@@ -66,7 +66,6 @@ export const NewJournalBrandModal = (props) => {
           return toast.error('Minimum required format: 140x140px.')
         } else {
           const imageData = await readFile(e.target.files[0])
-          console.log('imageData', imageData)
           dispatch(setImageCropperData(imageData))
         }
       }
