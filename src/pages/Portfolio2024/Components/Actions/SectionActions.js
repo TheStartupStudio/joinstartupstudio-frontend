@@ -5,6 +5,7 @@ import { FaPencilAlt } from 'react-icons/fa'
 import TooltipAction from './TooltipAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { IoMdOpen } from 'react-icons/io'
 
 function SectionActions(props) {
   const foundedAction = (type) =>
@@ -14,6 +15,7 @@ function SectionActions(props) {
   const saveButton = foundedAction('save')
   const hideButton = foundedAction('hide')
   const trashButton = foundedAction('trash')
+  const openButton = foundedAction('open')
 
   return (
     <React.Fragment>
@@ -96,6 +98,17 @@ function SectionActions(props) {
               tooltipContent={
                 <Tooltip id='tooltip' className={'tooltip-content '}>
                   {trashButton?.description ?? `Click here to delete item`}
+                </Tooltip>
+              }
+            />
+          )}
+          {openButton?.isDisplayed && (
+            <TooltipAction
+              onClick={() => openButton?.action()}
+              icon={<IoMdOpen className={'action-icon public-icon'} />}
+              tooltipContent={
+                <Tooltip id='tooltip' className={'tooltip-content '}>
+                  {openButton?.description ?? `Click here to delete item`}
                 </Tooltip>
               }
             />

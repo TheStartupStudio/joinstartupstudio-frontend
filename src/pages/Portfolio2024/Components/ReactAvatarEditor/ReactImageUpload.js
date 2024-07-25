@@ -3,6 +3,7 @@ import AvatarEditor from 'react-avatar-editor'
 import './index.css'
 import { SlCloudUpload } from 'react-icons/sl'
 import SectionActions from '../Actions/SectionActions'
+import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 // import useContainerSize from '../../../../hooks/useContainerSize'
 
 const ReactImageUpload = ({
@@ -23,14 +24,14 @@ const ReactImageUpload = ({
   height,
   type,
   color,
-  editorRef
+  editorRef,
+  readOnly
 }) => {
   // const editorRef = createRef()
   // const { containerRef, containerSize } = useContainerSize()
-
   return (
-    <div className="avatar-section position-relative" ref={null}>
-      {originalImage !== '' ? (
+    <div className='avatar-section position-relative' ref={null}>
+      {originalImage !== '' && readOnly ? (
         <div
           style={{
             width: isRelativeSize && 200,
@@ -42,7 +43,7 @@ const ReactImageUpload = ({
             color={color ?? [235, 235, 235, 0.6]}
             scale={scale}
             width={250}
-            crossOrigin="anonymous"
+            crossOrigin='anonymous'
             height={250}
             image={originalImage}
             rotate={rotate}
@@ -62,7 +63,7 @@ const ReactImageUpload = ({
         </div>
       ) : (
         <div
-          className="upload-image_container p-0 mb-1 position-relative"
+          className='upload-image_container p-0 mb-1 position-relative'
           style={{
             width: isRelativeSize && 200,
             height: 200,
@@ -78,17 +79,17 @@ const ReactImageUpload = ({
                   height: '100%',
                   borderRadius: type === 'circle' ? '50%' : ''
                 }}
-                alt="Thumb"
+                alt='Thumb'
                 className={'display-uploaded-image p-2'}
               />
             </label>
-          ) : (
+          ) : !readOnly ? (
             <label className={'w-100 h-100 p-3'} onClick={onLabelClick}>
               <input
                 onChange={onFileInputChange}
-                accept="image/*"
-                type="file"
-                className="d-none h-100"
+                accept='image/*'
+                type='file'
+                className='d-none h-100'
               />
               <div
                 className={
@@ -107,8 +108,14 @@ const ReactImageUpload = ({
                 </div>
               </div>
             </label>
+          ) : (
+            <img
+              className={'my-mentors-image'}
+              alt={'submission-image'}
+              src={imagePlaceholder}
+            />
           )}
-          {value && (
+          {value && !readOnly && (
             <SectionActions
               actions={actions}
               styles={
@@ -120,7 +127,9 @@ const ReactImageUpload = ({
           )}
         </div>
       )}
-      {!value && originalImage && <SectionActions actions={actions} />}
+      {!value && originalImage && !readOnly && (
+        <SectionActions actions={actions} />
+      )}
     </div>
   )
 }

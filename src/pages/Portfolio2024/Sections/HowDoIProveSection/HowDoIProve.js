@@ -50,22 +50,22 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
         MyAlignments,
         data?.myAlignments
       )}
-      {renderSection(
-        loadings?.userStory,
-        'my-productivity',
-        'My Productivity',
-        'My skills and expertise inside of my field of interest.',
-        MyProductivity,
-        data?.myProductivity
-      )}
-      {renderSection(
-        loadings?.userStory,
-        'my-competitiveness',
-        'My Competitiveness',
-        'The value of the outcomes you produce inside of your field of interest',
-        MyCompetitiveness,
-        data?.myCompetitiveness?.data
-      )}
+      {/*{renderSection(*/}
+      {/*  loadings?.userStory,*/}
+      {/*  'my-productivity',*/}
+      {/*  'My Productivity',*/}
+      {/*  'My skills and expertise inside of my field of interest.',*/}
+      {/*  MyProductivity,*/}
+      {/*  data?.myProductivity*/}
+      {/*)}*/}
+      {/*{renderSection(*/}
+      {/*  loadings?.userStory,*/}
+      {/*  'my-competitiveness',*/}
+      {/*  'My Competitiveness',*/}
+      {/*  'The value of the outcomes you produce inside of your field of interest',*/}
+      {/*  MyCompetitiveness,*/}
+      {/*  data?.myCompetitiveness?.data*/}
+      {/*)}*/}
     </div>
   )
 }

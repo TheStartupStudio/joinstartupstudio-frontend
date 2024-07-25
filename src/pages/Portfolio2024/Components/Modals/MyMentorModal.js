@@ -20,6 +20,7 @@ import ReactImageUpload from '../ReactAvatarEditor/ReactImageUpload'
 import useImageEditor from '../../../../hooks/useImageEditor'
 
 const MyMentorModal = (props) => {
+  const mode = props.mode
   const initialMentorState = {
     mentorImage: '',
     mentorName: '',
@@ -143,11 +144,12 @@ const MyMentorModal = (props) => {
     console.log('imageFile', imageFile)
   }
 
+  const readOnly = props.mode === 'preview'
   const actions = [
     {
       type: 'save',
       action: saveMyMentorData,
-      isDisplayed: true,
+      isDisplayed: !readOnly,
       containSpinner: true,
       isSaving
     },
@@ -173,6 +175,7 @@ const MyMentorModal = (props) => {
             actions={avatarEditorActions}
             title='Mentor Image'
             editorRef={editorRef}
+            readOnly={readOnly}
           />
         </div>
         <div className='col-md-8'>
@@ -181,6 +184,8 @@ const MyMentorModal = (props) => {
             type='text'
             value={mentorDetails.mentorName}
             onChange={(value) => handleInputChange('mentorName', value)}
+            readOnly={readOnly}
+            labelAlign={'start'}
           />
 
           <LabeledInput
@@ -189,6 +194,8 @@ const MyMentorModal = (props) => {
             value={mentorDetails.mentorRole}
             onChange={(value) => handleInputChange('mentorRole', value)}
             containerClassNames='mt-3'
+            readOnly={readOnly}
+            labelAlign={'start'}
           />
           <LabeledInput
             title='Company'
@@ -196,32 +203,51 @@ const MyMentorModal = (props) => {
             value={mentorDetails.mentorCompany}
             onChange={(value) => handleInputChange('mentorCompany', value)}
             containerClassNames='mt-3'
+            readOnly={readOnly}
+            labelAlign={'start'}
           />
         </div>
       </div>
       <div className='mt-3'>
-        <div className='portfolio-quill-label-sm'>Description</div>
-        <ReactQuill
-          className='portfolio-quill mt-2'
-          value={mentorDetails.mentorDescription}
-          onChange={(value) => handleInputChange('mentorDescription', value)}
-        />
+        {!readOnly ? (
+          <>
+            <div className='portfolio-quill-label-sm'>Description</div>
+            <ReactQuill
+              className='portfolio-quill mt-2'
+              value={mentorDetails.mentorDescription}
+              onChange={(value) =>
+                handleInputChange('mentorDescription', value)
+              }
+            />
+          </>
+        ) : (
+          <LabeledInput
+            title='Description'
+            type='textarea'
+            value={mentorDetails.mentorDescription}
+            containerClassNames='mt-3'
+            readOnly={readOnly}
+            labelAlign={'start'}
+          />
+        )}
       </div>
-      {isEdit() && (
+      {isEdit() && !readOnly && (
         <div className='mt-5' onClick={() => setConfirmDeleteModal(true)}>
           <LtsButton variant='text' align='end' name='DELETE MENTOR' />
         </div>
       )}
-      <ConfirmDeleteRecordModal
-        onHide={() => setConfirmDeleteModal(false)}
-        show={confirmDeleteModal}
-        modalContent={{
-          title: 'YOU’RE ABOUT TO DELETE THIS MENTOR?',
-          description:
-            'If you delete the mentor, it is not recoverable and will no longer appear in your portfolio.',
-          action: handleDeleteMentor
-        }}
-      />
+      {confirmDeleteModal && (
+        <ConfirmDeleteRecordModal
+          onHide={() => setConfirmDeleteModal(false)}
+          show={confirmDeleteModal}
+          modalContent={{
+            title: 'YOU’RE ABOUT TO DELETE THIS MENTOR?',
+            description:
+              'If you delete the mentor, it is not recoverable and will no longer appear in your portfolio.',
+            action: handleDeleteMentor
+          }}
+        />
+      )}
     </PortfolioModalWrapper>
   )
 }

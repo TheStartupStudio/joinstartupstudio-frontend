@@ -49,6 +49,11 @@ function MyMentor(props) {
       type: 'edit',
       action: () => handleShowModal(data?.id),
       isDisplayed: mode === 'edit' && props.isEditSection === true
+    },
+    {
+      type: 'open',
+      action: () => handleShowModal(data?.id),
+      isDisplayed: mode === 'preview'
     }
   ]
 
@@ -63,20 +68,25 @@ function MyMentor(props) {
       <div className={'mentor-info-box'}>
         <div className={'mentor-name'}>{data?.mentorName}</div>
         <div className={'mentor-role'}>{data?.mentorRole}</div>
-        <div className={'mentor-company'}>{data?.mentorCompany}</div>
-        <div
-          className={'mentor-description'}
-          dangerouslySetInnerHTML={{ __html: data?.mentorDescription }}
-        />
+        {/*<div className={'mentor-company'}>{data?.mentorCompany}</div>*/}
+        {/*<div*/}
+        {/*  className={'mentor-description'}*/}
+        {/*  dangerouslySetInnerHTML={{ __html: data?.mentorDescription }}*/}
+        {/*/>*/}
       </div>
       <SectionActions actions={actions} />
       {showModalId === data?.id && (
         <MyMentorModal
           onHide={handleHideModal}
           show={showModalId === data?.id}
-          title={`Edit ${props.type ?? 'mentor'}`}
+          title={
+            mode === 'preview'
+              ? `Preview ${props.type ?? 'mentor'}`
+              : `Edit ${props.type ?? 'mentor'}`
+          }
           data={data}
           category={props.category}
+          mode={mode}
         />
       )}
     </div>

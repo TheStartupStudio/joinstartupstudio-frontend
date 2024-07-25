@@ -75,9 +75,9 @@ const Index = ({
       await fetchSharingSettings()
       await fetchMyEducations()
       await fetchMyCredentials()
-      await fetchMyImmersions()
-      await fetchMyWorkExperiences()
-      await fetchMyCompetitiveness()
+      // await fetchMyImmersions()
+      // await fetchMyWorkExperiences()
+      // await fetchMyCompetitiveness()
     }
 
     fetchDataSequentially()
@@ -144,12 +144,12 @@ const Index = ({
               myAlignments: {
                 educations,
                 credentials
-              },
-              myProductivity: {
-                immersions,
-                workExperiences
-              },
-              myCompetitiveness
+              }
+              // myProductivity: {
+              //   immersions,
+              //   workExperiences
+              // },
+              // myCompetitiveness
             }}
           />
         </>
