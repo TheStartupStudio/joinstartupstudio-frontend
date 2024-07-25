@@ -50,7 +50,6 @@ function MyCompetitiveness(props) {
               title={`Add new "My Competitiveness" section`}
               modalTitle={'Add Competitiveness'}
               isEditSection={isEditSection}
-              data={myCompetitiveness?.data}
               category={'my-competitiveness'}
               type={'competitiveness'}
             />

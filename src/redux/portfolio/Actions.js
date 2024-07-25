@@ -171,7 +171,11 @@ import {
   SHOW_EDIT_WORK_EXPERIENCE_MODAL,
   HIDE_EDIT_WORK_EXPERIENCE_MODAL,
   SHOW_ADD_WORK_EXPERIENCE_MODAL,
-  HIDE_ADD_WORK_EXPERIENCE_MODAL
+  HIDE_ADD_WORK_EXPERIENCE_MODAL,
+  SHOW_EDIT_COMPETITIVENESS_MODAL,
+  HIDE_EDIT_COMPETITIVENESS_MODAL,
+  SHOW_ADD_COMPETITIVENESS_MODAL,
+  HIDE_ADD_COMPETITIVENESS_MODAL
 } from './Constants'
 import {
   createMyFailuresAPI,
@@ -924,6 +928,23 @@ export const showAddWorkExperienceModal = () => ({
 export const hideAddWorkExperienceModal = () => ({
   type: HIDE_ADD_WORK_EXPERIENCE_MODAL
 })
+
+export const showEditCompetitivenessModal = (id) => ({
+  type: SHOW_EDIT_COMPETITIVENESS_MODAL,
+  payload: id
+})
+
+export const hideEditCompetitivenessModal = () => ({
+  type: HIDE_EDIT_COMPETITIVENESS_MODAL
+})
+
+export const showAddCompetitivenessModal = () => ({
+  type: SHOW_ADD_COMPETITIVENESS_MODAL
+})
+
+export const hideAddCompetitivenessModal = () => ({
+  type: HIDE_ADD_COMPETITIVENESS_MODAL
+})
 /// WHAT CAN I DO SECTION ///
 export const getSkills = () => async (dispatch) => {
   dispatch({ type: GET_SKILLS })
@@ -1467,27 +1488,28 @@ export const getMyCompetitivenessError = (error) => {
 
 // Update Competitiveness
 export const updateMyCompetitiveness =
-  (competitiveness) => async (dispatch) => {
+  (competitiveness, id, category) => async (dispatch) => {
     dispatch({ type: UPDATE_MY_COMPETITIVENESS })
     try {
-      const response = await updateMyCompetitivenessAPI(competitiveness)
-      dispatch(updateMyCompetitivenessSuccess(response.data))
+      const response = await updateMyCompetitivenessAPI(competitiveness, id)
+      dispatch(updateMyCompetitivenessSuccess(response.data, category))
     } catch (e) {
-      dispatch(updateMyCompetitivenessError(e))
+      dispatch(updateMyCompetitivenessError(e, category))
     }
   }
 
-export const updateMyCompetitivenessSuccess = (response) => {
+export const updateMyCompetitivenessSuccess = (response, category) => {
+  debugger
   return {
     type: UPDATE_MY_COMPETITIVENESS_SUCCESS,
-    payload: { data: response }
+    payload: { data: response, category }
   }
 }
 
-export const updateMyCompetitivenessError = (error) => {
+export const updateMyCompetitivenessError = (error, category) => {
   return {
     type: UPDATE_MY_COMPETITIVENESS_ERROR,
-    payload: { error }
+    payload: { error, category }
   }
 }
 
@@ -1531,13 +1553,37 @@ export const deleteMyCompetitiveness =
 export const deleteMyCompetitivenessSuccess = (response) => {
   return {
     type: DELETE_MY_COMPETITIVENESS_SUCCESS,
-    payload: { data: response }
+    payload: { data: response, id: response.id }
   }
 }
 
 export const deleteMyCompetitivenessError = (error) => {
   return {
     type: DELETE_MY_COMPETITIVENESS_ERROR,
+    payload: { error }
+  }
+}
+export const deleteMyCompetitivenessImage =
+  (mentorImage, id) => async (dispatch) => {
+    dispatch({ type: DELETE_MY_MENTOR_IMAGE })
+    try {
+      const response = await updateMyCompetitivenessAPI(mentorImage, id)
+      dispatch(deleteMyCompetitivenessImageSuccess(response.data, id))
+    } catch (e) {
+      dispatch(deleteMyCompetitivenessImageError(e))
+    }
+  }
+
+export const deleteMyCompetitivenessImageSuccess = (response, id) => {
+  return {
+    type: DELETE_MY_MENTOR_IMAGE_SUCCESS,
+    payload: { data: response, id }
+  }
+}
+
+export const deleteMyCompetitivenessImageError = (error) => {
+  return {
+    type: DELETE_MY_MENTOR_IMAGE_ERROR,
     payload: { error }
   }
 }

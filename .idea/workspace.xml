@@ -5,15 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyCompetitiveness.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/AddMyMentor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/AddMyMentor.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/MyMentorModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/MyMentorModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/HowDoIProve.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/HowDoIProve.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyCompetitiveness.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyCompetitiveness.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyMentor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyMentor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Constants.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Service.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Service.js" afterDir="false" />
     </list>
@@ -122,7 +119,7 @@
       <workItem from="1720164433682" duration="1239000" />
       <workItem from="1720614606349" duration="608000" />
       <workItem from="1721036272998" duration="1343000" />
-      <workItem from="1721634831645" duration="52168000" />
+      <workItem from="1721634831645" duration="57099000" />
     </task>
     <servers />
   </component>

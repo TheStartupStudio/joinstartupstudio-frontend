@@ -429,7 +429,6 @@ export const updateMyCompetitivenessAPI = async (myCompetitiveness, id) => {
       `/hsPortfolio/myCompetitiveness/${id}`,
       myCompetitiveness
     )
-
     return response
   } catch (e) {
     console.log('Error occurred during creating my competitiveness', e)

@@ -4,7 +4,9 @@ import SectionActions from '../../Components/Actions/SectionActions'
 import { useDispatch, useSelector } from 'react-redux'
 import MyMentorModal from '../../Components/Modals/MyMentorModal'
 import {
+  hideEditCompetitivenessModal,
   hideEditMentorModal,
+  showEditCompetitivenessModal,
   showEditMentorModal
 } from '../../../../redux/portfolio/Actions'
 
@@ -12,15 +14,28 @@ function MyMentor(props) {
   const dispatch = useDispatch()
   const [data, setData] = useState({})
   const mode = useSelector((state) => state.portfolio.mode)
-  const showMentorModalId = useSelector(
-    (state) => state.portfolio.whoSection.myMentors.showEditMentorModal
+
+  const showModalId = useSelector((state) =>
+    props.category === 'my-competitiveness'
+      ? state.portfolio.howSection.myCompetitiveness
+          .showEditCompetitivenessModal
+      : state.portfolio.whoSection.myMentors.showEditMentorModal
   )
 
-  const handleShowMentorModal = (id) => {
-    dispatch(showEditMentorModal(id))
+  const handleShowModal = (id) => {
+    if (props.category === 'my-competitiveness') {
+      dispatch(showEditCompetitivenessModal(id))
+    } else {
+      dispatch(showEditMentorModal(id))
+    }
   }
-  const handleHideMentorModal = () => {
-    dispatch(hideEditMentorModal())
+
+  const handleHideModal = () => {
+    if (props.category === 'my-competitiveness') {
+      dispatch(hideEditCompetitivenessModal())
+    } else {
+      dispatch(hideEditMentorModal())
+    }
   }
 
   useEffect(() => {
@@ -32,7 +47,7 @@ function MyMentor(props) {
   const actions = [
     {
       type: 'edit',
-      action: () => handleShowMentorModal(data?.id),
+      action: () => handleShowModal(data?.id),
       isDisplayed: mode === 'edit' && props.isEditSection === true
     }
   ]
@@ -55,13 +70,15 @@ function MyMentor(props) {
         />
       </div>
       <SectionActions actions={actions} />
-      <MyMentorModal
-        onHide={handleHideMentorModal}
-        show={showMentorModalId === data?.id}
-        title={`Edit ${props.type ?? 'mentor'}`}
-        data={data}
-        category={props.category}
-      />
+      {showModalId === data?.id && (
+        <MyMentorModal
+          onHide={handleHideModal}
+          show={showModalId === data?.id}
+          title={`Edit ${props.type ?? 'mentor'}`}
+          data={data}
+          category={props.category}
+        />
+      )}
     </div>
   )
 }

@@ -2263,7 +2263,6 @@ const portfolioReducer = (state = initialState, action) => {
       const { data } = payload
 
       const updatedData = createRow(existingData, data)
-
       return {
         ...state,
         howSection: {
@@ -2309,8 +2308,9 @@ const portfolioReducer = (state = initialState, action) => {
 
     case UPDATE_MY_COMPETITIVENESS_SUCCESS: {
       const existingData = state.howSection.myCompetitiveness.data
-      const { id, data } = payload
-      const updatedData = updateRow(existingData, id, data)
+      const { data, category } = payload
+
+      const updatedData = updateRow(existingData, data?.id, data)
 
       return {
         ...state,
@@ -2320,7 +2320,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myCompetitiveness,
             data: updatedData,
             isSaving: false,
-            showEditCompetitivenessModal: false,
+            showEditCompetitivenessModal: null,
             error: null
           }
         }
@@ -2356,8 +2356,8 @@ const portfolioReducer = (state = initialState, action) => {
 
     case DELETE_MY_COMPETITIVENESS_IMAGE_SUCCESS: {
       const existingData = state.howSection.myCompetitiveness.data
-      const { id, data } = payload
-      const updatedData = updateRow(existingData, id, data)
+      const { data } = payload
+      const updatedData = updateRow(existingData, data.id, data)
 
       return {
         ...state,
@@ -2399,7 +2399,7 @@ const portfolioReducer = (state = initialState, action) => {
 
     case DELETE_MY_COMPETITIVENESS_SUCCESS: {
       const existingData = state.howSection.myCompetitiveness.data
-      const { id } = payload
+      const { id, data } = payload
       const updatedData = removeRow(existingData, id)
 
       return {
@@ -2410,7 +2410,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myCompetitiveness,
             data: updatedData,
             isSaving: false,
-            showCompetitivenessModal: false
+            showCompetitivenessModal: null
           }
         }
       }
