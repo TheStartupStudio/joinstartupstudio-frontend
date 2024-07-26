@@ -35,7 +35,7 @@ const LabeledInput = ({
           textClassNames ?? ''
         } justify-content-${labelAlign}`}
         style={{
-          backgroundColor: '#f3f3f3',
+          backgroundColor: '#F6F7F7',
           minHeight: titleHeight
         }}
       >

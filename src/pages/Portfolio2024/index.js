@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import PortfolioHeader from './Components/Header/PortfolioHeader'
 import PortfolioActions from './Components/Actions/PortfolioActions'
 import PortfolioNavigator from './Components/PortfolioNavigator'
@@ -71,6 +71,7 @@ const Index = ({
   isLoadingWorkExperiences,
   isLoadingCompetitiveness
 }) => {
+  const mode = useSelector((state) => state.portfolio.mode)
   useEffect(() => {
     const fetchDataSequentially = async () => {
       await fetchUserStory()
@@ -102,7 +103,11 @@ const Index = ({
     }
   }, [sharingSettings])
   return (
-    <div className='portfolio-container'>
+    <div
+      className={`portfolio-container ${
+        mode === 'edit' ? 'edit-mode' : 'preview-mode'
+      }`}
+    >
       {!areLoadingSharingSettings ? (
         <PortfolioActions
           actions={[

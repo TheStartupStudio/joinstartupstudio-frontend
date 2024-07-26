@@ -168,6 +168,31 @@ const UserStory = (props) => {
     setState({ ...state, imageFile: null })
   }
 
+  const isValidContent = (content) => {
+    if (content === null || content === undefined) {
+      return false
+    }
+
+    const trimmedContent = content.trim()
+    const htmlTagPattern = /<[^>]*>/g
+    const textOnlyContent = trimmedContent.replace(htmlTagPattern, '').trim()
+    return textOnlyContent !== ''
+  }
+
+  const displayContent = (content, clickEditText, noThingAddedText) => {
+    if (mode === 'edit' && !state?.isEditSection && !isValidContent(content)) {
+      return clickEditText ?? noThingAddedText
+    } else if (mode === 'edit' && !state?.isEditSection) {
+      return isValidContent(content)
+        ? content
+        : noThingAddedText ?? 'Nothing has been added yet.'
+    } else if (mode === 'preview') {
+      return isValidContent(content)
+        ? content
+        : noThingAddedText ?? 'Nothing has been added yet.'
+    }
+  }
+
   return (
     <>
       {state.isEditSection && mode === 'edit' ? (
@@ -258,6 +283,9 @@ const UserStory = (props) => {
                     onChange={(value) =>
                       handleInputChange('valueProposition', value)
                     }
+                    placeholder={
+                      'Your statement of value consisting of your passions/interests, skills, and outcomes.'
+                    }
                   />
                 </div>
               </div>
@@ -272,6 +300,7 @@ const UserStory = (props) => {
                 className={'portfolio-quill'}
                 value={state.story || ''}
                 onChange={(value) => handleInputChange('story', value)}
+                placeholder={'Your answers to the three program questions.'}
               />
             </div>
           </div>
@@ -290,10 +319,16 @@ const UserStory = (props) => {
               <div className={'d-flex flex-column h-100'}>
                 <UserInfo userInfo={state} user={props.user} />
 
-                <div className={'mt-auto '}>
+                <div className={' mt-3'}>
                   <PortfolioInfoBox
                     title={'My Value Proposition'}
-                    content={state.valueProposition}
+                    content={displayContent(
+                      state.valueProposition,
+                      null,
+                      'No value proposition added yet! Click the edit button to add your value proposition.'
+                    )}
+                    contentClasses={'mt-2'}
+                    height={150}
                   />
                 </div>
               </div>
@@ -301,7 +336,16 @@ const UserStory = (props) => {
           </div>
           <div className={'row'}>
             <div className={'mt-3 '}>
-              <PortfolioInfoBox title={'My story'} content={state.story} />
+              <PortfolioInfoBox
+                title={'My story'}
+                content={displayContent(
+                  state.story,
+                  null,
+                  'You haven’t added your story yet! Click the edit button to add your story.'
+                )}
+                contentClasses={'mt-2'}
+                height={150}
+              />
             </div>
           </div>
         </>

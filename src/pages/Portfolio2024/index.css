@@ -58,13 +58,18 @@
 
 
 .portfolio-container {
-    /*background: #E4E9F4 0% 0% no-repeat padding-box;*/
     background: #F8F7F7 0% 0% no-repeat padding-box;
     opacity: 1;
     padding: 75px 60px;
     position:relative;
 }
 
+.portfolio-container.edit-mode {
+    background: #F8F7F7 0% 0% no-repeat padding-box;
+}
+.portfolio-container.preview-mode {
+    background: #E4E9F4 0% 0% no-repeat padding-box;
+}
 .portfolio-actions {
     position:absolute;
     top:0;
@@ -989,10 +994,16 @@
     font: normal normal 300 15px/19px Montserrat;
     letter-spacing: 0px;
     color: #000000;
-    word-break: break-all !important;
-
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
+.my-relationships {
+    background: #FFFFFF 0% 0% no-repeat padding-box !important;
+    box-shadow: 0px 3px 6px #00000029 !important;
+    border-radius: 36px  !important;
+}
 
 
 

@@ -59,7 +59,10 @@ function MyFailures(props) {
           </React.Fragment>
         ))
       ) : (
-        <NoDataDisplay src={failureImage} />
+        <NoDataDisplay
+          src={failureImage}
+          text={'You don’t have any failures yet! Click the button to add one.'}
+        />
       )}
       {isEditSection && (
         <AddEntryButton

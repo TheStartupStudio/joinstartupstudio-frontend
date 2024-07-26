@@ -43,7 +43,13 @@ function MyMentors(props) {
             )
           })
         ) : (
-          <NoDataDisplay src={mentorsImage} classNames={'mt-5'} />
+          <NoDataDisplay
+            src={mentorsImage}
+            classNames={'mt-5'}
+            text={
+              'You don’t have any mentors yet! Click the button to add one.'
+            }
+          />
         )}
         <div className={'col-md-4'}>
           {isEditSection && (

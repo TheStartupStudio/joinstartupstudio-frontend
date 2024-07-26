@@ -58,13 +58,17 @@ function MyRelationships(props) {
   const isValidContent = (content) =>
     content !== null && content !== undefined && content.trim() !== ''
 
-  const displayContent = (content) => {
+  const displayContent = (content, clickEditText, noThingAddedText) => {
     if (mode === 'edit' && !isEditSection && !isValidContent(content)) {
-      return 'Click the edit button to add team role.'
+      return clickEditText
     } else if (mode === 'edit' && !isEditSection) {
-      return isValidContent(content) ? content : 'Nothing has been added yet.'
+      return isValidContent(content)
+        ? content
+        : noThingAddedText ?? 'Nothing has been added yet.'
     } else if (mode === 'preview') {
-      return isValidContent(content) ? content : 'Nothing has been added yet.'
+      return isValidContent(content)
+        ? content
+        : noThingAddedText ?? 'Nothing has been added yet.'
     }
   }
 
@@ -74,6 +78,7 @@ function MyRelationships(props) {
         <div className={'row'}>
           <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
             <LabeledInput
+              containerClassNames={'my-relationships'}
               title={'Team role'}
               titleClassNames='text-center py-3 text-uppercase'
               titleHeight={70}
@@ -87,6 +92,7 @@ function MyRelationships(props) {
           </div>
           <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
             <LabeledInput
+              containerClassNames={'my-relationships'}
               title={'Collaboration style'}
               titleClassNames='text-center py-3 text-uppercase'
               titleHeight={70}
@@ -100,6 +106,7 @@ function MyRelationships(props) {
           </div>
           <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
             <LabeledInput
+              containerClassNames={'my-relationships'}
               title={'Leadership philosophy'}
               titleClassNames='text-center py-3 text-uppercase'
               titleHeight={70}
@@ -122,7 +129,10 @@ function MyRelationships(props) {
                 inputHeight={120}
                 title={'Team role:'}
                 titleClasses={'text-center mt-3'}
-                content={displayContent(teamRole)}
+                content={displayContent(
+                  teamRole,
+                  'Click the edit button to add team role.'
+                )}
                 contentClasses={'text-center'}
               />
             </div>
@@ -134,7 +144,10 @@ function MyRelationships(props) {
                 inputHeight={120}
                 title={'Collaboration style:'}
                 titleClasses={'text-center mt-3'}
-                content={displayContent(collaborationStyle)}
+                content={displayContent(
+                  collaborationStyle,
+                  'Click the edit button to add a collaboration style'
+                )}
                 contentClasses={'text-center'}
               />
             </div>
@@ -146,7 +159,10 @@ function MyRelationships(props) {
                 inputHeight={120}
                 title={'Leadership philosophy:'}
                 titleClasses={'text-center mt-3'}
-                content={displayContent(leadershipPhilosophy)}
+                content={displayContent(
+                  leadershipPhilosophy,
+                  'Click the edit button to add a leadership philosophy'
+                )}
                 contentClasses={'text-center'}
               />
             </div>
