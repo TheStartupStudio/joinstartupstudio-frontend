@@ -7,17 +7,15 @@ import Project from './Project'
 import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
 import projectImage from '../../../../assets/images/HS-Portfolio-Icons/project.png'
 import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
+import SectionActions from '../../Components/Actions/SectionActions'
 
 const WhatCanIDo = ({ fetchProjects, myProjects }) => {
   const [projects, setProjects] = useState([])
-  console.log('projects', projects)
+
   useEffect(() => {
     if (myProjects?.data) {
       setProjects(myProjects?.data)
     }
-    // else {
-    //   setProjects(initialProjects)
-    // }
   }, [myProjects?.data])
   const mode = useSelector((state) => state.portfolio.mode)
   const [showAddProjectModal, setShowAddProjectModal] = useState(false)
@@ -33,10 +31,17 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
     const filteredProjects = projects?.filter(
       (project) => project.id !== projectId
     )
-    debugger
     setProjects(filteredProjects)
   }
 
+  const emptyDataActions = [
+    {
+      type: 'add',
+      action: () => handleShowAddProjectModal(),
+      isDisplayed: true
+      // isDisplayed: mode === 'edit' && isEditSection === false
+    }
+  ]
   return (
     <div className={'position-relative'}>
       {projects?.length > 0 ? (
@@ -57,7 +62,7 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
           </React.Fragment>
         ))
       ) : (
-        <PortfolioDataContainer title={'Project'} height={200}>
+        <PortfolioDataContainer title={'Project'} height={350}>
           <NoDataDisplay
             src={projectImage}
             classNames={'mt-1'}
@@ -65,9 +70,10 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
               'You don’t have any projects yet! Click the button to add one.'
             }
           />
+          <SectionActions actions={emptyDataActions} />
         </PortfolioDataContainer>
       )}
-      {mode === 'edit' && (
+      {projects?.length > 0 && mode === 'edit' && (
         <AddEntryButton
           title={`Add new 'My Projects' section`}
           onClick={handleShowAddProjectModal}

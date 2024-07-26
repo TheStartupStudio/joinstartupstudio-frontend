@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PortfolioModalWrapper from '../../Components/Modals/PortfolioModalWrapper'
 import EditProjectSection from './EditProjectSection'
 import axiosInstance from '../../../../utils/AxiosInstance'
@@ -30,6 +30,7 @@ function ProjectModal(props) {
       action: () => props.onHide()
     }
   ]
+
   const initialProject = [
     {
       showSection: true,

@@ -34,9 +34,7 @@ function Project(props) {
   const actions = [
     {
       type: 'edit',
-      // action: () => setIsEditSection(true),
       action: () => handleShowAddProjectModal(),
-      // handleShowAddProjectModal(),
       isDisplayed: mode === 'edit' && isEditSection === false
     },
     {
