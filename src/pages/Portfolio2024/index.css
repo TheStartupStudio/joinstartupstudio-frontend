@@ -827,7 +827,7 @@
     padding: 10px 0
 }
 .portfolio-data-container {
-    background: transparent linear-gradient(58deg, #E4E9F4 0%, #FFFFFF 100%) 0% 0% no-repeat padding-box;
+    background: transparent linear-gradient(66deg, #E4E9F4 0%, #FFFFFF 100%) 0% 0% no-repeat padding-box;
     box-shadow: 0px 3px 14px #00000029;
     border-radius: 36px;
     opacity: 1;
@@ -970,7 +970,7 @@
 
 .portfolio-info-title {
     text-align: left;
-    font: normal normal 600 15px/17px Montserrat;
+    font: normal normal 600 15px/19px Montserrat;
     letter-spacing: 0px;
     color: #000000;
     text-transform: uppercase;
@@ -986,7 +986,7 @@
 
 .portfolio-info-content {
     text-align: left;
-    font: normal normal 300 14px/19px Montserrat;
+    font: normal normal 300 15px/19px Montserrat;
     letter-spacing: 0px;
     color: #000000;
     word-break: break-all !important;
@@ -1247,266 +1247,42 @@
     letter-spacing: 0px;
     color: #766C6EFD;
 }
-/*/////////////////////////////////////////////*/
-/*/////////////////////////////////////////////*/
-/*/////////////////////////////////////////////*/
-/*/////////////////////////////////////////////*/
-/*/////////////////////////////////////////////*/
-/*/////////////////////////////////////////////*/
 
-/*//////////////////////*/
-.edit-portfolio-container.hs-portfolio{
-    width: 100% !important;
-    /*background: #E4E9F4 0% 0% no-repeat padding-box;*/
-    position:relative
-}
-
-
-
-.subSection-title {
-    font: normal normal 600 15px/19px Montserrat;
-    letter-spacing: 0.6px;
-    color: #000000;
-    text-transform: uppercase;
-    padding: 15px 0;
-    margin-left: 10px
-}
-/*// Change Portfolio View //*/
-.hs-section-button {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    position:absolute;
-    top:0;
-    right: 0;
-    background:#fff;
-    box-shadow: 0px 3px 10px #00000029;
-    padding: 10px;
-    border-bottom-left-radius: 20px;
-    cursor:pointer;
-    z-index: 3
-}
-
-.hs-section-button .icon{
-    width: 17px;
-    height: 17px;
-}
-
-.hs-section-button.start-bottom {
-    bottom:0 !important;
-    left: 0 !important;
-    top:auto;
-    right: auto;
-}
-.hs-section-button.end-top {
-    border-radius: 0 20px 0 0 !important;
-}
-/*// Portfolio Header //*/
-
-.hs-portfolio .welcome-to {
-    font: normal normal 600 16px/24px Montserrat;
-    letter-spacing: 0px;
-    color: #000000;
-    text-transform: uppercase;
-    text-align: center
-}
-
-.hs-portfolio .powered-by {
-    font: normal normal 400 16px Montserrat;
-    letter-spacing: 0px;
-    color: #000000;
-    text-transform: uppercase;
-}
-
-.hs-portfolio .lts-logo-vertical {
-    width: 100px;
-    height:100px;
-    object-fit:contain;
-}
-
-.hs-portfolio .my-portfolio {
-    font: normal normal 500 56px Montserrat;
-    letter-spacing: 0px;
-    color: #000000;
-    text-transform: uppercase;
-
-}
-
-.hs-portfolio .my-portfolio_description {
-    text-align: left;
-    font: normal normal 500 14px/19px Montserrat;
-    letter-spacing: 0px;
-    color: #000000;
-    padding-inline: 20px;
-    margin: 30px 0
-}
-
-.change-portfolio-view {
+.no-data-container {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100%;
+    /*margin-bottom: 45px;*/
+}
+
+.centered-image {
+    object-fit: contain;
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.no-data-text {
     position: absolute;
-    top: 0;
-    right: 0;
-    background: #fff;
-    box-shadow: 0px 3px 10px #00000029;
-    padding: 10px;
-    border-bottom-left-radius: 20px;
-    cursor: pointer;
-}
-
-/*////*/
-
-.wrapper-box {
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 3px 10px #00000029;
-    /*border: 1px solid #BBBDBF;*/
-    border-radius: 25px;
-    min-height: 300px !important;
-}
-
-.wrapper-header {
-    border-bottom: 1px solid #BBBDBF;
-    display:flex;
-    align-items: center;
-}
-
-.wrapper-header > * {
-    padding: 25px
-}
-
-.wrapper-icon-box {
-    padding-right: 0
-}
-
-.hs-icons {
-    margin-inline: 100px;
-    margin-bottom: 30px
-}
-.hs-icons .wrapper-icon-box {
-    padding-right: 0;
-    cursor: pointer
-}
-
-
-
-@media (max-width: 700px) {
-    .hs-icons {
-        margin-inline: 20px;
-    }
-
-    .horizontal-separator {
-        margin-inline: 20px;
-    }
-}
-
-
-@media (max-width: 400px) {
-    .hs-icons {
-        margin-inline: 10px;
-    }
-
-    .horizontal-separator {
-        margin-inline: 10px;
-    }
-}
-
-.wrapper-icon {
-    background: transparent linear-gradient(143deg, #F2359D 0%, #51C7DF 100%) 0% 0% no-repeat padding-box;
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.wrapper-icon.active{
-    background: #ACE7EC 0% 0% no-repeat padding-box;
-}
-
-/*.wrapper-icon .who-am-i-icon-white {*/
-/*    background: url('../../../assets/images/HS-Sidebar-Icons/Who (WH)-1200x.png') no-repeat;*/
-/*    padding-left: 0px;*/
-/*    background-size: 26px 26px;*/
-/*    width: 26px;*/
-/*    height: 26px;*/
-/*}*/
-
-.wrapper-title {
-    font: normal normal 800 23px/20px Montserrat;
-    letter-spacing: 0.92px;
-    color: #231F20;
-    text-transform: uppercase;
-}
-
-.wrapper-description {
-    font: normal normal normal 15px/20px Montserrat;
-    letter-spacing: 0.6px;
-    color: #231F20;
-    margin-top: 4px
-}
-
-.hs-portfolio-switchers {
-    gap: 20px;
-}
-
-.switcher-boxes {
-    display: flex;
-}
-
-@media screen and (max-width: 600px) {
-    .switcher-boxes {
-        flex-direction: column !important;
-    }
-}
-
-.switcher-box {
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 3px 6px #00000012;
-    border-radius: 4px;
-    position:relative;
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    cursor: pointer;
-}
-
-.switcher-box.active {
-    background: #51C7DF 0% 0% no-repeat padding-box;
-}
-
-.switcher-box .wrapper-icon {
-    position: absolute;
-    top: 0;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%)
-}
-
-.switcher-title {
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
     text-align: center;
-    font: normal normal 600 20px/24px Montserrat;
-    letter-spacing: 0px;
+    font: normal normal normal 22px/27px Montserrat;
+    letter-spacing: 0;
     color: #231F20;
-    text-transform: uppercase;
 }
 
-/*.wrapper-body > * {*/
-/*    padding: 25px*/
-/*}*/
-
-/*// MODAL //*/
-.edit-portfolio-data .modal-content{
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 3px 6px #00000029;
-    border-radius: 6px !important;
-}
-
-.edit-portfolio-data .modal-header {
-    padding-bottom: 10px !important;
-    border-bottom: 1px solid #BBBDBF;
-}
-
+/*/////////////////////////////////////////////*/
+/*/////////////////////////////////////////////*/
+/*/////////////////////////////////////////////*/
+/*/////////////////////////////////////////////*/
+/*/////////////////////////////////////////////*/
+/*/////////////////////////////////////////////*/

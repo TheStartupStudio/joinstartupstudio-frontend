@@ -15,7 +15,8 @@ const LabeledInput = ({
   labelAlign,
   titleHeight,
   align,
-  readOnly
+  readOnly,
+  p
 }) => {
   return (
     <div
@@ -52,8 +53,9 @@ const LabeledInput = ({
             }}
             className='w-100 rounded-0 p-2'
             onChange={(e) => onChange?.(e.target.value, 'mentorName')}
-            value={value ?? ''}
+            value={value?.trim() !== '' ? value : ''}
             readOnly={readOnly}
+            placeholder={placeholder}
           />
         ) : (
           <input
@@ -65,7 +67,7 @@ const LabeledInput = ({
             }}
             className=' w-100 rounded-0 py-1 px-2'
             onChange={(e) => onChange?.(e.target.value, 'mentorName')}
-            value={value ?? ''}
+            value={value?.trim() !== '' ? value : ''}
             placeholder={placeholder}
             readOnly={readOnly}
           />

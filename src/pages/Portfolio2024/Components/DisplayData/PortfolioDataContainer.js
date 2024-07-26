@@ -7,7 +7,7 @@ function PortfolioDataContainer(props) {
   return (
     <div
       className={'portfolio-data-container'}
-      style={{ background: props.background }}
+      style={{ background: props.background, minHeight: props.height }}
     >
       {props.title && (
         <div

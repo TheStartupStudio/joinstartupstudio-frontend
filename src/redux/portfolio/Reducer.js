@@ -508,7 +508,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myRelationships: {
             ...state.whoSection.myRelationships,
-            isLoading: true
+            isSaving: true
           }
         }
       }
@@ -520,7 +520,7 @@ const portfolioReducer = (state = initialState, action) => {
           myRelationships: {
             ...state.whoSection.myRelationships,
             data: payload.data,
-            isLoading: false
+            isSaving: false
           }
         }
       }

@@ -8,7 +8,8 @@ import {
 import SectionActions from '../../Components/Actions/SectionActions'
 import AddEntryButton from '../../Components/Actions/AddEntryButton'
 import MyFailureModal from '../../Components/Modals/MyFailureModal'
-
+import failureImage from '../../../../assets/images/HS-Portfolio-Icons/failure.png'
+import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
 function MyFailures(props) {
   const dispatch = useDispatch()
   const mode = useSelector((state) => state.portfolio.mode)
@@ -50,14 +51,16 @@ function MyFailures(props) {
   )
 
   return (
-    <div className={'d-flex flex-column gap-4'}>
-      {myFailures?.map((myFailure, index) => {
-        return (
-          <React.Fragment key={index}>
+    <div className={'d-flex flex-column gap-4 h-100'}>
+      {myFailures?.length > 0 ? (
+        myFailures?.map((myFailure, index) => (
+          <React.Fragment key={myFailure?.id}>
             <MyFailure data={myFailure} isEditSection={isEditSection} />
           </React.Fragment>
-        )
-      })}
+        ))
+      ) : (
+        <NoDataDisplay src={failureImage} />
+      )}
       {isEditSection && (
         <AddEntryButton
           title={`Add new "My Failures" section`}

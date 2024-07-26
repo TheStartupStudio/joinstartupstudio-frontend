@@ -3,6 +3,8 @@ import MyMentor from './MyMentor'
 import { useSelector } from 'react-redux'
 import SectionActions from '../../Components/Actions/SectionActions'
 import AddMyMentor from '../../Components/Actions/AddMyMentor'
+import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
+import mentorsImage from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
 
 function MyMentors(props) {
   const [myMentors, setMyMentors] = useState([])
@@ -30,15 +32,19 @@ function MyMentors(props) {
   return (
     <div className={'container'}>
       <div className={'row '}>
-        {myMentors?.map((mentor, index) => {
-          return (
-            <React.Fragment key={index}>
-              <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
-                <MyMentor data={mentor} isEditSection={isEditSection} />
-              </div>
-            </React.Fragment>
-          )
-        })}
+        {myMentors?.length > 0 ? (
+          myMentors?.map((mentor, index) => {
+            return (
+              <React.Fragment key={mentor?.id}>
+                <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
+                  <MyMentor data={mentor} isEditSection={isEditSection} />
+                </div>
+              </React.Fragment>
+            )
+          })
+        ) : (
+          <NoDataDisplay src={mentorsImage} classNames={'mt-5'} />
+        )}
         <div className={'col-md-4'}>
           {isEditSection && (
             <AddMyMentor
