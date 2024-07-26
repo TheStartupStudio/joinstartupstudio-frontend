@@ -4,10 +4,13 @@ import ProjectModal from './ProjectModal'
 import { getProjects, getSkills } from '../../../../redux/portfolio/Actions'
 import AddEntryButton from '../../Components/Actions/AddEntryButton'
 import Project from './Project'
+import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
+import projectImage from '../../../../assets/images/HS-Portfolio-Icons/project.png'
+import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
 
 const WhatCanIDo = ({ fetchProjects, myProjects }) => {
   const [projects, setProjects] = useState([])
-
+  console.log('projects', projects)
   useEffect(() => {
     if (myProjects?.data) {
       setProjects(myProjects?.data)
@@ -30,21 +33,40 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
     const filteredProjects = projects?.filter(
       (project) => project.id !== projectId
     )
+    debugger
     setProjects(filteredProjects)
   }
 
   return (
     <div className={'position-relative'}>
-      {projects?.map((project, index) => (
-        <React.Fragment key={project.id}>
-          <Project
-            id={project.id}
-            project={project}
-            index={index}
-            onDeleteProject={onDeleteProject}
+      {projects?.length > 0 ? (
+        projects?.map((project, index) => (
+          <React.Fragment key={project.id}>
+            <Project
+              id={project.id}
+              project={project}
+              index={index}
+              onDeleteProject={onDeleteProject}
+              onAddProject={(project) => {
+                const nonSavedProject = projects.find((project) => !project.id)
+                if (nonSavedProject) {
+                  setProjects([project])
+                }
+              }}
+            />
+          </React.Fragment>
+        ))
+      ) : (
+        <PortfolioDataContainer title={'Project'} height={200}>
+          <NoDataDisplay
+            src={projectImage}
+            classNames={'mt-1'}
+            text={
+              'You don’t have any projects yet! Click the button to add one.'
+            }
           />
-        </React.Fragment>
-      ))}
+        </PortfolioDataContainer>
+      )}
       {mode === 'edit' && (
         <AddEntryButton
           title={`Add new 'My Projects' section`}

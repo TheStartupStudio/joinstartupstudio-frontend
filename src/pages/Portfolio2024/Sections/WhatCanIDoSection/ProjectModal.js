@@ -103,10 +103,7 @@ function ProjectModal(props) {
         if (props.onAddProject) {
           props.onAddProject(res.data.project)
         }
-        // else {
-        //   setProject(res.data.project.children)
-        //   setIsEdit(res.data.project.id)
-        // }
+
         props.onHide()
         toast.success('Project updated successfully!')
       })
