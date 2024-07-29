@@ -27,21 +27,21 @@ const DeleteArchiveModal = (props) => {
     <Modal
       show={props.show}
       onHide={props.onHide}
-      backdrop="static"
+      backdrop='static'
       keyboard={false}
-      id="archive-modal"
-      className="archive-modal"
+      id='archive-modal'
+      className='archive-modal'
     >
-      <Modal.Header className="connection-modal-header general-modal-header mx-4">
+      <Modal.Header className='connection-modal-header general-modal-header mx-4'>
         <button
-          type="button"
-          className="btn-close me-3 mt-3"
-          aria-label="Close"
+          type='button'
+          className='btn-close me-3 mt-3'
+          aria-label='Close'
           onClick={props.onHide}
         ></button>
       </Modal.Header>
       <Modal.Body>
-        <div className="mt-4 mb-5 blocked-user-modal px-md-3 text-center">
+        <div className='mt-4 mb-5 blocked-user-modal px-md-3 text-center'>
           <div
             className={'d-flex justify-content-center align-items-center'}
             style={{

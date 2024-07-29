@@ -40,7 +40,7 @@ const SidebarItem = ({
       </a>
       {isDropdown && (
         <div
-          className='accordion accordion-flush'
+          className='accordion accordion-flush dropdown-accordion-border'
           id='accordionFlushExample'
         ></div>
       )}

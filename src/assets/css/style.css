@@ -31,6 +31,17 @@ h6 {
   color: #333d3d;
 }
 
+
+
+td {
+  border: 1px #51c7df solid;
+  margin: 2px;
+}
+
+td p {
+  padding: 2px;
+}
+
 a {
   text-decoration: none !important;
   color: #01c5d1;
@@ -142,12 +153,12 @@ nav#sidebar {
 
 #sidebar ul li a:hover,
 #sidebar ul li .active {
-  background: #e3e8f3;
+  background: #E4E9F4;
 
 }
 
 a.sidenav.active {
-  background: #e3e8f3;
+  background: #E4E9F4;
 }
 
 .dashboard {
@@ -253,7 +264,7 @@ button#sidebarCollapse {
 .dropdown-item.active,
 .dropdown-item:active,
 .dropdown-item:hover {
-  background: #e3e8f3;
+  background: #E4E9F4;
   color: #000 !important;
 }
 
@@ -279,7 +290,17 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light {
   background: transparent !important;
   border-bottom: 1px solid #ebecef;
   padding: 8px 0px;
+  justify-content: space-between;
+  gap: 3px;
 }
+
+/* .navbar-expand-lg {
+  background-color: #007bff !important;
+} */
+
+/* .navbar-expand-lg ul {
+  background-color: #007bff !important;
+} */
 
 .navbar-nav .dropdown-li .dropdown-menu {
   margin-top: 8px;
@@ -291,7 +312,7 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light {
 }
 
 .navbar-nav .dropdown-li .dropdown-menu a:hover {
-  background: #e3e8f3;
+  background: #E4E9F4;
 }
 
 .navbar-icon {
@@ -399,7 +420,7 @@ div.accordionmenu-main ul li a {
 
 
 .dropdown-item:hover {
-  background: #e3e8f3;
+  background: #E4E9F4;
 }
 
 .accordionmenu-main .card-header {
@@ -505,11 +526,11 @@ li.nav-item.dropdown-li:after {
 }
 
 a.sidenav.active {
-  background: #e3e8f3;
+  background: #E4E9F4;
 }
 
 .icon-menu:hover {
-  background: #e3e8f3;
+  background: #E4E9F4;
   box-shadow: 0px 0px 0px 0px #01c5d1;
 }
 
@@ -2063,7 +2084,7 @@ link a:hover {
 }
 
 .my-notes-order select option:hover {
-  background: #e3e8f3;
+  background: #E4E9F4;
   border: 0px solid #01c5d1 !important;
   color: #000;
 }
@@ -2158,7 +2179,7 @@ ul.content-list-of-month h5 {
 }
 
 ul.content-list-of-month li:hover .journey-content-time::after {
-  background: #e3e8f3;
+  background: #E4E9F4;
 }
 
 ul.content-list-of-month li:hover a h5,
@@ -3180,7 +3201,7 @@ white-space: nowrap; */
 }
 
 .nav-item a.active {
-  background: #e3e8f3;
+  background: transparent;
   box-shadow: 0 0 0 0 #01c5d1 !important;
 }
 
@@ -5016,15 +5037,24 @@ ul.sidebar-menu-item .collapse a:hover {
 }
 
 /*/////////////////////// NEW JOURNALS VIEW //////////////////////////*/
+.accordion.accordion-border.expanded {
+  background-color: #fff;
+}
+
+
 
 .accordion {
-  /*border: 1px solid #ccc;*/
   margin-bottom: 10px;
+  border: 1px solid #ccc;
   line-height: 15px;
   letter-spacing: 0.4px;
   color: #231f20;
   font-weight: 500;
   /* background-color:#fff */
+}
+
+.dropdown-accordion-border {
+  border: none !important;
 }
 
 .accordion-borde {

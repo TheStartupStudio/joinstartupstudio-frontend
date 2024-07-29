@@ -55,6 +55,7 @@ const EnLangs = {
   'login.register': 'Don’t have an account?',
   'login.register_link': 'Register',
   'login.next': 'Next',
+  'login.forgotPasswordEmail': 'le.name@email.com',
 
   //LTS Secure
   'lts_secure.partnership_for': 'A partnership for',

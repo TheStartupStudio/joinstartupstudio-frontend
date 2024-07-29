@@ -460,7 +460,7 @@ function MyTrainingContent(props) {
                       {openAccordion === 'pedagogy' && (
                         <>
                           {trainingIndex === 0 && <WelcomeToTraining />}
-                          <div className="accordion-content">
+                          <div className='accordion-content'>
                             <PedagogyBoxes
                               containsTitle={false}
                               boxes={journal?.pedagogyOptions}
@@ -624,7 +624,7 @@ function MyTrainingContent(props) {
                             resume.
                           </p>
                           <a
-                            className="btn btn-info text-light default-btn"
+                            className='btn btn-info text-light default-btn'
                             href={`/preview-portfolio`}
                           >
                             MY PORTFOLIO
@@ -674,7 +674,7 @@ function MyTrainingContent(props) {
                           </p>
                           <a
                             href={'/iamr-certification-system'}
-                            className="default-btn"
+                            className='default-btn'
                           >
                             MY CERTIFICATION
                           </a>
@@ -688,9 +688,9 @@ function MyTrainingContent(props) {
           )}
         </div>
       </>
-      <div className="row">
-        <div className="col-12">
-          <div className="journal-entries__back">
+      <div className='row'>
+        <div className='col-12'>
+          <div className='journal-entries__back'>
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
         </div>

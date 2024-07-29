@@ -5,24 +5,24 @@
 }
 
 .login-logo img {
-  width: 250px;
+  width: 15rem;
 }
-
 
 
 .login-title {
   margin-top: 20px;
-  font-weight: 100;
+  margin-bottom: 0;
+  font-weight: 100 !important;
   font-size: 4.3rem;
   color: gray;
 }
 
 .login-left-content {
-  margin-bottom: 50px;
+  font-weight: 100;
+  margin: 2rem 0 1rem 6rem;
   display: flex;
   flex-direction: column;
   text-align: start;
-
 }
 
 .login-left-content p {
@@ -38,11 +38,13 @@
   color: #a7ca42;
 }
 
-.social-media-item {
-  margin-right: 20px;
+.social-media-items * {
+  margin-right: 4px;
   color: black;
-  font-size: 20px;
+  font-size: 30px;
 }
+
+
 
 .login-create-account {
   text-align: right;

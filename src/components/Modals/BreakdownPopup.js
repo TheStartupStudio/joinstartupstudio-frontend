@@ -10,16 +10,16 @@ const BreakdownPopup = (props) => {
       <Modal
         show={props.show}
         onHide={props.onHide}
-        backdrop="static"
+        backdrop='static'
         keyboard={false}
-        id="subscription-modal"
-        className="breakdown_popup-modal"
+        id='subscription-modal'
+        className='breakdown_popup-modal'
       >
         <Modal.Header>
           <button
-            type="button"
-            className="btn-close mb-1 close-briefing-modal"
-            aria-label="Close"
+            type='button'
+            className='btn-close mb-1 close-briefing-modal'
+            aria-label='Close'
             onClick={props.onHide}
           />
         </Modal.Header>
@@ -32,16 +32,20 @@ const BreakdownPopup = (props) => {
               __html: props.popupContent
             }}
           />
-          <div className={'d-flex justify-content-center mt-3'}>
+          <div
+            className={'d-flex justify-content-center mt-3'}
+            style={{ margin: '0' }}
+          >
             <button
               style={{
                 backgroundColor: '#51c7df',
                 color: '#fff',
                 fontSize: 16,
                 font: 'normal normal 600 18px/16px Montserrat',
-                letterSpacing: '0.8px'
+                letterSpacing: '0.8px',
+                margin: '0'
               }}
-              className="px-5 py-3 border-0 color transform my-1"
+              className='px-5 py-3 border-0 color transform my-1'
               onClick={() => props.onHide()}
             >
               Got It!

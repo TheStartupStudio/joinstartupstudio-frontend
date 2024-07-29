@@ -95,7 +95,10 @@ const ForgotPassword = () => {
               <p className='mb-3 mt-4 public-page-text4'>
                 <IntlMessages id='forgot_password.input_your_email' />
               </p>
-              <FormattedMessage id='login.email' defaultMessage='login.email'>
+              <FormattedMessage
+                id='login.forgotPasswordEmail'
+                defaultMessage='login.forgotPasswordEmail'
+              >
                 {(placeholder) => (
                   <input
                     className='mb-2 pl-5'

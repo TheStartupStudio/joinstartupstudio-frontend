@@ -1,7 +1,6 @@
 @media (max-width: 991.9px) {
   .dropdown-menushow1 {
-    top: 3rem;
-    right: .5rem;
+    top: 20px;
   }
 
   .edit-account {
@@ -143,8 +142,8 @@
 @media (min-width: 992px) and (max-width: 1269px) {
 
   .dropdown-menushow1 {
-    top: 5rem;
-    right: .5rem;
+    top: 38px !important;
+    right: -3px !important;
   }
 
   .videos-track-icon {
@@ -523,9 +522,10 @@
     margin-top: 10px;
   }
 
+  /* 
   li.nav-item.dropdown-li:after {
     display: none;
-  }
+  } */
 
   .sidebar-bottom img {
     width: 90%;
@@ -709,7 +709,7 @@
     width: max-content;
     margin-right: 0px !important;
     margin-left: -15px !important;
-    right: .5rem !important;
+    right: 10px !important;
   }
 }
 
@@ -760,8 +760,8 @@
 
   .dropdown-menushow1 {
     width: 15rem;
-    top: 4.8rem;
-    right: .5rem;
+    top: 3.7rem;
+    right: -10px;
   }
 
   li.nav-item.dropdown-li>div {
@@ -774,11 +774,7 @@
     display: none !important;
   }
 
-  .dropdown-menushow1 {
-    width: 15rem;
-    top: 5rem;
-    right: .5rem;
-  }
+
 
   .dropdown-menushow1 * {
     width: 95%;
@@ -1967,8 +1963,8 @@
   }
 
   .dropdown-menushow1 {
-    top: 3rem;
-    right: 0rem;
+    top: 2.5rem;
+    right: -10px;
   }
 
 
@@ -2366,8 +2362,8 @@
 
 @media (min-width: 1200px) {
   .dropdown-menushow1 {
-    top: 5rem;
-    right: 0;
+    top: 63px;
+    right: -10px;
   }
 
   .notes-nav .icon-menu {

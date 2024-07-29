@@ -91,9 +91,9 @@ const FullCalendarComponent = (props) => {
 
     return (
       <div className={'custom-popover'}>
-        <div className="d-flex g-2 w-100" style={{ margin: 0, padding: 0 }}>
+        <div className='d-flex g-2 w-100' style={{ margin: 0, padding: 0 }}>
           <ul
-            className="event-ul"
+            className='event-ul'
             style={{
               width: '100%',
               margin: 0,
@@ -102,7 +102,7 @@ const FullCalendarComponent = (props) => {
             }}
           >
             <li
-              className="event-li"
+              className='event-li'
               style={{
                 color: backgroundColor(),
                 listStyleType: 'square',
@@ -112,7 +112,7 @@ const FullCalendarComponent = (props) => {
               }}
             >
               <span
-                className="event-span"
+                className='event-span'
                 style={{
                   fontSize: '12.5px',
                   fontWeight: 400,
@@ -124,7 +124,7 @@ const FullCalendarComponent = (props) => {
                 {foundedEvent?.name}
               </span>
               <div
-                className="event-name"
+                className='event-name'
                 style={{
                   fontSize: '12px',
                   fontWeight: 500,
@@ -135,7 +135,7 @@ const FullCalendarComponent = (props) => {
                 {foundedEvent?.user?.name}
               </div>
               <div
-                className="event-time"
+                className='event-time'
                 style={{
                   fontSize: '10px',
                   color: '#231F20',
@@ -361,14 +361,7 @@ const FullCalendarComponent = (props) => {
                                              <div class="event-name" style="font-size:12px;font-weight:500; color:#231F20; font: normal normal normal Montserrat;">
                                         ${event?.user?.name}
                                         </div>
-                                          <div class="event-time" className={"ml-2"} style="font-size: 10px; color:#231F20; font-weight:normal">
-                                          ${convertToAMPM(
-                                            event?.startTime.slice(0, 5)
-                                          )} -
-                                          ${convertToAMPM(
-                                            event?.endTime.slice(0, 5)
-                                          )}
-                                        </div>
+                                     
                                           </li>
                                         
                                         
@@ -465,7 +458,7 @@ const FullCalendarComponent = (props) => {
       <FullCalendar
         dayCellClassNames={'fc-cell-custom '}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
+        initialView='dayGridMonth'
         editable={true}
         selectable={true}
         selectMirror={true}

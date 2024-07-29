@@ -14,7 +14,7 @@ const ExpectedOutcomes = (props) => {
           <div
             style={{
               minHeight: 260,
-              marginBottom: 10
+              marginBottom: 0
             }}
           >
             {props.data?.map((data, index) => {
@@ -29,7 +29,7 @@ const ExpectedOutcomes = (props) => {
                           padding: data.padding ?? 0,
                           objectFit: 'contain'
                         }}
-                        alt="url"
+                        alt='url'
                       />
                     </div>
                   }
@@ -39,7 +39,8 @@ const ExpectedOutcomes = (props) => {
                         style={{
                           fontFamily: 'Montserrat',
                           backgroundColor: '#fff',
-                          marginBottom: 20,
+                          // marginBottom: 20,
+
                           textAlign: 'start',
                           width: '100%',
                           padding: '0 20px'

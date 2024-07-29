@@ -173,7 +173,7 @@ function Profile(props) {
           <div className='profile-margin'>
             <h3>{user?.name}</h3>
             <p>{user?.profession}</p>
-            {user?.social_links?.linkedIn && (
+            {/* {user?.social_links?.linkedIn && (
               <a
                 href={
                   user.social_links.linkedIn.startsWith('https')
@@ -186,8 +186,8 @@ function Profile(props) {
               >
                 <FontAwesomeIcon icon={faLinkedinIn} />
               </a>
-            )}
-            {user?.social_links?.twitter && (
+            )} */}
+            {/* {user?.social_links?.twitter && (
               <a
                 href={
                   user.social_links.twitter.startsWith('https')
@@ -200,8 +200,8 @@ function Profile(props) {
               >
                 <FontAwesomeIcon icon={faTwitter} />
               </a>
-            )}
-            {user?.social_links?.instagram && (
+            )} */}
+            {/* {user?.social_links?.instagram && (
               <a
                 href={
                   user.social_links.instagram.startsWith('https')
@@ -214,8 +214,8 @@ function Profile(props) {
               >
                 <FontAwesomeIcon icon={faInstagram} />
               </a>
-            )}
-            {user?.social_links?.website && (
+            )} */}
+            {/* {user?.social_links?.website && (
               <a
                 href={
                   user.social_links.website.startsWith('https')
@@ -228,8 +228,8 @@ function Profile(props) {
               >
                 <FontAwesomeIcon icon={faGlobe} />
               </a>
-            )}
-            {user?.social_links?.facebook && (
+            )} */}
+            {/* {user?.social_links?.facebook && (
               <a
                 href={
                   user.social_links.facebook.startsWith('https')
@@ -242,7 +242,7 @@ function Profile(props) {
               >
                 <FontAwesomeIcon icon={faFacebookF} />
               </a>
-            )}
+            )} */}
             <div className='dashboard_lastLogin w-100'>
               <span className='me-1'>Last Login:</span>
               {lastLogin}
