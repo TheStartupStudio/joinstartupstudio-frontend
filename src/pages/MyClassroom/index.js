@@ -40,6 +40,7 @@ function MyClassroom() {
       .get(`/peerSharing/peers/${peerPage + 1}`)
       .then(({ data }) => {
         if (data) {
+          debugger
           setSharedPeers([...sharedPeers, ...data.rows])
           setPeerPage(peerPage + 1)
           setPeerCount(data.count)
@@ -59,7 +60,7 @@ function MyClassroom() {
   }
 
   useEffect(() => {
-    if (loggedUser.Role.id === 2) {
+    if (loggedUser.Role.id === 2 || loggedUser.Role.id === 3) {
       getInstructorPeers()
     } else {
       getPeers()
@@ -69,35 +70,35 @@ function MyClassroom() {
   return (
     <Container fluid>
       <Row>
-        <div className="col-12 col-xl-12 px-0">
-          <div className="account-page-padding page-border">
-            <div className="row ps-2">
-              <div className="col-md-6">
-                <h3 className="page-title mb-0">My Portfolios</h3>
-                <p className="page-description mb-0">
+        <div className='col-12 col-xl-12 px-0'>
+          <div className='account-page-padding page-border'>
+            <div className='row ps-2'>
+              <div className='col-md-6'>
+                <h3 className='page-title mb-0'>My Portfolios</h3>
+                <p className='page-description mb-0'>
                   View the portfolios of your students.
                 </p>
               </div>
             </div>
             {searchingUsers ? (
-              <div className="row mt-5 ps-2">
-                <h3 className="page-title text-capitalize">
+              <div className='row mt-5 ps-2'>
+                <h3 className='page-title text-capitalize'>
                   My search results
                 </h3>
 
-                <div className="container-fluid content-center">
-                  <div className="mb-5 row d-flex ps-2">
+                <div className='container-fluid content-center'>
+                  <div className='mb-5 row d-flex ps-2'>
                     {loading && (
-                      <h4 className="text-center mt-4">
-                        <IntlMessages id="general.loading" />
+                      <h4 className='text-center mt-4'>
+                        <IntlMessages id='general.loading' />
                       </h4>
                     )}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="row ps-2 mx-auto mt-5">
-                <div className="mb-md-5 mx-auto row mt-5 m-0 p-0">
+              <div className='row ps-2 mx-auto mt-5'>
+                <div className='mb-md-5 mx-auto row mt-5 m-0 p-0'>
                   <SharedPeers
                     peers={sharedPeers}
                     loadMore={getPeers}

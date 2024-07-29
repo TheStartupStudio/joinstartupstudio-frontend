@@ -195,17 +195,17 @@ const UserStory = (props) => {
 
   return (
     <>
-      {state.isEditSection && mode === 'edit' ? (
+      {state?.isEditSection && mode === 'edit' ? (
         <>
           <div className={'row'}>
             <div className={'col-md-6'}>
               <EditPortfolioSubmission
-                videoUrl={state.videoUrl}
+                videoUrl={state?.videoUrl}
                 onChangeVideoUrl={(videoUrl) =>
                   handleInputChange('videoUrl', videoUrl)
                 }
                 onChangeImageCrop={updateCroppedImage}
-                value={state.thumbnailUrl}
+                value={state?.thumbnailUrl}
                 title={'MY PERSONAL BRAND STORY'}
                 deleteImage={handleDeleteImage}
                 deleteImageFile={handleDeleteImageFile}
@@ -232,7 +232,7 @@ const UserStory = (props) => {
                   title={'Title'}
                   type={'text'}
                   align={'start'}
-                  value={state.userTitle}
+                  value={state?.userTitle}
                   onChange={(value) => handleInputChange('userTitle', value)}
                 />
                 <div>

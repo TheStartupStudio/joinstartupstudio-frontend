@@ -3,6 +3,7 @@ import UserSocialMedia from './UserSocialMedia'
 import UserImage from './UserImage'
 
 function UserInfo(props) {
+  console.log('props', props)
   return (
     <div className={'d-flex gap-3'}>
       <UserImage

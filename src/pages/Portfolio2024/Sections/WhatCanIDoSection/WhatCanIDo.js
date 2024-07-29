@@ -9,7 +9,7 @@ import projectImage from '../../../../assets/images/HS-Portfolio-Icons/project.p
 import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
 import SectionActions from '../../Components/Actions/SectionActions'
 
-const WhatCanIDo = ({ fetchProjects, myProjects }) => {
+const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
   const [projects, setProjects] = useState([])
   console.log('projects', projects)
   useEffect(() => {
@@ -24,7 +24,12 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
   const handleHideAddProjectModal = () => setShowAddProjectModal(false)
 
   useEffect(() => {
-    fetchProjects()
+    if (portfolioType === 'peer') {
+      setProjects(data)
+    }
+    if (portfolioType !== 'peer') {
+      fetchProjects()
+    }
   }, [])
 
   const onDeleteProject = (projectId) => {

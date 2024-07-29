@@ -8,6 +8,7 @@ import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoa
 
 function WhoAmI({ loadings: propsLoadings, data, user }) {
   const [loadings, setLoadings] = useState(null)
+  console.log('user', user)
 
   useEffect(() => {
     if (propsLoadings) {
