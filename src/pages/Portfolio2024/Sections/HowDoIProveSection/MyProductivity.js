@@ -16,6 +16,10 @@ import ImmersionCardModal from './ImmersionCardModal'
 import WorkExperienceCard from './WorkExperienceCard'
 import WorkExperienceCardModal from './WorkExperienceCardModal'
 import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
+import immersionImage from '../../../../assets/images/HS-Portfolio-Icons/immersion.png'
+import workExperienceImage from '../../../../assets/images/HS-Portfolio-Icons/workexperience.png'
+import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
+import educationImage from '../../../../assets/images/HS-Portfolio-Icons/education.png'
 
 function MyProductivity(props) {
   const {
@@ -58,12 +62,23 @@ function MyProductivity(props) {
     {
       type: 'edit',
       action: () => setIsEditImmersionSection(true),
-      isDisplayed: mode === 'edit' && isEditImmersionSection === false
+      isDisplayed:
+        mode === 'edit' &&
+        isEditImmersionSection === false &&
+        immersions?.length > 0
+    },
+    {
+      type: 'add',
+      action: () => handleShowImmersionModal(),
+      isDisplayed: mode === 'edit' && immersions?.length === 0
     },
     {
       type: 'save',
       action: () => setIsEditImmersionSection(false),
-      isDisplayed: mode === 'edit' && isEditImmersionSection === true
+      isDisplayed:
+        mode === 'edit' &&
+        isEditImmersionSection === true &&
+        immersions?.length > 0
     }
   ]
 
@@ -71,12 +86,23 @@ function MyProductivity(props) {
     {
       type: 'edit',
       action: () => setIsEditWorkExperienceSection(true),
-      isDisplayed: mode === 'edit' && isEditWorkExperienceSection === false
+      isDisplayed:
+        mode === 'edit' &&
+        isEditWorkExperienceSection === false &&
+        workExperiences?.length > 0
+    },
+    {
+      type: 'add',
+      action: () => handleShowWorkExperienceModal(),
+      isDisplayed: mode === 'edit' && workExperiences?.length === 0
     },
     {
       type: 'save',
       action: () => setIsEditWorkExperienceSection(false),
-      isDisplayed: mode === 'edit' && isEditWorkExperienceSection === true
+      isDisplayed:
+        mode === 'edit' &&
+        isEditWorkExperienceSection === true &&
+        workExperiences?.length > 0
     }
   ]
 
@@ -100,7 +126,8 @@ function MyProductivity(props) {
     modalTitle,
     onSave,
     ModalComponent,
-    isLoading
+    isLoading,
+    NoDataDisplay
   ) => {
     if (isLoading) {
       return <PortfolioSectionDataLoader />
@@ -108,17 +135,24 @@ function MyProductivity(props) {
 
     return (
       <PortfolioDataContainer
-        background={'#fff'}
+        background={
+          items?.length > 0
+            ? '#fff'
+            : 'transparent linear-gradient(231deg, #FFFFFF 0%, #E4E9F4 100%) 0% 0% no-repeat padding-box'
+        }
         title={title}
         titleAlign={'start'}
+        height={items?.length > 0 ? undefined : 440}
       >
-        {items?.map((item) => (
-          <React.Fragment key={item.id}>
-            <ItemComponent data={item} isEditSection={isEditSection} />
-          </React.Fragment>
-        ))}
+        {items?.length > 0
+          ? items?.map((item) => (
+              <React.Fragment key={item.id}>
+                <ItemComponent data={item} isEditSection={isEditSection} />
+              </React.Fragment>
+            ))
+          : NoDataDisplay}
         <SectionActions actions={sectionActions} />
-        {isEditSection && (
+        {isEditSection && items?.length > 0 && (
           <AddEntryButton
             title={`Add new ${title}`}
             onClick={handleShowModal}
@@ -149,7 +183,13 @@ function MyProductivity(props) {
         'ADD IMMERSION EXPERIENCE',
         onSaveImmersion,
         ImmersionCardModal,
-        loadingImmersions
+        loadingImmersions,
+        <NoDataDisplay
+          src={immersionImage}
+          text={
+            'You don’t have any immersion experiences yet! Click the button to add one.'
+          }
+        />
       )}
       <div className={'mt-5'}>
         {renderSection(
@@ -164,7 +204,13 @@ function MyProductivity(props) {
           'ADD WORK EXPERIENCE',
           onSaveWorkExperience,
           WorkExperienceCardModal,
-          loadingWorkExperiences
+          loadingWorkExperiences,
+          <NoDataDisplay
+            src={workExperienceImage}
+            text={
+              'You don’t have any work experience yet! Click the button to add one.'
+            }
+          />
         )}
       </div>
     </>

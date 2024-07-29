@@ -3,7 +3,9 @@ import MyFailure from './MyFailure'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   hideAddFailureModal,
-  showAddFailureModal
+  hideAddMentorModal,
+  showAddFailureModal,
+  showAddMentorModal
 } from '../../../../redux/portfolio/Actions'
 import SectionActions from '../../Components/Actions/SectionActions'
 import AddEntryButton from '../../Components/Actions/AddEntryButton'
@@ -33,16 +35,32 @@ function MyFailures(props) {
     dispatch(hideAddFailureModal())
   }
 
+  const handleShowModal = () => {
+    dispatch(showAddFailureModal())
+  }
+
+  const handleHideModal = () => {
+    dispatch(hideAddFailureModal())
+  }
+
   const actions = [
     {
       type: 'edit',
       action: () => setIsEditSection(true),
-      isDisplayed: mode === 'edit' && isEditSection === false
+      isDisplayed:
+        mode === 'edit' && isEditSection === false && myFailures?.length > 0
     },
+    {
+      type: 'add',
+      action: () => handleShowModal(),
+      isDisplayed: mode === 'edit' && myFailures?.length === 0
+    },
+
     {
       type: 'save',
       action: () => setIsEditSection(false),
-      isDisplayed: mode === 'edit' && isEditSection === true
+      isDisplayed:
+        mode === 'edit' && isEditSection === true && myFailures?.length > 0
     }
   ]
 
@@ -64,7 +82,7 @@ function MyFailures(props) {
           text={'You don’t have any failures yet! Click the button to add one.'}
         />
       )}
-      {isEditSection && (
+      {myFailures?.length > 0 && isEditSection && (
         <AddEntryButton
           title={`Add new "My Failures" section`}
           onClick={handleShowFailureModal}

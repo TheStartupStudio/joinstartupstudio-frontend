@@ -15,14 +15,26 @@ function PortfolioDataContainer(props) {
           style={{ textAlign: props.titleAlign }}
         >
           {props.title}
+          {props.description && (
+            <div className={'portfolio-data-container-description py-2'}>
+              {props.description}
+            </div>
+          )}
         </div>
       )}
-      {props.description && (
-        <div className={'portfolio-data-container-description py-2'}>
-          {props.description}
-        </div>
-      )}
-      {props.children}
+
+      <div
+        style={{
+          marginTop:
+            props.title && props.description
+              ? 80
+              : props.title && !props.description
+              ? 50
+              : 0
+        }}
+      >
+        {props.children}
+      </div>
     </div>
   )
 }

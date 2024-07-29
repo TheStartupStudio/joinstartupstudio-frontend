@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
-// import UserStory from './UserStory'
-// import MyRelationships from './MyRelationships'
-// import MyFailures from './MyFailures'
-// import MyMentors from './MyMentors'
 import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
 import MyAlignments from './MyAlignments'
-import { getProjects } from '../../../../redux/portfolio/Actions'
-import { connect } from 'react-redux'
 import MyProductivity from './MyProductivity'
 import MyCompetitiveness from './MyCompetitiveness'
 

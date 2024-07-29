@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import MyMentor from './MyMentor'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SectionActions from '../../Components/Actions/SectionActions'
 import AddMyMentor from '../../Components/Actions/AddMyMentor'
 import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
 import mentorsImage from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+import MyMentorModal from '../../Components/Modals/MyMentorModal'
+import {
+  hideAddCompetitivenessModal,
+  hideAddMentorModal,
+  showAddCompetitivenessModal,
+  showAddMentorModal
+} from '../../../../redux/portfolio/Actions'
 
 function MyMentors(props) {
+  const dispatch = useDispatch()
   const [myMentors, setMyMentors] = useState([])
 
   const [isEditSection, setIsEditSection] = useState(false)
+  const showModal = useSelector(
+    (state) => state.portfolio.whoSection.myMentors.showAddMentorModal
+  )
 
   useEffect(() => {
     if (props.data) setMyMentors(props.data)
@@ -20,14 +31,29 @@ function MyMentors(props) {
     {
       type: 'edit',
       action: () => setIsEditSection(true),
-      isDisplayed: mode === 'edit' && isEditSection === false
+      isDisplayed:
+        mode === 'edit' && isEditSection === false && myMentors?.length > 0
+    },
+    {
+      type: 'add',
+      action: () => handleShowModal(),
+      isDisplayed: mode === 'edit' && myMentors?.length === 0
     },
     {
       type: 'save',
       action: () => setIsEditSection(false),
-      isDisplayed: mode === 'edit' && isEditSection === true
+      isDisplayed:
+        mode === 'edit' && isEditSection === true && myMentors?.length > 0
     }
   ]
+
+  const handleShowModal = () => {
+    dispatch(showAddMentorModal())
+  }
+
+  const handleHideModal = () => {
+    dispatch(hideAddMentorModal())
+  }
 
   return (
     <div className={'container'}>
@@ -52,7 +78,7 @@ function MyMentors(props) {
           />
         )}
         <div className={'col-md-4'}>
-          {isEditSection && (
+          {myMentors?.length > 0 && isEditSection && (
             <AddMyMentor
               title={`Add new "My Mentors" section`}
               isEditSection={isEditSection}
@@ -63,6 +89,14 @@ function MyMentors(props) {
       </div>
 
       <SectionActions actions={actions} />
+      {showModal && (
+        <MyMentorModal
+          onHide={handleHideModal}
+          show={showModal}
+          title={`Add ${props.type ?? 'mentor'}`}
+          category={'my-mentors'}
+        />
+      )}
     </div>
   )
 }

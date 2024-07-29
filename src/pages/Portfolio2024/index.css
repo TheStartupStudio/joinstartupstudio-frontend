@@ -820,7 +820,13 @@
     letter-spacing: 0px;
     color: #231F20;
     text-transform: uppercase;
-    padding: 10px 0
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
+    padding: 30px !important;
 }
 
 .portfolio-data-container-description {
@@ -829,7 +835,8 @@
     letter-spacing: 0px;
     color: #231F20;
     opacity: 1;
-    padding: 10px 0
+    padding: 10px 0;
+    text-transform:initial;
 }
 .portfolio-data-container {
     background: transparent linear-gradient(66deg, #E4E9F4 0%, #FFFFFF 100%) 0% 0% no-repeat padding-box;
@@ -842,6 +849,12 @@
     min-height: auto;
     padding: 20px;
     overflow: hidden;
+    display:flex;
+    align-items:unset;
+    flex-direction: column;
+    width: 100%;
+    justify-content:center;
+    position:relative
 }
 
 .portfolio-section-data-loader {

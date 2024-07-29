@@ -16,6 +16,9 @@ import AddEntryButton from '../../Components/Actions/AddEntryButton'
 import CredentialCard from './CredentialCard'
 import CredentialCardModal from './CredentialCardModal'
 import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
+import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
+import educationImage from '../../../../assets/images/HS-Portfolio-Icons/education.png'
+import credentialImage from '../../../../assets/images/HS-Portfolio-Icons/credentials.png'
 
 function MyAlignments(props) {
   const { educations: loadingEducations, credentials: loadingCredentials } =
@@ -53,12 +56,23 @@ function MyAlignments(props) {
     {
       type: 'edit',
       action: () => setIsEditEducationSection(true),
-      isDisplayed: mode === 'edit' && isEditEducationSection === false
+      isDisplayed:
+        mode === 'edit' &&
+        isEditEducationSection === false &&
+        educations?.length > 0
+    },
+    {
+      type: 'add',
+      action: () => handleShowEducationModal(),
+      isDisplayed: mode === 'edit' && educations?.length === 0
     },
     {
       type: 'save',
       action: () => setIsEditEducationSection(false),
-      isDisplayed: mode === 'edit' && isEditEducationSection === true
+      isDisplayed:
+        mode === 'edit' &&
+        isEditEducationSection === true &&
+        educations?.length > 0
     }
   ]
 
@@ -66,12 +80,23 @@ function MyAlignments(props) {
     {
       type: 'edit',
       action: () => setIsEditCredentialSection(true),
-      isDisplayed: mode === 'edit' && isEditCredentialSection === false
+      isDisplayed:
+        mode === 'edit' &&
+        isEditCredentialSection === false &&
+        credentials?.length > 0
+    },
+    {
+      type: 'add',
+      action: () => handleShowCredentialModal(),
+      isDisplayed: mode === 'edit' && credentials?.length === 0
     },
     {
       type: 'save',
       action: () => setIsEditCredentialSection(false),
-      isDisplayed: mode === 'edit' && isEditCredentialSection === true
+      isDisplayed:
+        mode === 'edit' &&
+        isEditCredentialSection === true &&
+        credentials?.length > 0
     }
   ]
 
@@ -95,24 +120,32 @@ function MyAlignments(props) {
     modalTitle,
     onSave,
     ModalComponent,
-    isLoading
+    isLoading,
+    NoDataDisplay
   ) => {
     if (isLoading) {
       return <PortfolioSectionDataLoader />
     }
     return (
       <PortfolioDataContainer
-        background={'#fff'}
+        background={
+          items?.length > 0
+            ? '#fff'
+            : 'transparent linear-gradient(231deg, #FFFFFF 0%, #E4E9F4 100%) 0% 0% no-repeat padding-box'
+        }
         title={title}
         titleAlign={'start'}
+        height={items?.length > 0 ? undefined : 440}
       >
-        {items?.map((item) => (
-          <React.Fragment key={item.id}>
-            <ItemComponent item={item} isEditSection={isEditSection} />
-          </React.Fragment>
-        ))}
+        {items?.length > 0
+          ? items?.map((item) => (
+              <React.Fragment key={item.id}>
+                <ItemComponent item={item} isEditSection={isEditSection} />
+              </React.Fragment>
+            ))
+          : NoDataDisplay}
         <SectionActions actions={sectionActions} />
-        {isEditSection && (
+        {isEditSection && items?.length > 0 && (
           <AddEntryButton
             title={`Add new ${title}`}
             onClick={handleShowModal}
@@ -129,6 +162,7 @@ function MyAlignments(props) {
       </PortfolioDataContainer>
     )
   }
+
   return (
     <>
       <>
@@ -144,9 +178,15 @@ function MyAlignments(props) {
           'ADD EDUCATIONAL EXPERIENCE',
           onSaveEducation,
           EducationCardModal,
-          loadingEducations
+          loadingEducations,
+          <NoDataDisplay
+            src={educationImage}
+            text={
+              'You don’t have any education yet! Click the button to add one.'
+            }
+          />
         )}
-        <div className={'mt-5'}>
+        <div className={'mt-5 w-100'}>
           {renderSection(
             'Credentials',
             credentials,
@@ -159,7 +199,13 @@ function MyAlignments(props) {
             'ADD CREDENTIAL',
             onSaveCredential,
             CredentialCardModal,
-            loadingCredentials
+            loadingCredentials,
+            <NoDataDisplay
+              src={credentialImage}
+              text={
+                'You don’t have any credential yet! Click the button to add one.'
+              }
+            />
           )}
         </div>
       </>

@@ -11,7 +11,7 @@ import SectionActions from '../../Components/Actions/SectionActions'
 
 const WhatCanIDo = ({ fetchProjects, myProjects }) => {
   const [projects, setProjects] = useState([])
-
+  console.log('projects', projects)
   useEffect(() => {
     if (myProjects?.data) {
       setProjects(myProjects?.data)
@@ -39,7 +39,6 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
       type: 'add',
       action: () => handleShowAddProjectModal(),
       isDisplayed: true
-      // isDisplayed: mode === 'edit' && isEditSection === false
     }
   ]
   return (
@@ -62,7 +61,7 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
           </React.Fragment>
         ))
       ) : (
-        <PortfolioDataContainer title={'Project'} height={350}>
+        <PortfolioDataContainer title={'Project'} height={440}>
           <NoDataDisplay
             src={projectImage}
             classNames={'mt-1'}
@@ -73,12 +72,14 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
           <SectionActions actions={emptyDataActions} />
         </PortfolioDataContainer>
       )}
-      {projects?.length > 0 && mode === 'edit' && (
-        <AddEntryButton
-          title={`Add new 'My Projects' section`}
-          onClick={handleShowAddProjectModal}
-        />
-      )}
+      {projects?.length > 0 &&
+        projects.some((project) => project.id) &&
+        mode === 'edit' && (
+          <AddEntryButton
+            title={`Add new 'My Projects' section`}
+            onClick={handleShowAddProjectModal}
+          />
+        )}
       {showAddProjectModal && (
         <ProjectModal
           onHide={handleHideAddProjectModal}

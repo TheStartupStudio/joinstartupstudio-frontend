@@ -57,29 +57,29 @@ function WorkExperienceCard(props) {
             <div className={'d-flex justify-content-between gap-2'}>
               <div>
                 <div className={'organization-name mb-2'}>
-                  {data.organizationName}
+                  {data?.organizationName}
                 </div>
                 <div className={'organization-location mb-2'}>
-                  {data.location}
+                  {data?.location}
                 </div>
                 <div className={'organization-website mb-3'}>
-                  {data.website}
+                  {data?.website}
                 </div>
               </div>
               <div className={'text-end organization-date'}>
-                {convertDateToMonthYear(data.startDate)} -{' '}
+                {convertDateToMonthYear(data?.startDate)} -{' '}
                 {!data?.currentPosition
-                  ? convertDateToMonthYear(data.endDate)
+                  ? convertDateToMonthYear(data?.endDate)
                   : 'Present'}
               </div>
             </div>
             <div>
               <div className={'organization-description-label mb-2'}>
-                {data.jobTitle}
+                {data?.jobTitle}
               </div>{' '}
               <div
                 className={'organization-description'}
-                dangerouslySetInnerHTML={{ __html: data.description }}
+                dangerouslySetInnerHTML={{ __html: data?.description }}
               />
             </div>
           </div>
