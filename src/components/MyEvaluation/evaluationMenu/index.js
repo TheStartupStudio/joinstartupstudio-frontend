@@ -183,7 +183,7 @@ function EvaluationMenu(props) {
               />
             ))}
         </MenuList>
-        <MenuList
+        {/* <MenuList
           title={'PORTFOLIO'}
           iconStyles={'me-2 me-md-0'}
           eventKey={'5'}
@@ -198,7 +198,7 @@ function EvaluationMenu(props) {
           handleClick={handleClick}
           category={'student-certificate'}
           journalId={'6'}
-        ></MenuList>
+        ></MenuList> */}
       </Accordion>
     </div>
   )
