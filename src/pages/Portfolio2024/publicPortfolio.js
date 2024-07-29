@@ -8,6 +8,8 @@ import WhoAmI from './Sections/WhoAmISection/WhoAmI'
 import PortfolioNavigator from './Components/PortfolioNavigator'
 import SkeletonLoader from '../MyImmersion/SkeletonLoader/SkeletonLoader'
 import PortfolioSkeletonLoader from './Components/PortfolioSkeletonLoader'
+import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
+import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
 
 function PeerPortfolio() {
   const [publicPortfolio, setPublicPortfolio] = useState({})
@@ -21,6 +23,7 @@ function PeerPortfolio() {
     const getPublicPortfolioAPI = async () => {
       try {
         const response = await axiosInstance.get(`/portfolio/${username}`)
+
         if (response.data.privateMessage) {
           setPrivatePortfolioMessage(response.data.privateMessage)
         } else {
@@ -43,8 +46,8 @@ function PeerPortfolio() {
 
   if (privatePortfolioMessage) {
     return (
-      <div className="portfolio-container">
-        <div className="private-portfolio-message">
+      <div className='portfolio-container'>
+        <div className='private-portfolio-message'>
           {privatePortfolioMessage}
         </div>
       </div>
@@ -52,12 +55,28 @@ function PeerPortfolio() {
   }
 
   return (
-    <div className="portfolio-container">
-      <PortfolioHeader user={publicPortfolio.user} />
+    <div className='portfolio-container'>
+      <PortfolioHeader
+        user={publicPortfolio.user}
+        userStory={publicPortfolio?.whoAmI?.userStory}
+      />
       {activeSection === 'who-section' && (
-        <WhoAmI data={publicPortfolio.whoAmI} user={publicPortfolio.user} />
+        <WhoAmI data={publicPortfolio?.whoAmI} user={publicPortfolio?.user} />
       )}
-      {activeSection === 'what-section' && 'What section'}
+      {activeSection === 'what-section' && (
+        <>
+          <WhatCanIDo
+            portfolioType={'public'}
+            data={publicPortfolio?.whatCanIDo}
+          />
+        </>
+      )}
+      {activeSection === 'how-section' && (
+        <>
+          <HowDoIProve data={publicPortfolio?.howDoIProve} />
+        </>
+      )}
+
       <PortfolioNavigator />
     </div>
   )

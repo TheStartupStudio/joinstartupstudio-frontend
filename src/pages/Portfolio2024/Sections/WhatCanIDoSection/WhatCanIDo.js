@@ -24,10 +24,10 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
   const handleHideAddProjectModal = () => setShowAddProjectModal(false)
 
   useEffect(() => {
-    if (portfolioType === 'peer') {
-      setProjects(data)
+    if (portfolioType === 'peer' || portfolioType === 'public') {
+      setProjects(data.myProjects.data)
     }
-    if (portfolioType !== 'peer') {
+    if (portfolioType !== 'peer' || portfolioType !== 'public') {
       fetchProjects()
     }
   }, [])
@@ -43,7 +43,7 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
     {
       type: 'add',
       action: () => handleShowAddProjectModal(),
-      isDisplayed: true
+      isDisplayed: mode === 'edit'
     }
   ]
   return (
@@ -100,12 +100,13 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
 }
 
 const mapStateToProps = (state) => {
-  const {
-    user: { user: loggedUser }
-  } = state.user
-  const {
-    whatSection: { myProjects }
-  } = state.portfolio
+  const userState = state.user ?? {}
+  const portfolioState = state.portfolio ?? {}
+
+  const { user: loggedUser = null } = userState
+
+  const { whatSection: { myProjects } = {} } = portfolioState
+
   return {
     loggedUser,
     myProjects

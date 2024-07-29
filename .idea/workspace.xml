@@ -6,17 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Connections/connectionBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Connections/connectionBox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyClassroom/SharedPeerBox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyClassroom/SharedPeerBox.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MyClassroom/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MyClassroom/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/PortfolioHeader.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/PortfolioHeader.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/SectionDescription.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/SectionDescription.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UserInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UserInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/HowDoIProve.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/HowDoIProve.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/WhatCanIDo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/WhatCanIDo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/UserStory.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/UserStory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/peerPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/peerPortfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/publicPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/publicPortfolio.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +117,7 @@
       <workItem from="1720614606349" duration="608000" />
       <workItem from="1721036272998" duration="1343000" />
       <workItem from="1721634831645" duration="70302000" />
-      <workItem from="1721980020589" duration="31325000" />
+      <workItem from="1721980020589" duration="34178000" />
     </task>
     <servers />
   </component>

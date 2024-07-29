@@ -11,8 +11,6 @@ import { getUserStory } from '../../../../redux/portfolio/Actions'
 // })
 // {
 function SectionDescription(props) {
-  console.log('props', props)
-
   // const userStory = useSelector((state) => state.portfolio.whoSection.userStory)
   //
   // const dispatch = useDispatch()
