@@ -6,12 +6,12 @@ function PortfolioInfoBox(props) {
     <React.Fragment>
       <div
         style={{ height: props.titleHeight }}
-        className={'portfolio-info-title'}
+        className={`portfolio-info-title ${props.titleClasses ?? ''}`}
       >
         {props.title ?? 'Title'}
       </div>
       <div
-        className={'portfolio-info-content'}
+        className={`portfolio-info-content ${props.contentClasses ?? ''}`}
         style={{ minHeight: props.inputHeight }}
         dangerouslySetInnerHTML={{ __html: props.content }}
       />

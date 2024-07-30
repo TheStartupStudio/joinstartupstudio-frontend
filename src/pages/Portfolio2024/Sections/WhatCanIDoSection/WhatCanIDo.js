@@ -4,17 +4,18 @@ import ProjectModal from './ProjectModal'
 import { getProjects, getSkills } from '../../../../redux/portfolio/Actions'
 import AddEntryButton from '../../Components/Actions/AddEntryButton'
 import Project from './Project'
+import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
+import projectImage from '../../../../assets/images/HS-Portfolio-Icons/project.png'
+import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
+import SectionActions from '../../Components/Actions/SectionActions'
 
-const WhatCanIDo = ({ fetchProjects, myProjects }) => {
+const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
   const [projects, setProjects] = useState([])
-
+  console.log('projects', projects)
   useEffect(() => {
     if (myProjects?.data) {
       setProjects(myProjects?.data)
     }
-    // else {
-    //   setProjects(initialProjects)
-    // }
   }, [myProjects?.data])
   const mode = useSelector((state) => state.portfolio.mode)
   const [showAddProjectModal, setShowAddProjectModal] = useState(false)
@@ -23,7 +24,12 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
   const handleHideAddProjectModal = () => setShowAddProjectModal(false)
 
   useEffect(() => {
-    fetchProjects()
+    if (portfolioType === 'peer' || portfolioType === 'public') {
+      setProjects(data.myProjects.data)
+    }
+    if (portfolioType !== 'peer' || portfolioType !== 'public') {
+      fetchProjects()
+    }
   }, [])
 
   const onDeleteProject = (projectId) => {
@@ -33,24 +39,52 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
     setProjects(filteredProjects)
   }
 
+  const emptyDataActions = [
+    {
+      type: 'add',
+      action: () => handleShowAddProjectModal(),
+      isDisplayed: mode === 'edit'
+    }
+  ]
   return (
     <div className={'position-relative'}>
-      {projects?.map((project, index) => (
-        <React.Fragment key={project.id}>
-          <Project
-            id={project.id}
-            project={project}
-            index={index}
-            onDeleteProject={onDeleteProject}
+      {projects?.length > 0 ? (
+        projects?.map((project, index) => (
+          <React.Fragment key={project.id}>
+            <Project
+              id={project.id}
+              project={project}
+              index={index}
+              onDeleteProject={onDeleteProject}
+              onAddProject={(project) => {
+                const nonSavedProject = projects.find((project) => !project.id)
+                if (nonSavedProject) {
+                  setProjects([project])
+                }
+              }}
+            />
+          </React.Fragment>
+        ))
+      ) : (
+        <PortfolioDataContainer title={'Project'} height={440}>
+          <NoDataDisplay
+            src={projectImage}
+            classNames={'mt-1'}
+            text={
+              'You don’t have any projects yet! Click the button to add one.'
+            }
           />
-        </React.Fragment>
-      ))}
-      {mode === 'edit' && (
-        <AddEntryButton
-          title={`Add new 'My Projects' section`}
-          onClick={handleShowAddProjectModal}
-        />
+          <SectionActions actions={emptyDataActions} />
+        </PortfolioDataContainer>
       )}
+      {projects?.length > 0 &&
+        projects.some((project) => project.id) &&
+        mode === 'edit' && (
+          <AddEntryButton
+            title={`Add new 'My Projects' section`}
+            onClick={handleShowAddProjectModal}
+          />
+        )}
       {showAddProjectModal && (
         <ProjectModal
           onHide={handleHideAddProjectModal}
@@ -66,12 +100,13 @@ const WhatCanIDo = ({ fetchProjects, myProjects }) => {
 }
 
 const mapStateToProps = (state) => {
-  const {
-    user: { user: loggedUser }
-  } = state.user
-  const {
-    whatSection: { myProjects }
-  } = state.portfolio
+  const userState = state.user ?? {}
+  const portfolioState = state.portfolio ?? {}
+
+  const { user: loggedUser = null } = userState
+
+  const { whatSection: { myProjects } = {} } = portfolioState
+
   return {
     loggedUser,
     myProjects

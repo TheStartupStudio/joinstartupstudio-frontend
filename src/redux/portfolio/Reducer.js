@@ -508,7 +508,7 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myRelationships: {
             ...state.whoSection.myRelationships,
-            isLoading: true
+            isSaving: true
           }
         }
       }
@@ -520,7 +520,7 @@ const portfolioReducer = (state = initialState, action) => {
           myRelationships: {
             ...state.whoSection.myRelationships,
             data: payload.data,
-            isLoading: false
+            isSaving: false
           }
         }
       }
@@ -1096,7 +1096,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              isLoading: true,
               error: null,
               showAddModal: true
             }
@@ -1112,7 +1111,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              isLoading: true,
               error: null,
               showAddModal: null
             }
@@ -1129,7 +1127,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              isLoading: true,
               error: null,
               showEditModal: action.payload
             }
@@ -1145,7 +1142,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              isLoading: true,
               error: null,
               showEditModal: null
             }
@@ -1162,7 +1158,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: true,
               error: null,
               showAddModal: true
             }
@@ -1178,7 +1173,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: true,
               error: null,
               showAddModal: null
             }
@@ -1195,7 +1189,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: true,
               error: null,
               showEditModal: action.payload
             }
@@ -1211,7 +1204,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: true,
               error: null,
               showEditModal: null
             }
@@ -1243,7 +1235,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              isLoading: true,
+              isLoading: false,
               error: null,
               data: payload.data
             }
@@ -1259,7 +1251,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              isLoading: true,
+              isLoading: false,
               error: payload.error
             }
           }
@@ -1380,7 +1372,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myAlignments,
             educations: {
               ...state.howSection.myAlignments.educations,
-              isLoading: true,
               error: null
             }
           }
@@ -1395,7 +1386,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myAlignments,
             educations: {
               ...state.howSection.myAlignments.educations,
-              isLoading: false,
               data: removeRow(
                 state.howSection.myAlignments.educations.data,
                 payload.data.id
@@ -1414,7 +1404,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myAlignments,
             educations: {
               ...state.howSection.myAlignments.educations,
-              isLoading: false,
               error: payload.error,
               showEditModal: false
             }
@@ -1448,7 +1437,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: true,
+              isLoading: false,
               error: null,
               data: payload.data
             }
@@ -1464,7 +1453,7 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: true,
+              isLoading: false,
               error: payload.error
             }
           }
@@ -1583,7 +1572,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: true,
               error: null
             }
           }
@@ -1598,7 +1586,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: false,
               data: removeRow(
                 state.howSection.myAlignments.credentials.data,
                 payload.data.id
@@ -1617,7 +1604,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              isLoading: false,
               error: action.payload.error,
               showEditModal: false
             }
@@ -1636,7 +1622,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             immersions: {
               ...state.howSection?.myProductivity?.immersions,
-              isLoading: true,
               error: null,
               showAddModal: true
             }
@@ -1652,7 +1637,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             immersions: {
               ...state.howSection?.myProductivity?.immersions,
-              isLoading: true,
               error: null,
               showAddModal: null
             }
@@ -1669,7 +1653,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             immersions: {
               ...state.howSection?.myProductivity?.immersions,
-              isLoading: true,
               error: null,
               showEditModal: action.payload
             }
@@ -1702,7 +1685,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             workExperiences: {
               ...state.howSection?.myProductivity?.workExperiences,
-              isLoading: true,
               error: null,
               showAddModal: true
             }
@@ -1718,7 +1700,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             workExperiences: {
               ...state.howSection?.myProductivity?.workExperiences,
-              isLoading: true,
               error: null,
               showAddModal: null
             }
@@ -1735,7 +1716,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             workExperiences: {
               ...state.howSection?.myProductivity?.workExperiences,
-              isLoading: true,
               error: null,
               showEditModal: action.payload
             }
@@ -1751,7 +1731,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             workExperiences: {
               ...state.howSection?.myProductivity?.workExperiences,
-              isLoading: true,
               error: null,
               showEditModal: null
             }
@@ -1917,7 +1896,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myProductivity,
             immersions: {
               ...state.howSection.myProductivity.immersions,
-              isLoading: true,
               error: null
             }
           }
@@ -1932,7 +1910,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myProductivity,
             immersions: {
               ...state.howSection.myProductivity.immersions,
-              isLoading: false,
               data: removeRow(
                 state.howSection.myProductivity.immersions.data,
                 payload.data.id
@@ -1951,7 +1928,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myProductivity,
             immersions: {
               ...state.howSection.myProductivity.immersions,
-              isLoading: false,
               error: payload.error,
               showEditModal: null
             }
@@ -2118,7 +2094,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
-              isLoading: true,
               error: null
             }
           }
@@ -2133,7 +2108,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
-              isLoading: false,
               data: removeRow(
                 state.howSection.myProductivity.workExperiences.data,
                 payload.data.id
@@ -2152,7 +2126,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection.myProductivity,
             workExperiences: {
               ...state.howSection.myProductivity.workExperiences,
-              isLoading: false,
               error: payload.error,
               showEditModal: null
             }

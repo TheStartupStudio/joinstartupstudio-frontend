@@ -34,9 +34,7 @@ function Project(props) {
   const actions = [
     {
       type: 'edit',
-      // action: () => setIsEditSection(true),
       action: () => handleShowAddProjectModal(),
-      // handleShowAddProjectModal(),
       isDisplayed: mode === 'edit' && isEditSection === false
     },
     {
@@ -124,7 +122,9 @@ function Project(props) {
     <div className={'portfolio-data-container mb-3'}>
       <SectionActions actions={actions} />
 
-      <h3 className={'text-center mb-2'}>My project #{props.index + 1}</h3>
+      <h3 className={'text-center mb-2 my-project-title'}>
+        My project #{props.index + 1}
+      </h3>
 
       <div>
         {renderSection(
@@ -165,6 +165,7 @@ function Project(props) {
             if (project.children.length > 0) {
               setProject(project.children)
               setId(project.id)
+              props.onAddProject(project)
             }
           }}
           onDeleteProject={props.onDeleteProject}

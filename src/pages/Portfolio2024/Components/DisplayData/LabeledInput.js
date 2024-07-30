@@ -15,7 +15,8 @@ const LabeledInput = ({
   labelAlign,
   titleHeight,
   align,
-  readOnly
+  readOnly,
+  p
 }) => {
   return (
     <div
@@ -34,7 +35,7 @@ const LabeledInput = ({
           textClassNames ?? ''
         } justify-content-${labelAlign}`}
         style={{
-          backgroundColor: '#f3f3f3',
+          backgroundColor: '#F6F7F7',
           minHeight: titleHeight
         }}
       >
@@ -52,8 +53,9 @@ const LabeledInput = ({
             }}
             className='w-100 rounded-0 p-2'
             onChange={(e) => onChange?.(e.target.value, 'mentorName')}
-            value={value ?? ''}
+            value={value?.trim() !== '' ? value : ''}
             readOnly={readOnly}
+            placeholder={placeholder}
           />
         ) : (
           <input
@@ -65,7 +67,7 @@ const LabeledInput = ({
             }}
             className=' w-100 rounded-0 py-1 px-2'
             onChange={(e) => onChange?.(e.target.value, 'mentorName')}
-            value={value ?? ''}
+            value={value?.trim() !== '' ? value : ''}
             placeholder={placeholder}
             readOnly={readOnly}
           />

@@ -15,8 +15,18 @@ import ImmersionCard from './ImmersionCard'
 import ImmersionCardModal from './ImmersionCardModal'
 import WorkExperienceCard from './WorkExperienceCard'
 import WorkExperienceCardModal from './WorkExperienceCardModal'
+import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
+import immersionImage from '../../../../assets/images/HS-Portfolio-Icons/immersion.png'
+import workExperienceImage from '../../../../assets/images/HS-Portfolio-Icons/workexperience.png'
+import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
+import educationImage from '../../../../assets/images/HS-Portfolio-Icons/education.png'
 
 function MyProductivity(props) {
+  const {
+    immersions: loadingImmersions,
+    workExperiences: loadingWorkExperiences
+  } = props.loadings ?? {}
+
   const dispatch = useDispatch()
   const immersions = props.data?.immersions?.data
   const workExperiences = props.data?.workExperiences?.data
@@ -52,12 +62,23 @@ function MyProductivity(props) {
     {
       type: 'edit',
       action: () => setIsEditImmersionSection(true),
-      isDisplayed: mode === 'edit' && isEditImmersionSection === false
+      isDisplayed:
+        mode === 'edit' &&
+        isEditImmersionSection === false &&
+        immersions?.length > 0
+    },
+    {
+      type: 'add',
+      action: () => handleShowImmersionModal(),
+      isDisplayed: mode === 'edit' && immersions?.length === 0
     },
     {
       type: 'save',
       action: () => setIsEditImmersionSection(false),
-      isDisplayed: mode === 'edit' && isEditImmersionSection === true
+      isDisplayed:
+        mode === 'edit' &&
+        isEditImmersionSection === true &&
+        immersions?.length > 0
     }
   ]
 
@@ -65,12 +86,23 @@ function MyProductivity(props) {
     {
       type: 'edit',
       action: () => setIsEditWorkExperienceSection(true),
-      isDisplayed: mode === 'edit' && isEditWorkExperienceSection === false
+      isDisplayed:
+        mode === 'edit' &&
+        isEditWorkExperienceSection === false &&
+        workExperiences?.length > 0
+    },
+    {
+      type: 'add',
+      action: () => handleShowWorkExperienceModal(),
+      isDisplayed: mode === 'edit' && workExperiences?.length === 0
     },
     {
       type: 'save',
       action: () => setIsEditWorkExperienceSection(false),
-      isDisplayed: mode === 'edit' && isEditWorkExperienceSection === true
+      isDisplayed:
+        mode === 'edit' &&
+        isEditWorkExperienceSection === true &&
+        workExperiences?.length > 0
     }
   ]
 
@@ -81,71 +113,105 @@ function MyProductivity(props) {
   const onSaveWorkExperience = (data) => {
     dispatch(addMyWorkExperience(data))
   }
-  return (
-    <>
+
+  const renderSection = (
+    title,
+    items,
+    ItemComponent,
+    isEditSection,
+    sectionActions,
+    handleShowModal,
+    showModal,
+    handleHideModal,
+    modalTitle,
+    onSave,
+    ModalComponent,
+    isLoading,
+    NoDataDisplay
+  ) => {
+    if (isLoading) {
+      return <PortfolioSectionDataLoader />
+    }
+
+    return (
       <PortfolioDataContainer
-        background={'#fff'}
-        title={'Immersion'}
+        background={
+          items?.length > 0
+            ? '#fff'
+            : 'transparent linear-gradient(231deg, #FFFFFF 0%, #E4E9F4 100%) 0% 0% no-repeat padding-box'
+        }
+        title={title}
         titleAlign={'start'}
+        height={items?.length > 0 ? undefined : 440}
       >
-        {immersions?.map((immersion, index) => {
-          return (
-            <React.Fragment key={immersion.id}>
-              <ImmersionCard
-                data={immersion}
-                isEditSection={isEditImmersionSection}
-              />
-            </React.Fragment>
-          )
-        })}
-        <SectionActions actions={immersionActions} />
-        {isEditImmersionSection && (
+        {items?.length > 0
+          ? items?.map((item) => (
+              <React.Fragment key={item.id}>
+                <ItemComponent data={item} isEditSection={isEditSection} />
+              </React.Fragment>
+            ))
+          : NoDataDisplay}
+        <SectionActions actions={sectionActions} />
+        {isEditSection && items?.length > 0 && (
           <AddEntryButton
-            title={`Add new Immersion Experience`}
-            onClick={handleShowImmersionModal}
+            title={`Add new ${title}`}
+            onClick={handleShowModal}
           />
         )}
-        {showImmersionModal && (
-          <ImmersionCardModal
-            onHide={handleHideImmersionModal}
-            show={showImmersionModal}
-            title={'ADD IMMERSION EXPERIENCE'}
-            onSave={onSaveImmersion}
+        {showModal && (
+          <ModalComponent
+            onHide={handleHideModal}
+            show={showModal}
+            title={modalTitle}
+            onSave={onSave}
           />
         )}
       </PortfolioDataContainer>
+    )
+  }
+  return (
+    <>
+      {renderSection(
+        'Immersion',
+        immersions,
+        ImmersionCard,
+        isEditImmersionSection,
+        immersionActions,
+        handleShowImmersionModal,
+        showImmersionModal,
+        handleHideImmersionModal,
+        'ADD IMMERSION EXPERIENCE',
+        onSaveImmersion,
+        ImmersionCardModal,
+        loadingImmersions,
+        <NoDataDisplay
+          src={immersionImage}
+          text={
+            'You don’t have any immersion experiences yet! Click the button to add one.'
+          }
+        />
+      )}
       <div className={'mt-5'}>
-        <PortfolioDataContainer
-          background={'#fff'}
-          title={'Work Experience'}
-          titleAlign={'start'}
-        >
-          {workExperiences?.map((workExperience, index) => {
-            return (
-              <React.Fragment key={workExperience.id}>
-                <WorkExperienceCard
-                  data={workExperience}
-                  isEditSection={isEditWorkExperienceSection}
-                />
-              </React.Fragment>
-            )
-          })}
-          <SectionActions actions={workExperienceActions} />
-          {isEditWorkExperienceSection && (
-            <AddEntryButton
-              title={`Add new Work Experience`}
-              onClick={handleShowWorkExperienceModal}
-            />
-          )}
-          {showWorkExperienceModal && (
-            <WorkExperienceCardModal
-              onHide={handleHideWorkExperienceModal}
-              show={showWorkExperienceModal}
-              title={'ADD WORK EXPERIENCE'}
-              onSave={onSaveWorkExperience}
-            />
-          )}
-        </PortfolioDataContainer>
+        {renderSection(
+          'Work Experience',
+          workExperiences,
+          WorkExperienceCard,
+          isEditWorkExperienceSection,
+          workExperienceActions,
+          handleShowWorkExperienceModal,
+          showWorkExperienceModal,
+          handleHideWorkExperienceModal,
+          'ADD WORK EXPERIENCE',
+          onSaveWorkExperience,
+          WorkExperienceCardModal,
+          loadingWorkExperiences,
+          <NoDataDisplay
+            src={workExperienceImage}
+            text={
+              'You don’t have any work experience yet! Click the button to add one.'
+            }
+          />
+        )}
       </div>
     </>
   )

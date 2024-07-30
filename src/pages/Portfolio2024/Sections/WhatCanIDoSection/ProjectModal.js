@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PortfolioModalWrapper from '../../Components/Modals/PortfolioModalWrapper'
 import EditProjectSection from './EditProjectSection'
 import axiosInstance from '../../../../utils/AxiosInstance'
@@ -30,6 +30,7 @@ function ProjectModal(props) {
       action: () => props.onHide()
     }
   ]
+
   const initialProject = [
     {
       showSection: true,
@@ -103,10 +104,7 @@ function ProjectModal(props) {
         if (props.onAddProject) {
           props.onAddProject(res.data.project)
         }
-        // else {
-        //   setProject(res.data.project.children)
-        //   setIsEdit(res.data.project.id)
-        // }
+
         props.onHide()
         toast.success('Project updated successfully!')
       })

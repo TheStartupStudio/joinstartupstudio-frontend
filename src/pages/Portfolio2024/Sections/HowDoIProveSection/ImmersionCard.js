@@ -13,7 +13,6 @@ import ImmersionCardModal from './ImmersionCardModal'
 import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 function ImmersionCard(props) {
   const { data, isEditSection } = props
-
   const [dataToEdit, setDataToEdit] = useState({})
 
   const dispatch = useDispatch()
@@ -23,9 +22,9 @@ function ImmersionCard(props) {
       state.portfolio.howSection?.myProductivity?.immersions?.showEditModal
   )
 
-  const handleShowImmersionModal = (education) => {
-    dispatch(showEditImmersionModal(education?.id))
-    setDataToEdit(education)
+  const handleShowImmersionModal = (immersion) => {
+    dispatch(showEditImmersionModal(immersion?.id))
+    setDataToEdit(immersion)
   }
   const handleHideImmersionModal = () => {
     dispatch(hideEditImmersionModal())
@@ -41,6 +40,13 @@ function ImmersionCard(props) {
   const onSave = (data) => {
     dispatch(updateMyImmersion(data))
   }
+
+  console.log(
+    'showModalId && showModalId === dataToEdit?.id',
+    showModalId && showModalId === dataToEdit?.id
+  )
+  console.log('showModalId', showModalId)
+  console.log('showModalId === dataToEdit?.id', showModalId === dataToEdit?.id)
   return (
     <div className={'mb-3'}>
       <PortfolioDataContainer background={'#fff'}>
@@ -57,13 +63,13 @@ function ImmersionCard(props) {
               <div className={'d-flex justify-content-between gap-2'}>
                 <div>
                   <div className={'organization-name mb-2'}>
-                    {data.organizationName}
+                    {data?.organizationName}
                   </div>
                   <div className={'organization-location mb-2'}>
-                    {data.location}
+                    {data?.location}
                   </div>
                   <div className={'organization-website mb-3'}>
-                    {data.website}
+                    {data?.website}
                   </div>
                 </div>
               </div>

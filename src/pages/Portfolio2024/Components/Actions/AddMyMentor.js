@@ -55,9 +55,9 @@ function AddMyMentor(props) {
         src={imagePlaceholder}
       />
       <div className={'add-new-mentor px-2 pt-3'}>
-        {`Click the add button to add a new ${
-          props.type ?? 'mentor'
-        } relationship.`}
+        {`Click the add button to add a new ${props.type ?? 'mentor'} ${
+          props.type === 'competitiveness' ? '' : 'relationship.'
+        }`}
       </div>
       <SectionActions actions={actions} />
       {showModal && (

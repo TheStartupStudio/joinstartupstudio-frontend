@@ -43,7 +43,7 @@ const EducationCardModal = (props) => {
       website: '',
       dateAwarded: formatDateToInputValue(new Date()),
       description: '',
-      imageUrl: ''
+      imageUrl: null
     }
   )
 

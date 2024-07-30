@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import PortfolioHeader from './Components/Header/PortfolioHeader'
 import PortfolioActions from './Components/Actions/PortfolioActions'
 import PortfolioNavigator from './Components/PortfolioNavigator'
@@ -64,8 +64,14 @@ const Index = ({
   credentials,
   immersions,
   workExperiences,
-  myCompetitiveness
+  myCompetitiveness,
+  isLoadingEducations,
+  isLoadingImmersions,
+  isLoadingCredentials,
+  isLoadingWorkExperiences,
+  isLoadingCompetitiveness
 }) => {
+  const mode = useSelector((state) => state.portfolio.mode)
   useEffect(() => {
     const fetchDataSequentially = async () => {
       await fetchUserStory()
@@ -75,9 +81,9 @@ const Index = ({
       await fetchSharingSettings()
       await fetchMyEducations()
       await fetchMyCredentials()
-      // await fetchMyImmersions()
-      // await fetchMyWorkExperiences()
-      // await fetchMyCompetitiveness()
+      await fetchMyImmersions()
+      await fetchMyWorkExperiences()
+      await fetchMyCompetitiveness()
     }
 
     fetchDataSequentially()
@@ -97,7 +103,11 @@ const Index = ({
     }
   }, [sharingSettings])
   return (
-    <div className='portfolio-container'>
+    <div
+      className={`portfolio-container ${
+        mode === 'edit' ? 'edit-mode' : 'preview-mode'
+      }`}
+    >
       {!areLoadingSharingSettings ? (
         <PortfolioActions
           actions={[
@@ -144,12 +154,23 @@ const Index = ({
               myAlignments: {
                 educations,
                 credentials
-              }
-              // myProductivity: {
-              //   immersions,
-              //   workExperiences
-              // },
-              // myCompetitiveness
+              },
+              myProductivity: {
+                immersions,
+                workExperiences
+              },
+              myCompetitiveness
+            }}
+            loadings={{
+              myAlignments: {
+                educations: isLoadingEducations,
+                credentials: isLoadingCredentials
+              },
+              myProductivity: {
+                immersions: isLoadingImmersions,
+                workExperiences: isLoadingWorkExperiences
+              },
+              myCompetitiveness: isLoadingCompetitiveness
             }}
           />
         </>
@@ -194,9 +215,20 @@ const mapStateToProps = (state) => {
       myMentors: { isLoading: isLoadingMyMentors }
     },
     howSection: {
-      myAlignments: { educations, credentials },
-      myProductivity: { immersions, workExperiences },
-      myCompetitiveness
+      myAlignments: {
+        educations,
+        credentials,
+        educations: { isLoading: isLoadingEducations },
+        credentials: { isLoading: isLoadingCredentials }
+      },
+      myProductivity: {
+        immersions,
+        workExperiences,
+        immersions: { isLoading: isLoadingImmersions },
+        workExperiences: { isLoading: isLoadingWorkExperiences }
+      },
+      myCompetitiveness,
+      myCompetitiveness: { isLoading: isLoadingCompetitiveness }
     }
   } = state.portfolio
 
@@ -221,7 +253,12 @@ const mapStateToProps = (state) => {
     credentials,
     immersions,
     workExperiences,
-    myCompetitiveness
+    myCompetitiveness,
+    isLoadingEducations,
+    isLoadingImmersions,
+    isLoadingCredentials,
+    isLoadingWorkExperiences,
+    isLoadingCompetitiveness
   }
 }
 

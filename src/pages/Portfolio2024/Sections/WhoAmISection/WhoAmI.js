@@ -8,6 +8,7 @@ import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoa
 
 function WhoAmI({ loadings: propsLoadings, data, user }) {
   const [loadings, setLoadings] = useState(null)
+  console.log('user', user)
 
   useEffect(() => {
     if (propsLoadings) {
@@ -15,9 +16,16 @@ function WhoAmI({ loadings: propsLoadings, data, user }) {
     }
   }, [propsLoadings])
 
-  const renderSection = (loading, type, title, Component, componentData) => {
+  const renderSection = (
+    loading,
+    type,
+    title,
+    Component,
+    componentData,
+    height
+  ) => {
     return !loading ? (
-      <PortfolioDataContainer title={title} type={type}>
+      <PortfolioDataContainer title={title} type={type} height={height}>
         <Component data={componentData} user={user} />
       </PortfolioDataContainer>
     ) : (
@@ -46,14 +54,16 @@ function WhoAmI({ loadings: propsLoadings, data, user }) {
         'my-failures',
         'My Failures',
         MyFailures,
-        data?.myFailures?.data
+        data?.myFailures?.data,
+        450
       )}
       {renderSection(
         loadings?.myMentors,
         'my-mentors',
         'My Mentors',
         MyMentors,
-        data?.myMentors?.data
+        data?.myMentors?.data,
+        450
       )}
     </div>
   )

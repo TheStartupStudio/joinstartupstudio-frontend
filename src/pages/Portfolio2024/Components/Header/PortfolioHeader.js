@@ -9,6 +9,7 @@ import myPortfolioLogo from '../../../../assets/images/HS-Portfolio-Icons/My Por
 import { useSelector } from 'react-redux'
 function PortfolioHeader(props) {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
+  console.log('props', props.userStory)
   return (
     <div>
       <PortfolioProgressIndicator />
@@ -24,7 +25,7 @@ function PortfolioHeader(props) {
           sectionTitle={'Who am i?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through <strong>Story</strong>, <strong>Relationship</strong>, <strong>Mentorship</strong>, and <strong>Failure</strong>.`}
           triangleIcon={whoTriangle}
-          user={props.user}
+          user={props.userStory}
         />
       )}
       {activeSection === 'what-section' && (
@@ -32,7 +33,7 @@ function PortfolioHeader(props) {
           sectionTitle={'What can I do?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through the outcomes of <strong>Learn</strong>, <strong>Develop</strong>, and <strong>Brand</strong>.`}
           triangleIcon={whatTriangle}
-          user={props.user}
+          user={props.userStory}
         />
       )}
       {activeSection === 'how-section' && (
@@ -40,7 +41,7 @@ function PortfolioHeader(props) {
           sectionTitle={'How Can I Prove it?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through the outcomes of <strong>Alignment</strong>, <strong>Productivity</strong>, and <strong>Competitiveness</strong>.`}
           triangleIcon={howTriangle}
-          user={props.user}
+          user={props.userStory}
         />
       )}
       {activeSection === 'start-section' && (
@@ -48,7 +49,7 @@ function PortfolioHeader(props) {
           sectionTitle={'Start'}
           sectionDescription={`My ability to prove the quality of my outcomes through the test metrics of <strong>sustainability</strong>, <strong>profitability</strong>, and <strong>efficiency</strong>.`}
           triangleIcon={startTriangle}
-          user={props.user}
+          user={props.userStory}
         />
       )}
     </div>

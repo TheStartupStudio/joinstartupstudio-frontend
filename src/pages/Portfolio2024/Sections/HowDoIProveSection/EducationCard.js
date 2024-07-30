@@ -12,7 +12,7 @@ import { convertDateToMonthYear } from '../../../../utils/helpers'
 import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 
 function EducationCard(props) {
-  const { education, isEditSection } = props
+  const { item: education, isEditSection } = props
 
   const [dataToEdit, setDataToEdit] = useState({})
 
@@ -43,7 +43,7 @@ function EducationCard(props) {
   }
 
   return (
-    <div className={'mb-3'}>
+    <div className={'mb-3 w-100'}>
       <PortfolioDataContainer background={'#fff'}>
         <div className={'d-flex gap-3 '}>
           <div className={'flex-grow'} style={{ width: 100 }}>

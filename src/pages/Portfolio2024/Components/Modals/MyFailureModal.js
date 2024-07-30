@@ -18,7 +18,7 @@ import ConfirmDeleteRecordModal from './ConfirmDeleteRecordModal'
 function MyFailureModal(props) {
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
   const [imageFile, setImageFile] = useState(null)
-  const [thumbnailUrl, setThumbnailUrl] = useState('')
+  const [thumbnailUrl, setThumbnailUrl] = useState(null)
   const [assessment, setAssessment] = useState('')
   const [outcome, setOutcome] = useState('')
   const [videoUrl, setVideoUrl] = useState('')

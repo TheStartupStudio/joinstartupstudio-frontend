@@ -7,6 +7,8 @@ import PortfolioHeader from './Components/Header/PortfolioHeader'
 import WhoAmI from './Sections/WhoAmISection/WhoAmI'
 import PortfolioNavigator from './Components/PortfolioNavigator'
 import PortfolioSkeletonLoader from './Components/PortfolioSkeletonLoader'
+import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
+import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
 
 function PeerPortfolio() {
   const [publicPortfolio, setPublicPortfolio] = useState({})
@@ -14,7 +16,6 @@ function PeerPortfolio() {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
-
   useLayoutEffect(() => {
     setIsLoading(true)
     const getPublicPortfolioAPI = async () => {
@@ -43,17 +44,38 @@ function PeerPortfolio() {
 
   if (privatePortfolioMessage) {
     return (
-      <div className="private-portfolio-message">{privatePortfolioMessage}</div>
+      <div className='private-portfolio-message'>{privatePortfolioMessage}</div>
     )
   }
 
+  console.log(
+    'publicPortfolio?.whoAmI?.userStory',
+    publicPortfolio?.whoAmI?.userStory
+  )
+
   return (
-    <div className="portfolio-container">
-      <PortfolioHeader user={publicPortfolio.user} />
+    <div className='portfolio-container'>
+      <PortfolioHeader
+        user={publicPortfolio.user}
+        userStory={publicPortfolio?.whoAmI?.userStory}
+      />
       {activeSection === 'who-section' && (
-        <WhoAmI data={publicPortfolio.whoAmI} user={publicPortfolio.user} />
+        <WhoAmI data={publicPortfolio?.whoAmI} user={publicPortfolio?.user} />
       )}
-      {activeSection === 'what-section' && 'What section'}
+      {activeSection === 'what-section' && (
+        <>
+          <WhatCanIDo
+            portfolioType={'peer'}
+            data={publicPortfolio?.whatCanIDo}
+          />
+        </>
+      )}
+      {activeSection === 'how-section' && (
+        <>
+          <HowDoIProve data={publicPortfolio?.howDoIProve} />
+        </>
+      )}
+
       <PortfolioNavigator />
     </div>
   )
