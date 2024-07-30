@@ -10,6 +10,7 @@ import {
 import { convertDateToMonthYear } from '../../../../utils/helpers'
 import WorkExperienceCardModal from './WorkExperienceCardModal'
 import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
+import WebsiteLink from '../../Components/WebsiteLink'
 
 function WorkExperienceCard(props) {
   const { data, isEditSection } = props
@@ -63,7 +64,7 @@ function WorkExperienceCard(props) {
                   {data?.location}
                 </div>
                 <div className={'organization-website mb-3'}>
-                  {data?.website}
+                  <WebsiteLink website={data?.website} />
                 </div>
               </div>
               <div className={'text-end organization-date'}>

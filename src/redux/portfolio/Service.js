@@ -440,7 +440,6 @@ export const deleteMyCompetitivenessAPI = async (id) => {
     const response = await axiosInstance.delete(
       `/hsPortfolio/myCompetitiveness/${id}`
     )
-
     return response
   } catch (e) {
     console.log('Error occurred during creating my competitiveness', e)

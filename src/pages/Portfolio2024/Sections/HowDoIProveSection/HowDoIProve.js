@@ -6,7 +6,6 @@ import MyProductivity from './MyProductivity'
 import MyCompetitiveness from './MyCompetitiveness'
 
 function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
-  console.log('data', data)
   const [loadings, setLoadings] = useState(null)
   useEffect(() => {
     if (propsLoadings) {

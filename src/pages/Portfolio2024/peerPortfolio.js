@@ -48,11 +48,6 @@ function PeerPortfolio() {
     )
   }
 
-  console.log(
-    'publicPortfolio?.whoAmI?.userStory',
-    publicPortfolio?.whoAmI?.userStory
-  )
-
   return (
     <div className='portfolio-container'>
       <PortfolioHeader

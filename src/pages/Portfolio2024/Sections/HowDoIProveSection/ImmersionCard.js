@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import ImmersionCardModal from './ImmersionCardModal'
 import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
+import WebsiteLink from '../../Components/WebsiteLink'
 function ImmersionCard(props) {
   const { data, isEditSection } = props
   const [dataToEdit, setDataToEdit] = useState({})
@@ -41,12 +42,6 @@ function ImmersionCard(props) {
     dispatch(updateMyImmersion(data))
   }
 
-  console.log(
-    'showModalId && showModalId === dataToEdit?.id',
-    showModalId && showModalId === dataToEdit?.id
-  )
-  console.log('showModalId', showModalId)
-  console.log('showModalId === dataToEdit?.id', showModalId === dataToEdit?.id)
   return (
     <div className={'mb-3'}>
       <PortfolioDataContainer background={'#fff'}>
@@ -69,7 +64,7 @@ function ImmersionCard(props) {
                     {data?.location}
                   </div>
                   <div className={'organization-website mb-3'}>
-                    {data?.website}
+                    <WebsiteLink website={data?.website} />
                   </div>
                 </div>
               </div>
@@ -77,16 +72,18 @@ function ImmersionCard(props) {
                 <div className={'organization-description-label mb-2'}>
                   The Problem
                 </div>
-                <div className={'organization-description'}>
-                  {data?.problem}
-                </div>
+                <div
+                  className={'organization-description'}
+                  dangerouslySetInnerHTML={{ __html: data?.problem }}
+                />
 
                 <div className={'organization-description-label mb-2 mt-3'}>
                   My solution
                 </div>
-                <div className={'organization-description'}>
-                  {data?.solution}
-                </div>
+                <div
+                  className={'organization-description'}
+                  dangerouslySetInnerHTML={{ __html: data?.solution }}
+                />
               </div>
             </div>
             <div className={'text-end organization-date w-50'}>

@@ -10,6 +10,7 @@ import {
 import CredentialCardModal from './CredentialCardModal'
 import { convertDateToMonthYear } from '../../../../utils/helpers'
 import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
+import WebsiteLink from '../../Components/WebsiteLink'
 
 function CredentialCard(props) {
   const { item: credential, isEditSection } = props
@@ -62,7 +63,7 @@ function CredentialCard(props) {
                   {credential?.certifyingOrganization}
                 </div>
                 <div className={'organization-website mb-3'}>
-                  {credential?.website}
+                  <WebsiteLink website={credential?.website} />
                 </div>
               </div>
               <div className={'text-end organization-date'}>
@@ -73,9 +74,10 @@ function CredentialCard(props) {
               <div className={'organization-description-label mb-2'}>
                 Description:
               </div>
-              <div className={'organization-description'}>
-                {credential?.description}
-              </div>
+              <div
+                className={'organization-description'}
+                dangerouslySetInnerHTML={{ __html: credential?.description }}
+              />
             </div>
           </div>
         </div>
