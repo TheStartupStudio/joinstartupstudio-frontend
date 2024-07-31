@@ -64,10 +64,10 @@
     position:relative;
 }
 
-.portfolio-container.edit-mode {
+.portfolio-container.portfolio_edit-mode {
     background: #F8F7F7 0% 0% no-repeat padding-box;
 }
-.portfolio-container.preview-mode {
+.portfolio-container.portfolio_preview-mode {
     background: #E4E9F4 0% 0% no-repeat padding-box;
 }
 .portfolio-actions {
