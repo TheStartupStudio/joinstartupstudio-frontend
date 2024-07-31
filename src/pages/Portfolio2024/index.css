@@ -64,10 +64,10 @@
     position:relative;
 }
 
-.portfolio-container.edit-mode {
+.portfolio-container.portfolio_edit-mode {
     background: #F8F7F7 0% 0% no-repeat padding-box;
 }
-.portfolio-container.preview-mode {
+.portfolio-container.portfolio_preview-mode {
     background: #E4E9F4 0% 0% no-repeat padding-box;
 }
 .portfolio-actions {
@@ -445,6 +445,9 @@
     text-align: left;
     letter-spacing: 0px;
     color: #000000;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .triangle-icon {
@@ -808,6 +811,9 @@
     letter-spacing: 0.6px;
     color: #000000;
     text-transform: none !important;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 
@@ -837,6 +843,9 @@
     opacity: 1;
     padding: 10px 0;
     text-transform:initial;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 .portfolio-data-container {
     background: transparent linear-gradient(66deg, #E4E9F4 0%, #FFFFFF 100%) 0% 0% no-repeat padding-box;
@@ -1123,6 +1132,9 @@
     font: normal normal normal 15px/19px Montserrat;
     letter-spacing: 0.6px;
     color: #000000;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 .show-section {
     text-align: right;
@@ -1143,6 +1155,9 @@
     font: normal normal normal 15px/19px Montserrat;
     letter-spacing: 0.6px;
     color: #000000;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .display-skill-box {
@@ -1189,6 +1204,9 @@
     font: normal normal normal 17px/20px Montserrat;
     letter-spacing: 0.68px;
     color: #231F20;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 /*/// HOW DO I PROVE IT ///*/
@@ -1237,6 +1255,10 @@
     font: normal normal normal 15px/17px Montserrat;
     letter-spacing: 0.6px;
     color: #231F20;
+
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .select-date {

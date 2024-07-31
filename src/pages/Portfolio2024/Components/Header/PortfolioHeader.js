@@ -9,7 +9,7 @@ import myPortfolioLogo from '../../../../assets/images/HS-Portfolio-Icons/My Por
 import { useSelector } from 'react-redux'
 function PortfolioHeader(props) {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
-  console.log('props', props.userStory)
+
   return (
     <div>
       <PortfolioProgressIndicator />

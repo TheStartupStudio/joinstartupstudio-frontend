@@ -11,7 +11,7 @@ import SectionActions from '../../Components/Actions/SectionActions'
 
 const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
   const [projects, setProjects] = useState([])
-  console.log('projects', projects)
+
   useEffect(() => {
     if (myProjects?.data) {
       setProjects(myProjects?.data)

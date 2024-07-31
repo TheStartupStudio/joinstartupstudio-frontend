@@ -10,6 +10,7 @@ import {
 import EducationCardModal from './EducationCardModal'
 import { convertDateToMonthYear } from '../../../../utils/helpers'
 import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
+import WebsiteLink from '../../Components/WebsiteLink'
 
 function EducationCard(props) {
   const { item: education, isEditSection } = props
@@ -63,7 +64,7 @@ function EducationCard(props) {
                   {education?.location}
                 </div>
                 <div className={'organization-website mb-3'}>
-                  {education?.website}
+                  <WebsiteLink website={education?.website} />
                 </div>
               </div>
               <div className={'text-end organization-date'}>
@@ -77,9 +78,10 @@ function EducationCard(props) {
               <div className={'organization-description-label mb-2'}>
                 Description:
               </div>{' '}
-              <div className={'organization-description'}>
-                {education?.description}
-              </div>
+              <div
+                className={'organization-description'}
+                dangerouslySetInnerHTML={{ __html: education?.description }}
+              />
             </div>
           </div>
         </div>

@@ -7,10 +7,7 @@ import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
 import mentorsImage from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
 import {
   hideAddCompetitivenessModal,
-  hideAddMentorModal,
-  showAddCompetitivenessModal,
-  showAddCredentialModal,
-  showAddMentorModal
+  showAddCompetitivenessModal
 } from '../../../../redux/portfolio/Actions'
 import MyMentorModal from '../../Components/Modals/MyMentorModal'
 
@@ -69,7 +66,11 @@ function MyCompetitiveness(props) {
             return (
               <React.Fragment key={competitive?.id}>
                 <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
-                  <MyMentor data={competitive} isEditSection={isEditSection} />
+                  <MyMentor
+                    data={competitive}
+                    isEditSection={isEditSection}
+                    category={'my-competitiveness'}
+                  />
                 </div>
               </React.Fragment>
             )

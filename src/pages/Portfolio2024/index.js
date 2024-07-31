@@ -105,7 +105,7 @@ const Index = ({
   return (
     <div
       className={`portfolio-container ${
-        mode === 'edit' ? 'edit-mode' : 'preview-mode'
+        mode === 'edit' ? 'portfolio_edit-mode' : 'portfolio_preview-mode'
       }`}
     >
       {!areLoadingSharingSettings ? (
