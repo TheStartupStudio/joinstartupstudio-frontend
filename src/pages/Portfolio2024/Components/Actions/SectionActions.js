@@ -1,6 +1,6 @@
 import React from 'react'
 import Tooltip from 'react-bootstrap/Tooltip'
-import { FaCheck, FaEye, FaPlus, FaTrash } from 'react-icons/fa6'
+import { FaCheck, FaEye, FaPlus, FaTrash, FaX } from 'react-icons/fa6'
 import { FaPencilAlt } from 'react-icons/fa'
 import TooltipAction from './TooltipAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -14,6 +14,7 @@ function SectionActions(props) {
   const editButton = foundedAction('edit')
   const saveButton = foundedAction('save')
   const hideButton = foundedAction('hide')
+  const closeButton = foundedAction('close')
   const trashButton = foundedAction('trash')
   const openButton = foundedAction('open')
 
@@ -73,6 +74,17 @@ function SectionActions(props) {
             <TooltipAction
               onClick={() => hideButton?.action()}
               icon={<FaEye className={'action-icon public-icon'} />}
+              tooltipContent={
+                <Tooltip id='tooltip' className={'tooltip-content '}>
+                  Click here to HIDE this section
+                </Tooltip>
+              }
+            />
+          )}
+          {closeButton?.isDisplayed && (
+            <TooltipAction
+              onClick={() => closeButton?.action()}
+              icon={<FaX className={'action-icon public-icon'} />}
               tooltipContent={
                 <Tooltip id='tooltip' className={'tooltip-content '}>
                   Click here to HIDE this section

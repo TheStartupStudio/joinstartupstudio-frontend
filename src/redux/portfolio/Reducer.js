@@ -1127,7 +1127,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              error: null,
               showEditModal: action.payload
             }
           }
@@ -1142,7 +1141,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             educations: {
               ...state.howSection?.myAlignments?.educations,
-              error: null,
               showEditModal: null
             }
           }
@@ -1158,7 +1156,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              error: null,
               showAddModal: true
             }
           }
@@ -1173,7 +1170,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myAlignments,
             credentials: {
               ...state.howSection?.myAlignments?.credentials,
-              error: null,
               showAddModal: null
             }
           }
@@ -1622,7 +1618,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             immersions: {
               ...state.howSection?.myProductivity?.immersions,
-              error: null,
               showAddModal: true
             }
           }
@@ -1637,7 +1632,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             immersions: {
               ...state.howSection?.myProductivity?.immersions,
-              error: null,
               showAddModal: null
             }
           }
@@ -1653,7 +1647,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             immersions: {
               ...state.howSection?.myProductivity?.immersions,
-              error: null,
               showEditModal: action.payload
             }
           }
@@ -1668,8 +1661,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             immersions: {
               ...state.howSection?.myProductivity?.immersions,
-              isLoading: true,
-              error: null,
               showEditModal: null
             }
           }
@@ -1685,7 +1676,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             workExperiences: {
               ...state.howSection?.myProductivity?.workExperiences,
-              error: null,
               showAddModal: true
             }
           }
@@ -1700,7 +1690,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             workExperiences: {
               ...state.howSection?.myProductivity?.workExperiences,
-              error: null,
               showAddModal: null
             }
           }
@@ -1716,7 +1705,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             workExperiences: {
               ...state.howSection?.myProductivity?.workExperiences,
-              error: null,
               showEditModal: action.payload
             }
           }
@@ -1731,7 +1719,6 @@ const portfolioReducer = (state = initialState, action) => {
             ...state.howSection?.myProductivity,
             workExperiences: {
               ...state.howSection?.myProductivity?.workExperiences,
-              error: null,
               showEditModal: null
             }
           }

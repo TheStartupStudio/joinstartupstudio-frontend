@@ -16,8 +16,10 @@ const ProjectSection = ({
 
   const actions = [
     {
-      type: 'hide',
-      action: () => setShowSkillsModal(false),
+      type: 'close',
+      action: () => {
+        setShowSkillsModal(undefined)
+      },
       isDisplayed: true
     }
   ]
@@ -90,29 +92,39 @@ const ProjectSection = ({
               })
 
               return (
-                <div className={'skill-group-by-section'} key={index}>
-                  <div className={'skill-group-title py-2'}>
-                    {evidence.title}
-                  </div>
-
-                  {Object.keys(skillsByCategory).map((category, idx) => (
-                    <div className={'skill-groups'} key={idx}>
-                      <div className={'skill-group-title py-2'}>{category}</div>
-                      <div className={'display-skill-box p-3 mb-3'}>
-                        {skillsByCategory[category].map((skill, skillIdx) => (
-                          <div className={'skill-title py-2'} key={skillIdx}>
-                            <span className={'skill-type me-1'}>
-                              {skill?.IamrSkill?.title}
-                            </span>
-                            <span className={'skill-description'}>
-                              {skill?.IamrSkill?.description}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                evidence?.selectedSkills?.length > 0 && (
+                  <div className={'skill-group-by-section'} key={index}>
+                    <div className={'skill-group-title py-2'}>
+                      {evidence.title}
                     </div>
-                  ))}
-                </div>
+
+                    {Object.keys(skillsByCategory)?.length > 0 &&
+                      Object.keys(skillsByCategory)?.map((category, idx) => (
+                        <div className={'skill-groups'} key={idx}>
+                          <div className={'skill-group-title py-2'}>
+                            {category}
+                          </div>
+                          <div className={'display-skill-box p-3 mb-3'}>
+                            {skillsByCategory[category].map(
+                              (skill, skillIdx) => (
+                                <div
+                                  className={'skill-title py-2'}
+                                  key={skillIdx}
+                                >
+                                  <span className={'skill-type me-1'}>
+                                    {skill?.IamrSkill?.title}
+                                  </span>
+                                  <span className={'skill-description'}>
+                                    {skill?.IamrSkill?.description}
+                                  </span>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )
               )
             })}
 

@@ -18,6 +18,8 @@ const EvidenceBody = ({
   deleteEvidenceImage,
   deleteEvidenceImageFile
 }) => {
+  // console.log('initialData', initialData)
+  // console.log('skills', skills)
   const editorRef = createRef()
   const [imageProperties, setImageProperties] = useState({
     originalImage: '',
@@ -66,32 +68,42 @@ const EvidenceBody = ({
 
   useEffect(() => {
     if (initialData) {
+      // console.log('initialData', initialData)
       let updatedSkills
       if (initialData?.selectedSkills?.length > 0) {
         updatedSkills = initialData?.selectedSkills?.map((skill) => {
-          const { id, ...rest } = skill?.IamrSkill
-          return { ...rest, ...skill }
+          // const { id = '', ...rest } = skill?.IamrSkill
+          const newIamrSkill = { ...skill?.IamrSkill }
+          delete newIamrSkill?.id
+          // return { ...rest, ...skill }
+          return { ...newIamrSkill, ...skill }
         })
       }
+
+      // console.log('updatedSkills', updatedSkills)
 
       let groupedSkills
       if (updatedSkills && updatedSkills.length > 0) {
         groupedSkills = updatedSkills.reduce((acc, skill) => {
-          const camelCasedCategory = skill.category
-            .toLowerCase()
-            .replace(/[-_\s.](.)/g, (_, char) => char.toUpperCase())
+          const category = skill.category
+          // const camelCasedCategory = skill.category
+          //   .toLowerCase()
+          //   .replace(/[-_\s.](.)/g, (_, char) => char.toUpperCase())
+          // console.log('camelCasedCategory', camelCasedCategory)
           const skillCopy = { ...skill }
           delete skillCopy.category
 
-          if (!acc[camelCasedCategory]) {
-            acc[camelCasedCategory] = []
+          if (!acc[category]) {
+            acc[category] = []
           }
 
-          acc[camelCasedCategory].push(skillCopy)
+          acc[category].push(skillCopy)
 
           return acc
         }, {})
       }
+
+      // console.log('groupedSkills', groupedSkills)
       setSelectedSkills(groupedSkills)
       setLinkInputValue(initialData.linkInputValue)
       setImageUrl(initialData.imageUrl)

@@ -31,23 +31,46 @@ function ProjectModal(props) {
     }
   ]
 
+  const initialEvidenceData = [
+    {
+      selectedSkills: [],
+      imageFile: null,
+      imageUrl: null,
+      linkInputValue: '',
+      type: 'evidence-1'
+    },
+    {
+      selectedSkills: [],
+      imageFile: null,
+      imageUrl: null,
+      linkInputValue: '',
+      type: 'evidence-2'
+    },
+    {
+      selectedSkills: [],
+      imageFile: null,
+      imageUrl: null,
+      linkInputValue: '',
+      type: 'evidence-3'
+    }
+  ]
   const initialProject = [
     {
       showSection: true,
       editorContent: '',
-      evidences: [],
+      evidences: [...initialEvidenceData],
       type: 'learn'
     },
     {
       showSection: true,
       editorContent: '',
-      evidences: [],
+      evidences: [...initialEvidenceData],
       type: 'develop'
     },
     {
       showSection: true,
       editorContent: '',
-      evidences: [],
+      evidences: [...initialEvidenceData],
       type: 'brand'
     }
   ]
