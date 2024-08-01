@@ -53,7 +53,7 @@ function ImmersionCard(props) {
               alt={'education image'}
             />
           </div>
-          <div className={'d-flex justify-content-between flex-grow-1'}>
+          <div className={'d-flex justify-content-between flex-grow-1 gap-4'}>
             <div className={'w-50'}>
               <div className={'d-flex justify-content-between gap-2'}>
                 <div>

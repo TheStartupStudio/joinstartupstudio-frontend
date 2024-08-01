@@ -78,8 +78,8 @@ const ImmersionCardModal = (props) => {
     if (props.data) {
       setImmersionData({
         ...props.data,
-        startDate: formatDateToInputValue(props.data?.startDate || new Date()),
-        endDate: formatDateToInputValue(props.data?.endDate || new Date())
+        startDate: formatDateToInputValue(props.data?.startDate ?? new Date()),
+        endDate: formatDateToInputValue(props.data?.endDate ?? new Date())
       })
       setImageUrl(props.data?.organizationLogo)
     }
@@ -92,6 +92,7 @@ const ImmersionCardModal = (props) => {
   const handleDataChange = (value, key) => {
     const updatedData = { ...immersionData }
     updatedData[key] = value
+
     setImmersionData(updatedData)
   }
 
@@ -222,6 +223,7 @@ const ImmersionCardModal = (props) => {
                     const newValue = e.target.value
                     handleDataChange(newValue, 'startDate')
                   }}
+                  dataformatas={''}
                 />
               </span>
             </div>
@@ -331,7 +333,7 @@ const ImmersionCardModal = (props) => {
                   }
                   videoUrl={immersionData?.immersionVideoUrl}
                   onChangeVideoUrl={(videoUrl) =>
-                    handleDataChange?.('videoUrl', videoUrl)
+                    handleDataChange?.(videoUrl, 'immersionVideoUrl')
                   }
                   onChangeImageCrop={updateCroppedImmersionImage}
                   value={immersionData?.immersionThumbnailUrl}
