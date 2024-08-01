@@ -279,7 +279,7 @@ const Navbar = (props) => {
                       to='/archived-portfolio'
                       onClick={() => setShowDropDown((preState) => !preState)}
                     >
-                      MY PORTFOLIO
+                      MY ARCHIVED PORTFOLIO
                     </Link>
 
                     <Link
