@@ -11,7 +11,7 @@ import PortfolioSkeletonLoader from './Components/PortfolioSkeletonLoader'
 import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
 import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
 
-function PeerPortfolio() {
+function PublicPortfolio() {
   const [publicPortfolio, setPublicPortfolio] = useState({})
   const [privatePortfolioMessage, setPrivatePortfolioMessage] = useState()
   const activeSection = useSelector((state) => state.portfolio.activeSection)
@@ -82,4 +82,4 @@ function PeerPortfolio() {
   )
 }
 
-export default PeerPortfolio
+export default PublicPortfolio
