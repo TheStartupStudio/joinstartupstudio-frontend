@@ -13,8 +13,10 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
   const [projects, setProjects] = useState([])
 
   useEffect(() => {
-    if (myProjects?.data) {
-      setProjects(myProjects?.data)
+    if (portfolioType !== 'peer' || portfolioType !== 'public') {
+      if (myProjects?.data) {
+        setProjects(myProjects?.data)
+      }
     }
   }, [myProjects?.data])
   const mode = useSelector((state) => state.portfolio.mode)
@@ -25,9 +27,11 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
 
   useEffect(() => {
     if (portfolioType === 'peer' || portfolioType === 'public') {
-      setProjects(data.myProjects.data)
+      setProjects(
+        data?.myProjects?.data?.length > 0 ? data?.myProjects?.data : []
+      )
     }
-    if (portfolioType !== 'peer' || portfolioType !== 'public') {
+    if (portfolioType !== 'peer' && portfolioType !== 'public') {
       fetchProjects()
     }
   }, [])
