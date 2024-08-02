@@ -3220,10 +3220,10 @@ white-space: nowrap; */
   display: block !important;
 }
 
-.notes-nav .active .not-focus-icon,
+/* .notes-nav .active .not-focus-icon,
 .notes-nav:hover .not-focus-icon {
   display: none !important;
-}
+} */
 
 .notes-nav .icon-menu {
   padding-top: 6px;
@@ -4853,10 +4853,10 @@ ul.sidebar-menu-item .collapse a:hover {
   cursor: pointer;
 }
 
-.nav-notifications:hover .nav-bell-icon,
+/* .nav-notifications:hover .nav-bell-icon,
 .nav-notifications.active .nav-bell-icon {
   color: white !important;
-}
+} */
 
 .notification-link {
   cursor: pointer;

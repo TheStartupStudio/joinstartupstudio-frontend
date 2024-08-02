@@ -13,7 +13,10 @@ const CustomLoginInput = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false)
   return (
-    <div className={`input-with-gradient-border ${cn}`}>
+    <div
+      className={`input-with-gradient-border ${cn}`}
+      style={{ position: 'relative' }}
+    >
       <input
         type={showPassword ? 'text' : inputType}
         name={inputName}
@@ -24,17 +27,49 @@ const CustomLoginInput = ({
       />
       {inputType === 'password' ? (
         showPassword ? (
-          <FontAwesomeIcon
-            icon={faEye}
-            className='cursor-pointer'
-            onClick={() => setShowPassword((state) => !state)}
-          />
+          <div
+            style={{
+              // backgroundColor: '#e8f0fe',
+              height: '45px',
+              width: '50px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignContent: 'center',
+              justifyContent: 'center',
+              borderRadius: '12px',
+              position: 'absolute',
+              right: 0
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faEye}
+              className='cursor-pointer'
+              onClick={() => setShowPassword((state) => !state)}
+              style={{ alignSelf: 'center' }}
+            />
+          </div>
         ) : (
-          <FontAwesomeIcon
-            icon={faEyeSlash}
-            className='cursor-pointer'
-            onClick={() => setShowPassword((state) => !state)}
-          />
+          <div
+            style={{
+              // backgroundColor: '#e8f0fe',
+              height: '45px',
+              width: '50px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignContent: 'center',
+              justifyContent: 'center',
+              borderRadius: '12px',
+              position: 'absolute',
+              right: 0
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faEyeSlash}
+              className='cursor-pointer'
+              onClick={() => setShowPassword((state) => !state)}
+              style={{ alignSelf: 'center' }}
+            />
+          </div>
         )
       ) : null}
     </div>

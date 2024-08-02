@@ -181,12 +181,12 @@ const Navbar = (props) => {
                   }
                 >
                   <div>
-                    <img
+                    {/* <img
                       src={notesIconHovered}
                       className='d-none focus-icon'
                       width='27px'
                       alt='note'
-                    />
+                    /> */}
                     <img
                       src={notesIcon}
                       className='not-focus-icon'

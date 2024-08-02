@@ -229,13 +229,13 @@ function LtsJournalContent(props) {
 
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          <div className="journal-entries__back">
+      <div className='row'>
+        <div className='col-12'>
+          <div className='journal-entries__back'>
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
 
-          <h4 className="page-card__content-title">{journal.title}</h4>
+          <h4 className='page-card__content-title'>{journal.title}</h4>
 
           {videos &&
             videos.constructor == Array &&
@@ -269,7 +269,7 @@ function LtsJournalContent(props) {
                     }`}
                     onClick={() => setShowVideo(video.id)}
                   >
-                    <img src={video.thumbnail} alt="thumbnail" />
+                    <img src={video.thumbnail} alt='thumbnail' />
                     <div
                       className={`journal-entries__video-thumbnail-icon${
                         journal.content == '' ? '--welcome-video' : ''
@@ -287,12 +287,12 @@ function LtsJournalContent(props) {
           journal?.content?.includes('<p') ? (
             parse(`${journal.content}`)
           ) : (
-            <p className="page-card__content-description">{journal.content}</p>
+            <p className='page-card__content-description'>{journal.content}</p>
           )}
         </div>
       </div>
       {journal?.journalTables ? (
-        <div className="col-12">
+        <div className='col-12'>
           <>
             <JournalTables
               loadData={loadData}
@@ -305,10 +305,10 @@ function LtsJournalContent(props) {
         </div>
       ) : null}
 
-      <div className="row">
+      <div className='row'>
         {journal.entries && journal.entries.length ? (
-          <div className="col-12">
-            <div className="journal-entries">
+          <div className='col-12'>
+            <div className='journal-entries'>
               <EntriesBox
                 // accordion={accordion}
                 entries={journal.entries}
@@ -334,7 +334,7 @@ function LtsJournalContent(props) {
           </div>
         ) : null}
         {journal.hasAccordion ? (
-          <div className="col-12">
+          <div className='col-12'>
             <div className={'custom-breakdowns-container'}>
               <div>
                 {!loading && (
@@ -363,7 +363,7 @@ function LtsJournalContent(props) {
               ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
               ?.map((accordion) => {
                 return (
-                  <div className="col-12">
+                  <div className='col-12'>
                     <AccordionItemWrapper
                       isOpened={openAccordion === `accordion-${accordion.id}`}
                       handleAccordionClick={() =>
@@ -387,7 +387,7 @@ function LtsJournalContent(props) {
 
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (
-              <div className="col-12">
+              <div className='col-12'>
                 <AccordionItemWrapper
                   isOpened={openAccordion === `accordion-${accordion.id}`}
                   handleAccordionClick={() =>
@@ -400,9 +400,9 @@ function LtsJournalContent(props) {
                     <>
                       {accordion.ltsJournalAccordionEntries &&
                         accordion.ltsJournalAccordionEntries.length > 0 && (
-                          <div className="accordion-content">
-                            <div className="col-12">
-                              <div className="">
+                          <div className='accordion-content'>
+                            <div className='col-12'>
+                              <div className=''>
                                 <EntriesBox
                                   accordion={accordion}
                                   entries={accordion.ltsJournalAccordionEntries}
@@ -431,11 +431,11 @@ function LtsJournalContent(props) {
                       {accordion.journalTablesAccordions &&
                         accordion.journalTablesAccordions.length > 0 && (
                           <div
-                            className="accordion-content"
+                            className='accordion-content'
                             style={{ padding: '15px 15px ' }}
                           >
-                            <div className="col-12">
-                              <div className="">
+                            <div className='col-12'>
+                              <div className=''>
                                 <JournalTables
                                   tables={accordion?.journalTablesAccordions}
                                   paragraphs={null}
@@ -454,7 +454,7 @@ function LtsJournalContent(props) {
         {journal.brandsJournal &&
         journal.brandsJournal.length &&
         journal.brandsJournal.find((item) => item.hasAccordion) ? (
-          <div className="col-12">
+          <div className='col-12'>
             <AccordionItemWrapper
               isOpened={openAccordion === `accordion-brand`}
               handleAccordionClick={() =>
@@ -465,12 +465,12 @@ function LtsJournalContent(props) {
             >
               {openAccordion === `accordion-brand` && (
                 <>
-                  <div className="accordion-content">
+                  <div className='accordion-content'>
                     <div>
                       <div>
                         <div>
-                          <div className="col-12">
-                            <div className="">
+                          <div className='col-12'>
+                            <div className=''>
                               <JournalBrands
                                 hasAccordion={1}
                                 loadData={loadData}
@@ -491,7 +491,7 @@ function LtsJournalContent(props) {
         {journal.reflectionsTable && journal.reflectionsTable.length ? (
           <>
             {journal.reflectionsTable.map((reflectionTable, tableIndex) => (
-              <div className="col-12" key={reflectionTable.id}>
+              <div className='col-12' key={reflectionTable.id}>
                 {reflectionTable.userReflectionsTable.length === 0 ? (
                   <TableWrapper title={reflectionTable.title}>
                     <TableReflections

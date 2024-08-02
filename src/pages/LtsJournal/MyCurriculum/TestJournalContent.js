@@ -126,7 +126,7 @@ function TestJournalContent(props) {
           textEditorContent: updatedInstructorDebriefData.textEditorContent,
           id: updatedInstructorDebriefData.id
         })
-        toast.success('The message was submmited successfully!')
+        toast.success('Changes saved!')
       })
       .catch((error) => {
         toast.error('Error submitting instructor debrief.')
@@ -961,7 +961,7 @@ function TestJournalContent(props) {
                           onSubmitInstructorDebrief(newInstructorBriefData)
                         }
                       >
-                        Submit
+                        Save Changes
                       </button>
                     </div>
                   </div>
