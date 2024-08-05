@@ -181,79 +181,77 @@ function Profile(props) {
           />
           <div className='profile-margin'>
             <h3>{user?.name}</h3>
-            {/*<p>{user?.profession}</p>*/}
-            <p>{userStory?.data?.userTitle}</p>
-            <UserSocialMedia data={userStory?.data?.socialMediaLinks} />
-            {/*{user?.social_links?.linkedIn && (*/}
-            {/*  <a*/}
-            {/*    href={*/}
-            {/*      user.social_links.linkedIn.startsWith('https')*/}
-            {/*        ? user.social_links.linkedIn*/}
-            {/*        : `https://${user.social_links.linkedIn}`*/}
-            {/*    }*/}
-            {/*    rel='noreferrer'*/}
-            {/*    target='_blank'*/}
-            {/*    className='link me-1'*/}
-            {/*  >*/}
-            {/*    <FontAwesomeIcon icon={faLinkedinIn} />*/}
-            {/*  </a>*/}
-            {/*)}*/}
-            {/*{user?.social_links?.twitter && (*/}
-            {/*  <a*/}
-            {/*    href={*/}
-            {/*      user.social_links.twitter.startsWith('https')*/}
-            {/*        ? user.social_links.twitter*/}
-            {/*        : `https://${user.social_links.twitter}`*/}
-            {/*    }*/}
-            {/*    rel='noreferrer'*/}
-            {/*    target='_blank'*/}
-            {/*    className='link mx-1'*/}
-            {/*  >*/}
-            {/*    <FontAwesomeIcon icon={faTwitter} />*/}
-            {/*  </a>*/}
-            {/*)}*/}
-            {/*{user?.social_links?.instagram && (*/}
-            {/*  <a*/}
-            {/*    href={*/}
-            {/*      user.social_links.instagram.startsWith('https')*/}
-            {/*        ? user.social_links.instagram*/}
-            {/*        : `https://${user.social_links.instagram}`*/}
-            {/*    }*/}
-            {/*    rel='noreferrer'*/}
-            {/*    target='_blank'*/}
-            {/*    className='link mx-1'*/}
-            {/*  >*/}
-            {/*    <FontAwesomeIcon icon={faInstagram} />*/}
-            {/*  </a>*/}
-            {/*)}*/}
-            {/*{user?.social_links?.website && (*/}
-            {/*  <a*/}
-            {/*    href={*/}
-            {/*      user.social_links.website.startsWith('https')*/}
-            {/*        ? user.social_links.website*/}
-            {/*        : `https://${user.social_links.website}`*/}
-            {/*    }*/}
-            {/*    rel='noreferrer'*/}
-            {/*    target='_blank'*/}
-            {/*    className='link mx-1'*/}
-            {/*  >*/}
-            {/*    <FontAwesomeIcon icon={faGlobe} />*/}
-            {/*  </a>*/}
-            {/*)}*/}
-            {/*{user?.social_links?.facebook && (*/}
-            {/*  <a*/}
-            {/*    href={*/}
-            {/*      user.social_links.facebook.startsWith('https')*/}
-            {/*        ? user.social_links.facebook*/}
-            {/*        : `https://${user.social_links.facebook}`*/}
-            {/*    }*/}
-            {/*    rel='noreferrer'*/}
-            {/*    target='_blank'*/}
-            {/*    className='link mx-1'*/}
-            {/*  >*/}
-            {/*    <FontAwesomeIcon icon={faFacebookF} />*/}
-            {/*  </a>*/}
-            {/*)}*/}
+            <p>{user?.profession}</p>
+            {/* {user?.social_links?.linkedIn && (
+              <a
+                href={
+                  user.social_links.linkedIn.startsWith('https')
+                    ? user.social_links.linkedIn
+                    : `https://${user.social_links.linkedIn}`
+                }
+                rel='noreferrer'
+                target='_blank'
+                className='link me-1'
+              >
+                <FontAwesomeIcon icon={faLinkedinIn} />
+              </a>
+            )} */}
+            {/* {user?.social_links?.twitter && (
+              <a
+                href={
+                  user.social_links.twitter.startsWith('https')
+                    ? user.social_links.twitter
+                    : `https://${user.social_links.twitter}`
+                }
+                rel='noreferrer'
+                target='_blank'
+                className='link mx-1'
+              >
+                <FontAwesomeIcon icon={faTwitter} />
+              </a>
+            )} */}
+            {/* {user?.social_links?.instagram && (
+              <a
+                href={
+                  user.social_links.instagram.startsWith('https')
+                    ? user.social_links.instagram
+                    : `https://${user.social_links.instagram}`
+                }
+                rel='noreferrer'
+                target='_blank'
+                className='link mx-1'
+              >
+                <FontAwesomeIcon icon={faInstagram} />
+              </a>
+            )} */}
+            {/* {user?.social_links?.website && (
+              <a
+                href={
+                  user.social_links.website.startsWith('https')
+                    ? user.social_links.website
+                    : `https://${user.social_links.website}`
+                }
+                rel='noreferrer'
+                target='_blank'
+                className='link mx-1'
+              >
+                <FontAwesomeIcon icon={faGlobe} />
+              </a>
+            )} */}
+            {/* {user?.social_links?.facebook && (
+              <a
+                href={
+                  user.social_links.facebook.startsWith('https')
+                    ? user.social_links.facebook
+                    : `https://${user.social_links.facebook}`
+                }
+                rel='noreferrer'
+                target='_blank'
+                className='link mx-1'
+              >
+                <FontAwesomeIcon icon={faFacebookF} />
+              </a>
+            )} */}
             <div className='dashboard_lastLogin w-100'>
               <span className='me-1'>Last Login:</span>
               {lastLogin}

@@ -80,49 +80,49 @@ const ChooseLogin = () => {
 
   return (
     <div
-      className="container-fluid md-px-5 ps-md-5"
+      className='container-fluid md-px-5 ps-md-5'
       style={{
-        backgroundColor: '#F8F7F7',
+        backgroundColor: '#e4e9f4',
         minHeight: ' calc(100vh - 90px)'
       }}
     >
-      <div className="row center-content">
-        <div className="col-md-6">
-          <div className="row">
-            <div className="col-md-9 mx-auto">
-              <div className="login-left-content">
-                <img className="login-logo" src={SUSLogo} alt="logo" />
-                <h1 className="login-title">Welcome...</h1>
+      <div className='row center-content'>
+        <div className='col-md-6'>
+          <div className='row'>
+            <div className='col-md-9 mx-auto'>
+              <div className='login-left-content'>
+                <img className='login-logo' src={SUSLogo} alt='logo' />
+                <h1 className='login-title'>Welcome...</h1>
                 <p>
                   ...to your Learn to Start Platform. Please choose your role
                   and log in to access.
                 </p>
 
-                <div className="social-media-items">
+                <div className='social-media-items'>
                   {/* <a className='social-media-item' href='' target='_blank'>
 										<FontAwesomeIcon icon={faFacebook} />
 									</a> */}
                   <a
-                    className="social-media-item"
-                    href="https://www.linkedin.com/company/learntostart/"
-                    target="_blank"
-                    rel="noreferrer"
+                    className='social-media-item'
+                    href='https://www.linkedin.com/company/learntostart/'
+                    target='_blank'
+                    rel='noreferrer'
                   >
                     <FontAwesomeIcon icon={faLinkedin} />
                   </a>
                   <a
-                    className="social-media-item"
-                    href="https://vimeo.com/showcase/9368302"
-                    target="_blank"
-                    rel="noreferrer"
+                    className='social-media-item'
+                    href='https://vimeo.com/showcase/9368302'
+                    target='_blank'
+                    rel='noreferrer'
                   >
                     <FontAwesomeIcon icon={faVimeo} />
                   </a>
                   <a
-                    className="social-media-item"
-                    href="https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3"
-                    target="_blank"
-                    rel="noreferrer"
+                    className='social-media-item'
+                    href='https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3'
+                    target='_blank'
+                    rel='noreferrer'
                   >
                     <FontAwesomeIcon icon={faSpotify} />
                   </a>
@@ -131,22 +131,22 @@ const ChooseLogin = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-5">
+        <div className='col-md-5'>
           <div
-            className="col-lg-9 mx-auto public-page-form px-4 pb-3 pt-4 "
+            className='col-lg-9 mx-auto public-page-form px-4 pb-3 pt-4 '
             style={{
               backgroundColor: '#F2F5FC'
             }}
           >
             <h3
-              className="text-center"
+              className='text-center'
               style={{
                 textTransform: 'uppercase',
                 color: '#51C7DF',
                 fontSize: 20
               }}
             >
-              <IntlMessages id="general.login" />
+              <IntlMessages id='general.login' />
             </h3>
             <h4 style={{ color: '#707070', textAlign: 'center', fontSize: 12 }}>
               Choose your Role
@@ -186,13 +186,13 @@ const ChooseLogin = () => {
               </div>
             </div>
 
-            <button type="submit" className="mt-2" onClick={navigateToLogin}>
-              <IntlMessages id="general.next" />
+            <button type='submit' className='mt-2' onClick={navigateToLogin}>
+              <IntlMessages id='general.next' />
             </button>
-            <p className="my-4">
-              <IntlMessages id="login.security" />
-              <a href="/lts-secure" className="ml-2 link">
-                <IntlMessages id="login.protect_data" />
+            <p className='my-4'>
+              <IntlMessages id='login.security' />
+              <a href='/lts-secure' className='ml-2 link'>
+                <IntlMessages id='login.protect_data' />
               </a>
             </p>
           </div>

@@ -10,7 +10,7 @@ const CurriculumOverview = (props) => {
       title={props.title}
     >
       {props.isOpened && (
-        <div className="accordion-content">
+        <div className='accordion-content'>
           {props.data?.map((data, index) => {
             return (
               <>
@@ -23,7 +23,7 @@ const CurriculumOverview = (props) => {
                       objectFit: 'contain',
                       marginBottom: 10
                     }}
-                    alt="url"
+                    alt='url'
                   />
                   <div
                     style={{

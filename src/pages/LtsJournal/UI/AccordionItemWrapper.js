@@ -10,7 +10,7 @@ const AccordionItemWrapper = (props) => {
       }`}
     >
       <div
-        className="accordion-header-box"
+        className='accordion-header-box'
         onClick={() => props.handleAccordionClick()}
       >
         <div className={'accordion-header-title'}>{props.title}</div>
@@ -19,13 +19,13 @@ const AccordionItemWrapper = (props) => {
             <FontAwesomeIcon
               icon={faAngleDown}
               color={'#838EAB'}
-              className="me-2 me-md-0 arrow"
+              className='me-2 me-md-0 arrow'
             />
           ) : (
             <FontAwesomeIcon
               icon={faAngleDown}
               color={'#838EAB'}
-              className="me-2 me-md-0 arrow"
+              className='me-2 me-md-0 arrow'
             />
           )}
         </span>

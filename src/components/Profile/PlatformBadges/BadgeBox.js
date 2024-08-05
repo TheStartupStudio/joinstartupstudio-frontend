@@ -52,23 +52,23 @@ const BadgeBox = () => {
   if (loading) {
     return (
       <div
-        className="d-flex justify-content-center align-items-center"
+        className='d-flex justify-content-center align-items-center'
         style={{ height: '100px' }}
       >
-        <span className=" spinner-border-primary spinner-border-sm " />
+        <span className=' spinner-border-primary spinner-border-sm ' />
       </div>
     )
   }
 
   return (
-    <div className="d-flex flex-col mt-2" style={{ flexDirection: 'column' }}>
+    <div className='d-flex flex-col mt-2' style={{ flexDirection: 'column' }}>
       <BadgeItem
-        icon={<FontAwesomeIcon icon={faLightbulb} className="me-3" />}
+        icon={<FontAwesomeIcon icon={faLightbulb} className='me-3' />}
         title={'MASTERCLASS'}
         activeRange={masterclassVideos.length}
       />
       <BadgeItem
-        icon={<FontAwesomeIcon icon={faPlay} className="me-3" />}
+        icon={<FontAwesomeIcon icon={faPlay} className='me-3' />}
         title={'STORY IN MOTION'}
         activeRange={podcastVideos.length}
       />
@@ -78,16 +78,16 @@ const BadgeBox = () => {
       />
       <BadgeItem title={'LTS JOURNAL'} activeRange={ltsJournals.length} />
       <BadgeItem
-        icon={<FontAwesomeIcon icon={faCheck} className="me-3" />}
+        icon={<FontAwesomeIcon icon={faCheck} className='me-3' />}
         title={'SPRINTS COMPLETED'}
         activeRange={sprints.length}
       />
       <BadgeItem
-        icon={<FontAwesomeIcon icon={faChalkboardTeacher} className="me-3" />}
+        icon={<FontAwesomeIcon icon={faChalkboardTeacher} className='me-3' />}
         title={'FEEDBACK ADDITIONS'}
         activeRange={feedbacks}
       />
-      <BadgeItem title={'MENTOR MEETINGS'} activeRange={mentorMeetings} />
+      <BadgeItem title={'MENTOR MEETING'} activeRange={mentorMeetings} />
       <BadgeItem title={'PORTFOLIO'} activeRange={portfolio.length} />
     </div>
   )
