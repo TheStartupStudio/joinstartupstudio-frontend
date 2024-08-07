@@ -5,11 +5,17 @@ import UserImage from './UserImage'
 function UserInfo(props) {
   return (
     <div className={'d-flex gap-3'}>
-      <UserImage width={150} height={150} />
+      <UserImage
+        width={150}
+        height={150}
+        userImageUrl={props.userInfo?.userImageUrl}
+      />
       <div className={'user-info-box'}>
         <div className={'user-name'}>{props.user?.name}</div>
-        <div className={'user-profession'}>{props.user?.profession}</div>
-        <UserSocialMedia />
+        <div className={'user-profession mt-1'}>
+          {props.userInfo?.userTitle}
+        </div>
+        <UserSocialMedia data={props.userInfo?.socialMediaLinks} />
       </div>
     </div>
   )

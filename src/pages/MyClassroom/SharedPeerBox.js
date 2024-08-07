@@ -40,7 +40,7 @@ const SharedPeerBox = (props) => {
           }}
         />
       )}
-      <div className="text-center mb-2">
+      <div className='text-center mb-2'>
         <Image
           src={
             props.data.profile_image ? props.data.profile_image : defaultImage
@@ -54,14 +54,14 @@ const SharedPeerBox = (props) => {
       props.from == 'EditPage' ? (
         <p>{props.data.Business_Founders.role}</p>
       ) : (
-        <p className="mt-0 mb-3">{props.data.profession}</p>
+        <p className='mt-0 mb-3'>{props.data.profession}</p>
       )}
       {props.from !== 'EditPage' && (
         <>
           <button
-            className="d-block mx-auto"
+            className='d-block mx-auto'
             onClick={() =>
-              navigate.push(`/user-portfolio/${props.data.username}`, {
+              navigate.push(`/peer-portfolio/${props.data.username}`, {
                 isPeerView: true
               })
             }

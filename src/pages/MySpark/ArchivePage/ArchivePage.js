@@ -64,7 +64,6 @@ function ArchivePage(props) {
     axiosInstance
       .delete(url)
       .then((res) => {
-        debugger
         toast.success(
           `Your archived ${res?.data?.data?.type} deleted successfully`
         )

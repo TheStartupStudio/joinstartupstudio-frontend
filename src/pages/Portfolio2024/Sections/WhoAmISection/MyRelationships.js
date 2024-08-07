@@ -21,7 +21,6 @@ function MyRelationships(props) {
   const dispatch = useDispatch()
 
   const mode = useSelector((state) => state.portfolio.mode)
-
   useEffect(() => {
     if (props.data) {
       setTeamRole(props?.data?.teamRole)
@@ -56,6 +55,22 @@ function MyRelationships(props) {
       isDisplayed: mode === 'edit' && isEditSection === true
     }
   ]
+  const isValidContent = (content) =>
+    content !== null && content !== undefined && content.trim() !== ''
+
+  const displayContent = (content, clickEditText, noThingAddedText) => {
+    if (mode === 'edit' && !isEditSection && !isValidContent(content)) {
+      return clickEditText
+    } else if (mode === 'edit' && !isEditSection) {
+      return isValidContent(content)
+        ? content
+        : noThingAddedText ?? 'Nothing has been added yet.'
+    } else if (mode === 'preview') {
+      return isValidContent(content)
+        ? content
+        : noThingAddedText ?? 'Nothing has been added yet.'
+    }
+  }
 
   return (
     <>
@@ -63,32 +78,44 @@ function MyRelationships(props) {
         <div className={'row'}>
           <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
             <LabeledInput
+              containerClassNames={'my-relationships'}
               title={'Team role'}
-              titleClassNames="text-center py-3 text-uppercase"
+              titleClassNames='text-center py-3 text-uppercase'
               titleHeight={70}
               inputHeight={120}
               value={teamRole}
               onChange={(value) => setTeamRole(value)}
+              placeholder={
+                isEditSection ? 'Explain the role you play on a team.' : ''
+              }
             />
           </div>
           <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
             <LabeledInput
+              containerClassNames={'my-relationships'}
               title={'Collaboration style'}
-              titleClassNames="text-center py-3 text-uppercase"
+              titleClassNames='text-center py-3 text-uppercase'
               titleHeight={70}
               inputHeight={120}
               value={collaborationStyle}
               onChange={(value) => setCollaborationStyle(value)}
+              placeholder={
+                isEditSection ? 'Explain how you collaborate with others.' : ''
+              }
             />
           </div>
           <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
             <LabeledInput
-              title={'Leadership philsophy'}
-              titleClassNames="text-center py-3 text-uppercase"
+              containerClassNames={'my-relationships'}
+              title={'Leadership philosophy'}
+              titleClassNames='text-center py-3 text-uppercase'
               titleHeight={70}
               inputHeight={120}
               value={leadershipPhilosophy}
               onChange={(value) => setLeadershipPhilosophy(value)}
+              placeholder={
+                isEditSection ? 'Explain how you act as a leader.' : ''
+              }
             />
           </div>
         </div>
@@ -100,26 +127,43 @@ function MyRelationships(props) {
                 height={190}
                 titleHeight={40}
                 inputHeight={120}
-                title={'Team role'}
-                content={teamRole}
+                title={'Team role:'}
+                titleClasses={'text-center mt-3'}
+                content={displayContent(
+                  teamRole,
+                  'Click the edit button to add team role.'
+                )}
+                contentClasses={'text-center'}
               />
             </div>
+
             <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
               <PortfolioInfoBox
                 height={190}
                 titleHeight={40}
                 inputHeight={120}
-                title={'Collaboration style'}
-                content={collaborationStyle}
+                title={'Collaboration style:'}
+                titleClasses={'text-center mt-3'}
+                content={displayContent(
+                  collaborationStyle,
+                  'Click the edit button to add a collaboration style'
+                )}
+                contentClasses={'text-center'}
               />
             </div>
+
             <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
               <PortfolioInfoBox
                 height={190}
                 titleHeight={40}
                 inputHeight={120}
-                title={'Leadership philsophy'}
-                content={leadershipPhilosophy}
+                title={'Leadership philosophy:'}
+                titleClasses={'text-center mt-3'}
+                content={displayContent(
+                  leadershipPhilosophy,
+                  'Click the edit button to add a leadership philosophy'
+                )}
+                contentClasses={'text-center'}
               />
             </div>
           </div>

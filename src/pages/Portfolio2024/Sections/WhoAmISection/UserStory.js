@@ -11,67 +11,122 @@ import {
   saveUserStory
 } from '../../../../redux/portfolio/Actions'
 import { deleteImage, uploadImage } from '../../../../utils/helpers'
+import ReactImageUpload from '../../Components/ReactAvatarEditor/ReactImageUpload'
+import useImageEditor from '../../../../hooks/useImageEditor'
+import SocialMediaInput from '../../Components/SocialMediaInput'
+
+import LabeledInput from '../../Components/DisplayData/LabeledInput'
+import { FaInstagram, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6'
+import { FaFacebook, FaFacebookF, FaGlobe } from 'react-icons/fa'
 
 const UserStory = (props) => {
-  const loggedUser = useSelector((state) => state.user.user.user)
   const mode = useSelector((state) => state.portfolio.mode)
-  const [isEditSection, setIsEditSection] = useState(false)
-  const [imageFile, setImageFile] = useState(null)
-  const [thumbnailUrl, setThumbnailUrl] = useState('')
-  const [videoUrl, setVideoUrl] = useState('')
-  const [valueProposition, setValueProposition] = useState('')
-  const [story, setStory] = useState('')
-  const [id, setId] = useState(null)
+  const isSaving = useSelector(
+    (state) => state.portfolio.whoSection.userStory.isSaving
+  )
+  const {
+    editorRef,
+    imageProperties,
+    setImageProperties,
+    handleImageLoadSuccess,
+    handleFileInputChange,
+    handleLabelClick,
+    handlePositionChange,
+    updateCroppedImage: updateCroppedProfileImage,
+    imageUrl: userImageUrl,
+    setImageUrl: setUserImageUrl,
+    avatarEditorActions
+  } = useImageEditor()
+
+  const [state, setState] = useState({
+    isEditSection: false,
+    imageFile: null,
+    userImageUrl: null,
+    thumbnailUrl: '',
+    videoUrl: '',
+    valueProposition: '',
+    story: '',
+    id: null,
+    userTitle: null,
+    socialMediaLinks: {
+      linkedIn: '',
+      facebook: '',
+      xTwitter: '',
+      instagram: '',
+      website: ''
+    }
+  })
+
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (props.data) {
-      setThumbnailUrl(props.data?.thumbnailUrl)
-      setVideoUrl(props.data?.videoUrl)
-      setValueProposition(props.data?.valueProposition)
-      setStory(props.data?.story)
-      setId(props.data?.id)
-      setIsEditSection(false)
+      setState((prevState) => ({
+        ...prevState,
+        thumbnailUrl: props.data?.thumbnailUrl,
+        videoUrl: props.data?.videoUrl,
+        valueProposition: props.data?.valueProposition,
+        story: props.data?.story,
+        id: props.data?.id,
+        isEditSection: false,
+        userTitle: props.data?.userTitle,
+        socialMediaLinks: props.data?.socialMediaLinks,
+        userImageUrl: props.data?.userImageUrl
+      }))
+      setUserImageUrl(props.data?.userImageUrl)
+      if (props.data?.userImageUrl) {
+        setImageProperties({ ...imageProperties, originalImage: '' })
+      }
     }
   }, [props.data])
 
-  const isEdit = () => !!id
+  const isEdit = () => !!state.id
+
   const saveUserStoryData = async () => {
     let newThumbnailUrl
-    if (imageFile) {
-      newThumbnailUrl = await uploadImage(imageFile)
+    let userImageUrl
+    if (state.imageFile) {
+      newThumbnailUrl = await uploadImage(state.imageFile)
     }
-    dispatch(
-      saveUserStory(
-        {
-          story,
-          valueProposition,
-          videoUrl,
-          thumbnailUrl: newThumbnailUrl ? newThumbnailUrl : thumbnailUrl
-        },
-        id
-      )
-    )
+
+    if (!!imageProperties.croppedImage) {
+      userImageUrl = await uploadImage(imageProperties.croppedImage)
+    }
+
+    const userStory = {
+      story: state.story,
+      valueProposition: state.valueProposition,
+      videoUrl: state.videoUrl,
+      thumbnailUrl: newThumbnailUrl ? newThumbnailUrl : state.thumbnailUrl,
+      userImageUrl,
+      socialMediaLinks: state.socialMediaLinks,
+      userTitle: state.userTitle
+    }
+
+    dispatch(saveUserStory(userStory, state.id))
   }
 
   const actions = [
     {
       type: 'edit',
-      action: () => setIsEditSection(true),
-      isDisplayed: mode === 'edit' && isEditSection === false
+      action: () =>
+        setState((prevState) => ({ ...prevState, isEditSection: true })),
+      isDisplayed: mode === 'edit' && state.isEditSection === false
     },
     {
       type: 'save',
       action: () => saveUserStoryData(),
-      isDisplayed: mode === 'edit' && isEditSection === true
+      isSaving: isSaving,
+      isDisplayed: mode === 'edit' && state.isEditSection === true
     }
   ]
+
   const updateCroppedImage = (croppedImage) => {
-    setImageFile(croppedImage)
+    setState((prevState) => ({ ...prevState, imageFile: croppedImage }))
   }
 
   const handleDeleteImage = async () => {
-    const deleteSuccess = await deleteImage(thumbnailUrl)
+    const deleteSuccess = await deleteImage(state.thumbnailUrl)
     if (deleteSuccess) {
       if (isEdit()) {
         dispatch(
@@ -79,7 +134,7 @@ const UserStory = (props) => {
             {
               thumbnailUrl: null
             },
-            id
+            state.id
           )
         )
       } else {
@@ -91,34 +146,146 @@ const UserStory = (props) => {
       console.error('Error: Image deletion failed')
     }
   }
+
+  const handleInputChange = (field, value) => {
+    setState((prevState) => ({
+      ...prevState,
+      [field]: value
+    }))
+  }
+
+  const handleSocialMediaChange = (platform, value) => {
+    setState((prevState) => ({
+      ...prevState,
+      socialMediaLinks: {
+        ...prevState.socialMediaLinks,
+        [platform]: value
+      }
+    }))
+  }
+
+  const handleDeleteImageFile = async () => {
+    setState({ ...state, imageFile: null })
+  }
+
+  const isValidContent = (content) => {
+    if (content === null || content === undefined) {
+      return false
+    }
+
+    const trimmedContent = content.trim()
+    const htmlTagPattern = /<[^>]*>/g
+    const textOnlyContent = trimmedContent.replace(htmlTagPattern, '').trim()
+    return textOnlyContent !== ''
+  }
+
+  const displayContent = (content, clickEditText, noThingAddedText) => {
+    if (mode === 'edit' && !state?.isEditSection && !isValidContent(content)) {
+      return clickEditText ?? noThingAddedText
+    } else if (mode === 'edit' && !state?.isEditSection) {
+      return isValidContent(content)
+        ? content
+        : noThingAddedText ?? 'Nothing has been added yet.'
+    } else if (mode === 'preview') {
+      return isValidContent(content)
+        ? content
+        : noThingAddedText ?? 'Nothing has been added yet.'
+    }
+  }
+
   return (
     <>
-      {isEditSection && mode === 'edit' ? (
+      {state?.isEditSection && mode === 'edit' ? (
         <>
           <div className={'row'}>
             <div className={'col-md-6'}>
               <EditPortfolioSubmission
-                videoUrl={videoUrl}
-                onChangeVideoUrl={(videoUrl) => setVideoUrl(videoUrl)}
+                videoUrl={state?.videoUrl}
+                onChangeVideoUrl={(videoUrl) =>
+                  handleInputChange('videoUrl', videoUrl)
+                }
                 onChangeImageCrop={updateCroppedImage}
-                value={thumbnailUrl}
+                value={state?.thumbnailUrl}
                 title={'MY PERSONAL BRAND STORY'}
                 deleteImage={handleDeleteImage}
+                deleteImageFile={handleDeleteImageFile}
               />
             </div>
             <div className={'col-md-6'}>
               <div className={'d-flex flex-column h-100'}>
-                <UserInfo user={loggedUser} />
+                <div className={'mb-2 d-flex justify-content-center'}>
+                  <ReactImageUpload
+                    value={userImageUrl}
+                    {...imageProperties}
+                    onChangeImageCrop={updateCroppedProfileImage}
+                    onImageLoadSuccess={handleImageLoadSuccess}
+                    onLabelClick={handleLabelClick}
+                    onFileInputChange={handleFileInputChange}
+                    onPositionChange={handlePositionChange}
+                    actions={avatarEditorActions}
+                    title={'User Image'}
+                    type={'circle'}
+                    editorRef={editorRef}
+                  />
+                </div>
+                <LabeledInput
+                  title={'Title'}
+                  type={'text'}
+                  align={'start'}
+                  value={state?.userTitle}
+                  onChange={(value) => handleInputChange('userTitle', value)}
+                />
+                <div>
+                  <SocialMediaInput
+                    icon={<FaLinkedinIn />}
+                    value={state?.socialMediaLinks?.linkedIn || ''}
+                    onChange={(value) =>
+                      handleSocialMediaChange('linkedIn', value)
+                    }
+                  />
+                  <SocialMediaInput
+                    icon={<FaInstagram />}
+                    value={state?.socialMediaLinks?.instagram || ''}
+                    onChange={(value) =>
+                      handleSocialMediaChange('instagram', value)
+                    }
+                  />
+                  <SocialMediaInput
+                    icon={<FaXTwitter />}
+                    value={state?.socialMediaLinks?.xTwitter || ''}
+                    onChange={(value) =>
+                      handleSocialMediaChange('xTwitter', value)
+                    }
+                  />
+                  <SocialMediaInput
+                    icon={<FaFacebookF />}
+                    value={state?.socialMediaLinks?.facebook || ''}
+                    onChange={(value) =>
+                      handleSocialMediaChange('facebook', value)
+                    }
+                  />
+                  <SocialMediaInput
+                    icon={<FaGlobe />}
+                    value={state?.socialMediaLinks?.website || ''}
+                    onChange={(value) =>
+                      handleSocialMediaChange('website', value)
+                    }
+                  />
+                </div>
 
                 <div className={'mt-2 '}>
-                  {/*<PortfolioInfoBox />*/}
                   <div className={'portfolio-info-title my-2'}>
                     {props.title ?? 'My value proposition'}
                   </div>
                   <ReactQuill
                     className={'portfolio-quill'}
-                    value={valueProposition || ''}
-                    onChange={(value) => setValueProposition(value)}
+                    value={state.valueProposition || ''}
+                    onChange={(value) =>
+                      handleInputChange('valueProposition', value)
+                    }
+                    placeholder={
+                      'Your statement of value consisting of your passions/interests, skills, and outcomes.'
+                    }
                   />
                 </div>
               </div>
@@ -131,8 +298,9 @@ const UserStory = (props) => {
               </div>
               <ReactQuill
                 className={'portfolio-quill'}
-                value={story || ''}
-                onChange={(value) => setStory(value)}
+                value={state.story || ''}
+                onChange={(value) => handleInputChange('story', value)}
+                placeholder={'Your answers to the three program questions.'}
               />
             </div>
           </div>
@@ -142,19 +310,25 @@ const UserStory = (props) => {
           <div className={'row'}>
             <div className={'col-md-6'}>
               <PortfolioSubmission
-                videoUrl={videoUrl}
-                thumbnailUrl={thumbnailUrl}
+                videoUrl={state.videoUrl}
+                thumbnailUrl={state.thumbnailUrl}
                 title={'MY PERSONAL BRAND STORY'}
               />
             </div>
             <div className={'col-md-6'}>
               <div className={'d-flex flex-column h-100'}>
-                <UserInfo user={loggedUser} />
+                <UserInfo userInfo={state} user={props.user} />
 
-                <div className={'mt-auto '}>
+                <div className={' mt-3'}>
                   <PortfolioInfoBox
                     title={'My Value Proposition'}
-                    content={valueProposition}
+                    content={displayContent(
+                      state.valueProposition,
+                      null,
+                      'No value proposition added yet! Click the edit button to add your value proposition.'
+                    )}
+                    contentClasses={'mt-2'}
+                    height={150}
                   />
                 </div>
               </div>
@@ -162,7 +336,16 @@ const UserStory = (props) => {
           </div>
           <div className={'row'}>
             <div className={'mt-3 '}>
-              <PortfolioInfoBox title={'My story'} content={story} />
+              <PortfolioInfoBox
+                title={'My story'}
+                content={displayContent(
+                  state.story,
+                  null,
+                  'You haven’t added your story yet! Click the edit button to add your story.'
+                )}
+                contentClasses={'mt-2'}
+                height={150}
+              />
             </div>
           </div>
         </>

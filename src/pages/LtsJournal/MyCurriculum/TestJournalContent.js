@@ -126,7 +126,7 @@ function TestJournalContent(props) {
           textEditorContent: updatedInstructorDebriefData.textEditorContent,
           id: updatedInstructorDebriefData.id
         })
-        toast.success('The message was submmited successfully!')
+        toast.success('Changes saved!')
       })
       .catch((error) => {
         toast.error('Error submitting instructor debrief.')
@@ -666,7 +666,7 @@ function TestJournalContent(props) {
                             style={{
                               fontFamily: 'Montserrat',
                               backgroundColor: '#fff',
-                              marginBottom: 20,
+                              // marginBottom: 20,
                               textAlign: 'start',
                               width: '100%',
                               flexDirection: 'column'
@@ -698,8 +698,8 @@ function TestJournalContent(props) {
                               style={{
                                 width: 180,
                                 height: 180,
-                                objectFit: 'contain',
-                                marginBottom: 20
+                                objectFit: 'contain'
+                                // marginBottom: 20
                               }}
                               alt={'lts-triangle'}
                               src={LtsCertification}
@@ -753,7 +753,7 @@ function TestJournalContent(props) {
                             style={{
                               fontFamily: 'Montserrat',
                               backgroundColor: '#fff',
-                              marginBottom: 20,
+                              // marginBottom: 20,
                               textAlign: 'start',
                               width: '100%'
                             }}
@@ -961,7 +961,7 @@ function TestJournalContent(props) {
                           onSubmitInstructorDebrief(newInstructorBriefData)
                         }
                       >
-                        Submit
+                        Save Changes
                       </button>
                     </div>
                   </div>
@@ -985,7 +985,7 @@ function TestJournalContent(props) {
                       style={{
                         fontFamily: 'Montserrat',
                         backgroundColor: '#fff',
-                        marginBottom: 20,
+                        // marginBottom: 20,
                         textAlign: 'start',
                         width: '100%',
                         flexDirection: 'column'

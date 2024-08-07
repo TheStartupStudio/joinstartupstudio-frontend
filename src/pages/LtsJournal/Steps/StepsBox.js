@@ -12,7 +12,8 @@ const StepsTitle = (props) => {
         fontWeight: 600
       }}
     >
-      <span>{props?.task?.days}</span> <span>{props?.task?.title}</span>
+      {/* <span>{props?.task?.days}</span> */}
+      <span>{props?.task?.title}</span>
     </div>
   )
 }

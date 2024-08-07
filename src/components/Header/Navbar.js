@@ -1,7 +1,7 @@
 import Notifications from './notifications'
 import { faAngleLeft, faBars, faBell } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { NavLink, useHistory } from 'react-router-dom/cjs/react-router-dom'
 import HSmySpark from '../../assets/images/LTS-HS/Spark .svg'
@@ -15,6 +15,8 @@ import axiosInstance from '../../utils/AxiosInstance'
 import avator from '../../assets/images/profile-image.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeSidebarState } from '../../redux'
+import { getUserStory } from '../../redux/portfolio/Actions'
+import { setBackButton } from '../../redux/backButtonReducer'
 
 const NavbarIcon = (props) => {
   return (
@@ -44,10 +46,31 @@ const Navbar = (props) => {
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
   const { isAdmin } = useSelector((state) => state.user.user)
   const backButton = useSelector((state) => state.backButton)
+  const userStory = useSelector((state) => state.portfolio.whoSection.userStory)
+
+  useEffect(() => {
+    const urlSegments = window.location.pathname.split('/')
+
+    if (
+      urlSegments[1] === 'iamr' &&
+      (urlSegments[2] === 'student-certification-1' ||
+        urlSegments[2] === 'student-certification-2')
+    ) {
+      setBackButton({ state: true, location: 'iamr' })
+    } else if (urlSegments[2] && urlSegments[2].includes('step')) {
+      setBackButton({ state: true, location: 'my-immersion' })
+    } else {
+      setBackButton({ state: false, location: '' })
+    }
+  }, [window.location.pathname])
 
   const showModal = () => {
     props.setShowContactModal(true)
   }
+
+  useEffect(() => {
+    dispatch(getUserStory())
+  }, [])
 
   const handleMobileNavBar = () => {
     if (showMobileDropDown === true) {
@@ -181,12 +204,12 @@ const Navbar = (props) => {
                   }
                 >
                   <div>
-                    <img
+                    {/* <img
                       src={notesIconHovered}
                       className='d-none focus-icon'
                       width='27px'
                       alt='note'
-                    />
+                    /> */}
                     <img
                       src={notesIcon}
                       className='not-focus-icon'
@@ -214,9 +237,15 @@ const Navbar = (props) => {
                   >
                     <div className='profile-dropdown me-1 ms-3 desktop-menu d-none d-xl-block'>
                       <img
+                        // src={
+                        //   props.mainState?.user?.user?.user?.profileImage
+                        //     ? props.mainState?.user?.user?.user?.profileImage
+                        //     : avator
+                        // }
+
                         src={
-                          props.mainState?.user?.user?.user?.profileImage
-                            ? props.mainState?.user?.user?.user?.profileImage
+                          userStory?.data?.userImageUrl
+                            ? userStory?.data?.userImageUrl
                             : avator
                         }
                         alt='Profile'
@@ -238,6 +267,7 @@ const Navbar = (props) => {
                     aria-labelledby='dropdownMenuButton'
                   >
                     <Link
+                      style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
                       to='/account'
                       onClick={() => setShowDropDown((preState) => !preState)}
@@ -246,14 +276,16 @@ const Navbar = (props) => {
                     </Link>
 
                     <Link
+                      style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
-                      to='/edit-portfolio'
+                      to='/archived-portfolio'
                       onClick={() => setShowDropDown((preState) => !preState)}
                     >
-                      MY PORTFOLIO
+                      MY ARCHIVED PORTFOLIO
                     </Link>
 
                     <Link
+                      style={{ width: '95%' }}
                       onClick={() => setShowDropDown((preState) => !preState)}
                       to='/briefings'
                       className='dropdown-item py-2 dropdown-menu-hover'
@@ -263,6 +295,7 @@ const Navbar = (props) => {
 
                     <li>
                       <Link
+                        style={{ width: '95%' }}
                         onClick={() => setShowDropDown((preState) => !preState)}
                         to='/resources'
                         className='dropdown-item py-2 dropdown-menu-hover'
@@ -272,6 +305,7 @@ const Navbar = (props) => {
                     </li>
                     {isAdmin && (
                       <Link
+                        style={{ width: '95%' }}
                         className='dropdown-item py-2 dropdown-menu-hover'
                         to='#'
                         onClick={() => {
@@ -293,6 +327,7 @@ const Navbar = (props) => {
                       SUPPORT
                     </Link> */}
                     <Link
+                      style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
                       onClick={() => {
                         history.push('/logout')

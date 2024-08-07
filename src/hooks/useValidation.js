@@ -33,7 +33,6 @@ export const useValidation = (
       }
 
       const value = formData[key]
-      console.log('value', value)
 
       if (
         (typeof value === 'string' && stripHtmlTags(value).trim() === '') ||

@@ -9,12 +9,13 @@ import {
   setConfirmVisibilityModalContent,
   setShareModal,
   setShareModalContent,
-  updatePortfolioPrivacy
+  updateSharingSettings
 } from '../../../../redux/portfolio/Actions'
 import SharePortfolioModal from './SharePortfolioModal'
 
 function PortfolioVisibilityModal(props) {
   const dispatch = useDispatch()
+  const [sharingSettings, setSharingSettings] = useState({})
   const [publishToPeers, setPublishToPeers] = useState(false)
   const [publishToPublic, setPublishToPublic] = useState(false)
   const confirmVisibilityModal = useSelector(
@@ -31,11 +32,15 @@ function PortfolioVisibilityModal(props) {
   )
 
   useEffect(() => {
-    setPublishToPublic(props.publishToPublic)
-  }, [props.publishToPublic])
-  useEffect(() => {
-    setPublishToPeers(props.publishToPeers)
-  }, [props.publishToPeers])
+    if (props.sharingSettings) setSharingSettings(props.sharingSettings)
+  }, [props.sharingSettings])
+
+  // useEffect(() => {
+  //   setPublishToPublic(props.publishToPublic)
+  // }, [props.publishToPublic])
+  // useEffect(() => {
+  //   setPublishToPeers(props.publishToPeers)
+  // }, [props.publishToPeers])
 
   const actions = [
     {
@@ -48,8 +53,9 @@ function PortfolioVisibilityModal(props) {
     }
   ]
 
+  const isEdit = () => !!sharingSettings?.id
   const handleTogglePeers = () => {
-    if (publishToPeers === false) {
+    if (sharingSettings?.isPeerShared === false) {
       dispatch(
         setConfirmVisibilityModalContent({
           title: 'YOU’RE ABOUT TO PUBLISH YOUR PORTFOLIO TO YOUR PEERS.',
@@ -57,10 +63,16 @@ function PortfolioVisibilityModal(props) {
             'Once you publish your portfolio, your peers will be able to view it.',
           action: () =>
             dispatch(
-              updatePortfolioPrivacy({
-                publishToPeers: !publishToPeers,
-                publishToPublic
-              })
+              updateSharingSettings(
+                {
+                  ...sharingSettings,
+                  isPeerShared: !sharingSettings?.isPeerShared,
+                  // isPublicShared: sharingSettings?.isPublicShared,
+                  id: sharingSettings?.id
+                },
+                null,
+                isEdit()
+              )
             )
         })
       )
@@ -79,12 +91,15 @@ function PortfolioVisibilityModal(props) {
           actionTitle: 'YES, UNPUBLISH MY PORTFOLIO',
           action: () =>
             dispatch(
-              updatePortfolioPrivacy(
+              updateSharingSettings(
                 {
-                  publishToPeers: !publishToPeers,
-                  publishToPublic
+                  ...sharingSettings,
+                  isPeerShared: !sharingSettings?.isPeerShared,
+                  // isPublicShared: sharingSettings?.isPublicShared,
+                  id: sharingSettings?.id
                 },
-                'unPublishing'
+                'unPublishing',
+                isEdit()
               )
             )
         })
@@ -99,7 +114,7 @@ function PortfolioVisibilityModal(props) {
   }
 
   const handleTogglePublic = () => {
-    if (publishToPublic === false) {
+    if (sharingSettings?.isPublicShared === false) {
       dispatch(
         setConfirmVisibilityModalContent({
           title: 'YOU’RE ABOUT TO PUBLISH YOUR PORTFOLIO TO THE PUBLIC.',
@@ -107,10 +122,17 @@ function PortfolioVisibilityModal(props) {
             'Once you publish your portfolio, others will be able to view it.',
           action: () =>
             dispatch(
-              updatePortfolioPrivacy({
-                publishToPeers: !publishToPeers,
-                publishToPublic: !publishToPublic
-              })
+              updateSharingSettings(
+                {
+                  // isPeerShared: sharingSettings?.isPeerShared,
+                  ...sharingSettings,
+                  isPeerShared: true,
+                  isPublicShared: !sharingSettings?.isPublicShared,
+                  id: sharingSettings?.id
+                },
+                null,
+                isEdit()
+              )
             )
         })
       )
@@ -132,12 +154,15 @@ function PortfolioVisibilityModal(props) {
             'Check to unpublished for everyone (nobody will be able to view your portfolio).',
           action: () =>
             dispatch(
-              updatePortfolioPrivacy(
+              updateSharingSettings(
                 {
-                  publishToPeers,
-                  publishToPublic: !publishToPublic
+                  // isPeerShared: sharingSettings?.isPeerShared,
+                  ...sharingSettings,
+                  isPublicShared: !sharingSettings?.isPublicShared,
+                  id: sharingSettings?.id
                 },
-                'unPublishing'
+                'unPublishing',
+                isEdit()
               )
             )
         })
@@ -173,9 +198,10 @@ function PortfolioVisibilityModal(props) {
               Publish to your peers
             </label>
             <SwitchIcon
-              id="publish-to-peers"
-              isChecked={!publishToPeers}
+              id='publish-to-peers'
+              isChecked={!sharingSettings?.isPeerShared}
               onToggle={handleTogglePeers}
+              icon={'custom-switch-label'}
             />
           </div>
 
@@ -188,9 +214,10 @@ function PortfolioVisibilityModal(props) {
               Publish to the public
             </label>
             <SwitchIcon
-              id="publish-to-public"
-              isChecked={!publishToPublic}
+              id='publish-to-public'
+              isChecked={!sharingSettings?.isPublicShared}
               onToggle={handleTogglePublic}
+              icon={'custom-switch-label'}
             />
           </div>
         </div>

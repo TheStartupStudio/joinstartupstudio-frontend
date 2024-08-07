@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 import SectionActions from './SectionActions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,32 +7,46 @@ import {
   hideAddMentorModal,
   hideEditMentorModal,
   showAddMentorModal,
-  showEditMentorModal
+  showEditMentorModal,
+  hideAddCompetitivenessModal,
+  showAddCompetitivenessModal
 } from '../../../../redux/portfolio/Actions'
 
 function AddMyMentor(props) {
   const dispatch = useDispatch()
   const mode = useSelector((state) => state.portfolio.mode)
 
-  const showMentorModal = useSelector(
-    (state) => state.portfolio.whoSection.myMentors.showAddMentorModal
+  const showModal = useSelector((state) =>
+    props.category === 'my-competitiveness'
+      ? state.portfolio.howSection.myCompetitiveness.showAddCompetitivenessModal
+      : state.portfolio.whoSection.myMentors.showAddMentorModal
   )
 
-  const handleShowMentorModal = () => {
-    dispatch(showAddMentorModal())
+  const handleShowModal = () => {
+    if (props.category === 'my-competitiveness') {
+      dispatch(showAddCompetitivenessModal())
+    } else {
+      dispatch(showAddMentorModal())
+    }
   }
-  const handleHideMentorModal = () => {
-    dispatch(hideAddMentorModal())
+
+  const handleHideModal = () => {
+    if (props.category === 'my-competitiveness') {
+      dispatch(hideAddCompetitivenessModal())
+    } else {
+      dispatch(hideAddMentorModal())
+    }
   }
 
   const actions = [
     {
       type: 'add',
-      action: () => handleShowMentorModal(),
+      action: handleShowModal,
       isDisplayed: mode === 'edit' && props.isEditSection === true,
-      description: 'Click here to add a new mentor'
+      description: `Click here to add a new ${props.type ?? 'mentor'}`
     }
   ]
+
   return (
     <div className={'my-mentors-container position-relative'}>
       <img
@@ -41,14 +55,19 @@ function AddMyMentor(props) {
         src={imagePlaceholder}
       />
       <div className={'add-new-mentor px-2 pt-3'}>
-        {'Click the add button to add a new mentor relationship.'}
+        {`Click the add button to add a new ${props.type ?? 'mentor'} ${
+          props.type === 'competitiveness' ? '' : 'relationship.'
+        }`}
       </div>
       <SectionActions actions={actions} />
-      <MyMentorModal
-        onHide={handleHideMentorModal}
-        show={showMentorModal}
-        title={'Add Mentor'}
-      />
+      {showModal && (
+        <MyMentorModal
+          onHide={handleHideModal}
+          show={showModal}
+          title={`Add ${props.type ?? 'mentor'}`}
+          category={props.category}
+        />
+      )}
     </div>
   )
 }

@@ -65,8 +65,6 @@ export const JournalTableRowsCloned = ({
         })
   }
 
-  console.log('tableRows', tableRows)
-
   const parentRowIndexString = (rowIndex) => {
     if (parentRowIndex) {
       return `${parentRowIndex}-${rowIndex}`
