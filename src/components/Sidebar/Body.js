@@ -117,15 +117,7 @@ const Body = (props) => {
         />
         <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
       </ParentDropdownItem>
-      {/* <SidebarItem
-        to={'/edit-portfolio'}
-        className={`${
-          location.pathname.includes('edit-portfolio') ? 'active' : ''
-        }`}
-        srcImage={SparkImage}
-        title='MY PORTFOLIO'
-        isDropdown={false}
-      /> */}
+
       <ParentSidebarItem
         ariaControls='mySpark'
         href='#mySpark'
@@ -137,6 +129,15 @@ const Body = (props) => {
         <DropdownItem title={'SPARK WIDGETS'} to={'/my-spark/widgets'} />
         <DropdownItem title={'SPARK ARCHIVE'} to={'/my-spark/archive'} />
       </ParentDropdownItem>
+      <SidebarItem
+        to={'/my-portfolio'}
+        className={`${
+          location.pathname.includes('my-portfolio') ? 'active' : ''
+        }`}
+        srcImage={SparkImage}
+        title='MY PORTFOLIO'
+        isDropdown={false}
+      />
     </ul>
   )
 }
