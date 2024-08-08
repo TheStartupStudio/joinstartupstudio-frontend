@@ -518,6 +518,7 @@
   min-height: 100px;
   padding: 25px;
   overflow: hidden;
+  margin-top: 40px;
 }
 
 .portfolio-data-container-title {
@@ -567,8 +568,8 @@
   align-items: center;
   padding: 10px;
   flex-direction: row;
-  margin-top: -40px;
-  height: 20%;
+  margin-top: -30px;
+  /* height: 20%; */
 }
 
 

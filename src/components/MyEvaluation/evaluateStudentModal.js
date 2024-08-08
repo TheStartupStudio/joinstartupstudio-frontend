@@ -278,7 +278,7 @@ const EvaluateStudentModal = (props) => {
             onClick={handlePrevious}
           >
             <FontAwesomeIcon icon={faChevronLeft} />
-            <div style={{ margin: '0 5px' }}>Previous</div>
+            <div style={{ margin: '0 5px', color: 'black' }}>Previous</div>
           </div>
           <div
             style={{
