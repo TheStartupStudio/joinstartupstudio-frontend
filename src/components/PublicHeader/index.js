@@ -105,7 +105,7 @@ function PublicHeader() {
                     href='/'
                     style={{
                       position: 'absolute',
-                      top: '90px',
+                      // top: '90px',
                       right: '50px',
                       fontSize: '16px'
                     }}

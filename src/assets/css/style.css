@@ -2273,6 +2273,7 @@ ul.content-list-of-month li:hover span {
 
 .public-nav li.nav-item {
   width: max-content;
+  margin: 0;
 }
 
 .public-nav .nav-link {
