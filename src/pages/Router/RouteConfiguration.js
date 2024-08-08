@@ -2,7 +2,7 @@ import React from 'react'
 import userProfile from '../Profile/userProfile'
 import CSVUpload from '../../components/CSVUpload'
 import LtsJournal from '../LtsJournal'
-import TestJournal from '../LtsJournal/MyCurriculum/TestJournal'
+import TestJournal from '../LtsJournal/MyCurriculum/CurriculumJournal'
 import StudentJournals from '../studentJournals'
 import VerifyEmailByCode from '../Register/verifyEmailByCode'
 

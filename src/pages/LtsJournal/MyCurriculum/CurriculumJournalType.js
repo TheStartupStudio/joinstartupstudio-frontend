@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Route, Switch, useHistory } from 'react-router-dom'
-import TestJournalContent from './TestJournalContent'
+import TestJournalContent from './CurriculumJournalContent'
 import searchIcon from '../../../assets/images/search-icon.png'
 import { FormattedMessage } from 'react-intl'
 import axiosInstance from '../../../utils/AxiosInstance'
@@ -8,7 +8,7 @@ import LtsEduLogo from '../../../assets/images/LTS-EDU-logo.png'
 import SidebarItems from './CurriculumSidebars/SidebarItems'
 import FinancialSidebar from './CurriculumSidebars/FinancialSidebar'
 
-const TestJournalType = (props) => {
+const CurriculumJournalType = (props) => {
   const history = useHistory()
   const [journals, setJournals] = useState([])
   const [weeks, setWeeks] = useState([])
@@ -319,4 +319,4 @@ const TestJournalType = (props) => {
   )
 }
 
-export default TestJournalType
+export default CurriculumJournalType

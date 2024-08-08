@@ -330,17 +330,7 @@ const Navbar = (props) => {
                       style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
                       onClick={() => {
-                        axiosInstance
-                          .put('/myPerformanceData/updateActivity/endTime', {
-                            isActive: false
-                          })
-                          .then((response) => {
-                            if (response) history.push('/logout')
-                          })
-                          .catch((error) => {
-                            console.error('Error updating activity:', error)
-                          })
-                          .finally(() => {})
+                        history.push('/logout')
                       }}
                     >
                       <IntlMessages id='navigation.logout' />

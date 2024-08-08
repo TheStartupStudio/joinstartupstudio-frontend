@@ -42,13 +42,13 @@ function Sidebar(props) {
 
   return (
     <nav
-      id="sidebar"
+      id='sidebar'
       className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
     >
-      <div className="scroll sidebar-sticky sidebar-scroll">
+      <div className='scroll sidebar-sticky sidebar-scroll'>
         <PerfectScrollbar
           option={{ suppressScrollX: true, wheelPropagation: false }}
-          className="sidebar-sticky"
+          className='sidebar-sticky'
         >
           <div>
             <Header props={props} />
