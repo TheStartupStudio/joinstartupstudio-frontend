@@ -8,16 +8,15 @@ export default function Logout() {
   const dispatch = useDispatch()
 
   useEffect(function () {
-    // axiosInstance
-    //   .put('/myPerformanceData/updateActivity/endTime', {
-    //     isActive: false
-    //   })
-    //   .then((response) => {})
-    //   .catch((error) => {
-    //     console.error('Error updating activity:', error)
-    //     // history.push('/logout')
-    //   })
-    //   .finally(() => {})
+    axiosInstance
+      .put('/myPerformanceData/updateActivity/endTime', {
+        isActive: false
+      })
+      .then((response) => {})
+      .catch((error) => {
+        console.error('Error updating activity:', error)
+      })
+      .finally(() => {})
     dispatch(userLogout())
   })
 
