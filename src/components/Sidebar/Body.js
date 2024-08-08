@@ -20,8 +20,9 @@ const Body = (props) => {
   const location = useLocation()
   return (
     <ul
-      className='list-unstyled components sidebar-menu-item'
+      className='list-unstyled components sidebar-menu-item '
       id='side-menu-main'
+      // style={{ height: '100vh' }}
     >
       <li>
         <div

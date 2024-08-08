@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+// import React, { useState, useRef } from 'react'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
 import { Link } from 'react-router-dom'
@@ -149,34 +150,13 @@ const MobileNavbar = (props) => {
                     <img
                       src={notesIconHovered}
                       className='d-none focus-icon'
-                      width='25px'
+                      width='27px'
                       alt='note'
                     />
                     <img
                       src={notesIcon}
                       className='not-focus-icon'
-                      width='25px'
-                      alt='note'
-                    />
-                  </div>
-                </NavLink>
-              </li>
-              <li className='nav-item notes-nav my-auto '>
-                <NavLink
-                  className={`nav-link px-2 me-1 icon-menu`}
-                  to={'/my-spark/widgets'}
-                >
-                  <div>
-                    <img
-                      src={mySparkWhite}
-                      className='d-none focus-icon'
-                      width='21px'
-                      alt='note'
-                    />
-                    <img
-                      src={mySparkBlack}
-                      className='not-focus-icon'
-                      width='21px'
+                      width='27px'
                       alt='note'
                     />
                   </div>
@@ -233,7 +213,7 @@ const MobileNavbar = (props) => {
           {
             <Link
               className='dropdown-item py-2 dropdown-menu-hover'
-              to='/archived-portfolio'
+              to='/edit-portfolio'
               onClick={() => setShowDropDown((preState) => !preState)}
             >
               MY ARCHIVED PORTFOLIO

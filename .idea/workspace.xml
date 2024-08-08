@@ -5,8 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumJournalContent.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Header/MobileNavbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header/MobileNavbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MyMarketReadyGuide/FirstDiv.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MyMarketReadyGuide/FirstDiv.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MyMarketReadyGuide/IamrGuideContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MyMarketReadyGuide/IamrGuideContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MyMarketReadyGuide/image.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MyMarketReadyGuide/image.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/Body.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/Body.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/SidebarItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/SidebarItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/newRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/newRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumJournal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournalContent.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumJournalContent.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournalContent.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/TestJournalType.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumJournalType.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Router/renderRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Router/renderRoutes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

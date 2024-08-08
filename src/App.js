@@ -3,7 +3,7 @@
  * */
 
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import jQuery from 'jquery'
 import NewRouter from './newRouter'
 import useUserActivity from './hooks/useUserActivity'
@@ -17,9 +17,9 @@ function App({ basename }) {
 
   return (
     <React.Suspense fallback={''}>
-      <BrowserRouter basename={basename}>
+      <Router basename={basename}>
         <NewRouter />
-      </BrowserRouter>
+      </Router>
     </React.Suspense>
   )
 }
