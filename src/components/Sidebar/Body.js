@@ -25,7 +25,7 @@ const Body = (props) => {
     >
       <li>
         <div
-          className='accordion accordion-flush'
+          className='accordion accordion-flush sidebar-accordion-border'
           id='accordionFlushExample'
         ></div>
         <SidebarItem

@@ -25,35 +25,35 @@ function Sidebar() {
 
   return (
     <nav
-      id="sidebar"
+      id='sidebar'
       className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
     >
-      <div className="scroll sidebar-sticky sidebar-scroll">
+      <div className='scroll sidebar-sticky sidebar-scroll'>
         <PerfectScrollbar
           option={{ suppressScrollX: true, wheelPropagation: false }}
-          className="sidebar-sticky"
+          className='sidebar-sticky'
         >
-          <div className="content">
-            <div className="sidebar-header">
-              <NavLink to="/dashboard">
-                <img src={SUSLogo} alt="logo" />
+          <div className='content'>
+            <div className='sidebar-header'>
+              <NavLink to='/dashboard'>
+                <img src={SUSLogo} alt='logo' />
               </NavLink>
             </div>
             <ul
-              className="list-unstyled components sidebar-menu-item"
-              id="side-menu-main"
+              className='list-unstyled components sidebar-menu-item'
+              id='side-menu-main'
             >
               <li>
                 <NavLink
                   onClick={() => dispatch(setAccordionToggled(false))}
                   to={'/dashboard'}
-                  className="mt-md-1"
-                  activeclassname="sidenav active"
+                  className='mt-md-1'
+                  activeclassname='sidenav active'
                 >
-                  <div className="d-flex" style={{ alignItems: 'center' }}>
-                    <div className="dashboard me-1"></div>
-                    <div className="ms-2">
-                      <IntlMessages id="navigation.dashboard" />
+                  <div className='d-flex' style={{ alignItems: 'center' }}>
+                    <div className='dashboard me-1'></div>
+                    <div className='ms-2'>
+                      <IntlMessages id='navigation.dashboard' />
                     </div>
                   </div>
                 </NavLink>
@@ -61,16 +61,16 @@ function Sidebar() {
               <li>
                 <NavLink
                   onClick={() => dispatch(setAccordionToggled(false))}
-                  to="/startup-live"
-                  activeclassname="sidenav active"
+                  to='/startup-live'
+                  activeclassname='sidenav active'
                 >
-                  <div className="d-flex" style={{ alignItems: 'center' }}>
+                  <div className='d-flex' style={{ alignItems: 'center' }}>
                     <FontAwesomeIcon
-                      className="sidebar-icon me-1"
+                      className='sidebar-icon me-1'
                       icon={faTv}
                     />
-                    <div className="ms-2">
-                      <IntlMessages id="navigation.startup_live" />
+                    <div className='ms-2'>
+                      <IntlMessages id='navigation.startup_live' />
                     </div>
                   </div>
                 </NavLink>
@@ -78,31 +78,31 @@ function Sidebar() {
               <li>
                 <NavLink
                   onClick={() => dispatch(setAccordionToggled(false))}
-                  to="/portfolio"
-                  activeclassname="sidenav active"
+                  to='/portfolio'
+                  activeclassname='sidenav active'
                 >
-                  <div className="d-flex" style={{ alignItems: 'center' }}>
+                  <div className='d-flex' style={{ alignItems: 'center' }}>
                     <FontAwesomeIcon
-                      className="sidebar-icon me-1 me-4"
+                      className='sidebar-icon me-1 me-4'
                       icon={faIdCard}
                     />
-                    <div className="ms-2">PORTFOLIO</div>
+                    <div className='ms-2'>PORTFOLIO</div>
                   </div>
                 </NavLink>
               </li>
               <li>
                 <NavLink
                   to={`/beyond-your-course`}
-                  activeclassname="active"
+                  activeclassname='active'
                   onClick={() => dispatch(setAccordionToggled(false))}
                 >
-                  <div className="d-flex" style={{ alignItems: 'center' }}>
+                  <div className='d-flex' style={{ alignItems: 'center' }}>
                     <FontAwesomeIcon
-                      className="sidebar-icon me-1"
+                      className='sidebar-icon me-1'
                       icon={faMapSigns}
                     />
-                    <div className="ms-2">
-                      <IntlMessages id="navigation.beyond_your_course" />
+                    <div className='ms-2'>
+                      <IntlMessages id='navigation.beyond_your_course' />
                     </div>
                   </div>
                 </NavLink>
@@ -110,26 +110,26 @@ function Sidebar() {
               <li>
                 <NavLink
                   to={`/story-in-motion`}
-                  activeclassname="sidenav active"
+                  activeclassname='sidenav active'
                   onClick={() => dispatch(setAccordionToggled(false))}
                 >
-                  <div className="d-flex" style={{ alignItems: 'center' }}>
+                  <div className='d-flex' style={{ alignItems: 'center' }}>
                     <FontAwesomeIcon
-                      className="sidebar-icon me-1"
+                      className='sidebar-icon me-1'
                       icon={faChild}
                     />
-                    <div className="ms-2">
-                      <IntlMessages id="sidebar.story_in_motion" />
+                    <div className='ms-2'>
+                      <IntlMessages id='sidebar.story_in_motion' />
                     </div>
                   </div>
                 </NavLink>
               </li>
             </ul>
-            <div className="sidebar-bottom">
+            <div className='sidebar-bottom'>
               {currentLanguage === 'en' ? (
-                <img src={sidebarImage} alt="sidebar" />
+                <img src={sidebarImage} alt='sidebar' />
               ) : (
-                <img src={sidebarImageES} alt="sidebar" />
+                <img src={sidebarImageES} alt='sidebar' />
               )}
             </div>
           </div>
