@@ -189,77 +189,82 @@ const EvaluateStudentModal = (props) => {
   }, [journalEntries])
 
   return (
-    <div className='evaluate-modal-background'>
+    <div className='evaluate-modal-background' style={{ height: '100%' }}>
       <div className='evaluate-container'>
-        <div
-          onClick={() => props.setSelectedUser('')}
-          className='evaluate-close-button'
-        >
-          <FontAwesomeIcon icon={faTimes} />
-        </div>
-        <div className='title-filter-container'>
-          <h5>{journalEntries.title}</h5>
-          <div>
-            {journalEntries.entries && journalEntries.entries.length > 0 && (
-              <Dropdown
-                studentSelected={studentSelected}
-                setStudentSelected={setStudentSelected}
-                myStudents={props.myStudents}
-              />
-            )}
+        <div className='liza-girlie'>
+          <div
+            onClick={() => props.setSelectedUser('')}
+            className='evaluate-close-button'
+          >
+            <FontAwesomeIcon icon={faTimes} />
           </div>
-        </div>
-
-        <div className='journal-entries-container'>
-          {journalEntries.entries &&
-            journalEntries.entries.length > 0 &&
-            journalEntries.entries.map((entry, index) => (
-              <div key={index} style={{ margin: '30px 0' }}>
-                <div className='journal-entries-title'>{entry.title}</div>
-                <div className='user-entries'>
-                  {userJournalEntries[index]?.content
-                    ? stripHtmlTags(userJournalEntries[index].content)
-                    : 'No Data'}
-                </div>
-              </div>
-            ))}
-        </div>
-
-        {journalEntries.entries && journalEntries.entries.length > 0 && (
-          <div className='portfolio-data-container'>
-            <div className='portfolio-data-container-title py-2'>
-              INSTRUCTOR FEEDBACK
-            </div>
-            <div className='feedback-action'>
-              <div className='feedback-action-box' onClick={toggleEditing}>
-                {instructorEditing ? (
-                  <FaCheck className={'action-icon public-icon'} />
-                ) : (
-                  <FaPencilAlt className={'action-icon pencil-icon'} />
-                )}
-              </div>
-            </div>
-            <div style={{ fontSize: '12px', color: 'grey' }}>
-              {!instructorEditing ? (
-                feedbackContent ? (
-                  stripHtmlTags(feedbackContent)
-                ) : (
-                  <div style={{ fontSize: '12px', color: 'grey' }}>
-                    No Feedback given yet. Click the pencil icon to add new
-                    feedback.
-                  </div>
-                )
-              ) : (
-                <ReactQuill
-                  className={'portfolio-quill'}
-                  value={valueProposition || ''}
-                  onChange={(value) => setValueProposition(value)}
+          <div className='title-filter-container'>
+            <h5>{journalEntries.title}</h5>
+            <div>
+              {journalEntries.entries && journalEntries.entries.length > 0 && (
+                <Dropdown
+                  studentSelected={studentSelected}
+                  setStudentSelected={setStudentSelected}
+                  myStudents={props.myStudents}
                 />
               )}
             </div>
           </div>
-        )}
 
+          <div className='journal-entries-container'>
+            {journalEntries.entries &&
+              journalEntries.entries.length > 0 &&
+              journalEntries.entries.map((entry, index) => (
+                <div key={index} style={{ margin: '30px 0' }}>
+                  <div className='journal-entries-title'>{entry.title}</div>
+                  <div className='user-entries'>
+                    {userJournalEntries[index]?.content
+                      ? stripHtmlTags(userJournalEntries[index].content)
+                      : 'No Data'}
+                  </div>
+                </div>
+              ))}
+          </div>
+
+          {journalEntries.entries && journalEntries.entries.length > 0 && (
+            <div className='portfolio-data-container'>
+              <div className='portfolio-data-container-title py-2'>
+                INSTRUCTOR FEEDBACK
+              </div>
+              <div className='feedback-action'>
+                <div className='feedback-action-box' onClick={toggleEditing}>
+                  {instructorEditing ? (
+                    <FaCheck className={'action-icon public-icon'} />
+                  ) : (
+                    <FaPencilAlt className={'action-icon pencil-icon'} />
+                  )}
+                </div>
+              </div>
+              <div style={{ fontSize: '12px', color: 'grey' }}>
+                {!instructorEditing ? (
+                  feedbackContent ? (
+                    stripHtmlTags(feedbackContent)
+                  ) : (
+                    <div style={{ fontSize: '12px', color: 'grey' }}>
+                      No Feedback given yet. Click the pencil icon to add new
+                      feedback.
+                    </div>
+                  )
+                ) : (
+                  <ReactQuill
+                    className={'portfolio-quill'}
+                    value={valueProposition || ''}
+                    onChange={(value) => setValueProposition(value)}
+                  />
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+        {/* <div
+          className='evaluation-footer-wrapper'
+          style={{ position: 'relative', bottom: '-50px' }}
+        > */}
         <div className='modal-footer-evaluation'>
           <div
             style={{
@@ -290,10 +295,11 @@ const EvaluateStudentModal = (props) => {
             }}
             onClick={handleNext}
           >
-            <div style={{ margin: '0 5px' }}>Next</div>
+            <div style={{ margin: '0 5px', marginLeft: '90%' }}>Next</div>
             <FontAwesomeIcon icon={faChevronRight} />
           </div>
         </div>
+        {/* </div> */}
       </div>
     </div>
   )
