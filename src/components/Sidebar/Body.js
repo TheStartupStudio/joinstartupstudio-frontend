@@ -20,12 +20,12 @@ const Body = (props) => {
   const location = useLocation()
   return (
     <ul
-      className='list-unstyled components sidebar-menu-item'
+      className='list-unstyled components sidebar-menu-item sidebar-menu-list'
       id='side-menu-main'
     >
       <li>
         <div
-          className='accordion accordion-flush'
+          className='accordion accordion-flush sidebar-accordion-border'
           id='accordionFlushExample'
         ></div>
         <SidebarItem
@@ -117,7 +117,7 @@ const Body = (props) => {
         />
         <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
       </ParentDropdownItem>
-      {/* <SidebarItem
+      <SidebarItem
         to={'/edit-portfolio'}
         className={`${
           location.pathname.includes('edit-portfolio') ? 'active' : ''
@@ -125,8 +125,8 @@ const Body = (props) => {
         srcImage={SparkImage}
         title='MY PORTFOLIO'
         isDropdown={false}
-      /> */}
-      <ParentSidebarItem
+      />
+      {/* <ParentSidebarItem
         ariaControls='mySpark'
         href='#mySpark'
         srcImage={SparkImage}
@@ -136,7 +136,7 @@ const Body = (props) => {
       <ParentDropdownItem id={'mySpark'}>
         <DropdownItem title={'SPARK WIDGETS'} to={'/my-spark/widgets'} />
         <DropdownItem title={'SPARK ARCHIVE'} to={'/my-spark/archive'} />
-      </ParentDropdownItem>
+      </ParentDropdownItem> */}
     </ul>
   )
 }

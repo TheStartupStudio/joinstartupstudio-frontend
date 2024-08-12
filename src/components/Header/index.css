@@ -4,6 +4,7 @@
   width: 80px;
   height: 80px;
 }
+
 .lds-facebook div {
   display: inline-block;
   position: absolute;
@@ -12,43 +13,52 @@
   background: #01c5d1;
   animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
 }
+
 .lds-facebook div:nth-child(1) {
   left: 8px;
   animation-delay: -0.24s;
 }
+
 .lds-facebook div:nth-child(2) {
   left: 32px;
   animation-delay: -0.12s;
 }
+
 .lds-facebook div:nth-child(3) {
   left: 56px;
   animation-delay: 0;
 }
+
 @keyframes lds-facebook {
   0% {
     top: 8px;
     height: 64px;
   }
+
   50%,
   100% {
     top: 24px;
     height: 32px;
   }
 }
+
 input,
 textarea {
   background: #e5e5e54d;
   border: 0;
 }
+
 .image-upload-widget {
   background-color: #e4e4e4;
   width: 100;
   padding: 5px;
   border: 0;
 }
+
 .TnC_modal_dialog.modal {
   text-align: center;
 }
+
 .comm-icon,
 .spark-icon,
 .hs-icon {
@@ -58,9 +68,11 @@ textarea {
   justify-content: center;
   align-items: center;
 }
+
 .hs-icon img {
   scale: 1.1;
 }
+
 .spark-icon img {
   scale: 0.8;
 }
@@ -71,6 +83,104 @@ textarea {
   scale: 1.5;
 }
 
+/* .navbar-icon-menu {
+  width: 80% !important;
+}
+
+.navbar-icon-menu * {
+  width: 20px;
+} */
+
+
+.notes-nav {
+  margin-right: 0 !important;
+}
+
+
+.navbar-dropdown-mobile {
+  display: none !important;
+}
+
+.navbar-icon-list {
+  margin-left: auto !important;
+  margin-top: .25rem !important;
+}
+
+.navbar-icons-border {
+  margin: 0px 1rem !important;
+}
+
+.navbar-icon-menu {
+  margin-left: auto !important;
+}
+
+/* //Small devices landscape phones, 576px and up */
+@media (max-width: 420px) {
+  .navbar-icon-list {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center;
+    text-align: center;
+    margin-left: 0 !important;
+    align-self: center;
+  }
+
+  .navbar-icon-menu {
+    margin-left: 230px !important;
+    text-align: center;
+  }
+
+  .navbar-mobile {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .navbar-icons-border {
+    width: 3px;
+    height: 30px !important;
+    margin: 0 !important;
+    margin-right: 25px !important;
+    padding-left: 25px !important;
+  }
+
+
+  .navbar-dropdown-desktop {
+    display: none !important;
+  }
+
+  .navbar-dropdown-mobile {
+    display: block !important;
+    margin-left: auto !important;
+
+  }
+
+  /* .navbar-topbtn-mobile {
+    width: 100%;
+  } */
+
+}
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {}
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {}
+
+/* // X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {}
+
+/* // XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {}
+
+
+
+
+
+
+
+
+
 @media screen and (min-width: 768px) {
   .TnC_modal_dialog.modal:before {
     display: inline-block;
@@ -79,22 +189,26 @@ textarea {
     height: 100%;
   }
 }
-.TnC_modal_dialog > .modal-dialog {
+
+.TnC_modal_dialog>.modal-dialog {
   display: inline-block;
   text-align: left;
   vertical-align: middle;
 }
+
 #TnC-modal p {
   font: normal normal 300 19px Montserrat;
   letter-spacing: 1px;
   color: #231f20;
 }
+
 #TnC-modal input[type='checkbox'] {
   border: 2px solid #707070;
   opacity: 1;
   height: 16px;
   width: 16px;
 }
+
 #TnC-modal label {
   font: normal normal bold 13px Montserrat;
   letter-spacing: 0.68px;

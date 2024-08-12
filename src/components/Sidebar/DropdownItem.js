@@ -5,9 +5,11 @@ const DropdownItem = ({ title, to, disabled, allowed = true }) => {
     <>
       {allowed && (
         <li className={`${disabled ? 'disabledd' : ''}`}>
-          <NavLink to={to} activeClassName="sidenav active ">
-            <div className="d-flex" style={{ alignItems: 'center' }}>
-              <div className="ms-4 ps-2 py-1 text-uppercase">{title}</div>
+          <NavLink to={to} activeClassName='sidenav active '>
+            <div className='d-flex' style={{ alignItems: 'center' }}>
+              <div className='ms-4 ps-2 py-1 text-uppercase sidebar-subtitle'>
+                {title}
+              </div>
             </div>
           </NavLink>
         </li>

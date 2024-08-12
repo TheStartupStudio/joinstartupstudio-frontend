@@ -25,6 +25,10 @@
   background: #e3e8f3;
 }
 
+.sidebar-accordion-border {
+  border: none !important;
+}
+
 .disabledd {
   pointer-events: none;
   /* You can also add additional styles to indicate a disabled state */
