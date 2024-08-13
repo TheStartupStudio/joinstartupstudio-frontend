@@ -19,10 +19,12 @@
 
 .login-left-content {
   font-weight: 100;
-  margin: 2rem 0 1rem 6rem;
+  /* margin: 2rem 0 1rem 6rem; */
   display: flex;
   flex-direction: column;
   text-align: start;
+  margin-top: -25px;
+  margin-left: -2px;
 }
 
 .login-left-content p {
@@ -212,6 +214,7 @@
 
   .login-left-content {
     margin-bottom: 20px;
+    margin-left: 5px !important;
     display: flex;
     justify-content: center !important;
     text-align: center;
@@ -220,6 +223,11 @@
   .login-left-content p {
     color: gray;
     width: 100%;
+  }
+
+  .social-media-items {
+    font-size: smaller;
+
   }
 }
 

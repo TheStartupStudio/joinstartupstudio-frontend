@@ -103,7 +103,7 @@ const ChooseLogin = () => {
           </div>
         </Col>
         <Col md='5' sm='12'>
-          <FormWrapper className='col-lg-9 col-md-12 col-sm-12 mx-auto px-4 pb-3 pt-4 '>
+          <FormWrapper className='col-lg-9 col-md-12 col-sm-12 mx-auto px-4 pb-3 pt-4 right-login-form'>
             <h2 className='text-center'>
               <IntlMessages id='general.ready' />?
             </h2>
