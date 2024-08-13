@@ -97,6 +97,7 @@
   right: -50px;
   width: 50px;
 }
+
 .submission-actions a {
   margin-bottom: 10px;
   display: block;
@@ -127,6 +128,7 @@
   color: #bbbdbf;
   cursor: pointer;
 }
+
 .dont-del-submission:hover {
   color: black;
 }

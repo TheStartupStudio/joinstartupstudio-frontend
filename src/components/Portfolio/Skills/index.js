@@ -33,7 +33,7 @@ export const Skills = (props) => {
     await axiosInstance
       .delete('/skills/multiple', { data: removeSkill })
       .then((data) => {
-        toast.success(<IntlMessages id="alerts.success_change" />)
+        toast.success(<IntlMessages id='alerts.success_change' />)
 
         setShowRemoveSkill(false)
 
@@ -47,7 +47,7 @@ export const Skills = (props) => {
       })
       .catch(() => {
         setShowRemoveSkill(false)
-        toast.success(<IntlMessages id="alerts.success_change" />)
+        toast.success(<IntlMessages id='alerts.success_change' />)
         getUserSkills()
         GetSkillsFromDB()
       })
@@ -98,7 +98,7 @@ export const Skills = (props) => {
     await axiosInstance
       .post('/skills/multiple', { data: selcetedSkills })
       .then((data) => {
-        toast.success(<IntlMessages id="alerts.success_change" />)
+        toast.success(<IntlMessages id='alerts.success_change' />)
         selcetedSkills.map((skill) => {
           setUserSkill((old) => [...old, { name: skill }])
         })
@@ -110,7 +110,7 @@ export const Skills = (props) => {
         setSelectedSkills([])
       })
       .catch(() => {
-        toast.success(<IntlMessages id="alerts.success_change" />)
+        toast.success(<IntlMessages id='alerts.success_change' />)
         // setTimeout(() => {
         selcetedSkills.map((skill) => {
           setUserSkill((old) => [...old, { name: skill }])
@@ -202,11 +202,11 @@ export const Skills = (props) => {
           >
             <div style={{ display: 'flex', gap: 10 }}>
               <div style={{ width: skillsContainerWidth() }}>
-                <div className="w-100 ">
-                  <div className="row">
+                <div className='w-100 '>
+                  <div className='row'>
                     {/*{userSkill && userSkill.length > 0 ? (*/}
                     {approvedSkills?.map((data) => (
-                      <div className="col-md-3 col-sm-6" key={data.id}>
+                      <div className='col-md-3 col-sm-6' key={data.id}>
                         <SkillBoxButton
                           data={data}
                           from={'index'}
@@ -231,7 +231,7 @@ export const Skills = (props) => {
               setShowSkillBoxModal(true)
             }}
           >
-            <div className="col-xl-12 col-md-3 col-sm-6">
+            <div className='col-xl-12 col-md-3 col-sm-6'>
               {/* <SkillBoxButton
                 data={{ name: 'add' }}
                 from={'index'}
@@ -240,7 +240,7 @@ export const Skills = (props) => {
                   setShowSkillBoxModal(true)
                 }}
               /> */}
-              <h6 className="text-center">No certified skills</h6>
+              <h6 className='text-center'>No certified skills</h6>
             </div>
           </PortfolioSection>
         )

@@ -59,7 +59,7 @@ const DeleteSubmissionModal = (props) => {
           </div>
           <div className='col-12 text-center'>
             <a className='dont-del-submission' onClick={props.onHide}>
-              NO, DON'T DELETE IT
+              NO, DONT DELETE IT
             </a>
           </div>
         </div>

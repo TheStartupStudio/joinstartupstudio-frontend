@@ -23,7 +23,7 @@ function PublicHeader() {
               window.location.href.includes('lts-secure') ||
               window.location.href.includes('register')
                 ? null
-                : { background: 'transparent' }
+                : { background: 'transparent', paddingLeft: 0 }
             }
           >
             {/* <div className={`sidebar-header ${showMenuMobile && 'ms-md-5'}`}>
@@ -78,7 +78,8 @@ function PublicHeader() {
                   style={{
                     background: 'transparent',
                     display: 'flex',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    margin: '0 !important'
                   }}
                 >
                   <div
@@ -105,7 +106,7 @@ function PublicHeader() {
                     href='/'
                     style={{
                       position: 'absolute',
-                      top: '90px',
+                      // top: '90px',
                       right: '50px',
                       fontSize: '16px'
                     }}

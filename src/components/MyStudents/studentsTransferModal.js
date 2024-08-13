@@ -427,7 +427,7 @@ const StudentsTransferModal = (props) => {
                         className='text-center'
                         style={{ fontSize: '14px' }}
                       >
-                        You dont have new transfer requests!
+                        You don't have new transfer requests!
                       </td>
                     </tr>
                   )
@@ -494,7 +494,7 @@ const StudentsTransferModal = (props) => {
                       className='text-center'
                       style={{ fontSize: '14px' }}
                     >
-                      You dont have new transfer requests!
+                      You don't have new transfer requests!
                     </td>
                   </tr>
                 )}
