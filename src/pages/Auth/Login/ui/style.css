@@ -1,6 +1,6 @@
 .public-login-form {
   height: 60vh;
-  min-height: 60vh;
+  /* min-height: 60vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,7 +13,8 @@
 }
 
 .right-login-form {
-  width: 45vw;
+  width: 30vw;
+  height: 50vh;
 }
 
 .public-login-form button {
@@ -109,6 +110,21 @@
     margin-left: -20px !important;
   }
 
+  .right-login-form {
+    height: 100% !important;
+    padding-bottom: 0 !important;
+  }
+
+  .right-login-content {
+    margin-bottom: 20px !important;
+  }
+
+  .right-login-text {
+    margin: 0;
+    padding: 0;
+    font-size: 17px;
+  }
+
 
 }
 
@@ -127,10 +143,13 @@
 
   .right-login-form {
     height: 100% !important;
+    width: 95vw !important;
+    justify-self: center;
     margin-left: 0 !important;
-    width: 100vw !important;
-    margin-bottom: 0 !important;
+    margin-right: 0 !important;
   }
+
+
 
   .login-form-resp {
     margin-left: 20px !important;

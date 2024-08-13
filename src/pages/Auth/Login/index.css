@@ -25,6 +25,7 @@
   text-align: start;
   margin-top: -25px;
   margin-left: -2px;
+  width: 30vw;
 }
 
 .login-left-content p {
@@ -41,7 +42,7 @@
 }
 
 .social-media-items * {
-  margin-right: 4px;
+  /* margin-right: 4px; */
   color: black;
   font-size: 30px;
 }
@@ -186,6 +187,10 @@
     min-height: calc(100vh - 92px);
   }
 
+  .right-login-content {
+    margin-bottom: 20px !important;
+  }
+
   .center-content {
     width: 100%;
     position: absolute;
@@ -218,6 +223,7 @@
     display: flex;
     justify-content: center !important;
     text-align: center;
+    width: 95vw;
   }
 
   .login-left-content p {
@@ -228,6 +234,10 @@
   .social-media-items {
     font-size: smaller;
 
+  }
+
+  .right-login-form {
+    margin: 0px 10px !important;
   }
 }
 
@@ -282,3 +292,10 @@
     width: 100%;
   }
 }
+
+/* @media (max-width: 470px) {
+  .right-login-form {
+    padding-bottom: -30px;
+  }
+} */
+/*  */
