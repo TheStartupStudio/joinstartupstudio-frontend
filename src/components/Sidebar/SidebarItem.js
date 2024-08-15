@@ -24,7 +24,9 @@ const SidebarItem = ({
         <div className='d-flex w-100' style={{ alignItems: 'center' }}>
           <IconContainer srcImage={srcImage} />
           <div className='flex-grow-1 ms-1'>
-            <span className={'text-uppercase'}>{title}</span>
+            <span className={'text-uppercase'} style={{ fontSize: '13px' }}>
+              {title}
+            </span>
           </div>
           {isDropdown && (
             <FontAwesomeIcon

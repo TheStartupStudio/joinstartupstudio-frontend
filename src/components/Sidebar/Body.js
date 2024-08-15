@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setAccordionToggled } from '../../redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
 import IntlMessages from '../../utils/IntlMessages'
+import Group3888Image from '../../assets/images/HS-Sidebar-Icons/Group 3888/Group 3888@2x.png'
 
 const Body = (props) => {
   const { isAdmin } = useSelector((state) => state.user.user)
@@ -108,21 +109,24 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'journals'}>
-        <DropdownItem title={'LTS JOURNAL'} to={'/student-lts'} />
-        <DropdownItem title={'MY MENTORSHIP'} to={'/my-mentorship'} />
-        <DropdownItem title={'WELLNESS JOURNAL'} to={'/student-wellnes'} />
+        <DropdownItem title={'MY LTS JOURNAL'} to={'/student-lts'} />
+        <DropdownItem title={'MY MENTORSHIP JOURNAL'} to={'/my-mentorship'} />
+        <DropdownItem title={'MY WELLNESS JOURNAL'} to={'/student-wellnes'} />
         <DropdownItem
-          title={'PERSONAL FINANCE JOURNAL'}
+          title={'MY PERSONAL FINANCE JOURNAL'}
           to={'/student-personal-finance'}
         />
-        <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
+        <DropdownItem
+          title={'MY LEADERSHIP JOURNAL'}
+          to={'/student-leadership'}
+        />
       </ParentDropdownItem>
       <SidebarItem
         to={'/edit-portfolio'}
         className={`${
           location.pathname.includes('edit-portfolio') ? 'active' : ''
         }`}
-        srcImage={SparkImage}
+        srcImage={Group3888Image}
         title='MY PORTFOLIO'
         isDropdown={false}
       />
