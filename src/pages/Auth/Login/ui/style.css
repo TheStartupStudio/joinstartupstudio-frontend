@@ -136,6 +136,7 @@
 
 
 
+
 @media (max-width: 768px) {
   .public-login-form {
     min-height: 35vh;
@@ -143,10 +144,10 @@
 
   .right-login-form {
     height: 100% !important;
-    width: 95vw !important;
+    /* width: 95vw !important; */
     justify-self: center;
     margin-left: 0 !important;
-    margin-right: 0 !important;
+    margin-right: -90px !important;
   }
 
 
@@ -177,10 +178,19 @@
     margin-left: 0 !important;
   }
 
-
-
   .login-form-resp {
     width: 90vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .right-login-form {
+    width: 95vw !important;
+    height: 100%;
+  }
+
+  .right-login-content {
+    height: 43vh;
   }
 }
 
@@ -215,5 +225,11 @@
   .public-login-form h6 {
     color: #707070;
     text-align: center;
+  }
+
+  .right-login-form {
+    justify-self: center;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }
