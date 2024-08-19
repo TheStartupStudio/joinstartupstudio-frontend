@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import BarChartJs from '../../../components/Charts/BarChartJs'
+import { BarChartJs } from '../../../components/Charts/BarChartJs'
 import { ProgressCard } from '../MyPerformanceDataComponents'
 import { useDispatch, useSelector } from 'react-redux'
 import {

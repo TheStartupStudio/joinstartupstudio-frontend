@@ -159,7 +159,7 @@ const Students = (props) => {
   const itemsPerPage = 6
 
   const getStudents = async () => {
-    const url = `/instructor/my-students/${user.id}`
+    const url = `/instructor/my-students/${user.instructorInfo.id}`
     try {
       const res = await axiosInstance.get(url)
       const sortedStudents = res.data.students.sort((a, b) =>

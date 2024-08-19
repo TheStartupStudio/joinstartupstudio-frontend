@@ -12,7 +12,6 @@ import DropdownItem from './DropdownItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAccordionToggled } from '../../redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
-import IntlMessages from '../../utils/IntlMessages'
 
 const Body = (props) => {
   const { isAdmin } = useSelector((state) => state.user.user)
@@ -24,25 +23,36 @@ const Body = (props) => {
       id='side-menu-main'
       // style={{ height: '100vh' }}
     >
-      <li>
-        <div
-          className='accordion accordion-flush sidebar-accordion-border'
-          id='accordionFlushExample'
-        ></div>
-        <SidebarItem
-          onClick={() => {
-            dispatch(setAccordionToggled(false))
-            props.hideHeaderIcons()
-          }}
-          to={'/dashboard'}
-          className={`${
-            location.pathname.includes('dashboard') ? 'active' : ''
-          }`}
-          srcImage={FolderSidebarImage}
-          title='MY Dashboard'
-          isDropdown={false}
-        />
-      </li>
+      <SidebarItem
+        onClick={() => {
+          dispatch(setAccordionToggled(false))
+          props.hideHeaderIcons()
+        }}
+        to={'/dashboard'}
+        className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+        srcImage={FolderSidebarImage}
+        title='MY Dashboard'
+        isDropdown={false}
+      />
+      {isAdmin && (
+        <>
+          <ParentSidebarItem
+            ariaControls='myUserManagament'
+            href='#myUserManagament'
+            srcImage={FolderSidebarImage}
+            title='My User Managament'
+            isDropdown={true}
+          />
+          <ParentDropdownItem id={'myUserManagament'}>
+            <DropdownItem title={'MY SCHOOL'} to={'/my-school'} />
+            <DropdownItem title={'MY IMMERSION'} to={'/my-immersion'} />
+            <DropdownItem
+              title={'My courses & management'}
+              to={'/student-wellnes'}
+            />
+          </ParentDropdownItem>
+        </>
+      )}
       <ParentSidebarItem
         href='#myLtsEDU'
         aria-controls='myLtsEDU'
@@ -70,11 +80,11 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseClassroom'}>
-        <DropdownItem
+        {/* <DropdownItem
           allowed={isAdmin}
           title={'USER MANAGEMENT'}
           to={'/user-management'}
-        />
+        /> */}
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
         <DropdownItem
           // disabled={true}
@@ -119,11 +129,20 @@ const Body = (props) => {
         <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
       </ParentDropdownItem>
 
-      <ParentSidebarItem
-        ariaControls='mySpark'
-        href='#mySpark'
-        srcImage={SparkImage}
-        title='MY SPARK'
+      <SidebarItem
+        to={'/edit-portfolio'}
+        className={`${
+          location.pathname.includes('edit-portfolio') ? 'active' : ''
+        }`}
+        srcImage={FolderSidebarImage}
+        title='MY PORTFOLIO'
+        isDropdown={false}
+      />
+      {/* <ParentSidebarItem
+        ariaControls="mySpark"
+        href="#mySpark"
+        srcImage={FolderSidebarImage}
+        title="MY SPARK"
         isDropdown={true}
       />
       <ParentDropdownItem id={'mySpark'}>
@@ -138,7 +157,8 @@ const Body = (props) => {
         srcImage={SparkImage}
         title='MY PORTFOLIO'
         isDropdown={false}
-      />
+      /> 
+      */}
     </ul>
   )
 }
