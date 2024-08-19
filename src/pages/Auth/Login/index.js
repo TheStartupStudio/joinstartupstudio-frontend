@@ -92,7 +92,10 @@ function Login() {
     >
       <Row className='m-0 p-0 ps-md-5 center-content'>
         <Col md='7' lg='6' xl='5' className='ms-sm-1'>
-          <FormWrapper className='col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4 login-form-resp'>
+          <FormWrapper
+            className='col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4 login-form-resp'
+            style={{ height: '60vh', minHeight: '60vh' }}
+          >
             <FormattedMessage id='login.email' defaultMessage='login.email'>
               {(placeholder) => (
                 <CustomLoginInput

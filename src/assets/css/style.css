@@ -249,6 +249,10 @@ ul.sidebar-menu-item li li {
   height: 20px !important;
 }
 
+.sidebar-accordion-border {
+  border: none !important;
+}
+
 .sidebar-bottom img {
   /* margin-top: 43% !important; */
   margin-top: 16% !important;
@@ -2313,6 +2317,7 @@ ul.content-list-of-month li:hover span {
 
 .public-nav li.nav-item {
   width: max-content;
+  margin: 0;
 }
 
 .public-nav .nav-link {

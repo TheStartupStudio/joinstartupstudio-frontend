@@ -23,7 +23,26 @@ const Body = (props) => {
       id='side-menu-main'
       // style={{ height: '100vh' }}
     >
-      <SidebarItem
+      <li>
+        <div
+          className='accordion accordion-flush sidebar-accordion-border'
+          id='accordionFlushExample'
+        ></div>
+        <SidebarItem
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            props.hideHeaderIcons()
+          }}
+          to={'/dashboard'}
+          className={`${
+            location.pathname.includes('dashboard') ? 'active' : ''
+          }`}
+          srcImage={FolderSidebarImage}
+          title='MY Dashboard'
+          isDropdown={false}
+        />
+      </li>
+      {/* <SidebarItem
         onClick={() => {
           dispatch(setAccordionToggled(false))
           props.hideHeaderIcons()
@@ -33,7 +52,7 @@ const Body = (props) => {
         srcImage={FolderSidebarImage}
         title='MY Dashboard'
         isDropdown={false}
-      />
+      /> */}
       {isAdmin && (
         <>
           <ParentSidebarItem

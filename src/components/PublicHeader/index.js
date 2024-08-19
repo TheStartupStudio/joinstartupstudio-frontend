@@ -4,7 +4,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import IntlMessages from '../../utils/IntlMessages'
 import SUSLogo from '../../assets/images/sus-institute-logo.png'
 import SUSLogoStudent from '../../assets/images/LTS-logo-horizontal.png'
-import HSLogounder from '../../assets/images/LTS-HS/LTS-HS-Logo-v2-2.png'
+import HSLogounder from '../../assets/images/HS-Sidebar/Market-READY label.png'
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
 
 function PublicHeader() {
