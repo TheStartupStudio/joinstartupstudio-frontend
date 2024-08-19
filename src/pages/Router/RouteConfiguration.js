@@ -102,8 +102,8 @@ const MySchoolContainer = React.lazy(() => import('../admin/MySchool'))
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData },
-  { path: '/user-management', component: UserManagement },
-  { path: '/my-school', component: MySchoolContainer }
+  // { path: '/user-management', component: UserManagement },
+  { path: '/my-school/:page?', component: MySchoolContainer }
 ]
 
 export const authRoutes = [
@@ -147,7 +147,7 @@ export const authRoutes = [
   { path: '/my-spark/widgets/:widgetName', component: MySparkWidgetDetails },
   { path: '/edit-journals2', component: JournalsManagement2, exact: true },
   { path: '/edit-journals', component: JournalsManagement, exact: true },
-  { path: '/my-notes/:id', component: MyNotes, exact: true },
+  { path: '/my-notes/:id?', component: MyNotes },
   { path: '/sample-note', component: SampleNote },
   { path: '/:page/video/:id', component: BeyondYourCourseVideo },
   { path: '/my-classroom', component: MyClassroom, exact: true },

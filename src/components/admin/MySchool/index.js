@@ -1,19 +1,85 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './style.css'
-import { Col, Row } from 'react-bootstrap'
-import Overview from './Overview'
+import MySchoolRouter from './MySchoolRouter'
+import axiosInstance from '../../../utils/AxiosInstance'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPeriodsStart } from '../../../redux/dashboard/Actions'
+import LoadingAnimation from '../../../ui/loadingAnimation'
 
 const MySchool = () => {
-  return (
-    <div className='my-school__container'>
-      <Row className='my-school__panel mb-3'>
-        <Col className='active'>Overview</Col>
-        <Col>Instructors</Col>
-        <Col>Learners</Col>
-        <Col>Reports</Col>
-      </Row>
+  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
+  const [programs, setPrograms] = useState([])
+  const [levels, setLevels] = useState([])
+  const [instructors, setInstructors] = useState([])
+  const [universities, setUniversities] = useState([])
+  const { universityId } = useSelector((state) => state.user.user.user)
+  const periods = useSelector((state) => state.dashboard.periods)
 
-      <Overview />
+  useEffect(() => {
+    dispatch(getPeriodsStart())
+  }, [dispatch])
+
+  useEffect(() => {
+    setLoading(true)
+    const fetchUniversities = async () => {
+      await axiosInstance.get('/universities').then((res) => {
+        setUniversities(res.data.universities)
+        setLoading(false)
+      })
+    }
+    fetchUniversities()
+  }, [])
+
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      await axiosInstance.get('/programs').then(({ data }) => setPrograms(data))
+    }
+    fetchPrograms()
+  }, [])
+
+  useEffect(() => {
+    const fetchLevels = async () => {
+      await axiosInstance.get('/levels').then(({ data }) => setLevels(data))
+    }
+    fetchLevels()
+  }, [])
+
+  useEffect(() => {
+    setLoading(true)
+    const fetchInstructors = async () => {
+      try {
+        const { data } = await axiosInstance.get('/users/instructors')
+
+        const formattedData = data.instructors.filter(
+          (instructor) => instructor.User !== null
+        )
+
+        setInstructors(formattedData)
+
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
+    }
+
+    fetchInstructors()
+  }, [])
+
+  return (
+    <div>
+      {loading ? (
+        <LoadingAnimation show={true} />
+      ) : (
+        <MySchoolRouter
+          programs={programs}
+          levels={levels}
+          instructors={instructors}
+          periods={periods}
+          universityId={universityId}
+          universities={universities}
+        />
+      )}
     </div>
   )
 }

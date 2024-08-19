@@ -1,0 +1,29 @@
+.download {
+  color: #000;
+  font-size: 12px;
+  letter-spacing: 0.48px;
+}
+.download svg {
+  font-size: 16px;
+}
+
+.download:hover {
+  color: #52c7de;
+}
+
+.students__cell,
+.students__cell svg,
+.reports_cell,
+.reports_cell svg {
+  color: #000000;
+  font-size: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font: normal normal 300 20px/20px Montserrat;
+}
+.students__cell:hover,
+.reports_cell:hover,
+.students__cell svg:hover,
+.reports_cell svg:hover {
+  color: #52c7de !important;
+  cursor: pointer;
+}

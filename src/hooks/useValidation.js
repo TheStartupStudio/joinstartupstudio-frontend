@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { validatePassword } from '../utils/helpers'
 
 // This is for Editor
 const stripHtmlTags = (html) => {
@@ -13,6 +14,7 @@ export const useValidation = (
   optionalFields = []
 ) => {
   const [errors, setErrors] = useState({})
+  const [submitLoading, setLoading] = useState(false)
 
   const isFormValid = Object.keys(formData).every((key) => {
     const value = formData[key]
@@ -33,7 +35,16 @@ export const useValidation = (
       }
 
       const value = formData[key]
-      console.log('value', value)
+
+      if (key === 'password' && !validatePassword(formData[key])) {
+        newErrors[
+          key
+        ] = `${key} must contain at least 8 characters and it should have at least one number, lowercase & uppercase character.`
+      }
+
+      if (Array.isArray(value) && !value.length) {
+        newErrors[key] = `${key} cannot be empty`
+      }
 
       if (
         (typeof value === 'string' && stripHtmlTags(value).trim() === '') ||
@@ -47,16 +58,28 @@ export const useValidation = (
         }
       }
     }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (callback) => {
+  // const handleSubmit = (callback) => {
+  //   setFormSubmitted(true)
+  //   if (validate()) {
+  //     callback()
+  //   }
+  // }
+  const handleSubmit = async (callback) => {
     setFormSubmitted(true)
     if (validate()) {
-      callback()
+      setLoading(true)
+      try {
+        await callback()
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
-  return { errors, isFormValid, handleSubmit }
+  return { errors, isFormValid, handleSubmit, submitLoading }
 }

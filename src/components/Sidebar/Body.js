@@ -7,7 +7,6 @@ import DropdownItem from './DropdownItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAccordionToggled } from '../../redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
-import IntlMessages from '../../utils/IntlMessages'
 
 const Body = (props) => {
   const { isAdmin } = useSelector((state) => state.user.user)
@@ -29,21 +28,25 @@ const Body = (props) => {
         title='MY Dashboard'
         isDropdown={false}
       />
-      <ParentSidebarItem
-        ariaControls='myUserManagament'
-        href='#myUserManagament'
-        srcImage={FolderSidebarImage}
-        title='My User Managament'
-        isDropdown={true}
-      />
-      <ParentDropdownItem id={'myUserManagament'}>
-        <DropdownItem title={'MY SCHOOL'} to={'/my-school'} />
-        <DropdownItem title={'MY IMMERSION'} to={'/my-immersion'} />
-        <DropdownItem
-          title={'My courses & management'}
-          to={'/student-wellnes'}
-        />
-      </ParentDropdownItem>
+      {isAdmin && (
+        <>
+          <ParentSidebarItem
+            ariaControls='myUserManagament'
+            href='#myUserManagament'
+            srcImage={FolderSidebarImage}
+            title='My User Managament'
+            isDropdown={true}
+          />
+          <ParentDropdownItem id={'myUserManagament'}>
+            <DropdownItem title={'MY SCHOOL'} to={'/my-school'} />
+            <DropdownItem title={'MY IMMERSION'} to={'/my-immersion'} />
+            <DropdownItem
+              title={'My courses & management'}
+              to={'/student-wellnes'}
+            />
+          </ParentDropdownItem>
+        </>
+      )}
       <ParentSidebarItem
         href='#myLtsEDU'
         aria-controls='myLtsEDU'
@@ -71,11 +74,11 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseClassroom'}>
-        <DropdownItem
+        {/* <DropdownItem
           allowed={isAdmin}
           title={'USER MANAGEMENT'}
           to={'/user-management'}
-        />
+        /> */}
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
         <DropdownItem
           // disabled={true}

@@ -53,7 +53,7 @@ const Dot = ({
     {children && children}
   </div>
 )
-export const ProgressCard = ({ title, progress, loading }) => {
+export const ProgressCard = ({ title, progress, loading, withDot = true }) => {
   return (
     <div
       className={
@@ -64,7 +64,7 @@ export const ProgressCard = ({ title, progress, loading }) => {
         {title}
       </div>
       <div className={'w-100 pt-4 pb-3'}>
-        <ProgressBar progress={progress} loading={loading} />
+        <ProgressBar progress={progress} loading={loading} withDot={withDot} />
       </div>
       <div
         className={'d-flex justify-content-center align-items-center'}
@@ -75,10 +75,15 @@ export const ProgressCard = ({ title, progress, loading }) => {
     </div>
   )
 }
-export const ProgressBar = ({ progress, loading }) => {
+export const ProgressBar = ({
+  progress,
+  loading,
+  withDot = true,
+  progressHeight = 40
+}) => {
   const ProgressDot = ({ backgroundColor, width, height, gap }) => (
     <div
-      className="progress-dot"
+      className='progress-dot'
       style={{
         ...dotStyle,
         width,
@@ -90,14 +95,14 @@ export const ProgressBar = ({ progress, loading }) => {
           'rgba(0, 0, 0, 0.10) 0px 31px 100px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px'
       }}
     >
-      <Dot backgroundColor="#e8e8e8" width="80%" height="80%" gap="">
-        <Dot backgroundColor="#68c5c8" width="95%" height="95%" gap="">
-          <Dot backgroundColor="#8bd2d5" width="80%" height="80%" gap="">
+      <Dot backgroundColor='#e8e8e8' width='80%' height='80%' gap=''>
+        <Dot backgroundColor='#68c5c8' width='95%' height='95%' gap=''>
+          <Dot backgroundColor='#8bd2d5' width='80%' height='80%' gap=''>
             <Dot
-              backgroundColor="#68c5c8"
-              width="80%"
-              height="80%"
-              gap="10%"
+              backgroundColor='#68c5c8'
+              width='80%'
+              height='80%'
+              gap='10%'
               containsStripes={true}
             ></Dot>
           </Dot>
@@ -109,7 +114,7 @@ export const ProgressBar = ({ progress, loading }) => {
     width: `${progress}%`,
     // background: `linear-gradient(to right, #FFC0CB, #DDA0DD, #9400D3)`,
     background: `linear-gradient(to right, #FF3399, #51C7DF)`,
-    height: 40,
+    height: progressHeight,
     position: 'relative',
     overflow: 'unset'
   }
@@ -126,7 +131,7 @@ export const ProgressBar = ({ progress, loading }) => {
   const overlayStyle = {
     position: 'absolute',
     width: `${100}%`,
-    height: 40,
+    height: progressHeight,
     zIndex: 1,
     background: `repeating-linear-gradient(
       135deg,
@@ -139,14 +144,14 @@ export const ProgressBar = ({ progress, loading }) => {
 
   return (
     <div
-      className="progress w-100 h-100 position-relative "
+      className='progress w-100 h-100 position-relative '
       style={{
         overflow: 'unset'
       }}
     >
-      <div className="progress-bar" style={progressStyle}>
+      <div className='progress-bar' style={progressStyle}>
         {/*<div className="progress-dot" style={dotStyle}></div>*/}
-        <ProgressDot width="60px" height="60px" />
+        {withDot && <ProgressDot width='60px' height='60px' />}
         <div className={'progress-bar-overlay'} style={overlayStyle}></div>
       </div>
     </div>
