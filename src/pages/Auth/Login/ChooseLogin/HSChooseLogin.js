@@ -102,12 +102,14 @@ const ChooseLogin = () => {
             </div>
           </div>
         </Col>
-        <Col md='5' sm='12'>
-          <FormWrapper className='col-lg-9 col-md-12 col-sm-12 mx-auto px-4 pb-3 pt-4 '>
-            <h2 className='text-center'>
+        <Col md='5' sm='12' className='right-login-content'>
+          <FormWrapper className='col-lg-9 col-md-12 col-sm-12 mx-auto px-4 pb-3 pt-4 right-login-form'>
+            <h2 className='text-center right-login-text'>
               <IntlMessages id='general.ready' />?
             </h2>
-            <h6 className='mb-4 '>Choose your role to log in</h6>
+            <h6 className='mb-4 right-login-text'>
+              Choose your role to log in
+            </h6>
             <div className='button-type_container'>
               <LoginRole
                 role={'ims'}
