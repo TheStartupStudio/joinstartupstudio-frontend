@@ -66,9 +66,9 @@ li {
   margin: 5px;
 }
 
-li.nav-item {
+/* li.nav-item {
   margin: 0 !important;
-}
+} */
 
 .btn {
   border-radius: 0px;
@@ -169,7 +169,7 @@ nav#sidebar {
 
 .sidebar-subtitle {
   color: #707070;
-  font-size: 12.5px;
+  font-size: 12.5px !important;
   font-weight: 400;
 }
 
@@ -4098,9 +4098,13 @@ wave>wave:first-child {
   color: #51c7df;
 }
 
+.lizas-accordion {
+  border: none !important;
+}
+
 .accordion-menu__item-toggle {
   text-decoration: none;
-  font: normal normal 500 10px/16px Montserrat;
+  font: normal normal 500 11.5px/16px Montserrat;
   letter-spacing: 0.4px;
   color: #333d3d;
   text-transform: uppercase;

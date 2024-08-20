@@ -114,6 +114,8 @@ textarea {
   margin-left: auto !important;
 }
 
+
+
 /* //Small devices landscape phones, 576px and up */
 @media (max-width: 420px) {
   .navbar-icon-list {
