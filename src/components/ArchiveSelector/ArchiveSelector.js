@@ -60,6 +60,7 @@ const ArchiveSelector = (props) => {
     <div className='col-md-12'>
       <div className='custom-dropdown'>
         <div
+          style={{ padding: '15px', fontSize: '12px', borderRadius: 0 }}
           className='selected-option'
           onClick={() => setDropdownOpen((prev) => !prev)}
         >

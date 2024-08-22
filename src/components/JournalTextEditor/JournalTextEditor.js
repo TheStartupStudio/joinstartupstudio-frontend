@@ -35,25 +35,29 @@ const JournalTextEditor = ({
   }
 
   return (
-    <div>
-      <div className="journal_text_editor-title">{title}</div>
+    <div
+      style={{
+        marginTop: '40px '
+      }}
+    >
+      <div className='journal_text_editor-title'>{title}</div>
       {previewMode !== 'on' && (
-        <div className="journal_text_editor-input_box journal-entries__entry-reflection-body">
+        <div className='journal_text_editor-input_box journal-entries__entry-reflection-body'>
           <ReactQuill
-            theme="snow"
-            name="textQuillStandart"
+            theme='snow'
+            name='textQuillStandart'
             modules={quillModules}
             formats={quillFormats}
             onChange={handleChangeContent}
             value={content}
           />
-          <div className="journal_text_editor-save_button-box">
-            <LtsButton name="Save" onClick={onSaveContent} />
+          <div className='journal_text_editor-save_button-box'>
+            <LtsButton name='Save' onClick={onSaveContent} />
           </div>
         </div>
       )}
       {previewMode === 'on' && (
-        <div className="journal_text_editor-input_box journal-entries__entry-reflection-body">
+        <div className='journal_text_editor-input_box journal-entries__entry-reflection-body'>
           <div
             dangerouslySetInnerHTML={{ __html: content }}
             className={'journal_text_editor-display_content'}
@@ -62,7 +66,7 @@ const JournalTextEditor = ({
       )}
 
       <div className={'journal_text_editor-footer-box'}>
-        <div className="journal_text_editor-footer d-flex justify-content-between align-items-center">
+        <div className='journal_text_editor-footer d-flex justify-content-between align-items-center'>
           {userData?.submitted && (
             <span>
               <strong>Submitted:</strong>

@@ -1,6 +1,6 @@
 .public-login-form {
   height: 60vh;
-  /* min-height: 60vh; */
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,11 +10,6 @@
   -webkit-box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.8);
   -moz-box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.8);
   border-radius: 15px;
-}
-
-.right-login-form {
-  width: 30vw;
-  height: 50vh;
 }
 
 .public-login-form button {
@@ -80,134 +75,19 @@
   right: 63%;
 }
 
-.login-form-resp {
-  width: 50vw;
-  margin-left: -12px !important;
-}
-
-
-/* @media (max-width: 778px) {
+@media (max-width: 778px) {
   .public-login-form {
     height: calc(35vh - 42px);
     min-height: 35vh;
     justify-content: center;
   }
-
-  .right-login-form {
-    width: 95vw;
-    padding-bottom: 30px;
-    padding-top: 0 !important;
-  }
-} */
-
-
-@media (max-width: 639px) {
-
-  /* Your CSS rules for small screens */
-  .login-form-resp {
-    width: 90vw;
-    height: 60vh !important;
-    margin-left: -20px !important;
-  }
-
-  .right-login-form {
-    height: 100% !important;
-    padding-bottom: 0 !important;
-  }
-
-  .right-login-content {
-    margin-bottom: 20px !important;
-  }
-
-  .right-login-text {
-    margin: 0;
-    padding: 0;
-    font-size: 17px;
-  }
-
-
-}
-
-@media (max-width: 520px) {
-  .login-form-resp {
-    width: 85vw;
-  }
-}
-
-
-
-
-@media (max-width: 768px) {
-  .public-login-form {
-    min-height: 35vh;
-  }
-
-  .right-login-form {
-    height: 100% !important;
-    /* width: 95vw !important; */
-    justify-self: center;
-    margin-left: 0 !important;
-    margin-right: -90px !important;
-  }
-
-
-  /* 
-  .login-form-resp {
-    margin-left: 20px !important;
-  } */
-}
-
-@media (min-width: 640px) and (max-width: 1007px) {
-  /* Your CSS rules for medium screens */
-
-  .login-form-resp {
-    width: 90vw;
-  }
-}
-
-@media (min-width: 1008px) {
-
-  /* Your CSS rules for large screens */
-  .login-form-resp {
-    width: 50vw;
-  }
-}
-
-@media (min-width: 639px) and (max-width: 767px) {
-  .right-login-content {
-    margin-left: 0 !important;
-  }
-
-  .login-form-resp {
-    width: 90vw;
-  }
-}
-
-@media (max-width: 767px) {
-  .right-login-form {
-    width: 95vw !important;
-    height: 100%;
-  }
-
-  .right-login-content {
-    height: 43vh;
-  }
-
-  .login-form-resp {
-    margin-left: 20px !important;
-  }
 }
 
 @media (max-width: 570px) {
   .public-login-form {
-    /* height: 35vh; */
+    height: 35vh;
     min-height: 35vh;
     justify-content: center;
-  }
-
-
-  .right-login-form {
-    padding-top: 20px;
   }
 
   .public-login-form button {
@@ -230,10 +110,16 @@
     color: #707070;
     text-align: center;
   }
+}
 
-  .right-login-form {
-    justify-self: center;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+@media (max-width: 767px) {
+  .login-form-resp {
+    width: 90vw !important;
+  }
+}
+
+@media (max-width: 1008px) and (min-width: 768px) {
+  .login-form-resp {
+    width: 90vw !important;
   }
 }
