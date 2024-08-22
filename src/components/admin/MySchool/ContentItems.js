@@ -12,6 +12,7 @@ import {
   faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { TextArea } from '@progress/kendo-react-inputs'
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import {
@@ -101,7 +102,7 @@ const CustomGradientButton = ({
   error
 }) => {
   return (
-    <div className='custom__input-container'>
+    <div className='custom__input-container '>
       {' '}
       <span
         className={`custom-gradient_button ${className}`}
@@ -268,14 +269,18 @@ const CustomDropdown = ({
   )
 }
 
-const CustomSearchBar = ({ onChange, className }) => {
+const CustomSearchBar = ({
+  onChange,
+  className,
+  placeholder = 'Search by user name'
+}) => {
   return (
     <div className={`custom-searchbar ${className}`}>
       <FontAwesomeIcon icon={faSearch} />
       <input
         type='text'
         className='bg-transparent'
-        placeholder='Search by user name'
+        placeholder={placeholder}
         onChange={onChange}
       />
     </div>
@@ -295,6 +300,38 @@ const CustomInput = ({
   return (
     <div className='custom__input-container d-flex flex-column align-items-center position-relative'>
       <input
+        type={showPassword ? 'text' : type}
+        name={name}
+        className='custom__input w-100 my-2'
+        value={value}
+        onChange={handleChange}
+        placeholder={placeholder}
+      />
+
+      {type === 'password' && (
+        <FontAwesomeIcon
+          icon={showPassword ? faEye : faEyeSlash}
+          className='pw-revelared__icon'
+          onClick={() => setShowPassword((state) => !state)}
+        />
+      )}
+      {showError && error && <small className='ps-1'>{error}</small>}
+    </div>
+  )
+}
+const CustomTextarea = ({
+  placeholder = '',
+  type,
+  value,
+  handleChange = () => {},
+  name,
+  showError = false,
+  error = ''
+}) => {
+  const [showPassword, setShowPassword] = useState(false)
+  return (
+    <div className='custom__input-container d-flex flex-column align-items-center position-relative h-auto'>
+      <TextArea
         type={showPassword ? 'text' : type}
         name={name}
         className='custom__input w-100 my-2'
@@ -406,5 +443,6 @@ export {
   CountTotalReport,
   CircularProgressComponent,
   CustomInput,
-  SubmitButton
+  SubmitButton,
+  CustomTextarea
 }

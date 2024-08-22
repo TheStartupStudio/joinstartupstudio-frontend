@@ -153,6 +153,7 @@
   border-color: #ccc;
 }
 .custom-gradient_button a,
+.custom-gradient_button p,
 .custom-gradient_button span {
   display: flex;
   align-items: center;
@@ -375,12 +376,15 @@
   display: flex;
   flex-direction: column;
   text-align: start;
+  width: auto;
+  cursor: pointer;
 }
 .custom__input__title {
   font: normal normal normal 14px/20px Montserrat;
   letter-spacing: 0.68px;
   color: #707070;
   padding: 5px;
+  width: auto;
 }
 .custom__input-container small {
   color: red;

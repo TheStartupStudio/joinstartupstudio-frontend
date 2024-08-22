@@ -1,0 +1,14 @@
+.courseVcredential-modal > modal-content {
+  width: 80vw;
+}
+.courseVcredential-modal {
+  font-size: 12px;
+}
+.courseVcredential-modal p {
+  font-weight: 500;
+}
+@media (min-width: 900px) {
+  .myCustomModal .modal-dialog {
+    max-width: 1100px;
+  }
+}
