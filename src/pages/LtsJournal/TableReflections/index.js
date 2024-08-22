@@ -225,11 +225,11 @@ const TableReflections = (props) => {
   }
 
   return (
-    <div className="table-reflections">
-      <div className="table-reflections__dates">
-        <div className="row">
-          <div className="col-6" style={{ paddingRight: 0 }}>
-            <div className="table-reflections__date">
+    <div className='table-reflections'>
+      <div className='table-reflections__dates'>
+        <div className='row'>
+          <div className='col-6' style={{ paddingRight: 0 }}>
+            <div className='table-reflections__date'>
               <b>Start date:</b>
               <div className={` w-100`}>
                 <input
@@ -256,8 +256,8 @@ const TableReflections = (props) => {
               {/*{moment(props.start).format('DD-MM-YYYY')}*/}
             </div>
           </div>
-          <div className="col-6" style={{ paddingLeft: 0 }}>
-            <div className="table-reflections__date">
+          <div className='col-6' style={{ paddingLeft: 0 }}>
+            <div className='table-reflections__date'>
               <b>End date:</b>{' '}
               <div className={` w-100`}>
                 <input
@@ -285,11 +285,11 @@ const TableReflections = (props) => {
           </div>
         </div>
       </div>
-      <div className="table-reflections__entries">
+      <div className='table-reflections__entries'>
         {reflectionTableEntries && reflectionTableEntries?.length
           ? [...reflectionTableEntries]?.map((entry) => (
-              <div className="table-reflections__entry" key={entry.id}>
-                <p>
+              <div className='table-reflections__entry' key={entry.id}>
+                <p style={{ marginRight: '6px' }}>
                   <b>{entry.title}</b>
                   <p className={'pt-1'}>
                     {
@@ -304,7 +304,7 @@ const TableReflections = (props) => {
                 </p>
                 {props.isEditable && (
                   <span
-                    className="table-reflections__entry-icon"
+                    className='table-reflections__entry-icon'
                     onClick={() => {
                       if (!isSaving) {
                         const userReflection =
@@ -336,7 +336,7 @@ const TableReflections = (props) => {
           : null}
         {userReflectionTableEntries && userReflectionTableEntries?.length
           ? [...userReflectionTableEntries]?.map((entry) => (
-              <div className="table-reflections__entry" key={entry.id}>
+              <div className='table-reflections__entry' key={entry.id}>
                 <p>
                   <b>{entry.title}</b>
                   <p className={'pt-1'}>
@@ -352,7 +352,7 @@ const TableReflections = (props) => {
                 </p>
                 {props.isEditable && (
                   <span
-                    className="table-reflections__entry-icon"
+                    className='table-reflections__entry-icon'
                     onClick={() => {
                       // const userReflection = userReflectionTableEntries.find(
                       //   (item) =>
@@ -394,14 +394,14 @@ const TableReflections = (props) => {
               </div>
             ))
           : null}
-        <div className="table-reflections__entry">
+        <div className='table-reflections__entry'>
           {props.isEditable && (
             <>
               <p>
                 <b>Add another team member to this table</b>
               </p>
               <span
-                className="table-reflections__entry-icon"
+                className='table-reflections__entry-icon'
                 onClick={() => {
                   if (!isSaving) {
                     dispatch(actions.setActiveItem(null))
