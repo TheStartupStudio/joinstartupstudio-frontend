@@ -131,12 +131,12 @@ const TestJournalType = (props) => {
   }
 
   return (
-    <div id="main-body">
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-12 col-md-11 px-0">
-            <div className="page-padding">
-              <div className="d-flex justify-content-between">
+    <div id='main-body'>
+      <div className='container-fluid'>
+        <div className='row'>
+          <div className='col-12 col-md-11 px-0'>
+            <div className='page-padding'>
+              <div className='d-flex justify-content-between'>
                 <div>
                   <div
                     style={{
@@ -170,17 +170,17 @@ const TestJournalType = (props) => {
                 </div>
               </div>
 
-              <div className="page-header">
-                <h3 className="page-header__title">
+              <div className='page-header'>
+                <h3 className='page-header__title'>
                   {/*<IntlMessages id={titleMapping[props.category]} />*/}
                 </h3>
-                <p className="page-header__description">
+                <p className='page-header__description'>
                   {/*<IntlMessages id={descriptionMapping[props.category]} />*/}
                 </p>
               </div>
-              <div className="page-card page-card--reverse">
+              <div className='page-card page-card--reverse'>
                 <div
-                  className="page-card__content styled-scrollbar col-lg-8 col-md-7"
+                  className='page-card__content styled-scrollbar col-lg-8 col-md-7'
                   // ref={contentContainer}
                 >
                   {props.match.params.type === 'task' && (
@@ -226,26 +226,26 @@ const TestJournalType = (props) => {
                 </div>{' '}
                 {/* page-card__content */}
                 <div
-                  className="page-card__sidebar col-lg-4 col-md-5"
+                  className='page-card__sidebar col-lg-4 col-md-5'
                   style={{ overflow: 'auto' }}
                 >
-                  <div className="page-card__sidebar-header">
-                    <label className="search-input">
+                  <div className='page-card__sidebar-header'>
+                    <label className='search-input'>
                       <img
-                        className="search-input__icon"
+                        className='search-input__icon'
                         src={searchIcon}
-                        alt="#"
+                        alt='#'
                       />
 
                       <FormattedMessage
-                        id="my_journal.search_journals"
-                        defaultMessage="my_journal.search_journals"
+                        id='my_journal.search_journals'
+                        defaultMessage='my_journal.search_journals'
                       >
                         {(placeholder) => (
                           <input
-                            type="text"
-                            className="search-input__input"
-                            name="searchedNote"
+                            type='text'
+                            className='search-input__input'
+                            name='searchedNote'
                             placeholder={placeholder}
                             onChange={(e) => {
                               handleJournalSearch(e)

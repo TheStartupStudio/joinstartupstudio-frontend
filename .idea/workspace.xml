@@ -5,7 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/EditPortfolioSubmission.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/EditPortfolioSubmission.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCardModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCardModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/EditProjectSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/EditProjectSection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/EvidenceBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/EvidenceBody.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/Evidences.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/Evidences.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/ProjectModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/ProjectModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/ProjectSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/ProjectSection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +31,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="my-curriculum" />
+        <entry key="$PROJECT_DIR$" value="cypress-testing" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -40,7 +49,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/assets/images",
+    "last_opened_file_path": "C:/Users/Dell/Desktop/Learn to start/lts-ims/src/pages/Portfolio2024/Components/Actions",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -53,11 +62,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\redux" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal\JournalTables" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\LtsJournal" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\Portfolio2024\Components\Actions" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\Portfolio2024\Components\Modals" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\pages\Portfolio2024\Sections\HowDoIProveSection" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components" />
+      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\icons" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />
@@ -105,7 +114,21 @@
       <workItem from="1716189136164" duration="22111000" />
       <workItem from="1716450314642" duration="13861000" />
       <workItem from="1716475776652" duration="8504000" />
-      <workItem from="1718893352755" duration="7902000" />
+      <workItem from="1718893352755" duration="9160000" />
+      <workItem from="1719412270264" duration="603000" />
+      <workItem from="1719414047178" duration="644000" />
+      <workItem from="1719490044758" duration="3140000" />
+      <workItem from="1720164433682" duration="1239000" />
+      <workItem from="1720614606349" duration="608000" />
+      <workItem from="1721036272998" duration="1343000" />
+<<<<<<< HEAD
+      <workItem from="1721634831645" duration="64510000" />
+=======
+      <workItem from="1721634831645" duration="70302000" />
+      <workItem from="1721980020589" duration="34178000" />
+      <workItem from="1722324740361" duration="4411000" />
+      <workItem from="1722338101358" duration="10173000" />
+>>>>>>> origin/hs-my-portfolio
     </task>
     <servers />
   </component>

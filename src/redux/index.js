@@ -31,7 +31,8 @@ export {
   getFinishedJournals,
   saveFinishedJournals,
   saveFinishedCourses,
-  checkIfUserHasFinishedJournal
+  checkIfUserHasFinishedJournal,
+  getJournalTitles
 } from './journal/Actions'
 
 export { getAllPodcast } from './podcast/Actions'

@@ -14,6 +14,28 @@ import searchIcon from '../../assets/images/search-icon.png'
 
 import LtsJournalContent from './content'
 
+function getEarliestUserCellDate(journal) {
+  let earliestDate = null
+
+  function traverse(node) {
+    if (Array.isArray(node)) {
+      node.forEach(traverse)
+    } else if (node && typeof node === 'object') {
+      if (node.userCells && node.userCells.createdAt) {
+        const createdAt = new Date(node.userCells.createdAt)
+        if (!earliestDate || createdAt < earliestDate) {
+          earliestDate = createdAt
+        }
+      }
+      Object.values(node).forEach(traverse)
+    }
+  }
+
+  traverse(journal)
+
+  return earliestDate ? earliestDate.toISOString() : null
+}
+
 function LtsJournal(props) {
   const dispatch = useDispatch()
   const history = useHistory()
@@ -113,34 +135,36 @@ function LtsJournal(props) {
       return
     }
 
-    if (!journalsData.every((item) => item.children.length <= 0)) {
-      setJournals([
-        ...journalsData.filter((journal) =>
-          journal.children.some((child) =>
-            child.title.toLowerCase().includes(keyword)
-          )
-        )
-      ])
-    }
+    const filteredJournals = journalsData.filter((journal) => {
+      const journalTitleMatch = journal.title.toLowerCase().includes(keyword)
+
+      const childrenTitleMatch = journal.children.some((child) =>
+        child.title.toLowerCase().includes(keyword)
+      )
+
+      return journalTitleMatch || childrenTitleMatch
+    })
+
+    setJournals(filteredJournals)
   }
   return (
-    <div id="main-body">
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-12 col-md-11 px-0">
-            <div className="page-padding">
-              <div className="page-header">
-                <h3 className="page-header__title">
+    <div id='main-body'>
+      <div className='container-fluid'>
+        <div className='row'>
+          <div className='col-12 col-md-11 px-0'>
+            <div className='page-padding'>
+              <div className='page-header'>
+                <h3 className='page-header__title'>
                   <IntlMessages id={titleMapping[props.category]} />
                 </h3>
-                <p className="page-header__description">
+                <p className='page-header__description'>
                   <IntlMessages id={descriptionMapping[props.category]} />
                 </p>
               </div>
 
-              <div className="page-card page-card--reverse">
+              <div className='page-card page-card--reverse'>
                 <div
-                  className="page-card__content styled-scrollbar col-lg-8 col-md-7"
+                  className='page-card__content styled-scrollbar col-lg-8 col-md-7'
                   ref={contentContainer}
                 >
                   <Switch>
@@ -160,24 +184,24 @@ function LtsJournal(props) {
                   </Switch>
                 </div>{' '}
                 {/* page-card__content */}
-                <div className="page-card__sidebar col-lg-4 col-md-5">
-                  <div className="page-card__sidebar-header">
-                    <label className="search-input">
+                <div className='page-card__sidebar col-lg-4 col-md-5'>
+                  <div className='page-card__sidebar-header'>
+                    <label className='search-input'>
                       <img
-                        className="search-input__icon"
+                        className='search-input__icon'
                         src={searchIcon}
-                        alt="#"
+                        alt='#'
                       />
 
                       <FormattedMessage
-                        id="my_journal.search_journals"
-                        defaultMessage="my_journal.search_journals"
+                        id='my_journal.search_journals'
+                        defaultMessage='my_journal.search_journals'
                       >
                         {(placeholder) => (
                           <input
-                            type="text"
-                            className="search-input__input"
-                            name="searchedNote"
+                            type='text'
+                            className='search-input__input'
+                            name='searchedNote'
                             placeholder={placeholder}
                             onChange={(e) => {
                               handleJournalSearch(e)
@@ -188,19 +212,19 @@ function LtsJournal(props) {
                     </label>
                   </div>
 
-                  <div className="page-card__sidebar-content styled-scrollbar">
-                    <Accordion defaultActiveKey="0" className="accordion-menu">
+                  <div className='page-card__sidebar-content styled-scrollbar'>
+                    <Accordion defaultActiveKey='0' className='accordion-menu'>
                       {journals.map((journalItem, journalItemIdx) => (
                         <div
                           key={journalItem.id}
-                          className={`accordion-menu__item`}
+                          className={`accordion-menu__item cursor-pointer accordion-menu__item-transition`}
                         >
                           {journalItem.children &&
                           journalItem.children.length ? (
                             <>
                               <Accordion.Toggle
                                 as={'a'}
-                                href="#"
+                                href='#'
                                 className={'accordion-menu__item-toggle'}
                                 eventKey={`${journalItemIdx}`}
                                 onClick={() =>
@@ -218,66 +242,96 @@ function LtsJournal(props) {
                               <Accordion.Collapse
                                 eventKey={`${journalItemIdx}`}
                               >
-                                <ul className="accordion-menu__submenu">
+                                <ul className='accordion-menu__submenu'>
                                   {journalItem.children.map(
-                                    (journalChildren) => (
-                                      <li
-                                        key={journalChildren.id}
-                                        className="accordion-menu__submenu-item"
-                                      >
-                                        <NavLink
-                                          to={`${props.match.url}/${journalChildren.id}`}
+                                    (journalChildren) => {
+                                      const earliestUserCellDate =
+                                        getEarliestUserCellDate(journalChildren)
+                                      return (
+                                        <li
+                                          key={journalChildren.id}
+                                          className='accordion-menu__submenu-item'
                                         >
-                                          <div className="accordion-menu__submenu-item-icon">
-                                            <FontAwesomeIcon icon={faFileAlt} />
-                                          </div>
-                                          <div className="accordion-menu__submenu-item-details">
-                                            <h5 className="accordion-menu__submenu-item-title">
-                                              {journalChildren.title}
-                                            </h5>
-                                            {journalChildren.userEntry &&
-                                            !!journalChildren.userEntry
-                                              .length &&
-                                            !!journalChildren.userEntry[0]
-                                              .createdAt ? (
-                                              <div className="accordion-menu__submenu-item-subtitle">
-                                                {moment(
-                                                  journalChildren.userEntry[0]
-                                                    .createdAt
+                                          <NavLink
+                                            to={`${props.match.url}/${journalChildren.id}`}
+                                          >
+                                            <div className='accordion-menu__submenu-item-icon'>
+                                              <FontAwesomeIcon
+                                                icon={faFileAlt}
+                                              />
+                                            </div>
+                                            <div className='accordion-menu__submenu-item-details'>
+                                              <h5 className='accordion-menu__submenu-item-title'>
+                                                {journalChildren.title}
+                                              </h5>
+
+                                              {props.category ===
+                                              'student-personal-finance' ? (
+                                                earliestUserCellDate ? (
+                                                  <div className='accordion-menu__submenu-item-subtitle'>
+                                                    {moment(
+                                                      earliestUserCellDate
+                                                    )
+                                                      .locale(currentLanguage)
+                                                      .format(
+                                                        'MMMM D, YYYY | hh:mma'
+                                                      )}
+                                                  </div>
+                                                ) : (
+                                                  <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
+                                                    NOT STARTED
+                                                  </div>
                                                 )
-                                                  .locale(currentLanguage)
-                                                  .format(
-                                                    'MMMM D, YYYY | hh:mma'
-                                                  )}
-                                              </div>
-                                            ) : (
-                                              <div className="accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started">
-                                                NOT STARTED
-                                              </div>
-                                            )}
-                                          </div>
-                                        </NavLink>
-                                      </li>
-                                    )
+                                              ) : journalChildren.userEntry &&
+                                                !!journalChildren.userEntry
+                                                  .length &&
+                                                !!journalChildren.userEntry[0]
+                                                  .createdAt ? (
+                                                <div className='accordion-menu__submenu-item-subtitle'>
+                                                  {moment(
+                                                    journalChildren.userEntry[0]
+                                                      .createdAt
+                                                  )
+                                                    .locale(currentLanguage)
+                                                    .format(
+                                                      'MMMM D, YYYY | hh:mma'
+                                                    )}
+                                                </div>
+                                              ) : (
+                                                <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
+                                                  NOT STARTED
+                                                </div>
+                                              )}
+                                            </div>
+                                          </NavLink>
+                                        </li>
+                                      )
+                                    }
                                   )}
                                 </ul>
                               </Accordion.Collapse>
                             </>
                           ) : (
-                            <Accordion.Toggle
-                              as={'a'}
+                            // <Accordion.Toggle
+                            //   as={'a'}
+                            //   className={'accordion-menu__item-toggle'}
+                            //   eventKey={`${journalItemIdx}`}
+                            //   onClick={() =>
+                            //     journalItem.content
+                            //       ? history.push(
+                            //           `${props.match.url}/${journalItem.id}`
+                            //         )
+                            //       : null
+                            //   }
+                            // >
+                            //   <span>{journalItem.title}</span>
+                            // </Accordion.Toggle>
+                            <NavLink
+                              to={`${props.match.url}/${journalItem.id}`}
                               className={'accordion-menu__item-toggle'}
-                              eventKey={`${journalItemIdx}`}
-                              onClick={() =>
-                                journalItem.content
-                                  ? history.push(
-                                      `${props.match.url}/${journalItem.id}`
-                                    )
-                                  : null
-                              }
                             >
                               <span>{journalItem.title}</span>
-                            </Accordion.Toggle>
+                            </NavLink>
                           )}
                         </div>
                       ))}

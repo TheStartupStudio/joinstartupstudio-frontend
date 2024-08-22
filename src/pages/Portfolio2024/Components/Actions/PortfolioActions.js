@@ -11,15 +11,17 @@ import TooltipAction from './TooltipAction'
 
 function PortfolioActions(props) {
   const viewMode = useSelector((state) => state.portfolio.mode)
-
-  const publishToPeers = useSelector((state) => state.portfolio.publishToPeers)
-  const publishToPublic = useSelector(
-    (state) => state.portfolio.publishToPublic
+  const sharingSettings = useSelector(
+    (state) => state.portfolio.sharingSettings
   )
+  // const publishToPeers = useSelector((state) => state.portfolio.publishToPeers)
+  // const publishToPublic = useSelector(
+  //   (state) => state.portfolio.publishToPublic
+  // )
 
   const renderIcon = () => {
     const iconStyle = { width: 30, height: 30, objectFit: 'contain' }
-    if (publishToPeers && !publishToPublic) {
+    if (sharingSettings?.isPeerShared && !sharingSettings?.isPublicShared) {
       return (
         <img
           src={shareToPeersIcon}
@@ -27,7 +29,7 @@ function PortfolioActions(props) {
           alt={'publish-to-peers'}
         />
       )
-    } else if (publishToPublic) {
+    } else if (sharingSettings?.isPublicShared) {
       return (
         <img
           src={shareToPublicIcon}
@@ -35,7 +37,10 @@ function PortfolioActions(props) {
           alt={'publish-to-public'}
         />
       )
-    } else if (!publishToPublic && !publishToPeers) {
+    } else if (
+      !sharingSettings?.isPublicShared &&
+      !sharingSettings?.isPeerShared
+    ) {
       return (
         <img
           src={noSharePinkIcon}

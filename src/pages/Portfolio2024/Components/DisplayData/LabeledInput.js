@@ -11,7 +11,12 @@ const LabeledInput = ({
   textClassNames,
   inputHeight,
   type,
-  titleHeight
+  placeholder,
+  labelAlign,
+  titleHeight,
+  align,
+  readOnly,
+  p
 }) => {
   return (
     <div
@@ -26,32 +31,56 @@ const LabeledInput = ({
       }}
     >
       <div
-        className={`mb-0 info-label p-2 ${titleClassNames} ${textClassNames}`}
-        style={{ backgroundColor: '#f3f3f3', minHeight: titleHeight }}
+        className={`mb-0 info-label p-2 ${titleClassNames ?? ''} ${
+          textClassNames ?? ''
+        } justify-content-${labelAlign}`}
+        style={{
+          backgroundColor: '#F6F7F7',
+          minHeight: titleHeight
+        }}
       >
         {title}
       </div>
-      {type !== 'text' ? (
-        <textarea
-          name={name}
-          id={name}
+      {!readOnly ? (
+        type !== 'text' ? (
+          <textarea
+            name={name}
+            id={name}
+            style={{
+              backgroundColor: '#fff',
+              minHeight: inputHeight,
+              resize: 'none'
+            }}
+            className='w-100 rounded-0 p-2'
+            onChange={(e) => onChange?.(e.target.value, 'mentorName')}
+            value={value?.trim() !== '' ? value : ''}
+            readOnly={readOnly}
+            placeholder={placeholder}
+          />
+        ) : (
+          <input
+            name={name}
+            id={name}
+            style={{
+              backgroundColor: '#fff',
+              minHeight: inputHeight
+            }}
+            className=' w-100 rounded-0 py-1 px-2'
+            onChange={(e) => onChange?.(e.target.value, 'mentorName')}
+            value={value?.trim() !== '' ? value : ''}
+            placeholder={placeholder}
+            readOnly={readOnly}
+          />
+        )
+      ) : (
+        <div
+          dangerouslySetInnerHTML={{ __html: value }}
           style={{
             backgroundColor: '#fff',
-            minHeight: inputHeight,
+            minHeight: inputHeight ?? 35,
             resize: 'none'
           }}
-          className="w-100 rounded-0 p-2"
-          onChange={(e) => onChange?.(e.target.value, 'mentorName')}
-          value={value ?? ''}
-        />
-      ) : (
-        <input
-          name={name}
-          id={name}
-          style={{ backgroundColor: '#fff', minHeight: inputHeight }}
-          className=" w-100 rounded-0 py-1 px-2"
-          onChange={(e) => onChange?.(e.target.value, 'mentorName')}
-          value={value ?? ''}
+          className='w-100 rounded-0 p-2'
         />
       )}
     </div>

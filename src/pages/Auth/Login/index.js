@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, NavLink, useHistory } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { FormattedMessage } from 'react-intl'
@@ -8,25 +8,15 @@ import { userLogin, loginLoading } from '../../../redux'
 import IntlMessages from '../../../utils/IntlMessages'
 import { validateEmail } from '../../../utils/helpers'
 import './index.css'
-import triangleIcon from '../../../assets/images/triangle.png'
-import axiosInstance from '../../../utils/AxiosInstance'
 import FormWrapper from './ui/FormWrapper'
 import CustomLoginInput from './ui/CustomLoginInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import {
-  updateStartTime,
-  updateUserActivity
-} from '../../../redux/user/Actions'
 import { Col, Row } from 'react-bootstrap'
+import { setLoginLoading } from '../../../redux/user/Actions'
 
 function Login() {
   const [user, setUser] = useState({})
-  const currentLanguage =
-    localStorage.getItem('currentLanguage') !== undefined ||
-    localStorage.getItem('currentLanguage') !== ''
-      ? localStorage.getItem('currentLanguage')
-      : 'en'
   const [loading, setLoading] = useState(false)
   const isLoading = useSelector((state) => state.user.loginLoading)
   const history = useHistory()
@@ -51,13 +41,13 @@ function Login() {
     dispatch(loginLoading(true))
 
     if (!user.email || user.email === '') {
-      toast.error(<IntlMessages id="alerts.email_required" />)
+      toast.error(<IntlMessages id='alerts.email_required' />)
       dispatch(loginLoading(false))
     } else if (!user.password || user.password === '') {
-      toast.error(<IntlMessages id="alerts.password_required" />)
+      toast.error(<IntlMessages id='alerts.password_required' />)
       dispatch(loginLoading(false))
     } else if (!validateEmail(user.email)) {
-      toast.error(<IntlMessages id="alerts.valid_email" />)
+      toast.error(<IntlMessages id='alerts.valid_email' />)
       dispatch(loginLoading(false))
     } else {
       await Auth.signIn(user.email, user.password)
@@ -72,31 +62,12 @@ function Login() {
           )
           localStorage.setItem('email', user.email)
 
-          // if (response.signInUserSession.idToken.jwtToken) {
-          //   const newTime = await axiosInstance.put(
-          //     '/myPerformanceData/updateActivity/startTime',
-          //     {},
-          //     {
-          //       headers: {
-          //         Authorization: `Bearer ${response.signInUserSession.idToken.jwtToken}`
-          //       }
-          //     }
-          //   )
-          // }
-
-          // if (response) {
-          //   console.log(response)
-          //   axiosInstance
-          //     .put(`/myPerformanceData/updateActivity`)
-          //     .then(({ data }) => {
-          //       debugger
-          //       dispatch(updateUserActivity(data))
-          //     })
-          // }
-
           dispatch(userLogin(user.password)).then((res) => {
             if (res === 'passwordResetRequired') {
               history.push('/password-change-required')
+            } else if (!res) {
+              toast.error('Wrong email or password!')
+              dispatch(setLoginLoading(false))
             } else {
               history.push('/dashboard')
             }
@@ -105,9 +76,9 @@ function Login() {
         .catch((err) => {
           dispatch(loginLoading(false))
           if (err.message === 'Incorrect username or password.') {
-            toast.error(<IntlMessages id="alerts.email_password_incorrect" />)
+            toast.error(<IntlMessages id='alerts.email_password_incorrect' />)
           } else {
-            toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+            toast.error(<IntlMessages id='alerts.something_went_wrong' />)
           }
         })
     }
@@ -116,22 +87,19 @@ function Login() {
 
   return (
     <div
-      className="container-fluid md-px-5 ps-md-5 login_container"
-      // style={{ backgroundColor: '#F8F7F7', minHeight: ' calc(100vh - 42px)' }}
+      className='container-fluid md-px-5 ps-md-5 login_container'
+      style={{ backgroundColor: '#e4e9f4' }}
     >
-      <Row className="m-0 p-0 ps-md-5 center-content">
-        <Col md="7" lg="6" xl="5" className="ms-sm-1">
-          <FormWrapper
-            className="col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4"
-            // style={{ height: '60vh', minHeight: '60vh' }}
-          >
-            <FormattedMessage id="login.email" defaultMessage="login.email">
+      <Row className='m-0 p-0 ps-md-5 center-content'>
+        <Col md='7' lg='6' xl='5' className='ms-sm-1'>
+          <FormWrapper className='col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4 login-form-resp'>
+            <FormattedMessage id='login.email' defaultMessage='login.email'>
               {(placeholder) => (
                 <CustomLoginInput
                   cn={'mt-2 mb-3'}
                   placeholder={placeholder}
-                  inputName="email"
-                  inputType="email"
+                  inputName='email'
+                  inputType='email'
                   enterLogin={enterLogin}
                   onChange={(event) => handleChange(event)}
                 />
@@ -139,14 +107,14 @@ function Login() {
             </FormattedMessage>
 
             <FormattedMessage
-              id="login.password"
-              defaultMessage="login.password"
+              id='login.password'
+              defaultMessage='login.password'
             >
               {(placeholder) => (
                 <CustomLoginInput
                   placeholder={placeholder}
                   enterLogin={enterLogin}
-                  inputName="password"
+                  inputName='password'
                   inputType={'password'}
                   onChange={(event) => handleChange(event)}
                 />
@@ -154,34 +122,34 @@ function Login() {
             </FormattedMessage>
 
             <button
-              type="submit"
-              className="mt-2"
+              type='submit'
+              className='mt-2'
               disabled={isLoading}
               onClick={handleSubmit}
             >
               {isLoading ? (
-                <span className="spinner-border spinner-border-sm" />
+                <span className='spinner-border-info spinner-border-sm' />
               ) : (
-                <span className="d-flex align-items-center justify-content-center">
-                  <IntlMessages id="general.login" />
+                <span className='d-flex align-items-center justify-content-center'>
+                  <IntlMessages id='general.login' />
                   <FontAwesomeIcon
                     icon={faArrowRight}
-                    className="ms-2 fw-bold"
+                    className='ms-2 fw-bold'
                   />
                 </span>
               )}
             </button>
-            <p className="text-center public-page-text my-4">
-              <IntlMessages id="login.forgot_password" />
-              <NavLink to={'/forgot-password'} className="ml-2 link fw-bold">
-                <IntlMessages id="general.click_here" />
+            <p className='text-center public-page-text my-4'>
+              <IntlMessages id='login.forgot_password' />
+              <NavLink to={'/forgot-password'} className='ml-2 link fw-bold'>
+                <IntlMessages id='general.click_here' />
               </NavLink>
             </p>
-            <p className=" text-center public-page-text">
-              <IntlMessages id="login.security" />
+            <p className=' text-center public-page-text'>
+              <IntlMessages id='login.security' />
               <br />
-              <a href="/lts-secure" className="ml-2 link fw-bold">
-                <IntlMessages id="login.protect_data" />
+              <a href='/lts-secure' className='ml-2 link fw-bold'>
+                <IntlMessages id='login.protect_data' />
               </a>
             </p>
           </FormWrapper>

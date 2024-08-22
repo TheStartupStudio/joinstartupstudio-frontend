@@ -79,9 +79,9 @@ const SubmitIndustryProblemModal = (props) => {
       {...props}
       show={props.show}
       onHide={props.onHide}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      className="submit-industry-problem-modal"
+      size='lg'
+      aria-labelledby='contained-modal-title-vcenter'
+      className='submit-industry-problem-modal'
       centered
     >
       {loading ? (
@@ -94,14 +94,14 @@ const SubmitIndustryProblemModal = (props) => {
             </Modal.Title>
             <span
               style={{ fontSize: '20px', fontWeight: '700' }}
-              className="cursor-pointer"
+              className='cursor-pointer'
               onClick={() => props.onHide()}
             >
               X
             </span>
           </Modal.Header>
 
-          <div className="body-container">
+          <div className='body-container'>
             <Col style={{ maxHeight: '70%' }}>
               <ProfileHolder
                 profileImage={
@@ -112,38 +112,38 @@ const SubmitIndustryProblemModal = (props) => {
                 name={props.mode === 'edit' ? props.User.name : user?.name}
               />
               <div>
-                <p className="mb-1">
+                <p className='mb-1'>
                   {props.ImmersionCompany?.name ?? props.currentCompanyName}{' '}
                   Problem
                 </p>
                 <Textarea
                   placeholder={'Briefly describe solution'}
-                  name="solutionDescription"
+                  name='solutionDescription'
                   value={formData.solutionDescription}
                   onChange={props.mode !== 'edit' ? handleChange : () => {}}
                 />
               </div>
             </Col>
-            <Col className="d-flex flex-column justify-content-between">
+            <Col className='d-flex flex-column justify-content-between'>
               <div>
                 <UploadFileInput
                   filename={formData.parentGuardianApprovalForm}
                   placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
-                  name="parentGuardianApprovalForm"
+                  name='parentGuardianApprovalForm'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
                 />
                 <UploadFileInput
                   filename={formData.pitchDeck}
                   placeholder={'Upload Pitch Deck (PDF)'}
-                  name="pitchDeck"
+                  name='pitchDeck'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
                 />
                 <UploadFileInput
                   filename={formData.pitchVideo}
                   placeholder={'Upload Pitch Video'}
-                  name="pitchVideo"
+                  name='pitchVideo'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
                 />
@@ -168,13 +168,13 @@ const SubmitIndustryProblemModal = (props) => {
             <Col>
               <ParentGuardianButton text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
             </Col>
-            <Col className="d-flex justify-content-end">
+            <Col className='d-flex justify-content-end'>
               {props.mode === 'edit' ? (
-                <div className="d-flex">
+                <div className='d-flex'>
                   <SubmitButton
                     text={'DENY'}
                     disabled={formData.status !== 'pending'}
-                    type="button"
+                    type='button'
                     onClick={() => submitHandler('rejected')}
                     className={'deny-button'}
                   />
@@ -182,7 +182,7 @@ const SubmitIndustryProblemModal = (props) => {
                   <SubmitButton
                     text={'APPROVE'}
                     disabled={formData.status !== 'pending'}
-                    type="button"
+                    type='button'
                     onClick={() => submitHandler('approved')}
                     className={'approve-button'}
                   />
@@ -191,7 +191,7 @@ const SubmitIndustryProblemModal = (props) => {
                 <SubmitButton
                   text={'SAVE'}
                   disabled={true}
-                  type="button"
+                  type='button'
                   className={'submit-button'}
                 />
               )}

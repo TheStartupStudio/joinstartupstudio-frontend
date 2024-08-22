@@ -11,13 +11,12 @@ import { useState, useEffect } from 'react'
 import StartupLiveEn from '../../assets/images/startup-live-en.jpg'
 import { faHeart as heartSaved } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
-import { NotesButton } from '../Notes'
+import { toast } from 'react-toastify'
 
 export default function VideoView(props) {
   const [showVideoModal, setShowVideoModal] = useState(false)
   const [showNotesButton, setShowNotesButton] = useState(false)
   const url = ''
-  // props.page === 'startup-live' ? `/${props.page}/video/${props.id}` : ''
   const [videoData, setVideoData] = useState([])
 
   useEffect(() => {
@@ -38,14 +37,23 @@ export default function VideoView(props) {
     if (value) {
       await axiosInstance
         .post(`/favorites`, { contentId: videoData.id })
-        .then((response) => response)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success('Your changes has been saved successfully')
+          }
+          return response
+        })
         .catch((err) =>
           setVideoData({ ...videoData, favorite: oldFavoriteValue })
         )
     } else {
       await axiosInstance
         .delete(`/favorites/${videoData.id}`)
-        .then(() => {})
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success('Your changes has been saved successfully')
+          }
+        })
         .catch((err) =>
           setVideoData({ ...videoData, favorite: oldFavoriteValue })
         )
@@ -62,7 +70,7 @@ export default function VideoView(props) {
         >
           <Link to={url ? url : '#'}>
             <div
-              className="beyond-your-course-video-thumb"
+              className='beyond-your-course-video-thumb'
               style={{ width: '100%' }}
             >
               <div style={{ position: 'absolute', right: '10px', top: '10px' }}>
@@ -89,17 +97,17 @@ export default function VideoView(props) {
               >
                 <img
                   src={props.thumbnail}
-                  width="100%"
-                  height="250px"
-                  alt="video"
+                  width='100%'
+                  height='250px'
+                  alt='video'
                 />
-                <div className="beyond-your-course-video-thumb-icon">
+                <div className='beyond-your-course-video-thumb-icon'>
                   <FontAwesomeIcon icon={faPlay} />
                 </div>
               </div>
             </div>
             <div
-              className="card-body-video"
+              className='card-body-video'
               onClick={() => setShowVideoModal(true)}
             >
               <>
@@ -107,7 +115,7 @@ export default function VideoView(props) {
                   <IntlMessages id={props.title} />
                 </h5>
                 <p
-                  className="card-text"
+                  className='card-text'
                   style={{
                     textAlign:
                       props.page === 'master-classes' ? 'center' : 'left'
@@ -120,19 +128,16 @@ export default function VideoView(props) {
           </Link>
           {props.type === 'widget' && (
             <hr
-              className="mx-auto mt-1 mt-2 mb-3"
+              className='mx-auto mt-1 mt-2 mb-3'
               style={{ color: '#333D3D83' }}
             />
           )}
         </div>
       ) : (
-        <div className="card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2">
-          <div
-            className="card mobile-card"
-            // style={{ paddingRight: '20px' }}
-          >
+        <div className='card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2'>
+          <div className='card mobile-card'>
             <Link to={url ? url : '#'}>
-              <div className="beyond-your-course-video-thumb beyound-all-videos-thumb">
+              <div className='beyond-your-course-video-thumb beyound-all-videos-thumb'>
                 <div
                   style={{
                     position: 'absolute',
@@ -165,28 +170,21 @@ export default function VideoView(props) {
                   }}
                 >
                   <img
-                    src={
-                      props.thumbnail
-                      // window.location.href.includes('startup-live')
-                      //   ? StartupLiveEn
-                      //   : props.thumbnail
-                    }
-                    // style={{ height: '200px' }}
-                    width="100%"
-                    // height=''
-                    alt="#"
+                    src={props.thumbnail}
+                    width='100%'
+                    alt='#'
                     style={{
                       objectFit:
                         props.page === 'startup-live' ? 'contain' : 'cover'
                     }}
                   />
-                  <div className="beyond-your-course-video-thumb-icon">
+                  <div className='beyond-your-course-video-thumb-icon'>
                     <FontAwesomeIcon icon={faPlay} />
                   </div>
                 </div>
               </div>
               <div
-                className="card-body-video"
+                className='card-body-video'
                 onClick={() => {
                   setShowVideoModal(true)
                 }}
@@ -197,7 +195,7 @@ export default function VideoView(props) {
                       <IntlMessages id={props.title} />
                     </h5>
                     <p
-                      className="card-text"
+                      className='card-text'
                       style={{
                         textAlign:
                           props.page === 'master-classes' ? 'center' : 'left'

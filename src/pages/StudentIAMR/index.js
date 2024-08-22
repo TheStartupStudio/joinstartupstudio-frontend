@@ -17,6 +17,7 @@ import {
 } from '../../redux/dashboard/Actions'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
 import LoadingAnimation from '../../ui/loadingAnimation'
+import { setBackButton } from '../../redux/backButtonReducer'
 
 export default function StudentIAMR() {
   return (
@@ -48,6 +49,15 @@ function StudentIamrContainer() {
   }, [])
 
   useEffect(() => {
+    dispatch(setBackButton(true, 'my-students'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    setLoading(true)
     axiosInstance
       .get(`/instructor/iamr/students/${studentId}`)
       .then(({ data }) => {
@@ -68,7 +78,7 @@ function StudentIamrContainer() {
         else setError('Something went wrong, please try again!')
         setLoading(false)
       })
-  }, [])
+  }, [studentId])
   const taskEventModal = useSelector(
     (state) => state.dashboard.addTaskEventModal
   )
@@ -81,22 +91,22 @@ function StudentIamrContainer() {
   }
 
   return (
-    <div className="container-fluid iamr-page">
-      <div className="row">
-        <div className="col-12 col-xl-9 px-0">
-          <div className="page-border">
+    <div className='container-fluid iamr-page'>
+      <div className='row'>
+        <div className='col-12 col-xl-9 px-0'>
+          <div className='page-border'>
             {loading ? (
               <LoadingAnimation show={loading} />
             ) : error ? (
-              <p className="error my-5 py-5">{error}</p>
+              <p className='error my-5 py-5'>{error}</p>
             ) : (
               <>
-                <div className="iamr-page-padding iamr-page-header border-bottom">
-                  <h3 className="page-title">STUDENT UPLOADS</h3>
-                  <h3 className="page-title student-name">{student?.name}</h3>
-                  <p className="page-description mt-3 mt-md-5">
+                <div className='iamr-page-padding iamr-page-header border-bottom'>
+                  <h3 className='page-title'>STUDENT UPLOADS</h3>
+                  <h3 className='page-title student-name'>{student?.name}</h3>
+                  <p className='page-description mt-3 mt-md-5'>
                     WELCOME TO{' '}
-                    <span className="fw-bold">
+                    <span className='fw-bold'>
                       I AM MARKET READY CERTIFICATION SYSTEM{' '}
                     </span>
                   </p>
@@ -106,8 +116,8 @@ function StudentIamrContainer() {
             )}
           </div>
         </div>
-        <div className="col-12 col-xl-3 px-0">
-          <div className="account-page-padding" style={{ paddingLeft: '20px' }}>
+        <div className='col-12 col-xl-3 px-0'>
+          <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
             <FullCalendarComponent events={events} periods={periods} />
             <button
               style={{
@@ -117,7 +127,7 @@ function StudentIamrContainer() {
                 fontSize: 14
               }}
               onClick={openTaskEventModal}
-              className="px-4 py-2 border-0 rounded color transform text-uppercase font-weight-bold w-100 my-1"
+              className='px-4 py-2 border-0 rounded color transform text-uppercase font-weight-bold w-100 my-1'
             >
               Create Task/Event
             </button>

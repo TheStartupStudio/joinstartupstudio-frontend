@@ -1,0 +1,9 @@
+.remove-brand-item:hover svg {
+  color: rgb(251, 79, 79);
+}
+.brand__box {
+  cursor: pointer;
+}
+.brand__box:hover {
+  color: #51c7df;
+}

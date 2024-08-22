@@ -20,6 +20,7 @@ import Certification2Badge from '../../assets/images/market-ready-2-badge.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPeriodsStart } from '../../redux/dashboard/Actions'
 import { NextYearModal } from './nextYearModal'
+import LoadingAnimation from '../../ui/loadingAnimation'
 
 export default function StudentsTable({ instructorId }) {
   const dispatchRedux = useDispatch()
@@ -126,6 +127,7 @@ export default function StudentsTable({ instructorId }) {
   }
 
   const getStudents = async () => {
+    setLoading(true)
     let url = ''
     if (instructorId) {
       url = `/instructor/my-students/${instructorId}`
@@ -148,9 +150,13 @@ export default function StudentsTable({ instructorId }) {
           setInstructors(newArrray)
           setStudents(res.data.students)
           setSchool(res.data.universityName)
+          setLoading(false)
         }
       })
-      .catch((e) => e)
+      .catch((e) => {
+        setLoading(false)
+        return e
+      })
   }
 
   const deleteSingleSentTransfer = (id) => {
@@ -371,18 +377,18 @@ export default function StudentsTable({ instructorId }) {
         <div>
           <components.Option {...this.props}>
             <div
-              className="d-flex align-items-center"
+              className='d-flex align-items-center'
               onClick={() => updateSelectedOptions(this.props.data)}
             >
               <input
                 style={{ cursor: 'pointer', borderRadius: '0' }}
-                type="checkbox"
+                type='checkbox'
                 checked={selectedOptions.includes(this.props.data.value)}
                 onChange={(e) => e}
               />{' '}
               <label
                 style={{ cursor: 'pointer', paddingTop: '2px' }}
-                className="my-auto ms-2"
+                className='my-auto ms-2'
               >
                 {this.props.value}{' '}
               </label>
@@ -395,16 +401,22 @@ export default function StudentsTable({ instructorId }) {
 
   const noDataComponent = () => {
     return (
-      <div className="no-data-component text-center">
-        {isSearching ? (
-          'You do not have any students with this information.'
+      <>
+        {loading ? (
+          <LoadingAnimation show={true} />
         ) : (
-          <>
-            You don't have any students yet. <br /> Use the blue link above to
-            upload your rosters.
-          </>
+          <div className='no-data-component text-center'>
+            {isSearching ? (
+              'You do not have any students with this information.'
+            ) : (
+              <>
+                You don't have any students yet. <br /> Use the blue link above
+                to upload your rosters.
+              </>
+            )}
+          </div>
         )}
-      </div>
+      </>
     )
   }
 
@@ -449,7 +461,7 @@ export default function StudentsTable({ instructorId }) {
         toast.success('Student updated!')
       })
       .catch((err) => {
-        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
       })
     setLoading(false)
     setCurrentEditingStudent()
@@ -560,11 +572,11 @@ export default function StudentsTable({ instructorId }) {
             )
           )
         } else {
-          toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+          toast.error(<IntlMessages id='alerts.something_went_wrong' />)
         }
       })
       .catch((err) => {
-        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
       })
     setDeactivateLoading(false)
     setShowToggleActivationModal(false)
@@ -620,7 +632,7 @@ export default function StudentsTable({ instructorId }) {
         setShowConfirmationModal(true)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
       })
     setDeactivateLoading(false)
     setShowBulkDeactivationModal(false)
@@ -652,7 +664,7 @@ export default function StudentsTable({ instructorId }) {
         setShowBulkEditModal(false)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
       })
 
     setEditLoading(false)
@@ -732,7 +744,7 @@ export default function StudentsTable({ instructorId }) {
         setShowBulkNextYearModal(false)
       })
       .catch((err) => {
-        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
       })
 
     setNextYearLoading(false)
@@ -751,18 +763,18 @@ export default function StudentsTable({ instructorId }) {
         width: '300px',
         cell: (record) => (
           <>
-            <div className="d-flex flex-column my-auto justify-content-center w-100">
+            <div className='d-flex flex-column my-auto justify-content-center w-100'>
               {currentEditingStudent?.id !== record.id ? (
                 <>
                   <p
-                    className="mb-1"
+                    className='mb-1'
                     style={{ color: '#231F20!important', fontWeight: '500' }}
                   >
                     {record.name}
                   </p>
-                  <div className="d-flex">
+                  <div className='d-flex'>
                     <span
-                      role="button"
+                      role='button'
                       onClick={() => {
                         setCurrentEditingStudent(record)
                         updateOptions(record.level)
@@ -770,10 +782,10 @@ export default function StudentsTable({ instructorId }) {
                     >
                       Quick Edit User
                     </span>
-                    <span className="mx-2">|</span>
+                    <span className='mx-2'>|</span>
                     {!record.deactivated ? (
                       <span
-                        role="button"
+                        role='button'
                         onClick={() => {
                           setBulkDeactivatingStudents([record.id])
                           setShowBulkDeactivationModal(true)
@@ -783,7 +795,7 @@ export default function StudentsTable({ instructorId }) {
                       </span>
                     ) : (
                       <span
-                        role="button"
+                        role='button'
                         onClick={() => {
                           setTooglingActivationStudent({
                             data: record,
@@ -798,17 +810,17 @@ export default function StudentsTable({ instructorId }) {
                   </div>
                 </>
               ) : (
-                <div className="d-flex flex-column justify-content-start">
+                <div className='d-flex flex-column justify-content-start'>
                   <input
-                    type="text"
-                    className="w-75 px-2 py-1"
+                    type='text'
+                    className='w-75 px-2 py-1'
                     style={{ border: '1px solid #BBBDBF', height: '35px' }}
-                    name="name"
+                    name='name'
                     value={currentEditingStudent?.name}
                     onChange={handleChange}
                   />
                   <button
-                    className="edit-btn m-0 mt-1 p-0"
+                    className='edit-btn m-0 mt-1 p-0'
                     onClick={() => setCurrentEditingStudent()}
                   >
                     Cancel
@@ -830,7 +842,7 @@ export default function StudentsTable({ instructorId }) {
         cell: (record) => {
           return (
             <>
-              <div className="table-edit-dropdown">
+              <div className='table-edit-dropdown'>
                 {currentEditingStudent?.id === record.id ? (
                   <Select
                     menuPortalTarget={document.body}
@@ -845,11 +857,11 @@ export default function StudentsTable({ instructorId }) {
                         target: { name: 'level', value: newValue.value }
                       })
                     }
-                    className="my-auto py-auto"
+                    className='my-auto py-auto'
                     // styles={customStyles}
                   />
                 ) : (
-                  <p className="my-auto">{record.level} </p>
+                  <p className='my-auto'>{record.level} </p>
                 )}
               </div>
             </>
@@ -865,7 +877,7 @@ export default function StudentsTable({ instructorId }) {
         cell: (record) => {
           return (
             <>
-              <div className="table-edit-dropdown">
+              <div className='table-edit-dropdown'>
                 {currentEditingStudent?.id === record.id ? (
                   <Select
                     menuPortalTarget={document.body}
@@ -881,11 +893,11 @@ export default function StudentsTable({ instructorId }) {
                         target: { name: 'year', value: newValue.value }
                       })
                     }
-                    className="my-auto py-auto"
+                    className='my-auto py-auto'
                     // styles={customStyles}
                   />
                 ) : (
-                  <p className="my-auto">
+                  <p className='my-auto'>
                     {record.year ? record.year : 'None'}{' '}
                   </p>
                 )}
@@ -903,7 +915,7 @@ export default function StudentsTable({ instructorId }) {
         cell: (record) => {
           return (
             <>
-              <div className="table-edit-dropdown">
+              <div className='table-edit-dropdown'>
                 {currentEditingStudent?.id === record.id ? (
                   <Select
                     menuPortalTarget={document.body}
@@ -928,10 +940,10 @@ export default function StudentsTable({ instructorId }) {
                         target: { name: 'period_id', value: newValue.value }
                       })
                     }
-                    className="my-auto py-auto"
+                    className='my-auto py-auto'
                   />
                 ) : (
-                  <p className="my-auto">
+                  <p className='my-auto'>
                     {periods?.find((period) => period.id === record.period_id)
                       ?.name || 'None'}
                   </p>
@@ -951,24 +963,24 @@ export default function StudentsTable({ instructorId }) {
         cell: (record) => {
           return (
             <>
-              <div className="d-flex justify-content-between text-center w-100">
-                <div className="w-50 d-flex align-items-center">
-                  <div className="w-50">
+              <div className='d-flex justify-content-between text-center w-100'>
+                <div className='w-50 d-flex align-items-center'>
+                  <div className='w-50'>
                     <img
-                      className="w-100 h-100"
+                      className='w-100 h-100'
                       src={Certification1Badge}
-                      alt=""
+                      alt=''
                     />
                   </div>
                   <span>
-                    <span className="d-flex">
-                      <p className="text-info mb-0 pb-0 fw-bold">
+                    <span className='d-flex'>
+                      <p className='text-info mb-0 pb-0 fw-bold'>
                         {record.completedSkills1
                           ? record.completedSkills1.length
                           : 0}{' '}
                       </p>
                       /
-                      <p className="mb-0 pb-0">
+                      <p className='mb-0 pb-0'>
                         {record.certification1Skills
                           ? record.certification1Skills
                           : 0}
@@ -977,18 +989,18 @@ export default function StudentsTable({ instructorId }) {
                     Skills
                   </span>
                 </div>
-                <div className="w-50 d-flex align-items-center">
-                  <div className="w-50">
+                <div className='w-50 d-flex align-items-center'>
+                  <div className='w-50'>
                     <img
-                      className="w-100 h-100"
+                      className='w-100 h-100'
                       src={Certification2Badge}
-                      alt=""
+                      alt=''
                     />
                   </div>
                   <span>
-                    <span className="d-flex">
+                    <span className='d-flex'>
                       <p
-                        className="mb-0 pb-0 fw-bold"
+                        className='mb-0 pb-0 fw-bold'
                         style={{ color: '#a22f6a' }}
                       >
                         {record.completedSkills2
@@ -996,7 +1008,7 @@ export default function StudentsTable({ instructorId }) {
                           : 0}
                       </p>
                       /
-                      <p className="mb-0 pb-0">
+                      <p className='mb-0 pb-0'>
                         {record.certification2Skills
                           ? record.certification2Skills
                           : 0}
@@ -1017,14 +1029,14 @@ export default function StudentsTable({ instructorId }) {
         cell: (record) => {
           return (
             <>
-              <div className="d-flex justify-content-end w-100 text-end me-3">
+              <div className='d-flex justify-content-end w-100 text-end me-3'>
                 <div
-                  className="d-flex text-center flex-column"
+                  className='d-flex text-center flex-column'
                   style={{ width: '95px' }}
                 >
                   <span
-                    role="button"
-                    className="my-1 fw-bold"
+                    role='button'
+                    className='my-1 fw-bold'
                     onClick={() => {
                       setStudentToEdit(record)
                       setOpenEditUserModal(true)
@@ -1037,7 +1049,7 @@ export default function StudentsTable({ instructorId }) {
                   {currentEditingStudent?.id === record.id && (
                     <>
                       <button
-                        className="edit-btn my-1 fw-bold ms-auto"
+                        className='edit-btn my-1 fw-bold ms-auto'
                         onClick={() => {
                           editSingleStudent()
                         }}
@@ -1070,11 +1082,11 @@ export default function StudentsTable({ instructorId }) {
   return (
     <>
       <>
-        <div className="row">
-          <div className="col-12">
-            <div className="row">
-              <div className="col-12 col-md-6">
-                <div className="d-flex flex-row switch_students_options align-items-end h-100">
+        <div className='row'>
+          <div className='col-12'>
+            <div className='row'>
+              <div className='col-12 col-md-6'>
+                <div className='d-flex flex-row switch_students_options align-items-end h-100'>
                   <div
                     className={`${
                       showStudentsOption !== 'all' ? 'not_active' : ''
@@ -1094,7 +1106,7 @@ export default function StudentsTable({ instructorId }) {
                       </span>
                     </p>
                   </div>
-                  <div className="div mx-1">|</div>
+                  <div className='div mx-1'>|</div>
                   <div
                     className={`${
                       showStudentsOption !== 'active' ? 'not_active' : ''
@@ -1117,7 +1129,7 @@ export default function StudentsTable({ instructorId }) {
                       </span>
                     </p>
                   </div>
-                  <div className="div mx-1">|</div>
+                  <div className='div mx-1'>|</div>
                   <div
                     className={`${
                       showStudentsOption !== 'inactive' ? 'not_active' : ''
@@ -1142,19 +1154,19 @@ export default function StudentsTable({ instructorId }) {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-md-6 mt-2 mt-md-0 text-end setAddStudents d-flex justify-content-md-end justify-content-start align-items-end">
+              <div className='col-12 col-md-6 mt-2 mt-md-0 text-end setAddStudents d-flex justify-content-md-end justify-content-start align-items-end'>
                 <p
-                  className="p-0 m-0"
+                  className='p-0 m-0'
                   role={'button'}
                   onClick={() => setShowStudentsTransferModal(true)}
                 >
                   Student transfers<span>({receivedTransfersCount})</span>
                 </p>
-                <span className="mx-2" style={{ color: '#333d3d83' }}>
+                <span className='mx-2' style={{ color: '#333d3d83' }}>
                   |
                 </span>
                 <p
-                  className="p-0 m-0"
+                  className='p-0 m-0'
                   role={'button'}
                   onClick={() => setShowAddStudentsModal(true)}
                 >
@@ -1163,35 +1175,35 @@ export default function StudentsTable({ instructorId }) {
               </div>
             </div>
           </div>
-          <div className="col-12">
-            <div className="row justify-content-between">
-              <div className="col-12 col-md-5 mt-2">
-                <div className="connections-search" style={{ height: '48px' }}>
-                  <div className="input-group h-100">
-                    <div className="input-group-prepend my-auto">
+          <div className='col-12'>
+            <div className='row justify-content-between'>
+              <div className='col-12 col-md-5 mt-2'>
+                <div className='connections-search' style={{ height: '48px' }}>
+                  <div className='input-group h-100'>
+                    <div className='input-group-prepend my-auto'>
                       <button
-                        className="btn btn-outline-secondary my-2 ms-2"
-                        type="button"
-                        id="button-addon1"
+                        className='btn btn-outline-secondary my-2 ms-2'
+                        type='button'
+                        id='button-addon1'
                       >
-                        <img src={searchIcon} alt="#" width="90%" />
+                        <img src={searchIcon} alt='#' width='90%' />
                       </button>
                     </div>
 
                     <input
-                      type="text"
-                      className="form-control"
-                      name="searchedNote"
+                      type='text'
+                      className='form-control'
+                      name='searchedNote'
                       placeholder={'SEARCH USERS'}
-                      aria-describedby="button-addon1"
+                      aria-describedby='button-addon1'
                       onChange={(e) => handleSearch(e.target.value)}
                     />
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-xxl-5 col-lg-5 col-md-7">
-                <div className="row h-100 me-0 align-items-end justify-content-end">
-                  <div className="col-12 col-sm-4 col-xxl-5 col-lg-5 mt-2 col-md-6 pe-0">
+              <div className='col-12 col-xxl-5 col-lg-5 col-md-7'>
+                <div className='row h-100 me-0 align-items-end justify-content-end'>
+                  <div className='col-12 col-sm-4 col-xxl-5 col-lg-5 mt-2 col-md-6 pe-0'>
                     <Select
                       options={[
                         { label: 'edit', value: 'edit' },
@@ -1207,13 +1219,13 @@ export default function StudentsTable({ instructorId }) {
                           ? handleBulkDeactiveAction()
                           : handleBulkNextYearAction()
                       }}
-                      className="mb-0 me-0 custom-dropdown"
+                      className='mb-0 me-0 custom-dropdown'
                       styles={dropDownStyles}
                       autoFocus={false}
                       isSearchable={false}
                     />
                   </div>
-                  <div className="col-12 col-sm-5 col-xxl-5 col-lg-6 col-md-6 mt-2 me-0 pe-0">
+                  <div className='col-12 col-sm-5 col-xxl-5 col-lg-6 col-md-6 mt-2 me-0 pe-0'>
                     <Select
                       options={[
                         { label: 'level', value: 'level' },
@@ -1235,7 +1247,7 @@ export default function StudentsTable({ instructorId }) {
                         { label: 'year', value: 'year' }
                       ]}
                       value={null}
-                      className="mb-0 custom-dropdown"
+                      className='mb-0 custom-dropdown'
                       styles={dropDownStyles}
                       autoFocus={false}
                       isSearchable={false}
@@ -1253,7 +1265,7 @@ export default function StudentsTable({ instructorId }) {
         </div>
 
         <DataTable
-          title="Employees"
+          title='Employees'
           columns={tableColumns}
           data={tableData()}
           pagination

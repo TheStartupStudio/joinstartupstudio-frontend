@@ -39,11 +39,10 @@ export const NewJournalBrandModal = (props) => {
     const { name, value, checked } = event.target
 
     setData((prevValues) => ({
-        ...prevValues,
-        [name]: value
+      ...prevValues,
+      [name]: value
     }))
   }
-    
   const imageChange = async (e) => {
     const file = e.target.files[0]
     if (e.target.files && e.target.files.length > 0) {
@@ -52,16 +51,48 @@ export const NewJournalBrandModal = (props) => {
         return toast.error('Image size exceeds 512KB.')
       }
 
-      setData((prevValues) => ({
-        ...prevValues,
-        image: null
-      }))
+      var img = document.createElement('img')
 
-      let imageData = await readFile(file)
-      dispatch(setImageCropperData(imageData))
+      var reader = new FileReader()
+      reader.onloadend = function (ended) {
+        img.src = ended.target.result
+        // const formData = new FormData()
+        // formData.append('image', ended.target.result)
+      }
+
+      reader.readAsDataURL(e.target.files[0])
+      img.onload = async function () {
+        if (this.width < 140 || this.height < 140) {
+          return toast.error('Minimum required format: 140x140px.')
+        } else {
+          const imageData = await readFile(e.target.files[0])
+          dispatch(setImageCropperData(imageData))
+        }
+      }
       previewImage(file)
     }
   }
+
+  // const imageChange = async (e) => {
+  //   const file = e.target.files[0]
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     const fileSize = file.size / 1024 / 1024
+  //     if (fileSize > 0.5) {
+  //       return toast.error('Image size exceeds 512KB.')
+  //     }
+
+  //     setData((prevValues) => ({
+  //       ...prevValues,
+  //       image: null
+  //     }))
+
+  //     let imageData = await readFile(file)
+
+  //     console.log('imageData', imageData)
+  //     dispatch(setImageCropperData(imageData))
+  //     previewImage(file)
+  //   }
+  // }
 
   const previewImage = (file) => {
     const reader = new FileReader()
@@ -78,8 +109,7 @@ export const NewJournalBrandModal = (props) => {
     setLoading(true)
     const newExperience = data
     for (var key in data) {
-      if (key === 'image' || key === 'hasAccordion')
-        continue
+      if (key === 'image' || key === 'hasAccordion') continue
       if (data[key] === null || data[key] == '') {
         setLoading(false)
         return toast.error('Please fill in all the fields.')
@@ -88,7 +118,9 @@ export const NewJournalBrandModal = (props) => {
 
     if (general.croppedImage) {
       const formData = new FormData()
-      formData.append('img', general.croppedImage)
+      const image = general.croppedImage
+
+      formData.append('img', image)
       await axiosInstance
         .post('/upload/img-transform', formData, {
           headers: {
@@ -100,6 +132,7 @@ export const NewJournalBrandModal = (props) => {
           newExperience.image = response.data.fileLocation
         })
         .catch((err) => {
+          console.log('err', err)
           return toast.error('Image upload failed, please try again!')
         })
     }
@@ -129,9 +162,7 @@ export const NewJournalBrandModal = (props) => {
         className='edit-modal edit-profile-modal edit-experience-modal'
       >
         <Modal.Header className='pb-0 mx-4 general-modal-header'>
-          <h3 className='mt-4 mb-0 contact-bio'>
-            ADD FULL SECTION
-          </h3>
+          <h3 className='mt-4 mb-0 contact-bio'>ADD FULL SECTION</h3>
           <button
             type='button'
             className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
@@ -146,28 +177,22 @@ export const NewJournalBrandModal = (props) => {
         <Modal.Body className='px-4'>
           <div className='row'>
             <div className='col-12 col-lg-3 upload-container my-2'>
-              <div className='upload-image me-2 mb-1'>
-                {general.imageCropperData ? (
-                  <div
-                    className='img-placeholder position-relative'
-                    style={{ height: '150px' }}
-                  >
-                    <ImageCropper
-                      width={150}
-                      height={150}
-                      setImageUrl={setSelectedImage}
-                      imageUrl={selectedImage}
-                    />
-                  </div>
-                ) : (
-                  <>
+              {/* <div className='upload-image me-2 mb-1'> */}
+              {general.imageCropperData ? (
+                <div className='position-relative' style={{ height: '150px' }}>
+                  <ImageCropper
+                    imageUrl={general.imageCropperData}
+                    setImageUrl={() => {}}
+                    width={140}
+                    height={140}
+                  />
+                </div>
+              ) : (
+                <>
+                  <div className='upload-image me-2 mb-1'>
                     {selectedImage ? (
                       <img
-                        src={
-                          data.image
-                            ? data.image
-                            : selectedImage
-                        }
+                        src={data.image ? data.image : selectedImage}
                         style={{ width: '100%', height: '100%' }}
                         alt='Thumb'
                       />
@@ -184,9 +209,10 @@ export const NewJournalBrandModal = (props) => {
                         onClick={() => inputImage.current.click()}
                       />
                     )}
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
+              {/* </div> */}
               {/* <p>Max image width: 85px</p> */}
               <p className='mt-2'>File Types: .png or .jpg only</p>
               <p className='mb-1'>Dimensions: 150x150px</p>
@@ -196,10 +222,10 @@ export const NewJournalBrandModal = (props) => {
                   type='file'
                   id='inputGroupFile'
                   name='profile_image'
-                  accept='image/png, image/jpeg'
+                  accept='image/*'
                   className='d-none'
                   ref={inputImage}
-                  onChange={imageChange}
+                  onChange={(e) => imageChange(e)}
                 />
                 <div className='image-upload d-flex'>
                   <p>Choose Image</p>

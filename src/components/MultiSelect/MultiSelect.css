@@ -1,20 +1,71 @@
 .multiselect-dropdown {
     position: relative;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+
 }
 
+.multiselect-title {
+    text-align: left;
+    font: normal normal normal 14px/19px Montserrat;
+    letter-spacing: 0px;
+}
+/*.multiselect-title, .multiselect-option {*/
+/*    text-align: left;*/
+/*    font: normal normal normal 14px/19px Montserrat;*/
+/*    letter-spacing: 0px;*/
+/*}*/
 
+.multiselect-option-checkbox input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 20px !important;
+    height: 20px !important;
+    position: relative;
+    cursor: pointer;
+}
+
+.multiselect-option-checkbox::before input {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border-radius: 2px;
+    transition: background-color 0.2s;
+}
+
+.multiselect-option-checkbox:checked::before input {
+    background-color: #52C7DE;
+    border-color: #52C7DE;
+    width: 20px;
+    height: 20px;
+}
+
+.multiselect-option-checkbox:hover input {
+    border-color: #52C7DE;
+}
 
 
 .dropdown-input {
     display: flex;
     flex-wrap: wrap; /* Added property */
     align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    /*border: 1px solid #ccc;*/
+    /*border-radius: 4px;*/
     padding: 8px;
     cursor: pointer;
     min-height: 40px; /* Adjust height as needed */
     background-color: #fff;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .chip {
@@ -84,16 +135,16 @@
 
 .option-label {
     display: flex;
-    align-items: center;
+    align-items: self-start;
     margin-bottom: 8px;
     font-size: 14px !important;
 }
 
 .option-label input {
     margin-right: 4px;
-    width: 14px !important;
+    /*width: 14px !important;*/
     justify-content: center;
     display: flex;
-
+    margin-top: 4px;
 }
 

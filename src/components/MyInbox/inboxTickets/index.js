@@ -144,7 +144,7 @@ function InboxTickets() {
 
     if (filteredTickets.length === 0) {
       return (
-        <div className="col-12 text-center mt-3">
+        <div className='col-12 text-center mt-3'>
           <p>No tickets available.</p>
         </div>
       )
@@ -182,9 +182,9 @@ function InboxTickets() {
   })
 
   return (
-    <div className="col-12 col-lg-9 inbox-tickets-container px-4 d-flex justify-content-between flex-column">
+    <div className='col-12 col-lg-9 inbox-tickets-container px-4 d-flex justify-content-between flex-column'>
       <div>
-        <div className="top-menu mt-3 row m-0">
+        <div className='top-menu mt-3 row m-0'>
           {error && <p>Error fetching data: {error.message}</p>}
           <FilterDropdown
             currentFilter={selectedFilter}
@@ -196,7 +196,7 @@ function InboxTickets() {
 
           <SearchBar handleChange={(e) => handleSearch(e.target.value)} />
         </div>
-        <div className="row all-tickets gy-2 m-0 my-3">
+        <div className='row all-tickets gy-2 m-0 my-3'>
           {selectedTicket?.type && (
             <TicketChat
               ticket={selectedTicket}

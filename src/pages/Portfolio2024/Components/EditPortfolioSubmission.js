@@ -26,8 +26,8 @@ function EditPortfolioSubmission(props) {
     imageProperties
 
   useEffect(() => {
-    if (imageFile) props.onChangeImageCrop?.(imageFile)
-  }, [imageFile])
+    if (croppedImage) props.onChangeImageCrop?.(croppedImage)
+  }, [croppedImage])
 
   useEffect(() => {
     updateCroppedImage()
@@ -55,7 +55,8 @@ function EditPortfolioSubmission(props) {
 
       setImageProperties((prevState) => ({
         ...prevState,
-        croppedImage: window.URL.createObjectURL(blob)
+        // croppedImage: window.URL.createObjectURL(blob)
+        croppedImage: formData
       }))
     }
   }
@@ -67,7 +68,10 @@ function EditPortfolioSubmission(props) {
   const inputImage = useRef(null)
   return (
     <>
-      <div className={`portfolio-submission-container `}>
+      <div
+        className={`portfolio-submission-container `}
+        style={{ height: props.height ?? '300px' }}
+      >
         {imageProperties.originalImage !== '' ? (
           <div className={'portfolio-submission-crop-container'}>
             <AvatarEditor
@@ -75,7 +79,7 @@ function EditPortfolioSubmission(props) {
               color={[235, 235, 235, 0.6]}
               scale={scale}
               width={600}
-              crossOrigin="anonymous"
+              crossOrigin='anonymous'
               height={400}
               image={originalImage}
               rotate={rotate}
@@ -101,7 +105,11 @@ function EditPortfolioSubmission(props) {
             />
           </>
         )}
-        <div className={'portfolio-submission-title'}>{props.title}</div>
+        <div
+          className={`portfolio-submission-title ${props.titleClasses ?? ''}`}
+        >
+          {props.title}
+        </div>
 
         <div className={'submission-actions-box'}>
           <div className={'position-relative'}>
@@ -113,7 +121,7 @@ function EditPortfolioSubmission(props) {
                 }}
                 icon={<FaPencilAlt className={'action-icon pencil-icon'} />}
                 tooltipContent={
-                  <Tooltip id="tooltip" className={'tooltip-content'}>
+                  <Tooltip id='tooltip' className={'tooltip-content'}>
                     Click here to return to edit mode
                   </Tooltip>
                 }
@@ -126,7 +134,7 @@ function EditPortfolioSubmission(props) {
                 }}
                 icon={<IoTrashOutline className={'action-icon public-icon'} />}
                 tooltipContent={
-                  <Tooltip id="tooltip" className={'tooltip-content '}>
+                  <Tooltip id='tooltip' className={'tooltip-content '}>
                     Click here to delete image
                   </Tooltip>
                 }
@@ -164,6 +172,7 @@ function EditPortfolioSubmission(props) {
                         })
                         setIsDeletingSubmission(false)
                         setIsEditingSubmission(true)
+                        props.deleteImageFile()
                       }
                     }}
                   />
@@ -200,9 +209,9 @@ function EditPortfolioSubmission(props) {
           <input
             ref={inputImage}
             onChange={handleAdd}
-            accept="image/*"
-            type="file"
-            className="d-none h-100"
+            accept='image/*'
+            type='file'
+            className='d-none h-100'
           />
         </div>
       )}

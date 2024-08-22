@@ -28,7 +28,9 @@ function MyFailure(props) {
   useEffect(() => {
     if (props.data) setMyFailure(props.data)
   }, [props.data])
-
+  const isSaving = useSelector(
+    (state) => state.portfolio.whoSection.myFailures.isSaving
+  )
   const actions = [
     {
       type: 'edit',
@@ -52,6 +54,7 @@ function MyFailure(props) {
       isDisplayed: mode === 'edit' && props.isEditSection === true
     }
   ]
+
   return (
     <>
       <div className={'my-failures-container position-relative'}>
@@ -81,6 +84,7 @@ function MyFailure(props) {
         show={showFailureModalId === myFailure?.id}
         title={'Edit Failure'}
         data={myFailure}
+        isSaving={isSaving}
       />
     </>
   )

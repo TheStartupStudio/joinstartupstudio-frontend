@@ -8,6 +8,7 @@ import VerifyEmailByCode from '../Register/verifyEmailByCode'
 
 const Iamr = React.lazy(() => import('../Iamr'))
 const Terms = React.lazy(() => import('../Terms'))
+const MyEvaluation = React.lazy(() => import('../MyEvaluation'))
 const MyInbox = React.lazy(() => import('../MyInbox'))
 const MyNotes = React.lazy(() => import('../MyNotes'))
 const MySpark = React.lazy(() => import('../MySpark'))
@@ -97,6 +98,13 @@ const IamrCertificationSystem = React.lazy(() =>
 const Portfolio2024 = React.lazy(() =>
   import('../../pages/Portfolio2024/index')
 )
+const PeerPortfolio2024 = React.lazy(() =>
+  import('../../pages/Portfolio2024/peerPortfolio')
+)
+
+const PublicPortfolio2024 = React.lazy(() =>
+  import('../Portfolio2024/publicPortfolio')
+)
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData },
@@ -112,7 +120,7 @@ export const authRoutes = [
   { path: '/terms', component: Terms },
   // { path: '/preview-portfolio', component: PreviewPortfolioNew },
   { path: '/old-portfolio', component: EditPortfolioNew, exact: true },
-  { path: '/edit-portfolio', component: Portfolio2024, exact: true },
+  { path: '/my-portfolio', component: Portfolio2024, exact: true },
   { path: '/resources', component: Resources },
   { path: '/my-students', component: MyStudents },
   { path: '/iamr-certification-guide', component: IamrCertificationGuide },
@@ -137,6 +145,7 @@ export const authRoutes = [
   { path: '/briefings', component: Briefings },
   { path: '/iamr', component: Iamr },
   { path: '/student-iamr/:studentId/:id?/:type?', component: StudentIAMR },
+  { path: '/my-evaluation', component: MyEvaluation },
   { path: '/my-inbox', component: MyInbox },
   { path: '/my-spark/archive', component: MySparkArchivePage, exact: true },
   { path: '/my-spark/widgets', component: MySpark, exact: true },
@@ -173,16 +182,17 @@ export const authRoutes = [
     path: '/iamr-certification-system/:certificationType?/:id?/:type?',
     component: IamrCertificationSystem
   },
-  {
-    path: '/edit-portfolio/recommendation/:id',
-    component: EditPortfolioNew,
-    exact: true
-  },
+  // {
+  //   path: '/edit-portfolio/recommendation/:id',
+  //   component: EditPortfolioNew,
+  //   exact: true
+  // },
   {
     path: '/iamr-certification-system',
     component: IamrCertificationSystem,
     exact: true
-  }
+  },
+  { path: '/archived-portfolio', component: EditPortfolioNew, exact: true }
 ]
 
 export const authRoutesWithProps = [
@@ -191,11 +201,21 @@ export const authRoutesWithProps = [
   { path: '/hs3-journal/', component: LtsJournal, props: { category: 'hs3' } },
   { path: '/hs2-journal/', component: LtsJournal, props: { category: 'hs2' } },
   { path: '/hs1-journal/', component: LtsJournal, props: { category: 'hs1' } },
+  // {
+  //   path: '/user-portfolio/:username',
+  //   component: PreviewPortfolioNew,
+  //   exact: true,
+  //   props: { isPublicView: false }
+  // },
   {
-    path: '/user-portfolio/:username',
-    component: PreviewPortfolioNew,
-    exact: true,
-    props: { isPublicView: false }
+    path: '/peer-portfolio/:username',
+    component: PeerPortfolio2024,
+    exact: true
+  },
+  {
+    path: '/public-portfolio/:username',
+    component: PeerPortfolio2024,
+    exact: true
   },
   {
     path: '/pathways/:occupationId?/:occupationJobId?',
@@ -310,11 +330,16 @@ export const publicRoutes = [
     exact: false
   },
   {
-    path: '/user-portfolio/:username',
-    component: PreviewPortfolioNew,
-    props: { isPublicView: true },
+    path: '/public-portfolio/:username',
+    component: PublicPortfolio2024,
     exact: true
   }
+  // {
+  //   path: '/user-portfolio/:username',
+  //   component: PreviewPortfolioNew,
+  //   props: { isPublicView: true },
+  //   exact: true
+  // }
 ]
 
 export const redirects = [

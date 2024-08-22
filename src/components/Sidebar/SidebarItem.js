@@ -4,8 +4,8 @@ import { Col } from 'react-bootstrap'
 
 const IconContainer = ({ srcImage }) => {
   return (
-    <Col md="2" className="col-2 icon_container">
-      <img src={srcImage} alt="Icon" className="w-100 h-100" />
+    <Col md='2' className='col-2 icon_container'>
+      <img src={srcImage} alt='Icon' className='w-100 h-100' />
     </Col>
   )
 }
@@ -19,24 +19,33 @@ const SidebarItem = ({
   isDropdown
 }) => {
   return (
-    <a onClick={onClick ?? null} href={to} className={className}>
-      <div className="d-flex w-100" style={{ alignItems: 'center' }}>
-        <IconContainer srcImage={srcImage} />
-        <div className="flex-grow-1 ms-1">
-          <span className={'text-uppercase'}>{title}</span>
+    <li>
+      <a onClick={onClick ?? null} href={to} className={className}>
+        <div className='d-flex w-100' style={{ alignItems: 'center' }}>
+          <IconContainer srcImage={srcImage} />
+          <div className='flex-grow-1 ms-1'>
+            <span className={'text-uppercase'}>{title}</span>
+          </div>
+          {isDropdown && (
+            <FontAwesomeIcon
+              icon={faAngleDown}
+              className='me-2 me-md-0'
+              style={{
+                fontSize: '16px',
+                color: '#333D3D'
+              }}
+            />
+          )}
         </div>
-        {isDropdown && (
-          <FontAwesomeIcon
-            icon={faAngleDown}
-            className="me-2 me-md-0"
-            style={{
-              fontSize: '16px',
-              color: '#333D3D'
-            }}
-          />
-        )}
-      </div>
-    </a>
+      </a>
+      {isDropdown && (
+        <div
+          className='accordion accordion-flush dropdown-accordion-border'
+          id='accordionFlushExample'
+        ></div>
+      )}
+    </li>
   )
 }
+
 export default SidebarItem

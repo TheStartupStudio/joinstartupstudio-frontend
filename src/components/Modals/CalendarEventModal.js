@@ -110,18 +110,18 @@ const CalendarModal = (props) => {
       <Modal
         show={props.show}
         onHide={props.onHide}
-        backdrop="static"
+        backdrop='static'
         keyboard={false}
         style={{ marginTop: '3.9%' }}
-        className="edit-modal general-modal-header"
+        className='edit-modal general-modal-header'
       >
         <Modal.Header
           style={{
             backgroundColor:
-              props.event?.type === 'task' ? '#A7CA42' : '#FF3399',
+              props.event?.type === 'event' ? '#FF3399' : '#A7CA42',
             color: '#fff'
           }}
-          className="add-new-note-title general-modal-header my-auto p-2 d-flex flex-column justify-start calendar-modal-header"
+          className='add-new-note-title general-modal-header my-auto p-2 d-flex flex-column justify-start calendar-modal-header'
         >
           <div
             className={
@@ -129,22 +129,22 @@ const CalendarModal = (props) => {
             }
           >
             <h3
-              className="mb-0 pb-0 "
+              className='mb-0 pb-0 '
               style={{
                 color: '#fff'
               }}
             >
               {props.event?.type === 'event' ? (
-                <IntlMessages id="calendar_task-events.event" />
+                <IntlMessages id='calendar_task-events.event' />
               ) : (
-                <IntlMessages id="calendar_task-events.task" />
+                <IntlMessages id='calendar_task-events.task' />
               )}{' '}
               DETAILS
             </h3>
             <button
-              type="button"
-              className="btn-close mb-1 "
-              aria-label="Close"
+              type='button'
+              className='btn-close mb-1 '
+              aria-label='Close'
               onClick={props.onHide}
               style={{ color: '#fff', opacity: 1 }}
             />
@@ -157,14 +157,14 @@ const CalendarModal = (props) => {
             <h2 className={'text-white text-center '}>{props.event?.name}</h2>
             <div style={{ display: 'flex', gap: 10 }}>
               <div
-                className="float-end  add-new-note-button-text "
+                className='float-end  add-new-note-button-text '
                 onClick={openTaskEventModal}
                 style={{ cursor: 'pointer' }}
               >
                 <FontAwesomeIcon icon={faEdit} />
               </div>
               <div
-                className="float-end   add-new-note-button-text "
+                className='float-end   add-new-note-button-text '
                 onClick={openDeleteEventModal}
                 style={{ cursor: 'pointer' }}
               >
@@ -191,7 +191,7 @@ const CalendarModal = (props) => {
             </div>
           </div>
         </Modal.Header>
-        <Modal.Body className="mt-4 mb-3 mx-4 add-new-note">
+        <Modal.Body className='mt-4 mb-3 mx-4 add-new-note'>
           <Event
             eventInfo={props.event?.description}
             type={props.event?.type}

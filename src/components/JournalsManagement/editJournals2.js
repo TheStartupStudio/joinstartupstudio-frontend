@@ -160,7 +160,7 @@ export default function EditJournals2(props) {
 
   const handleSubmit = async () => {
     setLoading(true)
-    if (!journalType.includes('my-training')) {
+    if (!journalType?.includes('my-training')) {
       await axiosInstance
         .put(`LtsJournals/${journalId}/editJournal2`, {
           breakdowns: breakdowns,
@@ -267,7 +267,7 @@ export default function EditJournals2(props) {
           {!!children && (
             <img
               src={searchIcon}
-              alt="#"
+              alt='#'
               style={{
                 color: '#333d3d',
                 height: '25px',
@@ -363,8 +363,8 @@ export default function EditJournals2(props) {
   return (
     <div>
       {!fetchingJournals ? (
-        <div className="row">
-          <div className="col-9">
+        <div className='row'>
+          <div className='col-9'>
             <Select
               value={
                 selectedJournal?.label
@@ -420,12 +420,12 @@ export default function EditJournals2(props) {
                 DropdownIndicator: () => null,
                 IndicatorSeparator: () => null
               }}
-              classNamePrefix="vyrill"
+              classNamePrefix='vyrill'
               // autoFocus={false}
             />
           </div>
-          <div className="col-3 image-upload-widget d-flex align-items-center">
-            <label htmlFor="file-input" className="d-flex m-0 p-0">
+          <div className='col-3 image-upload-widget d-flex align-items-center'>
+            <label htmlFor='file-input' className='d-flex m-0 p-0'>
               <FontAwesomeIcon
                 icon={faFileUpload}
                 style={{
@@ -438,20 +438,20 @@ export default function EditJournals2(props) {
             </label>
 
             {imageUploadingLoader && (
-              <p style={{ color: '#01c5d1' }} className="ms-2 p-0 my-auto">
+              <p style={{ color: '#01c5d1' }} className='ms-2 p-0 my-auto'>
                 Uploading image, please wait!
               </p>
             )}
 
             {!uploadedImageUrl && !imageUploadingLoader && (
-              <p className="ms-2 p-0 my-auto" style={{ color: '#707070' }}>
+              <p className='ms-2 p-0 my-auto' style={{ color: '#707070' }}>
                 Upload image to generate html
               </p>
             )}
 
             {uploadedImageUrl && !imageUploadingLoader && (
               <span
-                className="input-group-text bg-transparent text-dark ms-2 w-100 justify-content-center"
+                className='input-group-text bg-transparent text-dark ms-2 w-100 justify-content-center'
                 style={{ borderLeft: '0px !important' }}
                 onClick={() => {
                   toast.success(
@@ -463,20 +463,20 @@ export default function EditJournals2(props) {
                 }}
               >
                 <span
-                  className="copy-portfolio-span"
+                  className='copy-portfolio-span'
                   style={{ fontSize: '15px' }}
                 >
                   Copy Generated Html Code
-                  <img src={copy} width="22px" alt="#" className="ms-2" />
+                  <img src={copy} width='22px' alt='#' className='ms-2' />
                 </span>
               </span>
             )}
 
             <input
-              type="file"
-              name="myImage"
-              className="d-none"
-              id="file-input"
+              type='file'
+              name='myImage'
+              className='d-none'
+              id='file-input'
               disabled={imageUploadingLoader}
               onChange={(event) => {
                 // setSelectedImage(event.target.files[0]);
@@ -486,8 +486,8 @@ export default function EditJournals2(props) {
           </div>
         </div>
       ) : (
-        <div className="d-flex justify-content-center align-items-center flex-column mt-5 pt-5">
-          <div className="lds-facebook">
+        <div className='d-flex justify-content-center align-items-center flex-column mt-5 pt-5'>
+          <div className='lds-facebook'>
             <div></div>
             <div></div>
             <div></div>
@@ -496,12 +496,12 @@ export default function EditJournals2(props) {
         </div>
       )}
       {selectedJournal && (
-        <div style={{ width: 530 }} className="mt-2">
+        <div style={{ width: 530 }} className='mt-2'>
           <div>Title</div>
           <input
-            type="text"
-            className="w-100 p-2"
-            name="title"
+            type='text'
+            className='w-100 p-2'
+            name='title'
             value={selectedJournal?.value?.title}
             onChange={handleJournalUpdate}
           />
@@ -510,13 +510,13 @@ export default function EditJournals2(props) {
               <div>Paragraph</div>
 
               <textarea
-                className="p-2 w-100 mt-2"
+                className='p-2 w-100 mt-2'
                 value={selectedJournal?.value?.paragraph}
                 onChange={handleJournalUpdate}
-                name="paragraph"
-                id=""
-                cols="30"
-                rows="4"
+                name='paragraph'
+                id=''
+                cols='30'
+                rows='4'
               ></textarea>
             </>
           )}{' '}
@@ -525,13 +525,13 @@ export default function EditJournals2(props) {
               <div>Opening text</div>
 
               <textarea
-                className="p-2 w-100 mt-2"
+                className='p-2 w-100 mt-2'
                 value={selectedJournal?.value?.openingText}
                 onChange={handleTrainingsUpdate}
-                name="openingText"
-                id=""
-                cols="30"
-                rows="4"
+                name='openingText'
+                id=''
+                cols='30'
+                rows='4'
               ></textarea>
             </>
           )}
@@ -542,8 +542,8 @@ export default function EditJournals2(props) {
                   <h2>{step?.type.split('-').join(' ')}</h2>
                   <div>Step title</div>
                   <input
-                    type="text"
-                    className="form-control"
+                    type='text'
+                    className='form-control'
                     value={step?.title}
                     onChange={(e) =>
                       handleChangeSteps(index, 'title', e.target.value)
@@ -574,8 +574,8 @@ export default function EditJournals2(props) {
                   <h2>Pedagogy Option {index + 1}</h2>
                   <div>Pedagogy box title</div>
                   <input
-                    type="text"
-                    className="form-control"
+                    type='text'
+                    className='form-control'
                     value={step?.title}
                     onChange={(e) =>
                       handleChangePedagogyOptions(
@@ -603,8 +603,8 @@ export default function EditJournals2(props) {
                   <h2>Step {index + 1}</h2>
                   <div>Step title</div>
                   <input
-                    type="text"
-                    className="form-control"
+                    type='text'
+                    className='form-control'
                     value={step?.title}
                     onChange={(e) =>
                       handleChangeImplementationSteps(
@@ -676,8 +676,8 @@ export default function EditJournals2(props) {
                     <div>
                       <h3>Image Url {i + 1}</h3>
                       <input
-                        type="text"
-                        className="form-control"
+                        type='text'
+                        className='form-control'
                         value={x?.imageUrl}
                         onChange={(e) =>
                           handleChangeProgramOpportunities(
@@ -713,8 +713,8 @@ export default function EditJournals2(props) {
                     <div>
                       <h3>Image Url {i + 1}</h3>
                       <input
-                        type="text"
-                        className="form-control"
+                        type='text'
+                        className='form-control'
                         value={x?.imageUrl}
                         onChange={(e) =>
                           handleChangeCurriculumOverview(
@@ -750,8 +750,8 @@ export default function EditJournals2(props) {
                     <div>
                       <h3>Image Url {i + 1}</h3>
                       <input
-                        type="text"
-                        className="form-control"
+                        type='text'
+                        className='form-control'
                         value={x?.imageUrl}
                         onChange={(e) =>
                           handleChangeExpectedOutcomes(
@@ -762,12 +762,12 @@ export default function EditJournals2(props) {
                         }
                       />
                     </div>
-                    <div className="row">
+                    <div className='row'>
                       <div className={'col-sm-6'}>
                         <h6>Padding of image {i + 1}</h6>
                         <input
-                          type="text"
-                          className="form-control"
+                          type='text'
+                          className='form-control'
                           value={x?.padding}
                           onChange={(e) =>
                             handleChangeExpectedOutcomes(
@@ -781,8 +781,8 @@ export default function EditJournals2(props) {
                       <div className={'col-sm-6'}>
                         <h6>Width of image {i + 1}</h6>
                         <input
-                          type="text"
-                          className="form-control"
+                          type='text'
+                          className='form-control'
                           value={x?.width}
                           onChange={(e) =>
                             handleChangeExpectedOutcomes(
@@ -811,7 +811,7 @@ export default function EditJournals2(props) {
             </>
           )}
           <button
-            className="float-end mt-2 px-md-5 save-button add-new-note-button-text"
+            className='float-end mt-2 px-md-5 save-button add-new-note-button-text'
             style={{ fontSize: '16px', height: 'auto' }}
             onClick={() => {
               return handleSubmit()

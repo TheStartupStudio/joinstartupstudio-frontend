@@ -98,7 +98,7 @@ const ResetPassword = () => {
       <div
         className='container-fluid my-auto px-5 d-flex align-items-center justify-content-center'
         style={{
-          backgroundColor: '#F8F7F7',
+          backgroundColor: '#e4e9f4',
           minHeight: 'calc(100vh - 150px)'
         }}
       >

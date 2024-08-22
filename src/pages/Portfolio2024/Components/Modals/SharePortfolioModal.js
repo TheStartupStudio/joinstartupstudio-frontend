@@ -21,10 +21,28 @@ function SharePortfolioModal(props) {
 
   const [copied, setCopied] = useState(false)
 
+  const portfolioUrl = () => {
+    let portfolioUrl = ''
+    if (
+      props.sharingSettings?.isPeerShared &&
+      !props.sharingSettings?.isPublicShared
+    ) {
+      portfolioUrl = '/peer-portfolio/'
+    } else if (
+      (!props.sharingSettings?.isPeerShared &&
+        props.sharingSettings?.isPublicShared) ||
+      (props.sharingSettings?.isPeerShared &&
+        props.sharingSettings?.isPublicShared)
+    ) {
+      portfolioUrl = '/public-portfolio/'
+    }
+
+    let url = window.location.origin + portfolioUrl + loggedUser?.username
+    return url
+  }
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(
-      window.location.origin + '/user-portfolio/' + loggedUser.username
-    )
+    navigator.clipboard.writeText(portfolioUrl())
     setCopied(true)
   }
 
@@ -47,9 +65,7 @@ function SharePortfolioModal(props) {
         </div>
         <div className={'copy-to-clipboard-box d-flex align-items-center'}>
           <input
-            value={
-              window.location.origin + '/user-portfolio/' + loggedUser.username
-            }
+            value={portfolioUrl()}
             readOnly
             className={'share-portfolio-input'}
           />
@@ -57,7 +73,7 @@ function SharePortfolioModal(props) {
             onClick={handleCopy}
             icon={<IoMdCopy className={'action-icon pencil-icon'} />}
             tooltipContent={
-              <Tooltip id="tooltip" className={'tooltip-content'}>
+              <Tooltip id='tooltip' className={'tooltip-content'}>
                 {copied ? 'Copied!' : 'Click here to copy URL to clipboard'}
               </Tooltip>
             }

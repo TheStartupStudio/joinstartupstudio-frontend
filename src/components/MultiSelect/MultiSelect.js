@@ -1,45 +1,50 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './MultiSelect.css'
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 
 const MultiSelectDropdown = (props) => {
-  const [selectedOptions, setSelectedOptions] = useState(props.options ?? [])
-
-  const [isOpen, setIsOpen] = useState(false)
-
-  const [options, setOptions] = useState(props.periods)
-
-  useEffect(() => {
-    if (props.options) setSelectedOptions(props.options)
-  }, [props.options])
-  useEffect(() => {
-    if (props.periods) setOptions(props.periods)
-  }, [props.periods])
+  const {
+    options,
+    selectedOptions,
+    handleChange,
+    isOpen: initialIsOpen,
+    toggleDropdown
+  } = props
+  const [isOpen, setIsOpen] = useState(initialIsOpen)
 
   useEffect(() => {
-    props.handleChange(selectedOptions)
-  }, [selectedOptions])
+    setIsOpen(initialIsOpen)
+  }, [initialIsOpen])
+
+  // console.log('options', options)
   const handleOptionToggle = (option) => {
+    // console.log('option', option)
+    const newOption = { ...option }
+    delete newOption.id
+    const newOptionWithOutId = { ...option, iamrSkillId: option.id }
+    // console.log('selectedOptions', selectedOptions)
     const selectedIndex = selectedOptions?.findIndex(
-      (selectedOption) => selectedOption.id === option.id
+      (selectedOption) => selectedOption?.iamrSkillId === option.id
     )
 
     let updatedOptions = [...selectedOptions]
 
     if (selectedIndex === -1) {
-      updatedOptions.push(option)
+      updatedOptions.push(newOptionWithOutId)
     } else {
       updatedOptions.splice(selectedIndex, 1)
     }
 
-    setSelectedOptions(updatedOptions)
+    handleChange(updatedOptions)
   }
 
   const handleDropdownToggle = () => {
     setIsOpen(!isOpen)
+    toggleDropdown()
   }
 
   const handleDeleteAllOptions = () => {
-    setSelectedOptions([])
+    handleChange([])
   }
 
   return (
@@ -48,42 +53,18 @@ const MultiSelectDropdown = (props) => {
         className={`dropdown-input ${isOpen ? 'open' : ''}`}
         onClick={handleDropdownToggle}
       >
-        <div style={{ width: '90%', display: 'flex', flexWrap: 'wrap' }}>
-          {selectedOptions?.length === 0 ? (
-            <span className="placeholder">Select options...</span>
-          ) : (
-            selectedOptions?.map((option, index) => (
-              <span className="chip" key={index}>
-                {option.name}
-                <button
-                  className="chip-remove"
-                  onClick={() => handleOptionToggle(option)}
-                >
-                  &times;
-                </button>
-              </span>
-            ))
-          )}
-        </div>
+        <div className={'multiselect-title'}>{props?.title}</div>
 
         <div
           style={{
             position: 'absolute',
             right: 8,
             top: '50%',
-            transform: 'translateY(-50%)',
+            transform: 'translateY(-50%)'
           }}
         >
-          {selectedOptions?.length > 0 && (
-            <span
-              className="delete-all-options"
-              onClick={handleDeleteAllOptions}
-            >
-              X
-            </span>
-          )}
           <span className={`dropdown-arrow ${isOpen ? 'up' : 'down'}`}>
-            {isOpen ? '\u25B2' : '\u25BC'}
+            {isOpen ? <FaChevronUp width={16} /> : <FaChevronDown width={16} />}
           </span>
         </div>
       </div>
@@ -94,11 +75,14 @@ const MultiSelectDropdown = (props) => {
               <input
                 type="checkbox"
                 checked={selectedOptions?.some(
-                  (selectedOption) => selectedOption.id === option.id
+                  (selectedOption) => selectedOption?.iamrSkillId === option.id
                 )}
                 onChange={() => handleOptionToggle(option)}
+                className="multiselect-option-checkbox"
               />
-              <div>{option.name}</div>
+              <div className={'multiselect-option'}>
+                {option.title}: {option.description}
+              </div>
             </label>
           ))}
         </div>

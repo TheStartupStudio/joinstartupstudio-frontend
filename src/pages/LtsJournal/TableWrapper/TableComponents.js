@@ -190,7 +190,7 @@ export const UserJournalTableCell = (props) => {
           />
           {props.loading && (
             <div
-              className=""
+              className=''
               style={{
                 color: '#01c5d1',
                 position: 'absolute',
@@ -199,7 +199,7 @@ export const UserJournalTableCell = (props) => {
                 right: 13
               }}
             >
-              <FontAwesomeIcon icon={faSpinner} className="" spin />
+              <FontAwesomeIcon icon={faSpinner} className='' spin />
             </div>
           )}
         </>

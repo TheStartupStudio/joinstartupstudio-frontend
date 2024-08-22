@@ -1,5 +1,10 @@
 import React from 'react'
 import FolderSidebarImage from '../../assets/images/HS-Sidebar-Icons/Dashboard (Full)-1200x.png'
+import LtsEduImage from '../../assets/images/HS-Sidebar-Icons/lts-edu-sidebar.svg'
+import ClassroomImage from '../../assets/images/HS-Sidebar-Icons/classroom-sidebar.svg'
+import MarketImage from '../../assets/images/HS-Sidebar-Icons/market-sidebar.svg'
+import JournalImage from '../../assets/images/HS-Sidebar-Icons/journal-sidebar.svg'
+import SparkImage from '../../assets/images/HS-Sidebar-Icons/spark-sidebar.svg'
 import SidebarItem from './SidebarItem'
 import ParentSidebarItem from './ParentSidebarItem'
 import ParentDropdownItem from './ParentDropdownItem'
@@ -15,13 +20,13 @@ const Body = (props) => {
   const location = useLocation()
   return (
     <ul
-      className="list-unstyled components sidebar-menu-item"
-      id="side-menu-main"
+      className='list-unstyled components sidebar-menu-item'
+      id='side-menu-main'
     >
       <li>
         <div
-          className="accordion accordion-flush"
-          id="accordionFlushExample"
+          className='accordion accordion-flush'
+          id='accordionFlushExample'
         ></div>
         <SidebarItem
           onClick={() => {
@@ -33,15 +38,15 @@ const Body = (props) => {
             location.pathname.includes('dashboard') ? 'active' : ''
           }`}
           srcImage={FolderSidebarImage}
-          title="MY Dashboard"
+          title='MY Dashboard'
           isDropdown={false}
         />
       </li>
       <ParentSidebarItem
-        href="#myLtsEDU"
-        aria-controls="myLtsEDU"
-        srcImage={FolderSidebarImage}
-        title="MY Learn to Start EDU"
+        href='#myLtsEDU'
+        aria-controls='myLtsEDU'
+        srcImage={LtsEduImage}
+        title='MY Learn to Start EDU'
         isDropdown={true}
       />
       <ParentDropdownItem id={'myLtsEDU'}>
@@ -57,10 +62,10 @@ const Body = (props) => {
         />
       </ParentDropdownItem>
       <ParentSidebarItem
-        ariaControls="collapseClassroom"
-        href="#collapseClassroom"
-        srcImage={FolderSidebarImage}
-        title="MY CLASSROOM"
+        ariaControls='collapseClassroom'
+        href='#collapseClassroom'
+        srcImage={ClassroomImage}
+        title='MY CLASSROOM'
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseClassroom'}>
@@ -71,18 +76,18 @@ const Body = (props) => {
         />
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
         <DropdownItem
-          disabled={true}
+          // disabled={true}
           title={'MY EVALUATIONS'}
-          to={'/my-evaluations'}
+          to={'/my-evaluation'}
         />
-        <DropdownItem title={'MY INBOX'} to="/my-inbox" />
+        <DropdownItem title={'MY INBOX'} to='/my-inbox' />
       </ParentDropdownItem>
 
       <ParentSidebarItem
-        ariaControls="collapseExample"
-        href="#collapseExample"
-        srcImage={FolderSidebarImage}
-        title="MY MARKET RESOURCES"
+        ariaControls='collapseExample'
+        href='#collapseExample'
+        srcImage={MarketImage}
+        title='MY MARKET RESOURCES'
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseExample'}>
@@ -96,10 +101,10 @@ const Body = (props) => {
         <DropdownItem title={'SPOTLIGHT'} to={'/spotlight'} />
       </ParentDropdownItem>
       <ParentSidebarItem
-        ariaControls="journals"
-        href="#journals"
-        srcImage={FolderSidebarImage}
-        title="JOURNALS"
+        ariaControls='journals'
+        href='#journals'
+        srcImage={JournalImage}
+        title='JOURNALS'
         isDropdown={true}
       />
       <ParentDropdownItem id={'journals'}>
@@ -112,17 +117,27 @@ const Body = (props) => {
         />
         <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
       </ParentDropdownItem>
+
       <ParentSidebarItem
-        ariaControls="mySpark"
-        href="#mySpark"
-        srcImage={FolderSidebarImage}
-        title="MY SPARK"
+        ariaControls='mySpark'
+        href='#mySpark'
+        srcImage={SparkImage}
+        title='MY SPARK'
         isDropdown={true}
       />
       <ParentDropdownItem id={'mySpark'}>
         <DropdownItem title={'SPARK WIDGETS'} to={'/my-spark/widgets'} />
         <DropdownItem title={'SPARK ARCHIVE'} to={'/my-spark/archive'} />
       </ParentDropdownItem>
+      <SidebarItem
+        to={'/my-portfolio'}
+        className={`${
+          location.pathname.includes('my-portfolio') ? 'active' : ''
+        }`}
+        srcImage={SparkImage}
+        title='MY PORTFOLIO'
+        isDropdown={false}
+      />
     </ul>
   )
 }

@@ -5,12 +5,21 @@ import { useSelector, useDispatch } from 'react-redux'
 import { changeSidebarState } from '../../../redux'
 
 import '../../MyMarketReadyGuide/index.css'
+import { setBackButton } from '../../../redux/backButtonReducer'
 
 function IamrCertificationGuide() {
   useEffect(() => {
     dispatch(changeSidebarState(false))
   })
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setBackButton(true, 'my-certification-guide'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
   return (
     <div className='account-page-padding page-border MY_MARKET_READY_GUIDE ps-md-4 row'>
       <div className='col-12 col-md-10'>
