@@ -1,0 +1,4 @@
+universityName,instructorName,Name,Email,Password,Levels,Programs,Profession,Period
+Dev Instance,Albion Rexha,student One,student1@example.com,Learntostart1!,"HS,LS","Community-Ready,Community-Active",student,Period 0
+Dev Instance,Albion Rexha,student Two,student2@example.com,Learntostart1,"HS","Market-Ready",student,Period 1
+Dev Instance,Albion Rexha,student Three,student3@example.com,Learntostart1,"LS,MS","Community-Ready,Market-Active,Community-Active",student,Period 2

@@ -98,6 +98,7 @@ const CertificationSkills = ({ journal, isEditable }) => {
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '20px'
           }}
+          className='certskills-grid'
         >
           {skills.map((skill) => {
             return (

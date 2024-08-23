@@ -3,11 +3,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
 const AccordionItemWrapper = (props) => {
+  const scrollToAccordion = (element) => {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest'
+    })
+  }
   return (
     <div
       className={`accordion accordion-border ${
         props.isOpened ? 'expanded' : ''
       }`}
+      ref={(el) => {
+        if (props.isOpened && el) {
+          scrollToAccordion(el)
+        }
+      }}
     >
       <div
         className='accordion-header-box'

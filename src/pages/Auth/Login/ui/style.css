@@ -75,92 +75,9 @@
   right: 63%;
 }
 
-.login-form-resp {
-  width: 50vw;
-  margin-left: -24px !important;
-}
-
-@media (max-width: 639px) {
-  /* Your CSS rules for small screens */
-
-  .login-form-resp {
-    margin-left: -3px !important;
-    width: 95vw;
-    height: 60vh !important;
-  }
-
-
-
-  .login-left-content {
-    margin: 0;
-    margin-top: -15px;
-  }
-
-  .right-login-form {
-    /* padding-top: 30px !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 80px !important; */
-    height: 100% !important;
-  }
-
-
-  .right-login-content {
-    margin-bottom: 20px;
-  }
-
-  .right-login-text {
-    margin: 0;
-    padding: 0;
-    font-size: 17px;
-  }
-
-}
-
-/* Medium (641px to 1007px) */
-@media (min-width: 640px) and (max-width: 1007px) {
-  /* Your CSS rules for medium screens */
-
-  .login-form-resp {
-    width: 90vw;
-  }
-
-
-  .login-left-content {
-    margin-left: 0;
-  }
-
-  .right-login-content {
-    margin-left: 50px;
-  }
-
-}
-
-/* Large (1008px and larger) */
-@media (min-width: 1008px) {
-  /* Your CSS rules for large screens */
-
-  .login-form-resp {
-    width: 50vw;
-  }
-
-  .login-left-content {
-    margin: -20px -10px 0 -20px;
-  }
-
-  .right-login-content {
-    margin-right: 30px !important;
-  }
-
-  .right-login-form {
-    width: 45vw;
-    /* height: !important; */
-  }
-
-}
-
 @media (max-width: 778px) {
   .public-login-form {
-    /* height: calc(35vh - 42px); */
+    height: calc(35vh - 42px);
     min-height: 35vh;
     justify-content: center;
   }
@@ -192,5 +109,17 @@
   .public-login-form h6 {
     color: #707070;
     text-align: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .login-form-resp {
+    width: 90vw !important;
+  }
+}
+
+@media (max-width: 1008px) and (min-width: 768px) {
+  .login-form-resp {
+    width: 90vw !important;
   }
 }
