@@ -335,13 +335,13 @@ export const publicRoutes = [
     path: '/public-portfolio/:username',
     component: PublicPortfolio2024,
     exact: true
+  },
+  {
+    path: '/student-portfolio/:username',
+    component: PreviewPortfolioNew,
+    props: { isPublicView: true },
+    exact: true
   }
-  // {
-  //   path: '/user-portfolio/:username',
-  //   component: PreviewPortfolioNew,
-  //   props: { isPublicView: true },
-  //   exact: true
-  // }
 ]
 
 export const redirects = [
