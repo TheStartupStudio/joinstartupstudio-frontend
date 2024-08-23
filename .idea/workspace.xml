@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/studentPortfolio.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MyStudents/AddStudentsModal/EditStudentModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MyStudents/AddStudentsModal/EditStudentModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/PdfDocument.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/PdfDocument.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
