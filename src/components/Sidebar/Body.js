@@ -151,9 +151,9 @@ const Body = (props) => {
       </ParentDropdownItem>
 
       <SidebarItem
-        to={'/edit-portfolio'}
+        to={'/my-portfolio'}
         className={`${
-          location.pathname.includes('edit-portfolio') ? 'active' : ''
+          location.pathname.includes('my-portfolio') ? 'active' : ''
         }`}
         srcImage={Group3888Image}
         title='MY PORTFOLIO'
@@ -178,7 +178,7 @@ const Body = (props) => {
         srcImage={SparkImage}
         title='MY PORTFOLIO'
         isDropdown={false}
-      /> 
+      />
       */}
     </ul>
   )

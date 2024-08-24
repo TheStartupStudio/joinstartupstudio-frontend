@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/fixtures/example.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/support/commands.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/support/component-index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/support/component.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/admin/MySchool/AgGridItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/admin/MySchool/AgGridItems.js" afterDir="false" />
-    </list>
+    <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

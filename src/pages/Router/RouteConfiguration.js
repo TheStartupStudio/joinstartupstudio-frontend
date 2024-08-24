@@ -203,12 +203,11 @@ export const authRoutesWithProps = [
   { path: '/hs3-journal/', component: LtsJournal, props: { category: 'hs3' } },
   { path: '/hs2-journal/', component: LtsJournal, props: { category: 'hs2' } },
   { path: '/hs1-journal/', component: LtsJournal, props: { category: 'hs1' } },
-  // {
-  //   path: '/user-portfolio/:username',
-  //   component: PreviewPortfolioNew,
-  //   exact: true,
-  //   props: { isPublicView: false }
-  // },
+  {
+    path: '/student-portfolio/:username',
+    component: PreviewPortfolioNew,
+    exact: true
+  },
   {
     path: '/peer-portfolio/:username',
     component: PeerPortfolio2024,
