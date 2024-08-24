@@ -105,6 +105,10 @@ const PeerPortfolio2024 = React.lazy(() =>
 const PublicPortfolio2024 = React.lazy(() =>
   import('../Portfolio2024/publicPortfolio')
 )
+
+const StudentPortfolio2024 = React.lazy(() =>
+  import('../Portfolio2024/studentPortfolio')
+)
 const MySchoolContainer = React.lazy(() => import('../admin/MySchool'))
 
 export const adminRoutes = [
@@ -205,7 +209,7 @@ export const authRoutesWithProps = [
   { path: '/hs1-journal/', component: LtsJournal, props: { category: 'hs1' } },
   {
     path: '/student-portfolio/:username',
-    component: PreviewPortfolioNew,
+    component: StudentPortfolio2024,
     exact: true
   },
   {

@@ -16,6 +16,8 @@ function StudentPortfolio() {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
+
+  console.log('publicPortfolio', publicPortfolio)
   useLayoutEffect(() => {
     setIsLoading(true)
     const getPublicPortfolioAPI = async () => {

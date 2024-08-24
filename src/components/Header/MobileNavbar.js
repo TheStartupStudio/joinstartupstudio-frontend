@@ -246,7 +246,7 @@ const MobileNavbar = (props) => {
           {
             <Link
               className='dropdown-item py-2 dropdown-menu-hover'
-              to='/edit-portfolio'
+              to='/archived-portfolio'
               onClick={() => setShowDropDown((preState) => !preState)}
             >
               MY ARCHIVED PORTFOLIO
