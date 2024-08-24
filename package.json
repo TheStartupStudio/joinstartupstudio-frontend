@@ -42,6 +42,10 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@wavesurfer/react": "^1.0.7",
+    "ag-charts-community": "^9.3.1",
+    "ag-charts-react": "^9.3.1",
+    "ag-grid-community": "^31.1.1",
+    "ag-grid-react": "^31.1.1",
     "aws-amplify": "^4.3.5",
     "bootstrap": "^5.0.2",
     "chart.js": "^3.9.1",
@@ -112,8 +116,7 @@
     "build": "react-scripts build",
     "buildDev": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "cy:open": "cypress open"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

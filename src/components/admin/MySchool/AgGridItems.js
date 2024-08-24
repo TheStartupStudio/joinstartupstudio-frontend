@@ -6,7 +6,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { useGridFilter } from 'ag-grid-react/lib/main'
+// import { useGridFilter } from 'ag-grid-react/lib/main'
+import { useGridFilter } from 'ag-grid-react'
+
 import './style.css'
 import ResetPasswordModal from './ResetPasswordModal'
 import AddInstructorModal from './Instructors/AddInstructorModal'
