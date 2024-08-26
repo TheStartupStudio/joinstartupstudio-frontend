@@ -226,13 +226,13 @@ function LtsJournalContent(props) {
 
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          <div className="journal-entries__back">
+      <div className='row'>
+        <div className='col-12'>
+          <div className='journal-entries__back'>
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
 
-          <h4 className="page-card__content-title">{journal.title}</h4>
+          <h4 className='page-card__content-title'>{journal.title}</h4>
 
           {videos &&
             videos.constructor == Array &&
@@ -284,12 +284,12 @@ function LtsJournalContent(props) {
           journal?.content?.includes('<p') ? (
             parse(`${journal.content}`)
           ) : (
-            <p className="page-card__content-description">{journal.content}</p>
+            <p className='page-card__content-description'>{journal.content}</p>
           )}
         </div>
       </div>
       {journal?.journalTables ? (
-        <div className="col-12">
+        <div className='col-12'>
           <>
             <JournalTables
               loadData={loadData}
@@ -302,9 +302,9 @@ function LtsJournalContent(props) {
         </div>
       ) : null}
 
-      <div className="row">
-        <div className="col-12">
-          <div className="journal-entries">
+      <div className='row'>
+        <div className='col-12'>
+          <div className='journal-entries'>
             <EntriesBox
               entries={journal.entries}
               entryBoxTitle={journal?.title}
@@ -327,7 +327,7 @@ function LtsJournalContent(props) {
           </div>
         </div>
 
-        <div className="col-12">
+        <div className='col-12'>
           <div className={'custom-breakdowns-container'}>
             {journal.hasAccordion ? (
               <div>
@@ -354,7 +354,7 @@ function LtsJournalContent(props) {
 
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (
-              <div className="col-12">
+              <div className='col-12'>
                 <AccordionItemWrapper
                   isOpened={openAccordion === `accordion-${accordion.id}`}
                   handleAccordionClick={() =>
@@ -365,8 +365,8 @@ function LtsJournalContent(props) {
                 >
                   {openAccordion === `accordion-${accordion.id}` && (
                     <>
-                      <div className="accordion-content">
-                        <div className="col-12">
+                      <div className='accordion-content'>
+                        <div className='col-12'>
                           <EntriesBox
                             entries={accordion.ltsJournalAccordionEntries}
                             entryBoxTitle={journal?.title}
@@ -393,10 +393,10 @@ function LtsJournalContent(props) {
             ))
           : null}
 
-        {journal.brandsJournal &&
+        {/* {journal.brandsJournal &&
         journal.brandsJournal.length &&
         journal.brandsJournal.find((item) => item.hasAccordion) ? (
-          <div className="col-12">
+          <div className='col-12'>
             <AccordionItemWrapper
               isOpened={openAccordion === `accordion-brand`}
               handleAccordionClick={() =>
@@ -407,8 +407,8 @@ function LtsJournalContent(props) {
             >
               {openAccordion === `accordion-brand` && (
                 <>
-                  <div className="accordion-content">
-                    <div className="col-12">
+                  <div className='accordion-content'>
+                    <div className='col-12'>
                       <JournalBrands
                         hasAccordion={1}
                         loadData={loadData}
@@ -422,14 +422,14 @@ function LtsJournalContent(props) {
               )}
             </AccordionItemWrapper>
           </div>
-        ) : null}
+        ) : null} */}
 
-        {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
+        {/* {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
           ? journal?.ltsJournalAccordions
               ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
               ?.map((accordion) => {
                 return (
-                  <div className="col-12">
+                  <div className='col-12'>
                     <AccordionItemWrapper
                       isOpened={openAccordion === `accordion-${accordion.id}`}
                       handleAccordionClick={() =>
@@ -449,12 +449,12 @@ function LtsJournalContent(props) {
                   </div>
                 )
               })
-          : null}
+          : null} */}
 
-        {journal.reflectionsTable && journal.reflectionsTable.length ? (
+        {/* {journal.reflectionsTable && journal.reflectionsTable.length ? (
           <>
             {journal.reflectionsTable.map((reflectionTable, tableIndex) => (
-              <div className="col-12" key={reflectionTable.id}>
+              <div className='col-12' key={reflectionTable.id}>
                 {reflectionTable.userReflectionsTable.length === 0 ? (
                   <TableWrapper title={reflectionTable.title}>
                     <TableReflections
@@ -514,26 +514,28 @@ function LtsJournalContent(props) {
               </div>
             ))}
           </>
-        ) : null}
+        ) : null} */}
 
-        {journal?.teamMeetings ? (
+        {/* {journal?.teamMeetings ? (
           <MeetingManager journal={journal} isEditable={false} />
         ) : null}
         {journal?.feedbacks ? (
           <FeedbackManager journal={journal} isEditable={false} />
-        ) : null}
-        {journal?.mentorMeetings ? (
+        ) : null} */}
+        {/* {journal?.mentorMeetings ? (
           <MentorMeetingManager journal={journal} isEditable={false} />
-        ) : null}
+        ) : null} */}
 
-        {journal?.contentUploads ? (
+        {console.log(journal, 'jouuurnal530')}
+
+        {/* {journal?.contentUploads ? (
           <ContentUploads journal={journal} isEditable={false} />
         ) : null}
         {journal?.certificationSkills ? (
           <CertificationSkills journal={journal} isEditable={false} />
-        ) : null}
+        ) : null} */}
 
-        {journal.brandsJournal &&
+        {/* {journal.brandsJournal &&
         journal.brandsJournal.length &&
         !journal.brandsJournal.find((item) => item.hasAccordion) ? (
           <JournalBrands
@@ -543,9 +545,9 @@ function LtsJournalContent(props) {
             journalId={props.match.params.journalId}
             hasActions={false}
           />
-        ) : null}
+        ) : null} */}
       </div>
-      {props.match.params.journalId === '1001028' && <Rwl isEditable={false} />}
+      {/* {props.match.params.journalId === '1001028' && <Rwl isEditable={false} />} */}
       {journal?.instructorFeedback && (
         <InstructorFeedback data={journal?.instructorFeedback} />
       )}

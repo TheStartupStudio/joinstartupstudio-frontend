@@ -11,7 +11,7 @@ import PortfolioSkeletonLoader from './Components/PortfolioSkeletonLoader'
 import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
 import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
 
-function PublicPortfolio() {
+function PublicPortfolio(props) {
   const [publicPortfolio, setPublicPortfolio] = useState({})
   const [privatePortfolioMessage, setPrivatePortfolioMessage] = useState()
   const activeSection = useSelector((state) => state.portfolio.activeSection)
@@ -22,7 +22,9 @@ function PublicPortfolio() {
     setIsLoading(true)
     const getPublicPortfolioAPI = async () => {
       try {
-        const response = await axiosInstance.get(`/portfolio/${username}`)
+        const response = await axiosInstance.get(
+          `/portfolio/${username ? username : props.userName}`
+        )
 
         if (response.data.privateMessage) {
           setPrivatePortfolioMessage(response.data.privateMessage)
