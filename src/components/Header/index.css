@@ -70,11 +70,13 @@ textarea {
 }
 
 .hs-icon img {
-  scale: 1.1;
+  width: 45px !important;
+  height: 45px;
 }
 
 .spark-icon img {
-  scale: 0.8;
+  width: 36px !important;
+  height: 45px;
 }
 
 .comm-icon img {
@@ -167,7 +169,11 @@ textarea {
 @media (min-width: 768px) {}
 
 /* // Large devices (desktops, 992px and up) */
-@media (min-width: 992px) {}
+@media (min-width: 992px) {
+  .spark-icon {
+    padding-right: 5px !important;
+  }
+}
 
 /* // X-Large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {}

@@ -222,7 +222,7 @@ const AccordionItems = ({ index }) => {
                 <li>Pitch Video</li>
                 <li>Podcast</li>
                 <li>Brand Video</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Form of Communication</li>
                 <li>Social Media Content</li>
                 <li>Website</li>
@@ -235,7 +235,7 @@ const AccordionItems = ({ index }) => {
                 <li>Pitch Video</li>
                 <li>Social Media Content</li>
                 <li>Brand Video</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Form of Communication</li>
                 <li>Website</li>
                 <li>Focus Group Agenda and Results</li>
@@ -412,7 +412,7 @@ const AccordionItems = ({ index }) => {
                 <li>Brand Video</li>
                 <li>Website</li>
                 <li>Article</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Pitch Video</li>
                 <li>Social Media Content</li>
                 <li>Form of Communication</li>
@@ -727,7 +727,7 @@ const AccordionItems = ({ index }) => {
                 <li>Concept Plan</li>
                 <li>Business Plan</li>
                 <li>Form of Communication</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Journal Entry</li>
                 <li>Industry Analysis</li>
                 <li>Market Analysis</li>
@@ -797,7 +797,7 @@ const AccordionItems = ({ index }) => {
                 <li>Business Plan</li>
                 <li>Concept Plan</li>
                 <li>Form of Communication</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Model</li>
                 <li>Piece of Art/Code/Music</li>
                 <li>Prototype/Test</li>
@@ -1063,7 +1063,7 @@ const AccordionItems = ({ index }) => {
                 <li>Focus Group Agenda and Results</li>
                 <li>Interview Template</li>
                 <li>Brand Video</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Brand Charter</li>
                 <li>Brand Guidelines Booklet</li>
               </ul>
@@ -1126,7 +1126,7 @@ const AccordionItems = ({ index }) => {
               <p>Appropriate content to upload:</p>
               <ul>
                 <li>Pitch Video</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
               </ul>
             </div>
           </div>
@@ -1234,7 +1234,7 @@ const AccordionItems = ({ index }) => {
                 <li>Brand Video</li>
                 <li>Branded Material</li>
                 <li>Slide Deck</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Pitch Video</li>
                 <li>Social Media Content</li>
                 <li>Website</li>
@@ -1283,7 +1283,7 @@ const AccordionItems = ({ index }) => {
                 <li>Prototype/Test</li>
                 <li>Social Media Content</li>
                 <li>Website</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
               </ul>
             </div>
             <div className='skill-box'>
@@ -1307,7 +1307,7 @@ const AccordionItems = ({ index }) => {
                 <li>Prototype/Test</li>
                 <li>Social Media Content</li>
                 <li>Website</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Brand Charter</li>
                 <li>Brand Guidelines Booklet</li>
                 <li>Brand Vehicle</li>
@@ -1338,7 +1338,7 @@ const AccordionItems = ({ index }) => {
                 <li>Brand Vehicle</li>
                 <li>Brand Video</li>
                 <li>Form of Communication</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Social Media Content</li>
                 <li>Website</li>
                 <li>Podcast</li>
@@ -1378,7 +1378,7 @@ const AccordionItems = ({ index }) => {
                 <li>Branded Material</li>
                 <li>Brand Vehicle</li>
                 <li>Brand Video</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Piece of Art/Code/Music</li>
                 <li>Prototype/Test</li>
                 <li>Social Media Content</li>
@@ -1435,7 +1435,7 @@ const AccordionItems = ({ index }) => {
                 <li>Branded Material</li>
                 <li>Brand Vehicle</li>
                 <li>Brand Video</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Piece of Art/Code/Music</li>
                 <li>Prototype/Test</li>
                 <li>Slide Deck</li>
@@ -1801,7 +1801,7 @@ const AccordionItems = ({ index }) => {
                 <li>Branded Material</li>
                 <li>Brand Vehicle</li>
                 <li>Brand Video</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Pitch Video</li>
                 <li>Slide Deck</li>
                 <li>Social Media Content</li>
@@ -1817,7 +1817,7 @@ const AccordionItems = ({ index }) => {
                 <li>Brand Charter</li>
                 <li>Brand Vehicle</li>
                 <li>Brand Video</li>
-                <li>I Am Video</li>
+                <li>Personal Brand Video</li>
                 <li>Pitch Video</li>
                 <li>Slide Deck</li>
                 <li>Social Media Content</li>

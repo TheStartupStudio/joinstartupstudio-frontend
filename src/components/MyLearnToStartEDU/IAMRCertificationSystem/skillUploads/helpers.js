@@ -10,7 +10,7 @@ export const types = [
   'Course Certification',
   'Financial Document',
   'Form of Communication',
-  'I Am Video',
+  'Personal Brand Video',
   'Industry Analysis',
   'Journal Entry',
   'Market Analysis',

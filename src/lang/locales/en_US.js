@@ -404,7 +404,8 @@ const EnLangs = {
   'journal.word': 'word',
   'journal.words': 'words',
   'journal.minimum_words': 'words minimum',
-  'journal.put_iam_video_link': 'Put the link to your I Am video here',
+  'journal.put_iam_video_link':
+    'Put the link to your Personal Brand Video here',
   'journal.put_brand_introductory_video_link':
     'Put the link to your brand introductory video here...',
   'journal.view_document': 'View Document',
@@ -433,7 +434,7 @@ const EnLangs = {
   'portfolio.empowerment_p1':
     'Knowing yourself is the key to building empowered human beings. That is why at The Startup Studio it all begins with story. Once people discover themselves, they can begin building their true potential and uncover how to properly tell their real story in the world.',
   'portfolio.empowerment_p2':
-    'Your I Am video speaks to the outcome of EMPOWERMENT experienced by you as you tell your story and uncover your potential.',
+    'Your Personal Brand Video speaks to the outcome of EMPOWERMENT experienced by you as you tell your story and uncover your potential.',
   'portfolio.performance_p':
     'The Startup Studio challenges your to answer the question – What can you do? Because that is the only metric that will matter to a 21st century marketplace employer. In this program, you accomplish the outcome of PERFORMANCE by identifying a problem worth solving and proposing a solution that becomes the centerpiece of your startup. Throughout the process, your startup will begin to craft a powerful story about your unique solution and the benefits you offer to the greater global community.',
   'portfolio.wellness_p1':
@@ -455,8 +456,9 @@ const EnLangs = {
     'Once all elements are complete, you will be able to publish your portfolio, making it public and giving you the ability to share it with others outside the course.',
   'portfolio.learn_to_start': 'MY LEARN TO START PORTFOLIO',
   'portfolio.choose_your_header_color': 'Choose Header Color',
-  'portfolio.i_am_video_link': 'Paste link to I Am video here...',
-  'portfolio.i_am_video_description': 'Introduce your I Am video here...',
+  'portfolio.i_am_video_link': 'Paste link to Personal Brand Video here...',
+  'portfolio.i_am_video_description':
+    'Introduce your Personal Brand Video here...',
   'portfolio.promo_video_link': 'Paste link to Brand Intro video here…',
   'portfolio.promo_video_description':
     'Introduce your Brand Introductory video here...',
