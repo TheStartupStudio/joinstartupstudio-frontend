@@ -132,11 +132,15 @@ const Navbar = (props) => {
               to={'/story-in-motion'}
               cn={'hs-icon'}
               srcWithFocus={HSGooglePlay}
+              // width={'55px'}
+              // height={'45px'}
             />
             <NavbarIcon
               to={'/my-spark/widgets'}
               cn={'spark-icon'}
               srcWithFocus={HSmySpark}
+              // width={'55px'}
+              // height={'45px'}
             />
             <NavbarIcon
               to={'/my-classroom'}

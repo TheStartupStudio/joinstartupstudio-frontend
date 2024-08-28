@@ -6,7 +6,7 @@ import ltsHSLogo from '../../assets/images/HS-Sidebar/Market-READY label.png'
 
 const Header = (props) => {
   return (
-    <div className='sidebar-header' onClick={() => props.hideHeaderIcons?.()}>
+    <div className='sidebar-header ' onClick={() => props.hideHeaderIcons?.()}>
       <NavLink to='/dashboard'>
         <img src={SUSLogoStudent} alt='logo' />
       </NavLink>

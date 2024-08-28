@@ -83,7 +83,7 @@ const FirstDiv = () => {
         'A direct record of communication between two or more people. This can include: emails, memos, call transcripts, messages.'
     },
     {
-      title: 'I Am Video',
+      title: 'Personal Brand Video',
       content:
         'A personal brand video usually between 30-120 seconds long that introduces people to who you are and what you can do, including your individual value proposition.'
     },

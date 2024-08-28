@@ -88,12 +88,12 @@ const MobileNavbar = (props) => {
           <div className='navbar-top-icons' style={{ display: 'flex' }}>
             <NavbarIcon
               to={'/story-in-motion'}
-              cn={'hs-icon'}
+              cn={'hs-icon safari_only'}
               srcWithFocus={HSGooglePlay}
             />
             <NavbarIcon
               to={'/my-spark/widgets'}
-              cn={'spark-icon'}
+              cn={'spark-icon safari_only'}
               srcWithFocus={HSmySpark}
             />
             <NavbarIcon
@@ -293,7 +293,7 @@ const MobileNavbar = (props) => {
 
 const NavbarIcon = (props) => {
   return (
-    <li className='nav-item  my-auto'>
+    <li className='nav-item  my-auto '>
       <NavLink
         className={`nav-link m-0 p-0 icon-menu ${props.cn}`}
         to={props.to}

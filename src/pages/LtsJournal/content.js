@@ -291,6 +291,91 @@ function LtsJournalContent(props) {
           )}
         </div>
       </div>
+      {/* THIS IS WHERE THE DROPDOWN THING GOES */}
+      {props.match.params.journalId.includes('1001006') ? (
+        <div
+          className='col-12 journal_intro-accordion-title'
+          style={{ marginTop: '-20px' }}
+        >
+          <>
+            <AccordionItemWrapper
+              isOpened={openAccordion === 'intro-journal'}
+              handleAccordionClick={() => handleAccordionClick('intro-journal')}
+              isExanded={isExpanded}
+              title={'Click here for the LTS Journal Sections breakdown'}
+            >
+              {openAccordion === 'intro-journal' && (
+                <>
+                  <ul
+                    className='intro-journal'
+                    id='intro-journal'
+                    style={{ paddingLeft: 0 }}
+                  >
+                    <li
+                      className='journal_intro-list'
+                      style={{ fontWeight: '400', fontSize: '13px' }}
+                    >
+                      <span style={{ fontWeight: '600' }}>SECTION ONE:</span> MY
+                      INSPIRATION: In this journal section, you will find
+                      guidance to stop feeling stuck and find a new direction to
+                      follow{' '}
+                    </li>
+                    <li style={{ fontWeight: '400', fontSize: '13px' }}>
+                      <span style={{ fontWeight: '600' }}>SECTION TWO:</span> MY
+                      VALUE PROPOSITION: In this journal section, you will
+                      create your statement of value by identifying your
+                      interests/passions, skills, and achievable outcomes. You
+                      will continue to iterate on this statement so it always
+                      reflects who you are, what you can do, and how you can
+                      prove it. This section of the journal reflects the
+                      Environments and Core Skills layers of the LTS Model.{' '}
+                    </li>
+                    <li style={{ fontWeight: '400', fontSize: '13px' }}>
+                      <span style={{ fontWeight: '600' }}>SECTION THREE:</span>{' '}
+                      MY TEAM: In this journal section, you will build a team
+                      either as a leader or as a member. When your project needs
+                      more than just your skills and knowledge, you will come
+                      here to determine who you need, why you need them, and
+                      what they will do. This section of the journal reflects
+                      the Environments and Core Skills layers of the LTS Model.
+                    </li>
+                    <li style={{ fontWeight: '400', fontSize: '13px' }}>
+                      <span style={{ fontWeight: '600' }}>SECTION FOUR:</span>{' '}
+                      MY GOALS: In this journal section, you will identify your
+                      individual and team goals. You will create a timeline to
+                      achieve these goals. You will complete sprints to execute
+                      on your goals. This section of the journal reflects each
+                      layer of the LTS Model. Focusing on your individual goals
+                      reflects the Environment and Core Skills parts of the
+                      model. Focusing on your project goals reflects the LEARN,
+                      DEVELOP, BRAND, and START parts of the model.
+                    </li>
+                    <li style={{ fontWeight: '400', fontSize: '13px' }}>
+                      <span style={{ fontWeight: '600' }}>SECTION FIVE:</span>{' '}
+                      MY FEEDBACK: In this journal section, you will record all
+                      feedback given by your peers, teachers, and more after
+                      pitches or other ways of sharing your solutions. This
+                      section of the journal reflects on each layer of the LTS
+                      Model.
+                    </li>
+                    <li style={{ fontWeight: '400', fontSize: '13px' }}>
+                      <span style={{ fontWeight: '600' }}>SECTION SIX:</span> MY
+                      RWL: In this journal section, you will be able to review
+                      Read, Watch, Listen market-ready recommendations and add
+                      them to your RWL list so you can create and sustain habits
+                      around healthy consumption of media. You are able to check
+                      off the resources you complete and write articles based on
+                      them that you can add to your portfolio.
+                    </li>
+                  </ul>
+                </>
+              )}
+
+              {/* {openAccordion === 'evaluation' && <AccordionItems />} */}
+            </AccordionItemWrapper>
+          </>
+        </div>
+      ) : null}
       {journal?.journalTables ? (
         <div className='col-12'>
           <>

@@ -538,7 +538,7 @@ li.nav-item.dropdown-li:after {
   text-align: center;
   padding: 5px;
   line-height: 30px;
-  font-size: 22px !important;
+  /* font-size: 22px !important; */
   color: #3d3d3d !important;
   font-weight: bold;
   transition: 0.3s ease;
@@ -4948,6 +4948,30 @@ ul.sidebar-menu-item .collapse a:hover {
 }
 
 /** Accordion **/
+.journal_intro-accordion-title {
+  height: 20px;
+
+}
+
+.journal_intro-accordion-title .accordion {
+  border: none;
+}
+
+.journal_intro-accordion-title .accordion .accordion-header-box {
+  background-color: #333d3d19;
+}
+
+.journal_intro-accordion-title .accordion .accordion-header-box .accordion-icon {
+  display: none;
+}
+
+.journal_intro-accordion-title .accordion .accordion-header-box .accordion-header-title {
+  font-size: 13px !important;
+  color: #333d3d;
+  font-weight: 500;
+  text-transform: none;
+}
+
 .accordion--dark .accordion_button {
   background: #f8f7f7 0% 0% no-repeat padding-box;
   border: 1px solid #f3f3f3;
@@ -5192,4 +5216,12 @@ ul.sidebar-menu-item .collapse a:hover {
 
 .k-animation-container-shown {
   z-index: 99999999 !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .safari_only {
+  width: 36px !important;
+  height: 36px !important;
+
 }

@@ -369,7 +369,7 @@ function LtsJournalContent(props) {
                         <div className='col-12'>
                           <EntriesBox
                             entries={accordion.ltsJournalAccordionEntries}
-                            entryBoxTitle={journal?.title}
+                            entryBoxTitle={journal?.title + 'jel;o'}
                             journal={journal}
                             userJournalEntries={userJournalEntries}
                             deleteReflection={(entry, userJournalEntry) =>
