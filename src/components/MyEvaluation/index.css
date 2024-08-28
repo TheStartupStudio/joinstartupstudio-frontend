@@ -767,6 +767,214 @@
   }
 }
 
+/* Styling for the meeting date bar */
+.meeting-date-bar {
+  background-color: #ffffff; /* White background */
+  border-radius: 10px; /* Rounded corners */
+  padding: 15px; /* Padding inside the bar */
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  display: flex; /* Flexbox for aligning items */
+  justify-content: space-between; /* Space between items */
+  align-items: center; /* Center items vertically */
+  /* Bold text for date */
+  font-size: 12px; /* Font size for the date text */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Styling for when the meeting date bar is opened */
+.meeting-date-bar.open {
+  border-radius: 10px 10px 0 0; /* Rounded corners for top only */
+}
+
+/* Styling for the expanded view */
+.meeting-details {
+  background-color: #ffffff; /* White background */
+  border-radius: 0 0 10px 10px; /* Rounded corners for bottom only */
+  padding: 20px; /* Padding inside the details section */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly more shadow for depth */
+  font-size: 14px; /* Font size for the details text */
+  line-height: 1.5; /* Line height for better readability */
+}
+
+/* Styling for the labels like "Purpose", "Attendance", "Notes" */
+.meeting-details-label {
+  font-weight: 400;
+  margin-right: 10px;
+  padding-left: 5px;
+  font-size: 15px;
+}
+
+/* Styling for the "NEW" indicator */
+.meeting-new-indicator {
+  font-size: 12px; /* Smaller font size */
+  color: #ff3b3b; /* Red color for NEW text */
+  font-weight: bold; /* Bold text */
+  margin-right: 5px; /* Space between text and time */
+}
+
+/* Styling for the time indicator */
+.meeting-time-indicator {
+  font-size: 12px; /* Smaller font size */
+  color: #8c8c8c; /* Gray color for time text */
+}
+
+/* Styling for the dropdown arrow when expanded */
+.meeting-date-bar.open .dropdown-arrow {
+  transform: rotate(180deg); /* Rotate the arrow when expanded */
+}
+
+.shot-list {
+  display: flex;
+  flex-wrap: nowrap; /* Disable wrapping so all cards stay in a single row */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  gap: 10px; /* Space between the cards */
+  padding-bottom: 10px; /* Add space for the scrollbar */
+  margin-top: 40px;
+}
+
+.shot-list::-webkit-scrollbar {
+  height: 8px; /* Height of the scrollbar */
+}
+
+.shot-list::-webkit-scrollbar-track {
+  background-color: #e0e0e0; /* Track background color */
+  border-radius: 10px;
+}
+
+.shot-list::-webkit-scrollbar-thumb {
+  background-color: #888888; /* Thumb color */
+  border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+.shot-list::-webkit-scrollbar-thumb:hover {
+  background-color: #555555; /* Darker color when hovering over the scrollbar */
+}
+.shot-card {
+  flex: 0 0 auto; /* Prevent the cards from shrinking or growing */
+  width: 19%; /* Set a fixed width for each card */
+  overflow: hidden;
+  margin: 0 5px; /* Adds some margin to separate the cards */
+}
+
+.shot-image {
+  margin-bottom: 15px;
+}
+
+.shot-image img,
+.shot-image .placeholder-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  background-color: #ccc;
+  border-radius: 10px;
+}
+
+.shot-info {
+  padding: 10px;
+}
+
+.shot-info div {
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: #333;
+  background: #d2d2d2;
+  min-height: 50px;
+  max-height: 50px;
+  padding: 7px;
+  display: flex;
+}
+
+.shot-info strong {
+  display: inline-block;
+  margin-bottom: 4px;
+  color: #555;
+  font-weight: 500;
+}
+
+.placeholder-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #888;
+  height: 150px;
+}
+
+.video-card {
+  flex: 1 1 calc(50% - 20px); /* Adjust this based on your design */
+  margin: 0 5px; /* Adds some margin to separate the video */
+  flex-shrink: 0; /* Prevents the video from shrinking */
+  position: relative; /* Needed for the play button positioning */
+  border-radius: 20px; /* Increase the rounding for a softer look */
+  overflow: hidden; /* Ensures content like the video and play button stay inside rounded corners */
+  margin-top: 25px;
+}
+
+.video-card video {
+  width: 100%;
+  height: auto;
+  border-radius: 20px; /* Ensures video has rounded corners */
+  object-fit: cover;
+}
+
+.play-button-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.play-button-overlay::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 15px solid rgba(0, 0, 0, 0.8);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.accordion {
+  width: 100%;
+
+  font-weight: 300 !important;
+  font-size: 14px;
+  border: none;
+  margin-top: 15px;
+}
+
+.accordion-item {
+  border: none !important;
+  color: white;
+  margin: 10px 0;
+}
+
+.accordion-title {
+  background-color: #1b1b1b;
+  padding: 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-icon {
+  font-size: 20px;
+}
+
+.accordion-content {
+  padding: 15px;
+  background-color: #fafafa;
+}
+
 @media (max-width: 576px) {
   .chat-container .messages-container {
     max-height: initial;

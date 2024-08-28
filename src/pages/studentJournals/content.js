@@ -393,7 +393,7 @@ function LtsJournalContent(props) {
             ))
           : null}
 
-        {/* {journal.brandsJournal &&
+        {journal.brandsJournal &&
         journal.brandsJournal.length &&
         journal.brandsJournal.find((item) => item.hasAccordion) ? (
           <div className='col-12'>
@@ -422,9 +422,9 @@ function LtsJournalContent(props) {
               )}
             </AccordionItemWrapper>
           </div>
-        ) : null} */}
+        ) : null}
 
-        {/* {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
+        {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
           ? journal?.ltsJournalAccordions
               ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
               ?.map((accordion) => {
@@ -449,9 +449,9 @@ function LtsJournalContent(props) {
                   </div>
                 )
               })
-          : null} */}
+          : null}
 
-        {/* {journal.reflectionsTable && journal.reflectionsTable.length ? (
+        {journal.reflectionsTable && journal.reflectionsTable.length ? (
           <>
             {journal.reflectionsTable.map((reflectionTable, tableIndex) => (
               <div className='col-12' key={reflectionTable.id}>
@@ -514,28 +514,26 @@ function LtsJournalContent(props) {
               </div>
             ))}
           </>
-        ) : null} */}
+        ) : null}
 
-        {/* {journal?.teamMeetings ? (
+        {journal?.teamMeetings ? (
           <MeetingManager journal={journal} isEditable={false} />
         ) : null}
         {journal?.feedbacks ? (
           <FeedbackManager journal={journal} isEditable={false} />
-        ) : null} */}
-        {/* {journal?.mentorMeetings ? (
+        ) : null}
+        {journal?.mentorMeetings ? (
           <MentorMeetingManager journal={journal} isEditable={false} />
-        ) : null} */}
+        ) : null}
 
-        {console.log(journal, 'jouuurnal530')}
-
-        {/* {journal?.contentUploads ? (
+        {journal?.contentUploads ? (
           <ContentUploads journal={journal} isEditable={false} />
         ) : null}
         {journal?.certificationSkills ? (
           <CertificationSkills journal={journal} isEditable={false} />
-        ) : null} */}
+        ) : null}
 
-        {/* {journal.brandsJournal &&
+        {journal.brandsJournal &&
         journal.brandsJournal.length &&
         !journal.brandsJournal.find((item) => item.hasAccordion) ? (
           <JournalBrands
@@ -545,9 +543,9 @@ function LtsJournalContent(props) {
             journalId={props.match.params.journalId}
             hasActions={false}
           />
-        ) : null} */}
+        ) : null}
       </div>
-      {/* {props.match.params.journalId === '1001028' && <Rwl isEditable={false} />} */}
+      {props.match.params.journalId === '1001028' && <Rwl isEditable={false} />}
       {journal?.instructorFeedback && (
         <InstructorFeedback data={journal?.instructorFeedback} />
       )}
