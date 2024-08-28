@@ -1827,6 +1827,17 @@
   }
 }
 
+
+@media (max-width: 935px)and(min-width: 768px) {
+  .brand-video-container {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .brand-items-container {
+    width: 23vw !important;
+  }
+}
+
 @media (max-width: 768px) {
   #myProjectImage {
     max-width: 144px;
@@ -1946,7 +1957,41 @@
   .public-nav .nav-link {
     margin-right: 0;
   }
+
+  .brand-items-container {
+    grid-template-columns: 1fr 1fr 1fr !important;
+    width: 28vw !important;
+
+  }
+
+  .brand__item {
+    margin-top: 10px !important;
+  }
 }
+
+@media (max-width: 540px) {
+  .brand-video-container {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .brand-items-container {
+    width: 40vw !important;
+  }
+}
+
+
+@media (max-width: 340px) {
+  .brand-video-container {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-items-container {
+    width: 70vw !important;
+    justify-self: center;
+  }
+}
+
+
 
 @media (max-width: 767px) {
   .portfolio-user-info {

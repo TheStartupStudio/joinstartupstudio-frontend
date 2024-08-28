@@ -191,7 +191,7 @@ const EvaluateStudentModal = (props) => {
   return (
     <div className='evaluate-modal-background' style={{ height: '100%' }}>
       <div className='evaluate-container'>
-        <div className='liza-girlie'>
+        <div className='evaluate-wrapper'>
           <div
             onClick={() => props.setSelectedUser('')}
             className='evaluate-close-button'

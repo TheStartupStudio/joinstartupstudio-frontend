@@ -5,6 +5,7 @@ const StepContent = (props) => {
     <>
       {props.selectedStep != null && (
         <div
+          className='finlit-div'
           style={{
             fontFamily: 'Montserrat',
             backgroundColor: '#fff'
