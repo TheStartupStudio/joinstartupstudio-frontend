@@ -679,7 +679,6 @@ function CurriculumJournalContent(props) {
                                 __html: journal?.ltsConnection?.firstParagraph
                               }}
                             />
-
                             <div
                               style={{
                                 display: 'flex',

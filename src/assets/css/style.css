@@ -1967,6 +1967,78 @@ link a:hover {
   margin-left: 0px;
 }
 
+.finlit-div p {
+  font-size: 13px !important;
+}
+
+.mar-btm-p p {
+  margin-bottom: 0 !important;
+}
+
+.finlit-div span {
+  font-size: 13px !important;
+  font-family: Montserrat, sans-serif !important;
+  color: #333d3d !important;
+  font-weight: 500 !important;
+  line-height: 15px !important;
+  letter-spacing: 0.4px !important;
+}
+
+/* .brand-video-container {
+  display: flex;
+  flex-direction: column;
+} */
+
+.brand__item {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.brand-video-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+
+
+.brand__box {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  font-size: 12px;
+  background: var(--unnamed-color-333d3d29) 0% 0% no-repeat padding-box;
+  background: #333D3D29 0% 0% no-repeat padding-box;
+}
+
+.brand-title {
+  font-weight: 600;
+}
+
+.add-new-brand {
+  color: #707070 !important;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+}
+
+.add-new-brand:hover {
+  color: #01c5d1 !important;
+}
+
+.add-new-brand:active {
+  color: #01c5d1 !important;
+}
+
+.icon-plus {
+  font-size: 20px !important;
+}
+
+
 .notes-search-box input.form-control,
 .connections-search {
   /* padding: 2px 0px; */
@@ -4142,9 +4214,15 @@ wave>wave:first-child {
   transition: color 0.2s;
 }
 
-.accordion-menu__item-toggle:hover {
+.accordion-menu__item-toggle:hover span,
+.accordion-menu__item-toggle:focus span {
   color: #21c5d0;
 }
+
+.accordion-menu__item-toggle.active span {
+  color: #21c5d0;
+}
+
 
 .accordion-menu__item-toggle>svg {
   margin-left: 10px;
