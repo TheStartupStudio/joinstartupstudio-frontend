@@ -36,11 +36,11 @@ const JournalBrands = (props) => {
             <div
               className='col-12 col-sm-6 brand-items-container'
               style={{
-                width: '14.5vw'
+                width: '100%'
               }}
             >
               <div className='brand__item'>
-                {/* <span
+                <span
                   className='remove-brand-item cursor-pointer'
                   onClick={(e) => deleteBrand(brand.id)}
                 >
@@ -48,7 +48,7 @@ const JournalBrands = (props) => {
                     icon={faTrash}
                     className='edit-modal-sm ms-4'
                   />
-                </span> */}
+                </span>
                 <img
                   onClick={() => {
                     setImage(brand.image)

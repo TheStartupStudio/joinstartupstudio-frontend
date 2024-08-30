@@ -53,7 +53,11 @@ function ImmersionCard(props) {
               alt={'education image'}
             />
           </div>
-          <div className={'d-flex justify-content-between flex-grow-1 gap-4'}>
+          <div
+            className={
+              'd-flex justify-content-between flex-grow-1 gap-4 immersion-portfolio-card'
+            }
+          >
             <div className={'w-50'}>
               <div className={'d-flex justify-content-between gap-2'}>
                 <div>
@@ -86,12 +90,12 @@ function ImmersionCard(props) {
                 />
               </div>
             </div>
-            <div className={'text-end organization-date w-50'}>
+            <div className={'text-end organization-date w-50 immersion-portf'}>
               {convertDateToMonthYear(data?.startDate)} -{' '}
               {!data?.currentlyAttending
                 ? convertDateToMonthYear(data?.endDate)
                 : 'Currently attending'}
-              <div className={'mt-3'}>
+              <div className={'mt-3 immersion-card-img'}>
                 <PortfolioSubmission
                   title={'My immersion experience'}
                   thumbnailUrl={data?.immersionThumbnailUrl}

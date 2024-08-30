@@ -57,7 +57,7 @@ function MyMentors(props) {
 
   return (
     <div className={'container'}>
-      <div className={'row '}>
+      <div className={'row '} style={{ justifyContent: 'center' }}>
         {myMentors?.length > 0 ? (
           myMentors?.map((mentor, index) => {
             return (

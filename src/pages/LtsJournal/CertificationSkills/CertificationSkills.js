@@ -93,12 +93,12 @@ const CertificationSkills = ({ journal, isEditable }) => {
     <div>
       {journal?.certificationSkills?.length ? (
         <div
+          className='certskills-grid'
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '20px'
           }}
-          className='certskills-grid'
         >
           {skills.map((skill) => {
             return (

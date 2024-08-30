@@ -20,7 +20,6 @@ const ContentUploads = ({ journal, isEditable }) => {
   const handleToggleContentUpload = (contentUpload, status) => {
     setLoadingContentUploads(true)
     if (contentUpload?.hasOwnProperty('contentUploadId')) {
-
       axiosInstance
         .put(`/contentUploads/updateUserContentUpload/`, {
           contentUpload: { ...contentUpload, status: status }
@@ -78,6 +77,7 @@ const ContentUploads = ({ journal, isEditable }) => {
     <div>
       {journal?.contentUploads?.length ? (
         <div
+          className='certskills-grid'
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',

@@ -28,6 +28,14 @@
     ;
 }
 
+.intro-journal {
+    background-color: transparent !important;
+}
+
+.journal-table-border {
+    border: none !important;
+}
+
 .journal_table-data {
     padding: 2px 10px !important;
     align-items: center

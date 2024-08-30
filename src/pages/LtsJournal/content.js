@@ -303,13 +303,14 @@ function LtsJournalContent(props) {
               handleAccordionClick={() => handleAccordionClick('intro-journal')}
               isExanded={isExpanded}
               title={'Click here for the LTS Journal Sections breakdown'}
+              cn={'intro-journal'}
             >
               {openAccordion === 'intro-journal' && (
                 <>
                   <ul
                     className='intro-journal'
                     id='intro-journal'
-                    style={{ paddingLeft: 0 }}
+                    style={{ paddingLeft: 0, backgroundColor: 'transparent' }}
                   >
                     <li
                       className='journal_intro-list'
@@ -444,7 +445,7 @@ function LtsJournalContent(props) {
           </div>
         ) : null}
 
-        {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
+        {/* {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
           ? journal?.ltsJournalAccordions
               ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
               ?.map((accordion) => {
@@ -469,7 +470,7 @@ function LtsJournalContent(props) {
                   </div>
                 )
               })
-          : null}
+          : null} */}
 
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (

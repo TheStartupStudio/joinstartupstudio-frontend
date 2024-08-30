@@ -151,7 +151,8 @@ const Body = (props) => {
       </ParentDropdownItem>
 
       <SidebarItem
-        to={'/edit-portfolio'}
+        // to={'/edit-portfolio'}
+        to={'/my-portfolio'}
         className={`${
           location.pathname.includes('edit-portfolio') ? 'active' : ''
         }`}

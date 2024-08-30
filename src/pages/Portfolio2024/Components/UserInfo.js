@@ -4,7 +4,10 @@ import UserImage from './UserImage'
 
 function UserInfo(props) {
   return (
-    <div className={'d-flex gap-3'}>
+    <div
+      className={'d-flex gap-3 portfolio-user-box'}
+      style={{ marginTop: '30px' }}
+    >
       <UserImage
         width={150}
         height={150}
