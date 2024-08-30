@@ -444,7 +444,7 @@ function LtsJournalContent(props) {
           </div>
         ) : null}
 
-        {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
+        {/* {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
           ? journal?.ltsJournalAccordions
               ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
               ?.map((accordion) => {
@@ -469,7 +469,7 @@ function LtsJournalContent(props) {
                   </div>
                 )
               })
-          : null}
+          : null} */}
 
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (
