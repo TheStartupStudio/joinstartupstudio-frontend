@@ -27,7 +27,7 @@ function PortfolioDataContainer(props) {
         style={{
           marginTop:
             props.title && props.description
-              ? 80
+              ? 150
               : props.title && !props.description
               ? 50
               : 0

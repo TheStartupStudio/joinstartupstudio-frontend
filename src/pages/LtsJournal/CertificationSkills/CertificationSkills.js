@@ -106,12 +106,12 @@ const CertificationSkills = ({ journal, isEditable, evaluationModal }) => {
     <div>
       {journal?.certificationSkills?.length ? (
         <div
+          className='certskills-grid'
           style={{
             ...(evaluationModal
               ? displayContentStyleEvaluationModal
               : displayContentStyle)
           }}
-          className='certskills-grid'
         >
           {skills.map((skill) => {
             return (

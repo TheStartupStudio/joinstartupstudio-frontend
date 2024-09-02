@@ -86,7 +86,7 @@ const FinancialSidebar = ({
                   <div
                     key={item.id}
                     className={`accordion-menu__item  accordion-menu__item-transition ${
-                      addLesson && item.order !== 1 ? 'mb-4' : ''
+                      addLesson && item.order !== 1 ? 'mb-4 lizaliza' : ''
                     }`}
                   >
                     <NavLink to={`${url}/${item.id}`}>
@@ -98,7 +98,7 @@ const FinancialSidebar = ({
                         <span
                           className={'text-uppercase ml-1'}
                           style={{
-                            // marginLeft: 14,
+                            marginLeft: 14,
                             display: 'flex',
                             flexWrap: 'wrap'
                           }}

@@ -303,13 +303,14 @@ function LtsJournalContent(props) {
               handleAccordionClick={() => handleAccordionClick('intro-journal')}
               isExanded={isExpanded}
               title={'Click here for the LTS Journal Sections breakdown'}
+              cn={'intro-journal'}
             >
               {openAccordion === 'intro-journal' && (
                 <>
                   <ul
                     className='intro-journal'
                     id='intro-journal'
-                    style={{ paddingLeft: 0 }}
+                    style={{ paddingLeft: 0, backgroundColor: 'transparent' }}
                   >
                     <li
                       className='journal_intro-list'

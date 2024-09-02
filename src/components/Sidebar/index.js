@@ -53,7 +53,7 @@ function Sidebar(props) {
           <div>
             <Header props={props} />
             <Body props={props} />
-            <Footer />
+            {/* <Footer /> */}
           </div>
         </PerfectScrollbar>
       </div>

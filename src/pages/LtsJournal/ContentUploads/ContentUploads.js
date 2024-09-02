@@ -91,6 +91,7 @@ const ContentUploads = ({ journal, isEditable, evaluationModal }) => {
     <div>
       {journal?.contentUploads?.length ? (
         <div
+          className='certskills-grid'
           style={{
             ...(evaluationModal
               ? displayContentStyleEvaluationModal
