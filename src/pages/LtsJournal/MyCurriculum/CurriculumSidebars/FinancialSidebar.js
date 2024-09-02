@@ -44,8 +44,8 @@ const FinancialSidebar = ({
 
   return (
     <>
-      <div className="d-flex align-items-center justify-content-end">
-        <p className="m-0">View add lesson</p>
+      <div className='d-flex align-items-center justify-content-end'>
+        <p className='m-0'>View add lesson</p>
         <LtsCheckbox
           toggle={() => setAddLesson((state) => !state)}
           checked={addLesson}
@@ -70,7 +70,7 @@ const FinancialSidebar = ({
                     font: 'normal normal 500 14px/14px Montserrat',
                     letterSpacing: 0.56,
                     color: '#231F20',
-                    padding: '10px 0 15px 0'
+                    padding: '10px 0 10px 0'
                   }}
                 >
                   {journalClass}
@@ -86,17 +86,17 @@ const FinancialSidebar = ({
                   <div
                     key={item.id}
                     className={`accordion-menu__item  accordion-menu__item-transition ${
-                      addLesson && item.order !== 1 ? 'mb-4' : ''
+                      addLesson && item.order !== 1 ? 'mb-4 lizaliza' : ''
                     }`}
                   >
                     <NavLink to={`${url}/${item.id}`}>
                       {!item.title.toLowerCase().includes('task') ? (
-                        <span className="text-uppercase ml-1">
+                        <span className='text-uppercase ml-1'>
                           {item.title}
                         </span>
                       ) : (
                         <span
-                          className={'ml-1'}
+                          className={'text-uppercase ml-1'}
                           style={{
                             marginLeft: 14,
                             display: 'flex',
@@ -115,7 +115,7 @@ const FinancialSidebar = ({
                       >
                         <HiDocumentPlus />
                         <p
-                          className="m-0"
+                          className='m-0'
                           onClick={() => handleOpenModal(lesson, item.id)}
                         >
                           {hasLesson ? lesson.title : 'Add Lesson'}

@@ -1,0 +1,4 @@
+universityName,Name,Email,Password,Levels,Programs,Profession
+Dev Instance,Instructor One,instructor1@example.com,Learntostart1!,"HS,LS","Community-Ready,Community-Active",Instructor
+Dev Instance,Instructor Two,instructor2@example.com,Learntostart1,"HS","Market-Ready",Instructor
+Dev Instance,Instructor Three,instructor3@example.com,Learntostart1,"LS,MS","Community-Ready,Market-Active,Community-Active",Instructor

@@ -18,7 +18,12 @@ function PortfolioProgressIndicator(props) {
 
   return (
     <>
-      <div className={'nav-icons d-flex  align-items-center position-relative'}>
+      <div
+        className={
+          'nav-icons d-flex  align-items-center position-relative portfolio-nav-icons'
+        }
+        // className={'nav-icons d-flex  align-items-center  portfolio-nav-icons'}
+      >
         <ProgressIcon
           icons={{ coloredIcon: whoIconColor, grayIcon: whoIconGray }}
           title={'Who Am I?'}

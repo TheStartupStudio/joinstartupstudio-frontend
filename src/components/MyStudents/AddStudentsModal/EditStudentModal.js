@@ -265,7 +265,7 @@ const EditStudentModal = (props) => {
           }}
         />
         {/* <div className='col-1 px-0'>
-          
+
         </div> */}
       </Modal.Header>
       <Modal.Body className='row px-0 mx-4'>

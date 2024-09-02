@@ -74,20 +74,20 @@ const RwlButtons = (props) => {
               src={
                 openAccordion === 'read' ? ReadImageWIthBackground : ReadImage
               }
-              alt="Read"
+              alt='Read'
             />
           </button>
         }
       >
         {openAccordion === 'read' && (
-          <div className="rwl-button_body">
+          <div className='rwl-button_body' style={{ marginTop: '10px' }}>
             <Form>
               {props.items
                 ?.filter((item) => item.categoryID === 1)
                 .map((item, index) => (
                   <Form.Check
                     key={`default-${index}`}
-                    type="checkbox"
+                    type='checkbox'
                     name={`${item.name}`}
                     id={item.id}
                     label={item.name}
@@ -127,20 +127,20 @@ const RwlButtons = (props) => {
                   ? WatchImageWIthBackground
                   : WatchImage
               }
-              alt="Watch"
+              alt='Watch'
             />
           </button>
         }
       >
         {openAccordion === 'watch' && (
-          <div className="rwl-button_body">
+          <div className='rwl-button_body' style={{ marginTop: '10px' }}>
             <Form>
               {props.items
                 ?.filter((item) => item.categoryID === 2)
                 .map((item, index) => (
                   <Form.Check
                     key={`default-${index}`}
-                    type="checkbox"
+                    type='checkbox'
                     id={item.id}
                     label={item.name}
                     checked={props.userSelections.some(
@@ -179,20 +179,20 @@ const RwlButtons = (props) => {
                   ? ListenImageWIthBackground
                   : ListenImage
               }
-              alt="Listen"
+              alt='Listen'
             />
           </button>
         }
       >
         {openAccordion === 'listen' && (
-          <div className="rwl-button_body">
+          <div className='rwl-button_body' style={{ marginTop: '10px' }}>
             <Form>
               {props.items
                 ?.filter((item) => item.categoryID === 3)
                 .map((item, index) => (
                   <Form.Check
                     key={`default-${index}`}
-                    type="checkbox"
+                    type='checkbox'
                     id={item.id}
                     label={item.name}
                     checked={props.userSelections.some(

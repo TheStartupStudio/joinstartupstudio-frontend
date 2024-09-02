@@ -213,11 +213,17 @@ function LtsJournal(props) {
                   </div>
 
                   <div className='page-card__sidebar-content styled-scrollbar'>
-                    <Accordion defaultActiveKey='0' className='accordion-menu'>
+                    <Accordion
+                      defaultActiveKey='0'
+                      className='accordion-menu
+                      lizas-accordion
+                        '
+                    >
                       {journals.map((journalItem, journalItemIdx) => (
                         <div
                           key={journalItem.id}
-                          className={`accordion-menu__item cursor-pointer accordion-menu__item-transition`}
+                          className={`accordion-menu__item cursor-pointer accordion-menu__item-transition
+                          `}
                         >
                           {journalItem.children &&
                           journalItem.children.length ? (

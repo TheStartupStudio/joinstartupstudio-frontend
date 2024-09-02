@@ -38,7 +38,7 @@ function SectionDescription(props) {
       <div>
         <img
           src={props?.triangleIcon}
-          className={'triangle-icon'}
+          className={'triangle-icon portfolio-triangle-icon'}
           alt='triangle-icon'
         />
       </div>

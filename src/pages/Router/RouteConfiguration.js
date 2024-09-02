@@ -2,7 +2,7 @@ import React from 'react'
 import userProfile from '../Profile/userProfile'
 import CSVUpload from '../../components/CSVUpload'
 import LtsJournal from '../LtsJournal'
-import TestJournal from '../LtsJournal/MyCurriculum/TestJournal'
+import TestJournal from '../LtsJournal/MyCurriculum/CurriculumJournal'
 import StudentJournals from '../studentJournals'
 import VerifyEmailByCode from '../Register/verifyEmailByCode'
 
@@ -109,12 +109,12 @@ const PublicPortfolio2024 = React.lazy(() =>
 const StudentPortfolio2024 = React.lazy(() =>
   import('../Portfolio2024/studentPortfolio')
 )
-// const MySchoolContainer = React.lazy(() => import('../admin/MySchool'))
+const MySchoolContainer = React.lazy(() => import('../admin/MySchool'))
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData },
-  { path: '/user-management', component: UserManagement }
-  // { path: '/my-school/:page?', component: MySchoolContainer }
+  // { path: '/user-management', component: UserManagement },
+  { path: '/my-school/:page?', component: MySchoolContainer }
 ]
 
 export const authRoutes = [
@@ -337,6 +337,12 @@ export const publicRoutes = [
   {
     path: '/public-portfolio/:username',
     component: PublicPortfolio2024,
+    exact: true
+  },
+  {
+    path: '/student-portfolio/:username',
+    component: PreviewPortfolioNew,
+    props: { isPublicView: true },
     exact: true
   }
 ]
