@@ -3,7 +3,7 @@ import CertificationSkillBox from './CertificationSkillBox'
 import axiosInstance from '../../../utils/AxiosInstance'
 import SkillExplanationModal from '../../../components/Modals/SkillExplanationModal'
 import './CertificationSkills.css'
-const CertificationSkills = ({ journal, isEditable }) => {
+const CertificationSkills = ({ journal, isEditable, evaluationModal }) => {
   const [skills, setSkills] = useState([])
 
   const [showExplanationModal, setShowExplanationModal] = useState(false)
@@ -89,14 +89,28 @@ const CertificationSkills = ({ journal, isEditable }) => {
     }
   }
 
+  const displayContentStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '20px'
+  }
+
+  const displayContentStyleEvaluationModal = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(5, 1fr)',
+    gap: '5px',
+    marginTop: '20px'
+  }
+
   return (
     <div>
       {journal?.certificationSkills?.length ? (
         <div
+          className='certskills-grid'
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '20px'
+            ...(evaluationModal
+              ? displayContentStyleEvaluationModal
+              : displayContentStyle)
           }}
         >
           {skills.map((skill) => {
@@ -112,16 +126,21 @@ const CertificationSkills = ({ journal, isEditable }) => {
                   proficient={skill?.status === 'proficient'}
                   needsImprovement={skill?.status === 'needs_improvement'}
                   isEditable={isEditable}
+                  evaluationModal={evaluationModal}
                 />
-                <button
-                  className={'explanation-button'}
-                  onClick={() => {
-                    handleOpenExplanationModal()
-                    setSelectedSkill(skill)
-                  }}
-                >
-                  Explanation
-                </button>
+                {!evaluationModal ? (
+                  <button
+                    className={'explanation-button'}
+                    onClick={() => {
+                      handleOpenExplanationModal()
+                      setSelectedSkill(skill)
+                    }}
+                  >
+                    Explanation
+                  </button>
+                ) : (
+                  ''
+                )}
               </div>
             )
           })}

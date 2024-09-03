@@ -5,7 +5,8 @@ const ContentUploadBox = ({
   isAdded,
   onSelectContent,
   isSelected,
-  isEditable
+  isEditable,
+  evaluationModal
 }) => {
   const boxBackgroundColor = () => {
     if (isAdded) {
@@ -58,6 +59,25 @@ const ContentUploadBox = ({
     width: '100%'
   }
 
+  const evaluationModalStyle = {
+    background: boxBackgroundColor(),
+    color: boxTextColor(),
+    padding: '8px',
+    marginBottom: '5px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    height: 75,
+    font: '12px Montserrat',
+    fontSize: 14,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    fontWeight: 600,
+    width: '100%',
+    borderRadius: 20
+  }
+
   const editableStyles = {
     cursor: 'pointer'
   }
@@ -69,7 +89,7 @@ const ContentUploadBox = ({
   return (
     <div
       style={{
-        ...commonStyles,
+        ...(evaluationModal ? evaluationModalStyle : commonStyles),
         ...(isEditable ? editableStyles : nonEditableStyles)
       }}
       onClick={isEditable ? onSelectContent : undefined}

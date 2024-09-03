@@ -12,12 +12,15 @@ import {
 import useWindowWidth from '../../../hooks/useWindowWidth'
 import CustomSpinner from '../../../components/CustomSpinner'
 
-const DisplayCircleData = ({
+export const DisplayCircleData = ({
   backgroundColor,
   title,
   percentage,
   marginTop,
-  loading
+  loading,
+  width = 200,
+  height = 200,
+  fontSize = 20
 }) => {
   return (
     <div className={'p-2'}>
@@ -25,8 +28,8 @@ const DisplayCircleData = ({
         <div
           className={'p-2'}
           style={{
-            width: 200,
-            height: 200,
+            width: width,
+            height: height,
             borderRadius: '50%',
             backgroundColor: backgroundColor ?? '#54c7df',
             display: 'flex',
@@ -38,8 +41,8 @@ const DisplayCircleData = ({
           }}
         >
           <div
-            className={'text-center'}
-            style={{ color: '#fff', fontSize: 20 }}
+            className={'text-center pb-2'}
+            style={{ color: '#fff', fontSize: fontSize }}
           >
             {title}
           </div>
@@ -60,6 +63,7 @@ const DisplayCircleData = ({
 }
 
 const ContentStreamed = ({ instructorId }) => {
+  console.log('instructorId', instructorId)
   const dispatch = useDispatch()
   const windowWidth = useWindowWidth()
   const [filterBy, setFilterBy] = useState('')

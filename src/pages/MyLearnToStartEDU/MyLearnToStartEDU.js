@@ -3,7 +3,7 @@ import React from 'react'
 const MyLearnToStartEDU = (props) => {
   return (
     <div className={'m-2'}>
-      <div className="container">
+      <div className='container'>
         <div
           style={{
             font: 'normal normal bold 24px Montserrat',

@@ -2,7 +2,7 @@ import React from 'react'
 import userProfile from '../Profile/userProfile'
 import CSVUpload from '../../components/CSVUpload'
 import LtsJournal from '../LtsJournal'
-import TestJournal from '../LtsJournal/MyCurriculum/TestJournal'
+import TestJournal from '../LtsJournal/MyCurriculum/CurriculumJournal'
 import StudentJournals from '../studentJournals'
 import VerifyEmailByCode from '../Register/verifyEmailByCode'
 
@@ -106,9 +106,15 @@ const PublicPortfolio2024 = React.lazy(() =>
   import('../Portfolio2024/publicPortfolio')
 )
 
+const StudentPortfolio2024 = React.lazy(() =>
+  import('../Portfolio2024/studentPortfolio')
+)
+const MySchoolContainer = React.lazy(() => import('../admin/MySchool'))
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData },
-  { path: '/user-management', component: UserManagement }
+  // { path: '/user-management', component: UserManagement },
+  { path: '/my-school/:page?', component: MySchoolContainer }
 ]
 
 export const authRoutes = [
@@ -152,7 +158,7 @@ export const authRoutes = [
   { path: '/my-spark/widgets/:widgetName', component: MySparkWidgetDetails },
   { path: '/edit-journals2', component: JournalsManagement2, exact: true },
   { path: '/edit-journals', component: JournalsManagement, exact: true },
-  { path: '/my-notes/:id', component: MyNotes, exact: true },
+  { path: '/my-notes/:id?', component: MyNotes },
   { path: '/sample-note', component: SampleNote },
   { path: '/:page/video/:id', component: BeyondYourCourseVideo },
   { path: '/my-classroom', component: MyClassroom, exact: true },
@@ -201,12 +207,11 @@ export const authRoutesWithProps = [
   { path: '/hs3-journal/', component: LtsJournal, props: { category: 'hs3' } },
   { path: '/hs2-journal/', component: LtsJournal, props: { category: 'hs2' } },
   { path: '/hs1-journal/', component: LtsJournal, props: { category: 'hs1' } },
-  // {
-  //   path: '/user-portfolio/:username',
-  //   component: PreviewPortfolioNew,
-  //   exact: true,
-  //   props: { isPublicView: false }
-  // },
+  {
+    path: '/student-portfolio/:username',
+    component: StudentPortfolio2024,
+    exact: true
+  },
   {
     path: '/peer-portfolio/:username',
     component: PeerPortfolio2024,
@@ -333,13 +338,13 @@ export const publicRoutes = [
     path: '/public-portfolio/:username',
     component: PublicPortfolio2024,
     exact: true
+  },
+  {
+    path: '/student-portfolio/:username',
+    component: PreviewPortfolioNew,
+    props: { isPublicView: true },
+    exact: true
   }
-  // {
-  //   path: '/user-portfolio/:username',
-  //   component: PreviewPortfolioNew,
-  //   props: { isPublicView: true },
-  //   exact: true
-  // }
 ]
 
 export const redirects = [

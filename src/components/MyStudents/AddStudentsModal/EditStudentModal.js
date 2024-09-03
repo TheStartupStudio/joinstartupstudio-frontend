@@ -203,18 +203,18 @@ const EditStudentModal = (props) => {
     <Modal
       show={props.show}
       onHide={props.onHide}
-      backdrop="static"
+      backdrop='static'
       keyboard={false}
-      className="edit-profile-modal"
+      className='edit-profile-modal'
     >
-      <Modal.Header className="pb-0 general-modal-header mt-4 mx-4 row position-relative">
-        <div className="col-12 col-lg-3 p-0">
-          <p className="view-student-title p-0 m-0">VIEW STUDENT</p>
+      <Modal.Header className='pb-0 general-modal-header mt-4 mx-4 row position-relative'>
+        <div className='col-12 col-lg-3 p-0'>
+          <p className='view-student-title p-0 m-0'>VIEW STUDENT</p>
         </div>
-        <div className="col-12 col-lg-9 mt-2 pb-2 pe-lg-4">
-          <div className="row align-items-end justify-content-end">
-            <div className="col-12 col-sm-7 col-lg-5 certification-status d-flex align-items-end justify-content-lg-end p-0">
-              <p className="p-0 m-0">CERTIFICATION STATUS</p>
+        <div className='col-12 col-lg-9 mt-2 pb-2 pe-lg-4'>
+          <div className='row align-items-end justify-content-end'>
+            <div className='col-12 col-sm-7 col-lg-5 certification-status d-flex align-items-end justify-content-lg-end p-0'>
+              <p className='p-0 m-0'>CERTIFICATION STATUS</p>
               <span
                 style={{ cursor: 'pointer', paddingBottom: '3px' }}
                 className={`ms-1 ${
@@ -224,68 +224,68 @@ const EditStudentModal = (props) => {
                 ●
               </span>
             </div>
-            <div className="col-12 col-sm-5 col-lg-5 view-student-portfolio-journals d-flex justify-content-start justify-content-sm-end align-items-end pe-lg-4 p-0">
+            <div className='col-12 col-sm-5 col-lg-5 view-student-portfolio-journals d-flex justify-content-start justify-content-sm-end align-items-end pe-lg-4 p-0'>
               <Link
-                to={`/user-portfolio/${props.data.username}`}
-                className="d-flex"
+                to={`/student-portfolio/${props.data.username}`}
+                className='d-flex'
               >
                 <span>Portfolio</span>
               </Link>
               <span
-                className="px-1 my-auto fw-normal"
+                className='px-1 my-auto fw-normal'
                 style={{ color: '#707070' }}
               >
                 |
               </span>
               <Link
                 to={`/students-journals/${props.data.id}`}
-                className="d-flex"
+                className='d-flex'
               >
                 <span>Journals</span>
               </Link>
               <span
-                className="px-1 my-auto fw-normal"
+                className='px-1 my-auto fw-normal'
                 style={{ color: '#707070' }}
               >
                 |
               </span>
-              <Link to={`/student-iamr/${props.data.id}`} className="d-flex">
+              <Link to={`/student-iamr/${props.data.id}`} className='d-flex'>
                 <span>IAMR</span>
               </Link>
             </div>
           </div>
         </div>
         <button
-          type="button"
-          className="btn-close edit-student-close"
+          type='button'
+          className='btn-close edit-student-close'
           style={{ position: 'absolute', top: '0px', right: 0 }}
-          aria-label="Close"
+          aria-label='Close'
           onClick={() => {
             props.onHide()
           }}
         />
         {/* <div className='col-1 px-0'>
-          
+
         </div> */}
       </Modal.Header>
-      <Modal.Body className="row px-0 mx-4">
-        <div className="col-12 col-lg-2 mb-2 mb-lg-0 pt-2 text-center">
+      <Modal.Body className='row px-0 mx-4'>
+        <div className='col-12 col-lg-2 mb-2 mb-lg-0 pt-2 text-center'>
           <img
             src={data.profile_image ? data.profile_image : defaultImage}
-            className="border border-1 rounded-circle border border-dark text-center mx-auto"
+            className='border border-1 rounded-circle border border-dark text-center mx-auto'
             width={'101px'}
             height={'101px'}
-            alt="#"
+            alt='#'
           />
         </div>
-        <div className="col-12 h-100 col-lg-6 pe-lg-4">
-          <div className="input-group mb-1">
-            <label htmlFor=" w-100">User Name</label>
+        <div className='col-12 h-100 col-lg-6 pe-lg-4'>
+          <div className='input-group mb-1'>
+            <label htmlFor=' w-100'>User Name</label>
 
             <input
-              type="text"
-              className="form-control w-100"
-              name="name"
+              type='text'
+              className='form-control w-100'
+              name='name'
               // defaultValue={data?.name}
               value={data?.name}
               onChange={(e) =>
@@ -293,39 +293,39 @@ const EditStudentModal = (props) => {
               }
             />
           </div>
-          <div className="input-group mb-1">
-            <label htmlFor="userName w-100">User Email</label>
+          <div className='input-group mb-1'>
+            <label htmlFor='userName w-100'>User Email</label>
             <input
-              type="text"
-              className="form-control w-100"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-default"
+              type='text'
+              className='form-control w-100'
+              aria-label='Sizing example input'
+              aria-describedby='inputGroup-sizing-default'
               // defaultValue={data?.email}
               value={data?.email}
               onChange={(e) =>
                 handleChange({ name: 'email', value: e.target.value })
               }
-              name="UserEmail"
+              name='UserEmail'
             />
           </div>
-          <div className="input-group mb-1">
-            <label htmlFor="userName w-100">User Chosen Role</label>
+          <div className='input-group mb-1'>
+            <label htmlFor='userName w-100'>User Chosen Role</label>
             <input
-              type="text"
-              className="form-control w-100"
-              aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-default"
+              type='text'
+              className='form-control w-100'
+              aria-label='Sizing example input'
+              aria-describedby='inputGroup-sizing-default'
               // defaultValue={data?.email}
               value={data?.email}
               onChange={(e) =>
                 handleChange({ name: 'email', value: e.target.value })
               }
-              name="UserEmail"
+              name='UserEmail'
             />
           </div>
-          <div className="mt-2 mb-1 reset-student-password d-flex flex-column">
+          <div className='mt-2 mb-1 reset-student-password d-flex flex-column'>
             <button
-              className="lts-button reset-button"
+              className='lts-button reset-button'
               style={{
                 background: !resetSubmitted ? '#ea3b97' : 'rgb(187, 189, 191)',
                 hover: {
@@ -338,23 +338,23 @@ const EditStudentModal = (props) => {
               disabled={resetLoading || resetSubmitted}
             >
               {resetLoading ? (
-                <span className="spinner-border spinner-border-sm" />
+                <span className='spinner-border spinner-border-sm' />
               ) : (
                 'RESET PASSWORD'
               )}
             </button>
             {resetSubmitted && (
-              <p className="user-id-label mt-1">
+              <p className='user-id-label mt-1'>
                 Default password was set to:{' '}
                 <span style={{ color: '#01c5d1' }}> Learntostart1! </span>
               </p>
             )}
           </div>
 
-          <div className="">
+          <div className=''>
             <a
               href={`/account/${data.id}`}
-              className="btn btn-secondary w-100"
+              className='btn btn-secondary w-100'
               style={{
                 position: 'absolute',
                 bottom: '16px',
@@ -365,16 +365,16 @@ const EditStudentModal = (props) => {
             </a>
           </div>
         </div>
-        <div className="col-lg-4 col-12">
-          <div className="row mx-auto">
-            <div className="col-12 px-0 text-center mt-2 mt-lg-0">
-              <label htmlFor="unit" className="user-id-label">
+        <div className='col-lg-4 col-12'>
+          <div className='row mx-auto'>
+            <div className='col-12 px-0 text-center mt-2 mt-lg-0'>
+              <label htmlFor='unit' className='user-id-label'>
                 Unit
               </label>
               <Select
                 options={props?.school}
                 // defaultValue={data?.Instructor?.University?.name}
-                name="university"
+                name='university'
                 placeholder={data?.Instructor?.University?.name}
                 // onChange={(newValue) => {
                 //   handleChange({
@@ -384,14 +384,14 @@ const EditStudentModal = (props) => {
                 //   })
                 // }}
                 isDisabled={true}
-                className="my-auto py-auto"
+                className='my-auto py-auto'
                 // styles={customStyles}
               />
             </div>
           </div>
-          <div className="row mx-auto">
-            <div className="col-6 px-0 text-center">
-              <label htmlFor="level" className="user-id-label">
+          <div className='row mx-auto'>
+            <div className='col-6 px-0 text-center'>
+              <label htmlFor='level' className='user-id-label'>
                 Level
               </label>
               <Select
@@ -415,12 +415,12 @@ const EditStudentModal = (props) => {
                   setSelectedYear(null)
                   setSelectedPeriod(null)
                 }}
-                className="my-auto py-auto"
+                className='my-auto py-auto'
                 // styles={customStyles}
               />
             </div>
-            <div className="col-6 px-0 ps-2 text-center">
-              <label htmlFor="year" className="user-id-label">
+            <div className='col-6 px-0 ps-2 text-center'>
+              <label htmlFor='year' className='user-id-label'>
                 Year
               </label>
               <Select
@@ -436,19 +436,19 @@ const EditStudentModal = (props) => {
                 }}
                 disabled={data?.level === 'HE'}
                 isDisabled={data?.level === 'HE'}
-                className="my-auto py-auto"
+                className='my-auto py-auto'
                 // styles={customStyles}
               />
             </div>
           </div>
-          <div className="row mx-auto">
-            <div className="col-12 px-0 text-center">
-              <label htmlFor="userId" className="user-id-label">
+          <div className='row mx-auto'>
+            <div className='col-12 px-0 text-center'>
+              <label htmlFor='userId' className='user-id-label'>
                 Class
               </label>
               {data?.transferHistory[0]?.transferTo?.User?.name ? (
                 <p
-                  className="text-center text-warning p-0 m-0"
+                  className='text-center text-warning p-0 m-0'
                   style={{
                     // color: '#ff894d',
                     fontSize: '14px',
@@ -481,14 +481,14 @@ const EditStudentModal = (props) => {
               )}
             </div>
           </div>
-          <div className="row mx-auto">
-            <div className="col-12 px-0 text-center">
-              <label htmlFor="userId" className="user-id-label">
+          <div className='row mx-auto'>
+            <div className='col-12 px-0 text-center'>
+              <label htmlFor='userId' className='user-id-label'>
                 Instructor
               </label>
               {data?.transferHistory[0]?.transferTo?.User?.name ? (
                 <p
-                  className="text-center text-warning p-0 m-0"
+                  className='text-center text-warning p-0 m-0'
                   style={{
                     // color: '#ff894d',
                     fontSize: '14px',
@@ -509,18 +509,18 @@ const EditStudentModal = (props) => {
                     })
                   }}
                   isDisabled={false}
-                  className="my-auto py-auto"
+                  className='my-auto py-auto'
                   // styles={customStyles}
                 />
               )}
             </div>
           </div>
-          <div className="row mx-auto mt-3">
-            <div className=" col-12 ms-auto my-auto blunk-activated-div d-flex">
-              <p className="my-auto">Activated </p>
-              <label className="px-0 ps-sm-1 ps-lg-1 form-switch my-auto d-flex w-100">
+          <div className='row mx-auto mt-3'>
+            <div className=' col-12 ms-auto my-auto blunk-activated-div d-flex'>
+              <p className='my-auto'>Activated </p>
+              <label className='px-0 ps-sm-1 ps-lg-1 form-switch my-auto d-flex w-100'>
                 <input
-                  type="checkbox"
+                  type='checkbox'
                   checked={data?.deactivated == true ? false : true}
                   onChange={(e) => {
                     handleChange({
@@ -529,20 +529,20 @@ const EditStudentModal = (props) => {
                     })
                   }}
                 />
-                <i className="ms-auto"></i>
+                <i className='ms-auto'></i>
               </label>
             </div>
           </div>
-          <div className="row mx-auto mt-3">
+          <div className='row mx-auto mt-3'>
             <button
-              className="lts-button w-100"
+              className='lts-button w-100'
               onClick={() => {
                 handleSubmit()
               }}
               disabled={loading ? true : false}
             >
               {loading ? (
-                <span className="spinner-border spinner-border-sm" />
+                <span className='spinner-border spinner-border-sm' />
               ) : (
                 'SAVE'
               )}

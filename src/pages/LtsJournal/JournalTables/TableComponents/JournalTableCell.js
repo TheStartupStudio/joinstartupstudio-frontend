@@ -13,7 +13,7 @@ export const JournalTableCell = (props) => {
         height: '100%',
         display: 'table-cell'
       }}
-      className={'journal_table-data'}
+      className={'journal_table-data '}
       // className={'table_cell-title_box'}
     >
       {props.children}

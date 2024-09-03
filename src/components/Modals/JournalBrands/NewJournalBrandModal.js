@@ -244,7 +244,8 @@ export const NewJournalBrandModal = (props) => {
                 name='type'
                 value={data?.type}
                 onChange={handleChange}
-                placeholder='Type of Shot'
+                // placeholder='Type of Shot'
+                placeholder='Scene #, angle of camera'
               />
               <input
                 className='my-2'
@@ -252,7 +253,8 @@ export const NewJournalBrandModal = (props) => {
                 name='action'
                 value={data?.action}
                 onChange={handleChange}
-                placeholder='Action'
+                // placeholder='Action'
+                placeholder='What is happening in this scene?'
               />
               <input
                 className='my-2'
@@ -260,7 +262,8 @@ export const NewJournalBrandModal = (props) => {
                 name='narration'
                 value={data?.narration}
                 onChange={handleChange}
-                placeholder='Narration'
+                // placeholder='Narration'
+                placeholder='What dialogue or voiceover?'
               />
               <input
                 className='my-2'
@@ -268,7 +271,8 @@ export const NewJournalBrandModal = (props) => {
                 name='music'
                 value={data?.music}
                 onChange={handleChange}
-                placeholder='Music'
+                // placeholder='Music'
+                placeholder='What background track are you using?'
               />
             </div>
             <div className='row mx-0'>

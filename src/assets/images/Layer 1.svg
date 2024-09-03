@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="274" height="58" viewBox="0 0 274 58">
+  <defs>
+    <filter id="Rectangle_2553" x="0" y="0" width="274" height="58" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <linearGradient id="linear-gradient" x1="0.226" y1="-1.381" x2="0.774" y2="2.381" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ee3c96"/>
+      <stop offset="1" stop-color="#52c7de"/>
+    </linearGradient>
+  </defs>
+  <g id="Layer_1" data-name="Layer 1" transform="translate(9 6)">
+    <g id="Group_4445" data-name="Group 4445">
+      <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#Rectangle_2553)">
+        <rect id="Rectangle_2553-2" data-name="Rectangle 2553" width="256" height="40" rx="12.01" transform="translate(9 6)" fill="#fff"/>
+      </g>
+      <path id="Path_2384" data-name="Path 2384" d="M244.82,1c5.651,0,10.249,4.94,10.249,11.01V27.99c0,6.07-4.6,11.01-10.249,11.01H11.18C5.53,39,.931,34.06.931,27.99V12.01C.931,5.94,5.53,1,11.18,1H244.82m0-1H11.18C5.008,0,0,5.38,0,12.01V27.99C0,34.62,5.008,40,11.18,40H244.82C250.992,40,256,34.62,256,27.99V12.01C256,5.38,250.992,0,244.82,0Z" fill="url(#linear-gradient)"/>
+    </g>
+  </g>
+</svg>
