@@ -33,6 +33,9 @@ const FeedbackTable = ({
                   handleChangeFeedback('feedbackDate', value)
                 }
                 isDisabled={!isEditable}
+                inputType={'date'}
+                inputTag={'input'}
+                inputName={'feedbackDate'}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -52,6 +55,9 @@ const FeedbackTable = ({
                   handleChangeFeedback('feedbackGiver', value)
                 }
                 isDisabled={!isEditable}
+                inputType={'text'}
+                inputTag={'input'}
+                inputName={'feedbackGiver'}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -66,6 +72,9 @@ const FeedbackTable = ({
                   handleChangeFeedback('receivedFeedback', value)
                 }
                 isDisabled={!isEditable}
+                inputType={'text'}
+                inputTag={'input'}
+                inputName={'receivedFeedback'}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -80,6 +89,9 @@ const FeedbackTable = ({
                   handleChangeFeedback('relevantFeedback', value)
                 }
                 isDisabled={!isEditable}
+                inputType={'text'}
+                inputTag={'input'}
+                inputName={'relevantFeedback'}
               />
             </JournalTableCell>
           </JournalTableRow>
@@ -94,6 +106,9 @@ const FeedbackTable = ({
                   handleChangeFeedback('relevantFeedbackAct', value)
                 }
                 isDisabled={!isEditable}
+                inputType={'text'}
+                inputTag={'input'}
+                inputName={'relevantFeedbackAct'}
               />
             </JournalTableCell>
           </JournalTableRow>

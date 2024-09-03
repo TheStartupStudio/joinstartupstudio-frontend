@@ -35,6 +35,9 @@ const MeetingTable = ({
                 }
                 isDisabled={!isEditable}
                 setLoading={setLoading}
+                inputType={'date'}
+                inputTag={'input'}
+                inputName={'meetingDate'}
               />
             </JournalTableCell>
           </JournalTableRow>
