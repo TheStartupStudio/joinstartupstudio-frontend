@@ -69,11 +69,17 @@ function MyFailure(props) {
           </div>
           <div className={'col-md-7'}>
             <PortfolioInfo
-              title={'FAILURE #1'}
+              title={'MY FAILURE'}
               content={myFailure?.assessment}
             />
             <div className={'mt-2'}>
               <PortfolioInfo title={'My Pivot'} content={myFailure?.outcome} />
+            </div>
+            <div className={'mt-2'}>
+              <PortfolioInfo
+                title={'My Outcome'}
+                content={myFailure?.outcome}
+              />
             </div>
           </div>
         </div>

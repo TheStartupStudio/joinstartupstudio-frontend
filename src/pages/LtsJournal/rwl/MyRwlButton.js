@@ -34,17 +34,17 @@ const RwlListContainer = ({
 
   return (
     <>
-      <div className="myrwl-inside-container">
+      <div className='myrwl-inside-container'>
         <h6 style={{ color: color }}>{title}</h6>
-        <div className="ps-3">
+        <div className='ps-3'>
           {items.map((item, index) => (
-            <div className="d-flex justify-content-between pb-2" key={index}>
+            <div className='d-flex justify-content-between pb-2' key={index}>
               <span>{item.name}</span>
 
-              <div className="icons-container">
+              <div className='icons-container'>
                 {isEditable && (
                   <i
-                    className="cursor-pointer"
+                    className='cursor-pointer'
                     onClick={() => userSelectionRemove(item.id)}
                   >
                     <FontAwesomeIcon icon={faTrash} />
@@ -86,7 +86,7 @@ const RwlListContainer = ({
                 <ArticleModal
                   show={articleModal.state}
                   onHide={() => setArticleModal(false)}
-                  backdrop="static"
+                  backdrop='static'
                   keyboard={false}
                   category={title}
                   title={articleModal.name}
@@ -122,24 +122,24 @@ const MyRwlButton = (props) => {
       title={'MY RWL'}
     >
       {openAccordion === 'myrwl' && (
-        <div className="accordion-content">
+        <div className='accordion-content'>
           <RwlListContainer
-            title="read"
-            color="#F2359D"
+            title='read'
+            color='#F2359D'
             items={props.readSelectedItems}
             userSelections={props.userSelections}
             isEditable={props.isEditable}
           />
           <RwlListContainer
-            title="watch"
-            color="#A7CA42"
+            title='watch'
+            color='#A7CA42'
             items={props.watchSelectedItems}
             userSelections={props.userSelections}
             isEditable={props.isEditable}
           />
           <RwlListContainer
-            title="listen"
-            color="#51C7DF"
+            title='listen'
+            color='#51C7DF'
             items={props.listenSelectedItems}
             userSelections={props.userSelections}
             isEditable={props.isEditable}

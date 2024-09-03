@@ -27,14 +27,19 @@ const ProjectSection = ({
   return (
     <div className={'portfolio-info-container mb-3'}>
       <div className={'mb-3'}>
-        <span className={'portfolio-info-title me-1'}>{title}:</span>
+        <span
+          className={'portfolio-info-title me-1'}
+          style={{ fontSize: '25px' }}
+        >
+          {title}
+        </span>
         <span
           style={{
             font: 'normal normal normal 15px/18px Montserrat',
             letterSpacing: 0.68
           }}
         >
-          {subtitle}
+          {/* {subtitle} */}
         </span>
       </div>
       <div className={'mb-3'}>
@@ -74,7 +79,7 @@ const ProjectSection = ({
         </div>
         {showSkillsModal === type && (
           <PortfolioModalWrapper
-            title={'MARKET-READY DEVELOP SKILLS'}
+            title={'MARKET-READY LEARN SKILLS'}
             show={showSkillsModal === type}
             onHide={() => setShowSkillsModal(undefined)}
           >

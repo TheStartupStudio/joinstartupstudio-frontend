@@ -70,11 +70,11 @@ function MyMentor(props) {
       <div className={'mentor-info-box'}>
         <div className={'mentor-name'}>{data?.mentorName}</div>
         <div className={'mentor-role'}>{data?.mentorRole}</div>
-        {/*<div className={'mentor-company'}>{data?.mentorCompany}</div>*/}
-        {/*<div*/}
-        {/*  className={'mentor-description'}*/}
-        {/*  dangerouslySetInnerHTML={{ __html: data?.mentorDescription }}*/}
-        {/*/>*/}
+        <div className={'mentor-company'}>{data?.mentorCompany}</div>
+        <div
+          className={'mentor-description'}
+          dangerouslySetInnerHTML={{ __html: data?.mentorDescription }}
+        />
       </div>
       <SectionActions actions={actions} />
       {showModalId === data?.id && (

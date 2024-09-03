@@ -137,6 +137,14 @@ function MyFailureModal(props) {
             value={outcome}
             onChange={(value) => setOutcome(value)}
           />
+          <div className={'portfolio-info-title my-2 text-italic'}>
+            {'My Outcome'}
+          </div>
+          <ReactQuill
+            className={'portfolio-quill'}
+            value={outcome}
+            onChange={(value) => setOutcome(value)}
+          />
         </div>
       </div>
       {isEdit() && (
