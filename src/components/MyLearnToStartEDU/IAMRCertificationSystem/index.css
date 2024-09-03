@@ -29,6 +29,7 @@
   font-size: 14px;
   letter-spacing: 0.1ic;
 }
+
 .page-title__container {
   display: flex;
   height: 70px;
@@ -37,6 +38,7 @@
   width: calc(100% - 23px);
   border-bottom: 1px solid #ebecef;
 }
+
 .page-title__container h3 {
   margin-bottom: 0;
   width: 100%;
@@ -58,6 +60,7 @@
     font-weight: bold;
     font-size: 14px;
   }
+
   .iamr-container .page-title__container {
     padding-bottom: 5px;
     height: 35px;
@@ -84,6 +87,7 @@
     height: 100%;
     border-bottom: 2px solid #ebecef;
     top: 51px;
+    border: #f2359d 4px solid;
   }
 
   .iamr-container .accordion.expanded h4 {
@@ -117,6 +121,7 @@
     margin-left: 80px;
     top: 31px;
   }
+
   .page-title__container h3 {
     font-size: 18px;
     padding-left: 25px;
@@ -129,7 +134,8 @@
   border-top: 16px solid #3498db;
   width: 120px;
   height: 120px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
+  -webkit-animation: spin 2s linear infinite;
+  /* Safari */
   animation: spin 2s linear infinite;
 }
 

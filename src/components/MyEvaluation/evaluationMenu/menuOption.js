@@ -6,13 +6,14 @@ function MenuOption({
   setJournalSelectedId,
   setJournalSelected,
   selectedJournal,
-  id
+  id,
+  journal
 }) {
   const handleClick = (e) => {
     e.stopPropagation() // Prevent the click event from propagating to the parent
 
     setJournalSelectedId(id)
-    setJournalSelected(title)
+    setJournalSelected(journal)
   }
 
   return (

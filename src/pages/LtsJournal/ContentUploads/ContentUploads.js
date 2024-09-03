@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { propTypes } from 'react-bootstrap/esm/Image'
 import axiosInstance from '../../../utils/AxiosInstance'
 import ContentUploadBox from './ContentUploadBox'
-const ContentUploads = ({ journal, isEditable }) => {
+const ContentUploads = ({ journal, isEditable, evaluationModal }) => {
   const [contentUploads, setContentUploads] = useState([])
   const [loadingContentUpload, setLoadingContentUploads] = useState(false)
   useEffect(() => {
@@ -20,7 +21,6 @@ const ContentUploads = ({ journal, isEditable }) => {
   const handleToggleContentUpload = (contentUpload, status) => {
     setLoadingContentUploads(true)
     if (contentUpload?.hasOwnProperty('contentUploadId')) {
-
       axiosInstance
         .put(`/contentUploads/updateUserContentUpload/`, {
           contentUpload: { ...contentUpload, status: status }
@@ -74,14 +74,28 @@ const ContentUploads = ({ journal, isEditable }) => {
     }
   }
 
+  const displayContentStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '20px'
+  }
+
+  const displayContentStyleEvaluationModal = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(5, 1fr)',
+    gap: '5px',
+    marginTop: '20px'
+  }
+
   return (
     <div>
       {journal?.contentUploads?.length ? (
         <div
+          className='certskills-grid'
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '20px'
+            ...(evaluationModal
+              ? displayContentStyleEvaluationModal
+              : displayContentStyle)
           }}
         >
           {contentUploads?.map((contentUpload) => {
@@ -101,6 +115,7 @@ const ContentUploads = ({ journal, isEditable }) => {
                   }}
                   isAdded={contentUpload?.status === 'added'}
                   isSelected={contentUpload?.status === 'selected'}
+                  evaluationModal={evaluationModal}
                 />
               </div>
             )

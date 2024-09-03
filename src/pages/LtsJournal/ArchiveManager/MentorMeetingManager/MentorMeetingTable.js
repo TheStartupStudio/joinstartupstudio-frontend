@@ -33,6 +33,9 @@ const MentorMeetingTable = ({
                 handleChange={(value) =>
                   handleChangeMentorMeeting('meetingDate', value)
                 }
+                inputType={'date'}
+                inputTag={'input'}
+                inputName={'meetingDate'}
                 // isDisabled={!isEditable}
               />
             </JournalTableCell>

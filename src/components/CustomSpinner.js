@@ -1,9 +1,9 @@
 import React from 'react'
 
-function CustomSpinner({ color }) {
+function CustomSpinner({ color = 'info' }) {
   return (
     <div
-      className="d-flex justify-content-center align-items-center"
+      className='d-flex justify-content-center align-items-center'
       style={{ height: '30px' }}
     >
       <div
@@ -12,9 +12,9 @@ function CustomSpinner({ color }) {
             ? `spinner-border-${color} spinner-border-sm-${color}`
             : 'spinner-border spinner-border-sm'
         }`}
-        role="status"
+        role='status'
       >
-        <span class="sr-only">Loading...</span>
+        <span class='sr-only'>Loading...</span>
       </div>
     </div>
   )

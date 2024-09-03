@@ -258,6 +258,7 @@ const EntriesBox = (props) => {
             {entry.contentAfter && (
               <div
                 className='page-card__content-description journal-entry__content-after'
+                style={{ marginBottom: '7px ' }}
                 dangerouslySetInnerHTML={{
                   __html: entry.contentAfter
                 }}

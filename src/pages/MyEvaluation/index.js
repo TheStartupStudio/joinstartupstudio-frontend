@@ -10,6 +10,8 @@ const EvaluationContainer = () => {
   const [journalSelectedId, setJournalSelectedId] = useState('')
   const [journalSelected, setJournalSelected] = useState('')
 
+  console.log(journalSelected, 'EvaluationContainer')
+
   return (
     <div className='row iamr-inbox p-0 m-0'>
       <EvaluationMenu

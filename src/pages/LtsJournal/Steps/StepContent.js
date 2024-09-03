@@ -5,6 +5,7 @@ const StepContent = (props) => {
     <>
       {props.selectedStep != null && (
         <div
+          className='finlit-div'
           style={{
             fontFamily: 'Montserrat',
             backgroundColor: '#fff'
@@ -26,7 +27,7 @@ const StepContent = (props) => {
               fontSize: 9
             }}
             onClick={() => props.handleOpenPopup()}
-            className="px-4 py-3 border-0 color transform text-uppercase my-1"
+            className='px-4 py-3 border-0 color transform text-uppercase my-1'
           >
             WHAT TO EXPECT FROM STUDENTS
           </button>

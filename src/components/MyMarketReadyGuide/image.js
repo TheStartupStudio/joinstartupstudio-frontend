@@ -13,9 +13,9 @@ export const Image = (props) => {
         <Modal.Header className='border-0'>
           <button
             type='button'
-            className='btn-close me-5 pe-2'
+            className='btn-close me-5 pe-2 cursor-pointer'
             aria-label='Close'
-            style={{ border: 0 }}
+            style={{ border: 0, cursor: 'pointer' }}
             onClick={props.onHide}
           ></button>
         </Modal.Header>

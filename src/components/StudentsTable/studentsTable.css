@@ -46,3 +46,6 @@ select {
   padding: 70px;
   font-weight: 500;
 }
+.rdt_TableHeadRow:first-child {
+  background: #ededed !important;
+}

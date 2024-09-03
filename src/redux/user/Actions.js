@@ -158,22 +158,22 @@ export const userLogin = (old_password) => async (dispatch) => {
     }
 
     // Handle subscription-related redirections
-    if (
-      (!user.data.stripe_subscription_id ||
-        user.data.stripe_subscription_id === null) &&
-      user.data.customer_id === null
-    ) {
-      window.location = '/register'
-    } else if (
-      user.data.customer_id !== null &&
-      user.data.stripe_subscription_id === null
-    ) {
-      if (user.data.payment_type === 'SUB') {
-        window.location = '/subscription-ended'
-      } else if (user.data.payment_type === 'TRIAL') {
-        window.location = '/trial-ended'
-      }
-    }
+    // if (
+    //   (!user.data.stripe_subscription_id ||
+    //     user.data.stripe_subscription_id === null) &&
+    //   user.data.customer_id === null
+    // ) {
+    //   window.location = '/register'
+    // } else if (
+    //   user.data.customer_id !== null &&
+    //   user.data.stripe_subscription_id === null
+    // ) {
+    //   if (user.data.payment_type === 'SUB') {
+    //     window.location = '/subscription-ended'
+    //   } else if (user.data.payment_type === 'TRIAL') {
+    //     window.location = '/trial-ended'
+    //   }
+    // }
 
     // Get super admin status
     const accessResponse = await axiosInstance.get(
