@@ -14,7 +14,10 @@ const TableReflections = (props) => {
   const [showModal, setShowModal] = useState(false)
   const dispatch = useDispatch()
   const reflectionsTable = useSelector((state) => state.reflectionsTable)
-
+  const [tableReflectionEntry, setTableReflectionEntry] = useState({
+    title: '',
+    order: 1
+  })
   const [reflectionTableEntries, setReflectionTableEntries] = useState([])
   const [userReflectionTableEntries, setUserReflectionTableEntries] = useState(
     []
@@ -22,7 +25,6 @@ const TableReflections = (props) => {
   const [submitted, setSubmitted] = useState(false)
   const [isEdit, setIsEdit] = useState()
   const [isSaving, setIsSaving] = useState(false)
-  const [isSavingTableRefection, setIsSavingTableReflection] = useState(false)
   const currentDate = new Date()
   const nextDay = new Date(currentDate)
   nextDay.setDate(currentDate.getDate() + 1)
@@ -37,11 +39,6 @@ const TableReflections = (props) => {
       setIsEdit(true)
     }
   }, [props.name])
-
-  const [tableReflectionEntry, setTableReflectionEntry] = useState({
-    title: '',
-    order: 1
-  })
 
   useEffect(() => {
     let newUserReflectionTabEntries = []
@@ -68,9 +65,9 @@ const TableReflections = (props) => {
     })
 
     setReflectionTableEntries(newReflectionTableEntries)
-  }, [])
+  }, [props.reflectionTableEntries])
 
-  const onSave = (name, value) => {
+  const onSave = () => {
     if (isSaving) {
       return
     }
@@ -107,12 +104,13 @@ const TableReflections = (props) => {
       reflectionsTableId: props.reflectionTable.reflectionsTableId,
       id: props.reflectionTable.id
     }
+
     let isCreateValue = {
       startDate: tableReflection.startDate,
       endDate: tableReflection.endDate,
       title: tableReflection.title,
       journalId: tableReflection.journalId,
-      reflectionsTableId: props.reflectionTable.reflectionsTableId
+      reflectionsTableId: props.reflectionTable?.id
     }
 
     if (reflectionsTable.isEdit === false) {
