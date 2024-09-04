@@ -293,7 +293,10 @@ const UserStory = (props) => {
           </div>
           <div className={'row'}>
             <div className={'mt-3 '}>
-              <div className={'portfolio-info-title'}>
+              <div
+                className={'portfolio-info-title'}
+                style={{ marginBottom: '10px' }}
+              >
                 {props.title ?? 'My story'}
               </div>
               <ReactQuill

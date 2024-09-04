@@ -257,7 +257,7 @@ export const NewJournalBrandModal = (props) => {
                 placeholder='What is happening in this scene?'
               />
               <input
-                className='my-2'
+                className='my-2 '
                 type='text'
                 name='narration'
                 value={data?.narration}

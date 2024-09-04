@@ -103,7 +103,10 @@ const ReactImageUpload = ({
                   {title ?? 'Upload Image'}
                 </div>
                 <SlCloudUpload className={'upload-to-cloud_logo'} />
-                <div className={'upload-image-logo_click-here text-center'}>
+                <div
+                  className={'upload-image-logo_click-here text-center'}
+                  style={{ marginBottom: '25px' }}
+                >
                   Click to upload file
                 </div>
               </div>

@@ -45,7 +45,7 @@ const Rwl = ({ isEditable }) => {
   }, [dispatch])
 
   return (
-    <div className="rwl">
+    <div className='rwl'>
       <MyRwlButton
         userSelections={userSelections}
         items={items}
@@ -53,9 +53,10 @@ const Rwl = ({ isEditable }) => {
         watchSelectedItems={watchSelectedItems}
         listenSelectedItems={listenSelectedItems}
         isEditable={isEditable}
+        className={'lizaliza'}
       />
-      <ul className="page-card__content-description">
-        <p className="fw-bold">Suggestions for creating RWL habits:</p>
+      <ul className='page-card__content-description'>
+        <p className='fw-bold'>Suggestions for creating RWL habits:</p>
         <li>
           Choose one resource that you are checking in with daily. This resource
           should be one that is updated daily and your goal is to consume one
@@ -79,7 +80,7 @@ const Rwl = ({ isEditable }) => {
           would be a documentary or documentary series. For listening, this
           would be a podcast show not just an episode.
         </li>
-        <p className="pt-3">
+        <p className='pt-3'>
           Through the buttons below, you will see the Learn to Start
           recommendations for Read, Watch, and Listen resources. You can save
           the recommendations you want to consume, check off the ones you have

@@ -104,7 +104,7 @@ const JournalBrands = (props) => {
                     setShowEditJournalBrandBoxModal(true)
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: `<span class='brand-title'>MUSIC:</span>&nbsp;${brand.music}`
+                    __html: `<span class='brand-title'>MUSIC:</span>&nbsp;<span class="lizas-text">${brand.music}</span>`
                   }}
                 ></div>
               </div>

@@ -840,8 +840,8 @@
 }
 
 .my-mentors-container {
-  min-height: 150px;
-  height: 330px;
+  /* min-height: 150px;
+  height: 330px; */
   width: 240px !important;
   /*width: 100% !important;*/
   position: relative;
