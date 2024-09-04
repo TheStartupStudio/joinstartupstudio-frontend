@@ -9,6 +9,7 @@ import * as actions from '../../../redux/reflectionsTable/Actions'
 import axiosInstance from '../../../utils/AxiosInstance'
 import _, { isEqual } from 'lodash'
 import { setIsEdit } from '../../../redux/reflectionsTable/Actions'
+import { getFormattedDate } from '../../../utils/helpers'
 
 const TableReflections = (props) => {
   const [showModal, setShowModal] = useState(false)
@@ -237,8 +238,8 @@ const TableReflections = (props) => {
                     width: '100%'
                   }}
                   name={'startDate'}
-                  value={new Date(tableReflection.startDate).toLocaleDateString(
-                    'en-CA'
+                  value={getFormattedDate(
+                    tableReflection.startDate || currentDate
                   )}
                   onChange={(e) => {
                     if (!isSaving) {
@@ -265,8 +266,8 @@ const TableReflections = (props) => {
                     width: '100%'
                   }}
                   name={'startDate'}
-                  value={new Date(tableReflection.endDate).toLocaleDateString(
-                    'en-CA'
+                  value={getFormattedDate(
+                    tableReflection.endDate || currentDate
                   )}
                   onChange={(e) => {
                     if (!isSaving) {
