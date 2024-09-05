@@ -55,7 +55,7 @@ const Body = (props) => {
         title='MY Dashboard'
         isDropdown={false}
       /> */}
-      {/* {isAdmin && (
+      {isAdmin && (
         <>
           <ParentSidebarItem
             ariaControls='myUserManagament'
@@ -70,7 +70,7 @@ const Body = (props) => {
             <DropdownItem title={'My courses & management'} to={'/my-school'} />
           </ParentDropdownItem>
         </>
-      )} */}
+      )}
       <ParentSidebarItem
         href='#myLtsEDU'
         aria-controls='myLtsEDU'
