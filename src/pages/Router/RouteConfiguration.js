@@ -112,9 +112,9 @@ const StudentPortfolio2024 = React.lazy(() =>
 const MySchoolContainer = React.lazy(() => import('../admin/MySchool'))
 
 export const adminRoutes = [
-  { path: '/instructor-data/:id?', component: InstructorData },
+  { path: '/instructor-data/:id?', component: InstructorData }
   // { path: '/user-management', component: UserManagement },
-  { path: '/my-school/:page?', component: MySchoolContainer }
+  // { path: '/my-school/:page?', component: MySchoolContainer }
 ]
 
 export const authRoutes = [

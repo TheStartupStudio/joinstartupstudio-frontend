@@ -1069,7 +1069,6 @@ export default function StudentsTable({ instructorId }) {
     ],
     [currentEditingStudent, loading, selectedOptions, students]
   )
-
   const handleSearch = (keyword) => {
     if (keyword.length > 2) {
       setIsSearching(true)

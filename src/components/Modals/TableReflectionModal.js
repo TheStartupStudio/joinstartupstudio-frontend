@@ -41,7 +41,11 @@ export const TableReflectionModal = (props) => {
               <h4>{reflectionsTable.subtitle}</h4>
             ) : null}
             <textarea
-              placeholder={'Write your explanation:'}
+              placeholder={
+                reflectionsTable.activeItem === null
+                  ? "Write your team member's name here:"
+                  : 'Write your explanation:'
+              }
               style={{
                 width: '100%',
                 height: '100px',

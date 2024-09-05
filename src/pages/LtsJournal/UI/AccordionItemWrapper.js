@@ -1,25 +1,32 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
 const AccordionItemWrapper = (props) => {
+  const accordionRef = useRef(null)
+
   const scrollToAccordion = (element) => {
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest'
-    })
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      })
+    }
   }
+
+  useEffect(() => {
+    if (props.isOpened) {
+      scrollToAccordion(accordionRef.current)
+    }
+  }, [props.isOpened])
+
   return (
     <div
       className={`accordion accordion-border ${
         props.isOpened ? 'expanded' : ''
       }`}
-      ref={(el) => {
-        if (props.isOpened && el) {
-          scrollToAccordion(el)
-        }
-      }}
+      ref={accordionRef}
     >
       <div
         className='accordion-header-box'
