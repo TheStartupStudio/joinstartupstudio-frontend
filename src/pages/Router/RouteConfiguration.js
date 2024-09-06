@@ -5,7 +5,6 @@ import LtsJournal from '../LtsJournal'
 import TestJournal from '../LtsJournal/MyCurriculum/CurriculumJournal'
 import StudentJournals from '../studentJournals'
 import VerifyEmailByCode from '../Register/verifyEmailByCode'
-import SuccessPayment from '../Auth/Login/AcademyLogin/SuccessPayment'
 
 const Iamr = React.lazy(() => import('../Iamr'))
 const Terms = React.lazy(() => import('../Terms'))
@@ -48,10 +47,6 @@ const JournalsManagement = React.lazy(() => import('../JournalsManagement'))
 const ResetPassword = React.lazy(() => import('../Auth/Login/resetPassword'))
 const CreateAccount = React.lazy(() => import('../Auth/Login/createAccount'))
 const ForgotPassword = React.lazy(() => import('../Auth/Login/forgotPassword'))
-
-const WelcomeLogin = React.lazy(() =>
-  import('../Auth/Login/AcademyLogin/Welcome')
-)
 
 const ChooseLogin = React.lazy(() =>
   import('../Auth/Login/ChooseLogin/HSChooseLogin')
@@ -110,19 +105,20 @@ const PeerPortfolio2024 = React.lazy(() =>
 const PublicPortfolio2024 = React.lazy(() =>
   import('../Portfolio2024/publicPortfolio')
 )
-const SignupAcademy = React.lazy(() =>
-  import('../Auth/Login/AcademyLogin/SignupAcademy')
-)
 
 const StudentPortfolio2024 = React.lazy(() =>
   import('../Portfolio2024/studentPortfolio')
 )
 const MySchoolContainer = React.lazy(() => import('../admin/MySchool'))
+const MyGuestSpeakersContainer = React.lazy(() =>
+  import('../admin/MyGuestSpeakers')
+)
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData },
   // { path: '/user-management', component: UserManagement },
-  { path: '/my-school/:page?', component: MySchoolContainer }
+  { path: '/my-school/:page?', component: MySchoolContainer },
+  { path: '/my-guest-speakers', component: MyGuestSpeakersContainer }
 ]
 
 export const authRoutes = [
@@ -323,8 +319,6 @@ export const authRoutesWithProps = [
 ]
 
 export const publicRoutes = [
-  { path: '/', component: WelcomeLogin, exact: true },
-  { path: '/signup-academy', component: SignupAcademy, exact: true },
   { path: '/verify-email', component: VerifyEmailByCode, exact: false },
   { path: '/lts-secure', component: SecurePage, exact: true },
   { path: '/forgot-password', component: ForgotPassword, exact: true },
@@ -334,12 +328,11 @@ export const publicRoutes = [
   { path: '/my-immersion', component: MyImmersion, exact: false },
   { path: '/verify', component: VerifyEmail, exact: false },
   { path: '/ims-login', component: Login, exact: false },
-  // { path: '/', component: ChooseLogin, exact: true },
+  { path: '/', component: ChooseLogin, exact: true },
   { path: '/logout', component: Logout, exact: false },
   { path: '/register', component: Register, exact: true },
   { path: '/trial-ended', component: Resubscribe, exact: true },
   { path: '/subscription-ended', component: Resubscribe, exact: true },
-  { path: '/successful-signup', component: SuccessPayment },
   {
     path: '/password-change-required',
     component: PasswordChangeRequired,
