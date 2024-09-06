@@ -2,13 +2,11 @@
  * Entry application component used to compose providers and render Routes.
  * */
 
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import jQuery from 'jquery'
 import NewRouter from './newRouter'
 import useUserActivity from './hooks/useUserActivity'
-import axiosInstance from './utils/AxiosInstance'
-import { useSelector } from 'react-redux'
 
 window.jQuery = jQuery
 

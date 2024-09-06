@@ -23,28 +23,8 @@ const Body = (props) => {
     <ul
       className='list-unstyled components sidebar-menu-item sidebar-menu-list'
       id='side-menu-main'
-      // style={{ height: '100vh' }}
     >
-      <li>
-        <div
-          className='accordion accordion-flush sidebar-accordion-border'
-          id='accordionFlushExample'
-        ></div>
-        <SidebarItem
-          onClick={() => {
-            dispatch(setAccordionToggled(false))
-            props.hideHeaderIcons()
-          }}
-          to={'/dashboard'}
-          className={`${
-            location.pathname.includes('dashboard') ? 'active' : ''
-          }`}
-          srcImage={FolderSidebarImage}
-          title='MY Dashboard'
-          isDropdown={false}
-        />
-      </li>
-      {/* <SidebarItem
+      <SidebarItem
         onClick={() => {
           dispatch(setAccordionToggled(false))
           props.hideHeaderIcons()
@@ -54,7 +34,7 @@ const Body = (props) => {
         srcImage={FolderSidebarImage}
         title='MY Dashboard'
         isDropdown={false}
-      /> */}
+      />
       {isAdmin && (
         <>
           <ParentSidebarItem
@@ -67,7 +47,10 @@ const Body = (props) => {
           <ParentDropdownItem id={'myUserManagament'}>
             <DropdownItem title={'MY SCHOOL'} to={'/my-school'} />
             <DropdownItem title={'MY IMMERSION'} to={'/my-school'} />
-            <DropdownItem title={'My courses & management'} to={'/my-school'} />
+            <DropdownItem
+              title={'My courses & credentials'}
+              to={'/courses&credentials'}
+            />
             <DropdownItem
               title={'My guest speakers'}
               to={'/my-guest-speakers'}

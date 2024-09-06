@@ -1,4 +1,6 @@
 import {
+  faExclamationTriangle,
+  faEye,
   faGripLines,
   faKey,
   faUser,
@@ -16,6 +18,7 @@ import useModalState from './useModalState'
 import DeleteUserModal from './DeleteUserModal'
 import StudentActionsModal from './Learners/StudentActionsModal'
 import TransferStudentsModal from './Learners/TransferStudentsModal'
+import ViewItemModal from '../CoursesVCredentials/ViewItemModal'
 
 const CustomHeader = ({ displayName, options, handleOptionClick }) => {
   const [showDropdown, setShowDropdown] = useState(false)
@@ -651,6 +654,58 @@ const Actions = ({
   )
 }
 
+const CourseVCredentialsActions = ({
+  ViewModal,
+  RemoveModal,
+  handleView,
+  handleRemove
+}) => {
+  const [modals, setModalState] = useModalState()
+
+  const deleteHandler = () => {
+    setModalState(handleRemove, true)
+  }
+
+  const viewHandler = () => {
+    setModalState(handleView, true)
+  }
+
+  return (
+    <>
+      <div className='d-flex align-items-center agGrid__actions'>
+        <div className='action-item cursor-pointer' onClick={viewHandler}>
+          <a href='/my-school/learners' className='pe-1'>
+            <FontAwesomeIcon icon={faEye} style={{ fontSize: '16px' }} />
+          </a>
+          <p className='m-0 pe-2'> View Item</p>
+        </div>
+        <div className='action-item cursor-pointer' onClick={deleteHandler}>
+          <a href='/my-school/learners' className='pe-1'>
+            <FontAwesomeIcon
+              icon={faExclamationTriangle}
+              style={{ fontSize: '16px' }}
+            />
+          </a>
+          <p className='m-0 pe-2'> Delete Item</p>
+        </div>
+      </div>
+
+      {modals[handleView] && (
+        <ViewModal
+          show={modals[handleView]}
+          onHide={() => setModalState(handleView, false)}
+        />
+      )}
+      {modals[handleRemove] && (
+        <RemoveModal
+          show={modals[handleRemove]}
+          onHide={() => setModalState(handleRemove, false)}
+        />
+      )}
+    </>
+  )
+}
+
 export {
   CustomHeader,
   ActiveInactiveFilter,
@@ -659,5 +714,6 @@ export {
   TransferFilter,
   CustomSelectCellEditor,
   CustomSelect,
-  Actions
+  Actions,
+  CourseVCredentialsActions
 }

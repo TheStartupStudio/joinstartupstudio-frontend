@@ -18,8 +18,6 @@ function NewRouter(props) {
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user } = useSelector((state) => state.user)
 
-  console.log('user', user)
-
   return (
     <IntlProvider
       locale={currentAppLocale.locale}
