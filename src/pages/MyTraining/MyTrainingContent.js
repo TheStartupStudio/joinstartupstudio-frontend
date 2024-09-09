@@ -625,7 +625,7 @@ function MyTrainingContent(props) {
                           </p>
                           <a
                             className='btn btn-info text-light default-btn'
-                            href={`/preview-portfolio`}
+                            href={`/my-portfolio`}
                           >
                             MY PORTFOLIO
                           </a>

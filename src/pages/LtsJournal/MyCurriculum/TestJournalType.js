@@ -9,7 +9,6 @@ import SidebarItems from './CurriculumSidebars/SidebarItems'
 import FinancialSidebar from './CurriculumSidebars/FinancialSidebar'
 
 const TestJournalType = (props) => {
-  console.log('here')
   const history = useHistory()
   const [journals, setJournals] = useState([])
   const [weeks, setWeeks] = useState([])

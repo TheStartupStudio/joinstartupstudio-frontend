@@ -4345,6 +4345,12 @@ ul.sidebar-menu-item .collapse a {
   min-height: 138px;
 }
 
+.ql-editor {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 .you-href {
   text-align: left;
   font: normal normal 500 17px Montserrat;

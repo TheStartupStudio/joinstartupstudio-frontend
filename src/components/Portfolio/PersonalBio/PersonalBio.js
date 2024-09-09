@@ -54,7 +54,6 @@ export default function PersonalBio(props) {
   // }, [props.userData])
 
   const getUser = async () => {
-    debugger
     setLoading(true)
     await axiosInstance
       .get('/connect/count')
@@ -88,7 +87,7 @@ export default function PersonalBio(props) {
         bio: userBio
       })
       .then((response) => {
-        toast.success(<IntlMessages id="alerts.success_change" />)
+        toast.success(<IntlMessages id='alerts.success_change' />)
         setUserBio(response.data.bio)
 
         onClose()
@@ -130,11 +129,11 @@ export default function PersonalBio(props) {
     >
       <>
         <div
-          className="  d-flex personal-bio-container"
+          className='  d-flex personal-bio-container'
           // className=" my-account d-flex"
         >
           <div
-            className="d-flex  personal-bio-image-container"
+            className='d-flex  personal-bio-image-container'
             style={{
               marginRight: 'auto',
               justifyContent: 'center'
@@ -155,22 +154,22 @@ export default function PersonalBio(props) {
             >
               <img
                 src={user?.profile_image ? user?.profile_image : avatar}
-                className=" user-image"
+                className=' user-image'
               />
             </div>
           </div>
           <div
-            className=" personal-bio-info-container"
+            className=' personal-bio-info-container'
             style={{ marginLeft: 'auto' }}
           >
-            <div className="d-flex flex-wrap pb-0 mb-3">
-              <div className="portfolio-user-info">
-                <div className="row">
+            <div className='d-flex flex-wrap pb-0 mb-3'>
+              <div className='portfolio-user-info'>
+                <div className='row'>
                   <div
                   // className="col-10"
                   >
-                    <div className="d-flex flex-wrap ps-0 flex-grow-1 justify-content-between">
-                      <div className="user-info-grid mt-0 mt-md-4 mt-lg-0">
+                    <div className='d-flex flex-wrap ps-0 flex-grow-1 justify-content-between'>
+                      <div className='user-info-grid mt-0 mt-md-4 mt-lg-0'>
                         <div style={{ flexGrow: 1 }}>
                           <p
                             className={`w-100 d-flex mt-auto ps-0 mb-0 pb-0 ${
@@ -182,7 +181,7 @@ export default function PersonalBio(props) {
                             {user?.name}
                           </p>
                           <p
-                            className="mb-0 pt-1"
+                            className='mb-0 pt-1'
                             style={{
                               ...style.user_proffesion,
                               display: 'block'
@@ -202,7 +201,7 @@ export default function PersonalBio(props) {
                             user?.social_links?.facebook ||
                             user?.social_links?.website) && (
                             <div
-                              className="mt-0 ps-1 d-flex flex-wrap pt-1 pt-md-auto"
+                              className='mt-0 ps-1 d-flex flex-wrap pt-1 pt-md-auto'
                               style={style.social_links}
                             >
                               {user?.social_links?.linkedIn && (
@@ -214,9 +213,9 @@ export default function PersonalBio(props) {
                                       ? user.social_links.linkedIn
                                       : `https://${user.social_links.linkedIn}`
                                   }
-                                  rel="noreferrer"
-                                  target="_blank"
-                                  className="link me-1"
+                                  rel='noreferrer'
+                                  target='_blank'
+                                  className='link me-1'
                                 >
                                   <FontAwesomeIcon icon={faLinkedinIn} />
                                 </a>
@@ -230,9 +229,9 @@ export default function PersonalBio(props) {
                                       ? user.social_links.twitter
                                       : `https://${user.social_links.twitter}`
                                   }
-                                  rel="noreferrer"
-                                  target="_blank"
-                                  className="link mx-1"
+                                  rel='noreferrer'
+                                  target='_blank'
+                                  className='link mx-1'
                                 >
                                   <FontAwesomeIcon icon={faTwitter} />
                                 </a>
@@ -246,9 +245,9 @@ export default function PersonalBio(props) {
                                       ? user.social_links.instagram
                                       : `https://${user.social_links.instagram}`
                                   }
-                                  rel="noreferrer"
-                                  target="_blank"
-                                  className="link mx-1"
+                                  rel='noreferrer'
+                                  target='_blank'
+                                  className='link mx-1'
                                 >
                                   <FontAwesomeIcon icon={faInstagram} />
                                 </a>
@@ -263,9 +262,9 @@ export default function PersonalBio(props) {
                                       ? user.social_links.website
                                       : `https://${user.social_links.website}`
                                   }
-                                  rel="noreferrer"
-                                  target="_blank"
-                                  className="link mx-1"
+                                  rel='noreferrer'
+                                  target='_blank'
+                                  className='link mx-1'
                                 >
                                   <FontAwesomeIcon icon={faGlobe} />
                                 </a>
@@ -279,9 +278,9 @@ export default function PersonalBio(props) {
                                       ? user.social_links.facebook
                                       : `https://${user.social_links.facebook}`
                                   }
-                                  rel="noreferrer"
-                                  target="_blank"
-                                  className="link mx-1"
+                                  rel='noreferrer'
+                                  target='_blank'
+                                  className='link mx-1'
                                 >
                                   <FontAwesomeIcon icon={faFacebookF} />
                                 </a>
@@ -290,23 +289,23 @@ export default function PersonalBio(props) {
                           )}
 
                           {user && (
-                            <p className="connections px-0 pt-1 pt-sm-auto">
+                            <p className='connections px-0 pt-1 pt-sm-auto'>
                               {userConnections > 500 ? (
                                 <>
-                                  500+ <IntlMessages id="connection.title" />
+                                  500+ <IntlMessages id='connection.title' />
                                 </>
                               ) : (
                                 <>
                                   <span> {userConnections} </span>
-                                  <IntlMessages id="connection.title" />
+                                  <IntlMessages id='connection.title' />
                                 </>
                               )}
                             </p>
                           )}
                         </div>
-                        <div className="d-lg-flex flex-wrap w-100 w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate mx-lg-5 mx-sm-1">
+                        <div className='d-lg-flex flex-wrap w-100 w-md-100 pe-0 my-auto ps-xlg-5 text-center Certificate mx-lg-5 mx-sm-1'>
                           {!isCertified && (
-                            <div className="d-flex">
+                            <div className='d-flex'>
                               <img src={CertificationBadge1} />
                               <img src={CertificationBadge2} />
                             </div>
@@ -318,19 +317,19 @@ export default function PersonalBio(props) {
                 </div>
               </div>
             </div>
-            <div className="my-0">
+            <div className='my-0'>
               {user && (
                 <>
-                  <span className="user-bio">
+                  <span className='user-bio'>
                     {userBio && userBio.slice(0, charset)}
                     {userBio?.length >= charset && '...'}
                   </span>
                   {userBio?.length > charset && (
-                    <p className="user-bio-read-more pe-auto p-0 mt-1 mb-0">
+                    <p className='user-bio-read-more pe-auto p-0 mt-1 mb-0'>
                       <span
                         onClick={() => setCharset(charset + userBio.length)}
                       >
-                        <IntlMessages id="general.readMore" />
+                        <IntlMessages id='general.readMore' />
                       </span>
                     </p>
                   )}

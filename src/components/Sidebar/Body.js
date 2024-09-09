@@ -7,6 +7,7 @@ import DropdownItem from './DropdownItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAccordionToggled } from '../../redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
+import IntlMessages from '../../utils/IntlMessages'
 
 const Body = (props) => {
   const { isAdmin } = useSelector((state) => state.user.user)
@@ -71,16 +72,16 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseClassroom'}>
-        {/* <DropdownItem
+        <DropdownItem
           allowed={isAdmin}
           title={'USER MANAGEMENT'}
           to={'/user-management'}
-        /> */}
+        />
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
         <DropdownItem
           // disabled={true}
           title={'MY EVALUATIONS'}
-          to={'/my-evaluation'}
+          to={'/my-evaluations'}
         />
         <DropdownItem title={'MY INBOX'} to='/my-inbox' />
       </ParentDropdownItem>
@@ -111,7 +112,7 @@ const Body = (props) => {
       />
       <ParentDropdownItem id={'journals'}>
         <DropdownItem title={'LTS JOURNAL'} to={'/student-lts'} />
-        <DropdownItem title={'MENTORSHIP JOURNAL'} to={'/my-mentorship'} />
+        <DropdownItem title={'MY MENTORSHIP'} to={'/my-mentorship'} />
         <DropdownItem title={'WELLNESS JOURNAL'} to={'/student-wellnes'} />
         <DropdownItem
           title={'PERSONAL FINANCE JOURNAL'}
@@ -119,27 +120,30 @@ const Body = (props) => {
         />
         <DropdownItem title={'LEADERSHIP JOURNAL'} to={'/student-leadership'} />
       </ParentDropdownItem>
-
-      <SidebarItem
-        to={'/my-portfolio'}
-        className={`${
-          location.pathname.includes('my-portfolio') ? 'active' : ''
-        }`}
+      <ParentSidebarItem
+        ariaControls='mySpark'
+        href='#mySpark'
         srcImage={FolderSidebarImage}
-        title='MY PORTFOLIO'
-        isDropdown={false}
-      />
-      {/* <ParentSidebarItem
-        ariaControls="mySpark"
-        href="#mySpark"
-        srcImage={FolderSidebarImage}
-        title="MY SPARK"
+        title='MY SPARK'
         isDropdown={true}
       />
       <ParentDropdownItem id={'mySpark'}>
         <DropdownItem title={'SPARK WIDGETS'} to={'/my-spark/widgets'} />
         <DropdownItem title={'SPARK ARCHIVE'} to={'/my-spark/archive'} />
-      </ParentDropdownItem> */}
+      </ParentDropdownItem>
+      <SidebarItem
+        onClick={() => {
+          dispatch(setAccordionToggled(false))
+          props.hideHeaderIcons()
+        }}
+        to={'/my-portfolio'}
+        className={`${
+          location.pathname.includes('edit-portfolio') ? 'active' : ''
+        }`}
+        srcImage={FolderSidebarImage}
+        title='MY PORTFOLIO'
+        isDropdown={false}
+      />
     </ul>
   )
 }
