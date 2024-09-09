@@ -6,10 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Sidebar/Body.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Sidebar/Body.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/GeneratedResponsePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/GeneratedResponsePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/PdfDocument.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/PdfDocument.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyFailures.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyFailures.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

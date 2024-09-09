@@ -12,6 +12,7 @@ import AddEntryButton from '../../Components/Actions/AddEntryButton'
 import MyFailureModal from '../../Components/Modals/MyFailureModal'
 import failureImage from '../../../../assets/images/HS-Portfolio-Icons/failure.png'
 import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
+import LTSButton from '../../../../components/LTSButtons/LTSButton'
 function MyFailures(props) {
   const dispatch = useDispatch()
   const mode = useSelector((state) => state.portfolio.mode)
@@ -68,20 +69,79 @@ function MyFailures(props) {
     (state) => state.portfolio.whoSection.myFailures.isSaving
   )
 
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [previousIndex, setPreviousIndex] = useState(null)
+  const [direction, setDirection] = useState(null)
+
+  const next = () => {
+    setDirection('next')
+    setPreviousIndex(activeIndex)
+    if (myFailures?.length - 1 === activeIndex) {
+      setActiveIndex(0)
+    } else {
+      setActiveIndex(activeIndex + 1)
+    }
+  }
+
+  const prev = () => {
+    setDirection('prev')
+    setPreviousIndex(activeIndex)
+    if (activeIndex === 0) {
+      setActiveIndex(myFailures?.length - 1)
+    } else {
+      setActiveIndex(activeIndex - 1)
+    }
+  }
+
+  // console.log('previousIndex', previousIndex)
   return (
-    <div className={'d-flex flex-column gap-4 h-100'}>
+    // <div className={'d-flex flex-column gap-4 h-100'}>
+    <div className={'d-flex flex-row h-100'}>
       {myFailures?.length > 0 ? (
-        myFailures?.map((myFailure, index) => (
-          <React.Fragment key={myFailure?.id}>
-            <MyFailure data={myFailure} isEditSection={isEditSection} />
-          </React.Fragment>
-        ))
+        myFailures?.map((myFailure, index) => {
+          return (
+            <React.Fragment key={myFailure?.id}>
+              <div
+                className={`carousel-item ${
+                  index === activeIndex ? 'active' : ''
+                } ${
+                  index === activeIndex && direction === 'next' ? 'next' : ''
+                } 
+                 ${index === activeIndex && direction === 'prev' ? 'prev' : ''}
+                 ${
+                   index === previousIndex && direction === 'next'
+                     ? 'hide-item-next'
+                     : ''
+                 } 
+                 
+                  ${
+                    index === previousIndex && direction === 'prev'
+                      ? 'hide-item-prev'
+                      : ''
+                  } 
+                
+                 `}
+              >
+                <MyFailure data={myFailure} isEditSection={isEditSection} />
+              </div>
+            </React.Fragment>
+          )
+        })
       ) : (
         <NoDataDisplay
           src={failureImage}
           text={'You don’t have any failures yet! Click the button to add one.'}
         />
       )}
+      <div className={'d-flex gap-3'} style={{ marginTop: 200, zIndex: 4 }}>
+        <div>
+          <LTSButton name={'Prev'} onClick={prev} />
+        </div>
+        <div>
+          <LTSButton name={'Next'} onClick={next} />
+        </div>
+      </div>
+
       {myFailures?.length > 0 && isEditSection && (
         <AddEntryButton
           title={`Add new "My Failures" section`}
