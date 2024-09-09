@@ -57,7 +57,10 @@ function MyMentors(props) {
 
   return (
     <div className={'container'}>
-      <div className={'row '} style={{ justifyContent: 'center' }}>
+      <div
+        className={'row '}
+        // style={{ justifyContent: 'center' }}
+      >
         {myMentors?.length > 0 ? (
           myMentors?.map((mentor, index) => {
             return (
@@ -77,7 +80,7 @@ function MyMentors(props) {
             }
           />
         )}
-        <div className={'col-md-4'}>
+        <div className='col-lg-4 col-md-6 col-sm-12 mb-3'>
           {myMentors?.length > 0 && isEditSection && (
             <AddMyMentor
               title={`Add new "My Mentors" section`}

@@ -73,7 +73,7 @@ function SectionActions(props) {
           {hideButton?.isDisplayed && (
             <TooltipAction
               onClick={() => hideButton?.action()}
-              icon={<FaEye className={'action-icon public-icon'} />}
+              icon={<FaX className={'action-icon public-icon'} />}
               tooltipContent={
                 <Tooltip id='tooltip' className={'tooltip-content '}>
                   Click here to HIDE this section

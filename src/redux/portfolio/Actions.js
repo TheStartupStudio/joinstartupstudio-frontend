@@ -994,6 +994,7 @@ export const getProjects = () => async (dispatch) => {
           type: 'evidence-1',
           imageUrl: null,
           linkInputValue: '',
+          titleInputValue: '',
           selectedSkills: [],
           imageFile: null
         },
@@ -1001,6 +1002,7 @@ export const getProjects = () => async (dispatch) => {
           type: 'evidence-2',
           imageUrl: null,
           linkInputValue: '',
+          titleInputValue: '',
           selectedSkills: [],
           imageFile: null
         },
@@ -1008,6 +1010,7 @@ export const getProjects = () => async (dispatch) => {
           type: 'evidence-3',
           imageUrl: null,
           linkInputValue: '',
+          titleInputValue: '',
           selectedSkills: [],
           imageFile: null
         }

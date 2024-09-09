@@ -310,7 +310,8 @@ const UserStory = (props) => {
         </>
       ) : (
         <>
-          <div className={'row'}>
+          {/* <div className={'row'}> */}
+          <div className={'row resp-portfolio-row'}>
             <div className={'col-md-6'}>
               <PortfolioSubmission
                 videoUrl={state.videoUrl}
@@ -318,7 +319,8 @@ const UserStory = (props) => {
                 title={'MY PERSONAL BRAND STORY'}
               />
             </div>
-            <div className={'col-md-6'}>
+            {/* <div className={'col-md-6'}> */}
+            <div className={'col-md-6 lizas-column'}>
               <div className={'d-flex flex-column h-100'}>
                 <UserInfo userInfo={state} user={props.user} />
 
