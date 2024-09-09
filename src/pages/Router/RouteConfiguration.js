@@ -115,7 +115,7 @@ export const authRoutes = [
   { path: '/terms', component: Terms },
   // { path: '/preview-portfolio', component: PreviewPortfolioNew },
   { path: '/old-portfolio', component: EditPortfolioNew, exact: true },
-  { path: '/edit-portfolio', component: Portfolio2024, exact: true },
+  { path: '/my-portfolio', component: Portfolio2024, exact: true },
   { path: '/resources', component: Resources },
   { path: '/my-students', component: MyStudents },
   { path: '/iamr-certification-guide', component: IamrCertificationGuide },
