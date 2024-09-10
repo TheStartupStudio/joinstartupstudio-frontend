@@ -743,87 +743,6 @@
 }
 
 
-/*.carousel-container {*/
-/*    position: relative;*/
-/*    overflow: hidden;*/
-/*    width: 100%;*/
-/*}*/
-
-/*.carousel-slide-item {*/
-/*    display: none;*/
-/*    transform: translateX(100%);*/
-/*    transition: transform 0.5s ease, opacity 0.5s ease;*/
-/*    width: 100% !important;*/
-/*}*/
-
-/*.carousel-slide-item.active {*/
-/*    display: inline-block;*/
-/*    transform: translateX(0);*/
-/*}*/
-
-/*.carousel-slide-item.hide-item-next {*/
-/*    display: inline-block;*/
-/*    transform: translateX(-100%);*/
-/*}*/
-
-
-/*.carousel-slide-item.hide-item-prev {*/
-/*    display: inline-block;*/
-/*    transform: translateX(+100%);*/
-/*}*/
-
-/*.carousel-slide-item.next {*/
-/*    animation: slide-next 1s ease forwards;*/
-/*}*/
-
-/*.carousel-slide-item.prev {*/
-/*    animation: slide-prev 1s ease forwards;*/
-/*}*/
-
-/*.carousel-slide-item.hide-item-next {*/
-/*    animation: slide-hide-item-next 1s ease forwards;*/
-/*}*/
-
-/*.carousel-slide-item.hide-item-prev {*/
-/*    animation: slide-hide-item-prev 1s ease forwards;*/
-/*}*/
-
-/*@keyframes slide-next {*/
-/*    from {*/
-/*        transform: translateX(105%);*/
-/*    }*/
-/*    to {*/
-/*        transform: translateX(0);*/
-/*    }*/
-/*}*/
-
-/*@keyframes slide-prev {*/
-/*    from {*/
-/*        transform: translateX(-105%);*/
-/*    }*/
-/*    to {*/
-/*        transform: translateX(0);*/
-/*    }*/
-/*}*/
-
-/*@keyframes slide-hide-item-next {*/
-/*    from {*/
-/*        transform: translateX(0%);*/
-/*    }*/
-/*    to {*/
-/*        transform: translateX(-105%);*/
-/*    }*/
-/*}*/
-
-
-/*@keyframes slide-hide-item-prev {*/
-/*    from {*/
-/*        transform: translateX(0%);*/
-/*    }*/
-/*    to {*/
-/*        transform: translateX(105%);*/
-/*    }*/
-/*}*/
 
 .carousel-container {
     position: relative;
@@ -837,7 +756,7 @@
     /*transition: transform 0.5s ease, opacity 0.5s ease;*/
     position: relative;
     /*display: none;*/
-    float: left;
+    /*float: left;*/
     width: 100%;
     margin-right: -100%;
     backface-visibility: hidden;

@@ -107,30 +107,17 @@ const CarouselComponent = ({
     return classes.join(' ')
   }
 
-  const getStyle = (index) => {
-    for (let i = 0; i < numOfCarouselItems; i++) {
-      if (index === activeIndex + i && direction === 'next') {
-        return {
-          marginLeft: 300
-        }
-      }
-    }
-    return {}
-  }
-
   return (
     <div className={'d-flex flex-column gap-4 w-100'}>
       <>
         {items?.length > 0 ? (
           // <div className={'d-flex w-100 '}>
-          <div className={'d-flex'}>
+          // <div className={'d-flex'}>
+          <div className={'d-flex align-items-center'}>
             {items?.map((item, index) => {
               return (
                 <React.Fragment key={item?.id}>
-                  <div
-                    className={getClassNames(index)}
-                    // style={getStyle(index)}
-                  >
+                  <div className={getClassNames(index)}>
                     {renderItem(item, isEditSection)}
                   </div>
                 </React.Fragment>
