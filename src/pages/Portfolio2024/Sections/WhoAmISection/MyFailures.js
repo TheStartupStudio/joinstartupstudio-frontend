@@ -13,6 +13,12 @@ import MyFailureModal from '../../Components/Modals/MyFailureModal'
 import failureImage from '../../../../assets/images/HS-Portfolio-Icons/failure.png'
 import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
 import LTSButton from '../../../../components/LTSButtons/LTSButton'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faChevronLeft,
+  faChevronRight
+} from '@fortawesome/free-solid-svg-icons'
+import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
 function MyFailures(props) {
   const dispatch = useDispatch()
   const mode = useSelector((state) => state.portfolio.mode)
@@ -73,7 +79,7 @@ function MyFailures(props) {
   const [previousIndex, setPreviousIndex] = useState(null)
   const [direction, setDirection] = useState(null)
 
-  const next = () => {
+  const nextItem = () => {
     setDirection('next')
     setPreviousIndex(activeIndex)
     if (myFailures?.length - 1 === activeIndex) {
@@ -83,7 +89,7 @@ function MyFailures(props) {
     }
   }
 
-  const prev = () => {
+  const previousItem = () => {
     setDirection('prev')
     setPreviousIndex(activeIndex)
     if (activeIndex === 0) {
@@ -93,54 +99,98 @@ function MyFailures(props) {
     }
   }
 
-  // console.log('previousIndex', previousIndex)
+  const changeIndexWithIndicator = (index) => {
+    setPreviousIndex(activeIndex)
+    if (index > activeIndex) {
+      setDirection('next')
+    } else {
+      setDirection('prev')
+    }
+    setActiveIndex(index)
+  }
   return (
-    // <div className={'d-flex flex-column gap-4 h-100'}>
     <div className={'d-flex flex-row h-100'}>
-      {myFailures?.length > 0 ? (
-        myFailures?.map((myFailure, index) => {
-          return (
-            <React.Fragment key={myFailure?.id}>
-              <div
-                className={`carousel-item ${
-                  index === activeIndex ? 'active' : ''
-                } ${
-                  index === activeIndex && direction === 'next' ? 'next' : ''
-                } 
-                 ${index === activeIndex && direction === 'prev' ? 'prev' : ''}
-                 ${
-                   index === previousIndex && direction === 'next'
-                     ? 'hide-item-next'
-                     : ''
-                 } 
-                 
-                  ${
-                    index === previousIndex && direction === 'prev'
-                      ? 'hide-item-prev'
-                      : ''
-                  } 
-                
-                 `}
-              >
-                <MyFailure data={myFailure} isEditSection={isEditSection} />
-              </div>
-            </React.Fragment>
-          )
-        })
-      ) : (
-        <NoDataDisplay
-          src={failureImage}
-          text={'You don’t have any failures yet! Click the button to add one.'}
-        />
-      )}
-      <div className={'d-flex gap-3'} style={{ marginTop: 200, zIndex: 4 }}>
-        <div>
-          <LTSButton name={'Prev'} onClick={prev} />
-        </div>
-        <div>
-          <LTSButton name={'Next'} onClick={next} />
-        </div>
-      </div>
+      {/*{myFailures?.length > 0 ? (*/}
+      {/*  myFailures?.map((myFailure, index) => {*/}
+      {/*    return (*/}
+      {/*      <React.Fragment key={myFailure?.id}>*/}
+      {/*        <div*/}
+      {/*          className={`carousel-slide-item ${*/}
+      {/*            index === activeIndex ? 'active' : ''*/}
+      {/*          } ${*/}
+      {/*            index === activeIndex && direction === 'next' ? 'next' : ''*/}
+      {/*          } */}
+      {/*           ${index === activeIndex && direction === 'prev' ? 'prev' : ''}*/}
+      {/*           ${*/}
+      {/*             index === previousIndex && direction === 'next'*/}
+      {/*               ? 'hide-item-next'*/}
+      {/*               : ''*/}
+      {/*           } */}
+      {/*           */}
+      {/*            ${*/}
+      {/*              index === previousIndex && direction === 'prev'*/}
+      {/*                ? 'hide-item-prev'*/}
+      {/*                : ''*/}
+      {/*            } */}
+      {/*          */}
+      {/*           `}*/}
+      {/*        >*/}
+      {/*          <MyFailure data={myFailure} isEditSection={isEditSection} />*/}
+      {/*        </div>*/}
+      {/*      </React.Fragment>*/}
+      {/*    )*/}
+      {/*  })*/}
+      {/*) : (*/}
+      {/*  <NoDataDisplay*/}
+      {/*    src={failureImage}*/}
+      {/*    text={'You don’t have any failures yet! Click the button to add one.'}*/}
+      {/*  />*/}
+      {/*)}*/}
+
+      {/*<div className={'d-flex justify-content-center'}>*/}
+      {/*  <div*/}
+      {/*    className={'d-flex gap-3 align-items-center'}*/}
+      {/*    style={{ zIndex: 4 }}*/}
+      {/*  >*/}
+      {/*    <FontAwesomeIcon*/}
+      {/*      icon={faChevronLeft}*/}
+      {/*      className='carousel-indicator-button'*/}
+      {/*      onClick={previousItem}*/}
+      {/*    />*/}
+      {/*    /!*{Array.from({*!/*/}
+      {/*    /!*  length: Math.ceil(items?.length / numOfCarouselItems)*!/*/}
+      {/*    /!*})?.map((_, index) => (*!/*/}
+      {/*    /!*  <div*!/*/}
+      {/*    /!*    key={index}*!/*/}
+      {/*    /!*    className={`carousel-indicator ${*!/*/}
+      {/*    /!*      Math.floor(activeIndex / numOfCarouselItems) === index*!/*/}
+      {/*    /!*        ? 'active'*!/*/}
+      {/*    /!*        : ''*!/*/}
+      {/*    /!*    }`}*!/*/}
+      {/*    /!*    onClick={() =>*!/*/}
+      {/*    /!*      changeIndexWithIndicator(index * numOfCarouselItems)*!/*/}
+      {/*    /!*    }*!/*/}
+      {/*    /!*  />*!/*/}
+      {/*    /!*))}*!/*/}
+      {/*    <FontAwesomeIcon*/}
+      {/*      icon={faChevronRight}*/}
+      {/*      className='carousel-indicator-button'*/}
+      {/*      onClick={nextItem}*/}
+      {/*    />*/}
+      {/*  </div>*/}
+      {/*</div>*/}
+      <CarouselComponent
+        items={myFailures}
+        renderItem={(item, isEditSection) => (
+          <MyFailure data={item} isEditSection={isEditSection} />
+        )}
+        isEditSection={isEditSection}
+        isSaving={isSaving}
+        noDataText={
+          'You don’t have any failures yet! Click the button to add one.'
+        }
+        noDataImage={failureImage}
+      />
 
       {myFailures?.length > 0 && isEditSection && (
         <AddEntryButton
