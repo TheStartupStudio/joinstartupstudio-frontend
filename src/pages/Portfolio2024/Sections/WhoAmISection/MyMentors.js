@@ -15,6 +15,7 @@ import {
 import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
 import MyFailure from './MyFailure'
 import failureImage from '../../../../assets/images/HS-Portfolio-Icons/failure.png'
+import { Carousel } from '../../../CarouselComponent'
 
 function MyMentors(props) {
   const dispatch = useDispatch()
@@ -60,22 +61,30 @@ function MyMentors(props) {
 
   return (
     <div className={'container'}>
-      <div className={'row '}>
-        <CarouselComponent
-          items={myMentors}
-          renderItem={(item, isEditSection) => (
-            <MyMentor data={item} isEditSection={isEditSection} />
-          )}
-          numOfCarouselItems={3}
-          itemClassnames={'col-lg-4 col-md-6 col-sm-12 mb-3'}
-          isEditSection={isEditSection}
-          // isSaving={isSaving}
-          noDataText={
-            'You don’t have any mentors yet! Click the button to add one.'
-          }
-          noDataImage={mentorsImage}
-          noDataClassnames={'mt-5'}
+      <div className={'row gap-4'}>
+        <Carousel
+          data={myMentors}
+          itemsToShow={3}
+          renderItems={(item) => {
+            return <MyMentor data={item} isEditSection={isEditSection} />
+          }}
         />
+        {/*<CarouselComponent*/}
+        {/*  items={myMentors}*/}
+        {/*  renderItem={(item, isEditSection) => (*/}
+        {/*    <MyMentor data={item} isEditSection={isEditSection} />*/}
+        {/*  )}*/}
+        {/*  numOfCarouselItems={3}*/}
+        {/*  itemClassnames={'col-lg-4 col-md-6 col-sm-12 mb-3'}*/}
+        {/*  isEditSection={isEditSection}*/}
+        {/*  // isSaving={isSaving}*/}
+        {/*  noDataText={*/}
+        {/*    'You don’t have any mentors yet! Click the button to add one.'*/}
+        {/*  }*/}
+        {/*  noDataImage={mentorsImage}*/}
+        {/*  noDataClassnames={'mt-5'}*/}
+        {/*/>*/}
+
         {/*{myMentors?.length > 0 ? (*/}
         {/*  myMentors?.map((mentor, index) => {*/}
         {/*    return (*/}

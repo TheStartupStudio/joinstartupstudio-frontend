@@ -19,6 +19,8 @@ import {
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons'
 import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
+import { Carousel } from '../../../CarouselComponent'
+import MyMentor from './MyMentor'
 function MyFailures(props) {
   const dispatch = useDispatch()
   const mode = useSelector((state) => state.portfolio.mode)
@@ -109,7 +111,7 @@ function MyFailures(props) {
     setActiveIndex(index)
   }
   return (
-    <div className={'d-flex flex-row h-100'}>
+    <div className={'d-flex flex-row h-100 '}>
       {/*{myFailures?.length > 0 ? (*/}
       {/*  myFailures?.map((myFailure, index) => {*/}
       {/*    return (*/}
@@ -179,17 +181,26 @@ function MyFailures(props) {
       {/*    />*/}
       {/*  </div>*/}
       {/*</div>*/}
-      <CarouselComponent
-        items={myFailures}
-        renderItem={(item, isEditSection) => (
-          <MyFailure data={item} isEditSection={isEditSection} />
-        )}
-        isEditSection={isEditSection}
-        isSaving={isSaving}
-        noDataText={
-          'You don’t have any failures yet! Click the button to add one.'
-        }
-        noDataImage={failureImage}
+      {/*<CarouselComponent*/}
+      {/*  items={myFailures}*/}
+      {/*  renderItem={(item, isEditSection) => (*/}
+      {/*    <MyFailure data={item} isEditSection={isEditSection} />*/}
+      {/*  )}*/}
+      {/*  isEditSection={isEditSection}*/}
+      {/*  isSaving={isSaving}*/}
+      {/*  noDataText={*/}
+      {/*    'You don’t have any failures yet! Click the button to add one.'*/}
+      {/*  }*/}
+      {/*  noDataImage={failureImage}*/}
+      {/*/>*/}
+
+      <Carousel
+        data={myFailures}
+        itemsToShow={1}
+        renderItems={(item) => {
+          // return <>Test</>
+          return <MyFailure data={item} isEditSection={isEditSection} />
+        }}
       />
 
       {myFailures?.length > 0 && isEditSection && (
