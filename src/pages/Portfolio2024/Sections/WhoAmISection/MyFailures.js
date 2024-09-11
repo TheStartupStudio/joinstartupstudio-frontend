@@ -21,6 +21,7 @@ import {
 import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
 import { Carousel } from '../../../CarouselComponent'
 import MyMentor from './MyMentor'
+import mentorsImage from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
 function MyFailures(props) {
   const dispatch = useDispatch()
   const mode = useSelector((state) => state.portfolio.mode)
@@ -77,131 +78,26 @@ function MyFailures(props) {
     (state) => state.portfolio.whoSection.myFailures.isSaving
   )
 
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [previousIndex, setPreviousIndex] = useState(null)
-  const [direction, setDirection] = useState(null)
-
-  const nextItem = () => {
-    setDirection('next')
-    setPreviousIndex(activeIndex)
-    if (myFailures?.length - 1 === activeIndex) {
-      setActiveIndex(0)
-    } else {
-      setActiveIndex(activeIndex + 1)
-    }
-  }
-
-  const previousItem = () => {
-    setDirection('prev')
-    setPreviousIndex(activeIndex)
-    if (activeIndex === 0) {
-      setActiveIndex(myFailures?.length - 1)
-    } else {
-      setActiveIndex(activeIndex - 1)
-    }
-  }
-
-  const changeIndexWithIndicator = (index) => {
-    setPreviousIndex(activeIndex)
-    if (index > activeIndex) {
-      setDirection('next')
-    } else {
-      setDirection('prev')
-    }
-    setActiveIndex(index)
-  }
   return (
     <div className={'d-flex flex-row h-100 '}>
-      {/*{myFailures?.length > 0 ? (*/}
-      {/*  myFailures?.map((myFailure, index) => {*/}
-      {/*    return (*/}
-      {/*      <React.Fragment key={myFailure?.id}>*/}
-      {/*        <div*/}
-      {/*          className={`carousel-slide-item ${*/}
-      {/*            index === activeIndex ? 'active' : ''*/}
-      {/*          } ${*/}
-      {/*            index === activeIndex && direction === 'next' ? 'next' : ''*/}
-      {/*          } */}
-      {/*           ${index === activeIndex && direction === 'prev' ? 'prev' : ''}*/}
-      {/*           ${*/}
-      {/*             index === previousIndex && direction === 'next'*/}
-      {/*               ? 'hide-item-next'*/}
-      {/*               : ''*/}
-      {/*           } */}
-      {/*           */}
-      {/*            ${*/}
-      {/*              index === previousIndex && direction === 'prev'*/}
-      {/*                ? 'hide-item-prev'*/}
-      {/*                : ''*/}
-      {/*            } */}
-      {/*          */}
-      {/*           `}*/}
-      {/*        >*/}
-      {/*          <MyFailure data={myFailure} isEditSection={isEditSection} />*/}
-      {/*        </div>*/}
-      {/*      </React.Fragment>*/}
-      {/*    )*/}
-      {/*  })*/}
-      {/*) : (*/}
-      {/*  <NoDataDisplay*/}
-      {/*    src={failureImage}*/}
-      {/*    text={'You don’t have any failures yet! Click the button to add one.'}*/}
-      {/*  />*/}
-      {/*)}*/}
-
-      {/*<div className={'d-flex justify-content-center'}>*/}
-      {/*  <div*/}
-      {/*    className={'d-flex gap-3 align-items-center'}*/}
-      {/*    style={{ zIndex: 4 }}*/}
-      {/*  >*/}
-      {/*    <FontAwesomeIcon*/}
-      {/*      icon={faChevronLeft}*/}
-      {/*      className='carousel-indicator-button'*/}
-      {/*      onClick={previousItem}*/}
-      {/*    />*/}
-      {/*    /!*{Array.from({*!/*/}
-      {/*    /!*  length: Math.ceil(items?.length / numOfCarouselItems)*!/*/}
-      {/*    /!*})?.map((_, index) => (*!/*/}
-      {/*    /!*  <div*!/*/}
-      {/*    /!*    key={index}*!/*/}
-      {/*    /!*    className={`carousel-indicator ${*!/*/}
-      {/*    /!*      Math.floor(activeIndex / numOfCarouselItems) === index*!/*/}
-      {/*    /!*        ? 'active'*!/*/}
-      {/*    /!*        : ''*!/*/}
-      {/*    /!*    }`}*!/*/}
-      {/*    /!*    onClick={() =>*!/*/}
-      {/*    /!*      changeIndexWithIndicator(index * numOfCarouselItems)*!/*/}
-      {/*    /!*    }*!/*/}
-      {/*    /!*  />*!/*/}
-      {/*    /!*))}*!/*/}
-      {/*    <FontAwesomeIcon*/}
-      {/*      icon={faChevronRight}*/}
-      {/*      className='carousel-indicator-button'*/}
-      {/*      onClick={nextItem}*/}
-      {/*    />*/}
-      {/*  </div>*/}
-      {/*</div>*/}
-      {/*<CarouselComponent*/}
-      {/*  items={myFailures}*/}
-      {/*  renderItem={(item, isEditSection) => (*/}
-      {/*    <MyFailure data={item} isEditSection={isEditSection} />*/}
-      {/*  )}*/}
-      {/*  isEditSection={isEditSection}*/}
-      {/*  isSaving={isSaving}*/}
-      {/*  noDataText={*/}
-      {/*    'You don’t have any failures yet! Click the button to add one.'*/}
-      {/*  }*/}
-      {/*  noDataImage={failureImage}*/}
-      {/*/>*/}
-
-      <Carousel
-        data={myFailures}
-        itemsToShow={1}
-        renderItems={(item) => {
-          // return <>Test</>
-          return <MyFailure data={item} isEditSection={isEditSection} />
-        }}
-      />
+      {myFailures?.length > 0 ? (
+        <Carousel
+          data={myFailures}
+          renderItems={(item) => {
+            return <MyFailure data={item} isEditSection={isEditSection} />
+          }}
+        />
+      ) : (
+        <>
+          <NoDataDisplay
+            src={failureImage}
+            classNames={'mt-5'}
+            text={
+              'You don’t have any failures yet! Click the button to add one.'
+            }
+          />
+        </>
+      )}
 
       {myFailures?.length > 0 && isEditSection && (
         <AddEntryButton

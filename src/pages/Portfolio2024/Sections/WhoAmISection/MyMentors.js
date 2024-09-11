@@ -62,59 +62,42 @@ function MyMentors(props) {
   return (
     <div className={'container'}>
       <div className={'row gap-4'}>
-        <Carousel
-          data={myMentors}
-          itemsToShow={3}
-          renderItems={(item) => {
-            return <MyMentor data={item} isEditSection={isEditSection} />
-          }}
-        />
-        {/*<CarouselComponent*/}
-        {/*  items={myMentors}*/}
-        {/*  renderItem={(item, isEditSection) => (*/}
-        {/*    <MyMentor data={item} isEditSection={isEditSection} />*/}
-        {/*  )}*/}
-        {/*  numOfCarouselItems={3}*/}
-        {/*  itemClassnames={'col-lg-4 col-md-6 col-sm-12 mb-3'}*/}
-        {/*  isEditSection={isEditSection}*/}
-        {/*  // isSaving={isSaving}*/}
-        {/*  noDataText={*/}
-        {/*    'You don’t have any mentors yet! Click the button to add one.'*/}
-        {/*  }*/}
-        {/*  noDataImage={mentorsImage}*/}
-        {/*  noDataClassnames={'mt-5'}*/}
-        {/*/>*/}
-
-        {/*{myMentors?.length > 0 ? (*/}
-        {/*  myMentors?.map((mentor, index) => {*/}
-        {/*    return (*/}
-        {/*      <React.Fragment key={mentor?.id}>*/}
-        {/*        <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>*/}
-        {/*          <MyMentor data={mentor} isEditSection={isEditSection} />*/}
-        {/*        </div>*/}
-        {/*      </React.Fragment>*/}
-        {/*    )*/}
-        {/*  })*/}
-        {/*) : (*/}
-        {/*  <NoDataDisplay*/}
-        {/*    src={mentorsImage}*/}
-        {/*    classNames={'mt-5'}*/}
-        {/*    text={*/}
-        {/*      'You don’t have any mentors yet! Click the button to add one.'*/}
-        {/*    }*/}
-        {/*  />*/}
-        {/*)}*/}
-        <div className={'col-md-4'}>
-          {myMentors?.length > 0 && isEditSection && (
-            <AddMyMentor
-              title={`Add new "My Mentors" section`}
-              isEditSection={isEditSection}
-              data={myMentors?.data}
+        {myMentors?.length > 0 ? (
+          <>
+            <Carousel
+              data={myMentors}
+              itemsToShow={3}
+              addItemComponent={null}
+              renderItems={(item) => {
+                return (
+                  <>
+                    <MyMentor data={item} isEditSection={isEditSection} />
+                  </>
+                )
+              }}
             />
-          )}
-        </div>
+          </>
+        ) : (
+          <>
+            <NoDataDisplay
+              src={mentorsImage}
+              classNames={'mt-5'}
+              text={
+                'You don’t have any mentors yet! Click the button to add one.'
+              }
+            />
+          </>
+        )}
       </div>
-
+      <div className={'col-md-4'}>
+        {myMentors?.length > 0 && isEditSection && (
+          <AddMyMentor
+            title={`Add new "My Mentors" section`}
+            isEditSection={isEditSection}
+            data={myMentors?.data}
+          />
+        )}
+      </div>
       <SectionActions actions={actions} />
       {showModal && (
         <MyMentorModal

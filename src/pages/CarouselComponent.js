@@ -6,7 +6,12 @@ import {
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons'
 
-export const Carousel = ({ data, itemsToShow = 1, renderItems }) => {
+export const Carousel = ({
+  data,
+  itemsToShow = 1,
+  renderItems,
+  addItemComponent
+}) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const totalItems = data?.length
 
@@ -47,11 +52,17 @@ export const Carousel = ({ data, itemsToShow = 1, renderItems }) => {
           </div>
         ))}
       </div>
+      {addItemComponent && (
+        <div style={{ padding: '0 20px', marginTop: 20 }}>
+          {addItemComponent}
+        </div>
+      )}
+
       {displayIndicators && (
-        <div className='d-flex'>
+        <div className='d-flex mt-4 gap-4'>
           <FontAwesomeIcon
             icon={faChevronLeft}
-            className='carousel-indicator-button'
+            className='carousel-indicator-button me-4'
             onClick={() => updateIndex(-1)}
           />
           {Array.from({ length: totalPages }).map((_, index) => (
@@ -65,7 +76,7 @@ export const Carousel = ({ data, itemsToShow = 1, renderItems }) => {
           ))}
           <FontAwesomeIcon
             icon={faChevronRight}
-            className='carousel-indicator-button'
+            className='carousel-indicator-button ms-4'
             onClick={() => updateIndex(1)}
           />
         </div>
