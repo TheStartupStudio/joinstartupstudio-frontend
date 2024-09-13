@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
-import UserStory from './UserStory'
+import UserBasicInfo from './UserBasicInfo'
 import MyRelationships from './MyRelationships'
 import MyFailures from './MyFailures'
 import MyMentors from './MyMentors'
 import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
+import UserStory from './UserStory'
 
 function WhoAmI({ loadings: propsLoadings, data, user }) {
   const [loadings, setLoadings] = useState(null)
@@ -35,12 +36,20 @@ function WhoAmI({ loadings: propsLoadings, data, user }) {
   return (
     <div className={'d-flex flex-column gap-4'}>
       {renderSection(
+        loadings?.userBasicInfo,
+        'user-basic-info',
+        null,
+        UserBasicInfo,
+        data?.userBasicInfo?.data
+      )}
+      {renderSection(
         loadings?.userStory,
         'user-story',
-        null,
+        'My Story',
         UserStory,
         data?.userStory?.data
       )}
+
       {renderSection(
         loadings?.myRelationships,
         'my-relationship',

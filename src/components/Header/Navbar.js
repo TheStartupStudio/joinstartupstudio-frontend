@@ -15,7 +15,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import avator from '../../assets/images/profile-image.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeSidebarState } from '../../redux'
-import { getUserStory } from '../../redux/portfolio/Actions'
+import { getUserBasicInfo } from '../../redux/portfolio/Actions'
 import { setBackButton } from '../../redux/backButtonReducer'
 
 const NavbarIcon = (props) => {
@@ -69,7 +69,7 @@ const Navbar = (props) => {
   }
 
   useEffect(() => {
-    dispatch(getUserStory())
+    dispatch(getUserBasicInfo())
   }, [])
 
   const handleMobileNavBar = () => {

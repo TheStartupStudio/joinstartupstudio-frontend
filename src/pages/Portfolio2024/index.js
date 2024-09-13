@@ -19,13 +19,12 @@ import {
   getMyRelationships,
   getMyWorkExperiences,
   getSharingSettings,
+  getUserBasicInfo,
   getUserStory,
   setPublishModal,
   setShareModal,
   setShareModalContent
 } from '../../redux/portfolio/Actions'
-import PortfolioDataContainer from './Components/DisplayData/PortfolioDataContainer'
-import PortfolioSubmission from './Components/PortfolioSubmission'
 import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
 import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
 
@@ -38,17 +37,20 @@ const Index = ({
   showSharePortfolioModal,
   sharePortfolioModalContent,
   userStory,
+  userBasicInfo,
   myRelationships,
   myFailures,
   myMentors,
+  isLoadingUserBasicInfo,
   isLoadingUserStory,
   isLoadingMyRelationships,
   isLoadingMyFailures,
   isLoadingMyMentors,
+  fetchUserBasicInfo,
   fetchUserStory,
+  fetchMyRelationships,
   fetchMyFailures,
   fetchMyMentors,
-  fetchMyRelationships,
   fetchSharingSettings,
   setShareContent,
   setPublishModalVisibility,
@@ -74,6 +76,7 @@ const Index = ({
   const mode = useSelector((state) => state.portfolio.mode)
   useEffect(() => {
     const fetchDataSequentially = async () => {
+      await fetchUserBasicInfo()
       await fetchUserStory()
       await fetchMyFailures()
       await fetchMyMentors()
@@ -132,8 +135,15 @@ const Index = ({
       <PortfolioHeader userStory={userStory} user={loggedUser} />
       {activeSection === 'who-section' && (
         <WhoAmI
-          data={{ userStory, myRelationships, myMentors, myFailures }}
+          data={{
+            userStory,
+            myRelationships,
+            myMentors,
+            myFailures,
+            userBasicInfo
+          }}
           loadings={{
+            userBasicInfo: isLoadingUserBasicInfo,
             userStory: isLoadingUserStory,
             myRelationships: isLoadingMyRelationships,
             myMentors: isLoadingMyMentors,
@@ -205,10 +215,12 @@ const mapStateToProps = (state) => {
     showSharePortfolioModal,
     showSharePortfolioModalContent: sharePortfolioModalContent,
     whoSection: {
+      userBasicInfo,
       userStory,
       myRelationships,
       myFailures,
       myMentors,
+      userBasicInfo: { isLoading: isLoadingUserBasicInfo },
       userStory: { isLoading: isLoadingUserStory },
       myRelationships: { isLoading: isLoadingMyRelationships },
       myFailures: { isLoading: isLoadingMyFailures },
@@ -231,7 +243,6 @@ const mapStateToProps = (state) => {
       myCompetitiveness: { isLoading: isLoadingCompetitiveness }
     }
   } = state.portfolio
-
   return {
     loggedUser,
     activeSection,
@@ -240,10 +251,12 @@ const mapStateToProps = (state) => {
     areLoadingSharingSettings,
     showSharePortfolioModal,
     sharePortfolioModalContent,
+    userBasicInfo,
     userStory,
     myRelationships,
     myFailures,
     myMentors,
+    isLoadingUserBasicInfo,
     isLoadingUserStory,
     isLoadingMyRelationships,
     isLoadingMyFailures,
@@ -263,10 +276,12 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchUserBasicInfo: () => dispatch(getUserBasicInfo()),
   fetchUserStory: () => dispatch(getUserStory()),
+  fetchMyRelationships: () => dispatch(getMyRelationships()),
+
   fetchMyFailures: () => dispatch(getMyFailures()),
   fetchMyMentors: () => dispatch(getMyMentors()),
-  fetchMyRelationships: () => dispatch(getMyRelationships()),
   fetchSharingSettings: () => dispatch(getSharingSettings()),
   setShareContent: (content) => dispatch(setShareModalContent(content)),
   setPublishModalVisibility: (visible) => dispatch(setPublishModal(visible)),

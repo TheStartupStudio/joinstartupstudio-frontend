@@ -123,7 +123,7 @@ function Project(props) {
       <SectionActions actions={actions} />
 
       <h3 className={'text-center mb-2 my-project-title'}>
-        My project #{props.index + 1}
+        A NEW ALUMNI SPOTLIGHT
       </h3>
 
       <div>

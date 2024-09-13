@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Carousel.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -9,13 +9,18 @@ import {
 export const Carousel = ({
   data,
   itemsToShow = 1,
+  breakPoints = [],
   renderItems,
-  addItemComponent
+  transitionDuration = '0.5s',
+  transitionTimingFunction = 'ease-in-out'
 }) => {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [currentItemsToShow, setCurrentItemsToShow] = useState(itemsToShow)
+  const [totalPages, setTotalPages] = useState(
+    Math.ceil(data?.length / itemsToShow)
+  )
   const totalItems = data?.length
 
-  const totalPages = Math.ceil(totalItems / itemsToShow)
   const displayIndicators = totalPages > 1
 
   const updateIndex = (direction) => {
@@ -32,12 +37,42 @@ export const Carousel = ({
     })
   }
 
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth
+      let newItemsToShow = itemsToShow
+
+      for (const breakpoint of breakPoints) {
+        if (width >= breakpoint.width) {
+          newItemsToShow = breakpoint.itemsToShow
+        }
+      }
+
+      setCurrentItemsToShow(newItemsToShow)
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [breakPoints, itemsToShow])
+
+  useEffect(() => {
+    const newTotalPages = Math.ceil(totalItems / currentItemsToShow)
+    setTotalPages(newTotalPages)
+
+    setActiveIndex((prevIndex) => Math.min(prevIndex, newTotalPages - 1))
+  }, [currentItemsToShow, totalItems])
+
   return (
     <div className='my-carousel'>
       <div
         className='inner'
         style={{
-          transform: `translateX(-${activeIndex * 100}%)`
+          transform: `translateX(-${activeIndex * 100}%)`,
+          transition: `transform ${transitionDuration} ${transitionTimingFunction}`
         }}
       >
         {data?.map((item, index) => (
@@ -45,18 +80,13 @@ export const Carousel = ({
             key={index}
             className='carousel-slide-item'
             style={{
-              width: `${100 / itemsToShow}%`
+              width: `${100 / currentItemsToShow}%`
             }}
           >
-            {renderItems(item)}
+            {renderItems(item, index)}
           </div>
         ))}
       </div>
-      {addItemComponent && (
-        <div style={{ padding: '0 20px', marginTop: 20 }}>
-          {addItemComponent}
-        </div>
-      )}
 
       {displayIndicators && (
         <div className='d-flex mt-4 gap-4'>

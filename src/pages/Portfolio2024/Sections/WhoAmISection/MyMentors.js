@@ -7,14 +7,9 @@ import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
 import mentorsImage from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
 import MyMentorModal from '../../Components/Modals/MyMentorModal'
 import {
-  hideAddCompetitivenessModal,
   hideAddMentorModal,
-  showAddCompetitivenessModal,
   showAddMentorModal
 } from '../../../../redux/portfolio/Actions'
-import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
-import MyFailure from './MyFailure'
-import failureImage from '../../../../assets/images/HS-Portfolio-Icons/failure.png'
 import { Carousel } from '../../../CarouselComponent'
 
 function MyMentors(props) {
@@ -67,7 +62,6 @@ function MyMentors(props) {
             <Carousel
               data={myMentors}
               itemsToShow={3}
-              addItemComponent={null}
               renderItems={(item) => {
                 return (
                   <>
@@ -75,6 +69,13 @@ function MyMentors(props) {
                   </>
                 )
               }}
+              breakPoints={[
+                { width: 500, itemsToShow: 1 },
+                { width: 768, itemsToShow: 2 },
+                { width: 1200, itemsToShow: 3 }
+              ]}
+              transitionDuration='0.5s'
+              transitionTimingFunction='ease-in-out'
             />
           </>
         ) : (

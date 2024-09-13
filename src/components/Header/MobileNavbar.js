@@ -16,7 +16,7 @@ import notesIconHovered from '../../assets/images/notes-icon-active.svg'
 import mySparkBlack from '../../assets/icons/Asset 1.svg'
 import mySparkWhite from '../../assets/icons/Group 3819.svg'
 import avator from '../../assets/images/profile-image.png'
-import { getUserStory } from '../../redux/portfolio/Actions'
+import { getUserBasicInfo } from '../../redux/portfolio/Actions'
 
 const MobileNavbar = (props) => {
   const dispatch = useDispatch()
@@ -27,7 +27,7 @@ const MobileNavbar = (props) => {
   }
 
   useEffect(() => {
-    dispatch(getUserStory())
+    dispatch(getUserBasicInfo())
   }, [])
   const userStory = useSelector((state) => state.portfolio.whoSection.userStory)
   return (

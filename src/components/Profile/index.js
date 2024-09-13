@@ -23,7 +23,7 @@ import BriefingModal from '../Modals/BriefingModal'
 import { Link } from 'react-router-dom'
 import { getSelectedBriefingStart } from '../../redux/header/Actions'
 import UserSocialMedia from '../../pages/Portfolio2024/Components/UserSocialMedia'
-import { getUserStory } from '../../redux/portfolio/Actions'
+import { getUserBasicInfo } from '../../redux/portfolio/Actions'
 
 function Profile(props) {
   const dispatch = useDispatch()
@@ -39,7 +39,7 @@ function Profile(props) {
 
   useEffect(() => {
     dispatch(getSelectedBriefingStart())
-    dispatch(getUserStory())
+    dispatch(getUserBasicInfo())
   }, [dispatch])
 
   const handleOpenBriefingModal = () => {

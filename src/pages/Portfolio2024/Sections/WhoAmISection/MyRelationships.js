@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PortfolioInfoBox from '../../Components/DisplayData/PortfolioInfoBox'
-import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
-import {
-  editWhoSection,
-  getMyRelationships,
-  getUserStory,
-  saveMyRelationships,
-  saveUserStory
-} from '../../../../redux/portfolio/Actions'
+import { saveMyRelationships } from '../../../../redux/portfolio/Actions'
 import { useDispatch, useSelector } from 'react-redux'
 import SectionActions from '../../Components/Actions/SectionActions'
 import LabeledInput from '../../Components/DisplayData/LabeledInput'
