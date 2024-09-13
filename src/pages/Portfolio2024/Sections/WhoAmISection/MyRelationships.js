@@ -133,7 +133,7 @@ function MyRelationships(props) {
                   teamRole,
                   'Click the edit button to add team role.'
                 )}
-                contentClasses={'text-center'}
+                contentClasses={'text-center portfolio-nowidth-info'}
               />
             </div>
 
@@ -148,7 +148,7 @@ function MyRelationships(props) {
                   collaborationStyle,
                   'Click the edit button to add a collaboration style'
                 )}
-                contentClasses={'text-center'}
+                contentClasses={'text-center portfolio-nowidth-info'}
               />
             </div>
 
@@ -163,7 +163,7 @@ function MyRelationships(props) {
                   leadershipPhilosophy,
                   'Click the edit button to add a leadership philosophy'
                 )}
-                contentClasses={'text-center'}
+                contentClasses={'text-center portfolio-nowidth-info'}
               />
             </div>
           </div>

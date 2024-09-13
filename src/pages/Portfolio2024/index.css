@@ -1211,11 +1211,18 @@
   text-transform: capitalize;
 }
 
+.portfolio-nowidth-info {
+  width: 100% !important;
+}
+
+
+
 .portfolio-info-content {
   width: 350px;
   text-align: left;
   font: normal normal 300 15px/19px Montserrat;
-  letter-spacing: 0px;
+  letter-spacing: 1.5px;
+  word-spacing: 1px;
   color: #000000;
   word-break: break-word;
   overflow-wrap: break-word;

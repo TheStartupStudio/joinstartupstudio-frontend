@@ -54,13 +54,13 @@ function PublicHeader() {
             >
               {window.location.href.includes('terms') ||
               window.location.href.includes('lts-secure') ? (
-                <li className='nav-item'>
+                <li className='nav-item '>
                   {/* <a className='nav-link' href='/create-account'>
                 <IntlMessages id='navigation.create_your_account' />
               </a> */}
                 </li>
               ) : window.location.href.includes('register') ? (
-                <li className='nav-item'>
+                <li className='nav-item lts-secure-logo'>
                   <a className='nav-link mx-auto' href='/logout'>
                     <IntlMessages id='navigation.logout' />
                   </a>
@@ -74,7 +74,7 @@ function PublicHeader() {
               window.location.href.includes('forgot-password') ||
               window.location.href.includes('trial-ended') ? (
                 <li
-                  className='nav-item'
+                  className='nav-item lts-secure-logo'
                   style={{
                     background: 'transparent',
                     display: 'flex',
@@ -83,7 +83,9 @@ function PublicHeader() {
                   }}
                 >
                   <div
-                    className={`sidebar-header ${showMenuMobile && 'ms-md-5'}`}
+                    className={`sidebar-header lts-secure-logo ${
+                      showMenuMobile && 'ms-md-5'
+                    }`}
                     style={{
                       display: 'flex',
                       flexDirection: 'column',

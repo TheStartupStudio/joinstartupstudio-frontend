@@ -85,7 +85,7 @@ const ProjectSection = ({
         </div>
         {showSkillsModal === type && (
           <PortfolioModalWrapper
-            title={'MARKET-READY LEARN SKILLS'}
+            title={`MARKET-READY ${title} SKILLS`}
             show={showSkillsModal === type}
             onHide={() => setShowSkillsModal(undefined)}
           >

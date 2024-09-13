@@ -10,7 +10,7 @@ const EnLangs = {
   'general.ready': 'Ready',
   'general.start': 'Start!',
   'general.click_here': 'Click here',
-  'general.submit': 'Submit!',
+  'general.submit': 'Send',
   'general.login': 'Login',
   'general.copy': 'Copied to clipboard',
   'general.copy_1': 'Copy',
