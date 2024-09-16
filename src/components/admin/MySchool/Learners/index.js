@@ -1,15 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import { useSelector } from 'react-redux'
-import GridTable from '../GridTable'
-import {
-  Actions,
-  ActiveInactiveFilter,
-  CustomSelectCellEditor,
-  ProgramsFilter,
-  TransferFilter
-} from '../AgGridItems'
-import useModalState from '../useModalState'
+import GridTable from '../../../GridTable'
 import { SkillBox } from '../ContentItems'
 import { useParams, useHistory } from 'react-router-dom'
 import Certification1Badge from '../../../../assets/images/market-ready-1-badge.png'
@@ -17,6 +9,14 @@ import Certification2Badge from '../../../../assets/images/market-ready-2-badge.
 import StudentActionsModal from './StudentActionsModal'
 import HeaderActions from '../HeaderActions'
 import AddStudentBulkModal from './AddStudentBulkModal'
+import {
+  Actions,
+  ActiveInactiveFilter,
+  CustomSelectCellEditor,
+  ProgramsFilter,
+  TransferFilter
+} from '../../../GridTable/AgGridItems'
+import useModalState from '../../../../hooks/useModalState'
 
 const Learners = ({
   programs,

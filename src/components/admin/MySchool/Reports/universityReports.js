@@ -29,7 +29,7 @@ const UniversityReports = ({
           <Col md='6' className='d-flex justify-content-end'>
             <CustomDropdown
               title='Filter by program'
-              btnClassName={'instructor'}
+              btnClassName={'gray-border'}
               options={[
                 { name: 'Market-Ready (LTS1)', value: 'LTS1' },
                 { name: 'Market-Ready (LTS2)', value: 'LTS2' },

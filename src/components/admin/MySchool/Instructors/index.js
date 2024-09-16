@@ -6,17 +6,17 @@ import {
   CustomSelectCellEditor,
   LevelsFilter,
   ProgramsFilter
-} from '../AgGridItems'
+} from '../../../GridTable/AgGridItems'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChalkboardTeacher, faFile } from '@fortawesome/free-solid-svg-icons'
-import useModalState from '../useModalState'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import { SkillBox } from '../ContentItems'
 import AddInstructorBulkModal from './AddInstructorBulkModal'
 import AddInstructorModal from './AddInstructorModal'
-import GridTable from '../GridTable'
+import GridTable from '../../../GridTable'
 import HeaderActions from '../HeaderActions'
 import { toast } from 'react-toastify'
+import useModalState from '../../../../hooks/useModalState'
 
 const Instructors = ({ programs, levels, periods, universities }) => {
   const [modals, setModalState] = useModalState()

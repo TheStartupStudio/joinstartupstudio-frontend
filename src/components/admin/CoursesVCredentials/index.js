@@ -1,18 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import '../MySchool/style.css'
-import GridTable from '../MySchool/GridTable'
 import HeaderActions from './HeaderActions'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons'
-import {
-  Actions,
-  ActiveInactiveFilter,
-  CourseVCredentialsActions
-} from '../MySchool/AgGridItems'
-import useModalState from '../MySchool/useModalState'
+import useModalState from '../../../hooks/useModalState'
 import './style.css'
 import ViewItemModal from './ViewItemModal'
 import RemoveItemModal from './RemoveItemModal'
+import { ActiveInactiveFilter, TableActions } from '../../GridTable/AgGridItems'
+import GridTable from '../../GridTable'
+import CourseVCredentialsActions from './CourseVCredentialsActions'
 
 const CoursesVCredentials = () => {
   const [modals, setModalState] = useModalState()
@@ -79,11 +74,17 @@ const CoursesVCredentials = () => {
         flex: 2,
         cellRenderer: (params) => {
           return (
-            <CourseVCredentialsActions
-              ViewModal={ViewItemModal}
-              RemoveModal={RemoveItemModal}
-              handleView='viewCoursesVCredentialModal'
-              handleRemove='removeCoursesVCredentialModal'
+            <TableActions
+              ViewModal={{
+                modal: ViewItemModal,
+                name: 'viewCoursesVCredentialModal',
+                text: 'View Item'
+              }}
+              RemoveModal={{
+                modal: RemoveItemModal,
+                name: 'removeCoursesVCredentialModal',
+                text: 'Delete Item'
+              }}
             />
           )
         }
@@ -131,13 +132,13 @@ const CoursesVCredentials = () => {
         </div>
       </div>
 
-      {modals.addCoursesVCredentialModal && (
+      {/* {modals.addCoursesVCredentialModal && (
         <CourseVCredentialsActions
           show={modals.addCoursesVCredentialModal}
           onHide={() => setModalState('addCoursesVCredentialModal', false)}
           mode='add'
         />
-      )}
+      )} */}
     </>
   )
 }

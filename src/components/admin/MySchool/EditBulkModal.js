@@ -140,7 +140,7 @@ const EditBulkModal = (props) => {
               <CustomDropdown
                 isSelectable
                 multiple
-                btnClassName={'instructor'}
+                btnClassName={'gray-border'}
                 options={props.levels}
                 onClick={(selectedOptions) =>
                   handleChangeDropdown(selectedOptions, 'levels')
@@ -149,7 +149,7 @@ const EditBulkModal = (props) => {
             </Col>
             <Col md='4'>
               <CustomDropdown
-                btnClassName={'instructor'}
+                btnClassName={'gray-border'}
                 options={yearOptions?.map((item) => ({
                   name: item.value,
                   value: item.value
@@ -159,7 +159,7 @@ const EditBulkModal = (props) => {
             </Col>
             <Col md='4'>
               <CustomDropdown
-                btnClassName={'instructor'}
+                btnClassName={'gray-border'}
                 options={periodOptions?.map((item) => ({
                   name: item.label,
                   value: item.label

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { AgGridReact } from 'ag-grid-react'
 import 'ag-grid-community/styles//ag-grid.css'
 import 'ag-grid-community/styles//ag-theme-quartz.css'
-import './GridTable.css'
+import './style.css'
 
 const loadingTemplate = `
   <div class="d-flex justify-content-center align-items-center flex-column my-5 py-5">

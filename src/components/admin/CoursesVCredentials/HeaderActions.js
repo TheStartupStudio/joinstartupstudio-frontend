@@ -7,7 +7,7 @@ import {
 } from '../MySchool/ContentItems'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import useModalState from '../MySchool/useModalState'
+import useModalState from '../../../hooks/useModalState'
 import CourseVCredentialsActions from './CourseVCredentialsActions'
 
 const HeaderActions = ({ setSearchQuery }) => {
@@ -38,7 +38,7 @@ const HeaderActions = ({ setSearchQuery }) => {
             //     ? handleBulkDeactiveAction()
             //     : handleBulkNextYearAction()
             // }}
-            btnClassName={'instructor'}
+            btnClassName={'gray-border'}
           />
         </Col>
 

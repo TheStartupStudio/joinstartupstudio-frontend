@@ -18,7 +18,10 @@ const useModalState = () => {
     addCoursesVCredentialModal: false,
     editCoursesVCredentialModal: false,
     viewCoursesVCredentialModal: false,
-    removeCoursesVCredentialModal: false
+    removeCoursesVCredentialModal: false,
+    viewApplicationModal: false,
+    transferAcademyUserModal: false,
+    archiveApplicationModal: false
   })
 
   const setModalState = (modalName, value) => {

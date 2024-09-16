@@ -36,7 +36,7 @@ const CompletionProgress = ({ handleProgressValue, selectedInstructor }) => {
         <Col className='d-flex justify-content-end'>
           <CustomDropdown
             title='Filter by program'
-            btnClassName={'instructor'}
+            btnClassName={'gray-border'}
             options={[
               {
                 name: 'Curriculum Completion',

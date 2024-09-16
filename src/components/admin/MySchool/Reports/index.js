@@ -176,7 +176,7 @@ const Reports = ({ instructors, universityId }) => {
         <Col md={`${selectedInstructor ? 5 : 6}`}>
           <CustomDropdown
             title='Select Data to view'
-            btnClassName={'instructor'}
+            btnClassName={'gray-border'}
             options={dropdownOptions}
             onClick={(item) => {
               console.log('item', item)

@@ -140,7 +140,7 @@ const TransferStudentsModal = ({
                   isSelectable
                   exclusive
                   name='instructor_id'
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   options={instructors?.map((instructor) => {
                     return {
                       name: instructor.User.name,
@@ -165,7 +165,7 @@ const TransferStudentsModal = ({
                   isSelectable
                   exclusive
                   name='period'
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   options={periods?.map((period) => {
                     return {
                       name: period.name,

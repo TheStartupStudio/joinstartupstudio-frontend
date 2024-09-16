@@ -183,7 +183,7 @@ const CourseVCredentialsActions = ({
                       isSelectable
                       exclusive
                       name='awardType'
-                      btnClassName={'instructor'}
+                      btnClassName={'gray-border'}
                       // options={universities?.map((university) => {
                       //   return {
                       //     name: university.name,

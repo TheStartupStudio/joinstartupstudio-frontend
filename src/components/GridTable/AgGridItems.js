@@ -3,22 +3,21 @@ import {
   faEye,
   faGripLines,
   faKey,
+  faPaperPlane,
   faUser,
   faUserMinus
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-// import { useGridFilter } from 'ag-grid-react/lib/main'
 import { useGridFilter } from 'ag-grid-react'
-
 import './style.css'
-import ResetPasswordModal from './ResetPasswordModal'
-import AddInstructorModal from './Instructors/AddInstructorModal'
-import useModalState from './useModalState'
-import DeleteUserModal from './DeleteUserModal'
-import StudentActionsModal from './Learners/StudentActionsModal'
-import TransferStudentsModal from './Learners/TransferStudentsModal'
-import ViewItemModal from '../CoursesVCredentials/ViewItemModal'
+import useModalState from '../../hooks/useModalState'
+import AddInstructorModal from '../admin/MySchool/Instructors/AddInstructorModal'
+import ResetPasswordModal from '../admin/MySchool/ResetPasswordModal'
+import DeleteUserModal from '../admin/MySchool/DeleteUserModal'
+import StudentActionsModal from '../admin/MySchool/Learners/StudentActionsModal'
+import TransferStudentsModal from '../admin/MySchool/Learners/TransferStudentsModal'
+import { faDelicious } from '@fortawesome/free-brands-svg-icons'
 
 const CustomHeader = ({ displayName, options, handleOptionClick }) => {
   const [showDropdown, setShowDropdown] = useState(false)
@@ -654,52 +653,100 @@ const Actions = ({
   )
 }
 
-const CourseVCredentialsActions = ({
+const TableActions = ({
+  user,
+  payments,
+  application,
+  instructors,
+  cohorts,
+  levels,
+  programs,
+  refreshData,
   ViewModal,
   RemoveModal,
-  handleView,
-  handleRemove
+  TransferModal
 }) => {
   const [modals, setModalState] = useModalState()
 
   const deleteHandler = () => {
-    setModalState(handleRemove, true)
+    setModalState(RemoveModal.name, true)
   }
 
   const viewHandler = () => {
-    setModalState(handleView, true)
+    setModalState(ViewModal.name, true)
+  }
+
+  const transferHandler = () => {
+    setModalState(TransferModal.name, true)
   }
 
   return (
     <>
       <div className='d-flex align-items-center agGrid__actions'>
         <div className='action-item cursor-pointer' onClick={viewHandler}>
-          <a href='/my-school/learners' className='pe-1'>
-            <FontAwesomeIcon icon={faEye} style={{ fontSize: '16px' }} />
-          </a>
-          <p className='m-0 pe-2'> View Item</p>
+          <FontAwesomeIcon
+            icon={faEye}
+            className='me-1 '
+            style={{ fontSize: '16px' }}
+          />
+
+          <p className='m-0 pe-2'> {ViewModal.text}</p>
         </div>
-        <div className='action-item cursor-pointer' onClick={deleteHandler}>
-          <a href='/my-school/learners' className='pe-1'>
+        {TransferModal && (
+          <div className='action-item cursor-pointer' onClick={transferHandler}>
             <FontAwesomeIcon
-              icon={faExclamationTriangle}
+              icon={faPaperPlane}
+              className='me-1'
               style={{ fontSize: '16px' }}
             />
-          </a>
-          <p className='m-0 pe-2'> Delete Item</p>
+
+            <p className='m-0 pe-2'> {TransferModal.text}</p>
+          </div>
+        )}
+        <div className='action-item cursor-pointer' onClick={deleteHandler}>
+          <FontAwesomeIcon
+            icon={faExclamationTriangle}
+            style={{ fontSize: '16px' }}
+            className='me-1'
+          />
+
+          <p className='m-0 pe-2'> {RemoveModal.text}</p>
         </div>
       </div>
 
-      {modals[handleView] && (
-        <ViewModal
-          show={modals[handleView]}
-          onHide={() => setModalState(handleView, false)}
+      {modals[ViewModal?.name] && (
+        // eslint-disable-next-line react/jsx-pascal-case
+        <ViewModal.modal
+          show={modals[ViewModal?.name]}
+          onHide={() => setModalState(ViewModal?.name, false)}
+          user={user}
+          transferHandler={transferHandler}
+          deleteHandler={deleteHandler}
+          refreshData={refreshData}
+          application={application}
         />
       )}
-      {modals[handleRemove] && (
-        <RemoveModal
-          show={modals[handleRemove]}
-          onHide={() => setModalState(handleRemove, false)}
+      {modals[TransferModal?.name] && (
+        // eslint-disable-next-line react/jsx-pascal-case
+        <TransferModal.modal
+          show={modals[TransferModal?.name]}
+          onHide={() => setModalState(TransferModal?.name, false)}
+          user={user}
+          instructors={instructors}
+          cohorts={cohorts}
+          programs={programs}
+          levels={levels}
+          refreshData={refreshData}
+        />
+      )}
+      {modals[RemoveModal?.name] && (
+        // eslint-disable-next-line react/jsx-pascal-case
+        <RemoveModal.modal
+          show={modals[RemoveModal?.name]}
+          onHide={() => setModalState(RemoveModal?.name, false)}
+          payments={payments}
+          application={application}
+          refreshData={refreshData}
         />
       )}
     </>
@@ -715,5 +762,5 @@ export {
   CustomSelectCellEditor,
   CustomSelect,
   Actions,
-  CourseVCredentialsActions
+  TableActions
 }

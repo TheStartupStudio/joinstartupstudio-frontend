@@ -1,12 +1,12 @@
 {
-    "cognitoDemo": {
-        "REGION": "us-east-1",
-        "USER_POOL_ID": "us-east-1_059VnfheU",
-        "APP_CLIENT_ID": "728pvgml3836emhcd3vv1kt21k"
-    },
-    "cognito": {
-        "REGION": "us-east-1",
-        "USER_POOL_ID": "us-east-1_xkk6BKaXC",
-        "APP_CLIENT_ID": "643l3b6agb2gb4onmnuk6hiaqa"
-    }
+  "cognitoDemo": {
+    "REGION": "us-east-1",
+    "USER_POOL_ID": "us-east-1_zkRUZzMBT",
+    "APP_CLIENT_ID": "2ehmh3r96d90d9gu9g1n1p5dfk"
+  },
+  "cognito": {
+    "REGION": "us-east-1",
+    "USER_POOL_ID": "us-east-1_xkk6BKaXC",
+    "APP_CLIENT_ID": "643l3b6agb2gb4onmnuk6hiaqa"
+  }
 }
