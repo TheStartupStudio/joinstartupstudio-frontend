@@ -37,6 +37,7 @@ function ProjectModal(props) {
       imageFile: null,
       imageUrl: null,
       linkInputValue: '',
+      titleInputValue: '',
       type: 'evidence-1'
     },
     {
@@ -44,6 +45,7 @@ function ProjectModal(props) {
       imageFile: null,
       imageUrl: null,
       linkInputValue: '',
+      titleInputValue: '',
       type: 'evidence-2'
     },
     {
@@ -51,6 +53,7 @@ function ProjectModal(props) {
       imageFile: null,
       imageUrl: null,
       linkInputValue: '',
+      titleInputValue: '',
       type: 'evidence-3'
     }
   ]
@@ -232,34 +235,47 @@ function ProjectModal(props) {
       {renderEditProject(
         'learn',
         'LEARN: YOUR COMMITMENT TO CONSCIOUS CONSUMPTION, RESEARCH, AND ANALYSIS.',
-        'Upload and explain your proof of certification skill using any or all of the following: market analysis, industry analysis, problem identification. You can only tag a skill once in the portfolio.',
+        'Give an overview of your approach to research and analysis in determining that the problem ou identified is worth solving.',
+        // 'Upload and explain your proof of certification skill using any or all of the following: market analysis, industry analysis, problem identification. You can only tag a skill once in the portfolio.',
         'Problem identification',
         {
-          menuItem1: 'Market Analysis Document',
-          menuItem2: 'Industry Analysis Document',
-          menuItem3: 'Problem Identification'
+          menuItem1: 'Content Upload #1',
+          menuItem2: 'Content Upload #2',
+          menuItem3: 'Content Upload #3'
+          // menuItem1: 'Market Analysis Document',
+          // menuItem2: 'Industry Analysis Document',
+          // menuItem3: 'Problem Identification'
         }
       )}
       {renderEditProject(
         'develop',
         'DEVELOP: YOUR ABILITY TO EXECUTE THROUGH THE DEVELOPMENT OF EMPLOYABILITY AND INDUSTRY SKILLS.',
-        'Upload and explain your proof of certification skill using any or all of the following: solution slide deck, concept plan, business plan. You can only tag a skill once in the portfolio.',
-        'Problem identification',
+        'Give an overview of your approach to research and analysis in determining that the problem ou identified is worth solving.',
+        // 'Upload and explain your proof of certification skill using any or all of the following: solution slide deck, concept plan, business plan. You can only tag a skill once in the portfolio.',
+        // 'Problem identification',
+        'Solution',
         {
-          menuItem1: 'Solution Slide Deck',
-          menuItem2: 'Concept Plan Document',
-          menuItem3: 'Business Plan Document'
+          menuItem1: 'Content Upload #1',
+          menuItem2: 'Content Upload #2',
+          menuItem3: 'Content Upload #3'
+          // menuItem1: 'Solution Slide Deck',
+          // menuItem2: 'Concept Plan Document',
+          // menuItem3: 'Business Plan Document'
         }
       )}
       {renderEditProject(
         'brand',
         'BRAND: YOUR ABILITY TO COMMUNICATE AND MARKET YOUR VALUE.',
-        'Upload and explain your proof of certification skill using any or all of the following: brand charter, brand guidelines booklet, brand video. You can only tag a skill once in the portfolio.',
+        'Give an overview of your approach to research and analysis in determining that the problem ou identified is worth solving.',
+        // 'Upload and explain your proof of certification skill using any or all of the following: brand charter, brand guidelines booklet, brand video. You can only tag a skill once in the portfolio.',
         'BRAND DESCRIPTION',
         {
-          menuItem1: 'Brand Charter Document',
-          menuItem2: 'Brand Guidelines Booklet',
-          menuItem3: 'Brand Video'
+          menuItem1: 'Content Upload #1',
+          menuItem2: 'Content Upload #2',
+          menuItem3: 'Content Upload #3'
+          // menuItem1: 'Brand Charter Document',
+          // menuItem2: 'Brand Guidelines Booklet',
+          // menuItem3: 'Brand Video'
         }
       )}
 

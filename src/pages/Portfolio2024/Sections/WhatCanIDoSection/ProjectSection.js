@@ -51,7 +51,12 @@ const ProjectSection = ({
       </div>
       <div>
         <div className={'d-flex justify-content-between align-items-center'}>
-          <div className={'portfolio-info-title'}>Evidence</div>
+          <div
+            className={'portfolio-info-title'}
+            style={{ marginBottom: '10px' }}
+          >
+            Evidence
+          </div>
           <LtsButton
             variant={'text'}
             color={'#52C7DE'}
@@ -59,6 +64,7 @@ const ProjectSection = ({
             name={'View market-ready skills'}
             padding={{ padding: '0px' }}
             onClick={() => setShowSkillsModal(type)}
+            style={{ marginBottom: '10px' }}
           ></LtsButton>
         </div>
 
@@ -79,7 +85,7 @@ const ProjectSection = ({
         </div>
         {showSkillsModal === type && (
           <PortfolioModalWrapper
-            title={'MARKET-READY LEARN SKILLS'}
+            title={`MARKET-READY ${title} SKILLS`}
             show={showSkillsModal === type}
             onHide={() => setShowSkillsModal(undefined)}
           >

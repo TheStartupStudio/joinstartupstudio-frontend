@@ -33,6 +33,25 @@
   }
 }
 
+
+
+
+@media (max-width: 767px) {
+
+  .portfolio-submission-container {
+    width: 50% !important;
+  }
+
+  .resp-portfolio-row {
+    flex-direction: column;
+  }
+
+  .lizas-column {
+    width: 100%;
+  }
+}
+
+
 .portfolio-actions-loader {
   position: absolute;
   top: 0;
@@ -68,11 +87,15 @@
   opacity: 1;
   padding: 75px 60px;
   position: relative;
+  margin-right: 40px;
 }
 
 .portfolio-container.portfolio_edit-mode {
   background: #f8f7f7 0% 0% no-repeat padding-box;
+  /* background: #e4e9f4 0% 0% no-repeat padding-box; */
 }
+
+
 
 .portfolio-container.portfolio_preview-mode {
   background: #e4e9f4 0% 0% no-repeat padding-box;
@@ -362,9 +385,18 @@
   cursor: pointer;
 }
 
+.lizalizaliza {
+  font-size: 2rem;
+}
+
 .nav-icon {
   width: 45px;
   height: 45px;
+}
+
+.portfolio-nav-icon {
+  width: 55px;
+  height: 55px;
 }
 
 .nav-icon-title {
@@ -416,7 +448,7 @@
 
 .my-portfolio-logo {
   /* width: 380px; */
-  width: 100%;
+  width: 75%;
   height: 160px;
   object-fit: contain;
 }
@@ -425,7 +457,7 @@
 
 .section-description-container {
   display: flex;
-  padding: 10px 50px;
+  padding: 5px 35px;
   gap: 20px;
   align-items: baseline;
 }
@@ -519,6 +551,35 @@
   height: 100%;
 }
 
+.portfolio-section-title {
+  width: max-content;
+}
+
+@media (max-width: 460px) {
+  .portfolio-container {
+    padding: 10px !important;
+  }
+
+  .user-info-box {
+    margin-left: -20px;
+  }
+
+  .portfolio-nav-icons {
+    margin-top: 57px;
+  }
+
+  .portfolio-nav-icons div {
+    margin-right: 0 !important;
+    margin-left: 35px !important;
+
+  }
+}
+
+@media (max-width: 345px) {
+  .portfolio-nav-icons div {
+    margin-left: 10px !important;
+  }
+}
 
 @media (max-width: 875px) {
   .section-description-container {}
@@ -526,13 +587,15 @@
 
 @media (max-width: 578px) and (min-width: 421px) {
   .my-portfolio-logo {
-    width: 380px;
+    width: 380px !important;
   }
 }
 
+
+
 @media (max-width: 420px) {
   .my-portfolio-logo {
-    width: 300px;
+    width: 300px !important;
 
   }
 }
@@ -542,6 +605,12 @@
     width: 85vw;
     margin-inline: 0 !important;
   }
+
+
+  .my-portfolio-logo {
+    width: 90%;
+  }
+
 }
 
 @media (max-width: 578px) {
@@ -551,9 +620,9 @@
     gap: 40px;
   }
 
-  .portfolio-nav-icons div {
+  /* .portfolio-nav-icons div {
     margin-right: 30px !important;
-  }
+  } */
 
 
   .horizontal-separator {
@@ -577,16 +646,13 @@
 }
 
 
-@media (max-width: 460px) {
-  .portfolio-user-box {
-    flex-direction: column;
-    align-items: center;
-  }
+@media (max-width: 376px) {
+  .portfolio-user-box {}
 }
 
 @media (max-width: 490px) and (min-width: 404px) {
   .portfolio-triangle-icon {
-    margin-left: -30px;
+    /* margin-left: -30px; */
     margin-bottom: 10px;
   }
 
@@ -594,7 +660,7 @@
 
 @media (max-width: 403px)and (min-width: 367px) {
   .portfolio-triangle-icon {
-    margin-left: -50px;
+    /* margin-left: -50px; */
     margin-bottom: 10px;
   }
 
@@ -602,7 +668,7 @@
 
 @media (max-width: 366px) {
   .portfolio-triangle-icon {
-    margin-left: -70px !important;
+    /* margin-left: -70px !important; */
     margin-bottom: 10px;
   }
 
@@ -615,11 +681,23 @@
   }
 
   .portfolio-triangle-icon {
-    margin-left: -60px;
+    /* margin-left: -60px; */
     margin-bottom: 10px;
   }
 }
 
+@media (max-width: 412px) {
+  .portfolio-triangle-icon {
+    margin-left: -20px;
+  }
+}
+
+
+@media (max-width: 520px) {
+  .portfolio-section-title {
+    width: fit-content;
+  }
+}
 
 .upload-image_container {
   background: #ffffff 0% 0% no-repeat padding-box;
@@ -842,7 +920,7 @@
 .my-mentors-container {
   /* min-height: 150px;
   height: 330px; */
-  width: 240px !important;
+  /* width: 240px !important; */
   /*width: 100% !important;*/
   position: relative;
   background: #ffffff 0% 0% no-repeat padding-box;
@@ -1133,10 +1211,18 @@
   text-transform: capitalize;
 }
 
+.portfolio-nowidth-info {
+  width: 100% !important;
+}
+
+
+
 .portfolio-info-content {
+  width: 350px;
   text-align: left;
   font: normal normal 300 15px/19px Montserrat;
-  letter-spacing: 0px;
+  letter-spacing: 1.5px;
+  word-spacing: 1px;
   color: #000000;
   word-break: break-word;
   overflow-wrap: break-word;

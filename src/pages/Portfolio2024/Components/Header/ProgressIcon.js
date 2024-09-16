@@ -21,7 +21,7 @@ const ProgressIcon = (props) => {
               ? props.icons.coloredIcon
               : props.icons.grayIcon
           }
-          className={'nav-icon'}
+          className={'nav-icon portfolio-nav-icon'}
           alt={'nav-icon'}
           onMouseEnter={() => {
             setIsHovered(true)

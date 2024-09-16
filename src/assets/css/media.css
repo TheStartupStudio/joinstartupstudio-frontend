@@ -482,6 +482,11 @@
 }
 
 @media (max-width: 1024px) {
+
+  .portfolio-container {
+    margin-right: 0 !important;
+  }
+
   #content {
     width: 100%;
   }

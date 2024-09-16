@@ -11,7 +11,7 @@ function SocialMediaInput(props) {
       <input
         value={props.value}
         onChange={(e) => props.onChange?.(e.target.value)}
-        style={{ width: 250 }}
+        style={{ width: '100%' }}
         className={'social-media-input'}
       />
     </div>

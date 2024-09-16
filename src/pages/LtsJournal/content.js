@@ -342,14 +342,15 @@ function LtsJournalContent(props) {
                     </li>
                     <li style={{ fontWeight: '400', fontSize: '13px' }}>
                       <span style={{ fontWeight: '600' }}>SECTION FOUR:</span>{' '}
-                      MY GOALS: In this journal section, you will identify your
-                      individual and team goals. You will create a timeline to
-                      achieve these goals. You will complete sprints to execute
-                      on your goals. This section of the journal reflects each
-                      layer of the LTS Model. Focusing on your individual goals
-                      reflects the Environment and Core Skills parts of the
-                      model. Focusing on your project goals reflects the LEARN,
-                      DEVELOP, BRAND, and START parts of the model.
+                      MY SPRINTS: In this journal section, you will identify
+                      your individual and team goals. You will create a timeline
+                      to achieve these goals. You will complete sprints to
+                      execute on your goals. This section of the journal
+                      reflects each layer of the LTS Model. Focusing on your
+                      individual goals reflects the Environment and Core Skills
+                      parts of the model. Focusing on your project goals
+                      reflects the LEARN, DEVELOP, BRAND, and START parts of the
+                      model.
                     </li>
                     <li style={{ fontWeight: '400', fontSize: '13px' }}>
                       <span style={{ fontWeight: '600' }}>SECTION FIVE:</span>{' '}

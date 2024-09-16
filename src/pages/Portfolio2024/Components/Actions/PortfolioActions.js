@@ -2,7 +2,7 @@ import React from 'react'
 import { IoShareOutline } from 'react-icons/io5'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { useSelector } from 'react-redux'
-import { FaEye } from 'react-icons/fa6'
+import { FaEye, FaX } from 'react-icons/fa6'
 import { FaPencilAlt } from 'react-icons/fa'
 import shareToPeersIcon from '../../../../assets/images/HS-Portfolio-Icons/Share Icon PEERS v2 (BLU)x1200.png'
 import shareToPublicIcon from '../../../../assets/images/HS-Portfolio-Icons/Share Icon (BLU)x1200.png'
@@ -69,7 +69,7 @@ function PortfolioActions(props) {
                 onClick={() => editButton?.action()}
                 icon={<FaPencilAlt className={'action-icon pencil-icon'} />}
                 tooltipContent={
-                  <Tooltip id="tooltip" className={'tooltip-content'}>
+                  <Tooltip id='tooltip' className={'tooltip-content'}>
                     Click here to return to edit mode
                   </Tooltip>
                 }
@@ -81,7 +81,7 @@ function PortfolioActions(props) {
                 onClick={() => publishButton?.action()}
                 icon={renderIcon()}
                 tooltipContent={
-                  <Tooltip id="tooltip" className={'tooltip-content '}>
+                  <Tooltip id='tooltip' className={'tooltip-content '}>
                     <div className={'text-center bold-text'}>PUBLISHED</div>
                     <div className={'text-center'}>
                       Click to UNPUBLISH portfolio.
@@ -96,7 +96,7 @@ function PortfolioActions(props) {
                 icon={<IoShareOutline className={'action-icon share-icon'} />}
                 tooltipContent={
                   <Tooltip
-                    id="tooltip"
+                    id='tooltip'
                     className={'tooltip-content text-center'}
                   >
                     <div className={'text-center'}>
@@ -112,9 +112,9 @@ function PortfolioActions(props) {
           <React.Fragment>
             <TooltipAction
               onClick={() => previewButton.action()}
-              icon={<FaEye className={'action-icon eye-icon'} />}
+              icon={<FaX className={'action-icon eye-icon'} />}
               tooltipContent={
-                <Tooltip id="tooltip" className={'tooltip-content'}>
+                <Tooltip id='tooltip' className={'tooltip-content'}>
                   Click here to preview
                 </Tooltip>
               }

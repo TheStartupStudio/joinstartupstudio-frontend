@@ -8,6 +8,7 @@ const initialEvidenceData = [
     imageFile: null,
     imageUrl: null,
     linkInputValue: '',
+    titleInputValue: '',
     type: 'evidence-1'
   },
   {
@@ -15,6 +16,7 @@ const initialEvidenceData = [
     imageFile: null,
     imageUrl: null,
     linkInputValue: '',
+    titleInputValue: '',
     type: 'evidence-2'
   },
   {
@@ -22,6 +24,7 @@ const initialEvidenceData = [
     imageFile: null,
     imageUrl: null,
     linkInputValue: '',
+    titleInputValue: '',
     type: 'evidence-3'
   }
 ]
