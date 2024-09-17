@@ -204,6 +204,7 @@ function ProjectModal(props) {
     title,
     description,
     editorTitle,
+    placeholder,
     evidencesMenuItems
   ) => {
     let data
@@ -217,6 +218,7 @@ function ProjectModal(props) {
         title={title}
         description={description}
         editorTitle={editorTitle}
+        placeholder={placeholder}
         evidencesMenuItems={evidencesMenuItems}
         onChange={(data) => onChange(data, type)}
         projectData={data}
@@ -235,9 +237,10 @@ function ProjectModal(props) {
       {renderEditProject(
         'learn',
         'LEARN: YOUR COMMITMENT TO CONSCIOUS CONSUMPTION, RESEARCH, AND ANALYSIS.',
-        'Give an overview of your approach to research and analysis in determining that the problem ou identified is worth solving.',
+        'Give an overview of your approach to research and analysis in determining that the problem you identified is worth solving.',
         // 'Upload and explain your proof of certification skill using any or all of the following: market analysis, industry analysis, problem identification. You can only tag a skill once in the portfolio.',
         'Problem identification',
+        "While Learn to Start's extensive alumni network offers valuable insights into the program's impact on both professional and personal lives, this potential has yet to be fully revealed to a broader audience. To better highlight the program's outcomes, it's essential to share more alumni stories in easily accessible spaces, enabling the public to truly appreciate the program's influence.  ",
         {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
@@ -250,10 +253,11 @@ function ProjectModal(props) {
       {renderEditProject(
         'develop',
         'DEVELOP: YOUR ABILITY TO EXECUTE THROUGH THE DEVELOPMENT OF EMPLOYABILITY AND INDUSTRY SKILLS.',
-        'Give an overview of your approach to research and analysis in determining that the problem ou identified is worth solving.',
+        'Give an overview of your approach to execution in creating a solution that solves the problem you identified.',
         // 'Upload and explain your proof of certification skill using any or all of the following: solution slide deck, concept plan, business plan. You can only tag a skill once in the portfolio.',
         // 'Problem identification',
-        'Solution',
+        'My Solution',
+        "Leverage the power of Learn to Start's extensive alumni network by conducting Zoom interviews with former participants to explore the program's impact on their lives. During these conversations, emphasize key themes that are crucial for thriving as a productive, aligned, and capable individual in the 21st-century marketplace. ",
         {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
@@ -266,9 +270,10 @@ function ProjectModal(props) {
       {renderEditProject(
         'brand',
         'BRAND: YOUR ABILITY TO COMMUNICATE AND MARKET YOUR VALUE.',
-        'Give an overview of your approach to research and analysis in determining that the problem ou identified is worth solving.',
+        'Give an overview of your approach to communicating the value of your solution.',
         // 'Upload and explain your proof of certification skill using any or all of the following: brand charter, brand guidelines booklet, brand video. You can only tag a skill once in the portfolio.',
         'BRAND DESCRIPTION',
+        'By introducing the new "Alumni Spotlight" segment on the Learn to Start Live Platform, alumni stories are now accessible to a broader audience. These articles highlight the profound impact Learn to Start has had on students\' lives and showcase how they are applying their skills after graduation.',
         {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',

@@ -33,7 +33,7 @@ function SectionDescription(props) {
             width={60}
             height={60}
           />
-          <div className={'section-title'} style={{ fontSize: '35px' }}>
+          <div className={'section-title'} style={{ fontSize: '40px' }}>
             {props?.sectionTitle}
           </div>
         </div>

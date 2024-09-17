@@ -182,6 +182,8 @@ function Profile(props) {
           <div className='profile-margin'>
             <h3>{user?.name}</h3>
             <p>{user?.profession}</p>
+
+            <UserSocialMedia data={userStory?.data?.socialMediaLinks} />
             {/* {user?.social_links?.linkedIn && (
               <a
                 href={
@@ -195,8 +197,8 @@ function Profile(props) {
               >
                 <FontAwesomeIcon icon={faLinkedinIn} />
               </a>
-            )} */}
-            {/* {user?.social_links?.twitter && (
+            )}
+            {user?.social_links?.twitter && (
               <a
                 href={
                   user.social_links.twitter.startsWith('https')
@@ -209,8 +211,8 @@ function Profile(props) {
               >
                 <FontAwesomeIcon icon={faTwitter} />
               </a>
-            )} */}
-            {/* {user?.social_links?.instagram && (
+            )}
+            {user?.social_links?.instagram && (
               <a
                 href={
                   user.social_links.instagram.startsWith('https')
@@ -223,8 +225,8 @@ function Profile(props) {
               >
                 <FontAwesomeIcon icon={faInstagram} />
               </a>
-            )} */}
-            {/* {user?.social_links?.website && (
+            )}
+            {user?.social_links?.website && (
               <a
                 href={
                   user.social_links.website.startsWith('https')
@@ -237,8 +239,8 @@ function Profile(props) {
               >
                 <FontAwesomeIcon icon={faGlobe} />
               </a>
-            )} */}
-            {/* {user?.social_links?.facebook && (
+            )}
+            {user?.social_links?.facebook && (
               <a
                 href={
                   user.social_links.facebook.startsWith('https')

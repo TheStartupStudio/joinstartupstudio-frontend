@@ -171,27 +171,29 @@ function MyProductivity(props) {
   }
   return (
     <>
-      {renderSection(
-        'Immersion',
-        immersions,
-        ImmersionCard,
-        isEditImmersionSection,
-        immersionActions,
-        handleShowImmersionModal,
-        showImmersionModal,
-        handleHideImmersionModal,
-        'ADD IMMERSION EXPERIENCE',
-        onSaveImmersion,
-        ImmersionCardModal,
-        loadingImmersions,
-        <NoDataDisplay
-          src={immersionImage}
-          text={
-            'You don’t have any immersion experiences yet! Click the button to add one.'
-          }
-        />
-      )}
-      <div className={'mt-5'}>
+      <div className={'education-section-alignment'}>
+        {renderSection(
+          'Immersion',
+          immersions,
+          ImmersionCard,
+          isEditImmersionSection,
+          immersionActions,
+          handleShowImmersionModal,
+          showImmersionModal,
+          handleHideImmersionModal,
+          'ADD IMMERSION EXPERIENCE',
+          onSaveImmersion,
+          ImmersionCardModal,
+          loadingImmersions,
+          <NoDataDisplay
+            src={immersionImage}
+            text={
+              'You don’t have any immersion experiences yet! Click the button to add one.'
+            }
+          />
+        )}
+      </div>
+      <div className={'education-section-alignment mt-5'}>
         {renderSection(
           'Work Experience',
           workExperiences,

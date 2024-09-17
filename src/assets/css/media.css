@@ -920,6 +920,11 @@
   .menu-dropdown {
     width: 245px;
   }
+
+  /* .sidebar-scroll {
+    width: 200px !important;
+  } */
+
 }
 
 @media (max-width: 1200px) {

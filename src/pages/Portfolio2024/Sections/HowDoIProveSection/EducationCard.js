@@ -44,7 +44,7 @@ function EducationCard(props) {
   }
 
   return (
-    <div className={'mb-3 w-100'}>
+    <div className={' mb-3 w-100'}>
       <PortfolioDataContainer background={'#fff'}>
         <div className={'d-flex gap-3 '} style={{ flexWrap: 'wrap' }}>
           <div className={'flex-grow'} style={{ width: 100 }}>
@@ -57,17 +57,26 @@ function EducationCard(props) {
           <div className={'flex-grow-1'}>
             <div className={'d-flex justify-content-between gap-2'}>
               <div>
-                <div className={'organization-name mb-2'}>
+                <div className={' proveit-title-org organization-name mb-2'}>
                   {education?.organizationName}
                 </div>
-                <div className={'organization-location mb-2'}>
+                <div
+                  className={'organization-location mb-2'}
+                  style={{ fontWeight: 400 }}
+                >
                   {education?.location}
                 </div>
-                <div className={'organization-website mb-3'}>
+                <div
+                  className={'organization-website mb-3'}
+                  style={{ fontWeight: 400 }}
+                >
                   <WebsiteLink website={education?.website} />
                 </div>
               </div>
-              <div className={'text-end organization-date'}>
+              <div
+                className={'text-end organization-date'}
+                style={{ fontWeight: 400 }}
+              >
                 {convertDateToMonthYear(education?.startDate)} -{' '}
                 {!education?.currentPosition
                   ? convertDateToMonthYear(education?.endDate)
@@ -75,12 +84,17 @@ function EducationCard(props) {
               </div>
             </div>
             <div>
-              <div className={'organization-description-label mb-2'}>
+              <div
+                className={
+                  ' proveit-title-org organization-description-label mb-2'
+                }
+              >
                 Description:
               </div>{' '}
               <div
                 className={'organization-description'}
                 dangerouslySetInnerHTML={{ __html: education?.description }}
+                style={{ fontWeight: 300 }}
               />
             </div>
           </div>

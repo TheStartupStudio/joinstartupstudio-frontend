@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 function PortfolioDataContainer(props) {
   return (
     <div
-      className={'portfolio-data-container'}
+      className={'portfolio-data-container proveit-container'}
       style={{ background: props.background, minHeight: props.height }}
     >
       {props.title && (
@@ -27,9 +27,9 @@ function PortfolioDataContainer(props) {
         style={{
           marginTop:
             props.title && props.description
-              ? 150
+              ? 110
               : props.title && !props.description
-              ? 50
+              ? 70
               : 0
         }}
       >

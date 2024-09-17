@@ -50,7 +50,7 @@ export const Education = (props) => {
       .then()
       .catch((e) => {
         setIsPublished(!oldPublishValue)
-        toast.error(<IntlMessages id="alerts.something_went_wrong" />)
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
       })
   }
 
@@ -92,7 +92,7 @@ export const Education = (props) => {
         onAdd={() => setShowEducationModal(true)}
         isPreview={isPreview}
       >
-        <div className="w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4">
+        <div className='w-100 mx-auto px-1 px-md-0 mx-md-0 row gap-4'>
           {educations?.length > 0 &&
             educations?.map((education, index, { length }) => {
               return (
@@ -135,8 +135,8 @@ export const Education = (props) => {
           currentEducation={currentEducation}
         />
         <link
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          rel="stylesheet"
+          href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
+          rel='stylesheet'
         />
       </PortfolioSection>
     ) : (

@@ -166,27 +166,30 @@ function MyAlignments(props) {
   return (
     <>
       <>
-        {renderSection(
-          'Education',
-          educations,
-          EducationCard,
-          isEditEducationSection,
-          educationActions,
-          handleShowEducationModal,
-          showEducationModal,
-          handleHideEducationModal,
-          'ADD EDUCATIONAL EXPERIENCE',
-          onSaveEducation,
-          EducationCardModal,
-          loadingEducations,
-          <NoDataDisplay
-            src={educationImage}
-            text={
-              'You don’t have any education yet! Click the button to add one.'
-            }
-          />
-        )}
-        <div className={'mt-5 w-100'}>
+        {' '}
+        <div className={'education-section-alignment w-100'}>
+          {renderSection(
+            'Education',
+            educations,
+            EducationCard,
+            isEditEducationSection,
+            educationActions,
+            handleShowEducationModal,
+            showEducationModal,
+            handleHideEducationModal,
+            'ADD EDUCATIONAL EXPERIENCE',
+            onSaveEducation,
+            EducationCardModal,
+            loadingEducations,
+            <NoDataDisplay
+              src={educationImage}
+              text={
+                'You don’t have any education yet! Click the button to add one.'
+              }
+            />
+          )}
+        </div>
+        <div className={'education-section-alignment mt-5 w-100'}>
           {renderSection(
             'Credentials',
             credentials,

@@ -510,13 +510,13 @@
 
 .portfolio-data-container {
   box-shadow: 0px 3px 14px #00000029;
-  border-radius: 36px;
+  border-radius: 25px;
   opacity: 1;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   /*min-height: 350px;*/
   min-height: 100px;
-  padding: 25px;
+  padding: 30px;
   overflow: hidden;
   margin-top: 40px;
 }
@@ -594,12 +594,14 @@
 
 /* Hide scrollbar for Firefox */
 .scroll-container {
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* Hide scrollbar for IE and Edge */
 .scroll-container {
-  -ms-overflow-style: none; /* IE 10+ */
+  -ms-overflow-style: none;
+  /* IE 10+ */
 }
 
 .evaluate-wrapper {
@@ -643,6 +645,7 @@
 }
 
 @media (min-width: 640px) and (max-width: 1007px) {
+
   /* Your CSS rules for medium screens */
   .modal-footer-evaluation {
     gap: 150%;
@@ -769,32 +772,48 @@
 
 /* Styling for the meeting date bar */
 .meeting-date-bar {
-  background-color: #ffffff; /* White background */
-  border-radius: 10px; /* Rounded corners */
-  padding: 15px; /* Padding inside the bar */
+  background-color: #ffffff;
+  /* White background */
+  border-radius: 10px;
+  /* Rounded corners */
+  padding: 15px;
+  /* Padding inside the bar */
   margin: 20px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  display: flex; /* Flexbox for aligning items */
-  justify-content: space-between; /* Space between items */
-  align-items: center; /* Center items vertically */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
+  display: flex;
+  /* Flexbox for aligning items */
+  justify-content: space-between;
+  /* Space between items */
+  align-items: center;
+  /* Center items vertically */
   /* Bold text for date */
-  font-size: 12px; /* Font size for the date text */
-  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 12px;
+  /* Font size for the date text */
+  cursor: pointer;
+  /* Pointer cursor on hover */
 }
 
 /* Styling for when the meeting date bar is opened */
 .meeting-date-bar.open {
-  border-radius: 10px 10px 0 0; /* Rounded corners for top only */
+  border-radius: 10px 10px 0 0;
+  /* Rounded corners for top only */
 }
 
 /* Styling for the expanded view */
 .meeting-details {
-  background-color: #ffffff; /* White background */
-  border-radius: 0 0 10px 10px; /* Rounded corners for bottom only */
-  padding: 20px; /* Padding inside the details section */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly more shadow for depth */
-  font-size: 14px; /* Font size for the details text */
-  line-height: 1.5; /* Line height for better readability */
+  background-color: #ffffff;
+  /* White background */
+  border-radius: 0 0 10px 10px;
+  /* Rounded corners for bottom only */
+  padding: 20px;
+  /* Padding inside the details section */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Slightly more shadow for depth */
+  font-size: 14px;
+  /* Font size for the details text */
+  line-height: 1.5;
+  /* Line height for better readability */
 }
 
 /* Styling for the labels like "Purpose", "Attendance", "Notes" */
@@ -807,54 +826,74 @@
 
 /* Styling for the "NEW" indicator */
 .meeting-new-indicator {
-  font-size: 12px; /* Smaller font size */
-  color: #ff3b3b; /* Red color for NEW text */
-  font-weight: bold; /* Bold text */
-  margin-right: 5px; /* Space between text and time */
+  font-size: 12px;
+  /* Smaller font size */
+  color: #ff3b3b;
+  /* Red color for NEW text */
+  font-weight: bold;
+  /* Bold text */
+  margin-right: 5px;
+  /* Space between text and time */
 }
 
 /* Styling for the time indicator */
 .meeting-time-indicator {
-  font-size: 12px; /* Smaller font size */
-  color: #8c8c8c; /* Gray color for time text */
+  font-size: 12px;
+  /* Smaller font size */
+  color: #8c8c8c;
+  /* Gray color for time text */
 }
 
 /* Styling for the dropdown arrow when expanded */
 .meeting-date-bar.open .dropdown-arrow {
-  transform: rotate(180deg); /* Rotate the arrow when expanded */
+  transform: rotate(180deg);
+  /* Rotate the arrow when expanded */
 }
 
 .shot-list {
   display: flex;
-  flex-wrap: nowrap; /* Disable wrapping so all cards stay in a single row */
-  overflow-x: auto; /* Enable horizontal scrolling */
-  gap: 10px; /* Space between the cards */
-  padding-bottom: 10px; /* Add space for the scrollbar */
+  flex-wrap: nowrap;
+  /* Disable wrapping so all cards stay in a single row */
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
+  gap: 10px;
+  /* Space between the cards */
+  padding-bottom: 10px;
+  /* Add space for the scrollbar */
   margin-top: 40px;
 }
 
 .shot-list::-webkit-scrollbar {
-  height: 8px; /* Height of the scrollbar */
+  height: 8px;
+  /* Height of the scrollbar */
 }
 
 .shot-list::-webkit-scrollbar-track {
-  background-color: #e0e0e0; /* Track background color */
+  background-color: #e0e0e0;
+  /* Track background color */
   border-radius: 10px;
 }
 
 .shot-list::-webkit-scrollbar-thumb {
-  background-color: #888888; /* Thumb color */
-  border-radius: 10px; /* Rounded corners for the thumb */
+  background-color: #888888;
+  /* Thumb color */
+  border-radius: 10px;
+  /* Rounded corners for the thumb */
 }
 
 .shot-list::-webkit-scrollbar-thumb:hover {
-  background-color: #555555; /* Darker color when hovering over the scrollbar */
+  background-color: #555555;
+  /* Darker color when hovering over the scrollbar */
 }
+
 .shot-card {
-  flex: 0 0 auto; /* Prevent the cards from shrinking or growing */
-  width: 19%; /* Set a fixed width for each card */
+  flex: 0 0 auto;
+  /* Prevent the cards from shrinking or growing */
+  width: 19%;
+  /* Set a fixed width for each card */
   overflow: hidden;
-  margin: 0 5px; /* Adds some margin to separate the cards */
+  margin: 0 5px;
+  /* Adds some margin to separate the cards */
 }
 
 .shot-image {
@@ -902,19 +941,26 @@
 }
 
 .video-card {
-  flex: 1 1 calc(50% - 20px); /* Adjust this based on your design */
-  margin: 0 5px; /* Adds some margin to separate the video */
-  flex-shrink: 0; /* Prevents the video from shrinking */
-  position: relative; /* Needed for the play button positioning */
-  border-radius: 20px; /* Increase the rounding for a softer look */
-  overflow: hidden; /* Ensures content like the video and play button stay inside rounded corners */
+  flex: 1 1 calc(50% - 20px);
+  /* Adjust this based on your design */
+  margin: 0 5px;
+  /* Adds some margin to separate the video */
+  flex-shrink: 0;
+  /* Prevents the video from shrinking */
+  position: relative;
+  /* Needed for the play button positioning */
+  border-radius: 20px;
+  /* Increase the rounding for a softer look */
+  overflow: hidden;
+  /* Ensures content like the video and play button stay inside rounded corners */
   margin-top: 25px;
 }
 
 .video-card video {
   width: 100%;
   height: auto;
-  border-radius: 20px; /* Ensures video has rounded corners */
+  border-radius: 20px;
+  /* Ensures video has rounded corners */
   object-fit: cover;
 }
 

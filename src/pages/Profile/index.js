@@ -387,7 +387,7 @@ function Profile(props) {
                       </div>
                     </div>
                     <div className='col-10 col-md-6 col-lg-6 offset-lg-0'>
-                      <h2 className='mt-4 mb-0'>{user.name}</h2>
+                      <h2 className='mt-4 mb-0'>{user.name}hello</h2>
                       <h5 className='mb-0'>
                         {user.profession ? user.profession : ''}
                       </h5>

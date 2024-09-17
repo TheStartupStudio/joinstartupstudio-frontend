@@ -23,6 +23,7 @@ const Body = (props) => {
     <ul
       className='list-unstyled components sidebar-menu-item sidebar-menu-list'
       id='side-menu-main'
+      a
       // style={{ height: '100vh' }}
     >
       <li>
