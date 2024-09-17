@@ -75,6 +75,13 @@ function MyFailure(props) {
             <div className={'mt-2'}>
               <PortfolioInfo title={'My Pivot'} content={myFailure?.outcome} />
             </div>
+
+            <div className={'mt-2'}>
+              <PortfolioInfo
+                title={'My Outcomes'}
+                content={myFailure?.outcome}
+              />
+            </div>
           </div>
         </div>
         <SectionActions actions={actions} />

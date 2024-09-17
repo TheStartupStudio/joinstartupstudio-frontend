@@ -191,109 +191,93 @@ function UserBasicInfoModal(props) {
       <>
         <div className={'row'}>
           <div className={'col-md-6'}>
-            <EditPortfolioSubmission
-              videoUrl={state?.videoUrl}
-              onChangeVideoUrl={(videoUrl) =>
-                handleInputChange('videoUrl', videoUrl)
-              }
-              onChangeImageCrop={updateCroppedImage}
-              value={state?.thumbnailUrl}
-              title={'MY PERSONAL BRAND STORY'}
-              deleteImage={handleDeleteImage}
-              deleteImageFile={handleDeleteImageFile}
+            <ReactImageUpload
+              value={userImageUrl}
+              {...imageProperties}
+              onChangeImageCrop={updateCroppedProfileImage}
+              onImageLoadSuccess={handleImageLoadSuccess}
+              onLabelClick={handleLabelClick}
+              onFileInputChange={handleFileInputChange}
+              onPositionChange={handlePositionChange}
+              actions={avatarEditorActions}
+              title={'User Image'}
+              type={'circle'}
+              editorRef={editorRef}
             />
-          </div>
-          <div className={'col-md-6'}>
-            <div className={'d-flex flex-column h-100'}>
-              <div className={'mb-2 d-flex justify-content-center'}>
-                <ReactImageUpload
-                  value={userImageUrl}
-                  {...imageProperties}
-                  onChangeImageCrop={updateCroppedProfileImage}
-                  onImageLoadSuccess={handleImageLoadSuccess}
-                  onLabelClick={handleLabelClick}
-                  onFileInputChange={handleFileInputChange}
-                  onPositionChange={handlePositionChange}
-                  actions={avatarEditorActions}
-                  title={'User Image'}
-                  type={'circle'}
-                  editorRef={editorRef}
-                />
-              </div>
-              <LabeledInput
-                title={'Title'}
-                type={'text'}
-                align={'start'}
-                value={state?.userTitle}
-                onChange={(value) => handleInputChange('userTitle', value)}
-              />
-              <div>
-                <SocialMediaInput
-                  icon={<FaLinkedinIn />}
-                  value={state?.socialMediaLinks?.linkedIn || ''}
-                  onChange={(value) =>
-                    handleSocialMediaChange('linkedIn', value)
-                  }
-                />
-                <SocialMediaInput
-                  icon={<FaInstagram />}
-                  value={state?.socialMediaLinks?.instagram || ''}
-                  onChange={(value) =>
-                    handleSocialMediaChange('instagram', value)
-                  }
-                />
-                <SocialMediaInput
-                  icon={<FaXTwitter />}
-                  value={state?.socialMediaLinks?.xTwitter || ''}
-                  onChange={(value) =>
-                    handleSocialMediaChange('xTwitter', value)
-                  }
-                />
-                <SocialMediaInput
-                  icon={<FaFacebookF />}
-                  value={state?.socialMediaLinks?.facebook || ''}
-                  onChange={(value) =>
-                    handleSocialMediaChange('facebook', value)
-                  }
-                />
-                <SocialMediaInput
-                  icon={<FaGlobe />}
-                  value={state?.socialMediaLinks?.website || ''}
-                  onChange={(value) =>
-                    handleSocialMediaChange('website', value)
-                  }
-                />
-              </div>
-
-              <div className={'mt-2 '}>
-                <div className={'portfolio-info-title my-2'}>
-                  {props.title ?? 'My value proposition'}
-                </div>
-                <ReactQuill
-                  className={'portfolio-quill'}
-                  value={state.valueProposition || ''}
-                  onChange={(value) =>
-                    handleInputChange('valueProposition', value)
-                  }
-                  placeholder={
-                    'Your statement of value consisting of your passions/interests, skills, and outcomes.'
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={'row'}>
-          <div className={'mt-3 '}>
-            <div className={'portfolio-info-title'}>
-              {props.title ?? 'My story'}
+            <LabeledInput
+              title={'Name'}
+              type={'text'}
+              align={'start'}
+              value={state?.userTitle}
+              onChange={(value) => handleInputChange('userTitle', value)}
+            />
+            <LabeledInput
+              title={'Title'}
+              type={'text'}
+              align={'start'}
+              value={state?.userTitle}
+              onChange={(value) => handleInputChange('userTitle', value)}
+            />
+            <LabeledInput
+              title={'Organization'}
+              type={'text'}
+              align={'start'}
+              value={state?.userTitle}
+              onChange={(value) => handleInputChange('userTitle', value)}
+            />
+            <div className={'portfolio-info-title my-2'}>
+              {'My value proposition'}
             </div>
             <ReactQuill
               className={'portfolio-quill'}
-              value={state.story || ''}
-              onChange={(value) => handleInputChange('story', value)}
-              placeholder={'Your answers to the three program questions.'}
+              value={state.valueProposition || ''}
+              onChange={(value) => handleInputChange('valueProposition', value)}
+              placeholder={
+                'Your statement of value consisting of your passions/interests, skills, and outcomes.'
+              }
             />
+          </div>
+          <div className={'col-md-6'}>
+            <div>
+              <SocialMediaInput
+                icon={<FaLinkedinIn />}
+                value={state?.socialMediaLinks?.linkedIn || ''}
+                onChange={(value) => handleSocialMediaChange('linkedIn', value)}
+              />
+              <SocialMediaInput
+                icon={<FaInstagram />}
+                value={state?.socialMediaLinks?.instagram || ''}
+                onChange={(value) =>
+                  handleSocialMediaChange('instagram', value)
+                }
+              />
+              <SocialMediaInput
+                icon={<FaXTwitter />}
+                value={state?.socialMediaLinks?.xTwitter || ''}
+                onChange={(value) => handleSocialMediaChange('xTwitter', value)}
+              />
+              <SocialMediaInput
+                icon={<FaFacebookF />}
+                value={state?.socialMediaLinks?.facebook || ''}
+                onChange={(value) => handleSocialMediaChange('facebook', value)}
+              />
+              <SocialMediaInput
+                icon={<FaGlobe />}
+                value={state?.socialMediaLinks?.website || ''}
+                onChange={(value) => handleSocialMediaChange('website', value)}
+              />
+              <EditPortfolioSubmission
+                videoUrl={state?.videoUrl}
+                onChangeVideoUrl={(videoUrl) =>
+                  handleInputChange('videoUrl', videoUrl)
+                }
+                onChangeImageCrop={updateCroppedImage}
+                value={state?.thumbnailUrl}
+                title={'MY PERSONAL BRAND STORY'}
+                deleteImage={handleDeleteImage}
+                deleteImageFile={handleDeleteImageFile}
+              />
+            </div>
           </div>
         </div>
       </>

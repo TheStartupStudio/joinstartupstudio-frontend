@@ -175,10 +175,10 @@ import {
   HIDE_EDIT_COMPETITIVENESS_MODAL,
   SHOW_ADD_COMPETITIVENESS_MODAL,
   HIDE_ADD_COMPETITIVENESS_MODAL,
-  GET_BASIC_USER_DATA,
-  GET_BASIC_USER_DATA_SUCCESS,
-  SAVE_BASIC_USER_DATA,
-  SAVE_BASIC_USER_DATA_SUCCESS,
+  GET_BASIC_USER_INFO,
+  GET_BASIC_USER_INFO_SUCCESS,
+  SAVE_BASIC_USER_INFO,
+  SAVE_BASIC_USER_INFO_SUCCESS,
   GET_USER_STORY,
   SHOW_EDIT_MY_STORY_MODAL,
   HIDE_EDIT_MY_STORY_MODAL,
@@ -187,7 +187,13 @@ import {
   SHOW_EDIT_USER_BASIC_INFO_MODAL,
   HIDE_EDIT_USER_BASIC_INFO_MODAL,
   SHOW_ADD_USER_BASIC_INFO_MODAL,
-  HIDE_ADD_USER_BASIC_INFO_MODAL
+  HIDE_ADD_USER_BASIC_INFO_MODAL,
+  TOGGLE_USER_STORY,
+  TOGGLE_USER_STORY_SUCCESS,
+  TOGGLE_MY_RELATIONSHIPS,
+  TOGGLE_MY_RELATIONSHIPS_SUCCESS,
+  TOGGLE_MY_FAILURE,
+  TOGGLE_MY_FAILURE_SUCCESS
 } from './Constants'
 import {
   createMyFailuresAPI,
@@ -412,22 +418,22 @@ export const savePersonalBrandStorySuccess = (link) => {
 /// WHO AM I SECTION //
 
 export const getUserBasicInfo = () => async (dispatch) => {
-  dispatch({ type: GET_BASIC_USER_DATA })
+  dispatch({ type: GET_BASIC_USER_INFO })
   try {
     const response = await getUserBasicDataAPI()
-    dispatch(getUserBasicDataSuccess(response.data))
+    dispatch(getUserBasicDataSuccess(response?.data))
   } catch (e) {
     console.log('error', e)
   }
 }
 export const getUserBasicDataSuccess = (response) => {
   return {
-    type: GET_BASIC_USER_DATA_SUCCESS,
+    type: GET_BASIC_USER_INFO_SUCCESS,
     payload: { data: response }
   }
 }
 export const saveUserBasicData = (userStory, id) => async (dispatch) => {
-  dispatch({ type: SAVE_BASIC_USER_DATA })
+  dispatch({ type: SAVE_BASIC_USER_INFO })
   try {
     let response
     if (id) {
@@ -435,12 +441,12 @@ export const saveUserBasicData = (userStory, id) => async (dispatch) => {
     } else {
       response = await createUserBasicDataAPI(userStory)
     }
-    dispatch(saveUserBasicDataSuccess(response.data))
+    dispatch(saveUserBasicDataSuccess(response?.data))
   } catch (e) {}
 }
 export const saveUserBasicDataSuccess = (response) => {
   return {
-    type: SAVE_BASIC_USER_DATA_SUCCESS,
+    type: SAVE_BASIC_USER_INFO_SUCCESS,
     payload: { data: response }
   }
 }
@@ -449,7 +455,7 @@ export const getMyRelationships = () => async (dispatch) => {
   dispatch({ type: GET_MY_RELATIONSHIPS })
   try {
     const response = await getMyRelationshipsAPI()
-    dispatch(getMyRelationshipsSuccess(response.data))
+    dispatch(getMyRelationshipsSuccess(response?.data))
   } catch (e) {
     console.log('error', e)
   }
@@ -470,7 +476,7 @@ export const saveMyRelationships =
       } else {
         response = await createMyRelationshipsAPI(myRelationships)
       }
-      dispatch(saveMyRelationshipsSuccess(response.data))
+      dispatch(saveMyRelationshipsSuccess(response?.data))
     } catch (e) {}
   }
 export const saveMyRelationshipsSuccess = (response) => {
@@ -480,11 +486,33 @@ export const saveMyRelationshipsSuccess = (response) => {
   }
 }
 
+export const toggleMyRelationships =
+  (myRelationships, id) => async (dispatch) => {
+    dispatch({ type: TOGGLE_MY_RELATIONSHIPS })
+    try {
+      let response
+
+      if (id) {
+        response = await updateMyRelationshipsAPI(myRelationships, id)
+      } else {
+        response = await createMyRelationshipsAPI(myRelationships)
+      }
+      dispatch(toggleMyRelationshipsSuccess(response?.data))
+    } catch (e) {}
+  }
+export const toggleMyRelationshipsSuccess = (response) => {
+  return {
+    type: TOGGLE_MY_RELATIONSHIPS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
 export const getUserStory = () => async (dispatch) => {
   dispatch({ type: GET_USER_STORY })
   try {
     const response = await getUserStoryAPI()
-    dispatch(getUserStorySuccess(response.data))
+
+    dispatch(getUserStorySuccess(response?.data))
   } catch (e) {
     console.log('error', e)
   }
@@ -517,13 +545,34 @@ export const saveUserStorySuccess = (response, isEdit) => {
   }
 }
 
+export const toggleUserStory = (userStory, id) => async (dispatch) => {
+  dispatch({ type: TOGGLE_USER_STORY })
+  try {
+    let response
+    if (id) {
+      response = await updateUserStoryAPI(userStory, id)
+    } else {
+      response = await createUserStoryAPI(userStory)
+    }
+
+    const isEdit = id
+    dispatch(toggleUserStorySuccess(response.data, isEdit))
+  } catch (e) {}
+}
+export const toggleUserStorySuccess = (response, isEdit) => {
+  return {
+    type: TOGGLE_USER_STORY_SUCCESS,
+    payload: { data: response },
+    isEdit
+  }
+}
+
 // MY FAILURES
 export const getMyFailures = () => async (dispatch) => {
   dispatch({ type: GET_MY_FAILURES })
   try {
     const response = await getMyFailuresAPI()
-
-    dispatch(getMyFailuresSuccess(response.data))
+    dispatch(getMyFailuresSuccess(response?.data))
   } catch (e) {
     console.log('error', e)
   }
@@ -631,6 +680,26 @@ export const deleteMyFailureImageError = (error) => {
   return {
     type: DELETE_MY_FAILURE_IMAGE_ERROR,
     payload: { error }
+  }
+}
+
+export const toggleMyFailure = (myFailure, id) => async (dispatch) => {
+  dispatch({ type: TOGGLE_MY_FAILURE })
+  try {
+    let response
+
+    if (id) {
+      response = await updateMyFailuresAPI(myFailure, id)
+    } else {
+      response = await createMyFailuresAPI(myFailure)
+    }
+    dispatch(toggleMyFailureSuccess(response?.data))
+  } catch (e) {}
+}
+export const toggleMyFailureSuccess = (response) => {
+  return {
+    type: TOGGLE_MY_FAILURE_SUCCESS,
+    payload: { data: response }
   }
 }
 

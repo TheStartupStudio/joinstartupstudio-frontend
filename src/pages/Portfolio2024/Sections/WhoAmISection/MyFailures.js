@@ -79,7 +79,7 @@ function MyFailures(props) {
   )
 
   return (
-    <div className={'d-flex flex-row h-100 '}>
+    <div className={'d-flex flex-column h-100 '}>
       {myFailures?.length > 0 ? (
         <Carousel
           data={myFailures}

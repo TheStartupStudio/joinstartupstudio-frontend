@@ -89,7 +89,7 @@ export const Carousel = ({
       </div>
 
       {displayIndicators && (
-        <div className='d-flex mt-4 gap-4'>
+        <div className='d-flex mt-4 gap-4 justify-content-center'>
           <FontAwesomeIcon
             icon={faChevronLeft}
             className='carousel-indicator-button me-4'

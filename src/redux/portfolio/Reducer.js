@@ -156,12 +156,12 @@ import {
   SHOW_EDIT_COMPETITIVENESS_MODAL,
   HIDE_ADD_COMPETITIVENESS_MODAL,
   SHOW_ADD_COMPETITIVENESS_MODAL,
-  GET_BASIC_USER_DATA_SUCCESS,
-  GET_BASIC_USER_DATA,
-  GET_BASIC_USER_DATA_ERROR,
-  SAVE_BASIC_USER_DATA,
-  SAVE_BASIC_USER_DATA_SUCCESS,
-  SAVE_BASIC_USER_DATA_ERROR,
+  GET_BASIC_USER_INFO_SUCCESS,
+  GET_BASIC_USER_INFO,
+  GET_BASIC_USER_INFO_ERROR,
+  SAVE_BASIC_USER_INFO,
+  SAVE_BASIC_USER_INFO_SUCCESS,
+  SAVE_BASIC_USER_INFO_ERROR,
   GET_USER_STORY,
   SHOW_EDIT_MY_STORY_MODAL,
   HIDE_EDIT_MY_STORY_MODAL,
@@ -170,7 +170,13 @@ import {
   HIDE_EDIT_USER_BASIC_INFO_MODAL,
   SHOW_EDIT_USER_BASIC_INFO_MODAL,
   HIDE_ADD_USER_BASIC_INFO_MODAL,
-  SHOW_ADD_USER_BASIC_INFO_MODAL
+  SHOW_ADD_USER_BASIC_INFO_MODAL,
+  TOGGLE_USER_STORY_SUCCESS,
+  TOGGLE_USER_STORY,
+  TOGGLE_MY_RELATIONSHIPS_SUCCESS,
+  TOGGLE_MY_RELATIONSHIPS,
+  TOGGLE_MY_FAILURE,
+  TOGGLE_MY_FAILURE_SUCCESS
 } from './Constants'
 
 const initialState = {
@@ -214,6 +220,7 @@ const initialState = {
       editModal: false,
       isLoading: false,
       isSaving: false,
+      isTogglingSection: false,
       error: null,
       data: {
         story: ''
@@ -223,6 +230,7 @@ const initialState = {
       isLoading: false,
       isSaving: false,
       error: null,
+      isTogglingSection: false,
       data: {
         teamRole: '',
         collaborationStyle: '',
@@ -434,7 +442,7 @@ const portfolioReducer = (state = initialState, action) => {
       }
 
     // PORTFOLIO SECTIONS
-    case GET_BASIC_USER_DATA:
+    case GET_BASIC_USER_INFO:
       return {
         ...state,
         whoSection: {
@@ -445,7 +453,7 @@ const portfolioReducer = (state = initialState, action) => {
           }
         }
       }
-    case GET_BASIC_USER_DATA_SUCCESS:
+    case GET_BASIC_USER_INFO_SUCCESS:
       return {
         ...state,
         whoSection: {
@@ -457,7 +465,7 @@ const portfolioReducer = (state = initialState, action) => {
           }
         }
       }
-    case GET_BASIC_USER_DATA_ERROR:
+    case GET_BASIC_USER_INFO_ERROR:
       return {
         ...state,
         whoSection: {
@@ -469,7 +477,7 @@ const portfolioReducer = (state = initialState, action) => {
           }
         }
       }
-    case SAVE_BASIC_USER_DATA:
+    case SAVE_BASIC_USER_INFO:
       return {
         ...state,
         whoSection: {
@@ -480,7 +488,7 @@ const portfolioReducer = (state = initialState, action) => {
           }
         }
       }
-    case SAVE_BASIC_USER_DATA_SUCCESS:
+    case SAVE_BASIC_USER_INFO_SUCCESS:
       return {
         ...state,
         whoSection: {
@@ -492,7 +500,7 @@ const portfolioReducer = (state = initialState, action) => {
           }
         }
       }
-    case SAVE_BASIC_USER_DATA_ERROR:
+    case SAVE_BASIC_USER_INFO_ERROR:
       return {
         ...state,
         whoSection: {
@@ -553,6 +561,29 @@ const portfolioReducer = (state = initialState, action) => {
         }
       }
 
+    case TOGGLE_MY_RELATIONSHIPS:
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myRelationships: {
+            ...state.whoSection.myRelationships,
+            isTogglingSection: true
+          }
+        }
+      }
+    case TOGGLE_MY_RELATIONSHIPS_SUCCESS:
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myRelationships: {
+            ...state.whoSection.myRelationships,
+            data: payload.data,
+            isTogglingSection: false
+          }
+        }
+      }
     case GET_USER_STORY:
       return {
         ...state,
@@ -598,6 +629,30 @@ const portfolioReducer = (state = initialState, action) => {
             isSaving: false,
             editModal: false,
             addModal: false
+          }
+        }
+      }
+
+    case TOGGLE_USER_STORY:
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          userStory: {
+            ...state.whoSection.userStory,
+            isTogglingSection: true
+          }
+        }
+      }
+    case TOGGLE_USER_STORY_SUCCESS:
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          userStory: {
+            ...state.whoSection.userStory,
+            data: payload.data,
+            isTogglingSection: false
           }
         }
       }
@@ -870,6 +925,34 @@ const portfolioReducer = (state = initialState, action) => {
         }
       }
     }
+
+    case TOGGLE_MY_FAILURE:
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myFailures: {
+            ...state.whoSection.myFailures,
+            isTogglingSection: true
+          }
+        }
+      }
+    case TOGGLE_MY_FAILURE_SUCCESS:
+      const existingData = state.whoSection.myFailures.data
+      const { id, data } = payload
+      const updatedData = updateRow(existingData, id, data)
+      return {
+        ...state,
+        whoSection: {
+          ...state.whoSection,
+          myFailures: {
+            ...state.whoSection.myFailures,
+            data: updatedData,
+            isTogglingSection: false
+          }
+        }
+      }
+
     // MY MENTORS
 
     case SHOW_ADD_MENTOR_MODAL:

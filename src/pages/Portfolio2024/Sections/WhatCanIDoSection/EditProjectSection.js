@@ -11,8 +11,6 @@ function EditProjectSection(props) {
     evidences: []
   })
 
-  console.log('sectionState', sectionState)
-
   useLayoutEffect(() => {
     setType(props.type)
   }, [props.type])

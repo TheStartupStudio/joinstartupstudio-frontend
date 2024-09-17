@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill'
-import { useDispatch } from 'react-redux'
 import PortfolioModalWrapper from './PortfolioModalWrapper'
 
 function StoryModal(props) {

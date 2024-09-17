@@ -12,7 +12,6 @@ import {
   showAddUserBasicInfoModal,
   showEditUserBasicInfoModal
 } from '../../../../redux/portfolio/Actions'
-import useImageEditor from '../../../../hooks/useImageEditor'
 
 import UserBasicInfoModal from '../../Components/Modals/UserBasicInfoModal'
 
@@ -166,6 +165,9 @@ const UserBasicInfo = (props) => {
           onSave={(data) => {
             dispatch(saveUserBasicData(data, state.id))
           }}
+          showSectionCheckbox={true}
+          isShownSection={true}
+          onShowSection={() => {}}
         />
       )}
 
@@ -179,6 +181,9 @@ const UserBasicInfo = (props) => {
           onSave={(data) => {
             dispatch(saveUserBasicData(data, state.id))
           }}
+          showSectionCheckbox={true}
+          isShownSection={true}
+          onShowSection={() => {}}
         />
       )}
     </>

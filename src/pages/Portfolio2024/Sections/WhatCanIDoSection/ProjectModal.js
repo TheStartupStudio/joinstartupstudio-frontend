@@ -6,6 +6,7 @@ import { deleteImage, uploadImage } from '../../../../utils/helpers'
 import { toast } from 'react-toastify'
 import LtsButton from '../../../../components/LTSButtons/LTSButton'
 import ConfirmDeleteRecordModal from '../../Components/Modals/ConfirmDeleteRecordModal'
+import LabeledInput from '../../Components/DisplayData/LabeledInput'
 
 function ProjectModal(props) {
   const [isEdit, setIsEdit] = useState(null)
@@ -229,6 +230,19 @@ function ProjectModal(props) {
       actions={projectModalActions}
       class={'add-project-modal '}
     >
+      <div className={'mb-4'}>
+        <div className={'portfolio-info-title my-2'}>{'Project Title'}</div>
+        <LabeledInput
+          title={'Project title'}
+          type={'text'}
+          align={'start'}
+          placeholder={'A New Alumni Spotlight'}
+          labelAlign={'start'}
+          // value={state?.userTitle}
+          // onChange={(value) => handleInputChange('userTitle', value)}
+        />
+      </div>
+
       {renderEditProject(
         'learn',
         'LEARN: YOUR COMMITMENT TO CONSCIOUS CONSUMPTION, RESEARCH, AND ANALYSIS.',

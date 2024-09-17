@@ -10,11 +10,20 @@ const SwitchIcon = (props) => {
         className='custom-switch-checkbox'
         checked={props.isChecked}
         onChange={props.onToggle}
+        // disabled={props.isToggling}
       />
 
       <label htmlFor={props.id} className={props.icon}>
         <span className='custom-switch-icon'></span>
       </label>
+
+      {/*<label htmlFor={props.id} className={props.icon}>*/}
+      {/*  {props.isToggling ? (*/}
+      {/*    <span className='loader'></span> */}
+      {/*  ) : (*/}
+      {/*    <span className='custom-switch-icon'></span> */}
+      {/*  )}*/}
+      {/*</label>*/}
     </div>
   )
 }

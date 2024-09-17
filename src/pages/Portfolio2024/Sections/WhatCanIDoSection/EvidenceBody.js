@@ -262,7 +262,18 @@ const EvidenceBody = ({
         <div style={{ gridArea: 'input' }}>
           <div className={'mb-1'}>
             <LabeledInput
-              title={`Link to ${evidenceName}`}
+              title={`Title for Content Upload`}
+              name={'link-to-market-analysis-document'}
+              type={'text'}
+              placeholder={`${evidenceName}`}
+              titleClassNames={'text-start justify-content-start'}
+              onChange={handleInputChange}
+              value={linkInputValue}
+            />
+          </div>
+          <div className={'mb-1'}>
+            <LabeledInput
+              title={`Link to Content Upload`}
               name={'link-to-market-analysis-document'}
               type={'text'}
               placeholder={'https://drive.google.com/29304naf-2343hnl'}

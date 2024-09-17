@@ -80,6 +80,7 @@
     overflow: hidden;
     justify-content: end;
     padding: 0;
+    z-index:3
 
 }
 
@@ -227,6 +228,9 @@
 .custom-switch-checkbox:checked + .eye-icon-show:after {
     left: calc(100% - 27px);
 }
+
+
+
 
 /*///////////////////// --- ///////////////////////////*/
 
@@ -1144,6 +1148,33 @@
     letter-spacing: 0.52px;
     color: #000000;
 }
+
+.labeled-switch-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adjust spacing between label and switch */
+}
+
+.label-top {
+    flex-direction: column-reverse;
+}
+
+.label-bottom {
+    flex-direction: column;
+}
+
+.label-left {
+    flex-direction: row;
+}
+
+.label-right {
+    flex-direction: row-reverse;
+}
+
+.switch-label {
+    font-size: 16px; /* Adjust as needed */
+}
+
 
 .select-skill {
     text-align: left;

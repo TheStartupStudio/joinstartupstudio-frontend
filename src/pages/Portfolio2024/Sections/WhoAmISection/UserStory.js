@@ -3,24 +3,21 @@ import PortfolioInfoBox from '../../Components/DisplayData/PortfolioInfoBox'
 import {
   hideAddMyStoryModal,
   hideEditMyStoryModal,
-  saveMyRelationships,
   saveUserStory,
   showAddMyStoryModal,
-  showEditMyStoryModal
+  showEditMyStoryModal,
+  toggleUserStory
 } from '../../../../redux/portfolio/Actions'
 import { useDispatch, useSelector } from 'react-redux'
 import SectionActions from '../../Components/Actions/SectionActions'
 import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
 import myStoryImage from '../../../../assets/images/HS-Portfolio-Icons/my story icon.png'
 import StoryModal from '../../Components/Modals/StoryModal'
-import {
-  createUserStoryAPI,
-  updateUserStoryAPI
-} from '../../../../redux/portfolio/Service'
 
 function UserStory(props) {
   const [isEditSection, setIsEditSection] = useState(false)
   const [story, setStory] = useState('')
+  const [showStory, setShowStory] = useState(false)
   const [id, setId] = useState(null)
   const dispatch = useDispatch()
 
@@ -34,9 +31,12 @@ function UserStory(props) {
   const isSaving = useSelector(
     (state) => state.portfolio.whoSection.userStory.isSaving
   )
-
+  const isTogglingSection = useSelector(
+    (state) => state.portfolio.whoSection.userStory.isTogglingSection
+  )
   useEffect(() => {
     if (props.data) {
+      setShowStory(props.data?.showUserStory)
       setStory(props?.data?.story)
       setId(props.data?.id)
     }
@@ -115,6 +115,12 @@ function UserStory(props) {
           onSave={(data) => {
             dispatch(saveUserStory(data, id))
           }}
+          showSectionCheckbox={true}
+          isShownSection={showStory}
+          onToggleSection={(showUserStory) => {
+            dispatch(toggleUserStory({ showUserStory: showUserStory }, id))
+          }}
+          isTogglingSection={isTogglingSection}
         />
       )}
 
@@ -130,6 +136,12 @@ function UserStory(props) {
           onSave={(data) => {
             dispatch(saveUserStory(data, id))
           }}
+          showSectionCheckbox={true}
+          isShownSection={showStory}
+          onToggleSection={(showUserStory) => {
+            dispatch(toggleUserStory({ showUserStory: showUserStory }, id))
+          }}
+          isTogglingSection={isTogglingSection}
         />
       )}
     </>
