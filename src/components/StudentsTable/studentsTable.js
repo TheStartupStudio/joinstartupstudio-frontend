@@ -140,7 +140,7 @@ export default function StudentsTable({ instructorId }) {
         if (res.data.students?.length) {
           let newArrray = []
           res.data.instructorsnew.map((instructor) => {
-            newArrray.push({
+            return newArrray.push({
               value: instructor.instructorInfo?.id,
               label: instructor.name
             })

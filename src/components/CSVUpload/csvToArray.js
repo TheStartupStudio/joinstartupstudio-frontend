@@ -8,16 +8,21 @@ const csvToArray = (str, delimiter = ',') => {
         header === 'Password' ||
         header === 'Level' ||
         header === 'Year' ||
+        header === 'Email' ||
+        header === 'FirstName' ||
+        header === 'LastName' ||
         header === 'Period'
       )
         header = header.toLowerCase()
       return header
     })
 
+  console.log('headers', headers)
+
   if (
-    headers[0] !== 'FirstName' ||
-    headers[1] !== 'LastName' ||
-    headers[2] !== 'UserEmail' ||
+    headers[0] !== 'firstname' ||
+    headers[1] !== 'lastname' ||
+    headers[2] !== 'email' ||
     headers[3] !== 'password' ||
     headers[4] !== 'level' ||
     headers[5] !== 'year' ||
