@@ -27,9 +27,9 @@ const AddStudentsModal = (props) => {
   const [successfullyAdded, setSuccessfullyAdded] = useState(0)
 
   const userRequiredFields = [
-    'FirstName',
-    'LastName',
-    'UserEmail',
+    'firstname',
+    'lastname',
+    'email',
     'password',
     'level',
     'year',
@@ -106,14 +106,14 @@ const AddStudentsModal = (props) => {
 
     const item = results.shift()
 
-    if (results.length === 0 && !item['FirstName'] && !item['LastName']) {
+    if (results.length === 0 && !item['firstname'] && !item['lastname']) {
       return req(results)
     }
 
     if (
-      !item['UserEmail'] ||
-      !item['FirstName'] ||
-      !item['LastName'] ||
+      !item['email'] ||
+      !item['firstname'] ||
+      !item['lastname'] ||
       !item['password'] ||
       !item['level'] ||
       (item['level'] !== 'HE' && !item['year']) ||
@@ -124,20 +124,20 @@ const AddStudentsModal = (props) => {
         {
           message: `Please fill in all the required fields.`,
           code: 400,
-          user: item['UserEmail']
+          user: item['email']
         }
       ])
 
       return req(results)
     }
 
-    if (!validateEmail(item['UserEmail'])) {
+    if (!validateEmail(item['email'])) {
       setErrors((old) => [
         ...old,
         {
           message: `Please provide a valid email.`,
           code: 400,
-          user: item['UserEmail']
+          user: item['email']
         }
       ])
 
@@ -150,7 +150,7 @@ const AddStudentsModal = (props) => {
         {
           message: `Password must contain at least 8 characters and it should have at least one number, lowercase & uppercase character.`,
           code: 400,
-          user: item['UserEmail']
+          user: item['email']
         }
       ])
 
@@ -168,7 +168,7 @@ const AddStudentsModal = (props) => {
         {
           message: `Level must be either: LS, MS, HS or HE.`,
           code: 400,
-          user: item['UserEmail']
+          user: item['email']
         }
       ])
 
@@ -176,30 +176,31 @@ const AddStudentsModal = (props) => {
     }
 
     await Auth.signUp({
-      username: item['UserEmail'],
+      username: item['email'],
       password: item['password'],
       attributes: {
         'custom:universityCode': 'dev2020',
         'custom:isVerified': '1',
         'custom:language': 'en',
-        'custom:email': item['UserEmail'],
+        'custom:email': item['email'],
         'custom:password': item['password'],
-        name: item.FirstName + ' ' + item.LastName
+        name: item.firstname + ' ' + item.lastname
       }
     })
       .then(async (res) => {
         await axiosInstance
           .post('/instructor/add-users', {
-            data: {
-              ...item,
-              name: item.FirstName + ' ' + item.LastName,
-              cognito_Id: res.userSub,
-              stripe_subscription_id: 'true',
-              payment_type: 'school',
-              is_active: 1
-            }
+            // data: {
+            ...item,
+            name: item.firstname + ' ' + item.lastname,
+            cognito_Id: res.userSub,
+            stripe_subscription_id: 'true',
+            payment_type: 'school',
+            is_active: 1
+            // }
           })
           .then((response) => {
+            console.log('response', response)
             const addedUser = response.data.user
             addedUser.transferHistory = []
             addedUsers = [addedUser, ...addedUsers]
@@ -211,7 +212,7 @@ const AddStudentsModal = (props) => {
               ...old,
               {
                 message: 'Something went wrong!',
-                user: item['UserEmail']
+                user: item['email']
               }
             ])
             req(results)
@@ -222,7 +223,7 @@ const AddStudentsModal = (props) => {
           ...old,
           {
             message: err.message,
-            user: item['UserEmail']
+            user: item['email']
           }
         ])
         req(results)
@@ -240,7 +241,9 @@ const AddStudentsModal = (props) => {
         const results = csvToArray(e.target.result, ',')
         req(results)
       } catch (error) {
+        console.log('error', error)
         setCsvLoading(false)
+
         setUploadedFileName('')
         setUploaded(false)
         setFileInputKey(Date.now())
@@ -260,14 +263,14 @@ const AddStudentsModal = (props) => {
           setAddUserInputs(3)
         }}
         style={{ marginTop: '3.9%' }}
-        dialogClassName="custom-modal-lg"
+        dialogClassName='custom-modal-lg'
       >
-        <Modal.Header className="contact-us-title general-modal-header my-auto p-0 mx-4">
-          <h3 className="mb-0 pt-4 mt-2 ">ADD USERS</h3>
+        <Modal.Header className='contact-us-title general-modal-header my-auto p-0 mx-4'>
+          <h3 className='mb-0 pt-4 mt-2 '>ADD USERS</h3>
           <button
-            type="button"
-            className="btn-close me-1 btn-close me-1 mt-0 pt-3 me-md-1 mb-md-2 ms-2 ms-md-0 mt-md-0 my-auto"
-            aria-label="Close"
+            type='button'
+            className='btn-close me-1 btn-close me-1 mt-0 pt-3 me-md-1 mb-md-2 ms-2 ms-md-0 mt-md-0 my-auto'
+            aria-label='Close'
             disabled={loading ? true : false}
             onClick={() => {
               props.onHide()
@@ -276,51 +279,51 @@ const AddStudentsModal = (props) => {
           />
         </Modal.Header>
         <Modal.Body>
-          <div className="row ms-2">
-            <div className="col-12 col-md-7 Add-User-Bulk px-0">
-              <p className="title mb-0">Upload Bulk Users</p>
-              <p className="description mb-0">
+          <div className='row ms-2'>
+            <div className='col-12 col-md-7 Add-User-Bulk px-0'>
+              <p className='title mb-0'>Upload Bulk Users</p>
+              <p className='description mb-0'>
                 Upload multiple users at one time using a CVS file.
               </p>
-              <p className="description">
+              <p className='description'>
                 (Download{' '}
-                <span className="brand">
+                <span className='brand'>
                   <a href={`${file}`} download>
                     template
                   </a>
                 </span>{' '}
                 to edit)
               </p>
-              <p className="supported-formats mb-0">Supported formats: -</p>
-              <p className="supported-formats-description mb-0">.csv only</p>
+              <p className='supported-formats mb-0'>Supported formats: -</p>
+              <p className='supported-formats-description mb-0'>.csv only</p>
             </div>
-            <div className="col-12 col-md-5 pt-3 row justify-content-end">
-              <label className="text-center border-1 col-12 col-sm-6 col-md-12 ps-0 pe-0">
+            <div className='col-12 col-md-5 pt-3 row justify-content-end'>
+              <label className='text-center border-1 col-12 col-sm-6 col-md-12 ps-0 pe-0'>
                 <input
-                  type="file"
-                  id="csvFile"
-                  name="csvFile"
-                  className="d-none"
+                  type='file'
+                  id='csvFile'
+                  name='csvFile'
+                  className='d-none'
                   key={fileInputKey}
                   onChange={(e) => {
                     setUploaded(true)
                     setUploadedFileName(e.target.files[0].name)
                   }}
                 />
-                <div className="image-upload d-flex upload-user-input w-100 my-auto py-2 px-2">
-                  <p className="py-auto my-auto">
+                <div className='image-upload d-flex upload-user-input w-100 my-auto py-2 px-2'>
+                  <p className='py-auto my-auto'>
                     {!uploadedFileName ? 'Upload new file' : uploadedFileName}
                   </p>
                   <FontAwesomeIcon
                     icon={faFileUpload}
-                    className="edit-modal-sm ms-auto float-end"
+                    className='edit-modal-sm ms-auto float-end'
                     //   style={{ height: '27px', width: '20px' }}
                   />
                 </div>
               </label>
-              <div className="col-12 col-sm-6 col-md-auto mt-2 mt-sm-0 mt-md-3 pe-0 ps-0 ps-sm-2">
+              <div className='col-12 col-sm-6 col-md-auto mt-2 mt-sm-0 mt-md-3 pe-0 ps-0 ps-sm-2'>
                 <button
-                  className="lts-button px-3 upload-user-button float-end mt-md-3 text-center"
+                  className='lts-button px-3 upload-user-button float-end mt-md-3 text-center'
                   disabled={csvLoading || loading}
                   onClick={
                     isUploaded
@@ -336,15 +339,15 @@ const AddStudentsModal = (props) => {
                   }
                 >
                   {csvLoading ? (
-                    <span className="spinner-border spinner-border-sm" />
+                    <span className='spinner-border spinner-border-sm' />
                   ) : (
                     'UPLOAD USER FILE CSV'
                   )}
                 </button>
               </div>
             </div>
-            <div className="row mx-0 ps-0">
-              <p className="add-individual mx-0 px-0 mt-2 mb-0">
+            <div className='row mx-0 ps-0'>
+              <p className='add-individual mx-0 px-0 mt-2 mb-0'>
                 Add individual
               </p>
               {[...Array(addUserInputs)].map((data, index) => (
@@ -357,7 +360,7 @@ const AddStudentsModal = (props) => {
                 />
               ))}
               <span
-                className="add-new-input-for-user mt-3 cursor-pointer brand"
+                className='add-new-input-for-user mt-3 cursor-pointer brand'
                 onClick={() => {
                   setAddUserInputs((old) => old + 1)
                 }}
@@ -366,9 +369,9 @@ const AddStudentsModal = (props) => {
               </span>
             </div>
           </div>
-          <div className="modal-footer position-relative px-0 border-0">
+          <div className='modal-footer position-relative px-0 border-0'>
             <button
-              className="lts-button"
+              className='lts-button'
               onClick={() => {
                 if (users.length > 0) {
                   validateUsersBeforeSubmit()
@@ -379,7 +382,7 @@ const AddStudentsModal = (props) => {
               disabled={loading || csvLoading}
             >
               {loading ? (
-                <span className="spinner-border spinner-border-sm" />
+                <span className='spinner-border spinner-border-sm' />
               ) : (
                 'ADD USER(S)'
               )}
