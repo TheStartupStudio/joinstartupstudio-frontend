@@ -56,7 +56,7 @@ function CredentialCard(props) {
           <div className={'flex-grow-1'}>
             <div className={'d-flex justify-content-between gap-2'}>
               <div>
-                <div className={'organization-name mb-2'}>
+                <div className={'proveit-title-org organization-name mb-2'}>
                   {credential?.credentialTitle}
                 </div>
                 <div className={'organization-location mb-2'}>

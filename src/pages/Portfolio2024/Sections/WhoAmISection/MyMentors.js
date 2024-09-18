@@ -58,14 +58,16 @@ function MyMentors(props) {
   return (
     <div className={'container'}>
       <div
-        className={'row '}
+        className={' row '}
         // style={{ justifyContent: 'center' }}
       >
         {myMentors?.length > 0 ? (
           myMentors?.map((mentor, index) => {
             return (
               <React.Fragment key={mentor?.id}>
-                <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
+                <div
+                  className={'mentor-width col-lg-4 col-md-6 col-sm-12 mb-3 '}
+                >
                   <MyMentor data={mentor} isEditSection={isEditSection} />
                 </div>
               </React.Fragment>

@@ -76,9 +76,11 @@ function MyRelationships(props) {
     <>
       {isEditSection && mode === 'edit' ? (
         <div className={'row'}>
-          <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
+          <div
+            className={'col-lg-4 col-md-6 col-sm-12 mb-3 relationship-story'}
+          >
             <LabeledInput
-              containerClassNames={'my-relationships'}
+              containerClassNames={'my-relationships '}
               title={'Team role'}
               titleClassNames='text-center py-3 text-uppercase'
               titleHeight={70}
@@ -122,9 +124,11 @@ function MyRelationships(props) {
       ) : (
         <>
           <div className={'row'}>
-            <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
+            <div
+              className={'col-lg-4 col-md-6 col-sm-12 mb-3 relationship-story'}
+            >
               <PortfolioInfoBox
-                height={190}
+                height={170}
                 titleHeight={40}
                 inputHeight={120}
                 title={'Team role:'}
@@ -137,9 +141,11 @@ function MyRelationships(props) {
               />
             </div>
 
-            <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
+            <div
+              className={'col-lg-4 col-md-6 col-sm-12 mb-3 relationship-story'}
+            >
               <PortfolioInfoBox
-                height={190}
+                height={170}
                 titleHeight={40}
                 inputHeight={120}
                 title={'Collaboration style:'}
@@ -152,9 +158,11 @@ function MyRelationships(props) {
               />
             </div>
 
-            <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
+            <div
+              className={'col-lg-4 col-md-6 col-sm-12 mb-3 relationship-story'}
+            >
               <PortfolioInfoBox
-                height={190}
+                height={170}
                 titleHeight={40}
                 inputHeight={120}
                 title={'Leadership philosophy:'}

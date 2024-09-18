@@ -211,7 +211,7 @@ const UserStory = (props) => {
                 deleteImageFile={handleDeleteImageFile}
               />
             </div>
-            <div className={'col-md-6'}>
+            <div className={'  col-md-6 '}>
               <div className={'d-flex flex-column h-100'}>
                 <div className={'mb-2 d-flex justify-content-center'}>
                   <ReactImageUpload
@@ -312,7 +312,7 @@ const UserStory = (props) => {
         <>
           {/* <div className={'row'}> */}
           <div className={'row resp-portfolio-row'}>
-            <div className={'col-md-6'}>
+            <div className={'col-md-6 submission-wrapper-portfolio'}>
               <PortfolioSubmission
                 videoUrl={state.videoUrl}
                 thumbnailUrl={state.thumbnailUrl}
@@ -324,7 +324,7 @@ const UserStory = (props) => {
               <div className={'d-flex flex-column h-100'}>
                 <UserInfo userInfo={state} user={props.user} />
 
-                <div className={' mt-3'}>
+                <div className={' mt-3 value-prop-modal'}>
                   <PortfolioInfoBox
                     title={'My Value Proposition'}
                     content={displayContent(
@@ -332,14 +332,14 @@ const UserStory = (props) => {
                       null,
                       'No value proposition added yet! Click the edit button to add your value proposition.'
                     )}
-                    contentClasses={'mt-2'}
+                    contentClasses={'mt-2 '}
                     height={150}
                   />
                 </div>
               </div>
             </div>
           </div>
-          <div className={'row'}>
+          {/* <div className={'row'}>
             <div className={'mt-3 '}>
               <PortfolioInfoBox
                 title={'My story'}
@@ -352,7 +352,7 @@ const UserStory = (props) => {
                 height={150}
               />
             </div>
-          </div>
+          </div> */}
         </>
       )}
       <SectionActions actions={actions} />

@@ -82,6 +82,7 @@ function EditProjectSection(props) {
           className={'portfolio-quill'}
           value={sectionState?.editorContent ?? ''}
           onChange={handleEditorChange}
+          placeholder={props.placeholder}
         />
       </div>
       <Evidences

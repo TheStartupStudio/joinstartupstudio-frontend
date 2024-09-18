@@ -61,19 +61,29 @@ function ImmersionCard(props) {
             <div className={'w-50'}>
               <div className={'d-flex justify-content-between gap-2'}>
                 <div>
-                  <div className={'organization-name mb-2'}>
+                  <div className={'proveit-title-org organization-name mb-2'}>
                     {data?.organizationName}
                   </div>
-                  <div className={'organization-location mb-2'}>
+                  <div
+                    className={'organization-location mb-2'}
+                    style={{ fontWeight: 400 }}
+                  >
                     {data?.location}
                   </div>
-                  <div className={'organization-website mb-3'}>
+                  <div
+                    className={'organization-website mb-3'}
+                    style={{ fontWeight: 400 }}
+                  >
                     <WebsiteLink website={data?.website} />
                   </div>
                 </div>
               </div>
               <div>
-                <div className={'organization-description-label mb-2'}>
+                <div
+                  className={
+                    'proveit-title-org organization-description-label mb-2'
+                  }
+                >
                   The Problem
                 </div>
                 <div
@@ -81,7 +91,11 @@ function ImmersionCard(props) {
                   dangerouslySetInnerHTML={{ __html: data?.problem }}
                 />
 
-                <div className={'organization-description-label mb-2 mt-3'}>
+                <div
+                  className={
+                    'proveit-title-org organization-description-label mb-2 mt-3'
+                  }
+                >
                   My solution
                 </div>
                 <div
@@ -90,7 +104,11 @@ function ImmersionCard(props) {
                 />
               </div>
             </div>
-            <div className={'text-end organization-date w-50 immersion-portf'}>
+            <div
+              className={
+                'org-end-immersion text-end organization-date w-50 immersion-portf'
+              }
+            >
               {convertDateToMonthYear(data?.startDate)} -{' '}
               {!data?.currentlyAttending
                 ? convertDateToMonthYear(data?.endDate)

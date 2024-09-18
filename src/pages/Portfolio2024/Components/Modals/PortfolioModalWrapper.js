@@ -7,13 +7,13 @@ function PortfolioModalWrapper(props) {
     <Modal
       show={props.show}
       onHide={props.onHide}
-      backdrop="static"
+      backdrop='static'
       keyboard={false}
-      id="portfolio-modal-wrapper"
+      id='portfolio-modal-wrapper'
       className={` portfolio-modal-wrapper ${props.class ? props.class : ''}`}
     >
       <SectionActions actions={props.actions} />
-      <div className={'p-2 mt-2 w-100'}>
+      <div className={'p-2 mt-2 w-100 portfolio-modal-content'}>
         {!props.hideHeader && (
           <div
             style={{
@@ -22,7 +22,7 @@ function PortfolioModalWrapper(props) {
               color: '#231F20',
               borderBottom: '1px solid #e3e3e3'
             }}
-            className={'text-uppercase pb-4'}
+            className={'text-uppercase pb-4 portfolio-modal-title'}
           >
             {props.title}
           </div>

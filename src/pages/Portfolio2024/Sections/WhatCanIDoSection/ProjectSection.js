@@ -25,11 +25,14 @@ const ProjectSection = ({
   ]
 
   return (
-    <div className={'portfolio-info-container mb-3'}>
+    <div
+      className={'portfolio-info-container mb-3'}
+      style={{ padding: '40px' }}
+    >
       <div className={'mb-3'}>
         <span
           className={'portfolio-info-title me-1'}
-          style={{ fontSize: '25px' }}
+          style={{ fontSize: '16px' }}
         >
           {title}
         </span>
@@ -43,7 +46,12 @@ const ProjectSection = ({
         </span>
       </div>
       <div className={'mb-3'}>
-        <div className={'portfolio-info-title mb-3'}>{content.title}</div>
+        <div
+          className={'portfolio-info-title mb-3'}
+          style={{ fontWeight: '500' }}
+        >
+          {content.title}
+        </div>
         <div
           className={'portfolio-info-content'}
           dangerouslySetInnerHTML={{ __html: content.text }}
@@ -53,7 +61,7 @@ const ProjectSection = ({
         <div className={'d-flex justify-content-between align-items-center'}>
           <div
             className={'portfolio-info-title'}
-            style={{ marginBottom: '10px' }}
+            style={{ marginBottom: '10px', fontWeight: '500' }}
           >
             Evidence
           </div>
@@ -72,7 +80,7 @@ const ProjectSection = ({
           {evidences?.map((evidence, index) => {
             return (
               <React.Fragment key={evidence?.title}>
-                <div className={'col-md-4'} key={index}>
+                <div className={'project-submission col-md-4'} key={index}>
                   <PortfolioSubmission
                     title={evidence?.title}
                     videoUrl={evidence?.linkInputValue}
