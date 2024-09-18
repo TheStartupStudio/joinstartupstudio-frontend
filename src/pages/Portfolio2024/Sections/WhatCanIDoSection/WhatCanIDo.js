@@ -53,6 +53,7 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
       isDisplayed: mode === 'edit'
     }
   ]
+
   return (
     <div className={'position-relative'}>
       <div className={'row gap-4'}>
@@ -99,35 +100,7 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
           </>
         )}
       </div>
-      {/*{projects?.length > 0 ? (*/}
-      {/*  projects?.map((project, index) => (*/}
-      {/*    <React.Fragment key={project.id}>*/}
-      {/*      <Project*/}
-      {/*        id={project.id}*/}
-      {/*        project={project}*/}
-      {/*        index={index}*/}
-      {/*        onDeleteProject={onDeleteProject}*/}
-      {/*        onAddProject={(project) => {*/}
-      {/*          const nonSavedProject = projects.find((project) => !project.id)*/}
-      {/*          if (nonSavedProject) {*/}
-      {/*            setProjects([project])*/}
-      {/*          }*/}
-      {/*        }}*/}
-      {/*      />*/}
-      {/*    </React.Fragment>*/}
-      {/*  ))*/}
-      {/*) : (*/}
-      {/*  <PortfolioDataContainer title={'Project'} height={440}>*/}
-      {/*    <NoDataDisplay*/}
-      {/*      src={projectImage}*/}
-      {/*      classNames={'mt-1'}*/}
-      {/*      text={*/}
-      {/*        'You don’t have any projects yet! Click the button to add one.'*/}
-      {/*      }*/}
-      {/*    />*/}
-      {/*    <SectionActions actions={emptyDataActions} />*/}
-      {/*  </PortfolioDataContainer>*/}
-      {/*)}*/}
+
       {projects?.length > 0 &&
         projects.some((project) => project.id) &&
         mode === 'edit' && (

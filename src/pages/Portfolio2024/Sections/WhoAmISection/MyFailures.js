@@ -63,7 +63,8 @@ function MyFailures(props) {
     {
       type: 'add',
       action: () => handleShowModal(),
-      isDisplayed: mode === 'edit' && myFailures?.length === 0
+      isDisplayed:
+        mode === 'edit' && (myFailures?.length === 0 || myFailures?.length > 0)
     },
 
     {
@@ -99,12 +100,12 @@ function MyFailures(props) {
         </>
       )}
 
-      {myFailures?.length > 0 && isEditSection && (
-        <AddEntryButton
-          title={`Add new "My Failures" section`}
-          onClick={handleShowFailureModal}
-        />
-      )}
+      {/*{myFailures?.length > 0 && isEditSection && (*/}
+      {/*  <AddEntryButton*/}
+      {/*    title={`Add new "My Failures" section`}*/}
+      {/*    onClick={handleShowFailureModal}*/}
+      {/*  />*/}
+      {/*)}*/}
       <SectionActions actions={actions} />
 
       {showFailureModal && (

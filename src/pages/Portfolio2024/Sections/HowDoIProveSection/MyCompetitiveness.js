@@ -10,6 +10,7 @@ import {
   showAddCompetitivenessModal
 } from '../../../../redux/portfolio/Actions'
 import MyMentorModal from '../../Components/Modals/MyMentorModal'
+import { Carousel } from '../../../CarouselComponent'
 
 function MyCompetitiveness(props) {
   const dispatch = useDispatch()
@@ -60,52 +61,52 @@ function MyCompetitiveness(props) {
 
   return (
     <div className={'container'}>
-      <div className={'row '}>
-        {myCompetitiveness?.length > 0 ? (
-          myCompetitiveness?.map((competitive, index) => {
-            return (
-              <React.Fragment key={competitive?.id}>
-                <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
-                  <MyMentor
-                    data={competitive}
-                    isEditSection={isEditSection}
-                    category={'my-competitiveness'}
-                  />
-                </div>
-              </React.Fragment>
-            )
-          })
-        ) : (
+      {myCompetitiveness?.length > 0 ? (
+        <>
+          <Carousel
+            data={myCompetitiveness}
+            itemsToShow={3}
+            renderItems={(item) => {
+              return (
+                <>
+                  <MyMentor data={item} isEditSection={isEditSection} />
+                </>
+              )
+            }}
+            breakPoints={[
+              { width: 500, itemsToShow: 1 },
+              { width: 768, itemsToShow: 2 },
+              { width: 1200, itemsToShow: 3 }
+            ]}
+            transitionDuration='0.5s'
+            transitionTimingFunction='ease-in-out'
+          />
+        </>
+      ) : (
+        <>
           <NoDataDisplay
             src={mentorsImage}
             classNames={'mt-5'}
             text={
-              'You don’t have any mentor feedback yet! Click the button to add one.'
+              'You don’t have any competitiveness yet! Click the button to add one.'
             }
           />
+        </>
+      )}
+
+      <div className={'col-md-4'} style={{ marginLeft: 90 }}>
+        {myCompetitiveness?.length > 0 && isEditSection && (
+          <AddMyMentor
+            title={`Add new "My Competitiveness" section`}
+            modalTitle={'Add Competitiveness'}
+            isEditSection={isEditSection}
+            category={'my-competitiveness'}
+            type={'competitiveness'}
+          />
         )}
-        <div className={'col-md-4'}>
-          {myCompetitiveness?.length > 0 && isEditSection && (
-            <AddMyMentor
-              title={`Add new "My Competitiveness" section`}
-              modalTitle={'Add Competitiveness'}
-              isEditSection={isEditSection}
-              category={'my-competitiveness'}
-              type={'competitiveness'}
-            />
-          )}
-        </div>
       </div>
 
       <SectionActions actions={actions} />
-      {showModal && (
-        <MyMentorModal
-          onHide={handleHideModal}
-          show={showModal}
-          title={`Add ${props.type ?? 'mentor'}`}
-          category={'my-competitiveness'}
-        />
-      )}
     </div>
   )
 }

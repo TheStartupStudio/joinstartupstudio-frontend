@@ -90,7 +90,7 @@ function MyMentors(props) {
           </>
         )}
       </div>
-      <div className={'col-md-4'}>
+      <div className={'col-md-4'} style={{ marginLeft: 90 }}>
         {myMentors?.length > 0 && isEditSection && (
           <AddMyMentor
             title={`Add new "My Mentors" section`}
@@ -100,14 +100,6 @@ function MyMentors(props) {
         )}
       </div>
       <SectionActions actions={actions} />
-      {showModal && (
-        <MyMentorModal
-          onHide={handleHideModal}
-          show={showModal}
-          title={`Add ${props.type ?? 'mentor'}`}
-          category={'my-mentors'}
-        />
-      )}
     </div>
   )
 }

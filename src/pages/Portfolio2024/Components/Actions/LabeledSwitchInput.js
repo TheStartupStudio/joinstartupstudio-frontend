@@ -14,7 +14,6 @@ function LabeledSwitchInput(props) {
   } = props
 
   const labelPositionClass = `label-${labelDirection}`
-
   return (
     <div
       className={`labeled-switch-container ${labelPositionClass}`}

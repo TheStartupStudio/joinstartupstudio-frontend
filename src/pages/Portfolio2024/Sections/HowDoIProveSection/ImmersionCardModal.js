@@ -70,7 +70,8 @@ const ImmersionCardModal = (props) => {
       solution: '',
       currentlyAttending: false,
       immersionThumbnailUrl: null,
-      immersionVideoUrl: null
+      immersionVideoUrl: null,
+      showSection: true
     }
   )
 
@@ -200,6 +201,13 @@ const ImmersionCardModal = (props) => {
       title={props.title}
       actions={modalActions}
       class={'edit-immersion-modal'}
+      showSectionCheckbox={true}
+      isShownSection={immersionData.showSection}
+      onToggleSection={(showSection) => {
+        setImmersionData({ ...immersionData, showSection })
+      }}
+      switchId={`${isEdit() ? 'edit' : 'add'}-immersion-switch`}
+      switchName={`${isEdit() ? 'edit' : 'add'}-immersion-switch`}
     >
       <div className={'portfolio-section-container w-100 pt-1 pb-1 px-1'}>
         <div

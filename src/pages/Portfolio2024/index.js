@@ -132,7 +132,7 @@ const Index = ({
       ) : (
         <PortfolioActionsSkeleton />
       )}
-      <PortfolioHeader userStory={userStory} user={loggedUser} />
+      <PortfolioHeader userStory={userBasicInfo} user={loggedUser} />
       {activeSection === 'who-section' && (
         <WhoAmI
           data={{

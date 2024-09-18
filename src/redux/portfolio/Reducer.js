@@ -496,7 +496,9 @@ const portfolioReducer = (state = initialState, action) => {
           userBasicInfo: {
             ...state.whoSection.userBasicInfo,
             data: payload.data,
-            isSaving: false
+            isSaving: false,
+            addModal: false,
+            editModal: false
           }
         }
       }

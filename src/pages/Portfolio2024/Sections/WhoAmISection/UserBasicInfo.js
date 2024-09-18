@@ -38,6 +38,8 @@ const UserBasicInfo = (props) => {
     story: '',
     id: null,
     userTitle: null,
+    name: '',
+    organization: '',
     socialMediaLinks: {
       linkedIn: '',
       facebook: '',
@@ -60,6 +62,8 @@ const UserBasicInfo = (props) => {
         id: props.data?.id,
         isEditSection: false,
         userTitle: props.data?.userTitle,
+        name: props.data?.name,
+        organization: props.data?.organization,
         socialMediaLinks: props.data?.socialMediaLinks,
         userImageUrl: props.data?.userImageUrl
       }))
@@ -165,7 +169,7 @@ const UserBasicInfo = (props) => {
           onSave={(data) => {
             dispatch(saveUserBasicData(data, state.id))
           }}
-          showSectionCheckbox={true}
+          showSectionCheckbox={false}
           isShownSection={true}
           onShowSection={() => {}}
         />
@@ -181,7 +185,7 @@ const UserBasicInfo = (props) => {
           onSave={(data) => {
             dispatch(saveUserBasicData(data, state.id))
           }}
-          showSectionCheckbox={true}
+          showSectionCheckbox={false}
           isShownSection={true}
           onShowSection={() => {}}
         />

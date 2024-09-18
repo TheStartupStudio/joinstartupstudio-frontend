@@ -46,7 +46,9 @@ const Navbar = (props) => {
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
   const { isAdmin } = useSelector((state) => state.user.user)
   const backButton = useSelector((state) => state.backButton)
-  const userStory = useSelector((state) => state.portfolio.whoSection.userStory)
+  const userBasicInfo = useSelector(
+    (state) => state.portfolio.whoSection.userBasicInfo
+  )
 
   useEffect(() => {
     const urlSegments = window.location.pathname.split('/')
@@ -244,8 +246,8 @@ const Navbar = (props) => {
                         // }
 
                         src={
-                          userStory?.data?.userImageUrl
-                            ? userStory?.data?.userImageUrl
+                          userBasicInfo?.data?.userImageUrl
+                            ? userBasicInfo?.data?.userImageUrl
                             : avator
                         }
                         alt='Profile'

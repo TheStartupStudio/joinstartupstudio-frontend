@@ -11,9 +11,17 @@ function UserInfo(props) {
         userImageUrl={props.userInfo?.userImageUrl}
       />
       <div className={'user-info-box'}>
-        <div className={'user-name'}>{props.user?.name}</div>
+        <div className={'user-name mb-1'}>{props.userInfo?.name}</div>
         <div className={'user-profession mt-1'}>
-          {props.userInfo?.userTitle}
+          {props.userInfo?.userTitle?.trim()?.length > 0
+            ? props.userInfo?.userTitle
+            : 'No title has been added yet'}
+        </div>
+
+        <div className={'user-profession mt-1'}>
+          {props.userInfo?.organization?.trim()?.length > 0
+            ? props.userInfo?.organization
+            : 'No organization has been added yet'}
         </div>
         <UserSocialMedia data={props.userInfo?.socialMediaLinks} />
       </div>

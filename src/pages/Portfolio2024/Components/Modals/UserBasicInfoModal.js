@@ -41,6 +41,8 @@ function UserBasicInfoModal(props) {
     story: '',
     id: null,
     userTitle: null,
+    name: '',
+    organization: '',
     socialMediaLinks: {
       linkedIn: '',
       facebook: '',
@@ -63,6 +65,8 @@ function UserBasicInfoModal(props) {
         id: props.data?.id,
         isEditSection: false,
         userTitle: props.data?.userTitle,
+        name: props.data?.name,
+        organization: props.data?.organization,
         socialMediaLinks: props.data?.socialMediaLinks,
         userImageUrl: props.data?.userImageUrl
       }))
@@ -93,7 +97,9 @@ function UserBasicInfoModal(props) {
       thumbnailUrl: newThumbnailUrl ? newThumbnailUrl : state.thumbnailUrl,
       userImageUrl,
       socialMediaLinks: state.socialMediaLinks,
-      userTitle: state.userTitle
+      userTitle: state.userTitle,
+      name: state.name,
+      organization: state.organization
     }
 
     props.onSave?.(data)
@@ -191,51 +197,62 @@ function UserBasicInfoModal(props) {
       <>
         <div className={'row'}>
           <div className={'col-md-6'}>
-            <ReactImageUpload
-              value={userImageUrl}
-              {...imageProperties}
-              onChangeImageCrop={updateCroppedProfileImage}
-              onImageLoadSuccess={handleImageLoadSuccess}
-              onLabelClick={handleLabelClick}
-              onFileInputChange={handleFileInputChange}
-              onPositionChange={handlePositionChange}
-              actions={avatarEditorActions}
-              title={'User Image'}
-              type={'circle'}
-              editorRef={editorRef}
-            />
-            <LabeledInput
-              title={'Name'}
-              type={'text'}
-              align={'start'}
-              value={state?.userTitle}
-              onChange={(value) => handleInputChange('userTitle', value)}
-            />
-            <LabeledInput
-              title={'Title'}
-              type={'text'}
-              align={'start'}
-              value={state?.userTitle}
-              onChange={(value) => handleInputChange('userTitle', value)}
-            />
-            <LabeledInput
-              title={'Organization'}
-              type={'text'}
-              align={'start'}
-              value={state?.userTitle}
-              onChange={(value) => handleInputChange('userTitle', value)}
-            />
-            <div className={'portfolio-info-title my-2'}>
-              {'My value proposition'}
+            <div className={'d-flex flex-column gap-3'}>
+              <div
+                className={'d-flex justify-content-center align-items-center'}
+              >
+                <ReactImageUpload
+                  value={userImageUrl}
+                  {...imageProperties}
+                  onChangeImageCrop={updateCroppedProfileImage}
+                  onImageLoadSuccess={handleImageLoadSuccess}
+                  onLabelClick={handleLabelClick}
+                  onFileInputChange={handleFileInputChange}
+                  onPositionChange={handlePositionChange}
+                  actions={avatarEditorActions}
+                  title={'User Image'}
+                  type={'circle'}
+                  editorRef={editorRef}
+                />
+              </div>
+
+              <LabeledInput
+                title={'Name'}
+                type={'text'}
+                align={'start'}
+                value={state?.name}
+                onChange={(value) => handleInputChange('name', value)}
+              />
+              <LabeledInput
+                title={'Title'}
+                type={'text'}
+                align={'start'}
+                value={state?.userTitle}
+                onChange={(value) => handleInputChange('userTitle', value)}
+              />
+              <LabeledInput
+                title={'Organization'}
+                type={'text'}
+                align={'start'}
+                value={state?.organization}
+                onChange={(value) => handleInputChange('organization', value)}
+              />
             </div>
-            <ReactQuill
-              className={'portfolio-quill'}
-              value={state.valueProposition || ''}
-              onChange={(value) => handleInputChange('valueProposition', value)}
-              placeholder={
-                'Your statement of value consisting of your passions/interests, skills, and outcomes.'
-              }
-            />
+            <div className={'mt-3'}>
+              <div className={'portfolio-info-title my-2'}>
+                {'My value proposition'}
+              </div>
+              <ReactQuill
+                className={'portfolio-quill'}
+                value={state.valueProposition || ''}
+                onChange={(value) =>
+                  handleInputChange('valueProposition', value)
+                }
+                placeholder={
+                  'Your statement of value consisting of your passions/interests, skills, and outcomes.'
+                }
+              />
+            </div>
           </div>
           <div className={'col-md-6'}>
             <div>
@@ -266,17 +283,19 @@ function UserBasicInfoModal(props) {
                 value={state?.socialMediaLinks?.website || ''}
                 onChange={(value) => handleSocialMediaChange('website', value)}
               />
-              <EditPortfolioSubmission
-                videoUrl={state?.videoUrl}
-                onChangeVideoUrl={(videoUrl) =>
-                  handleInputChange('videoUrl', videoUrl)
-                }
-                onChangeImageCrop={updateCroppedImage}
-                value={state?.thumbnailUrl}
-                title={'MY PERSONAL BRAND STORY'}
-                deleteImage={handleDeleteImage}
-                deleteImageFile={handleDeleteImageFile}
-              />
+              <div className={'mt-4'}>
+                <EditPortfolioSubmission
+                  videoUrl={state?.videoUrl}
+                  onChangeVideoUrl={(videoUrl) =>
+                    handleInputChange('videoUrl', videoUrl)
+                  }
+                  onChangeImageCrop={updateCroppedImage}
+                  value={state?.thumbnailUrl}
+                  title={'MY PERSONAL BRAND STORY'}
+                  deleteImage={handleDeleteImage}
+                  deleteImageFile={handleDeleteImageFile}
+                />
+              </div>
             </div>
           </div>
         </div>

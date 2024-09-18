@@ -7,6 +7,7 @@ import ProjectModal from './ProjectModal'
 function Project(props) {
   const [id, setId] = useState(null)
   const [project, setProject] = useState(null)
+  const [title, setTitle] = useState('')
 
   const [showAddProjectModal, setShowAddProjectModal] = useState(false)
 
@@ -23,10 +24,12 @@ function Project(props) {
     } else {
       setProject(props.project)
     }
-  }, [props.project, props.project?.children])
+    setTitle(props.project?.title)
+  }, [props.project, props.project?.children, props.project?.title])
 
   const onUpdateProject = (project) => {
     setProject(project)
+    setTitle(project.title)
   }
   const [isEditSection, setIsEditSection] = useState(false)
   const mode = useSelector((state) => state.portfolio.mode)
@@ -119,12 +122,10 @@ function Project(props) {
   }
 
   return (
-    <div className={'portfolio-data-container mb-3'}>
+    <div className={'portfolio-data-container mb-3 justify-content-start'}>
       <SectionActions actions={actions} />
 
-      <h3 className={'text-center mb-2 my-project-title'}>
-        A NEW ALUMNI SPOTLIGHT
-      </h3>
+      <h3 className={'text-center mb-2 my-project-title'}>{title}</h3>
 
       <div>
         {renderSection(
@@ -158,6 +159,7 @@ function Project(props) {
           onShow={handleShowAddProjectModal}
           show={showAddProjectModal}
           project={project.children ? project.children : project}
+          projectTitle={title}
           isEdit={id}
           modalTitle={'Edit Project'}
           onUpdateProject={onUpdateProject}

@@ -19,7 +19,7 @@ import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoa
 import immersionImage from '../../../../assets/images/HS-Portfolio-Icons/immersion.png'
 import workExperienceImage from '../../../../assets/images/HS-Portfolio-Icons/workexperience.png'
 import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
-import educationImage from '../../../../assets/images/HS-Portfolio-Icons/education.png'
+import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
 
 function MyProductivity(props) {
   const {
@@ -127,7 +127,8 @@ function MyProductivity(props) {
     onSave,
     ModalComponent,
     isLoading,
-    NoDataDisplay
+    NoDataDisplay,
+    containCarousel
   ) => {
     if (isLoading) {
       return <PortfolioSectionDataLoader />
@@ -144,13 +145,28 @@ function MyProductivity(props) {
         titleAlign={'start'}
         height={items?.length > 0 ? undefined : 440}
       >
-        {items?.length > 0
-          ? items?.map((item) => (
+        {items?.length > 0 ? (
+          containCarousel ? (
+            <CarouselComponent
+              data={items}
+              itemsToShow={3}
+              renderItems={(item) => (
+                <React.Fragment key={item.id}>
+                  <ItemComponent data={item} isEditSection={isEditSection} />
+                </React.Fragment>
+              )}
+              transitionDuration='0.5s'
+            />
+          ) : (
+            items?.map((item) => (
               <React.Fragment key={item.id}>
                 <ItemComponent data={item} isEditSection={isEditSection} />
               </React.Fragment>
             ))
-          : NoDataDisplay}
+          )
+        ) : (
+          NoDataDisplay
+        )}
         <SectionActions actions={sectionActions} />
         {isEditSection && items?.length > 0 && (
           <AddEntryButton
@@ -169,6 +185,7 @@ function MyProductivity(props) {
       </PortfolioDataContainer>
     )
   }
+
   return (
     <>
       {renderSection(
@@ -189,7 +206,8 @@ function MyProductivity(props) {
           text={
             'You don’t have any immersion experiences yet! Click the button to add one.'
           }
-        />
+        />,
+        true // enable carousel for Immersions
       )}
       <div className={'mt-5'}>
         {renderSection(
@@ -210,7 +228,8 @@ function MyProductivity(props) {
             text={
               'You don’t have any work experience yet! Click the button to add one.'
             }
-          />
+          />,
+          false
         )}
       </div>
     </>

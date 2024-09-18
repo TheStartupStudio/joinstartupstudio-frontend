@@ -155,7 +155,9 @@ function Profile(props) {
       .catch((err) => err)
   }
 
-  const userStory = useSelector((state) => state.portfolio.whoSection.userStory)
+  const userBasicInfo = useSelector(
+    (state) => state.portfolio.whoSection.userBasicInfo
+  )
   return (
     <Row className='mx-0'>
       <Col
@@ -171,8 +173,8 @@ function Profile(props) {
         <div className='dashboard-profile'>
           <img
             src={
-              userStory?.data?.userImageUrl
-                ? userStory?.data?.userImageUrl
+              userBasicInfo?.data?.userImageUrl
+                ? userBasicInfo?.data?.userImageUrl
                 : avator
             }
             // src={user?.profile_image ? user?.profile_image : avator}
@@ -182,8 +184,8 @@ function Profile(props) {
           <div className='profile-margin'>
             <h3>{user?.name}</h3>
             {/*<p>{user?.profession}</p>*/}
-            <p>{userStory?.data?.userTitle}</p>
-            <UserSocialMedia data={userStory?.data?.socialMediaLinks} />
+            <p>{userBasicInfo?.data?.userTitle}</p>
+            <UserSocialMedia data={userBasicInfo?.data?.socialMediaLinks} />
             {/*{user?.social_links?.linkedIn && (*/}
             {/*  <a*/}
             {/*    href={*/}

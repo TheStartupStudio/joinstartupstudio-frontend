@@ -2,6 +2,8 @@ import React from 'react'
 import '../../index.css'
 
 const SwitchIcon = (props) => {
+  // console.log('value', props.id, props.isChecked)
+
   return (
     <div className='custom-switch-container'>
       <input
@@ -16,14 +18,6 @@ const SwitchIcon = (props) => {
       <label htmlFor={props.id} className={props.icon}>
         <span className='custom-switch-icon'></span>
       </label>
-
-      {/*<label htmlFor={props.id} className={props.icon}>*/}
-      {/*  {props.isToggling ? (*/}
-      {/*    <span className='loader'></span> */}
-      {/*  ) : (*/}
-      {/*    <span className='custom-switch-icon'></span> */}
-      {/*  )}*/}
-      {/*</label>*/}
     </div>
   )
 }

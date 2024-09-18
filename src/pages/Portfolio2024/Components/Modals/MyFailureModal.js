@@ -32,11 +32,11 @@ function MyFailureModal(props) {
     if (props.data) {
       setThumbnailUrl(props.data?.thumbnailUrl)
       setVideoUrl(props.data?.videoUrl)
-      setFailure(props.data?.assessment)
-      setOutcomes(props.data?.outcome)
+      setFailure(props.data?.failure)
+      setOutcomes(props.data?.outcomes)
       setPivot(props.data?.pivot)
       setId(props.data?.id)
-      // setShowSection(props.data?.showSection)
+      setShowSection(props.data?.showSection)
       setConfirmDeleteModal(false)
     }
   }, [props.data])
@@ -50,9 +50,11 @@ function MyFailureModal(props) {
 
     const failureData = {
       videoUrl,
-      assessment: failure,
-      outcome: outcomes,
+      failure,
+      pivot,
+      outcomes,
       thumbnailUrl: newThumbnailUrl ? newThumbnailUrl : thumbnailUrl,
+      showSection,
       category: 'my-failures'
     }
 
@@ -115,17 +117,10 @@ function MyFailureModal(props) {
       showSectionCheckbox={true}
       isShownSection={showSection}
       onToggleSection={(showSection) => {
-        debugger
         setShowSection(showSection)
       }}
-      switchId={'failure-switch'}
-      switchName={'failure-switch'}
-      // isTogglingSection={isTogglingSection}
-      // isShownSection={showSection ?? false}
-      // onToggleSection={(showSection) => {
-      //   setShowSection(!showSection)
-      // }}
-      // isTogglingSection={false}
+      switchId={isEdit() ? 'edit-failure-switch' : 'add-failure-switch'}
+      switchName={isEdit() ? 'edit-failure-switch' : 'add-failure-switch'}
     >
       <div className={'row'}>
         <div className={'col-lg-6 col-md-12'}>

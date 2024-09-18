@@ -88,18 +88,20 @@ function MyRelationships(props) {
 
   return (
     <>
-      <LabeledSwitchInput
-        label={'Show section'}
-        labelDirection={'left'}
-        value={showSection}
-        onChange={(value) => {
-          onToggleSection(!value)
-        }}
-        name={'show-section'}
-        id={'show-section'}
-        isToggling={isTogglingSection}
-        styles={{ position: 'absolute', right: 70, top: 30 }}
-      />
+      {isEditSection && mode === 'edit' && (
+        <LabeledSwitchInput
+          label={'Show section'}
+          labelDirection={'left'}
+          value={showSection}
+          onChange={(value) => {
+            onToggleSection(!value)
+          }}
+          name={'show-section'}
+          id={'show-section'}
+          isToggling={isTogglingSection}
+          styles={{ position: 'absolute', right: 70, top: 30 }}
+        />
+      )}
       {isEditSection && mode === 'edit' ? (
         <div className={'row '}>
           <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>

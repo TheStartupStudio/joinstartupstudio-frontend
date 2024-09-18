@@ -29,7 +29,9 @@ const MobileNavbar = (props) => {
   useEffect(() => {
     dispatch(getUserBasicInfo())
   }, [])
-  const userStory = useSelector((state) => state.portfolio.whoSection.userStory)
+  const userBasicInfo = useSelector(
+    (state) => state.portfolio.whoSection.userBasicInfo
+  )
   return (
     <nav className='navbar navbar-expand-lg navbar-light bg-light mobile-menu'>
       <div className='container-fluid'>
@@ -203,8 +205,8 @@ const MobileNavbar = (props) => {
               //     : avator
               // }
               src={
-                userStory?.data?.userImageUrl
-                  ? userStory?.data?.userImageUrl
+                userBasicInfo?.data?.userImageUrl
+                  ? userBasicInfo?.data?.userImageUrl
                   : avator
               }
               alt='Profile'

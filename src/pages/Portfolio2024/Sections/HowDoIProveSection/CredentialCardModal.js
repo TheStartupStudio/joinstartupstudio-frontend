@@ -43,7 +43,8 @@ const EducationCardModal = (props) => {
       website: '',
       dateAwarded: formatDateToInputValue(new Date()),
       description: '',
-      imageUrl: null
+      imageUrl: null,
+      showSection: true
     }
   )
 
@@ -111,6 +112,13 @@ const EducationCardModal = (props) => {
       title={props.title}
       actions={modalActions}
       class={'edit-education-modal'}
+      showSectionCheckbox={true}
+      isShownSection={credentialData.showSection}
+      onToggleSection={(showSection) => {
+        setCredentialData({ ...credentialData, showSection })
+      }}
+      switchId={`${isEdit() ? 'edit' : 'add'}-credential-switch`}
+      switchName={`${isEdit() ? 'edit' : 'add'}-credential-switch`}
     >
       <div className={'portfolio-section-container w-100 pt-1 pb-1 px-1'}>
         <div
