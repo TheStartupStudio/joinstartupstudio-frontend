@@ -27,7 +27,7 @@ const MyGuestSpeakers = ({ levels, programs }) => {
   const fetchApplications = useCallback(async () => {
     setLoading(true)
     try {
-      const { data } = await axiosInstance.get('/academy/applications')
+      const { data } = await axiosInstance.get('/academies/applications')
       const formattedData = data.map((application) => ({
         ...application,
         user: { ...application.academy_user.user },
@@ -76,7 +76,7 @@ const MyGuestSpeakers = ({ levels, programs }) => {
     setLoading(true)
     const fetchCohorts = async () => {
       try {
-        const { data } = await axiosInstance.get('/academy/cohorts')
+        const { data } = await axiosInstance.get('/academies/cohorts')
 
         setCohorts(data)
 

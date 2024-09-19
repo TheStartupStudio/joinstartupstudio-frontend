@@ -22,7 +22,7 @@ const ArchiveAppModal = ({
 
     try {
       await axiosInstance.patch(
-        `/academy/applications/${application.id}/archived`
+        `/academies/applications/${application.id}/archived`
       )
 
       if (refund) {

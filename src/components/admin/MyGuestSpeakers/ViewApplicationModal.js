@@ -75,7 +75,7 @@ const ViewApplicationModal = ({
         onHide()
       } else {
         axiosInstance
-          .patch(`/academy/applications/${application.id}/approved`)
+          .patch(`/academies/applications/${application.id}/approved`)
           .then((res) => {
             if (res.status === 200) {
               setLoading(false)

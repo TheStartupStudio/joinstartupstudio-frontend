@@ -74,7 +74,7 @@ const TransferModal = ({
 
     handleSubmit(() => {
       axiosInstance
-        .post(`/academy/applications/transfer/${user.id}`, formData)
+        .post(`/academies/applications/transfer/${user.id}`, formData)
         .then((res) => {
           if (res.status === 200) {
             refreshData()
