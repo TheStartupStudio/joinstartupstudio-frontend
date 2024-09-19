@@ -3,25 +3,13 @@ import MyFailure from './MyFailure'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   hideAddFailureModal,
-  hideAddMentorModal,
-  showAddFailureModal,
-  showAddMentorModal
+  showAddFailureModal
 } from '../../../../redux/portfolio/Actions'
 import SectionActions from '../../Components/Actions/SectionActions'
-import AddEntryButton from '../../Components/Actions/AddEntryButton'
 import MyFailureModal from '../../Components/Modals/MyFailureModal'
 import failureImage from '../../../../assets/images/HS-Portfolio-Icons/failure.png'
 import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
-import LTSButton from '../../../../components/LTSButtons/LTSButton'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faChevronLeft,
-  faChevronRight
-} from '@fortawesome/free-solid-svg-icons'
 import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
-import { Carousel } from '../../../CarouselComponent'
-import MyMentor from './MyMentor'
-import mentorsImage from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
 function MyFailures(props) {
   const dispatch = useDispatch()
   const mode = useSelector((state) => state.portfolio.mode)
@@ -82,7 +70,7 @@ function MyFailures(props) {
   return (
     <div className={'d-flex flex-column h-100 '}>
       {myFailures?.length > 0 ? (
-        <Carousel
+        <CarouselComponent
           data={myFailures}
           renderItems={(item) => {
             return <MyFailure data={item} isEditSection={isEditSection} />

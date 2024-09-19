@@ -14,6 +14,8 @@ import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
 import WebsiteLink from '../../Components/WebsiteLink'
 function ImmersionCard(props) {
   const { data, isEditSection } = props
+
+  console.log('props', props)
   const [dataToEdit, setDataToEdit] = useState({})
 
   const dispatch = useDispatch()
@@ -43,7 +45,7 @@ function ImmersionCard(props) {
   }
 
   return (
-    <div className={'mb-3'}>
+    <div className={'mb-3 w-100'}>
       <PortfolioDataContainer background={'#fff'}>
         <div className={'d-flex gap-3 '}>
           <div className={'flex-grow'} style={{ width: 100 }}>

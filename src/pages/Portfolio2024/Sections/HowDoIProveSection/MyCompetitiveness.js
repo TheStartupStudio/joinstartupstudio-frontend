@@ -10,7 +10,7 @@ import {
   showAddCompetitivenessModal
 } from '../../../../redux/portfolio/Actions'
 import MyMentorModal from '../../Components/Modals/MyMentorModal'
-import { Carousel } from '../../../CarouselComponent'
+import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
 
 function MyCompetitiveness(props) {
   const dispatch = useDispatch()
@@ -63,7 +63,7 @@ function MyCompetitiveness(props) {
     <div className={'container'}>
       {myCompetitiveness?.length > 0 ? (
         <>
-          <Carousel
+          <CarouselComponent
             data={myCompetitiveness}
             itemsToShow={3}
             renderItems={(item) => {
@@ -75,8 +75,9 @@ function MyCompetitiveness(props) {
             }}
             breakPoints={[
               { width: 500, itemsToShow: 1 },
-              { width: 768, itemsToShow: 2 },
-              { width: 1200, itemsToShow: 3 }
+              { width: 768, itemsToShow: 2 }
+              // { width: 1200, itemsToShow: 3 }
+              // { width: 1600, itemsToShow: 4 }
             ]}
             transitionDuration='0.5s'
             transitionTimingFunction='ease-in-out'

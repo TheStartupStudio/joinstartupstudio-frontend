@@ -8,9 +8,7 @@ import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
 import projectImage from '../../../../assets/images/HS-Portfolio-Icons/project.png'
 import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
 import SectionActions from '../../Components/Actions/SectionActions'
-import { Carousel } from '../../../CarouselComponent'
-import MyMentor from '../WhoAmISection/MyMentor'
-import mentorsImage from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
 
 const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
   const [projects, setProjects] = useState([])
@@ -59,7 +57,7 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
       <div className={'row gap-4'}>
         {projects?.length > 0 ? (
           <>
-            <Carousel
+            <CarouselComponent
               data={projects}
               renderItems={(item, index) => {
                 return (

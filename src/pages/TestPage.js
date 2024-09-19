@@ -1,5 +1,48 @@
-import React from 'react'
-import { Carousel } from './CarouselComponent'
+import CarouselComponent from '../components/Carousel/CarouselComponent'
+
+import React, { useRef, useState } from 'react'
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
+import 'swiper/swiper-bundle.min.css'
+import 'swiper/swiper.min.css'
+
+// Import Swiper styles
+// import 'swiper/css'
+// import 'swiper/css/pagination'
+// import 'swiper/css/navigation'
+
+// import './styles.css'
+
+import Pagination from 'swiper/modules/pagination/pagination'
+import Navigation from 'swiper/modules/navigation/navigation'
+
+function Slider() {
+  return (
+    <>
+      <Swiper
+        slidesPerView={2}
+        spaceBetween={30}
+        loop={true}
+        pagination={{
+          clickable: true
+        }}
+        navigation={true}
+        modules={[Pagination, Navigation]}
+        className='mySwiper'
+      >
+        <SwiperSlide>Slide 1</SwiperSlide>
+        <SwiperSlide>Slide 2</SwiperSlide>
+        <SwiperSlide>Slide 3</SwiperSlide>
+        <SwiperSlide>Slide 4</SwiperSlide>
+        <SwiperSlide>Slide 5</SwiperSlide>
+        <SwiperSlide>Slide 6</SwiperSlide>
+        <SwiperSlide>Slide 7</SwiperSlide>
+        <SwiperSlide>Slide 8</SwiperSlide>
+        <SwiperSlide>Slide 9</SwiperSlide>
+      </Swiper>
+    </>
+  )
+}
 
 const TestPage = () => {
   const products = [
@@ -10,13 +53,12 @@ const TestPage = () => {
     { id: 5, name: 'Product 5', color: '#ab47bc' }
   ]
 
-  // Render function to display each product
   const renderProduct = (item) => (
     <div
       className='product-card'
       style={{
         backgroundColor: item.color,
-        padding: '20px',
+        // padding: '20px',
         borderRadius: '10px'
       }}
     >
@@ -26,8 +68,17 @@ const TestPage = () => {
 
   return (
     <>
-      <Carousel data={products} itemsToShow={3} renderItems={renderProduct} />
-      <Carousel data={products} itemsToShow={2} renderItems={renderProduct} />
+      <Slider />
+      {/*<CarouselComponent*/}
+      {/*  data={products}*/}
+      {/*  itemsToShow={3}*/}
+      {/*  renderItems={renderProduct}*/}
+      {/*/>*/}
+      {/*<CarouselComponent*/}
+      {/*  data={products}*/}
+      {/*  itemsToShow={2}*/}
+      {/*  renderItems={renderProduct}*/}
+      {/*/>*/}
     </>
   )
 }

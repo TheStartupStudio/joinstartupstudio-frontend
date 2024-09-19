@@ -10,7 +10,7 @@ import {
   hideAddMentorModal,
   showAddMentorModal
 } from '../../../../redux/portfolio/Actions'
-import { Carousel } from '../../../CarouselComponent'
+import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
 
 function MyMentors(props) {
   const dispatch = useDispatch()
@@ -59,7 +59,7 @@ function MyMentors(props) {
       <div className={'row gap-4'}>
         {myMentors?.length > 0 ? (
           <>
-            <Carousel
+            <CarouselComponent
               data={myMentors}
               itemsToShow={3}
               renderItems={(item) => {

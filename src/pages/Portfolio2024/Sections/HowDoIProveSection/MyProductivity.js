@@ -149,12 +149,13 @@ function MyProductivity(props) {
           containCarousel ? (
             <CarouselComponent
               data={items}
-              itemsToShow={3}
-              renderItems={(item) => (
-                <React.Fragment key={item.id}>
-                  <ItemComponent data={item} isEditSection={isEditSection} />
-                </React.Fragment>
-              )}
+              renderItems={(item) => {
+                return (
+                  <React.Fragment key={item.id}>
+                    <ItemComponent data={item} isEditSection={isEditSection} />
+                  </React.Fragment>
+                )
+              }}
               transitionDuration='0.5s'
             />
           ) : (
@@ -207,7 +208,7 @@ function MyProductivity(props) {
             'You don’t have any immersion experiences yet! Click the button to add one.'
           }
         />,
-        true // enable carousel for Immersions
+        true
       )}
       <div className={'mt-5'}>
         {renderSection(
