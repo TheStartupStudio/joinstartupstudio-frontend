@@ -1,6 +1,6 @@
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Col, Modal } from 'react-bootstrap'
 import { CustomCheckbox, LtsButton } from '../../../ui/ContentItems'
 import axiosInstance from '../../../utils/AxiosInstance'
@@ -11,10 +11,9 @@ const ArchiveAppModal = ({
   onHide,
   application,
   payments,
-  refreshData
+  refreshData,
+  selectedRows = []
 }) => {
-  console.log('application archive', application)
-  console.log('payments archive', payments)
   const [loading, setLoading] = useState(false)
   const [refund, setRefund] = useState(false)
 
@@ -40,7 +39,7 @@ const ArchiveAppModal = ({
         } `
       )
     } catch (error) {
-      console.error('Error archiving or refunding:', error.message)
+      throw error
     } finally {
       setLoading(false)
     }

@@ -1,6 +1,12 @@
 import axios from 'axios'
 import { Auth } from 'aws-amplify'
 
+const getSubdomain = () => {
+  const hostname = window.location.hostname
+  const subdomain = hostname.split('.')[0]
+  return subdomain
+}
+
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_BASE_URL
 })
@@ -53,8 +59,11 @@ axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
 axiosInstance.interceptors.request.use(
   (request) => {
     const token = JSON.parse(localStorage.getItem('user'))
+    const clientName = getSubdomain()
 
     if (token) request.headers.Authorization = `Bearer ${token.token}`
+
+    request.headers['x-client-name'] = clientName
 
     return request
   },

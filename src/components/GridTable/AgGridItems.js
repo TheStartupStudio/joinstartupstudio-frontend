@@ -265,6 +265,59 @@ const TransferFilter = ({ model, onModelChange, getValue }) => {
     </div>
   )
 }
+const ACADEMY_TRANSFER_OPTIONS = [
+  'needs-review',
+  'approved',
+  'pending',
+  'archived'
+]
+const AccademyTransferFilter = ({ model, onModelChange, getValue }) => {
+  const [selectedStatus, setSelectedStatus] = useState(model || [])
+
+  const doesFilterPass = useCallback(
+    (params) => {
+      const { data } = params
+      const status = data.status || []
+
+      if (selectedStatus.length === 0) {
+        return true
+      }
+
+      return selectedStatus.includes(status.toLowerCase())
+    },
+    [selectedStatus]
+  )
+
+  useGridFilter({ doesFilterPass })
+
+  const handleCheckboxChange = (transfer) => {
+    const updatedSelectedTransfers = selectedStatus.includes(transfer)
+      ? selectedStatus.filter((p) => p !== transfer)
+      : [...selectedStatus, transfer]
+
+    setSelectedStatus(updatedSelectedTransfers)
+    onModelChange(updatedSelectedTransfers)
+  }
+
+  return (
+    <div style={{ padding: '4px' }}>
+      {ACADEMY_TRANSFER_OPTIONS.map((transfer) => (
+        <div
+          className='agGrid-customFilters__checkbox-container d-flex py-1'
+          key={transfer}
+        >
+          <input
+            type='checkbox'
+            className='agGrid-customFilters__checkbox'
+            onChange={() => handleCheckboxChange(transfer)}
+            checked={selectedStatus.includes(transfer)}
+          />
+          {transfer}
+        </div>
+      ))}
+    </div>
+  )
+}
 
 const CustomSelectCellEditor = (props) => {
   const { values } = props
@@ -762,5 +815,6 @@ export {
   CustomSelectCellEditor,
   CustomSelect,
   Actions,
-  TableActions
+  TableActions,
+  AccademyTransferFilter
 }

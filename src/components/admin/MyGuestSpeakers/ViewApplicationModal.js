@@ -1,23 +1,18 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useValidation } from '../../../hooks/useValidation'
 import useIsFormEmpty from '../../../hooks/useIsFormEmpty'
 import LoadingAnimation from '../../../ui/loadingAnimation'
 import { Col, Modal, Row } from 'react-bootstrap'
 import { CustomInput } from '../MySchool/ContentItems'
 import { CustomCheckbox, LtsButton } from '../../../ui/ContentItems'
-import DefaultImage from '../../../assets/images/default-university-logo.jpg'
 import { useForm } from '../../../hooks/useForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faExclamationTriangle,
   faUserPlus
 } from '@fortawesome/free-solid-svg-icons'
-import { FaTriangleExclamation } from 'react-icons/fa6'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
-import useModalState from '../../../hooks/useModalState'
-import TransferModal from './TransferModal'
 import { getFormattedDate } from '../../../utils/helpers'
 
 const ViewApplicationModal = ({
@@ -29,9 +24,6 @@ const ViewApplicationModal = ({
   transferHandler,
   deleteHandler
 }) => {
-  console.log('application', application)
-  const [modals, setModalState] = useModalState()
-  const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
 

@@ -42,7 +42,6 @@ const TransferModal = ({
   refreshData,
   selectedRows = []
 }) => {
-  console.log('user', user)
   const [openDropdown, setOpenDropdown] = useState(null)
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -51,8 +50,8 @@ const TransferModal = ({
     name: user.name ?? '',
     instructor_id: '',
     cohort_id: '',
-    cohort_date: [],
-    cohort_time: [],
+    cohort_date: '',
+    cohort_time: '',
     levels: [],
     programs: []
   }
@@ -62,7 +61,6 @@ const TransferModal = ({
     user,
     loading
   )
-  console.log('formData', formData)
 
   const { errors, handleSubmit } = useValidation(formData, setFormSubmitted)
 
@@ -78,7 +76,6 @@ const TransferModal = ({
       axiosInstance
         .post(`/academy/applications/transfer/${user.id}`, formData)
         .then((res) => {
-          console.log('res', res)
           if (res.status === 200) {
             refreshData()
             toast.success('A user is successfully transfered.')
@@ -235,7 +232,6 @@ const TransferModal = ({
                 <CustomDropdown
                   isSelectable
                   exclusive
-                  multiple
                   name='cohort_date'
                   btnClassName={'gray-border'}
                   options={COHORT_DAYS_OPTIONS?.map((date) => {
@@ -247,8 +243,8 @@ const TransferModal = ({
                   })}
                   isOpen={openDropdown === 'cohort_date'}
                   setOpenDropdown={() => handleDropdownClick('cohort_date')}
-                  onClick={(selectedOptions) => {
-                    handleChangeDropdown(selectedOptions, 'add', 'cohort_date')
+                  onClick={(even) => {
+                    handleChangeSelect(even, 'cohort_date')
                   }}
                   showError={formSubmitted}
                   error={errors.instructor_id}
@@ -260,7 +256,6 @@ const TransferModal = ({
                 <label htmlFor='cohort_time'>Assign cohort times</label>
                 <CustomDropdown
                   isSelectable
-                  multiple
                   exclusive
                   name='cohort_time'
                   btnClassName={'gray-border'}
@@ -272,23 +267,12 @@ const TransferModal = ({
                     }
                   })}
                   isOpen={openDropdown === 'cohort_time'}
-                  // handleChange={(e) => handleChangeCheckbox(e, 'array', 3)}
                   setOpenDropdown={() => handleDropdownClick('cohort_time')}
-                  onClick={(selectedOptions) => {
-                    handleChangeDropdown(selectedOptions, 'add', 'cohort_time')
+                  onClick={(even) => {
+                    handleChangeSelect(even, 'cohort_time')
                   }}
                   showError={formSubmitted}
                   error={errors.cohort_time}
-                  // preselectedOptions={
-                  //   mode === 'edit'
-                  //     ? [
-                  //         {
-                  //           name: formData.period?.name,
-                  //           id: formData.period?.id
-                  //         }
-                  //       ]
-                  //     : []
-                  // }
                 />
               </div>
             </Col>

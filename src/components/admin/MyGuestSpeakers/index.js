@@ -6,17 +6,16 @@ import './style.css'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import {
-  Actions,
   TableActions,
-  TransferFilter
+  AccademyTransferFilter
 } from '../../GridTable/AgGridItems'
 import GridTable from '../../GridTable'
 import ViewApplicationModal from './ViewApplicationModal'
 import ArchiveAppModal from './ArchiveAppModal'
 import TransferModal from './TransferModal'
+import { formatDateString } from '../../../utils/helpers'
 
 const MyGuestSpeakers = ({ levels, programs }) => {
-  const [modals, setModalState] = useModalState()
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSchoolFilter, setSelectedSchoolFilter] = useState(null)
@@ -25,13 +24,10 @@ const MyGuestSpeakers = ({ levels, programs }) => {
   const [instructors, setInstructors] = useState([])
   const [cohorts, setCohorts] = useState([])
 
-  console.log('selectedRows', selectedRows)
-
   const fetchApplications = useCallback(async () => {
     setLoading(true)
     try {
       const { data } = await axiosInstance.get('/academy/applications')
-      console.log('data', data)
       const formattedData = data.map((application) => ({
         ...application,
         user: { ...application.academy_user.user },
@@ -99,19 +95,32 @@ const MyGuestSpeakers = ({ levels, programs }) => {
         headerName: 'User Name',
         field: 'name',
         flex: 2,
-        checkboxSelection: true
+        checkboxSelection: true,
+        cellRenderer: (params) => (
+          <>
+            <div className='pb-0 m-0 fw-medium' style={{ height: '14px' }}>
+              {params.data?.name}
+            </div>
+            <small
+              className='m-0 p-0'
+              style={{ fontSize: '12px', color: 'grey' }}
+            >
+              {params.data?.user?.email}
+            </small>
+          </>
+        )
       },
       {
         headerName: 'Date Submitted',
         field: 'dateOfApplication',
-        flex: 2
+        flex: 2,
+        cellRenderer: (params) => formatDateString(params.value)
       },
       {
         field: 'status',
         flex: 2,
-        filter: TransferFilter,
+        filter: AccademyTransferFilter,
         cellRenderer: (params) => {
-          console.log('params', params)
           let status = params.value
           return (
             <div>
@@ -135,7 +144,7 @@ const MyGuestSpeakers = ({ levels, programs }) => {
                       : status === 'approved'
                       ? 'Approved'
                       : status === 'archived'
-                      ? 'Denied'
+                      ? 'Archived'
                       : 'None'
                     : 'None'
                 }
@@ -148,7 +157,6 @@ const MyGuestSpeakers = ({ levels, programs }) => {
         field: 'actions',
         flex: 3,
         cellRenderer: (params) => {
-          console.log('params', params)
           let user = {
             ...params.data.academy_user
           }
@@ -233,11 +241,6 @@ const MyGuestSpeakers = ({ levels, programs }) => {
         <HeaderActions
           setSearchQuery={setSearchQuery}
           selectedRows={selectedRows}
-          cohorts={cohorts}
-          programs={programs}
-          levels={levels}
-          user={rowData.user}
-          instructors={instructors}
         />
         <GridTable
           searchQuery={searchQuery}
@@ -247,18 +250,6 @@ const MyGuestSpeakers = ({ levels, programs }) => {
           filteredData={filteredData}
           loading={loading}
         />
-        {/* {modals.transferAcademyUserModal && (
-          <TransferModal
-            show={modals.transferAcademyUserModal}
-            onHide={() => setModalState('transferAcademyUserModal', false)}
-            user={rowData.user}
-            instructors={instructors}
-            cohorts={cohorts}
-            programs={programs}
-            levels={levels}
-            refreshData={refreshApplications}
-          />
-        )} */}
       </div>
     </div>
   )
