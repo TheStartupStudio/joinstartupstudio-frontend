@@ -195,16 +195,21 @@ const EducationCardModal = (props) => {
           <div className={'col-md-8 '}>
             <>
               <LabeledInput
-                title={'Organization name'}
+                titleClassNames={'portf-input-title'}
+                title={'ORGANIZATION NAME'}
                 name={'organizationName'}
                 width={'100%'}
                 value={educationData?.organizationName}
                 type={'text'}
                 onChange={(e) => handleDataChange(e, 'organizationName')}
                 labelAlign={'start'}
+                placeholder={
+                  'Add the name of your school, college, or university'
+                }
               />
               <div className={'mt-2'}>
                 <LabeledInput
+                  titleClassNames={'portf-input-title'}
                   type={'text'}
                   title={'Location'}
                   name={'location'}
@@ -212,6 +217,7 @@ const EducationCardModal = (props) => {
                   value={educationData?.location}
                   onChange={(e) => handleDataChange(e, 'location')}
                   labelAlign={'start'}
+                  placeholder={'Add the location here'}
                 />
               </div>
               <div className={'mt-2'}>
@@ -220,10 +226,13 @@ const EducationCardModal = (props) => {
                   title={'Website'}
                   name={'website'}
                   width={'100%'}
-                  titleClassNames={'bold-text '}
+                  titleClassNames={'bold-text portf-input-title'}
                   value={educationData?.website}
                   onChange={(e) => handleDataChange(e, 'website')}
                   labelAlign={'start'}
+                  placeholder={
+                    'Add the URL for the website of the school, college, or university'
+                  }
                 />
               </div>
             </>
@@ -237,6 +246,7 @@ const EducationCardModal = (props) => {
             className={'portfolio-quill'}
             value={educationData?.description ?? ''}
             onChange={(value) => handleDataChange(value, 'description')}
+            placeholder='Briefly describe what you are studying or the degree you earned at this school, college, or university.'
           />
         </div>
       </div>

@@ -35,7 +35,7 @@ const LabeledInput = ({
           textClassNames ?? ''
         } justify-content-${labelAlign}`}
         style={{
-          backgroundColor: '#F6F7F7',
+          // backgroundColor: '#F6F7F7',
           minHeight: titleHeight
         }}
       >
@@ -49,7 +49,8 @@ const LabeledInput = ({
             style={{
               backgroundColor: '#fff',
               minHeight: inputHeight,
-              resize: 'none'
+              resize: 'none',
+              textAlign: 'center'
             }}
             className='w-100 rounded-0 p-2'
             onChange={(e) => onChange?.(e.target.value, 'mentorName')}

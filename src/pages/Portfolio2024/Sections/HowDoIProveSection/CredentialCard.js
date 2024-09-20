@@ -45,7 +45,7 @@ function CredentialCard(props) {
   return (
     <div className={'mb-3'}>
       <PortfolioDataContainer background={'#fff'}>
-        <div className={'d-flex gap-3 '} style={{ flexWrap: 'wrap' }}>
+        <div className={'proveit-card-resp d-flex gap-3 '}>
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}

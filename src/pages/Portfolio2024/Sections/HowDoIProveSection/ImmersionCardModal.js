@@ -286,16 +286,19 @@ const ImmersionCardModal = (props) => {
             <div className={'d-flex gap-5'}>
               <div className={'w-75'}>
                 <LabeledInput
-                  title={'Organization name'}
+                  titleClassNames={'portf-input-title'}
+                  title={'ORGANIZATION NAME'}
                   name={'organizationName'}
                   width={'100%'}
                   value={immersionData?.organizationName}
                   type={'text'}
                   onChange={(e) => handleDataChange(e, 'organizationName')}
                   labelAlign={'start'}
+                  placeholder={'Add the name of the organization'}
                 />
                 <div className={'mt-2'}>
                   <LabeledInput
+                    titleClassNames={'portf-input-title'}
                     type={'text'}
                     title={'Location'}
                     name={'location'}
@@ -303,6 +306,7 @@ const ImmersionCardModal = (props) => {
                     value={immersionData?.location}
                     onChange={(e) => handleDataChange(e, 'location')}
                     labelAlign={'start'}
+                    placeholder={'Add the location here'}
                   />
                 </div>
                 <div className={'mt-2'}>
@@ -311,10 +315,11 @@ const ImmersionCardModal = (props) => {
                     title={'Website'}
                     name={'website'}
                     width={'100%'}
-                    titleClassNames={'bold-text '}
+                    titleClassNames={'bold-text portf-input-title'}
                     value={immersionData?.website}
                     onChange={(e) => handleDataChange(e, 'website')}
                     labelAlign={'start'}
+                    placeholder={'Add the URL of the organization'}
                   />
                 </div>
               </div>
@@ -347,12 +352,13 @@ const ImmersionCardModal = (props) => {
                 className={'portfolio-info-title '}
                 style={{ textTransform: 'none' }}
               >
-                {'The problem'}
+                {'The Problem'}
               </div>
               <ReactQuill
                 className={'portfolio-quill mt-2'}
                 value={immersionData?.problem ?? ''}
                 onChange={(value) => handleDataChange(value, 'problem')}
+                placeholder='Explain the problem you identified and why it was worth solving.'
               />
             </div>
 
@@ -361,12 +367,13 @@ const ImmersionCardModal = (props) => {
                 className={'portfolio-info-title'}
                 style={{ textTransform: 'none' }}
               >
-                {'The solution'}
+                {'The Solution'}
               </div>
               <ReactQuill
                 className={'portfolio-quill mt-2'}
                 value={immersionData?.solution ?? ''}
                 onChange={(value) => handleDataChange(value, 'solution')}
+                placeholder='Explain how your solution solved the problem you identified.'
               />
             </div>
           </div>

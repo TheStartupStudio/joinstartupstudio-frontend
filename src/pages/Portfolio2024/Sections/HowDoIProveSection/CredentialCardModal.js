@@ -164,16 +164,19 @@ const EducationCardModal = (props) => {
           <div className={'col-md-8 '}>
             <>
               <LabeledInput
-                title={'Organization name'}
+                titleClassNames={'portf-input-title'}
+                title={'CREDENTIAL NAME'}
                 name={'organizationName'}
                 width={'100%'}
                 value={credentialData?.credentialTitle}
                 type={'text'}
                 onChange={(e) => handleDataChange(e, 'credentialTitle')}
                 labelAlign={'start'}
+                placeholder={'Add the title of the credential'}
               />
               <div className={'mt-2'}>
                 <LabeledInput
+                  titleClassNames={'portf-input-title'}
                   type={'text'}
                   title={'Location'}
                   name={'location'}
@@ -183,6 +186,7 @@ const EducationCardModal = (props) => {
                     handleDataChange(e, 'certifyingOrganization')
                   }
                   labelAlign={'start'}
+                  placeholder={'Add the name of the certifying organization'}
                 />
               </div>
               <div className={'mt-2'}>
@@ -191,10 +195,11 @@ const EducationCardModal = (props) => {
                   title={'Website'}
                   name={'website'}
                   width={'100%'}
-                  titleClassNames={'bold-text '}
+                  titleClassNames={'bold-text portf-input-title'}
                   value={credentialData?.website}
                   onChange={(e) => handleDataChange(e, 'website')}
                   labelAlign={'start'}
+                  placeholder={'Add the URL for the certifying organization'}
                 />
               </div>
             </>
@@ -208,6 +213,7 @@ const EducationCardModal = (props) => {
             className={'portfolio-quill'}
             value={credentialData?.description ?? ''}
             onChange={(value) => handleDataChange(value, 'description')}
+            placeholder='Briefly describe what the credential earned and some of the skills gained.'
           />
         </div>
       </div>

@@ -216,16 +216,19 @@ const WorkExperienceCardModal = (props) => {
           <div className={'col-md-8 '}>
             <>
               <LabeledInput
-                title={'Organization name'}
+                titleClassNames={'portf-input-title'}
+                title={'ORGANIZATION NAME'}
                 name={'organizationName'}
                 width={'100%'}
                 value={workExperienceData?.organizationName}
                 type={'text'}
                 onChange={(e) => handleDataChange(e, 'organizationName')}
                 labelAlign={'start'}
+                placeholder={'Add the name of the organization'}
               />
               <div className={'mt-2'}>
                 <LabeledInput
+                  titleClassNames={'portf-input-title'}
                   type={'text'}
                   title={'Location'}
                   name={'location'}
@@ -233,6 +236,7 @@ const WorkExperienceCardModal = (props) => {
                   value={workExperienceData?.location}
                   onChange={(e) => handleDataChange(e, 'location')}
                   labelAlign={'start'}
+                  placeholder={'Add the location here'}
                 />
               </div>
               <div className={'mt-2'}>
@@ -241,10 +245,11 @@ const WorkExperienceCardModal = (props) => {
                   title={'Website'}
                   name={'website'}
                   width={'100%'}
-                  titleClassNames={'bold-text '}
+                  titleClassNames={'bold-text portf-input-title'}
                   value={workExperienceData?.website}
                   onChange={(e) => handleDataChange(e, 'website')}
                   labelAlign={'start'}
+                  placeholder={"Add the URL for the organization's website"}
                 />
               </div>
             </>
@@ -257,10 +262,11 @@ const WorkExperienceCardModal = (props) => {
               title={'Job title'}
               name={'jobTitle'}
               width={'100%'}
-              titleClassNames={'bold-text '}
+              titleClassNames={'bold-text portf-input-title'}
               value={workExperienceData?.jobTitle}
               onChange={(e) => handleDataChange(e, 'jobTitle')}
               labelAlign={'start'}
+              placeholder={'Add your job title here'}
             />
           </div>
           <div className={'mt-3'}>
@@ -274,6 +280,7 @@ const WorkExperienceCardModal = (props) => {
               className={'portfolio-quill'}
               value={workExperienceData?.description ?? ''}
               onChange={(value) => handleDataChange(value, 'description')}
+              placeholder='Briefly describe the nature of your work experience.'
             />
           </div>
         </div>

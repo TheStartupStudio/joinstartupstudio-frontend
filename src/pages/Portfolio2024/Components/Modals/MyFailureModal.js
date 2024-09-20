@@ -130,7 +130,7 @@ function MyFailureModal(props) {
             value={assessment}
             onChange={(value) => setAssessment(value)}
           />
-          <div className={'portfolio-info-title my-2 text-italic'}>
+          <div className={'pivot-title portfolio-info-title my-2 text-italic'}>
             {'My Pivot'}
           </div>
           <ReactQuill
@@ -139,7 +139,7 @@ function MyFailureModal(props) {
             value={outcome}
             onChange={(value) => setOutcome(value)}
           />
-          <div className={'portfolio-info-title my-2 text-italic'}>
+          <div className={'pivot-title portfolio-info-title my-2 text-italic'}>
             {'My Outcome'}
           </div>
           <ReactQuill

@@ -5125,7 +5125,19 @@ ul.sidebar-menu-item .collapse a:hover {
   word-break: break-word;
   overflow-wrap: break-word;
   white-space: normal;
+  font-weight: 300;
+  letter-spacing: 1px;
 }
+
+.portf-quill-mentor {
+  font-size: 15px !important;
+
+}
+
+.portf-input-title {
+  background-color: #F6F7F7 !important;
+}
+
 
 .you-href {
   text-align: left;
