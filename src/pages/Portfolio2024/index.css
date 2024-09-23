@@ -407,6 +407,7 @@
 
 .nav-icons {
   margin-inline: 100px;
+  /* margin-left: 200px !important; */
   margin-bottom: 30px;
 }
 
@@ -425,9 +426,20 @@
 }
 
 .portfolio-nav-icon {
-  width: 70px !important;
-  height: 70px !important;
+  width: 60px !important;
+  height: 60px !important;
 }
+
+@media (max-width:960px) {
+  .immersion-portfolio-card {
+    flex-direction: column !important;
+  }
+
+  .immersion-card-text {
+    width: 100% !important;
+  }
+}
+
 
 .nav-icon-title {
   font: normal normal 600 14px/24px Montserrat;
@@ -436,7 +448,7 @@
   text-transform: uppercase;
   bottom: -30px;
   position: absolute;
-  width: 155px;
+  width: 200px;
   text-align: center;
 }
 
@@ -575,14 +587,15 @@
 
 
 .portfolio-modal-wrapper .modal-content {
-  /* background: #ffffff 0% 0% no-repeat padding-box; */
-  background: transparent linear-gradient(237deg, #FFFFFF 0%, #E4E9F4 100%) 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  /* background: transparent linear-gradient(237deg, #FFFFFF 0%, #E4E9F4 100%) 0% 0% no-repeat padding-box; */
   box-shadow: 0px 3px 10px #00000029;
   overflow: hidden;
   border-radius: 50px !important;
 
   min-width: 85%;
-  height: 850px !important;
+  /* height: 850px !important; */
+  height: max-content !important;
   margin-top: -10px !important;
   padding: 20px;
 
@@ -612,9 +625,9 @@
   padding: 10px !important;
 }
 
-.edit-immersion-modal .modal-dialog {
+/* .edit-immersion-modal .modal-dialog {
   min-width: 1000px !important;
-}
+} */
 
 .share-portfolio-modal .modal-dialog {
   min-height: 100% !important;
@@ -662,6 +675,7 @@
   }
 }
 
+
 @media (max-width: 875px) {
   .section-description-container {}
 }
@@ -693,6 +707,57 @@
   }
 
 }
+
+/* 
+@media (max-width: 1252px) {
+  .portfolio-nav-icons {
+    width: 85%;
+    margin-inline: 50px !important;
+  }
+
+}
+
+
+@media (max-width: 822px) {
+  .portfolio-nav-icons {
+    width: 100%;
+    margin-inline: 0 !important;
+  }
+
+}
+
+@media (max-width: 730px) {
+  .portfolio-nav-icons {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 40px;
+    gap: 40px;
+  }
+
+  .horizontal-separator {
+    display: none;
+  }
+
+}
+
+@media (max-width: 423px) {
+  .portfolio-nav-icons {
+    grid-gap: 10px !important;
+    gap: 30px !important;
+  }
+} */
+
+/* 
+@media (max-width: 795px) {
+  .portfolio-nav-icons {
+    width: 85vw;
+    margin-inline: 0 !important;
+  }
+
+  .my-portfolio-logo {
+    width: 90%;
+  }
+} */
 
 @media (max-width: 578px) {
   .portfolio-nav-icons {
@@ -1082,6 +1147,79 @@
   height: 20px;
 }
 
+
+
+.image-education-card {
+  width: 25% !important;
+}
+
+.education-card-inputs {
+  width: 75%;
+}
+
+
+@media (max-width:920px) {
+  .education-card-row {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .education-card-inputs {
+    width: 100%;
+  }
+
+
+
+}
+
+.checkbox-date-education-resp {
+  display: none !important;
+}
+
+@media (max-width:570px) {
+  .education-card-date {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .checkbox-date-education {
+    display: none !important;
+  }
+
+  .checkbox-date-education-resp {
+    display: block !important;
+  }
+}
+
+@media (max-width:470px) {
+  .immersion-inputs {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start !important;
+  }
+}
+
+.immersion-inputs {
+  align-items: center !important;
+  gap: 1rem !important;
+  grid-gap: 20px !important;
+}
+
+.immersion-image-align {
+  margin-top: 40px !important;
+}
+
+.immersion-problem {
+  margin-top: -10px !important;
+}
+
+.delete-immersion-btn {
+  margin-top: 15px !important;
+}
+
+
+
 .proveit-title-org {
   font-weight: 500 !important;
   /* font: normal normal 600 20px/24px Montserrat; */
@@ -1091,8 +1229,9 @@
   font: normal normal 600 20px/24px Montserrat !important;
 }
 
+
 .education-section-alignment * {
-  letter-spacing: 1.5px !important;
+  letter-spacing: 1px !important;
   line-height: -1px;
 }
 
@@ -1115,6 +1254,7 @@
   text-align: center;
   font: normal normal normal 22px/27px Montserrat;
   letter-spacing: 0px;
+  font-weight: 300 !important;
   color: #231f20;
   opacity: 1;
   padding: 10px 0;
@@ -1192,7 +1332,7 @@
   }
 
   .immersion-portf {
-    margin-left: -120px !important;
+    /* margin-left: -120px !important; */
     text-align: center !important;
   }
 
@@ -1222,7 +1362,44 @@
   align-items: flex-end;
 }
 
+@media (max-width:960px) {
+  .org-end-immersion {
+    justify-content: center;
+    width: 100% !important;
+  }
 
+}
+
+@media (max-width:720px) and (min-width:681px) {
+  .org-end-immersion {
+    margin-left: -100px !important;
+  }
+
+}
+
+@media (max-width:680px) and (min-width:577px) {
+  .org-end-immersion {
+    margin-left: -50px !important;
+  }
+}
+
+@media (max-width:576px) {
+  .org-end-immersion {
+    margin-left: -100px !important;
+    width: 100% !important;
+  }
+
+  .immersion-card-img {
+    width: 100%;
+  }
+}
+
+
+@media (max-width:370px) {
+  .org-end-immersion {
+    margin-left: -120px !important;
+  }
+}
 
 .submission-wrapper-portfolio {
   width: 45%;
@@ -1374,6 +1551,15 @@
   padding-left: 0 !important;
 }
 
+.add-mentor-portf {
+  height: 400px !important;
+}
+
+.placeholder-mentor-img {
+
+  background: transparent linear-gradient(66deg, #e4e9f4 30%, #ffffff 70%) 0% 0% no-repeat padding-box;
+}
+
 .portfolio-quill-label-sm {
   text-align: left;
   font: normal normal 600 14px/13px Montserrat;
@@ -1408,9 +1594,9 @@
   font-size: 25px;
 }
 
-.relationship-story .portfolio-info-container {
+/* .relationship-story .portfolio-info-container {
   height: 170px !important;
-}
+} */
 
 /* .mentor-width {
   width: 400px !important;
@@ -1431,7 +1617,7 @@
   text-align: left;
   font: normal normal 300 15px/19px Montserrat;
   color: #231F20 !important;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   word-spacing: 1px;
   color: #000000;
   word-break: break-word;

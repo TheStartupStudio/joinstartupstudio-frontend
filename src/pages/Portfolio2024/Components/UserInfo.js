@@ -9,8 +9,8 @@ function UserInfo(props) {
       style={{ marginTop: '30px' }}
     >
       <UserImage
-        width={190}
-        height={190}
+        width={180}
+        height={180}
         userImageUrl={props.userInfo?.userImageUrl}
       />
       <div className={'user-info-box'} style={{ marginTop: '30px' }}>

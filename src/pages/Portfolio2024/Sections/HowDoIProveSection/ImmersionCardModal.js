@@ -207,7 +207,7 @@ const ImmersionCardModal = (props) => {
             ' d-flex justify-content-between flex-column align-items-end mb-2'
           }
         >
-          <div className={'d-flex gap-2 mb-2'}>
+          <div className={'education-card-date d-flex gap-2 mb-2'}>
             <div className={'select-date d-flex align-items-center'}>
               <span>
                 <BsCalendar3 className={'calendar_icon '} />
@@ -247,9 +247,27 @@ const ImmersionCardModal = (props) => {
                 </span>
               </div>
             )}
+            <div
+              className={
+                'checkbox-date-education-resp d-flex align-items-center'
+              }
+            >
+              <input
+                type='checkbox'
+                checked={immersionData.currentlyAttending}
+                onChange={(e) => {
+                  const newValue = e.target.checked
+                  handleDataChange(newValue, 'currentlyAttending')
+                }}
+                className={'me-2 current-position-checkbox'}
+              />
+              <span className={'current-position-label'}>
+                Currently attending
+              </span>
+            </div>
           </div>
 
-          <div className={'d-flex align-items-center'}>
+          <div className={'checkbox-date-education d-flex align-items-center'}>
             <input
               type='checkbox'
               checked={immersionData.currentlyAttending}
@@ -264,8 +282,8 @@ const ImmersionCardModal = (props) => {
             </span>
           </div>
         </div>
-        <div className={'row'}>
-          <div className={' col-md-3 '}>
+        <div className={'education-card-row row'}>
+          <div className={'immersion-image-align col-md-3 '}>
             {/*<div className="upload-image me-2 mb-1">*/}
             <div className='p-0 mb-1'>
               <ReactImageUpload
@@ -283,7 +301,7 @@ const ImmersionCardModal = (props) => {
             </div>
           </div>
           <div className={'col-md-9 '}>
-            <div className={'d-flex gap-5'}>
+            <div className={'immersion-inputs d-flex gap-5'}>
               <div className={'w-75'}>
                 <LabeledInput
                   titleClassNames={'portf-input-title'}
@@ -347,7 +365,7 @@ const ImmersionCardModal = (props) => {
                 />
               </div>
             </div>
-            <div className={'mt-4'}>
+            <div className={'immersion-problem mt-4'}>
               <div
                 className={'portfolio-info-title '}
                 style={{ textTransform: 'none' }}
@@ -380,7 +398,10 @@ const ImmersionCardModal = (props) => {
         </div>
       </div>
       {isEdit() && (
-        <div className={' mt-5'} onClick={() => setConfirmDeleteModal(true)}>
+        <div
+          className={'delete-immersion-btn mt-5'}
+          onClick={() => setConfirmDeleteModal(true)}
+        >
           <LtsButton variant={'text'} align={'end'} name={'DELETE IMMERSION'} />
         </div>
       )}

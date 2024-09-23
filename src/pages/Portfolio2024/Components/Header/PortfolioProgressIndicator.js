@@ -34,6 +34,7 @@ function PortfolioProgressIndicator(props) {
         />
         <HorizontalSeparator />
         <ProgressIcon
+          className={'wcid-text'}
           icons={{ coloredIcon: whatIconColor, grayIcon: whatIconGray }}
           title={'What Can I Do?'}
           activateSection={() => {

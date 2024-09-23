@@ -139,7 +139,7 @@ const WorkExperienceCardModal = (props) => {
             ' d-flex justify-content-between flex-column align-items-end mb-2'
           }
         >
-          <div className={'d-flex gap-2 mb-2'}>
+          <div className={'education-card-date d-flex gap-2 mb-2'}>
             <div className={'select-date d-flex align-items-center'}>
               <span>
                 <BsCalendar3 className={'calendar_icon '} />
@@ -177,10 +177,28 @@ const WorkExperienceCardModal = (props) => {
                   />
                 </span>
               </div>
-            )}
+            )}{' '}
+            <div
+              className={
+                'checkbox-date-education-resp d-flex align-items-center'
+              }
+            >
+              <input
+                type='checkbox'
+                checked={workExperienceData.currentPosition}
+                onChange={(e) => {
+                  const newValue = e.target.checked
+                  handleDataChange(newValue, 'currentPosition')
+                }}
+                className={'me-2 current-position-checkbox'}
+              />
+              <span className={'current-position-label'}>
+                My current position
+              </span>
+            </div>
           </div>
 
-          <div className={'d-flex align-items-center'}>
+          <div className={'checkbox-date-education d-flex align-items-center'}>
             <input
               type='checkbox'
               checked={workExperienceData.currentPosition}
@@ -195,8 +213,8 @@ const WorkExperienceCardModal = (props) => {
             </span>
           </div>
         </div>
-        <div className={'row'}>
-          <div className={' col-md-4 '}>
+        <div className={'education-card-row row'}>
+          <div className={'image-education-card col-md-4 '}>
             {/*<div className="upload-image me-2 mb-1">*/}
             <div className='p-0 mb-1'>
               <ReactImageUpload
@@ -213,9 +231,10 @@ const WorkExperienceCardModal = (props) => {
               />
             </div>
           </div>
-          <div className={'col-md-8 '}>
+          <div className={'education-card-inputs col-md-8 '}>
             <>
               <LabeledInput
+                containerClassNames={'wcid-ed-input'}
                 titleClassNames={'portf-input-title'}
                 title={'ORGANIZATION NAME'}
                 name={'organizationName'}
@@ -228,6 +247,7 @@ const WorkExperienceCardModal = (props) => {
               />
               <div className={'mt-2'}>
                 <LabeledInput
+                  containerClassNames={'wcid-ed-input'}
                   titleClassNames={'portf-input-title'}
                   type={'text'}
                   title={'Location'}
@@ -241,6 +261,7 @@ const WorkExperienceCardModal = (props) => {
               </div>
               <div className={'mt-2'}>
                 <LabeledInput
+                  containerClassNames={'wcid-ed-input'}
                   type={'text'}
                   title={'Website'}
                   name={'website'}

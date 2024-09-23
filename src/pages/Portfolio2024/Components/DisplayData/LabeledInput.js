@@ -31,9 +31,9 @@ const LabeledInput = ({
       }}
     >
       <div
-        className={`mb-0 info-label p-2 ${titleClassNames ?? ''} ${
-          textClassNames ?? ''
-        } justify-content-${labelAlign}`}
+        className={`portf-input-title mb-0 info-label p-2 ${
+          titleClassNames ?? ''
+        } ${textClassNames ?? ''} justify-content-${labelAlign}`}
         style={{
           // backgroundColor: '#F6F7F7',
           minHeight: titleHeight

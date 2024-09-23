@@ -1,5 +1,5 @@
 import React from 'react'
-import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
+import imagePlaceholder from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
 import SectionActions from './SectionActions'
 import { useDispatch, useSelector } from 'react-redux'
 import MyMentorModal from '../Modals/MyMentorModal'
@@ -55,9 +55,9 @@ function AddMyMentor(props) {
   ]
 
   return (
-    <div className={'my-mentors-container position-relative'}>
+    <div className={'add-mentor-portf my-mentors-container position-relative'}>
       <img
-        className={'my-mentors-image'}
+        className={'placeholder-mentor-img my-mentors-image'}
         alt={'submission-image'}
         src={imagePlaceholder}
       />
