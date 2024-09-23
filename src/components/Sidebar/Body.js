@@ -67,7 +67,7 @@ const Body = (props) => {
           />
           <ParentDropdownItem id={'myUserManagament'}>
             <DropdownItem title={'MY SCHOOL'} to={'/my-school'} />
-            <DropdownItem title={'MY IMMERSION'} to={'/my-school'} />
+            <DropdownItem title={'MY IMMERSION'} to={'/my-immersion-admin'} />
             <DropdownItem title={'My courses & management'} to={'/my-school'} />
           </ParentDropdownItem>
         </>
