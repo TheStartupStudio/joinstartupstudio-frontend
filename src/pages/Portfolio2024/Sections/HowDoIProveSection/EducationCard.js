@@ -46,7 +46,7 @@ function EducationCard(props) {
   return (
     <div className={' mb-3 w-100'}>
       <PortfolioDataContainer background={'#fff'}>
-        <div className={'d-flex gap-3 '} style={{ flexWrap: 'wrap' }}>
+        <div className={'proveit-card-resp d-flex gap-3 '} s>
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}

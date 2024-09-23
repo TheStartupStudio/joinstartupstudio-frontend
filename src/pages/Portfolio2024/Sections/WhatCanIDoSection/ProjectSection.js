@@ -53,7 +53,7 @@ const ProjectSection = ({
           {content.title}
         </div>
         <div
-          className={'portfolio-info-content'}
+          className={'project-content portfolio-info-content'}
           dangerouslySetInnerHTML={{ __html: content.text }}
         />
       </div>

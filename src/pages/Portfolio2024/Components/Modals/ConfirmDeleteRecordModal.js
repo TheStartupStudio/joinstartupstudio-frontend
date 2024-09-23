@@ -34,7 +34,7 @@ function ConfirmDeleteRecordModal(props) {
           <LtsButton
             onClick={props.onHide}
             name={'CANCEL & GO BACK'}
-            backgroundColor={'#fff'}
+            backgroundColor={'transparent'}
             color={'#707070'}
           />
         </div>

@@ -38,7 +38,6 @@ function SectionActions(props) {
               }
             />
           )}
-
           {saveButton?.isDisplayed && (
             <TooltipAction
               onClick={() => saveButton?.action()}
@@ -58,7 +57,6 @@ function SectionActions(props) {
               }
             />
           )}
-
           {/*{saveButton?.isDisplayed && !saveButton?.containSpinner && (*/}
           {/*  <TooltipAction*/}
           {/*    onClick={() => saveButton?.action()}*/}
@@ -70,7 +68,7 @@ function SectionActions(props) {
           {/*    }*/}
           {/*  />*/}
           {/*)}*/}
-          {hideButton?.isDisplayed && (
+          {/* {hideButton?.isDisplayed && (
             <TooltipAction
               onClick={() => hideButton?.action()}
               icon={<FaX className={'action-icon public-icon'} />}
@@ -91,7 +89,7 @@ function SectionActions(props) {
                 </Tooltip>
               }
             />
-          )}
+          )} */}
           {addButton?.isDisplayed && (
             <TooltipAction
               onClick={() => addButton?.action()}
@@ -103,6 +101,7 @@ function SectionActions(props) {
               }
             />
           )}
+
           {trashButton?.isDisplayed && (
             <TooltipAction
               onClick={() => trashButton?.action()}

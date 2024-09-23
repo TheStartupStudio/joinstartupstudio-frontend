@@ -186,6 +186,8 @@ const MyMentorModal = (props) => {
             onChange={(value) => handleInputChange('mentorName', value)}
             readOnly={readOnly}
             labelAlign={'start'}
+            containerClassNames={'portf-quill-mentor'}
+            placeholder={"Add your mentor's name"}
           />
 
           <LabeledInput
@@ -193,18 +195,24 @@ const MyMentorModal = (props) => {
             type='text'
             value={mentorDetails.mentorRole}
             onChange={(value) => handleInputChange('mentorRole', value)}
-            containerClassNames='mt-3'
+            containerClassNames='portf-quill-mentor mt-3'
             readOnly={readOnly}
             labelAlign={'start'}
+            placeholder={
+              "Add your mentor's role or title here (i.e. Director of Finance)"
+            }
           />
           <LabeledInput
             title='Company'
             type='text'
             value={mentorDetails.mentorCompany}
             onChange={(value) => handleInputChange('mentorCompany', value)}
-            containerClassNames='mt-3'
+            containerClassNames='portf-quill-mentor mt-3'
             readOnly={readOnly}
             labelAlign={'start'}
+            placeholder={
+              'Add the name of the organization where your mentor works'
+            }
           />
         </div>
       </div>
@@ -218,6 +226,9 @@ const MyMentorModal = (props) => {
               onChange={(value) =>
                 handleInputChange('mentorDescription', value)
               }
+              placeholder={
+                'Briefly describe the role your mentor is playing in our growth and development.'
+              }
             />
           </>
         ) : (
@@ -229,6 +240,9 @@ const MyMentorModal = (props) => {
             readOnly={readOnly}
             labelAlign={'start'}
             inputHeight={100}
+            placeholder={
+              'Briefly describe the role your mentor is playing in our growth and development.'
+            }
           />
         )}
       </div>

@@ -68,7 +68,7 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
         loadings?.myCompetitiveness,
         'my-competitiveness',
         'My Competitiveness',
-        'The value of the outcomes you produce inside of your field of interest',
+        'The value of the outcomes you produce inside of your field of interest.',
         MyCompetitiveness,
         data?.myCompetitiveness?.data
       )}

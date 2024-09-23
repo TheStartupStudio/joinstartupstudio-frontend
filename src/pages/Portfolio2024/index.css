@@ -137,7 +137,7 @@
   right: 0;
   display: flex !important;
   box-shadow: 0px 3px 10px #00000029;
-  border-radius: 0px 0px 0px 28px;
+  border-radius: 0px 20px 0px 28px;
   overflow: hidden;
   justify-content: end;
   padding: 0;
@@ -508,7 +508,10 @@
   letter-spacing: 1.6px;
   color: #231f20;
   text-transform: uppercase;
+  line-height: 35px;
 }
+
+
 
 .section-description {
   text-align: left;
@@ -1000,6 +1003,7 @@
   height: 330px; */
   /* width: 240px !important; */
   /*width: 100% !important;*/
+  height: 100%;
   position: relative;
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029;
@@ -1241,8 +1245,8 @@
 }
 
 .portfolio-submission-image {
-  height: 80%;
-  min-height: 80%;
+  height: 70%;
+  min-height: 70%;
   width: 100%;
   object-fit: cover;
 }
@@ -1254,7 +1258,7 @@
 }
 
 .portfolio-submission-title {
-  height: 20%;
+  height: 30%;
   text-align: center;
   font: normal normal 600 18px/22px Montserrat;
   letter-spacing: 0.88px;
@@ -1272,7 +1276,7 @@
   color: #766c6efd;
   text-transform: none;
   padding: 10px;
-  height: 20%;
+  height: 30%;
 }
 
 .insert-submission-link-box {
@@ -1343,6 +1347,10 @@
   overflow-wrap: break-word;
 }
 
+.pivot-title {
+  margin-top: 25px !important;
+}
+
 .portfolio-info-title {
   text-align: left;
   font: normal normal 600 15px/19px Montserrat;
@@ -1407,6 +1415,16 @@
 /* .mentor-width {
   width: 400px !important;
 } */
+
+.project-content {
+  width: 100% !important;
+}
+
+@media (max-width: 520px) {
+  .proveit-card-resp {
+    flex-wrap: wrap;
+  }
+}
 
 .portfolio-info-content {
   width: 350px;
