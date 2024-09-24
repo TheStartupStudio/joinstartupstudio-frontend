@@ -31,7 +31,7 @@ const AddStudentsModal = (props) => {
     'lastname',
     'email',
     'password',
-    'level',
+    'levels',
     'year',
     'period'
   ]
@@ -43,15 +43,18 @@ const AddStudentsModal = (props) => {
     var item = users.find((item) => item.id === index)
 
     if (name === 'level' && (value === 'LS' || value === 'HE')) {
-      // Set period to null if the condition is true
       if (item) {
-        item.level = value
-        item.period = null
         item.year = ''
+        item.period = null
+        if (item.levels.includes(value)) {
+          item.levels = item.levels.filter((level) => level !== value)
+        } else {
+          item.levels = [...item.levels, value]
+        }
       } else {
         addUser((old) => [
           ...old,
-          { id: index, [name]: value, period: null, year: '' }
+          { id: index, levels: [value], period: null, year: '' }
         ])
       }
     } else {
@@ -73,8 +76,11 @@ const AddStudentsModal = (props) => {
       userRequiredFields.forEach((field) => {
         if (
           !user[field] &&
-          !(user['level'] === 'LS' && field === 'period') &&
-          !(user['level'] === 'HE' && (field === 'year' || field === 'period'))
+          !(user['levels'].includes('LS') && field === 'period') &&
+          !(
+            user['levels'].includes('HE') &&
+            (field === 'year' || field === 'period')
+          )
         ) {
           validateError = true
         }
@@ -115,9 +121,11 @@ const AddStudentsModal = (props) => {
       !item['firstname'] ||
       !item['lastname'] ||
       !item['password'] ||
-      !item['level'] ||
-      (item['level'] !== 'HE' && !item['year']) ||
-      (item['level'] !== 'LS' && item['level'] !== 'HE' && !item['period'])
+      item['levels'].length === 0 ||
+      (!item['levels'].includes('HE') && !item['year']) ||
+      (!item['levels'].includes('HE') &&
+        !item['levels'].includes('LS') &&
+        !item['period'])
     ) {
       setErrors((old) => [
         ...old,
@@ -158,10 +166,10 @@ const AddStudentsModal = (props) => {
     }
 
     if (
-      item['level'] !== 'LS' &&
-      item['level'] !== 'MS' &&
-      item['level'] !== 'HS' &&
-      item['level'] !== 'HE'
+      !item['levels'].every(
+        (level) =>
+          level === 'LS' || level === 'MS' || level === 'HS' || level === 'HE'
+      )
     ) {
       setErrors((old) => [
         ...old,
@@ -200,7 +208,6 @@ const AddStudentsModal = (props) => {
             // }
           })
           .then((response) => {
-            console.log('response', response)
             const addedUser = response.data.user
             addedUser.transferHistory = []
             addedUsers = [addedUser, ...addedUsers]
@@ -241,7 +248,6 @@ const AddStudentsModal = (props) => {
         const results = csvToArray(e.target.result, ',')
         req(results)
       } catch (error) {
-        console.log('error', error)
         setCsvLoading(false)
 
         setUploadedFileName('')

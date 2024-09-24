@@ -1,2 +1,2 @@
-FirstName,LastName,Email,Password,Level,Year,Period
-John,Doe,john@gmail.com,Learntostart1!,LS,ES1,1
+FirstName,LastName,Email,Password,Levels,Year,Period
+John,Doe,john@gmail.com,Learntostart1!,"HS,LS",ES1,1

@@ -17,7 +17,7 @@ const AddIndividual = (props) => {
     lastname: '',
     email: '',
     password: '',
-    level: '',
+    levels: [],
     year: '',
     period: null
   })
@@ -74,7 +74,7 @@ const AddIndividual = (props) => {
 
         return elements?.map((el, index) => ({
           name: prop,
-          value: periodIds[index], // Assign the period ID as the value
+          value: periodIds[index],
           label: el
         }))
       }
@@ -84,11 +84,11 @@ const AddIndividual = (props) => {
         label: el
       }))
     }
-    const yearOptions = getOptions(dataValidation.level, 'year')
-    const periodOptions = getOptions(dataValidation.level, 'period')
+    const yearOptions = getOptions(dataValidation.levels[0], 'year')
+    const periodOptions = getOptions(dataValidation.levels[0], 'period')
     setYearOptions(yearOptions)
     setPeriodOptions(periodOptions)
-  }, [dataValidation.level])
+  }, [dataValidation.levels])
 
   const handleValidation = (e) => {
     const { name, value } = e
@@ -100,14 +100,14 @@ const AddIndividual = (props) => {
       dataValidation.lastname.length === 0 &&
       dataValidation.email.length === 0 &&
       dataValidation.password.length === 0 &&
-      dataValidation.level.length === 0 &&
+      dataValidation.levels.length === 0 &&
       dataValidation.year.length === 0 &&
       dataValidation.period === null
     ) {
       return setIsChanged(false)
     }
 
-    if (name === 'level') {
+    if (name === 'levels') {
       setDataValidation((old) => ({
         ...old,
         year: '',
@@ -202,7 +202,7 @@ const AddIndividual = (props) => {
           placeholder={'Level'}
           options={defaultData}
           className={`my-auto py-auto h-100 add-student-select ${
-            dataValidation.level.length === 0 && isChanged
+            dataValidation.levels.length === 0 && isChanged
               ? 'border border-danger rounded'
               : 'false'
           }`}
@@ -214,10 +214,17 @@ const AddIndividual = (props) => {
               fontSize: '13px'
             })
           }}
-          name='level'
-          onChange={(e) => {
-            handleValidation(e)
-            props.handleChange(e)
+          name='levels'
+          // onChange={(e) => {
+          //   handleValidation(e)
+          //   props.handleChange(e)
+          // }}
+          onChange={(selectedOption) => {
+            handleValidation({ name: 'levels', value: [selectedOption.value] })
+            props.handleChange({
+              name: 'levels',
+              value: [selectedOption.value]
+            })
           }}
         />
       </div>
@@ -227,7 +234,7 @@ const AddIndividual = (props) => {
           name='year'
           placeholder={selectedYear ? selectedYear : 'Year'}
           value={selectedYear ? selectedYear : 'None'}
-          isDisabled={dataValidation.level === 'HE'}
+          isDisabled={dataValidation.levels.includes('HE')}
           styles={{
             ...customStyles,
             menu: (provided) => ({
@@ -239,7 +246,7 @@ const AddIndividual = (props) => {
           className={`my-auto py-auto h-100 add-student-select ${
             dataValidation.year.length === 0 &&
             isChanged &&
-            dataValidation.level !== 'HE'
+            !dataValidation.levels.includes('HE')
               ? 'border border-danger rounded'
               : 'false'
           }`}
@@ -258,7 +265,8 @@ const AddIndividual = (props) => {
           }
           value={periods?.find((period) => period.id === selectedPeriod)?.name}
           isDisabled={
-            dataValidation.level === 'LS' || dataValidation.level === 'HE'
+            dataValidation.levels.includes('LS') ||
+            dataValidation.levels.includes('HE')
           }
           name='period'
           styles={{
@@ -277,8 +285,8 @@ const AddIndividual = (props) => {
           className={`my-auto py-auto h-100 add-student-select ${
             dataValidation.period === null &&
             isChanged &&
-            dataValidation.level !== 'LS' &&
-            dataValidation.level !== 'HE'
+            !dataValidation.levels.includes('LS') &&
+            !dataValidation.levels.includes('HE')
               ? 'border border-danger rounded'
               : 'false'
           }`}
