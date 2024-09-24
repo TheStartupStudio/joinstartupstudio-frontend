@@ -132,7 +132,7 @@ nav#sidebar {
 }
 
 #sidebar.active {
-  margin-left: -250px;
+  margin-left: -220px;
 }
 
 #sidebar .sidebar-header {

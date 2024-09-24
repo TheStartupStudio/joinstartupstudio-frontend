@@ -569,8 +569,8 @@ const portfolioReducer = (state = initialState, action) => {
         whoSection: {
           ...state.whoSection,
           myRelationships: {
-            ...state.whoSection.myRelationships,
-            isTogglingSection: true
+            ...state.whoSection.myRelationships
+            // isTogglingSection: true
           }
         }
       }
@@ -581,8 +581,8 @@ const portfolioReducer = (state = initialState, action) => {
           ...state.whoSection,
           myRelationships: {
             ...state.whoSection.myRelationships,
-            data: payload.data,
-            isTogglingSection: false
+            data: payload.data
+            // isTogglingSection: false
           }
         }
       }

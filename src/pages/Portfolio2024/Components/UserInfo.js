@@ -1,6 +1,7 @@
 import React from 'react'
 import UserSocialMedia from './UserSocialMedia'
 import UserImage from './UserImage'
+import UserCertifications from './UserCertifications'
 
 function UserInfo(props) {
   return (
@@ -27,6 +28,7 @@ function UserInfo(props) {
             : 'No organization has been added yet'}
         </div>
         <UserSocialMedia data={props.userInfo?.socialMediaLinks} />
+        {/*<UserCertifications />*/}
       </div>
     </div>
   )

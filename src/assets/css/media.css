@@ -492,7 +492,7 @@
   }
 
   #content.active {
-    width: calc(100% - 250px);
+    width: calc(100% - 220px);
   }
 
   #sidebar {
@@ -739,7 +739,7 @@
   /*}*/
 
   #sidebar {
-    width: 250px;
+    width: 220px;
     padding: 20px 20px;
   }
 
@@ -909,9 +909,9 @@
   /*  width: calc(100% - 250px);*/
   /*}*/
 
-  /*#sidebar {*/
-  /*  width: 250px;*/
-  /*}*/
+  #sidebar {
+    width: 220px;
+  }
 
   ul.sidebar-menu-item a {
     font-size: 14px;
