@@ -382,7 +382,7 @@ const SubmitButton = ({
 }) => {
   return (
     <button
-      className={`lts-button ${className}`}
+      className={`Lts-button ${className}`}
       onClick={onClick}
       style={{
         background: background,

@@ -319,7 +319,7 @@ const AddStudentsManualyModal = (props) => {
               </label>
               <div className='col-12 col-sm-6 col-md-auto mt-2 mt-sm-0 mt-md-3 pe-0 ps-0 ps-sm-2'>
                 <button
-                  className='lts-button px-3 upload-user-button float-end mt-md-3 text-center'
+                  className='Lts-button px-3 upload-user-button float-end mt-md-3 text-center'
                   disabled={csvLoading || loading}
                   onClick={
                     isUploaded
@@ -367,7 +367,7 @@ const AddStudentsManualyModal = (props) => {
           </div>
           <div className='modal-footer position-relative px-0 border-0'>
             <button
-              className='lts-button'
+              className='Lts-button'
               // onClick={() => {
               //   if (users.length > 0) {
               //     validateUsersBeforeSubmit()

@@ -409,7 +409,8 @@
 
 /* Button style */
 
-.lts-button {
+.Lts-button {
+  width: auto !important;
   height: 40px;
   color: #000;
   background: var(#ffffff) 0% 0% no-repeat padding-box;
@@ -418,6 +419,7 @@
   box-shadow: 0px 3px 6px #00000029;
   border: 1px solid #707070;
   border-radius: 12px;
+  padding: 5px 10px;
 }
 
 .edit-actions__details p:hover {

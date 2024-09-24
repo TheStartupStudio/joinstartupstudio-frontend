@@ -13,13 +13,13 @@ const AddIndividual = (props) => {
   const [selectedYear, setSelectedYear] = useState(null)
   const [selectedPeriod, setSelectedPeriod] = useState(null)
   const [dataValidation, setDataValidation] = useState({
-    FirstName: '',
-    LastName: '',
-    UserEmail: '',
+    firstname: '',
+    lastname: '',
+    email: '',
     password: '',
-    level: '',
+    levels: [],
     year: '',
-    period: null,
+    period: null
   })
   const [isChanged, setIsChanged] = useState(false)
 
@@ -32,7 +32,7 @@ const AddIndividual = (props) => {
       name: 'level',
       value: 'LS',
       label: 'LS',
-      year: ['K', '1st', '2nd', '3rd', '4th', '5th'],
+      year: ['K', '1st', '2nd', '3rd', '4th', '5th']
     },
     {
       name: 'level',
@@ -50,16 +50,16 @@ const AddIndividual = (props) => {
             item.name === 'Period 6' ||
             item.name === 'Period 7'
         )
-        .map((item) => item.name),
+        .map((item) => item.name)
     },
     {
       name: 'level',
       value: 'HS',
       label: 'HS',
       year: ['LTS1', 'LTS2', 'LTS3', 'LTS4'],
-      period: periods?.map((item) => item.name),
+      period: periods?.map((item) => item.name)
     },
-    { name: 'level', value: 'HE', label: 'HE' },
+    { name: 'level', value: 'HE', label: 'HE' }
   ]
 
   useEffect(() => {
@@ -74,21 +74,21 @@ const AddIndividual = (props) => {
 
         return elements?.map((el, index) => ({
           name: prop,
-          value: periodIds[index], // Assign the period ID as the value
-          label: el,
+          value: periodIds[index],
+          label: el
         }))
       }
       return elements?.map((el) => ({
         name: prop,
         value: el,
-        label: el,
+        label: el
       }))
     }
-    const yearOptions = getOptions(dataValidation.level, 'year')
-    const periodOptions = getOptions(dataValidation.level, 'period')
+    const yearOptions = getOptions(dataValidation.levels[0], 'year')
+    const periodOptions = getOptions(dataValidation.levels[0], 'period')
     setYearOptions(yearOptions)
     setPeriodOptions(periodOptions)
-  }, [dataValidation.level])
+  }, [dataValidation.levels])
 
   const handleValidation = (e) => {
     const { name, value } = e
@@ -96,22 +96,22 @@ const AddIndividual = (props) => {
     setDataValidation((old) => ({ ...old, [name]: value }))
 
     if (
-      dataValidation.FirstName.length === 0 &&
-      dataValidation.LastName.length === 0 &&
-      dataValidation.UserEmail.length === 0 &&
+      dataValidation.firstname.length === 0 &&
+      dataValidation.lastname.length === 0 &&
+      dataValidation.email.length === 0 &&
       dataValidation.password.length === 0 &&
-      dataValidation.level.length === 0 &&
+      dataValidation.levels.length === 0 &&
       dataValidation.year.length === 0 &&
       dataValidation.period === null
     ) {
       return setIsChanged(false)
     }
 
-    if (name === 'level') {
+    if (name === 'levels') {
       setDataValidation((old) => ({
         ...old,
         year: '',
-        period: null,
+        period: null
       }))
       setSelectedYear(null)
       setSelectedPeriod(null)
@@ -123,86 +123,86 @@ const AddIndividual = (props) => {
   const customStyles = {
     // control: styles => ({ ...styles,fontSize:'13px' }),
     option: (provided, state) => ({
-      ...provided,
-    }),
+      ...provided
+    })
   }
 
   return (
-    <div className="row mx-0 px-0 mt-2 pb-4 pb-md-0 add-individual-first-div">
+    <div className='row mx-0 px-0 mt-2 pb-4 pb-md-0 add-individual-first-div'>
       <div
         className={`col-6 col-md-2 mx-0 ps-0 pe-1 add-individual-inputs-div`}
       >
         <input
           className={`w-100 py-2 px-2 ${
-            dataValidation.FirstName.length === 0 && isChanged
+            dataValidation.firstname.length === 0 && isChanged
               ? 'border border-danger'
               : 'false'
           }`}
-          type="text"
-          name="FirstName"
-          placeholder="First Name"
+          type='text'
+          name='firstname'
+          placeholder='First Name'
           onChange={(e) => {
             handleValidation({ name: e.target.name, value: e.target.value })
             props.handleChange({ name: e.target.name, value: e.target.value })
           }}
         />
       </div>
-      <div className="col-6 mb-2 mb-md-auto col-md-2 mx-0 ps-0 pe-1 add-individual-inputs-div">
+      <div className='col-6 mb-2 mb-md-auto col-md-2 mx-0 ps-0 pe-1 add-individual-inputs-div'>
         <input
           className={`w-100 py-2 px-2 ${
-            dataValidation.LastName.length === 0 &&
+            dataValidation.lastname.length === 0 &&
             isChanged &&
             'border border-danger'
           }`}
-          type="text"
-          name="LastName"
-          placeholder="Last Name"
+          type='text'
+          name='lastname'
+          placeholder='Last Name'
           onChange={(e) => {
             handleValidation({ name: e.target.name, value: e.target.value })
             props.handleChange({ name: e.target.name, value: e.target.value })
           }}
         />
       </div>
-      <div className="col-12 col-md-3 mb-2 mb-md-auto mx-0 ps-0 pe-1 add-individual-inputs-div">
+      <div className='col-12 col-md-3 mb-2 mb-md-auto mx-0 ps-0 pe-1 add-individual-inputs-div'>
         <input
           className={`w-100 py-2 px-2 ${
-            dataValidation.UserEmail.length === 0 && isChanged
+            dataValidation.email.length === 0 && isChanged
               ? 'border border-danger'
               : 'false'
           }`}
-          type="email"
-          name="UserEmail"
-          autoComplete="false"
-          placeholder="Email"
+          type='email'
+          name='email'
+          autoComplete='false'
+          placeholder='Email'
           onChange={(e) => {
             handleValidation({ name: e.target.name, value: e.target.value })
             props.handleChange({ name: e.target.name, value: e.target.value })
           }}
         />
       </div>
-      <div className="col-12 col-md-2 mb-2 mb-md-auto mx-0 ps-0 pe-1 add-individual-inputs-div">
+      <div className='col-12 col-md-2 mb-2 mb-md-auto mx-0 ps-0 pe-1 add-individual-inputs-div'>
         <input
           className={`w-100 mx-0 py-2 px-2 ${
             dataValidation.password.length === 0 && isChanged
               ? 'border border-danger'
               : 'false'
           }`}
-          autoComplete="off"
-          type="password"
-          name="password"
-          placeholder="Password"
+          autoComplete='off'
+          type='password'
+          name='password'
+          placeholder='Password'
           onChange={(e) => {
             handleValidation({ name: e.target.name, value: e.target.value })
             props.handleChange({ name: e.target.name, value: e.target.value })
           }}
         />
       </div>
-      <div className="col-6 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div">
+      <div className='col-6 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div'>
         <Select
           placeholder={'Level'}
           options={defaultData}
           className={`my-auto py-auto h-100 add-student-select ${
-            dataValidation.level.length === 0 && isChanged
+            dataValidation.levels.length === 0 && isChanged
               ? 'border border-danger rounded'
               : 'false'
           }`}
@@ -211,35 +211,42 @@ const AddIndividual = (props) => {
             menu: (provided) => ({
               ...provided,
               zIndex: 9999,
-              fontSize: '13px',
-            }),
+              fontSize: '13px'
+            })
           }}
-          name="level"
-          onChange={(e) => {
-            handleValidation(e)
-            props.handleChange(e)
+          name='levels'
+          // onChange={(e) => {
+          //   handleValidation(e)
+          //   props.handleChange(e)
+          // }}
+          onChange={(selectedOption) => {
+            handleValidation({ name: 'levels', value: [selectedOption.value] })
+            props.handleChange({
+              name: 'levels',
+              value: [selectedOption.value]
+            })
           }}
         />
       </div>
-      <div className="col-6 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div">
+      <div className='col-6 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div'>
         <Select
           options={yearOptions}
-          name="year"
+          name='year'
           placeholder={selectedYear ? selectedYear : 'Year'}
           value={selectedYear ? selectedYear : 'None'}
-          isDisabled={dataValidation.level === 'HE'}
+          isDisabled={dataValidation.levels.includes('HE')}
           styles={{
             ...customStyles,
             menu: (provided) => ({
               ...provided,
               zIndex: 9999,
-              fontSize: '13px',
-            }),
+              fontSize: '13px'
+            })
           }}
           className={`my-auto py-auto h-100 add-student-select ${
             dataValidation.year.length === 0 &&
             isChanged &&
-            dataValidation.level !== 'HE'
+            !dataValidation.levels.includes('HE')
               ? 'border border-danger rounded'
               : 'false'
           }`}
@@ -250,7 +257,7 @@ const AddIndividual = (props) => {
           }}
         />
       </div>
-      <div className="col-7 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div">
+      <div className='col-7 col-md-1 mx-0 ps-0 pe-1 add-individual-inputs-div'>
         <Select
           options={periodOptions}
           placeholder={
@@ -258,23 +265,28 @@ const AddIndividual = (props) => {
           }
           value={periods?.find((period) => period.id === selectedPeriod)?.name}
           isDisabled={
-            dataValidation.level === 'LS' || dataValidation.level === 'HE'
+            dataValidation.levels.includes('LS') ||
+            dataValidation.levels.includes('HE')
           }
-          name="period"
+          name='period'
           styles={{
             ...customStyles,
-            control: styles => ({ ...styles,padding:'1px 2px',fontSize:'13px' }),
+            control: (styles) => ({
+              ...styles,
+              padding: '1px 2px',
+              fontSize: '13px'
+            }),
             menu: (provided) => ({
               ...provided,
               zIndex: 9999,
-              fontSize: '13px',
-            }),
+              fontSize: '13px'
+            })
           }}
           className={`my-auto py-auto h-100 add-student-select ${
             dataValidation.period === null &&
             isChanged &&
-            dataValidation.level !== 'LS' &&
-            dataValidation.level !== 'HE'
+            !dataValidation.levels.includes('LS') &&
+            !dataValidation.levels.includes('HE')
               ? 'border border-danger rounded'
               : 'false'
           }`}

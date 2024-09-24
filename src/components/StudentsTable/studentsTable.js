@@ -140,7 +140,7 @@ export default function StudentsTable({ instructorId }) {
         if (res.data.students?.length) {
           let newArrray = []
           res.data.instructorsnew.map((instructor) => {
-            newArrray.push({
+            return newArrray.push({
               value: instructor.instructorInfo?.id,
               label: instructor.name
             })
@@ -616,7 +616,7 @@ export default function StudentsTable({ instructorId }) {
     setDeactivateLoading(true)
 
     await axiosInstance
-      .post(`/instructor/bulk-update/`, {
+      .post(`/instructor/bulk-update-old/`, {
         studentsIds: bulkDeactivatingStudents,
         bulkDeactivate: true
       })
@@ -642,7 +642,7 @@ export default function StudentsTable({ instructorId }) {
     setEditLoading(true)
 
     await axiosInstance
-      .post(`/instructor/bulk-update/`, {
+      .post(`/instructor/bulk-update-old/`, {
         studentsIds: bulkEditingStudents,
         options: options
       })
@@ -689,24 +689,37 @@ export default function StudentsTable({ instructorId }) {
         )?.name
 
         const currentPeriodIndex =
-          selectedUserData?.period.indexOf(periodIndexId)
+          selectedUserData?.period?.indexOf(periodIndexId)
+
         let nextYearIndex
         let nextPeriodIndex
 
         if (selectedUserData?.year.length - 1 === currentYearIndex) {
           nextYearIndex = currentYearIndex
-          nextPeriodIndex = currentPeriodIndex
+          if (!['HS', 'LS'].includes(selectedUserData.value)) {
+            nextPeriodIndex = currentPeriodIndex
+          } else {
+            nextPeriodIndex = null
+          }
         } else {
           nextYearIndex = currentYearIndex + 1
-          nextPeriodIndex = 0
+          if (!['HS', 'LS'].includes(selectedUserData.value)) {
+            nextPeriodIndex = 0
+          } else {
+            nextPeriodIndex = null
+          }
         }
 
         const nextYear = selectedUserData?.year[nextYearIndex]
-        const nextPeriodName = selectedUserData?.period[nextPeriodIndex]
+        const nextPeriodName =
+          nextPeriodIndex !== null
+            ? selectedUserData?.period[nextPeriodIndex]
+            : ''
 
-        const nextPeriod = periods.find(
-          (item) => item.name === nextPeriodName
-        )?.id
+        const nextPeriod =
+          nextPeriodIndex !== null
+            ? periods.find((item) => item.name === nextPeriodName)?.id
+            : null
 
         return {
           studentID: data?.id,
@@ -717,7 +730,7 @@ export default function StudentsTable({ instructorId }) {
     )
 
     await axiosInstance
-      .post(`/instructor/bulk-update/`, {
+      .post(`/instructor/bulk-update-old/`, {
         studentsIds: bulkNextYearStudents,
         nextYearOptions: updatedOptions
       })
