@@ -41,19 +41,19 @@ export const createSharingSettingsAPI = async (userSharingSettings) => {
   }
 }
 
-export const getUserStoryAPI = async () => {
+export const getUserBasicDataAPI = async () => {
   try {
-    const response = await axiosInstance.get('/hsPortfolio/userStory')
+    const response = await axiosInstance.get('/hsPortfolio/userBasicInfo')
     return response
   } catch (e) {
     console.log('Error occurred during fetching user story', e)
   }
 }
 
-export const createUserStoryAPI = async (userStory) => {
+export const createUserBasicDataAPI = async (userStory) => {
   try {
     const response = await axiosInstance.post(
-      '/hsPortfolio/userStory',
+      '/hsPortfolio/userBasicInfo',
       userStory
     )
 
@@ -63,10 +63,10 @@ export const createUserStoryAPI = async (userStory) => {
   }
 }
 
-export const updateUserStoryAPI = async (userStory, id) => {
+export const updateUserBasicDataAPI = async (userStory, id) => {
   try {
     const response = await axiosInstance.put(
-      `/hsPortfolio/userStory/${id}`,
+      `/hsPortfolio/userBasicInfo/${id}`,
       userStory
     )
     return response
@@ -110,6 +110,40 @@ export const updateMyRelationshipsAPI = async (myRelationships, id) => {
   }
 }
 
+export const getUserStoryAPI = async () => {
+  try {
+    const response = await axiosInstance.get('/hsPortfolio/userStory')
+
+    return response
+  } catch (e) {
+    console.log('Error occurred during fetching my user story', e)
+  }
+}
+
+export const createUserStoryAPI = async (userStory) => {
+  try {
+    const response = await axiosInstance.post(
+      '/hsPortfolio/userStory',
+      userStory
+    )
+
+    return response
+  } catch (e) {
+    console.log('Error occurred during creating user story', e)
+  }
+}
+
+export const updateUserStoryAPI = async (userStory, id) => {
+  try {
+    const response = await axiosInstance.put(
+      `/hsPortfolio/userStory/${id}`,
+      userStory
+    )
+    return response
+  } catch (e) {
+    console.log('Error occurred during updating user story', e)
+  }
+}
 export const getMyFailuresAPI = async () => {
   try {
     const response = await axiosInstance.get('/hsPortfolio/myFailures')

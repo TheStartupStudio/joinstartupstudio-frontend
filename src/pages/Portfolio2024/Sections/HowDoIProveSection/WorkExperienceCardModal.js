@@ -63,7 +63,8 @@ const WorkExperienceCardModal = (props) => {
       description: '',
       jobTitle: '',
       imageUrl: null,
-      currentPosition: false
+      currentPosition: false,
+      showSection: true
     }
   )
 
@@ -132,6 +133,13 @@ const WorkExperienceCardModal = (props) => {
       title={props.title}
       actions={modalActions}
       class={'edit-education-modal'}
+      showSectionCheckbox={true}
+      isShownSection={workExperienceData.showSection}
+      onToggleSection={(showSection) => {
+        setWorkExperienceData({ ...workExperienceData, showSection })
+      }}
+      switchId={`${isEdit() ? 'edit' : 'add'}-workExperience-switch`}
+      switchName={`${isEdit() ? 'edit' : 'add'}-workExperience-switch`}
     >
       <div className={'portfolio-section-container w-100 pt-1 pb-1 px-1'}>
         <div

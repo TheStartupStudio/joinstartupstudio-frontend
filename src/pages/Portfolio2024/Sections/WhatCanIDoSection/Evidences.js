@@ -38,7 +38,7 @@ const Evidences = (props) => {
 
   const [activeEvidence, setActiveEvidence] = useState(null)
   const [evidencesData, setEvidencesData] = useState(initialEvidenceData)
-  console.log('evidencesData', evidencesData)
+  // console.log('evidencesData', evidencesData)
   useEffect(() => {
     onChange?.(evidencesData)
   }, [evidencesData])
@@ -125,7 +125,7 @@ const Evidences = (props) => {
           } py-3`}
           onClick={() => setActiveEvidence('evidence-1')}
         >
-          {menuItem1}
+          Content upload #1
         </div>
         <div
           className={`evidence-nav-item ${
@@ -133,7 +133,7 @@ const Evidences = (props) => {
           } py-3`}
           onClick={() => setActiveEvidence('evidence-2')}
         >
-          {menuItem2}
+          Content upload #2
         </div>
         <div
           className={`evidence-nav-item ${
@@ -141,7 +141,7 @@ const Evidences = (props) => {
           } py-3`}
           onClick={() => setActiveEvidence('evidence-3')}
         >
-          {menuItem3}
+          Content upload #3
         </div>
       </div>
       {activeEvidence === 'evidence-1' && (

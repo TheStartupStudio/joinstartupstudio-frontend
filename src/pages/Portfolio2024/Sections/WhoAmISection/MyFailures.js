@@ -3,15 +3,13 @@ import MyFailure from './MyFailure'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   hideAddFailureModal,
-  hideAddMentorModal,
-  showAddFailureModal,
-  showAddMentorModal
+  showAddFailureModal
 } from '../../../../redux/portfolio/Actions'
 import SectionActions from '../../Components/Actions/SectionActions'
-import AddEntryButton from '../../Components/Actions/AddEntryButton'
 import MyFailureModal from '../../Components/Modals/MyFailureModal'
 import failureImage from '../../../../assets/images/HS-Portfolio-Icons/failure.png'
 import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
+import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
 function MyFailures(props) {
   const dispatch = useDispatch()
   const mode = useSelector((state) => state.portfolio.mode)
@@ -53,7 +51,8 @@ function MyFailures(props) {
     {
       type: 'add',
       action: () => handleShowModal(),
-      isDisplayed: mode === 'edit' && myFailures?.length >= 0
+      isDisplayed:
+        mode === 'edit' && (myFailures?.length === 0 || myFailures?.length > 0)
     },
 
     {
@@ -69,27 +68,32 @@ function MyFailures(props) {
   )
 
   return (
-    <div className={'d-flex flex-column gap-4 h-100'}>
+    <div className={'d-flex flex-column h-100 '}>
       {myFailures?.length > 0 ? (
-        myFailures?.map((myFailure, index) => (
-          <React.Fragment key={myFailure?.id}>
-            <MyFailure data={myFailure} isEditSection={isEditSection} />
-          </React.Fragment>
-        ))
+        <CarouselComponent
+          data={myFailures}
+          renderItems={(item) => {
+            return <MyFailure data={item} isEditSection={isEditSection} />
+          }}
+        />
       ) : (
-        <NoDataDisplay
-          src={failureImage}
-          text={'You don’t have any failures yet! Click the button to add one.'}
-        />
+        <>
+          <NoDataDisplay
+            src={failureImage}
+            classNames={'mt-5'}
+            text={
+              'You don’t have any failures yet! Click the button to add one.'
+            }
+          />
+        </>
       )}
 
-      {myFailures?.length > 0 && isEditSection && (
-        <AddEntryButton
-          title={`Add new "My Failures" section`}
-          onClick={handleShowFailureModal}
-        />
-      )}
-
+      {/*{myFailures?.length > 0 && isEditSection && (*/}
+      {/*  <AddEntryButton*/}
+      {/*    title={`Add new "My Failures" section`}*/}
+      {/*    onClick={handleShowFailureModal}*/}
+      {/*  />*/}
+      {/*)}*/}
       <SectionActions actions={actions} />
 
       {showFailureModal && (

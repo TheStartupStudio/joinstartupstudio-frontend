@@ -9,6 +9,7 @@ import {
   deleteMyFailure,
   deleteMyFailureImage,
   deleteMyMentor,
+  toggleUserStory,
   updateMyFailure
 } from '../../../../redux/portfolio/Actions'
 import { deleteImage, uploadImage } from '../../../../utils/helpers'
@@ -19,19 +20,23 @@ function MyFailureModal(props) {
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
   const [imageFile, setImageFile] = useState(null)
   const [thumbnailUrl, setThumbnailUrl] = useState(null)
-  const [assessment, setAssessment] = useState('')
-  const [outcome, setOutcome] = useState('')
+  const [failure, setFailure] = useState('')
+  const [outcomes, setOutcomes] = useState('')
+  const [pivot, setPivot] = useState('')
   const [videoUrl, setVideoUrl] = useState('')
   const [id, setId] = useState(null)
+  const [showSection, setShowSection] = useState(false)
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (props.data) {
       setThumbnailUrl(props.data?.thumbnailUrl)
       setVideoUrl(props.data?.videoUrl)
-      setAssessment(props.data?.assessment)
-      setOutcome(props.data?.outcome)
+      setFailure(props.data?.failure)
+      setOutcomes(props.data?.outcomes)
+      setPivot(props.data?.pivot)
       setId(props.data?.id)
+      setShowSection(props.data?.showSection)
       setConfirmDeleteModal(false)
     }
   }, [props.data])
@@ -45,9 +50,11 @@ function MyFailureModal(props) {
 
     const failureData = {
       videoUrl,
-      assessment,
-      outcome,
+      failure,
+      pivot,
+      outcomes,
       thumbnailUrl: newThumbnailUrl ? newThumbnailUrl : thumbnailUrl,
+      showSection,
       category: 'my-failures'
     }
 
@@ -104,7 +111,17 @@ function MyFailureModal(props) {
   }
 
   return (
-    <PortfolioModalWrapper {...props} actions={actions}>
+    <PortfolioModalWrapper
+      {...props}
+      actions={actions}
+      showSectionCheckbox={true}
+      isShownSection={showSection}
+      onToggleSection={(showSection) => {
+        setShowSection(showSection)
+      }}
+      switchId={isEdit() ? 'edit-failure-switch' : 'add-failure-switch'}
+      switchName={isEdit() ? 'edit-failure-switch' : 'add-failure-switch'}
+    >
       <div className={'row'}>
         <div className={'col-lg-6 col-md-12'}>
           <div className={'my-2'}>
@@ -127,26 +144,27 @@ function MyFailureModal(props) {
           <ReactQuill
             placeholder='Explain the context and outcomes of your failure.'
             className={'portfolio-quill'}
-            value={assessment}
-            onChange={(value) => setAssessment(value)}
+            value={failure ?? ''}
+            onChange={(value) => setFailure(value)}
           />
           <div className={'pivot-title portfolio-info-title my-2 text-italic'}>
             {'My Pivot'}
           </div>
+
           <ReactQuill
             placeholder='Explain how you turned your failure experience into an oppurtunity.'
             className={'portfolio-quill'}
-            value={outcome}
-            onChange={(value) => setOutcome(value)}
+            value={pivot || ''}
+            onChange={(value) => setPivot(value)}
           />
-          <div className={'pivot-title portfolio-info-title my-2 text-italic'}>
-            {'My Outcome'}
+
+          <div className={'portfolio-info-title my-2 text-italic'}>
+            {'My Outcomes'}
           </div>
           <ReactQuill
-            placeholder='Explain how you turned your failure experience into an oppurtunity.'
             className={'portfolio-quill'}
-            value={outcome}
-            onChange={(value) => setOutcome(value)}
+            value={outcomes || ''}
+            onChange={(value) => setOutcomes(value)}
           />
         </div>
       </div>

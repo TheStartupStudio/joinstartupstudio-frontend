@@ -8,6 +8,7 @@ import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
 import projectImage from '../../../../assets/images/HS-Portfolio-Icons/project.png'
 import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
 import SectionActions from '../../Components/Actions/SectionActions'
+import CarouselComponent from '../../../../components/Carousel/CarouselComponent'
 
 const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
   const [projects, setProjects] = useState([])
@@ -50,37 +51,54 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
       isDisplayed: mode === 'edit'
     }
   ]
+
   return (
     <div className={'position-relative'}>
-      {projects?.length > 0 ? (
-        projects?.map((project, index) => (
-          <React.Fragment key={project.id}>
-            <Project
-              id={project.id}
-              project={project}
-              index={index}
-              onDeleteProject={onDeleteProject}
-              onAddProject={(project) => {
-                const nonSavedProject = projects.find((project) => !project.id)
-                if (nonSavedProject) {
-                  setProjects([project])
-                }
+      <div className={'row gap-4'}>
+        {projects?.length > 0 ? (
+          <>
+            <CarouselComponent
+              data={projects}
+              renderItems={(item, index) => {
+                return (
+                  <>
+                    <React.Fragment key={item.id}>
+                      <Project
+                        id={item.id}
+                        project={item}
+                        index={index}
+                        onDeleteProject={onDeleteProject}
+                        onAddProject={(project) => {
+                          const nonSavedProject = projects.find(
+                            (project) => !project.id
+                          )
+                          if (nonSavedProject) {
+                            setProjects([project])
+                          }
+                        }}
+                      />
+                    </React.Fragment>
+                  </>
+                )
               }}
             />
-          </React.Fragment>
-        ))
-      ) : (
-        <PortfolioDataContainer title={'Project'} height={440}>
-          <NoDataDisplay
-            src={projectImage}
-            classNames={'mt-1'}
-            text={
-              'You don’t have any projects yet! Click the button to add one.'
-            }
-          />
-          <SectionActions actions={emptyDataActions} />
-        </PortfolioDataContainer>
-      )}
+          </>
+        ) : (
+          <>
+            <PortfolioDataContainer title={'Project'} height={440}>
+              <NoDataDisplay
+                src={projectImage}
+                classNames={'mt-1'}
+                text={
+                  'You don’t have any projects yet! Click the button to add one.'
+                }
+              />
+              <SectionActions actions={emptyDataActions} />
+            </PortfolioDataContainer>
+          </>
+        )}
+      </div>
+
       {projects?.length > 0 &&
         projects.some((project) => project.id) &&
         mode === 'edit' && (

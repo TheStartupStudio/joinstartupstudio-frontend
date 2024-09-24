@@ -23,8 +23,6 @@ const Body = (props) => {
     <ul
       className='list-unstyled components sidebar-menu-item sidebar-menu-list'
       id='side-menu-main'
-      a
-      // style={{ height: '100vh' }}
     >
       <li>
         <div
@@ -99,11 +97,11 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseClassroom'}>
-        {/* <DropdownItem
+        <DropdownItem
           allowed={isAdmin}
           title={'USER MANAGEMENT'}
           to={'/user-management'}
-        /> */}
+        />
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
         <DropdownItem
           // disabled={true}

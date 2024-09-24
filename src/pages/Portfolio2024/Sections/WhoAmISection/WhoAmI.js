@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
-import UserStory from './UserStory'
+import UserBasicInfo from './UserBasicInfo'
 import MyRelationships from './MyRelationships'
 import MyFailures from './MyFailures'
 import MyMentors from './MyMentors'
 import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
+import UserStory from './UserStory'
 
-function WhoAmI({ loadings: propsLoadings, data, user }) {
+function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
   const [loadings, setLoadings] = useState(null)
 
   useEffect(() => {
@@ -35,19 +36,29 @@ function WhoAmI({ loadings: propsLoadings, data, user }) {
   return (
     <div className={'d-flex flex-column gap-4'}>
       {renderSection(
-        loadings?.userStory,
-        'user-story',
+        loadings?.userBasicInfo,
+        'user-basic-info',
         null,
-        UserStory,
-        data?.userStory?.data
+        UserBasicInfo,
+        data?.userBasicInfo?.data
       )}
-      {renderSection(
-        loadings?.myRelationships,
-        'my-relationship',
-        'My Relationships',
-        MyRelationships,
-        data?.myRelationships?.data
-      )}
+      {data?.userStory &&
+        renderSection(
+          loadings?.userStory,
+          'user-story',
+          'My Story',
+          UserStory,
+          data?.userStory?.data
+        )}
+
+      {data?.myRelationships &&
+        renderSection(
+          loadings?.myRelationships,
+          'my-relationship',
+          'My Relationships',
+          MyRelationships,
+          data?.myRelationships?.data
+        )}
       {renderSection(
         loadings?.myFailures,
         'my-failures',

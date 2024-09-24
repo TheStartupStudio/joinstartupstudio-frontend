@@ -6,6 +6,7 @@ import { deleteImage, uploadImage } from '../../../../utils/helpers'
 import { toast } from 'react-toastify'
 import LtsButton from '../../../../components/LTSButtons/LTSButton'
 import ConfirmDeleteRecordModal from '../../Components/Modals/ConfirmDeleteRecordModal'
+import LabeledInput from '../../Components/DisplayData/LabeledInput'
 
 function ProjectModal(props) {
   const [isEdit, setIsEdit] = useState(null)
@@ -14,6 +15,7 @@ function ProjectModal(props) {
     props.isEdit && setIsEdit(props.isEdit)
   }, [props.isEdit])
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
+  const [projectTitle, setProjectTitle] = useState('')
   const projectModalActions = [
     {
       type: 'save',
@@ -83,6 +85,7 @@ function ProjectModal(props) {
   useEffect(() => {
     if (props.project) {
       setProject(props.project)
+      setProjectTitle(props.projectTitle)
     }
   }, [props.project])
 
@@ -124,7 +127,10 @@ function ProjectModal(props) {
       })
     )
     await axiosInstance
-      .post('/hsPortfolio/myProjects', updatedProjects)
+      .post('/hsPortfolio/myProjects', {
+        projects: updatedProjects,
+        title: projectTitle
+      })
       .then((res) => {
         setIsSaving(false)
         if (props.onAddProject) {
@@ -147,10 +153,10 @@ function ProjectModal(props) {
       )
 
       await axiosInstance
-        .put(
-          `/hsPortfolio/myProjects/${foundedProject?.parentId}`,
-          updatedProjects
-        )
+        .put(`/hsPortfolio/myProjects/${foundedProject?.parentId}`, {
+          updatedProjects,
+          title: projectTitle
+        })
         .then((res) => {
           props.onUpdateProject(res.data.project)
           props.onHide()
@@ -234,6 +240,19 @@ function ProjectModal(props) {
       actions={projectModalActions}
       class={'add-project-modal '}
     >
+      <div className={'mb-4'}>
+        <div className={'portfolio-info-title my-2'}>{'Project Title'}</div>
+        <LabeledInput
+          title={'Project title'}
+          type={'text'}
+          align={'start'}
+          placeholder={'A New Alumni Spotlight'}
+          labelAlign={'start'}
+          value={projectTitle}
+          onChange={(value) => setProjectTitle(value)}
+        />
+      </div>
+
       {renderEditProject(
         'learn',
         'LEARN: YOUR COMMITMENT TO CONSCIOUS CONSUMPTION, RESEARCH, AND ANALYSIS.',

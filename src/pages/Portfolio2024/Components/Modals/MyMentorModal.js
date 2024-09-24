@@ -20,13 +20,13 @@ import ReactImageUpload from '../ReactAvatarEditor/ReactImageUpload'
 import useImageEditor from '../../../../hooks/useImageEditor'
 
 const MyMentorModal = (props) => {
-  const mode = props.mode
   const initialMentorState = {
     mentorImage: '',
     mentorName: '',
     mentorRole: '',
     mentorCompany: '',
-    mentorDescription: ''
+    mentorDescription: '',
+    showSection: true
   }
   const isCompetitiveness = props.category === 'my-competitiveness'
   const isSaving = useSelector((state) =>
@@ -37,7 +37,6 @@ const MyMentorModal = (props) => {
 
   const dispatch = useDispatch()
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
-  const [imageFile, setImageFile] = useState(null)
   const [mentorDetails, setMentorDetails] = useState(initialMentorState)
   const [id, setId] = useState(null)
 
@@ -62,8 +61,10 @@ const MyMentorModal = (props) => {
         mentorName: props.data.mentorName,
         mentorRole: props.data.mentorRole,
         mentorCompany: props.data.mentorCompany,
-        mentorDescription: props.data.mentorDescription
+        mentorDescription: props.data.mentorDescription,
+        showSection: props.data.showSection ?? false
       })
+      // setShowSection(props.data.showSection ?? false)
       setId(props.data.id)
       setImageUrl(props.data.mentorImage)
       if (props.data.mentorImage) {
@@ -161,7 +162,17 @@ const MyMentorModal = (props) => {
   ]
 
   return (
-    <PortfolioModalWrapper {...props} actions={actions}>
+    <PortfolioModalWrapper
+      {...props}
+      actions={actions}
+      showSectionCheckbox={!readOnly}
+      isShownSection={mentorDetails.showSection}
+      onToggleSection={(showSection) => {
+        setMentorDetails({ ...mentorDetails, showSection })
+      }}
+      switchId={isEdit() ? 'edit-mentor-switch' : 'add-mentor-switch'}
+      switchName={isEdit() ? 'edit-mentor-switch' : 'add-mentor-switch'}
+    >
       <div className='row'>
         <div className='col-md-4 d-flex align-items-center flex-column justify-content-center'>
           <ReactImageUpload

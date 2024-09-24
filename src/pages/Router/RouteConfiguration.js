@@ -98,6 +98,7 @@ const IamrCertificationSystem = React.lazy(() =>
 const Portfolio2024 = React.lazy(() =>
   import('../../pages/Portfolio2024/index')
 )
+const TestPage = React.lazy(() => import('../TestPage'))
 const PeerPortfolio2024 = React.lazy(() =>
   import('../../pages/Portfolio2024/peerPortfolio')
 )
@@ -118,6 +119,8 @@ export const adminRoutes = [
 ]
 
 export const authRoutes = [
+  { path: '/test-page', component: TestPage },
+
   { path: '/dashboard', component: Dashboard, exact: true },
   { path: '/beyond-your-course', component: BeyondYourCourse, exact: true },
   { path: '/beyond-your-course/:id', component: BeyondYourCourse, exact: true },

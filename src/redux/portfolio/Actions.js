@@ -25,7 +25,6 @@ import {
   SAVE_PERSONAL_BRAND_STORY_SUCCESS,
   SAVE_USER_STORY,
   SAVE_USER_STORY_SUCCESS,
-  GET_USER_STORY,
   GET_USER_STORY_SUCCESS,
   GET_MY_RELATIONSHIPS,
   GET_MY_RELATIONSHIPS_SUCCESS,
@@ -175,7 +174,26 @@ import {
   SHOW_EDIT_COMPETITIVENESS_MODAL,
   HIDE_EDIT_COMPETITIVENESS_MODAL,
   SHOW_ADD_COMPETITIVENESS_MODAL,
-  HIDE_ADD_COMPETITIVENESS_MODAL
+  HIDE_ADD_COMPETITIVENESS_MODAL,
+  GET_BASIC_USER_INFO,
+  GET_BASIC_USER_INFO_SUCCESS,
+  SAVE_BASIC_USER_INFO,
+  SAVE_BASIC_USER_INFO_SUCCESS,
+  GET_USER_STORY,
+  SHOW_EDIT_MY_STORY_MODAL,
+  HIDE_EDIT_MY_STORY_MODAL,
+  SHOW_ADD_MY_STORY_MODAL,
+  HIDE_ADD_MY_STORY_MODAL,
+  SHOW_EDIT_USER_BASIC_INFO_MODAL,
+  HIDE_EDIT_USER_BASIC_INFO_MODAL,
+  SHOW_ADD_USER_BASIC_INFO_MODAL,
+  HIDE_ADD_USER_BASIC_INFO_MODAL,
+  TOGGLE_USER_STORY,
+  TOGGLE_USER_STORY_SUCCESS,
+  TOGGLE_MY_RELATIONSHIPS,
+  TOGGLE_MY_RELATIONSHIPS_SUCCESS,
+  TOGGLE_MY_FAILURE,
+  TOGGLE_MY_FAILURE_SUCCESS
 } from './Constants'
 import {
   createMyFailuresAPI,
@@ -183,7 +201,7 @@ import {
   createMyRelationshipsAPI,
   createSharingSettingsAPI,
   createUserStory,
-  createUserStoryAPI,
+  createUserBasicDataAPI,
   deleteMyFailuresAPI,
   deleteMyMentorsAPI,
   getMyFailuresAPI,
@@ -193,12 +211,12 @@ import {
   getPublicPortfolioAPI,
   getSharingSettingsAPI,
   getSkillsAPI,
-  getUserStoryAPI,
+  getUserBasicDataAPI,
   updateMyFailuresAPI,
   updateMyMentorsAPI,
   updateMyRelationshipsAPI,
   updateSharingSettingsAPI,
-  updateUserStoryAPI,
+  updateUserBasicDataAPI,
   // How do I prove it //
   getMyEducationsAPI,
   updateMyEducationAPI,
@@ -219,7 +237,10 @@ import {
   getMyCompetitivenessAPI,
   updateMyCompetitivenessAPI,
   createMyCompetitivenessAPI,
-  deleteMyCompetitivenessAPI
+  deleteMyCompetitivenessAPI,
+  getUserStoryAPI,
+  updateUserStoryAPI,
+  createUserStoryAPI
 } from './Service'
 
 export const getPublicPortfolio = () => async (dispatch) => {
@@ -396,36 +417,36 @@ export const savePersonalBrandStorySuccess = (link) => {
 
 /// WHO AM I SECTION //
 
-export const getUserStory = () => async (dispatch) => {
-  dispatch({ type: GET_USER_STORY })
+export const getUserBasicInfo = () => async (dispatch) => {
+  dispatch({ type: GET_BASIC_USER_INFO })
   try {
-    const response = await getUserStoryAPI()
-    dispatch(getUserStorySuccess(response.data))
+    const response = await getUserBasicDataAPI()
+    dispatch(getUserBasicDataSuccess(response?.data))
   } catch (e) {
     console.log('error', e)
   }
 }
-export const getUserStorySuccess = (response) => {
+export const getUserBasicDataSuccess = (response) => {
   return {
-    type: GET_USER_STORY_SUCCESS,
+    type: GET_BASIC_USER_INFO_SUCCESS,
     payload: { data: response }
   }
 }
-export const saveUserStory = (userStory, id) => async (dispatch) => {
-  dispatch({ type: SAVE_USER_STORY })
+export const saveUserBasicData = (userStory, id) => async (dispatch) => {
+  dispatch({ type: SAVE_BASIC_USER_INFO })
   try {
     let response
     if (id) {
-      response = await updateUserStoryAPI(userStory, id)
+      response = await updateUserBasicDataAPI(userStory, id)
     } else {
-      response = await createUserStoryAPI(userStory)
+      response = await createUserBasicDataAPI(userStory)
     }
-    dispatch(saveUserStorySuccess(response.data))
+    dispatch(saveUserBasicDataSuccess(response?.data))
   } catch (e) {}
 }
-export const saveUserStorySuccess = (response) => {
+export const saveUserBasicDataSuccess = (response) => {
   return {
-    type: SAVE_USER_STORY_SUCCESS,
+    type: SAVE_BASIC_USER_INFO_SUCCESS,
     payload: { data: response }
   }
 }
@@ -434,7 +455,7 @@ export const getMyRelationships = () => async (dispatch) => {
   dispatch({ type: GET_MY_RELATIONSHIPS })
   try {
     const response = await getMyRelationshipsAPI()
-    dispatch(getMyRelationshipsSuccess(response.data))
+    dispatch(getMyRelationshipsSuccess(response?.data))
   } catch (e) {
     console.log('error', e)
   }
@@ -455,7 +476,7 @@ export const saveMyRelationships =
       } else {
         response = await createMyRelationshipsAPI(myRelationships)
       }
-      dispatch(saveMyRelationshipsSuccess(response.data))
+      dispatch(saveMyRelationshipsSuccess(response?.data))
     } catch (e) {}
   }
 export const saveMyRelationshipsSuccess = (response) => {
@@ -465,13 +486,93 @@ export const saveMyRelationshipsSuccess = (response) => {
   }
 }
 
+export const toggleMyRelationships =
+  (myRelationships, id) => async (dispatch) => {
+    dispatch({ type: TOGGLE_MY_RELATIONSHIPS })
+    try {
+      let response
+
+      if (id) {
+        response = await updateMyRelationshipsAPI(myRelationships, id)
+      } else {
+        response = await createMyRelationshipsAPI(myRelationships)
+      }
+      dispatch(toggleMyRelationshipsSuccess(response?.data))
+    } catch (e) {}
+  }
+export const toggleMyRelationshipsSuccess = (response) => {
+  return {
+    type: TOGGLE_MY_RELATIONSHIPS_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const getUserStory = () => async (dispatch) => {
+  dispatch({ type: GET_USER_STORY })
+  try {
+    const response = await getUserStoryAPI()
+
+    dispatch(getUserStorySuccess(response?.data))
+  } catch (e) {
+    console.log('error', e)
+  }
+}
+export const getUserStorySuccess = (response) => {
+  return {
+    type: GET_USER_STORY_SUCCESS,
+    payload: { data: response }
+  }
+}
+export const saveUserStory = (userStory, id) => async (dispatch) => {
+  dispatch({ type: SAVE_USER_STORY })
+  try {
+    let response
+    if (id) {
+      response = await updateUserStoryAPI(userStory, id)
+    } else {
+      response = await createUserStoryAPI(userStory)
+    }
+
+    const isEdit = id
+    dispatch(saveUserStorySuccess(response.data, isEdit))
+  } catch (e) {}
+}
+export const saveUserStorySuccess = (response, isEdit) => {
+  return {
+    type: SAVE_USER_STORY_SUCCESS,
+    payload: { data: response },
+    isEdit
+  }
+}
+
+export const toggleUserStory = (userStory, id) => async (dispatch) => {
+  dispatch({ type: TOGGLE_USER_STORY })
+  try {
+    let response
+    if (id) {
+      response = await updateUserStoryAPI(userStory, id)
+    } else {
+      response = await createUserStoryAPI(userStory)
+    }
+
+    const isEdit = id
+    dispatch(toggleUserStorySuccess(response.data, isEdit))
+  } catch (e) {}
+}
+export const toggleUserStorySuccess = (response, isEdit) => {
+  return {
+    type: TOGGLE_USER_STORY_SUCCESS,
+    payload: { data: response },
+    isEdit
+  }
+}
+
 // MY FAILURES
 export const getMyFailures = () => async (dispatch) => {
   dispatch({ type: GET_MY_FAILURES })
   try {
     const response = await getMyFailuresAPI()
-
-    dispatch(getMyFailuresSuccess(response.data))
+    dispatch(getMyFailuresSuccess(response?.data))
   } catch (e) {
     console.log('error', e)
   }
@@ -579,6 +680,26 @@ export const deleteMyFailureImageError = (error) => {
   return {
     type: DELETE_MY_FAILURE_IMAGE_ERROR,
     payload: { error }
+  }
+}
+
+export const toggleMyFailure = (myFailure, id) => async (dispatch) => {
+  dispatch({ type: TOGGLE_MY_FAILURE })
+  try {
+    let response
+
+    if (id) {
+      response = await updateMyFailuresAPI(myFailure, id)
+    } else {
+      response = await createMyFailuresAPI(myFailure)
+    }
+    dispatch(toggleMyFailureSuccess(response?.data))
+  } catch (e) {}
+}
+export const toggleMyFailureSuccess = (response) => {
+  return {
+    type: TOGGLE_MY_FAILURE_SUCCESS,
+    payload: { data: response }
   }
 }
 
@@ -820,6 +941,37 @@ export const setPublishModalSuccess = (visibility) => {
   }
 }
 
+export const showEditMyStoryModal = () => ({
+  type: SHOW_EDIT_MY_STORY_MODAL
+})
+
+export const hideEditMyStoryModal = () => ({
+  type: HIDE_EDIT_MY_STORY_MODAL
+})
+
+export const showAddMyStoryModal = () => ({
+  type: SHOW_ADD_MY_STORY_MODAL
+})
+
+export const hideAddMyStoryModal = () => ({
+  type: HIDE_ADD_MY_STORY_MODAL
+})
+
+export const showEditUserBasicInfoModal = () => ({
+  type: SHOW_EDIT_USER_BASIC_INFO_MODAL
+})
+
+export const hideEditUserBasicInfoModal = () => ({
+  type: HIDE_EDIT_USER_BASIC_INFO_MODAL
+})
+
+export const showAddUserBasicInfoModal = () => ({
+  type: SHOW_ADD_USER_BASIC_INFO_MODAL
+})
+
+export const hideAddUserBasicInfoModal = () => ({
+  type: HIDE_ADD_USER_BASIC_INFO_MODAL
+})
 export const showEditMentorModal = (id) => ({
   type: SHOW_EDIT_MENTOR_MODAL,
   payload: id
@@ -1491,6 +1643,7 @@ export const getMyCompetitivenessError = (error) => {
 // Update Competitiveness
 export const updateMyCompetitiveness =
   (competitiveness, id, category) => async (dispatch) => {
+    debugger
     dispatch({ type: UPDATE_MY_COMPETITIVENESS })
     try {
       const response = await updateMyCompetitivenessAPI(competitiveness, id)

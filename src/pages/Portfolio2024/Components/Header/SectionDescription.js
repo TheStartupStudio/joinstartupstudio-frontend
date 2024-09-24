@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import UserImage from '../UserImage'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserStory } from '../../../../redux/portfolio/Actions'
+import { getUserBasicInfo } from '../../../../redux/portfolio/Actions'
 
 // function SectionDescription({
 //   userStory,

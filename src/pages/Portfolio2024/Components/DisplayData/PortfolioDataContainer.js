@@ -31,6 +31,7 @@ function PortfolioDataContainer(props) {
               : props.title && !props.description
               ? 70
               : 0
+          // overflow: 'hidden'
         }}
       >
         {props.children}

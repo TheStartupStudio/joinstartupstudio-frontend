@@ -1,31 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import PortfolioInfoBox from '../../Components/DisplayData/PortfolioInfoBox'
-import PortfolioDataContainer from '../../Components/DisplayData/PortfolioDataContainer'
 import {
-  editWhoSection,
-  getMyRelationships,
-  getUserStory,
   saveMyRelationships,
-  saveUserStory
+  toggleMyRelationships,
+  toggleUserStory
 } from '../../../../redux/portfolio/Actions'
 import { useDispatch, useSelector } from 'react-redux'
 import SectionActions from '../../Components/Actions/SectionActions'
 import LabeledInput from '../../Components/DisplayData/LabeledInput'
+import LabeledSwitchInput from '../../Components/Actions/LabeledSwitchInput'
 
 function MyRelationships(props) {
   const [isEditSection, setIsEditSection] = useState(false)
   const [teamRole, setTeamRole] = useState('')
   const [collaborationStyle, setCollaborationStyle] = useState('')
   const [leadershipPhilosophy, setLeadershipPhilosophy] = useState('')
+  const [showSection, setShowSection] = useState(false)
   const [id, setId] = useState(null)
   const dispatch = useDispatch()
 
   const mode = useSelector((state) => state.portfolio.mode)
+  const isTogglingSection = useSelector(
+    (state) => state.portfolio.whoSection.myRelationships.isTogglingSection
+  )
   useEffect(() => {
     if (props.data) {
       setTeamRole(props?.data?.teamRole)
       setCollaborationStyle(props?.data?.collaborationStyle)
       setLeadershipPhilosophy(props?.data?.leadershipPhilosophy)
+      setShowSection(props?.data?.showRelationships)
       setId(props.data?.id)
     }
     setIsEditSection(false)
@@ -55,6 +58,17 @@ function MyRelationships(props) {
       isDisplayed: mode === 'edit' && isEditSection === true
     }
   ]
+
+  const onToggleSection = (showRelationships) => {
+    dispatch(
+      toggleMyRelationships(
+        {
+          showRelationships: showRelationships
+        },
+        id
+      )
+    )
+  }
   const isValidContent = (content) =>
     content !== null && content !== undefined && content.trim() !== ''
 
@@ -74,11 +88,23 @@ function MyRelationships(props) {
 
   return (
     <>
+      {isEditSection && mode === 'edit' && (
+        <LabeledSwitchInput
+          label={'Show section'}
+          labelDirection={'left'}
+          value={showSection}
+          onChange={(value) => {
+            onToggleSection(!value)
+          }}
+          name={'show-relationships-section'}
+          id={'show-relationships-section'}
+          isToggling={isTogglingSection}
+          styles={{ position: 'absolute', right: 70, top: 30 }}
+        />
+      )}
       {isEditSection && mode === 'edit' ? (
-        <div className={'row'}>
-          <div
-            className={'col-lg-4 col-md-6 col-sm-12 mb-3 relationship-story'}
-          >
+        <div className={'row '}>
+          <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
             <LabeledInput
               containerClassNames={'my-relationships '}
               title={'Team role'}

@@ -82,7 +82,7 @@
   width: 100% !important;
 }
 
-\ .portfolio-actions-loader {
+.portfolio-actions-loader {
   position: absolute;
   top: 0;
   right: 0;
@@ -141,6 +141,9 @@
   overflow: hidden;
   justify-content: end;
   padding: 0;
+
+    z-index:3
+
 }
 
 .custom-switch-container {
@@ -287,6 +290,9 @@
 .custom-switch-checkbox:checked+.eye-icon-show:after {
   left: calc(100% - 27px);
 }
+
+
+
 
 /*///////////////////// --- ///////////////////////////*/
 
@@ -536,7 +542,7 @@
 
 .portfolio-modal-content {
   height: 100% !important;
-  overflow: scroll;
+  /*overflow: scroll;*/
   z-index: 1;
 }
 
@@ -567,11 +573,11 @@
   }
 }
 
-@media (max-width:1055px) {
-  .portfolio-modal-wrapper .modal-dialog {
-    margin: 30px !important;
-  }
-}
+/*@media (max-width:1055px) {*/
+/*  .portfolio-modal-wrapper .modal-dialog {*/
+/*    margin: 30px !important;*/
+/*  }*/
+/*}*/
 
 
 .portfolio-modal-wrapper .modal-content {
@@ -580,10 +586,10 @@
   box-shadow: 0px 3px 10px #00000029;
   overflow: hidden;
   border-radius: 50px !important;
-
+position:relative;
   min-width: 85%;
-  height: 850px !important;
-  margin-top: -10px !important;
+  /*max-height: 850px !important;*/
+  margin-top: 0px !important;
   padding: 20px;
 
   display: flex !important;
@@ -990,18 +996,36 @@
   font-size: 20px;
 }
 
+
+.certification-badges {
+  display:flex;
+  align-items:center;
+  gap: 6px;
+  margin-top: 4px
+}
+
+.certification-badge {
+  width: 50px;
+  height:50px;
+  object-fit: contain;
+}
 .my-failures-container {
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 14px #00000029;
   border-radius: 36px;
   padding: 20px;
   overflow: hidden;
+
+    width: 100%
 }
+
+
+
 
 .my-mentors-container {
   /* min-height: 150px;
   height: 330px; */
-  /* width: 240px !important; */
+   width: 240px !important;
   /*width: 100% !important;*/
   height: 100%;
   position: relative;
@@ -1408,9 +1432,9 @@
   font-size: 25px;
 }
 
-.relationship-story .portfolio-info-container {
-  height: 170px !important;
-}
+/*.relationship-story .portfolio-info-container {*/
+/*  height: 170px !important;*/
+/*}*/
 
 /* .mentor-width {
   width: 400px !important;
@@ -1427,7 +1451,7 @@
 }
 
 .portfolio-info-content {
-  width: 350px;
+  /*width: 350px;*/
   text-align: left;
   font: normal normal 300 15px/19px Montserrat;
   color: #231F20 !important;
@@ -1563,6 +1587,33 @@
   letter-spacing: 0.52px;
   color: #000000;
 }
+
+.labeled-switch-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adjust spacing between label and switch */
+}
+
+.label-top {
+    flex-direction: column-reverse;
+}
+
+.label-bottom {
+    flex-direction: column;
+}
+
+.label-left {
+    flex-direction: row;
+}
+
+.label-right {
+    flex-direction: row-reverse;
+}
+
+.switch-label {
+    font-size: 16px; /* Adjust as needed */
+}
+
 
 .select-skill {
   text-align: left;

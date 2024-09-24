@@ -59,7 +59,7 @@ function MyFailure(props) {
     <>
       <div className={'my-failures-container position-relative'}>
         <div className={'row'}>
-          <div className={'failure-submission-content col-md-5'}>
+          <div className={'col-md-5'}>
             <PortfolioSubmission
               videoUrl={myFailure?.videoUrl}
               thumbnailUrl={myFailure?.thumbnailUrl}
@@ -67,18 +67,16 @@ function MyFailure(props) {
               title={'MY FAILURE STORY'}
             />
           </div>
-          <div className={'failure-info-content col-md-7'}>
-            <PortfolioInfo
-              title={'MY FAILURE'}
-              content={myFailure?.assessment}
-            />
-            <div className={' mt-2 '}>
-              <PortfolioInfo title={'My Pivot'} content={myFailure?.outcome} />
+          <div className={'col-md-7'}>
+            <PortfolioInfo title={'FAILURE #1'} content={myFailure?.failure} />
+            <div className={'mt-2'}>
+              <PortfolioInfo title={'My Pivot'} content={myFailure?.pivot} />
             </div>
-            <div className={' mt-2 '}>
+
+            <div className={'mt-2'}>
               <PortfolioInfo
-                title={'My Outcome'}
-                content={myFailure?.outcome}
+                title={'My Outcomes'}
+                content={myFailure?.outcomes}
               />
             </div>
           </div>

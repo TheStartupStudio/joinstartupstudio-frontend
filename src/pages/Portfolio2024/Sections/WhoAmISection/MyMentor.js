@@ -15,8 +15,6 @@ function MyMentor(props) {
   const [data, setData] = useState({})
   const mode = useSelector((state) => state.portfolio.mode)
 
-  const isCompetitiveness = props.category
-
   const showModalId = useSelector((state) =>
     props.category === 'my-competitiveness'
       ? state.portfolio.howSection.myCompetitiveness

@@ -48,7 +48,7 @@ function AddMyMentor(props) {
   const actions = [
     {
       type: 'add',
-      action: handleShowModal,
+      action: () => handleShowModal(),
       isDisplayed: mode === 'edit' && props.isEditSection === true,
       description: `Click here to add a new ${props.type ?? 'mentor'}`
     }

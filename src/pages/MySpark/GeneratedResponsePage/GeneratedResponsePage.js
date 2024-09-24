@@ -15,8 +15,8 @@ import MyContentModal from '../Modals/MyContentModal'
 import DeleteSparkArchiveModal from '../Modals/DeleteArchiveModal'
 import { toast } from 'react-toastify'
 import FinalStepModal from '../Modals/FinalStepModal'
-import { PDFDownloadLink } from '@react-pdf/renderer'
-import PdfDocument from './PdfDocument'
+// import { PDFDownloadLink } from '@react-pdf/renderer'
+// import PdfDocument from './PdfDocument'
 import useWindowWidth from '../../../hooks/useWindowWidth'
 
 function GeneratedResponsePage(props) {
@@ -358,11 +358,11 @@ function GeneratedResponsePage(props) {
     <>
       <Container fluid>
         <Row>
-          <div className="col-12 col-xl-12 px-0">
-            <div className="account-page-padding page-border">
-              <div className="row ps-2">
-                <div className="col-md-6">
-                  <h3 className="page-title mb-0">MY SPARK</h3>
+          <div className='col-12 col-xl-12 px-0'>
+            <div className='account-page-padding page-border'>
+              <div className='row ps-2'>
+                <div className='col-md-6'>
+                  <h3 className='page-title mb-0'>MY SPARK</h3>
                 </div>
               </div>
 
@@ -385,7 +385,7 @@ function GeneratedResponsePage(props) {
                     `}
                   >
                     <img
-                      className="generate-page-type__icon "
+                      className='generate-page-type__icon '
                       src={archivedDocument?.icon}
                     />
                   </div>
@@ -423,7 +423,7 @@ function GeneratedResponsePage(props) {
                             }
                           >
                             <img
-                              className="prompt-icon me-3"
+                              className='prompt-icon me-3'
                               src={mySparkPrompt}
                               alt={'my spark icon'}
                             />
@@ -474,7 +474,7 @@ function GeneratedResponsePage(props) {
                             {isSavedArchive() && (
                               <FontAwesomeIcon
                                 icon={faTrash}
-                                className="me-2 me-md-0 trash-icon"
+                                className='me-2 me-md-0 trash-icon'
                                 onClick={() => setShowDeleteSparkModal(true)}
                               />
                             )}
@@ -518,31 +518,32 @@ function GeneratedResponsePage(props) {
                               <>
                                 {myContentDisplayed ||
                                 archivedDocument?.type === 'image' ? (
-                                  <PDFDownloadLink
-                                    document={
-                                      <PdfDocument
-                                        archivedDocument={archivedDocument}
-                                      />
-                                    }
-                                    fileName={`${archivedDocument?.widgetName}.pdf`}
-                                    className={'w-100 d-flex'}
-                                  >
-                                    {({ blob, url, loading, error }) => (
-                                      <LtsButton
-                                        name={'Download'}
-                                        width={
-                                          windowWidth < 700 ? '100%' : '70%'
-                                        }
-                                        align={alignButton('download')}
-                                        backgroundColor={
-                                          isSavedArchive() || myContentDisplayed
-                                            ? '#99CC33'
-                                            : '#BBBDBF'
-                                        }
-                                      />
-                                    )}
-                                  </PDFDownloadLink>
+                                  <></>
                                 ) : (
+                                  // <PDFDownloadLink
+                                  //   document={
+                                  //     <PdfDocument
+                                  //       archivedDocument={archivedDocument}
+                                  //     />
+                                  //   }
+                                  //   fileName={`${archivedDocument?.widgetName}.pdf`}
+                                  //   className={'w-100 d-flex'}
+                                  // >
+                                  //   {({ blob, url, loading, error }) => (
+                                  //     <LtsButton
+                                  //       name={'Download'}
+                                  //       width={
+                                  //         windowWidth < 700 ? '100%' : '70%'
+                                  //       }
+                                  //       align={alignButton('download')}
+                                  //       backgroundColor={
+                                  //         isSavedArchive() || myContentDisplayed
+                                  //           ? '#99CC33'
+                                  //           : '#BBBDBF'
+                                  //       }
+                                  //     />
+                                  //   )}
+                                  // </PDFDownloadLink>
                                   <LtsButton
                                     onClick={() => setShowFinalStepModal(true)}
                                     backgroundColor={
@@ -586,7 +587,7 @@ function GeneratedResponsePage(props) {
                   ) : (
                     <>
                       {errorMessage && (
-                        <Alert variant="danger" className={'w-75'}>
+                        <Alert variant='danger' className={'w-75'}>
                           <Alert.Heading>
                             Oh snap! You got an error!
                           </Alert.Heading>
@@ -597,10 +598,10 @@ function GeneratedResponsePage(props) {
                   )}
                 </div>
                 {isLoading && (
-                  <div className="my-spark__loader ">
+                  <div className='my-spark__loader '>
                     <FontAwesomeIcon
                       icon={faSpinner}
-                      className="my-spark__spinner"
+                      className='my-spark__spinner'
                       spin
                       size={'lg'}
                     />

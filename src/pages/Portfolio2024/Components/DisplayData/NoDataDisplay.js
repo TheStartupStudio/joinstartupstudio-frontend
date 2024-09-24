@@ -1,13 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-const NoDataDisplay = ({ src, classNames, text = null }) => {
+const NoDataDisplay = ({ src, classNames, text = null, width }) => {
   const mode = useSelector((state) => state.portfolio.mode)
   return (
     <div className={`no-data-container ${classNames ?? ''}`}>
       <img
         src={src}
-        width={250}
+        width={width ?? 250}
         height={'100%'}
         alt={'no-data'}
         className='centered-image'
