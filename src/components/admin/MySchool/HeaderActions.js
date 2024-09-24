@@ -4,11 +4,11 @@ import { CustomDropdown, CustomSearchBar } from './ContentItems'
 import IntlMessages from '../../../utils/IntlMessages'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
-import useModalState from './useModalState'
 import { ConfirmationModal } from '../../Modals/confirmationModal'
 import { DeactivateDialogModal } from '../../StudentsTable/deactivateDialogModal'
 import { NextYearModal } from '../../StudentsTable/nextYearModal'
 import EditBulkModal from './EditBulkModal'
+import useModalState from '../../../hooks/useModalState'
 
 const HeaderActions = ({
   usedIn = 'instructor',
@@ -187,7 +187,7 @@ const HeaderActions = ({
           <Col md='4'>
             <CustomDropdown
               title={firstDropdownProps.title}
-              btnClassName={'instructor'}
+              btnClassName={'gray-border'}
               options={firstDropdownProps.options}
               onClick={firstDropdownProps.onChange}
               width={'300px'}
@@ -225,7 +225,7 @@ const HeaderActions = ({
                     ? handleBulkDeactiveAction()
                     : handleBulkNextYearAction()
                 }}
-                btnClassName={'instructor'}
+                btnClassName={'gray-border'}
               />
             </Col>
             <Col>

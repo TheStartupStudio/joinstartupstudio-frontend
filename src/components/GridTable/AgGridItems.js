@@ -1,21 +1,23 @@
 import {
+  faExclamationTriangle,
+  faEye,
   faGripLines,
   faKey,
+  faPaperPlane,
   faUser,
   faUserMinus
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-// import { useGridFilter } from 'ag-grid-react/lib/main'
 import { useGridFilter } from 'ag-grid-react'
-
 import './style.css'
-import ResetPasswordModal from './ResetPasswordModal'
-import AddInstructorModal from './Instructors/AddInstructorModal'
-import useModalState from './useModalState'
-import DeleteUserModal from './DeleteUserModal'
-import StudentActionsModal from './Learners/StudentActionsModal'
-import TransferStudentsModal from './Learners/TransferStudentsModal'
+import useModalState from '../../hooks/useModalState'
+import AddInstructorModal from '../admin/MySchool/Instructors/AddInstructorModal'
+import ResetPasswordModal from '../admin/MySchool/ResetPasswordModal'
+import DeleteUserModal from '../admin/MySchool/DeleteUserModal'
+import StudentActionsModal from '../admin/MySchool/Learners/StudentActionsModal'
+import TransferStudentsModal from '../admin/MySchool/Learners/TransferStudentsModal'
+import { faDelicious } from '@fortawesome/free-brands-svg-icons'
 
 const CustomHeader = ({ displayName, options, handleOptionClick }) => {
   const [showDropdown, setShowDropdown] = useState(false)
@@ -256,6 +258,59 @@ const TransferFilter = ({ model, onModelChange, getValue }) => {
             className='agGrid-customFilters__checkbox'
             onChange={() => handleCheckboxChange(transfer)}
             checked={selectedTransferStatus.includes(transfer)}
+          />
+          {transfer}
+        </div>
+      ))}
+    </div>
+  )
+}
+const ACADEMY_TRANSFER_OPTIONS = [
+  'needs-review',
+  'approved',
+  'pending',
+  'archived'
+]
+const AccademyTransferFilter = ({ model, onModelChange, getValue }) => {
+  const [selectedStatus, setSelectedStatus] = useState(model || [])
+
+  const doesFilterPass = useCallback(
+    (params) => {
+      const { data } = params
+      const status = data.status || []
+
+      if (selectedStatus.length === 0) {
+        return true
+      }
+
+      return selectedStatus.includes(status.toLowerCase())
+    },
+    [selectedStatus]
+  )
+
+  useGridFilter({ doesFilterPass })
+
+  const handleCheckboxChange = (transfer) => {
+    const updatedSelectedTransfers = selectedStatus.includes(transfer)
+      ? selectedStatus.filter((p) => p !== transfer)
+      : [...selectedStatus, transfer]
+
+    setSelectedStatus(updatedSelectedTransfers)
+    onModelChange(updatedSelectedTransfers)
+  }
+
+  return (
+    <div style={{ padding: '4px' }}>
+      {ACADEMY_TRANSFER_OPTIONS.map((transfer) => (
+        <div
+          className='agGrid-customFilters__checkbox-container d-flex py-1'
+          key={transfer}
+        >
+          <input
+            type='checkbox'
+            className='agGrid-customFilters__checkbox'
+            onChange={() => handleCheckboxChange(transfer)}
+            checked={selectedStatus.includes(transfer)}
           />
           {transfer}
         </div>
@@ -651,6 +706,106 @@ const Actions = ({
   )
 }
 
+const TableActions = ({
+  user,
+  payments,
+  application,
+  instructors,
+  cohorts,
+  levels,
+  programs,
+  refreshData,
+  ViewModal,
+  RemoveModal,
+  TransferModal
+}) => {
+  const [modals, setModalState] = useModalState()
+
+  const deleteHandler = () => {
+    setModalState(RemoveModal.name, true)
+  }
+
+  const viewHandler = () => {
+    setModalState(ViewModal.name, true)
+  }
+
+  const transferHandler = () => {
+    setModalState(TransferModal.name, true)
+  }
+
+  return (
+    <>
+      <div className='d-flex align-items-center agGrid__actions'>
+        <div className='action-item cursor-pointer' onClick={viewHandler}>
+          <FontAwesomeIcon
+            icon={faEye}
+            className='me-1 '
+            style={{ fontSize: '16px' }}
+          />
+
+          <p className='m-0 pe-2'> {ViewModal.text}</p>
+        </div>
+        {TransferModal && (
+          <div className='action-item cursor-pointer' onClick={transferHandler}>
+            <FontAwesomeIcon
+              icon={faPaperPlane}
+              className='me-1'
+              style={{ fontSize: '16px' }}
+            />
+
+            <p className='m-0 pe-2'> {TransferModal.text}</p>
+          </div>
+        )}
+        <div className='action-item cursor-pointer' onClick={deleteHandler}>
+          <FontAwesomeIcon
+            icon={faExclamationTriangle}
+            style={{ fontSize: '16px' }}
+            className='me-1'
+          />
+
+          <p className='m-0 pe-2'> {RemoveModal.text}</p>
+        </div>
+      </div>
+
+      {modals[ViewModal?.name] && (
+        // eslint-disable-next-line react/jsx-pascal-case
+        <ViewModal.modal
+          show={modals[ViewModal?.name]}
+          onHide={() => setModalState(ViewModal?.name, false)}
+          user={user}
+          transferHandler={transferHandler}
+          deleteHandler={deleteHandler}
+          refreshData={refreshData}
+          application={application}
+        />
+      )}
+      {modals[TransferModal?.name] && (
+        // eslint-disable-next-line react/jsx-pascal-case
+        <TransferModal.modal
+          show={modals[TransferModal?.name]}
+          onHide={() => setModalState(TransferModal?.name, false)}
+          user={user}
+          instructors={instructors}
+          cohorts={cohorts}
+          programs={programs}
+          levels={levels}
+          refreshData={refreshData}
+        />
+      )}
+      {modals[RemoveModal?.name] && (
+        // eslint-disable-next-line react/jsx-pascal-case
+        <RemoveModal.modal
+          show={modals[RemoveModal?.name]}
+          onHide={() => setModalState(RemoveModal?.name, false)}
+          payments={payments}
+          application={application}
+          refreshData={refreshData}
+        />
+      )}
+    </>
+  )
+}
+
 export {
   CustomHeader,
   ActiveInactiveFilter,
@@ -659,5 +814,7 @@ export {
   TransferFilter,
   CustomSelectCellEditor,
   CustomSelect,
-  Actions
+  Actions,
+  TableActions,
+  AccademyTransferFilter
 }

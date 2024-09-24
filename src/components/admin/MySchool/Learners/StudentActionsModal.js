@@ -5,22 +5,22 @@ import {
   faUserMinus,
   faUserPlus
 } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
-import { Col, Modal, Row } from 'react-bootstrap'
 import {
   CustomDropdown,
   CustomInput,
   SkillBox,
   SubmitButton
 } from '../ContentItems'
-import LtsCheckbox from '../../../../ui/LtsCheckbox'
-import { useValidation } from '../../../../hooks/useValidation'
-import { useForm } from '../../../../hooks/useForm'
-import useIsFormEmpty from '../../../../hooks/useIsFormEmpty'
 import { Auth } from 'aws-amplify'
-import axiosInstance from '../../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
+import React, { useState } from 'react'
+import { Col, Modal, Row } from 'react-bootstrap'
+import { useForm } from '../../../../hooks/useForm'
+import LtsCheckbox from '../../../../ui/LtsCheckbox'
+import axiosInstance from '../../../../utils/AxiosInstance'
+import useIsFormEmpty from '../../../../hooks/useIsFormEmpty'
+import { useValidation } from '../../../../hooks/useValidation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Certification1Badge from '../../../../assets/images/market-ready-1-badge.png'
 import Certification2Badge from '../../../../assets/images/market-ready-2-badge.png'
 
@@ -63,6 +63,8 @@ const StudentActionsModal = ({
     handleChangeDropdown,
     handleChangeSelect
   } = useForm(initialState, user, mode, loading)
+
+  console.log('formData', formData)
 
   let optionalFields = ['deactivated', 'period']
 
@@ -338,7 +340,7 @@ const StudentActionsModal = ({
                   isSelectable
                   exclusive
                   name='universityId'
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   options={universities?.map((university) => {
                     return {
                       name: university.name,
@@ -372,7 +374,7 @@ const StudentActionsModal = ({
                   exclusive
                   multiple
                   name='levels'
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   options={levels}
                   onClick={(selectedOptions) =>
                     handleChangeDropdown(selectedOptions, mode, 'levels')
@@ -391,7 +393,7 @@ const StudentActionsModal = ({
                   exclusive
                   multiple
                   name='programs'
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   options={programs?.map((program) => ({
                     name: program.name,
                     value: program.name,
@@ -413,7 +415,7 @@ const StudentActionsModal = ({
                   isSelectable
                   exclusive
                   name='instructor_id'
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   options={instructors?.map((instructor) => {
                     return {
                       name: instructor.User.name,
@@ -446,7 +448,7 @@ const StudentActionsModal = ({
                   isSelectable
                   exclusive
                   name='period'
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   options={periods?.map((period) => {
                     return {
                       name: period.name,

@@ -39,7 +39,6 @@ const MyTraining = React.lazy(() => import('../MyTraining/MyTraining'))
 const LiveStream = React.lazy(() => import('../StartupLive/livestream'))
 const BeyondYourCourse = React.lazy(() => import('../BeyondYourCourse'))
 const MyPerformanceData = React.lazy(() => import('../MyPerformanceData'))
-const UserManagement = React.lazy(() => import('../admin/UserManagement'))
 const AllVideos = React.lazy(() => import('../BeyondYourCourse/allVideos'))
 const ProfilePreview = React.lazy(() => import('../Profile/profilePreview'))
 const MyMarketReadyGuide = React.lazy(() => import('../MyMarketReadyGuide'))
@@ -75,9 +74,6 @@ const MySparkGeneratePage = React.lazy(() =>
 const MySparkArchivePage = React.lazy(() =>
   import('../MySpark/ArchivePage/ArchivePage')
 )
-const PreviewPortfolioNew = React.lazy(() =>
-  import('../PortfolioNew/previewPortfolio')
-)
 const EditPortfolioNew = React.lazy(() =>
   import('../PortfolioNew/editPortfolio')
 )
@@ -111,11 +107,31 @@ const StudentPortfolio2024 = React.lazy(() =>
   import('../Portfolio2024/studentPortfolio')
 )
 const MySchoolContainer = React.lazy(() => import('../admin/MySchool'))
+const MyGuestSpeakersContainer = React.lazy(() =>
+  import('../admin/MyGuestSpeakers')
+)
+const CoursesVcredentialsContainer = React.lazy(() =>
+  import('../admin/CoursesVCredentials')
+)
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData },
   // { path: '/user-management', component: UserManagement },
-  { path: '/my-school/:page?', component: MySchoolContainer }
+  {
+    path: '/my-school/:page?',
+    component: MySchoolContainer,
+    breadcrumb: 'My School'
+  },
+  {
+    path: '/courses&credentials',
+    component: CoursesVcredentialsContainer,
+    breadcrumb: 'Courses & Credentials'
+  },
+  {
+    path: '/my-guest-speakers',
+    component: MyGuestSpeakersContainer,
+    breadcrumb: 'My Guest Speakers'
+  }
 ]
 
 export const authRoutes = [
@@ -127,7 +143,6 @@ export const authRoutes = [
   { path: '/my-immersion', component: MyImmersion, exact: true },
   { path: '/my-immersion/:step', component: Steps },
   { path: '/terms', component: Terms },
-  // { path: '/preview-portfolio', component: PreviewPortfolioNew },
   { path: '/old-portfolio', component: EditPortfolioNew, exact: true },
   { path: '/my-portfolio', component: Portfolio2024, exact: true },
   { path: '/resources', component: Resources },
@@ -191,11 +206,6 @@ export const authRoutes = [
     path: '/iamr-certification-system/:certificationType?/:id?/:type?',
     component: IamrCertificationSystem
   },
-  // {
-  //   path: '/edit-portfolio/recommendation/:id',
-  //   component: EditPortfolioNew,
-  //   exact: true
-  // },
   {
     path: '/iamr-certification-system',
     component: IamrCertificationSystem,
@@ -341,13 +351,13 @@ export const publicRoutes = [
     path: '/public-portfolio/:username',
     component: PublicPortfolio2024,
     exact: true
-  },
-  {
-    path: '/student-portfolio/:username',
-    component: PreviewPortfolioNew,
-    props: { isPublicView: true },
-    exact: true
   }
+  // {
+  //   path: '/student-portfolio/:username',
+  //   component: PreviewPortfolioNew,
+  //   props: { isPublicView: true },
+  //   exact: true
+  // }
 ]
 
 export const redirects = [

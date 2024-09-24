@@ -16,13 +16,13 @@ export const useValidation = (
   const [errors, setErrors] = useState({})
   const [submitLoading, setLoading] = useState(false)
 
-  const isFormValid = Object.keys(formData).every((key) => {
-    const value = formData[key]
-    if (typeof value === 'string' && key !== 'isSelected') {
-      return stripHtmlTags(value).trim() !== ''
-    }
-    return !(value === undefined || value === null || value === '')
-  })
+  // const isFormValid = Object.keys(formData).every((key) => {
+  //   const value = formData[key]
+  //   if (typeof value === 'string' && key !== 'isSelected') {
+  //     return stripHtmlTags(value).trim() !== ''
+  //   }
+  //   return !(value === undefined || value === null || value === '')
+  // })
 
   const validate = () => {
     let newErrors = {}
@@ -81,5 +81,5 @@ export const useValidation = (
     }
   }
 
-  return { errors, isFormValid, handleSubmit, submitLoading }
+  return { errors, handleSubmit, submitLoading }
 }

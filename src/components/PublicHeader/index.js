@@ -14,6 +14,7 @@ function PublicHeader() {
     <div>
       {location.pathname !== '/ims-login' &&
         location.pathname !== '/' &&
+        location.pathname !== '/signup-academy' &&
         location.pathname !== '/forgot-password' && (
           <nav
             className={`navbar navbar-expand-lg justify-content-between py-4 px-4 px-md-5 ${

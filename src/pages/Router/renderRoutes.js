@@ -11,6 +11,7 @@ const renderRoutes = (routes, layout) => {
         path={route.path}
         exact={route.exact || false}
         render={(props) => <RouteComponent {...props} />}
+        breadcrumb={route.breadcrumb}
       />
     )
   })

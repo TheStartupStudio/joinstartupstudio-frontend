@@ -326,7 +326,7 @@ const AddInstructorModal = ({
                   isSelectable
                   exclusive
                   name='universityId'
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   options={universities?.map((university) => {
                     return {
                       name: university.name,
@@ -361,7 +361,7 @@ const AddInstructorModal = ({
                   isSelectable
                   exclusive
                   multiple
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   name='levels'
                   options={levels}
                   onClick={(selectedOptions) =>
@@ -381,7 +381,7 @@ const AddInstructorModal = ({
                   exclusive
                   multiple
                   name='programs'
-                  btnClassName={'instructor'}
+                  btnClassName={'gray-border'}
                   options={programs?.map((program) => ({
                     name: program.name,
                     value: program.name,
