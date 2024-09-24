@@ -14,16 +14,19 @@ function EvaluationMenu(props) {
   const [journalCategoryOptions, setJournalCategoryOptions] = useState([])
 
   const getUserTitles = async (category) => {
+    console.log(category, 'categgory')
     try {
       const { data } = await axiosInstance.get(
         `/ltsJournals/fromInstructorAllJournals`,
         {
           params: {
             category: category,
-            platform: 'instructor'
+            platform: category == 'personal-finance' ? 'student' : 'instructor'
           }
         }
       )
+
+      console.log(data, 'dataEvaluationMenu')
 
       let journalOptions = []
 
@@ -91,6 +94,7 @@ function EvaluationMenu(props) {
                 selectedJournal={props.journalSelected}
                 allowedToShow={true}
                 title={journal.title}
+                journal={journal}
                 id={journal.id}
               />
             ))}
@@ -113,6 +117,7 @@ function EvaluationMenu(props) {
                 setJournalSelected={props.setJournalSelected}
                 selectedJournal={props.journalSelected}
                 title={journal.title}
+                journal={journal}
                 id={journal.id}
               />
             ))}
@@ -122,7 +127,7 @@ function EvaluationMenu(props) {
           iconStyles={'me-2 me-md-0'}
           eventKey={'2'}
           handleClick={handleClick}
-          category={'student-personal-finance'}
+          category={'personal-finance'}
           journalId={'2'}
         >
           {journalCategoryOptions &&
@@ -135,6 +140,7 @@ function EvaluationMenu(props) {
                 setJournalSelected={props.setJournalSelected}
                 selectedJournal={props.journalSelected}
                 title={journal.title}
+                journal={journal}
                 id={journal.id}
               />
             ))}
@@ -157,6 +163,7 @@ function EvaluationMenu(props) {
                 setJournalSelected={props.setJournalSelected}
                 selectedJournal={props.journalSelected}
                 title={journal.title}
+                journal={journal}
                 id={journal.id}
               />
             ))}
@@ -169,19 +176,25 @@ function EvaluationMenu(props) {
           category={'student-wellnes'}
           journalId={'4'}
         >
+          {console.log(journalCategoryOptions, 'journalCateggoryOoptions')}
           {journalCategoryOptions &&
             journalCategoryOptions.length > 0 &&
-            journalCategoryOptions.map((journal) => (
-              <MenuOption
-                key={journal.id}
-                allowedToShow={true}
-                setJournalSelectedId={props.setJournalSelectedId}
-                setJournalSelected={props.setJournalSelected}
-                selectedJournal={props.journalSelected}
-                title={journal.title}
-                id={journal.id}
-              />
-            ))}
+            journalCategoryOptions
+              .filter(
+                (journal) => journal.title != 'WELCOME TO YOUR WELLNESS JOURNAL'
+              )
+              .map((journal) => (
+                <MenuOption
+                  key={journal.id}
+                  allowedToShow={true}
+                  setJournalSelectedId={props.setJournalSelectedId}
+                  setJournalSelected={props.setJournalSelected}
+                  selectedJournal={props.journalSelected}
+                  title={journal.title}
+                  journal={journal}
+                  id={journal.id}
+                />
+              ))}
         </MenuList>
         <MenuList
           title={'PORTFOLIO'}
@@ -191,14 +204,14 @@ function EvaluationMenu(props) {
           category={'student-portfolio'}
           journalId={'5'}
         ></MenuList>
-        <MenuList
+        {/* <MenuList
           title={'CERTIFICATE'}
           iconStyles={'me-2 me-md-0'}
           eventKey={'6'}
           handleClick={handleClick}
           category={'student-certificate'}
           journalId={'6'}
-        ></MenuList>
+        ></MenuList> */}
       </Accordion>
     </div>
   )

@@ -46,8 +46,25 @@ function WorkExperienceCard(props) {
   return (
     <div className={'mb-3'}>
       <PortfolioDataContainer background={'#fff'}>
-        <div className={'d-flex gap-3 '}>
+        <div
+          className={'d-flex gap-3 '}
+          style={{
+            flexWrap: 'wrap'
+          }}
+        >
           <div className={'flex-grow'} style={{ width: 100 }}>
+            {/* {data.currentPosition
+              ? `${(
+                  <div className={'proveit-title-org organization-name mb-2'}>
+                    CURRENT POSITION
+                  </div>
+                )}`
+              : ''}
+
+            <div className={'proveit-title-org organization-name mb-2'}>
+              {data?.currentPosition ? 'CURRENT POSITION' : ''}
+            </div> */}
+
             <img
               className={'organization-image'}
               src={data?.imageUrl ?? imagePlaceholder}
@@ -57,13 +74,19 @@ function WorkExperienceCard(props) {
           <div className={'flex-grow-1'}>
             <div className={'d-flex justify-content-between gap-2'}>
               <div>
-                <div className={'organization-name mb-2'}>
+                <div className={'proveit-title-org organization-name mb-2'}>
                   {data?.organizationName}
                 </div>
-                <div className={'organization-location mb-2'}>
+                <div
+                  className={'organization-location mb-2'}
+                  style={{ fontWeight: 400 }}
+                >
                   {data?.location}
                 </div>
-                <div className={'organization-website mb-3'}>
+                <div
+                  className={'organization-website mb-3'}
+                  style={{ fontWeight: 400 }}
+                >
                   <WebsiteLink website={data?.website} />
                 </div>
               </div>
@@ -75,12 +98,17 @@ function WorkExperienceCard(props) {
               </div>
             </div>
             <div>
-              <div className={'organization-description-label mb-2'}>
+              <div
+                className={
+                  'proveit-title-org organization-description-label mb-2'
+                }
+              >
                 {data?.jobTitle}
               </div>{' '}
               <div
                 className={'organization-description'}
                 dangerouslySetInnerHTML={{ __html: data?.description }}
+                style={{ fontWeight: 400 }}
               />
             </div>
           </div>

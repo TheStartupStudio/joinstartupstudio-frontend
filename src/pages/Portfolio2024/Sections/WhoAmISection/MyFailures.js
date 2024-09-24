@@ -100,7 +100,7 @@ function MyFailures(props) {
         <MyFailureModal
           onHide={handleHideFailureModal}
           show={showFailureModal}
-          title={'Add Failure'}
+          title={'Add New Failure'}
           isSaving={isSaving}
         />
       )}

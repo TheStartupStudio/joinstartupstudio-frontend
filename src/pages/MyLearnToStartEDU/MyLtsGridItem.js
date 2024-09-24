@@ -15,10 +15,12 @@ const MyLtsGridItem = (props) => {
         }}
       >
         <div
-          className="row py-4 px-3 w-100"
+          className='row py-4 px-3 w-100'
           style={{
             background: '#F8F7F7 0% 0% no-repeat padding-box',
-            minHeight: 150
+            minHeight: 150,
+            width: '100%',
+            margin: 0
           }}
         >
           <div
@@ -52,7 +54,8 @@ const MyLtsGridItem = (props) => {
               style={{
                 font: 'normal normal normal 13px/17px Montserrat',
                 letterSpacing: 0.52,
-                color: '#333D3D'
+                color: '#333D3D',
+                margin: '10px'
               }}
             >
               {props.description}

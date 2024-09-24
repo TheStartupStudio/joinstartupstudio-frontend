@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axiosInstance from '../utils/AxiosInstance'
 
-const useUserActivity = () => {
+const useUserActivity = (userActivity) => {
+  // console.log('userActivity', userActivity)
   const { isAuthenticated, user } = useSelector((state) => state.user)
   const [isFirstRendered, setIsFirstRendered] = useState(false)
   const [existUserActivity, setExistUserActivity] = useState(null)
@@ -50,34 +51,17 @@ const useUserActivity = () => {
   }
 
   useEffect(() => {
-    if (user && isAuthenticated) {
-      axiosInstance
-        .get('/myPerformanceData/userActivity')
-        .then(({ data }) => {
-          setExistUserActivity(data)
-          setIsFirstRendered(true)
-          restartInterval().then((data) => {
-            if (data) {
-              setIntervalId(startInterval('beginning'))
-            }
-          })
-        })
-        .catch((error) => {
-          console.error('Error fetching user activity:', error)
-        })
-    }
-  }, [user, isAuthenticated])
-
-  useEffect(() => {
     if (!user) {
       clearInterval(intervalId)
     }
   }, [user])
 
   useEffect(() => {
-    if (!existUserActivity && user && isAuthenticated) {
+    if (user && isAuthenticated) {
       axiosInstance
-        .put('/myPerformanceData/updateActivity/startTime', { isActive: false })
+        .put('/myPerformanceData/updateActivity/startTime', {
+          isActive: false
+        })
         .then((response) => {
           setIsFirstRendered(true)
           setActiveMinutes(response.data.activeMinutes)
@@ -86,7 +70,7 @@ const useUserActivity = () => {
           console.error('Error updating activity:', error)
         })
     }
-  }, [existUserActivity, user, isAuthenticated])
+  }, [user, isAuthenticated])
 
   useEffect(() => {
     if (user && isAuthenticated && isFirstRendered) {
@@ -130,3 +114,77 @@ const useUserActivity = () => {
 }
 
 export default useUserActivity
+
+/////////// DO NOT DELETE THESE COMMENTS ////////////
+
+// useEffect(() => {
+//   if (user && isAuthenticated) {
+//     axiosInstance
+//       .get('/myPerformanceData/userActivity')
+//       .then(({ data }) => {
+//         setExistUserActivity(data)
+//         setIsFirstRendered(true)
+//         restartInterval().then((data) => {
+//           if (data) {
+//             setIntervalId(startInterval('beginning'))
+//           }
+//         })
+//       })
+//       .catch((error) => {
+//         console.error('Error fetching user activity:', error)
+//       })
+//   }
+// }, [user, isAuthenticated])
+
+///
+
+// useEffect(() => {
+//   if (!existUserActivity && user && isAuthenticated) {
+//     axiosInstance
+//       .put('/myPerformanceData/updateActivity/startTime', { isActive: false })
+//       .then((response) => {
+//         setIsFirstRendered(true)
+//         setActiveMinutes(response.data.activeMinutes)
+//       })
+//       .catch((error) => {
+//         console.error('Error updating activity:', error)
+//       })
+//   }
+// }, [user, isAuthenticated, existUserActivity])
+///
+// import { useEffect, useLayoutEffect, useState } from 'react'
+// import { useSelector } from 'react-redux'
+// import axiosInstance from '../utils/AxiosInstance'
+//
+// const useUserActivity = (userActivity) => {
+//   const { isAuthenticated, user } = useSelector((state) => state.user)
+//   const [intervalId, setIntervalId] = useState(null)
+//   const [activeMinutes, setActiveMinutes] = useState(null)
+//
+//   const intervalTimeout = 60000
+//
+//   const startInterval = (from) => {
+//     return setInterval(() => {
+//       axiosInstance
+//         .put('/myPerformanceData/updateActivity/updateActiveMinutes')
+//         .then((response) => {
+//           setActiveMinutes(response.data.activeMinutes)
+//         })
+//         .catch((error) => {
+//           console.error('Error updating activity:', error)
+//         })
+//     }, intervalTimeout)
+//   }
+//
+//   useEffect(() => {
+//     if (user && isAuthenticated) {
+//       setIntervalId(startInterval())
+//     } else {
+//       clearInterval(intervalId)
+//     }
+//   }, [user, isAuthenticated])
+//
+//   return { activeMinutes }
+// }
+//
+// export default useUserActivity

@@ -96,8 +96,8 @@ function MyRelationships(props) {
           onChange={(value) => {
             onToggleSection(!value)
           }}
-          name={'show-section'}
-          id={'show-section'}
+          name={'show-relationships-section'}
+          id={'show-relationships-section'}
           isToggling={isTogglingSection}
           styles={{ position: 'absolute', right: 70, top: 30 }}
         />
@@ -106,7 +106,7 @@ function MyRelationships(props) {
         <div className={'row '}>
           <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
             <LabeledInput
-              containerClassNames={'my-relationships'}
+              containerClassNames={'my-relationships '}
               title={'Team role'}
               titleClassNames='text-center py-3 text-uppercase'
               titleHeight={70}
@@ -150,9 +150,11 @@ function MyRelationships(props) {
       ) : (
         <>
           <div className={'row'}>
-            <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
+            <div
+              className={'col-lg-4 col-md-6 col-sm-12 mb-3 relationship-story'}
+            >
               <PortfolioInfoBox
-                height={190}
+                height={170}
                 titleHeight={40}
                 inputHeight={120}
                 title={'Team role:'}
@@ -161,13 +163,15 @@ function MyRelationships(props) {
                   teamRole,
                   'Click the edit button to add team role.'
                 )}
-                contentClasses={'text-center'}
+                contentClasses={'text-center portfolio-nowidth-info'}
               />
             </div>
 
-            <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
+            <div
+              className={'col-lg-4 col-md-6 col-sm-12 mb-3 relationship-story'}
+            >
               <PortfolioInfoBox
-                height={190}
+                height={170}
                 titleHeight={40}
                 inputHeight={120}
                 title={'Collaboration style:'}
@@ -176,13 +180,15 @@ function MyRelationships(props) {
                   collaborationStyle,
                   'Click the edit button to add a collaboration style'
                 )}
-                contentClasses={'text-center'}
+                contentClasses={'text-center portfolio-nowidth-info'}
               />
             </div>
 
-            <div className={'col-lg-4 col-md-6 col-sm-12 mb-3'}>
+            <div
+              className={'col-lg-4 col-md-6 col-sm-12 mb-3 relationship-story'}
+            >
               <PortfolioInfoBox
-                height={190}
+                height={170}
                 titleHeight={40}
                 inputHeight={120}
                 title={'Leadership philosophy:'}
@@ -191,7 +197,7 @@ function MyRelationships(props) {
                   leadershipPhilosophy,
                   'Click the edit button to add a leadership philosophy'
                 )}
-                contentClasses={'text-center'}
+                contentClasses={'text-center portfolio-nowidth-info'}
               />
             </div>
           </div>

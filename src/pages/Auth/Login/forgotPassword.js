@@ -68,7 +68,7 @@ const ForgotPassword = () => {
       <div
         className='container-fluid my-auto px-5 d-flex align-items-center justify-content-center'
         style={{
-          backgroundColor: '#F8F7F7',
+          backgroundColor: '#e4e9f4',
           minHeight: ' calc(100vh - 42px)'
         }}
       >
@@ -82,6 +82,7 @@ const ForgotPassword = () => {
             />
           </div>
         </div> */}
+
         <div className='w-100' style={{ marginTop: '-150px' }}>
           <div className='row my-auto'>
             <div
@@ -94,7 +95,10 @@ const ForgotPassword = () => {
               <p className='mb-3 mt-4 public-page-text4'>
                 <IntlMessages id='forgot_password.input_your_email' />
               </p>
-              <FormattedMessage id='login.email' defaultMessage='login.email'>
+              <FormattedMessage
+                id='login.forgotPasswordEmail'
+                defaultMessage='login.forgotPasswordEmail'
+              >
                 {(placeholder) => (
                   <input
                     className='mb-2 pl-5'

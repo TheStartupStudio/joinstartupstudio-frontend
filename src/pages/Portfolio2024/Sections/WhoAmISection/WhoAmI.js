@@ -7,7 +7,7 @@ import MyMentors from './MyMentors'
 import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
 import UserStory from './UserStory'
 
-function WhoAmI({ loadings: propsLoadings, data, user }) {
+function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
   const [loadings, setLoadings] = useState(null)
 
   useEffect(() => {
@@ -42,21 +42,23 @@ function WhoAmI({ loadings: propsLoadings, data, user }) {
         UserBasicInfo,
         data?.userBasicInfo?.data
       )}
-      {renderSection(
-        loadings?.userStory,
-        'user-story',
-        'My Story',
-        UserStory,
-        data?.userStory?.data
-      )}
+      {data?.userStory &&
+        renderSection(
+          loadings?.userStory,
+          'user-story',
+          'My Story',
+          UserStory,
+          data?.userStory?.data
+        )}
 
-      {renderSection(
-        loadings?.myRelationships,
-        'my-relationship',
-        'My Relationships',
-        MyRelationships,
-        data?.myRelationships?.data
-      )}
+      {data?.myRelationships &&
+        renderSection(
+          loadings?.myRelationships,
+          'my-relationship',
+          'My Relationships',
+          MyRelationships,
+          data?.myRelationships?.data
+        )}
       {renderSection(
         loadings?.myFailures,
         'my-failures',

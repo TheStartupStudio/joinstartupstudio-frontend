@@ -16,10 +16,18 @@ const ArchiveManager = (props) => {
 
   return (
     <>
-      <div className="col-12">
+      <div className='col-12'>
         <div>{props.tableContent}</div>
-        <div className={'d-flex justify-content-between py-1 mt-2'}>
-          <div className="col-md-6 px-1 d-flex justify-content-center align-items-center">
+        <div
+          className={'d-flex justify-content-between py-1 mt-2'}
+          style={{ gap: '20px' }}
+        >
+          <div
+            className='col-md-6 px-1 d-flex justify-content-center align-items-center'
+            style={{
+              width: '47%'
+            }}
+          >
             <ArchiveSelector
               archiveTitle={props.title}
               archives={props.archives}
@@ -28,20 +36,26 @@ const ArchiveManager = (props) => {
             />
           </div>
           {props.isEditable && (
-            <div className="col-md-6 px-1">
+            <div
+              className='col-md-6 px-1'
+              style={{
+                width: '50%'
+              }}
+            >
               <button
                 style={{
                   backgroundColor: '#51c7df',
                   color: '#fff',
                   fontSize: 14,
-                  padding: 10
+                  padding: 10,
+                  fontWeight: 500
                 }}
                 onClick={
                   props.hasUnsavedChanges
                     ? props.onOpenArchiveModal
                     : props.onAdd
                 }
-                className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
+                className='px-4 py-2 border-0 color transform text-uppercase  w-100 my-1 team-add-btn'
               >
                 Add a new {archiveOptionTitle()}
               </button>

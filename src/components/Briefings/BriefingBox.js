@@ -20,20 +20,23 @@ const BriefingBox = ({ briefing, handleOpenBriefingModal, isAdmin, user }) => {
   }
 
   return (
-    <div className="skill-box">
+    <div className='skill-box'>
       {isAdmin && (
-        <div className="briefing_edit-button ">
+        <div className='briefing_edit-button '>
           <FontAwesomeIcon icon={faPen} onClick={() => setEditModal(true)} />
         </div>
       )}
-      <h5>{truncateText(title, 50)}</h5>
+      <h5>{truncateText(title)}</h5>
       <hr />
-      <p>
-        Date: <strong>{moment(date).format('MMM. D, YYYY')}</strong>
+      <p style={{ color: '#707070' }}>
+        Date:{' '}
+        <span style={{ fontWeight: '600' }}>
+          {moment(date).format('MMM. D, YYYY')}
+        </span>
       </p>
-      <div className="skill-actions d-flex justify-content-between align-items-center">
+      <div className='skill-actions d-flex justify-content-between align-items-center'>
         <p
-          className="read-button"
+          className='read-button'
           onClick={() => handleOpenBriefingModal(briefing)}
         >
           Read briefing...
@@ -54,7 +57,7 @@ const BriefingBox = ({ briefing, handleOpenBriefingModal, isAdmin, user }) => {
           show={editModal}
           onHide={() => setEditModal(false)}
           briefing={briefing}
-          mode="edit"
+          mode='edit'
           user={user}
         />
       )}

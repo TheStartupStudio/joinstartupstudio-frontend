@@ -175,17 +175,21 @@
 .status.not_started {
   color: #bbbdbf;
 }
+
 .status.submitted,
 .status.pending {
   color: #51c7df;
 }
+
 .status.saved {
   color: #231f20;
 }
+
 .status.received_feedback,
 .status.rejected {
   color: #ff3399;
 }
+
 .status.proficient,
 .status.approved {
   color: #99cc33;
@@ -387,6 +391,7 @@
 .years-period-container p {
   font-size: 10px !important;
 }
+
 .years-period-container {
   font-size: 12px;
 
@@ -403,6 +408,7 @@
   font-size: 10px;
   color: grey;
 }
+
 .class-period-container {
   font-size: 12px;
   font-weight: 500px;
@@ -414,6 +420,7 @@
   align-items: center;
   flex-direction: column;
 }
+
 .class-period-container p {
   font-size: 10px !important;
 }
@@ -442,7 +449,8 @@
   background-color: white;
   border-radius: 15px;
   position: relative;
-  padding-bottom: 50px; /* Space for the footer */
+  /* padding-bottom: 50px; */
+  /* Space for the footer */
   position: relative;
 }
 
@@ -481,7 +489,8 @@
   font-size: 16px;
 
   cursor: pointer;
-  border-radius: 8px; /* Adjust the radius as needed */
+  border-radius: 8px;
+  /* Adjust the radius as needed */
   transition: background-color 0.3s;
   border: 1px solid gainsboro;
   width: 300px;
@@ -494,30 +503,33 @@
   background-color: white;
   min-width: 100%;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  border-radius: 8px; /* Adjust the radius as needed */
+  border-radius: 8px;
+  /* Adjust the radius as needed */
   z-index: 1;
 }
 
 .portfolio-data-container {
   box-shadow: 0px 3px 14px #00000029;
-  border-radius: 36px;
+  border-radius: 25px;
   opacity: 1;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   /*min-height: 350px;*/
   min-height: 100px;
-  padding: 25px;
+  padding: 30px;
   overflow: hidden;
+  margin-top: 40px;
 }
 
 .portfolio-data-container-title {
   font: normal normal 500 11px Montserrat;
-  letter-spacing: 0px;
-  color: #000000;
+  letter-spacing: 0;
+  color: #000;
   text-transform: uppercase;
   padding: 10px 0;
   margin-bottom: 15px;
 }
+
 .feedback-action {
   position: absolute;
   top: 0;
@@ -528,33 +540,75 @@
   overflow: hidden;
   justify-content: end;
   padding: 0;
+  width: fit-content !important;
 }
 
 .feedback-action-box {
   background: #fff 0 0 no-repeat padding-box;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1607843137254902) !important;
   padding: 15px;
-  width: 55px;
+  width: 55px !important;
   cursor: pointer;
 }
+
 .dropdown-item-student {
   padding: 12px 16px;
   cursor: pointer;
 }
 
 .modal-footer-evaluation {
-  position: absolute;
+  /* position: absolute;
   bottom: 0;
-  left: 50%;
+  left: 50%; */
   transform: translateX(-50%);
-  width: 90%;
-
+  width: 50% !important;
   display: flex;
   justify-content: space-between;
+  gap: 175%;
   align-items: center;
-
   padding: 10px;
+  flex-direction: row;
+  margin-top: -30px;
+  /* height: 20%; */
 }
+
+.evaluate-container {
+  height: 90%;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  overflow: auto;
+  /* position: relative; */
+}
+
+/* Hide the scrollbar but keep scrolling functionality */
+.scroll-container {
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+/* Hide scrollbar for Chrome, Edge, and Safari */
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.scroll-container {
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Hide scrollbar for IE and Edge */
+.scroll-container {
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+
+.evaluate-wrapper {
+  /* height: 60%; */
+  margin-bottom: 40px;
+}
+
 /* medias */
 
 .journal-entries-title {
@@ -566,6 +620,7 @@
   align-items: center;
   padding: 5px;
 }
+
 .evaluate-close-button {
   text-align: right;
   position: absolute;
@@ -581,6 +636,22 @@
   font-weight: 600;
   margin-top: 30px;
 }
+
+@media (max-width: 630px) {
+  .modal-footer-evaluation {
+    gap: 122%;
+    margin-left: -40px;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1007px) {
+
+  /* Your CSS rules for medium screens */
+  .modal-footer-evaluation {
+    gap: 150%;
+  }
+}
+
 @media (min-width: 992px) {
   .iamr-inbox .inbox-menu {
     padding: 0;
@@ -697,6 +768,257 @@
     width: 100px;
     font-size: 10px;
   }
+}
+
+/* Styling for the meeting date bar */
+.meeting-date-bar {
+  background-color: #ffffff;
+  /* White background */
+  border-radius: 10px;
+  /* Rounded corners */
+  padding: 15px;
+  /* Padding inside the bar */
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
+  display: flex;
+  /* Flexbox for aligning items */
+  justify-content: space-between;
+  /* Space between items */
+  align-items: center;
+  /* Center items vertically */
+  /* Bold text for date */
+  font-size: 12px;
+  /* Font size for the date text */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+}
+
+/* Styling for when the meeting date bar is opened */
+.meeting-date-bar.open {
+  border-radius: 10px 10px 0 0;
+  /* Rounded corners for top only */
+}
+
+/* Styling for the expanded view */
+.meeting-details {
+  background-color: #ffffff;
+  /* White background */
+  border-radius: 0 0 10px 10px;
+  /* Rounded corners for bottom only */
+  padding: 20px;
+  /* Padding inside the details section */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Slightly more shadow for depth */
+  font-size: 14px;
+  /* Font size for the details text */
+  line-height: 1.5;
+  /* Line height for better readability */
+}
+
+/* Styling for the labels like "Purpose", "Attendance", "Notes" */
+.meeting-details-label {
+  font-weight: 400;
+  margin-right: 10px;
+  padding-left: 5px;
+  font-size: 15px;
+}
+
+/* Styling for the "NEW" indicator */
+.meeting-new-indicator {
+  font-size: 12px;
+  /* Smaller font size */
+  color: #ff3b3b;
+  /* Red color for NEW text */
+  font-weight: bold;
+  /* Bold text */
+  margin-right: 5px;
+  /* Space between text and time */
+}
+
+/* Styling for the time indicator */
+.meeting-time-indicator {
+  font-size: 12px;
+  /* Smaller font size */
+  color: #8c8c8c;
+  /* Gray color for time text */
+}
+
+/* Styling for the dropdown arrow when expanded */
+.meeting-date-bar.open .dropdown-arrow {
+  transform: rotate(180deg);
+  /* Rotate the arrow when expanded */
+}
+
+.shot-list {
+  display: flex;
+  flex-wrap: nowrap;
+  /* Disable wrapping so all cards stay in a single row */
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
+  gap: 10px;
+  /* Space between the cards */
+  padding-bottom: 10px;
+  /* Add space for the scrollbar */
+  margin-top: 40px;
+}
+
+.shot-list::-webkit-scrollbar {
+  height: 8px;
+  /* Height of the scrollbar */
+}
+
+.shot-list::-webkit-scrollbar-track {
+  background-color: #e0e0e0;
+  /* Track background color */
+  border-radius: 10px;
+}
+
+.shot-list::-webkit-scrollbar-thumb {
+  background-color: #888888;
+  /* Thumb color */
+  border-radius: 10px;
+  /* Rounded corners for the thumb */
+}
+
+.shot-list::-webkit-scrollbar-thumb:hover {
+  background-color: #555555;
+  /* Darker color when hovering over the scrollbar */
+}
+
+.shot-card {
+  flex: 0 0 auto;
+  /* Prevent the cards from shrinking or growing */
+  width: 19%;
+  /* Set a fixed width for each card */
+  overflow: hidden;
+  margin: 0 5px;
+  /* Adds some margin to separate the cards */
+}
+
+.shot-image {
+  margin-bottom: 15px;
+}
+
+.shot-image img,
+.shot-image .placeholder-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  background-color: #ccc;
+  border-radius: 10px;
+}
+
+.shot-info {
+  padding: 10px;
+}
+
+.shot-info div {
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: #333;
+  background: #d2d2d2;
+  min-height: 50px;
+  max-height: 50px;
+  padding: 7px;
+  display: flex;
+}
+
+.shot-info strong {
+  display: inline-block;
+  margin-bottom: 4px;
+  color: #555;
+  font-weight: 500;
+}
+
+.placeholder-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #888;
+  height: 150px;
+}
+
+.video-card {
+  flex: 1 1 calc(50% - 20px);
+  /* Adjust this based on your design */
+  margin: 0 5px;
+  /* Adds some margin to separate the video */
+  flex-shrink: 0;
+  /* Prevents the video from shrinking */
+  position: relative;
+  /* Needed for the play button positioning */
+  border-radius: 20px;
+  /* Increase the rounding for a softer look */
+  overflow: hidden;
+  /* Ensures content like the video and play button stay inside rounded corners */
+  margin-top: 25px;
+}
+
+.video-card video {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  /* Ensures video has rounded corners */
+  object-fit: cover;
+}
+
+.play-button-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.play-button-overlay::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 15px solid rgba(0, 0, 0, 0.8);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.accordion {
+  width: 100%;
+
+  font-weight: 300 !important;
+  font-size: 14px;
+  border: none;
+  margin-top: 15px;
+}
+
+.accordion-item {
+  border: none !important;
+  color: white;
+  margin: 10px 0;
+}
+
+.accordion-title {
+  background-color: #1b1b1b;
+  padding: 15px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accordion-icon {
+  font-size: 20px;
+}
+
+.accordion-content {
+  padding: 15px;
+  background-color: #fafafa;
 }
 
 @media (max-width: 576px) {

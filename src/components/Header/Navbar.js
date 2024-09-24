@@ -18,26 +18,28 @@ import { changeSidebarState } from '../../redux'
 import { getUserBasicInfo } from '../../redux/portfolio/Actions'
 import { setBackButton } from '../../redux/backButtonReducer'
 
-const NavbarIcon = (props) => {
-  return (
-    <li className='nav-item  my-auto'>
-      <NavLink
-        className={`nav-link m-0 p-0 icon-menu ${props.cn}`}
-        to={props.to}
-      >
-        <img
-          src={props.srcWithFocus}
-          width={props.width}
-          height={props.height}
-          style={props.style}
-          alt={props.alt}
-        />
-      </NavLink>
-    </li>
-  )
-}
-
 const Navbar = (props) => {
+  const NavbarIcon = (props) => {
+    return (
+      <li
+        className='nav-item  my-auto'
+        onClick={() => setShowNotifications(false)}
+      >
+        <NavLink
+          className={`nav-link m-0 p-0 icon-menu ${props.cn}`}
+          to={props.to}
+        >
+          <img
+            src={props.srcWithFocus}
+            width={props.width}
+            height={props.height}
+            style={props.style}
+            alt={props.alt}
+          />
+        </NavLink>
+      </li>
+    )
+  }
   const history = useHistory()
   const dispatch = useDispatch()
   const notificationsRef = useRef(null)
@@ -132,11 +134,15 @@ const Navbar = (props) => {
               to={'/story-in-motion'}
               cn={'hs-icon'}
               srcWithFocus={HSGooglePlay}
+              // width={'55px'}
+              // height={'45px'}
             />
             <NavbarIcon
               to={'/my-spark/widgets'}
               cn={'spark-icon'}
               srcWithFocus={HSmySpark}
+              // width={'55px'}
+              // height={'45px'}
             />
             <NavbarIcon
               to={'/my-classroom'}
@@ -183,7 +189,10 @@ const Navbar = (props) => {
                   />
                 )}
               </li>
-              <li className='nav-item my-auto me-2'>
+              <li
+                className='nav-item my-auto me-2'
+                onClick={() => setShowNotifications(false)}
+              >
                 <NavLink
                   className={`nav-link icon-menu px-2 my-auto `}
                   to={'/savedMedia'}
@@ -196,7 +205,10 @@ const Navbar = (props) => {
                 </NavLink>
               </li>
 
-              <li className='nav-item notes-nav my-auto me-2 '>
+              <li
+                className='nav-item notes-nav my-auto me-2 '
+                onClick={() => setShowNotifications(false)}
+              >
                 <NavLink
                   className={`nav-link icon-menu`}
                   to={
@@ -206,12 +218,12 @@ const Navbar = (props) => {
                   }
                 >
                   <div>
-                    <img
+                    {/* <img
                       src={notesIconHovered}
                       className='d-none focus-icon'
                       width='27px'
                       alt='note'
-                    />
+                    /> */}
                     <img
                       src={notesIcon}
                       className='not-focus-icon'
@@ -221,7 +233,10 @@ const Navbar = (props) => {
                   </div>
                 </NavLink>
               </li>
-              <li className='nav-item dropdown ms-2'>
+              <li
+                className='nav-item dropdown'
+                onClick={() => setShowNotifications(false)}
+              >
                 {/* <Dropdown showModal={showModal} close={closeProfileDropDown} /> */}
                 <div
                   className='dropdown-li'
@@ -269,6 +284,7 @@ const Navbar = (props) => {
                     aria-labelledby='dropdownMenuButton'
                   >
                     <Link
+                      style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
                       to='/account'
                       onClick={() => setShowDropDown((preState) => !preState)}
@@ -277,6 +293,7 @@ const Navbar = (props) => {
                     </Link>
 
                     <Link
+                      style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
                       to='/archived-portfolio'
                       onClick={() => setShowDropDown((preState) => !preState)}
@@ -285,6 +302,7 @@ const Navbar = (props) => {
                     </Link>
 
                     <Link
+                      style={{ width: '95%' }}
                       onClick={() => setShowDropDown((preState) => !preState)}
                       to='/briefings'
                       className='dropdown-item py-2 dropdown-menu-hover'
@@ -294,6 +312,7 @@ const Navbar = (props) => {
 
                     <li>
                       <Link
+                        style={{ width: '95%' }}
                         onClick={() => setShowDropDown((preState) => !preState)}
                         to='/resources'
                         className='dropdown-item py-2 dropdown-menu-hover'
@@ -303,6 +322,7 @@ const Navbar = (props) => {
                     </li>
                     {isAdmin && (
                       <Link
+                        style={{ width: '95%' }}
                         className='dropdown-item py-2 dropdown-menu-hover'
                         to='#'
                         onClick={() => {
@@ -324,19 +344,10 @@ const Navbar = (props) => {
                       SUPPORT
                     </Link> */}
                     <Link
+                      style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
                       onClick={() => {
-                        axiosInstance
-                          .put('/myPerformanceData/updateActivity/endTime', {
-                            isActive: false
-                          })
-                          .then((response) => {
-                            if (response) history.push('/logout')
-                          })
-                          .catch((error) => {
-                            console.error('Error updating activity:', error)
-                          })
-                          .finally(() => {})
+                        history.push('/logout')
                       }}
                     >
                       <IntlMessages id='navigation.logout' />

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+// import React, { useState, useRef } from 'react'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
 import { Link } from 'react-router-dom'
@@ -16,10 +17,15 @@ import notesIconHovered from '../../assets/images/notes-icon-active.svg'
 import mySparkBlack from '../../assets/icons/Asset 1.svg'
 import mySparkWhite from '../../assets/icons/Group 3819.svg'
 import avator from '../../assets/images/profile-image.png'
+import HSGooglePlay from '../../assets/images/LTS-HS/Story in motion-01.svg'
+import HSmySpark from '../../assets/images/LTS-HS/Spark .svg'
+import HSCommunity from '../../assets/images/LTS-HS/Community-01.svg'
 import { getUserBasicInfo } from '../../redux/portfolio/Actions'
 
 const MobileNavbar = (props) => {
   const dispatch = useDispatch()
+  const notificationsRef = useRef(null)
+  const [showNotifications, setShowNotifications] = useState(false)
   const history = useHistory()
   const [showDropDown, setShowDropDown] = useState(false)
   const showModal = () => {
@@ -34,24 +40,38 @@ const MobileNavbar = (props) => {
   )
   return (
     <nav className='navbar navbar-expand-lg navbar-light bg-light mobile-menu'>
-      <div className='container-fluid'>
-        <button
-          type='button'
-          id='sidebarCollapse'
-          className='btn'
-          style={{
-            backgroundColor: '#01c5d1'
-          }}
-          onClick={() => {
-            dispatch(changeSidebarState(!props.sideBarState))
-            setShowDropDown(false)
-          }}
-        >
-          <FontAwesomeIcon icon={faBars} />
-        </button>
-        <div className='col-2 d-flex ms-auto flex-row-reverse'>
+      <div
+        className='navbar-mobile'
+        style={{
+          display: 'flex',
+
+          width: '100%'
+          // height: '50px'
+        }}
+      >
+        {/* <div className='container-fluid'> */}
+        <div style={{ display: 'flex' }} className='navbar-topbtn-mobile'>
           <button
-            className='btn d-inline-block'
+            type='button'
+            id='sidebarCollapse'
+            className='btn'
+            style={{
+              backgroundColor: '#01c5d1',
+              // fontSize: '10px',
+              width: '40px',
+              height: '40px'
+            }}
+            onClick={() => {
+              dispatch(changeSidebarState(!props.sideBarState))
+              setShowDropDown(false)
+            }}
+          >
+            <FontAwesomeIcon icon={faBars} />
+          </button>
+
+          <button
+            // className='btn d-inline-block '
+            className='btn navbar-dropdown-mobile'
             type='button'
             // style={{ display: 'none' }}
             id='dropdownMenuButton'
@@ -64,21 +84,46 @@ const MobileNavbar = (props) => {
           >
             <FontAwesomeIcon icon={faBars} />
           </button>
-          <ul className='navbar-nav my-auto'>
-            <li className='nav-item my-auto position-relative nav-notifications-li'>
+        </div>
+        {/* <div className='col-2 d-flex flex-row-reverse navbar-icon-menu'> */}
+        <ul className='navbar-nav mt-1 navbar-icon-list navbar-list-margin'>
+          <div className='navbar-top-icons' style={{ display: 'flex' }}>
+            <NavbarIcon
+              to={'/story-in-motion'}
+              cn={'hs-icon safari_only'}
+              srcWithFocus={HSGooglePlay}
+            />
+            <NavbarIcon
+              to={'/my-spark/widgets'}
+              cn={'spark-icon safari_only'}
+              srcWithFocus={HSmySpark}
+            />
+            <NavbarIcon
+              to={'/my-classroom'}
+              cn={'comm-icon my-auto'}
+              srcWithFocus={HSCommunity}
+              width={'55px'}
+              height={'45px'}
+            />
+          </div>
+
+          <div className='navbar-bottom-icons' style={{ display: 'flex' }}>
+            <div
+              className='my-auto navbar-icons-border'
+              style={{ borderRight: '1px solid #BBBDBF', height: '20px' }}
+            ></div>
+            <div className='nav-item my-auto me-2 position-relative'>
               <a
                 className={`nav-link icon-menu px-2 my-auto nav-notifications position-relative ${
-                  props.showNotifications ? 'active' : ''
+                  showNotifications ? 'active' : ''
                 }`}
-                onClick={() =>
-                  props.setShowNotifications(!props.showNotifications)
-                }
+                onClick={() => setShowNotifications((state) => !state)}
                 href
               >
                 <FontAwesomeIcon
                   icon={faBell}
                   style={{
-                    fontSize: '26px',
+                    fontSize: '30px',
                     color: '#333D3D'
                   }}
                   className='nav-bell-icon pt-1'
@@ -89,108 +134,78 @@ const MobileNavbar = (props) => {
                   </span>
                 )}
               </a>
-              {props.showNotifications && (
+              {showNotifications && (
                 <Notifications
                   unreadNotifications={props.unreadNotifications}
                   notifications={props.notifications}
-                  setShowNotifications={props.setShowNotifications}
+                  setShowNotifications={setShowNotifications}
                   setUnreadNotifications={props.setUnreadNotifications}
+                  notificationsRef={notificationsRef}
                 />
               )}
-            </li>
-            <div
-              onClick={() => props.setShowNotifications(false)}
-              style={{ display: 'inherit' }}
-            >
-              <li className='nav-item spotlight-nav my-auto'>
-                <NavLink
-                  className={`nav-link icon-menu px-2 me-2 my-auto`}
-                  to={'/spotlight'}
-                >
-                  <div>
-                    <img
-                      src={focusIconWhite}
-                      className='d-none focus-icon'
-                      width='28px'
-                      alt='note'
-                    />
-                    <img
-                      src={focusIcon}
-                      className='not-focus-icon'
-                      width='28px'
-                      alt='note'
-                    />
-                  </div>
-                </NavLink>
-              </li>
-              <li className='nav-item my-auto'>
-                <NavLink
-                  className={`nav-link icon-menu px-2 me-2 my-auto`}
-                  to={'/savedMedia'}
-                >
-                  <FontAwesomeIcon
-                    icon={heart}
-                    style={{ fontSize: '26px' }}
-                    className='pt-1'
-                  />
-                </NavLink>
-              </li>
-              {/*  */}
-              <li className='nav-item notes-nav my-auto'>
-                <NavLink
-                  className={`nav-link px-2 me-1 icon-menu`}
-                  to={
-                    props.firstNote !== ''
-                      ? `${`/my-notes/${props.firstNote}`}`
-                      : '/my-notes'
-                  }
-                >
-                  <div>
-                    <img
+            </div>
+            <div className='nav-item my-auto me-2'>
+              <NavLink
+                className={`nav-link icon-menu px-2 my-auto `}
+                to={'/savedMedia'}
+              >
+                <FontAwesomeIcon
+                  icon={heart}
+                  style={{ fontSize: '30px' }}
+                  className='pt-1'
+                />
+              </NavLink>
+            </div>
+
+            <div className='nav-item notes-nav my-auto me-2 '>
+              <NavLink
+                className={`nav-link icon-menu`}
+                to={
+                  props.firstNote !== ''
+                    ? `${`/my-notes/${props.firstNote}`}`
+                    : '/my-notes'
+                }
+              >
+                <div style={{ padding: '0px 9px' }}>
+                  {/* <img
                       src={notesIconHovered}
                       className='d-none focus-icon'
-                      width='25px'
+                      width='27px'
                       alt='note'
-                    />
-                    <img
-                      src={notesIcon}
-                      className='not-focus-icon'
-                      width='25px'
-                      alt='note'
-                    />
-                  </div>
-                </NavLink>
-              </li>
-              <li className='nav-item notes-nav my-auto '>
-                <NavLink
-                  className={`nav-link px-2 me-1 icon-menu`}
-                  to={'/my-spark/widgets'}
-                >
-                  <div>
-                    <img
-                      src={mySparkWhite}
-                      className='d-none focus-icon'
-                      width='21px'
-                      alt='note'
-                    />
-                    <img
-                      src={mySparkBlack}
-                      className='not-focus-icon'
-                      width='21px'
-                      alt='note'
-                    />
-                  </div>
-                </NavLink>
-              </li>
+                    /> */}
+                  <img
+                    src={notesIcon}
+                    className='not-focus-icon'
+                    width='27px'
+                    alt='note'
+                  />
+                </div>
+              </NavLink>
             </div>
-          </ul>
-        </div>
+          </div>
+          <button
+            // className='btn d-inline-block '
+            className='btn navbar-dropdown-desktop'
+            type='button'
+            // style={{ display: 'none' }}
+            id='dropdownMenuButton'
+            data-toggle='dropdown'
+            aria-haspopup='true'
+            aria-expanded='false'
+            onClick={() => {
+              setShowDropDown((preState) => !preState)
+            }}
+          >
+            <FontAwesomeIcon icon={faBars} />
+          </button>
+        </ul>
+        {/* </div> */}
       </div>
       <div className='dropdown-li'>
         <button
           className='btn btn-secondary  menu-dropdown'
           type='button'
-          // style={{ display: 'none' }}
+          style={{ display: 'none' }}
           id='dropdownMenuButton'
           data-toggle='dropdown'
           aria-haspopup='true'
@@ -266,26 +281,34 @@ const MobileNavbar = (props) => {
           <div
             className='dropdown-item py-2 dropdown-menu-hover'
             onClick={() => {
-              axiosInstance
-                .put('/myPerformanceData/updateActivity/endTime', {
-                  isActive: false
-                })
-                .then((response) => {
-                  if (response) history.push('/logout')
-                })
-                .catch((error) => {
-                  console.error('Error updating activity:', error)
-                })
-                .finally(() => {
-                  // history.push('/logout')
-                })
+              history.push('/logout')
             }}
           >
             <IntlMessages id='navigation.logout' />
           </div>
         </div>
       </div>
+      {/* </div> */}
     </nav>
+  )
+}
+
+const NavbarIcon = (props) => {
+  return (
+    <li className='nav-item  my-auto '>
+      <NavLink
+        className={`nav-link m-0 p-0 icon-menu ${props.cn}`}
+        to={props.to}
+      >
+        <img
+          src={props.srcWithFocus}
+          width={props.width}
+          height={props.height}
+          style={props.style}
+          alt={props.alt}
+        />
+      </NavLink>
+    </li>
   )
 }
 

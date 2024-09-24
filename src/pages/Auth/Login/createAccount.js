@@ -196,7 +196,7 @@ function CreateAccount() {
   return (
     <div
       className='container-fluid px-md-5'
-      style={{ backgroundColor: '#F8F7F7', minHeight: 'calc(100vh - 90px)' }}
+      style={{ backgroundColor: '#e4e9f4', minHeight: 'calc(100vh - 90px)' }}
     >
       <div className='row pt-5'>
         <div className='col-sm-12 mx-auto col-md-10 col-lg-8 py-3'>

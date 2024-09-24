@@ -80,6 +80,7 @@ function EditProjectSection(props) {
           className={'portfolio-quill'}
           value={sectionState?.editorContent ?? ''}
           onChange={handleEditorChange}
+          placeholder={props.placeholder}
         />
       </div>
       <Evidences
@@ -98,6 +99,7 @@ const initialEvidenceData = [
     imageFile: null,
     imageUrl: null,
     linkInputValue: '',
+    titleInputValue: '',
     type: 'evidence-1'
   },
   {
@@ -105,6 +107,7 @@ const initialEvidenceData = [
     imageFile: null,
     imageUrl: null,
     linkInputValue: '',
+    titleInputValue: '',
     type: 'evidence-2'
   },
   {
@@ -112,6 +115,7 @@ const initialEvidenceData = [
     imageFile: null,
     imageUrl: null,
     linkInputValue: '',
+    titleInputValue: '',
     type: 'evidence-3'
   }
 ]

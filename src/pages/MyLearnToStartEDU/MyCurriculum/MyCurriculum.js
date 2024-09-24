@@ -16,7 +16,7 @@ const MyCurriculum = () => {
         description={`LTS1 curriculum guides students to create their 
           market-ready portfolio through the process of 
           creating a community-based project or startup.`}
-        to="/new-hs1-journal/task"
+        to='/new-hs1-journal/task'
         itemNumberImage={<NumberImage image={lts1} />}
       />
       <MyLtsGridItem
@@ -25,21 +25,21 @@ const MyCurriculum = () => {
         for internship and employment opportunities
         as they iterate on their portfolios.`}
         itemNumberImage={<NumberImage image={lts2} />}
-        to="/new-hs2-journal/task"
+        to='/new-hs2-journal/task'
       />
       <MyLtsGridItem
         title={'LTS 3'}
         description={`LTS3 is autonomous year for students 
         to complete the IAMR Certification system.`}
         itemNumberImage={<NumberImage image={lts3} />}
-        to="/new-hs3-journal/task"
+        to='/new-hs3-journal/task'
       />
       <MyLtsGridItem
         title={'LTS 4'}
         description={`LTS4 is autonomous year for students 
         to complete the IAMR Certification system.`}
         itemNumberImage={<NumberImage image={lts4} />}
-        to="/new-hs4-journal/task"
+        to='/new-hs4-journal/task'
       />
       <MyLtsGridItem
         title={'FINANCIAL LITERACY'}
@@ -47,13 +47,13 @@ const MyCurriculum = () => {
         through research-based tasks that prepare
         them for post-graduation and beyond.`}
         itemNumberImage={<NumberImage image={financialLiteracy} />}
-        to="/financial-literacy/task"
+        to='/financial-literacy/task'
       />
       <MyLtsGridItem
         title={''}
         description={``}
         itemNumberImage={<NumberImage image={null} />}
-        to="#"
+        to='#'
       />
     </MyLearnToStartEDU>
   )

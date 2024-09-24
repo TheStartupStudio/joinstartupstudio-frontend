@@ -57,14 +57,14 @@ const Preview = () => {
   }
 
   const updateStatus = async () => {
-    // in db we dont have a column for this so we used the show_tags to check if project is published or not
+    // in db we don't have a column for this so we used the show_tags to check if project is published or not
     await axiosInstance
       .put(`/Business/update/Business`, {
         id: project.id,
         show_tags: !toggle
       })
       .then(() => {
-        toast.success(<IntlMessages id="alerts.success_change" />)
+        toast.success(<IntlMessages id='alerts.success_change' />)
         setToggle(!toggle)
       })
       .catch((err) => err)
@@ -107,53 +107,53 @@ const Preview = () => {
   }
 
   return (
-    <div className="row">
-      <div className="pt-5 px-md-4 col-lg-9 page-border">
-        <div className="px-3 rounded mb-5">
-          <div className="col-12 row pb-4">
-            <p className="edit-project-page-title pb-0 mb-0">
+    <div className='row'>
+      <div className='pt-5 px-md-4 col-lg-9 page-border'>
+        <div className='px-3 rounded mb-5'>
+          <div className='col-12 row pb-4'>
+            <p className='edit-project-page-title pb-0 mb-0'>
               MY PROJECT |{' '}
-              <Link to={`/editProject/${id}`} className="blue-text">
+              <Link to={`/editProject/${id}`} className='blue-text'>
                 EDIT
               </Link>
             </p>
-            <p className="delete-project-description pt-0 mt-0">
+            <p className='delete-project-description pt-0 mt-0'>
               Sharing my solutions with the global community.
             </p>
           </div>
-          <div className="row">
+          <div className='row'>
             <div
               className={`px-3 rounded pt-4 my-account ${
                 project?.description.length == 0 && 'pb-4'
               }`}
             >
-              <div className="d-flex flex-wrap pb-0 mb-3">
-                <div className="d-flex my-auto">
+              <div className='d-flex flex-wrap pb-0 mb-3'>
+                <div className='d-flex my-auto'>
                   <img
                     src={project?.image ? project?.image : defaultImage}
                     width={'140px'}
                     height={'140px'}
                     style={{ objectFit: 'cover' }}
-                    className="me-2 rounded-circle float-start user-image"
+                    className='me-2 rounded-circle float-start user-image'
                   />
                 </div>
-                <div className="portfolio-user-info" style={{ flex: 1 }}>
-                  <div className="row">
-                    <div className="col-12 mt-md-4 ms-2">
-                      <span className="startup_project_name d-block">
+                <div className='portfolio-user-info' style={{ flex: 1 }}>
+                  <div className='row'>
+                    <div className='col-12 mt-md-4 ms-2'>
+                      <span className='startup_project_name d-block'>
                         {project?.company_name}
                       </span>
-                      <span className="startup_project_slogane d-block">
+                      <span className='startup_project_slogane d-block'>
                         {project?.company_slogan}
                       </span>
-                      <span className="social_media">
+                      <span className='social_media'>
                         {(project?.social_links?.linkedin ||
                           project?.social_links?.twitter ||
                           project?.social_links?.instagram ||
                           project?.social_links?.facebook ||
                           project?.social_links?.website) && (
                           <div
-                            className="mt-0 d-flex flex-wrap pt-md-auto"
+                            className='mt-0 d-flex flex-wrap pt-md-auto'
                             style={style.social_links}
                           >
                             {project?.social_links?.linkedin && (
@@ -165,9 +165,9 @@ const Preview = () => {
                                     ? project.social_links.linkedin
                                     : `https://${project.social_links.linkedin}`
                                 }
-                                rel="noreferrer"
-                                target="_blank"
-                                className="link me-1"
+                                rel='noreferrer'
+                                target='_blank'
+                                className='link me-1'
                               >
                                 <FontAwesomeIcon icon={faLinkedinIn} />
                               </a>
@@ -181,9 +181,9 @@ const Preview = () => {
                                     ? project.social_links.twitter
                                     : `https://${project.social_links.twitter}`
                                 }
-                                rel="noreferrer"
-                                target="_blank"
-                                className="link me-1"
+                                rel='noreferrer'
+                                target='_blank'
+                                className='link me-1'
                               >
                                 <FontAwesomeIcon icon={faTwitterSquare} />
                               </a>
@@ -197,9 +197,9 @@ const Preview = () => {
                                     ? project.social_links.facebook
                                     : `https://${project.social_links.facebook}`
                                 }
-                                rel="noreferrer"
-                                target="_blank"
-                                className="link me-1"
+                                rel='noreferrer'
+                                target='_blank'
+                                className='link me-1'
                               >
                                 <FontAwesomeIcon icon={faFacebookSquare} />
                               </a>
@@ -213,9 +213,9 @@ const Preview = () => {
                                     ? project.social_links.instagram
                                     : `https://${project.social_links.instagram}`
                                 }
-                                rel="noreferrer"
-                                target="_blank"
-                                className="link me-1"
+                                rel='noreferrer'
+                                target='_blank'
+                                className='link me-1'
                               >
                                 <FontAwesomeIcon icon={faInstagram} />
                               </a>
@@ -229,9 +229,9 @@ const Preview = () => {
                                     ? project.social_links.website
                                     : `https://${project.social_links.website}`
                                 }
-                                rel="noreferrer"
-                                target="_blank"
-                                className="link me-1"
+                                rel='noreferrer'
+                                target='_blank'
+                                className='link me-1'
                               >
                                 <FontAwesomeIcon icon={faGlobe} />
                               </a>
@@ -244,13 +244,13 @@ const Preview = () => {
                 </div>
               </div>
 
-              <div className="published_company_description mb-4 mt-4">
+              <div className='published_company_description mb-4 mt-4'>
                 {project?.description}
               </div>
             </div>
           </div>
         </div>
-        <div className="rounded mx-3 mx-md-auto pt-md-4 row mb-4">
+        <div className='rounded mx-3 mx-md-auto pt-md-4 row mb-4'>
           {project && (
             <FoundersPreview
               founders={project.founders.filter(
@@ -268,13 +268,13 @@ const Preview = () => {
         </div>
       </div>
 
-      <div className="col-12 col-lg-3 px-4">
-        <div className="col-12 px-3 px-xl-0 mt-4 d-flex flex-wrap d-flex justify-content-start">
-          <h3 className="publish-my-project d-flex ">
+      <div className='col-12 col-lg-3 px-4'>
+        <div className='col-12 px-3 px-xl-0 mt-4 d-flex flex-wrap d-flex justify-content-start'>
+          <h3 className='publish-my-project d-flex '>
             Publish My Project
-            <label className="px-0 ps-sm-1 ms-3 ps-md-1 form-switch">
+            <label className='px-0 ps-sm-1 ms-3 ps-md-1 form-switch'>
               <input
-                type="checkbox"
+                type='checkbox'
                 checked={toggle}
                 onChange={() => {
                   updateStatus()
@@ -290,13 +290,13 @@ const Preview = () => {
             }}
           ></div>
 
-          <p className=" pe-xxl-5 break d-flex publish-my-project-community">
+          <p className=' pe-xxl-5 break d-flex publish-my-project-community'>
             Set your startup to live and build a powerful network inside your
             community.
           </p>
         </div>
         <div
-          className="col-12 px-3 px-xl-0 mt-3 d-flex flex-wrap d-flex justify-content-start mx-auto"
+          className='col-12 px-3 px-xl-0 mt-3 d-flex flex-wrap d-flex justify-content-start mx-auto'
           onClick={() => {
             setOpenShareModal(true)
           }}
@@ -306,16 +306,16 @@ const Preview = () => {
             style={{ fontSize: '35px' }}
             className={'my-auto'}
           />
-          <div className="d-flex flex-column ps-3">
-            <p className="d-block py-0 my-0 share-widget-share-this-project ">
+          <div className='d-flex flex-column ps-3'>
+            <p className='d-block py-0 my-0 share-widget-share-this-project '>
               Share This Project
             </p>
-            <p className="d-block py-0 my-0 share-widget-Startup-must-be-published-first">
+            <p className='d-block py-0 my-0 share-widget-Startup-must-be-published-first'>
               Startup must be published first.
             </p>
           </div>
         </div>
-        <ConnectionRequestsBox from="PublishedProject" />
+        <ConnectionRequestsBox from='PublishedProject' />
         <ShowMessenger />
         {/* <div
           className={`community-connect px-3 ${

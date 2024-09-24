@@ -41,7 +41,7 @@ function AddMyMentor(props) {
   const actions = [
     {
       type: 'add',
-      action: handleShowModal,
+      action: () => handleShowModal(),
       isDisplayed: mode === 'edit' && props.isEditSection === true,
       description: `Click here to add a new ${props.type ?? 'mentor'}`
     }
@@ -54,7 +54,8 @@ function AddMyMentor(props) {
         alt={'submission-image'}
         src={imagePlaceholder}
       />
-      <div className={'add-new-mentor px-2 pt-3'}>
+      {/*<div className={'add-new-mentor px-2 pt-3'}>*/}
+      <div className={'add-new-mentor px-2 py-2'}>
         {`Click the add button to add a new ${props.type ?? 'mentor'} ${
           props.type === 'competitiveness' ? '' : 'relationship.'
         }`}

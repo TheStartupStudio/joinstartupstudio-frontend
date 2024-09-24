@@ -28,11 +28,17 @@ const JournalBrands = (props) => {
 
   return (
     <div className='journal_brands--wrapper'>
-      <div className='row'>
+      <div className='row brand-video-container'>
         {props.brands
           .filter((brand) => !brand.isDefault)
           .map((brand) => (
-            <div className='col-12 col-sm-6 col-md-4'>
+            // <div className='col-12 col-sm-6 col-md-4'>
+            <div
+              className='col-12 col-sm-6 brand-items-container'
+              style={{
+                width: '100%'
+              }}
+            >
               <div className='brand__item'>
                 <span
                   className='remove-brand-item cursor-pointer'
@@ -54,7 +60,7 @@ const JournalBrands = (props) => {
                   alt=''
                 />
                 <div
-                  className='brand__box '
+                  className='brand__box'
                   onClick={(e) => {
                     setColumn('type')
                     setBrandId(brand.id)
@@ -62,7 +68,7 @@ const JournalBrands = (props) => {
                     setShowEditJournalBrandBoxModal(true)
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: `<strong>TYPE OF SHOT:</strong> ${brand.type}`
+                    __html: `<span class='brand-title'>TYPE OF SHOT:</span>&nbsp;${brand.type}`
                   }}
                 ></div>
                 <div
@@ -74,11 +80,11 @@ const JournalBrands = (props) => {
                     setShowEditJournalBrandBoxModal(true)
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: `<strong>ACTION:</strong> ${brand.action}`
+                    __html: `<span class='brand-title'>ACTION:</span>&nbsp;${brand.action}`
                   }}
                 ></div>
                 <div
-                  className='brand__box'
+                  className='brand__box mar-btm-p'
                   onClick={(e) => {
                     setColumn('narration')
                     setBrandId(brand.id)
@@ -86,7 +92,7 @@ const JournalBrands = (props) => {
                     setShowEditJournalBrandBoxModal(true)
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: `<strong>NARRATION:</strong> ${brand.narration}`
+                    __html: `<span class='brand-title'>NARRATION:</span>&nbsp;${brand.narration}`
                   }}
                 ></div>
                 <div
@@ -98,61 +104,61 @@ const JournalBrands = (props) => {
                     setShowEditJournalBrandBoxModal(true)
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: `<strong>MUSIC:</strong> ${brand.music}`
+                    __html: `<span class='brand-title'>MUSIC:</span>&nbsp;<span class="lizas-text">${brand.music}</span>`
                   }}
                 ></div>
               </div>
             </div>
           ))}
-        <div className='col-12 my-3'>
-          <a
-            className='add-new-brand cursor-pointer'
-            onClick={(e) => setShowNewJournalModal(true)}
-            href
-          >
-            <FontAwesomeIcon icon={faPlus} className='me-2' />
-            Add another full section of Image and the boxes below it
-          </a>
-          <NewJournalBrandModal
-            hasAccordion={props.hasAccordion}
-            onShow={() => {
-              props.loadData()
-              setShowNewJournalModal(false)
-            }}
-            onHide={() => {
-              setShowNewJournalModal(false)
-            }}
-            show={showNewJournalModal}
-            journalId={props.journalId}
-          />
-          <EditJournalBrandImageModal
-            onShow={() => {
-              props.loadData()
-              setShowEditJournalBrandImageModal(false)
-            }}
-            onHide={() => {
-              setShowEditJournalBrandImageModal(false)
-            }}
-            show={showEditJournalBrandImageModal}
-            journalId={props.journalId}
-            image={image}
-            id={brandId}
-          />
-          <EditJournalBrandBoxModal
-            onShow={() => {
-              props.loadData()
-              setShowEditJournalBrandBoxModal(false)
-            }}
-            onHide={() => {
-              setShowEditJournalBrandBoxModal(false)
-            }}
-            show={showEditJournalBrandBoxModal}
-            journalId={props.journalId}
-            id={brandId}
-            column={column}
-            content={content}
-          />
-        </div>
+      </div>
+      <div className='col-12 my-3'>
+        <a
+          className='add-new-brand cursor-pointer'
+          onClick={(e) => setShowNewJournalModal(true)}
+          href
+        >
+          <FontAwesomeIcon icon={faPlus} className='me-2 icon-plus' />
+          Add another full section of Image and the boxes below it
+        </a>
+        <NewJournalBrandModal
+          hasAccordion={props.hasAccordion}
+          onShow={() => {
+            props.loadData()
+            setShowNewJournalModal(false)
+          }}
+          onHide={() => {
+            setShowNewJournalModal(false)
+          }}
+          show={showNewJournalModal}
+          journalId={props.journalId}
+        />
+        <EditJournalBrandImageModal
+          onShow={() => {
+            props.loadData()
+            setShowEditJournalBrandImageModal(false)
+          }}
+          onHide={() => {
+            setShowEditJournalBrandImageModal(false)
+          }}
+          show={showEditJournalBrandImageModal}
+          journalId={props.journalId}
+          image={image}
+          id={brandId}
+        />
+        <EditJournalBrandBoxModal
+          onShow={() => {
+            props.loadData()
+            setShowEditJournalBrandBoxModal(false)
+          }}
+          onHide={() => {
+            setShowEditJournalBrandBoxModal(false)
+          }}
+          show={showEditJournalBrandBoxModal}
+          journalId={props.journalId}
+          id={brandId}
+          column={column}
+          content={content}
+        />
       </div>
     </div>
   )

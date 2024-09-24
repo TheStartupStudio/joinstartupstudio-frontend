@@ -144,6 +144,7 @@ const FilterDropdown = ({
 }
 
 const Students = (props) => {
+  console.log(props, 'propsStudents')
   const dropdownRef = useRef(null)
   const { user, isAdmin } = useSelector((state) => state.user.user)
   const [filterExpanded, setFilterExpanded] = useState(false)
@@ -256,7 +257,14 @@ const Students = (props) => {
   return (
     <div className='col-12 col-lg-9 inbox-tickets-container px-4 d-flex justify-content-between flex-column'>
       <div>
-        <div className='journal-select-title'>{props.journalSelected}</div>
+        {console.log(props.journalSelected, 'prpos.journalSelected')}
+
+        <div className='journal-select-title'>
+          {console.log(props.journalSelected, 'journal')}
+          {props.journalSelected == 'PORTFOLIO'
+            ? 'PORTFOLIOS'
+            : props.journalSelected.title}
+        </div>
         <div className='top-menu mt-3 row m-0'>
           <FilterDropdown
             currentFilter={selectedFilter}
@@ -300,19 +308,23 @@ const Students = (props) => {
                 <Student
                   key={myStudent.id}
                   student={myStudent}
-                  subject={props.journalSelected}
+                  // subject={props.journalSelected.title}
                   setSelectedUser={setSelectedUser}
                 />
               ))
             : 'No students available'}
-
+          {console.log(props, 'props.journal')}
+          {console.log(selectedUser, 'selectedUser')}
           {selectedUser && props.journalSelected ? (
             <EvaluateStudentModal
               userId={selectedUser.id}
               userName={selectedUser.name}
+              userUserName={selectedUser.userName}
               selectedJournalId={props.journalSelectedId}
               myStudents={myStudents}
+              journalSelected={props.journalSelected}
               setSelectedUser={setSelectedUser}
+              journal={props.journal}
             />
           ) : null}
         </div>

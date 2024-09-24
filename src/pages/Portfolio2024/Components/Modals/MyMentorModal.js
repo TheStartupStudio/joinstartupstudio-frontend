@@ -20,7 +20,6 @@ import ReactImageUpload from '../ReactAvatarEditor/ReactImageUpload'
 import useImageEditor from '../../../../hooks/useImageEditor'
 
 const MyMentorModal = (props) => {
-  const mode = props.mode
   const initialMentorState = {
     mentorImage: '',
     mentorName: '',
@@ -38,7 +37,6 @@ const MyMentorModal = (props) => {
 
   const dispatch = useDispatch()
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false)
-  const [imageFile, setImageFile] = useState(null)
   const [mentorDetails, setMentorDetails] = useState(initialMentorState)
   const [id, setId] = useState(null)
 

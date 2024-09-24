@@ -3,27 +3,34 @@
   display: flex;
   justify-content: start;
 }
+
 .login-logo img {
-  width: 200px;
+  width: 15rem;
 }
+
 
 .login-title {
   margin-top: 20px;
-  font-weight: 100;
-  font-size: 50px;
+  margin-bottom: 0;
+  font-weight: 100 !important;
+  font-size: 4.3rem;
   color: gray;
 }
 
 .login-left-content {
-  margin-bottom: 50px;
+  font-weight: 100;
+  /* margin: 2rem 0 1rem 6rem; */
   display: flex;
   flex-direction: column;
   text-align: start;
+  margin-top: -25px;
+  margin-left: -2px;
+  width: 30vw;
 }
 
 .login-left-content p {
   color: gray;
-  width: 50%;
+  /* width: 50%; */
 }
 
 .social-media-items {
@@ -34,11 +41,13 @@
   color: #a7ca42;
 }
 
-.social-media-item {
-  margin-right: 20px;
+.social-media-items * {
+  /* margin-right: 4px; */
   color: black;
-  font-size: 20px;
+  font-size: 30px;
 }
+
+
 
 .login-create-account {
   text-align: right;
@@ -67,7 +76,7 @@
   grid-template-columns: 25px auto;
 }
 
-.radio-wrapper > div {
+.radio-wrapper>div {
   display: flex;
   align-items: center;
 }
@@ -89,6 +98,7 @@
   appearance: none;
   padding: 3px;
 }
+
 .radio-wrapper input[type='radio']:checked {
   background-color: #01c5d1;
 }
@@ -112,9 +122,11 @@
 .learner-logo:hover * {
   fill: white;
 }
+
 .learner-logo-clicked {
   fill: white;
 }
+
 .learner-logo-clicked [class^='st'] {
   fill: white;
 }
@@ -125,6 +137,7 @@
   color: black;
   font-size: 20px;
 }
+
 .button-type_container {
   display: flex;
   width: 100%;
@@ -169,9 +182,15 @@
   .choose-login_container {
     min-height: calc(100vh - 92px);
   }
+
   .login_container {
     min-height: calc(100vh - 92px);
   }
+
+  .right-login-content {
+    margin-bottom: 20px !important;
+  }
+
   .center-content {
     width: 100%;
     position: absolute;
@@ -179,6 +198,7 @@
     left: 30%;
     transform: translate(-30%, -30%);
   }
+
   .login-logo {
     width: 100%;
     display: flex;
@@ -191,22 +211,36 @@
     font-size: 35px;
     color: gray;
   }
+
   .login-role {
     width: 110px;
     height: 110px;
   }
+
   .login-left-content {
     margin-bottom: 20px;
+    margin-left: 5px !important;
     display: flex;
     justify-content: center !important;
     text-align: center;
+    width: 95vw;
   }
 
   .login-left-content p {
     color: gray;
     width: 100%;
   }
+
+  .social-media-items {
+    font-size: smaller;
+
+  }
+
+  .right-login-form {
+    margin: 0px 10px !important;
+  }
 }
+
 @media (min-width: 767.98px) {
   .center-content {
     width: 100%;
@@ -222,12 +256,14 @@
     margin-left: 0;
   }
 }
+
 @media (max-width: 570px) {
   .login-logo {
     width: 100%;
     display: flex;
     justify-content: center;
   }
+
   .login-logo img {
     width: 150px;
   }
@@ -238,10 +274,12 @@
     font-size: 30px;
     color: gray;
   }
+
   .login-role {
     width: 90px;
     height: 90px;
   }
+
   .login-left-content {
     margin-bottom: 20px;
     display: flex;
@@ -254,3 +292,10 @@
     width: 100%;
   }
 }
+
+/* @media (max-width: 470px) {
+  .right-login-form {
+    padding-bottom: -30px;
+  }
+} */
+/*  */

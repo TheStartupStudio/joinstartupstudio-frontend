@@ -64,7 +64,7 @@ const JournalTableCellInput = (props) => {
             onKeyDown={handleTabKey}
             onChange={(e) => {
               debounce(() => handleChange(e.target.value))
-              setLoading(true)
+              setLoading?.(true)
             }}
           />
         )}
@@ -77,11 +77,11 @@ const JournalTableCellInput = (props) => {
             type={inputType}
             style={newStyle}
             name={inputName ?? ''}
-            defaultValue={value}
+            value={value}
             onKeyDown={handleTabKey}
             onChange={(e) => {
-              debounce(() => handleChange(e.target.value))
-              setLoading(true)
+              handleChange(e.target.value)
+              setLoading?.(true)
             }}
           />
         )}
@@ -98,7 +98,7 @@ const JournalTableCellInput = (props) => {
             onKeyDown={handleTabKey}
             onChange={(e) => {
               debounce(() => handleChange(e.target.value))
-              setLoading(true)
+              setLoading?.(true)
             }}
           />
         )}

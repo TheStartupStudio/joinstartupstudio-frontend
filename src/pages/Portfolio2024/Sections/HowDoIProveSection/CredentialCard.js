@@ -45,7 +45,7 @@ function CredentialCard(props) {
   return (
     <div className={'mb-3'}>
       <PortfolioDataContainer background={'#fff'}>
-        <div className={'d-flex gap-3 '}>
+        <div className={'d-flex gap-3 '} style={{ flexWrap: 'wrap' }}>
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}
@@ -56,7 +56,7 @@ function CredentialCard(props) {
           <div className={'flex-grow-1'}>
             <div className={'d-flex justify-content-between gap-2'}>
               <div>
-                <div className={'organization-name mb-2'}>
+                <div className={'proveit-title-org organization-name mb-2'}>
                   {credential?.credentialTitle}
                 </div>
                 <div className={'organization-location mb-2'}>

@@ -11,6 +11,7 @@
   -moz-box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.8);
   border-radius: 15px;
 }
+
 .public-login-form button {
   font-size: 14px;
   font-weight: 600;
@@ -25,20 +26,24 @@
   text-transform: uppercase;
   box-shadow: none;
 }
+
 .public-login-form input::placeholder {
   font-size: 12px;
   letter-spacing: 0px;
   color: #333d3d;
   opacity: 1;
 }
+
 .public-login-form h2 {
   text-align: center;
   text-transform: uppercase;
 }
+
 .public-login-form h6 {
   color: #707070;
   text-align: center;
 }
+
 /*Login input style  */
 
 .input-with-gradient-border {
@@ -52,6 +57,7 @@
   display: flex;
   align-items: center;
 }
+
 .input-with-gradient-border svg {
   margin-right: 3%;
 }
@@ -62,6 +68,7 @@
   background-color: transparent !important;
   border-radius: 15px;
 }
+
 .pw-revelared__icon {
   position: absolute;
   top: 10;
@@ -75,27 +82,44 @@
     justify-content: center;
   }
 }
+
 @media (max-width: 570px) {
   .public-login-form {
     height: 35vh;
     min-height: 35vh;
     justify-content: center;
   }
+
   .public-login-form button {
     font-size: 14px;
   }
+
   .public-login-form input::placeholder {
     font-size: 12px;
     letter-spacing: 0px;
     color: #333d3d;
     opacity: 1;
   }
+
   .public-login-form h2 {
     text-align: center;
     text-transform: uppercase;
   }
+
   .public-login-form h6 {
     color: #707070;
     text-align: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .login-form-resp {
+    width: 90vw !important;
+  }
+}
+
+@media (max-width: 1008px) and (min-width: 768px) {
+  .login-form-resp {
+    width: 90vw !important;
   }
 }

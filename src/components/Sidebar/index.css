@@ -20,16 +20,22 @@
   align-items: center;
   line-height: 1;
 }
+
 .sidenav:hover {
-  color: #fff;
-  background: #21c5d0;
+  background: #e3e8f3;
 }
+
+.sidebar-accordion-border {
+  border: none !important;
+}
+
 .disabledd {
   pointer-events: none;
   /* You can also add additional styles to indicate a disabled state */
   color: gray;
   cursor: not-allowed;
 }
+
 .icon_container {
   height: 35px;
   width: 35px;

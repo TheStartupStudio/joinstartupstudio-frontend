@@ -1146,6 +1146,7 @@ export const getProjects = () => async (dispatch) => {
           type: 'evidence-1',
           imageUrl: null,
           linkInputValue: '',
+          titleInputValue: '',
           selectedSkills: [],
           imageFile: null
         },
@@ -1153,6 +1154,7 @@ export const getProjects = () => async (dispatch) => {
           type: 'evidence-2',
           imageUrl: null,
           linkInputValue: '',
+          titleInputValue: '',
           selectedSkills: [],
           imageFile: null
         },
@@ -1160,6 +1162,7 @@ export const getProjects = () => async (dispatch) => {
           type: 'evidence-3',
           imageUrl: null,
           linkInputValue: '',
+          titleInputValue: '',
           selectedSkills: [],
           imageFile: null
         }
@@ -1640,6 +1643,7 @@ export const getMyCompetitivenessError = (error) => {
 // Update Competitiveness
 export const updateMyCompetitiveness =
   (competitiveness, id, category) => async (dispatch) => {
+    debugger
     dispatch({ type: UPDATE_MY_COMPETITIVENESS })
     try {
       const response = await updateMyCompetitivenessAPI(competitiveness, id)

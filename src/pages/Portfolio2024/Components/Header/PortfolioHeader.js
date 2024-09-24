@@ -5,7 +5,7 @@ import whoTriangle from '../../../../assets/images/HS-Portfolio-Icons/LTS Model 
 import whatTriangle from '../../../../assets/images/HS-Portfolio-Icons/LTS Model - What can you dox800.png'
 import howTriangle from '../../../../assets/images/HS-Portfolio-Icons/LTS Model - How do you prove itx800.png'
 import startTriangle from '../../../../assets/images/HS-Portfolio-Icons/LTS Model - Startx800.png'
-import myPortfolioLogo from '../../../../assets/images/HS-Portfolio-Icons/My Portfolio logo@2x.png'
+import myPortfolioLogo from '../../../../assets/images/LTS Portfolio Logo (Pwd By SUS)x1200.png'
 import { useSelector } from 'react-redux'
 function PortfolioHeader(props) {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
@@ -38,7 +38,7 @@ function PortfolioHeader(props) {
       )}
       {activeSection === 'how-section' && (
         <SectionDescription
-          sectionTitle={'How Can I Prove it?'}
+          sectionTitle={'How Do I Prove it?'}
           sectionDescription={`LTS Participants communicate the value they have produced in themselves through the outcomes of <strong>Alignment</strong>, <strong>Productivity</strong>, and <strong>Competitiveness</strong>.`}
           triangleIcon={howTriangle}
           user={props.userStory}

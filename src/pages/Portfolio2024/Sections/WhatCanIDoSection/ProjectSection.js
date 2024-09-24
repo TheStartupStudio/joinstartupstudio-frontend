@@ -25,20 +25,33 @@ const ProjectSection = ({
   ]
 
   return (
-    <div className={'portfolio-info-container mb-3'}>
+    <div
+      className={'portfolio-info-container mb-3'}
+      style={{ padding: '40px' }}
+    >
       <div className={'mb-3'}>
-        <span className={'portfolio-info-title me-1'}>{title}:</span>
+        <span
+          className={'portfolio-info-title me-1'}
+          style={{ fontSize: '16px' }}
+        >
+          {title}
+        </span>
         <span
           style={{
             font: 'normal normal normal 15px/18px Montserrat',
             letterSpacing: 0.68
           }}
         >
-          {subtitle}
+          {/* {subtitle} */}
         </span>
       </div>
       <div className={'mb-3'}>
-        <div className={'portfolio-info-title mb-3'}>{content.title}</div>
+        <div
+          className={'portfolio-info-title mb-3'}
+          style={{ fontWeight: '500' }}
+        >
+          {content.title}
+        </div>
         <div
           className={'portfolio-info-content'}
           dangerouslySetInnerHTML={{ __html: content.text }}
@@ -46,7 +59,12 @@ const ProjectSection = ({
       </div>
       <div>
         <div className={'d-flex justify-content-between align-items-center'}>
-          <div className={'portfolio-info-title'}>Evidence</div>
+          <div
+            className={'portfolio-info-title'}
+            style={{ marginBottom: '10px', fontWeight: '500' }}
+          >
+            Evidence
+          </div>
           <LtsButton
             variant={'text'}
             color={'#52C7DE'}
@@ -54,6 +72,7 @@ const ProjectSection = ({
             name={'View market-ready skills'}
             padding={{ padding: '0px' }}
             onClick={() => setShowSkillsModal(type)}
+            style={{ marginBottom: '10px' }}
           ></LtsButton>
         </div>
 
@@ -61,7 +80,7 @@ const ProjectSection = ({
           {evidences?.map((evidence, index) => {
             return (
               <React.Fragment key={evidence?.title}>
-                <div className={'col-md-4'} key={index}>
+                <div className={'project-submission col-md-4'} key={index}>
                   <PortfolioSubmission
                     title={evidence?.title}
                     videoUrl={evidence?.linkInputValue}
@@ -74,7 +93,7 @@ const ProjectSection = ({
         </div>
         {showSkillsModal === type && (
           <PortfolioModalWrapper
-            title={'MARKET-READY DEVELOP SKILLS'}
+            title={`MARKET-READY ${title} SKILLS`}
             show={showSkillsModal === type}
             onHide={() => setShowSkillsModal(undefined)}
           >

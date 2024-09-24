@@ -12,10 +12,10 @@ function PortfolioModalWrapper(props) {
       backdrop='static'
       keyboard={false}
       id='portfolio-modal-wrapper'
-      className={` portfolio-modal-wrapper ${props.class ? props.class : ''}`}
+      className={` portfolio-modal-wrapper ${props.class ? props.class : ''} `}
     >
       <SectionActions actions={props.actions} />
-      <div className={'p-2 w-100 position-relative'}>
+      <div className={'p-2 mt-3 w-100  portfolio-modal-content'}>
         <div
           className={'d-flex w-100'}
           style={{
@@ -36,8 +36,11 @@ function PortfolioModalWrapper(props) {
                   font: 'normal normal bold 22px/15px Montserrat',
                   letterSpacing: 0.88,
                   color: '#231F20'
+                  // borderBottom: '1px solid #e3e3e3'
                 }}
-                className={'text-uppercase pb-4'}
+                className={
+                  'text-uppercase d-flex align-items-center portfolio-modal-title'
+                }
               >
                 {props.title}
               </div>

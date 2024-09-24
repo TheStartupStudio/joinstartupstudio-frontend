@@ -3,9 +3,9 @@ import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
-import TestJournalType from './TestJournalType'
+import CurriculumJournalType from './CurriculumJournalType'
 
-function TestJournal(props) {
+function CurriculumJournal(props) {
   return (
     <>
       <Switch>
@@ -13,7 +13,7 @@ function TestJournal(props) {
           path={`${props.match.url}/:type/`}
           render={(renderprops) => (
             <>
-              <TestJournalType
+              <CurriculumJournalType
                 {...renderprops}
                 backRoute={props.match.url}
                 category={props.category}
@@ -26,6 +26,6 @@ function TestJournal(props) {
   )
 }
 
-export default injectIntl(TestJournal, {
+export default injectIntl(CurriculumJournal, {
   withRef: false
 })

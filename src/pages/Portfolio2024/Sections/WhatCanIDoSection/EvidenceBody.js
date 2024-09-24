@@ -44,6 +44,7 @@ const EvidenceBody = ({
   const [onDelete, setOnDelete] = useState(false)
 
   const [linkInputValue, setLinkInputValue] = useState('')
+  const [titleInputValue, setTitleInputValue] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState({
     criticalThinkingSkills: false,
     collaborationSkills: false,
@@ -62,9 +63,10 @@ const EvidenceBody = ({
         ...(selectedSkills?.criticalThinkingSkills ?? [])
       ],
       imageFile: originalImage,
-      linkInputValue
+      linkInputValue,
+      titleInputValue
     })
-  }, [selectedSkills, originalImage, linkInputValue])
+  }, [selectedSkills, originalImage, linkInputValue, titleInputValue])
 
   useEffect(() => {
     if (initialData) {
@@ -106,6 +108,7 @@ const EvidenceBody = ({
       // console.log('groupedSkills', groupedSkills)
       setSelectedSkills(groupedSkills)
       setLinkInputValue(initialData.linkInputValue)
+      setTitleInputValue(initialData.titleInputValue)
       setImageUrl(initialData.imageUrl)
       if (initialData?.imageFile) {
         setImageProperties({
@@ -134,6 +137,7 @@ const EvidenceBody = ({
 
   const handleInputChange = (value) => {
     setLinkInputValue(value)
+    setTitleInputValue(value)
   }
 
   useEffect(() => {
@@ -260,6 +264,17 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'input' }}>
+          {/* <div className={'mb-1'}>
+            <LabeledInput
+              title={`Title for ${evidenceName}`}
+              name={'title-for-market-analysis-document'}
+              type={'text'}
+              placeholder={`Title for ${evidenceName}`}
+              titleClassNames={'text-start justify-content-start'}
+              onChange={handleInputChange}
+              value={titleInputValue}
+            />
+          </div> */}
           <div className={'mb-1'}>
             <LabeledInput
               title={`Title for Content Upload`}
@@ -284,9 +299,9 @@ const EvidenceBody = ({
           </div>
 
           <div className={'select-skill pt-4 my-3'}>Select Skill(s)</div>
-          <div className={'select-skill-description'}>
+          {/* <div className={'select-skill-description'}>
             Remember, you can only tag a skill once in the portfolio.
-          </div>
+          </div> */}
         </div>
         <div style={{ gridArea: 'skills1' }}>
           <MultiSelectDropdown

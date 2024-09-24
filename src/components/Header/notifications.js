@@ -49,13 +49,13 @@ const Notifications = (props) => {
   }
 
   return (
-    <div className="notifications-wrapper" ref={props.notificationsRef}>
-      <div className="position-relative">
+    <div className='notifications-wrapper' ref={props.notificationsRef}>
+      <div className='position-relative'>
         {loading && (
-          <div className="notifications-loader">
+          <div className='notifications-loader'>
             <FontAwesomeIcon
               icon={faSpinner}
-              className="notifications-spinner"
+              className='notifications-spinner'
               spin
             />
           </div>
@@ -77,7 +77,7 @@ const Notifications = (props) => {
                     {notification.Sender.name}
                     {NotificationTypes[notification.type]?.value}
                   </a>
-                  <span className="notification-date">
+                  <span className='notification-date'>
                     {formatDate(notification.createdAt)}
                   </span>
                 </React.Fragment>
@@ -85,7 +85,7 @@ const Notifications = (props) => {
             })}
           </>
         ) : (
-          <span>You dont have any notifications!</span>
+          <span>You don't have any notifications!</span>
         )}
       </div>
     </div>

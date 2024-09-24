@@ -28,7 +28,10 @@ function Layout({ children }) {
           sideBarVisible={sideBarVisible}
           hideHeaderIcons={hideHeaderIcons}
         />
-        <div id='content' className='w-100'>
+        <div
+          id='content'
+          // className='w-100'
+        >
           {sideBarState ? (
             <div className='backdrop' onClick={toggleBackdrop}></div>
           ) : null}

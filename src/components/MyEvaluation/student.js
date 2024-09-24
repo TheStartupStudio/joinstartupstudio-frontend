@@ -35,11 +35,11 @@ function Student({ student, subject, setSelectedUser, journalSelected }) {
         />
         <div className='ticket-information d-flex flex-column mx-2 min-w-0'>
           <h5 className='from'>{student.name}</h5>
-          <p className='subject'>
+          {/* <p className='subject'>
             Subject: <span className='fw-bold'> {subject ? subject : ''} </span>
-          </p>
+          </p> */}
         </div>
-        <div className='ticket-status d-flex align-items-center'>
+        {/* <div className='ticket-status d-flex align-items-center'>
           <p className='my-auto pe-2' style={{ color: '#ccc' }}></p>
           <p className='my-auto pl-2'></p>
           <FontAwesomeIcon
@@ -51,7 +51,7 @@ function Student({ student, subject, setSelectedUser, journalSelected }) {
             }}
             className={`status received_feedback`}
           />
-        </div>
+        </div> */}
       </div>
     </>
   )

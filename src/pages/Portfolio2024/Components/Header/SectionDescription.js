@@ -22,13 +22,20 @@ function SectionDescription(props) {
   return (
     <div className={' section-description-container'}>
       <div>
-        <div className={'d-flex gap-3 align-items-center mb-3'}>
+        <div
+          className={
+            'd-flex gap-3 align-items-center mb-3 portfolio-section-title'
+          }
+          // style={{ width: 'max-content' }}
+        >
           <UserImage
             userImageUrl={props?.user?.data?.userImageUrl}
-            width={45}
-            height={45}
+            width={60}
+            height={60}
           />
-          <div className={'section-title'}>{props?.sectionTitle}</div>
+          <div className={'section-title'} style={{ fontSize: '40px' }}>
+            {props?.sectionTitle}
+          </div>
         </div>
         <div
           className={'section-description'}
@@ -38,7 +45,7 @@ function SectionDescription(props) {
       <div>
         <img
           src={props?.triangleIcon}
-          className={'triangle-icon'}
+          className={'triangle-icon portfolio-triangle-icon'}
           alt='triangle-icon'
         />
       </div>

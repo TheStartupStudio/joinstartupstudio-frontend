@@ -415,14 +415,7 @@ const FullCalendarComponent = (props) => {
                                              <div class="event-name" style="font-size:12px;font-weight:500; color:#231F20; font: normal normal normal Montserrat;">
                                         ${event?.user?.name}
                                         </div>
-                                          <div class="event-time" className={"ml-2"} style="font-size: 10px; color:#231F20; font-weight:normal">
-                                          ${convertToAMPM(
-                                            event?.startTime.slice(0, 5)
-                                          )} -
-                                          ${convertToAMPM(
-                                            event?.endTime.slice(0, 5)
-                                          )}
-                                        </div>
+                                     
                                           </li>
                                         
                                         

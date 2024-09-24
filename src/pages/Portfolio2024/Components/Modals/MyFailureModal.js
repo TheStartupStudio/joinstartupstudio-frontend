@@ -142,6 +142,7 @@ function MyFailureModal(props) {
             {'Failure'}
           </div>
           <ReactQuill
+            placeholder='Explain the context and outcomes of your failure.'
             className={'portfolio-quill'}
             value={failure ?? ''}
             onChange={(value) => setFailure(value)}
@@ -149,7 +150,9 @@ function MyFailureModal(props) {
           <div className={'portfolio-info-title my-2 text-italic'}>
             {'My Pivot'}
           </div>
+
           <ReactQuill
+            placeholder='Explain how you turned your failure experience into an oppurtunity.'
             className={'portfolio-quill'}
             value={pivot || ''}
             onChange={(value) => setPivot(value)}
@@ -166,7 +169,10 @@ function MyFailureModal(props) {
         </div>
       </div>
       {isEdit() && (
-        <div className={' mt-5'} onClick={() => setConfirmDeleteModal(true)}>
+        <div
+          className={' mt-5 delete-failure-btn'}
+          onClick={() => setConfirmDeleteModal(true)}
+        >
           <LtsButton variant={'text'} align={'end'} name={'DELETE FAILURE'} />
         </div>
       )}

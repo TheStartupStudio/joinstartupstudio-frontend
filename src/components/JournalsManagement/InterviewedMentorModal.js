@@ -10,7 +10,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 
-import { FaEdit, FaEye, FaTrash } from 'react-icons/fa'
+import { FaEdit, FaTrash, FaEye } from 'react-icons/fa'
 
 function InterviewedMentorModal(props) {
   const { selectedAccordion, setSelectedAccordion } = props
@@ -181,7 +181,7 @@ function InterviewedMentorModal(props) {
               marginRight: '8px'
             }}
           >
-            <FaEye size={20} color="#51c7df" />
+            <FaEye size={20} color='#51c7df' />
           </button>
         )
       }
@@ -212,13 +212,13 @@ function InterviewedMentorModal(props) {
               marginRight: '8px'
             }}
           >
-            <FaEdit size={20} color="#99CC33" />
+            <FaEdit size={20} color='#99CC33' />
           </button>
           <button
             onClick={() => onDelete?.(row.original)}
             style={{ background: 'none', border: 'none', cursor: 'pointer' }}
           >
-            <FaTrash size={20} color="#FE43A1" />
+            <FaTrash size={20} color='#FE43A1' />
           </button>
         </div>
       )
@@ -337,9 +337,9 @@ function InterviewedMentorModal(props) {
                               onChange={(event) =>
                                 imageUpload(event.target.files[0])
                               }
-                              accept="image/*"
-                              type="file"
-                              className="d-none h-100"
+                              accept='image/*'
+                              type='file'
+                              className='d-none h-100'
                             />
                             <img
                               src={
@@ -353,7 +353,7 @@ function InterviewedMentorModal(props) {
                                 width: '100%',
                                 height: '100%'
                               }}
-                              alt="Thumb"
+                              alt='Thumb'
                             />
                           </label>
                         ) : (
@@ -366,9 +366,9 @@ function InterviewedMentorModal(props) {
                               onChange={(event) =>
                                 imageUpload(event.target.files[0])
                               }
-                              accept="image/*"
-                              type="file"
-                              className="d-none h-100"
+                              accept='image/*'
+                              type='file'
+                              className='d-none h-100'
                             />
 
                             <div
@@ -537,10 +537,10 @@ const MentorDescription = (props) => {
             <div className={'row'}>
               <div className={'col-md-6'}>
                 <input
-                  type="text"
+                  type='text'
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
-                  placeholder="Enter new description"
+                  placeholder='Enter new description'
                   className={'h-100 w-100 me-1'}
                 />
               </div>
@@ -567,7 +567,7 @@ const MentorDescription = (props) => {
             >
               {editIndex === index ? (
                 <input
-                  type="text"
+                  type='text'
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
                   onBlur={handleSaveEdit}

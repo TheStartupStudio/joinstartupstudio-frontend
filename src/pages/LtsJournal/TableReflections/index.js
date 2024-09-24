@@ -9,12 +9,16 @@ import * as actions from '../../../redux/reflectionsTable/Actions'
 import axiosInstance from '../../../utils/AxiosInstance'
 import _, { isEqual } from 'lodash'
 import { setIsEdit } from '../../../redux/reflectionsTable/Actions'
+import { getFormattedDate } from '../../../utils/helpers'
 
 const TableReflections = (props) => {
   const [showModal, setShowModal] = useState(false)
   const dispatch = useDispatch()
   const reflectionsTable = useSelector((state) => state.reflectionsTable)
-
+  const [tableReflectionEntry, setTableReflectionEntry] = useState({
+    title: '',
+    order: 1
+  })
   const [reflectionTableEntries, setReflectionTableEntries] = useState([])
   const [userReflectionTableEntries, setUserReflectionTableEntries] = useState(
     []
@@ -22,7 +26,6 @@ const TableReflections = (props) => {
   const [submitted, setSubmitted] = useState(false)
   const [isEdit, setIsEdit] = useState()
   const [isSaving, setIsSaving] = useState(false)
-  const [isSavingTableRefection, setIsSavingTableReflection] = useState(false)
   const currentDate = new Date()
   const nextDay = new Date(currentDate)
   nextDay.setDate(currentDate.getDate() + 1)
@@ -37,11 +40,6 @@ const TableReflections = (props) => {
       setIsEdit(true)
     }
   }, [props.name])
-
-  const [tableReflectionEntry, setTableReflectionEntry] = useState({
-    title: '',
-    order: 1
-  })
 
   useEffect(() => {
     let newUserReflectionTabEntries = []
@@ -68,9 +66,9 @@ const TableReflections = (props) => {
     })
 
     setReflectionTableEntries(newReflectionTableEntries)
-  }, [])
+  }, [props.reflectionTableEntries])
 
-  const onSave = (name, value) => {
+  const onSave = () => {
     if (isSaving) {
       return
     }
@@ -107,12 +105,13 @@ const TableReflections = (props) => {
       reflectionsTableId: props.reflectionTable.reflectionsTableId,
       id: props.reflectionTable.id
     }
+
     let isCreateValue = {
       startDate: tableReflection.startDate,
       endDate: tableReflection.endDate,
       title: tableReflection.title,
       journalId: tableReflection.journalId,
-      reflectionsTableId: props.reflectionTable.reflectionsTableId
+      reflectionsTableId: props.reflectionTable?.id
     }
 
     if (reflectionsTable.isEdit === false) {
@@ -225,11 +224,11 @@ const TableReflections = (props) => {
   }
 
   return (
-    <div className="table-reflections">
-      <div className="table-reflections__dates">
-        <div className="row">
-          <div className="col-6" style={{ paddingRight: 0 }}>
-            <div className="table-reflections__date">
+    <div className='table-reflections'>
+      <div className='table-reflections__dates'>
+        <div className='row'>
+          <div className='col-6' style={{ paddingRight: 0 }}>
+            <div className='table-reflections__date'>
               <b>Start date:</b>
               <div className={` w-100`}>
                 <input
@@ -239,8 +238,8 @@ const TableReflections = (props) => {
                     width: '100%'
                   }}
                   name={'startDate'}
-                  value={new Date(tableReflection.startDate).toLocaleDateString(
-                    'en-CA'
+                  value={getFormattedDate(
+                    tableReflection.startDate || currentDate
                   )}
                   onChange={(e) => {
                     if (!isSaving) {
@@ -256,8 +255,8 @@ const TableReflections = (props) => {
               {/*{moment(props.start).format('DD-MM-YYYY')}*/}
             </div>
           </div>
-          <div className="col-6" style={{ paddingLeft: 0 }}>
-            <div className="table-reflections__date">
+          <div className='col-6' style={{ paddingLeft: 0 }}>
+            <div className='table-reflections__date'>
               <b>End date:</b>{' '}
               <div className={` w-100`}>
                 <input
@@ -267,8 +266,8 @@ const TableReflections = (props) => {
                     width: '100%'
                   }}
                   name={'startDate'}
-                  value={new Date(tableReflection.endDate).toLocaleDateString(
-                    'en-CA'
+                  value={getFormattedDate(
+                    tableReflection.endDate || currentDate
                   )}
                   onChange={(e) => {
                     if (!isSaving) {
@@ -285,11 +284,11 @@ const TableReflections = (props) => {
           </div>
         </div>
       </div>
-      <div className="table-reflections__entries">
+      <div className='table-reflections__entries'>
         {reflectionTableEntries && reflectionTableEntries?.length
           ? [...reflectionTableEntries]?.map((entry) => (
-              <div className="table-reflections__entry" key={entry.id}>
-                <p>
+              <div className='table-reflections__entry' key={entry.id}>
+                <p style={{ marginRight: '6px' }}>
                   <b>{entry.title}</b>
                   <p className={'pt-1'}>
                     {
@@ -304,7 +303,7 @@ const TableReflections = (props) => {
                 </p>
                 {props.isEditable && (
                   <span
-                    className="table-reflections__entry-icon"
+                    className='table-reflections__entry-icon'
                     onClick={() => {
                       if (!isSaving) {
                         const userReflection =
@@ -336,7 +335,7 @@ const TableReflections = (props) => {
           : null}
         {userReflectionTableEntries && userReflectionTableEntries?.length
           ? [...userReflectionTableEntries]?.map((entry) => (
-              <div className="table-reflections__entry" key={entry.id}>
+              <div className='table-reflections__entry' key={entry.id}>
                 <p>
                   <b>{entry.title}</b>
                   <p className={'pt-1'}>
@@ -352,7 +351,7 @@ const TableReflections = (props) => {
                 </p>
                 {props.isEditable && (
                   <span
-                    className="table-reflections__entry-icon"
+                    className='table-reflections__entry-icon'
                     onClick={() => {
                       // const userReflection = userReflectionTableEntries.find(
                       //   (item) =>
@@ -394,14 +393,14 @@ const TableReflections = (props) => {
               </div>
             ))
           : null}
-        <div className="table-reflections__entry">
+        <div className='table-reflections__entry'>
           {props.isEditable && (
             <>
               <p>
                 <b>Add another team member to this table</b>
               </p>
               <span
-                className="table-reflections__entry-icon"
+                className='table-reflections__entry-icon'
                 onClick={() => {
                   if (!isSaving) {
                     dispatch(actions.setActiveItem(null))

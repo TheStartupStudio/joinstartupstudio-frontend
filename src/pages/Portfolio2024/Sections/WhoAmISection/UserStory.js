@@ -121,6 +121,8 @@ function UserStory(props) {
             dispatch(toggleUserStory({ showUserStory: showUserStory }, id))
           }}
           isTogglingSection={isTogglingSection}
+          switchId={'add-story-switch'}
+          switchName={'add-story-switch'}
         />
       )}
 
@@ -142,6 +144,8 @@ function UserStory(props) {
             dispatch(toggleUserStory({ showUserStory: showUserStory }, id))
           }}
           isTogglingSection={isTogglingSection}
+          switchId={'edit-story-switch'}
+          switchName={'edit-story-switch'}
         />
       )}
     </>

@@ -23,10 +23,10 @@ const socialIcons = {
 const SociaMediaItem = ({ href, icon }) => {
   return (
     <a
-      className="social-media-item"
+      className='social-media-item'
       href={href}
-      target="_blank"
-      rel="noreferrer"
+      target='_blank'
+      rel='noreferrer'
     >
       <FontAwesomeIcon icon={socialIcons[icon]} />
     </a>
@@ -44,7 +44,7 @@ const LoginRole = (props) => {
       <img
         src={props.icon}
         style={{ width: '100%', objectFit: 'contain' }}
-        alt=""
+        alt=''
       />
     </div>
   )
@@ -62,24 +62,29 @@ const ChooseLogin = () => {
   }
 
   return (
-    <div className="container-fluid md-px-5 ps-md-5 choose-login_container">
-      <Row className="m-0 p-0 align-items-center center-content justify-evenly">
-        <Col md="6" sm="12">
-          <div className="row">
-            <div className="col-sm-12 col-md-9  mx-auto">
-              <div className="login-left-content">
-                <div className="login-logo">
-                  <img src={SUSLogo} alt="logo" />
+    <div
+      className='container-fluid md-px-5 ps-md-5 choose-login_container'
+      style={{
+        backgroundColor: '#e4e9f4'
+      }}
+    >
+      <Row className='m-0 p-0 align-items-center center-content justify-evenly'>
+        <Col md='6' sm='12'>
+          <div className='row'>
+            <div className='col-sm-12 col-md-9  mx-auto'>
+              <div className='login-left-content'>
+                <div className='login-logo'>
+                  <img src={SUSLogo} alt='logo' />
                 </div>
-                <h1 className="login-title" style={{ color: '#000' }}>
+                <h1 className='login-title' style={{ color: '#000' }}>
                   Welcome...
                 </h1>
                 <p style={{ color: '#000' }}>
-                  ...to your Learn to Start Platform. Please choose your role
-                  and log in to access.
+                  ...to Learn to Start Powered by The Startup Studio. Please
+                  choose from the options to the right to begin your login.
                 </p>
 
-                <div className="social-media-items">
+                <div className='social-media-items'>
                   <SociaMediaItem
                     href={`https://www.linkedin.com/company/learntostart/`}
                     icon={'linkedin'}
@@ -97,13 +102,15 @@ const ChooseLogin = () => {
             </div>
           </div>
         </Col>
-        <Col md="5" sm="12">
-          <FormWrapper className="col-lg-9 col-md-12 col-sm-12 mx-auto px-4 pb-3 pt-4 ">
-            <h2 className="text-center">
-              <IntlMessages id="general.ready" /> ?
+        <Col md='5' sm='12' className='right-login-content'>
+          <FormWrapper className='col-lg-9 col-md-12 col-sm-12 mx-auto px-4 pb-3 pt-4 right-login-form'>
+            <h2 className='text-center right-login-text'>
+              <IntlMessages id='general.ready' />?
             </h2>
-            <h6 className="mb-4 ">Choose your Role to log in</h6>
-            <div className="button-type_container">
+            <h6 className='mb-4 right-login-text'>
+              Choose your role to log in
+            </h6>
+            <div className='button-type_container'>
               <LoginRole
                 role={'ims'}
                 icon={instructorNormal}
@@ -122,11 +129,12 @@ const ChooseLogin = () => {
                 className={'main-login-role'}
               />
             </div>
-            <p className="my-4 text-center public-page-text">
-              <IntlMessages id="login.security" />
+
+            <p className='my-4 text-center public-page-text'>
+              <IntlMessages id='login.security' />
               <br />
-              <a href="/lts-secure" className="ml-2 link">
-                <IntlMessages id="login.protect_data" />
+              <a href='/lts-secure' className='ml-2 link'>
+                <IntlMessages id='login.protect_data' />
               </a>
             </p>
           </FormWrapper>
