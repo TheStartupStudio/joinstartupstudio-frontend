@@ -42,7 +42,7 @@ const ActiveUsers = ({ universityId }) => {
       ) : (
         <div className='border'>
           <Row>
-            <Col md='10'>
+            <Col md='10' className='pe-0'>
               <LineChart
                 rangeFilter={rangeFilter}
                 datasets={[
@@ -63,15 +63,15 @@ const ActiveUsers = ({ universityId }) => {
             </Col>
             <Col
               className='d-flex  align-items-center ps-1 m-0 w-100'
-              style={{ fontSize: '12px' }}
+              style={{ fontSize: '10px' }}
             >
               <Col>
                 <div
-                  className='d-flex flex-column justify-content-center my-2'
+                  className='d-flex flex-column justify-content-center my-2 '
                   style={{ wordBreak: 'keep-all' }}
                 >
                   <div className='d-flex align-items-center'>
-                    <span className='dot__transfer__requested me-1'></span>
+                    {/* <span className='dot__transfer__requested me-1'></span> */}
                     <div>30 Days</div>
                     <br />
                   </div>
@@ -88,7 +88,7 @@ const ActiveUsers = ({ universityId }) => {
                   style={{ wordBreak: 'keep-all' }}
                 >
                   <div className='d-flex align-items-center'>
-                    <span className='dot__transfer__requested me-1'></span>
+                    {/* <span className='dot__transfer__requested me-1'></span> */}
                     <div>7 Days</div>
                     <br />
                   </div>
@@ -105,7 +105,7 @@ const ActiveUsers = ({ universityId }) => {
                   style={{ wordBreak: 'keep-all' }}
                 >
                   <div className='d-flex align-items-center'>
-                    <span className='dot__transfer__requested me-1'></span>
+                    {/* <span className='dot__transfer__requested me-1'></span> */}
                     <div>1 Days</div>
                     <br />
                   </div>
@@ -122,7 +122,7 @@ const ActiveUsers = ({ universityId }) => {
           </Row>
 
           <hr className='m-1' />
-          <Col md='4'>
+          <Col md='5'>
             <Dropdown>
               <Dropdown.Toggle
                 variant='success'

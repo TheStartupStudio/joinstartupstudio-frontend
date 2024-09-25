@@ -264,7 +264,7 @@ const LineChart = ({ datasets, rangeFilter, numberOfIntervals = 7 }) => {
   }
 
   return (
-    <div style={{ height: '25vh' }}>
+    <div style={{ height: '32vh' }}>
       <Line data={getFilteredData()} options={options} />
       <div id='legend-container'></div>
     </div>

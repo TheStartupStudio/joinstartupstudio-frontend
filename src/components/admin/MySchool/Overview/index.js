@@ -67,7 +67,7 @@ const Overview = ({ universityId, programs }) => {
                 onSuccess={refreshData}
               />
             </Col>
-            <Col md='4'>
+            <Col md='4' className='h-100'>
               <ActiveUsers universityId={universityId} />
             </Col>
           </Row>

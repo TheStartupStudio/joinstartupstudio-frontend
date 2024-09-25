@@ -102,7 +102,7 @@ const AddInstructorModal = ({
 
             if (res) {
               onSuccess()
-              toast.success('Lesson updated successfully!')
+              toast.success('Instructor updated successfully!')
               onHide()
             } else {
               toast.error('Something went wrong!')
