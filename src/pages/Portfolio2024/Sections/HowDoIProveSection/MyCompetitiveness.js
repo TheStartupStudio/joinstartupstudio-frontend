@@ -91,7 +91,7 @@ function MyCompetitiveness(props) {
         <>
           <NoDataDisplay
             src={mentorsImage}
-            classNames={'mt-5'}
+            // classNames={'mt-5'}
             text={
               'You don’t have any competitiveness yet! Click the button to add one.'
             }

@@ -5138,6 +5138,11 @@ ul.sidebar-menu-item .collapse a:hover {
 
 }
 
+/* 
+.portfolio-quill .styled-scrollbar::-webkit-scrollbar {
+  display: block;
+} */
+
 .portf-input-title {
   background-color: #F6F7F7 !important;
 }
