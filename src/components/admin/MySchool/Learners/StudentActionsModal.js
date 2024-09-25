@@ -1,6 +1,7 @@
 import {
   faCheck,
   faIdBadge,
+  faTimes,
   faUserLock,
   faUserMinus,
   faUserPlus
@@ -64,8 +65,6 @@ const StudentActionsModal = ({
     handleChangeSelect
   } = useForm(initialState, user, mode, loading)
 
-  console.log('formData', formData)
-
   let optionalFields = ['deactivated', 'period']
 
   const validatePayload =
@@ -85,7 +84,6 @@ const StudentActionsModal = ({
     setFormSubmitted,
     optionalFields
   )
-  console.log('errors', errors)
 
   const handleDropdownClick = (dropdownName) => {
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName)
@@ -213,6 +211,10 @@ const StudentActionsModal = ({
           ) : submitLoading ? (
             <div className={`check-button fw-bold`}>
               <span className='spinner-border-info spinner-border-sm' />
+            </div>
+          ) : isDisabled ? (
+            <div className={`check-button `} onClick={() => onHide()}>
+              <FontAwesomeIcon icon={faTimes} />
             </div>
           ) : (
             <div

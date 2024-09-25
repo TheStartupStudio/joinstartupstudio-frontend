@@ -26,12 +26,13 @@ const Learners = ({
   tableTitle,
   periods,
   universities,
-  usedIn
+  usedIn,
+  instructors
 }) => {
   const { user } = useSelector((state) => state.user.user)
   const [modals, setModalState] = useModalState()
   const [selectedInstructor, setSelectedInstructor] = useState(null)
-  const [instructors, setInstructors] = useState([])
+  // const [instructors, setInstructors] = useState([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSchoolFilter, setSelectedSchoolFilter] = useState(null)
@@ -50,7 +51,7 @@ const Learners = ({
     }
   }, [instructorId, instructor_id])
 
-  const fetchStudents = useCallback(() => {
+  const fetchStudents = useCallback(async () => {
     setLoading(true)
     let url = ''
     if (instructorId || instructor_id) {
@@ -62,27 +63,27 @@ const Learners = ({
     }
 
     try {
-      axiosInstance.get(url).then(({ data }) => {
-        console.log('data', data)
-        const formattedData = data.map((student) => ({
-          ...student,
-          status: student.deactivated ? 'unactive' : 'active',
-          levels: student?.levels || [],
-          programs: student?.programs || [],
-          transferStatus: student.transferHistory.length
-            ? student.transferHistory[0].status === 'approved'
-              ? 'transferred'
-              : student.transferHistory[0].status === 'pending'
-              ? 'requested'
-              : student.transferHistory[0].status === 'denied'
-              ? 'denied '
-              : 'none'
+      const { data } = await axiosInstance.get(url)
+
+      const formattedData = data.map((student) => ({
+        ...student,
+        status: student.deactivated ? 'unactive' : 'active',
+        levels: student?.levels || [],
+        programs: student?.programs || [],
+        transferStatus: student.transferHistory.length
+          ? student.transferHistory[0].status === 'approved'
+            ? 'transferred'
+            : student.transferHistory[0].status === 'pending'
+            ? 'requested'
+            : student.transferHistory[0].status === 'denied'
+            ? 'denied '
             : 'none'
-        }))
-        setRowData(formattedData)
-        setLoading(false)
-      })
+          : 'none'
+      }))
+      setRowData(formattedData)
     } catch (error) {
+      setLoading(false)
+    } finally {
       setLoading(false)
     }
   }, [instructorId, instructor_id, user.universityId])
@@ -94,28 +95,6 @@ const Learners = ({
   useEffect(() => {
     fetchStudents()
   }, [fetchStudents])
-
-  useEffect(() => {
-    setLoading(true)
-    const fetchInstructors = async () => {
-      try {
-        const { data } = await axiosInstance.get('/users/instructors')
-
-        const formattedData = data.instructors.filter(
-          (instructor) => instructor.User !== null
-        )
-
-        setInstructors(formattedData)
-
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching instructors:', error)
-        setLoading(false)
-      }
-    }
-
-    fetchInstructors()
-  }, [])
 
   const columnDefs = useMemo(() => {
     const baseColumnDefs = [
@@ -147,7 +126,6 @@ const Learners = ({
         field: 'status',
         filter: ActiveInactiveFilter,
         cellRenderer: (params) => {
-          console.log('params', params)
           return (
             <div className=''>
               <SkillBox
@@ -163,7 +141,6 @@ const Learners = ({
         headerName: 'Programs',
         field: 'programs',
         cellRenderer: (params) => {
-          console.log('params', params)
           return (
             <div className='d-flex align-items-center justify-content-center h-100'>
               <CustomSelectCellEditor
@@ -327,6 +304,16 @@ const Learners = ({
     refreshStudents
   ])
 
+  const handleInstructorFilterChange = (selectedOption) => {
+    setSelectedInstructor(null)
+    const selectedSchool = instructors.find((i) => i.id === selectedOption.id)
+    setSelectedSchoolFilter(selectedSchool)
+
+    if (instructorId) {
+      history.push(`/my-school/learners/${selectedOption.id}`)
+    }
+  }
+
   const filterData = useCallback((data, searchQuery, selectedSchoolFilter) => {
     return data?.filter((item) => {
       const matchesSearchQuery =
@@ -344,16 +331,6 @@ const Learners = ({
     () => filterData(rowData, searchQuery, selectedSchoolFilter),
     [rowData, searchQuery, selectedSchoolFilter, filterData]
   )
-
-  const handleInstructorFilterChange = (selectedOption) => {
-    setSelectedInstructor(null)
-    const selectedSchool = instructors.find((i) => i.id === selectedOption.id)
-    setSelectedSchoolFilter(selectedSchool)
-
-    if (instructorId) {
-      history.push(`/my-school/learners/${selectedOption.id}`)
-    }
-  }
 
   return (
     <div style={{ background: '#fff' }}>

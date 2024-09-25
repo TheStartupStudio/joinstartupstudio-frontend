@@ -1,5 +1,6 @@
 import {
   faCheck,
+  faTimes,
   faUserLock,
   faUserMinus,
   faUserPlus
@@ -67,87 +68,19 @@ const AddInstructorModal = ({
         }
       : formData
 
-  const { errors, handleSubmit } = useValidation(
+  const { errors, handleSubmit, submitLoading } = useValidation(
     validatePayload,
     setFormSubmitted,
     optionalFields
   )
-  console.log('errors', errors)
 
   const handleDropdownClick = (dropdownName) => {
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName)
   }
 
-  // const submitHandler = () => {
-  //   setLoading(true)
-  //   handleSubmit(async () => {
-  //     if (mode === 'edit') {
-  //       let payload = {
-  //         universityId: formData.universityId,
-  //         universityName: formData.universityName,
-  //         name: formData.name,
-  //         email: formData.email,
-  //         profession: formData.profession,
-  //         programs: formData.programs.map((item) => item.name),
-  //         levels: formData.levels.map((item) => item.name),
-  //         deactivated: formData.deactivated
-  //       }
-  //       try {
-  //         let res = await axiosInstance.patch(
-  //           `/instructor/edit-instructors/${formData.id}`,
-  //           payload
-  //         )
-
-  //         if (res) {
-  //           onSuccess()
-  //           toast.success('Lesson updated successfully!')
-  //           onHide()
-  //         } else {
-  //           toast.error('Something went wrong!')
-  //         }
-  //       } catch (error) {
-  //         toast.error('Something went wrong!')
-  //       } finally {
-  //         setLoading(false)
-  //       }
-  //     } else {
-  //       try {
-  //         let res = await Auth.signUp({
-  //           username: formData.email,
-  //           password: formData.password,
-  //           attributes: {
-  //             'custom:universityCode': 'dev2020',
-  //             'custom:isVerified': '1',
-  //             'custom:language': 'en',
-  //             'custom:email': formData.email,
-  //             'custom:password': formData.password,
-  //             name: formData.name
-  //           }
-  //         })
-
-  //         let payload = {
-  //           ...formData,
-  //           cognito_Id: res.userSub,
-  //           stripe_subscription_id: 'true',
-  //           payment_type: 'school',
-  //           is_active: 1
-  //         }
-  //         await axiosInstance.post('/instructor/add-instructors', payload)
-  //         onSuccess()
-  //         toast.success('Instructor added successfully!')
-  //         onHide()
-  //       } catch (err) {
-  //         toast.error(err)
-  //         console.log('err', err)
-  //       } finally {
-  //         setLoading(false)
-  //       }
-  //     }
-  //   })
-  // }
   const submitHandler = async () => {
+    setLoading(true)
     try {
-      setLoading(true)
       handleSubmit(async () => {
         if (mode === 'edit') {
           const payload = {
@@ -252,9 +185,13 @@ const AddInstructorModal = ({
             <div className={`check-button fw-bold`} onClick={() => onHide()}>
               X
             </div>
-          ) : loading ? (
+          ) : submitLoading ? (
             <div className={`check-button fw-bold`}>
               <span className='spinner-border-info spinner-border-sm' />
+            </div>
+          ) : isDisabled ? (
+            <div className={`check-button `} onClick={() => onHide()}>
+              <FontAwesomeIcon icon={faTimes} />
             </div>
           ) : (
             <div

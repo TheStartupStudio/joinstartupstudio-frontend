@@ -50,6 +50,7 @@ const Instructors = ({ programs, levels, periods, universities }) => {
       setRowData(formattedData)
     } catch (error) {
       toast.error('Something went wrong!')
+      setLoading(false)
     } finally {
       setLoading(false)
     }
