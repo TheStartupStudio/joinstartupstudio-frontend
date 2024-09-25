@@ -355,14 +355,16 @@ const StudentActionsModal = ({
                   setOpenDropdown={() =>
                     handleDropdownClick('schoolAssignment')
                   }
-                  onClick={(event) => handleChangeSelect(event, 'universityId')}
+                  onClick={(event) =>
+                    handleChangeSelect(event, 'universityId', 'universityName')
+                  }
                   showError={formSubmitted}
                   error={errors.universityId}
                   preselectedOptions={
                     mode === 'edit'
                       ? [
                           {
-                            name: formData.University?.name,
+                            name: formData.universityName,
                             id: formData.universityId
                           }
                         ]

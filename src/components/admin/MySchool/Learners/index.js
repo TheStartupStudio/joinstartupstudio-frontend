@@ -78,7 +78,8 @@ const Learners = ({
             : student.transferHistory[0].status === 'denied'
             ? 'denied '
             : 'none'
-          : 'none'
+          : 'none',
+        universityName: student.University.name
       }))
       setRowData(formattedData)
     } catch (error) {
