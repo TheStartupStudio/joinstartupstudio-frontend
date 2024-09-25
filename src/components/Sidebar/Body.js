@@ -86,11 +86,6 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseClassroom'}>
-        <DropdownItem
-          allowed={isAdmin}
-          title={'USER MANAGEMENT'}
-          to={'/user-management'}
-        />
         <DropdownItem title={'MY STUDENTS'} to={'/my-students'} />
         <DropdownItem
           // disabled={true}
