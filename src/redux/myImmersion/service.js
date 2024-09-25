@@ -12,10 +12,10 @@ const fetchStep = async (step) => {
   }
 }
 
-const fetchIndustryProblems = async (currentPage, itemsPerPage) => {
+const fetchIndustryProblems = async (step, currentPage, itemsPerPage) => {
   try {
     const response = await axiosInstance.get(
-      `/immersion/problems?page=${currentPage}&limit=${itemsPerPage}`
+      `/immersion/immersionsAll/fetch-immersion-step?step=${step}&currentPage=${currentPage}&itemsPerPage=${itemsPerPage}`
     )
     if (response.status === 200) {
       return response.data

@@ -114,10 +114,11 @@ const Steps = () => {
                 <ImmersionTable
                   data={
                     step && step === 'step-1'
-                      ? filteredData
+                      ? myImmersion.industryProblems?.immersions
                       : myImmersion.experiences?.data
                   }
                   step={step}
+                  immersions={myImmersion.industryProblems?.immersions}
                 />
               )}
 
