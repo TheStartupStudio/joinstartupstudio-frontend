@@ -8,6 +8,7 @@ import configureAwsSdk from '../../../config/configAwsSdk'
 import { useForm } from '../../../hooks/useForm'
 import { useValidation } from '../../../hooks/useValidation'
 import { toast } from 'react-toastify'
+import { LtsButton } from '../../../ui/ContentItems'
 
 const changeUserPassword = async (cognito_Id, newPassword) => {
   const cognito = configureAwsSdk()
@@ -104,17 +105,16 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
               handleChange={handleChange}
             />
           </Col>
-          <Col md='12' className='d-flex justify-content-end'>
-            <Row className='m-0 col-5 justify-content-evenly'>
-              <SubmitButton
+          <Col md='12' className='d-flex justify-content-end pt-3'>
+            <Row className='m-0 col-5 justify-content-end'>
+              <LtsButton
                 text={'CANCEL'}
-                width={'100px'}
                 background={'transparent'}
                 color={'#000'}
                 border={'1px solid #ccc'}
                 onClick={() => onHide()}
               />
-              <SubmitButton
+              <LtsButton
                 text={
                   loading ? (
                     <span className='spinner-border spinner-border-sm' />
@@ -123,6 +123,7 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
                   )
                 }
                 background={'#52C7DE'}
+                className={'ms-2'}
                 color={'#fff'}
                 border={'none'}
                 onClick={submitHandler}

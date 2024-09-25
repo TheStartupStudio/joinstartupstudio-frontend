@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Col, Modal } from 'react-bootstrap'
+import { Col, Modal, Row } from 'react-bootstrap'
 import '../../MyStudents/index.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPeriodsStart } from '../../../redux/dashboard/Actions'
 import { CustomDropdown } from './ContentItems'
 import IntlMessages from '../../../utils/IntlMessages'
+import { LtsButton } from '../../../ui/ContentItems'
 
 const EditBulkModal = (props) => {
   const [toggle, setToggle] = useState(0)
@@ -191,23 +192,21 @@ const EditBulkModal = (props) => {
           </div>
         </div>
       </Modal.Body>
-      <div className='border-0 py-0 my-0 mb-2 position-relative'>
-        <div className='me-md-4 p-0 mb-3'>
-          <div className=''>
-            <button
-              className='float-end edit-account me-0'
-              disabled={props.loading || !data}
-              onClick={() => props.onSave(data)}
-            >
-              {props.loading ? (
-                <IntlMessages id='general.loading' />
-              ) : (
-                <span>SAVE CHANGES</span>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
+      <Row className='w-100  mb-2 justify-content-end'>
+        <LtsButton
+          text={
+            props.loading ? (
+              <IntlMessages id='general.loading' />
+            ) : (
+              <span>SAVE CHANGES</span>
+            )
+          }
+          background={'#52C7DE'}
+          color={'#fff'}
+          border={'none'}
+          onClick={() => props.onSave(data)}
+        />
+      </Row>
     </Modal>
   )
 }

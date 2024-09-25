@@ -10,6 +10,7 @@ import { Auth } from 'aws-amplify'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import csvToArrayLearners from '../../../CSVUpload/csvToArrayLearners'
+import { LtsButton } from '../../../../ui/ContentItems'
 
 const AddStudentBulkModal = ({ show, onHide, onSuccess }) => {
   const [csvLoading, setCsvLoading] = useState(false)
@@ -140,16 +141,15 @@ const AddStudentBulkModal = ({ show, onHide, onSuccess }) => {
             <LtsFileDropzone id='csvFile' onDrop={handleFileDrop} />
           </Col>
           <Col md='12' className='d-flex justify-content-end'>
-            <Row className='m-0 col-5 justify-content-evenly'>
-              <SubmitButton
+            <Row className='m-0 col-5 justify-content-end'>
+              <LtsButton
                 text={'CANCEL'}
-                width={'100px'}
                 background={'transparent'}
                 color={'#000'}
                 border={'1px solid #ccc'}
                 onClick={() => onHide()}
               />
-              <SubmitButton
+              <LtsButton
                 text={
                   csvLoading ? (
                     <span className='spinner-border spinner-border-sm' />
@@ -160,6 +160,7 @@ const AddStudentBulkModal = ({ show, onHide, onSuccess }) => {
                 background={'#52C7DE'}
                 color={'#fff'}
                 border={'none'}
+                className={'ms-2'}
                 onClick={
                   isUploaded
                     ? () => {

@@ -24,6 +24,7 @@ import { useValidation } from '../../../../hooks/useValidation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Certification1Badge from '../../../../assets/images/market-ready-1-badge.png'
 import Certification2Badge from '../../../../assets/images/market-ready-2-badge.png'
+import { LtsButton } from '../../../../ui/ContentItems'
 
 const StudentActionsModal = ({
   show,
@@ -479,16 +480,15 @@ const StudentActionsModal = ({
           </Row>
           {mode === 'add' ? (
             <Col md='12' className='d-flex justify-content-end'>
-              <Row className='m-0 col-5 justify-content-evenly'>
-                <SubmitButton
+              <Row className='m-0 col-5 justify-content-end'>
+                <LtsButton
                   text={'CANCEL'}
-                  width={'100px'}
                   background={'transparent'}
                   color={'#000'}
                   border={'1px solid #ccc'}
                   onClick={() => onHide()}
                 />
-                <SubmitButton
+                <LtsButton
                   onClick={submitHandler}
                   text={
                     loading ? (
@@ -498,6 +498,7 @@ const StudentActionsModal = ({
                     )
                   }
                   background={'#52C7DE'}
+                  className={'ms-2'}
                   color={'#fff'}
                   border={'none'}
                 />

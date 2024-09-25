@@ -31,7 +31,7 @@ const ActiveUsers = ({ universityId }) => {
   }, [universityId])
 
   return (
-    <InfoBox style={{ minHeight: '330px' }}>
+    <InfoBox style={{ minHeight: '330px', height: '330px' }}>
       {chartLoading ? (
         <div
           style={{ height: '300px' }}

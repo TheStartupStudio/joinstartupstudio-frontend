@@ -7,6 +7,7 @@ import { SubmitButton } from './ContentItems'
 import configureAwsSdk from '../../../config/configAwsSdk'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
+import { LtsButton } from '../../../ui/ContentItems'
 
 const deleteUser = async (cognito_Id) => {
   const cognito = configureAwsSdk()
@@ -82,7 +83,7 @@ const DeleteUserModal = ({ show, onHide, user, onSuccess }) => {
             </p>
           </Col>
           <Col md='12' className='d-flex justify-content-center'>
-            <SubmitButton
+            <LtsButton
               text={
                 loading ? (
                   <span className='spinner-border spinner-border-sm' />
@@ -90,7 +91,6 @@ const DeleteUserModal = ({ show, onHide, user, onSuccess }) => {
                   'YES, DELETE USER'
                 )
               }
-              width={'150px'}
               background={'#EE3C96'}
               color={'#FFF'}
               border={'1px solid #ccc'}
