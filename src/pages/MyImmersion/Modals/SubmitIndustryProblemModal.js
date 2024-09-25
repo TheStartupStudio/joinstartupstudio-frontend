@@ -113,7 +113,7 @@ const SubmitIndustryProblemModal = (props) => {
               />
               <div>
                 <p className='mb-1'>
-                  {props.ImmersionCompany?.name ?? props.currentCompanyName}{' '}
+                  {props.immersion.companyName ?? props.immersion.companyName}{' '}
                   Problem
                 </p>
                 <Textarea

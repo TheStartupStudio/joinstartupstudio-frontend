@@ -9,15 +9,12 @@ import {
   ProgramsFilter,
   TransferFilter
 } from './AgGridItems'
-import useModalState from '../MySchool/useModalState'
 import { SkillBox } from '../MySchool/ContentItems'
 import { useParams, useHistory } from 'react-router-dom'
-import Certification1Badge from '../../../assets/images/market-ready-1-badge.png'
-import Certification2Badge from '../../../assets/images/market-ready-2-badge.png'
-import StudentActionsModal from '../MySchool/Learners/StudentActionsModal'
+
 import HeaderActions from './HeaderActions'
 import AddImmersionModal from './AddImmersionModal'
-// import AddStudentBulkModal from '../MySchool/Learners/AddStudentBulkModal'
+import DeleteModal from './DeleteImmersionModal'
 
 const MyImmersion = ({
   programs,
@@ -30,7 +27,6 @@ const MyImmersion = ({
   usedIn
 }) => {
   const { user } = useSelector((state) => state.user.user)
-  // const [modals, setModalState] = useModalState()
 
   const [immersionStep, setImmersionStep] = useState()
   const [selectedInstructor, setSelectedInstructor] = useState(null)
@@ -38,13 +34,12 @@ const MyImmersion = ({
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSchoolFilter, setSelectedSchoolFilter] = useState(null)
-  const [selectedRows, setSelectedRows] = useState([])
+  const [selectedRows, setSelectedRows] = useState([]) // State to track selected rows
   const [rowData, setRowData] = useState([])
   const { instructorId } = useParams()
   const [viewExprience, setViewExprience] = useState()
+  const [viewDeleteModal, setViewDeleteModal] = useState()
   const history = useHistory()
-
-  console.log(viewExprience, 'viewExprience')
 
   useEffect(() => {
     if (instructorId || instructor_id) {
@@ -62,7 +57,6 @@ const MyImmersion = ({
 
     try {
       axiosInstance.get(url).then(({ data }) => {
-        console.log('dataImmersions', data)
         const formattedData = data.data.map((immersion) => ({
           ...immersion,
           status: immersion.status ? 'active' : 'unactive'
@@ -75,44 +69,28 @@ const MyImmersion = ({
     }
   }, [])
 
-  // const refreshStudents = useCallback(() => {
-  //   fetchImmersions()
-  // }, [fetchImmersions])
-
+  // Fetch immersions when the component mounts
   useEffect(() => {
     fetchImmersions()
   }, [fetchImmersions])
 
-  // useEffect(() => {
-  //   setLoading(true)
-  //   const fetchInstructors = async () => {
-  //     try {
-  //       const { data } = await axiosInstance.get('/users/instructors')
-
-  //       const formattedData = data.instructors.filter(
-  //         (instructor) => instructor.User !== null
-  //       )
-
-  //       setInstructors(formattedData)
-
-  //       setLoading(false)
-  //     } catch (error) {
-  //       console.error('Error fetching instructors:', error)
-  //       setLoading(false)
-  //     }
-  //   }
-
-  //   fetchInstructors()
-  // }, [])
+  const handleConfirmDelete = async (immersion) => {
+    try {
+      await axiosInstance.delete(`/immersion/immersionsAll/${immersion.id}`)
+      setViewDeleteModal(false) // Close the modal after deletion
+      fetchImmersions() // Re-fetch immersions
+    } catch (error) {
+      console.error('Error deleting Immersion:', error)
+    }
+  }
 
   const columnDefs = useMemo(() => {
     const baseColumnDefs = [
       {
         headerName: 'Company Name',
-        field: 'company_name', // Use the field name as per your data
+        field: 'company_name',
         flex: 2,
-        checkboxSelection: true
-        // Remove cellRenderer for now
+        checkboxSelection: true // Enable checkbox selection in this column
       },
       {
         field: 'status',
@@ -136,7 +114,7 @@ const MyImmersion = ({
       },
       {
         headerName: 'INDUSTRY',
-        field: 'industry', // Field name from your data
+        field: 'industry',
         flex: 2,
         cellRenderer: (params) => {
           return (
@@ -151,7 +129,7 @@ const MyImmersion = ({
       },
       {
         headerName: 'DESCRIPTION',
-        field: 'company_description', // Field name from your data
+        field: 'company_description',
         flex: 3,
         cellRenderer: (params) => {
           return (
@@ -176,24 +154,27 @@ const MyImmersion = ({
             user={user}
             handleViewStudent='immersionEditActionModal'
             setViewExprience={() => setViewExprience(immersion)}
+            setViewDeleteModal={() => setViewDeleteModal(immersion)}
             immersion={immersion}
-            // levels={levels}
-            // programs={programs}
-            // instructors={instructors}
-            // periods={periods}
-            onSuccess={null}
+            onSuccess={fetchImmersions} // Pass fetchImmersions function to refresh data after an action
           />
         )
       }
     })
 
     return baseColumnDefs
-  }, [justSearchable, periods, universities, levels, programs, instructors])
+  }, [
+    justSearchable,
+    periods,
+    universities,
+    levels,
+    programs,
+    instructors,
+    fetchImmersions
+  ])
 
   const filterData = useCallback((data, searchQuery, selectedSchoolFilter) => {
     return data?.filter((item) => {
-      console.log(item, 'datafilterItem')
-      console.log(searchQuery, 'searchQuery')
       const matchesSearchQuery =
         searchQuery === '' ||
         item.company_name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -220,16 +201,27 @@ const MyImmersion = ({
     }
   }
 
+  const handleCloseModal = () => {
+    setImmersionStep(null) // Close the add immersion modal
+    setViewExprience(null) // Close the view/edit immersion modal
+  }
+
   return (
     <div style={{ background: '#fff' }}>
+      {viewDeleteModal && (
+        <DeleteModal
+          onClose={() => setViewDeleteModal(false)} // Close the modal
+          onDelete={() => handleConfirmDelete(viewDeleteModal)} // Confirm deletion
+          title='Delete Immersion Experience'
+          message='Are you sure you want to delete this experience?'
+        />
+      )}
       <HeaderActions
         usedIn={usedIn || 'student'}
         tableTitle={tableTitle}
         lastDropdownProps={{
-          title: 'Add Immersion Oppurtunity',
+          title: 'Add Immersion Opportunity',
           onClick: (newValue) => {
-            console.log(newValue, 'newValue')
-
             setImmersionStep(newValue)
           }
         }}
@@ -242,7 +234,7 @@ const MyImmersion = ({
         selectedRows={selectedRows}
         periods={periods}
         programs={programs}
-        onSuccess={null}
+        onSuccess={fetchImmersions} // Add this line to refresh data after actions
       />
       <GridTable
         searchQuery={searchQuery}
@@ -253,27 +245,21 @@ const MyImmersion = ({
         loading={loading}
       />
 
-      {immersionStep && <AddImmersionModal />}
-      {viewExprience && <AddImmersionModal viewExprience={viewExprience} />}
-      {/* {modals.studentAddActionModal && (
-        <StudentActionsModal
-          show={modals.studentAddActionModal}
-          onHide={() => setModalState('studentAddActionModal', false)}
-          user={user}
-          universities={universities}
-          programs={programs}
-          levels={levels}
-          instructors={instructors}
-          periods={periods}
-          mode='add'
-          onSuccess={refreshStudents}
+      {immersionStep && (
+        <AddImmersionModal
+          onClose={handleCloseModal}
+          immersionStep={immersionStep}
+          onSuccess={fetchImmersions} // Pass fetchImmersions to refresh data
         />
-      )} */}
-      {/* <AddStudentBulkModal
-        show={modals.showAddStudentsBulkModal}
-        onHide={() => setModalState('showAddStudentsBulkModal', false)}
-        onSuccess={refreshStudents}
-      /> */}
+      )}
+      {viewExprience && (
+        <AddImmersionModal
+          viewExprience={viewExprience}
+          onClose={handleCloseModal}
+          immersionStep={immersionStep}
+          onSuccess={fetchImmersions} // Pass fetchImmersions to refresh data
+        />
+      )}
     </div>
   )
 }

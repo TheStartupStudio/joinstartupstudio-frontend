@@ -7,30 +7,33 @@ import {
   faArrowLeft,
   faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons'
-import {
-  FaPencilAlt,
-  FaCheck,
-  FaEye,
-  FaTrashAlt,
-  FaBackspace
-} from 'react-icons/fa'
+import { FaPencilAlt, FaCheck, FaEye } from 'react-icons/fa'
 
-const AddImmersionModal = ({ viewExprience, onClose }) => {
-  const [status, setStatus] = useState(viewExprience?.status === 'Active')
+const AddImmersionModal = ({
+  viewExprience,
+  onClose,
+  immersionStep,
+  onSuccess,
+  justView
+}) => {
+  console.log(viewExprience, 'viewExprience')
+  const [status, setStatus] = useState(viewExprience?.status === 'active')
   const [companyName, setCompanyName] = useState(
-    viewExprience?.company_name || ''
+    viewExprience?.company_name || viewExprience?.companyName || ''
   )
-  const [editingImmersion, setEditingImmersion] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false) // New state for delete confirmation
+  const [editingImmersion, setEditingImmersion] = useState(!viewExprience) // Start editing if no viewExprience
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [companyDescription, setCompanyDescription] = useState(
-    viewExprience?.company_description || ''
+    viewExprience?.company_description ||
+      viewExprience?.companyDescription ||
+      ''
   )
   const [industry, setIndustry] = useState(viewExprience?.industry || '')
   const [industryProblem, setIndustryProblem] = useState(
-    viewExprience?.industry_problem || ''
+    viewExprience?.industry_problem || viewExprience?.industryProblem || ''
   )
   const [researchGuidance, setResearchGuidance] = useState(
-    viewExprience?.research_guidance || ''
+    viewExprience?.research_guidance || viewExprience?.researchGuidance || ''
   )
 
   const toggleEditing = () => setEditingImmersion(!editingImmersion)
@@ -39,27 +42,30 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
 
   const handleSubmit = async () => {
     const formData = {
+      immersionId: viewExprience ? viewExprience.id : null,
       status: status ? 'Active' : 'Inactive',
       companyName,
       companyDescription,
       industry,
       industryProblem,
       researchGuidance,
-      step: 4
+      step: immersionStep ? immersionStep.value : 1 // Default step 1 if immersionStep is not provided
     }
 
     try {
       if (viewExprience) {
-        await axiosInstance.put(
-          `/immersion/immersionsAll/${viewExprience.id}`,
-          formData
-        )
+        // Update existing immersion
+        await axiosInstance.post(`/immersion/immersionsAll`, formData)
+        console.log('Immersion updated:', formData)
       } else {
+        // Create a new immersion
         await axiosInstance.post('/immersion/immersionsAll', formData)
+        console.log('New immersion created:', formData)
       }
-      console.log('Form Data Submitted:', formData)
+      onSuccess()
+      onClose() // Close the modal after submit
     } catch (err) {
-      console.log(err, 'Error in submission')
+      console.error('Error in submission:', err)
     }
   }
 
@@ -67,9 +73,10 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
     try {
       await axiosInstance.delete(`/immersion/immersionsAll/${viewExprience.id}`)
       console.log('Experience Deleted')
+      onSuccess()
       onClose() // Close modal after deletion
     } catch (err) {
-      console.log(err, 'Error in deletion')
+      console.error('Error in deletion:', err)
     }
   }
 
@@ -79,16 +86,41 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
         {/* Modal Header */}
         <div className='modal-header'>
           {viewExprience && (
-            <div className='portfolio-actions' onClick={toggleEditing}>
+            <div className='portfolio-actions'>
               {editingImmersion ? (
                 <>
-                  <FaCheck className={'action-box public-icon'} />
-                  <FaEye className={'action-box pencil-icon'} />
+                  <FaCheck
+                    className={'action-box public-icon'}
+                    onClick={handleSubmit} // Save changes to backend
+                    style={{ cursor: 'pointer' }}
+                    title='Save Changes'
+                  />
+                  {!justView && (
+                    <FaEye
+                      className={'action-box pencil-icon'}
+                      onClick={toggleEditing} // Switch to view-only mode
+                      style={{ cursor: 'pointer' }}
+                      title='Switch to View Mode'
+                    />
+                  )}
                 </>
               ) : (
                 <>
-                  <FaCheck className={'action-box public-icon'} />
-                  <FaPencilAlt className={'action-box pencil-icon'} />
+                  <FaCheck
+                    className={'action-box public-icon'}
+                    onClick={onClose} // Close the modal
+                    style={{ cursor: 'pointer' }}
+                    title='Close'
+                  />
+
+                  {!justView && (
+                    <FaPencilAlt
+                      className={'action-box pencil-icon'}
+                      onClick={toggleEditing} // Switch to edit mode
+                      style={{ cursor: 'pointer' }}
+                      title='Edit Experience'
+                    />
+                  )}
                 </>
               )}
             </div>
@@ -106,7 +138,7 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
                 ? editingImmersion
                   ? 'Edit Immersion Step 1: Industry Problem'
                   : 'View Immersion Step 1: Industry Problem'
-                : 'Add Immersion Step 1: Industry Problem'}
+                : immersionStep.name}
             </h5>
             <div className='status-toggle'>
               <span>Status</span>
@@ -131,7 +163,6 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
 
         {/* Modal Body */}
         <div className='modal-body'>
-          {/* Form Fields */}
           <div className='input-group'>
             <p className='input-group-title'>Company Details</p>
             <input
@@ -180,7 +211,7 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
 
         {/* Modal Footer */}
         <div className='modal-footer'>
-          {editingImmersion && (
+          {editingImmersion && viewExprience && (
             <>
               <div
                 className='delete-button'
@@ -188,8 +219,6 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
               >
                 <FontAwesomeIcon
                   icon={faExclamationTriangle}
-                  // onClick={() => setShowDeleteConfirm(false)} // Close confirmation modal
-                  // className='action-box'
                   style={{ cursor: 'pointer' }}
                 />
                 <span style={{ marginLeft: '5px' }}>Delete Experience</span>
@@ -197,8 +226,6 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
               <div className='cancel-edit' onClick={toggleEditing}>
                 <FontAwesomeIcon
                   icon={faArrowLeft}
-                  // onClick={() => setShowDeleteConfirm(false)} // Close confirmation modal
-                  // className='action-box'
                   style={{ cursor: 'pointer' }}
                 />
                 <span style={{ marginLeft: '5px' }}>Cancel Edits</span>
@@ -213,7 +240,7 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
           )}
           {!viewExprience && (
             <button className='add-button' onClick={handleSubmit}>
-              {'Add Experience'}
+              Add Experience
             </button>
           )}
         </div>
@@ -221,23 +248,48 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
         {/* Delete Confirmation Modal */}
         {showDeleteConfirm && (
           <div className='modal-overlay'>
-            <div className='modal-container'>
+            <div className='modal-container-delete'>
               <div className='modal-header'>
-                <FontAwesomeIcon
-                  icon={faArrowLeft}
-                  onClick={() => setShowDeleteConfirm(false)} // Close confirmation modal
-                  className='action-box'
-                  style={{ cursor: 'pointer' }}
-                />
-                <h5>Delete Immersion Experience</h5>
+                <div className='portfolio-actions'>
+                  <FontAwesomeIcon
+                    icon={faArrowLeft}
+                    onClick={() => setShowDeleteConfirm(false)} // Close confirmation modal
+                    className='action-box-delete'
+                    style={{
+                      cursor: 'pointer',
+                      fontSize: '20px',
+                      width: '45px'
+                    }}
+                  />
+                </div>
+
+                <h5 style={{ marginTop: '10px' }}>
+                  Delete Immersion Experience
+                </h5>
               </div>
-              <div className='modal-body'>
-                <p>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  borderTop: '1px solid black'
+                }}
+                className='modal-body-delete'
+              >
+                <p style={{ paddingTop: '25px' }}>
                   Are you sure you want to delete this experience? All
                   submissions will also be deleted.
                 </p>
               </div>
-              <div className='modal-footer'>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  border: 'none'
+                }}
+                className='modal-footer'
+              >
                 <button
                   className='delete-confirm-button'
                   onClick={handleDelete}
@@ -245,6 +297,7 @@ const AddImmersionModal = ({ viewExprience, onClose }) => {
                   YES, DELETE EXPERIENCE
                 </button>
                 <button
+                  style={{ border: 'none' }}
                   className='cancel-button'
                   onClick={() => setShowDeleteConfirm(false)}
                 >

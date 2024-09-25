@@ -6,7 +6,10 @@ import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
 import useModalState from './useModalState'
 import { ConfirmationModal } from '../../Modals/confirmationModal'
-import { DeactivateDialogModal } from '../../StudentsTable/deactivateDialogModal'
+import {
+  DeactivateDialogModal,
+  RemoveDialogModal
+} from './DeactiveImmersionModal'
 import { NextYearModal } from '../../StudentsTable/nextYearModal'
 import EditBulkModal from './EditBulkModal'
 
@@ -23,9 +26,12 @@ const HeaderActions = ({
   onSuccess
 }) => {
   const [modals, setModalState] = useModalState()
-  const [bulkEditingStudents, setBulkEditingStudents] = useState([])
+  // const [bulkEditingStudents, setBulkEditingStudents] = useState([])
+  const [bulkRemovingImmersions, setBulkremovingImmersions] = useState([])
   const [bulkNextYearStudents, setBulkNextYearStudents] = useState([])
-  const [bulkDeactivatingStudents, setBulkDeactivatingStudents] = useState([])
+  const [bulkDeactivatingImmersions, setBulkDeactivatingImmersions] = useState(
+    []
+  )
 
   const getId = (item) => (usedIn === 'instructor' ? item.User.id : item.id)
 
@@ -67,16 +73,17 @@ const HeaderActions = ({
   const handleBulkEditAction = () => {
     if (!selectedRows.length) return
 
-    setBulkEditingStudents(selectedRows.map(getId))
+    setBulkremovingImmersions(selectedRows.map(getId))
     setModalState('showBulkEditModal', true)
   }
-  const bulkEditStudents = async (options) => {
+  const bulkRemoveImmersions = async (options) => {
     setLoading(true)
 
     try {
-      await axiosInstance.post(`/instructor/bulk-update/`, {
-        studentsIds: bulkEditingStudents,
-        options: options
+      await axiosInstance.delete(`/immersion/immersionsAll/remove`, {
+        data: {
+          immersionIds: bulkRemovingImmersions // Send data under 'data' key for DELETE request
+        }
       })
 
       onSuccess()
@@ -92,15 +99,15 @@ const HeaderActions = ({
   const handleBulkDeactiveAction = () => {
     if (!selectedRows.length) return
 
-    setBulkDeactivatingStudents(selectedRows.map(getId))
+    setBulkDeactivatingImmersions(selectedRows.map(getId))
     setModalState('showBulkDeactivationModal', true)
   }
-  const bulkDeactivateStudents = async () => {
+  const bulkDeactivateImmersions = async () => {
     setLoading(true)
     try {
-      await axiosInstance.post('/instructor/bulk-update/', {
-        studentsIds: bulkDeactivatingStudents,
-        bulkDeactivate: true
+      await axiosInstance.patch('/immersion/immersionsAll/batch/status', {
+        immersionIds: bulkDeactivatingImmersions,
+        status: '0'
       })
       onSuccess()
       setModalState('showConfirmationModal', true)
@@ -207,7 +214,7 @@ const HeaderActions = ({
                   { name: 'Remove', value: 'remove' }
                 ]}
                 onClick={(newValue) => {
-                  newValue?.value === 'edit'
+                  newValue?.value === 'remove'
                     ? handleBulkEditAction()
                     : newValue?.value === 'deactivate'
                     ? handleBulkDeactiveAction()
@@ -221,22 +228,22 @@ const HeaderActions = ({
                 options={[
                   {
                     name: 'Step 1: Industry Problem',
-                    value: 'step-1',
+                    value: '1',
                     icon: ''
                   },
                   {
                     name: 'Step 2:Immersion Experience',
-                    value: 'step-2',
+                    value: '2',
                     icon: ''
                   },
                   {
                     name: 'Step 3: Internship',
-                    value: 'step-3',
+                    value: '3',
                     icon: ''
                   },
                   {
                     name: 'Step 4: Entry-Level Employment',
-                    value: 'step-4',
+                    value: '4',
                     icon: ''
                   }
                 ]}
@@ -251,39 +258,41 @@ const HeaderActions = ({
       <DeactivateDialogModal
         show={modals.showBulkDeactivationModal}
         onHide={() => setModalState('showBulkDeactivationModal', false)}
-        bulkDeactivateStudents={bulkDeactivateStudents}
+        bulkDeactivateImmersions={bulkDeactivateImmersions}
         deactivateLoading={modals.loading}
         handleAction={() => {
-          bulkDeactivateStudents()
-        }}
-      />
-      <NextYearModal
-        show={modals.showBulkNextYearModal}
-        onHide={() => setModalState('showBulkNextYearModal', false)}
-        bulkNextYear={bulkNextYear}
-        nextYearLoading={modals.loading}
-        handleAction={() => {
-          bulkNextYear()
+          bulkDeactivateImmersions()
         }}
       />
 
-      <EditBulkModal
+      {/* <RemoveDialogModal    show={modals.showBulkDeactivationModal}
+        onHide={() => setModalState('showBulkDeactivationModal', false)}
+        bulkDeactivateImmersions={bulkDeactivateImmersions}
+        deactivateLoading={modals.loading}
+        handleAction={() => {
+          bulkDeactivateImmersions()
+        }}
+      /> */}
+
+      <RemoveDialogModal
         show={modals.showBulkEditModal}
         onHide={() => setModalState('showBulkEditModal', false)}
-        bulkEditStudents={bulkEditStudents}
-        onSave={(options) => bulkEditStudents(options)}
+        bulkEditStudents={bulkRemovingImmersions}
+        handleAction={() => {
+          bulkRemoveImmersions()
+        }}
         levels={levels}
         onSuccess={onSuccess}
       />
-      {bulkEditingStudents?.length > 0 && (
+      {bulkRemovingImmersions?.length > 0 && (
         <>
           <ConfirmationModal
             show={modals.showConfirmationModal}
             onHide={() => {
               setModalState('showConfirmationModal', false)
-              setBulkEditingStudents([])
+              setBulkremovingImmersions([])
             }}
-            message={'Student(s) updated.'}
+            message={'Immersions removed'}
           />
         </>
       )}
@@ -299,15 +308,15 @@ const HeaderActions = ({
           />
         </>
       )}
-      {bulkDeactivatingStudents.length > 0 && (
+      {bulkDeactivatingImmersions.length > 0 && (
         <>
           <ConfirmationModal
             show={modals.showConfirmationModal}
             onHide={() => {
               setModalState('showConfirmationModal', false)
-              setBulkDeactivatingStudents([])
+              setBulkDeactivatingImmersions([])
             }}
-            message={'Student(s) deactivated.'}
+            message={'Immersion(s) deactivated.'}
           />
         </>
       )}

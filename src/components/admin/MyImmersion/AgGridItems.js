@@ -2,9 +2,18 @@ import {
   faGripLines,
   faKey,
   faUser,
-  faUserMinus
+  faUserMinus,
+  faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons'
+import {
+  FaPencilAlt,
+  FaCheck,
+  FaEye,
+  FaTrashAlt,
+  FaBackspace
+} from 'react-icons/fa'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import axiosInstance from '../../../utils/AxiosInstance'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 // import { useGridFilter } from 'ag-grid-react/lib/main'
 import { useGridFilter } from 'ag-grid-react'
@@ -16,6 +25,7 @@ import AddImmersionModal from './AddImmersionModal'
 // import DeleteUserModal from './DeleteUserModal'
 // import StudentActionsModal from './Learners/StudentActionsModal'
 // import TransferStudentsModal from './Learners/TransferStudentsModal'
+import DeleteModal from './DeleteImmersionModal'
 
 const CustomHeader = ({ displayName, options, handleOptionClick }) => {
   const [showDropdown, setShowDropdown] = useState(false)
@@ -491,42 +501,29 @@ const CustomSelect = ({
 
 const Actions = ({
   setViewExprience,
-
-  immersion
+  immersion,
+  setViewDeleteModal,
+  onSuccess
 }) => {
   const [modals, setModalState] = useModalState()
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
-  // const handleResetPassword = () => {
-  //   setModalState('resetPasswordModal', true)
-  // }
-  // const handleDeleteUser = () => {
-  //   setModalState('deleteUserModal', true)
-  // }
+  const handleDeleteExperience = () => {
+    setShowDeleteModal(true)
+  }
 
-  // const resetPasswordFromEdit = () => {
-  //   setModalState('editInstructorModal', false)
-  //   setTimeout(() => {
-  //     setModalState('resetPasswordModal', true)
-  //   }, 300)
-  // }
-  // const deleteUserFromEdit = () => {
-  //   setModalState('editInstructorModal', false)
-  //   setTimeout(() => {
-  //     setModalState('deleteUserModal', true)
-  //   }, 300)
-  // }
-  // const resetPasswordFromEditStudent = () => {
-  //   setModalState('studentEditActionModal', false)
-  //   setTimeout(() => {
-  //     setModalState('resetPasswordModal', true)
-  //   }, 300)
-  // }
-  // const deleteUserFromEditStudent = () => {
-  //   setModalState('studentEditActionModal', false)
-  //   setTimeout(() => {
-  //     setModalState('deleteUserModal', true)
-  //   }, 300)
-  // }
+  const handleConfirmDelete = async () => {
+    try {
+      // Call the delete endpoint to delete the immersion experience
+      await axiosInstance.delete(`/immersion/immersionsAll/${immersion.id}`)
+      console.log('Experience Deleted')
+      // Refresh or update your parent component data as needed
+      onSuccess()
+      setShowDeleteModal(false) // Close the modal after deletion
+    } catch (error) {
+      console.error('Error deleting experience:', error)
+    }
+  }
 
   return (
     <>
@@ -536,93 +533,34 @@ const Actions = ({
           onClick={() => setViewExprience(immersion)}
         >
           <a href='/my-school/learners' className='pe-1'>
-            <FontAwesomeIcon icon={faUser} style={{ fontSize: '16px' }} />
+            <FaEye style={{ fontSize: '16px', color: 'grey' }} />
           </a>
           <p className='m-0 pe-2'> View Experience</p>
         </div>
 
         <div
           className='action-item cursor-pointer'
-          // onClick={() => handleDeleteUser(true)}
+          onClick={handleDeleteExperience} // Show delete modal when clicked
         >
           <a href='/my-school/learners' className='pe-1'>
-            <FontAwesomeIcon icon={faUserMinus} style={{ fontSize: '16px' }} />
+            <FontAwesomeIcon
+              icon={faExclamationTriangle}
+              style={{ fontSize: '16px', color: 'grey' }}
+            />
           </a>
           <p className='m-0 pe-2'> Delete Experience</p>
         </div>
       </div>
 
-      {/* {modals.editInstructorModal && (
-        <AddInstructorModal
-          show={modals.editInstructorModal}
-          onHide={() => setModalState('editInstructorModal', false)}
-          user={user}
-          universities={universities}
-          programs={programs}
-          levels={levels}
-          mode='edit'
-          onSuccess={onSuccess}
-          resetPasswordFromEdit={resetPasswordFromEdit}
-          deleteUserFromEdit={deleteUserFromEdit}
+      {/* DeleteModal Integration */}
+      {showDeleteModal && (
+        <DeleteModal
+          onClose={() => setShowDeleteModal(false)} // Close the modal
+          onDelete={handleConfirmDelete} // Confirm deletion
+          title='Delete Immersion Experience'
+          message='Are you sure you want to delete this experience?'
         />
-      )} */}
-      {/* {modals.showAddInstructorModal && (
-        <AddInstructorModal
-          show={modals.showAddInstructorModal}
-          onHide={() => setModalState('showAddInstructorModal', false)}
-          user={user}
-          universities={universities}
-          programs={programs}
-          levels={levels}
-          instructors={instructors}
-          mode='add'
-          test={test}
-        />
-      )} */}
-
-      {/* {modals.studentEditActionModal && (
-        <StudentActionsModal
-          show={modals.studentEditActionModal}
-          onHide={() => setModalState('studentEditActionModal', false)}
-          user={user}
-          universities={universities}
-          programs={programs}
-          levels={levels}
-          periods={periods}
-          instructors={instructors}
-          mode='edit'
-          onSuccess={onSuccess}
-          resetPasswordFromEdit={resetPasswordFromEditStudent}
-          deleteUserFromEdit={deleteUserFromEditStudent}
-          transferHandler={transferHandler}
-        />
-      )} */}
-      {/* {modals.resetPasswordModal && (
-        <ResetPasswordModal
-          show={modals.resetPasswordModal}
-          onHide={() => setModalState('resetPasswordModal', false)}
-          user={user}
-          onSuccess={onSuccess}
-        />
-      )} */}
-      {/* {modals.deleteUserModal && (
-        <DeleteUserModal
-          show={modals.deleteUserModal}
-          onHide={() => setModalState('deleteUserModal', false)}
-          user={user}
-          instructors={instructors}
-          onSuccess={onSuccess}
-        />
-      )} */}
-      {/* {modals.trasnferStudentsModal && (
-        <TransferStudentsModal
-          show={modals.trasnferStudentsModal}
-          onHide={() => setModalState('trasnferStudentsModal', false)}
-          user={user}
-          periods={periods}
-          instructors={instructors}
-        />
-      )} */}
+      )}
     </>
   )
 }
