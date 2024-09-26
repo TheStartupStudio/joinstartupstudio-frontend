@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import useInboxContext from '../inboxContext'
 import { Accordion } from 'react-bootstrap'
 import '../index.css'
@@ -6,6 +6,7 @@ import MenuList from './menuList'
 import MenuOption from './menuOption'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { setBackButton } from '../../../redux/backButtonReducer'
 
 function InboxMenu() {
   const {
@@ -19,6 +20,16 @@ function InboxMenu() {
   const { isAdmin } = useSelector((state) => state.user.user)
   const location = useLocation()
   const [activeEventKey, setActiveEventKey] = useState('0')
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setBackButton(true, 'dashboard'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   useEffect(() => {
     const hash = location.hash.substring(1)
@@ -41,7 +52,7 @@ function InboxMenu() {
   }, [location, selectQuestionsMenu])
 
   return (
-    <div className="col-12 col-lg-3 inbox-menu">
+    <div className='col-12 col-lg-3 inbox-menu'>
       <h4>INBOX</h4>
       <Accordion activeKey={activeEventKey} onSelect={setActiveEventKey}>
         <MenuList

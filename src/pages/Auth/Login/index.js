@@ -11,7 +11,11 @@ import './index.css'
 import FormWrapper from './ui/FormWrapper'
 import CustomLoginInput from './ui/CustomLoginInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import {
+  faArrowLeft,
+  faArrowRight,
+  faBackward
+} from '@fortawesome/free-solid-svg-icons'
 import { Col, Row } from 'react-bootstrap'
 import { setLoginLoading } from '../../../redux/user/Actions'
 
@@ -88,13 +92,21 @@ function Login() {
 
   return (
     <div
-      className='container-fluid md-px-5 ps-md-5 login_container'
+      className='container-fluid md-px-5 ps-md-5 login_container position-relative'
       style={{ backgroundColor: '#e4e9f4' }}
     >
+      <a
+        href='/'
+        className=' d-flex align-items-center cursor-pointer'
+        style={{ position: 'absolute', top: '20px', left: '20px' }}
+      >
+        <FontAwesomeIcon icon={faArrowLeft} className='me-2' />
+        <h6 className='p-0 m-0'>Choose Login</h6>
+      </a>
       <Row className='m-0 p-0 ps-md-5 center-content'>
         <Col md='7' lg='6' xl='5' className='ms-sm-1'>
           <FormWrapper
-            className='col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4 login-form-resp'
+            className='col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4 login-form-resp '
             style={{ height: '60vh', minHeight: '60vh' }}
           >
             <FormattedMessage id='login.email' defaultMessage='login.email'>

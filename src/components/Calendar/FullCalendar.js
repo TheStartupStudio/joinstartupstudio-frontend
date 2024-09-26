@@ -273,7 +273,7 @@ const FullCalendarComponent = (props) => {
   const convertDate = (date) => {
     const inputDate = new Date(date)
     const day = inputDate.getDate()
-    const month = inputDate.toLocaleString('default', { month: 'long' })
+    const month = inputDate.toLocaleString('en-US', { month: 'long' })
     const year = inputDate.getFullYear()
 
     const formattedDate = `${month} ${day}`
