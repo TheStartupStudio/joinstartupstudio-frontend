@@ -218,17 +218,15 @@ const ImmersionTable = React.memo(({ data, step, immersions }) => {
           mode='add'
         />
       )}
-      {industryProblemModal && clickedImmersion && (
+      {/* {industryProblemModal && clickedImmersion && (
         <SubmitIndustryProblemModal
           show={industryProblemModal}
           immersion={clickedImmersion} // Pass the entire immersion object
           onHide={() => setIndustryProblemModal(false)}
-          problemID={problemId}
-          companyID={companyId}
-          problemIsSubmitted={problemIsSubmitted}
+      
           mode='add'
         />
-      )}
+      )} */}
     </>
   )
 })
