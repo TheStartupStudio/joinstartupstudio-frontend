@@ -27,7 +27,7 @@ const MyButton = ({ href, top, left, width, height }) => {
     <a
       href={href}
       style={{ ...buttonStyle(top, left, width, height) }}
-      className="hover-effect"
+      className='hover-effect'
     >
       START
     </a>
@@ -43,18 +43,20 @@ const MyImmersion = () => {
   const containerStyle = {
     position: 'relative',
     maxWidth: '100%',
-    height: 'auto',
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: '7%'
+    marginBottom: '7%',
+    background: 'white',
+    padding: '50px ',
+    boxShadow: ' 3px 3px 3px  3px #00000029'
   }
-
   return (
-    <div className="container-fluid iamr-page">
-      <div className="pt-4 ">
-        <h2 className="fw-bold">LTS IMMERSION</h2>
-        <p>
+    <div className='container-fluid iamr-page'>
+      <div className='pt-4 '>
+        <h2 className='immersion-page-title fw-bold'>LTS IMMERSION</h2>
+        <p className='main-immersion-desc'>
           Our Industry Partner organizations share their challenges with the LTS
           students so they can experience the reality of market-based problem
           solving while leveraging their personal development in the areas of
@@ -66,24 +68,25 @@ const MyImmersion = () => {
       <div style={containerStyle}>
         <img
           src={ImmersionImage}
-          alt="Background"
-          style={{ width: '100%', height: 'auto' }}
+          alt='Background'
+          style={{ width: '80%', height: 'auto' }}
         />
         <MyButton
-          href="/my-immersion/step-1"
-          top={19}
-          left={8}
-          width={11}
-          height={22}
+          href='/my-immersion/step-1'
+          top={24.5}
+          left={19}
+          width={8}
+          height={17}
         />
         <MyButton
-          href="/my-immersion/step-2"
-          top={19}
-          left={32}
-          width={11}
-          height={22}
+          // href='/my-immersion/step-2'
+          href='/spotlight'
+          top={24.5}
+          left={37}
+          width={8}
+          height={17}
         />
-        ;
+
         <p
           // href="/my-immersion/step-3"
           onClick={() =>
@@ -94,8 +97,8 @@ const MyImmersion = () => {
                 'You must first complete the prerequisites for this step before you can start'
             })
           }
-          style={buttonStyle(19, 55, 11, 22)}
-          className="hover-effect"
+          style={buttonStyle(24.5, 54.2, 8, 17)}
+          className='hover-effect'
         >
           START
         </p>
@@ -109,8 +112,8 @@ const MyImmersion = () => {
                 'You must first complete the prerequisites for this step before you can start'
             })
           }
-          style={buttonStyle(19, 79, 11, 22)}
-          className="hover-effect"
+          style={buttonStyle(24.5, 71.3, 8, 17)}
+          className='hover-effect'
         >
           START
         </p>

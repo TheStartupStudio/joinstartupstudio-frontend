@@ -95,13 +95,13 @@ const Steps = () => {
       ) : (
         <div className='container-fluid iamr-page'>
           <div className='pt-4'>
-            <h2 className='fw-bold'>{myImmersion.step?.title}</h2>
-            <p>{myImmersion.step?.subtitle}</p>
+            <h2 className='immersion-steps-title'>{myImmersion.step?.title}</h2>
+            <p className='main-immersion-desc'>{myImmersion.step?.subtitle}</p>
           </div>
 
           <hr className='m-0' />
           <div className='steps-container'>
-            <div style={{ background: '#fff' }}>
+            <div style={{ background: '#fff', padding: '1%' }}>
               <DropdownSelector
                 myImmersion={myImmersion}
                 industry={industry}
@@ -121,7 +121,6 @@ const Steps = () => {
                   immersions={myImmersion.industryProblems?.immersions}
                 />
               )}
-
               <CustomPagination
                 itemsPerPage={itemsPerPage}
                 totalItems={

@@ -119,14 +119,14 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'collapseExample'}>
-        <DropdownItem title={'PATHWAYS'} to={'/pathways'} />
-        <DropdownItem title={'IMMERSION'} to={'/my-immersion'} />
+        <DropdownItem title={'MY PATHWAYS'} to={'/pathways'} />
+        <DropdownItem title={'MY IMMERSION'} to={'/my-immersion'} />
         <DropdownItem
           disabled={true}
           title={'COURSE & CREDENTIALS'}
           to={'/course-credentials'}
         />
-        <DropdownItem title={'SPOTLIGHT'} to={'/spotlight'} />
+        {/* <DropdownItem title={'MY SPOTLIGHT'} to={'/spotlight'} /> */}
       </ParentDropdownItem>
       <ParentSidebarItem
         ariaControls='journals'
