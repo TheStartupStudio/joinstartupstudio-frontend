@@ -7,7 +7,7 @@ const SpotlightSimpleModal = (props) => {
       title={props.title}
       show={props.show}
       onHide={props.onHide}
-      className={`spotlight-simple-modal ${
+      className={`${props.className} spotlight-simple-modal ${
         props.boxShadow ? 'modal-shadow' : ''
       }`}
     >

@@ -8,6 +8,9 @@ import SpotlightSimpleModal from './SpotlightSimpleModal'
 import { UploadFileInput } from '../../../pages/MyImmersion/ContentItems'
 import { useForm } from '../../../hooks/useForm'
 import { useValidation } from '../../../hooks/useValidation'
+import { ParentButtonApply } from './ParentButtonApply'
+import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const SpotlightApplyModal = (props) => {
   const [loading, setLoading] = useState(false)
@@ -119,81 +122,91 @@ const SpotlightApplyModal = (props) => {
       onHide={props.onHide}
       classes={'spotlight-apply-modal'}
     >
-      <div className="row">
-        <div className="col-12 col-lg-6">
+      <div className='row'>
+        <div className='col-12 col-lg-6'>
           <input
-            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input border"
+            className='apply-button mt-2 mb-2 w-100 ps-2 py-3 pitch-input border'
             style={{ backgroundColor: '#fff' }}
-            type="text"
-            name="who_is_pitching"
+            type='text'
+            name='who_is_pitching'
             required
             onChange={(e) => handleChange(e)}
             placeholder={'Who is pitching?'}
           />
           <input
-            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-input border"
-            type="text"
-            name="product"
+            className='apply-button mt-2 mb-2 w-100 ps-2 py-3 pitch-input border'
+            type='text'
+            name='product'
             onChange={(e) => handleChange(e)}
             required
             placeholder={'What is your product or service called?'}
           />
           <textarea
-            className="mt-2 mb-2 w-100 ps-2 py-3 pitch-inputtextarea border"
-            type="text"
+            className='apply-button mt-2 mb-2 w-100 ps-2 py-3 pitch-inputtextarea border'
+            type='text'
             onChange={(e) => handleChange(e)}
             rows={5}
             required
-            name="describe"
+            name='describe'
             placeholder={'Briefly describe your product or service.'}
           />
           <textarea
-            className="mt-0 mb-2 w-100 ps-2 py-3 pitch-inputtextarea border"
-            type="text"
+            className='apply-button mt-0 mb-2 w-100 ps-2 py-3 pitch-inputtextarea border'
+            type='text'
             onChange={(e) => handleChange(e)}
             required
             rows={5}
-            name="outcome"
-            placeholder={
-              'What is the outcome that you are hoping for, once you’ve finished your pitch?'
-            }
+            name='outcome'
+            placeholder={'What type of membership are you applying for?'}
           />
+          <div className='parent-form-spotlight'>
+            <ParentButtonApply text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
+          </div>
         </div>
-        <div className="col-12 col-lg-6">
+        <div className='apply-inputs col-12 col-lg-6'>
+          <UploadFileInput
+            filename={formData.parentGuardianApprovalForm}
+            placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
+            name='parentGuardianApprovalForm'
+            onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
+            mode={props.mode}
+          />
+
           <UploadFileInput
             filename={formData.Pitch_Deck.name}
             placeholder={'Upload Pitch Deck (PDF)'}
-            name="Pitch_Deck"
+            name='Pitch_Deck'
             onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
             mode={'new'}
           />
           <UploadFileInput
             filename={formData.Business_Plan.name}
             placeholder={'Upload Business Plan (PDF)'}
-            name="Business_Plan"
+            name='Business_Plan'
             onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
             mode={'new'}
           />
-          <div className="mt-2">
-            <p className="span-subscribed-to-the-Learn-to-Start">
+          <div className='mt-2'>
+            <p className='span-subscribed-to-the-Learn-to-Start'>
               You must be subscribed to the Learn to Start platform for a
-              minimum of 1 year prior to applying. Applicants must be 18 years
-              old or have a parent/guardian form to be considered for Spotlight.
+              minimum of one (1) year prior to applying. Applicants must be 18
+              years old or have a parent/guardian form to be considered for
+              Spotlight.
             </p>
           </div>
-          <div className="d-flex align-items-center">
+          <div className='d-flex align-items-center'>
             <input
-              type="checkbox"
-              name="agree"
-              className="form-check-input spotlight-checkbox"
+              type='checkbox'
+              name='agree'
+              className='form-check-input spotlight-checkbox'
               onChange={(e) => {
                 setAgreed(e.target.value)
               }}
             />
-            <span className="term ps-3">
+            <span className='term ps-3'>
               I agree to the Spotlight{' '}
               <span
-                className="text-blue blue-text font-bold"
+                className='text-blue blue-text font-bold'
                 style={{ cursor: 'pointer' }}
                 onClick={() => openSimpleSpotlightModal('termsAndConditions')}
               >
@@ -203,10 +216,10 @@ const SpotlightApplyModal = (props) => {
           </div>
         </div>
       </div>
-      <div className="w-100 pb-5">
-        <div className="row float-end">
+      <div className='w-100 pb-5'>
+        <div className='row float-end'>
           <button
-            className="edit-account me-5"
+            className='apply-save-button edit-account me-5'
             disabled={loading}
             onClick={() => {
               setLoading(true)
@@ -214,10 +227,10 @@ const SpotlightApplyModal = (props) => {
             }}
           >
             {loading ? (
-              <span className="spinner-border spinner-border-sm" />
+              <span className='spinner-border spinner-border-sm' />
             ) : (
               // <IntlMessages id="general.save" />
-              <>Submit</>
+              <>SAVE</>
             )}
           </button>
         </div>

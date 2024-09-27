@@ -56,7 +56,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
 
         Cell: ({ cell }) => (
           <Button
-            className="bg-transparent text-info border-info"
+            className='bg-transparent text-info border-info'
             onClick={() => {
               const { companyName, problemDescription } = cell.row.original
 
@@ -79,7 +79,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         accessor: 'completionDate',
         disableResizing: true,
         Cell: ({ value }) => (
-          <div className="text-center">
+          <div className='text-center'>
             {value ? formatDateString(value) : 'N/A'}
           </div>
         )
@@ -90,7 +90,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         disableResizing: true,
         Cell: ({ cell }) => (
           <button
-            className="submit-btn"
+            className='submit-btn'
             style={{ backgroundColor: '#99cc33', color: 'white' }}
             onClick={() => {
               const { companyName, problemID, companyID, submitted } =
@@ -122,7 +122,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         accessor: 'problemDescription',
         Cell: ({ cell }) => (
           <Button
-            className="bg-transparent text-info border-info"
+            className='bg-transparent text-info border-info'
             onClick={() => {
               const { companyName, problemDescription } = cell.row.original
 
@@ -143,7 +143,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         Header: 'Date of Application',
         accessor: 'dateOfApplication',
         Cell: ({ value }) => (
-          <div className="text-center">
+          <div className='text-center'>
             {value ? formatDateString(value) : 'N/A'}
           </div>
         )
@@ -152,7 +152,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         Header: 'Date of Immersion Experience',
         accessor: 'dateOfImmersionExperience',
         Cell: ({ value }) => (
-          <div className="text-center">
+          <div className='text-center'>
             {value ? formatDateString(value) : 'N/A'}
           </div>
         )
@@ -163,7 +163,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         width: 200,
         Cell: ({ cell }) => (
           <button
-            className="submit-btn"
+            className='submit-btn'
             style={{ backgroundColor: '#99cc33', color: 'white' }}
             onClick={() => {
               const { companyName, problemID, companyID } = cell.row.original
@@ -190,7 +190,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
 
   return (
     <>
-      <table {...getTableProps()} className="immersion-table">
+      <table {...getTableProps()} className='immersion-table'>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -229,7 +229,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
           currentCompanyName={currentCompanyName}
           problemDescription={currentProblemDescription}
           onHide={() => setExperienceModal(false)}
-          mode="add"
+          mode='add'
         />
       )}
       {industryProblemModal && (
@@ -240,7 +240,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
           problemID={problemId}
           companyID={companyId}
           problemIsSubmitted={problemIsSubmitted}
-          mode="add"
+          mode='add'
         />
       )}
     </>
