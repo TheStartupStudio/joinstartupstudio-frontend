@@ -89,8 +89,10 @@ const SubmitIndustryProblemModal = (props) => {
       {loading ? (
         <LoadingAnimation show={true} />
       ) : (
-        <Modal.Body style={{ padding: '3%' }}>
-          <Modal.Header>
+        <Modal.Body
+          style={{ padding: '3%', display: 'flex', flexDirection: 'column' }}
+        >
+          <Modal.Header style={{ flexDirection: 'row' }}>
             <Modal.Title>
               {props.mode === 'edit' ? 'USER SOLUTION' : 'SUBMIT YOUR SOLUTION'}
             </Modal.Title>
@@ -134,13 +136,6 @@ const SubmitIndustryProblemModal = (props) => {
             <Col className='d-flex flex-column justify-content-between'>
               <div>
                 <UploadFileInput
-                  filename={formData.parentGuardianApprovalForm}
-                  placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
-                  name='parentGuardianApprovalForm'
-                  onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
-                  mode={props.mode}
-                />
-                <UploadFileInput
                   filename={formData.pitchDeck}
                   placeholder={'Upload Pitch Deck (PDF)'}
                   name='pitchDeck'
@@ -171,9 +166,6 @@ const SubmitIndustryProblemModal = (props) => {
                 }
                 checked={formData.termsAndConditions}
               />
-            </Col>
-
-            <Col className='d-flex justify-content-end'>
               {props.mode === 'edit' ? (
                 <div className='d-flex'>
                   <SubmitButton
