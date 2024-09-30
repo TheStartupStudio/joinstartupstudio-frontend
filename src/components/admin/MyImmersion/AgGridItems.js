@@ -503,30 +503,21 @@ const Actions = ({
   setViewExprience,
   immersion,
   setViewDeleteModal,
-  onSuccess
+  onSuccess,
+  handleConfirmDeleteFrom,
+  setShowDeleteModal,
+  setDeleteImmersion
 }) => {
   const [modals, setModalState] = useModalState()
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   const handleDeleteExperience = () => {
     setShowDeleteModal(true)
-  }
-
-  const handleConfirmDelete = async () => {
-    try {
-      // Call the delete endpoint to delete the immersion experience
-      await axiosInstance.delete(`/immersion/immersionsAll/${immersion.id}`)
-      console.log('Experience Deleted')
-      // Refresh or update your parent component data as needed
-      onSuccess()
-      setShowDeleteModal(false) // Close the modal after deletion
-    } catch (error) {
-      console.error('Error deleting experience:', error)
-    }
+    setDeleteImmersion(immersion)
+    // setViewExprience(immersion)
   }
 
   return (
-    <>
+    <div>
       <div className='d-flex align-items-center agGrid__actions'>
         <div
           className='action-item cursor-pointer'
@@ -553,15 +544,7 @@ const Actions = ({
       </div>
 
       {/* DeleteModal Integration */}
-      {showDeleteModal && (
-        <DeleteModal
-          onClose={() => setShowDeleteModal(false)} // Close the modal
-          onDelete={handleConfirmDelete} // Confirm deletion
-          title='Delete Immersion Experience'
-          message='Are you sure you want to delete this experience?'
-        />
-      )}
-    </>
+    </div>
   )
 }
 

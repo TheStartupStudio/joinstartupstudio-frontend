@@ -16,25 +16,70 @@ const AddImmersionModal = ({
   onSuccess,
   justView
 }) => {
-  console.log(viewExprience, 'viewExprience')
+  // Initialize states for form fields
   const [status, setStatus] = useState(viewExprience?.status === 'active')
-  const [companyName, setCompanyName] = useState(
-    viewExprience?.company_name || viewExprience?.companyName || ''
-  )
+  const [companyName, setCompanyName] = useState('')
+  const [companyDescription, setCompanyDescription] = useState('')
+  const [industry, setIndustry] = useState('')
+  const [industryProblem, setIndustryProblem] = useState('')
+  const [researchGuidance, setResearchGuidance] = useState('')
+  const [immersionStepName, setImmersionStepName] = useState('')
+
   const [editingImmersion, setEditingImmersion] = useState(!viewExprience) // Start editing if no viewExprience
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const [companyDescription, setCompanyDescription] = useState(
-    viewExprience?.company_description ||
+
+  // Store initial values
+  const [initialValues, setInitialValues] = useState({
+    status: viewExprience?.status === 'active',
+    companyName:
+      viewExprience?.company_name || viewExprience?.companyName || '',
+    companyDescription:
+      viewExprience?.company_description ||
       viewExprience?.companyDescription ||
-      ''
-  )
-  const [industry, setIndustry] = useState(viewExprience?.industry || '')
-  const [industryProblem, setIndustryProblem] = useState(
-    viewExprience?.industry_problem || viewExprience?.industryProblem || ''
-  )
-  const [researchGuidance, setResearchGuidance] = useState(
-    viewExprience?.research_guidance || viewExprience?.researchGuidance || ''
-  )
+      '',
+    industry: viewExprience?.industry || '',
+    industryProblem:
+      viewExprience?.industry_problem || viewExprience?.industryProblem || '',
+    researchGuidance:
+      viewExprience?.research_guidance || viewExprience?.researchGuidance || ''
+  })
+
+  // Set the form values when the component mounts or when `viewExprience` changes
+  useEffect(() => {
+    let immersionStep = '' // Move this outside the if block
+
+    if (viewExprience) {
+      setStatus(initialValues.status)
+      setCompanyName(initialValues.companyName)
+      setCompanyDescription(initialValues.companyDescription)
+      setIndustry(initialValues.industry)
+      setIndustryProblem(initialValues.industryProblem)
+      setResearchGuidance(initialValues.researchGuidance)
+
+      if (viewExprience.step === 1) {
+        immersionStep = 'Step 1: Industry Problem'
+      } else if (viewExprience.step === 2) {
+        immersionStep = 'Step 2: Immersion Experience'
+      } else if (viewExprience.step === 3) {
+        immersionStep = 'Step 3: Internship'
+      } else if (viewExprience.step === 4) {
+        immersionStep = 'Step 4: Entry-Level Employment'
+      }
+    }
+
+    setImmersionStepName(immersionStep)
+  }, [initialValues, viewExprience])
+
+  // Function to reset fields to their original values
+  const resetFields = () => {
+    setStatus(initialValues.status)
+    setCompanyName(initialValues.companyName)
+    setCompanyDescription(initialValues.companyDescription)
+    setIndustry(initialValues.industry)
+    setIndustryProblem(initialValues.industryProblem)
+    setResearchGuidance(initialValues.researchGuidance)
+    setEditingImmersion(false) // Switch back to view mode
+  }
 
   const toggleEditing = () => setEditingImmersion(!editingImmersion)
 
@@ -56,11 +101,9 @@ const AddImmersionModal = ({
       if (viewExprience) {
         // Update existing immersion
         await axiosInstance.post(`/immersion/immersionsAll`, formData)
-        console.log('Immersion updated:', formData)
       } else {
         // Create a new immersion
         await axiosInstance.post('/immersion/immersionsAll', formData)
-        console.log('New immersion created:', formData)
       }
       onSuccess()
       onClose() // Close the modal after submit
@@ -72,7 +115,7 @@ const AddImmersionModal = ({
   const handleDelete = async () => {
     try {
       await axiosInstance.delete(`/immersion/immersionsAll/${viewExprience.id}`)
-      console.log('Experience Deleted')
+
       onSuccess()
       onClose() // Close modal after deletion
     } catch (err) {
@@ -133,13 +176,7 @@ const AddImmersionModal = ({
               width: '100%'
             }}
           >
-            <h5>
-              {viewExprience
-                ? editingImmersion
-                  ? 'Edit Immersion Step 1: Industry Problem'
-                  : 'View Immersion Step 1: Industry Problem'
-                : immersionStep.name}
-            </h5>
+            <h5>{viewExprience ? immersionStepName : immersionStep.name}</h5>
             <div className='status-toggle'>
               <span>Status</span>
               <span style={{ fontSize: '12px', color: 'grey' }}>
@@ -223,7 +260,7 @@ const AddImmersionModal = ({
                 />
                 <span style={{ marginLeft: '5px' }}>Delete Experience</span>
               </div>
-              <div className='cancel-edit' onClick={toggleEditing}>
+              <div className='cancel-edit' onClick={resetFields}>
                 <FontAwesomeIcon
                   icon={faArrowLeft}
                   style={{ cursor: 'pointer' }}

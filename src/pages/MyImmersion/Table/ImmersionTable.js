@@ -31,9 +31,9 @@ const ImmersionTable = React.memo(({ data, step, immersions }) => {
 
         researchGuidance: item.research_guidance,
 
-        completionDate: item.completion_date,
-        dateOfApplication: item.dateOfApplication,
-        dateOfImmersionExperience: item.dateOfImmersionExperience
+        completionDate: 'March 1st',
+        dateOfApplication: 'March 1st',
+        dateOfImmersionExperience: 'March 1st'
       }
       return commonData
     })
@@ -72,11 +72,7 @@ const ImmersionTable = React.memo(({ data, step, immersions }) => {
         Header: 'Completion Date for Solution',
         accessor: 'completionDate',
         disableResizing: true,
-        Cell: ({ value }) => (
-          <div className='text-center'>
-            {value ? formatDateString(value) : 'N/A'}
-          </div>
-        )
+        Cell: ({ value }) => <div className='text-center'>{'March 1st'}</div>
       },
       {
         Header: '',
@@ -218,15 +214,15 @@ const ImmersionTable = React.memo(({ data, step, immersions }) => {
           mode='add'
         />
       )}
-      {/* {industryProblemModal && clickedImmersion && (
+
+      {industryProblemModal && clickedImmersion && (
         <SubmitIndustryProblemModal
           show={industryProblemModal}
           immersion={clickedImmersion} // Pass the entire immersion object
           onHide={() => setIndustryProblemModal(false)}
-      
           mode='add'
         />
-      )} */}
+      )}
     </>
   )
 })

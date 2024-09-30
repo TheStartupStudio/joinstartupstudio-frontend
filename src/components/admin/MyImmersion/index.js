@@ -39,6 +39,8 @@ const MyImmersion = ({
   const { instructorId } = useParams()
   const [viewExprience, setViewExprience] = useState()
   const [viewDeleteModal, setViewDeleteModal] = useState()
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [deleteImmersion, setDeleteImmersion] = useState(null)
   const history = useHistory()
 
   useEffect(() => {
@@ -74,10 +76,12 @@ const MyImmersion = ({
     fetchImmersions()
   }, [fetchImmersions])
 
-  const handleConfirmDelete = async (immersion) => {
+  const handleConfirmDelete = async () => {
     try {
-      await axiosInstance.delete(`/immersion/immersionsAll/${immersion.id}`)
-      setViewDeleteModal(false) // Close the modal after deletion
+      await axiosInstance.delete(
+        `/immersion/immersionsAll/${deleteImmersion.id}`
+      )
+      setShowDeleteModal(false) // Close the modal after deletion
       fetchImmersions() // Re-fetch immersions
     } catch (error) {
       console.error('Error deleting Immersion:', error)
@@ -155,6 +159,8 @@ const MyImmersion = ({
             handleViewStudent='immersionEditActionModal'
             setViewExprience={() => setViewExprience(immersion)}
             setViewDeleteModal={() => setViewDeleteModal(immersion)}
+            setShowDeleteModal={setShowDeleteModal}
+            setDeleteImmersion={() => setDeleteImmersion(immersion)}
             immersion={immersion}
             onSuccess={fetchImmersions} // Pass fetchImmersions function to refresh data after an action
           />
@@ -208,14 +214,15 @@ const MyImmersion = ({
 
   return (
     <div style={{ background: '#fff' }}>
-      {viewDeleteModal && (
-        <DeleteModal
-          onClose={() => setViewDeleteModal(false)} // Close the modal
-          onDelete={() => handleConfirmDelete(viewDeleteModal)} // Confirm deletion
-          title='Delete Immersion Experience'
-          message='Are you sure you want to delete this experience?'
-        />
-      )}
+      {viewDeleteModal ||
+        (showDeleteModal && (
+          <DeleteModal
+            onClose={() => setShowDeleteModal(false)} // Close the modal
+            onDelete={() => handleConfirmDelete(viewExprience)} // Confirm deletion
+            title='Delete Immersion Experience'
+            message='Are you sure you want to delete this experience?'
+          />
+        ))}
       <HeaderActions
         usedIn={usedIn || 'student'}
         tableTitle={tableTitle}

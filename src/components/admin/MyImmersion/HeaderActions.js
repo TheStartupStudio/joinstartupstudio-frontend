@@ -191,10 +191,10 @@ const HeaderActions = ({
           </Col>
         )}
 
-        <Col md='4'></Col>
+        <Col md='3'></Col>
 
         <Col
-          md='4'
+          md='3'
           className={`${
             usedIn === 'reports' ? 'd-flex justify-content-end pe-0' : ''
           }`}
@@ -206,7 +206,7 @@ const HeaderActions = ({
         </Col>
         {usedIn !== 'reports' && (
           <>
-            <Col className='d-flex justify-content-end'>
+            <Col md='3' className='d-flex justify-content-end'>
               <CustomDropdown
                 title='Bulk Actions'
                 options={[

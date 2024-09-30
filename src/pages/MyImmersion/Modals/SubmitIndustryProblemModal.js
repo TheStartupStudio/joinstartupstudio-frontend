@@ -22,6 +22,7 @@ import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
 
 const SubmitIndustryProblemModal = (props) => {
+  console.log(props, 'SubmitIndustryProblemModal')
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.user.user)
   const { loading, industryProblems } = useSelector(
@@ -38,6 +39,7 @@ const SubmitIndustryProblemModal = (props) => {
     submissionDate: new Date()
   }
 
+  console.log(props, 'propsSubmitIndustryProblemModal')
   useEffect(() => {
     if (props.mode === 'edit') {
       dispatch(
@@ -112,9 +114,14 @@ const SubmitIndustryProblemModal = (props) => {
                 name={props.mode === 'edit' ? props.User.name : user?.name}
               />
               <div>
+                {console.log(props, 'propssubmit')}
+
                 <p className='mb-1'>
-                  {props.immersion.companyName ?? props.immersion.companyName}{' '}
-                  Problem
+                  {props.immersion?.companyName
+                    ? props.immersion.companyName
+                    : props.user_industry_solution?.company_name
+                    ? props.user_industry_solution?.company_name
+                    : ''}{' '}
                 </p>
                 <Textarea
                   placeholder={'Briefly describe solution'}
@@ -165,9 +172,7 @@ const SubmitIndustryProblemModal = (props) => {
                 checked={formData.termsAndConditions}
               />
             </Col>
-            <Col>
-              <ParentGuardianButton text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
-            </Col>
+
             <Col className='d-flex justify-content-end'>
               {props.mode === 'edit' ? (
                 <div className='d-flex'>
