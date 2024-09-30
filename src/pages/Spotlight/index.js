@@ -18,7 +18,7 @@ import {
 import Video from '../../components/Video'
 import '../../assets/css/media.css'
 import './index.css'
-import spotlightBulb from '../../assets/images/Group 3885/Group 3885@2x.png'
+import spotlightBulb from '../../assets/images/Immersion/SpotlightBulbImg2.png'
 import checkmark from '../../assets/images/checkmark.svg'
 
 function StartupLive() {
@@ -436,10 +436,10 @@ function StartupLive() {
                   <div className='apply-title'>
                     <img
                       src={spotlightBulb}
-                      width={'55px'}
+                      width={'100%'}
                       height={'55px'}
                     ></img>
-                    <p
+                    {/* <p
                       style={{
                         fontSize: '30px',
                         marginTop: '15px',
@@ -447,7 +447,7 @@ function StartupLive() {
                       }}
                     >
                       SPOTLIGHT®
-                    </p>
+                    </p> */}
                   </div>
                   <SpotlightApplyBtn
                     type={'applyNow'}
@@ -463,7 +463,7 @@ function StartupLive() {
               <Row className='spot-archive-wrapper'>
                 <Row>
                   <div>
-                    <div className='d-flex justify-content-between guidance-videos-top mt-5 guidance-encouragement-page-titles '>
+                    <div className='d-flex justify-content-between guidance-videos-top  guidance-encouragement-page-titles '>
                       <h3 className='spot-archive-title'>Spotlight Archive</h3>
                       <div className={'d-flex align-items-end  blue-text'}>
                         View all

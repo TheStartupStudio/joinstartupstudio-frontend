@@ -115,8 +115,8 @@
 .comp-apply-container {
     margin-top: 30px;
     margin-left: 10px;
-    padding-top: 2px;
-    padding-bottom: 2px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     width: 98.5%;
     border-radius: 10px;
     background-color: #fff;
@@ -318,4 +318,20 @@
 
 .apply-save-button {
     border-radius: 10px !important;
+}
+
+.spot-archive-wrapper {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-left: 1px;
+    margin-right: 0px;
+    padding-bottom: 20px;
+}
+
+.spot-archive-title {
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    margin-top: 20px;
 }
