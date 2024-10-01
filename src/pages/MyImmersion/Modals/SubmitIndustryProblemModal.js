@@ -136,19 +136,21 @@ const SubmitIndustryProblemModal = (props) => {
             <Col className='d-flex flex-column justify-content-between'>
               <div>
                 <UploadFileInput
-                  filename={formData.pitchDeck}
+                  filename={formData.pitchDeck?.name || ''}
                   placeholder={'Upload Pitch Deck (PDF)'}
                   name='pitchDeck'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
                 />
                 <UploadFileInput
-                  filename={formData.pitchVideo}
+                  filename={formData.pitchVideo?.name || ''}
                   placeholder={'Upload Pitch Video'}
                   name='pitchVideo'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
+                  accept='video/*' // Pass the accept attribute to restrict uploads to video files
                 />
+
                 <p style={{ fontSize: '11px' }}>
                   You must be subscribed to the Learn to Start platform for a
                   minimum of a 1 year prior applying. Applicants must be 18

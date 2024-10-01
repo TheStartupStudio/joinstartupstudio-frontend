@@ -46,7 +46,7 @@ const UploadFileInput = ({ filename, placeholder, name, onChange, mode }) => {
           type='file'
           id='inputGroupFile'
           name={name}
-          accept='application/pdf'
+          accept='application/pdf, video/*'
           className='file-input'
           onChange={onChange}
         />
