@@ -41,7 +41,7 @@ function InboxMenu() {
   }, [location, selectQuestionsMenu])
 
   return (
-    <div className="col-12 col-lg-3 inbox-menu">
+    <div className='col-12 col-lg-3 inbox-menu'>
       <h4>INBOX</h4>
       <Accordion activeKey={activeEventKey} onSelect={setActiveEventKey}>
         <MenuList
@@ -83,7 +83,7 @@ function InboxMenu() {
           <MenuOption
             allowedToShow={true}
             questionMenu={'immersion_experience_applications'}
-            title={'IMMERSION APPLICATIONS'}
+            title={'SPOTLIGHT APPLICATIONS'}
             categoryOption={immersionExperiences?.unreadCount}
           />
           {/* <MenuOption

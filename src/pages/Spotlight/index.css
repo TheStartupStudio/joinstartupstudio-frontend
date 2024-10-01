@@ -19,9 +19,11 @@
     height: 100%;
 }
 
+
 .spotlight-header {
     padding: 20px;
     padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .spotlight-main-btns {
@@ -85,6 +87,11 @@
 
     .spotlight-btn-desc {
         top: -40px !important;
+    }
+
+    .comp-apply-container {
+        display: flex;
+        flex-direction: column;
     }
 }
 
@@ -334,4 +341,9 @@
     font-weight: 500 !important;
     font-size: 14px !important;
     margin-top: 20px;
+}
+
+
+.spotlight-archive-view-btn {
+    background-color: transparent;
 }

@@ -49,18 +49,18 @@ function Ticket({
       >
         <img
           src={ticket.User.profile_image ? ticket.User.profile_image : imgTest}
-          alt="profile"
-          className="rounded-circle"
+          alt='profile'
+          className='rounded-circle'
         />
-        <div className="ticket-information d-flex flex-column mx-2 min-w-0">
-          <h5 className="from">{ticket.User.name}</h5>
-          <p className="subject">
-            Subject: <span className="fw-bold"> {ticket.subject} </span>
+        <div className='ticket-information d-flex flex-column mx-2 min-w-0'>
+          <h5 className='from'>{ticket.User.name}</h5>
+          <p className='subject'>
+            Subject: <span className='fw-bold'> {ticket.subject} </span>
           </p>
-          <p className="last-message">{ticket.TicketAnswers?.message}</p>
+          <p className='last-message'>{ticket.TicketAnswers?.message}</p>
         </div>
-        <div className="ticket-status d-flex align-items-center">
-          <p className="my-auto pe-2" style={{ color: '#ccc' }}>
+        <div className='ticket-status d-flex align-items-center'>
+          <p className='my-auto pe-2' style={{ color: '#ccc' }}>
             {ticket.type === 'industry_problem'
               ? ticket.user_industry_solution.status === 'approved'
                 ? 'Application Approved'
@@ -75,7 +75,7 @@ function Ticket({
                 : 'Application Returned'
               : null}
           </p>
-          <p className="my-auto pl-2">
+          <p className='my-auto pl-2'>
             {beautifulDateFormat(
               ticket.TicketAnswers?.createdAt ?? ticket.createdAt
             )}
@@ -103,7 +103,7 @@ function Ticket({
           show={industryProblemModal}
           onHide={() => setIndustryProblemModal(false)}
           User={ticket.User}
-          mode="edit"
+          mode='edit'
           updateUserSolutionStatus={updateUserSolutionStatus}
         />
       )}
@@ -113,7 +113,7 @@ function Ticket({
           show={submitExperienceModal}
           onHide={() => setSubmitExperienceModal(false)}
           User={ticket.User}
-          mode="edit"
+          mode='edit'
           updateUserSolutionStatus={updateUserSolutionStatus}
         />
       )}

@@ -22,12 +22,12 @@ const buttonStyle = (top, left, width, height) => ({
   border: '8px solid transparent'
 })
 
-const MyButton = ({ href, top, left, width, height }) => {
+const MyButton = ({ href, top, left, width, height, className }) => {
   return (
     <a
       href={href}
       style={{ ...buttonStyle(top, left, width, height) }}
-      className='hover-effect'
+      className={className}
     >
       START
     </a>
@@ -70,8 +70,11 @@ const MyImmersion = () => {
           src={ImmersionImage}
           alt='Background'
           style={{ width: '90%', height: 'auto' }}
+          className='main-immrs-image'
         />
+
         <MyButton
+          className='st1-immr-btn hover-effect'
           href='/my-immersion/step-1'
           top={30.7}
           left={18}
@@ -79,6 +82,7 @@ const MyImmersion = () => {
           height={12.8}
         />
         <MyButton
+          className='st2-immr-btn hover-effect'
           // href='/my-immersion/step-2'
           href='/spotlight'
           top={30.7}
@@ -98,7 +102,7 @@ const MyImmersion = () => {
             })
           }
           style={buttonStyle(30.7, 53.7, 7.2, 12.8)}
-          className='hover-effect'
+          className='st3-immr-btn hover-effect'
         >
           START
         </p>
@@ -113,7 +117,7 @@ const MyImmersion = () => {
             })
           }
           style={buttonStyle(30.7, 71.5, 7.2, 12.8)}
-          className='hover-effect'
+          className='st4-immr-btn hover-effect'
         >
           START
         </p>

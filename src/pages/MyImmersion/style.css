@@ -310,3 +310,327 @@ th:last-child {
   color: #fff;
   cursor: not-allowed;
 }
+
+/* .immersion-button-container {
+  position: absolute;
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100%;
+right: 45px;
+top: 200px;
+z-index: 2;
+gap: -10px;
+}
+
+*/
+
+@media (max-width:1200px) {
+  .st1-immr-btn {
+    left: 18.5% !important;
+    font-size: 13px;
+  }
+
+  .st2-immr-btn {
+    left: 36.3% !important;
+    font-size: 13px;
+  }
+
+  .st3-immr-btn {
+    font-size: 13px;
+  }
+
+  .st4-immr-btn {
+    left: 71% !important;
+    font-size: 13px;
+  }
+}
+
+
+@media (max-width:916px) {
+  .st1-immr-btn {
+    left: 15.7% !important;
+    font-size: 13px;
+    width: 7.5% !important;
+    height: 12% !important;
+    top: 31.2% !important;
+  }
+
+  .st2-immr-btn {
+    left: 35.4% !important;
+    font-size: 13px;
+    width: 7.5% !important;
+    height: 12% !important;
+    top: 31.2% !important;
+  }
+
+  .st3-immr-btn {
+    font-size: 13px;
+    width: 7.5% !important;
+    height: 12% !important;
+    top: 31.2% !important;
+    left: 54.1% !important;
+  }
+
+  .st4-immr-btn {
+    left: 73.2% !important;
+    font-size: 13px;
+    width: 7.5% !important;
+    height: 12% !important;
+    top: 31.2% !important;
+  }
+
+  .main-immrs-image {
+    width: 100% !important;
+  }
+}
+
+
+@media (max-width:790px) {
+  .st1-immr-btn {
+    left: 16.1% !important;
+    font-size: 12px;
+    width: 7.6% !important;
+    height: 12.1% !important;
+    top: 31.3% !important;
+  }
+
+  .st2-immr-btn {
+    left: 35.4% !important;
+    font-size: 12px;
+    width: 7.6% !important;
+    height: 12.1% !important;
+    top: 31.3% !important;
+  }
+
+  .st3-immr-btn {
+    font-size: 12px;
+    width: 7.6% !important;
+    height: 12.1% !important;
+    top: 31.3% !important;
+    left: 54% !important;
+  }
+
+  .st4-immr-btn {
+    left: 72.8% !important;
+    font-size: 12px;
+    width: 7.6% !important;
+    height: 12.1% !important;
+    top: 31.3% !important;
+  }
+
+  .main-immrs-image {
+    width: 100% !important;
+  }
+}
+
+@media (max-width:745px) {
+
+
+  .st1-immr-btn {
+    left: 11% !important;
+    font-size: 12px;
+    width: 9.5% !important;
+    height: 12.1% !important;
+    top: 31.5% !important;
+  }
+
+  .st2-immr-btn {
+    left: 32.6% !important;
+    font-size: 12px;
+    width: 9.5% !important;
+    height: 12.1% !important;
+    top: 31.5% !important;
+  }
+
+  .st3-immr-btn {
+    font-size: 12px;
+    width: 9.5% !important;
+    height: 12.1% !important;
+    top: 31.5% !important;
+    left: 54% !important;
+  }
+
+  .st4-immr-btn {
+    left: 76% !important;
+    font-size: 12px;
+    width: 9.5% !important;
+    height: 12.1% !important;
+    top: 31.5% !important;
+  }
+
+  .main-immrs-image {
+    width: 120% !important;
+  }
+}
+
+
+
+@media (max-width:620px) {
+
+
+  .st1-immr-btn {
+    left: 11% !important;
+    font-size: 11px;
+    width: 9.5% !important;
+    height: 12.1% !important;
+    top: 31.5% !important;
+  }
+
+  .st2-immr-btn {
+    left: 32.6% !important;
+    font-size: 11px;
+    width: 9.5% !important;
+    height: 12.1% !important;
+    top: 31.5% !important;
+  }
+
+  .st3-immr-btn {
+    font-size: 11px;
+    width: 9.5% !important;
+    height: 12.1% !important;
+    top: 31.5% !important;
+    left: 54% !important;
+  }
+
+  .st4-immr-btn {
+    left: 76% !important;
+    font-size: 11px;
+    width: 9.5% !important;
+    height: 12.1% !important;
+    top: 31.5% !important;
+  }
+
+  .main-immrs-image {
+    width: 120% !important;
+  }
+}
+
+
+@media (max-width:540px) {
+
+
+  .st1-immr-btn {
+    left: 9% !important;
+    font-size: 10px;
+    width: 9.6% !important;
+    height: 12.1% !important;
+    top: 31.7% !important;
+  }
+
+  .st2-immr-btn {
+    left: 32.5% !important;
+    font-size: 10px;
+    width: 9.6% !important;
+    height: 12.1% !important;
+    top: 31.7% !important;
+  }
+
+  .st3-immr-btn {
+    font-size: 10px;
+    width: 9.6% !important;
+    height: 12.1% !important;
+    top: 31.7% !important;
+    left: 54.2% !important;
+  }
+
+  .st4-immr-btn {
+    left: 76.6% !important;
+    font-size: 10px;
+    width: 9.6% !important;
+    height: 12.1% !important;
+    top: 31.7% !important;
+  }
+
+  .main-immrs-image {
+    width: 130% !important;
+  }
+}
+
+
+
+@media (max-width:468px) {
+
+
+  .st1-immr-btn {
+    left: 6% !important;
+    font-size: 10px;
+    width: 12% !important;
+    height: 12.8% !important;
+    top: 31.7% !important;
+  }
+
+  .st2-immr-btn {
+    left: 31% !important;
+    font-size: 10px;
+    width: 12% !important;
+    height: 12.5% !important;
+    top: 31.7% !important;
+  }
+
+  .st3-immr-btn {
+    font-size: 10px;
+    width: 12% !important;
+    height: 12.8% !important;
+    top: 31.7% !important;
+    left: 54.2% !important;
+  }
+
+  .st4-immr-btn {
+    left: 77.2% !important;
+    font-size: 10px;
+    width: 12% !important;
+    height: 12.8% !important;
+    top: 31.7% !important;
+  }
+
+  .main-immrs-image {
+    width: 145% !important;
+  }
+}
+
+
+
+@media (max-width:400px) {
+
+
+  .st1-immr-btn {
+    left: 6.3% !important;
+    font-size: 10px;
+    width: 12% !important;
+    height: 12.5% !important;
+    top: 32.7% !important;
+    border: 3px solid transparent !important
+  }
+
+  .st2-immr-btn {
+    left: 31% !important;
+    font-size: 10px;
+    width: 12% !important;
+    height: 12.5% !important;
+    top: 32.7% !important;
+    border: 3px solid transparent !important
+  }
+
+  .st3-immr-btn {
+    font-size: 10px;
+    width: 12% !important;
+    height: 12.5% !important;
+    top: 32.7% !important;
+    left: 54.2% !important;
+    border: 3px solid transparent !important
+  }
+
+  .st4-immr-btn {
+    left: 77.2% !important;
+    font-size: 10px;
+    width: 12% !important;
+    height: 12.5% !important;
+    top: 32.7% !important;
+    border: 3px solid transparent !important
+  }
+
+  .main-immrs-image {
+    width: 155% !important;
+  }
+}

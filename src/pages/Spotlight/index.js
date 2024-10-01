@@ -20,6 +20,7 @@ import '../../assets/css/media.css'
 import './index.css'
 import spotlightBulb from '../../assets/images/Immersion/SpotlightBulbImg2.png'
 import checkmark from '../../assets/images/checkmark.svg'
+import { setBackButton } from '../../redux/backButtonReducer'
 
 function StartupLive() {
   const firstEventTime = new Date('2023-01-30T16:30:00').getTime()
@@ -40,6 +41,13 @@ function StartupLive() {
   const resize = () => {
     setWidth(window.innerWidth)
   }
+  useEffect(() => {
+    dispatch(setBackButton(true, 'my-immersion'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   useEffect(() => {
     setWidth(window.innerWidth)
@@ -465,9 +473,13 @@ function StartupLive() {
                   <div>
                     <div className='d-flex justify-content-between guidance-videos-top  guidance-encouragement-page-titles '>
                       <h3 className='spot-archive-title'>Spotlight Archive</h3>
-                      <div className={'d-flex align-items-end  blue-text'}>
+                      <button
+                        className={
+                          'spotlight-archive-view-btn d-flex align-items-end  blue-text'
+                        }
+                      >
                         View all
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </Row>
@@ -490,14 +502,17 @@ function StartupLive() {
                   <div
                     className='card-group desktop-menu card-group-beyond-your-course'
                     // style={{ marginTop: '15px' }}
-                    style={{ width: '94%' }}
+                    style={{ width: '94%', marginLeft: '15px' }}
                   >
-                    <div className='card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start  flex-sm-row'>
+                    <div
+                      className='card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start  flex-sm-row'
+                      style={{ flexWrap: 'wrap' }}
+                    >
                       {[0, 0].map((item, index) => (
                         <div
                           className='card-group all-videos-beyond-your-course-videos col-12 col-sm-5 col-md-4 me-4'
                           key={index}
-                          style={{ width: '20%' }}
+                          style={{ width: '170px' }}
                         >
                           <div
                             className='card mobile-card'
