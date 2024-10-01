@@ -150,7 +150,7 @@ export default function EditJournals(props) {
             // />
             <img
               src={searchIcon}
-              alt="#"
+              alt='#'
               style={{
                 color: '#333d3d',
                 height: '25px',
@@ -208,13 +208,13 @@ export default function EditJournals(props) {
               marginRight: '8px'
             }}
           >
-            <FaEdit size={20} color="#99CC33" />
+            <FaEdit size={20} color='#99CC33' />
           </button>
           <button
             onClick={() => onDelete?.(row.original)}
             style={{ background: 'none', border: 'none', cursor: 'pointer' }}
           >
-            <FaTrash size={20} color="#FE43A1" />
+            <FaTrash size={20} color='#FE43A1' />
           </button>
         </div>
       )
@@ -224,8 +224,8 @@ export default function EditJournals(props) {
   return (
     <div>
       {!fetchingJournals ? (
-        <div className="row">
-          <div className="col-9">
+        <div className='row'>
+          <div className='col-9'>
             <Select
               value={
                 selectedJournal?.label
@@ -282,12 +282,12 @@ export default function EditJournals(props) {
                 DropdownIndicator: () => null,
                 IndicatorSeparator: () => null
               }}
-              classNamePrefix="vyrill"
+              classNamePrefix='vyrill'
               // autoFocus={false}
             />
           </div>
-          <div className="col-3 image-upload-widget d-flex align-items-center">
-            <label htmlFor="file-input" className="d-flex m-0 p-0">
+          <div className='col-3 image-upload-widget d-flex align-items-center'>
+            <label htmlFor='file-input' className='d-flex m-0 p-0'>
               <FontAwesomeIcon
                 icon={faFileUpload}
                 style={{
@@ -300,20 +300,20 @@ export default function EditJournals(props) {
             </label>
 
             {imageUploadingLoader && (
-              <p style={{ color: '#01c5d1' }} className="ms-2 p-0 my-auto">
+              <p style={{ color: '#01c5d1' }} className='ms-2 p-0 my-auto'>
                 Uploading image, please wait!
               </p>
             )}
 
             {!uploadedImageUrl && !imageUploadingLoader && (
-              <p className="ms-2 p-0 my-auto" style={{ color: '#707070' }}>
+              <p className='ms-2 p-0 my-auto' style={{ color: '#707070' }}>
                 Upload image to generate html
               </p>
             )}
 
             {uploadedImageUrl && !imageUploadingLoader && (
               <span
-                className="input-group-text bg-transparent text-dark ms-2 w-100 justify-content-center"
+                className='input-group-text bg-transparent text-dark ms-2 w-100 justify-content-center'
                 style={{ borderLeft: '0px !important' }}
                 onClick={() => {
                   toast.success(
@@ -325,20 +325,20 @@ export default function EditJournals(props) {
                 }}
               >
                 <span
-                  className="copy-portfolio-span"
+                  className='copy-portfolio-span'
                   style={{ fontSize: '15px' }}
                 >
                   Copy Generated Html Code
-                  <img src={copy} width="22px" alt="#" className="ms-2" />
+                  <img src={copy} width='22px' alt='#' className='ms-2' />
                 </span>
               </span>
             )}
 
             <input
-              type="file"
-              name="myImage"
-              className="d-none"
-              id="file-input"
+              type='file'
+              name='myImage'
+              className='d-none'
+              id='file-input'
               disabled={imageUploadingLoader}
               onChange={(event) => {
                 // setSelectedImage(event.target.files[0]);
@@ -348,8 +348,8 @@ export default function EditJournals(props) {
           </div>
         </div>
       ) : (
-        <div className="d-flex justify-content-center align-items-center flex-column mt-5 pt-5">
-          <div className="lds-facebook">
+        <div className='d-flex justify-content-center align-items-center flex-column mt-5 pt-5'>
+          <div className='lds-facebook'>
             <div></div>
             <div></div>
             <div></div>
@@ -358,7 +358,7 @@ export default function EditJournals(props) {
         </div>
       )}
       {selectedJournal && (
-        <div className="mt-2">
+        <div className='mt-2'>
           {/* <ReactQuill
           theme='snow'
           name='value'
@@ -376,9 +376,9 @@ export default function EditJournals(props) {
         /> */}
 
           <input
-            type="text"
-            className="w-100 p-2"
-            name="title"
+            type='text'
+            className='w-100 p-2'
+            name='title'
             value={selectedJournal?.value?.title}
             onChange={handleJournalUpdate}
             // style={{widt}}
@@ -386,17 +386,17 @@ export default function EditJournals(props) {
           />
 
           <textarea
-            className="p-2 w-100 mt-2"
+            className='p-2 w-100 mt-2'
             value={selectedJournal?.value?.content}
             onChange={handleJournalUpdate}
-            name="content"
-            id=""
-            cols="30"
-            rows="16"
+            name='content'
+            id=''
+            cols='30'
+            rows='16'
           ></textarea>
 
           <button
-            className="float-end mt-2 px-md-5 save-button add-new-note-button-text"
+            className='float-end mt-2 px-md-5 save-button add-new-note-button-text'
             style={{ fontSize: '16px', height: 'auto' }}
             onClick={() => handleSubmit()}
             disabled={loading}
@@ -434,15 +434,17 @@ export default function EditJournals(props) {
         </div>
       </div>
 
-      <AccordionModal
-        show={showAccordionModal}
-        onHide={handleHideAccordionModal}
-        selectedAccordion={selectedAccordion}
-        setSelectedAccordion={setSelectedAccordion}
-        selectedJournal={selectedJournal}
-        onAddAccordion={onAddAccordion}
-        onUpdateAccordion={onUpdateAccordion}
-      />
+      {showAccordionModal && (
+        <AccordionModal
+          show={showAccordionModal}
+          onHide={handleHideAccordionModal}
+          selectedAccordion={selectedAccordion}
+          setSelectedAccordion={setSelectedAccordion}
+          selectedJournal={selectedJournal}
+          onAddAccordion={onAddAccordion}
+          onUpdateAccordion={onUpdateAccordion}
+        />
+      )}
     </div>
   )
 }

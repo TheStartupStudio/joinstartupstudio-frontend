@@ -82,6 +82,7 @@ function LtsJournal(props) {
   }
 
   function journalChanged(journal) {
+    debugger
     getJournals(false)
   }
   useEffect(() => {
@@ -219,64 +220,87 @@ function LtsJournal(props) {
                       lizas-accordion
                         '
                     >
-                      {journals.map((journalItem, journalItemIdx) => (
-                        <div
-                          key={journalItem.id}
-                          className={`accordion-menu__item cursor-pointer accordion-menu__item-transition
+                      {journals.map((journalItem, journalItemIdx) => {
+                        return (
+                          <div
+                            key={journalItem.id}
+                            className={`accordion-menu__item cursor-pointer accordion-menu__item-transition
                           `}
-                        >
-                          {journalItem.children &&
-                          journalItem.children.length ? (
-                            <>
-                              <Accordion.Toggle
-                                as={'a'}
-                                href='#'
-                                className={'accordion-menu__item-toggle'}
-                                eventKey={`${journalItemIdx}`}
-                                onClick={() =>
-                                  journalItem.content
-                                    ? history.push(
-                                        `${props.match.url}/${journalItem.id}`
-                                      )
-                                    : null
-                                }
-                              >
-                                <span>{journalItem.title}</span>
-                                <FontAwesomeIcon icon={faAngleDown} />
-                              </Accordion.Toggle>
+                          >
+                            {journalItem.children &&
+                            journalItem.children.length ? (
+                              <>
+                                <Accordion.Toggle
+                                  as={'a'}
+                                  href='#'
+                                  className={'accordion-menu__item-toggle'}
+                                  eventKey={`${journalItemIdx}`}
+                                  onClick={() =>
+                                    journalItem.content
+                                      ? history.push(
+                                          `${props.match.url}/${journalItem.id}`
+                                        )
+                                      : null
+                                  }
+                                >
+                                  <span>{journalItem.title}</span>
+                                  <FontAwesomeIcon icon={faAngleDown} />
+                                </Accordion.Toggle>
 
-                              <Accordion.Collapse
-                                eventKey={`${journalItemIdx}`}
-                              >
-                                <ul className='accordion-menu__submenu'>
-                                  {journalItem.children.map(
-                                    (journalChildren) => {
-                                      const earliestUserCellDate =
-                                        getEarliestUserCellDate(journalChildren)
-                                      return (
-                                        <li
-                                          key={journalChildren.id}
-                                          className='accordion-menu__submenu-item'
-                                        >
-                                          <NavLink
-                                            to={`${props.match.url}/${journalChildren.id}`}
+                                <Accordion.Collapse
+                                  eventKey={`${journalItemIdx}`}
+                                >
+                                  <ul className='accordion-menu__submenu'>
+                                    {journalItem.children.map(
+                                      (journalChildren) => {
+                                        const earliestUserCellDate =
+                                          getEarliestUserCellDate(
+                                            journalChildren
+                                          )
+                                        return (
+                                          <li
+                                            key={journalChildren.id}
+                                            className='accordion-menu__submenu-item'
                                           >
-                                            <div className='accordion-menu__submenu-item-icon'>
-                                              <FontAwesomeIcon
-                                                icon={faFileAlt}
-                                              />
-                                            </div>
-                                            <div className='accordion-menu__submenu-item-details'>
-                                              <h5 className='accordion-menu__submenu-item-title'>
-                                                {journalChildren.title}
-                                              </h5>
+                                            <NavLink
+                                              to={`${props.match.url}/${journalChildren.id}`}
+                                            >
+                                              <div className='accordion-menu__submenu-item-icon'>
+                                                <FontAwesomeIcon
+                                                  icon={faFileAlt}
+                                                />
+                                              </div>
+                                              <div className='accordion-menu__submenu-item-details'>
+                                                <h5 className='accordion-menu__submenu-item-title'>
+                                                  {journalChildren.title}
+                                                </h5>
 
-                                              {props.category ===
-                                              'student-personal-finance' ? (
-                                                earliestUserCellDate ? (
+                                                {props.category ===
+                                                'student-personal-finance' ? (
+                                                  earliestUserCellDate ? (
+                                                    <div className='accordion-menu__submenu-item-subtitle'>
+                                                      {moment(
+                                                        earliestUserCellDate
+                                                      )
+                                                        .locale(currentLanguage)
+                                                        .format(
+                                                          'MMMM D, YYYY | hh:mma'
+                                                        )}
+                                                    </div>
+                                                  ) : (
+                                                    <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
+                                                      NOT STARTED
+                                                    </div>
+                                                  )
+                                                ) : journalChildren.userEntry &&
+                                                  !!journalChildren.userEntry
+                                                    .length &&
+                                                  !!journalChildren.userEntry[0]
+                                                    .createdAt ? (
                                                   <div className='accordion-menu__submenu-item-subtitle'>
                                                     {moment(
-                                                      earliestUserCellDate
+                                                      journalChildren
+                                                        .userEntry[0].createdAt
                                                     )
                                                       .locale(currentLanguage)
                                                       .format(
@@ -287,60 +311,41 @@ function LtsJournal(props) {
                                                   <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
                                                     NOT STARTED
                                                   </div>
-                                                )
-                                              ) : journalChildren.userEntry &&
-                                                !!journalChildren.userEntry
-                                                  .length &&
-                                                !!journalChildren.userEntry[0]
-                                                  .createdAt ? (
-                                                <div className='accordion-menu__submenu-item-subtitle'>
-                                                  {moment(
-                                                    journalChildren.userEntry[0]
-                                                      .createdAt
-                                                  )
-                                                    .locale(currentLanguage)
-                                                    .format(
-                                                      'MMMM D, YYYY | hh:mma'
-                                                    )}
-                                                </div>
-                                              ) : (
-                                                <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
-                                                  NOT STARTED
-                                                </div>
-                                              )}
-                                            </div>
-                                          </NavLink>
-                                        </li>
-                                      )
-                                    }
-                                  )}
-                                </ul>
-                              </Accordion.Collapse>
-                            </>
-                          ) : (
-                            // <Accordion.Toggle
-                            //   as={'a'}
-                            //   className={'accordion-menu__item-toggle'}
-                            //   eventKey={`${journalItemIdx}`}
-                            //   onClick={() =>
-                            //     journalItem.content
-                            //       ? history.push(
-                            //           `${props.match.url}/${journalItem.id}`
-                            //         )
-                            //       : null
-                            //   }
-                            // >
-                            //   <span>{journalItem.title}</span>
-                            // </Accordion.Toggle>
-                            <NavLink
-                              to={`${props.match.url}/${journalItem.id}`}
-                              className={'accordion-menu__item-toggle'}
-                            >
-                              <span>{journalItem.title}</span>
-                            </NavLink>
-                          )}
-                        </div>
-                      ))}
+                                                )}
+                                              </div>
+                                            </NavLink>
+                                          </li>
+                                        )
+                                      }
+                                    )}
+                                  </ul>
+                                </Accordion.Collapse>
+                              </>
+                            ) : (
+                              // <Accordion.Toggle
+                              //   as={'a'}
+                              //   className={'accordion-menu__item-toggle'}
+                              //   eventKey={`${journalItemIdx}`}
+                              //   onClick={() =>
+                              //     journalItem.content
+                              //       ? history.push(
+                              //           `${props.match.url}/${journalItem.id}`
+                              //         )
+                              //       : null
+                              //   }
+                              // >
+                              //   <span>{journalItem.title}</span>
+                              // </Accordion.Toggle>
+                              <NavLink
+                                to={`${props.match.url}/${journalItem.id}`}
+                                className={'accordion-menu__item-toggle'}
+                              >
+                                <span>{journalItem.title}</span>
+                              </NavLink>
+                            )}
+                          </div>
+                        )
+                      })}
                       {/* journals.map */}
                     </Accordion>
                   </div>

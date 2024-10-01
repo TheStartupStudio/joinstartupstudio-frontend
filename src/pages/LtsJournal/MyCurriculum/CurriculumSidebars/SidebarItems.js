@@ -15,8 +15,7 @@ const SidebarItems = ({ url, filteredJournals, type, category }) => {
   const [addLesson, setAddLesson] = useState(false)
   const [journalId, setJournalId] = useState(null)
   const { user } = useSelector((state) => state.user.user)
-  const { lessons, loading } = useSelector((state) => state.lessons)
-
+  const { lessons, loading, saving } = useSelector((state) => state.lessons)
   useEffect(() => {
     dispatch(fetchLessons(type, category))
   }, [dispatch, type, category])
@@ -41,12 +40,14 @@ const SidebarItems = ({ url, filteredJournals, type, category }) => {
       <div className='d-flex align-items-center justify-content-end'>
         <p className='m-0'>View add lesson</p>
         <LtsCheckbox
-          toggle={() => setAddLesson((state) => !state)}
+          toggle={() => {
+            setAddLesson((state) => !state)
+          }}
           checked={addLesson}
         />
       </div>
       <div>
-        {filteredJournals.map((journalItem) => {
+        {filteredJournals?.map((journalItem, index) => {
           const { hasLesson, lesson } = getLessonByType(
             lessons,
             journalItem,

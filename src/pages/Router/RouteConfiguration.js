@@ -81,7 +81,7 @@ const PasswordChangeRequired = React.lazy(() =>
   import('../Auth/Login/passwordChangeRequired')
 )
 const JournalsManagement2 = React.lazy(() =>
-  import('../JournalsManagement/JournalsManagement2')
+  import('../JournalsManagement/ManageAllJournals')
 )
 const InstructorData = React.lazy(() =>
   import('../../components/admin/UserManagement/instructorData')
@@ -116,10 +116,18 @@ const CoursesVcredentialsContainer = React.lazy(() =>
 const MyImmersionContainer = React.lazy(() => import('../admin/MyImmersion'))
 
 export const adminRoutes = [
-  { path: '/instructor-data/:id?', component: InstructorData },
+  { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   // { path: '/user-management', component: UserManagement },
-  { path: '/my-school/:page?', component: MySchoolContainer },
-  { path: '/my-immersion-admin', component: MyImmersionContainer }
+  {
+    path: '/my-school/:page?',
+    component: MySchoolContainer,
+    breadcrumb: 'My School'
+  },
+  {
+    path: '/my-immersion-admin',
+    component: MyImmersionContainer,
+    breadcrumb: 'My Immersion'
+  }
 ]
 
 export const authRoutes = [

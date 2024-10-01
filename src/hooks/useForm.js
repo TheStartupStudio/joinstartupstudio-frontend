@@ -7,6 +7,8 @@ export const useForm = (initialState, initialData, mode = 'add', loading) => {
   useEffect(() => {
     if (mode === 'edit' && initialData && !loading) {
       setFormData(initialData)
+    } else {
+      setFormData(initialState)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData, initialData, mode, loading])
@@ -114,6 +116,7 @@ export const useForm = (initialState, initialData, mode = 'add', loading) => {
 
   return {
     formData,
+    setFormData,
     handleChange,
     handleChangeFile,
     handleChangeCheckbox,

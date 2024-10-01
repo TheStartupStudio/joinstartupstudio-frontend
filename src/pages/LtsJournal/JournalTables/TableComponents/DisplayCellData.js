@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { useLocation } from 'react-router-dom'
 
 export const DisplayCellData = (props) => {
+  const location = useLocation()
+  const isFromStudentsJournals = location.pathname.includes('students-journals')
   const newRef = useRef(null)
 
   useEffect(() => {
@@ -42,19 +45,21 @@ export const DisplayCellData = (props) => {
         <div style={{ overflowWrap: 'anywhere' }}>{props.userCellValue}</div>
         {/*<div></div>*/}
       </div>
-      <div
-        ref={newRef}
-        onClick={(event) => {
-          props.openEditBox(event)
-        }}
-        className={'edit-pencil-container d-flex justify-content-end'}
-        style={{ padding: '16px 0 16px 16px' }}
-      >
-        <FontAwesomeIcon
-          className={'z-3 ml-1 edit-pencil'}
-          icon={faPencilAlt}
-        />
-      </div>
+      {!isFromStudentsJournals && (
+        <div
+          ref={newRef}
+          onClick={(event) => {
+            props.openEditBox(event)
+          }}
+          className={'edit-pencil-container d-flex justify-content-end'}
+          style={{ padding: '16px 0 16px 16px' }}
+        >
+          <FontAwesomeIcon
+            className={'z-3 ml-1 edit-pencil'}
+            icon={faPencilAlt}
+          />
+        </div>
+      )}
     </span>
   )
 }

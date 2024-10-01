@@ -34,10 +34,10 @@ function InterviewedMentors(props) {
                   width: '100%',
                   height: '100%'
                 }}
-                alt="Thumb"
+                alt='Thumb'
               />
               <FaPlay
-                className="position-absolute"
+                className='position-absolute'
                 style={{
                   top: '50%',
                   left: '50%',
@@ -67,7 +67,11 @@ function InterviewedMentors(props) {
               {accordion?.interviewedMentor?.mentorName}
             </div>
             {accordion?.interviewedMentor?.mentorDescription?.map((desc) => {
-              return <div className={'mentor-description'}>{desc.title}</div>
+              return (
+                <div className={'mentor-description'} key={desc.id}>
+                  {desc.title}
+                </div>
+              )
             })}
           </div>
         </div>
@@ -75,14 +79,14 @@ function InterviewedMentors(props) {
       <div className={'col-lg-8 col-md-12'}>
         <div>
           <InterviewSection
-            part="part-1"
+            part='part-1'
             interviews={accordion?.interviewedMentor?.interviews}
             setVideo={setVideo}
             journal={journal}
           />
           <div className={'pt-3'}>
             <InterviewSection
-              part="part-2"
+              part='part-2'
               interviews={accordion?.interviewedMentor?.interviews}
               setVideo={setVideo}
               journal={journal}

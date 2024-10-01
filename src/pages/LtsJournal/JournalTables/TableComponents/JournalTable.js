@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { JournalTableRows } from './JournalTableRows'
 import '../../TableWrapper/index.css'
+import { useLocation } from 'react-router-dom'
 // import { JournalTableRows } from '../../TableWrapper/TableComponents'
 
 const JournalTable = ({

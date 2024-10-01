@@ -130,7 +130,7 @@ const JournalsManagement = React.lazy(() =>
   import('./pages/JournalsManagement')
 )
 const JournalsManagement2 = React.lazy(() =>
-  import('./pages/JournalsManagement/JournalsManagement2')
+  import('./pages/JournalsManagement/ManageAllJournals')
 )
 
 const MyInbox = React.lazy(() => import('./pages/MyInbox'))
