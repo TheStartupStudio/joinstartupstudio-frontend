@@ -31,7 +31,7 @@ const ProgressIcon = (props) => {
           }}
         />
       </div>
-      <div className={'nav-icon-title'}>{props.title}</div>
+      <div className={`${props.className} nav-icon-title`}>{props.title}</div>
     </div>
   )
 }

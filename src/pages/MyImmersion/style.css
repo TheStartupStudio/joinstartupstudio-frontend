@@ -36,6 +36,23 @@ button {
   cursor: pointer;
 }
 
+.immersion-page-title {
+  font-weight: 500 !important;
+  font-size: 26px !important;
+
+}
+
+.main-immersion-desc {
+  font-weight: 500;
+  color: #949494;
+  font-size: 13px;
+}
+
+.immersion-steps-title {
+  font-weight: 600;
+  font-size: 24px;
+}
+
 .submit-btn {
   background-color: #4caf50;
   color: white;
@@ -70,7 +87,7 @@ th:last-child {
 /* Steps style */
 .steps-container {
   background: #f4f4f4;
-  padding: 1%;
+  padding: 2%;
 }
 
 /* Immersion table style */

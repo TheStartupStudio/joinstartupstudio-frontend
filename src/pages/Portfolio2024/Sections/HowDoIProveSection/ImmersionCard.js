@@ -47,7 +47,7 @@ function ImmersionCard(props) {
   return (
     <div className={'mb-3 w-100'}>
       <PortfolioDataContainer background={'#fff'}>
-        <div className={'d-flex gap-3 '}>
+        <div className={'immersion-card-resp d-flex gap-3 '}>
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}
@@ -60,7 +60,7 @@ function ImmersionCard(props) {
               'd-flex justify-content-between flex-grow-1 gap-4 immersion-portfolio-card'
             }
           >
-            <div className={'w-50'}>
+            <div className={'immersion-card-text w-50'}>
               <div className={'d-flex justify-content-between gap-2'}>
                 <div>
                   <div className={'proveit-title-org organization-name mb-2'}>
@@ -68,13 +68,13 @@ function ImmersionCard(props) {
                   </div>
                   <div
                     className={'organization-location mb-2'}
-                    style={{ fontWeight: 400 }}
+                    style={{ fontWeight: 300 }}
                   >
                     {data?.location}
                   </div>
                   <div
                     className={'organization-website mb-3'}
-                    style={{ fontWeight: 400 }}
+                    style={{ fontWeight: 300 }}
                   >
                     <WebsiteLink website={data?.website} />
                   </div>
@@ -90,6 +90,7 @@ function ImmersionCard(props) {
                 </div>
                 <div
                   className={'organization-description'}
+                  style={{ fontWeight: 300, wordBreak: 'break-word' }}
                   dangerouslySetInnerHTML={{ __html: data?.problem }}
                 />
 
@@ -98,10 +99,11 @@ function ImmersionCard(props) {
                     'proveit-title-org organization-description-label mb-2 mt-3'
                   }
                 >
-                  My solution
+                  My Solution
                 </div>
                 <div
                   className={'organization-description'}
+                  style={{ fontWeight: 300, wordBreak: 'break-word' }}
                   dangerouslySetInnerHTML={{ __html: data?.solution }}
                 />
               </div>
@@ -115,7 +117,7 @@ function ImmersionCard(props) {
               {!data?.currentlyAttending
                 ? convertDateToMonthYear(data?.endDate)
                 : 'Currently attending'}
-              <div className={'mt-3 immersion-card-img'}>
+              <div className={'immersion-card-img mt-3 '}>
                 <PortfolioSubmission
                   title={'My immersion experience'}
                   thumbnailUrl={data?.immersionThumbnailUrl}

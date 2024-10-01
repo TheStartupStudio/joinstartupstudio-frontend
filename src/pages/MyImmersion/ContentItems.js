@@ -15,12 +15,12 @@ const Textarea = ({ placeholder, name, value, onChange, error, showError }) => {
         className={`w-100 ${
           showError && error ? 'error-border' : 'border'
         } bg-transparent p-2`}
-        id=""
-        cols="30"
-        rows="6"
+        id=''
+        cols='30'
+        rows='6'
         placeholder={placeholder}
       ></textarea>
-      {showError && error && <small className="ps-1">{error}</small>}
+      {showError && error && <small className='ps-1'>{error}</small>}
     </div>
   )
 }
@@ -32,22 +32,22 @@ const UploadFileInput = ({ filename, placeholder, name, onChange, mode }) => {
     }
   }
   return (
-    <label className="immersion-upload-file-input border" onClick={handleClick}>
-      <span className="file-input-placeholder">
+    <label className='immersion-upload-file-input border' onClick={handleClick}>
+      <span className='file-input-placeholder'>
         {mode === 'edit'
           ? fileNameExtracter(filename)
           : filename
           ? filename
           : placeholder}
       </span>
-      <FontAwesomeIcon icon={faFileUpload} className="file-input-icon" />
+      <FontAwesomeIcon icon={faFileUpload} className='file-input-icon' />
       {mode !== 'edit' && (
         <input
-          type="file"
-          id="inputGroupFile"
+          type='file'
+          id='inputGroupFile'
           name={name}
-          accept="application/pdf"
-          className="file-input"
+          accept='application/pdf'
+          className='file-input'
           onChange={onChange}
         />
       )}
@@ -69,11 +69,11 @@ const SubmitButton = ({ text, type, onClick, disabled, className }) => {
 }
 const ProfileHolder = ({ profileImage, name }) => {
   return (
-    <div className="d-flex align-items-center mb-5 ">
-      <div className="profile-dropdown me-1 desktop-menu d-none d-xl-block">
-        <img src={profileImage ? profileImage : Avatar} alt="Profile" />
+    <div className='d-flex align-items-center mb-5 '>
+      <div className='profile-dropdown me-1 desktop-menu d-none d-xl-block'>
+        <img src={profileImage ? profileImage : Avatar} alt='Profile' />
       </div>
-      <div className="profile-dropdown-info desktop-menu">
+      <div className='profile-dropdown-info desktop-menu'>
         <h5>{name ? name : localStorage.getItem('name')}</h5>
       </div>
     </div>
@@ -91,25 +91,25 @@ const TermsAndConditionsCheckbox = ({
 }) => {
   return (
     <>
-      <div className="terms-checkbox">
+      <div className='terms-checkbox'>
         <input
-          type="checkbox"
-          id="terms"
+          type='checkbox'
+          id='terms'
           checked={checked}
           name={name}
           onChange={onChange}
         />
-        <label htmlFor="terms">
-          {text} <a href="/terms">{blueText}</a>
+        <label htmlFor='terms'>
+          {text} <a href='/terms'>{blueText}</a>
         </label>
       </div>
-      {showError && error && <small className="">{error}</small>}
+      {showError && error && <small className=''>{error}</small>}
     </>
   )
 }
 
-const ParentGuardianButton = ({ text }) => {
-  return <button className="parentGuardian-button">{text}</button>
+const ParentGuardianButton = ({ text, className }) => {
+  return <button className='parentGuardian-button'>{text}</button>
 }
 
 export {

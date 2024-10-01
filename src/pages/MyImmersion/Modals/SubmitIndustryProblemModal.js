@@ -22,6 +22,7 @@ import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
 
 const SubmitIndustryProblemModal = (props) => {
+  console.log(props, 'SubmitIndustryProblemModal')
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.user.user)
   const { loading, industryProblems } = useSelector(
@@ -38,6 +39,7 @@ const SubmitIndustryProblemModal = (props) => {
     submissionDate: new Date()
   }
 
+  console.log(props, 'propsSubmitIndustryProblemModal')
   useEffect(() => {
     if (props.mode === 'edit') {
       dispatch(
@@ -87,8 +89,10 @@ const SubmitIndustryProblemModal = (props) => {
       {loading ? (
         <LoadingAnimation show={true} />
       ) : (
-        <Modal.Body style={{ padding: '3%' }}>
-          <Modal.Header>
+        <Modal.Body
+          style={{ padding: '3%', display: 'flex', flexDirection: 'column' }}
+        >
+          <Modal.Header style={{ flexDirection: 'row' }}>
             <Modal.Title>
               {props.mode === 'edit' ? 'USER SOLUTION' : 'SUBMIT YOUR SOLUTION'}
             </Modal.Title>
@@ -112,9 +116,14 @@ const SubmitIndustryProblemModal = (props) => {
                 name={props.mode === 'edit' ? props.User.name : user?.name}
               />
               <div>
+                {console.log(props, 'propssubmit')}
+
                 <p className='mb-1'>
-                  {props.ImmersionCompany?.name ?? props.currentCompanyName}{' '}
-                  Problem
+                  {props.immersion?.companyName
+                    ? props.immersion.companyName
+                    : props.user_industry_solution?.company_name
+                    ? props.user_industry_solution?.company_name
+                    : ''}{' '}
                 </p>
                 <Textarea
                   placeholder={'Briefly describe solution'}
@@ -126,13 +135,6 @@ const SubmitIndustryProblemModal = (props) => {
             </Col>
             <Col className='d-flex flex-column justify-content-between'>
               <div>
-                <UploadFileInput
-                  filename={formData.parentGuardianApprovalForm}
-                  placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
-                  name='parentGuardianApprovalForm'
-                  onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
-                  mode={props.mode}
-                />
                 <UploadFileInput
                   filename={formData.pitchDeck}
                   placeholder={'Upload Pitch Deck (PDF)'}
@@ -164,11 +166,6 @@ const SubmitIndustryProblemModal = (props) => {
                 }
                 checked={formData.termsAndConditions}
               />
-            </Col>
-            <Col>
-              <ParentGuardianButton text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
-            </Col>
-            <Col className='d-flex justify-content-end'>
               {props.mode === 'edit' ? (
                 <div className='d-flex'>
                   <SubmitButton

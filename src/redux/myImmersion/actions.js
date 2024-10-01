@@ -17,10 +17,13 @@ export const fetchAllIndustryProblems = (currentPage, itemsPerPage) => {
   return async (dispatch) => {
     try {
       dispatch(fetchAllIndustryProblemsPending())
+      const step = 1
       const data = await myImmersionService.fetchIndustryProblems(
+        step,
         currentPage,
         itemsPerPage
       )
+
       dispatch(fetchAllIndustryProblemsFulfilled(data))
     } catch (error) {
       dispatch(fetchAllIndustryProblemsRejected(error))

@@ -6,39 +6,36 @@ import { Button } from 'react-bootstrap'
 import SubmitIndustryProblemModal from '../Modals/SubmitIndustryProblemModal'
 import SubmitExperienceModal from '../Modals/SubmitExperienceModal'
 import { formatDateString } from '../../../utils/helpers'
+import AddImmersionModal from '../../../components/admin/MyImmersion/AddImmersionModal'
 
-const ImmersionTable = React.memo(({ data, step }) => {
+const ImmersionTable = React.memo(({ data, step, immersions }) => {
   const [problemModal, setProblemModal] = useState(false)
   const [industryProblemModal, setIndustryProblemModal] = useState(false)
   const [experienceModal, setExperienceModal] = useState(false)
-  const [currentProblemDescription, setCurrentProblemDescription] = useState('')
-  const [currentCompanyName, setCurrentCompanyName] = useState('')
-  const [problemId, setProblemId] = useState(null)
-  const [companyId, setCompanyId] = useState(null)
-  const [problemIsSubmitted, setProblemIsSubmitted] = useState(false)
+  const [clickedImmersion, setClickedImmersion] = useState(null)
+
+  const [selectedImmersion, setSelectedImmersion] = useState(null)
 
   const tableData = React.useMemo(() => {
     if (!data) return []
+
     return data?.map((item) => {
       const commonData = {
         problemID: item.id,
-        companyID: item.company_id,
-        companyName: item.company,
+        companyDescription: item.company_description,
+        companyName: item.company_name,
         problemDescription: item.description,
+        industryProblem: item.industry_problem,
         industry: item.industry,
-        submitted: item.submitted
-      }
+        status: item.status,
 
-      return step === 'step-1'
-        ? {
-            ...commonData,
-            completionDate: item.completion_date
-          }
-        : {
-            ...commonData,
-            dateOfApplication: item.dateOfApplication,
-            dateOfImmersionExperience: item.dateOfImmersionExperience
-          }
+        researchGuidance: item.research_guidance,
+
+        completionDate: 'March 1st',
+        dateOfApplication: 'March 1st',
+        dateOfImmersionExperience: 'March 1st'
+      }
+      return commonData
     })
   }, [data, step])
 
@@ -53,15 +50,12 @@ const ImmersionTable = React.memo(({ data, step }) => {
       {
         Header: 'Industry Problem Description',
         accessor: 'problemDescription',
-
         Cell: ({ cell }) => (
           <Button
-            className="bg-transparent text-info border-info"
+            className='bg-transparent text-info border-info'
             onClick={() => {
-              const { companyName, problemDescription } = cell.row.original
-
-              setCurrentCompanyName(companyName)
-              setCurrentProblemDescription(problemDescription)
+              const immersionData = cell.row.original
+              setClickedImmersion(immersionData) // Set the entire immersion object
               setProblemModal(true)
             }}
           >
@@ -78,11 +72,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         Header: 'Completion Date for Solution',
         accessor: 'completionDate',
         disableResizing: true,
-        Cell: ({ value }) => (
-          <div className="text-center">
-            {value ? formatDateString(value) : 'N/A'}
-          </div>
-        )
+        Cell: ({ value }) => <div className='text-center'>{'March 1st'}</div>
       },
       {
         Header: '',
@@ -90,18 +80,13 @@ const ImmersionTable = React.memo(({ data, step }) => {
         disableResizing: true,
         Cell: ({ cell }) => (
           <button
-            className="submit-btn"
+            className='submit-btn'
             style={{ backgroundColor: '#99cc33', color: 'white' }}
             onClick={() => {
-              const { companyName, problemID, companyID, submitted } =
-                cell.row.original
-              setProblemId(problemID)
-              setCompanyId(companyID)
-              setCurrentCompanyName(companyName)
+              const immersionData = cell.row.original
+              setClickedImmersion(immersionData) // Set the entire immersion object
               setIndustryProblemModal(true)
-              setProblemIsSubmitted(submitted)
             }}
-            // disabled={cell.row.original.submitted}
           >
             SUBMIT
           </button>
@@ -122,12 +107,10 @@ const ImmersionTable = React.memo(({ data, step }) => {
         accessor: 'problemDescription',
         Cell: ({ cell }) => (
           <Button
-            className="bg-transparent text-info border-info"
+            className='bg-transparent text-info border-info'
             onClick={() => {
-              const { companyName, problemDescription } = cell.row.original
-
-              setCurrentCompanyName(companyName)
-              setCurrentProblemDescription(problemDescription)
+              const immersionData = cell.row.original
+              setClickedImmersion(immersionData) // Set the entire immersion object
               setProblemModal(true)
             }}
           >
@@ -143,7 +126,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         Header: 'Date of Application',
         accessor: 'dateOfApplication',
         Cell: ({ value }) => (
-          <div className="text-center">
+          <div className='text-center'>
             {value ? formatDateString(value) : 'N/A'}
           </div>
         )
@@ -152,7 +135,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
         Header: 'Date of Immersion Experience',
         accessor: 'dateOfImmersionExperience',
         Cell: ({ value }) => (
-          <div className="text-center">
+          <div className='text-center'>
             {value ? formatDateString(value) : 'N/A'}
           </div>
         )
@@ -163,13 +146,11 @@ const ImmersionTable = React.memo(({ data, step }) => {
         width: 200,
         Cell: ({ cell }) => (
           <button
-            className="submit-btn"
+            className='submit-btn'
             style={{ backgroundColor: '#99cc33', color: 'white' }}
             onClick={() => {
-              const { companyName, problemID, companyID } = cell.row.original
-              setProblemId(problemID)
-              setCompanyId(companyID)
-              setCurrentCompanyName(companyName)
+              const immersionData = cell.row.original
+              setClickedImmersion(immersionData) // Set the entire immersion object
               setExperienceModal(true)
             }}
           >
@@ -190,7 +171,7 @@ const ImmersionTable = React.memo(({ data, step }) => {
 
   return (
     <>
-      <table {...getTableProps()} className="immersion-table">
+      <table {...getTableProps()} className='immersion-table'>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -215,32 +196,31 @@ const ImmersionTable = React.memo(({ data, step }) => {
           })}
         </tbody>
       </table>
-      {problemModal && (
-        <ProblemModal
-          show={problemModal}
-          currentCompanyName={currentCompanyName}
-          problemDescription={currentProblemDescription}
-          onHide={() => setProblemModal(false)}
+
+      {problemModal && clickedImmersion && (
+        <AddImmersionModal
+          viewExprience={clickedImmersion}
+          justView={true}
+          // show={problemModal}
+          // immersion={clickedImmersion} // Pass the entire immersion object
+          onClose={() => setProblemModal(false)}
         />
       )}
-      {experienceModal && (
+      {experienceModal && clickedImmersion && (
         <SubmitExperienceModal
           show={experienceModal}
-          currentCompanyName={currentCompanyName}
-          problemDescription={currentProblemDescription}
+          immersion={clickedImmersion} // Pass the entire immersion object
           onHide={() => setExperienceModal(false)}
-          mode="add"
+          mode='add'
         />
       )}
-      {industryProblemModal && (
+
+      {industryProblemModal && clickedImmersion && (
         <SubmitIndustryProblemModal
           show={industryProblemModal}
-          currentCompanyName={currentCompanyName}
+          immersion={clickedImmersion} // Pass the entire immersion object
           onHide={() => setIndustryProblemModal(false)}
-          problemID={problemId}
-          companyID={companyId}
-          problemIsSubmitted={problemIsSubmitted}
-          mode="add"
+          mode='add'
         />
       )}
     </>

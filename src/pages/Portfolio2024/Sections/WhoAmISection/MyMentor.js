@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import imagePlaceholder from '../../../../assets/images/image-placeholder.jpeg'
+import imagePlaceholder from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
 import SectionActions from '../../Components/Actions/SectionActions'
 import { useDispatch, useSelector } from 'react-redux'
 import MyMentorModal from '../../Components/Modals/MyMentorModal'
@@ -60,7 +60,7 @@ function MyMentor(props) {
   return (
     <div className={'my-mentors-container position-relative'}>
       <img
-        className={'my-mentors-image'}
+        className={'placeholder-mentor-img my-mentors-image'}
         alt={'submission-image'}
         src={data?.mentorImage ? data?.mentorImage : imagePlaceholder}
       />

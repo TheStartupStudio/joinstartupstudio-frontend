@@ -39,6 +39,7 @@ const GridTable = ({
     (event) => {
       const selectedNodes = event.api.getSelectedNodes()
       const selectedData = selectedNodes.map((node) => node.data)
+
       setSelectedRows(selectedData)
     },
     [setSelectedRows]
