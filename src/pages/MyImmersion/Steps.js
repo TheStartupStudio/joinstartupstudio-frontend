@@ -18,9 +18,9 @@ import { setBackButton } from '../../redux/backButtonReducer'
 
 const DropdownSelector = ({ myImmersion, industry, setIndustry }) => {
   const industriesOptions = useMemo(() => {
-    return myImmersion.industries.map((item) => ({
-      label: item.name,
-      value: item.name
+    return myImmersion?.industryProblems?.data.map((item) => ({
+      label: item.industry,
+      value: item.industry
     }))
   }, [myImmersion.industries])
 
@@ -102,6 +102,7 @@ const Steps = () => {
           <hr className='m-0' />
           <div className='steps-container'>
             <div style={{ background: '#fff', padding: '1%' }}>
+              {console.log(industry, 'industry')}
               <DropdownSelector
                 myImmersion={myImmersion}
                 industry={industry}
@@ -114,13 +115,16 @@ const Steps = () => {
                 <ImmersionTable
                   data={
                     step && step === 'step-1'
-                      ? myImmersion.industryProblems?.immersions
+                      ? filteredData && filteredData.length > 0
+                        ? filteredData
+                        : myImmersion.industryProblems?.immersions
                       : myImmersion.experiences?.data
                   }
                   step={step}
                   immersions={myImmersion.industryProblems?.immersions}
                 />
               )}
+              {console.log(filteredData, 'filteredData')}
               <CustomPagination
                 itemsPerPage={itemsPerPage}
                 totalItems={

@@ -22,14 +22,14 @@ const ImmersionTable = React.memo(({ data, step, immersions }) => {
     return data?.map((item) => {
       const commonData = {
         problemID: item.id,
-        companyDescription: item.company_description,
-        companyName: item.company_name,
+        companyDescription: item.company_description || item.companyDescription,
+        companyName: item.company_name || item.company,
         problemDescription: item.description,
-        industryProblem: item.industry_problem,
+        industryProblem: item.industry_problem || item.industryProblem,
         industry: item.industry,
         status: item.status,
 
-        researchGuidance: item.research_guidance,
+        researchGuidance: item.research_guidance || item.researchGuidance,
 
         completionDate: 'March 1st',
         dateOfApplication: 'March 1st',
