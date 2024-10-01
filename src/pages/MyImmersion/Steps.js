@@ -18,7 +18,7 @@ import { setBackButton } from '../../redux/backButtonReducer'
 
 const DropdownSelector = ({ myImmersion, industry, setIndustry }) => {
   const industriesOptions = useMemo(() => {
-    return myImmersion?.industryProblems?.data.map((item) => ({
+    return myImmersion.industryProblems.data.map((item) => ({
       label: item.industry,
       value: item.industry
     }))
