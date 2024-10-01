@@ -22,7 +22,6 @@ import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
 
 const SubmitIndustryProblemModal = (props) => {
-  console.log(props, 'SubmitIndustryProblemModal')
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.user.user)
   const { loading, industryProblems } = useSelector(
@@ -39,7 +38,6 @@ const SubmitIndustryProblemModal = (props) => {
     submissionDate: new Date()
   }
 
-  console.log(props, 'propsSubmitIndustryProblemModal')
   useEffect(() => {
     if (props.mode === 'edit') {
       dispatch(
@@ -116,8 +114,6 @@ const SubmitIndustryProblemModal = (props) => {
                 name={props.mode === 'edit' ? props.User.name : user?.name}
               />
               <div>
-                {console.log(props, 'propssubmit')}
-
                 <p className='mb-1'>
                   {props.immersion?.companyName
                     ? props.immersion.companyName
@@ -136,14 +132,22 @@ const SubmitIndustryProblemModal = (props) => {
             <Col className='d-flex flex-column justify-content-between'>
               <div>
                 <UploadFileInput
-                  filename={formData.pitchDeck?.name || ''}
+                  filename={
+                    formData.pitchDeck?.name ||
+                    props.user_industry_solution?.pitchDeck ||
+                    ''
+                  }
                   placeholder={'Upload Pitch Deck (PDF)'}
                   name='pitchDeck'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
                 />
                 <UploadFileInput
-                  filename={formData.pitchVideo?.name || ''}
+                  filename={
+                    formData.pitchVideo?.name ||
+                    props.user_industry_solution?.pitchVideo ||
+                    ''
+                  }
                   placeholder={'Upload Pitch Video'}
                   name='pitchVideo'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}

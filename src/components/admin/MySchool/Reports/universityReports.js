@@ -124,7 +124,7 @@ const UniversityReports = ({
         </Row>
 
         <Col className='col-12 d-flex justify-content-end'>
-          <Row className='col-2 m-0 justify-content-around'>
+          <Row className='m-0 justify-content-around'>
             {studentsCountLoading
               ? Array(2)
                   .fill()

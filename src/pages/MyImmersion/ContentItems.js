@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Avatar from '../../assets/images/profile-image.png'
 import './style.css'
 import { fileNameExtracter } from '../../utils/helpers'
+import { FETCH_ALL_COMPANIES_PENDING } from '../../redux/myImmersion/types'
 
 const Textarea = ({ placeholder, name, value, onChange, error, showError }) => {
   return (
@@ -31,6 +32,7 @@ const UploadFileInput = ({ filename, placeholder, name, onChange, mode }) => {
       window.open(filename, '_blank')
     }
   }
+
   return (
     <label className='immersion-upload-file-input border' onClick={handleClick}>
       <span className='file-input-placeholder'>
