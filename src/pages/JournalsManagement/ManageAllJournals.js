@@ -3,21 +3,21 @@ import { useDispatch } from 'react-redux'
 import { changeSidebarState } from '../../redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import EditJournals from '../../components/JournalsManagement/editJournals'
-import EditJournals2 from '../../components/JournalsManagement/editJournals2'
+import EditAllJournals from '../../components/JournalsManagement/editAllJournals'
 
-function JournalsManagement2() {
+function ManageAllJournals() {
   const dispatch = useDispatch()
   // useEffect(() => {
   //   dispatch(changeSidebarState(false))
   // }, [])
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-12">
-          <div className="account-page-padding">
-            <h3 className="page-title">Edit Journals</h3>
-            <EditJournals2 />
+    <div className='container-fluid'>
+      <div className='row'>
+        <div className='col-12'>
+          <div className='account-page-padding'>
+            <h3 className='page-title'>Edit Journals</h3>
+            <EditAllJournals />
           </div>
         </div>
       </div>
@@ -25,4 +25,4 @@ function JournalsManagement2() {
   )
 }
 
-export default JournalsManagement2
+export default ManageAllJournals

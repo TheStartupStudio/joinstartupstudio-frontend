@@ -85,7 +85,7 @@ const PasswordChangeRequired = React.lazy(() =>
   import('../Auth/Login/passwordChangeRequired')
 )
 const JournalsManagement2 = React.lazy(() =>
-  import('../JournalsManagement/JournalsManagement2')
+  import('../JournalsManagement/ManageAllJournals')
 )
 const InstructorData = React.lazy(() =>
   import('../../components/admin/UserManagement/instructorData')

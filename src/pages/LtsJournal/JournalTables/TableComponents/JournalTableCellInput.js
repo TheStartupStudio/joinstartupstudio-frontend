@@ -83,6 +83,7 @@ const JournalTableCellInput = (props) => {
               handleChange(e.target.value)
               setLoading?.(true)
             }}
+            {...(inputType === 'number' && { step: 'any' })}
           />
         )}
         {!inputTag && (
@@ -100,6 +101,7 @@ const JournalTableCellInput = (props) => {
               debounce(() => handleChange(e.target.value))
               setLoading?.(true)
             }}
+            {...(inputType === 'number' && { step: 'any' })}
           />
         )}
       </div>

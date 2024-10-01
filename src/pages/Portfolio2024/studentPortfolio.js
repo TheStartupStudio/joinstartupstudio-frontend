@@ -54,7 +54,7 @@ function StudentPortfolio() {
     <div className='portfolio-container'>
       <PortfolioHeader
         user={publicPortfolio.user}
-        userStory={publicPortfolio?.whoAmI?.userStory}
+        userStory={publicPortfolio?.whoAmI?.userBasicInfo}
       />
       {activeSection === 'who-section' && (
         <WhoAmI data={publicPortfolio?.whoAmI} user={publicPortfolio?.user} />

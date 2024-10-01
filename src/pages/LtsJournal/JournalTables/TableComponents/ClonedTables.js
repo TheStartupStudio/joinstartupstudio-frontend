@@ -2,6 +2,7 @@ import React from 'react'
 import JournalTable from './JournalTable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { useLocation } from 'react-router-dom'
 
 function ClonedTables({
   tables,
@@ -11,6 +12,8 @@ function ClonedTables({
   setLoading,
   onDeleteClonedTable
 }) {
+  const location = useLocation()
+  const isFromStudentsJournals = location.pathname.includes('students-journals')
   return tables?.map((clonedTable, tableIndex) => {
     return (
       <React.Fragment key={clonedTable.id}>
@@ -31,26 +34,28 @@ function ClonedTables({
               isClonedTable={true}
             />
           </div>
-          <div
-            style={{
-              order: 2,
-              flexGrow: 0.1,
-              display: 'flex',
-              justifyContent: 'end'
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faTrashAlt}
-              className="plus-icon float-end ms-1"
+          {!isFromStudentsJournals && (
+            <div
               style={{
-                width: '22px',
-                height: '22px',
-                color: 'rgb(254, 67, 161)',
-                cursor: 'pointer'
+                order: 2,
+                flexGrow: 0.1,
+                display: 'flex',
+                justifyContent: 'end'
               }}
-              onClick={() => onDeleteClonedTable(clonedTable, tableIndex)}
-            />
-          </div>
+            >
+              <FontAwesomeIcon
+                icon={faTrashAlt}
+                className='plus-icon float-end ms-1'
+                style={{
+                  width: '22px',
+                  height: '22px',
+                  color: 'rgb(254, 67, 161)',
+                  cursor: 'pointer'
+                }}
+                onClick={() => onDeleteClonedTable(clonedTable, tableIndex)}
+              />
+            </div>
+          )}
         </div>
       </React.Fragment>
     )

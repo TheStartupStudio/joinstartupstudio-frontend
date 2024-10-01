@@ -1,6 +1,6 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
 import { TextEditor, TextInput } from '../../../../ui/ContentItems'
 import { useForm } from '../../../../hooks/useForm'
@@ -24,6 +24,7 @@ const AddLessonModal = ({
   type,
   category
 }) => {
+  console.log('data', data)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -39,7 +40,7 @@ const AddLessonModal = ({
     assignment: ''
   }
 
-  const { formData, handleChange, handleChangeEditor } = useForm(
+  const { formData, setFormData, handleChange, handleChangeEditor } = useForm(
     initialState,
     data,
     mode,
@@ -47,6 +48,11 @@ const AddLessonModal = ({
   )
 
   const { errors, handleSubmit } = useValidation(formData, setFormSubmitted)
+
+  useEffect(() => {
+    setFormData(data)
+  }, [data])
+  console.log('formData', formData)
 
   const deleteLessonHandler = () => {
     const res = dispatch(deleteLesson(formData.id))
@@ -106,11 +112,11 @@ const AddLessonModal = ({
       show={show}
       onHide={onHide}
       keyboard={false}
-      size="lg"
-      id="edit_briefing-modal"
+      size='lg'
+      id='edit_briefing-modal'
     >
-      <Modal.Header className="position-relative ">
-        <Modal.Title className="px-3 py-3">
+      <Modal.Header className='position-relative '>
+        <Modal.Title className='px-3 py-3'>
           {mode === 'add' ? 'ADD LESSON' : 'EDIT LESSON'}
         </Modal.Title>
         {isDisabled ? (
@@ -126,46 +132,46 @@ const AddLessonModal = ({
           </di>
         )}
       </Modal.Header>
-      <Modal.Body className="briefing-modal-body">
+      <Modal.Body className='briefing-modal-body'>
         <Row>
-          <Col className="me-auto col-12">
+          <Col className='me-auto col-12'>
             <TextInput
-              title="Title"
-              name="title"
-              value={formData.title}
+              title='Title'
+              name='title'
+              value={formData?.title}
               handleChange={handleChange}
               showError={formSubmitted}
-              error={errors.title}
+              error={errors?.title}
             />
           </Col>
         </Row>
         <Row>
-          <Col className="me-auto col-12">
+          <Col className='me-auto col-12'>
             <TextEditor
-              title="Lesson Plan / Task"
-              name="lessonPlan"
-              value={formData.lessonPlan}
+              title='Lesson Plan / Task'
+              name='lessonPlan'
+              value={formData?.lessonPlan}
               handleChange={handleChangeEditor}
               showError={formSubmitted}
-              error={errors.lessonPlan}
+              error={errors?.lessonPlan}
             />
           </Col>
         </Row>
         <Row>
-          <Col className="me-auto col-12">
+          <Col className='me-auto col-12'>
             <TextEditor
-              title="Assignment"
-              name="assignment"
-              value={formData.assignment}
+              title='Assignment'
+              name='assignment'
+              value={formData?.assignment}
               handleChange={handleChangeEditor}
               showError={formSubmitted}
-              error={errors.assignment}
+              error={errors?.assignment}
             />
           </Col>
         </Row>
         {mode === 'edit' && (
           <p
-            className="d-flex justify-content-end cursor-pointer pt-3"
+            className='d-flex justify-content-end cursor-pointer pt-3'
             onClick={() => deleteLessonHandler()}
           >
             DELETE LESSON

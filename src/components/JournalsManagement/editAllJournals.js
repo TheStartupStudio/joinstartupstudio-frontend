@@ -15,8 +15,12 @@ import { v4 as uuidv4 } from 'uuid'
 import { useHistory, useParams } from 'react-router-dom'
 import PositionSelector from '../PositionSelector/PositionSelector'
 import CustomContent from './CustomContent/CustomContent'
+import LtsButton from '../LTSButtons/LTSButton'
+import ReactTable from '../ReactTable/ReactTable'
+import AccordionModal from './AccordionModal'
+import { FaEdit, FaTrash } from 'react-icons/fa'
 
-export default function EditJournals2(props) {
+export default function EditAllJournals(props) {
   const [journals, setJournals] = useState([])
   const [journalOptions, setJournalOptions] = useState([])
   const [selectedJournal, setSelectedJournal] = useState({})
@@ -26,29 +30,30 @@ export default function EditJournals2(props) {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(false)
   const [journalType, setJournalType] = useState(null)
   const [journalId, setJournalId] = useState(null)
-  const randomUUID = uuidv4()
+  const [accordions, setAccordions] = useState([])
+  const [selectedAccordion, setSelectedAccordion] = useState({})
 
-  const breakdownInitialState = [
-    {
-      content: '',
-      title: '',
-      type: '',
+  const [showAccordionModal, setShowAccordionModal] = useState(false)
+  const handleShowAccordionModal = () => {
+    setShowAccordionModal(true)
+  }
 
-      customContent: {
-        paragraphs: [],
-        buttons: [],
-        popupButtons: [],
-        imageGallery: {}
-      }
-    }
-  ]
+  const handleHideAccordionModal = () => {
+    setShowAccordionModal(false)
+    setSelectedAccordion(null)
+  }
 
-  const [breakdowns, setBreakdowns] = useState(breakdownInitialState)
   useEffect(() => {
-    getJournals2()
-    getJournals2Weeks()
+    getJournalsTasks()
+    getJournalsWeeks()
     getTrainings()
+    getJournals()
   }, [])
+
+  useEffect(() => {
+    if (selectedJournal?.value?.ltsJournalAccordions)
+      setAccordions(selectedJournal?.value?.ltsJournalAccordions)
+  }, [selectedJournal?.value?.ltsJournalAccordions])
 
   useEffect(() => {
     if (journals?.length) {
@@ -81,12 +86,6 @@ export default function EditJournals2(props) {
       value: e.value,
       label: e.label
     })
-
-    setBreakdowns(
-      e.value?.breakdowns
-        ?.slice()
-        ?.sort((a, b) => a?.breakdownOrder - b?.breakdownOrder)
-    )
   }
 
   useEffect(() => {
@@ -108,7 +107,8 @@ export default function EditJournals2(props) {
     await axiosInstance
       .get('/ltsJournals/journals-descriptions')
       .then(({ data }) => {
-        setJournals(data.filter((d) => d.category.includes('new')))
+        // setJournals(data.filter((d) => d.category.includes('new')))
+        setJournals(data)
         setFetchingJournals(false)
       })
       .catch((e) => e)
@@ -124,7 +124,7 @@ export default function EditJournals2(props) {
     }
   }
 
-  const getJournals2 = async () => {
+  const getJournalsTasks = async () => {
     try {
       const response = await axiosInstance.get(
         '/ltsJournals/journals-descriptions2'
@@ -140,7 +140,7 @@ export default function EditJournals2(props) {
       console.error(error)
     }
   }
-  const getJournals2Weeks = async () => {
+  const getJournalsWeeks = async () => {
     try {
       const response = await axiosInstance.get(
         '/ltsJournals/journals-descriptions2-weeks'
@@ -158,48 +158,75 @@ export default function EditJournals2(props) {
   }
   // const { journalId, type } = useParams()
 
+  console.log('selectedJournal', selectedJournal)
   const handleSubmit = async () => {
     setLoading(true)
-    if (!journalType?.includes('my-training')) {
-      await axiosInstance
-        .put(`LtsJournals/${journalId}/editJournal2`, {
-          breakdowns: breakdowns,
-          paragraph: selectedJournal?.value?.paragraph,
-          title: selectedJournal?.value?.title,
-          type: selectedJournal?.value?.type,
-          customContent: selectedJournal?.value?.customContent,
-          steps: selectedJournal?.value?.steps,
-          ltsConnection: selectedJournal?.value?.ltsConnection,
-          curriculumOverview: selectedJournal?.value?.curriculumOverview,
-          programOpportunities: selectedJournal?.value?.programOpportunities,
-          expectedOutcomes: selectedJournal?.value?.expectedOutcomes,
-          studentAssignments: selectedJournal?.value?.studentAssignments
-        })
-        .then((res) => {
-          setJournals(
-            journals.map((journal) =>
-              res.data.id === journal.id ? res.data : journal
+    if (selectedJournal.value.hasOwnProperty('type')) {
+      debugger
+      if (!journalType?.includes('my-training')) {
+        await axiosInstance
+          .put(`LtsJournals/${journalId}/editJournal2`, {
+            paragraph: selectedJournal?.value?.paragraph,
+            title: selectedJournal?.value?.title,
+            type: selectedJournal?.value?.type,
+            customContent: selectedJournal?.value?.customContent,
+            steps: selectedJournal?.value?.steps,
+            ltsConnection: selectedJournal?.value?.ltsConnection,
+            curriculumOverview: selectedJournal?.value?.curriculumOverview,
+            programOpportunities: selectedJournal?.value?.programOpportunities,
+            expectedOutcomes: selectedJournal?.value?.expectedOutcomes,
+            studentAssignments: selectedJournal?.value?.studentAssignments
+          })
+          .then((res) => {
+            setJournals(
+              journals.map((journal) =>
+                res.data.id === journal.id ? res.data : journal
+              )
             )
-          )
-          setSelectedJournal((prevState) => ({
-            ...prevState,
-            value: res.data?.updatedJournal?.journal
-          }))
-          toast.success('Journal modified successfully!')
-          setLoading(false)
-        })
-        .catch((err) => {
-          toast.error('An error occurred, please try again!')
-          setLoading(false)
-        })
+            setSelectedJournal((prevState) => ({
+              ...prevState,
+              value: res.data?.updatedJournal?.journal
+            }))
+            toast.success('Journal modified successfully!')
+            setLoading(false)
+          })
+          .catch((err) => {
+            toast.error('An error occurred, please try again!')
+            setLoading(false)
+          })
+      } else {
+        await axiosInstance
+          .put(`my-training/${journalId}`, {
+            openingText: selectedJournal?.value?.openingText,
+            title: selectedJournal?.value?.title,
+            implementationSteps: selectedJournal?.value?.implementationSteps,
+            pedagogyOptions: selectedJournal?.value?.pedagogyOptions
+            // type: selectedJournal?.value?.type,
+          })
+          .then((res) => {
+            setJournals(
+              journals.map((journal) =>
+                res.data.id === journal.id ? res.data : journal
+              )
+            )
+            setSelectedJournal((prevState) => ({
+              ...prevState,
+              value: res.data?.updatedJournal?.journal
+            }))
+            toast.success('Journal modified successfully!')
+            setLoading(false)
+          })
+          .catch((err) => {
+            toast.error('An error occurred, please try again!')
+            setLoading(false)
+          })
+      }
     } else {
+      debugger
       await axiosInstance
-        .put(`my-training/${journalId}`, {
-          openingText: selectedJournal?.value?.openingText,
-          title: selectedJournal?.value?.title,
-          implementationSteps: selectedJournal?.value?.implementationSteps,
-          pedagogyOptions: selectedJournal?.value?.pedagogyOptions
-          // type: selectedJournal?.value?.type,
+        .put(`LtsJournals/${selectedJournal.value.id}/editJournal`, {
+          content: selectedJournal.value?.content,
+          title: selectedJournal?.value?.title
         })
         .then((res) => {
           setJournals(
@@ -209,7 +236,7 @@ export default function EditJournals2(props) {
           )
           setSelectedJournal((prevState) => ({
             ...prevState,
-            value: res.data?.updatedJournal?.journal
+            value: res.data
           }))
           toast.success('Journal modified successfully!')
           setLoading(false)
@@ -360,6 +387,60 @@ export default function EditJournals2(props) {
     setSelectedJournal(newJournal)
   }
 
+  const onAddAccordion = (newAccordion) => {
+    setAccordions([...accordions, newAccordion])
+  }
+  const onUpdateAccordion = (updatedAccordion) => {
+    setAccordions(
+      accordions.map((acc) =>
+        acc.id === updatedAccordion.id ? updatedAccordion : acc
+      )
+    )
+  }
+  const handleDeleteAccordion = async (row) => {
+    try {
+      await axiosInstance.delete(`/manageJournals/accordion/${row?.id}`)
+      setAccordions(accordions.filter((acc) => acc.id !== row?.id))
+    } catch (error) {
+      console.error('Error deleting accordion:', error)
+    }
+  }
+
+  const getColumns = ({ onSelectRow, onEdit, onDelete }) => [
+    {
+      Header: 'Title',
+      accessor: 'title',
+      Cell: ({ row }) => {
+        return <div>{row.original.title}</div>
+      }
+    },
+    {
+      Header: 'Actions',
+      accessor: 'id',
+      Cell: ({ row }) => (
+        <div>
+          <button
+            onClick={() => onEdit?.(row.original)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              marginRight: '8px'
+            }}
+          >
+            <FaEdit size={20} color='#99CC33' />
+          </button>
+          <button
+            onClick={() => onDelete?.(row.original)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            <FaTrash size={20} color='#FE43A1' />
+          </button>
+        </div>
+      )
+    }
+  ]
+
   return (
     <div>
       {!fetchingJournals ? (
@@ -436,53 +517,53 @@ export default function EditJournals2(props) {
                 }}
               />
             </label>
-
             {imageUploadingLoader && (
               <p style={{ color: '#01c5d1' }} className='ms-2 p-0 my-auto'>
                 Uploading image, please wait!
               </p>
             )}
-
             {!uploadedImageUrl && !imageUploadingLoader && (
               <p className='ms-2 p-0 my-auto' style={{ color: '#707070' }}>
                 Upload image to generate html
               </p>
             )}
-
-            {uploadedImageUrl && !imageUploadingLoader && (
-              <span
-                className='input-group-text bg-transparent text-dark ms-2 w-100 justify-content-center'
-                style={{ borderLeft: '0px !important' }}
-                onClick={() => {
-                  toast.success(
-                    'HTML Code Copied, you can paste it on the journal content!'
-                  )
-                  navigator.clipboard.writeText(
-                    `<img src="${uploadedImageUrl}" class="w-100"><br>`
-                  )
-                }}
-              >
+            <>
+              {uploadedImageUrl && !imageUploadingLoader && (
                 <span
-                  className='copy-portfolio-span'
-                  style={{ fontSize: '15px' }}
+                  className='input-group-text bg-transparent text-dark ms-2 w-100 justify-content-center'
+                  style={{ borderLeft: '0px !important' }}
+                  onClick={() => {
+                    toast.success(
+                      'HTML Code Copied, you can paste it on the journal content!'
+                    )
+                    navigator.clipboard.writeText(
+                      `<img src="${uploadedImageUrl}" class="w-100"><br>`
+                    )
+                  }}
                 >
-                  Copy Generated Html Code
-                  <img src={copy} width='22px' alt='#' className='ms-2' />
+                  <span
+                    className='copy-portfolio-span'
+                    style={{ fontSize: '15px' }}
+                  >
+                    Copy Generated Html Code
+                    <img src={copy} width='22px' alt='#' className='ms-2' />
+                  </span>
                 </span>
-              </span>
-            )}
+              )}
 
-            <input
-              type='file'
-              name='myImage'
-              className='d-none'
-              id='file-input'
-              disabled={imageUploadingLoader}
-              onChange={(event) => {
-                // setSelectedImage(event.target.files[0]);
-                imageUpload(event.target.files[0])
-              }}
-            />
+              <input
+                type='file'
+                name='myImage'
+                className='d-none'
+                id='file-input'
+                disabled={imageUploadingLoader}
+                onChange={(event) => {
+                  // setSelectedImage(event.target.files[0]);
+                  imageUpload(event.target.files[0])
+                }}
+              />
+            </>
+            )
           </div>
         </div>
       ) : (
@@ -505,6 +586,18 @@ export default function EditJournals2(props) {
             value={selectedJournal?.value?.title}
             onChange={handleJournalUpdate}
           />
+          {selectedJournal &&
+            !selectedJournal?.value?.hasOwnProperty('type') && (
+              <textarea
+                className='p-2 w-100 mt-2'
+                value={selectedJournal?.value?.content}
+                onChange={handleJournalUpdate}
+                name='content'
+                id=''
+                cols='30'
+                rows='16'
+              ></textarea>
+            )}
           {selectedJournal?.value?.paragraph && (
             <>
               <div>Paragraph</div>
@@ -625,47 +718,55 @@ export default function EditJournals2(props) {
               )
             })}
           {/* {selectedJournal.value?.studentAssignments && ( */}
-          <>
-            <h2>Student assignment content</h2>
-            <KendoTextEditor
-              value={selectedJournal?.value?.studentAssignments || ''}
-              handleChange={handleChangeStudentAssignments}
-              minHeight={150}
-            />
-          </>
-          {/* )} */}
-          <>
-            <h2>Lts Connection Model</h2>
-            {selectedJournal?.value?.ltsConnection && (
+          {selectedJournal &&
+            selectedJournal?.value?.hasOwnProperty('type') && (
               <>
-                <div># First paragraph</div>
-                <KendoTextEditor
-                  value={selectedJournal?.value?.ltsConnection?.firstParagraph}
-                  handleChange={(e) =>
-                    handleChangeLtsConnection('firstParagraph', e)
-                  }
-                  minHeight={150}
-                />
-                {selectedJournal?.value?.ltsConnection?.secondParagraph !=
-                  null &&
-                  typeof selectedJournal?.value?.ltsConnection
-                    ?.secondParagraph !== 'undefined' && (
+                <>
+                  <h2>Student assignment content</h2>
+                  <KendoTextEditor
+                    value={selectedJournal?.value?.studentAssignments || ''}
+                    handleChange={handleChangeStudentAssignments}
+                    minHeight={150}
+                  />
+                </>
+                {/* )} */}
+                <>
+                  <h2>Lts Connection Model</h2>
+                  {selectedJournal?.value?.ltsConnection && (
                     <>
-                      <div># Second paragraph</div>
+                      <div># First paragraph</div>
                       <KendoTextEditor
                         value={
-                          selectedJournal?.value?.ltsConnection?.secondParagraph
+                          selectedJournal?.value?.ltsConnection?.firstParagraph
                         }
                         handleChange={(e) =>
-                          handleChangeLtsConnection('secondParagraph', e)
+                          handleChangeLtsConnection('firstParagraph', e)
                         }
                         minHeight={150}
                       />
+                      {selectedJournal?.value?.ltsConnection?.secondParagraph !=
+                        null &&
+                        typeof selectedJournal?.value?.ltsConnection
+                          ?.secondParagraph !== 'undefined' && (
+                          <>
+                            <div># Second paragraph</div>
+                            <KendoTextEditor
+                              value={
+                                selectedJournal?.value?.ltsConnection
+                                  ?.secondParagraph
+                              }
+                              handleChange={(e) =>
+                                handleChangeLtsConnection('secondParagraph', e)
+                              }
+                              minHeight={150}
+                            />
+                          </>
+                        )}
                     </>
                   )}
+                </>
               </>
             )}
-          </>
           {selectedJournal?.value?.programOpportunities && (
             <>
               <h1>Program Opportunities</h1>
@@ -821,6 +922,50 @@ export default function EditJournals2(props) {
             {loading ? 'SAVING..' : 'SAVE'}
           </button>
         </div>
+      )}
+
+      <div className={'row mt-4'}>
+        <div className={'col-md-6'}>
+          {selectedJournal?.value?.category === 'my-mentorship' &&
+            selectedJournal?.value?.title
+              ?.toLowerCase()
+              ?.includes('My Story in Motion Research'.toLowerCase()) && (
+              <LtsButton
+                onClick={handleShowAccordionModal}
+                name={`Add new accordion`}
+                align={'end'}
+                width={'70%'}
+              />
+            )}
+          {accordions && accordions?.length > 0 && (
+            <ReactTable
+              // data={accordions}
+              data={accordions?.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+              )}
+              getColumns={getColumns}
+              addNew={'accordion'}
+              onAdd={handleShowAccordionModal}
+              onEdit={(row) => {
+                handleShowAccordionModal(row)
+                setSelectedAccordion(row)
+              }}
+              onDelete={handleDeleteAccordion}
+            />
+          )}
+        </div>
+      </div>
+
+      {showAccordionModal && (
+        <AccordionModal
+          show={showAccordionModal}
+          onHide={handleHideAccordionModal}
+          selectedAccordion={selectedAccordion}
+          setSelectedAccordion={setSelectedAccordion}
+          selectedJournal={selectedJournal}
+          onAddAccordion={onAddAccordion}
+          onUpdateAccordion={onUpdateAccordion}
+        />
       )}
     </div>
   )

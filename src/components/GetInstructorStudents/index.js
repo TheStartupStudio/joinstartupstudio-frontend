@@ -10,7 +10,7 @@ import socket from '../../utils/notificationSocket'
 import { useSelector } from 'react-redux'
 import NotificationTypes from '../../utils/notificationTypes'
 const JournalsManagement2 = React.lazy(() =>
-  import('../../pages/JournalsManagement/JournalsManagement2')
+  import('../../pages/JournalsManagement/ManageAllJournals')
 )
 
 const customStyles = {
@@ -120,16 +120,16 @@ const StudentOfInstructors = (props) => {
     <Modal
       show={props.onShow}
       onHide={props.onHide}
-      backdrop="static"
+      backdrop='static'
       keyboard={false}
-      id=""
+      id=''
     >
-      <Modal.Header className="contact-us-title my-auto general-modal-header p-0 mx-4">
-        <h3 className="mb-0 pt-4 mt-2">Admin panel</h3>
+      <Modal.Header className='contact-us-title my-auto general-modal-header p-0 mx-4'>
+        <h3 className='mb-0 pt-4 mt-2'>Admin panel</h3>
         <button
-          type="button"
-          className="btn-close me-1 mt-0 pt-1"
-          aria-label="Close"
+          type='button'
+          className='btn-close me-1 mt-0 pt-1'
+          aria-label='Close'
           onClick={() => {
             props.onHide()
             setStateToShow('none')
@@ -138,8 +138,8 @@ const StudentOfInstructors = (props) => {
       </Modal.Header>
       <Modal.Body style={{ minHeight: '150px' }}>
         <div>
-          <div className="row px-md-4 mt-md-4">
-            <div className="col-12 col-md-6 px-md-4">
+          <div className='row px-md-4 mt-md-4'>
+            <div className='col-12 col-md-6 px-md-4'>
               <button
                 className={`btn w-100  ${
                   toShow === 'CountStudent'
@@ -155,7 +155,7 @@ const StudentOfInstructors = (props) => {
                 {toShow === 'CountStudent' ? 'Close' : 'Student count'}
               </button>
             </div>
-            <div className="col-12 col-md-6 px-md-4">
+            <div className='col-12 col-md-6 px-md-4'>
               <button
                 className={`btn  w-100 brand-button ${
                   toShow === 'dashboard'
@@ -172,8 +172,8 @@ const StudentOfInstructors = (props) => {
               </button>
             </div>
           </div>
-          <div className="row px-md-4 mt-md-4">
-            <div className="col-12 col-md-6 px-md-4">
+          <div className='row px-md-4 mt-md-4'>
+            <div className='col-12 col-md-6 px-md-4'>
               <button
                 className={`btn  w-100 brand-button ${
                   toShow === 'notifications'
@@ -190,7 +190,7 @@ const StudentOfInstructors = (props) => {
               </button>
             </div>
 
-            <div className="col-12 col-md-6 px-md-4">
+            <div className='col-12 col-md-6 px-md-4'>
               <button
                 className={`btn  w-100 brand-button ${
                   toShow === 'edit-journals'
@@ -208,19 +208,19 @@ const StudentOfInstructors = (props) => {
             </div>
           </div>
         </div>
-        <div className="row"></div>
+        <div className='row'></div>
         {toShow !== 'none' && <hr />}
         {toShow === 'dashboard' && (
           <>
             <Form onSubmit={handleSubmit(changeDashboard)}>
-              <div className="mb-4 py-2 px-md-2 row">
+              <div className='mb-4 py-2 px-md-2 row'>
                 <Col sm={12} md={12}>
-                  <label htmlFor="text" className="brand-text mt-3">
+                  <label htmlFor='text' className='brand-text mt-3'>
                     Text to show
                   </label>
                   <textarea
-                    className="mt-2 mb-2 col-12 p-md-2"
-                    name="text"
+                    className='mt-2 mb-2 col-12 p-md-2'
+                    name='text'
                     rows={4}
                     placeholder={'Description'}
                     value={dashboardData ? dashboardData.description : ''}
@@ -233,13 +233,13 @@ const StudentOfInstructors = (props) => {
                   />
                 </Col>
                 <Col sm={12} md={12}>
-                  <label htmlFor="link" className="brand-text">
+                  <label htmlFor='link' className='brand-text'>
                     Link to redirect
                   </label>
                   <input
-                    className="mt-2 mb-2 col-12 p-md-2"
-                    type="text"
-                    name="link"
+                    className='mt-2 mb-2 col-12 p-md-2'
+                    type='text'
+                    name='link'
                     placeholder={'Link'}
                     value={dashboardData ? dashboardData.link : ''}
                     onChange={(e) =>
@@ -250,21 +250,21 @@ const StudentOfInstructors = (props) => {
                     }
                   />
                 </Col>
-                <Col sm={12} md={12} className="row mb-4">
+                <Col sm={12} md={12} className='row mb-4'>
                   <p
-                    className="brand-text mb-0 col-12"
+                    className='brand-text mb-0 col-12'
                     style={{ fontSize: '18px' }}
                   >
                     Read
                   </p>
-                  <div className="col-12 col-md-6">
-                    <label htmlFor="title" className="brand-text">
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='title' className='brand-text'>
                       Title
                     </label>
                     <input
-                      type="text"
-                      name="title"
-                      className="p-md-2 w-100"
+                      type='text'
+                      name='title'
+                      className='p-md-2 w-100'
                       placeholder={'Title'}
                       value={dashboardData ? dashboardData?.read?.title : ''}
                       onChange={(e) =>
@@ -278,14 +278,14 @@ const StudentOfInstructors = (props) => {
                       }
                     />
                   </div>
-                  <div className="col-12 col-md-6">
-                    <label htmlFor="author" className="brand-text">
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='author' className='brand-text'>
                       Author
                     </label>
                     <input
-                      type="text"
-                      name="author"
-                      className="p-md-2 w-100"
+                      type='text'
+                      name='author'
+                      className='p-md-2 w-100'
                       placeholder={'author'}
                       value={dashboardData ? dashboardData?.read?.author : ''}
                       onChange={(e) =>
@@ -300,21 +300,21 @@ const StudentOfInstructors = (props) => {
                     />
                   </div>
                 </Col>
-                <Col sm={12} md={12} className="row mb-4">
+                <Col sm={12} md={12} className='row mb-4'>
                   <p
-                    className="brand-text mb-0 col-12"
+                    className='brand-text mb-0 col-12'
                     style={{ fontSize: '18px' }}
                   >
                     Watch
                   </p>
-                  <div className="col-12 col-md-6">
-                    <label htmlFor="title" className="brand-text">
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='title' className='brand-text'>
                       Title
                     </label>
                     <input
-                      type="text"
-                      name="title"
-                      className="p-md-2 w-100"
+                      type='text'
+                      name='title'
+                      className='p-md-2 w-100'
                       placeholder={'Title'}
                       value={dashboardData ? dashboardData?.watch?.title : ''}
                       onChange={(e) =>
@@ -328,14 +328,14 @@ const StudentOfInstructors = (props) => {
                       }
                     />
                   </div>
-                  <div className="col-12 col-md-6">
-                    <label htmlFor="author" className="brand-text">
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='author' className='brand-text'>
                       Author
                     </label>
                     <input
-                      type="text"
-                      name="author"
-                      className="p-md-2 w-100"
+                      type='text'
+                      name='author'
+                      className='p-md-2 w-100'
                       placeholder={'author'}
                       value={dashboardData ? dashboardData?.watch?.author : ''}
                       onChange={(e) =>
@@ -350,21 +350,21 @@ const StudentOfInstructors = (props) => {
                     />
                   </div>
                 </Col>
-                <Col sm={12} md={12} className="row mb-4">
+                <Col sm={12} md={12} className='row mb-4'>
                   <p
-                    className="brand-text mb-0 col-12"
+                    className='brand-text mb-0 col-12'
                     style={{ fontSize: '18px' }}
                   >
                     Listen
                   </p>
-                  <div className="col-12 col-md-6">
-                    <label htmlFor="title" className="brand-text">
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='title' className='brand-text'>
                       Title
                     </label>
                     <input
-                      type="text"
-                      name="title"
-                      className="p-md-2 w-100"
+                      type='text'
+                      name='title'
+                      className='p-md-2 w-100'
                       placeholder={'Title'}
                       value={dashboardData ? dashboardData?.listen?.title : ''}
                       onChange={(e) =>
@@ -378,14 +378,14 @@ const StudentOfInstructors = (props) => {
                       }
                     />
                   </div>
-                  <div className="col-12 col-md-6">
-                    <label htmlFor="author" className="brand-text">
+                  <div className='col-12 col-md-6'>
+                    <label htmlFor='author' className='brand-text'>
                       Author
                     </label>
                     <input
-                      type="text"
-                      name="author"
-                      className="p-md-2 w-100"
+                      type='text'
+                      name='author'
+                      className='p-md-2 w-100'
                       placeholder={'author'}
                       value={dashboardData ? dashboardData?.listen?.author : ''}
                       onChange={(e) =>
@@ -402,8 +402,8 @@ const StudentOfInstructors = (props) => {
                 </Col>
               </div>
               <button
-                className="btn w-100 save-button add-new-note-button-text fw-bold brand-button"
-                type="submit"
+                className='btn w-100 save-button add-new-note-button-text fw-bold brand-button'
+                type='submit'
               >
                 Submit
               </button>
@@ -412,12 +412,12 @@ const StudentOfInstructors = (props) => {
         )}
         {toShow === 'CountStudent' && (
           <>
-            <div className="mb-4 py-2 px-md-2 row">
+            <div className='mb-4 py-2 px-md-2 row'>
               <>
                 <Select
                   placeholder={'Select Uni'}
                   options={universities}
-                  name="year"
+                  name='year'
                   styles={{
                     ...customStyles,
                     menu: (provided) => ({
@@ -433,7 +433,7 @@ const StudentOfInstructors = (props) => {
                     setTotalNumber(-1)
                   }}
                 />
-                <div className="row col-12 col-md-7">
+                <div className='row col-12 col-md-7'>
                   {universities?.filter((uni) => uni.value === isUniChosed)[0]
                     ?.universityInstructors.length !== 0 &&
                   !(
@@ -442,7 +442,7 @@ const StudentOfInstructors = (props) => {
                     totalNumber === -1
                   ) ? (
                     <>
-                      <p className="text-starts fw-bold mb-3">Instructors</p>
+                      <p className='text-starts fw-bold mb-3'>Instructors</p>
                     </>
                   ) : (
                     ''
@@ -450,18 +450,18 @@ const StudentOfInstructors = (props) => {
                   {universities
                     .filter((univerity) => univerity.value === isUniChosed)[0]
                     ?.universityInstructors.map((instructor, index) => (
-                      <div className="mb-2">
+                      <div className='mb-2'>
                         <label htmlFor={`instructor ${instructor.User.id}`}>
                           {instructor.User.name}
                         </label>
                         <input
                           style={{ fontSize: '19px' }}
-                          type="checkbox"
+                          type='checkbox'
                           key={index + instructor.User.id}
                           id={`instructor ${instructor.User.id}`}
                           name={`${instructor.User.name}`}
                           value={`${instructor.instructorId}`}
-                          className="my-auto float-end px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex"
+                          className='my-auto float-end px-0 ps-sm-1 ps-md-1 float-end my-auto form-switch d-flex'
                           onChange={(e) => {
                             if (selectedInstructors.includes(e.target.value)) {
                               const index = selectedInstructors.indexOf(
@@ -501,7 +501,7 @@ const StudentOfInstructors = (props) => {
                     ))}
                 </div>
                 {totalNumber !== -1 ? (
-                  <p className="fw-bolder text-center w-100">
+                  <p className='fw-bolder text-center w-100'>
                     Total active students: {totalNumber}
                   </p>
                 ) : (
@@ -509,7 +509,7 @@ const StudentOfInstructors = (props) => {
                 )}
                 {universities?.filter((uni) => uni.value === isUniChosed)[0]
                   ?.universityInstructors.length === 0 ? (
-                  <p className="text-center fw-bold">
+                  <p className='text-center fw-bold'>
                     This university don't have any instructor
                   </p>
                 ) : (
@@ -518,15 +518,15 @@ const StudentOfInstructors = (props) => {
                 {selectedInstructorsName.length === 0 &&
                 isUniChosed === 0 &&
                 totalNumber === -1 ? (
-                  <p className="text-center fw-bold">
+                  <p className='text-center fw-bold'>
                     You don't have selected anything
                   </p>
                 ) : (
                   ''
                 )}
-                <div className="col-12 col-md-5 text-center ">
+                <div className='col-12 col-md-5 text-center '>
                   {selectedInstructorsName?.length !== 0 ? (
-                    <span className="fw-bolder">Selected Users</span>
+                    <span className='fw-bolder'>Selected Users</span>
                   ) : (
                     ''
                   )}
@@ -558,7 +558,7 @@ const StudentOfInstructors = (props) => {
             ))}
             <div className={'d-flex justify-content-end mb-2'}>
               <button
-                className="float-end m-0 px-md-5 save-button add-new-note-button-text"
+                className='float-end m-0 px-md-5 save-button add-new-note-button-text'
                 onClick={onAddNewNotification}
               >
                 {loading ? 'loading' : 'Add more'}
@@ -566,7 +566,7 @@ const StudentOfInstructors = (props) => {
             </div>
             <div>
               <button
-                className="float-end m-0 px-md-5 w-100 save-button add-new-note-button-text"
+                className='float-end m-0 px-md-5 w-100 save-button add-new-note-button-text'
                 onClick={handleSubmitNotification}
               >
                 {loading ? 'loading' : 'Submit'}
@@ -579,7 +579,7 @@ const StudentOfInstructors = (props) => {
       <Modal.Footer style={{ border: '0px' }}>
         {toShow === 'CountStudent' && (
           <button
-            className="float-end m-0 px-md-5 w-100 save-button add-new-note-button-text"
+            className='float-end m-0 px-md-5 w-100 save-button add-new-note-button-text'
             onClick={submit}
           >
             {loading ? 'loading' : 'Show'}

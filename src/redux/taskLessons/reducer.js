@@ -34,7 +34,7 @@ const TaskLessonReducer = (state = initialState, action) => {
     case types.EDIT_LESSONS_PENDING:
       return {
         ...state,
-        loading: true,
+        saving: true,
         error: null
       }
     case types.EDIT_LESSONS_FULFILLED:
@@ -43,53 +43,53 @@ const TaskLessonReducer = (state = initialState, action) => {
       return {
         ...state,
         lessons: updatedLessonInArray,
-        loading: false,
+        saving: false,
         error: null
       }
     case types.EDIT_LESSONS_REJECTED:
       return {
         ...state,
-        loading: false,
+        saving: false,
         error: payload
       }
 
     case types.CREATE_LESSONS_PENDING:
       return {
         ...state,
-        loading: true,
+        saving: true,
         error: null
       }
     case types.CREATE_LESSONS_FULFILLED:
       return {
         ...state,
         lessons: [...state.lessons, payload],
-        loading: false,
+        saving: false,
         error: null
       }
     case types.CREATE_LESSONS_REJECTED:
       return {
         ...state,
         loading: false,
-        error: payload
+        saving: payload
       }
 
     case types.DELETE_LESSONS_PENDING:
       return {
         ...state,
-        loading: true,
+        saving: true,
         error: null
       }
     case types.DELETE_LESSONS_FULFILLED:
       return {
         ...state,
-        loading: false,
+        saving: false,
         lessons: state.lessons.filter((briefing) => briefing.id !== payload.id),
         error: null
       }
     case types.DELETE_LESSONS_REJECTED:
       return {
         ...state,
-        loading: false,
+        saving: false,
         error: payload
       }
 

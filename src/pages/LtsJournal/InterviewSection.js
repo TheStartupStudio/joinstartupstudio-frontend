@@ -42,7 +42,7 @@ const InterviewSection = ({ part, interviews, setVideo, journal }) => {
         ?.filter((interview) => interview.part === part)
         .map((interview, index) => {
           return (
-            <React.Fragment key={index}>
+            <React.Fragment key={interview.id}>
               <div className={'gap-2 d-flex align-items-center'}>
                 <div className={'mr-2'}>
                   <FontAwesomeIcon

@@ -9,6 +9,7 @@ import '../../../pages/LtsJournal/TableWrapper/index.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { useLocation } from 'react-router-dom'
 
 const JournalTables = (props) => {
   const [tables, setTables] = useState([])
@@ -174,6 +175,7 @@ const JournalTables = (props) => {
         ...newData.content
       })
       .then(({ data }) => {
+        props.saved && props.saved()
         if (data) {
           if (data.cloneCellId) {
             if (from !== 'fromClonedRows') {
@@ -464,6 +466,9 @@ const JournalTables = (props) => {
         toast.error('Error occurred during deleting table')
       })
   }
+
+  const location = useLocation()
+  const isFromStudentsJournals = location.pathname.includes('students-journals')
   return (
     <div className={'table-container'}>
       {tables?.map((table, tableIndex) => {
@@ -533,23 +538,25 @@ const JournalTables = (props) => {
                   />
                 )}
               </div>
-              <div style={{ order: 3, position: 'relative' }}>
-                {table?.isCloneable ? (
-                  <div className={' d-flex justify-content-end p-2'}>
-                    <FontAwesomeIcon
-                      icon={faPlus}
-                      className='plus-ico '
-                      style={{
-                        width: '28px',
-                        height: '28px',
-                        color: '#707070',
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => onAddTable(table)}
-                    />
-                  </div>
-                ) : null}
-              </div>
+              {!isFromStudentsJournals && (
+                <div style={{ order: 3, position: 'relative' }}>
+                  {table?.isCloneable ? (
+                    <div className={' d-flex justify-content-end p-2'}>
+                      <FontAwesomeIcon
+                        icon={faPlus}
+                        className='plus-ico '
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          color: '#707070',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => onAddTable(table)}
+                      />
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </div>
           </React.Fragment>
         )

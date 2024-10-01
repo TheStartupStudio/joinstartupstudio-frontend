@@ -68,7 +68,7 @@ function SectionActions(props) {
           {/*    }*/}
           {/*  />*/}
           {/*)}*/}
-          {/* {hideButton?.isDisplayed && (
+          {hideButton?.isDisplayed && (
             <TooltipAction
               onClick={() => hideButton?.action()}
               icon={<FaX className={'action-icon public-icon'} />}
@@ -89,7 +89,7 @@ function SectionActions(props) {
                 </Tooltip>
               }
             />
-          )} */}
+          )}
           {addButton?.isDisplayed && (
             <TooltipAction
               onClick={() => addButton?.action()}

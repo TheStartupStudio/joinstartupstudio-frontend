@@ -22,7 +22,7 @@ const MentorMeetingManager = (props) => {
   const [saveUnchanged, setSaveUnchanged] = useState(false)
   const [showArchiveModal, setShowArchiveModal] = useState(false)
   const [showDeleteArchiveModal, setShowDeleteArchiveModal] = useState(false)
-  const [mentorMeetings, setMentorMeetings] = useState([]) // Replaced teamMeetings with mentorMeetings
+  const [mentorMeetings, setMentorMeetings] = useState([])
   const [isEdit, setIsEdit] = useState(false)
   const handleCloseArchiveModal = () => {
     setShowArchiveModal(false)
@@ -46,13 +46,13 @@ const MentorMeetingManager = (props) => {
         meeting
       })
       .then((res) => {
-        let newMentorMeetings = [...mentorMeetings] // Replaced teamMeetings with mentorMeetings
+        let newMentorMeetings = [...mentorMeetings]
         const foundedIndex = newMentorMeetings?.findIndex(
           (meeting) => meeting.id === res.data?.id
         )
         newMentorMeetings.splice(foundedIndex, 1, res.data)
-        setMentorMeeting(res.data) // Replaced teamMeeting with mentorMeeting
-        setMentorMeetings(newMentorMeetings) // Replaced teamMeetings with mentorMeetings
+        setMentorMeeting(res.data)
+        setMentorMeetings(newMentorMeetings)
         handleCloseArchiveModal()
         setSaveUnchanged(true)
       })
@@ -60,14 +60,14 @@ const MentorMeetingManager = (props) => {
 
   useEffect(() => {
     if (saveUnchanged === true) {
-      handleAddMentorMeeting() // Replaced handleAddTeamMeeting with handleAddMentorMeeting
+      handleAddMentorMeeting()
       setSaveUnchanged(false)
     }
   }, [saveUnchanged])
 
   const saveChanged = () => {
     handleCloseArchiveModal()
-    handleAddMentorMeeting() // Replaced handleAddTeamMeeting with handleAddMentorMeeting
+    handleAddMentorMeeting()
   }
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
@@ -100,7 +100,7 @@ const MentorMeetingManager = (props) => {
         })
         .then((res) => {
           if (mentorMeetings.length) {
-            const newMeetings = [...mentorMeetings] // Replaced teamMeetings with mentorMeetings
+            const newMeetings = [...mentorMeetings]
             const foundedIndex = newMeetings?.findIndex(
               (meeting) => meeting?.id === res.data?.id
             )
@@ -149,14 +149,13 @@ const MentorMeetingManager = (props) => {
 
   useEffect(() => {
     if (isEdit) {
-      const latestUpdatedElement = getLatestUpdatedElement(mentorMeetings) // Replaced teamMeetings with mentorMeetings
+      const latestUpdatedElement = getLatestUpdatedElement(mentorMeetings)
       setSelectedArchive(latestUpdatedElement)
     }
-  }, [mentorMeetings]) // Replaced teamMeetings with mentorMeetings
+  }, [mentorMeetings])
 
   const handleChangeMentorMeeting = async (name, value, meetingIndex, fb) => {
     if (mentorMeetings?.length === 0) {
-      // Replaced teamMeetings with mentorMeetings
       const newMentorMeeting = {
         ...mentorMeeting,
         [name]: value

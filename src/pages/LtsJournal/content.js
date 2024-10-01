@@ -65,6 +65,8 @@ function LtsJournalContent(props) {
   //   )
   // }
 
+  console.log('journals', journal)
+
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
@@ -195,7 +197,6 @@ function LtsJournalContent(props) {
       })
 
       setShowAddReflection({ ...showAddReflection, [entry.id]: false })
-
       props.saved && props.saved(data.journal)
     }
   }
@@ -382,12 +383,14 @@ function LtsJournalContent(props) {
         <div className='col-12'>
           <>
             <JournalTables
+              getJournals={props.getJournals}
               loadData={loadData}
               tables={journal?.journalTables}
               paragraphs={journal?.journalParagraphs}
               loading={loading}
               setLoading={setLoading}
               backgroundColor={'#fff'}
+              saved={() => props.saved(journal)}
             />
           </>
         </div>
@@ -411,7 +414,9 @@ function LtsJournalContent(props) {
                 updateReflection={(entry, userJournalEntry) =>
                   updateReflection(entry, userJournalEntry)
                 }
-                addReflection={(entry) => addReflection(entry)}
+                addReflection={(entry) => {
+                  addReflection(entry)
+                }}
                 handleShowAddReflection={(reflection) =>
                   handleShowAddReflection(reflection)
                 }
@@ -446,100 +451,65 @@ function LtsJournalContent(props) {
           </div>
         ) : null}
 
-        {/* {journal?.ltsJournalAccordions && journal?.ltsJournalAccordions?.length
-          ? journal?.ltsJournalAccordions
+        {journal.ltsJournalAccordions && journal.ltsJournalAccordions.length
+          ? journal.ltsJournalAccordions
               ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-              ?.map((accordion) => {
+              .map((accordion) => {
                 return (
-                  <div className='col-12'>
-                    <AccordionItemWrapper
-                      isOpened={openAccordion === `accordion-${accordion.id}`}
-                      handleAccordionClick={() =>
-                        handleAccordionClick(`accordion-${accordion.id}`)
-                      }
-                      isExanded={false}
-                      title={accordion.title}
-                      accordionStyle={{ backgroundColor: '#fff' }}
-                    >
-                      {openAccordion === `accordion-${accordion.id}` && (
-                        <InterviewedMentors
-                          accordion={accordion}
-                          journal={journal}
-                        />
-                      )}
-                    </AccordionItemWrapper>
-                  </div>
+                  !!accordion?.interviewedMentor && (
+                    <div className='col-12'>
+                      <AccordionItemWrapper
+                        isOpened={openAccordion === `accordion-${accordion.id}`}
+                        handleAccordionClick={() =>
+                          handleAccordionClick(`accordion-${accordion.id}`)
+                        }
+                        isExanded={false}
+                        title={accordion.title}
+                        accordionStyle={{ backgroundColor: '#fff' }}
+                      >
+                        {openAccordion === `accordion-${accordion.id}` && (
+                          <InterviewedMentors
+                            accordion={accordion}
+                            journal={journal}
+                          />
+                        )}
+                      </AccordionItemWrapper>
+                    </div>
+                  )
                 )
               })
-          : null} */}
-
+          : null}
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (
-              <div className='col-12'>
-                <AccordionItemWrapper
-                  isOpened={openAccordion === `accordion-${accordion.id}`}
-                  handleAccordionClick={() =>
-                    handleAccordionClick(`accordion-${accordion.id}`)
-                  }
-                  isExanded={false}
-                  title={accordion.title}
-                >
-                  {openAccordion === `accordion-${accordion.id}` && (
-                    <>
-                      {accordion.ltsJournalAccordionEntries &&
-                        accordion.ltsJournalAccordionEntries.length > 0 && (
-                          <div className='accordion-content'>
-                            <div className='col-12'>
-                              <div className=''>
-                                <EntriesBox
-                                  accordion={accordion}
-                                  entries={accordion.ltsJournalAccordionEntries}
-                                  entryBoxTitle={journal?.title}
-                                  isEditable={true}
-                                  journal={journal}
-                                  userJournalEntries={userJournalEntries}
-                                  deleteReflection={(entry, userJournalEntry) =>
-                                    deleteReflection(entry, userJournalEntry)
-                                  }
-                                  updateReflection={(entry, userJournalEntry) =>
-                                    updateReflection(entry, userJournalEntry)
-                                  }
-                                  addReflection={(entry) =>
-                                    addReflection(entry)
-                                  }
-                                  handleShowAddReflection={(reflection) =>
-                                    handleShowAddReflection(reflection)
-                                  }
-                                  showAddReflection={showAddReflection}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      {accordion.journalTablesAccordions &&
-                        accordion.journalTablesAccordions.length > 0 && (
-                          <div
-                            className='accordion-content'
-                            style={{ padding: '15px 15px ' }}
-                          >
-                            <div className='col-12'>
-                              <div className=''>
-                                <JournalTables
-                                  tables={accordion?.journalTablesAccordions}
-                                  paragraphs={null}
-                                  loading={loading}
-                                  setLoading={setLoading}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                    </>
-                  )}
-                </AccordionItemWrapper>
-              </div>
+              <>
+                <AccordionWithJournalEntries
+                  key={`entries-${accordion.id}`}
+                  accordion={accordion}
+                  journal={journal}
+                  openAccordion={openAccordion}
+                  handleAccordionClick={handleAccordionClick}
+                  userJournalEntries={userJournalEntries}
+                  deleteReflection={deleteReflection}
+                  updateReflection={updateReflection}
+                  addReflection={addReflection}
+                  handleShowAddReflection={handleShowAddReflection}
+                  showAddReflection={showAddReflection}
+                />
+
+                <AccordionWithJournalTables
+                  key={`tables-${accordion.id}`}
+                  accordion={accordion}
+                  journal={journal}
+                  openAccordion={openAccordion}
+                  handleAccordionClick={handleAccordionClick}
+                  loading={loading}
+                  setLoading={setLoading}
+                  props={props}
+                />
+              </>
             ))
           : null}
+
         {journal.brandsJournal &&
         journal.brandsJournal.length &&
         journal.brandsJournal.find((item) => item.hasAccordion) ? (
@@ -677,6 +647,114 @@ function LtsJournalContent(props) {
   )
 }
 
+const AccordionWithJournalEntries = ({
+  accordion,
+  journal,
+  openAccordion,
+  handleAccordionClick,
+  userJournalEntries,
+  deleteReflection,
+  updateReflection,
+  addReflection,
+  handleShowAddReflection,
+  showAddReflection
+}) => {
+  const hasJournalEntries =
+    accordion.ltsJournalAccordionEntries &&
+    accordion.ltsJournalAccordionEntries.length > 0
+
+  if (!hasJournalEntries) {
+    return null
+  }
+
+  return (
+    <div className='col-12'>
+      <AccordionItemWrapper
+        isOpened={openAccordion === `accordion-${accordion.id}`}
+        handleAccordionClick={() =>
+          handleAccordionClick(`accordion-${accordion.id}`)
+        }
+        isExanded={false}
+        title={accordion.title}
+      >
+        {openAccordion === `accordion-${accordion.id}` && (
+          <div className='accordion-content'>
+            <div className='col-12'>
+              <div className=''>
+                <EntriesBox
+                  accordion={accordion}
+                  entries={accordion.ltsJournalAccordionEntries}
+                  entryBoxTitle={journal?.title}
+                  isEditable={true}
+                  journal={journal}
+                  userJournalEntries={userJournalEntries}
+                  deleteReflection={(entry, userJournalEntry) =>
+                    deleteReflection(entry, userJournalEntry)
+                  }
+                  updateReflection={(entry, userJournalEntry) =>
+                    updateReflection(entry, userJournalEntry)
+                  }
+                  addReflection={(entry) => addReflection(entry)}
+                  handleShowAddReflection={(reflection) =>
+                    handleShowAddReflection(reflection)
+                  }
+                  showAddReflection={showAddReflection}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </AccordionItemWrapper>
+    </div>
+  )
+}
+
+const AccordionWithJournalTables = ({
+  accordion,
+  journal,
+  openAccordion,
+  handleAccordionClick,
+  loading,
+  setLoading,
+  props
+}) => {
+  const hasJournalTables =
+    accordion.journalTablesAccordions &&
+    accordion.journalTablesAccordions.length > 0
+
+  if (!hasJournalTables) {
+    return null
+  }
+
+  return (
+    <div className='col-12'>
+      <AccordionItemWrapper
+        isOpened={openAccordion === `accordion-${accordion.id}`}
+        handleAccordionClick={() =>
+          handleAccordionClick(`accordion-${accordion.id}`)
+        }
+        isExanded={false}
+        title={accordion.title}
+      >
+        {openAccordion === `accordion-${accordion.id}` && (
+          <div className='accordion-content' style={{ padding: '15px 15px ' }}>
+            <div className='col-12'>
+              <div className=''>
+                <JournalTables
+                  tables={accordion?.journalTablesAccordions}
+                  paragraphs={null}
+                  loading={loading}
+                  setLoading={setLoading}
+                  saved={() => props.saved(journal)}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </AccordionItemWrapper>
+    </div>
+  )
+}
 export default injectIntl(LtsJournalContent, {
   withRef: false
 })

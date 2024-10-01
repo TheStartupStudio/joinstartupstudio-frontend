@@ -13,6 +13,7 @@ import JournalTableRow from './JournalTableRow'
 import JournalTableCell from './JournalTableCell'
 import JournalTableRowsCloned from './JournalTableRowsCloned'
 import axiosInstance from '../../../../utils/AxiosInstance'
+import { useLocation } from 'react-router-dom'
 export const JournalTableRows = ({
   rows,
   displayedCellIndex,
@@ -118,7 +119,8 @@ export const JournalTableRows = ({
       return `${rowIndex}`
     }
   }
-
+  const location = useLocation()
+  const isFromStudentsJournals = location.pathname.includes('students-journals')
   return (
     <>
       {tableRows
@@ -229,35 +231,39 @@ export const JournalTableRows = ({
                       </React.Fragment>
                     )
                   })}
-                {row?.isCloneable ? (
-                  <div className={'add_plus-sign'}>
-                    <FontAwesomeIcon
-                      icon={faPlus}
-                      className="plus-ico"
-                      style={{
-                        width: '22px',
-                        height: '22px',
-                        color: '#707070',
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => onAddRow(row)}
-                    />
-                  </div>
-                ) : null}
-                {isClonedRow ? (
-                  <div className={'add_minus-sign'}>
-                    <FontAwesomeIcon
-                      icon={faMinus}
-                      style={{
-                        width: '16px',
-                        height: '16px',
-                        color: '#fff',
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => onDeleteClonedRow(row, rowIndex)}
-                    />
-                  </div>
-                ) : null}
+                {!isFromStudentsJournals && (
+                  <>
+                    {row?.isCloneable ? (
+                      <div className={'add_plus-sign'}>
+                        <FontAwesomeIcon
+                          icon={faPlus}
+                          className='plus-ico'
+                          style={{
+                            width: '22px',
+                            height: '22px',
+                            color: '#707070',
+                            cursor: 'pointer'
+                          }}
+                          onClick={() => onAddRow(row)}
+                        />
+                      </div>
+                    ) : null}
+                    {isClonedRow ? (
+                      <div className={'add_minus-sign'}>
+                        <FontAwesomeIcon
+                          icon={faMinus}
+                          style={{
+                            width: '16px',
+                            height: '16px',
+                            color: '#fff',
+                            cursor: 'pointer'
+                          }}
+                          onClick={() => onDeleteClonedRow(row, rowIndex)}
+                        />
+                      </div>
+                    ) : null}
+                  </>
+                )}
               </JournalTableRow>
               {/*//////////// CLONED ROWS //////////////*/}
               {row?.clonedRows?.length > 0 && (

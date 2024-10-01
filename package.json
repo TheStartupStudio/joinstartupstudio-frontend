@@ -112,6 +112,7 @@
     "suneditor-react": "^3.6.1",
     "tippy.js": "^6.3.7",
     "use-onclickoutside": "^0.4.1",
+    "util": "^0.12.5",
     "uuid": "^9.0.0",
     "wavesurfer.js": "^7.8.1",
     "web-vitals": "^1.0.1"
