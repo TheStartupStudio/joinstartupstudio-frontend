@@ -15,9 +15,11 @@ import MyContentModal from '../Modals/MyContentModal'
 import DeleteSparkArchiveModal from '../Modals/DeleteArchiveModal'
 import { toast } from 'react-toastify'
 import FinalStepModal from '../Modals/FinalStepModal'
-// import { PDFDownloadLink } from '@react-pdf/renderer'
+// import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
 // import PdfDocument from './PdfDocument'
 import useWindowWidth from '../../../hooks/useWindowWidth'
+import PdfDocument from './PdfDocument'
+import jsPDF from 'jspdf'
 
 function GeneratedResponsePage(props) {
   const [archivedDocument, setArchivedDocument] = useState({})
@@ -90,6 +92,21 @@ function GeneratedResponsePage(props) {
 
   // console.log('editingContent', editingContent)
 
+  const [loading, setLoading] = useState(false)
+
+  const generatePdf = () => {
+    setLoading(true)
+    const doc = new jsPDF()
+
+    doc.text(20, 20, archivedDocument?.widgetName || 'Document Title')
+
+    if (archivedDocument?.content) {
+      doc.text(20, 30, archivedDocument.content)
+    }
+
+    doc.save(`${archivedDocument?.widgetName}.pdf`)
+    setLoading(false)
+  }
   useEffect(() => {
     if (fromPage === 'widgets') {
       const icon = addDocumentIcon(data)
@@ -354,7 +371,10 @@ function GeneratedResponsePage(props) {
   }
 
   const myContentDisplayed = !!archivedDocument?.myContent && isMyContentAdded
-
+  console.log('archivedDocument?.myContent', archivedDocument?.myContent)
+  console.log('isMyContentAdded', isMyContentAdded)
+  console.log("showItem('download-button')", showItem('download-button'))
+  console.log('myContentDisplayed', myContentDisplayed)
   return (
     <>
       <Container fluid>
@@ -521,6 +541,22 @@ function GeneratedResponsePage(props) {
                                 archivedDocument?.type === 'image' ? (
                                   <></>
                                 ) : (
+                                  <LtsButton
+                                    name={
+                                      loading ? 'Generating...' : 'Download'
+                                    }
+                                    width={
+                                      window.innerWidth < 700 ? '100%' : '70%'
+                                    }
+                                    align={alignButton('download')}
+                                    backgroundColor={
+                                      isSavedArchive() || myContentDisplayed
+                                        ? '#99CC33'
+                                        : '#BBBDBF'
+                                    }
+                                    onClick={generatePdf}
+                                    disabled={loading}
+                                  />
                                   // <PDFDownloadLink
                                   //   document={
                                   //     <PdfDocument
@@ -545,16 +581,16 @@ function GeneratedResponsePage(props) {
                                   //     />
                                   //   )}
                                   // </PDFDownloadLink>
-                                  <LtsButton
-                                    onClick={() => setShowFinalStepModal(true)}
-                                    backgroundColor={
-                                      isSavedArchive() || myContentDisplayed
-                                        ? '#99CC33'
-                                        : '#BBBDBF'
-                                    }
-                                    width={windowWidth < 700 ? '100%' : '70%'}
-                                    name={'Download'}
-                                  />
+                                  // <LtsButton
+                                  //   onClick={() => setShowFinalStepModal(true)}
+                                  //   backgroundColor={
+                                  //     isSavedArchive() || myContentDisplayed
+                                  //       ? '#99CC33'
+                                  //       : '#BBBDBF'
+                                  //   }
+                                  //   width={windowWidth < 700 ? '100%' : '70%'}
+                                  //   name={'Download'}
+                                  // />
                                 )}
                               </>
                             )}

@@ -5,15 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/pages/MySpark/PdfDownloadButton.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewedMentorModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewedMentorModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TimePicker/TimePicker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TimePicker/TimePicker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/GeneratedResponsePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/GeneratedResponsePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MySpark/widgetInputData.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/widgetInputData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/PdfDocument.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/PdfDocument.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +117,7 @@
       <workItem from="1726645354829" duration="36761000" />
       <workItem from="1727076299728" duration="27344000" />
       <workItem from="1727335698809" duration="40517000" />
-      <workItem from="1727856370644" duration="3610000" />
+      <workItem from="1727856370644" duration="7937000" />
     </task>
     <servers />
   </component>
