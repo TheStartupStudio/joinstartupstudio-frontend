@@ -284,6 +284,7 @@ function GeneratedResponsePage(props) {
         setIsLoading(false)
       })
   }
+  moment.locale('en')
   const timeAgo = moment(archivedDocument?.updatedAt).fromNow()
   const htmlRef = useRef(null)
 

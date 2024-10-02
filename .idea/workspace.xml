@@ -6,38 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Router.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Router.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/GetInstructorStudents/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GetInstructorStudents/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/editAllJournals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useValidation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useValidation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/JournalsManagement/JournalsManagement2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/JournalsManagement/ManageAllJournals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/InterviewSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/InterviewSection.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/InterviewedMentors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/InterviewedMentors.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/ClonedTables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/ClonedTables.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/DisplayCellData.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/DisplayCellData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableCellInput.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableCellInput.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableRows.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableRows.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/SidebarItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/SidebarItems.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/addLessonModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/addLessonModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/getLessonsByType.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/getLessonsByType.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/studentPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/studentPortfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/studentJournals/JournalsBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/studentJournals/JournalsBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/studentJournals/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/studentJournals/content.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/studentJournals/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/studentJournals/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/taskLessons/reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/taskLessons/reducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/LtsCheckbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/LtsCheckbox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewedMentorModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/InterviewedMentorModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Modals/TaskEventModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/TimePicker/TimePicker.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TimePicker/TimePicker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/TableReflections/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/GeneratedResponsePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/GeneratedResponsePage/GeneratedResponsePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MySpark/widgetInputData.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MySpark/widgetInputData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/dashboard/Reducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,7 +119,8 @@
       <workItem from="1726473806835" duration="30458000" />
       <workItem from="1726645354829" duration="36761000" />
       <workItem from="1727076299728" duration="27344000" />
-      <workItem from="1727335698809" duration="29286000" />
+      <workItem from="1727335698809" duration="40517000" />
+      <workItem from="1727856370644" duration="3610000" />
     </task>
     <servers />
   </component>

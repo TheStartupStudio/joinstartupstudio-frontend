@@ -85,6 +85,7 @@ const TaskEventModal = (props) => {
 
       setState(newState)
       setTab(props.event?.type)
+      debugger
     }
   }, [props.event])
 
@@ -115,8 +116,8 @@ const TaskEventModal = (props) => {
 
   const [state, setState] = useState(initialState)
   useEffect(() => {
-    const newState = { ...state }
-    newState.type = tab == 'task' ? 'task' : 'event'
+    let newState = { ...state }
+    newState.type = tab === 'task' ? 'task' : 'event'
     setState(newState)
   }, [tab])
 
@@ -178,7 +179,7 @@ const TaskEventModal = (props) => {
       endDate: state.endDate ? state.endDate : null,
       endTime: state.endTime,
       description: state.description,
-      type: state.type,
+      type: tab,
       requirements: state.requirements,
       periods: state.periods
     }
@@ -201,15 +202,16 @@ const TaskEventModal = (props) => {
       endDate: state.endDate ? state.endDate : null,
       endTime: state.endTime,
       description: state.description,
-      type: state.type,
+      type: tab,
       requirements: state.requirements,
       periods: state.periods
     }
-    if (state.periods.length) {
-      dispatch(editEventStart(newEvent, { eventId: props.event.id }))
-    } else {
-      toast.error('You must select at least one period')
-    }
+    debugger
+    // if (state.periods.length) {
+    dispatch(editEventStart(newEvent, { eventId: props.event.id }))
+    // } else {
+    //   toast.error('You must select at least one period')
+    // }
   }
   const isEdit = () => {
     return props.event != null
