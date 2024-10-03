@@ -11,9 +11,7 @@ import { format } from 'date-fns'
 import { toast } from 'react-toastify'
 import {
   faChartBar,
-  faCircle,
   faCity,
-  faMountain,
   faPaintBrush,
   faPaintRoller,
   faUser,
@@ -36,8 +34,7 @@ import {
   faTruckMoving,
   faUserTie,
   faWrench,
-  faHeadset,
-  faBook
+  faHeadset
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import moment from 'moment'
@@ -338,4 +335,19 @@ export const convertImageFileToFormData = (imageFile) => {
   const formData = new FormData()
   formData.append('img', imageFile)
   return formData
+}
+
+export const getClientFromHostname = () => {
+  const hostnameParts = window.location.hostname.split('.')
+  return hostnameParts.length > 3 ? hostnameParts[0] : ''
+}
+
+export const constructLoginUrl = (client, role) => {
+  if (client) {
+    return `https://${client}.${role}.learntostart.com/${role}-login`
+  } else if (role === 'ims') {
+    return '/ims-login'
+  } else if (role === 'main') {
+    return 'https://main.learntostart.com/main-login'
+  }
 }

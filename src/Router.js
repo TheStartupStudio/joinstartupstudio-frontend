@@ -8,13 +8,13 @@ import {
   authRoutesWithProps,
   publicRoutes,
   redirects
-} from './pages/Router/RouteConfiguration'
+} from './Router/RouteConfiguration'
 import NotFound from './pages/NotFound'
 import PublicLayout from './pages/Layout/publicLayout'
-import renderRoutes from './pages/Router/renderRoutes'
+import renderRoutes from './Router/renderRoutes'
 import AppLocale from './lang'
 
-function NewRouter(props) {
+function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user } = useSelector((state) => state.user)
 
@@ -66,4 +66,4 @@ const mapStateToProps = ({ lang }) => {
   return { locale }
 }
 
-export default connect(mapStateToProps, {})(NewRouter)
+export default connect(mapStateToProps, {})(Router)

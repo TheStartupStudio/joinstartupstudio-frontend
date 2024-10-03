@@ -13,6 +13,10 @@ import {
 } from '@fortawesome/free-brands-svg-icons'
 import FormWrapper from '../ui/FormWrapper'
 import { Col, Row } from 'react-bootstrap'
+import {
+  constructLoginUrl,
+  getClientFromHostname
+} from '../../../../utils/helpers'
 
 const socialIcons = {
   linkedin: faLinkedin,
@@ -54,10 +58,13 @@ const ChooseLogin = () => {
   const history = useHistory()
 
   const handleLoginRole = (role) => {
-    if (role === 'ims') {
-      return history.push('/ims-login')
-    } else if (role === 'main') {
-      return window.location.replace('https://main.learntostart.com/main-login')
+    const client = getClientFromHostname()
+    const loginUrl = constructLoginUrl(client, role)
+
+    if (loginUrl.startsWith('/')) {
+      history.push(loginUrl)
+    } else {
+      window.location.replace(loginUrl)
     }
   }
 

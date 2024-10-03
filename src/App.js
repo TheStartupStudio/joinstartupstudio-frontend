@@ -5,7 +5,7 @@
 import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import jQuery from 'jquery'
-import NewRouter from './newRouter'
+import Routers from './Router'
 import useUserActivity from './hooks/useUserActivity'
 
 window.jQuery = jQuery
@@ -16,7 +16,7 @@ function App({ basename }) {
   return (
     <React.Suspense fallback={''}>
       <Router basename={basename}>
-        <NewRouter />
+        <Routers />
       </Router>
     </React.Suspense>
   )
