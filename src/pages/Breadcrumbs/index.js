@@ -4,7 +4,7 @@ import {
   adminRoutes,
   authRoutes,
   publicRoutes
-} from '../Router/RouteConfiguration'
+} from '../../Router/RouteConfiguration'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import './style.css'
