@@ -40,7 +40,7 @@ const MultiSelectDropdown = (props) => {
 
   const handleDropdownToggle = () => {
     setIsOpen(!isOpen)
-    toggleDropdown()
+    toggleDropdown?.()
   }
 
   const handleDeleteAllOptions = () => {
@@ -48,7 +48,7 @@ const MultiSelectDropdown = (props) => {
   }
 
   return (
-    <div className="multiselect-dropdown">
+    <div className='multiselect-dropdown'>
       <div
         className={`dropdown-input ${isOpen ? 'open' : ''}`}
         onClick={handleDropdownToggle}
@@ -69,16 +69,16 @@ const MultiSelectDropdown = (props) => {
         </div>
       </div>
       {isOpen && (
-        <div className="dropdown-options">
+        <div className='dropdown-options'>
           {options?.map((option, index) => (
-            <label key={index} className="option-label">
+            <label key={index} className='option-label'>
               <input
-                type="checkbox"
+                type='checkbox'
                 checked={selectedOptions?.some(
                   (selectedOption) => selectedOption?.iamrSkillId === option.id
                 )}
                 onChange={() => handleOptionToggle(option)}
-                className="multiselect-option-checkbox"
+                className='multiselect-option-checkbox'
               />
               <div className={'multiselect-option'}>
                 {option.title}: {option.description}

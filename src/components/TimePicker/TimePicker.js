@@ -13,7 +13,6 @@ const TimePicker = (props) => {
       setSelectedTime(convert24HourTo12HourFormat(props.value))
     }
   }, [props.value])
-
   useEffect(() => {
     convertTimeTo24HourFormat(selectedTime)
   }, [selectedTime])

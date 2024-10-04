@@ -4292,6 +4292,10 @@ wave > wave:first-child {
 /*
   Journal Entries
 */
+
+.ql-align-right {
+  text-align:end !important;
+}
 .team-add-btn {
   padding: 15px !important;
 }

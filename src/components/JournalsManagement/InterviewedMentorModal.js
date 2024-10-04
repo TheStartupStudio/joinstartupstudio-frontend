@@ -126,7 +126,7 @@ function InterviewedMentorModal(props) {
       setSelectedAccordion({
         ...selectedAccordion,
         interviewedMentor: {
-          ...selectedAccordion.interviewedMentor,
+          ...selectedAccordion?.interviewedMentor,
           mentorDescription: putResponse.data
         }
       })
@@ -244,7 +244,7 @@ function InterviewedMentorModal(props) {
       ...prevState,
       interviewedMentor: {
         ...prevState.interviewedMentor,
-        interviews: [...prevState.interviewedMentor.interviews, response.data]
+        interviews: [...prevState.interviewedMentor?.interviews, response.data]
       }
     }))
   }
