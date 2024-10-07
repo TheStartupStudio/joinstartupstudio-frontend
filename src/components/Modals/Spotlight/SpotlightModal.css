@@ -10,14 +10,18 @@
 }
 
 .spotlight-apply-modal .modal-dialog {
-  max-width: 60% !important;
+  max-width: 70% !important;
+  border-radius: 20px !important;
 }
+
 .close-general-modal .btn-close {
   color: #231f20;
 }
+
 .general-modal-container .modal-header {
   margin-right: -7px;
 }
+
 .general-modal-wrapper .modal-title {
   font-size: 22px;
   text-transform: uppercase;
@@ -40,9 +44,14 @@
   padding: 10px 35px !important;
   background-color: #fbfbfb !important;
 }
+
 .spotlight-apply-modal .modal-content,
 .spotlight-simple-modal .modal-content {
-  border-radius: 6px !important;
+  border-radius: 20px !important;
+}
+
+.spotlight-apply-modal .modal-content {
+  padding: 30px !important;
 }
 
 .general-modal-wrapper .general-modal-body {

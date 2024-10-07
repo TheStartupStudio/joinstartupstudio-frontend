@@ -20,6 +20,9 @@ import {
 } from '../ContentItems'
 import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
+import { FaEye, FaX } from 'react-icons/fa6'
+
+// import ParentButtonApply from '../../../components/Modals/Spotlight/ParentButtonApply.js'
 
 const SubmitIndustryProblemModal = (props) => {
   const dispatch = useDispatch()
@@ -27,7 +30,6 @@ const SubmitIndustryProblemModal = (props) => {
   const { loading, industryProblems } = useSelector(
     (state) => state.myImmersion
   )
-
   const initialState = {
     solutionDescription: '',
     status: '',
@@ -87,31 +89,74 @@ const SubmitIndustryProblemModal = (props) => {
       {loading ? (
         <LoadingAnimation show={true} />
       ) : (
-        <Modal.Body style={{ padding: '3%' }}>
-          <Modal.Header>
-            <Modal.Title>
-              {props.mode === 'edit' ? 'USER SOLUTION' : 'SUBMIT YOUR SOLUTION'}
+        <Modal.Body
+          style={{
+            padding: '3%'
+            //  height: '500px'
+          }}
+          className='immersion-step1-modal-body'
+        >
+          <Modal.Header style={{ marginTop: '40px' }}>
+            <div className='portfolio-actions'>
+              <span
+                style={{ fontSize: '20px', fontWeight: '700' }}
+                className='action-box cursor-pointer'
+                onClick={() => props.onHide()}
+              >
+                X
+              </span>
+            </div>
+            <Modal.Title
+              style={{
+                color: '#231f20',
+                fontWeight: '500',
+                fontSize: '20px',
+                marginBottom: '5px'
+              }}
+              className='immrs-solution-title-modal'
+            >
+              <div>
+                {props.mode === 'edit'
+                  ? 'USER SOLUTION'
+                  : 'SUBMIT YOUR SOLUTION'}
+              </div>
+              <div
+                style={{
+                  marginLeft: '260px ',
+                  display: 'flex',
+                  alignContent: 'center',
+                  color: '#231f20'
+                }}
+                className='left-title-immrs'
+              >
+                Submitted by:
+                <ProfileHolder
+                  className={'no-profile'}
+                  classN={'username-submit'}
+                  name={props.mode === 'edit' ? props.User.name : user?.name}
+                />
+              </div>
             </Modal.Title>
-            <span
+            {/* <span
               style={{ fontSize: '20px', fontWeight: '700' }}
               className='cursor-pointer'
               onClick={() => props.onHide()}
             >
               X
-            </span>
+            </span> */}
           </Modal.Header>
 
-          <div className='body-container'>
+          <div className='immersion-body-container body-container'>
             <Col style={{ maxHeight: '70%' }}>
-              <ProfileHolder
+              {/* <ProfileHolder
                 profileImage={
                   props.mode === 'edit'
                     ? props.User.profile_image
                     : user?.profileImage
                 }
                 name={props.mode === 'edit' ? props.User.name : user?.name}
-              />
-              <div>
+              /> */}
+              <div className='step1-submit-modal-textarea'>
                 <p className='mb-1'>
                   {props.ImmersionCompany?.name ?? props.currentCompanyName}{' '}
                   Problem
@@ -124,15 +169,18 @@ const SubmitIndustryProblemModal = (props) => {
                 />
               </div>
             </Col>
-            <Col className='d-flex flex-column justify-content-between'>
+            <Col
+              style={{ marginTop: '28px' }}
+              className='d-flex flex-column justify-content-between'
+            >
               <div>
-                <UploadFileInput
+                {/* <UploadFileInput
                   filename={formData.parentGuardianApprovalForm}
                   placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
                   name='parentGuardianApprovalForm'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
-                />
+                /> */}
                 <UploadFileInput
                   filename={formData.pitchDeck}
                   placeholder={'Upload Pitch Deck (PDF)'}
@@ -142,19 +190,20 @@ const SubmitIndustryProblemModal = (props) => {
                 />
                 <UploadFileInput
                   filename={formData.pitchVideo}
-                  placeholder={'Upload Pitch Video'}
+                  placeholder={'Add link to your pitch video'}
                   name='pitchVideo'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
                 />
                 <p style={{ fontSize: '11px' }}>
-                  You must be subscribed to the Learn to Start platform for a
-                  minimum of a 1 year prior applying. Applicants must be 18
-                  years old or have a parent/guardian form to be considered for
-                  Sportlight.
+                  You are submitting your solution to your LTS Instructor. If
+                  your instructor approves your solution, you can submit your
+                  solution for Step 2 Spotlight. If your instructor denies your
+                  solution, they will offer you feedback so you can improve your
+                  solution to resubmit for Step 1
                 </p>
               </div>
-
+              {/* 
               <TermsAndConditionsCheckbox
                 text={'I agree to the Spotlight'}
                 blueText={'Terms & Conditions'}
@@ -163,12 +212,46 @@ const SubmitIndustryProblemModal = (props) => {
                   props.mode !== 'edit' ? handleChangeCheckbox : () => {}
                 }
                 checked={formData.termsAndConditions}
+              /> */}
+
+              <Col className='d-flex justify-content-end'>
+                {props.mode === 'edit' ? (
+                  <div className='d-flex'>
+                    <SubmitButton
+                      text={'DENY'}
+                      disabled={formData.status !== 'pending'}
+                      type='button'
+                      onClick={() => submitHandler('rejected')}
+                      className={'deny-button'}
+                    />
+
+                    <SubmitButton
+                      text={'APPROVE'}
+                      disabled={formData.status !== 'pending'}
+                      type='button'
+                      onClick={() => submitHandler('approved')}
+                      className={'approve-button'}
+                    />
+                  </div>
+                ) : (
+                  <SubmitButton
+                    text={'SUBMIT'}
+                    disabled={true}
+                    type='button'
+                    className={'submit-button'}
+                  />
+                )}
+              </Col>
+            </Col>
+            {/* <Col>
+              <ParentGuardianButton
+                style={{ display: 'flex', justifyContent: 'center' }}
+                className='immrs-parent-form'
+                text={'DOWNLOAD PARENT/GUARDIAN FORM'}
               />
-            </Col>
-            <Col>
-              <ParentGuardianButton text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
-            </Col>
-            <Col className='d-flex justify-content-end'>
+            </Col> */}
+
+            {/* <Col className='d-flex justify-content-end'>
               {props.mode === 'edit' ? (
                 <div className='d-flex'>
                   <SubmitButton
@@ -189,13 +272,13 @@ const SubmitIndustryProblemModal = (props) => {
                 </div>
               ) : (
                 <SubmitButton
-                  text={'SAVE'}
+                  text={'SUBMIT'}
                   disabled={true}
                   type='button'
                   className={'submit-button'}
                 />
               )}
-            </Col>
+            </Col> */}
           </div>
         </Modal.Body>
       )}

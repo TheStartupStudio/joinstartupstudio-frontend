@@ -221,7 +221,7 @@ const SpotlightApplyModal = (props) => {
           </div>
         </div>
       </div>
-      <div className='w-100 pb-5'>
+      <div className='w-100 pb-5' style={{ marginTop: '-45px' }}>
         <div className='row float-end'>
           <button
             className='apply-save-button edit-account me-5'
@@ -232,7 +232,10 @@ const SpotlightApplyModal = (props) => {
             }}
           >
             {loading ? (
-              <span className='spinner-border spinner-border-sm' />
+              <span
+                className='spinner-border spinner-border-sm'
+                style={{ fontSize: '13px', fontWeight: 600 }}
+              />
             ) : (
               // <IntlMessages id="general.save" />
               <>SAVE</>

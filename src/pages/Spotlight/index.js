@@ -483,8 +483,8 @@ function StartupLive() {
                     </div>
                   </div>
                 </Row>
-                <div className='beyond-videos-desktop mt-2 d-flex align-items-center'>
-                  <div className='arrow-icon-1' style={{ height: '100%' }}>
+                <div className='beyond-videos-desktop mt-2 d-flex align-items-center justify-content-center '>
+                  {/* <div className='arrow-icon-1' style={{ height: '100%' }}>
                     <button
                       className='videos-track'
                       onClick={() => {
@@ -498,8 +498,11 @@ function StartupLive() {
                         style={{ marginRight: '20px' }}
                       />
                     </button>
-                  </div>
-                  <div
+                  </div> */}
+                  <p className='archive-placeholder-title'>
+                    Stay tuned for the 2025 Spotlight Pitches
+                  </p>
+                  {/* <div
                     className='card-group desktop-menu card-group-beyond-your-course'
                     // style={{ marginTop: '15px' }}
                     style={{ width: '94%', marginLeft: '15px' }}
@@ -545,8 +548,8 @@ function StartupLive() {
                         </div>
                       ))}
                     </div>
-                  </div>
-                  <div
+                  </div> */}
+                  {/* <div
                     className='arrow-icon-1 justify-content-start'
                     style={{ height: '100%' }}
                   >
@@ -560,7 +563,7 @@ function StartupLive() {
                         className='videos-track-icon'
                       />
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </Row>
             </div>

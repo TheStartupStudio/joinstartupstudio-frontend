@@ -299,7 +299,7 @@
     background-color: #51c7df !important;
     color: #fff !important;
     border-radius: 10px;
-    width: 360px !important;
+    width: 100% !important;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -325,6 +325,7 @@
 
 .apply-save-button {
     border-radius: 10px !important;
+    background-color: #51c7df;
 }
 
 .spot-archive-wrapper {
@@ -346,4 +347,15 @@
 
 .spotlight-archive-view-btn {
     background-color: transparent;
+}
+
+.archive-placeholder-title {
+    font-weight: 200;
+    font-size: 15px;
+    align-self: center;
+    justify-self: center;
+    width: 95%;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 50px;
 }
