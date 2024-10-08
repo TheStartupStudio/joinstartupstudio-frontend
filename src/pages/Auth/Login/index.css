@@ -8,7 +8,6 @@
   width: 15rem;
 }
 
-
 .login-title {
   margin-top: 20px;
   margin-bottom: 0;
@@ -47,8 +46,6 @@
   font-size: 30px;
 }
 
-
-
 .login-create-account {
   text-align: right;
   position: relative;
@@ -76,7 +73,7 @@
   grid-template-columns: 25px auto;
 }
 
-.radio-wrapper>div {
+.radio-wrapper > div {
   display: flex;
   align-items: center;
 }
@@ -178,6 +175,11 @@
   overflow: hidden;
 }
 
+.resignin-modal .modal-dialog {
+  max-width: 500px;
+  width: 500px;
+}
+
 @media (max-width: 767.98px) {
   .choose-login_container {
     min-height: calc(100vh - 92px);
@@ -233,7 +235,6 @@
 
   .social-media-items {
     font-size: smaller;
-
   }
 
   .right-login-form {
