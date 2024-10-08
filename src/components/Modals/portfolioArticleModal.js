@@ -5,7 +5,7 @@ import { Modal } from 'react-bootstrap'
 const PortfolioArticleModal = (props) => {
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
-  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+  // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages)
