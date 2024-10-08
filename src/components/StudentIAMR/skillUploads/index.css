@@ -1,0 +1,146 @@
+.skill-uploads .upload-item {
+  height: 48px;
+  border: 1px solid #bbbdbf;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #707070;
+}
+
+.skill-uploads .upload .upload-item {
+  cursor: initial;
+}
+
+.skill-uploads .upload .imported-entry .upload-item {
+  min-height: 48px;
+  height: auto;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.skill-uploads .upload-item .title {
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  margin: 0;
+}
+
+.skill-uploads .upload-item .view {
+  margin: 0;
+  font-size: 10px;
+  color: #01c5d1;
+  font-weight: 500;
+}
+
+.skill-uploads .upload .upload-item {
+  background: #ffff;
+}
+
+.skill-uploads .delete-upload-icon.disabled {
+  opacity: 0.5;
+  cursor: initial;
+}
+
+.skill-uploads .upload form {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.skill-uploads .upload .explanation-container textarea {
+  min-height: 90px;
+  padding: 10px;
+  font: normal normal 300 12px/15px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  resize: vertical;
+  width: 100%;
+}
+
+.skill-uploads .upload .import-journal-entry {
+  color: #51c7df;
+  cursor: pointer;
+  margin: 0;
+}
+
+.skill-uploads .upload .explanation-container .field-error {
+  margin: 0;
+  margin-top: -5px;
+}
+
+.skill-uploads .new-ticket-btn {
+  height: 48px;
+  margin-right: 22px;
+}
+
+.skill-uploads .upload .lts-button {
+  height: 48px;
+}
+
+.skill-uploads .upload .lts-button:disabled,
+.skill-uploads .upload .lts-button[disabled] {
+  opacity: 0.5;
+}
+
+.import-entry-modal .contact-us input {
+  height: initial;
+}
+
+.import-entry-modal .journal-container {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.import-entry-modal .journal-container .entry {
+  border-bottom: 1px solid #bbbdbf;
+}
+
+.import-entry-modal .journal-container .entry p {
+  margin: 0;
+}
+
+.import-entry-modal .journal-container .entry .answer {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-radius: 10px;
+  min-height: 60px;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.import-entry-modal .journal-container .entry .answer div {
+  overflow: hidden;
+  max-height: 120px;
+}
+
+.journal-container .entry .answer.selected {
+  border: 2px solid #01c5d1;
+}
+
+#import-entry-modal {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 576px) {
+  .skill-uploads .upload .lts-button {
+    width: 100%;
+  }
+}

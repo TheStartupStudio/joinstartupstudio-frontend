@@ -1,0 +1,114 @@
+.certification-title {
+  font: normal normal 600 15px Montserrat !important;
+  letter-spacing: 0px;
+  color: #333d3d;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.accordion-item.active .accordion-button-text {
+  font-weight: 500;
+}
+
+.accordion-link.active {
+  color: #707070;
+  font-weight: normal;
+}
+
+.accordion-data {
+  /* padding-left: 5%; */
+  border: 0 !important;
+}
+.accordion-data-item {
+  border: 0 !important;
+}
+.accordion-button:not(.collapsed) {
+  border: none;
+  background-color: transparent;
+  color: black;
+}
+.accordion-button::after {
+  display: none;
+}
+.accordion-body:hover {
+  border: 0px !important;
+}
+.accordion-button:not(.collapsed) {
+  box-shadow: none;
+}
+
+.accordion-button-text {
+  font-size: 13px;
+  letter-spacing: 0.52px;
+  color: #333d3d;
+  text-transform: uppercase;
+  opacity: 1;
+  padding-left: 2px;
+}
+
+.accordion-link {
+  text-align: left;
+  font: normal 300 13px Montserrat;
+  letter-spacing: 0.52px;
+  color: #333d3d;
+  text-transform: capitalize;
+  opacity: 1;
+}
+
+.accordion-link:hover {
+  color: #01c5d1;
+}
+
+.iamr-status-point {
+  min-width: 10px !important;
+  height: 10px !important;
+  border-radius: 50%;
+  background-color: #bbbdbf;
+}
+
+.iamr-status-point.not_started {
+  background-color: #bbbdbf;
+}
+.iamr-status-point.submitted,
+.iamr-status-point.pending {
+  background-color: #51c7df;
+}
+.iamr-status-point.saved {
+  background-color: #231f20;
+}
+.iamr-status-point.received_feedback,
+.iamr-status-point.developing {
+  background-color: #ff3399;
+}
+
+.iamr-status-point.proficient {
+  background-color: #99cc33;
+}
+.iamr-status-point.approved {
+  background-color: gold;
+}
+
+.upload-status {
+  color: #333d3d;
+  font-weight: 600;
+}
+
+.upload-status.developing {
+  color: #ff3399;
+}
+
+.upload-status.submitted {
+  color: #51c7df;
+}
+
+.upload-status.proficient {
+  color: #99cc33;
+}
+.upload-status.approved {
+  color: gold;
+}
+.grouping-string {
+  font-size: 14px !important;
+  letter-spacing: 0.6px;
+  font-weight: 600 !important;
+}

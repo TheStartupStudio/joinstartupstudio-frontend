@@ -1,0 +1,20 @@
+.remove-brand-item:hover svg {
+  color: rgb(251, 79, 79);
+}
+
+.brand__box {
+  cursor: pointer;
+}
+
+.brand__box:hover {
+  color: #51c7df;
+}
+
+.brand-title-width {
+  width: 100px;
+}
+
+.lizas-text p {
+  width: 165px !important;
+  margin-bottom: 0 !important;
+}

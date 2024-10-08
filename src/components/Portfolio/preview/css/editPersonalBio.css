@@ -1,0 +1,158 @@
+.user-name {
+  text-align: left;
+  font: normal normal 500 21px/17px Montserrat;
+  letter-spacing: 0.84px;
+  color: #333d3d;
+  opacity: 1;
+}
+.user-profession {
+  color: var(--unnamed-color-707070);
+  text-align: left;
+  font: normal normal 500 12px/16px Montserrat;
+  letter-spacing: 0.48px;
+  color: #707070;
+  opacity: 1;
+}
+.user-bio span {
+  text-align: left;
+  font: normal normal 300 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #3d3d3d;
+}
+.user-bio {
+  text-align: left;
+  font: normal normal 300 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #3d3d3d;
+}
+.user-bio-read-more span {
+  text-align: left;
+  font: normal normal 500 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #01c5d1;
+  cursor: pointer;
+}
+.connections {
+  text-align: left;
+  font: normal normal 500 12px/16px Montserrat;
+  letter-spacing: 0.48px;
+  color: #bbbdbf;
+  opacity: 1;
+}
+.user-image {
+  width: 188px !important;
+  height: 188px !important;
+  object-fit: cover;
+  position: relative;
+}
+.edit_modal_first_paragrf {
+  text-align: left;
+  font: normal normal 300 20px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+}
+.edit_modal_second_paragrf span {
+  color: #01c5d1;
+}
+.edit_user_bio > .name {
+  text-align: left;
+  font: normal normal 500 17px Montserrat;
+  letter-spacing: 0.84px;
+  color: #333d3d;
+  opacity: 1;
+}
+.edit_modal {
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0px;
+  opacity: 1;
+}
+
+.publish_checkbox_info span {
+  text-align: left;
+  font: normal normal 300 13px/14px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+  opacity: 1;
+}
+.my-modal {
+  width: 78vw;
+  max-width: 78vw;
+}
+
+.my_portfolio_edit {
+  text-align: left;
+  font: normal normal 600 13px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+  opacity: 1;
+}
+@media (max-width: 780px) {
+  .my-modal {
+    width: 95vw; /* Occupy the 90% of the screen width */
+    max-width: 95vw;
+  }
+}
+
+@media (max-width: 767px) {
+  .user-portfolio {
+    display: block !important;
+  }
+}
+.my_portfolio_edit span {
+  text-align: left;
+  font: normal normal 600 13px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+  opacity: 1;
+}
+
+.Summary_first span {
+  text-align: left;
+  font: normal normal 600 20px/19px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+}
+.Summary_second span {
+  text-align: left;
+  font: normal normal 300 15px/19px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+}
+.text_area {
+  border: 1px solid #bbbdbf;
+  opacity: 1;
+  width: 100%;
+  padding: 5px;
+  height: 145px;
+  resize: none;
+}
+.edit_portfolio_bio_user_name {
+  text-align: left;
+  font: normal normal 500 21px/17px Montserrat;
+  letter-spacing: 0.84px;
+  color: #333d3d;
+  opacity: 1;
+}
+.social_links_edit_modal {
+  font-size: 20px;
+}
+textarea {
+  border-radius: 6px;
+}
+
+.verified {
+  min-width: 105px;
+}
+.verified span {
+  text-align: left;
+  font: normal normal 300 9px/12px Montserrat;
+  letter-spacing: 0.36px;
+  color: #01c5d1;
+  opacity: 1;
+}
+
+.user-portfolio {
+  display: grid;
+  grid-template-columns: 188px auto 150px;
+}

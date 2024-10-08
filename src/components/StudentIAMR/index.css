@@ -1,0 +1,211 @@
+.iamr-container {
+  display: flex;
+  position: relative;
+}
+
+.iamr-container .accordion {
+  width: 35%;
+  padding-left: calc(0.5rem + 10px);
+  padding-right: calc(0.5rem + 10px);
+}
+
+.iamr-container .skill-content {
+  width: 65%;
+  padding-left: calc(0.5rem + 10px);
+  padding-right: calc(0.5rem + 10px);
+}
+
+.iamr-container .accordion .back {
+  display: none;
+}
+
+.iamr-container .accordion h4 {
+  display: none;
+}
+
+@media (max-width: 576px) {
+  .iamr-container {
+    min-height: 100vh;
+  }
+
+  .iamr-container .accordion h4 {
+    display: block;
+    color: #01c5d1;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .iamr-container .accordion {
+    width: 80px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    transition: width 0.2s linear;
+    border-right: 1px solid #ebecef !important;
+  }
+
+  .iamr-container .accordion .accordion-data {
+    display: none;
+  }
+
+  .iamr-container .accordion.expanded {
+    position: absolute;
+    width: 70%;
+    background: #ffffff;
+    display: block;
+    z-index: 5;
+    height: 100%;
+    border-bottom: 2px solid #ebecef;
+  }
+
+  .iamr-container .accordion.expanded h4 {
+    display: none;
+  }
+
+  .iamr-container .accordion.expanded .accordion-data {
+    display: block;
+  }
+
+  .iamr-container .accordion.expanded .back {
+    float: right;
+  }
+
+  .iamr-container .accordion .back {
+    display: block;
+    margin: auto;
+    height: 30px;
+    width: 30px;
+    margin-top: 20px;
+  }
+
+  .iamr-container .skill-content {
+    width: calc(100% - 80px);
+  }
+
+  .iamr-container .skill-content.expanded {
+    width: 100%;
+    margin-left: 80px;
+  }
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+.iamr-container .skill-title {
+  text-align: left;
+  font: normal normal normal 14px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.iamr-container .page-content-title {
+  margin-top: 10px;
+  text-align: left;
+  font: normal normal 500 13px Montserrat;
+  letter-spacing: 0.52px;
+  color: #333d3d;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.iamr-container .page-content-text {
+  text-align: left;
+  font: normal normal 300 13px Montserrat;
+  letter-spacing: 0.52px;
+  color: #333d3d;
+  opacity: 1;
+}
+
+.custom-dropdown-options {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.custom-dropdown-options li {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #707070;
+}
+
+.custom-dropdown-options .option-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.custom-dropdown-options .option-container .checkbox-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 1px solid #707070;
+  width: 14px;
+  height: 14px;
+  margin-right: 5px;
+  background-color: #fff;
+  vertical-align: middle;
+  padding: 0;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.custom-dropdown-options .option-container .checkbox-label {
+  font-size: 12px;
+  font-weight: medium;
+  letter-spacing: 0px;
+  color: #707070;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 100%;
+}
+
+.custom-dropdown-options .option-container .checkbox-input:checked {
+  padding: 2px;
+  background-color: #51c7df;
+  background-clip: content-box;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05),
+    inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+  transition-duration: 0.3s;
+}
+
+.confirmation-modal .modal-dialog {
+  max-width: 500px !important;
+}
+
+.confirmation-modal .title {
+  font: normal normal 600 21px/21px Montserrat;
+  letter-spacing: 0.84px;
+  color: #f2359d;
+  text-align: center;
+}
+
+.confirmation-modal.approve .title {
+  color: #01c5d1;
+}
+
+.confirmation-modal .cancel {
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.confirmation-modal .confirm-btn {
+  background: #01c5d1 0% 0% no-repeat padding-box;
+  border: 0;
+  font: normal normal 600 12px/6px Montserrat;
+  letter-spacing: 0px;
+  color: #ffffff;
+  text-transform: uppercase;
+  height: 34px;
+  width: 100%;
+}

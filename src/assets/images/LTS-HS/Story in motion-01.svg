@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 28.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#Path_143_00000129907906176406386730000015502889420177250712_);}
+	.st1{fill:url(#Path_144_00000054227897543826746290000014449205676665756813_);}
+	.st2{fill:#FFFFFF;}
+</style>
+<linearGradient id="Path_143_00000033366412023806181310000007719862248367594393_" gradientUnits="userSpaceOnUse" x1="-614.6555" y1="422.2622" x2="-614.6555" y2="420.0868" gradientTransform="matrix(22.813 0 0 -22.078 14076.3223 9349.6709)">
+	<stop  offset="0" style="stop-color:#51C7DF"/>
+	<stop  offset="1" style="stop-color:#F2359D"/>
+</linearGradient>
+<path id="Path_143" style="fill:url(#Path_143_00000033366412023806181310000007719862248367594393_);" d="M79,31.1v38.2
+	c0,3.2-2.6,5.7-5.7,5.7H35.1c-3.2,0-5.7-2.6-5.7-5.7l0,0v-3.1h35.4c3,0.1,5.8-1.8,6.7-4.7L78,30.1c0.3-1.1,0-2.3-0.8-3.1
+	C78.4,28,79,29.5,79,31.1"/>
+<linearGradient id="Path_144_00000168117392620546456670000013170784166177562526_" gradientUnits="userSpaceOnUse" x1="-615.5743" y1="418.1388" x2="-615.5743" y2="415.9634" gradientTransform="matrix(23.9111 0 0 -16.6272 14766.8262 6977.8325)">
+	<stop  offset="0" style="stop-color:#51C7DF"/>
+	<stop  offset="1" style="stop-color:#F2359D"/>
+</linearGradient>
+<path id="Path_144" style="fill:url(#Path_144_00000168117392620546456670000013170784166177562526_);" d="M21.8,57.3l6-27.8
+	c0.9-2.6,3.4-4.3,6.2-4.2h35.2c2.9,0,4.9,1.9,4.4,4.2l-6,27.8c-0.9,2.6-3.4,4.3-6.2,4.2H26.2C23.3,61.5,21.3,59.6,21.8,57.3"/>
+<path id="Path_148" class="st2" d="M57.3,42.1l-11.8-7.8c-0.6-0.4-1.5-0.2-1.9,0.4c-0.1,0.1-0.2,0.3-0.2,0.5l-3.5,15.7
+	c-0.2,0.7,0.3,1.5,1,1.6c0.3,0.1,0.6,0,0.9-0.1l15.3-7.8c0.7-0.3,0.9-1.2,0.6-1.8C57.6,42.4,57.5,42.2,57.3,42.1"/>
+</svg>

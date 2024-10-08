@@ -1,0 +1,233 @@
+.customUI-item {
+  font: normal normal medium 12px/16px Montserrat;
+  letter-spacing: 0.48px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+/* Toggle styles */
+.form-switch {
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.form-switch i {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.3rem;
+  width: 46px;
+  height: 24px;
+  /* border: 1px solid #707070; */
+  background-color: #e6e6e6;
+  border-radius: 24px;
+  vertical-align: text-bottom;
+  transition: all 0.3s linear;
+  cursor: pointer;
+}
+
+.form-switch i::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  background-color: #333d3d29;
+  border-radius: 11px;
+  transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+  transition: all 0.25s linear;
+}
+
+.form-switch i::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  background-color: #fff;
+  border: 1px solid #707070;
+  border-radius: 11px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+  transform: translate3d(2px, 2px, 0);
+  transition: all 0.2s ease-in-out;
+}
+
+.form-switch:active i::after {
+  width: 28px;
+  transform: translate3d(2px, 2px, 0);
+}
+
+.form-switch:active input:checked + i::after {
+  transform: translate3d(16px, 2px, 0);
+}
+
+.form-switch input {
+  display: none;
+}
+
+.form-switch input:checked + i {
+  background-color: #a7ca42;
+}
+
+.form-switch input:checked + i::after {
+  margin-left: 3px;
+}
+
+.form-switch input:checked + i::before {
+  transform: translate3d(14px, 2px, 0) scale3d(0, 0, 0);
+}
+
+.form-switch input:checked + i::after {
+  transform: translate3d(22px, 2px, 0);
+}
+
+/* lts Gradient button styles */
+.ltsGradientButton__container {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+}
+.ltsGradientButton__container small {
+  color: red;
+  font-size: 12px;
+}
+.ltsGradientButton__button {
+  border: double 1px transparent;
+  border-radius: 10px;
+  background-image: linear-gradient(white, white),
+    linear-gradient(to right, #db438a, #5db1cc);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  display: flex;
+  align-items: center;
+  height: 41px;
+  max-height: 42px;
+  z-index: 10;
+  cursor: pointer;
+}
+.ltsGradientButton__button.no-color-border {
+  border-color: #ccc;
+}
+.ltsGradientButton__button a,
+.ltsGradientButton__button span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0.6rem !important;
+  color: #000;
+}
+
+/* Custom input styles */
+.customInput__container {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  color: #9297a1;
+}
+.customInput__container .hint-icon {
+  position: absolute;
+  top: 30%;
+  right: 5%;
+  width: 19px;
+  height: 19px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  box-shadow: 0px 3px 6px #00000029;
+  font-size: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.customInput__container .hint-menu {
+  position: absolute;
+  top: -90%;
+  right: 5%;
+  width: 100px;
+  padding: 5px;
+  background: #000;
+  color: #fff;
+  letter-spacing: 0.46px;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 5px;
+  font-size: 10px;
+  text-align: center;
+  z-index: 10;
+}
+
+.customInput__container .hint-menu::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 10px solid #000;
+  transform: translateX(50%);
+}
+.customInput__container small {
+  width: 100%;
+  color: red;
+  font-size: 11px;
+}
+.customInput {
+  border: thin solid #dededeb3;
+  height: 40px;
+  background: var(#ffffff) 0% 0% no-repeat padding-box;
+  background: rgba(255, 255, 255, 1) 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 6px;
+  opacity: 1;
+  color: #333d3db3;
+  padding: 0 8px;
+  position: relative;
+}
+
+/* Custom Checkbox styles */
+.customCheckbox__container {
+  color: var(#000000);
+  text-align: left;
+  color: #000000;
+  opacity: 1;
+}
+.customCheckbox {
+  min-width: 20px;
+  height: 20px;
+  background: var(#ffffff) 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 6px;
+  opacity: 1;
+  margin: 0 5px;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+}
+.customCheckbox:checked::before {
+  content: '\2713';
+  color: #ffffff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.customCheckbox:checked {
+  width: 20px;
+  height: 20px;
+  background: #52c7de !important;
+  background: #52c7de 0% 0% no-repeat padding-box !important;
+  box-shadow: inset 0px 3px 3px #00000029;
+  opacity: 1;
+}
+
+/* LtsButton styles */
+.LtsButton {
+  opacity: 1;
+  min-width: 40px;
+  width: auto;
+  box-shadow: none;
+  padding: 4px 10px;
+  font-size: 0.855rem;
+}

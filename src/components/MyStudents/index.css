@@ -1,0 +1,353 @@
+.Add-User-Bulk .title {
+  text-align: left;
+  font: normal normal 600 18px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.Add-User-Bulk .description {
+  text-align: left;
+  font: normal normal 300 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+}
+.Add-User-Bulk .description .brand {
+  text-align: left;
+  font: normal normal 500 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #51c7df;
+}
+.brand a:hover {
+  color: #a7ca42 !important;
+}
+.Add-User-Bulk .supported-formats {
+  text-align: left;
+  font: normal normal 500 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+}
+.supported-formats-description {
+  text-align: left;
+  font: normal normal 300 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+}
+.upload-user-input {
+  border: 1px solid #bbbdbf;
+}
+.upload-user-input p {
+  text-align: left;
+  font: normal normal 500 13px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  overflow: hidden;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.upload-user-button {
+  width: 219px !important;
+  height: 48px !important;
+}
+/* .upload-user-button {
+  background: #01c5d1;
+  font: normal normal 600 13px Montserrat;
+  letter-spacing: 0.52px;
+  color: #ffffff;
+  opacity: 1;
+  box-shadow: none;
+  border: 0;
+  text-transform: uppercase;
+  width: 219px;
+} */
+/* .upload-user-button:hover {
+  background-color: #a7ca42;
+} */
+.add-individual {
+  text-align: left;
+  font: normal normal 600 18px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.add-individual-inputs-div input,
+select {
+  border: 1px solid #bbbdbf;
+  border-radius: 1px;
+
+}
+.Add-Student-Modal > modal-content {
+  width: 90vw;
+}
+@media (min-width: 900px) {
+  .myCustomModal .modal-dialog {
+    max-width: 1300px;
+  }
+}
+
+.add-student-select .css-1s2u09g-control {
+  /* max-height:41px !important; */
+  height: 100%;
+}
+.add-new-input-for-user {
+  text-align: left;
+  width: auto;
+  font: normal normal 500 14px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #51c7df;
+  opacity: 1;
+  cursor: pointer;
+}
+.border-lts {
+  border: 1px solid #01c5d1;
+  /* border-color: ; */
+}
+.lts-button {
+  width: 186px;
+  height: 40px;
+}
+@media (max-width: 720px) {
+  .add-individual-first-div {
+    border-bottom: 1px solid #01c5d1;
+  }
+  .edit-modal-sm {
+    font-size: 14px;
+  }
+  .upload-user-input p {
+    text-align: left;
+    font: normal normal 500 12px Montserrat;
+    letter-spacing: 0px;
+    color: #707070;
+    opacity: 1;
+  }
+  .upload-user-button {
+    width: 180px;
+  }
+}
+.brand:hover {
+  color: #a7ca42;
+}
+.image-upload {
+  height: 48px !important;
+}
+.edit-modal-sm {
+  font-size: 25px !important;
+}
+.image-upload::placeholder {
+  text-align: left;
+  font: normal normal 500 13px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+.bulk-edit-description {
+  text-align: left;
+  font: normal normal 600 18px/22px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.blunk-activated-div p {
+  text-align: left;
+  font: normal normal 300 17px/20px Montserrat;
+  letter-spacing: 0.68px;
+  color: #707070;
+  opacity: 1;
+}
+.blunk-activated-div {
+  background: #e5e5e54d 0% 0% no-repeat padding-box;
+  min-width: 234px;
+  height: 54px;
+}
+/* Toggle */
+.form-switch {
+  display: inline-block;
+  /* cursor: pointer; */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.form-switch i {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.3rem;
+  width: 46px;
+  height: 24px;
+  /* border: 1px solid #707070; */
+  background-color: #e6e6e6;
+  border-radius: 24px;
+  vertical-align: text-bottom;
+  transition: all 0.3s linear;
+  cursor: pointer;
+}
+
+.form-switch i::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  background-color: #333d3d29;
+  border-radius: 11px;
+  transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+  transition: all 0.25s linear;
+}
+
+.form-switch i::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  background-color: #fff;
+  border: 1px solid #707070;
+  border-radius: 11px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+  transform: translate3d(2px, 2px, 0);
+  transition: all 0.2s ease-in-out;
+}
+
+.form-switch:active i::after {
+  width: 28px;
+  transform: translate3d(2px, 2px, 0);
+}
+
+.form-switch:active input:checked + i::after {
+  transform: translate3d(16px, 2px, 0);
+}
+
+.form-switch input {
+  display: none;
+}
+
+.form-switch input:checked + i {
+  background-color: #a7ca42;
+}
+
+.form-switch input:checked + i::before {
+  transform: translate3d(14px, 2px, 0) scale3d(0, 0, 0);
+}
+
+.form-switch input:checked + i::after {
+  transform: translate3d(22px, 2px, 0);
+}
+.view-student-title {
+  text-align: left;
+  font: normal normal 600 20px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  text-transform: uppercase;
+  opacity: 1;
+}
+.certification-status {
+  text-align: left;
+  font: normal normal 600 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+.statusOk {
+  font-size: 25px;
+  color: #99cc33;
+}
+
+.statusFalse {
+  font-size: 25px;
+  color: #ea3b97;
+}
+.view-student-portfolio-journals span {
+  text-align: left;
+  font: normal normal 600 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #51c7df;
+  opacity: 1;
+}
+.user-id-label {
+  text-align: left;
+  font: normal normal 600 12px/15px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+
+.errors-modal-body {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.students-transfer-modal .table-container {
+  height: 400px;
+}
+
+.students-transfer-modal .transfers-table {
+  /* min-height: 300px;
+  max-height: 400px; */
+  height: 100%;
+}
+
+.students-transfer-modal .bulk-deleting {
+  height: 98%;
+  width: calc(100% - 2rem);
+  backdrop-filter: blur(5px);
+  overflow: auto;
+  /* border-radius: 10px; */
+  box-shadow: 0 3px 3px rgb(0 0 0 / 30%);
+  background-color: rgb(221 221 221 / 50%);
+  /* background-color: rgb(151 148 148 / 50%); */
+  position: absolute;
+  z-index: 100;
+  top: -5px;
+  overflow: hidden;
+}
+
+.students-transfer-modal .transfers-table th {
+  font-weight: 600;
+}
+
+.students-transfer-modal .transfer-dialog p {
+  font-size: 16px;
+  width: 400px;
+}
+
+.students-transfer-modal .transfer-dialog .lts-button {
+  height: 35px;
+  width: 180px;
+}
+
+.reset-student-password .reset-button {
+  width: 50%;
+}
+.disabled-select {
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .students-transfer-modal .transfer-dialog p {
+    font-size: 14px;
+    width: auto;
+  }
+
+  .reset-student-password .reset-button {
+    width: 100%;
+  }
+
+  .students-transfer-modal .transfer-dialog .lts-button {
+    height: 30px;
+    width: 100px;
+    margin: 0px 10px;
+  }
+}
+
+@media (max-width: 991px) {
+  .edit-student-close {
+    top: -5px !important;
+  }
+}
+
+@media (max-width: 899px) {
+  .upload-user-button {
+    width: 100% !important;
+    font-size: 12px;
+  }
+}

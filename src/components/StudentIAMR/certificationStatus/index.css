@@ -1,0 +1,26 @@
+.certification-status p {
+  font: normal normal 300 13px/16px Montserrat;
+  letter-spacing: 0.52px;
+  color: #333d3d;
+  opacity: 1;
+}
+
+.certification-status .title {
+  font: normal normal bold 14px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+  text-transform: uppercase;
+  opacity: 1;
+  /* font-weight: 500; */
+}
+.lts-button:disabled,
+.lts-button[disabled] {
+  opacity: 0.5;
+}
+.certified {
+  font-size: 14px;
+  font-weight: normal;
+}
+.certified span {
+  font-size: 15px;
+}

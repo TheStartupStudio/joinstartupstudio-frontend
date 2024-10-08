@@ -1,0 +1,51 @@
+select {
+  border: 1px solid #bbbdbf;
+  border-radius: 1px;
+}
+
+.custom-dropdown:hover {
+  cursor: pointer;
+}
+
+.switch_students_options p {
+  margin: 0;
+  padding: 0;
+}
+
+.switch_students_options p:hover {
+  cursor: pointer;
+}
+
+.switch_students_options {
+  font: normal normal 600 13px/16px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+}
+
+.switch_students_options .not_active {
+  color: #51c7df;
+}
+
+.edit-btn {
+  width: 94px;
+  height: 24px;
+  background: #707070;
+  font: normal normal 600 14px/10px Montserrat;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  outline: 0;
+  border: 0;
+}
+
+.no-data-component {
+  font: normal normal medium 16px/19px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  padding: 70px;
+  font-weight: 500;
+}
+.rdt_TableHeadRow:first-child {
+  background: #ededed !important;
+}

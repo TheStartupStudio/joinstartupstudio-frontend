@@ -1,0 +1,158 @@
+.publishMyPortfolio {
+  text-align: left;
+  font: normal normal 600 20px/24px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+  opacity: 1;
+}
+/* Toggle */
+.form-switch {
+  display: inline-block;
+  /* cursor: pointer; */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.form-switch i {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.3rem;
+  width: 46px;
+  height: 24px;
+  /* border: 1px solid #707070; */
+  background-color: #e6e6e6;
+  border-radius: 24px;
+  vertical-align: text-bottom;
+  transition: all 0.3s linear;
+  cursor: pointer;
+}
+
+.form-switch i::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  background-color: #333d3d29;
+  border-radius: 11px;
+  transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+  transition: all 0.25s linear;
+}
+
+.form-switch i::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  background-color: #fff;
+  border: 1px solid #707070;
+  border-radius: 11px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+  transform: translate3d(2px, 2px, 0);
+  transition: all 0.2s ease-in-out;
+}
+
+.form-switch:active i::after {
+  width: 28px;
+  transform: translate3d(2px, 2px, 0);
+}
+
+.form-switch:active input:checked + i::after {
+  transform: translate3d(16px, 2px, 0);
+}
+
+.form-switch input {
+  display: none;
+}
+
+.form-switch input:checked + i {
+  background-color: #a7ca42;
+}
+
+.form-switch input:checked + i::before {
+  transform: translate3d(14px, 2px, 0) scale3d(0, 0, 0);
+}
+
+.form-switch input:checked + i::after {
+  transform: translate3d(22px, 2px, 0);
+}
+.previewSpanPublish {
+  text-align: left;
+  font: normal normal 300 13px/14px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d83;
+}
+
+.preview-container h4 {
+  text-align: left;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0px;
+  color: #333d3d;
+}
+
+.preview_licenses_certification {
+  text-align: left;
+  font: normal normal 600 24px/29px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+  opacity: 1;
+}
+
+.new-message button {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0px;
+  color: #ffffff;
+  opacity: 1;
+  background: #01c5d1 0% 0% no-repeat padding-box;
+  width: 121px;
+  height: 34px;
+  border: 0;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1024px) {
+  .preview-portfolio-container .page-border {
+    min-height: 0vw;
+  }
+}
+
+.lds-facebook {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  left: 8px;
+  width: 16px;
+  background: #01c5d1;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook div:nth-child(1) {
+  left: 8px;
+  animation-delay: -0.24s;
+}
+.lds-facebook div:nth-child(2) {
+  left: 32px;
+  animation-delay: -0.12s;
+}
+.lds-facebook div:nth-child(3) {
+  left: 56px;
+  animation-delay: 0;
+}
+@keyframes lds-facebook {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%,
+  100% {
+    top: 24px;
+    height: 32px;
+  }
+}

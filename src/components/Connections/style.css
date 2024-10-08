@@ -1,0 +1,45 @@
+.approved-connections-container .all-approved-connections {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 240px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 215px);
+  grid-gap: 10px;
+  justify-content: space-evenly;
+}
+
+@media (min-width: 1800px) {
+  .approved-connections-container .all-approved-connections {
+    grid-template-columns: repeat(auto-fill, 22%);
+  }
+}
+
+.approved-connections-container .all-approved-connections .my-connection-box {
+  width: 100% !important;
+}
+
+.approved-connections-container {
+  min-height: 310px;
+  /* height: 1px; */
+}
+
+.load-data {
+  font: normal normal 500 16px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #01c5d1;
+  cursor: pointer;
+}
+
+.search-results {
+  height: 301px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* @media (min-width: 768px) {
+  .approved-connections-container {
+    padding-left: 40px !important;
+  }
+} */

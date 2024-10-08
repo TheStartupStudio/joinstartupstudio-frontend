@@ -1,0 +1,164 @@
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import IntlMessages from '../../utils/IntlMessages'
+import Profile from '../../components/Profile'
+import { changeSidebarState } from '../../redux'
+import {
+  closeTaskModal,
+  getEventsStart,
+   getPeriodsStart,
+  openTaskModal
+} from '../../redux/dashboard/Actions'
+import LevelWrapper from '../../components/LevelWrapper'
+import FullCalendarComponent from '../../components/Calendar/FullCalendar'
+import TaskEventModal from '../../components/Modals/TaskEventModal'
+import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
+
+function Dashboard() {
+  const dispatch = useDispatch()
+  const periods = useSelector((state) => state.dashboard.periods)
+  const events = useSelector((state) => state.dashboard.events)
+   // useEffect(() => {
+  //   if (loggedUser) {
+  //     const newTime = axiosInstance.get('/myPerformanceData/loginTime')
+  //     console.log(newTime)
+  //   }
+  // }, [])
+  const user = {
+    level: 'HS'
+  }
+
+  const [newMessage, setNewMessage] = useState([])
+  const [chatId, setChatId] = useState('')
+  const [startDate, setStartDate] = useState(null)
+  useEffect(() => {
+    dispatch(changeSidebarState(false))
+  }, [])
+  useEffect(() => {
+    dispatch(getPeriodsStart())
+    dispatch(getEventsStart())
+  }, [])
+
+  function getFormattedDate() {
+    const today = new Date()
+    const year = today.getFullYear().toString()
+    let month = (today.getMonth() + 1).toString().padStart(2, '0')
+    let day = today.getDate().toString().padStart(2, '0')
+
+    return `${year}-${month}-${day}`
+  }
+
+  const taskEventModal = useSelector(
+    (state) => state.dashboard.addTaskEventModal
+  )
+  const openTaskEventModal = () => {
+    // const formattedDate = getFormattedDate()
+    // setStartDate(formattedDate)
+    dispatch(openTaskModal('create'))
+  }
+
+  const closeTaskEventModal = () => {
+    dispatch(closeTaskModal('create'))
+  }
+
+  return (
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-12 col-md-12 col-xl-9 pe-0 me-0">
+          <div className="account-page-padding page-border">
+            <h3 className="page-title">
+              <IntlMessages id="navigation.dashboard" />
+            </h3>
+            <p className="page-description">
+              <IntlMessages id="dashboard.page_description" />
+            </p>
+
+            <LevelWrapper user={user}>
+              <Profile
+                newMessage={newMessage}
+                chatOpened={chatId}
+                clearChat={() => setChatId('')}
+                level={'MS'}
+              />
+              <Profile
+                newMessage={newMessage}
+                chatOpened={chatId}
+                clearChat={() => setChatId('')}
+                level={'HS'}
+              />
+            </LevelWrapper>
+
+            {/*<div className="my-4">*/}
+            {/*  <div className="row">*/}
+            {/*    <div className="col-md-12 col-lg-8">*/}
+            {/*      <h3*/}
+            {/*        className="page-title"*/}
+            {/*        style={{ textTransform: 'capitalize' }}*/}
+            {/*      >*/}
+            {/*        Recently Active Students*/}
+            {/*      </h3>*/}
+            {/*    </div>*/}
+            {/*    <ActiveStudents />*/}
+            {/*  </div>*/}
+            {/*</div>*/}
+
+          </div>
+        </div>
+        <div className="col-12 col-xl-3 px-0">
+          <div className="account-page-padding" style={{ paddingLeft: '20px' }}>
+            <FullCalendarComponent
+              events={events}
+              periods={periods}
+              // startDate={getFormattedDate()}
+            />
+
+            <button
+              style={{
+                backgroundColor: '#51c7df',
+                color: '#fff',
+                fontSize: 14
+              }}
+              onClick={openTaskEventModal}
+              className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
+            >
+              Create Task/Event
+            </button>
+            <TaskEventModal
+              show={taskEventModal}
+              onHide={closeTaskEventModal}
+              periods={periods}
+              startDate={getFormattedDate()}
+            />
+            <NotificationSection />
+            {/*<CertificationRequestsWidget />*/}
+            {/* <Messenger
+              chatOpened={(id) => setChatId(id)}
+              newMessage={(message) => setNewMessage(message)}
+            />
+
+            <div className={`community-connect px-3`}>
+              <Link to='/my-connections'>
+                <FontAwesomeIcon
+                  icon={faUsers}
+                  style={{
+                    color: '#01C5D1',
+                    background: 'white',
+                    borderRadius: '50%',
+                    height: '25px',
+                    width: '36px',
+                    opacity: '1'
+                  }}
+                />
+              </Link>
+              <Link to='/my-connections'>
+                <p className='my-auto ms-2'>Connect with my community</p>
+              </Link>
+            </div> */}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Dashboard

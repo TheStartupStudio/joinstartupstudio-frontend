@@ -1,0 +1,167 @@
+#notesButton {
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  z-index: 4000000000;
+  background-color: #01c5d1;
+  border: 0;
+  position: relative;
+}
+.firstDiv {
+  width: 262px;
+  height: 183px;
+  background-color: #ffffff;
+  margin-top: -217px;
+  margin-left: -244px;
+  box-shadow: 0px 3px 6px #00000029;
+  position: inherit;
+  overflow: hidden;
+  z-index: 9999999999;
+}
+.modalsNotes_title {
+  text-align: left;
+  font: normal normal 600 14px/20px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+  text-transform: uppercase;
+  opacity: 1;
+  cursor: pointer;
+}
+.notes-wrapper {
+  position: fixed;
+  z-index: 999999;
+  bottom: 20px;
+  right: 20px;
+}
+.noteFromThisPage_Title {
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: 0px;
+  text-align: left;
+  font: normal normal 600 10px/16px Montserrat;
+  color: #333d3d;
+  opacity: 1;
+}
+.noteFromThisPage_Date {
+  text-align: left;
+  font: normal normal 300 9px/10px Montserrat;
+  letter-spacing: 0.36px;
+  color: #333d3d;
+  opacity: 1;
+}
+.noteFromThisPage_ViewMore {
+  text-align: left;
+  font: normal normal 500 10px/16px Montserrat;
+  letter-spacing: 0.4px;
+  color: #01c5d1;
+  opacity: 1;
+  cursor: pointer;
+}
+/* .modal-content {
+  /* this is because we can resize this background so we'll hide it. The coloring will
+    now be maintained by the modal-resizable class */
+/* background: transparent; */
+/* } */
+
+.modal-content > .modal-resizable {
+  background-color: white;
+  background-clip: padding-box;
+  border: 1px solid #ebedee;
+  border: 0;
+  border-radius: 0.2em;
+  box-shadow: 0 0 0 1px rgba(101, 108, 126, 0.5) inset,
+    0 1px 3px 1px rgba(64, 64, 64, 0.5);
+}
+
+.modal-resizable > .modal-body {
+  /* This is to account for the height of the footer */
+  padding: 1em 1em 5em 1em;
+}
+
+.modal-footer {
+  /* this is to keep the footer pinned to the bottom when we resize */
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+.newNote_title {
+  text-align: left;
+  font: normal normal 600 20px/24px Montserrat;
+  letter-spacing: 0px;
+  color: #333d3d;
+  text-transform: uppercase;
+  opacity: 1;
+}
+.newNote_date {
+  text-align: left;
+  font: normal normal 300 9px/10px Montserrat;
+  letter-spacing: 0.36px;
+  color: #707070;
+  opacity: 1;
+}
+.modalResizable_width_height {
+  min-height: 400px;
+  min-width: 200px;
+}
+.form-control:focus .form-control:active input:active input:focus,
+input input:active {
+  outline: 0px !important;
+  -webkit-appearance: none;
+  box-shadow: none !important;
+}
+.single_note_primary_div {
+  margin: 5px;
+  padding: 5px;
+  max-height: 400px;
+  overflow: auto;
+  text-align: justify;
+}
+.single_note_title {
+  text-align: left;
+  font: normal normal 600 11px/10px Montserrat;
+  letter-spacing: 0.44px;
+  color: #707070;
+  opacity: 1;
+}
+.single_note_title_small {
+  text-align: left;
+  font: normal normal 500 10px/16px Montserrat;
+  letter-spacing: 0.4px;
+  color: #333d3d;
+  opacity: 1;
+}
+.single_note_date {
+  text-align: left;
+  font: normal normal 300 11px/10px Montserrat;
+  letter-spacing: 0.44px;
+  color: #707070;
+  opacity: 1;
+}
+.single_note_date_small {
+  text-align: left;
+  font: normal normal 300 9px/10px Montserrat;
+  letter-spacing: 0.36px;
+  color: #333d3d;
+  opacity: 1;
+}
+.single_note_div {
+  cursor: pointer;
+}
+.scroll-add-new-note-popup-modal::placeholder {
+  text-align: left;
+  font: normal normal 300 9px/10px Montserrat;
+  letter-spacing: 0.36px;
+  color: #707070;
+  opacity: 1;
+}
+.react-quill::placeholder .ql-editor::placeholder .ql-blank::placeholder {
+  text-align: left;
+  font: normal normal 300 15px/17px Montserrat;
+  letter-spacing: 0.6px;
+  color: #bbbdbf;
+  opacity: 1;
+}
+.create-new-note-modal {
+  z-index: 9999999999999999;
+}

@@ -1,0 +1,26 @@
+.journal-question {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.button.undo-reflection {
+  margin-top: -5px;
+  width: 70px;
+  font-size: 10px;
+  height: 25px;
+  min-width: 0;
+}
+
+.user-entry-input {
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #333d3d29;
+  padding: 10px;
+  font-size: 10px;
+  letter-spacing: 0px;
+  color: #bbbdbf;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  word-break: break-all;
+}

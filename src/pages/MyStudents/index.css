@@ -1,0 +1,23 @@
+.setAddStudents {
+  /* text-align: left; */
+  font: normal normal 600 16px/20px Montserrat;
+  letter-spacing: 0px;
+  color: #51c7df;
+  opacity: 1;
+}
+
+.table-edit-dropdown {
+  width: 50%;
+}
+
+@media (max-width: 768px) {
+  .setAddStudents {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .table-edit-dropdown {
+    width: 100%;
+  }
+}

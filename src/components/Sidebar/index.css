@@ -1,0 +1,42 @@
+.sidebar_title_span {
+  text-align: left;
+  font: normal normal 500 14px/16px Montserrat;
+  letter-spacing: 0.07px;
+  color: #707070;
+  opacity: 1;
+}
+
+.sidenav {
+  color: #333d3d;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 10px 10px;
+  display: flex;
+  transition: 0.3s ease;
+  background: transparent;
+  position: relative;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  line-height: 1;
+}
+
+.sidenav:hover {
+  background: #e3e8f3;
+}
+
+.sidebar-accordion-border {
+  border: none !important;
+}
+
+.disabledd {
+  pointer-events: none;
+  /* You can also add additional styles to indicate a disabled state */
+  color: gray;
+  cursor: not-allowed;
+}
+
+.icon_container {
+  height: 35px;
+  width: 35px;
+}

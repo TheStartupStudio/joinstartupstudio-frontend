@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700,900');
+
+.custom-dropdown-wrapper {
+  border: 1px solid #bbbdbf;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+  height: 48px;
+  display: flex;
+}
+
+.custom-dropdown-wrapper .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0px 20px;
+}
+
+.custom-dropdown-wrapper .header .title {
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  margin: 0;
+}
+
+.custom-dropdown-wrapper .header i {
+  width: 10px;
+  height: 5px;
+}
+
+.custom-dropdown-wrapper .dropdown-options {
+  position: absolute;
+  top: 48px;
+  width: 100%;
+  max-height: 295px;
+  overflow-y: auto;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  display: none;
+}
+
+.custom-dropdown-wrapper .dropdown-options.show {
+  display: block;
+  z-index: 2;
+}

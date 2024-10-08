@@ -1,0 +1,63 @@
+.upload-image-box {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #0000004D;
+    border: 1px solid #E1E1E1;
+    /*border-radius: 6px;*/
+    /*height: 100%;*/
+    padding: 4px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.journal_intro-list {
+    margin-left: 0 !important;
+}
+
+
+
+@media (max-width: 1235px) {
+    .upload-image-box {
+
+        width: 120px;
+        height: 120px;
+
+    }
+}
+
+.mentor-title {
+    font: normal normal 600 16px/24px Montserrat;
+    letter-spacing: 0px;
+    color: #000000;
+    text-transform: uppercase;
+}
+
+.mentor-description {
+    font: normal normal 500 14px/24px Montserrat;
+    letter-spacing: 0px;
+    color: #000000;
+    text-transform: uppercase;
+    /*text-align: center*/
+}
+
+.interview-part {
+    font: normal normal 600 14px/24px Montserrat;
+    letter-spacing: 0px;
+    color: #000000;
+    text-transform: uppercase;
+}
+
+.interview-description {
+    font: normal normal 500 14px/24px Montserrat;
+    letter-spacing: 0px;
+    color: #000000;
+}
+
+.play-icon {
+    color: #99CC33;
+    cursor: pointer;
+    width: 16px;
+    height: 16px
+}

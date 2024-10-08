@@ -1,0 +1,125 @@
+.public-login-form {
+  height: 60vh;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.95);
+  -webkit-box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.8);
+  -moz-box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+}
+
+.public-login-form button {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0px;
+  color: #000;
+  opacity: 1;
+  background-color: transparent;
+  width: 25%;
+  height: 45px;
+  border-bottom: 2px solid #db438a !important;
+  border: none;
+  text-transform: uppercase;
+  box-shadow: none;
+}
+
+.public-login-form input::placeholder {
+  font-size: 12px;
+  letter-spacing: 0px;
+  color: #333d3d;
+  opacity: 1;
+}
+
+.public-login-form h2 {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.public-login-form h6 {
+  color: #707070;
+  text-align: center;
+}
+
+/*Login input style  */
+
+.input-with-gradient-border {
+  width: 100%;
+  border: double 3px transparent;
+  border-radius: 15px;
+  background-image: linear-gradient(white, white),
+    linear-gradient(to right, #db438a, #5db1cc);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-gradient-border svg {
+  margin-right: 3%;
+}
+
+.input-with-gradient-border input {
+  position: relative;
+  border: none !important;
+  background-color: transparent !important;
+  border-radius: 15px;
+}
+
+.pw-revelared__icon {
+  position: absolute;
+  top: 10;
+  right: 63%;
+}
+
+@media (max-width: 778px) {
+  .public-login-form {
+    height: calc(35vh - 42px);
+    min-height: 35vh;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 570px) {
+  .public-login-form {
+    height: 35vh;
+    min-height: 35vh;
+    justify-content: center;
+  }
+
+  .public-login-form button {
+    font-size: 14px;
+  }
+
+  .public-login-form input::placeholder {
+    font-size: 12px;
+    letter-spacing: 0px;
+    color: #333d3d;
+    opacity: 1;
+  }
+
+  .public-login-form h2 {
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .public-login-form h6 {
+    color: #707070;
+    text-align: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .login-form-resp {
+    width: 90vw !important;
+  }
+}
+
+@media (max-width: 1008px) and (min-width: 768px) {
+  .login-form-resp {
+    width: 90vw !important;
+  }
+}

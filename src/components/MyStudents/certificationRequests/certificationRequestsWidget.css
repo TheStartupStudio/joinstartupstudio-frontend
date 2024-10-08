@@ -1,0 +1,38 @@
+.certificationReqWidget .title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.48px;
+  color: #231f20;
+  opacity: 1;
+  text-align: center;
+}
+
+.certificationReqWidget .description {
+  text-align: left;
+  font-weight: normal;
+  font-size: 10px;
+  letter-spacing: 0.4px;
+  color: #707070;
+  opacity: 1;
+}
+
+.certificationReqWidget table {
+  border: 0;
+  width: 100%;
+}
+
+.certificationReqWidget table th {
+  font-size: 12px;
+  letter-spacing: 0.48px;
+  color: #231f20;
+  opacity: 1;
+  font-weight: 600;
+}
+
+.certificationReqWidget table td {
+  letter-spacing: 0.48px;
+  color: #51c7df;
+  opacity: 1;
+  font-size: 12px;
+  font-weight: normal;
+}

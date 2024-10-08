@@ -1,0 +1,32 @@
+.resourceCard .details {
+  border: 1px solid #dbdcde;
+  min-height: 130px;
+  border-top: 0;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.resourceCard {
+  width: 100%;
+  border: 0;
+  min-height: 260px !important;
+  border-radius: 6px;
+  outline: none;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+.resourceCard .details .links {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0px;
+  color: #51c7df;
+  cursor: pointer;
+}
+
+.resource-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 270px);
+  grid-gap: 15px;
+  justify-content: space-evenly;
+}

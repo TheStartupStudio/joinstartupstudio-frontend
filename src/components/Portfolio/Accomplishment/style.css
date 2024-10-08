@@ -1,0 +1,27 @@
+.education-details {
+  width: 75%;
+}
+
+.experience-details .edit-icon {
+  text-align: right;
+  flex-grow: 1;
+}
+
+/* @media (min-width: 1024px) {
+  .education-details {
+    padding-right: 200px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .education-details {
+    padding-right: 300px;
+  }
+} */
+
+@media (max-width: 767px) {
+  .experience-details .edit-icon {
+    text-align: right;
+    padding-right: 10px;
+  }
+}

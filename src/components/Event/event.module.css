@@ -1,0 +1,26 @@
+.event {
+  margin-bottom: 15px;
+}
+.date {
+  color: #01c5d1;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.52px;
+  margin-bottom: 3px !important;
+}
+.title {
+  font-size: 12px;
+  color: #333d3d;
+  font-weight: 500;
+  margin-bottom: 0px;
+  letter-spacing: 0.48px;
+  line-height: normal;
+}
+.auther {
+  margin: 0px;
+  font-size: 10px;
+  color: #333d3d;
+  font-weight: 300;
+  letter-spacing: 0.4px;
+  opacity: 1;
+}

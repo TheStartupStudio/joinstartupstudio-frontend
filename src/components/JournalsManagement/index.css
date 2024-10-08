@@ -1,0 +1,210 @@
+.lds-facebook {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  left: 8px;
+  width: 16px;
+  background: #01c5d1;
+  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.lds-facebook div:nth-child(1) {
+  left: 8px;
+  animation-delay: -0.24s;
+}
+.lds-facebook div:nth-child(2) {
+  left: 32px;
+  animation-delay: -0.12s;
+}
+.lds-facebook div:nth-child(3) {
+  left: 56px;
+  animation-delay: 0;
+}
+@keyframes lds-facebook {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%,
+  100% {
+    top: 24px;
+    height: 32px;
+  }
+}
+
+input,
+textarea {
+  background: #e5e5e54d;
+  border: 0;
+}
+
+.image-upload-widget {
+  background-color: #e4e4e4;
+  width: 100px;
+  padding: 5px;
+  border: 0;
+}
+
+/*///////////////////*/
+.upload-image-box {
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #0000004D;
+  border: 1px solid #E1E1E1;
+  /*border-radius: 6px;*/
+  /*height: 100%;*/
+  padding: 4px;
+  width: 180px;
+  height:180px;
+  border-radius:50%;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.border-dashed {
+  border: 2px dashed #E4E9F4;
+  height: 100%;
+  border-radius:50%;
+}
+
+.upload-image_box-title {
+  font: italic normal 600 16px/18px Montserrat;
+  letter-spacing: 0.56px;
+  padding-right: 10px;
+  padding-left: 10px;
+  text-align:center;
+}
+
+.upload-image_click-here {
+  font: normal normal normal 16px/18px Montserrat;
+  padding-right: 10px;
+  padding-left: 10px;
+  text-align:center;
+  letter-spacing: 0.56px;
+  color: #766C6EFD;
+}
+.organization-logo-box {
+  display: flex;
+  justify-content: center;
+}
+.organization-logo {
+  width: 100px;
+  height: 100px;
+}
+
+.upload-to-cloud_logo {
+  width: 50px;
+  height: 50px;
+  color: #766C6EFD
+}
+
+/*// Upload video // */
+
+.interview-modal-box {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.upload-btn {
+  display: inline-block;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+  background-color: #0056b3;
+}
+
+#video-upload {
+  display: none;
+}
+
+/*// Entry slider //*/
+.toggle-container {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label {
+  margin-right: 10px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: background-color 0.3s ease;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.switch input:checked + .slider {
+  background-color: #007bff;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/*// description */
+
+.description-input {
+  margin-top: 20px;
+}
+
+.description-input label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.description-input input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background: #fff
+}
+
+/* Optional: Style placeholder text */
+.description-input input::placeholder {
+  color: #aaa;
+}

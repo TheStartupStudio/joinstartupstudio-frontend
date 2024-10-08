@@ -1,0 +1,45 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+/*.app {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    text-align: center;*/
+/*    height: 100vh;*/
+/*    font-family: Roboto;*/
+/*    background: whitesmoke;*/
+/*}*/
+
+.avatar-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: inherit;
+}
+
+.file-input-hidden {
+    /* Hack to remove the awful Bootstrap 4 file input */
+    max-width: fit-content;
+    opacity: 0;
+}
+
+.file-btn {
+    height: 38px;
+}
+
+.file-btn:focus-within {
+    /* Adds focus styles */
+    background-color: #0069d9;
+    border-color: #0062cc;
+    box-shadow: 0 0 0 0.2rem rgb(38 143 255 / 50%);
+}
+
+/*ul {*/
+/*    margin-left: 3rem;*/
+/*}*/
+
+/*li {*/
+/*    min-width: 10rem;*/
+/*    text-align: left;*/
+/*}*/

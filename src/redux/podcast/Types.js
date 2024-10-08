@@ -1,0 +1,3 @@
+// GET Podcast
+export const GET_ALL_PODCAST = 'GET_ALL_PODCAST'
+export const GET_ALL_PODCAST_ERROR = 'GET_ALL_PODCAST_ERROR'

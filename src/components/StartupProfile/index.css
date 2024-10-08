@@ -1,0 +1,73 @@
+.addNewProjectModal_label {
+  text-align: left;
+  font: normal normal 500 12px/15px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+.addNewProjectModal_image {
+  height: 139px;
+  width: 139px;
+  object-fit: cover;
+}
+.addNewProjectModal_label_input {
+  text-align: left;
+  font: normal normal 500 12px/13px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  height: 48px;
+}
+.addNewProjectModal_label_input::placeholder {
+  text-align: left;
+  font: normal normal 500 12px/13px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+.addNewProjectModal_sm {
+  text-align: left;
+  font: normal normal 600 24px/24px Montserrat;
+  letter-spacing: 0.96px;
+  color: #231f20;
+  opacity: 1;
+}
+.addNewProjectModal_Description {
+  text-align: left;
+  font: normal normal 600 24px/29px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.addNewProjectModal_textarea {
+  resize: none;
+}
+.addNewProjectModal_textarea::placeholder {
+  text-align: left;
+  font: normal normal 300 15px/18px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+}
+.addNewProjectModal_Founders_title {
+  text-align: left;
+  font: normal normal 600 24px/29px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.addNewProjectModal_email_title {
+  text-align: left;
+  font: normal normal 600 24px/29px Montserrat;
+  letter-spacing: 0px;
+  color: #231f20;
+  opacity: 1;
+}
+.addNewProjectModal_email_input {
+  text-align: left;
+  font: normal normal 500 12px/13px Montserrat;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  height: 40px;
+}

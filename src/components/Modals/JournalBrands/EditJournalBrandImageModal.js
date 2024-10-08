@@ -1,0 +1,228 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { Modal } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+  faGlobe,
+  faFileUpload,
+  faLink
+} from '@fortawesome/free-solid-svg-icons'
+import axiosInstance from '../../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
+import ImageCropper from '../../ImageCropper'
+import { readFile } from '../../../utils/canvasUtils'
+import { useDispatch, useSelector } from 'react-redux'
+import { setImageCropperData, setCroppedImage } from '../../../redux'
+import '../../Portfolio/Experience/style.css'
+import IntlMessages from '../../../utils/IntlMessages'
+
+export const EditJournalBrandImageModal = (props) => {
+  const defaultData = {
+    image: '',
+    id: props.id,
+    journalId: props.journalId
+  }
+
+  const [data, setData] = useState(defaultData)
+  const [loading, setLoading] = useState(false)
+  const [selectedImage, setSelectedImage] = useState('')
+  const [imageChanged, setImageChanged] = useState(false)
+  const inputImage = React.useRef(null)
+
+  const general = useSelector((state) => state.general)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    setSelectedImage(props.image)
+  }, [props.image])
+
+  const handleChange = (event) => {
+    const { name, value, checked } = event.target
+
+    setData((prevValues) => ({
+        ...prevValues,
+        [name]: value
+    }))
+  }
+    
+  const imageChange = async (e) => {
+    const file = e.target.files[0]
+    if (e.target.files && e.target.files.length > 0) {
+      const fileSize = file.size / 1024 / 1024
+      if (fileSize > 0.5) {
+        return toast.error('Image size exceeds 512KB.')
+      }
+      setImageChanged(true)
+
+      setData((prevValues) => ({
+        ...prevValues,
+        image: null
+      }))
+
+      let imageData = await readFile(file)
+      dispatch(setImageCropperData(imageData))
+      previewImage(file)
+    }
+  }
+
+  const previewImage = (file) => {
+    const reader = new FileReader()
+    if (file) {
+      reader.readAsDataURL(file)
+    }
+
+    reader.onloadend = () => {
+      setSelectedImage(reader.result)
+    }
+  }
+
+  const addExperience = async () => {
+    if(!imageChanged){
+        props.onHide();
+        return;
+    }
+    setLoading(true)
+    const newExperience = {...data, id: defaultData.id}
+    if (general.croppedImage) {
+      const formData = new FormData()
+      formData.append('img', general.croppedImage)
+      await axiosInstance
+        .post('/upload/img-transform', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then((response) => {
+          setLoading(false)
+          newExperience.image = response.data.fileLocation
+        })
+        .catch((err) => {
+          return toast.error('Image upload failed, please try again!')
+        })
+    }
+
+    await axiosInstance
+      .patch('/LtsJournals/journal-brand-image', newExperience)
+      .then(() => {
+        setLoading(false)
+        props.onSave()
+        toast.success(<IntlMessages id='alert.my_account.success_change' />)
+        setSelectedImage()
+        setData(defaultData)
+      })
+      .catch((err) => {
+        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        setLoading(false)
+      })
+  }
+
+  return (
+    <>
+      <Modal
+        show={props.show}
+        onHide={props.onHide}
+        backdrop='static'
+        keyboard={false}
+        className='edit-modal add-journal-brand-image'
+      >
+        <Modal.Header className='pb-0 mx-4 general-modal-header'>
+          <h3 className='mt-4 mb-0 contact-bio'>
+            ADD IMAGE
+          </h3>
+          <button
+            type='button'
+            className='btn-close me-1 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
+            aria-label='Close'
+            onClick={() => {
+              props.onHide()
+              setSelectedImage()
+              setData(defaultData)
+            }}
+          />
+        </Modal.Header>
+        <Modal.Body className='px-4'>
+          <div className='row'>
+            <div className='col-12 upload-container my-2'>
+              <div className='upload-image me-2 mb-1'>
+                {general.imageCropperData ? (
+                  <div
+                    className='img-placeholder position-relative'
+                    style={{ height: '300px' }}
+                  >
+                    <ImageCropper
+                      width={150}
+                      height={150}
+                      setImageUrl={setSelectedImage}
+                      imageUrl={selectedImage}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    {selectedImage ? (
+                      <img
+                        src={
+                          data.image
+                            ? data.image
+                            : selectedImage
+                        }
+                        style={{ width: '100%', height: '100%' }}
+                        alt='Thumb'
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faPlus}
+                        className='upload-image-plus'
+                        style={{
+                          width: '56px',
+                          height: '56px',
+                          color: '#BBBDBF',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => inputImage.current.click()}
+                      />
+                    )}
+                  </>
+                )}
+              </div>
+              {/* <p>Max image width: 85px</p> */}
+              <label className='text-center py-2'>
+                <input
+                  type='file'
+                  id='inputGroupFile'
+                  name='profile_image'
+                  accept='image/png, image/jpeg'
+                  className='d-none'
+                  ref={inputImage}
+                  onChange={imageChange}
+                />
+                <div className='image-upload d-flex'>
+                  <p>Choose Image</p>
+                  <FontAwesomeIcon
+                    icon={faFileUpload}
+                    className='edit-modal-sm ms-4'
+                    style={{ height: '27px', width: '20px' }}
+                  />
+                </div>
+              </label>
+            </div>
+            <div className='row mx-0'>
+              <div className='col-12 text-end'>
+                <button
+                  className='float-end edit-account mt-4'
+                  disabled={loading}
+                  onClick={() => addExperience()}
+                >
+                  {loading ? (
+                    <span className='spinner-border spinner-border-sm' />
+                  ) : (
+                    'UPLOAD'
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+    </>
+  )
+}

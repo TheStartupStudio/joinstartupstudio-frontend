@@ -1,0 +1,37 @@
+.verify-wrapper {
+    height: 100vh;
+    background: #f8f7f7;
+}
+.verify-form {
+    max-width: 350px;
+    width: 90%;
+    background: red;
+    padding: 25px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.verify-form h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.verify-form .verify-btn-wrapper {
+    text-align: right;
+}
+
+.verify-form .verify-btn {
+    display: inline-block;
+    width: unset;
+    margin-top: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.verify-form .verify-error {
+    margin-top: 10px;
+    color: red;
+}

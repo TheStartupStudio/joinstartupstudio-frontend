@@ -1,0 +1,47 @@
+.conversation-body p:first-child {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: #333d3d;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.conversation-body p {
+  /* font: normal normal 300 12px/16px Montserrat; */
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: #333d3d;
+  font-weight: 300;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conversation-body .convo-container {
+  flex-wrap: wrap;
+}
+
+.convo-container .lastMessage {
+  flex-grow: 1;
+}
+
+.conversation-body img {
+  height: 30px;
+  width: 30px;
+}
+
+.conversation-body hr {
+  width: 95%;
+  margin-left: auto;
+  margin-right: 3px;
+}
+
+.conversation-body:hover {
+  cursor: pointer;
+}
+
+.chatProfileImage {
+  object-fit: cover;
+}
