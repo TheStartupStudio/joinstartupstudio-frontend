@@ -9,6 +9,7 @@ import { DeactivateDialogModal } from '../../StudentsTable/deactivateDialogModal
 import { NextYearModal } from '../../StudentsTable/nextYearModal'
 import EditBulkModal from './EditBulkModal'
 import useModalState from '../../../hooks/useModalState'
+import DeleteUserModal from './DeleteUserModal'
 
 const HeaderActions = ({
   usedIn = 'instructor',
@@ -26,6 +27,7 @@ const HeaderActions = ({
   const [bulkEditingStudents, setBulkEditingStudents] = useState([])
   const [bulkNextYearStudents, setBulkNextYearStudents] = useState([])
   const [bulkDeactivatingStudents, setBulkDeactivatingStudents] = useState([])
+  const [bulkDeleteStudents, setBulkDeleteStudents] = useState([])
 
   const getId = (item) => (usedIn === 'instructor' ? item.User.id : item.id)
 
@@ -175,6 +177,26 @@ const HeaderActions = ({
     }
     setLoading(false)
   }
+
+  const handleBulkDeleteAction = () => {
+    console.log('selectedRows', selectedRows)
+    setBulkDeleteStudents(selectedRows.map((student) => student))
+    setModalState('deleteUserModal', true)
+  }
+
+  const bulkDelete = async () => {
+    setLoading(true)
+    try {
+      await axiosInstance.delete('/instructor/bulk-delete', {
+        userIds: bulkDeleteStudents.map(getId)
+      })
+      onSuccess()
+      setModalState('deleteUserModal', false)
+    } catch (error) {
+      toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+    }
+  }
+
   return (
     <>
       <Row className='py-3 m-0'>
@@ -215,15 +237,15 @@ const HeaderActions = ({
                     name: 'Edit',
                     value: 'edit'
                   },
-                  { name: 'Next year', value: 'next year' },
-                  { name: 'Deactivate', value: 'deactivate' }
+                  { name: 'Deactivate', value: 'deactivate' },
+                  { name: 'Remove', value: 'remove' }
                 ]}
                 onClick={(newValue) => {
                   newValue?.value === 'edit'
                     ? handleBulkEditAction()
                     : newValue?.value === 'deactivate'
                     ? handleBulkDeactiveAction()
-                    : handleBulkNextYearAction()
+                    : handleBulkDeleteAction()
                 }}
                 btnClassName={'gray-border'}
               />
@@ -312,6 +334,19 @@ const HeaderActions = ({
             message={'Student(s) deactivated.'}
           />
         </>
+      )}
+
+      {bulkDeleteStudents.length > 0 && (
+        <DeleteUserModal
+          show={modals.deleteUserModal}
+          onHide={() => setModalState('deleteUserModal', false)}
+          users={
+            usedIn === 'student'
+              ? bulkDeleteStudents
+              : bulkDeleteStudents.map((students) => students.User)
+          }
+          onSuccess={onSuccess}
+        />
       )}
     </>
   )

@@ -9,6 +9,7 @@ import {
   faPencilAlt,
   faSearch,
   faTimes,
+  faTrashAlt,
   faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -169,7 +170,11 @@ const CustomDropdown = ({
         onClick(newSelectedOptions)
       }
     } else {
-      setSelectedOptions(option)
+      if (selectedOptions === option) {
+        setSelectedOptions(null)
+      } else {
+        setSelectedOptions(option)
+      }
       if (exclusive) {
         setOpenDropdown()
       } else {
@@ -198,6 +203,14 @@ const CustomDropdown = ({
     }
   }
 
+  const resetSelection = (e) => {
+    e.stopPropagation()
+    setSelectedOptions(null)
+    if (onClick) {
+      onClick(null)
+    }
+  }
+
   const isDropdownOpen = exclusive ? isOpen : localIsOpen
 
   return (
@@ -213,7 +226,7 @@ const CustomDropdown = ({
         error={error}
       >
         <span
-          className='p-0'
+          className='p-0 w-100'
           style={{
             overflow: 'hidden',
             whiteSpace: 'nowrap',
@@ -229,6 +242,16 @@ const CustomDropdown = ({
             ? selectedOptions.name
             : title || 'Select an option'}
         </span>
+
+        {!multiple && !isSelectable && selectedOptions && (
+          <span
+            className='reset-button d-flex justify-content-end cursor-pointer'
+            onClick={(e) => resetSelection(e)}
+            style={{ color: 'red' }}
+          >
+            <FontAwesomeIcon icon={faTrashAlt} />
+          </span>
+        )}
 
         <span className={`arrow ${isDropdownOpen ? 'open' : ''}`}>
           <FontAwesomeIcon icon={faAngleDown} />
@@ -306,6 +329,7 @@ const CustomInput = ({
         value={value}
         onChange={handleChange}
         placeholder={placeholder}
+        autocomplete='new-password'
       />
 
       {type === 'password' && (

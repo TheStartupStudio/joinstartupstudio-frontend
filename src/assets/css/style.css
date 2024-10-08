@@ -410,7 +410,7 @@ div.accordionmenu-main ul li a {
 
 .dropdown-item {
   border-radius: 30px;
-  margin: 10px;
+  /* margin: 10px; */
   text-align: left;
   font-size: 14px;
   font-weight: 600;
@@ -4294,7 +4294,7 @@ wave > wave:first-child {
 */
 
 .ql-align-right {
-  text-align:end !important;
+  text-align: end !important;
 }
 .team-add-btn {
   padding: 15px !important;

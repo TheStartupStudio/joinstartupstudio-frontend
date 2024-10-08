@@ -331,10 +331,12 @@ const StudentActionsModal = ({
                 </div>
               </div>
 
-              <a href={`/user-portfolio/${formData.username}`}>
-                <FontAwesomeIcon icon={faIdBadge} className='me-2' /> View
-                Student Portfolio
-              </a>
+              {mode === 'edit' ? (
+                <a href={`/user-portfolio/${formData.username}`}>
+                  <FontAwesomeIcon icon={faIdBadge} className='me-2' /> View
+                  Student Portfolio
+                </a>
+              ) : null}
             </Col>
             <Col md='6'>
               <div className='pb-3'>

@@ -21,7 +21,7 @@
   position: relative;
 }
 
-.modal-header {
+.immersion-modal-header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -85,7 +85,7 @@ input:checked + .slider:before {
   transform: translateX(18px);
 }
 
-.modal-body {
+.immersion-modal-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
