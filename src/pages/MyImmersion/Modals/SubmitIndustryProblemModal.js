@@ -21,6 +21,7 @@ import {
 import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
 import { FaEye, FaX } from 'react-icons/fa6'
+import mailIcon from '../../../assets/images/mail-icon.svg'
 
 // import ParentButtonApply from '../../../components/Modals/Spotlight/ParentButtonApply.js'
 
@@ -96,7 +97,11 @@ const SubmitIndustryProblemModal = (props) => {
           }}
           className='immersion-step1-modal-body'
         >
-          <Modal.Header style={{ marginTop: '40px' }}>
+          {' '}
+          <div className='mail-icon-cont'>
+            <img src={mailIcon} className='step1-mail-icon'></img>
+          </div>
+          <Modal.Header style={{ marginTop: '30px' }}>
             <div className='portfolio-actions'>
               <span
                 style={{ fontSize: '20px', fontWeight: '700' }}
@@ -110,7 +115,7 @@ const SubmitIndustryProblemModal = (props) => {
               style={{
                 color: '#231f20',
                 fontWeight: '500',
-                fontSize: '20px',
+                fontSize: '14px',
                 marginBottom: '5px'
               }}
               className='immrs-solution-title-modal'
@@ -145,7 +150,6 @@ const SubmitIndustryProblemModal = (props) => {
               X
             </span> */}
           </Modal.Header>
-
           <div className='immersion-body-container body-container'>
             <Col style={{ maxHeight: '70%' }}>
               {/* <ProfileHolder
@@ -236,7 +240,7 @@ const SubmitIndustryProblemModal = (props) => {
                 ) : (
                   <SubmitButton
                     text={'SUBMIT'}
-                    disabled={true}
+                    disabled={props.problemIsSubmitted}
                     type='button'
                     className={'submit-button'}
                   />

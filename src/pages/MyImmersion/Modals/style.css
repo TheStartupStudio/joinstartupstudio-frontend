@@ -96,8 +96,26 @@
 
 }
 
-@media (max-width:593px) {
+@media (max-width:507px) {
   .immrs-solution-title-modal {
     flex-direction: column;
   }
+}
+
+
+.mail-icon-cont {
+  border-radius: 50px;
+  background: #C8CDD880 0% 0% no-repeat padding-box;
+  height: 36px;
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  bottom: 0px;
+}
+
+.step1-mail-icon {
+  width: 20.16px;
+  height: 18.24px;
 }
