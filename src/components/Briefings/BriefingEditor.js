@@ -9,7 +9,8 @@ import {
   deleteBriefingStart,
   editBriefingStart
 } from '../../redux/header/Actions'
-import { useForm, useValidation } from './useForm'
+import { useForm } from '../../hooks/useForm'
+import { useValidation } from '../../hooks/useValidation'
 import { DateInput, TextEditor, TextInput } from '../../ui/ContentItems'
 import useIsFormEmpty from '../../hooks/useIsFormEmpty'
 import { QuillEditorBox } from '../../ui/ContentItems'

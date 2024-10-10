@@ -82,6 +82,7 @@ const AddLessonModal = ({
             ? { weekJournalId: journalId }
             : { weekJournalId: null })
         }
+        debugger
         const res = dispatch(createLesson(lessonData))
         if (res) {
           toast.success('Lesson addedd successfully!')
