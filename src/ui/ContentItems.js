@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Editor, EditorTools } from '@progress/kendo-react-editor'
 import { getFormattedDate } from '../utils/helpers'
 import ReactSelect from 'react-select'
@@ -8,6 +8,7 @@ import {
   faEyeSlash,
   faQuestion
 } from '@fortawesome/free-solid-svg-icons'
+import ReactQuill from 'react-quill'
 
 const TextInput = ({ title, name, value, handleChange, showError, error }) => (
   <div className='content-item__container'>
@@ -37,35 +38,127 @@ const DateInput = ({ title, name, value, handleChange, showError, error }) => (
   </div>
 )
 
-const TextEditor = ({ title, name, value, handleChange, showError, error }) => (
-  <div className='content-item__container'>
-    <label className='content-item__title'>{title}:</label>
-    <Editor
-      name={name}
-      resizable={true}
-      style={{ height: 100, maxHeight: 250, minWidth: 555, minHeight: 170 }}
-      tools={[
-        [EditorTools.Bold, EditorTools.Italic, EditorTools.Underline],
-        [EditorTools.Undo, EditorTools.Redo],
-        [EditorTools.Link, EditorTools.Unlink],
-        [
-          EditorTools.AlignLeft,
-          EditorTools.AlignCenter,
-          EditorTools.AlignRight
-        ],
-        [
-          EditorTools.OrderedList,
-          EditorTools.UnorderedList,
-          EditorTools.Indent,
-          EditorTools.Outdent
-        ]
-      ]}
-      value={value}
-      onChange={(e) => handleChange(e, name)}
-    />
-    {showError && error && <small className='ps-1'>{error}</small>}
-  </div>
-)
+const QuillEditor = ({ title, name, value, onChange, showError, error }) => {
+  const quillModules = {
+    toolbar: [
+      [{ header: '1' }, { header: '2' }],
+      [
+        'bold',
+        'italic',
+        'underline',
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { align: [] },
+        'blockquote',
+        'link'
+      ]
+    ]
+  }
+
+  const quillFormats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'list',
+    'bullet',
+    'link',
+    'blockquote',
+    'align'
+  ]
+
+  return (
+    <>
+      <label className='content-item__title'>{title}:</label>
+      <ReactQuill
+        theme='snow'
+        name='textQuillStandart'
+        modules={quillModules}
+        formats={quillFormats}
+        onChange={(e) => onChange?.(e, name)}
+        value={value ?? ''}
+      />
+    </>
+  )
+}
+
+const QuillEditorBox = ({ title, name, value, onChange, showError, error }) => {
+  console.log('value', value)
+  const quillModules = {
+    toolbar: [
+      [{ header: '1' }, { header: '2' }],
+      [
+        'bold',
+        'italic',
+        'underline',
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { align: [] },
+        'blockquote',
+        'link'
+      ]
+    ]
+  }
+
+  const quillFormats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'list',
+    'bullet',
+    'link',
+    'blockquote',
+    'align'
+  ]
+
+  return (
+    <div className='content-item__container'>
+      <label className='content-item__title'>{title}:</label>
+      <ReactQuill
+        theme='snow'
+        name='textQuillStandart'
+        modules={quillModules}
+        formats={quillFormats}
+        onChange={(e) => onChange?.(e, name)}
+        value={value ?? ''}
+      />
+      {showError && error && <small className='ps-1'>{error}</small>}
+    </div>
+  )
+}
+
+const TextEditor = ({ title, name, value, handleChange, showError, error }) => {
+  return (
+    <div className='content-item__container'>
+      <label className='content-item__title'>{title}:</label>
+      <Editor
+        name={name}
+        resizable={true}
+        style={{ height: 100, maxHeight: 250, minWidth: 555, minHeight: 170 }}
+        tools={[
+          [EditorTools.Bold, EditorTools.Italic, EditorTools.Underline],
+          [EditorTools.Undo, EditorTools.Redo],
+          [EditorTools.Link, EditorTools.Unlink],
+          [
+            EditorTools.AlignLeft,
+            EditorTools.AlignCenter,
+            EditorTools.AlignRight
+          ],
+          [
+            EditorTools.OrderedList,
+            EditorTools.UnorderedList,
+            EditorTools.Indent,
+            EditorTools.Outdent
+          ]
+        ]}
+        value={value}
+        onChange={(e) => handleChange(e, name)}
+      />
+      {showError && error && <small className='ps-1'>{error}</small>}
+    </div>
+  )
+}
 
 const SelectInput = ({
   title,
@@ -212,5 +305,7 @@ export {
   LtsGradientButton,
   CustomInput,
   LtsButton,
-  CustomCheckbox
+  CustomCheckbox,
+  QuillEditor,
+  QuillEditorBox
 }

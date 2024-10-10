@@ -14,8 +14,7 @@ export const useForm = (initialState, briefing, mode) => {
     setFormData({ ...formData, [name]: value })
   }
 
-  const handleChangeEditor = (event, name) => {
-    const value = event.html
+  const handleChangeEditor = (value, name) => {
     setFormData((prevState) => ({ ...prevState, [name]: value }))
   }
 

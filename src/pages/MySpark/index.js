@@ -86,24 +86,24 @@ function MySpark() {
       icon: videoScriptIcon,
       getMazeApiType: 'document',
       type: 'video-script'
-    },
-    {
-      name: 'Image',
-      icon: imageIcon,
-      getMazeApiType: 'image',
-      type: 'image'
     }
+    // {
+    //   name: 'Image',
+    //   icon: imageIcon,
+    //   getMazeApiType: 'image',
+    //   type: 'image'
+    // }
   ]
   const history = useHistory()
   const windowWidth = useWindowWidth()
   return (
     <Container fluid>
       <Row>
-        <div className="col-12 col-xl-12 px-0">
-          <div className="account-page-padding page-border">
-            <div className="row ps-2 pb-4">
-              <div className="col-md-6 d-flex align-items-start flex-column  ">
-                <h3 className="page-title mb-0">My SPARK</h3>
+        <div className='col-12 col-xl-12 px-0'>
+          <div className='account-page-padding page-border'>
+            <div className='row ps-2 pb-4'>
+              <div className='col-md-6 d-flex align-items-start flex-column  '>
+                <h3 className='page-title mb-0'>My SPARK</h3>
                 <p className={'page-description'}>
                   Use the AI tool, My Spark, to help inspire you to create your
                   own versions of each piece of content.
