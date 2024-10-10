@@ -83,7 +83,6 @@ const QuillEditor = ({ title, name, value, onChange, showError, error }) => {
 }
 
 const QuillEditorBox = ({ title, name, value, onChange, showError, error }) => {
-  console.log('value', value)
   const quillModules = {
     toolbar: [
       [{ header: '1' }, { header: '2' }],

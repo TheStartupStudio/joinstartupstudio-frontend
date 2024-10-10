@@ -28,7 +28,6 @@ const AddLessonModal = ({
   type,
   category
 }) => {
-  console.log('data', data)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -56,7 +55,6 @@ const AddLessonModal = ({
   useEffect(() => {
     setFormData(data)
   }, [data])
-  console.log('formData', formData)
 
   const deleteLessonHandler = () => {
     const res = dispatch(deleteLesson(formData.id))
