@@ -13,7 +13,11 @@ export const fetchStep = (step) => {
   }
 }
 
-export const fetchAllIndustryProblems = (currentPage, itemsPerPage) => {
+export const fetchAllIndustryProblems = (
+  currentPage,
+  itemsPerPage,
+  industry
+) => {
   return async (dispatch) => {
     try {
       dispatch(fetchAllIndustryProblemsPending())
@@ -21,7 +25,8 @@ export const fetchAllIndustryProblems = (currentPage, itemsPerPage) => {
       const data = await myImmersionService.fetchIndustryProblems(
         step,
         currentPage,
-        itemsPerPage
+        itemsPerPage,
+        industry
       )
 
       dispatch(fetchAllIndustryProblemsFulfilled(data))
