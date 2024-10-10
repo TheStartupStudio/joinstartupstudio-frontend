@@ -391,7 +391,6 @@ div.accordionmenu-main ul li a {
   right: -10px;
   z-index: 100;
   background-color: #ffffff;
-  /* width: 80% !important; */
   width: max-content;
   margin-top: 8px;
   box-shadow: 0px 3px 6px #00000029;
@@ -408,9 +407,21 @@ div.accordionmenu-main ul li a {
   padding: 4px 0px;
 }
 
+.dropdown-menushow1 .dropdown-item {
+  border-radius: 30px;
+  margin: 10px;
+  text-align: left;
+  padding: 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0px;
+  color: #333d3d;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
 .dropdown-item {
   border-radius: 30px;
-  /* margin: 10px; */
   text-align: left;
   font-size: 14px;
   font-weight: 600;

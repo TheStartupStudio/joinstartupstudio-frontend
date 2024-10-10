@@ -230,6 +230,7 @@ const Instructors = ({ programs, levels, periods, universities }) => {
             value: university.name,
             id: university.id
           })),
+          hasResetOption: true,
           onChange: handleSchoolFilterChange
         }}
         lastDropdownProps={{

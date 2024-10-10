@@ -8,7 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import {
   CustomDropdown,
-  CustomInput,
+  // CustomInput,
   SkillBox,
   SubmitButton
 } from '../ContentItems'
@@ -24,7 +24,7 @@ import { useValidation } from '../../../../hooks/useValidation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Certification1Badge from '../../../../assets/images/market-ready-1-badge.png'
 import Certification2Badge from '../../../../assets/images/market-ready-2-badge.png'
-import { LtsButton } from '../../../../ui/ContentItems'
+import { CustomInput, LtsButton } from '../../../../ui/ContentItems'
 
 const StudentActionsModal = ({
   show,
@@ -49,7 +49,7 @@ const StudentActionsModal = ({
     universityId: '',
     email: '',
     name: '',
-    password: '',
+    password: 'Learntostart1?',
     levels: [],
     programs: [],
     instructor_id: '',
@@ -248,7 +248,7 @@ const StudentActionsModal = ({
                 showError={formSubmitted}
                 error={errors.email}
               />
-              {mode !== 'edit' && (
+              {/* {mode !== 'edit' && (
                 <CustomInput
                   placeholder={'Password (required)'}
                   type={'password'}
@@ -258,7 +258,7 @@ const StudentActionsModal = ({
                   showError={formSubmitted}
                   error={errors.password}
                 />
-              )}
+              )} */}
               <div className='py-3'>
                 <p>Set Status</p>
                 <span

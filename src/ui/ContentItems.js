@@ -126,23 +126,26 @@ const CustomInput = ({
   const [showPassword, setShowPassword] = useState(false)
   const [hintMenu, setHintMenu] = useState(false)
   return (
-    <div className='customUI-item customInput__container d-flex flex-column align-items-center position-relative'>
-      <input
-        type={showPassword ? 'text' : type}
-        name={name}
-        className='customInput w-100 my-2'
-        value={value}
-        onChange={handleChange}
-        placeholder={placeholder}
-      />
-
-      {type === 'password' && (
-        <FontAwesomeIcon
-          icon={showPassword ? faEye : faEyeSlash}
-          className='pw-revelared__icon'
-          onClick={() => setShowPassword((state) => !state)}
+    <div className='customUI-item d-flex flex-column  position-relative'>
+      <div className='customInput__container'>
+        <input
+          type={showPassword ? 'text' : type}
+          name={name}
+          className='customInput'
+          value={value}
+          onChange={handleChange}
+          placeholder={placeholder}
+          autoComplete='new-password'
         />
-      )}
+
+        {type === 'password' && (
+          <FontAwesomeIcon
+            icon={showPassword ? faEye : faEyeSlash}
+            className='pw-revelared__icon'
+            onClick={() => setShowPassword((state) => !state)}
+          />
+        )}
+      </div>
       {showHint && (
         <span
           className='hint-icon'
@@ -154,7 +157,7 @@ const CustomInput = ({
 
       {hintMenu && <div className='hint-menu'>{hintText}</div>}
 
-      {showError && error && <small className='ps-1 '>{error}</small>}
+      {showError && error && <small className='error ps-1 '>{error}</small>}
     </div>
   )
 }

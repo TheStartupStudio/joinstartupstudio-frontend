@@ -208,6 +208,7 @@ const HeaderActions = ({
         {usedIn !== 'reports' && (
           <Col md='4'>
             <CustomDropdown
+              hasResetOption={firstDropdownProps.hasResetOption}
               title={firstDropdownProps.title}
               btnClassName={'gray-border'}
               options={firstDropdownProps.options}

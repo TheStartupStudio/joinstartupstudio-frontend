@@ -8,6 +8,7 @@ import { validatePassword } from '../../../utils/helpers'
 import LTSJourneyEn from '../../../assets/images/lts-journey-en.png'
 import LTSJourneyEs from '../../../assets/images/lts-journey-es.png'
 import IntlMessages from '../../../utils/IntlMessages'
+import { CustomInput } from '../../../ui/ContentItems'
 
 const ResetPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -121,13 +122,11 @@ const ResetPassword = () => {
                 defaultMessage='New Password'
               >
                 {(placeholder) => (
-                  <input
-                    className='mb-3 w-100 pl-5'
-                    type='password'
-                    name='new_password'
+                  <CustomInput
                     placeholder={placeholder}
-                    style={{ padding: '8px' }}
-                    onChange={(event) => handleChange(event)}
+                    type={'password'}
+                    name='new_password'
+                    handleChange={(event) => handleChange(event)}
                   />
                 )}
               </FormattedMessage>
@@ -136,13 +135,11 @@ const ResetPassword = () => {
                 defaultMessage='Confirm New Password'
               >
                 {(placeholder) => (
-                  <input
-                    className=' w-100 pl-5'
-                    type='password'
-                    name='confirm_new_password'
+                  <CustomInput
                     placeholder={placeholder}
-                    style={{ padding: '8px' }}
-                    onChange={(event) => handleChange(event)}
+                    type={'password'}
+                    name='confirm_new_password'
+                    handleChange={(event) => handleChange(event)}
                   />
                 )}
               </FormattedMessage>

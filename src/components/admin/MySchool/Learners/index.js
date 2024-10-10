@@ -349,6 +349,7 @@ const Learners = ({
             value: instructor.User.name,
             id: instructor.id
           })),
+          hasResetOption: true,
           onChange: handleInstructorFilterChange
         }}
         lastDropdownProps={{

@@ -3,6 +3,7 @@ import {
   faAward,
   faChalkboardTeacher,
   faCheck,
+  faExclamation,
   faEye,
   faEyeSlash,
   faGraduationCap,
@@ -133,7 +134,8 @@ const CustomDropdown = ({
   exclusive = false,
   preselectedOptions = [],
   showError = false,
-  error = null
+  error = null,
+  hasResetOption = false
 }) => {
   const [localIsOpen, setLocalIsOpen] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState(
@@ -243,13 +245,13 @@ const CustomDropdown = ({
             : title || 'Select an option'}
         </span>
 
-        {!multiple && !isSelectable && selectedOptions && (
+        {!multiple && !isSelectable && selectedOptions && hasResetOption && (
           <span
             className='reset-button d-flex justify-content-end cursor-pointer'
             onClick={(e) => resetSelection(e)}
             style={{ color: 'red' }}
           >
-            <FontAwesomeIcon icon={faTrashAlt} />
+            <FontAwesomeIcon icon={faTimes} />
           </span>
         )}
 
@@ -305,44 +307,46 @@ const CustomSearchBar = ({
         className='bg-transparent'
         placeholder={placeholder}
         onChange={onChange}
+        autoComplete='new-password'
+        name={`search-${Math.random()}`}
       />
     </div>
   )
 }
 
-const CustomInput = ({
-  placeholder = '',
-  type,
-  value,
-  handleChange = () => {},
-  name,
-  showError = false,
-  error = ''
-}) => {
-  const [showPassword, setShowPassword] = useState(false)
-  return (
-    <div className='custom__input-container d-flex flex-column align-items-center position-relative'>
-      <input
-        type={showPassword ? 'text' : type}
-        name={name}
-        className='custom__input w-100 my-2'
-        value={value}
-        onChange={handleChange}
-        placeholder={placeholder}
-        autocomplete='new-password'
-      />
+// const CustomInput = ({
+//   placeholder = '',
+//   type,
+//   value,
+//   handleChange = () => {},
+//   name,
+//   showError = false,
+//   error = ''
+// }) => {
+//   const [showPassword, setShowPassword] = useState(false)
+//   return (
+//     <div className='custom__input-container d-flex flex-column align-items-center position-relative'>
+//       <input
+//         type={showPassword ? 'text' : type}
+//         name={name}
+//         className='custom__input w-100 my-2'
+//         value={value}
+//         onChange={handleChange}
+//         placeholder={placeholder}
+//         autocomplete='new-password'
+//       />
 
-      {type === 'password' && (
-        <FontAwesomeIcon
-          icon={showPassword ? faEye : faEyeSlash}
-          className='pw-revelared__icon'
-          onClick={() => setShowPassword((state) => !state)}
-        />
-      )}
-      {showError && error && <small className='ps-1'>{error}</small>}
-    </div>
-  )
-}
+//       {type === 'password' && (
+//         <FontAwesomeIcon
+//           icon={showPassword ? faEye : faEyeSlash}
+//           className='pw-revelared__icon'
+//           onClick={() => setShowPassword((state) => !state)}
+//         />
+//       )}
+//       {showError && error && <small className='ps-1'>{error}</small>}
+//     </div>
+//   )
+// }
 const CustomTextarea = ({
   placeholder = '',
   type,
@@ -466,7 +470,7 @@ export {
   CustomSearchBar,
   CountTotalReport,
   CircularProgressComponent,
-  CustomInput,
+  // CustomInput,
   SubmitButton,
   CustomTextarea
 }

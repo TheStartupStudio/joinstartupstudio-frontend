@@ -61,7 +61,7 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
     <>
       <Modal
         show={show}
-        className={''}
+        className={'delete-user-modal'}
         onHide={() => {
           onHide()
         }}
