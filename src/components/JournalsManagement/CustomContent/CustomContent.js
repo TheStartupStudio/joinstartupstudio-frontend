@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import KendoTextEditor from '../TextEditor'
 import PositionSelector from '../../PositionSelector/PositionSelector'
 import ParagraphInputs from './ParagraphInputs'
 import OrderInput from './OrderInput'
@@ -100,10 +99,10 @@ const CustomContent = (props) => {
                 />
                 <div>Title</div>
                 <input
-                  type="text"
-                  key="title"
-                  className="w-100 p-2"
-                  name="title"
+                  type='text'
+                  key='title'
+                  className='w-100 p-2'
+                  name='title'
                   value={data?.title}
                   onChange={(e) => {
                     const uuid = data?.uuid
@@ -117,12 +116,12 @@ const CustomContent = (props) => {
                   }}
                 />
 
-                <div>Popup Content</div>
-                <KendoTextEditor
-                  key="content"
+                <QuillEditorBox
+                  title='Popup Content'
+                  key='content'
                   value={data?.popupContent}
                   minHeight={200}
-                  handleChange={(e) => {
+                  onChange={(e) => {
                     const uuid = data?.uuid
                     return props.handleChangeButtons(
                       'popupContent',
@@ -171,11 +170,11 @@ const CustomContent = (props) => {
             {data.type === 'image' && (
               <React.Fragment key={index}>
                 <div className={'d-flex justify-content-end'}>
-                  <div className="input-group mb-3" style={{ width: 150 }}>
-                    <span className="input-group-text">Order:</span>
+                  <div className='input-group mb-3' style={{ width: 150 }}>
+                    <span className='input-group-text'>Order:</span>
                     <input
-                      type="number"
-                      className="form-control"
+                      type='number'
+                      className='form-control'
                       value={data.order}
                       onChange={(e) =>
                         handleOrderChange(index, Number(e.target.value))
@@ -184,11 +183,11 @@ const CustomContent = (props) => {
                   </div>
                 </div>
                 <div className={'d-flex justify-content-start'}>
-                  <div className="input-group mb-3" style={{ width: 200 }}>
-                    <span className="input-group-text">Grid column:</span>
+                  <div className='input-group mb-3' style={{ width: 200 }}>
+                    <span className='input-group-text'>Grid column:</span>
                     <input
-                      type="number"
-                      className="form-control"
+                      type='number'
+                      className='form-control'
                       value={data.gridColumns}
                       onChange={(e) => {
                         const uuid = data?.uuid
@@ -201,9 +200,9 @@ const CustomContent = (props) => {
                       }}
                     />
                   </div>
-                  <label className="px-0 ps-sm-1 ps-lg-1 form-switch my-auto d-flex">
+                  <label className='px-0 ps-sm-1 ps-lg-1 form-switch my-auto d-flex'>
                     <input
-                      type="checkbox"
+                      type='checkbox'
                       checked={data.borderBottom}
                       onChange={(e) => {
                         const uuid = data?.uuid
@@ -216,18 +215,18 @@ const CustomContent = (props) => {
                       }}
                     />
                     Has bottom border?
-                    <i className="ms-auto"></i>
+                    <i className='ms-auto'></i>
                   </label>
                 </div>
                 {data.images?.map((image, index) => {
                   return (
                     <React.Fragment key={index}>
-                      <div>Image</div>
-                      <KendoTextEditor
-                        key="image"
-                        value={image?.image}
+                      <QuillEditorBox
+                        title='Image'
+                        key='image'
+                        value={data?.popupContent}
                         minHeight={200}
-                        handleChange={(e) => {
+                        onChange={(e) => {
                           const uuid = image?.uuid
                           return props.handleChangeImages(
                             'image',
@@ -239,12 +238,12 @@ const CustomContent = (props) => {
                         }}
                       />
 
-                      <div>Image Content</div>
-                      <KendoTextEditor
-                        key="content"
-                        value={image?.description}
+                      <QuillEditorBox
+                        title='Image Content'
+                        key='content'
+                        value={data?.description}
                         minHeight={200}
-                        handleChange={(e) => {
+                        onChange={(e) => {
                           const uuid = image?.uuid
                           return props.handleChangeImages(
                             'description',
@@ -255,6 +254,7 @@ const CustomContent = (props) => {
                           )
                         }}
                       />
+
                       <div>Button</div>
                       {Object.keys(image?.button)?.length > 0 && (
                         <>
@@ -271,10 +271,10 @@ const CustomContent = (props) => {
                           {/*/>*/}
                           <div>Title</div>
                           <input
-                            type="text"
-                            key="title"
-                            className="w-100 p-2"
-                            name="title"
+                            type='text'
+                            key='title'
+                            className='w-100 p-2'
+                            name='title'
                             value={image?.button?.title}
                             onChange={(e) => {
                               const uuid = image?.uuid
@@ -288,12 +288,13 @@ const CustomContent = (props) => {
                               )
                             }}
                           />
-                          <div>Popup Content</div>
-                          <KendoTextEditor
-                            key="content"
+
+                          <QuillEditorBox
+                            title='Popup Content'
+                            key='content'
                             value={image?.button?.popupContent}
                             minHeight={200}
-                            handleChange={(e) => {
+                            onChange={(e) => {
                               const uuid = image?.uuid
                               return props.handleChangeImages(
                                 'popupContent',
