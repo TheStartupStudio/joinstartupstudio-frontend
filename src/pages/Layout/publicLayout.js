@@ -8,7 +8,7 @@ function PublicLayout({ children }) {
   return (
     <React.Fragment>
       <div id='content' style={{ width: '100%' }}>
-        <PublicHeader />
+        {/* <PublicHeader /> */}
         {children}
         <ToastContainer
           className='customToast'
