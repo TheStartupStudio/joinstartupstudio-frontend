@@ -4,6 +4,8 @@ import Avatar from '../../assets/images/profile-image.png'
 import './style.css'
 import { fileNameExtracter } from '../../utils/helpers'
 import { FETCH_ALL_COMPANIES_PENDING } from '../../redux/myImmersion/types'
+import React from 'react'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 const Textarea = ({ placeholder, name, value, onChange, error, showError }) => {
   return (
@@ -34,7 +36,10 @@ const UploadFileInput = ({ filename, placeholder, name, onChange, mode }) => {
   }
 
   return (
-    <label className='immersion-upload-file-input border' onClick={handleClick}>
+    <label
+      className='  immersion-upload-file-input border'
+      onClick={handleClick}
+    >
       <span className='file-input-placeholder'>
         {mode === 'edit'
           ? fileNameExtracter(filename)
@@ -69,18 +74,34 @@ const SubmitButton = ({ text, type, onClick, disabled, className }) => {
     </button>
   )
 }
-const ProfileHolder = ({ profileImage, name }) => {
+const ProfileHolder = ({ profileImage, name, className, classN }) => {
   return (
-    <div className='d-flex align-items-center mb-5 '>
-      <div className='profile-dropdown me-1 desktop-menu d-none d-xl-block'>
+    <div className={`${classN} d-flex align-items-center mb-5 `}>
+      <div
+        className={`profile-dropdown me-1 desktop-menu d-none d-xl-block ${className}`}
+      >
         <img src={profileImage ? profileImage : Avatar} alt='Profile' />
       </div>
-      <div className='profile-dropdown-info desktop-menu'>
+      <div className={` profile-dropdown-info desktop-menu `}>
         <h5>{name ? name : localStorage.getItem('name')}</h5>
       </div>
     </div>
   )
 }
+// }
+
+// const TooltipAction = (props) => {
+//   return (
+//     <OverlayTrigger placement='bottom' overlay={props.tooltipContent}>
+//       <div
+//         className={'action-box cursor-pointer'}
+//         onClick={() => props.onClick?.()}
+//       >
+//         {props.icon}
+//       </div>
+//     </OverlayTrigger>
+//   )
+// }
 
 const TermsAndConditionsCheckbox = ({
   text,
@@ -111,7 +132,7 @@ const TermsAndConditionsCheckbox = ({
 }
 
 const ParentGuardianButton = ({ text, className }) => {
-  return <button className='parentGuardian-button'>{text}</button>
+  return <button className='parentGuardian-button '>{text}</button>
 }
 
 export {

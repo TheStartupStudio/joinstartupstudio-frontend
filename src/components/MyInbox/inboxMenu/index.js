@@ -94,7 +94,7 @@ function InboxMenu() {
           <MenuOption
             allowedToShow={true}
             questionMenu={'immersion_experience_applications'}
-            title={'IMMERSION APPLICATIONS'}
+            title={'SPOTLIGHT APPLICATIONS'}
             categoryOption={immersionExperiences?.unreadCount}
           />
           {/* <MenuOption
