@@ -21,14 +21,14 @@
   position: relative;
 }
 
-.modal-header {
+/* .modal-header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   border: none;
-}
+} */
 
 .status-toggle {
   display: flex;
@@ -85,12 +85,12 @@ input:checked + .slider:before {
   transform: translateX(18px);
 }
 
-.modal-body {
+/* .modal-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 20px;
-}
+} */
 
 .modal-body-delete {
   display: grid;
@@ -137,11 +137,11 @@ textarea {
   width: 100%;
 }
 
-.modal-footer {
+/* .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-}
+} */
 
 .cancel-button,
 .add-button {
@@ -235,13 +235,13 @@ textarea {
   z-index: 10000;
 }
 
-.modal-container {
+/* .modal-container {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   width: 60%;
   max-width: 90%;
-}
+} */
 
 .modal-container-delete {
   position: fixed;

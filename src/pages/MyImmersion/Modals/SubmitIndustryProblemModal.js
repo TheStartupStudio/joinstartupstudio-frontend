@@ -91,19 +91,64 @@ const SubmitIndustryProblemModal = (props) => {
         <LoadingAnimation show={true} />
       ) : (
         <Modal.Body
-          style={{ padding: '3%', display: 'flex', flexDirection: 'column' }}
+          style={{
+            padding: '3%'
+            //  height: '500px'
+          }}
+          className='immersion-step1-modal-body'
         >
-          <Modal.Header style={{ flexDirection: 'row' }}>
-            <Modal.Title>
-              {props.mode === 'edit' ? 'USER SOLUTION' : 'SUBMIT YOUR SOLUTION'}
+          {' '}
+          <div className='mail-icon-cont'>
+            <img src={mailIcon} className='step1-mail-icon'></img>
+          </div>
+          <Modal.Header style={{ marginTop: '30px' }}>
+            <div className='portfolio-actions'>
+              <span
+                style={{ fontSize: '20px', fontWeight: '700' }}
+                className='action-box cursor-pointer'
+                onClick={() => props.onHide()}
+              >
+                X
+              </span>
+            </div>
+            <Modal.Title
+              style={{
+                color: '#231f20',
+                fontWeight: '500',
+                fontSize: '14px',
+                marginBottom: '5px'
+              }}
+              className='immrs-solution-title-modal'
+            >
+              <div>
+                {props.mode === 'edit'
+                  ? 'USER SOLUTION'
+                  : 'SUBMIT YOUR SOLUTION'}
+              </div>
+              <div
+                style={{
+                  marginLeft: '260px ',
+                  display: 'flex',
+                  alignContent: 'center',
+                  color: '#231f20'
+                }}
+                className='left-title-immrs'
+              >
+                Submitted by:
+                <ProfileHolder
+                  className={'no-profile'}
+                  classN={'username-submit'}
+                  name={props.mode === 'edit' ? props.User.name : user?.name}
+                />
+              </div>
             </Modal.Title>
-            <span
+            {/* <span
               style={{ fontSize: '20px', fontWeight: '700' }}
               className='cursor-pointer'
               onClick={() => props.onHide()}
             >
               X
-            </span>
+            </span> */}
           </Modal.Header>
           <div className='immersion-body-container body-container'>
             <Col style={{ maxHeight: '70%' }}>
