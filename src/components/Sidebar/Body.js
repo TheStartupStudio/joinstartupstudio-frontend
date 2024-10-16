@@ -48,7 +48,7 @@ const Body = (props) => {
             <DropdownItem title={'MY SCHOOL'} to={'/my-school'} />
             <DropdownItem title={'MY IMMERSION'} to={'/my-immersion-admin'} />
             <DropdownItem
-              disabled={true}
+              // disabled={true}
               title={'My courses & management'}
               to={'/my-courses-management'}
             />

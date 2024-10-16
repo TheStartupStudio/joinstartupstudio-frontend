@@ -130,6 +130,10 @@ const MyImmersionContainer = React.lazy(() =>
   import('../pages/admin/MyImmersion')
 )
 
+const MyCourseAndCredentialsContainer = React.lazy(() =>
+  import('../pages/admin/MyCourseAndCredentials')
+)
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   // { path: '/user-management', component: UserManagement },
@@ -142,6 +146,11 @@ export const adminRoutes = [
     path: '/my-immersion-admin',
     component: MyImmersionContainer,
     breadcrumb: 'My Immersion'
+  },
+  {
+    path: '/my-courses-management',
+    component: MyCourseAndCredentialsContainer,
+    breadcrumb: 'My Course & Credentials'
   }
 ]
 
