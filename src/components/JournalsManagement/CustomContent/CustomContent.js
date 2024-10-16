@@ -3,6 +3,7 @@ import PositionSelector from '../../PositionSelector/PositionSelector'
 import ParagraphInputs from './ParagraphInputs'
 import OrderInput from './OrderInput'
 import PopupButtonInputs from './PopupButtonInputs'
+import { QuillEditorBox } from '../../../ui/ContentItems'
 
 const CustomContent = (props) => {
   const [sortedComponents, setSortedComponents] = useState([])
