@@ -1,6 +1,6 @@
 import React from 'react'
-import KendoTextEditor from '../TextEditor'
 import PositionSelector from '../../PositionSelector/PositionSelector'
+import { QuillEditorBox } from '../../../ui/ContentItems'
 
 const PopupButtonInputs = (props) => {
   return (

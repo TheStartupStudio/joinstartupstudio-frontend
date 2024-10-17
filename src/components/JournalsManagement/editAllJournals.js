@@ -191,6 +191,8 @@ export default function EditAllJournals(props) {
           .catch((err) => {
             toast.error('An error occurred, please try again!')
             setLoading(false)
+            console.log('err', err)
+            console.log('err-message', err.message)
           })
       } else {
         await axiosInstance

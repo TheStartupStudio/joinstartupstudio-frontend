@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import './MultiSelect.css'
+import './IamrSkillSelector.css'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 
-const MultiSelectDropdown = (props) => {
+const IAMRSkillSelector = (props) => {
   const {
     options,
     selectedOptions,
@@ -74,9 +74,9 @@ const MultiSelectDropdown = (props) => {
             <label key={index} className='option-label'>
               <input
                 type='checkbox'
-                checked={selectedOptions?.some(
-                  (selectedOption) => selectedOption?.iamrSkillId === option.id
-                )}
+                // checked={selectedOptions?.some(
+                //   (selectedOption) => selectedOption?.iamrSkillId === option.id
+                // )}
                 onChange={() => handleOptionToggle(option)}
                 className='multiselect-option-checkbox'
               />
@@ -91,4 +91,4 @@ const MultiSelectDropdown = (props) => {
   )
 }
 
-export default MultiSelectDropdown
+export default IAMRSkillSelector
