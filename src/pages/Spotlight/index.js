@@ -18,8 +18,9 @@ import {
 import Video from '../../components/Video'
 import '../../assets/css/media.css'
 import './index.css'
-import spotlightBulb from '../../assets/images/Group 3885/Group 3885@2x.png'
+import spotlightBulb from '../../assets/images/Immersion/SpotlightBulbImg2.png'
 import checkmark from '../../assets/images/checkmark.svg'
+import { setBackButton } from '../../redux/backButtonReducer'
 
 function StartupLive() {
   const firstEventTime = new Date('2023-01-30T16:30:00').getTime()
@@ -40,6 +41,13 @@ function StartupLive() {
   const resize = () => {
     setWidth(window.innerWidth)
   }
+  useEffect(() => {
+    dispatch(setBackButton(true, 'my-immersion'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   useEffect(() => {
     setWidth(window.innerWidth)
@@ -436,10 +444,10 @@ function StartupLive() {
                   <div className='apply-title'>
                     <img
                       src={spotlightBulb}
-                      width={'55px'}
+                      width={'100%'}
                       height={'55px'}
                     ></img>
-                    <p
+                    {/* <p
                       style={{
                         fontSize: '30px',
                         marginTop: '15px',
@@ -447,7 +455,7 @@ function StartupLive() {
                       }}
                     >
                       SPOTLIGHT®
-                    </p>
+                    </p> */}
                   </div>
                   <SpotlightApplyBtn
                     type={'applyNow'}
@@ -463,16 +471,20 @@ function StartupLive() {
               <Row className='spot-archive-wrapper'>
                 <Row>
                   <div>
-                    <div className='d-flex justify-content-between guidance-videos-top mt-5 guidance-encouragement-page-titles '>
+                    <div className='d-flex justify-content-between guidance-videos-top  guidance-encouragement-page-titles '>
                       <h3 className='spot-archive-title'>Spotlight Archive</h3>
-                      <div className={'d-flex align-items-end  blue-text'}>
+                      <button
+                        className={
+                          'spotlight-archive-view-btn d-flex align-items-end  blue-text'
+                        }
+                      >
                         View all
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </Row>
-                <div className='beyond-videos-desktop mt-2 d-flex align-items-center'>
-                  <div className='arrow-icon-1' style={{ height: '100%' }}>
+                <div className='beyond-videos-desktop mt-2 d-flex align-items-center justify-content-center '>
+                  {/* <div className='arrow-icon-1' style={{ height: '100%' }}>
                     <button
                       className='videos-track'
                       onClick={() => {
@@ -486,18 +498,24 @@ function StartupLive() {
                         style={{ marginRight: '20px' }}
                       />
                     </button>
-                  </div>
-                  <div
+                  </div> */}
+                  <p className='archive-placeholder-title'>
+                    Stay tuned for the 2025 Spotlight Pitches
+                  </p>
+                  {/* <div
                     className='card-group desktop-menu card-group-beyond-your-course'
                     // style={{ marginTop: '15px' }}
-                    style={{ width: '94%' }}
+                    style={{ width: '94%', marginLeft: '15px' }}
                   >
-                    <div className='card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start  flex-sm-row'>
+                    <div
+                      className='card-group desktop-menu startuplive-archive-videos card-group-beyond-your-course w-100 justify-content-start  flex-sm-row'
+                      style={{ flexWrap: 'wrap' }}
+                    >
                       {[0, 0].map((item, index) => (
                         <div
                           className='card-group all-videos-beyond-your-course-videos col-12 col-sm-5 col-md-4 me-4'
                           key={index}
-                          style={{ width: '20%' }}
+                          style={{ width: '170px' }}
                         >
                           <div
                             className='card mobile-card'
@@ -530,8 +548,8 @@ function StartupLive() {
                         </div>
                       ))}
                     </div>
-                  </div>
-                  <div
+                  </div> */}
+                  {/* <div
                     className='arrow-icon-1 justify-content-start'
                     style={{ height: '100%' }}
                   >
@@ -545,7 +563,7 @@ function StartupLive() {
                         className='videos-track-icon'
                       />
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </Row>
             </div>

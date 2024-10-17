@@ -19,9 +19,11 @@
     height: 100%;
 }
 
+
 .spotlight-header {
     padding: 20px;
     padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .spotlight-main-btns {
@@ -86,6 +88,11 @@
     .spotlight-btn-desc {
         top: -40px !important;
     }
+
+    .comp-apply-container {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 @media (max-width:430px) {
@@ -115,8 +122,8 @@
 .comp-apply-container {
     margin-top: 30px;
     margin-left: 10px;
-    padding-top: 2px;
-    padding-bottom: 2px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     width: 98.5%;
     border-radius: 10px;
     background-color: #fff;
@@ -292,7 +299,7 @@
     background-color: #51c7df !important;
     color: #fff !important;
     border-radius: 10px;
-    width: 360px !important;
+    width: 100% !important;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -318,4 +325,37 @@
 
 .apply-save-button {
     border-radius: 10px !important;
+    background-color: #51c7df;
+}
+
+.spot-archive-wrapper {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-left: 1px;
+    margin-right: 0px;
+    padding-bottom: 20px;
+}
+
+.spot-archive-title {
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    margin-top: 20px;
+}
+
+
+.spotlight-archive-view-btn {
+    background-color: transparent;
+}
+
+.archive-placeholder-title {
+    font-weight: 200;
+    font-size: 15px;
+    align-self: center;
+    justify-self: center;
+    width: 95%;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 50px;
 }
