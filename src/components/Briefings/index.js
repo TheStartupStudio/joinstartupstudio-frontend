@@ -10,7 +10,6 @@ import BriefingEditor from './BriefingEditor'
 import LoadingAnimation from '../../ui/loadingAnimation'
 
 const BriefingsArchive = () => {
-  console.log('hello')
   const dispatch = useDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedBriefing, setSelectedBriefing] = useState(null)

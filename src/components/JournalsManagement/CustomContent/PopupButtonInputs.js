@@ -7,10 +7,10 @@ const PopupButtonInputs = (props) => {
     <>
       <div>Popup Button Title</div>
       <input
-        type="text"
-        key="title"
-        className="w-100 p-2"
-        name="title"
+        type='text'
+        key='title'
+        className='w-100 p-2'
+        name='title'
         value={props.data?.title}
         onChange={(e) => {
           const uuid = props.uuid
@@ -23,12 +23,13 @@ const PopupButtonInputs = (props) => {
           ])
         }}
       />
-      <div>Popup Content</div>
-      <KendoTextEditor
-        key="content"
-        value={props.data?.popupContent}
+
+      <QuillEditorBox
+        title='Popup Content'
+        key='content'
+        value={props?.button?.popupContent}
         minHeight={200}
-        handleChange={(e) => {
+        onChange={(e) => {
           const uuid = props.data?.uuid
           return props.handleChangePopupButtons([
             'popupContent',

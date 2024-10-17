@@ -15,11 +15,12 @@ import MyContentModal from '../Modals/MyContentModal'
 import DeleteSparkArchiveModal from '../Modals/DeleteArchiveModal'
 import { toast } from 'react-toastify'
 import FinalStepModal from '../Modals/FinalStepModal'
-// import { PDFDownloadLink, Document, Page } from '@react-pdf/renderer'
-// import PdfDocument from './PdfDocument'
 import useWindowWidth from '../../../hooks/useWindowWidth'
+import { jsPDF } from 'jspdf'
+// import { PDFDownloadLink } from '@react-pdf/renderer'
 import PdfDocument from './PdfDocument'
-import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
+import { saveAs } from 'file-saver'
 
 function GeneratedResponsePage(props) {
   const [archivedDocument, setArchivedDocument] = useState({})
@@ -82,31 +83,6 @@ function GeneratedResponsePage(props) {
   const { fromPage, data } = locationState ?? {}
   const [editingContent, setEditingContent] = useState('')
 
-  // useEffect(() => {
-  //   if (archivedDocument?.myContent?.length > 0) {
-  //     shouldDisplayItem('create-own-content', false)
-  //   } else {
-  //     shouldDisplayItem('create-own-content', true)
-  //   }
-  // }, [archivedDocument?.myContent])
-
-  // console.log('editingContent', editingContent)
-
-  const [loading, setLoading] = useState(false)
-
-  const generatePdf = () => {
-    setLoading(true)
-    const doc = new jsPDF()
-
-    doc.text(20, 20, archivedDocument?.widgetName || 'Document Title')
-
-    if (archivedDocument?.content) {
-      doc.text(20, 30, archivedDocument.content)
-    }
-
-    doc.save(`${archivedDocument?.widgetName}.pdf`)
-    setLoading(false)
-  }
   useEffect(() => {
     if (fromPage === 'widgets') {
       const icon = addDocumentIcon(data)
@@ -301,7 +277,6 @@ function GeneratedResponsePage(props) {
         setIsLoading(false)
       })
   }
-  moment.locale('en')
   const timeAgo = moment(archivedDocument?.updatedAt).fromNow()
   const htmlRef = useRef(null)
 
@@ -371,10 +346,92 @@ function GeneratedResponsePage(props) {
   }
 
   const myContentDisplayed = !!archivedDocument?.myContent && isMyContentAdded
-  console.log('archivedDocument?.myContent', archivedDocument?.myContent)
-  console.log('isMyContentAdded', isMyContentAdded)
-  console.log("showItem('download-button')", showItem('download-button'))
-  console.log('myContentDisplayed', myContentDisplayed)
+  const generatePdfWithJsPDF = async (archivedDocument) => {
+    console.log(archivedDocument)
+
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'pt',
+      format: 'a4'
+    })
+
+    const pageWidth = doc.internal.pageSize.getWidth()
+    const pageHeight = doc.internal.pageSize.getHeight()
+
+    doc.setFontSize(14)
+    if (archivedDocument?.widgetName && archivedDocument?.title) {
+      const displayText = `${archivedDocument.widgetName.toUpperCase()}: ${
+        archivedDocument.title
+      }`
+      doc.text(displayText, 20, 30)
+    }
+
+    doc.setFontSize(12)
+    if (archivedDocument?.myContent) {
+      const yPosition = 50
+      doc.text(archivedDocument.myContent, 20, yPosition)
+    }
+
+    if (archivedDocument.type !== 'image') {
+      const content = document.getElementById('htmlContentToRender')
+      if (content) {
+        const canvas = await html2canvas(content)
+        const contentDataURL = canvas.toDataURL('image/png')
+        const imgWidth = 190
+        const imgHeight = (canvas.height * imgWidth) / canvas.width
+        doc.addImage(contentDataURL, 'PNG', 10, 80, imgWidth, imgHeight)
+      }
+    } else {
+      const imgWidth = pageWidth - 40 // Some padding
+      const imgHeight =
+        (archivedDocument?.imageResolution?.height * imgWidth) /
+        archivedDocument?.imageResolution?.width
+
+      doc.addImage(
+        archivedDocument?.imageUrl,
+        'JPEG',
+        20,
+        80,
+        imgWidth,
+        imgHeight
+      )
+    }
+
+    doc.save(`${archivedDocument?.widgetName}.pdf`)
+  }
+
+  const documentRef = useRef(null)
+  const handleGeneratePdf = async (archivedDocument) => {
+    const clone = documentRef.current.cloneNode(true)
+    document.body.appendChild(clone)
+    clone.style.display = 'block'
+
+    const doc = new jsPDF({
+      format: 'a4',
+      unit: 'px'
+    })
+
+    await doc.html(clone, {
+      async callback(doc) {
+        await doc.save(`${archivedDocument.title}.pdf`)
+      },
+      y: 0.1,
+      x: 0.1,
+      html2canvas: { scale: 0.7 }
+    })
+
+    document.body.removeChild(clone)
+  }
+
+  const handleDownloadImage = (imageUrl, imageName = '') => {
+    fetch(imageUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        saveAs(blob, `${imageName}.jpg`)
+      })
+      .catch((err) => console.error('Download failed:', err))
+  }
+
   return (
     <>
       <Container fluid>
@@ -539,58 +596,37 @@ function GeneratedResponsePage(props) {
                               <>
                                 {myContentDisplayed ||
                                 archivedDocument?.type === 'image' ? (
-                                  <></>
-                                ) : (
                                   <LtsButton
-                                    name={
-                                      loading ? 'Generating...' : 'Download'
-                                    }
-                                    width={
-                                      window.innerWidth < 700 ? '100%' : '70%'
-                                    }
+                                    name={'Download'}
+                                    width={windowWidth < 700 ? '100%' : '70%'}
                                     align={alignButton('download')}
                                     backgroundColor={
                                       isSavedArchive() || myContentDisplayed
                                         ? '#99CC33'
                                         : '#BBBDBF'
                                     }
-                                    onClick={generatePdf}
-                                    disabled={loading}
+                                    // onClick={() =>
+                                    //   handleDownloadImage(
+                                    //     archivedDocument?.imageUrl,
+                                    //     archivedDocument?.title
+                                    //   )
+                                    // }
+                                    onClick={
+                                      () => handleGeneratePdf(archivedDocument)
+                                      // generatePdfWithJsPDF(archivedDocument)
+                                    }
                                   />
-                                  // <PDFDownloadLink
-                                  //   document={
-                                  //     <PdfDocument
-                                  //       archivedDocument={archivedDocument}
-                                  //     />
-                                  //   }
-                                  //   fileName={`${archivedDocument?.widgetName}.pdf`}
-                                  //   className={'w-100 d-flex'}
-                                  // >
-                                  //   {({ blob, url, loading, error }) => (
-                                  //     <LtsButton
-                                  //       name={'Download'}
-                                  //       width={
-                                  //         windowWidth < 700 ? '100%' : '70%'
-                                  //       }
-                                  //       align={alignButton('download')}
-                                  //       backgroundColor={
-                                  //         isSavedArchive() || myContentDisplayed
-                                  //           ? '#99CC33'
-                                  //           : '#BBBDBF'
-                                  //       }
-                                  //     />
-                                  //   )}
-                                  // </PDFDownloadLink>
-                                  // <LtsButton
-                                  //   onClick={() => setShowFinalStepModal(true)}
-                                  //   backgroundColor={
-                                  //     isSavedArchive() || myContentDisplayed
-                                  //       ? '#99CC33'
-                                  //       : '#BBBDBF'
-                                  //   }
-                                  //   width={windowWidth < 700 ? '100%' : '70%'}
-                                  //   name={'Download'}
-                                  // />
+                                ) : (
+                                  <LtsButton
+                                    onClick={() => setShowFinalStepModal(true)}
+                                    backgroundColor={
+                                      isSavedArchive() || myContentDisplayed
+                                        ? '#99CC33'
+                                        : '#BBBDBF'
+                                    }
+                                    width={windowWidth < 700 ? '100%' : '70%'}
+                                    name={'Download'}
+                                  />
                                 )}
                               </>
                             )}
@@ -633,6 +669,9 @@ function GeneratedResponsePage(props) {
                       )}
                     </>
                   )}
+                </div>
+                <div ref={documentRef} style={{ display: 'none' }}>
+                  <PdfDocument archivedDocument={archivedDocument} />
                 </div>
                 {isLoading && (
                   <div className='my-spark__loader '>

@@ -5,7 +5,7 @@ const ParagraphInputs = (props) => {
   return (
     <React.Fragment key={props.index}>
       <KendoTextEditor
-        key="paragraph"
+        key='paragraph'
         value={props.data?.paragraph}
         minHeight={200}
         handleChange={(e) => {
@@ -17,6 +17,23 @@ const ParagraphInputs = (props) => {
             props.breakdownIndex,
             uuid
           ])
+        }}
+      />
+      <QuillEditorBox
+        title='Popup Content'
+        key='content'
+        value={image?.button?.popupContent}
+        minHeight={200}
+        onChange={(e) => {
+          const uuid = image?.uuid
+          return props.handleChangeImages(
+            'popupContent',
+            e,
+            index,
+            props.breakdownIndex,
+            uuid,
+            'button'
+          )
         }}
       />
     </React.Fragment>

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 
 export const useForm = (initialState, initialData, mode = 'add', loading) => {
   const [formData, setFormData] = useState(initialState)
-  console.log('formData', formData)
 
   useEffect(() => {
     if (mode === 'edit' && initialData && !loading) {
@@ -14,7 +13,6 @@ export const useForm = (initialState, initialData, mode = 'add', loading) => {
   }, [initialData, initialData, mode, loading])
 
   const handleChange = (event) => {
-    console.log('event', event)
     const { name, value } = event.target
     setFormData({ ...formData, [name]: value })
   }
@@ -67,11 +65,9 @@ export const useForm = (initialState, initialData, mode = 'add', loading) => {
     setFormData({ ...formData, [name]: files[0] })
   }
 
-  const handleChangeEditor = (event, name) => {
-    const value = event.html
+  const handleChangeEditor = (value, name) => {
     setFormData((prevState) => ({ ...prevState, [name]: value }))
   }
-
   const handleChangeSelect = (event, fieldName1, fieldName2) => {
     if (fieldName1) {
       const { id, name } = event

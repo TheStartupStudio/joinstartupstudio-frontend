@@ -8,7 +8,6 @@ import './index.css'
 import searchIcon from '../../assets/images/search-icon.png'
 import copy from '../../assets/images/copy.svg'
 import 'react-quill/dist/quill.snow.css'
-import KendoTextEditor from './TextEditor'
 import { EditorTools } from '@progress/kendo-react-editor'
 import '@progress/kendo-theme-default/dist/all.css'
 import { v4 as uuidv4 } from 'uuid'
@@ -19,6 +18,7 @@ import LtsButton from '../LTSButtons/LTSButton'
 import ReactTable from '../ReactTable/ReactTable'
 import AccordionModal from './AccordionModal'
 import { FaEdit, FaTrash } from 'react-icons/fa'
+import { QuillEditorBox, TextInput } from '../../ui/ContentItems'
 
 export default function EditAllJournals(props) {
   const [journals, setJournals] = useState([])
@@ -158,11 +158,9 @@ export default function EditAllJournals(props) {
   }
   // const { journalId, type } = useParams()
 
-  console.log('selectedJournal', selectedJournal)
   const handleSubmit = async () => {
     setLoading(true)
     if (selectedJournal.value.hasOwnProperty('type')) {
-      debugger
       if (!journalType?.includes('my-training')) {
         await axiosInstance
           .put(`LtsJournals/${journalId}/editJournal2`, {
@@ -222,7 +220,6 @@ export default function EditAllJournals(props) {
           })
       }
     } else {
-      debugger
       await axiosInstance
         .put(`LtsJournals/${selectedJournal.value.id}/editJournal`, {
           content: selectedJournal.value?.content,
@@ -563,7 +560,6 @@ export default function EditAllJournals(props) {
                 }}
               />
             </>
-            )
           </div>
         </div>
       ) : (
@@ -633,29 +629,26 @@ export default function EditAllJournals(props) {
               return (
                 <>
                   <h2>{step?.type.split('-').join(' ')}</h2>
-                  <div>Step title</div>
-                  <input
-                    type='text'
-                    className='form-control'
+                  <TextInput
+                    title={'Step title'}
                     value={step?.title}
-                    onChange={(e) =>
+                    handleChange={(e) =>
                       handleChangeSteps(index, 'title', e.target.value)
                     }
                   />
-                  <div>Step content</div>
-                  <KendoTextEditor
+                  <QuillEditorBox
                     value={step?.stepContent}
-                    handleChange={(e) =>
-                      handleChangeSteps(index, 'stepContent', e)
-                    }
+                    onChange={(e) => handleChangeSteps(index, 'stepContent', e)}
+                    title={'Step content'}
                   />
-                  <div>Popup content</div>
-                  <KendoTextEditor
+
+                  <QuillEditorBox
                     value={step?.popupContent}
-                    handleChange={(e) =>
+                    onChange={(e) =>
                       handleChangeSteps(index, 'popupContent', e)
                     }
                     minHeight={200}
+                    title={'Popup content'}
                   />
                 </>
               )
@@ -665,12 +658,11 @@ export default function EditAllJournals(props) {
               return (
                 <>
                   <h2>Pedagogy Option {index + 1}</h2>
-                  <div>Pedagogy box title</div>
-                  <input
-                    type='text'
-                    className='form-control'
+
+                  <TextInput
+                    title={`Pedagogy Option ${index + 1}`}
                     value={step?.title}
-                    onChange={(e) =>
+                    handleChange={(e) =>
                       handleChangePedagogyOptions(
                         index,
                         'title',
@@ -678,13 +670,14 @@ export default function EditAllJournals(props) {
                       )
                     }
                   />
-                  <div>Step box content</div>
-                  <KendoTextEditor
+
+                  <QuillEditorBox
                     value={step?.content}
-                    handleChange={(e) =>
+                    onChange={(e) =>
                       handleChangePedagogyOptions(index, 'content', e)
                     }
                     minHeight={100}
+                    title={'Step box content'}
                   />
                 </>
               )
@@ -694,12 +687,11 @@ export default function EditAllJournals(props) {
               return (
                 <>
                   <h2>Step {index + 1}</h2>
-                  <div>Step title</div>
-                  <input
-                    type='text'
-                    className='form-control'
+
+                  <TextInput
+                    title={`Step ${index + 1}`}
                     value={step?.title}
-                    onChange={(e) =>
+                    handleChange={(e) =>
                       handleChangeImplementationSteps(
                         index,
                         'title',
@@ -707,12 +699,12 @@ export default function EditAllJournals(props) {
                       )
                     }
                   />
-                  <div>Step content</div>
-                  <KendoTextEditor
+                  <QuillEditorBox
                     value={step?.stepContent}
-                    handleChange={(e) =>
+                    onChange={(e) =>
                       handleChangeImplementationSteps(index, 'stepContent', e)
                     }
+                    title={'Step content'}
                   />
                 </>
               )
@@ -722,11 +714,11 @@ export default function EditAllJournals(props) {
             selectedJournal?.value?.hasOwnProperty('type') && (
               <>
                 <>
-                  <h2>Student assignment content</h2>
-                  <KendoTextEditor
+                  <QuillEditorBox
                     value={selectedJournal?.value?.studentAssignments || ''}
-                    handleChange={handleChangeStudentAssignments}
+                    onChange={handleChangeStudentAssignments}
                     minHeight={150}
+                    title={'Student assignment content'}
                   />
                 </>
                 {/* )} */}
@@ -734,31 +726,32 @@ export default function EditAllJournals(props) {
                   <h2>Lts Connection Model</h2>
                   {selectedJournal?.value?.ltsConnection && (
                     <>
-                      <div># First paragraph</div>
-                      <KendoTextEditor
+                      <QuillEditorBox
                         value={
                           selectedJournal?.value?.ltsConnection?.firstParagraph
                         }
-                        handleChange={(e) =>
+                        onChange={(e) =>
                           handleChangeLtsConnection('firstParagraph', e)
                         }
                         minHeight={150}
+                        title={'# First paragraph'}
                       />
+
                       {selectedJournal?.value?.ltsConnection?.secondParagraph !=
                         null &&
                         typeof selectedJournal?.value?.ltsConnection
                           ?.secondParagraph !== 'undefined' && (
                           <>
-                            <div># Second paragraph</div>
-                            <KendoTextEditor
+                            <QuillEditorBox
                               value={
                                 selectedJournal?.value?.ltsConnection
                                   ?.secondParagraph
                               }
-                              handleChange={(e) =>
+                              onChange={(e) =>
                                 handleChangeLtsConnection('secondParagraph', e)
                               }
                               minHeight={150}
+                              title={'# Second paragraph'}
                             />
                           </>
                         )}
@@ -773,33 +766,27 @@ export default function EditAllJournals(props) {
 
               {selectedJournal?.value?.programOpportunities?.map((x, i) => {
                 return (
-                  <div>
-                    <div>
-                      <h3>Image Url {i + 1}</h3>
-                      <input
-                        type='text'
-                        className='form-control'
-                        value={x?.imageUrl}
-                        onChange={(e) =>
-                          handleChangeProgramOpportunities(
-                            i,
-                            'imageUrl',
-                            e.target.value
-                          )
-                        }
-                      />
-                    </div>
-                    <div>
-                      <h3>Content {i + 1}</h3>
-                      <KendoTextEditor
-                        value={x?.content}
-                        handleChange={(e) =>
-                          handleChangeProgramOpportunities(i, 'content', e)
-                        }
-                        minHeight={150}
-                      />
-                    </div>
-                  </div>
+                  <React.Fragment>
+                    <TextInput
+                      title={`Image Url ${i + 1}`}
+                      value={x?.imageUrl}
+                      handleChange={(e) =>
+                        handleChangeProgramOpportunities(
+                          i,
+                          'imageUrl',
+                          e.target.value
+                        )
+                      }
+                    />
+                    <QuillEditorBox
+                      value={x?.content}
+                      onChange={(e) =>
+                        handleChangeProgramOpportunities(i, 'content', e)
+                      }
+                      minHeight={150}
+                      title={`Content ${i + 1}`}
+                    />
+                  </React.Fragment>
                 )
               })}
             </>
@@ -810,33 +797,27 @@ export default function EditAllJournals(props) {
 
               {selectedJournal?.value?.curriculumOverview?.map((x, i) => {
                 return (
-                  <div>
-                    <div>
-                      <h3>Image Url {i + 1}</h3>
-                      <input
-                        type='text'
-                        className='form-control'
-                        value={x?.imageUrl}
-                        onChange={(e) =>
-                          handleChangeCurriculumOverview(
-                            i,
-                            'imageUrl',
-                            e.target.value
-                          )
-                        }
-                      />
-                    </div>
-                    <div>
-                      <h3>Content {i + 1}</h3>
-                      <KendoTextEditor
-                        value={x?.content}
-                        handleChange={(e) =>
-                          handleChangeCurriculumOverview(i, 'content', e)
-                        }
-                        minHeight={150}
-                      />
-                    </div>
-                  </div>
+                  <React.Fragment>
+                    <TextInput
+                      title={`Image Url ${i + 1}`}
+                      value={x?.imageUrl}
+                      handleChange={(e) =>
+                        handleChangeProgramOpportunities(
+                          i,
+                          'imageUrl',
+                          e.target.value
+                        )
+                      }
+                    />
+                    <QuillEditorBox
+                      value={x?.content}
+                      onChange={(e) =>
+                        handleChangeCurriculumOverview(i, 'content', e)
+                      }
+                      minHeight={150}
+                      title={`Content ${i + 1}`}
+                    />
+                  </React.Fragment>
                 )
               })}
             </>
@@ -849,13 +830,11 @@ export default function EditAllJournals(props) {
                 return (
                   <div>
                     <div>
-                      <h3>Image Url {i + 1}</h3>
-                      <input
-                        type='text'
-                        className='form-control'
+                      <TextInput
+                        title={`Image Url ${i + 1}`}
                         value={x?.imageUrl}
-                        onChange={(e) =>
-                          handleChangeExpectedOutcomes(
+                        handleChange={(e) =>
+                          handleChangeProgramOpportunities(
                             i,
                             'imageUrl',
                             e.target.value
@@ -865,12 +844,10 @@ export default function EditAllJournals(props) {
                     </div>
                     <div className='row'>
                       <div className={'col-sm-6'}>
-                        <h6>Padding of image {i + 1}</h6>
-                        <input
-                          type='text'
-                          className='form-control'
+                        <TextInput
+                          title={`Padding of image ${i + 1}`}
                           value={x?.padding}
-                          onChange={(e) =>
+                          handleChange={(e) =>
                             handleChangeExpectedOutcomes(
                               i,
                               'padding',
@@ -880,12 +857,10 @@ export default function EditAllJournals(props) {
                         />
                       </div>
                       <div className={'col-sm-6'}>
-                        <h6>Width of image {i + 1}</h6>
-                        <input
-                          type='text'
-                          className='form-control'
+                        <TextInput
+                          title={`Width of image ${i + 1}`}
                           value={x?.width}
-                          onChange={(e) =>
+                          handleChange={(e) =>
                             handleChangeExpectedOutcomes(
                               i,
                               'width',
@@ -897,13 +872,13 @@ export default function EditAllJournals(props) {
                     </div>
 
                     <div>
-                      <h3>Content {i + 1}</h3>
-                      <KendoTextEditor
+                      <QuillEditorBox
                         value={x?.content}
-                        handleChange={(e) =>
+                        onChange={(e) =>
                           handleChangeExpectedOutcomes(i, 'content', e)
                         }
                         minHeight={150}
+                        title={`Content ${i + 1}`}
                       />
                     </div>
                   </div>

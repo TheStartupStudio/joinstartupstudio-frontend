@@ -1,0 +1,25 @@
+.pdf-document {
+  font-family: Arial, sans-serif;
+  background-color: #e4e4e4;
+  /* padding: 20px; */
+}
+
+.page {
+  display: flex;
+  flex-direction: row;
+}
+
+.section {
+  margin: 10px;
+  padding: 10px;
+  flex-grow: 1;
+}
+
+.content {
+  background-color: #fff;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+}
