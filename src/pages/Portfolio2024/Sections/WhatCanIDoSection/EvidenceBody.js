@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createRef } from 'react'
 import LabeledInput from '../../Components/DisplayData/LabeledInput'
-import MultiSelectDropdown from '../../../../components/MultiSelect/MultiSelect'
+import IAMRSkillSelector from '../../../../components/IamrSkillSelector/IAMRSkillSelector'
 
 import { getProjects, getSkills } from '../../../../redux/portfolio/Actions'
 import { connect } from 'react-redux'
@@ -304,7 +304,7 @@ const EvidenceBody = ({
           </div> */}
         </div>
         <div style={{ gridArea: 'skills1' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Critical thinking skills'}
             selectedOptions={selectedSkills?.criticalThinkingSkills ?? []}
             options={skills?.criticalThinkingSkills ?? []}
@@ -316,7 +316,7 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'skills2' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Collaboration skills'}
             selectedOptions={selectedSkills?.collaborationSkills ?? []}
             options={skills?.collaborationSkills ?? []}
@@ -328,7 +328,7 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'skills3' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Creativity skills'}
             selectedOptions={selectedSkills?.creativitySkills ?? []}
             options={skills?.creativitySkills ?? []}
@@ -340,7 +340,7 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'skills4' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Leadership skills'}
             selectedOptions={selectedSkills?.leadershipSkills ?? []}
             options={skills?.leadershipSkills ?? []}
@@ -352,7 +352,7 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'skills5' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Enterprise skills'}
             selectedOptions={selectedSkills?.enterpriseSkills ?? []}
             options={skills?.enterpriseSkills ?? []}
