@@ -30,10 +30,10 @@ const fetchIndustryProblems = async (
   }
 }
 
-const fetchExperiences = async (currentPage, itemsPerPage) => {
+const fetchSpotlights = async (currentPage, itemsPerPage) => {
   try {
     const response = await axiosInstance.get(
-      `/immersion/experiences?page=${currentPage}&limit=${itemsPerPage}`
+      `/immersion/spotlights?page=${currentPage}&limit=${itemsPerPage}`
     )
 
     if (response.status === 200) {
@@ -70,10 +70,10 @@ const fetchUserProblemSolution = async (user_ID, solution_ID) => {
   }
 }
 
-const fetchUserExperienceApplication = async (user_ID, experience_ID) => {
+const fetchUserSpotlightApplication = async (user_ID, spotlight_ID) => {
   try {
     const response = await axiosInstance.get(
-      `/immersion/experiences/${user_ID}/${experience_ID}`
+      `/immersion/spotlights/${user_ID}/${spotlight_ID}`
     )
 
     if (response.status === 200) {
@@ -83,10 +83,11 @@ const fetchUserExperienceApplication = async (user_ID, experience_ID) => {
     throw error
   }
 }
-const handleExperienceStatus = async (id, status) => {
+const handleSpotlightStatus = async (id, status, feedbackMessage) => {
   try {
-    const response = await axiosInstance.patch(`/immersion/experiences/${id}`, {
-      status
+    const response = await axiosInstance.patch(`/immersion/spotlights/${id}`, {
+      status,
+      feedbackMessage
     })
     if (response.status === 200) {
       return response.data
@@ -119,11 +120,11 @@ const updateStatusInArray = (array, selectedItem, status) => {
 const myImmersionService = {
   fetchStep,
   fetchIndustryProblems,
-  fetchExperiences,
+  fetchSpotlights,
   fetchAllIndustries,
   fetchUserProblemSolution,
-  fetchUserExperienceApplication,
-  handleExperienceStatus,
+  fetchUserSpotlightApplication,
+  handleSpotlightStatus,
   handleIndustryProblemStatus,
   updateStatusInArray
 }

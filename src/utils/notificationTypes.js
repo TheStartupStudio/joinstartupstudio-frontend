@@ -88,17 +88,17 @@ export default {
     key: 'INDUSTRY_PROBLEM_APPROVED',
     value: ' has approved your industry problem submission'
   },
-  IMMERSION_EXPERIENCE: {
-    key: 'IMMERSION_EXPERIENCE',
+  SPOTLIGHT: {
+    key: 'SPOTLIGHT',
     value: ' applied for immersion experience'
   },
-  IMMERSION_EXPERIENCE_DENIED: {
-    key: 'IMMERSION_EXPERIENCE_DENIED',
-    value: ' has denied your experience application'
+  SPOTLIGHT_DENIED: {
+    key: 'SPOTLIGHT_DENIED',
+    value: ' has denied your spotlight application'
   },
-  IMMERSION_EXPERIENCE_APPROVED: {
-    key: 'IMMERSION_EXPERIENCE_APPROVED',
-    value: ' has approved your experience application'
+  SPOTLIGHT_APPROVED: {
+    key: 'SPOTLIGHT_APPROVED',
+    value: ' has approved your spotlight application'
   },
   IAMR_SAVED_UPLOAD: {
     key: 'IAMR_SAVED_UPLOAD',

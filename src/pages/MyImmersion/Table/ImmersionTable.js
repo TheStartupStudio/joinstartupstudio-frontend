@@ -4,7 +4,7 @@ import '../style.css'
 import ProblemModal from '../Modals/ProblemModal'
 import { Button } from 'react-bootstrap'
 import SubmitIndustryProblemModal from '../Modals/SubmitIndustryProblemModal'
-import SubmitExperienceModal from '../Modals/SubmitExperienceModal'
+import SubmitExperienceModal from '../Modals/SpotlightModal'
 import { formatDateString } from '../../../utils/helpers'
 import AddImmersionModal from '../../../components/admin/MyImmersion/AddImmersionModal'
 

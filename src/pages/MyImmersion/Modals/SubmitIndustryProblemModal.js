@@ -49,8 +49,12 @@ const SubmitIndustryProblemModal = (props) => {
     }
   }, [dispatch, props.user_id, props.industry_solution_id, props.mode])
 
-  const { formData, handleChange, handleChangeFile, handleChangeCheckbox } =
-    useForm(initialState, industryProblems.userSolution, props.mode, loading)
+  const { formData, handleChange, handleChangeFile } = useForm(
+    initialState,
+    industryProblems.userSolution,
+    props.mode,
+    loading
+  )
 
   const submitHandler = (status) => {
     const res = dispatch(

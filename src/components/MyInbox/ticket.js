@@ -7,7 +7,7 @@ import { beautifulDateFormat } from '../../utils/helpers'
 import { useHistory } from 'react-router'
 import axiosInstance from '../../utils/AxiosInstance'
 import SubmitIndustryProblemModal from '../../pages/MyImmersion/Modals/SubmitIndustryProblemModal'
-import SubmitExperienceModal from '../../pages/MyImmersion/Modals/SubmitExperienceModal'
+import SpotlightModal from '../../pages/MyImmersion/Modals/SpotlightModal'
 
 function Ticket({
   ticket,
@@ -15,9 +15,10 @@ function Ticket({
   updateTicketStatus,
   updateUserSolutionStatus
 }) {
+  console.log('ticket', ticket)
   const history = useHistory()
   const [industryProblemModal, setIndustryProblemModal] = useState(false)
-  const [submitExperienceModal, setSubmitExperienceModal] = useState(false)
+  const [submitSpotlightModal, setSubmitSpotlightModal] = useState(false)
 
   let uploadUrl
   if (ticket?.type === 'approval') {
@@ -43,7 +44,7 @@ function Ticket({
             ? setSelectedTicket(ticket)
             : ticket.type === 'industry_problem'
             ? setIndustryProblemModal(true)
-            : setSubmitExperienceModal(true)
+            : setSubmitSpotlightModal(true)
           readByInstructorHandler()
         }}
       >
@@ -67,10 +68,10 @@ function Ticket({
                 : ticket.user_industry_solution.status === 'pending'
                 ? 'Application Submitted'
                 : 'Application Returned'
-              : ticket.type === 'immersion_experience'
-              ? ticket.user_immersion_experience.status === 'approved'
+              : ticket.type === 'spotlight'
+              ? ticket.spotlight.status === 'approved'
                 ? 'Application Approved'
-                : ticket.user_immersion_experience.status === 'pending'
+                : ticket.spotlight.status === 'pending'
                 ? 'Application Submitted'
                 : 'Application Returned'
               : null}
@@ -107,14 +108,15 @@ function Ticket({
           updateUserSolutionStatus={updateUserSolutionStatus}
         />
       )}
-      {submitExperienceModal && (
-        <SubmitExperienceModal
+      {submitSpotlightModal && (
+        <SpotlightModal
           {...ticket}
-          show={submitExperienceModal}
-          onHide={() => setSubmitExperienceModal(false)}
+          show={submitSpotlightModal}
+          onHide={() => setSubmitSpotlightModal(false)}
           User={ticket.User}
           mode='edit'
           updateUserSolutionStatus={updateUserSolutionStatus}
+          title={'Spotlight Application'}
         />
       )}
     </>
