@@ -75,6 +75,7 @@ function InstructorFeedback(props) {
         })
       }}
       title={'Instructor feedback'}
+      alignFooter={'end'}
     />
   )
 }

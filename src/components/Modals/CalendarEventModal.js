@@ -225,8 +225,6 @@ const CalendarModal = (props) => {
             eventInfo={
             <div className={'d-flex gap-1 flex-wrap'}>
               {props.event?.periods?.map((period) =>
-
-
                 <ChipComponent
               label={period.name} />
               )}</div>}
