@@ -28,6 +28,12 @@ import {
 import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
 import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
 import Tooltip from 'react-bootstrap/Tooltip'
+import { FaPencilAlt } from 'react-icons/fa'
+import { IoShareOutline } from 'react-icons/io5'
+import { FaX } from 'react-icons/fa6'
+import shareToPeersIcon from '../../assets/images/HS-Portfolio-Icons/Share Icon PEERS v2 (BLU)x1200.png'
+import shareToPublicIcon from '../../assets/images/HS-Portfolio-Icons/Share Icon (BLU)x1200.png'
+import noSharePinkIcon from '../../assets/images/HS-Portfolio-Icons/NO Share Icon (PINK)x1200.png'
 
 const Index = ({
   loggedUser,
@@ -111,8 +117,37 @@ const Index = ({
     }
   }, [sharingSettings])
 
-  console.log('publishToPeers', publishToPeers)
-  console.log('publishToPublic', publishToPublic)
+const shareIcon =  () => {
+    const iconStyle = { width: 30, height: 30, objectFit: 'contain' }
+    if (sharingSettings?.isPeerShared && !sharingSettings?.isPublicShared) {
+      return (
+        <img
+          src={shareToPeersIcon}
+          style={iconStyle}
+          alt={'publish-to-peers'}
+        />
+      )
+    } else if (sharingSettings?.isPublicShared) {
+      return (
+        <img
+          src={shareToPublicIcon}
+          style={iconStyle}
+          alt={'publish-to-public'}
+        />
+      )
+    } else if (
+      !sharingSettings?.isPublicShared &&
+      !sharingSettings?.isPeerShared
+    ) {
+      return (
+        <img
+          src={noSharePinkIcon}
+          style={iconStyle}
+          alt={'publish-to-public'}
+        />
+      )
+    }
+  }
 
   return (
     <div
@@ -127,13 +162,16 @@ const Index = ({
               action: () => changeMode('edit'),
               tooltipContent: <Tooltip id='tooltip' className={'tooltip-content'}>
                 Click here to return to edit mode
-              </Tooltip>
+              </Tooltip>,
+              icon: <FaPencilAlt className={'action-icon pencil-icon'} />
             },
             { type: 'preview',
               action: () => changeMode('preview'),
               tooltipContent:  <Tooltip id='tooltip' className={'tooltip-content'}>
               Click here to preview
-            </Tooltip>
+            </Tooltip>,
+              icon: <FaX className={'action-icon eye-icon'} />
+
             },
             {
               type: 'publish',
@@ -149,7 +187,8 @@ const Index = ({
                   {`Click to ${!sharingSettings?.isPublicShared && !sharingSettings?.isPeerShared ? "PUBLISH" : 
                   'UNPUBLISH'} portfolio.`}
                 </div>
-              </Tooltip>
+              </Tooltip>,
+              icon: shareIcon()
             },
             {
               type: 'share',
@@ -163,7 +202,8 @@ const Index = ({
                 <div className={'text-center'}>
                   Click here share your portfolio
                 </div>
-              </Tooltip>
+              </Tooltip>,
+              icon: <IoShareOutline className={'action-icon share-icon'} />
             }
           ]}
         />
