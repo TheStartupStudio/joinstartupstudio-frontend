@@ -27,6 +27,7 @@ import {
 } from '../../redux/portfolio/Actions'
 import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
 import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
+import Tooltip from 'react-bootstrap/Tooltip'
 
 const Index = ({
   loggedUser,
@@ -74,6 +75,10 @@ const Index = ({
   isLoadingCompetitiveness
 }) => {
   const mode = useSelector((state) => state.portfolio.mode)
+   const publishToPeers = useSelector((state) => state.portfolio.publishToPeers)
+   const publishToPublic = useSelector(
+     (state) => state.portfolio.publishToPublic
+   )
   useEffect(() => {
     const fetchDataSequentially = async () => {
       await fetchUserBasicInfo()
@@ -105,6 +110,10 @@ const Index = ({
       })
     }
   }, [sharingSettings])
+
+  console.log('publishToPeers', publishToPeers)
+  console.log('publishToPublic', publishToPublic)
+
   return (
     <div
       className={`portfolio-container ${
@@ -114,18 +123,47 @@ const Index = ({
       {!areLoadingSharingSettings ? (
         <PortfolioActions
           actions={[
-            { type: 'edit', action: () => changeMode('edit') },
-            { type: 'preview', action: () => changeMode('preview') },
+            { type: 'edit',
+              action: () => changeMode('edit'),
+              tooltipContent: <Tooltip id='tooltip' className={'tooltip-content'}>
+                Click here to return to edit mode
+              </Tooltip>
+            },
+            { type: 'preview',
+              action: () => changeMode('preview'),
+              tooltipContent:  <Tooltip id='tooltip' className={'tooltip-content'}>
+              Click here to preview
+            </Tooltip>
+            },
             {
               type: 'publish',
               action: () => setPublishModalVisibility(true),
-              isDisplayed: true
+              isDisplayed: true,
+              tooltipContent: <Tooltip id='tooltip' className={'tooltip-content '}>
+                <div className={'text-center bold-text'}>{`${sharingSettings?.isPublicShared || sharingSettings?.isPeerShared ? 'PUBLISHED' : 
+                'UNPUBLISHED'}`}</div>
+
+
+
+                <div className={'text-center'}>
+                  {`Click to ${!sharingSettings?.isPublicShared && !sharingSettings?.isPeerShared ? "PUBLISH" : 
+                  'UNPUBLISH'} portfolio.`}
+                </div>
+              </Tooltip>
             },
             {
               type: 'share',
               action: () => setShareModalVisibility(true),
               isDisplayed:
-                sharingSettings?.isPublicShared || sharingSettings?.isPeerShared
+                sharingSettings?.isPublicShared || sharingSettings?.isPeerShared,
+              tooltipContent: <Tooltip
+                id='tooltip'
+                className={'tooltip-content text-center'}
+              >
+                <div className={'text-center'}>
+                  Click here share your portfolio
+                </div>
+              </Tooltip>
             }
           ]}
         />

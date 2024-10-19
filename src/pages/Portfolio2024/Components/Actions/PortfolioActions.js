@@ -68,11 +68,7 @@ function PortfolioActions(props) {
               <TooltipAction
                 onClick={() => editButton?.action()}
                 icon={<FaPencilAlt className={'action-icon pencil-icon'} />}
-                tooltipContent={
-                  <Tooltip id='tooltip' className={'tooltip-content'}>
-                    Click here to return to edit mode
-                  </Tooltip>
-                }
+                tooltipContent={editButton.tooltipContent}
               />
             )}
 
@@ -80,30 +76,14 @@ function PortfolioActions(props) {
               <TooltipAction
                 onClick={() => publishButton?.action()}
                 icon={renderIcon()}
-                tooltipContent={
-                  <Tooltip id='tooltip' className={'tooltip-content '}>
-                    <div className={'text-center bold-text'}>PUBLISHED</div>
-                    <div className={'text-center'}>
-                      Click to UNPUBLISH portfolio.
-                    </div>
-                  </Tooltip>
-                }
+                tooltipContent={publishButton.tooltipContent}
               />
             )}
             {shareButton?.isDisplayed && (
               <TooltipAction
                 onClick={() => shareButton?.action()}
                 icon={<IoShareOutline className={'action-icon share-icon'} />}
-                tooltipContent={
-                  <Tooltip
-                    id='tooltip'
-                    className={'tooltip-content text-center'}
-                  >
-                    <div className={'text-center'}>
-                      Click here share your portfolio
-                    </div>
-                  </Tooltip>
-                }
+                tooltipContent={shareButton.tooltipContent}
               />
             )}
           </React.Fragment>
@@ -113,11 +93,7 @@ function PortfolioActions(props) {
             <TooltipAction
               onClick={() => previewButton.action()}
               icon={<FaX className={'action-icon eye-icon'} />}
-              tooltipContent={
-                <Tooltip id='tooltip' className={'tooltip-content'}>
-                  Click here to preview
-                </Tooltip>
-              }
+              tooltipContent={previewButton.tooltipContent}
             />
           </React.Fragment>
         )}
