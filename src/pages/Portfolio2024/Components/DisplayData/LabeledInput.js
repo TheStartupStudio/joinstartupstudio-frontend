@@ -31,7 +31,7 @@ const LabeledInput = ({
       }}
     >
       <div
-        className={`portf-input-title mb-0 info-label p-2 ${
+        className={`portf-input-title mb-0 info-label p-1 ${
           titleClassNames ?? ''
         } ${textClassNames ?? ''} justify-content-${labelAlign}`}
         style={{
@@ -50,9 +50,9 @@ const LabeledInput = ({
               backgroundColor: '#fff',
               minHeight: inputHeight,
               resize: 'none',
-              textAlign: 'center'
+              textAlign: 'start'
             }}
-            className='w-100 rounded-0 p-2'
+            className='w-100 rounded-0 p-1'
             onChange={(e) => onChange?.(e.target.value, 'mentorName')}
             value={value?.trim() !== '' ? value : ''}
             readOnly={readOnly}
@@ -64,9 +64,12 @@ const LabeledInput = ({
             id={name}
             style={{
               backgroundColor: '#fff',
-              minHeight: inputHeight
+              minHeight: inputHeight,
+              fontWeight: '100',
+              fontSize: '13px',
+              paddingLeft: '15px !important'
             }}
-            className=' w-100 rounded-0 py-1 px-2'
+            className=' w-100 rounded-0 py-1 px-3'
             onChange={(e) => onChange?.(e.target.value, 'mentorName')}
             value={value?.trim() !== '' ? value : ''}
             placeholder={placeholder}
@@ -81,7 +84,7 @@ const LabeledInput = ({
             minHeight: inputHeight ?? 35,
             resize: 'none'
           }}
-          className='w-100 rounded-0 p-2'
+          className='w-100 rounded-0 p-1'
         />
       )}
     </div>

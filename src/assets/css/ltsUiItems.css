@@ -56,7 +56,7 @@
   transform: translate3d(2px, 2px, 0);
 }
 
-.form-switch:active input:checked + i::after {
+.form-switch:active input:checked+i::after {
   transform: translate3d(16px, 2px, 0);
 }
 
@@ -64,19 +64,19 @@
   display: none;
 }
 
-.form-switch input:checked + i {
+.form-switch input:checked+i {
   background-color: #a7ca42;
 }
 
-.form-switch input:checked + i::after {
+.form-switch input:checked+i::after {
   margin-left: 3px;
 }
 
-.form-switch input:checked + i::before {
+.form-switch input:checked+i::before {
   transform: translate3d(14px, 2px, 0) scale3d(0, 0, 0);
 }
 
-.form-switch input:checked + i::after {
+.form-switch input:checked+i::after {
   transform: translate3d(22px, 2px, 0);
 }
 
@@ -86,10 +86,12 @@
   flex-direction: column;
   text-align: start;
 }
+
 .ltsGradientButton__container small {
   color: red;
   font-size: 12px;
 }
+
 .ltsGradientButton__button {
   border: double 1px transparent;
   border-radius: 10px;
@@ -104,9 +106,11 @@
   z-index: 10;
   cursor: pointer;
 }
+
 .ltsGradientButton__button.no-color-border {
   border-color: #ccc;
 }
+
 .ltsGradientButton__button a,
 .ltsGradientButton__button span {
   display: flex;
@@ -124,6 +128,7 @@
   text-align: start;
   color: #9297a1;
 }
+
 .customInput__container .hint-icon {
   position: absolute;
   top: 30%;
@@ -139,6 +144,7 @@
   border-radius: 50%;
   cursor: pointer;
 }
+
 .customInput__container .hint-menu {
   position: absolute;
   top: -90%;
@@ -167,11 +173,13 @@
   border-top: 10px solid #000;
   transform: translateX(50%);
 }
+
 .customInput__container small {
   width: 100%;
   color: red;
   font-size: 11px;
 }
+
 .customInput {
   border: thin solid #dededeb3;
   height: 40px;
@@ -192,6 +200,7 @@
   color: #000000;
   opacity: 1;
 }
+
 .customCheckbox {
   min-width: 20px;
   height: 20px;
@@ -205,6 +214,7 @@
   cursor: pointer;
   position: relative;
 }
+
 .customCheckbox:checked::before {
   content: '\2713';
   color: #ffffff;
@@ -213,6 +223,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .customCheckbox:checked {
   width: 20px;
   height: 20px;
@@ -230,4 +241,5 @@
   box-shadow: none;
   padding: 4px 10px;
   font-size: 0.855rem;
+
 }

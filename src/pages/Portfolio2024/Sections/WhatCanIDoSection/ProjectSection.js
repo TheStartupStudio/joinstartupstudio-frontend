@@ -26,13 +26,13 @@ const ProjectSection = ({
 
   return (
     <div
-      className={'portfolio-info-container mb-3'}
+      className={'portf-learn-cont portfolio-info-container mb-3'}
       style={{ padding: '40px' }}
     >
-      <div className={'mb-3'}>
+      <div className={' mb-3'} style={{ textAlign: 'center' }}>
         <span
-          className={'portfolio-info-title me-1'}
-          style={{ fontSize: '16px' }}
+          className={'portf-maintitle portfolio-info-title me-1'}
+          // style={{ fontSize: '16px' }}
         >
           {title}
         </span>
@@ -85,6 +85,7 @@ const ProjectSection = ({
                     title={evidence?.title}
                     videoUrl={evidence?.linkInputValue}
                     thumbnailUrl={evidence?.imageUrl}
+                    className='project-submission-image'
                   />
                 </div>
               </React.Fragment>

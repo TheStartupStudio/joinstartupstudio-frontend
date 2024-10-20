@@ -95,7 +95,7 @@ function UserStory(props) {
             <PortfolioInfoBox
               inputHeight={120}
               content={story}
-              contentClasses={'text-start'}
+              contentClasses={'mystory-port-infobox text-start'}
             />
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import avatar from '../../../assets/images/profile-image.png'
+// import avatar from '../../../assets/images/profile-image.png'
+import avatar from '../../../assets/images/userimgplaceholder.png'
 
 function UserImage(props) {
   return (

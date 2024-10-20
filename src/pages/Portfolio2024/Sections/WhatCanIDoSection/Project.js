@@ -125,7 +125,9 @@ function Project(props) {
     <div className={'portfolio-data-container mb-3 justify-content-start'}>
       <SectionActions actions={actions} />
 
-      <h3 className={'text-center mb-2 my-project-title'}>{title}</h3>
+      <h3 className={'text-center mb-2 my-project-title'}>
+        {title}A NEW ALUMNI SPOTLIGHT
+      </h3>
 
       <div>
         {renderSection(
