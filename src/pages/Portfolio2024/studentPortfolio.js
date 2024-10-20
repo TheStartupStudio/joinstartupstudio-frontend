@@ -31,7 +31,7 @@ function StudentPortfolio() {
         }
         setIsLoading(false)
       } catch (error) {
-        toast.error(error.response.data.error)
+        toast.error(error?.response?.data?.error)
         setIsLoading(false)
       }
     }
