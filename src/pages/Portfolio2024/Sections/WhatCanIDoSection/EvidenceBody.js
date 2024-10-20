@@ -44,7 +44,7 @@ const EvidenceBody = ({
   const [onDelete, setOnDelete] = useState(false)
 
   const [linkInputValue, setLinkInputValue] = useState('')
-  const [titleInputValue, setTitleInputValue] = useState('')
+  const [evidenceTitle, setEvidenceTitle] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState({
     criticalThinkingSkills: false,
     collaborationSkills: false,
@@ -64,9 +64,9 @@ const EvidenceBody = ({
       ],
       imageFile: originalImage,
       linkInputValue,
-      titleInputValue
+      evidenceTitle
     })
-  }, [selectedSkills, originalImage, linkInputValue, titleInputValue])
+  }, [selectedSkills, originalImage, linkInputValue, evidenceTitle])
 
   useEffect(() => {
     if (initialData) {
@@ -107,8 +107,9 @@ const EvidenceBody = ({
 
       // console.log('groupedSkills', groupedSkills)
       setSelectedSkills(groupedSkills)
+      debugger
       setLinkInputValue(initialData.linkInputValue)
-      setTitleInputValue(initialData.titleInputValue)
+      setEvidenceTitle(initialData.evidenceTitle)
       setImageUrl(initialData.imageUrl)
       if (initialData?.imageFile) {
         setImageProperties({
@@ -135,9 +136,12 @@ const EvidenceBody = ({
     }))
   }
 
-  const handleInputChange = (value) => {
+  const handleEvidenceTitleChange = (value) => {
+    setEvidenceTitle(value)
+
+  }
+  const handleLinkChange = (value) => {
     setLinkInputValue(value)
-    setTitleInputValue(value)
   }
 
   useEffect(() => {
@@ -282,8 +286,8 @@ const EvidenceBody = ({
               type={'text'}
               placeholder={`${evidenceName}`}
               titleClassNames={'text-start justify-content-start'}
-              onChange={handleInputChange}
-              value={linkInputValue}
+              onChange={handleEvidenceTitleChange}
+              value={evidenceTitle}
             />
           </div>
           <div className={'mb-1'}>
@@ -293,7 +297,7 @@ const EvidenceBody = ({
               type={'text'}
               placeholder={'https://drive.google.com/29304naf-2343hnl'}
               titleClassNames={'text-start justify-content-start'}
-              onChange={handleInputChange}
+              onChange={handleLinkChange}
               value={linkInputValue}
             />
           </div>
