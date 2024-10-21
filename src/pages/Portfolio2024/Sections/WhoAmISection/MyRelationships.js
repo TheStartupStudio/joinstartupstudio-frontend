@@ -92,9 +92,9 @@ function MyRelationships(props) {
         <LabeledSwitchInput
           label={'Show section'}
           labelDirection={'left'}
-          value={showSection}
+          value={!showSection}
           onChange={(value) => {
-            onToggleSection(!value)
+            onToggleSection(value)
           }}
           name={'show-relationships-section'}
           id={'show-relationships-section'}

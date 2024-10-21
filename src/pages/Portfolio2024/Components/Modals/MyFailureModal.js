@@ -115,7 +115,7 @@ function MyFailureModal(props) {
       {...props}
       actions={actions}
       showSectionCheckbox={true}
-      isShownSection={showSection}
+      isShownSection={!showSection}
       onToggleSection={(showSection) => {
         setShowSection(showSection)
       }}

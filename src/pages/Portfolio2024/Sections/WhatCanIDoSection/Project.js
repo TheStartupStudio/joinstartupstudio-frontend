@@ -57,7 +57,6 @@ function Project(props) {
 
   const getEvidenceData = (evidencesInitialData, type) => {
     const evidences = getProjectSectionByType(type)?.evidences
-
     let newEvidences = evidencesInitialData?.map((evidence, index) => {
       const evidenceFounded = evidences?.find((ev) => ev.type === evidence.type)
       if (evidenceFounded) {
@@ -71,23 +70,7 @@ function Project(props) {
     return newEvidences
   }
 
-  const learnEvidencesInitial = [
-    { title: 'MARKET ANALYSIS', type: 'evidence-1' },
-    { title: 'INDUSTRY ANALYSIS', type: 'evidence-2' },
-    { title: 'PROBLEM IDENTIFICATION', type: 'evidence-3' }
-  ]
 
-  const developEvidencesInitial = [
-    { title: 'SOLUTION SLIDE DECK', type: 'evidence-1' },
-    { title: 'CONCEPT PLAN', type: 'evidence-2' },
-    { title: 'BUSINESS PLAN', type: 'evidence-3' }
-  ]
-
-  const brandEvidencesInitial = [
-    { title: 'BRAND CHARTER', type: 'evidence-1' },
-    { title: 'BRAND GUIDELINES BOOKLET', type: 'evidence-2' },
-    { title: 'BRAND VIDEO', type: 'evidence-3' }
-  ]
   const getProjectContent = (type) => {
     return getProjectSectionByType(type)?.editorContent
   }
@@ -100,8 +83,13 @@ function Project(props) {
     title,
     subTitle,
     contentTitle,
-    initialEvidences
+
   ) => {
+    const initialEvidences = [
+      {  type: 'evidence-1' },
+      {  type: 'evidence-2' },
+      {  type: 'evidence-3' }
+    ]
     const evidences = getEvidenceData(initialEvidences, type)
     const content = getProjectContent(type)
     const showSection = getProjectShowSection(type)
@@ -133,8 +121,6 @@ function Project(props) {
           'LEARN',
           'Your commitment to conscious consumption, research, and analysis.',
           'Problem identification',
-          learnEvidencesInitial,
-          ''
         )}
 
         {renderSection(
@@ -142,7 +128,6 @@ function Project(props) {
           'DEVELOP',
           'Your ability to execute through the development of employability and industry skills.',
           'My solution',
-          developEvidencesInitial
         )}
 
         {renderSection(
@@ -150,7 +135,6 @@ function Project(props) {
           'BRAND',
           'Your ability to communicate and market your value.',
           'Branded material',
-          brandEvidencesInitial
         )}
       </div>
       {showAddProjectModal && (

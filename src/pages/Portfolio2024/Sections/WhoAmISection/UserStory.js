@@ -36,7 +36,7 @@ function UserStory(props) {
   )
   useEffect(() => {
     if (props.data) {
-      setShowStory(props.data?.showUserStory)
+      setShowStory(props.data?.showUserStory )
       setStory(props?.data?.story)
       setId(props.data?.id)
     }
@@ -116,8 +116,9 @@ function UserStory(props) {
             dispatch(saveUserStory(data, id))
           }}
           showSectionCheckbox={true}
-          isShownSection={showStory}
+          isShownSection={!showStory}
           onToggleSection={(showUserStory) => {
+            debugger
             dispatch(toggleUserStory({ showUserStory: showUserStory }, id))
           }}
           isTogglingSection={isTogglingSection}
@@ -139,7 +140,7 @@ function UserStory(props) {
             dispatch(saveUserStory(data, id))
           }}
           showSectionCheckbox={true}
-          isShownSection={showStory}
+          isShownSection={!showStory}
           onToggleSection={(showUserStory) => {
             dispatch(toggleUserStory({ showUserStory: showUserStory }, id))
           }}

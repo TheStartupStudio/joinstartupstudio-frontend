@@ -113,7 +113,7 @@ const EducationCardModal = (props) => {
       actions={modalActions}
       class={'edit-education-modal'}
       showSectionCheckbox={true}
-      isShownSection={credentialData.showSection}
+      isShownSection={!credentialData.showSection}
       onToggleSection={(showSection) => {
         setCredentialData({ ...credentialData, showSection })
       }}

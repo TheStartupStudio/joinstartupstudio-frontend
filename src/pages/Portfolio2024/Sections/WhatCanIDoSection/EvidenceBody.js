@@ -105,9 +105,7 @@ const EvidenceBody = ({
         }, {})
       }
 
-      // console.log('groupedSkills', groupedSkills)
       setSelectedSkills(groupedSkills)
-      debugger
       setLinkInputValue(initialData.linkInputValue)
       setEvidenceTitle(initialData.evidenceTitle)
       setImageUrl(initialData.imageUrl)
@@ -268,17 +266,7 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'input' }}>
-          {/* <div className={'mb-1'}>
-            <LabeledInput
-              title={`Title for ${evidenceName}`}
-              name={'title-for-market-analysis-document'}
-              type={'text'}
-              placeholder={`Title for ${evidenceName}`}
-              titleClassNames={'text-start justify-content-start'}
-              onChange={handleInputChange}
-              value={titleInputValue}
-            />
-          </div> */}
+
           <div className={'mb-1'}>
             <LabeledInput
               title={`Title for Content Upload`}

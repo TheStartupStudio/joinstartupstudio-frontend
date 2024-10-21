@@ -202,7 +202,7 @@ const ImmersionCardModal = (props) => {
       actions={modalActions}
       class={'edit-immersion-modal'}
       showSectionCheckbox={true}
-      isShownSection={immersionData.showSection}
+      isShownSection={!immersionData.showSection}
       onToggleSection={(showSection) => {
         setImmersionData({ ...immersionData, showSection })
       }}
