@@ -21,6 +21,7 @@ import './index.css'
 import spotlightBulb from '../../assets/images/Immersion/SpotlightBulbImg2.png'
 import checkmark from '../../assets/images/checkmark.svg'
 import { setBackButton } from '../../redux/backButtonReducer'
+import SpotlightModal from '../MyImmersion/Modals/SpotlightModal'
 
 function StartupLive() {
   const firstEventTime = new Date('2023-01-30T16:30:00').getTime()
@@ -887,13 +888,20 @@ function StartupLive() {
           title={'Pitch Evaluation'}
         />
       )}{' '}
-      {spotlightApplyModal && (
+      {/* {spotlightApplyModal && (
         <SpotlightApplyModal
           show={spotlightApplyModal}
           onHide={() => closeSpotlightApplyModal()}
           title={'Apply to Pitch'}
         />
-      )}
+      )} */}
+      <SpotlightModal
+        show={spotlightApplyModal}
+        onHide={() => closeSpotlightApplyModal()}
+        // User={ticket.User}
+        mode='add'
+        // updateUserSolutionStatus={updateUserSolutionStatus}
+      />
     </Container>
   )
 }

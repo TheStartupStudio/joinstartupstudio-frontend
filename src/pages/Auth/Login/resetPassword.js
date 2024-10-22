@@ -8,6 +8,7 @@ import { validatePassword } from '../../../utils/helpers'
 import LTSJourneyEn from '../../../assets/images/lts-journey-en.png'
 import LTSJourneyEs from '../../../assets/images/lts-journey-es.png'
 import IntlMessages from '../../../utils/IntlMessages'
+import { CustomInput } from '../../../ui/ContentItems'
 
 const ResetPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -94,78 +95,67 @@ const ResetPassword = () => {
   }
 
   return (
-    <div>
-      <div
-        className='container-fluid my-auto px-5 d-flex align-items-center justify-content-center'
-        style={{
-          backgroundColor: '#e4e9f4',
-          minHeight: 'calc(100vh - 150px)'
-        }}
-      >
-        <div className='w-100' style={{ marginTop: '-150px' }}>
-          <div className='row my-auto'>
-            <div
-              className='col-md-8 col-lg-4 mx-auto p-4 public-page-form'
-              style={{ backgroundColor: '#ffff' }}
+    <div
+      className=' md-px-5 ps-md-5 d-flex align-items-center justify-content-center choose-login_container'
+      style={{
+        backgroundColor: '#e4e9f4',
+        minHeight: 'calc(100vh - 42px)'
+        // overflow: 'hidden'
+      }}
+    >
+      <div className='w-100' style={{ marginTop: '-150px' }}>
+        <div className='row my-auto'>
+          <div
+            className='col-md-8 col-lg-4 mx-auto p-4 public-page-form'
+            style={{ backgroundColor: '#ffff' }}
+          >
+            <h3 className='text-center fw-bold'>
+              <IntlMessages id='reset_password.title' />
+            </h3>
+            <p className='mb-3 mt-4 public-page-text4'>
+              Enter your new password below. Your password must include at least
+              one lower case letter, one upper case letter, and one number.
+            </p>
+            <FormattedMessage
+              id='reset.new_password'
+              defaultMessage='New Password'
             >
-              <h3 className='text-center fw-bold'>
-                <IntlMessages id='reset_password.title' />
-              </h3>
-              <p className='mb-3 mt-4 public-page-text4'>
-                Enter your new password below. Your password must include at
-                least one lower case letter, one upper case letter, and one
-                number.
-              </p>
-              <FormattedMessage
-                id='reset.new_password'
-                defaultMessage='New Password'
-              >
-                {(placeholder) => (
-                  <input
-                    className='mb-3 w-100 pl-5'
-                    type='password'
-                    name='new_password'
-                    placeholder={placeholder}
-                    style={{ padding: '8px' }}
-                    onChange={(event) => handleChange(event)}
-                  />
-                )}
-              </FormattedMessage>
-              <FormattedMessage
-                id='reset.confirm_new_password'
-                defaultMessage='Confirm New Password'
-              >
-                {(placeholder) => (
-                  <input
-                    className=' w-100 pl-5'
-                    type='password'
-                    name='confirm_new_password'
-                    placeholder={placeholder}
-                    style={{ padding: '8px' }}
-                    onChange={(event) => handleChange(event)}
-                  />
-                )}
-              </FormattedMessage>
-              <button
-                className='mt-3 float-end'
-                onClick={(event) => handleSubmit(event)}
-                style={{ width: '136px', height: '44px' }}
-              >
-                {loading ? (
-                  <span className='spinner-border spinner-border-sm' />
-                ) : (
-                  'SAVE'
-                )}
-              </button>
-            </div>
+              {(placeholder) => (
+                <CustomInput
+                  placeholder={placeholder}
+                  type={'password'}
+                  name='new_password'
+                  handleChange={(event) => handleChange(event)}
+                />
+              )}
+            </FormattedMessage>
+            <FormattedMessage
+              id='reset.confirm_new_password'
+              defaultMessage='Confirm New Password'
+            >
+              {(placeholder) => (
+                <CustomInput
+                  placeholder={placeholder}
+                  type={'password'}
+                  name='confirm_new_password'
+                  handleChange={(event) => handleChange(event)}
+                />
+              )}
+            </FormattedMessage>
+            <button
+              className='mt-3 float-end'
+              onClick={(event) => handleSubmit(event)}
+              style={{ width: '136px', height: '44px' }}
+            >
+              {loading ? (
+                <span className='spinner-border spinner-border-sm' />
+              ) : (
+                'SAVE'
+              )}
+            </button>
           </div>
         </div>
       </div>
-      <ToastContainer
-        className='customToast'
-        position='bottom-left'
-        autoClose={5000}
-      />
     </div>
   )
 }

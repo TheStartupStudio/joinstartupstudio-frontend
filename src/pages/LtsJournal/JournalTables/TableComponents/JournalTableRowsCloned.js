@@ -48,7 +48,6 @@ export const JournalTableRowsCloned = ({
         .delete(`/ltsJournalTables/rowsClone/${row.id}`)
         .then((res) => {
           const { deletedRow } = res.data
-          // debugger
           const newTableRows = tableRows.filter((r) => r.id !== deletedRow.id)
 
           if (newTableRows.length === tableRows.length) {

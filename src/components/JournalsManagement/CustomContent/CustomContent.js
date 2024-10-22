@@ -259,17 +259,6 @@ const CustomContent = (props) => {
                       <div>Button</div>
                       {Object.keys(image?.button)?.length > 0 && (
                         <>
-                          {/*<PopupButtonInputs*/}
-                          {/*  data={image?.button}*/}
-                          {/*  index={index}*/}
-                          {/*  breakdownIndex={props.breakdownIndex}*/}
-                          {/*  uuid={data?.uuid}*/}
-                          {/*  handleChangePopupButtons={(e) => {*/}
-                          {/*    const event = [...e, 'button']*/}
-                          {/*    console.log(...event)*/}
-                          {/*    props.handleChangeImages(...event)*/}
-                          {/*  }}*/}
-                          {/*/>*/}
                           <div>Title</div>
                           <input
                             type='text'

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { CustomInput, InfoBox } from '../ContentItems'
+import { InfoBox } from '../ContentItems'
 import { Col, Row } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSchool } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import CustomSpinner from '../../../CustomSpinner'
+import { CustomInput } from '../../../../ui/ContentItems'
 
 const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
   const [mode, setMode] = useState('view')

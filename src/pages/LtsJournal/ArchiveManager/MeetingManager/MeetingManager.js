@@ -158,11 +158,9 @@ const MeetingManager = (props) => {
     } else {
       const newTeamMeeting = { ...teamMeeting }
       newTeamMeeting[name] = value
-      // debugger
       setTeamMeeting(newTeamMeeting)
       const newSelectedTeamMeeting = { ...selectedArchive }
       newSelectedTeamMeeting[name] = value
-      // debugger
       setSelectedArchive(newSelectedTeamMeeting)
       debounce(updateTeamMeeting, newSelectedTeamMeeting)
       const hasChanged = !isEqual(newSelectedTeamMeeting, selectedArchive)

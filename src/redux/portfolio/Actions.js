@@ -1656,7 +1656,6 @@ export const getMyCompetitivenessError = (error) => {
 // Update Competitiveness
 export const updateMyCompetitiveness =
   (competitiveness, id, category) => async (dispatch) => {
-    debugger
     dispatch({ type: UPDATE_MY_COMPETITIVENESS })
     try {
       const response = await updateMyCompetitivenessAPI(competitiveness, id)

@@ -2,44 +2,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import {
   faPlay,
   faPause,
-  faBackward,
   faStepForward,
-  faStepBackward,
-  faForward
+  faStepBackward
 } from '@fortawesome/free-solid-svg-icons'
 import WaveSurfer from 'wavesurfer.js'
 import './StoryInMotion.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useDispatch } from 'react-redux'
 import { createWatchedPodcast } from '../../redux/platformBadges/actions'
-
-const formWaveSurferOptions = (ref) => ({
-  container: ref,
-  waveColor: '#BBBDBF',
-  progressColor: '#7F7F7F',
-  cursorColor: '#7F7F7F',
-  barWidth: 1,
-  background: '#fff !important',
-  barRadius: 1,
-  responsive: true,
-  height: 140,
-  // If true, normalize by the maximum peak instead of 1.0.
-  normalize: true,
-  // Use the PeakCache to improve rendering speed of large waveforms.
-  partialRender: true
-})
-
-const playBtn = {
-  alignItems: 'center',
-  width: ' 60px',
-  height: '60px',
-  background: '#FFFF',
-  borderRadius: '50%',
-  border: 'none',
-  outline: 'none',
-  cursor: 'pointer',
-  color: '#707070'
-}
 
 const darts = {
   alignItems: 'center',
@@ -68,14 +38,15 @@ let Style = {
 export default function Waveform({
   url,
   isPlayingParent,
-  selectedTrack,
-  handle,
-  isPlaying
+  isPlaying,
+  selectedTrack
 }) {
   const dispatch = useDispatch()
   const wavesurfer = useRef(null)
   const [duration, setDuration] = useState()
   const [now, setNow] = useState()
+  // create new WaveSurfer instance
+  // On component mount and when url changes
 
   useEffect(() => {
     if (url) {
@@ -92,6 +63,7 @@ export default function Waveform({
         isPlayingParent(false)
         dispatch(createWatchedPodcast(selectedTrack.id))
       })
+
       if (isPlaying) {
         wavesurfer.current.on('ready', function async() {
           setDuration(wavesurfer?.current?.getDuration())
@@ -100,12 +72,14 @@ export default function Waveform({
       }
       return () => wavesurfer.current.destroy()
     }
+    // eslint-disable-next-line
   }, [url])
 
-  wavesurfer?.current?.on('finish', function async() {
-    wavesurfer?.current?.pause()
-    isPlayingParent(false)
-  })
+  // wavesurfer?.current?.on('finish', function async() {
+  //   wavesurfer?.current?.pause()
+  //   isPlayingParent(false)
+  //   console.log('rendered time')
+  // })
 
   wavesurfer?.current?.on('audioprocess', function async() {
     setNow(wavesurfer.current.getCurrentTime())
@@ -120,6 +94,7 @@ export default function Waveform({
   useEffect(() => {
     setDuration(wavesurfer?.current?.getDuration())
     handlePlayPause()
+    // eslint-disable-next-line
   }, [isPlaying])
 
   const goBackward = () => {
@@ -150,7 +125,7 @@ export default function Waveform({
         className='waveform formWaveSurferOptions wform '
         // ref={waveformRef}
       />
-      <div className='controls row'>
+      <div className='controls d-flex'>
         <span className='float-start col-1 col-sm-4 my-auto'>
           {now ? getMinutes(now) : '00:00'}
         </span>
@@ -178,7 +153,7 @@ export default function Waveform({
               }}
             />
           )}
-          {/* <span className="my-auto">
+          {/* <span className='my-auto'>
             <FontAwesomeIcon
               icon={faStepForward}
               style={darts}

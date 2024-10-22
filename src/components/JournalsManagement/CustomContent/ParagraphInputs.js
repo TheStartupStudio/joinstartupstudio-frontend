@@ -1,5 +1,4 @@
 import React from 'react'
-import KendoTextEditor from '../TextEditor'
 import { QuillEditorBox } from '../../../ui/ContentItems'
 
 const ParagraphInputs = (props) => {
@@ -20,7 +19,6 @@ const ParagraphInputs = (props) => {
           ])
         }}
       />
-
     </React.Fragment>
   )
 }

@@ -13,7 +13,7 @@ const AddImmersionModal = ({
   viewExprience,
   onClose,
   immersionStep,
-  onSuccess,
+  onSuccess = () => {},
   justView
 }) => {
   // Initialize states for form fields
@@ -127,7 +127,7 @@ const AddImmersionModal = ({
     <div className='modal-overlay'>
       <div className='modal-container'>
         {/* Modal Header */}
-        <div className='modal-header'>
+        <div className='immersion-modal-header'>
           {viewExprience && (
             <div className='portfolio-actions'>
               {editingImmersion ? (
@@ -199,7 +199,7 @@ const AddImmersionModal = ({
         </div>
 
         {/* Modal Body */}
-        <div className='modal-body'>
+        <div className='immersion-modal-body'>
           <div className='input-group'>
             <p className='input-group-title'>Company Details</p>
             <input
@@ -286,7 +286,7 @@ const AddImmersionModal = ({
         {showDeleteConfirm && (
           <div className='modal-overlay'>
             <div className='modal-container-delete'>
-              <div className='modal-header'>
+              <div className='immersion-modal-header'>
                 <div className='portfolio-actions'>
                   <FontAwesomeIcon
                     icon={faArrowLeft}

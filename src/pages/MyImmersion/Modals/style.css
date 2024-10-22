@@ -24,9 +24,9 @@
 }
 
 .step1-submit-modal-textarea textarea {
-  color: #9297A1;
+  color: #9297a1;
   /* background-color: #fff; */
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029;
   border: none !important;
   border-radius: 10px;
@@ -71,14 +71,18 @@
   height: 500px;
 }
 
+.pitch-input::placeholder,
+.pitch-inputtextarea::placeholder {
+  font-size: 12px;
+}
 
-@media (max-width:992px) {
+@media (max-width: 992px) {
   .left-title-immrs .profile-dropdown-info {
     display: block !important;
   }
 }
 
-@media (max-width:646px) {
+@media (max-width: 646px) {
   .immersion-body-container {
     grid-template-columns: 1fr !important;
   }
@@ -88,24 +92,21 @@
   }
 }
 
-@media (max-width:850px) {
-
+@media (max-width: 850px) {
   .left-title-immrs {
     margin-left: 0 !important;
   }
-
 }
 
-@media (max-width:507px) {
+@media (max-width: 507px) {
   .immrs-solution-title-modal {
     flex-direction: column;
   }
 }
 
-
 .mail-icon-cont {
   border-radius: 50px;
-  background: #C8CDD880 0% 0% no-repeat padding-box;
+  background: #c8cdd880 0% 0% no-repeat padding-box;
   height: 36px;
   width: 36px;
   display: flex;
@@ -118,4 +119,9 @@
 .step1-mail-icon {
   width: 20.16px;
   height: 18.24px;
+}
+
+/* Spotlight */
+.spotlight-modal {
+  font-size: 14px !important;
 }

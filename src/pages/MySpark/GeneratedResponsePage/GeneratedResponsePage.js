@@ -710,7 +710,6 @@ function GeneratedResponsePage(props) {
                       if (isEdit) {
                         handleSaveEditedContent()
                         setIsEdit(false)
-                        // debugger
                         if (archivedDocument.myContent) {
                           shouldDisplayItem('create-own-content', false)
                         }
