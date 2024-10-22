@@ -44,7 +44,7 @@ function InboxMenu() {
         setActiveEventKey('0')
       } else if (
         hash === 'industry_problem_submissions' ||
-        hash === 'spotlight_application'
+        hash === 'spotlight_applications'
       ) {
         setActiveEventKey('1')
       }

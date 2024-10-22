@@ -3,25 +3,30 @@ import React, { useState } from 'react'
 import './style.css'
 import '../style.css'
 import '../../Spotlight/index.css'
-import { toast } from 'react-toastify'
-
+import 'react-quill/dist/quill.snow.css'
 import { useForm } from '../../../hooks/useForm'
-import { SubmitButton, UploadFileInput } from '../ContentItems'
-import ModalWrapper from '../../../components/Modals/Spotlight/ModalWrapper'
-import { ParentButtonApply } from '../../../components/Modals/Spotlight/ParentButtonApply'
-import SpotlightSimpleModal from '../../../components/Modals/Spotlight/SpotlightSimpleModal'
-import IntlMessages from '../../../utils/IntlMessages'
 import { useDispatch } from 'react-redux'
+import { Col, Modal, Row } from 'react-bootstrap'
+import { CustomDropdown, LtsButton } from '../../../ui/ContentItems'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faFile,
+  faFileUpload,
+  faTimes
+} from '@fortawesome/free-solid-svg-icons'
+import ReactQuill from 'react-quill'
 import { handleSpotlightStatus } from '../../../redux/myImmersion/actions'
+import axiosInstance from '../../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
 import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
-import DenySpotlightModal from './DenySpotlightModal'
 
 const SpotlightModal = (props) => {
-  console.log('props', props)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
-  const [showDenyUploadModal, setShowDenyUploadModal] = useState(false)
+  const [submitType, setSubmitType] = useState('approved')
+  const [feedbackMessage, setFeedbackMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const initialState = {
     name: '',
@@ -35,44 +40,79 @@ const SpotlightModal = (props) => {
     applicationDate: Date.now()
   }
 
-  const [spotlightSimpleModal, setSpotlightSimpleModal] = useState({
-    type: '',
-    show: null
-  })
-
-  const closeSimpleSpotlightModal = (type) => {
-    let newSpotlightSimpleModal = { ...spotlightSimpleModal }
-    newSpotlightSimpleModal.type = type
-    newSpotlightSimpleModal.show = false
-    setSpotlightSimpleModal(newSpotlightSimpleModal)
-  }
-
-  const { formData, handleChange, handleChangeFile } = useForm(
+  const { formData } = useForm(
     initialState,
     props.spotlight,
     props.mode,
     loading
   )
 
-  const submitHandler = (status, feedbackMessage) => {
+  const handleDownloadAll = () => {
+    const files = [
+      {
+        name: 'Parent-Guardian-Approval-Form.pdf',
+        url: formData.parentGuardianApprovalForm
+      },
+      { name: 'PitchDeck.pdf', url: formData.pitchDeck },
+      { name: 'BusinessPlan.pdf', url: formData.businessPlan }
+    ]
+
+    files.forEach((file) => {
+      fetch(file.url)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', file.name)
+          document.body.appendChild(link)
+          link.click()
+
+          link.parentNode.removeChild(link)
+          window.URL.revokeObjectURL(url)
+        })
+        .catch((err) => console.error('Error downloading file:', err))
+    })
+  }
+
+  const submitHandler = async () => {
+    const sanitizedFeedback = feedbackMessage
+      ?.replace(/<\/?[^>]+(>|$)/g, '')
+      .trim()
+
+    if (submitType === 'rejecte' && !sanitizedFeedback) {
+      setErrorMessage('Please provide feedback for the student.')
+      return
+    }
     const res = dispatch(
-      handleSpotlightStatus(props.spotlight_id, status, feedbackMessage)
+      handleSpotlightStatus(props.spotlight_id, submitType, sanitizedFeedback)
     )
 
     if (res) {
+      if (submitType === 'approved') {
+        await axiosInstance
+          .post('/users/sendPitch', {
+            ...formData,
+            ...props.User
+          })
+          .then(() => {
+            setLoading(false)
+          })
+      }
+
       toast.success('User solution status updated successfully!')
-      props.updateUserSolutionStatus(props.id, status)
+      props.updateUserSolutionStatus(props.id, submitType)
       props.onHide()
       const type =
-        status === 'approved'
-          ? notificationTypes.INDUSTRY_PROBLEM_APPROVED.key
-          : notificationTypes.INDUSTRY_PROBLEM_DENIED.key
+        submitType === 'approved'
+          ? notificationTypes.SPOTLIGHT_APPROVED.key
+          : notificationTypes.SPOTLIGHT_DENIED.key
 
       notificationSocket?.emit('sendNotification', {
         sender: props.User,
         receivers: [{ id: props.user_id }],
         type: type,
-        url: '/my-immersion/step-2'
+        url: '/spotlight'
       })
     } else {
       toast.error('Failed to update user solution status.')
@@ -80,177 +120,154 @@ const SpotlightModal = (props) => {
   }
 
   return (
-    <>
-      <ModalWrapper
-        title={props.title}
-        show={props.show}
-        onHide={props.onHide}
-        classes={'spotlight-apply-modal'}
-      >
-        <div className='row'>
-          <div className='col-12 col-lg-6'>
-            <input
-              className='apply-button mt-2 mb-2 w-100 ps-2 py-2 pitch-input border'
-              style={{ backgroundColor: '#fff' }}
-              type='text'
-              name='name'
-              value={formData.name}
-              required
-              onChange={
-                props.mode !== 'edit' ? (e) => handleChange(e) : () => {}
-              }
-              placeholder={'Who is pitching?'}
+    <Modal
+      {...props}
+      show={props.show}
+      onHide={props.onHide}
+      size='xl'
+      aria-labelledby='contained-modal-title-vcenter'
+      className='spotlight-modal'
+      centered
+    >
+      <Modal.Header>
+        <Row className='align-items-center w-100 m-0 py-2'>
+          <Col md='10' className='d-flex justify-content-between'>
+            <Col md='9' className='d-flex align-items-center'>
+              <h5 className='m-0'>SPOTLIGHT SUBMISSION</h5>
+            </Col>
+            <Col md='3'>
+              <CustomDropdown
+                title={'Submitted'}
+                btnClassName={'gray-border'}
+                options={[
+                  {
+                    name: 'Approved',
+                    value: 'approved'
+                  },
+                  {
+                    name: 'Denied',
+                    value: 'rejected'
+                  }
+                ]}
+                onClick={(option) => setSubmitType(option.value)}
+              />
+            </Col>
+          </Col>
+          <Col md='2' className='d-flex justify-content-end'>
+            <FontAwesomeIcon
+              icon={faTimes}
+              onClick={() => props.onHide()}
+              style={{ fontSize: '20px' }}
+              className='cursor-pointer'
             />
-            <input
-              className='apply-button mt-2 mb-2 w-100 ps-2 py-2 pitch-input border'
-              type='text'
-              name='productName'
-              onChange={
-                props.mode !== 'edit' ? (e) => handleChange(e) : () => {}
-              }
-              value={formData.productName}
-              required
-              placeholder={'What is your product or service called?'}
-            />
-            <textarea
-              className='apply-button mt-2 mb-2 w-100 ps-2 py-2 pitch-inputtextarea border'
-              type='text'
-              onChange={
-                props.mode !== 'edit' ? (e) => handleChange(e) : () => {}
-              }
-              value={formData.productDescription}
-              rows={5}
-              required
-              name='productDescription'
-              placeholder={'Briefly describe your product or service.'}
-            />
-            <textarea
-              className='apply-button mt-0 mb-2 w-100 ps-2 py-2 pitch-inputtextarea border'
-              type='text'
-              onChange={
-                props.mode !== 'edit' ? (e) => handleChange(e) : () => {}
-              }
-              value={formData.membershipType}
-              required
-              rows={5}
-              name='membershipType'
-              placeholder={'What type of membership are you applying for?'}
-            />
+          </Col>
+        </Row>
+      </Modal.Header>
+      <Modal.Body>
+        <div>
+          <div className='d-flex align-items-center m-0 w-100'>
+            <span className='pe-2'>Name of Student:</span>
+            <span className='fw-bold'>{formData.name}</span>
           </div>
-          <div className='apply-inputs col-12 col-lg-6'>
-            <UploadFileInput
-              filename={formData.parentGuardianApprovalForm}
-              placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
-              name='parentGuardianApprovalForm'
-              onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
-              mode={props.mode}
-            />
-
-            <UploadFileInput
-              filename={formData.pitchDeck}
-              placeholder={'Upload Pitch Deck (PDF)'}
-              name='pitchDeck'
-              onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
-              mode={props.mode}
-            />
-            <UploadFileInput
-              filename={formData.businessPlan}
-              placeholder={'Upload Business Plan (PDF)'}
-              name='businessPlan'
-              onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
-              mode={props.mode}
-            />
-            <div className='mt-2'>
-              <p style={{ fontSize: '14px' }}>
-                You must be subscribed to the Learn to Start platform for a
-                minimum of one (1) year prior to applying. Applicants must be 18
-                years old or have a parent/guardian form to be considered for
-                Spotlight.
-              </p>
-            </div>
+          <div className='d-flex align-items-center m-0 w-100'>
+            <span className='pe-2'>Title of Product or Service:</span>
+            <span className='fw-bold'>{formData.productName}</span>
           </div>
         </div>
-        <div className='d-flex justify-content-between w-100'>
-          <div className='parent-form-spotlight'>
-            <ParentButtonApply text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
-          </div>
-          {props.mode === 'edit' ? (
-            <div className='d-flex justify-content-end'>
-              <SubmitButton
-                text={'DENY'}
-                disabled={formData.status !== 'pending'}
-                type='button'
-                onClick={() => {
-                  setShowDenyUploadModal(true)
-                  props.onHide()
-                }}
-                className={'deny-button'}
-              />
 
-              <SubmitButton
-                text={'APPROVE'}
-                disabled={formData.status !== 'pending'}
-                type='button'
-                onClick={() => submitHandler('approved')}
-                className={'approve-button'}
-              />
-            </div>
-          ) : (
-            <div className='row float-end'>
-              <button
-                className='apply-save-button edit-account me-5'
-                disabled={true}
-                onClick={() => {
-                  setLoading(true)
-                }}
+        <Col className='my-4'>
+          <p className='fw-bold mb-2'>Product or Service Description</p>
+          <p className=' m-0'>{formData.productDescription}</p>
+        </Col>
+        <Col className='my-4'>
+          <p className='fw-bold mb-2'>Type of Membership Applying For</p>
+          <p className=' m-0'>{formData.membershipType}</p>
+        </Col>
+        <Row className='justify-content-between align-items-center w-100 m-0'>
+          <Col md='9' className='my-4'>
+            <p className='fw-bold mb-2'>FILES SUBMITTED</p>
+            <span className='d-flex align-items-center'>
+              <FontAwesomeIcon icon={faFile} className='me-2' />
+              <a
+                href={formData.parentGuardianApprovalForm}
+                target='_blank'
+                rel='noopener noreferrer'
               >
-                {loading ? (
-                  <span
-                    className='spinner-border spinner-border-sm'
-                    style={{ fontSize: '13px', fontWeight: 600 }}
-                  />
-                ) : (
-                  <IntlMessages id='general.save' />
-                )}
-              </button>
-            </div>
-          )}
-        </div>
-        {spotlightSimpleModal.type === 'termsAndConditions' && (
-          <SpotlightSimpleModal
-            boxShadow={true}
-            show={
-              spotlightSimpleModal.type === 'termsAndConditions' &&
-              spotlightSimpleModal.show
-            }
-            onHide={() => closeSimpleSpotlightModal('termsAndConditions')}
-            content={`<ul style=' display: flex;
-                                flex-direction: column;
-                                gap: 10px;'>
-                       <li>To pitch in a Spotlight event, you must be at least 16 years old and a registered user inside of the Learn to Start platform with at least one year of experience on the platform.</li>
-  <li>Participants will have 12 minutes to present their pitch deck, with additional minutes allocated to Q&A from the expert panel.</li>
-  <li>Ventures submitted for Spotlight are not kept confidential, so teams should not include detailed descriptions of intellectual property in their submission. Participants retain ownership over their ventures, concepts, and work.</li>
-  <li>All participants are expected to compete with integrity and shall not knowingly deceive panels or members of the advisory committee. All presented materials shall be offered as an accurate representation of knowledge and expectations and shall not contain false or misleading statements. Participants who violate this expectation of integrity are subject to disqualification and revocation of their Learn to Start platform membership.</li>
-  <li>Spotlight participants authorize Learn to Start and its affiliates to use a summary of the content of their submission and any video and image submissions for publicity purposes related to Spotlight.</li>
-  <li>The organizers of Spotlight reserve the right to disqualify any entry that, in their judgment, violates the spirit of the event guidelines.</li>
-                    </ul>
-                  `}
-            title={'What is spotlight'}
+                Parent/Guardian Approval Form.pdf
+              </a>
+            </span>
+            <span className='d-flex align-items-center'>
+              <FontAwesomeIcon icon={faFile} className='me-2' />
+              <a
+                href={formData.pitchDeck}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                Pitch Deck.pdf
+              </a>
+            </span>
+            <span className='d-flex align-items-center'>
+              <FontAwesomeIcon icon={faFile} className='me-2' />
+              <a
+                href={formData.businessPlan}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                Business Plan.pdf
+              </a>
+            </span>
+          </Col>
+          <Col md='3' className='d-flex justify-content-end'>
+            <span
+              className='d-flex align-items-center cursor-pointer'
+              style={{ color: '#5db1cc' }}
+              onClick={handleDownloadAll}
+            >
+              Download All Files
+              <FontAwesomeIcon icon={faFileUpload} className='ms-2' />
+            </span>
+          </Col>
+        </Row>
+        {submitType === 'rejected' && (
+          <Col className='my-3'>
+            <p className='fw-bold mb-2'>Feedback About Application Denial</p>
+            <ReactQuill
+              className={'portfolio-quill'}
+              value={feedbackMessage || ''}
+              onChange={(value) => setFeedbackMessage(value)}
+              placeholder='Briefly describe the nature of your work experience.'
+            />
+            <span style={{ color: 'red' }}>{errorMessage}</span>
+          </Col>
+        )}
+
+        <Row className='w-100 m-0 justify-content-end'>
+          <LtsButton
+            text={'CANCEL'}
+            background={'transparent'}
+            color={'#000'}
+            border={'1px solid #ccc'}
+            onClick={() => props.onHide()}
           />
-        )}{' '}
-      </ModalWrapper>
-      {showDenyUploadModal && (
-        <DenySpotlightModal
-          show={showDenyUploadModal}
-          spotlight={props.spotlight}
-          onHide={() => setShowDenyUploadModal(false)}
-          submit={(feedbackMessage) => {
-            submitHandler('rejected', feedbackMessage)
-            setShowDenyUploadModal(false)
-          }}
-        />
-      )}
-    </>
+          <LtsButton
+            text={
+              loading ? (
+                <span className='spinner-border spinner-border-sm' />
+              ) : submitType === 'rejected' ? (
+                'SEND TO STUDENT'
+              ) : (
+                'SEND TO LTS'
+              )
+            }
+            background={'#52C7DE'}
+            className={'ms-2'}
+            color={'#fff'}
+            border={'none'}
+            onClick={submitHandler}
+          />
+        </Row>
+      </Modal.Body>
+    </Modal>
   )
 }
 

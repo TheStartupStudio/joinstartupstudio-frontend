@@ -120,3 +120,8 @@
   width: 20.16px;
   height: 18.24px;
 }
+
+/* Spotlight */
+.spotlight-modal {
+  font-size: 14px !important;
+}

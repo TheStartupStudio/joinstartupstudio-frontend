@@ -90,7 +90,7 @@ export default {
   },
   SPOTLIGHT: {
     key: 'SPOTLIGHT',
-    value: ' applied for immersion experience'
+    value: ' has submitted a spotlight application'
   },
   SPOTLIGHT_DENIED: {
     key: 'SPOTLIGHT_DENIED',

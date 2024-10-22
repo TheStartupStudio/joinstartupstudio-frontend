@@ -15,7 +15,6 @@ function Ticket({
   updateTicketStatus,
   updateUserSolutionStatus
 }) {
-  console.log('ticket', ticket)
   const history = useHistory()
   const [industryProblemModal, setIndustryProblemModal] = useState(false)
   const [submitSpotlightModal, setSubmitSpotlightModal] = useState(false)
