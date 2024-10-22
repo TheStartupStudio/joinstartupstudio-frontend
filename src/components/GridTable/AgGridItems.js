@@ -688,7 +688,7 @@ const Actions = ({
         <DeleteUserModal
           show={modals.deleteUserModal}
           onHide={() => setModalState('deleteUserModal', false)}
-          user={user}
+          users={user}
           instructors={instructors}
           onSuccess={onSuccess}
         />

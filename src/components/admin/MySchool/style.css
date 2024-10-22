@@ -403,13 +403,6 @@
   padding: 0 8px;
   position: relative;
 }
-.pw-revelared__icon {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 5%;
-  cursor: pointer;
-}
 
 /* Button style */
 
@@ -431,4 +424,10 @@
 }
 .transfer-body_container label {
   font-size: 12px;
+}
+.reset-password-modal .modal-dialog {
+  max-width: 500px;
+}
+.delete-user-modal .modal-dialog {
+  max-width: 500px;
 }

@@ -306,6 +306,10 @@ const Learners = ({
   ])
 
   const handleInstructorFilterChange = (selectedOption) => {
+    if (!selectedOption) {
+      setSelectedSchoolFilter(null)
+      return
+    }
     setSelectedInstructor(null)
     const selectedSchool = instructors.find((i) => i.id === selectedOption.id)
     setSelectedSchoolFilter(selectedSchool)
@@ -345,12 +349,13 @@ const Learners = ({
             value: instructor.User.name,
             id: instructor.id
           })),
+          hasResetOption: true,
           onChange: handleInstructorFilterChange
         }}
         lastDropdownProps={{
           title: 'Add Student',
           onClick: (newValue) => {
-            newValue.value === 'add-manualy'
+            newValue?.value === 'add-manualy'
               ? setModalState('studentAddActionModal', true)
               : setModalState('showAddStudentsBulkModal', true)
           }

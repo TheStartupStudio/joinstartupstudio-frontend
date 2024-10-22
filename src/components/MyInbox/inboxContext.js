@@ -50,10 +50,10 @@ export const InboxProvider = ({ children }) => {
     },
     [dispatch]
   )
-  const setImmersionExperiences = useCallback(
+  const setSpotlights = useCallback(
     (payload) => {
       dispatch({
-        type: 'SET_IMMERSION_EXPERIENCE',
+        type: 'SET_SPOTLIGHTS',
         payload
       })
     },
@@ -104,7 +104,7 @@ export const InboxProvider = ({ children }) => {
           ? state.approvalRequests 
           : ticket.type === 'industry_problem' 
           ? state.industryProblems
-          : state.immersionExperience
+          : state.spotlights
 
       const newRows = questions.rows.map((x) =>
         x.id === ticket.id ? { ...x, TicketAnswers: message } : x
@@ -120,7 +120,7 @@ export const InboxProvider = ({ children }) => {
             ? 'UPDATE_APPROVAL_REQUEST' 
             : ticket.type === 'industry_problem' 
             ? 'UPDATE_INDUSTRY_PROBLEMS'
-            : 'UPDATE_IMMERSION_EXPERIENCE'
+            : 'UPDATE_SPOTLIGHT'
 
       dispatch({
         type: type,
@@ -142,7 +142,7 @@ export const InboxProvider = ({ children }) => {
           ? state.approvalRequests 
           : ticket.type === 'industry_problem' 
           ? state.industryProblems
-          : state.immersionExperience
+          : state.spotlights
 
       const foundIndex = questions.rows.find(
         (row) => row.id === ticket.id && !row.read_by_instructor
@@ -164,7 +164,7 @@ export const InboxProvider = ({ children }) => {
         ? 'UPDATE_APPROVAL_REQUEST' 
         : ticket.type === 'industry_problem' 
         ? 'UPDATE_INDUSTRY_PROBLEMS'
-        : 'UPDATE_IMMERSION_EXPERIENCE'
+        : 'UPDATE_SPOTLIGHT'
 
       dispatch({
         type: type,
@@ -180,7 +180,7 @@ export const InboxProvider = ({ children }) => {
       state.studentQuestions,
       state.approvalRequests,
       state.industryProblems,
-      state.immersionExperience
+      state.spotlights
     ]
   )
 
@@ -197,14 +197,14 @@ export const InboxProvider = ({ children }) => {
       approvalRequests: state.approvalRequests,
       questionsMenuSelected: state.questionsMenuSelected,
       industryProblems: state.industryProblems,
-      immersionExperiences: state.immersionExperiences,
+      spotlights: state.spotlights,
       loading: state.loading,
       replying: state.replying,
       setStudentQuestions,
       setCertificationFeedbackQuestions,
       setApprovalRequests,
       setIndustryProblems,
-      setImmersionExperiences,
+      setSpotlights,
       selectQuestionsMenu,
       setLoading,
       setReplying,
@@ -220,7 +220,7 @@ export const InboxProvider = ({ children }) => {
     setCertificationFeedbackQuestions,
     setApprovalRequests,
     setIndustryProblems,
-    setImmersionExperiences,
+    setSpotlights,
     setLoading,
     setReplying,
     newMessage,

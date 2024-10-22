@@ -4,6 +4,7 @@ import CustomSpinner from '../../../CustomSpinner'
 import { Col, Dropdown, Row } from 'react-bootstrap'
 import { LineChart } from '../../../Charts/BarChartJs'
 import axiosInstance from '../../../../utils/AxiosInstance'
+import ActiveUsersModal from './ActiveUsersModal'
 
 const ActiveUsers = ({ universityId }) => {
   const [rangeFilter, setRangeFilter] = useState({
@@ -12,6 +13,7 @@ const ActiveUsers = ({ universityId }) => {
   })
   const [chartLoading, setChartLoading] = useState(false)
   const [chartData, setChartData] = useState({})
+  const [activeUsersModal, setActiveUsersModal] = useState(false)
 
   useEffect(() => {
     const fetchChartData = async () => {
@@ -30,6 +32,10 @@ const ActiveUsers = ({ universityId }) => {
     fetchChartData()
   }, [universityId])
 
+  const activeUsersViewModeHandler = () => {
+    setActiveUsersModal(true)
+  }
+
   return (
     <InfoBox style={{ minHeight: '330px', height: '330px' }}>
       {chartLoading ? (
@@ -40,9 +46,13 @@ const ActiveUsers = ({ universityId }) => {
           <CustomSpinner />
         </div>
       ) : (
-        <div className='border'>
+        <div className='border '>
           <Row>
-            <Col md='10' className='pe-0'>
+            <Col
+              md='10'
+              className='pe-0 cursor-pointer'
+              onClick={activeUsersViewModeHandler}
+            >
               <LineChart
                 rangeFilter={rangeFilter}
                 datasets={[
@@ -168,6 +178,16 @@ const ActiveUsers = ({ universityId }) => {
             </Dropdown>
           </Col>
         </div>
+      )}
+
+      {activeUsersModal && (
+        <ActiveUsersModal
+          show={activeUsersModal}
+          onHide={() => setActiveUsersModal(false)}
+          chartData={chartData}
+          rangeFilter={rangeFilter}
+          setRangeFilter={setRangeFilter}
+        />
       )}
     </InfoBox>
   )

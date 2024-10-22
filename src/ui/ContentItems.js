@@ -1,12 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Editor, EditorTools } from '@progress/kendo-react-editor'
 import { getFormattedDate } from '../utils/helpers'
 import ReactSelect from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  faAngleDown,
   faEye,
   faEyeSlash,
-  faQuestion
+  faQuestion,
+  faTimes
 } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 
@@ -218,23 +220,26 @@ const CustomInput = ({
   const [showPassword, setShowPassword] = useState(false)
   const [hintMenu, setHintMenu] = useState(false)
   return (
-    <div className='customUI-item customInput__container d-flex flex-column align-items-center position-relative'>
-      <input
-        type={showPassword ? 'text' : type}
-        name={name}
-        className='customInput w-100 my-2'
-        value={value}
-        onChange={handleChange}
-        placeholder={placeholder}
-      />
-
-      {type === 'password' && (
-        <FontAwesomeIcon
-          icon={showPassword ? faEye : faEyeSlash}
-          className='pw-revelared__icon'
-          onClick={() => setShowPassword((state) => !state)}
+    <div className='customUI-item d-flex flex-column  position-relative'>
+      <div className='customInput__container'>
+        <input
+          type={showPassword ? 'text' : type}
+          name={name}
+          className='customInput'
+          value={value}
+          onChange={handleChange}
+          placeholder={placeholder}
+          autoComplete='new-password'
         />
-      )}
+
+        {type === 'password' && (
+          <FontAwesomeIcon
+            icon={showPassword ? faEye : faEyeSlash}
+            className='pw-revelared__icon'
+            onClick={() => setShowPassword((state) => !state)}
+          />
+        )}
+      </div>
       {showHint && (
         <span
           className='hint-icon'
@@ -246,7 +251,7 @@ const CustomInput = ({
 
       {hintMenu && <div className='hint-menu'>{hintText}</div>}
 
-      {showError && error && <small className='ps-1 '>{error}</small>}
+      {showError && error && <small className='error ps-1 '>{error}</small>}
     </div>
   )
 }
@@ -295,6 +300,204 @@ const CustomCheckbox = ({ handleChange, checked, text, name, value }) => {
     </div>
   )
 }
+const CustomGradientButton = ({
+  children,
+  className,
+  onClick,
+  style,
+  showError,
+  error
+}) => {
+  return (
+    <div className='custom__input-container '>
+      {' '}
+      <span
+        className={`custom-gradient_button ${className}`}
+        style={style}
+        onClick={onClick}
+      >
+        {children}
+      </span>
+      {showError && error && <small className='ps-1'>{error}</small>}
+    </div>
+  )
+}
+
+const CustomDropdown = ({
+  options,
+  name,
+  width,
+  btnClassName,
+  title,
+  onClick,
+  maxHeight,
+  dropdownHeaderHeight,
+  isSelectable,
+  multiple = false,
+  isOpen,
+  setOpenDropdown,
+  exclusive = false,
+  preselectedOptions = [],
+  showError = false,
+  error = null,
+  hasResetOption = false
+}) => {
+  const [localIsOpen, setLocalIsOpen] = useState(false)
+  const [selectedOptions, setSelectedOptions] = useState(
+    multiple ? preselectedOptions : preselectedOptions[0] || null
+  )
+
+  useEffect(() => {
+    if (preselectedOptions.length) {
+      setSelectedOptions(multiple ? preselectedOptions : preselectedOptions[0])
+    }
+  }, [preselectedOptions, multiple])
+
+  const toggleDropdown = () => {
+    if (exclusive) {
+      setOpenDropdown()
+    } else {
+      setLocalIsOpen(!localIsOpen)
+    }
+  }
+
+  const handleOptionClick = (option) => {
+    if (multiple) {
+      handleCheckboxChange(option)
+    } else if (isSelectable) {
+      const newSelectedOptions =
+        selectedOptions?.id === option.id ? null : option
+      setSelectedOptions(newSelectedOptions)
+      if (exclusive) {
+        setOpenDropdown()
+      } else {
+        setLocalIsOpen(false)
+      }
+      if (onClick) {
+        onClick(newSelectedOptions)
+      }
+    } else {
+      if (selectedOptions === option) {
+        setSelectedOptions(null)
+      } else {
+        setSelectedOptions(option)
+      }
+      if (exclusive) {
+        setOpenDropdown()
+      } else {
+        setLocalIsOpen(false)
+      }
+      if (onClick) {
+        onClick(option)
+      }
+    }
+  }
+
+  const handleCheckboxChange = (option) => {
+    let newSelectedOptions
+    if (
+      selectedOptions.some((selectedOption) => selectedOption.id === option.id)
+    ) {
+      newSelectedOptions = selectedOptions.filter(
+        (selectedOption) => selectedOption.id !== option.id
+      )
+    } else {
+      newSelectedOptions = [...selectedOptions, option]
+    }
+    setSelectedOptions(newSelectedOptions)
+    if (onClick) {
+      onClick(newSelectedOptions)
+    }
+  }
+
+  const resetSelection = (e) => {
+    e.stopPropagation()
+    setSelectedOptions(null)
+    if (onClick) {
+      onClick(null)
+    }
+  }
+
+  const isDropdownOpen = exclusive ? isOpen : localIsOpen
+
+  return (
+    <div
+      className='custom_dropdown'
+      style={{ width: width, maxHeight: maxHeight }}
+    >
+      <CustomGradientButton
+        className={`dropdown-header ${btnClassName}`}
+        onClick={toggleDropdown}
+        style={{ maxHeight: dropdownHeaderHeight }}
+        showError={showError}
+        error={error}
+      >
+        <span
+          className='p-0 w-100'
+          style={{
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            display: 'block'
+          }}
+        >
+          {multiple
+            ? selectedOptions.length > 0
+              ? selectedOptions.map((option) => option.name).join(', ')
+              : title || 'Select an option'
+            : selectedOptions
+            ? selectedOptions.name
+            : title || 'Select an option'}
+        </span>
+
+        {!multiple && !isSelectable && selectedOptions && hasResetOption && (
+          <span
+            className='reset-button d-flex justify-content-end cursor-pointer'
+            onClick={(e) => resetSelection(e)}
+            style={{ color: 'red' }}
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </span>
+        )}
+
+        <span className={`arrow ${isDropdownOpen ? 'open' : ''}`}>
+          <FontAwesomeIcon icon={faAngleDown} />
+        </span>
+      </CustomGradientButton>
+      {isDropdownOpen && (
+        <>
+          <div className='dropdown-list'>
+            {options?.map((option, index) => (
+              <div
+                key={index}
+                name={name}
+                className='dropdown-list-item'
+                onClick={() => !multiple && handleOptionClick(option)}
+              >
+                {isSelectable && (
+                  <input
+                    type='checkbox'
+                    name={name}
+                    className='agGrid-customFilters__checkbox'
+                    onChange={() => handleOptionClick(option)}
+                    checked={
+                      multiple
+                        ? selectedOptions.some(
+                            (selectedOption) => selectedOption.id === option.id
+                          )
+                        : selectedOptions?.id === option.id
+                    }
+                  />
+                )}
+                {option.name}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
 
 export {
   TextInput,
@@ -306,5 +509,6 @@ export {
   LtsButton,
   CustomCheckbox,
   QuillEditor,
-  QuillEditorBox
+  QuillEditorBox,
+  CustomDropdown
 }

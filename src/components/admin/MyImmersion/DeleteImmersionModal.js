@@ -17,7 +17,7 @@ const DeleteModal = ({
 }) => {
   return (
     <div className='modal-container-delete'>
-      <div className='modal-header'>
+      <div className='immersion-modal-header'>
         <div className='portfolio-actions'>
           <FontAwesomeIcon
             icon={faArrowLeft}
