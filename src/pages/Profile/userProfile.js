@@ -25,7 +25,7 @@ import '../PortfolioNew/style/previewPortfolio.css'
 import { editSocialMedia } from '../../redux/user/Actions'
 import StudentData from '../../components/MyStudents/studentData'
 import { StudentCountProvider } from '../../components/MyStudents/studentCountContext'
-import { getUserWithIdAction } from '../../redux/users/Actions'
+import { getStudentInfoById, getUserWithIdAction } from '../../redux/users/Actions'
 import './style.css'
 import InstructorNotes from '../../components/Profile/InstructorNotes/InstructorNotes'
 import PlatformBadges from '../../components/Profile/PlatformBadges'
@@ -44,12 +44,18 @@ function Profile(props) {
   const [isContactable, setIsContactable] = useState(false)
   const currentLanguage = useSelector((state) => state.lang.locale)
   const userProfile = useSelector((state) => state.users.selectedUser)
-
+  const studentInfo = useSelector(
+    (state) => state.users.studentInfo
+  )
   const { id } = useParams()
 
   useEffect(() => {
     dispatch(getUserWithIdAction(id))
   }, [id])
+
+  useEffect(()=>{
+    if(user.id) dispatch(getStudentInfoById(user.id))
+  },[user.id])
 
   useEffect(() => {
     getUserData()
@@ -136,8 +142,8 @@ function Profile(props) {
                       <div className='round-image-wrapper'>
                         <Image
                           src={
-                            userProfile?.profile_image
-                              ? userProfile?.profile_image
+                            studentInfo?.data?.userImageUrl
+                              ? studentInfo?.data?.userImageUrl
                               : defaultImage
                           }
                           className='editbio-user-image mx-auto my-account'

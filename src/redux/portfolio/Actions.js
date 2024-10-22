@@ -193,7 +193,10 @@ import {
   TOGGLE_MY_RELATIONSHIPS,
   TOGGLE_MY_RELATIONSHIPS_SUCCESS,
   TOGGLE_MY_FAILURE,
-  TOGGLE_MY_FAILURE_SUCCESS
+  TOGGLE_MY_FAILURE_SUCCESS,
+  GET_STUDENT_INFO_BY_ID,
+  GET_STUDENT_INFO_BY_ID_SUCCESS,
+  GET_STUDENT_INFO_BY_ID_ERROR, GET_BASIC_USER_INFO_ERROR
 } from './Constants'
 import {
   createMyFailuresAPI,
@@ -240,7 +243,7 @@ import {
   deleteMyCompetitivenessAPI,
   getUserStoryAPI,
   updateUserStoryAPI,
-  createUserStoryAPI
+  createUserStoryAPI, getStudentInfoByIdAPI
 } from './Service'
 
 export const getPublicPortfolio = () => async (dispatch) => {
@@ -423,7 +426,7 @@ export const getUserBasicInfo = () => async (dispatch) => {
     const response = await getUserBasicDataAPI()
     dispatch(getUserBasicDataSuccess(response?.data))
   } catch (e) {
-    console.log('error', e)
+    dispatch(getUserBasicDataError(e))
   }
 }
 export const getUserBasicDataSuccess = (response) => {
@@ -432,6 +435,16 @@ export const getUserBasicDataSuccess = (response) => {
     payload: { data: response }
   }
 }
+
+export const getUserBasicDataError = (error) => {
+  return {
+    type: GET_BASIC_USER_INFO_ERROR,
+    payload: { error }
+  }
+}
+
+
+
 export const saveUserBasicData = (userStory, id) => async (dispatch) => {
   dispatch({ type: SAVE_BASIC_USER_INFO })
   try {

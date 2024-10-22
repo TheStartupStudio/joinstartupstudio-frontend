@@ -1,8 +1,13 @@
 import React from 'react'
 import searchIcon from '../../assets/images/search-icon.png'
 import Select, { components } from 'react-select'
+import avator from '../../assets/images/profile-image.png'
+import { useSelector } from 'react-redux'
 
 const Header = (props) => {
+  const userBasicInfo = useSelector(
+    (state) => state.portfolio.whoSection.userBasicInfo
+  )
   const options = [
     { value: 'chocolate', label: 'Chocolate' },
     { value: 'strawberry', label: 'Strawberry' },
@@ -34,8 +39,10 @@ const Header = (props) => {
         <div className='user-info'>
           <img
             className='rounded-circle user-image'
-            src={props?.user?.profile_image}
-            alt={props?.user?.profile_image}
+            src={   userBasicInfo?.data?.userImageUrl
+              ? userBasicInfo?.data?.userImageUrl
+              : avator}
+            alt={'student-image'}
           />
           <span className='user-name ps-2'>{props?.user?.name}</span>
         </div>

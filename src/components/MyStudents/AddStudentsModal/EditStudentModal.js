@@ -8,6 +8,7 @@ import '../index.css'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPeriodsStart } from '../../../redux/dashboard/Actions'
+import { getStudentInfoById } from '../../../redux/users/Actions'
 
 const EditStudentModal = (props) => {
   const dispatch = useDispatch()
@@ -21,6 +22,10 @@ const EditStudentModal = (props) => {
   const [periodOptions, setPeriodOptions] = useState([])
   const [selectedYear, setSelectedYear] = useState(null)
   const [selectedPeriod, setSelectedPeriod] = useState(null)
+  const studentInfo = useSelector(
+    (state) => state.users.studentInfo
+  )
+
 
   const defaultData = {
     name: '',
@@ -38,6 +43,10 @@ const EditStudentModal = (props) => {
   useEffect(() => {
     dispatch(getPeriodsStart())
   }, [])
+
+  useEffect(()=>{
+    if(data.id) dispatch(getStudentInfoById(data.id))
+  },[data.id])
 
   useEffect(() => {
     setSelectedPeriod(data?.period_id)
@@ -271,7 +280,7 @@ const EditStudentModal = (props) => {
       <Modal.Body className='row px-0 mx-4'>
         <div className='col-12 col-lg-2 mb-2 mb-lg-0 pt-2 text-center'>
           <img
-            src={data.profile_image ? data.profile_image : defaultImage}
+            src={studentInfo?.data?.userImageUrl ? studentInfo?.data?.userImageUrl : defaultImage}
             className='border border-1 rounded-circle border border-dark text-center mx-auto'
             width={'101px'}
             height={'101px'}
