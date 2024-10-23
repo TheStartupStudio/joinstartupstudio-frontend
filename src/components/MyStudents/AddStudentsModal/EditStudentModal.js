@@ -208,6 +208,7 @@ const EditStudentModal = (props) => {
     setResetLoading(false)
   }
 
+  console.log('data', data)
   return data?.id ? (
     <Modal
       show={props.show}
