@@ -80,52 +80,52 @@ const AddImmersionModal = ({
 
         {/* Modal Body */}
         <div className='modal-body'>
-          <div className='input-group'>
-            <p className='input-group-title'>Course/Credential Details</p>
-            <input
-              type='text'
-              placeholder='Name of Course or Credential'
-              value={courseName}
-              onChange={(e) => setCourseName(e.target.value)}
-            />
-            <input
-              type='text'
-              placeholder='Name of Course/Credential Provider'
-              value={providerName}
-              onChange={(e) => setProviderName(e.target.value)}
-            />
+          <div>
+            <div className='input-group'>
+              <div>
+                <p className='input-group-title'>Course/Credential Details</p>
+                <input
+                  type='text'
+                  placeholder='Name of Course or Credential'
+                  value={courseName}
+                  onChange={(e) => setCourseName(e.target.value)}
+                />
+                <input
+                  type='text'
+                  placeholder='Name of Course/Credential Provider'
+                  value={providerName}
+                  onChange={(e) => setProviderName(e.target.value)}
+                />
+
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <div>
+                    <p className='input-group-title'>Course Rating</p>
+                    <input
+                      type='text'
+                      placeholder='Numerical Rating'
+                      value={courseRating}
+                      onChange={(e) => setCourseRating(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <p className='input-group-title'>No. Of Reviews</p>
+                    <input
+                      type='text'
+                      placeholder='Number of Reviews'
+                      value={numReviews}
+                      onChange={(e) => setNumReviews(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div></div>
+            </div>
           </div>
 
-          <div className='input-group'>
-            <p className='input-group-title'>Additional Details</p>
-            <input
-              type='text'
-              placeholder='Course Rating'
-              value={courseRating}
-              onChange={(e) => setCourseRating(e.target.value)}
-            />
-            <input
-              type='text'
-              placeholder='Number of Reviews'
-              value={numReviews}
-              onChange={(e) => setNumReviews(e.target.value)}
-            />
-          </div>
-
-          <div className='input-group'>
-            <input
-              type='text'
-              placeholder='Type of Award for Completion'
-              value={typeOfAward}
-              onChange={(e) => setTypeOfAward(e.target.value)}
-            />
-            <input
-              type='text'
-              placeholder='Total Time to Complete Course'
-              value={totalTime}
-              onChange={(e) => setTotalTime(e.target.value)}
-            />
-          </div>
+          <div className='input-group'></div>
 
           <div className='input-group'>
             <input

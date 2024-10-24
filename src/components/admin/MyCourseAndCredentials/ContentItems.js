@@ -203,6 +203,7 @@ const CustomDropdown = ({
     <div
       className='custom_dropdown'
       style={{ width: width, maxHeight: maxHeight }}
+      onClick={() => !multiple && handleOptionClick('Add Course or Credential')}
     >
       <CustomGradientButton
         className={`dropdown-header ${btnClassName}`}
