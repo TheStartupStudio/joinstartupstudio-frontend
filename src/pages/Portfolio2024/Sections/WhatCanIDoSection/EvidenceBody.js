@@ -87,19 +87,29 @@ const EvidenceBody = ({
       let groupedSkills
       if (updatedSkills && updatedSkills.length > 0) {
         groupedSkills = updatedSkills.reduce((acc, skill) => {
-          const category = skill.category
-          // const camelCasedCategory = skill.category
-          //   .toLowerCase()
-          //   .replace(/[-_\s.](.)/g, (_, char) => char.toUpperCase())
-          // console.log('camelCasedCategory', camelCasedCategory)
           const skillCopy = { ...skill }
           delete skillCopy.category
 
-          if (!acc[category]) {
-            acc[category] = []
+
+          // const category = skill.category
+          //
+          // if (!acc[category]) {
+          //   acc[category] = []
+          // }
+          //
+          // acc[category].push(skillCopy)
+
+
+
+          const camelCasedCategory = skill.category
+            .toLowerCase()
+            .replace(/[-_\s.](.)/g, (_, char) => char.toUpperCase())
+          // console.log('camelCasedCategory', camelCasedCategory)
+          if (!acc[camelCasedCategory]) {
+            acc[camelCasedCategory] = []
           }
 
-          acc[category].push(skillCopy)
+          acc[camelCasedCategory].push(skillCopy)
 
           return acc
         }, {})
@@ -141,6 +151,9 @@ const EvidenceBody = ({
   const handleLinkChange = (value) => {
     setLinkInputValue(value)
   }
+
+  // console.log('selectedSkills', selectedSkills)
+  // console.log('selectedSkills?.criticalThinkingSkills', selectedSkills?.criticalThinkingSkills)
 
   useEffect(() => {
     setDropdownOpen({

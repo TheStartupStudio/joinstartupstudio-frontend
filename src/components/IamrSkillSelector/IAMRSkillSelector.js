@@ -74,9 +74,9 @@ const IAMRSkillSelector = (props) => {
             <label key={index} className='option-label'>
               <input
                 type='checkbox'
-                // checked={selectedOptions?.some(
-                //   (selectedOption) => selectedOption?.iamrSkillId === option.id
-                // )}
+                checked={selectedOptions?.some(
+                  (selectedOption) => selectedOption?.iamrSkillId === option.id
+                )}
                 onChange={() => handleOptionToggle(option)}
                 className='multiselect-option-checkbox'
               />

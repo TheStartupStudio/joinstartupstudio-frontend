@@ -76,7 +76,6 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
                             setProjects([project])
                           }
                         }}
-                        title={'A NEW ALUMNI SPOTLIGHT'}
                       />
                     </React.Fragment>
                   </>
