@@ -604,7 +604,7 @@ export default function EditJournals2(props) {
                 </>
               )
             })}
-          {/* {selectedJournal.value?.studentAssignments && ( */}
+           {selectedJournal.value?.studentAssignments && (
           <>
             <QuillEditorBox
               title={'Student assignment content'}
@@ -613,7 +613,7 @@ export default function EditJournals2(props) {
               minHeight={150}
             />
           </>
-          {/* )} */}
+           )}
           <>
             <h2>Lts Connection Model</h2>
             {selectedJournal?.value?.ltsConnection && (
