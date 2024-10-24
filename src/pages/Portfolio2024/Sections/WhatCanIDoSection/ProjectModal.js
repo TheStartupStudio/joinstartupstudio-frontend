@@ -246,7 +246,7 @@ function ProjectModal(props) {
           title={'Project title'}
           type={'text'}
           align={'start'}
-          placeholder={'A New Alumni Spotlight'}
+          placeholder={'Give your project a name'}
           labelAlign={'start'}
           value={projectTitle}
           onChange={(value) => setProjectTitle(value)}
@@ -298,7 +298,12 @@ function ProjectModal(props) {
 
       {isEdit && (
         <div className={' mt-5'} onClick={() => setConfirmDeleteModal(true)}>
-          <LtsButton variant={'text'} align={'end'} name={'DELETE PROJECT'} />
+          <LtsButton
+            className='mydelete-failure-btn'
+            variant={'text'}
+            align={'end'}
+            name={'DELETE PROJECT'}
+          />
         </div>
       )}
 

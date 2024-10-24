@@ -17,7 +17,11 @@ function LabeledSwitchInput(props) {
   return (
     <div
       className={`labeled-switch-container ${labelPositionClass}`}
-      style={styles}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+      }}
     >
       <label className={'show-section switch-label'} htmlFor={id}>
         {label}

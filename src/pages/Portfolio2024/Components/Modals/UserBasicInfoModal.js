@@ -255,34 +255,80 @@ function UserBasicInfoModal(props) {
             </div>
           </div>
           <div className={'col-md-6'}>
-            <div>
-              <SocialMediaInput
-                icon={<FaLinkedinIn />}
+            <div
+              style={{
+                fontWeight: '600',
+                fontSize: '15px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}
+            >
+              SOCIAL MEDIA LINKS
+              <LabeledInput
+                title={'LinkedIn'}
+                type={'text'}
+                align={'start'}
                 value={state?.socialMediaLinks?.linkedIn || ''}
                 onChange={(value) => handleSocialMediaChange('linkedIn', value)}
               />
-              <SocialMediaInput
-                icon={<FaInstagram />}
+              {/* <SocialMediaInput
+                icon={<FaLinkedinIn />}
+                value={state?.socialMediaLinks?.linkedIn || ''}
+                onChange={(value) => handleSocialMediaChange('linkedIn', value)}
+              /> */}
+              <LabeledInput
+                title={'Instagram'}
+                type={'text'}
+                align={'start'}
                 value={state?.socialMediaLinks?.instagram || ''}
                 onChange={(value) =>
                   handleSocialMediaChange('instagram', value)
                 }
               />
-              <SocialMediaInput
-                icon={<FaXTwitter />}
+              {/* <SocialMediaInput
+                icon={<FaInstagram />}
+                value={state?.socialMediaLinks?.instagram || ''}
+                onChange={(value) =>
+                  handleSocialMediaChange('instagram', value)
+                }
+              /> */}
+              <LabeledInput
+                title={'Twitter'}
+                type={'text'}
+                align={'start'}
                 value={state?.socialMediaLinks?.xTwitter || ''}
                 onChange={(value) => handleSocialMediaChange('xTwitter', value)}
               />
-              <SocialMediaInput
-                icon={<FaFacebookF />}
+              {/* <SocialMediaInput
+                icon={<FaXTwitter />}
+                value={state?.socialMediaLinks?.xTwitter || ''}
+                onChange={(value) => handleSocialMediaChange('xTwitter', value)}
+              /> */}
+              <LabeledInput
+                title={'Facebook'}
+                type={'text'}
+                align={'start'}
                 value={state?.socialMediaLinks?.facebook || ''}
                 onChange={(value) => handleSocialMediaChange('facebook', value)}
               />
-              <SocialMediaInput
-                icon={<FaGlobe />}
+              {/* <SocialMediaInput
+                icon={<FaFacebookF />}
+                value={state?.socialMediaLinks?.facebook || ''}
+                onChange={(value) => handleSocialMediaChange('facebook', value)}
+              /> */}
+              <LabeledInput
+                title={'Website'}
+                type={'text'}
+                align={'start'}
                 value={state?.socialMediaLinks?.website || ''}
                 onChange={(value) => handleSocialMediaChange('website', value)}
               />
+              {/* <SocialMediaInput
+                icon={<FaGlobe />}
+                value={state?.socialMediaLinks?.website || ''}
+                onChange={(value) => handleSocialMediaChange('website', value)}
+              /> */}
               <div className={'mt-4'}>
                 <EditPortfolioSubmission
                   videoUrl={state?.videoUrl}

@@ -124,7 +124,7 @@ function MyFailureModal(props) {
     >
       <div className={'row'}>
         <div className={'col-lg-6 col-md-12'}>
-          <div className={'my-2'}>
+          <div className={'failure-submission-container my-2'}>
             <EditPortfolioSubmission
               // uploadedImage={videoThumbnail}
               videoUrl={videoUrl}
@@ -134,10 +134,11 @@ function MyFailureModal(props) {
               title={'MY FAILURE STORY'}
               deleteImage={handleDeleteImage}
               deleteImageFile={handleDeleteImageFile}
-            />
+            />{' '}
+            <p> Link to your failure story video.</p>
           </div>
         </div>
-        <div className={'col-lg-6 col-md-12'}>
+        <div className={'col-lg-6 col-md-12 '} style={{ marginTop: '10px' }}>
           <div className={'portfolio-info-title text-uppercase'}>
             {'Failure'}
           </div>
@@ -173,7 +174,12 @@ function MyFailureModal(props) {
           className={' mt-5 delete-failure-btn'}
           onClick={() => setConfirmDeleteModal(true)}
         >
-          <LtsButton variant={'text'} align={'end'} name={'DELETE FAILURE'} />
+          <LtsButton
+            variant={'text'}
+            align={'end'}
+            name={'DELETE FAILURE'}
+            className='mydelete-failure-btn'
+          />
         </div>
       )}
       <ConfirmDeleteRecordModal

@@ -47,7 +47,7 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
   }
 
   return (
-    <div className={'d-flex flex-column gap-4'}>
+    <div className={'d-flex flex-column gap-4'} style={{ marginTop: '30px' }}>
       {renderSection(
         loadings?.myAlignments,
         'my-alignment',

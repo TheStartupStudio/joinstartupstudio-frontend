@@ -33,7 +33,7 @@ function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
     )
   }
   return (
-    <div className={'d-flex flex-column gap-4'}>
+    <div className={'d-flex flex-column gap-4'} style={{ marginTop: '30px' }}>
       {renderSection(
         loadings?.userBasicInfo,
         'user-basic-info',

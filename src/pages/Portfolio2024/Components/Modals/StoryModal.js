@@ -40,6 +40,7 @@ function StoryModal(props) {
             className={'portfolio-quill'}
             value={story}
             onChange={(value) => setStory(value)}
+            placeholder='Use this space to tell your story.'
           />
         </div>
       </div>
