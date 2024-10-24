@@ -6,10 +6,15 @@ import MyFailures from './MyFailures'
 import MyMentors from './MyMentors'
 import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
 import UserStory from './UserStory'
+import { useSelector } from 'react-redux'
 
 function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
   const [loadings, setLoadings] = useState(null)
+  const mode = useSelector((state) => state.portfolio.mode)
 
+  const filteredUnshownData = (data) => {
+    return data.filter((data)=>data.showSection)
+  }
   useEffect(() => {
     if (propsLoadings) {
       setLoadings(propsLoadings)
@@ -41,7 +46,7 @@ function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
         UserBasicInfo,
         data?.userBasicInfo?.data
       )}
-      {data?.userStory &&
+      {data?.userStory  && data?.userStory?.showUserStory &&  mode === 'preview' &&
         renderSection(
           loadings?.userStory,
           'user-story',
@@ -50,7 +55,25 @@ function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
           data?.userStory?.data
         )}
 
-      {data?.myRelationships &&
+      {data?.userStory && mode === 'edit' &&
+        renderSection(
+          loadings?.userStory,
+          'user-story',
+          'My Story',
+          UserStory,
+          data?.userStory?.data
+        )}
+
+      {data?.myRelationships && data?.myRelationships?.showRelationships &&  mode === 'preview' &&
+        renderSection(
+          loadings?.myRelationships,
+          'my-relationship',
+          'My Relationships',
+          MyRelationships,
+          data?.myRelationships?.data
+        )}
+
+      {data?.myRelationships &&  mode === 'mode' &&
         renderSection(
           loadings?.myRelationships,
           'my-relationship',
@@ -63,17 +86,19 @@ function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
         'my-failures',
         'My Failures',
         MyFailures,
-        data?.myFailures?.data,
+        mode === 'edit' ? data?.myFailures?.data : filteredUnshownData(data?.myFailures?.data),
         450
       )}
+
       {renderSection(
         loadings?.myMentors,
         'my-mentors',
         'My Mentors',
         MyMentors,
-        data?.myMentors?.data,
+        mode === 'edit' ? data?.myMentors?.data : filteredUnshownData(data?.myMentors?.data),
         450
       )}
+
     </div>
   )
 }
