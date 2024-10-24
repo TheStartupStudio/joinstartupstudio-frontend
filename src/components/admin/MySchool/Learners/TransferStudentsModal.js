@@ -7,10 +7,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { CustomDropdown, CustomInput, SubmitButton } from '../ContentItems'
+import { CustomDropdown, SubmitButton } from '../ContentItems'
 import { useValidation } from '../../../../hooks/useValidation'
 import { useForm } from '../../../../hooks/useForm'
 import useIsFormEmpty from '../../../../hooks/useIsFormEmpty'
+import { CustomInput } from '../../../../ui/ContentItems'
 
 const TransferStudentsModal = ({
   show,

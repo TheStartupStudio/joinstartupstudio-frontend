@@ -159,6 +159,9 @@ import {
   GET_BASIC_USER_INFO_SUCCESS,
   GET_BASIC_USER_INFO,
   GET_BASIC_USER_INFO_ERROR,
+  GET_STUDENT_INFO_BY_ID_SUCCESS,
+  GET_STUDENT_INFO_BY_ID,
+  GET_STUDENT_INFO_BY_ID_ERROR,
   SAVE_BASIC_USER_INFO,
   SAVE_BASIC_USER_INFO_SUCCESS,
   SAVE_BASIC_USER_INFO_ERROR,
@@ -324,7 +327,8 @@ const initialState = {
       showAddCompetitivenessModal: null,
       data: []
     }
-  }
+  },
+
 }
 
 const portfolioReducer = (state = initialState, action) => {
@@ -477,6 +481,9 @@ const portfolioReducer = (state = initialState, action) => {
           }
         }
       }
+
+
+
     case SAVE_BASIC_USER_INFO:
       return {
         ...state,

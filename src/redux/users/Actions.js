@@ -1,5 +1,10 @@
 import * as types from './Types'
 import usersService from './Service'
+import {
+  GET_STUDENT_INFO_BY_ID,
+  GET_STUDENT_INFO_BY_ID_ERROR,
+  GET_STUDENT_INFO_BY_ID_SUCCESS
+} from './Types'
 
 export const getUserWithIdAction = (id) => {
   return async (dispatch) => {
@@ -29,5 +34,28 @@ export const getAllUsersAction = () => {
     } catch (error) {
       dispatch({ type: types.GET_ALL_USERS_REJECTED, payload: error.message })
     }
+  }
+}
+
+export const getStudentInfoById = (id) => async (dispatch) => {
+  dispatch({ type: GET_STUDENT_INFO_BY_ID })
+  try {
+    const response = await usersService.getStudentInfoByIdAPI(id)
+    dispatch(getStudentInfoSuccessById(response?.data))
+  } catch (error) {
+    dispatch(getStudentInfoErrorById(error?.data))
+  }
+}
+export const getStudentInfoSuccessById = (response) => {
+  return {
+    type: GET_STUDENT_INFO_BY_ID_SUCCESS,
+    payload: { data: response }
+  }
+}
+
+export const getStudentInfoErrorById = (response) => {
+  return {
+    type: GET_STUDENT_INFO_BY_ID_ERROR,
+    payload: { error: response.error }
   }
 }

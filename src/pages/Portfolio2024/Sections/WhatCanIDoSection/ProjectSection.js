@@ -82,7 +82,7 @@ const ProjectSection = ({
               <React.Fragment key={evidence?.title}>
                 <div className={'project-submission col-md-4'} key={index}>
                   <PortfolioSubmission
-                    title={evidence?.title}
+                    title={evidence?.evidenceTitle?.length ?evidence?.evidenceTitle : `Upload content ${index+ 1}` }
                     videoUrl={evidence?.linkInputValue}
                     thumbnailUrl={evidence?.imageUrl}
                     className='project-submission-image'

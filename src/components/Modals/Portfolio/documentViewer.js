@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import { Document, Page, pdfjs } from 'react-pdf'
 import { Modal } from 'react-bootstrap'
 
 export default function DocumentViewer(props) {
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
-  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages)
@@ -38,7 +36,8 @@ export default function DocumentViewer(props) {
         <Modal.Title id='contained-modal-title-vcenter'></Modal.Title>
       </Modal.Header>
       <Modal.Body className='document-modal'>
-        <Document
+        <></>
+        {/* <Document
           className='pdf-document-viewer'
           file={`${props.articleLink}`}
           onLoadSuccess={onDocumentLoadSuccess}
@@ -58,7 +57,7 @@ export default function DocumentViewer(props) {
               </button>
             </div>
           ) : null}
-        </Document>
+        </Document> */}
       </Modal.Body>
     </Modal>
   )

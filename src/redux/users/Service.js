@@ -15,9 +15,19 @@ const getAllUsers = async () => {
   }
 }
 
+export const getStudentInfoByIdAPI = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/users/student-info/${id}`)
+    return response
+  } catch (e) {
+    throw e?.response
+  }
+}
+
 const usersService = {
   getAllUsers,
-  getUserWithId
+  getUserWithId,
+  getStudentInfoByIdAPI
 }
 
 export default usersService

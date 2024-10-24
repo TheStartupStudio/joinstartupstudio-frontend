@@ -264,9 +264,6 @@ function ProjectModal(props) {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
           menuItem3: 'Content Upload #3'
-          // menuItem1: 'Market Analysis Document',
-          // menuItem2: 'Industry Analysis Document',
-          // menuItem3: 'Problem Identification'
         }
       )}
       {renderEditProject(
@@ -281,9 +278,7 @@ function ProjectModal(props) {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
           menuItem3: 'Content Upload #3'
-          // menuItem1: 'Solution Slide Deck',
-          // menuItem2: 'Concept Plan Document',
-          // menuItem3: 'Business Plan Document'
+
         }
       )}
       {renderEditProject(
@@ -297,9 +292,7 @@ function ProjectModal(props) {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
           menuItem3: 'Content Upload #3'
-          // menuItem1: 'Brand Charter Document',
-          // menuItem2: 'Brand Guidelines Booklet',
-          // menuItem3: 'Brand Video'
+
         }
       )}
 

@@ -96,14 +96,14 @@ function LiveStream() {
           >
             Create Task/Event
           </button>
-          <TaskEventModal
+          {taskEventModal && <TaskEventModal
             show={taskEventModal}
             onHide={closeTaskEventModal}
             periods={periods}
             event={null}
             onEdit={null}
             startDate={null}
-          />
+          />}
           {/* <CertificationRequestsWidget /> */}
         </div>
       </Row>

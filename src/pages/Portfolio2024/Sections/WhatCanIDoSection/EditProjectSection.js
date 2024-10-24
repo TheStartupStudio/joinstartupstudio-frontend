@@ -59,7 +59,7 @@ function EditProjectSection(props) {
             >
               <LabeledSwitchInput
                 label={'Show section'}
-                value={sectionState?.showSection}
+                value={!sectionState?.showSection}
                 onChange={(value) => {
                   handleChangeVisibility(value)
                 }}

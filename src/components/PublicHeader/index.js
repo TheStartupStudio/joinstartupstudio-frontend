@@ -12,22 +12,18 @@ function PublicHeader() {
   const location = useLocation()
   return (
     <div>
-      {location.pathname !== '/ims-login' &&
-        location.pathname !== '/' &&
-        location.pathname !== '/signup-academy' &&
-        location.pathname !== '/forgot-password' && (
-          <nav
-            className={`navbar navbar-expand-lg justify-content-between py-4 px-4 px-md-5 ${
-              showMenuMobile && 'desktop-menu mt-lg-5'
-            }  px-xl-2`}
-            style={
-              window.location.href.includes('lts-secure') ||
-              window.location.href.includes('register')
-                ? null
-                : { background: 'transparent', paddingLeft: 0 }
-            }
-          >
-            {/* <div className={`sidebar-header ${showMenuMobile && 'ms-md-5'}`}>
+      <nav
+        className={`navbar navbar-expand-lg justify-content-between py-4 px-4 px-md-5 ${
+          showMenuMobile && 'desktop-menu mt-lg-5'
+        }  px-xl-2`}
+        style={
+          window.location.href.includes('lts-secure') ||
+          window.location.href.includes('register')
+            ? null
+            : { background: 'transparent', paddingLeft: 0 }
+        }
+      >
+        {/* <div className={`sidebar-header ${showMenuMobile && 'ms-md-5'}`}>
               <NavLink to='/'>
                 {location.pathname !== '/' && (
                   <img src={SUSLogoStudent} alt='logo' className='ms-md-5' />
@@ -47,90 +43,87 @@ function PublicHeader() {
                 </div>
               )}
             </div> */}
-            <ul
-              className='navbar-nav navbar-expand-lg public-nav'
+        <ul
+          className='navbar-nav navbar-expand-lg public-nav'
+          style={{
+            width: '100%'
+          }}
+        >
+          {/* {window.location.href.includes('terms') ||
+          window.location.href.includes('lts-secure') ? (
+            <li className='nav-item '>
+              <a className='nav-link' href='/create-account'>
+                <IntlMessages id='navigation.create_your_account' />
+              </a>
+            </li>
+          ) :  */}
+          {window.location.href.includes('register') ? (
+            <li className='nav-item lts-secure-logo'>
+              <a className='nav-link mx-auto' href='/logout'>
+                <IntlMessages id='navigation.logout' />
+              </a>
+            </li>
+          ) : null}
+          {window.location.href.includes('create-account') ||
+          window.location.href.includes('lts-secure') ||
+          window.location.href.includes('subscription-ended') ||
+          window.location.href.includes('register') ||
+          window.location.href.includes('reset-password') ||
+          window.location.href.includes('forgot-password') ||
+          window.location.href.includes('trial-ended') ? (
+            <li
+              className='nav-item lts-secure-logo'
               style={{
-                width: '100%'
+                background: 'transparent',
+                display: 'flex',
+                justifyContent: 'space-between',
+                margin: '0 !important'
               }}
             >
-              {window.location.href.includes('terms') ||
-              window.location.href.includes('lts-secure') ? (
-                <li className='nav-item '>
-                  {/* <a className='nav-link' href='/create-account'>
-                <IntlMessages id='navigation.create_your_account' />
-              </a> */}
-                </li>
-              ) : window.location.href.includes('register') ? (
-                <li className='nav-item lts-secure-logo'>
-                  <a className='nav-link mx-auto' href='/logout'>
-                    <IntlMessages id='navigation.logout' />
-                  </a>
-                </li>
-              ) : null}
-              {window.location.href.includes('create-account') ||
-              window.location.href.includes('lts-secure') ||
-              window.location.href.includes('subscription-ended') ||
-              window.location.href.includes('register') ||
-              window.location.href.includes('reset-password') ||
-              window.location.href.includes('forgot-password') ||
-              window.location.href.includes('trial-ended') ? (
-                <li
-                  className='nav-item lts-secure-logo'
-                  style={{
-                    background: 'transparent',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    margin: '0 !important'
-                  }}
-                >
-                  <div
-                    className={`sidebar-header lts-secure-logo ${
-                      showMenuMobile && 'ms-md-5'
-                    }`}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      marginLeft: '0 !important'
-                    }}
-                  >
-                    <NavLink to='/'>
-                      {location.pathname !== '/' && (
-                        <img
-                          src={SUSLogoStudent}
-                          alt='logo'
-                          className='ms-md-5'
-                        />
-                      )}
-                    </NavLink>
-                    <img src={HSLogounder} alt='logo' className='ms-md-5' />
-                  </div>
-                  <a
-                    className='nav-link'
-                    href='/'
-                    style={{
-                      position: 'absolute',
-                      // top: '90px',
-                      right: '50px',
-                      fontSize: '16px'
-                    }}
-                  >
-                    <IntlMessages id='navigation.login' />
-                  </a>
-                </li>
-              ) : null}
-              {location.pathname === '/' && (
-                <li className='nav-item'>
-                  {/* <Link className='nav-link' to='/create-account'>
+              <div
+                className={`sidebar-header lts-secure-logo ${
+                  showMenuMobile && 'ms-md-5'
+                }`}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginLeft: '0 !important'
+                }}
+              >
+                <NavLink to='/'>
+                  {location.pathname !== '/' && (
+                    <img src={SUSLogoStudent} alt='logo' className='ms-md-5' />
+                  )}
+                </NavLink>
+                <img src={HSLogounder} alt='logo' className='ms-md-5' />
+              </div>
+              <a
+                className='nav-link'
+                href='/'
+                style={{
+                  position: 'absolute',
+                  // top: '90px',
+                  right: '50px',
+                  fontSize: '16px'
+                }}
+              >
+                <IntlMessages id='navigation.login' />
+              </a>
+            </li>
+          ) : null}
+          {location.pathname === '/' && (
+            <li className='nav-item'>
+              {/* <Link className='nav-link' to='/create-account'>
                 <IntlMessages id='navigation.create_your_account' />
               </Link> */}
-                </li>
-              )}
-              {/* <li className='nav-item mr-3'>
+            </li>
+          )}
+          {/* <li className='nav-item mr-3'>
           <Language />
         </li> */}
-            </ul>
-          </nav>
-        )}
+        </ul>
+      </nav>
+
       {showMenuMobile && (
         <nav className='mobile-menu'>
           <Navbar

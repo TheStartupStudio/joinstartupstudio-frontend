@@ -148,8 +148,8 @@ const FullCalendarComponent = (props) => {
                   fontWeight: 'normal'
                 }}
               >
-                {convertToAMPM(foundedEvent?.startTime.slice(0, 5))} -{' '}
-                {convertToAMPM(foundedEvent?.endTime.slice(0, 5))}
+                {foundedEvent?.startTime ? convertToAMPM(foundedEvent?.startTime.slice(0, 5)) : ''} -{' '}
+                {foundedEvent?.endTime ? convertToAMPM(foundedEvent?.endTime.slice(0, 5)): ''}
               </div>
             </li>
           </ul>
@@ -327,7 +327,7 @@ const FullCalendarComponent = (props) => {
                                               padding-top: 3px;
                                          "
                                         >
-                                          ${convertDate(event?.startDate)}
+                                          ${ convertDate(event?.startDate)}
                                           ${
                                             event?.endDate
                                               ? ' - ' +
@@ -356,12 +356,12 @@ const FullCalendarComponent = (props) => {
                                         ${event?.user?.name}
                                         </div>
                                           <div class="event-time" className={"ml-2"} style="font-size: 10px; color:#231F20; font-weight:normal">
-                                          ${convertToAMPM(
+                                          ${event?.startTime ? convertToAMPM(
                                             event?.startTime.slice(0, 5)
-                                          )} -
-                                          ${convertToAMPM(
+                                          ): ''} -
+                                          ${event?.endTime ? convertToAMPM(
                                             event?.endTime.slice(0, 5)
-                                          )}
+                                          ) : ''}
                                         </div>
                                           </li>
                                         
@@ -499,14 +499,14 @@ const FullCalendarComponent = (props) => {
         event={foundedEvent}
         onEdit={(event) => dispatch(editEventStart(event))}
       />
-      <TaskEventModal
+      {taskEventModal && <TaskEventModal
         show={taskEventModal}
         onHide={closeTaskEventModal}
         periods={props.periods}
         event={null}
         onEdit={null}
         startDate={props.startDate ? props.startDate : startDate}
-      />
+      />}
     </>
   )
 }

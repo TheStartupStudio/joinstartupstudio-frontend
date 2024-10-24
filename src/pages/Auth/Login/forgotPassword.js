@@ -9,6 +9,7 @@ import LTSJourneyEs from '../../../assets/images/lts-journey-es.png'
 import IntlMessages from '../../../utils/IntlMessages'
 import Footer from '../../../components/Footer'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { CustomInput } from '../../../ui/ContentItems'
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -27,9 +28,11 @@ const ForgotPassword = () => {
     setLoading(true)
     event.preventDefault()
     if (userEmail === '') {
-      toast.error(<IntlMessages id='alert.email_fields_empty' />)
+      toast.error(<IntlMessages id='alerts.email_required' />)
+      setLoading(false)
     } else if (!validateEmail(userEmail)) {
-      toast.error(<IntlMessages id='alert.email_not_valid' />)
+      toast.error(<IntlMessages id='alerts.email_not_valid' />)
+      setLoading(false)
     } else {
       try {
         const res = await axiosInstance.post('/check-email', {
@@ -58,9 +61,10 @@ const ForgotPassword = () => {
           setLoading(false)
           return toast.error(res.data.message)
         }
-      } catch (error) {}
+      } catch (error) {
+        setLoading(false)
+      }
     }
-    // setLoading(false)
   }
 
   return (
@@ -100,13 +104,11 @@ const ForgotPassword = () => {
                 defaultMessage='login.forgotPasswordEmail'
               >
                 {(placeholder) => (
-                  <input
-                    className='mb-2 pl-5'
+                  <CustomInput
                     type='email'
                     name='email'
                     placeholder={placeholder}
-                    style={{ padding: '8px' }}
-                    onChange={(event) => handleChange(event)}
+                    handleChange={(event) => handleChange(event)}
                   />
                 )}
               </FormattedMessage>

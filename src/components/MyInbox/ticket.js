@@ -7,7 +7,7 @@ import { beautifulDateFormat } from '../../utils/helpers'
 import { useHistory } from 'react-router'
 import axiosInstance from '../../utils/AxiosInstance'
 import SubmitIndustryProblemModal from '../../pages/MyImmersion/Modals/SubmitIndustryProblemModal'
-import SubmitExperienceModal from '../../pages/MyImmersion/Modals/SubmitExperienceModal'
+import SpotlightModal from '../../pages/MyImmersion/Modals/SpotlightModal'
 
 function Ticket({
   ticket,
@@ -17,7 +17,7 @@ function Ticket({
 }) {
   const history = useHistory()
   const [industryProblemModal, setIndustryProblemModal] = useState(false)
-  const [submitExperienceModal, setSubmitExperienceModal] = useState(false)
+  const [submitSpotlightModal, setSubmitSpotlightModal] = useState(false)
 
   let uploadUrl
   if (ticket?.type === 'approval') {
@@ -43,39 +43,39 @@ function Ticket({
             ? setSelectedTicket(ticket)
             : ticket.type === 'industry_problem'
             ? setIndustryProblemModal(true)
-            : setSubmitExperienceModal(true)
+            : setSubmitSpotlightModal(true)
           readByInstructorHandler()
         }}
       >
         <img
           src={ticket.User.profile_image ? ticket.User.profile_image : imgTest}
-          alt="profile"
-          className="rounded-circle"
+          alt='profile'
+          className='rounded-circle'
         />
-        <div className="ticket-information d-flex flex-column mx-2 min-w-0">
-          <h5 className="from">{ticket.User.name}</h5>
-          <p className="subject">
-            Subject: <span className="fw-bold"> {ticket.subject} </span>
+        <div className='ticket-information d-flex flex-column mx-2 min-w-0'>
+          <h5 className='from'>{ticket.User.name}</h5>
+          <p className='subject'>
+            Subject: <span className='fw-bold'> {ticket.subject} </span>
           </p>
-          <p className="last-message">{ticket.TicketAnswers?.message}</p>
+          <p className='last-message'>{ticket.TicketAnswers?.message}</p>
         </div>
-        <div className="ticket-status d-flex align-items-center">
-          <p className="my-auto pe-2" style={{ color: '#ccc' }}>
+        <div className='ticket-status d-flex align-items-center'>
+          <p className='my-auto pe-2' style={{ color: '#ccc' }}>
             {ticket.type === 'industry_problem'
               ? ticket.user_industry_solution.status === 'approved'
                 ? 'Application Approved'
                 : ticket.user_industry_solution.status === 'pending'
                 ? 'Application Submitted'
                 : 'Application Returned'
-              : ticket.type === 'immersion_experience'
-              ? ticket.user_immersion_experience.status === 'approved'
+              : ticket.type === 'spotlight'
+              ? ticket.spotlight.status === 'approved'
                 ? 'Application Approved'
-                : ticket.user_immersion_experience.status === 'pending'
+                : ticket.spotlight.status === 'pending'
                 ? 'Application Submitted'
                 : 'Application Returned'
               : null}
           </p>
-          <p className="my-auto pl-2">
+          <p className='my-auto pl-2'>
             {beautifulDateFormat(
               ticket.TicketAnswers?.createdAt ?? ticket.createdAt
             )}
@@ -103,18 +103,19 @@ function Ticket({
           show={industryProblemModal}
           onHide={() => setIndustryProblemModal(false)}
           User={ticket.User}
-          mode="edit"
+          mode='edit'
           updateUserSolutionStatus={updateUserSolutionStatus}
         />
       )}
-      {submitExperienceModal && (
-        <SubmitExperienceModal
+      {submitSpotlightModal && (
+        <SpotlightModal
           {...ticket}
-          show={submitExperienceModal}
-          onHide={() => setSubmitExperienceModal(false)}
+          show={submitSpotlightModal}
+          onHide={() => setSubmitSpotlightModal(false)}
           User={ticket.User}
-          mode="edit"
+          mode='edit'
           updateUserSolutionStatus={updateUserSolutionStatus}
+          title={'Spotlight Application'}
         />
       )}
     </>

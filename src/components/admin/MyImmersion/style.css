@@ -21,7 +21,7 @@
   position: relative;
 }
 
-.modal-header {
+.immersion-modal-header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -85,7 +85,7 @@ input:checked + .slider:before {
   transform: translateX(18px);
 }
 
-.modal-body {
+.immersion-modal-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -137,11 +137,11 @@ textarea {
   width: 100%;
 }
 
-.modal-footer {
+/* .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-}
+} */
 
 .cancel-button,
 .add-button {
@@ -235,13 +235,13 @@ textarea {
   z-index: 10000;
 }
 
-.modal-container {
+/* .modal-container {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   width: 60%;
   max-width: 90%;
-}
+} */
 
 .modal-container-delete {
   position: fixed;

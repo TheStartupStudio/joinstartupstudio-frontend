@@ -82,7 +82,6 @@ function LtsJournal(props) {
   }
 
   function journalChanged(journal) {
-    debugger
     getJournals(false)
   }
   useEffect(() => {

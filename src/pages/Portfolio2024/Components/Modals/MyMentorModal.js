@@ -166,7 +166,7 @@ const MyMentorModal = (props) => {
       {...props}
       actions={actions}
       showSectionCheckbox={!readOnly}
-      isShownSection={mentorDetails.showSection}
+      isShownSection={!mentorDetails.showSection}
       onToggleSection={(showSection) => {
         setMentorDetails({ ...mentorDetails, showSection })
       }}

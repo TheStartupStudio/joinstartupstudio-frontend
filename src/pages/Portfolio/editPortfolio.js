@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import ReactPlayer from 'react-player'
 import { FormattedMessage } from 'react-intl'
-import { Document, Page } from 'react-pdf'
+// import { Document, Page } from 'react-pdf'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faLinkedinIn,
@@ -762,13 +762,13 @@ function EditPortfolio() {
                         className='article-document portfolio-video-height'
                         onClick={showPDFModal}
                       >
-                        <Document
+                        {/* <Document
                           className='pdf-document-viewer'
                           file={`${wellnessArticle.url}`}
                           onLoadSuccess={onDocumentLoadSuccess}
                         >
                           <Page pageNumber={1} />
-                        </Document>
+                        </Document> */}
                       </div>
                     ) : (
                       <img src={profileImage} alt='#' />

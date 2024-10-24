@@ -40,7 +40,6 @@ function MyClassroom() {
       .get(`/peerSharing/peers/${peerPage + 1}`)
       .then(({ data }) => {
         if (data) {
-          debugger
           setSharedPeers([...sharedPeers, ...data.rows])
           setPeerPage(peerPage + 1)
           setPeerCount(data.count)

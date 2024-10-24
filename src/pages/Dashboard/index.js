@@ -123,12 +123,12 @@ function Dashboard() {
             >
               Create Task/Event
             </button>
-            <TaskEventModal
+            {taskEventModal && <TaskEventModal
               show={taskEventModal}
               onHide={closeTaskEventModal}
               periods={periods}
               startDate={getFormattedDate()}
-            />
+            />}
             <NotificationSection />
             {/*<CertificationRequestsWidget />*/}
             {/* <Messenger

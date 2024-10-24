@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6'
 import { changeActiveSection } from '../../../redux/portfolio/Actions'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,6 +25,7 @@ function PortfolioNavigator(props) {
     (section, index) => section.type === activeSection
   )
 
+
   const handleNextSection = () => {
     let changeSectionIndex = activeSectionIndex + 1
     while (
@@ -37,6 +38,7 @@ function PortfolioNavigator(props) {
     if (changeSectionIndex < sections.length) {
       dispatch(changeActiveSection(sections[changeSectionIndex].type))
     }
+    props.scrollToTop()
   }
 
   const handlePreviousSection = () => {
@@ -48,9 +50,13 @@ function PortfolioNavigator(props) {
     if (changeSectionIndex >= 0) {
       dispatch(changeActiveSection(sections[changeSectionIndex].type))
     }
+    props.scrollToTop()
   }
 
+
+
   // DO NOT DELETE THESE TWO FUNCTIONS !!!
+  // todo: use these functions when all sections are disabled
 
   // const handleNextSection = () => {
   //   let changeSectionIndex = activeSectionIndex + 1

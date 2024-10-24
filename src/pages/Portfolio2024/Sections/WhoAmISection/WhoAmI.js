@@ -32,7 +32,6 @@ function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
       <PortfolioSectionDataLoader />
     )
   }
-  console.log('data', data)
   return (
     <div className={'d-flex flex-column gap-4'} style={{ marginTop: '30px' }}>
       {renderSection(

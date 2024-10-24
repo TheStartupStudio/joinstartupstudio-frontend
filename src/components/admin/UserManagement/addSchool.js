@@ -55,11 +55,11 @@ const AddSchool = ({ data, show, onHide, mode }) => {
       show={show}
       onHide={onHide}
       keyboard={false}
-      size="lg"
-      id="edit_briefing-modal"
+      size='lg'
+      id='edit_briefing-modal'
     >
-      <Modal.Header className="position-relative ">
-        <Modal.Title className="px-3 py-3">ADD NEW SCHOOL</Modal.Title>
+      <Modal.Header className='position-relative '>
+        <Modal.Title className='px-3 py-3'>ADD NEW SCHOOL</Modal.Title>
         <div
           className={`check-button ${isDisabled ? 'disabled' : ''}`}
           onClick={!isDisabled ? submitHandler : null}
@@ -67,36 +67,36 @@ const AddSchool = ({ data, show, onHide, mode }) => {
           <FontAwesomeIcon icon={faCheck} />
         </div>
       </Modal.Header>
-      <Modal.Body className="briefing-modal-body">
+      <Modal.Body className='briefing-modal-body'>
         <Row>
-          <Col className="me-auto col-12">
-            <TextInput
-              title="Code"
-              name="code"
+          <Col className='me-auto col-12'>
+            <QuillEditorBox
+              title='Code'
+              name='code'
               value={formData.code}
-              handleChange={handleChange}
+              onChange={handleChange}
               showError={formSubmitted}
               error={errors.code}
             />
           </Col>
         </Row>
         <Row>
-          <Col className="col-12">
-            <TextInput
-              title="Name"
-              name="name"
+          <Col className='col-12'>
+            <QuillEditorBox
+              title='Name'
+              name='name'
               value={formData.name}
-              handleChange={handleChange}
+              onChange={handleChange}
               showError={formSubmitted}
               error={errors.name}
             />
           </Col>
         </Row>
         <Row>
-          <Col className="col-12">
+          <Col className='col-12'>
             <TextInput
-              title="Domain"
-              name="domain"
+              title='Domain'
+              name='domain'
               value={formData.domain}
               handleChange={handleChange}
               showError={formSubmitted}
@@ -105,10 +105,10 @@ const AddSchool = ({ data, show, onHide, mode }) => {
           </Col>
         </Row>
         <Row>
-          <Col className="col-12">
+          <Col className='col-12'>
             <SelectInput
-              title="Level"
-              name="level"
+              title='Level'
+              name='level'
               value={formData.level}
               options={[
                 { value: 'LS', label: 'LS', name: 'level' },

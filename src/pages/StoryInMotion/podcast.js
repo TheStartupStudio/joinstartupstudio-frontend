@@ -135,6 +135,7 @@ const Podcast = ({
 
           {descriptionLimit < description.length && (
             <div>
+              {/* eslint-disable-next-line */}
               <a
                 href=''
                 onClick={(e) => {

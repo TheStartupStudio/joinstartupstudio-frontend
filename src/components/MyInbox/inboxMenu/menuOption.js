@@ -3,6 +3,7 @@ import useInboxContext from '../inboxContext'
 import '../index.css'
 
 function MenuOption({ allowedToShow, questionMenu, title, categoryOption }) {
+  console.log('questionMenu', questionMenu)
   const history = useHistory()
   const { questionsMenuSelected, selectQuestionsMenu } = useInboxContext()
 
@@ -26,8 +27,8 @@ function MenuOption({ allowedToShow, questionMenu, title, categoryOption }) {
           }`}
           onClick={handleClick}
         >
-          <h5 className="my-auto">{title}</h5>
-          <div className="unread-tickets-number my-auto">{categoryOption}</div>
+          <h5 className='my-auto'>{title}</h5>
+          <div className='unread-tickets-number my-auto'>{categoryOption}</div>
         </div>
       )}
     </>

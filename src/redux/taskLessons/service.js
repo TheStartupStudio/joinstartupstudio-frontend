@@ -28,6 +28,7 @@ const editLesson = async (id, data) => {
 const createLesson = async (data) => {
   try {
     const response = await axiosInstance.post(`/lessons`, data)
+
     if (response.status === 200) {
       return response.data
     }
