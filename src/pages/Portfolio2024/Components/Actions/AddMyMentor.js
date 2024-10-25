@@ -1,5 +1,6 @@
 import React from 'react'
-import imagePlaceholder from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+// import imagePlaceholder from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+import imagePlaceholder from '../../../../assets/images/mentorplaceholder.png'
 import SectionActions from './SectionActions'
 import { useDispatch, useSelector } from 'react-redux'
 import MyMentorModal from '../Modals/MyMentorModal'

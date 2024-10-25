@@ -34,7 +34,9 @@ function MyProductivity(props) {
   const [isEditWorkExperienceSection, setIsEditWorkExperienceSection] =
     useState(false)
   const mode = useSelector((state) => state.portfolio.mode)
-
+  const filteredUnshownData = (data) => {
+    return data?.filter((data)=>data.showSection)
+  }
   const showImmersionModal = useSelector(
     (state) =>
       state.portfolio.howSection?.myProductivity?.immersions?.showAddModal
@@ -191,7 +193,7 @@ function MyProductivity(props) {
     <>
       {renderSection(
         'Immersion',
-        immersions,
+       mode === 'edit' ? immersions : filteredUnshownData(immersions),
         ImmersionCard,
         isEditImmersionSection,
         immersionActions,
@@ -213,7 +215,7 @@ function MyProductivity(props) {
       <div className={'mt-5'}>
         {renderSection(
           'Work Experience',
-          workExperiences,
+          mode === 'edit' ? immersions : filteredUnshownData(workExperiences),
           WorkExperienceCard,
           isEditWorkExperienceSection,
           workExperienceActions,

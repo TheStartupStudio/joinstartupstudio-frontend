@@ -125,7 +125,7 @@ const Evidences = (props) => {
           } py-3`}
           onClick={() => setActiveEvidence('evidence-1')}
         >
-          Content upload #1
+          { getActiveData('evidence-1')?.evidenceTitle?.length > 0 ? getActiveData('evidence-1')?.evidenceTitle : "Content upload #1"}
         </div>
         <div
           className={`evidence-nav-item ${
@@ -133,7 +133,7 @@ const Evidences = (props) => {
           } py-3`}
           onClick={() => setActiveEvidence('evidence-2')}
         >
-          Content upload #2
+          { getActiveData('evidence-2')?.evidenceTitle?.length > 0? getActiveData('evidence-2')?.evidenceTitle : "Content upload #2"}
         </div>
         <div
           className={`evidence-nav-item ${
@@ -141,7 +141,7 @@ const Evidences = (props) => {
           } py-3`}
           onClick={() => setActiveEvidence('evidence-3')}
         >
-          Content upload #3
+          { getActiveData('evidence-3')?.evidenceTitle?.length > 0? getActiveData('evidence-3')?.evidenceTitle : "Content upload #3"}
         </div>
       </div>
       {activeEvidence === 'evidence-1' && (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import imagePlaceholder from '../../../assets/images/image-placeholder.jpeg'
+// import imagePlaceholder from '../../../assets/images/image-placeholder.jpeg'
+import imagePlaceholder from '../../../assets/images/videoimage.png'
 import { useHistory } from 'react-router-dom'
 
 function PortfolioSubmission(props) {
@@ -14,7 +15,7 @@ function PortfolioSubmission(props) {
   }
   return (
     <div
-      className={`portfolio-submission-container ${
+      className={`${props.className} portfolio-submission-container ${
         props.videoUrl?.length > 0 ? 'cursor-pointer' : ''
       }`}
     >

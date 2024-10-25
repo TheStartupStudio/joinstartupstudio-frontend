@@ -31,6 +31,11 @@ function MyAlignments(props) {
   const [isEditCredentialSection, setIsEditCredentialSection] = useState(false)
   const mode = useSelector((state) => state.portfolio.mode)
 
+
+  const filteredUnshownData = (data) => {
+    return data?.filter((data)=>data.showSection)
+  }
+
   const showEducationModal = useSelector(
     (state) => state.portfolio.howSection.myAlignments.educations.showAddModal
   )
@@ -170,7 +175,7 @@ function MyAlignments(props) {
         <div className={'education-section-alignment w-100'}>
           {renderSection(
             'Education',
-            educations,
+            mode === 'edit' ? educations : filteredUnshownData(educations),
             EducationCard,
             isEditEducationSection,
             educationActions,
@@ -192,7 +197,7 @@ function MyAlignments(props) {
         <div className={'education-section-alignment mt-5 w-100'}>
           {renderSection(
             'Credentials',
-            credentials,
+            mode === 'edit' ? credentials : filteredUnshownData(credentials),
             CredentialCard,
             isEditCredentialSection,
             credentialActions,

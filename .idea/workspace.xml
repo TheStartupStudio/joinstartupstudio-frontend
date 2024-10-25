@@ -5,51 +5,432 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e682dbea-9786-4201-99ca-480e422acdaf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/IamrSkillSelector/IAMRSkillSelector.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/IamrSkillSelector/IamrSkillSelector.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Router.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Router.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/GetInstructorStudents/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GetInstructorStudents/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/JournalsManagement/editJournals2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/JournalsManagement/editAllJournals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useValidation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useValidation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/JournalsManagement/JournalsManagement2.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/JournalsManagement/ManageAllJournals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/ArchiveManager/MentorMeetingManager/MentorMeetingManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/InterviewSection.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/InterviewSection.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/InterviewedMentors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/InterviewedMentors.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/JournalTables.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/ClonedTables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/ClonedTables.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/DisplayCellData.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/DisplayCellData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableCellInput.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableCellInput.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableRows.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/JournalTables/TableComponents/JournalTableRows.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/SidebarItems.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/SidebarItems.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/addLessonModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/addLessonModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/getLessonsByType.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/MyCurriculum/CurriculumSidebars/getLessonsByType.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/content.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LtsJournal/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/studentPortfolio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Portfolio2024/studentPortfolio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Router/RouteConfiguration.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/studentJournals/JournalsBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/studentJournals/JournalsBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/studentJournals/content.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/studentJournals/content.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/studentJournals/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/studentJournals/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/taskLessons/reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/taskLessons/reducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/LtsCheckbox.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/LtsCheckbox.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/extra.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/ltsUiItems.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/media.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/files/CSV_INSTRUCTORS_TEMPLATE.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/files/CSV_LEARNERS_TEMPLATE.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/files/CSV_USERS_EXAMPLE.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/fonts/Montserrat-Bold.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/fonts/Montserrat-Light.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/fonts/Montserrat-Medium.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/Asset 1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/Asset 3.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/Group 1770.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/Group 3819.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/LTS HS Logo v2-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/Notebook.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/comment-alt-lines.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/comments-alt.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/eye-icon-slash.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/eye-icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/icons/material-collections-bookmark.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/2D-Pyramid_White background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/ASSESSMENT MODEL V2 (SALES) (2).png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/ASSESSMENT MODEL V2 (SALES) (2)old.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/ASSESSMENT MODEL V2 (SALES) (2)oldd.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/ASSESSMENT MODEL V2 (SALES).png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Amazon Music.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Apple Podcasts.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Certified-L1-800px.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/CoreVectors - LTS-1200px.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Google Podcasts.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Google Podcasts@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Group 3884/Group 3884.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Group 3884/Group 3884@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Group 3885/Group 3885.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Group 3885/Group 3885@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Group 3887/Group 3887.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Group 3887/Group 3887@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/LTS Model - How do you prove itx800.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/LTS Model - Startx800.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/LTS Model - What can you dox800.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/LTS Model - Who are youx800.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/My Portfolio logo@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NO Share Icon (GREY)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NO Share Icon (PINK)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NO Share Icon (WH)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NavIcon-HOW (CL)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NavIcon-HOW (GR)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NavIcon-START (CL)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NavIcon-START (GR)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NavIcon-WHAT (CL)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NavIcon-WHAT (GR)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NavIcon-WHO (CL)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/NavIcon-WHO (GR)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/Share Icon (BLU)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/Share Icon (GREY)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/Share Icon (PINK)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/Share Icon (WH)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/Share Icon PEERS v2 (BLU)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/credentials.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/credentials@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/education.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/education@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/failure.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/failure@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/immersion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/immersion@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/mentors.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/mentors@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/my story icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/my story icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/my story icon@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/project.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/project@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/workexperience.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Portfolio-Icons/workexperience@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Asset 3-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Dashboard (Full)-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Dashboard (WH)-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Do (WH)-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Group 3888/Group 3888.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Group 3888/Group 3888@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Portfolio (Full)-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Portfolio (WH)-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Prove (Full)-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Prove (WH)-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/What can I do icon-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/Who (WH)-1200x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/classroom-sidebar.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/dashboard-active-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/dashboard-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/journal-sidebar.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/lts-edu-sidebar.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/market-sidebar.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/my-portfolio-active-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/my-portfolio-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/prove-it-active-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/prove-it-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/spark-sidebar.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/what-can-i-do-active-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/what-can-i-do-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/who-am-i-active-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar-Icons/who-am-i-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/Asset_3-1200x_22x22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/Dashboard_Full-1200x_22x22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/Dashboard_WH-1200x_22x22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/Market-READY label.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/dashboard-active-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/dashboard-active-icon-hs_22x22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/dashboard-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/dashboard-icon-hs_22x22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/iloveimg-resized.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/my-portfolio-active-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/my-portfolio-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/prove-it-active-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/prove-it-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/what-can-i-do-active-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/what-can-i-do-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/who-am-i-active-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/HS-Sidebar/who-am-i-icon-hs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Icon awesome-exclamation-triangle.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Immersion/Immersion Graphic-NoText.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Immersion/Immersion Graphic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Immersion/Immersion graphs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Immersion/Immersion graphs.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS INSTRUCTOR FILLED.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS INSTRUCTOR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS Instructor Icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS LEARNER FILLED.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS LEARNER.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS Learner Icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS Model - Triangle - All.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS Portfolio Logo (Pwd By SUS)x1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS-EDU-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS-HS/Community-01.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS-HS/LTS-HS-Logo-v2-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS-HS/Spark .svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS-HS/Story in motion-01.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS-logo-horizontal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS-logo-vertical.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTS-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LTSI-Certificate-Badge-375x-v2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Layer 1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/LearntoStart-Diagram-3D.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Listen.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Login/Cogs_Background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Login/LTS Instructor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Login/LTS Learner.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Login/sus-mark-trans-bkg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/1.Article.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/10.Social-Post-Caption.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/11.Video-Script.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/12.Image.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/2.About us.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/3.Faq.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/4.Startup Names.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/5.Vision Statement.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/6.Value Proposition.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/7.Startup-Ideas.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/8.Mission-Statement.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/9.Social-Post.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/1. Article.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/10. Social post caption.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/11. Video script.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/12. Image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/2. About us.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/3. FAQ.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/4. Startup names.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/5. Vision statement.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/6. Value proposition.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/7. Startup ideas.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/8. Mission statement.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/My Spark Widget Icons/Blue background/9. Social Post.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/MyCurriculum/LTS-FinancialLit Logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/MyCurriculum/LTS1 Logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/MyCurriculum/LTS2 Logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/MyCurriculum/LTS3 Logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/MyCurriculum/LTS3 Logo.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/MyCurriculum/LTS4 Logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Overcast.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Overcast@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Podcast-Cover.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Podcast-Cover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Read-01.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/SIM Podcast Cover-1200px.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Screenshot 2022-03-29 151601.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Spotify.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Spotify@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Stitcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Stitcher@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/Watch.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/alert-triangle-icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/almooc-university.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/amazon-webservices-graphic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/anastasia-signature.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/assesment_model.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/assesment_model.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/assessment-model-thumbnail.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/beyond-lts.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/black-spark.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Collaboration Cert.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Collaboration Certx1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Creativity Cert.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Creativity Certx1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Critical Thinking Cert.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Critical Thinking Certx1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Enterprise Cert.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Enterprise Certx1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Leadership Cert.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/certification-badges/Leadership Certx1200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/checkmark.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/chs-university.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/colored-spark.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/compliance-standards-graphic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/copy.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/dashboard-active.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/dashboard.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/default-university-logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/empowerment.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/feedbacks.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/five-pillars.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/focus_icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/focus_icon_white.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/iamr/Certified L1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/image-placeholder.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/image_placeholder.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/infographics.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/instructor-hover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/instructor-normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/journals-icon-active.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/journals-icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/landing-video-poster-en.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/landing-video-poster-es.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/learner-hover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/learner-normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/legonimbus-university.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/lli-university.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/lts-certifeid-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/lts-certificate-of-complete.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/lts-journey-en.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/lts-journey-es.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/lts-online-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/market-ready-1-badge.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/market-ready-1-badge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/market-ready-2-badge.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/market-ready-2-badge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/market-ready.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/marketplace.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/my-community.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/my-notes-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/my-portfolio.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/not-found.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/notes-icon-active.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/notes-icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/novae-logo-horz.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/number-1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/number-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/number-3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/number-4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/number-four.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/number-one.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/number-three.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/number-two.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/old-LTS-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/old-logo-sus-institute-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/olddsus-institute-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/palermo-university.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/partnership-security-graphic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/performance.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/colored/Platform Badges_colored-1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/colored/Platform Badges_colored-10.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/colored/Platform Badges_colored-15.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/colored/Platform Badges_colored-20.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/colored/Platform Badges_colored-3.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/colored/Platform Badges_colored-5.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/grey/Platform Badges_grey-1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/grey/Platform Badges_grey-10.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/grey/Platform Badges_grey-15.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/grey/Platform Badges_grey-20.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/grey/Platform Badges_grey-3.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/platform-badges/grey/Platform Badges_grey-5.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/play-button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/profile-image.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/questions.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Listen icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Listen_with typo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Listen_with typo1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Read icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Read_with typo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Read_with typo1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Read_with typo2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Watch icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Watch_with typo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/read_watch_listen_Watch_with typo1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/reflection-guidance.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/register-graphic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/register-proof-graphic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/register-superman-graphic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/safe-secure-graphic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/search-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/side-logo-es.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/side-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/spotlight-thumbnail.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/spotlight.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/startup-live-en.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/startup-live-es.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/startup-live-logo-new.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/startup-live-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/startuplive.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/step-1.PNG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/step-2.PNG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/step-3.PNG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/step-4.PNG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/story-in-motion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/sus-institute-logo-student.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/sus-institute-logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/sus-learner-logo-rgb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/sus-logo-full-color.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/sus-logo-rgb-horz-full-color.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/sus-logo-rgb-horz-full-color@2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/sus-logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/test-1.PNG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/triangle.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/unsplash-1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/unsplash-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/unsplash-3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/uploadSVG.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/verify-novae.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/video-coming-soon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/video.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/welcome-course-thumbnail.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/wellness.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/images/white-spark.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/json/foul-words.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/json/lts-diagram.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/json/lts_course_intro.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/AddEntryButton.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/AddMyMentor.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/LabeledSwitchInput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/PortfolioActions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SectionActions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/SwitchIcon.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Actions/TooltipAction.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/CertificationBadge.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/LabeledInput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/NoDataDisplay.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/PortfolioDataContainer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/PortfolioInfo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/DisplayData/PortfolioInfoBox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/EditPortfolioSubmission.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/HorizontalSeparator.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/PortfolioHeader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/PortfolioProgressIndicator.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/ProgressIcon.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Header/SectionDescription.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/ConfirmDeleteRecordModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/ConfirmVisibilityModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/MyFailureModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/MyMentorModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/PortfolioModalWrapper.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/PortfolioVisibilityModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/SharePortfolioModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/StoryModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/Modals/UserBasicInfoModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/PortfolioNavigator.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/PortfolioSectionDataLoader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/PortfolioSkeletonLoader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/PortfolioSubmission.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/ReactAvatarEditor/ReactImageUpload.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/ReactAvatarEditor/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/SocialMediaInput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UserCertifications.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UserImage.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UserInfo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/UserSocialMedia.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Components/WebsiteLink.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/PortfolioActionsSkeleton.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/CredentialCard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/CredentialCardModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/EducationCard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/EducationCardModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/HowDoIProve.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/ImmersionCardModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyAlignments.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyCompetitiveness.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/MyProductivity.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/WorkExperienceCard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/HowDoIProveSection/WorkExperienceCardModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/EditProjectSection.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/EvidenceBody.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/Evidences.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/Project.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/ProjectModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/ProjectSection.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhatCanIDoSection/WhatCanIDo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyFailure.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyFailures.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyMentor.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyMentors.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/MyRelationships.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/UserBasicInfo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/UserStory.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/Sections/WhoAmISection/WhoAmI.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/peerPortfolio.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/publicPortfolio.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Portfolio2024/studentPortfolio.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Constants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Reducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/portfolio/Service.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/portfolio/Service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/users/Actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/users/Actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/users/Reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/users/Reducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/users/Service.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/users/Service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/users/Types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/users/Types.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FormatOnSaveOptions">
-    <option name="myRunOnSave" value="false" />
-    <option name="myAllFileTypesSelected" value="true" />
-    <option name="mySelectedFileTypes">
-      <set />
-    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -62,36 +443,42 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
+  </component>
   <component name="ProjectId" id="2P2poAH4RVZqoUmVB4164ZB9Ztl" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Dell/Desktop/Learn to start/lts-ims-dev/src/assets&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\Dell\\AppData\\Roaming\\npm\\node_modules\\prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2023.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "portfolio-fixes-live",
+    "last_opened_file_path": "C:/Users/futur/OneDrive/Desktop/Learn to start/lts-ims/src/components",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Dell\\AppData\\Roaming\\npm\\node_modules\\prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\futur\OneDrive\Desktop\Learn to start\lts-ims\src\components" />
+      <recent name="C:\Users\futur\OneDrive\Desktop\Learn to start\lts-ims\src\redux" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims-dev\src\assets" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims-dev\src\assets\css" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims-dev\src\pages\Portfolio2024\Sections\WhoAmISection" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\assets\images" />
-      <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\redux" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\futur\OneDrive\Desktop\Learn to start\lts-ims\src" />
+      <recent name="C:\Users\futur\OneDrive\Desktop\Learn to start\lts-ims\src\pages" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims-dev\src\components\Carousel" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims-dev\src\pages\Portfolio2024\Components\Modals" />
       <recent name="C:\Users\Dell\Desktop\Learn to start\lts-ims\src\components\Modals" />

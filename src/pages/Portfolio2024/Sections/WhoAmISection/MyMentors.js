@@ -91,7 +91,7 @@ function MyMentors(props) {
         )}
       </div>
       <div className={'col-md-4'} style={{ marginLeft: 90 }}>
-        {myMentors?.length > 0 && isEditSection && (
+        {mode === 'edit' && myMentors?.length > 0 && isEditSection && (
           <AddMyMentor
             title={`Add new "My Mentors" section`}
             isEditSection={isEditSection}
