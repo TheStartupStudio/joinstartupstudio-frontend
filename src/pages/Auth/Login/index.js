@@ -56,10 +56,13 @@ function Login() {
     } else {
       await Auth.signIn(user.email, user.password)
         .then(async (response) => {
-          console.log('response', response)
           localStorage.setItem(
             'access_token',
             response.signInUserSession.idToken.jwtToken
+          )
+          localStorage.setItem(
+            'auth_time',
+            response.signInUserSession.idToken.payload.auth_time
           )
           localStorage.setItem(
             'language',

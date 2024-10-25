@@ -4,13 +4,23 @@ export const CheckTokenValidity = async () => {
   try {
     const session = await Auth.currentSession()
     const accessToken = session.getAccessToken()
-    const expiration = accessToken.getExpiration() 
-    const currentTime = Math.floor(Date.now() / 1000) 
+    const expiration = accessToken.getExpiration()
+    const currentTime = Math.floor(Date.now() / 1000)
+    const storedAuthTime = localStorage.getItem('auth_time')
 
-    const bufferTime = 5 * 60 
+    const reauthThreshold = 30 * 24 * 60 * 60
+
+    if (storedAuthTime && currentTime - storedAuthTime > reauthThreshold) {
+      console.log(
+        'auth_time is older than threshold, triggering reauthentication...'
+      )
+
+      return null
+    }
+
+    const bufferTime = 5 * 60
 
     if (currentTime >= expiration - bufferTime) {
-
       const newSession = await Auth.currentSession()
       const newAccessToken = newSession.getAccessToken().getJwtToken()
       const newRefreshToken = newSession.getRefreshToken().getToken()
