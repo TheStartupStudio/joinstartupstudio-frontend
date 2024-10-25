@@ -243,7 +243,7 @@ import {
   deleteMyCompetitivenessAPI,
   getUserStoryAPI,
   updateUserStoryAPI,
-  createUserStoryAPI, getStudentInfoByIdAPI
+  createUserStoryAPI,
 } from './Service'
 
 export const getPublicPortfolio = () => async (dispatch) => {
