@@ -14,7 +14,6 @@ import {
   faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { TextArea } from '@progress/kendo-react-inputs'
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import {
@@ -359,7 +358,7 @@ const CustomTextarea = ({
   const [showPassword, setShowPassword] = useState(false)
   return (
     <div className='custom__input-container d-flex flex-column align-items-center position-relative h-auto'>
-      <TextArea
+      <textarea
         type={showPassword ? 'text' : type}
         name={name}
         className='custom__input w-100 my-2'

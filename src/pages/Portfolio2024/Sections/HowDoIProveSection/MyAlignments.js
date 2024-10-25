@@ -197,7 +197,7 @@ function MyAlignments(props) {
         <div className={'education-section-alignment mt-5 w-100'}>
           {renderSection(
             'Credentials',
-            mode === 'edit' ? educations : filteredUnshownData(credentials),
+            mode === 'edit' ? credentials : filteredUnshownData(credentials),
             CredentialCard,
             isEditCredentialSection,
             credentialActions,
