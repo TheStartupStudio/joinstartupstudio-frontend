@@ -226,6 +226,7 @@ const MobileNavbar = (props) => {
               }
               alt='Profile'
             />
+
           </div>
           <div className='profile-dropdown-info desktop-menu'>
             {/* <h5>{name}</h5> */}

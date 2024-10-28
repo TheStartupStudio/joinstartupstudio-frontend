@@ -24,6 +24,7 @@ import defaultImage from '../../assets/images/profile-image.png'
 import LtsJournalContent from './content'
 import Select from 'react-select'
 import NotAllowed from './NotAllowed'
+import { getStudentInfoById } from '../../redux/users/Actions'
 
 function JournalsBody(props) {
   const studentId = parseInt(useParams().studentId)
@@ -39,6 +40,9 @@ function JournalsBody(props) {
   const [globalCategory, setGlobalCategory] = useState('lts')
 
   let contentContainer = useRef()
+  const studentInfo = useSelector(
+    (state) => state.users.studentInfo
+  )
 
   async function getJournals(category = 'student-lts', redir = true) {
     setGlobalCategory(category)
@@ -117,6 +121,9 @@ function JournalsBody(props) {
     dispatch(changeSidebarState(false))
   })
 
+  useEffect(()=>{
+    if(user.id) dispatch(getStudentInfoById(user.id))
+  },[user.id])
   function updateJournalEntry(journals, journal) {
     return journals.map((item) => {
       return {
@@ -217,17 +224,18 @@ function JournalsBody(props) {
                       </span>
                     </div>
                     <div className='mt-2 col-12 justify-content-lg-end row m-0 p-0'>
-                      <div className='user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 d-flex justify-content-md-end'>
+                      <div
+                        className='user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 d-flex justify-content-md-end'>
                         <img
                           className='rounded-circle user-image'
                           src={
-                            user?.profile_image
-                              ? user?.profile_image
+                            studentInfo?.data?.userImageUrl
+                              ? studentInfo?.data?.userImageUrl
                               : defaultImage
                           }
                           alt={
-                            user?.profile_image
-                              ? user?.profile_image
+                            studentInfo?.data?.userImageUrl
+                              ? studentInfo?.data?.userImageUrl
                               : 'no image'
                           }
                         />

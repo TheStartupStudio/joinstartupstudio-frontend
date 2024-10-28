@@ -44,12 +44,18 @@ function Profile(props) {
   const [isContactable, setIsContactable] = useState(false)
   const currentLanguage = useSelector((state) => state.lang.locale)
   const userProfile = useSelector((state) => state.users.selectedUser)
-
+  const studentInfo = useSelector(
+    (state) => state.users.studentInfo
+  )
   const { id } = useParams()
 
   useEffect(() => {
     dispatch(getUserWithIdAction(id))
   }, [id])
+
+  useEffect(()=>{
+    if(user.id) dispatch(getStudentInfoById(user.id))
+  },[user.id])
 
   useEffect(() => {
     getUserData()
@@ -136,12 +142,13 @@ function Profile(props) {
                       <div className='round-image-wrapper'>
                         <Image
                           src={
-                            userProfile?.profile_image
-                              ? userProfile?.profile_image
+                            studentInfo?.data?.userImageUrl
+                              ? studentInfo?.data?.userImageUrl
                               : defaultImage
                           }
                           className='editbio-user-image mx-auto my-account'
                         />
+
                       </div>
                     </div>
                     <div className='col-10 col-md-6 col-lg-6 offset-lg-0'>
