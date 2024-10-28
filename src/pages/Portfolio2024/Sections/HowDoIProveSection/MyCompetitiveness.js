@@ -15,13 +15,16 @@ import CarouselComponent from '../../../../components/Carousel/CarouselComponent
 function MyCompetitiveness(props) {
   const dispatch = useDispatch()
   const [myCompetitiveness, setMyCompetitiveness] = useState([])
+  const [isEditSection, setIsEditSection] = useState(false)
+
   const showModal = useSelector(
     (state) =>
       state.portfolio.howSection.myCompetitiveness.showAddCompetitivenessModal
   )
-
-  const [isEditSection, setIsEditSection] = useState(false)
   const mode = useSelector((state) => state.portfolio.mode)
+
+  console.log('showModal', showModal)
+    console.log(`'mode === 'edit' && myCompetitiveness?.length > 0 && isEditSection'`, mode === 'edit', myCompetitiveness?.length > 0, isEditSection)
 
   const filteredUnshownData = (data) => {
     return data?.filter((data)=>data.showSection)
@@ -41,7 +44,10 @@ function MyCompetitiveness(props) {
     },
     {
       type: 'add',
-      action: () => handleShowModal(),
+      action: () => {
+        handleShowModal()
+        setIsEditSection(true)
+      },
       isDisplayed: mode === 'edit' && myCompetitiveness?.length === 0
     },
     {
@@ -112,6 +118,15 @@ function MyCompetitiveness(props) {
             type={'competitiveness'}
           />
         )}
+        {mode === 'edit' && showModal && (
+          <MyMentorModal
+            onHide={handleHideModal}
+            show={showModal}
+            title={`Add competitiveness`}
+            category={'my-competitiveness'}
+          />
+        )}
+
       </div>
 
       <SectionActions actions={actions} />

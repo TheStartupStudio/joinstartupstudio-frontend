@@ -98,6 +98,14 @@ function MyMentors(props) {
             data={myMentors?.data}
           />
         )}
+        {mode === 'edit' && showModal && (
+          <MyMentorModal
+            onHide={handleHideModal}
+            show={showModal}
+            title={`Add mentors`}
+            category={'my-mentors'}
+          />
+        )}
       </div>
       <SectionActions actions={actions} />
     </div>

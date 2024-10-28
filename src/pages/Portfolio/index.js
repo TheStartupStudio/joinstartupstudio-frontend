@@ -3,7 +3,6 @@ import { Container, Row } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import ReactPlayer from 'react-player'
-import { Document, Page, pdfjs } from 'react-pdf'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faFacebookSquare,
@@ -31,7 +30,6 @@ function Portfolio() {
   const [showPDFViewer, setShowPDFViewer] = useState(false)
   const closePDFModal = () => setShowPDFViewer(false)
   const showPDFModal = () => setShowPDFViewer(true)
-  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
   useEffect(() => {
     getUserPortfolio()
@@ -356,13 +354,13 @@ function Portfolio() {
                     className="article-document portfolio-video-height"
                     onClick={showPDFModal}
                   >
-                    <Document
-                      className="pdf-document-viewer"
-                      file={`${userPortfolio.portfolioWellness.url}`}
-                      onLoadSuccess={onDocumentLoadSuccess}
-                    >
-                      <Page pageNumber={1} />
-                    </Document>
+                    {/*<Document*/}
+                    {/*  className="pdf-document-viewer"*/}
+                    {/*  file={`${userPortfolio.portfolioWellness.url}`}*/}
+                    {/*  onLoadSuccess={onDocumentLoadSuccess}*/}
+                    {/*>*/}
+                    {/*  <Page pageNumber={1} />*/}
+                    {/*</Document>*/}
                   </div>
                 ) : (
                   <div>
