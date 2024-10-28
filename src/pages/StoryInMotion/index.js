@@ -279,7 +279,7 @@ function StoryInMotion() {
   // eslint-disable-next-line
   useEffect(async () => {
     await gettracks()
-    await getLastetSaved()
+    getLastetSaved()
     // eslint-disable-next-line
   }, [])
 
@@ -360,11 +360,18 @@ function StoryInMotion() {
                   <IntlMessages id='storyInMotion.page_week_now_playing' />
                   <span className='mx-2'>{selectedTrack?.title}</span>
                 </p>
+                {/* <Waveform
+                  url={selectedTrack?.url}
+                  isPlayingParent={setIsPlaying}
+                  isPlaying={isPlaying}
+                  setMusicIsPlaying={MusicPlaying}
+                /> */}
                 <Waveform
                   url={selectedTrack?.url}
                   isPlayingParent={setIsPlaying}
                   isPlaying={isPlaying}
                   setMusicIsPlaying={MusicPlaying}
+                  selectedTrack={selectedTrack}
                 />
                 <p className='story-in-motion-also-avalible mb-2 pb-0 '>
                   <IntlMessages id='storyInMotion.page_also_avalible' />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createRef } from 'react'
 import LabeledInput from '../../Components/DisplayData/LabeledInput'
-import MultiSelectDropdown from '../../../../components/MultiSelect/MultiSelect'
+import IAMRSkillSelector from '../../../../components/IamrSkillSelector/IAMRSkillSelector'
 
 import { getProjects, getSkills } from '../../../../redux/portfolio/Actions'
 import { connect } from 'react-redux'
@@ -44,7 +44,7 @@ const EvidenceBody = ({
   const [onDelete, setOnDelete] = useState(false)
 
   const [linkInputValue, setLinkInputValue] = useState('')
-  const [titleInputValue, setTitleInputValue] = useState('')
+  const [evidenceTitle, setEvidenceTitle] = useState('')
   const [dropdownOpen, setDropdownOpen] = useState({
     criticalThinkingSkills: false,
     collaborationSkills: false,
@@ -64,9 +64,9 @@ const EvidenceBody = ({
       ],
       imageFile: originalImage,
       linkInputValue,
-      titleInputValue
+      evidenceTitle
     })
-  }, [selectedSkills, originalImage, linkInputValue, titleInputValue])
+  }, [selectedSkills, originalImage, linkInputValue, evidenceTitle])
 
   useEffect(() => {
     if (initialData) {
@@ -105,10 +105,9 @@ const EvidenceBody = ({
         }, {})
       }
 
-      // console.log('groupedSkills', groupedSkills)
       setSelectedSkills(groupedSkills)
       setLinkInputValue(initialData.linkInputValue)
-      setTitleInputValue(initialData.titleInputValue)
+      setEvidenceTitle(initialData.evidenceTitle)
       setImageUrl(initialData.imageUrl)
       if (initialData?.imageFile) {
         setImageProperties({
@@ -135,9 +134,12 @@ const EvidenceBody = ({
     }))
   }
 
-  const handleInputChange = (value) => {
+  const handleEvidenceTitleChange = (value) => {
+    setEvidenceTitle(value)
+
+  }
+  const handleLinkChange = (value) => {
     setLinkInputValue(value)
-    setTitleInputValue(value)
   }
 
   useEffect(() => {
@@ -264,26 +266,16 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'input' }}>
-          {/* <div className={'mb-1'}>
-            <LabeledInput
-              title={`Title for ${evidenceName}`}
-              name={'title-for-market-analysis-document'}
-              type={'text'}
-              placeholder={`Title for ${evidenceName}`}
-              titleClassNames={'text-start justify-content-start'}
-              onChange={handleInputChange}
-              value={titleInputValue}
-            />
-          </div> */}
+
           <div className={'mb-1'}>
             <LabeledInput
               title={`Title for Content Upload`}
               name={'link-to-market-analysis-document'}
               type={'text'}
-              placeholder={`${evidenceName}`}
+              placeholder={`Add title for your content upload (suggested upload: Market Analysis)`}
               titleClassNames={'text-start justify-content-start'}
-              onChange={handleInputChange}
-              value={linkInputValue}
+              onChange={handleEvidenceTitleChange}
+              value={evidenceTitle}
             />
           </div>
           <div className={'mb-1'}>
@@ -291,9 +283,9 @@ const EvidenceBody = ({
               title={`Link to Content Upload`}
               name={'link-to-market-analysis-document'}
               type={'text'}
-              placeholder={'https://drive.google.com/29304naf-2343hnl'}
+              placeholder={'Add the shareable link to your file here'}
               titleClassNames={'text-start justify-content-start'}
-              onChange={handleInputChange}
+              onChange={handleLinkChange}
               value={linkInputValue}
             />
           </div>
@@ -304,7 +296,7 @@ const EvidenceBody = ({
           </div> */}
         </div>
         <div style={{ gridArea: 'skills1' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Critical thinking skills'}
             selectedOptions={selectedSkills?.criticalThinkingSkills ?? []}
             options={skills?.criticalThinkingSkills ?? []}
@@ -316,7 +308,7 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'skills2' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Collaboration skills'}
             selectedOptions={selectedSkills?.collaborationSkills ?? []}
             options={skills?.collaborationSkills ?? []}
@@ -328,7 +320,7 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'skills3' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Creativity skills'}
             selectedOptions={selectedSkills?.creativitySkills ?? []}
             options={skills?.creativitySkills ?? []}
@@ -340,7 +332,7 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'skills4' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Leadership skills'}
             selectedOptions={selectedSkills?.leadershipSkills ?? []}
             options={skills?.leadershipSkills ?? []}
@@ -352,7 +344,7 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'skills5' }}>
-          <MultiSelectDropdown
+          <IAMRSkillSelector
             title={'Enterprise skills'}
             selectedOptions={selectedSkills?.enterpriseSkills ?? []}
             options={skills?.enterpriseSkills ?? []}

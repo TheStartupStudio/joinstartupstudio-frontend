@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, Row } from 'react-bootstrap'
 import ReactPlayer from 'react-player'
-import { Document, Page } from 'react-pdf'
+// import { Document, Page } from 'react-pdf'
 import axiosInstance from '../../utils/AxiosInstance'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -94,7 +94,7 @@ export default function PublicProfile() {
                 <a
                   href={`${clientBaseURL}/public-profile/${userData.username}`}
                 >
-                  View profile >>
+                  View profile
                 </a>
               </div>
             </div>
@@ -298,13 +298,13 @@ export default function PublicProfile() {
                   className='article-document portfolio-video-height'
                   onClick={showPDFModal}
                 >
-                  <Document
+                  {/* <Document
                     className='pdf-document-viewer'
                     file={`${userData?.UserPortfolio?.portfolioWellness.url}`}
                     onLoadSuccess={onDocumentLoadSuccess}
                   >
                     <Page pageNumber={1} />
-                  </Document>
+                  </Document> */}
                 </div>
               ) : (
                 <div>

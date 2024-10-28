@@ -126,7 +126,6 @@ const dashboardReducer = (state = initialState, action) => {
 
     case EDIT_EVENT_SUCCESS:
       const updatedEvent = payload.event
-      debugger
       const updatedEvents = state.events.map((event) => {
         if (event.id === updatedEvent.id) {
           const newUpdatedEvent = { ...updatedEvent }

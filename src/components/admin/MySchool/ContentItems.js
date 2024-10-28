@@ -3,12 +3,14 @@ import {
   faAward,
   faChalkboardTeacher,
   faCheck,
+  faExclamation,
   faEye,
   faEyeSlash,
   faGraduationCap,
   faPencilAlt,
   faSearch,
   faTimes,
+  faTrashAlt,
   faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -132,7 +134,8 @@ const CustomDropdown = ({
   exclusive = false,
   preselectedOptions = [],
   showError = false,
-  error = null
+  error = null,
+  hasResetOption = false
 }) => {
   const [localIsOpen, setLocalIsOpen] = useState(false)
   const [selectedOptions, setSelectedOptions] = useState(
@@ -169,7 +172,11 @@ const CustomDropdown = ({
         onClick(newSelectedOptions)
       }
     } else {
-      setSelectedOptions(option)
+      if (selectedOptions === option) {
+        setSelectedOptions(null)
+      } else {
+        setSelectedOptions(option)
+      }
       if (exclusive) {
         setOpenDropdown()
       } else {
@@ -198,6 +205,14 @@ const CustomDropdown = ({
     }
   }
 
+  const resetSelection = (e) => {
+    e.stopPropagation()
+    setSelectedOptions(null)
+    if (onClick) {
+      onClick(null)
+    }
+  }
+
   const isDropdownOpen = exclusive ? isOpen : localIsOpen
 
   return (
@@ -213,7 +228,7 @@ const CustomDropdown = ({
         error={error}
       >
         <span
-          className='p-0'
+          className='p-0 w-100'
           style={{
             overflow: 'hidden',
             whiteSpace: 'nowrap',
@@ -229,6 +244,16 @@ const CustomDropdown = ({
             ? selectedOptions.name
             : title || 'Select an option'}
         </span>
+
+        {!multiple && !isSelectable && selectedOptions && hasResetOption && (
+          <span
+            className='reset-button d-flex justify-content-end cursor-pointer'
+            onClick={(e) => resetSelection(e)}
+            style={{ color: 'red' }}
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </span>
+        )}
 
         <span className={`arrow ${isDropdownOpen ? 'open' : ''}`}>
           <FontAwesomeIcon icon={faAngleDown} />
@@ -282,43 +307,46 @@ const CustomSearchBar = ({
         className='bg-transparent'
         placeholder={placeholder}
         onChange={onChange}
+        autoComplete='new-password'
+        name={`search-${Math.random()}`}
       />
     </div>
   )
 }
 
-const CustomInput = ({
-  placeholder = '',
-  type,
-  value,
-  handleChange = () => {},
-  name,
-  showError = false,
-  error = ''
-}) => {
-  const [showPassword, setShowPassword] = useState(false)
-  return (
-    <div className='custom__input-container d-flex flex-column align-items-center position-relative'>
-      <input
-        type={showPassword ? 'text' : type}
-        name={name}
-        className='custom__input w-100 my-2'
-        value={value}
-        onChange={handleChange}
-        placeholder={placeholder}
-      />
+// const CustomInput = ({
+//   placeholder = '',
+//   type,
+//   value,
+//   handleChange = () => {},
+//   name,
+//   showError = false,
+//   error = ''
+// }) => {
+//   const [showPassword, setShowPassword] = useState(false)
+//   return (
+//     <div className='custom__input-container d-flex flex-column align-items-center position-relative'>
+//       <input
+//         type={showPassword ? 'text' : type}
+//         name={name}
+//         className='custom__input w-100 my-2'
+//         value={value}
+//         onChange={handleChange}
+//         placeholder={placeholder}
+//         autocomplete='new-password'
+//       />
 
-      {type === 'password' && (
-        <FontAwesomeIcon
-          icon={showPassword ? faEye : faEyeSlash}
-          className='pw-revelared__icon'
-          onClick={() => setShowPassword((state) => !state)}
-        />
-      )}
-      {showError && error && <small className='ps-1'>{error}</small>}
-    </div>
-  )
-}
+//       {type === 'password' && (
+//         <FontAwesomeIcon
+//           icon={showPassword ? faEye : faEyeSlash}
+//           className='pw-revelared__icon'
+//           onClick={() => setShowPassword((state) => !state)}
+//         />
+//       )}
+//       {showError && error && <small className='ps-1'>{error}</small>}
+//     </div>
+//   )
+// }
 const CustomTextarea = ({
   placeholder = '',
   type,
@@ -442,7 +470,7 @@ export {
   CustomSearchBar,
   CountTotalReport,
   CircularProgressComponent,
-  CustomInput,
+  // CustomInput,
   SubmitButton,
   CustomTextarea
 }

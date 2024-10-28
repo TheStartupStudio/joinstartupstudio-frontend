@@ -21,14 +21,14 @@
   position: relative;
 }
 
-/* .modal-header {
+.immersion-modal-header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   border: none;
-} */
+}
 
 .status-toggle {
   display: flex;
@@ -85,12 +85,12 @@ input:checked + .slider:before {
   transform: translateX(18px);
 }
 
-/* .modal-body {
+.immersion-modal-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 20px;
-} */
+}
 
 .modal-body-delete {
   display: grid;

@@ -35,9 +35,9 @@ function LtsButton(props) {
         aria-expanded={props.ariaExpanded}
         style={{ ...buttonStyle }}
         onClick={props.onClick ?? null}
-        className={`${
-          props.padding ? '' : 'px-4 py-2'
-        } color transform text-uppercase d-flex justify-content-center text-center align-items-center`}
+        className={`${props.padding ? '' : 'px-4 py-2'}
+        ${props.className}
+        color transform text-uppercase d-flex justify-content-center text-center align-items-center`}
       >
         {props.name?.toUpperCase() ?? 'Lts Button'}
       </div>

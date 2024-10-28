@@ -10,13 +10,13 @@ import { Col, Modal, Row } from 'react-bootstrap'
 import {
   CustomTextarea,
   CustomDropdown,
-  CustomInput,
   SubmitButton
 } from '../MySchool/ContentItems'
 import { useValidation } from '../../../hooks/useValidation'
 import { useForm } from '../../../hooks/useForm'
 import LtsCheckbox from '../../../ui/LtsCheckbox'
 import LtsFileDropzone from '../../../ui/LtsFileDropzone'
+import { CustomInput } from '../../../ui/ContentItems'
 
 const CourseVCredentialsActions = ({
   show,

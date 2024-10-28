@@ -79,9 +79,10 @@ const Steps = () => {
   useEffect(() => {
     if (step === 'step-1') {
       dispatch(fetchAllIndustryProblems(currPage, itemsPerPage, industry))
-    } else {
-      dispatch(fetchExperiences(currPage, itemsPerPage))
     }
+    // else {
+    //   dispatch(fetchExperiences(currPage, itemsPerPage))
+    // }
   }, [dispatch, step, currPage, itemsPerPage, industry])
 
   useEffect(() => {

@@ -14,8 +14,11 @@ const JournalTextEditor = ({
   handleSave,
   value,
   title,
-  previewMode
+  previewMode,
+  alignFooter
 }) => {
+
+
   const currentLanguage = useSelector((state) => state.lang.locale)
   const [content, setContent] = useState('')
 
@@ -66,7 +69,7 @@ const JournalTextEditor = ({
       )}
 
       <div className={'journal_text_editor-footer-box'}>
-        <div className='journal_text_editor-footer d-flex justify-content-between align-items-center'>
+        <div className={`journal_text_editor-footer d-flex justify-content-between align-items-${alignFooter ?? 'end'}`}>
           {userData?.submitted && (
             <span>
               <strong>Submitted:</strong>

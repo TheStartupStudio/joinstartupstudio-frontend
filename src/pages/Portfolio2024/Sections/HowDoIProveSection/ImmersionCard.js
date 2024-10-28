@@ -15,7 +15,6 @@ import WebsiteLink from '../../Components/WebsiteLink'
 function ImmersionCard(props) {
   const { data, isEditSection } = props
 
-  console.log('props', props)
   const [dataToEdit, setDataToEdit] = useState({})
 
   const dispatch = useDispatch()

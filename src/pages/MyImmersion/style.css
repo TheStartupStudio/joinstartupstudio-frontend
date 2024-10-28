@@ -39,7 +39,6 @@ button {
 .immersion-page-title {
   font-weight: 500 !important;
   font-size: 26px !important;
-
 }
 
 .main-immersion-desc {
@@ -77,7 +76,7 @@ td {
   width: 20%;
 } */
 
-td:last-child>button {
+td:last-child > button {
   width: 100%;
 }
 
@@ -102,7 +101,6 @@ th:last-child {
 .immersion-table td {
   border: none !important;
 }
-
 
 /* .immersion-table tbody tr {
   border-bottom: 1px solid black !important;
@@ -183,9 +181,12 @@ th:last-child {
   top: 19%;
   left: 32%;
   background: rgb(219, 54, 148) !important;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+      90deg,
       rgba(219, 54, 148, 1) 0%,
-      rgba(128, 197, 220, 1) 75%) border-box !important;
+      rgba(128, 197, 220, 1) 75%
+    )
+    border-box !important;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -208,13 +209,12 @@ th:last-child {
   cursor: pointer;
   height: 50px;
   font-size: 13px;
-  color: #9297A1;
+  color: #9297a1;
   /* background-color: #fff; */
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029;
   border: none !important;
   border-radius: 10px;
-
 }
 
 .file-input-placeholder {
@@ -223,7 +223,6 @@ th:last-child {
 
 .file-input-icon {
   font-size: 28px;
-  margin-left: 10px;
   color: #6c6c6c;
 }
 
@@ -261,6 +260,7 @@ th:last-child {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0px 10px;
   gap: 10px;
   height: 50px;
   font-size: 13px;
@@ -344,7 +344,7 @@ gap: -10px;
 
 */
 
-@media (max-width:1200px) {
+@media (max-width: 1200px) {
   .st1-immr-btn {
     left: 18.5% !important;
     font-size: 13px;
@@ -365,8 +365,7 @@ gap: -10px;
   }
 }
 
-
-@media (max-width:916px) {
+@media (max-width: 916px) {
   .st1-immr-btn {
     left: 15.7% !important;
     font-size: 13px;
@@ -404,8 +403,7 @@ gap: -10px;
   }
 }
 
-
-@media (max-width:790px) {
+@media (max-width: 790px) {
   .st1-immr-btn {
     left: 16.1% !important;
     font-size: 12px;
@@ -443,9 +441,7 @@ gap: -10px;
   }
 }
 
-@media (max-width:745px) {
-
-
+@media (max-width: 745px) {
   .st1-immr-btn {
     left: 11% !important;
     font-size: 12px;
@@ -483,11 +479,7 @@ gap: -10px;
   }
 }
 
-
-
-@media (max-width:620px) {
-
-
+@media (max-width: 620px) {
   .st1-immr-btn {
     left: 11% !important;
     font-size: 11px;
@@ -525,10 +517,7 @@ gap: -10px;
   }
 }
 
-
-@media (max-width:540px) {
-
-
+@media (max-width: 540px) {
   .st1-immr-btn {
     left: 9% !important;
     font-size: 10px;
@@ -566,11 +555,7 @@ gap: -10px;
   }
 }
 
-
-
-@media (max-width:468px) {
-
-
+@media (max-width: 468px) {
   .st1-immr-btn {
     left: 6% !important;
     font-size: 10px;
@@ -608,18 +593,14 @@ gap: -10px;
   }
 }
 
-
-
-@media (max-width:400px) {
-
-
+@media (max-width: 400px) {
   .st1-immr-btn {
     left: 6.3% !important;
     font-size: 10px;
     width: 12% !important;
     height: 12.5% !important;
     top: 32.7% !important;
-    border: 3px solid transparent !important
+    border: 3px solid transparent !important;
   }
 
   .st2-immr-btn {
@@ -628,7 +609,7 @@ gap: -10px;
     width: 12% !important;
     height: 12.5% !important;
     top: 32.7% !important;
-    border: 3px solid transparent !important
+    border: 3px solid transparent !important;
   }
 
   .st3-immr-btn {
@@ -637,7 +618,7 @@ gap: -10px;
     height: 12.5% !important;
     top: 32.7% !important;
     left: 54.2% !important;
-    border: 3px solid transparent !important
+    border: 3px solid transparent !important;
   }
 
   .st4-immr-btn {
@@ -646,7 +627,7 @@ gap: -10px;
     width: 12% !important;
     height: 12.5% !important;
     top: 32.7% !important;
-    border: 3px solid transparent !important
+    border: 3px solid transparent !important;
   }
 
   .main-immrs-image {
@@ -654,17 +635,14 @@ gap: -10px;
   }
 }
 
-
 .no-profile {
   display: none !important;
 }
-
 
 .left-title-immrs .profile-dropdown-info {
   align-self: center !important;
   margin: 0 !important;
   margin-top: -150px;
-
 }
 
 .left-title-immrs .profile-dropdown-info h5 {

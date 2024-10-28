@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, createRef } from 'react'
-import imagePlaceholder from '../../../assets/images/image-placeholder.jpeg'
+// import imagePlaceholder from '../../../assets/images/image-placeholder.jpeg'
+import imagePlaceholder from '../../../assets/images/videoimage.png'
 import { FaPencilAlt } from 'react-icons/fa'
 import Tooltip from 'react-bootstrap/Tooltip'
 import TooltipAction from './Actions/TooltipAction'
@@ -69,7 +70,7 @@ function EditPortfolioSubmission(props) {
   return (
     <>
       <div
-        className={`portfolio-submission-container `}
+        className={`${props.containerClassname} portfolio-submission-container `}
         style={{ height: props.height ?? '300px' }}
       >
         {imageProperties.originalImage !== '' ? (
@@ -90,7 +91,7 @@ function EditPortfolioSubmission(props) {
               borderRadius={6}
               style={{
                 width: '100%',
-                height: '100%',
+                height: '324px',
                 boxShadow: '0px 3px 6px #0000004D',
                 borderRadius: 28
               }}

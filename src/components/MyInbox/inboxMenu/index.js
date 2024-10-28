@@ -14,7 +14,7 @@ function InboxMenu() {
     certificationFeedbackQuestions,
     approvalRequests,
     industryProblems,
-    immersionExperiences,
+    spotlights,
     selectQuestionsMenu
   } = useInboxContext()
   const { isAdmin } = useSelector((state) => state.user.user)
@@ -44,7 +44,7 @@ function InboxMenu() {
         setActiveEventKey('0')
       } else if (
         hash === 'industry_problem_submissions' ||
-        hash === 'immersion_experience_applications'
+        hash === 'spotlight_applications'
       ) {
         setActiveEventKey('1')
       }
@@ -93,9 +93,9 @@ function InboxMenu() {
           />
           <MenuOption
             allowedToShow={true}
-            questionMenu={'immersion_experience_applications'}
+            questionMenu={'spotlight_applications'}
             title={'SPOTLIGHT APPLICATIONS'}
-            categoryOption={immersionExperiences?.unreadCount}
+            categoryOption={spotlights?.unreadCount}
           />
           {/* <MenuOption
             allowedToShow={true}

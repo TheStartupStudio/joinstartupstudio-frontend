@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
-import { Document, Page, pdfjs } from 'react-pdf'
+// import { Document, Page, pdfjs } from 'react-pdf'
 
 const PortfolioArticleModal = (props) => {
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
-  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+  // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages)
@@ -38,7 +38,7 @@ const PortfolioArticleModal = (props) => {
         <Modal.Title id='contained-modal-title-vcenter'></Modal.Title>
       </Modal.Header>
       <Modal.Body className='document-modal'>
-        <Document
+        {/* <Document
           className='pdf-document-viewer'
           file={`${props.articleLink}`}
           onLoadSuccess={onDocumentLoadSuccess}
@@ -60,7 +60,7 @@ const PortfolioArticleModal = (props) => {
               </button>
             </div>
           ) : null}
-        </Document>
+        </Document> */}
       </Modal.Body>
     </Modal>
   )

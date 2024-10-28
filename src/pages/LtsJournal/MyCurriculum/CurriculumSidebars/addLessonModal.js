@@ -2,7 +2,11 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { TextEditor, TextInput } from '../../../../ui/ContentItems'
+import {
+  TextEditor,
+  TextInput,
+  QuillEditorBox
+} from '../../../../ui/ContentItems'
 import { useForm } from '../../../../hooks/useForm'
 import { useValidation } from '../../../../hooks/useValidation'
 import useIsFormEmpty from '../../../../hooks/useIsFormEmpty'
@@ -24,7 +28,6 @@ const AddLessonModal = ({
   type,
   category
 }) => {
-  console.log('data', data)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -52,7 +55,6 @@ const AddLessonModal = ({
   useEffect(() => {
     setFormData(data)
   }, [data])
-  console.log('formData', formData)
 
   const deleteLessonHandler = () => {
     const res = dispatch(deleteLesson(formData.id))
@@ -120,16 +122,16 @@ const AddLessonModal = ({
           {mode === 'add' ? 'ADD LESSON' : 'EDIT LESSON'}
         </Modal.Title>
         {isDisabled ? (
-          <di className={`check-button fw-bold`} onClick={() => onHide()}>
+          <div className={`check-button fw-bold`} onClick={() => onHide()}>
             X
-          </di>
+          </div>
         ) : (
-          <di
+          <div
             className={`check-button  ${isDisabled ? 'disabled' : ''}`}
             onClick={!isDisabled ? submitHandler : null}
           >
             <FontAwesomeIcon icon={faCheck} />
-          </di>
+          </div>
         )}
       </Modal.Header>
       <Modal.Body className='briefing-modal-body'>
@@ -147,11 +149,11 @@ const AddLessonModal = ({
         </Row>
         <Row>
           <Col className='me-auto col-12'>
-            <TextEditor
+            <QuillEditorBox
               title='Lesson Plan / Task'
               name='lessonPlan'
               value={formData?.lessonPlan}
-              handleChange={handleChangeEditor}
+              onChange={handleChangeEditor}
               showError={formSubmitted}
               error={errors?.lessonPlan}
             />
@@ -159,11 +161,11 @@ const AddLessonModal = ({
         </Row>
         <Row>
           <Col className='me-auto col-12'>
-            <TextEditor
+            <QuillEditorBox
               title='Assignment'
               name='assignment'
               value={formData?.assignment}
-              handleChange={handleChangeEditor}
+              onChange={handleChangeEditor}
               showError={formSubmitted}
               error={errors?.assignment}
             />

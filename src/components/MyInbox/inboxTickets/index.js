@@ -18,7 +18,7 @@ function InboxTickets() {
     setCertificationFeedbackQuestions,
     setApprovalRequests,
     setIndustryProblems,
-    setImmersionExperiences,
+    setSpotlights,
     loading,
     setLoading
   } = useInboxContext()
@@ -37,13 +37,15 @@ function InboxTickets() {
     searchKeyword
   )
 
+  console.log('data', data)
+
   useEffect(() => {
     if (data) {
       setStudentQuestions(data['student_questions'])
       setCertificationFeedbackQuestions(data['certification_feedback_requests'])
       setApprovalRequests(data['approval_requests'])
       setIndustryProblems(data['industry_problem_submissions'])
-      setImmersionExperiences(data['immersion_experience_applications'])
+      setSpotlights(data['spotlight_applications'])
     }
   }, [
     data,
@@ -51,7 +53,7 @@ function InboxTickets() {
     setStudentQuestions,
     setCertificationFeedbackQuestions,
     setApprovalRequests,
-    setImmersionExperiences,
+    setSpotlights,
     setIndustryProblems
   ])
 
@@ -150,15 +152,18 @@ function InboxTickets() {
       )
     }
 
-    return filteredTickets.map((ticket) => (
-      <Ticket
-        key={ticket.id}
-        ticket={ticket}
-        setSelectedTicket={setSelectedTicket}
-        updateTicketStatus={updateTicketStatus}
-        updateUserSolutionStatus={updateUserSolutionStatus}
-      />
-    ))
+    return filteredTickets.map((ticket) => {
+      // console.log('ticket', ticket)
+      return (
+        <Ticket
+          key={ticket.id}
+          ticket={ticket}
+          setSelectedTicket={setSelectedTicket}
+          updateTicketStatus={updateTicketStatus}
+          updateUserSolutionStatus={updateUserSolutionStatus}
+        />
+      )
+    })
   }, [
     isMenuOpened,
     loading,
@@ -196,6 +201,7 @@ function InboxTickets() {
 
           <SearchBar handleChange={(e) => handleSearch(e.target.value)} />
         </div>
+        {console.log('selectedTicket', selectedTicket)}
         <div className='row all-tickets gy-2 m-0 my-3'>
           {selectedTicket?.type && (
             <TicketChat

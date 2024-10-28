@@ -24,6 +24,7 @@ import defaultImage from '../../assets/images/profile-image.png'
 import LtsJournalContent from './content'
 import Select from 'react-select'
 import NotAllowed from './NotAllowed'
+import { getStudentInfoById } from '../../redux/users/Actions'
 
 function JournalsBody(props) {
   const studentId = parseInt(useParams().studentId)
@@ -37,8 +38,14 @@ function JournalsBody(props) {
   const currentLanguage = useSelector((state) => state.lang.locale)
   const [user, setUser] = useState({})
   const [globalCategory, setGlobalCategory] = useState('lts')
+  const userBasicInfo = useSelector(
+    (state) => state.portfolio.whoSection.userBasicInfo
+  )
 
   let contentContainer = useRef()
+  const studentInfo = useSelector(
+    (state) => state.users.studentInfo
+  )
 
   async function getJournals(category = 'student-lts', redir = true) {
     setGlobalCategory(category)
@@ -117,6 +124,9 @@ function JournalsBody(props) {
     dispatch(changeSidebarState(false))
   })
 
+  useEffect(()=>{
+    if(user.id) dispatch(getStudentInfoById(user.id))
+  },[user.id])
   function updateJournalEntry(journals, journal) {
     return journals.map((item) => {
       return {
@@ -221,13 +231,13 @@ function JournalsBody(props) {
                         <img
                           className='rounded-circle user-image'
                           src={
-                            user?.profile_image
-                              ? user?.profile_image
+                            studentInfo?.data?.userImageUrl
+                              ?  studentInfo?.data?.userImageUrl
                               : defaultImage
                           }
                           alt={
-                            user?.profile_image
-                              ? user?.profile_image
+                            studentInfo?.data?.userImageUrl
+                              ?  studentInfo?.data?.userImageUrl
                               : 'no image'
                           }
                         />

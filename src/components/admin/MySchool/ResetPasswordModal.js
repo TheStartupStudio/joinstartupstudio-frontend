@@ -3,12 +3,11 @@ import { faUserLock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Col, Modal, Row } from 'react-bootstrap'
 import './style.css'
-import { CustomInput, SubmitButton } from './ContentItems'
 import configureAwsSdk from '../../../config/configAwsSdk'
 import { useForm } from '../../../hooks/useForm'
 import { useValidation } from '../../../hooks/useValidation'
 import { toast } from 'react-toastify'
-import { LtsButton } from '../../../ui/ContentItems'
+import { CustomInput, LtsButton } from '../../../ui/ContentItems'
 
 const changeUserPassword = async (cognito_Id, newPassword) => {
   const cognito = configureAwsSdk()
@@ -58,7 +57,7 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
     <>
       <Modal
         show={show}
-        className={''}
+        className={'reset-password-modal'}
         onHide={() => {
           onHide()
         }}
@@ -94,13 +93,13 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
             <p>User details</p>
             <CustomInput
               placeholder={'New Password'}
-              type={'text'}
+              type={'password'}
               name='password'
               handleChange={handleChange}
             />
             <CustomInput
               placeholder={'Repeat Password'}
-              type={'text'}
+              type={'password'}
               name='confirmPassword'
               handleChange={handleChange}
             />

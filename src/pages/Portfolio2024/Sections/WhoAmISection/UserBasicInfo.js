@@ -149,7 +149,7 @@ const UserBasicInfo = (props) => {
                     null,
                     'No value proposition added yet! Click the edit button to add your value proposition.'
                   )}
-                  contentClasses={'mt-2'}
+                  contentClasses={'w-100 mt-2'}
                   height={150}
                 />
               </div>

@@ -4,9 +4,16 @@ import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoa
 import MyAlignments from './MyAlignments'
 import MyProductivity from './MyProductivity'
 import MyCompetitiveness from './MyCompetitiveness'
+import { useSelector } from 'react-redux'
 
 function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
   const [loadings, setLoadings] = useState(null)
+
+  const mode = useSelector((state) => state.portfolio.mode)
+
+  const filteredUnshownData = (data) => {
+    return data?.filter((data)=>data.showSection)
+  }
   useEffect(() => {
     if (propsLoadings) {
       setLoadings(propsLoadings)
@@ -46,8 +53,9 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
     }
   }
 
+
   return (
-    <div className={'d-flex flex-column gap-4'}>
+    <div className={'d-flex flex-column gap-4'} style={{ marginTop: '30px' }}>
       {renderSection(
         loadings?.myAlignments,
         'my-alignment',
@@ -56,6 +64,7 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
         MyAlignments,
         data?.myAlignments
       )}
+
       {renderSection(
         loadings?.myProductivity,
         'my-productivity',
@@ -70,7 +79,8 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
         'My Competitiveness',
         'The value of the outcomes you produce inside of your field of interest.',
         MyCompetitiveness,
-        data?.myCompetitiveness?.data
+        mode === 'edit' ?
+          data?.myCompetitiveness?.data : filteredUnshownData(data?.myCompetitiveness?.data)
       )}
     </div>
   )

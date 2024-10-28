@@ -9,7 +9,7 @@ const INIT_STATE = {
   sidebarState: false,
   isAccordionToggled: false,
   imageCropperData: null,
-  croppedImage: null
+  croppedImage: null,
 }
 
 export default (state = INIT_STATE, action) => {

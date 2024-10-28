@@ -1,14 +1,14 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import {  useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
-import PortfolioActions from './Components/Actions/PortfolioActions'
 import PortfolioHeader from './Components/Header/PortfolioHeader'
 import WhoAmI from './Sections/WhoAmISection/WhoAmI'
 import PortfolioNavigator from './Components/PortfolioNavigator'
 import PortfolioSkeletonLoader from './Components/PortfolioSkeletonLoader'
 import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
 import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
+import { toast } from 'react-toastify'
 
 function StudentPortfolio() {
   const [publicPortfolio, setPublicPortfolio] = useState({})
@@ -17,13 +17,12 @@ function StudentPortfolio() {
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
 
-  console.log('publicPortfolio', publicPortfolio)
-  useLayoutEffect(() => {
+  useEffect(() => {
     setIsLoading(true)
     const getPublicPortfolioAPI = async () => {
       try {
         const response = await axiosInstance.get(
-          `/hsPortfolio/userPortfolio/${username}`
+          `/hsPortfolio/studentPortfolio/${username}`
         )
         if (response.data.privateMessage) {
           setPrivatePortfolioMessage(response.data.privateMessage)
@@ -31,8 +30,8 @@ function StudentPortfolio() {
           setPublicPortfolio(response.data)
         }
         setIsLoading(false)
-      } catch (e) {
-        console.error('Error occurred during fetching user portfolio', e)
+      } catch (error) {
+        toast.error(error?.response?.data?.error)
         setIsLoading(false)
       }
     }
