@@ -476,8 +476,9 @@ function StartupLive() {
                       <h3 className='spot-archive-title'>Spotlight Archive</h3>
                       <button
                         className={
-                          'spotlight-archive-view-btn d-flex align-items-end  blue-text'
+                          'spotlight-archive-view-btn d-flex align-items-end  '
                         }
+                        style={{ color: '#766C6EFD' }}
                       >
                         View all
                       </button>

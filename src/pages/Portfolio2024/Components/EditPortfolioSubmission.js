@@ -70,7 +70,7 @@ function EditPortfolioSubmission(props) {
   return (
     <>
       <div
-        className={`portfolio-submission-container `}
+        className={`${props.containerClassname} portfolio-submission-container `}
         style={{ height: props.height ?? '300px' }}
       >
         {imageProperties.originalImage !== '' ? (
