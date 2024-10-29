@@ -87,7 +87,7 @@ function GeneratedResponsePage(props) {
   const [editingContent, setEditingContent] = useState('')
 
   useEffect(() => {
-    dispatch(setBackButton(true, 'my-spark/generate-page'))
+    dispatch(setBackButton(true, 'my-spark/widgets'))
 
     return () => {
       dispatch(setBackButton(false, ''))
