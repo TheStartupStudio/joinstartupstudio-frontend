@@ -215,7 +215,7 @@ function MyProductivity(props) {
       <div className={'mt-5'}>
         {renderSection(
           'Work Experience',
-          mode === 'edit' ? immersions : filteredUnshownData(workExperiences),
+          mode === 'edit' ? workExperiences : filteredUnshownData(workExperiences),
           WorkExperienceCard,
           isEditWorkExperienceSection,
           workExperienceActions,
