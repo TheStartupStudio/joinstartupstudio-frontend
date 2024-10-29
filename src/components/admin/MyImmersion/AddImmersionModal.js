@@ -138,6 +138,7 @@ const AddImmersionModal = ({
                     style={{ cursor: 'pointer' }}
                     title='Save Changes'
                   />
+
                   {!justView && (
                     <FaEye
                       className={'action-box pencil-icon'}

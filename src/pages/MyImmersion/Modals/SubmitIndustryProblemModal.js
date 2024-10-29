@@ -10,6 +10,13 @@ import {
 } from '../../../redux/myImmersion/actions'
 import LoadingAnimation from '../../../ui/loadingAnimation'
 import { useForm } from '../../../hooks/useForm'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faUpload,
+  faLink,
+  faArrowLeft,
+  faEnvelope
+} from '@fortawesome/free-solid-svg-icons'
 import {
   ParentGuardianButton,
   ProfileHolder,
@@ -106,13 +113,21 @@ const SubmitIndustryProblemModal = (props) => {
             <img src={mailIcon} className='step1-mail-icon'></img>
           </div>
           <Modal.Header style={{ marginTop: '30px' }}>
-            <div className='portfolio-actions'>
+            <div
+              className='portfolio-actions'
+              style={{ borderRadius: ' 0px 28px' }}
+            >
               <span
-                style={{ fontSize: '20px', fontWeight: '700' }}
+                style={{
+                  fontSize: '20px',
+                  fontWeight: '700',
+                  width: '65px',
+                  height: '65px'
+                }}
                 className='action-box cursor-pointer'
                 onClick={() => props.onHide()}
               >
-                X
+                <FontAwesomeIcon icon={faArrowLeft} />
               </span>
             </div>
             <Modal.Title
@@ -172,6 +187,7 @@ const SubmitIndustryProblemModal = (props) => {
                     ? props.user_industry_solution?.company_name
                     : ''}{' '}
                 </p>
+                -
                 <Textarea
                   placeholder={'Briefly describe solution'}
                   name='solutionDescription'
@@ -249,7 +265,7 @@ const SubmitIndustryProblemModal = (props) => {
                   </div>
                 ) : (
                   <SubmitButton
-                    text={'SUBMIT'}
+                    text={'SAVE'}
                     disabled={props.problemIsSubmitted}
                     type='button'
                     className={'submit-button'}

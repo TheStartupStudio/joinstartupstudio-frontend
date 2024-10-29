@@ -474,18 +474,18 @@ function StartupLive() {
                   <div>
                     <div className='d-flex justify-content-between guidance-videos-top  guidance-encouragement-page-titles '>
                       <h3 className='spot-archive-title'>Spotlight Archive</h3>
-                      <button
+                      <span
                         className={
                           'spotlight-archive-view-btn d-flex align-items-end  '
                         }
                         style={{ color: '#766C6EFD' }}
                       >
                         View all
-                      </button>
+                      </span>
                     </div>
                   </div>
                 </Row>
-                <div className='beyond-videos-desktop mt-2 d-flex align-items-center justify-content-center '>
+                <div className='beyond-videos-desktop mt-5 d-flex align-items-center justify-content-center '>
                   {/* <div className='arrow-icon-1' style={{ height: '100%' }}>
                     <button
                       className='videos-track'
