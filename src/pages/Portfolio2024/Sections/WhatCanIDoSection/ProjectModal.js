@@ -138,7 +138,7 @@ function ProjectModal(props) {
         }
 
         props.onHide()
-        toast.success('Project updated successfully!')
+        toast.success('Project created successfully!')
       })
   }
 
@@ -161,7 +161,7 @@ function ProjectModal(props) {
           props.onUpdateProject(res.data.project)
           props.onHide()
           setIsSaving(false)
-          toast.success('Project created successfully!')
+          toast.success('Project updated successfully!')
         })
     } catch (error) {
       console.error('Error saving projects:', error)

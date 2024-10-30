@@ -8,14 +8,11 @@ import './index.css'
 import searchIcon from '../../assets/images/search-icon.png'
 import copy from '../../assets/images/copy.svg'
 import 'react-quill/dist/quill.snow.css'
-import KendoTextEditor from './TextEditor'
-import { EditorTools } from '@progress/kendo-react-editor'
-import '@progress/kendo-theme-default/dist/all.css'
-import { v4 as uuidv4 } from 'uuid'
-import { useHistory, useParams } from 'react-router-dom'
-import PositionSelector from '../PositionSelector/PositionSelector'
-import CustomContent from './CustomContent/CustomContent'
 import { QuillEditorBox } from '../../ui/ContentItems'
+import AccordionModal from './AccordionModal'
+import ReactTable from '../ReactTable/ReactTable'
+import { FaEdit, FaTrash } from 'react-icons/fa'
+import LtsButton from '../LTSButtons/LTSButton'
 
 export default function EditJournals2(props) {
   const [journals, setJournals] = useState([])
@@ -27,14 +24,30 @@ export default function EditJournals2(props) {
   const [uploadedImageUrl, setUploadedImageUrl] = useState(false)
   const [journalType, setJournalType] = useState(null)
   const [journalId, setJournalId] = useState(null)
-  const randomUUID = uuidv4()
+  const [accordions, setAccordions] = useState([])
+  const [selectedAccordion, setSelectedAccordion] = useState({})
 
+  const [showAccordionModal, setShowAccordionModal] = useState(false)
+  const handleShowAccordionModal = () => {
+    setShowAccordionModal(true)
+  }
+
+  const handleHideAccordionModal = () => {
+    setShowAccordionModal(false)
+    setSelectedAccordion(null)
+  }
+
+  useEffect(() => {
+    if (selectedJournal?.value?.ltsJournalAccordions)
+      setAccordions(selectedJournal?.value?.ltsJournalAccordions)
+  }, [selectedJournal?.value?.ltsJournalAccordions])
 
 
   useEffect(() => {
     getJournals2()
     getJournals2Weeks()
     getTrainings()
+    getJournals()
   }, [])
 
   useEffect(() => {
@@ -91,8 +104,11 @@ export default function EditJournals2(props) {
     await axiosInstance
       .get('/ltsJournals/journals-descriptions')
       .then(({ data }) => {
-        setJournals(data.filter((d) => d.category.includes('new')))
-        setFetchingJournals(false)
+        // setJournals(data.filter((d) => d.category.includes('new')))
+        // setFetchingJournals(false)
+        const newData = data.filter((data) => data.category && data.category === 'my-mentorship')
+        // debugger
+        setJournals((prevJournals) => [...prevJournals, ...newData])
       })
       .catch((e) => e)
   }
@@ -340,6 +356,59 @@ export default function EditJournals2(props) {
     setSelectedJournal(newJournal)
   }
 
+  const onAddAccordion = (newAccordion) => {
+    setAccordions([...accordions, newAccordion])
+  }
+  const onUpdateAccordion = (updatedAccordion) => {
+    setAccordions(
+      accordions.map((acc) =>
+        acc.id === updatedAccordion.id ? updatedAccordion : acc
+      )
+    )
+  }
+  const handleDeleteAccordion = async (row) => {
+    try {
+      await axiosInstance.delete(`/manageJournals/accordion/${row?.id}`)
+      setAccordions(accordions.filter((acc) => acc.id !== row?.id))
+    } catch (error) {
+      console.error('Error deleting accordion:', error)
+    }
+  }
+
+  const getColumns = ({ onSelectRow, onEdit, onDelete }) => [
+    {
+      Header: 'Title',
+      accessor: 'title',
+      Cell: ({ row }) => {
+        return <div>{row.original.title}</div>
+      }
+    },
+    {
+      Header: 'Actions',
+      accessor: 'id',
+      Cell: ({ row }) => (
+        <div>
+          <button
+            onClick={() => onEdit?.(row.original)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              marginRight: '8px'
+            }}
+          >
+            <FaEdit size={20} color='#99CC33' />
+          </button>
+          <button
+            onClick={() => onDelete?.(row.original)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            <FaTrash size={20} color='#FE43A1' />
+          </button>
+        </div>
+      )
+    }
+  ]
   return (
     <div>
       {!fetchingJournals ? (
@@ -803,6 +872,49 @@ export default function EditJournals2(props) {
             {loading ? 'SAVING..' : 'SAVE'}
           </button>
         </div>
+      )}
+      <div className={'row mt-4 w-100'}>
+        <div className={'col-md-6'}>
+          {selectedJournal?.value?.category === 'my-mentorship' &&
+            selectedJournal?.value?.title
+              ?.toLowerCase()
+              ?.includes('My Story in Motion Research'.toLowerCase()) && (
+              <LtsButton
+                onClick={handleShowAccordionModal}
+                name={`Add new accordion`}
+                align={'end'}
+                width={'70%'}
+              />
+            )}
+          {accordions && accordions?.length > 0 && (
+            <ReactTable
+              // data={accordions}
+              data={accordions?.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+              )}
+              getColumns={getColumns}
+              addNew={'accordion'}
+              onAdd={handleShowAccordionModal}
+              onEdit={(row) => {
+                handleShowAccordionModal(row)
+                setSelectedAccordion(row)
+              }}
+              onDelete={handleDeleteAccordion}
+            />
+          )}
+        </div>
+      </div>
+
+      {showAccordionModal && (
+        <AccordionModal
+          show={showAccordionModal}
+          onHide={handleHideAccordionModal}
+          selectedAccordion={selectedAccordion}
+          setSelectedAccordion={setSelectedAccordion}
+          selectedJournal={selectedJournal}
+          onAddAccordion={onAddAccordion}
+          onUpdateAccordion={onUpdateAccordion}
+        />
       )}
     </div>
   )

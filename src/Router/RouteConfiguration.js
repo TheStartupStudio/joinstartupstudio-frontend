@@ -243,7 +243,7 @@ export const authRoutesWithProps = [
   },
   {
     path: '/public-portfolio/:username',
-    component: PeerPortfolio2024,
+    component: PublicPortfolio2024,
     exact: true
   },
   {

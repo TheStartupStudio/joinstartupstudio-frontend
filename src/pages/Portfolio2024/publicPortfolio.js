@@ -16,6 +16,7 @@ function PublicPortfolio(props) {
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
 
+
   useEffect(() => {
     setIsLoading(true)
     const getPublicPortfolioAPI = async () => {
@@ -52,7 +53,6 @@ function PublicPortfolio(props) {
       </div>
     )
   }
-
   return (
     <div className='portfolio-container'>
       <PortfolioHeader

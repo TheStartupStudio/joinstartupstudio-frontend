@@ -10,7 +10,6 @@ import './assets/css/style.css'
 import './assets/css/media.css'
 import './assets/css/extra.css'
 import './assets/css/ltsUiItems.css'
-import '@progress/kendo-theme-default/dist/all.css'
 
 const { PUBLIC_URL } = process.env
 

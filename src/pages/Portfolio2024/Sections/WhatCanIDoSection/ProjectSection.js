@@ -115,7 +115,7 @@ const ProjectSection = ({
                 evidence?.selectedSkills?.length > 0 && (
                   <div className={'skill-group-by-section'} key={index}>
                     <div className={'skill-group-title py-2'}>
-                      {evidence.title}
+                      {evidence.evidenceTitle}
                     </div>
 
                     {Object.keys(skillsByCategory)?.length > 0 &&
