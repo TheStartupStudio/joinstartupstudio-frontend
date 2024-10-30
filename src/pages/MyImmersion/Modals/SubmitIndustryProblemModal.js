@@ -187,7 +187,7 @@ const SubmitIndustryProblemModal = (props) => {
                     ? props.user_industry_solution?.company_name
                     : ''}{' '}
                 </p>
-                -
+
                 <Textarea
                   placeholder={'Briefly describe solution'}
                   name='solutionDescription'

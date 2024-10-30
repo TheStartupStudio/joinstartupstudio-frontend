@@ -660,6 +660,57 @@
   height: 99px;
 }
 
+.portf-userinfo .user-info-box {
+  margin-top: 10px !important;
+}
+
+.userinfo-valueprop .portfolio-info-title {
+  font: normal normal 600 22px/27px Montserrat !important
+}
+
+.failure-submission-parent .portfolio-submission-container {
+  width: 436.01px !important;
+  height: 264.71px !important;
+}
+
+.failure-desc {
+  width: 477px !important;
+}
+
+.failure-submission-parent {
+  margin-right: 55px !important;
+}
+
+@media (max-width: 1408px) {
+  .failure-submission-parent .portfolio-submission-container {
+    width: 100% !important
+  }
+
+  .failure-submission-parent {
+    margin-right: 0 !important;
+  }
+
+  .failure-desc {
+    width: 58.33333333% !important;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .failure-desc {
+    width: 100% !important;
+  }
+}
+
+
+.mentors-container-nomod {
+  height: 400px !important;
+}
+
+.mentors-container-nomod .mentor-info-box {
+  justify-content: start !important;
+}
+
 @media (max-width: 460px) {
   .portfolio-container {
     padding: 10px !important;
@@ -1115,7 +1166,6 @@
   /*justify-content: flex-start;*/
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 10px;
   padding: 12px;
 }
