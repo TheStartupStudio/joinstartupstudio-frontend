@@ -1170,6 +1170,14 @@
   padding: 12px;
 }
 
+.inputs-aligning .w-100.rounded-0.p-1 {
+  margin-left: 10px !important;
+}
+
+.view-marketready-color {
+  color: #52c7de !important;
+}
+
 .add-new-mentor {
   text-align: center;
   font: normal normal normal 17px/20px Montserrat;

@@ -831,8 +831,11 @@
     margin-right: 20px;
   }
 
-  .public-portfolio {
+  /* .public-portfolio {
     width: 93%;
+  } */
+  .public-portfolio {
+    width: 100%;
   }
 
   .align-items-center.published-portfolio {
@@ -889,6 +892,10 @@
   .dashboard-notification {
     margin-top: 15px;
   }
+}
+
+.public-portfolio .portfolio-container {
+  margin-right: 0 !important;
 }
 
 @media (max-width: 1097px) {

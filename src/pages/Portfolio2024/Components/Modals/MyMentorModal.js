@@ -189,7 +189,7 @@ const MyMentorModal = (props) => {
             readOnly={readOnly}
           />
         </div>
-        <div className='mentor-modal-inputs'>
+        <div className='mentor-modal-inputs inputs-aligning'>
           <LabeledInput
             title='Mentor Name'
             type='text'
@@ -227,7 +227,7 @@ const MyMentorModal = (props) => {
           />
         </div>
       </div>
-      <div className='mt-3'>
+      <div className='mt-3 inputs-aligning'>
         {!readOnly ? (
           <>
             <div className='portfolio-quill-label-sm'>Description</div>

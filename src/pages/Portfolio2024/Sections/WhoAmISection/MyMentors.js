@@ -90,7 +90,7 @@ function MyMentors(props) {
           </>
         )}
       </div>
-      <div className={'col-md-4'} style={{ marginLeft: 90 }}>
+      <div className={'col-md-4'}>
         {myMentors?.length > 0 && isEditSection && (
           <AddMyMentor
             title={`Add new "My Mentors" section`}

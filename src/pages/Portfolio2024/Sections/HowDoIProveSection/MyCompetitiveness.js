@@ -99,7 +99,7 @@ function MyCompetitiveness(props) {
         </>
       )}
 
-      <div className={'col-md-4'} style={{ marginLeft: 90 }}>
+      <div className={'col-md-4'}>
         {myCompetitiveness?.length > 0 && isEditSection && (
           <AddMyMentor
             title={`Add new "My Competitiveness" section`}
