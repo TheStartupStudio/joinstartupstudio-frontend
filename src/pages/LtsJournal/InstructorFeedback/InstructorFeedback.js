@@ -4,12 +4,13 @@ import { useRouteMatch } from 'react-router-dom'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import notificationSocket from '../../../utils/notificationSocket'
+import NotificationTypes from '../../../utils/notificationTypes'
 
 function InstructorFeedback(props) {
-  const loggedUserId = useSelector((state) => state.user.user.user.id)
+  const { id:loggedUserId, name: loggedUserName } = useSelector((state) => state.user.user.user)
   const [instructorFeedback, setInstructorFeedback] = useState(null)
   const routeMatch = useRouteMatch()
-
   const [, , ...ids] = routeMatch.url.split('/')
 
   const [userId, journalId] = ids.map((id) => +id)
@@ -17,7 +18,7 @@ function InstructorFeedback(props) {
   const handleChangeInstructorFeedback = (data) => {
     console.log('data', data)
   }
-
+  // console.log('props', props)
   const handleSave = (updatedData) => {
     const isEdit = !!updatedData.id
     let newData = {
@@ -31,6 +32,14 @@ function InstructorFeedback(props) {
 
     delete newData.id
 
+    const journalType = () => {
+      let type = props.journalType.value
+      if(type === 'personal-finance') {
+        return 'student-personal-finance'
+      }
+      return type
+    }
+
     if (!isEdit) {
       axiosInstance
         .post('/ltsJournals/instructor-feedback', newData)
@@ -40,6 +49,15 @@ function InstructorFeedback(props) {
             userInstructorFeedback: res.data
           })
           toast.success('Instructor feedback updated successfully!')
+
+
+          notificationSocket?.emit('sendNotification', {
+            sender: { id: loggedUserId,  name: loggedUserName },
+            receivers: [{ id: userId }],
+            type: NotificationTypes.INSTRUCTOR_FEEDBACK_ADDED.key,
+            url: `/${journalType()}/${props.data?.journalId}`,
+            description: ` on ${props.journal?.title} of ${props.journalType?.label}`
+          })
         })
         .catch((e) => {
           toast.error('Error occurred during updating instructor feedback!')
@@ -52,12 +70,21 @@ function InstructorFeedback(props) {
             ...instructorFeedback,
             userInstructorFeedback: res.data
           })
+          notificationSocket?.emit('sendNotification', {
+            sender: { id: loggedUserId, name: loggedUserName },
+            receivers: [{ id: userId }],
+            type: NotificationTypes.INSTRUCTOR_FEEDBACK_UPDATED.key,
+            url: `/${journalType()}/${props.data?.journalId}`,
+            description: ` on ${props.journal?.title} of ${props.journalType?.label}`
+          })
           toast.success('Instructor feedback updated successfully!')
         })
         .catch((e) => {
           toast.error('Error occurred during updating instructor feedback!')
         })
     }
+
+
   }
   useEffect(() => {
     if (props.data) setInstructorFeedback(props.data)
