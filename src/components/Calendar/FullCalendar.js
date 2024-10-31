@@ -22,36 +22,6 @@ import {
 } from '../../redux/dashboard/Actions'
 import TaskEventModal from '../Modals/TaskEventModal'
 
-let eventGuid = 0
-let todayStr = new Date().toISOString().replace(/T.*$/, '')
-
-export const INITIAL_EVENTS = [
-  {
-    id: createEventId(),
-    title: 'All-day event',
-    start: todayStr
-  },
-  {
-    id: createEventId(),
-    title: 'All-day event2',
-    start: todayStr
-  },
-  {
-    id: createEventId(),
-    title: 'All-day event3',
-    start: todayStr
-  },
-  {
-    id: createEventId(),
-    title: 'All-day event4',
-    start: todayStr
-  }
-]
-
-export function createEventId() {
-  return String(eventGuid++)
-}
-
 const FullCalendarComponent = (props) => {
   const dispatch = useDispatch()
 
@@ -61,7 +31,6 @@ const FullCalendarComponent = (props) => {
   const [startDate, setStartDate] = useState(null)
   const [weekendsVisible, setWeekendsVisible] = useState(true)
   const [currentEvents, setCurrentEvents] = useState([])
-
   const calendarEventModal = useSelector(
     (state) => state.dashboard.calendarEventModal
   )
@@ -492,6 +461,8 @@ const FullCalendarComponent = (props) => {
           </div>
         )}
         moreLinkClassNames={'more-link'}
+        nextDayThreshold={'00:00:00'}
+        timeZone="UTC"
       />
       <CalendarEventModal
         show={calendarEventModal}
