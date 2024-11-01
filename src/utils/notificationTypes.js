@@ -107,5 +107,13 @@ export default {
   IAMR_UPDATE_SAVED_UPLOAD: {
     key: 'IAMR_UPDATE_SAVED_UPLOAD',
     value: ' updated a saved upload.'
+  },
+  INSTRUCTOR_FEEDBACK_ADDED: {
+    key: 'INSTRUCTOR_FEEDBACK_ADDED',
+    value: ' added a new feedback.'
+  },
+  INSTRUCTOR_FEEDBACK_UPDATED: {
+    key: 'INSTRUCTOR_FEEDBACK_UPDATED',
+    value: ' updated feedback.'
   }
 }

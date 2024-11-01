@@ -31,7 +31,7 @@ function JournalsBody(props) {
   const history = useHistory()
   let [journals, setJournals] = useState([])
   let [loaded, setLoaded] = useState(false)
-  let [journalActive, setJournalActive] = useState(false)
+  let [journalActive, setJournalActive] = useState('student-lts')
   const [journalsData, setJournalsData] = useState()
   const [fetchingUserData, setFetchingUserData] = useState(true)
   const [notAllowed, setNotAllowed] = useState(false)
@@ -41,6 +41,7 @@ function JournalsBody(props) {
   const userBasicInfo = useSelector(
     (state) => state.portfolio.whoSection.userBasicInfo
   )
+
 
   let contentContainer = useRef()
   const studentInfo = useSelector(
@@ -253,6 +254,7 @@ function JournalsBody(props) {
                           styles={customStyles}
                           onChange={async (data) => {
                             getJournals(data.value)
+                            setJournalActive(data)
                           }}
                         />
                       </div>
@@ -276,6 +278,7 @@ function JournalsBody(props) {
                                   contentContainer={contentContainer}
                                   backRoute={props.match.url}
                                   saved={journalChanged}
+                                  journalType={journalActive}
                                 />
                               </>
                             )}

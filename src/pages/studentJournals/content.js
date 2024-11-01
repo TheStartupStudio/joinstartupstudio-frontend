@@ -224,6 +224,8 @@ function LtsJournalContent(props) {
     navigate.push('/story-in-motion')
   }
 
+  // console.log('journal', journal)
+
   return (
     <>
       <div className='row'>
@@ -547,7 +549,7 @@ function LtsJournalContent(props) {
       </div>
       {props.match.params.journalId === '1001028' && <Rwl isEditable={false} />}
       {journal?.instructorFeedback && (
-        <InstructorFeedback data={journal?.instructorFeedback} />
+        <InstructorFeedback data={journal?.instructorFeedback} journal={journal} journalType={props.journalType} />
       )}
     </>
   )
