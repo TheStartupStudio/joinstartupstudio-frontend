@@ -200,12 +200,8 @@ const EducationCardModal = (props) => {
             </span>
           </div>
         </div>
-        <div className={'mentor-modal-firstrow education-card-row row'}>
-          <div
-            className={
-              'image-education-card col-md-4 education-modal-imgs mentor-modal-imgs'
-            }
-          >
+        <div className={'education-card-row row'}>
+          <div className={'image-education-card col-md-4 '}>
             {/*<div className="upload-image me-2 mb-1">*/}
             <div className=' p-0 mb-1'>
               <ReactImageUpload
@@ -222,9 +218,7 @@ const EducationCardModal = (props) => {
               />
             </div>
           </div>
-          <div
-            className={'mentor-modal-inputs education-card-inputs col-md-8 '}
-          >
+          <div className={'education-card-inputs col-md-8 '}>
             <>
               <LabeledInput
                 containerClassNames={'wcid-ed-input'}

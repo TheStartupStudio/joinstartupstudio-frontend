@@ -13,7 +13,7 @@ function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
   const mode = useSelector((state) => state.portfolio.mode)
 
   const filteredUnshownData = (data) => {
-    return data.filter((data)=>data.showSection)
+    return data?.filter((data)=>data.showSection)
   }
   useEffect(() => {
     if (propsLoadings) {
@@ -46,41 +46,78 @@ function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
         UserBasicInfo,
         data?.userBasicInfo?.data
       )}
-      {data?.userStory  && data?.userStory?.showUserStory &&  mode === 'preview' &&
-        renderSection(
-          loadings?.userStory,
-          'user-story',
-          'My Story',
-          UserStory,
-          data?.userStory?.data
-        )}
+      {data?.userStory && data?.userStory?.data ? <>
 
-      {data?.userStory && mode === 'edit' &&
-        renderSection(
-          loadings?.userStory,
-          'user-story',
-          'My Story',
-          UserStory,
-          data?.userStory?.data
-        )}
+          { data?.userStory?.data?.showUserStory !== 0  &&  mode === 'preview' &&
+            renderSection(
+              loadings?.userStory,
+              'user-story',
+              'My Story',
+              UserStory,
+              data?.userStory?.data
+            )}
 
-      {data?.myRelationships && data?.myRelationships?.showRelationships &&  mode === 'preview' &&
-        renderSection(
-          loadings?.myRelationships,
-          'my-relationship',
-          'My Relationships',
-          MyRelationships,
-          data?.myRelationships?.data
-        )}
+          {mode === 'edit' &&
+            renderSection(
+              loadings?.userStory,
+              'user-story',
+              'My Story',
+              UserStory,
+              data?.userStory?.data
+            )}
 
-      {data?.myRelationships &&  mode === 'mode' &&
-        renderSection(
-          loadings?.myRelationships,
-          'my-relationship',
-          'My Relationships',
-          MyRelationships,
-          data?.myRelationships?.data
-        )}
+
+        </>:
+
+        <>
+
+          {
+            renderSection(
+              loadings?.userStory,
+              'user-story',
+              'My Story',
+              UserStory,
+              data?.userStory?.data
+            )}
+        </>
+
+      }
+
+
+      {data?.myRelationships && data?.myRelationships?.data ? <>
+          {data?.myRelationships?.data?.showRelationships !== 0 &&  mode === 'preview' &&
+            renderSection(
+              loadings?.myRelationships,
+              'my-relationship',
+              'My Relationships',
+              MyRelationships,
+              data?.myRelationships?.data
+            )}
+
+          {mode === 'edit' &&
+            renderSection(
+              loadings?.myRelationships,
+              'my-relationship',
+              'My Relationships',
+              MyRelationships,
+              data?.myRelationships?.data
+            )}
+
+        </> :
+
+        <>
+          {renderSection(
+            loadings?.myRelationships,
+            'my-relationship',
+            'My Relationships',
+            MyRelationships,
+            data?.myRelationships?.data
+          )}
+        </>
+
+
+      }
+
       {renderSection(
         loadings?.myFailures,
         'my-failures',

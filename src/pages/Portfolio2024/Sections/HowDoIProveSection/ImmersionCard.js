@@ -44,15 +44,9 @@ function ImmersionCard(props) {
   }
 
   return (
-    <div
-      className={'mb-3 w-100'}
-      style={{ paddingLeft: '10px', paddingRight: '10px' }}
-    >
-      <PortfolioDataContainer
-        background={'#fff'}
-        className='immersion-card-margin'
-      >
-        <div className={'d-flex gap-3 '}>
+    <div className={'mb-3 w-100'}>
+      <PortfolioDataContainer background={'#fff'}>
+        <div className={'immersion-card-resp d-flex gap-3 '}>
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img
               className={'organization-image'}
@@ -127,7 +121,6 @@ function ImmersionCard(props) {
                   title={'My immersion experience'}
                   thumbnailUrl={data?.immersionThumbnailUrl}
                   videoUrl={data?.immersionVideoUrl}
-                  className='project-submission-image'
                 />
               </div>
             </div>
