@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createRef } from 'react'
 import LabeledInput from '../../Components/DisplayData/LabeledInput'
-import IAMRSkillSelector from '../../../../components/IAMRSkillSelector/IAMRSkillSelector'
+// import IAMRSkillSelector from '../../../../Components/IAMRSkillSelector/IAMRSkillSelector'
+import IAMRSkillSelector from '../../../../components/IamrSkillSelector/IAMRSkillSelector'
 
 import { getProjects, getSkills } from '../../../../redux/portfolio/Actions'
 import { connect } from 'react-redux'
@@ -90,7 +91,6 @@ const EvidenceBody = ({
           const skillCopy = { ...skill }
           delete skillCopy.category
 
-
           // const category = skill.category
           //
           // if (!acc[category]) {
@@ -98,8 +98,6 @@ const EvidenceBody = ({
           // }
           //
           // acc[category].push(skillCopy)
-
-
 
           const camelCasedCategory = skill.category
             .toLowerCase()
@@ -146,7 +144,6 @@ const EvidenceBody = ({
 
   const handleEvidenceTitleChange = (value) => {
     setEvidenceTitle(value)
-
   }
   const handleLinkChange = (value) => {
     setLinkInputValue(value)
@@ -279,7 +276,6 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'input' }}>
-
           <div className={'mb-1'}>
             <LabeledInput
               title={`Title for Content Upload`}
