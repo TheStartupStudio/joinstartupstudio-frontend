@@ -29,7 +29,7 @@ function AddMyMentor(props) {
       ? state.portfolio.howSection.myCompetitiveness.showAddCompetitivenessModal
       : state.portfolio.whoSection.myMentors.showAddMentorModal
   )
-  // console.log('props.category', props.category)
+
   const handleShowModal = () => {
     if (props.category === 'my-competitiveness') {
       dispatch(showAddCompetitivenessModal())

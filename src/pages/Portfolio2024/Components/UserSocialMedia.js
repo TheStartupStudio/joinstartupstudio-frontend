@@ -1,7 +1,7 @@
 import React from 'react'
 import { FaInstagram, FaLinkedinIn, FaGlobe } from 'react-icons/fa'
 import { FaSquareFacebook, FaSquareXTwitter } from 'react-icons/fa6'
-import '../index.css'
+import '../../Portfolio2024/index.css'
 
 const ensureUrlProtocol = (url) => {
   if (url?.startsWith('http://') || url?.startsWith('https://')) {

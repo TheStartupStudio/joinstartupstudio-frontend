@@ -70,7 +70,6 @@ function Project(props) {
     return newEvidences
   }
 
-
   const getProjectContent = (type) => {
     return getProjectSectionByType(type)?.editorContent
   }
@@ -78,17 +77,11 @@ function Project(props) {
   const getProjectShowSection = (type) => {
     return getProjectSectionByType(type)?.showSection
   }
-  const renderSection = (
-    type,
-    title,
-    subTitle,
-    contentTitle,
-
-  ) => {
+  const renderSection = (type, title, subTitle, contentTitle) => {
     const initialEvidences = [
-      {  type: 'evidence-1' },
-      {  type: 'evidence-2' },
-      {  type: 'evidence-3' }
+      { type: 'evidence-1' },
+      { type: 'evidence-2' },
+      { type: 'evidence-3' }
     ]
     const evidences = getEvidenceData(initialEvidences, type)
     const content = getProjectContent(type)
@@ -114,7 +107,7 @@ function Project(props) {
       <SectionActions actions={actions} />
 
       <h3 className={'text-center mb-2 my-project-title'}>
-        {title}
+        {title} A NEW ALUMNI SPOTLIGHT
       </h3>
 
       <div>
@@ -122,21 +115,21 @@ function Project(props) {
           'learn',
           'LEARN',
           'Your commitment to conscious consumption, research, and analysis.',
-          'Problem identification',
+          'Problem identification'
         )}
 
         {renderSection(
           'develop',
           'DEVELOP',
           'Your ability to execute through the development of employability and industry skills.',
-          'My solution',
+          'My solution'
         )}
 
         {renderSection(
           'brand',
           'BRAND',
           'Your ability to communicate and market your value.',
-          'Branded material',
+          'Branded material'
         )}
       </div>
       {showAddProjectModal && (

@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import SectionActions from '../../Components/Actions/SectionActions'
 import AddMyMentor from '../../Components/Actions/AddMyMentor'
 import NoDataDisplay from '../../Components/DisplayData/NoDataDisplay'
-import mentorsImage from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+// import mentorsImage from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+import mentorplaceholder from '../../../../assets/images/mentorplaceholder.png'
 import MyMentorModal from '../../Components/Modals/MyMentorModal'
 import {
   hideAddMentorModal,
@@ -81,7 +82,7 @@ function MyMentors(props) {
         ) : (
           <>
             <NoDataDisplay
-              src={mentorsImage}
+              src={mentorplaceholder}
               classNames={'mt-5'}
               text={
                 'You don’t have any mentors yet! Click the button to add one.'
@@ -96,14 +97,6 @@ function MyMentors(props) {
             title={`Add new "My Mentors" section`}
             isEditSection={isEditSection}
             data={myMentors?.data}
-          />
-        )}
-        {mode === 'edit' && showModal && (
-          <MyMentorModal
-            onHide={handleHideModal}
-            show={showModal}
-            title={`Add mentors`}
-            category={'my-mentors'}
           />
         )}
       </div>

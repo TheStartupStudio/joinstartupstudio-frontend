@@ -26,8 +26,6 @@ function MyAlignments(props) {
 
   const educations = props.data?.educations?.data
   const credentials = props.data?.credentials?.data
-
-
   const dispatch = useDispatch()
   const [isEditEducationSection, setIsEditEducationSection] = useState(false)
   const [isEditCredentialSection, setIsEditCredentialSection] = useState(false)
@@ -199,7 +197,7 @@ function MyAlignments(props) {
         <div className={'education-section-alignment mt-5 w-100'}>
           {renderSection(
             'Credentials',
-            mode === 'edit' ? credentials : filteredUnshownData(credentials),
+            mode === 'edit' ? educations : filteredUnshownData(credentials),
             CredentialCard,
             isEditCredentialSection,
             credentialActions,

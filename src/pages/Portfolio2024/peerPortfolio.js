@@ -51,7 +51,7 @@ function PeerPortfolio() {
     <div className='portfolio-container'>
       <PortfolioHeader
         user={publicPortfolio.user}
-        userStory={publicPortfolio?.whoAmI?.userBasicInfo}
+        userStory={publicPortfolio?.whoAmI?.userStory}
       />
       {activeSection === 'who-section' && (
         <WhoAmI data={publicPortfolio?.whoAmI} user={publicPortfolio?.user} />

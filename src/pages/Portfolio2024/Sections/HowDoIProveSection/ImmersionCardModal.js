@@ -255,27 +255,32 @@ const ImmersionCardModal = (props) => {
                 </span>
               </div>
             )}
-            {/* <div
-              className={
-                'checkbox-date-education-resp d-flex align-items-center'
-              }
-            >
-              <input
-                type='checkbox'
-                checked={immersionData.currentlyAttending}
-                onChange={(e) => {
-                  const newValue = e.target.checked
-                  handleDataChange(newValue, 'currentlyAttending')
-                }}
-                className={'me-2 current-position-checkbox'}
-              />
-              <span className={'current-position-label'}>
-                Currently attending
-              </span>
-            </div> */}
+            {/*           
+          //   <div
+          //     className={
+          //       'checkbox-date-education-resp d-flex align-items-center'
+          //     }
+          //   >
+          //     <input
+          //       type='checkbox'
+          //       checked={immersionData.currentlyAttending}
+          //       onChange={(e) => {
+          //         const newValue = e.target.checked
+          //         handleDataChange(newValue, 'currentlyAttending')
+          //       }}
+          //       className={'me-2 current-position-checkbox'}
+          //     />
+          //     <span className={'current-position-label'}>
+          //       Currently attending
+          //     </span>
+          //   </div>*/}
           </div>
 
-          <div className={'checkbox-date-education d-flex align-items-center'}>
+          <div
+            className={
+              'checkbox-date-education-resp checkbox-date-education d-flex align-items-center'
+            }
+          >
             <input
               type='checkbox'
               checked={immersionData.currentlyAttending}
@@ -293,19 +298,8 @@ const ImmersionCardModal = (props) => {
         <div className={'education-card-row row'}>
           {/* <div className={'immersion-image-align col-md-3 '}> */}
           <div className={'immersion-image-align '}>
+            {/*<div className="upload-image me-2 mb-1">*/}
             <div className='p-0 mb-1'>
-              {/* <ReactImageUpload
-                value={imageUrl}
-                {...imageProperties}
-                onChangeImageCrop={updateCroppedImage}
-                onImageLoadSuccess={handleImageLoadSuccess}
-                onLabelClick={handleLabelClick}
-                onFileInputChange={handleFileInputChange}
-                onPositionChange={handlePositionChange}
-                actions={avatarEditorActions}
-                title={'Organization Logo'}
-                editorRef={editorRef}
-              /> */}
               <ReactImageUpload
                 value={imageUrl}
                 {...imageProperties}
@@ -364,7 +358,6 @@ const ImmersionCardModal = (props) => {
               </div>
               <div>
                 <EditPortfolioSubmission
-                  containerClassname={'immers-video-portf'}
                   height={250}
                   title={
                     !immersionData?.immersionThumbnailUrl

@@ -146,6 +146,7 @@ function MyProductivity(props) {
         title={title}
         titleAlign={'start'}
         height={items?.length > 0 ? undefined : 440}
+        className='productivity-titles'
       >
         {items?.length > 0 ? (
           containCarousel ? (
@@ -215,7 +216,7 @@ function MyProductivity(props) {
       <div className={'mt-5'}>
         {renderSection(
           'Work Experience',
-          mode === 'edit' ? workExperiences : filteredUnshownData(workExperiences),
+          mode === 'edit' ? immersions : filteredUnshownData(workExperiences),
           WorkExperienceCard,
           isEditWorkExperienceSection,
           workExperienceActions,

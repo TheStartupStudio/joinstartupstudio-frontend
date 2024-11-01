@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createRef } from 'react'
 import LabeledInput from '../../Components/DisplayData/LabeledInput'
-import IAMRSkillSelector from '../../../../components/IamrSkillSelector/IAMRSkillSelector'
+import IAMRSkillSelector from '../../../../components/IAMRSkillSelector/IAMRSkillSelector'
 
 import { getProjects, getSkills } from '../../../../redux/portfolio/Actions'
 import { connect } from 'react-redux'
