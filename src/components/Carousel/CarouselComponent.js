@@ -7,20 +7,21 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 const CarouselComponent = ({
-  data,
-  itemsToShow = 1,
-  breakPoints = [],
-  renderItems,
-  transitionDuration = '0.5s',
-  transitionTimingFunction = 'ease-in-out'
-}) => {
-  const [activeIndex, setActiveIndex] = useState(0)
+                             data,
+                             itemsToShow = 1,
+                             breakPoints = [],
+                             renderItems,
+                             transitionDuration = '0.5s',
+                             transitionTimingFunction = 'ease-in-out',
+                             initialActiveIndex = 0
+                           }) => {
+  const [activeIndex, setActiveIndex] = useState(initialActiveIndex)
   const [currentItemsToShow, setCurrentItemsToShow] = useState(itemsToShow)
   const [totalPages, setTotalPages] = useState(
     Math.ceil(data?.length / itemsToShow)
   )
-  const totalItems = data?.length
 
+  const totalItems = data?.length
   const displayIndicators = totalPages > 1
 
   const updateIndex = (direction) => {
@@ -65,6 +66,10 @@ const CarouselComponent = ({
 
     setActiveIndex((prevIndex) => Math.min(prevIndex, newTotalPages - 1))
   }, [currentItemsToShow, totalItems])
+
+  useEffect(() => {
+    setActiveIndex(initialActiveIndex)
+  }, [initialActiveIndex])
 
   return (
     <div className='my-carousel'>
@@ -114,4 +119,5 @@ const CarouselComponent = ({
     </div>
   )
 }
+
 export default CarouselComponent

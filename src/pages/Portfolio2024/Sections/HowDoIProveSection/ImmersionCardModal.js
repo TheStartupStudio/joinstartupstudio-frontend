@@ -255,32 +255,27 @@ const ImmersionCardModal = (props) => {
                 </span>
               </div>
             )}
-            {/*           
-          //   <div
-          //     className={
-          //       'checkbox-date-education-resp d-flex align-items-center'
-          //     }
-          //   >
-          //     <input
-          //       type='checkbox'
-          //       checked={immersionData.currentlyAttending}
-          //       onChange={(e) => {
-          //         const newValue = e.target.checked
-          //         handleDataChange(newValue, 'currentlyAttending')
-          //       }}
-          //       className={'me-2 current-position-checkbox'}
-          //     />
-          //     <span className={'current-position-label'}>
-          //       Currently attending
-          //     </span>
-          //   </div>*/}
+            <div
+              className={
+                'checkbox-date-education-resp d-flex align-items-center'
+              }
+            >
+              <input
+                type='checkbox'
+                checked={immersionData.currentlyAttending}
+                onChange={(e) => {
+                  const newValue = e.target.checked
+                  handleDataChange(newValue, 'currentlyAttending')
+                }}
+                className={'me-2 current-position-checkbox'}
+              />
+              <span className={'current-position-label'}>
+                Currently attending
+              </span>
+            </div>
           </div>
 
-          <div
-            className={
-              'checkbox-date-education-resp checkbox-date-education d-flex align-items-center'
-            }
-          >
+          <div className={'checkbox-date-education d-flex align-items-center'}>
             <input
               type='checkbox'
               checked={immersionData.currentlyAttending}
@@ -296,8 +291,7 @@ const ImmersionCardModal = (props) => {
           </div>
         </div>
         <div className={'education-card-row row'}>
-          {/* <div className={'immersion-image-align col-md-3 '}> */}
-          <div className={'immersion-image-align '}>
+          <div className={'immersion-image-align col-md-3 '}>
             {/*<div className="upload-image me-2 mb-1">*/}
             <div className='p-0 mb-1'>
               <ReactImageUpload
@@ -316,8 +310,7 @@ const ImmersionCardModal = (props) => {
           </div>
           <div className={'col-md-9 '}>
             <div className={'immersion-inputs d-flex gap-5'}>
-              {/* <div className={'immersion-card-portf w-75'}> */}
-              <div className={'immersion-card-portf '}>
+              <div className={'w-75'}>
                 <LabeledInput
                   titleClassNames={'portf-input-title'}
                   title={'ORGANIZATION NAME'}
@@ -329,7 +322,7 @@ const ImmersionCardModal = (props) => {
                   labelAlign={'start'}
                   placeholder={'Add the name of the organization'}
                 />
-                <div className={'mt-2'} style={{ marginBottom: '20px' }}>
+                <div className={'mt-2'}>
                   <LabeledInput
                     titleClassNames={'portf-input-title'}
                     type={'text'}
