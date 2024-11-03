@@ -1,4 +1,8 @@
-import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
+import {
+  faFileUpload,
+  faUpload,
+  faLink
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Avatar from '../../assets/images/profile-image.png'
 import './style.css'
@@ -28,7 +32,14 @@ const Textarea = ({ placeholder, name, value, onChange, error, showError }) => {
   )
 }
 
-const UploadFileInput = ({ filename, placeholder, name, onChange, mode }) => {
+const UploadFileInput = ({
+  filename,
+  placeholder,
+  name,
+  onChange,
+  mode,
+  video
+}) => {
   const handleClick = () => {
     if (mode === 'edit' && filename) {
       window.open(filename, '_blank')
@@ -47,7 +58,10 @@ const UploadFileInput = ({ filename, placeholder, name, onChange, mode }) => {
           ? filename
           : placeholder}
       </span>
-      <FontAwesomeIcon icon={faFileUpload} className='file-input-icon' />
+      <FontAwesomeIcon
+        icon={!video ? faUpload : faLink}
+        className='file-input-icon'
+      />
       {mode !== 'edit' && (
         <input
           type='file'

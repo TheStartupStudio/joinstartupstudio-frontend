@@ -119,6 +119,7 @@ function MyFailureModal(props) {
       onToggleSection={(showSection) => {
         setShowSection(showSection)
       }}
+      class={'portf-modal-widths'}
       switchId={isEdit() ? 'edit-failure-switch' : 'add-failure-switch'}
       switchName={isEdit() ? 'edit-failure-switch' : 'add-failure-switch'}
     >

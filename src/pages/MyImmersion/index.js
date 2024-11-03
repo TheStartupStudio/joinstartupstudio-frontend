@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './style.css'
-import ImmersionImage from '../../assets/images/Immersion/immersionMainImg (1).png'
+import ImmersionImage from '../../assets/images/Immersion/immersionMainImg (2).png'
 import PrerequisiteModal from './Modals/PrerequisiteModal'
 
 const buttonStyle = (top, left, width, height) => ({
@@ -19,7 +19,8 @@ const buttonStyle = (top, left, width, height) => ({
   borderRadius: '50%',
   background:
     'linear-gradient(white, white) padding-box,linear-gradient(to right, rgba(219, 54, 148, 1), rgba(128, 197, 220, 1)) border-box',
-  border: '8px solid transparent'
+  border: '8px solid transparent',
+  fontSize: '14px'
 })
 
 const MyButton = ({ href, top, left, width, height, className }) => {

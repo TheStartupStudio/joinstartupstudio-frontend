@@ -33,7 +33,11 @@ function StoryModal(props) {
   ]
 
   return (
-    <PortfolioModalWrapper {...props} actions={actions}>
+    <PortfolioModalWrapper
+      {...props}
+      actions={actions}
+      class={'portf-modal-widths'}
+    >
       <div className={'row'}>
         <div className={'col-sm-12'}>
           <ReactQuill

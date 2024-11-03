@@ -218,11 +218,12 @@ const SubmitIndustryProblemModal = (props) => {
                     props.user_industry_solution?.pitchVideo ||
                     ''
                   }
-                  placeholder={'Upload Pitch Video'}
+                  placeholder={'Add your link to your pitch video'}
                   name='pitchVideo'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
                   accept='video/*' // Pass the accept attribute to restrict uploads to video files
+                  video={true}
                 />
 
                 <p style={{ fontSize: '11px' }}>

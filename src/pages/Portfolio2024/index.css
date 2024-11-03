@@ -353,10 +353,12 @@
   box-shadow: 0px 3px 10px #00000029 !important;
   /*padding: 10px 15px;*/
   padding: 15px 15px;
-  width: 55px;
+  width: 65px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .action-icon {
@@ -623,6 +625,11 @@
 
 .edit-education-modal .modal-content {
   padding: 10px !important;
+  width: 1500px !important;
+}
+
+.portf-modal-widths .modal-dialog {
+  max-width: 1100px !important;
 }
 
 /* .edit-immersion-modal .modal-dialog {
@@ -848,7 +855,7 @@
 @media (max-width: 576px) {
   .portfolio-modal-wrapper .modal-content {
     min-width: 88.5% !important;
-    margin-top: 150% !important;
+    margin-top: 20% !important;
   }
 }
 
@@ -1232,13 +1239,27 @@
 
 
 .image-education-card {
-  width: 25% !important;
+  width: 20% !important;
 }
 
 .education-card-inputs {
   width: 75%;
+  margin-left: 10px !important;
 }
 
+@media (max-width:1067px) {
+  .education-card-inputs {
+
+    margin-left: 20px !important;
+  }
+}
+
+@media (max-width:1040px) {
+  .education-card-inputs {
+
+    margin-left: 30px !important;
+  }
+}
 
 @media (max-width:920px) {
   .education-card-row {
@@ -1249,6 +1270,7 @@
 
   .education-card-inputs {
     width: 100%;
+    margin-left: 0 !important;
   }
 
 
@@ -1643,7 +1665,7 @@
 }
 
 .add-mentor-portf {
-  min-height: 312px ;
+  min-height: 312px;
 }
 
 .placeholder-mentor-img {

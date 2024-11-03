@@ -76,7 +76,7 @@ td {
   width: 20%;
 } */
 
-td:last-child > button {
+td:last-child>button {
   width: 100%;
 }
 
@@ -181,12 +181,9 @@ th:last-child {
   top: 19%;
   left: 32%;
   background: rgb(219, 54, 148) !important;
-  background: linear-gradient(
-      90deg,
+  background: linear-gradient(90deg,
       rgba(219, 54, 148, 1) 0%,
-      rgba(128, 197, 220, 1) 75%
-    )
-    border-box !important;
+      rgba(128, 197, 220, 1) 75%) border-box !important;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -344,58 +341,62 @@ gap: -10px;
 
 */
 
-@media (max-width: 1200px) {
+@media (max-width: 1166px) {
   .st1-immr-btn {
     left: 18.5% !important;
-    font-size: 13px;
+    font-size: 12px !important;
   }
 
   .st2-immr-btn {
     left: 36.3% !important;
-    font-size: 13px;
+    font-size: 12px !important;
   }
 
   .st3-immr-btn {
-    font-size: 13px;
+    font-size: 12px !important;
   }
 
   .st4-immr-btn {
     left: 71% !important;
-    font-size: 13px;
+    font-size: 12px !important;
   }
 }
 
 @media (max-width: 916px) {
   .st1-immr-btn {
     left: 15.7% !important;
-    font-size: 13px;
+    font-size: 11.5px !important;
     width: 7.5% !important;
     height: 12% !important;
     top: 31.2% !important;
+    border: 5px solid transparent !important;
   }
 
   .st2-immr-btn {
     left: 35.4% !important;
-    font-size: 13px;
+    font-size: 11.5px !important;
     width: 7.5% !important;
     height: 12% !important;
     top: 31.2% !important;
+    border: 5px solid transparent !important;
   }
 
   .st3-immr-btn {
-    font-size: 13px;
+    font-size: 11.5px !important;
     width: 7.5% !important;
     height: 12% !important;
     top: 31.2% !important;
     left: 54.1% !important;
+    border: 5px solid transparent !important;
   }
 
   .st4-immr-btn {
     left: 73.2% !important;
-    font-size: 13px;
+    font-size: 11.5px !important;
     width: 7.5% !important;
     height: 12% !important;
     top: 31.2% !important;
+    border: 5px solid transparent !important;
   }
 
   .main-immrs-image {
@@ -406,34 +407,38 @@ gap: -10px;
 @media (max-width: 790px) {
   .st1-immr-btn {
     left: 16.1% !important;
-    font-size: 12px;
+    font-size: 11px !important;
     width: 7.6% !important;
     height: 12.1% !important;
     top: 31.3% !important;
+    border: 5px solid transparent !important;
   }
 
   .st2-immr-btn {
     left: 35.4% !important;
-    font-size: 12px;
+    font-size: 11px !important;
     width: 7.6% !important;
     height: 12.1% !important;
     top: 31.3% !important;
+    border: 5px solid transparent !important;
   }
 
   .st3-immr-btn {
-    font-size: 12px;
+    font-size: 11px !important;
     width: 7.6% !important;
     height: 12.1% !important;
     top: 31.3% !important;
     left: 54% !important;
+    border: 5px solid transparent !important;
   }
 
   .st4-immr-btn {
     left: 72.8% !important;
-    font-size: 12px;
+    font-size: 11px !important;
     width: 7.6% !important;
     height: 12.1% !important;
     top: 31.3% !important;
+    border: 5px solid transparent !important;
   }
 
   .main-immrs-image {
@@ -444,7 +449,7 @@ gap: -10px;
 @media (max-width: 745px) {
   .st1-immr-btn {
     left: 11% !important;
-    font-size: 12px;
+    font-size: 10.5px !important;
     width: 9.5% !important;
     height: 12.1% !important;
     top: 31.5% !important;
@@ -452,14 +457,14 @@ gap: -10px;
 
   .st2-immr-btn {
     left: 32.6% !important;
-    font-size: 12px;
+    font-size: 10.5px !important;
     width: 9.5% !important;
     height: 12.1% !important;
     top: 31.5% !important;
   }
 
   .st3-immr-btn {
-    font-size: 12px;
+    font-size: 10.5px !important;
     width: 9.5% !important;
     height: 12.1% !important;
     top: 31.5% !important;
@@ -468,7 +473,7 @@ gap: -10px;
 
   .st4-immr-btn {
     left: 76% !important;
-    font-size: 12px;
+    font-size: 10.5px !important;
     width: 9.5% !important;
     height: 12.1% !important;
     top: 31.5% !important;
@@ -482,7 +487,7 @@ gap: -10px;
 @media (max-width: 620px) {
   .st1-immr-btn {
     left: 11% !important;
-    font-size: 11px;
+    font-size: 11px !important;
     width: 9.5% !important;
     height: 12.1% !important;
     top: 31.5% !important;
@@ -490,14 +495,14 @@ gap: -10px;
 
   .st2-immr-btn {
     left: 32.6% !important;
-    font-size: 11px;
+    font-size: 11px !important;
     width: 9.5% !important;
     height: 12.1% !important;
     top: 31.5% !important;
   }
 
   .st3-immr-btn {
-    font-size: 11px;
+    font-size: 11px !important;
     width: 9.5% !important;
     height: 12.1% !important;
     top: 31.5% !important;
@@ -506,7 +511,7 @@ gap: -10px;
 
   .st4-immr-btn {
     left: 76% !important;
-    font-size: 11px;
+    font-size: 11px !important;
     width: 9.5% !important;
     height: 12.1% !important;
     top: 31.5% !important;
@@ -520,7 +525,7 @@ gap: -10px;
 @media (max-width: 540px) {
   .st1-immr-btn {
     left: 9% !important;
-    font-size: 10px;
+    font-size: 10px !important;
     width: 9.6% !important;
     height: 12.1% !important;
     top: 31.7% !important;
@@ -528,14 +533,14 @@ gap: -10px;
 
   .st2-immr-btn {
     left: 32.5% !important;
-    font-size: 10px;
+    font-size: 10px !important;
     width: 9.6% !important;
     height: 12.1% !important;
     top: 31.7% !important;
   }
 
   .st3-immr-btn {
-    font-size: 10px;
+    font-size: 10px !important;
     width: 9.6% !important;
     height: 12.1% !important;
     top: 31.7% !important;
@@ -544,7 +549,7 @@ gap: -10px;
 
   .st4-immr-btn {
     left: 76.6% !important;
-    font-size: 10px;
+    font-size: 10px !important;
     width: 9.6% !important;
     height: 12.1% !important;
     top: 31.7% !important;
@@ -558,7 +563,7 @@ gap: -10px;
 @media (max-width: 468px) {
   .st1-immr-btn {
     left: 6% !important;
-    font-size: 10px;
+    font-size: 10px !important;
     width: 12% !important;
     height: 12.8% !important;
     top: 31.7% !important;
@@ -566,14 +571,14 @@ gap: -10px;
 
   .st2-immr-btn {
     left: 31% !important;
-    font-size: 10px;
+    font-size: 10px !important;
     width: 12% !important;
     height: 12.5% !important;
     top: 31.7% !important;
   }
 
   .st3-immr-btn {
-    font-size: 10px;
+    font-size: 10px !important;
     width: 12% !important;
     height: 12.8% !important;
     top: 31.7% !important;
@@ -582,7 +587,7 @@ gap: -10px;
 
   .st4-immr-btn {
     left: 77.2% !important;
-    font-size: 10px;
+    font-size: 10px !important;
     width: 12% !important;
     height: 12.8% !important;
     top: 31.7% !important;
@@ -596,7 +601,7 @@ gap: -10px;
 @media (max-width: 400px) {
   .st1-immr-btn {
     left: 6.3% !important;
-    font-size: 10px;
+    font-size: 10px !important;
     width: 12% !important;
     height: 12.5% !important;
     top: 32.7% !important;
@@ -605,7 +610,7 @@ gap: -10px;
 
   .st2-immr-btn {
     left: 31% !important;
-    font-size: 10px;
+    font-size: 10px !important;
     width: 12% !important;
     height: 12.5% !important;
     top: 32.7% !important;
@@ -613,7 +618,7 @@ gap: -10px;
   }
 
   .st3-immr-btn {
-    font-size: 10px;
+    font-size: 10px !important;
     width: 12% !important;
     height: 12.5% !important;
     top: 32.7% !important;
@@ -623,7 +628,7 @@ gap: -10px;
 
   .st4-immr-btn {
     left: 77.2% !important;
-    font-size: 10px;
+    font-size: 10px !important;
     width: 12% !important;
     height: 12.5% !important;
     top: 32.7% !important;
@@ -633,33 +638,4 @@ gap: -10px;
   .main-immrs-image {
     width: 155% !important;
   }
-}
-
-.no-profile {
-  display: none !important;
-}
-
-.left-title-immrs .profile-dropdown-info {
-  align-self: center !important;
-  margin: 0 !important;
-  margin-top: -150px;
-}
-
-.left-title-immrs .profile-dropdown-info h5 {
-  font-size: 14px !important;
-  font-weight: 500;
-  margin-top: 3px;
-}
-
-.left-title-immrs {
-  font-size: 14px !important;
-  font-weight: 500;
-}
-
-.immrs-parent-form {
-  background-color: #51c7df !important;
-}
-
-.immersion-table tbody tr {
-  border-bottom: 1px solid lightgrey !important;
 }
