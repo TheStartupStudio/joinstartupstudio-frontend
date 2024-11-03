@@ -21,11 +21,14 @@ function MyCompetitiveness(props) {
   )
 
   const [isEditSection, setIsEditSection] = useState(false)
+  const mode = useSelector((state) => state.portfolio.mode)
 
+  const filteredUnshownData = (data) => {
+    return data?.filter((data) => data.showSection)
+  }
   useEffect(() => {
     if (props.data) setMyCompetitiveness(props.data)
   }, [props.data])
-  const mode = useSelector((state) => state.portfolio.mode)
 
   const actions = [
     {
@@ -99,7 +102,7 @@ function MyCompetitiveness(props) {
         </>
       )}
 
-      <div className={'col-md-4'}>
+      <div className={'col-md-4'} style={{ marginLeft: 90 }}>
         {myCompetitiveness?.length > 0 && isEditSection && (
           <AddMyMentor
             title={`Add new "My Competitiveness" section`}
