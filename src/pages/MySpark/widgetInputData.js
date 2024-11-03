@@ -586,8 +586,8 @@ export const widgetInputData = {
     {
       ...description,
       value: '',
-      description: 'Learn how to program through our easy to understand course',
-      placeholder: 'The description of the company.',
+      description: 'The description of the company.',
+      placeholder: 'Learn how to program through our easy to understand course',
       order: 3
     },
     ...hiddenWidgetInputs

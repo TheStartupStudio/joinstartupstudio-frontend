@@ -255,7 +255,7 @@ const ImmersionCardModal = (props) => {
                 </span>
               </div>
             )}
-            {/* <div
+            <div
               className={
                 'checkbox-date-education-resp d-flex align-items-center'
               }
@@ -272,7 +272,7 @@ const ImmersionCardModal = (props) => {
               <span className={'current-position-label'}>
                 Currently attending
               </span>
-            </div> */}
+            </div>
           </div>
 
           <div className={'checkbox-date-education d-flex align-items-center'}>
@@ -291,21 +291,9 @@ const ImmersionCardModal = (props) => {
           </div>
         </div>
         <div className={'education-card-row row'}>
-          {/* <div className={'immersion-image-align col-md-3 '}> */}
-          <div className={'immersion-image-align '}>
+          <div className={'immersion-image-align col-md-3 '}>
+            {/*<div className="upload-image me-2 mb-1">*/}
             <div className='p-0 mb-1'>
-              {/* <ReactImageUpload
-                value={imageUrl}
-                {...imageProperties}
-                onChangeImageCrop={updateCroppedImage}
-                onImageLoadSuccess={handleImageLoadSuccess}
-                onLabelClick={handleLabelClick}
-                onFileInputChange={handleFileInputChange}
-                onPositionChange={handlePositionChange}
-                actions={avatarEditorActions}
-                title={'Organization Logo'}
-                editorRef={editorRef}
-              /> */}
               <ReactImageUpload
                 value={imageUrl}
                 {...imageProperties}
@@ -322,8 +310,7 @@ const ImmersionCardModal = (props) => {
           </div>
           <div className={'col-md-9 '}>
             <div className={'immersion-inputs d-flex gap-5'}>
-              {/* <div className={'immersion-card-portf w-75'}> */}
-              <div className={'immersion-card-portf '}>
+              <div className={'w-75'}>
                 <LabeledInput
                   titleClassNames={'portf-input-title'}
                   title={'ORGANIZATION NAME'}
@@ -335,7 +322,7 @@ const ImmersionCardModal = (props) => {
                   labelAlign={'start'}
                   placeholder={'Add the name of the organization'}
                 />
-                <div className={'mt-2'} style={{ marginBottom: '20px' }}>
+                <div className={'mt-2'}>
                   <LabeledInput
                     titleClassNames={'portf-input-title'}
                     type={'text'}
@@ -364,7 +351,6 @@ const ImmersionCardModal = (props) => {
               </div>
               <div>
                 <EditPortfolioSubmission
-                  containerClassname={'immers-video-portf'}
                   height={250}
                   title={
                     !immersionData?.immersionThumbnailUrl

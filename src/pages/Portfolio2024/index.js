@@ -151,26 +151,7 @@ const shareIcon =  () => {
 
 
   const scrollableRef = useRef(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (scrollableRef.current) {
-        setScrollPosition(scrollableRef.current.scrollTop);
-      }
-    };
-
-    const element = scrollableRef.current;
-    if (element) {
-      element.addEventListener('scroll', handleScroll);
-    }
-
-    return () => {
-      if (element) {
-        element.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, []);
 
   const scrollToTop = () => {
     if (scrollableRef.current) {

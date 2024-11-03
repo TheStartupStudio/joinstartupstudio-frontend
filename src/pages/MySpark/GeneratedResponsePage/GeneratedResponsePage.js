@@ -21,6 +21,8 @@ import { jsPDF } from 'jspdf'
 import PdfDocument from './PdfDocument'
 import html2canvas from 'html2canvas'
 import { saveAs } from 'file-saver'
+import { setBackButton } from '../../../redux/backButtonReducer'
+import { useDispatch } from 'react-redux'
 
 function GeneratedResponsePage(props) {
   const [archivedDocument, setArchivedDocument] = useState({})
@@ -38,6 +40,7 @@ function GeneratedResponsePage(props) {
   const [isEdit, setIsEdit] = useState(false)
   const [existMyContent, setExistMyContent] = useState(false)
   const windowWidth = useWindowWidth()
+  const dispatch = useDispatch()
   const [displayItem, setDisplayItem] = useState([
     {
       name: 'first-line',
@@ -83,6 +86,13 @@ function GeneratedResponsePage(props) {
   const { fromPage, data } = locationState ?? {}
   const [editingContent, setEditingContent] = useState('')
 
+  useEffect(() => {
+    dispatch(setBackButton(true, 'my-spark/widgets'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
   useEffect(() => {
     if (fromPage === 'widgets') {
       const icon = addDocumentIcon(data)

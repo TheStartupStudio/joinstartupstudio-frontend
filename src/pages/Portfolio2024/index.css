@@ -1538,46 +1538,6 @@
   height: 30%;
 }
 
-
-.immersion-image-align .avatar-section {
-  width: 200px !important;
-}
-
-.immersion-inputs {
-  gap: 20px !important;
-  margin-top: 20px !important;
-}
-
-.immersion-card-portf {
-  width: 90% !important;
-  margin-top: 20px !important;
-}
-
-.immersion-card-portf .portfolio-input {
-  margin-bottom: 20px !important;
-}
-
-.immersion-image-align {
-  width: 220px !important;
-  margin-top: 36px !important;
-}
-
-.immersion-image-align .portfolio-submission-container {
-  width: 220px !important;
-  margin-right: 0 !important;
-
-}
-
-.immers-video-portf {
-  margin-right: 0 !important;
-  margin-top: 0 !important;
-}
-
-.immers-video-portf .submission-title_edit-mode {
-  height: 30% !important;
-
-}
-
 .insert-submission-link-box {
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029;
@@ -1683,7 +1643,7 @@
 }
 
 .add-mentor-portf {
-  height: 400px !important;
+  min-height: 312px ;
 }
 
 .placeholder-mentor-img {
