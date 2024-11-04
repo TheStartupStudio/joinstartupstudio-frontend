@@ -26,89 +26,97 @@ import IntlMessages from '../../utils/IntlMessages'
 //   try {
 //     dispatch({ type: LOADING })
 
+//     // Set the authorization header
 //     axiosInstance.defaults.headers.common[
 //       'Authorization'
 //     ] = `Bearer ${localStorage.getItem('access_token')}`
 //     axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
-//     const user = await axiosInstance
-//       .get('/instructor/')
-//       .then()
-//       .catch((e) => {
-//         toast.error(<IntlMessages id="alerts.email_password_incorrect" />)
-//         dispatch({
-//           type: LOGIN_LOADING,
-//           payload: false
-//         })
-//         return
-//       })
 
+//     // Get user data
+//     const user = await axiosInstance.get('/instructor/')
+
+//     // Check current user attributes
 //     const currentUser = await Auth.currentAuthenticatedUser({
 //       bypassCache: true
+//     }).then((res) => {
+//       console.log('res auth', res)
+//       return res
 //     })
-//     if (currentUser.attributes['custom:isVerified'] == 0) {
+
+//     if (currentUser.attributes['custom:isVerified'] === 0) {
 //       window.location.href = '/verify-email'
 //       return
 //     }
 
+//     // Handle password reset
 //     if (user.data.payment_type === 'school' && !user.data.last_login) {
-//       dispatch({
-//         type: NEED_RESET,
-//         payload: old_password
-//       })
-//       dispatch({
-//         type: LOGIN_LOADING,
-//         payload: false
-//       })
+//       dispatch({ type: LOGIN_LOADING, payload: false })
+//       dispatch({ type: NEED_RESET, payload: old_password })
 //       return 'passwordResetRequired'
 //     }
 
+//     // Check for inactive account
 //     if (user.data.is_active !== true) {
 //       window.location.href = '/verify-email'
 //       return
 //     }
 
-//     if (
-//       (!user.data.stripe_subscription_id ||
-//         user.data.stripe_subscription_id === null) &&
-//       user.data.customer_id === null
-//     ) {
-//       window.location = '/register'
-//     } else if (
-//       user.data.customer_id !== null &&
-//       user.data.stripe_subscription_id === null
-//     ) {
-//       if (user.data.payment_type === 'SUB')
-//         window.location = '/subscription-ended'
-//       else if (user.data.payment_type === 'TRIAL')
-//         window.location = '/trial-ended'
-//     } else {
-//       let payloadData = user.data
+//     // Handle subscription-related redirections
+//     // if (
+//     //   (!user.data.stripe_subscription_id ||
+//     //     user.data.stripe_subscription_id === null) &&
+//     //   user.data.customer_id === null
+//     // ) {
+//     //   window.location = '/register'
+//     // } else if (
+//     //   user.data.customer_id !== null &&
+//     //   user.data.stripe_subscription_id === null
+//     // ) {
+//     //   if (user.data.payment_type === 'SUB') {
+//     //     window.location = '/subscription-ended'
+//     //   } else if (user.data.payment_type === 'TRIAL') {
+//     //     window.location = '/trial-ended'
+//     //   }
+//     // }
 
-//       payloadData.agreedConnections = false
-//       payloadData.profileImage = user.data.profile_image
-//       payloadData.language = localStorage.getItem('currentLanguage')
+//     // Get super admin status
+//     const accessResponse = await axiosInstance.get(
+//       '/studentsInstructorss/admin'
+//     )
+//     const isAdmin = accessResponse.data.allow
 
-//       const userData = {
-//         token: user.data.cognito_Id,
-//         user: payloadData
-//       }
+//     const payloadData = {
+//       ...user.data,
+//       profileImage: user.data.profile_image,
+//       language: localStorage.getItem('currentLanguage')
+//     }
 
-//       const user_token = {
-//         user: payloadData,
-//         token: localStorage.getItem('access_token')
-//       }
+//     const userData = {
+//       token: user.data.cognito_Id,
+//       user: payloadData,
+//       isAdmin
+//     }
 
-//       localStorage.setItem('user', JSON.stringify(user_token))
+//     const user_token = {
+//       user: payloadData,
+//       token: localStorage.getItem('access_token'),
+//       isAdmin
+//     }
 
-//       dispatch({
-//         type: USER_LOGIN_SUCCESS,
-//         payload: userData
-//       })
+//     // Save data to local storage
+//     localStorage.setItem('user', JSON.stringify(user_token))
 
-//       dispatch({
-//         type: LOGIN_LOADING,
-//         payload: false
-//       })
+//     dispatch({
+//       type: USER_LOGIN_SUCCESS,
+//       payload: userData
+//     })
+
+//     dispatch({
+//       type: LOGIN_LOADING,
+//       payload: false
+//     })
+//     if (user) {
+//       return 'instructor'
 //     }
 //   } catch (err) {
 //     dispatch({
@@ -118,109 +126,127 @@ import IntlMessages from '../../utils/IntlMessages'
 //   }
 // }
 
-export const userLogin = (old_password) => async (dispatch) => {
-  try {
-    dispatch({ type: LOADING })
+export const userLogin =
+  (old_password, isImpersonation = false) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: LOADING })
 
-    // Set the authorization header
-    axiosInstance.defaults.headers.common[
-      'Authorization'
-    ] = `Bearer ${localStorage.getItem('access_token')}`
-    axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
+      axiosInstance.defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${localStorage.getItem('access_token')}`
+      axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
 
-    // Get user data
-    const user = await axiosInstance.get('/instructor/')
+      if (isImpersonation) {
+        const user = await axiosInstance.get('/instructor/')
 
-    // Check current user attributes
-    const currentUser = await Auth.currentAuthenticatedUser({
-      bypassCache: true
-    }).then((res) => {
-      console.log('res auth', res)
-      return res
-    })
+        const accessResponse = await axiosInstance.get(
+          '/studentsInstructorss/admin'
+        )
+        const isAdmin = accessResponse.data.allow
 
-    if (currentUser.attributes['custom:isVerified'] === 0) {
-      window.location.href = '/verify-email'
-      return
+        const payloadData = {
+          ...user.data,
+          profileImage: user.data.profile_image,
+          language: localStorage.getItem('currentLanguage')
+        }
+
+        const userData = {
+          token: user.data.cognito_Id,
+          user: payloadData,
+          isAdmin
+        }
+
+        const user_token = {
+          user: payloadData,
+          token: localStorage.getItem('access_token'),
+          isAdmin
+        }
+
+        localStorage.setItem('user', JSON.stringify(user_token))
+
+        dispatch({
+          type: USER_LOGIN_SUCCESS,
+          payload: userData
+        })
+
+        dispatch({
+          type: LOGIN_LOADING,
+          payload: false
+        })
+
+        return Promise.resolve('impersonated')
+      }
+
+      // Non-impersonation flow
+      const user = await axiosInstance.get('/users/')
+
+      console.log('user', user)
+
+      const currentUser = await Auth.currentAuthenticatedUser({
+        bypassCache: true
+      })
+
+      if (currentUser.attributes['custom:isVerified'] === 0) {
+        window.location.href = '/verify-email'
+        return
+      }
+
+      if (user.data.payment_type === 'school' && !user.data.last_login) {
+        dispatch({ type: LOGIN_LOADING, payload: false })
+        dispatch({ type: NEED_RESET, payload: old_password })
+        return 'passwordResetRequired'
+      }
+
+      if (user.data.is_active !== true) {
+        window.location.href = '/verify-email'
+        return
+      }
+
+      const accessResponse = await axiosInstance.get(
+        '/studentsInstructorss/admin'
+      )
+      const isAdmin = accessResponse.data.allow
+
+      const payloadData = {
+        ...user.data,
+        profileImage: user.data.profile_image,
+        language: localStorage.getItem('currentLanguage')
+      }
+
+      const userData = {
+        token: user.data.cognito_Id,
+        user: payloadData,
+        isAdmin
+      }
+
+      const user_token = {
+        user: payloadData,
+        token: localStorage.getItem('access_token'),
+        isAdmin
+      }
+
+      localStorage.setItem('user', JSON.stringify(user_token))
+
+      dispatch({
+        type: USER_LOGIN_SUCCESS,
+        payload: userData
+      })
+
+      dispatch({
+        type: LOGIN_LOADING,
+        payload: false
+      })
+      if (user) {
+        return 'instructor'
+      }
+    } catch (err) {
+      dispatch({
+        type: USER_LOGIN_ERROR,
+        payload: err?.message
+      })
     }
-
-    // Handle password reset
-    if (user.data.payment_type === 'school' && !user.data.last_login) {
-      dispatch({ type: LOGIN_LOADING, payload: false })
-      dispatch({ type: NEED_RESET, payload: old_password })
-      return 'passwordResetRequired'
-    }
-
-    // Check for inactive account
-    if (user.data.is_active !== true) {
-      window.location.href = '/verify-email'
-      return
-    }
-
-    // Handle subscription-related redirections
-    // if (
-    //   (!user.data.stripe_subscription_id ||
-    //     user.data.stripe_subscription_id === null) &&
-    //   user.data.customer_id === null
-    // ) {
-    //   window.location = '/register'
-    // } else if (
-    //   user.data.customer_id !== null &&
-    //   user.data.stripe_subscription_id === null
-    // ) {
-    //   if (user.data.payment_type === 'SUB') {
-    //     window.location = '/subscription-ended'
-    //   } else if (user.data.payment_type === 'TRIAL') {
-    //     window.location = '/trial-ended'
-    //   }
-    // }
-
-    // Get super admin status
-    const accessResponse = await axiosInstance.get(
-      '/studentsInstructorss/admin'
-    )
-    const isAdmin = accessResponse.data.allow
-
-    const payloadData = {
-      ...user.data,
-      profileImage: user.data.profile_image,
-      language: localStorage.getItem('currentLanguage')
-    }
-
-    const userData = {
-      token: user.data.cognito_Id,
-      user: payloadData,
-      isAdmin
-    }
-
-    const user_token = {
-      user: payloadData,
-      token: localStorage.getItem('access_token'),
-      isAdmin
-    }
-
-    // Save data to local storage
-    localStorage.setItem('user', JSON.stringify(user_token))
-
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: userData
-    })
-
-    dispatch({
-      type: LOGIN_LOADING,
-      payload: false
-    })
-    if (user) {
-      return 'instructor'
-    }
-  } catch (err) {
-    dispatch({
-      type: USER_LOGIN_ERROR,
-      payload: err?.message
-    })
   }
-}
 
 export const userLogout = () => {
   localStorage.clear()

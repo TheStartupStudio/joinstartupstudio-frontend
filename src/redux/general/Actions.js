@@ -2,7 +2,8 @@ import {
   CHANGE_SIDEBAR_STATE,
   SET_ACCORDION_TOGGLED,
   SET_IMAGE_CROPPER_DATA,
-  SET_CROPPED_IMAGE
+  SET_CROPPED_IMAGE,
+  GENERAL_LOGIN
 } from './Types'
 
 export const changeSidebarState = (state) => {
@@ -29,6 +30,13 @@ export const setImageCropperData = (state) => {
 export const setCroppedImage = (state) => {
   return {
     type: SET_CROPPED_IMAGE,
+    payload: state
+  }
+}
+
+export const setGeneralLoading = (state) => {
+  return {
+    type: GENERAL_LOGIN,
     payload: state
   }
 }

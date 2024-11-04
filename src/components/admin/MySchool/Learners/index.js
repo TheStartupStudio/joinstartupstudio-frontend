@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import axiosInstance from '../../../../utils/AxiosInstance'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import GridTable from '../../../GridTable'
 import { SkillBox } from '../ContentItems'
 import { useParams, useHistory } from 'react-router-dom'
@@ -17,6 +17,8 @@ import {
   TransferFilter
 } from '../../../GridTable/AgGridItems'
 import useModalState from '../../../../hooks/useModalState'
+import { toast } from 'react-toastify'
+import { userLogin } from '../../../../redux'
 
 const Learners = ({
   programs,
@@ -29,6 +31,8 @@ const Learners = ({
   usedIn,
   instructors
 }) => {
+  const dispatch = useDispatch()
+  const history = useHistory()
   const { user } = useSelector((state) => state.user.user)
   const [modals, setModalState] = useModalState()
   const [selectedInstructor, setSelectedInstructor] = useState(null)
@@ -39,7 +43,6 @@ const Learners = ({
   const [selectedRows, setSelectedRows] = useState([])
   const [rowData, setRowData] = useState([])
   const { instructorId } = useParams()
-  const history = useHistory()
 
   useEffect(() => {
     if (instructorId || instructor_id) {
@@ -96,6 +99,36 @@ const Learners = ({
   useEffect(() => {
     fetchStudents()
   }, [fetchStudents])
+
+  const handleProxyLogin = async (impersonateId, studentCognitoId) => {
+    try {
+      const response = await axiosInstance.post('/auth/proxy-auth', {
+        impersonateId
+      })
+
+      console.log('response', response)
+
+      const { accessToken } = response.data
+      const originalToken = localStorage.getItem('access_token')
+      localStorage.setItem('original_access_token', originalToken)
+      localStorage.setItem('impersonateId', studentCognitoId)
+
+      // Store impersonation token
+      localStorage.setItem('access_token', accessToken)
+
+      dispatch(userLogin(null, true))
+
+      history.push('/dashboard')
+    } catch (error) {
+      console.log('error', error)
+      if (error.response) {
+        // Handle specific error responses
+        toast.error(error.response.data.error || 'Something went wrong')
+      } else {
+        toast.error('Network error')
+      }
+    }
+  }
 
   const columnDefs = useMemo(() => {
     const baseColumnDefs = [
@@ -275,8 +308,9 @@ const Learners = ({
 
     baseColumnDefs.push({
       field: 'actions',
-      flex: 3,
+      flex: 4,
       cellRenderer: (params) => {
+        console.log('params', params)
         let user = params.data
 
         return (
@@ -288,6 +322,7 @@ const Learners = ({
             programs={programs}
             instructors={instructors}
             periods={periods}
+            handleProxyLogin={handleProxyLogin}
             onSuccess={refreshStudents}
           />
         )
@@ -302,7 +337,8 @@ const Learners = ({
     levels,
     programs,
     instructors,
-    refreshStudents
+    refreshStudents,
+    handleProxyLogin
   ])
 
   const handleInstructorFilterChange = (selectedOption) => {

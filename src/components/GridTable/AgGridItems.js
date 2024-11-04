@@ -1,4 +1,5 @@
 import {
+  faDoorOpen,
   faExclamationTriangle,
   faEye,
   faGripLines,
@@ -552,8 +553,10 @@ const Actions = ({
   instructors,
   handleViewStudent,
   periods,
+  handleProxyLogin,
   onSuccess
 }) => {
+  console.log('user', user)
   const [modals, setModalState] = useModalState()
 
   const handleViewUser = (handleViewStudent) => {
@@ -628,6 +631,20 @@ const Actions = ({
             <FontAwesomeIcon icon={faUserMinus} style={{ fontSize: '16px' }} />
           </a>
           <p className='m-0 pe-2'> Delete user</p>
+        </div>
+        <div
+          className='action-item cursor-pointer'
+          onClick={() =>
+            handleProxyLogin(
+              'e91c37a6-c94c-4b47-a01a-f94da596cd18',
+              user.cognito_Id
+            )
+          }
+        >
+          {/* <a href='/my-school/learners' className='pe-1'> */}
+          <FontAwesomeIcon icon={faDoorOpen} style={{ fontSize: '16px' }} />
+          {/* </a> */}
+          <p className='m-0 pe-2'> Proxy Login</p>
         </div>
       </div>
 

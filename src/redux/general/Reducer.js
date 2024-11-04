@@ -2,7 +2,8 @@ import {
   CHANGE_SIDEBAR_STATE,
   SET_ACCORDION_TOGGLED,
   SET_IMAGE_CROPPER_DATA,
-  SET_CROPPED_IMAGE
+  SET_CROPPED_IMAGE,
+  GENERAL_LOGIN
 } from './Types'
 
 const INIT_STATE = {
@@ -10,6 +11,7 @@ const INIT_STATE = {
   isAccordionToggled: false,
   imageCropperData: null,
   croppedImage: null,
+  generalLoading: false
 }
 
 export default (state = INIT_STATE, action) => {
@@ -24,6 +26,9 @@ export default (state = INIT_STATE, action) => {
       return { ...state, imageCropperData: action.payload }
     case SET_CROPPED_IMAGE:
       return { ...state, croppedImage: action.payload }
+
+    case GENERAL_LOGIN:
+      return { ...state, generalLoading: action.payload }
 
     default:
       return { ...state }

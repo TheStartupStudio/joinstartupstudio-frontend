@@ -68,8 +68,13 @@ function Login() {
           localStorage.setItem('email', user.email)
 
           dispatch(userLogin(user.password)).then((res) => {
+            console.log('res', res)
             if (res === 'passwordResetRequired') {
               history.push('/password-change-required')
+            } else if (res === 'impersonated') {
+              console.log('impersonated')
+              debugger
+              history.push('/')
             } else if (!res) {
               toast.error('Wrong email or password!')
               dispatch(setLoginLoading(false))
