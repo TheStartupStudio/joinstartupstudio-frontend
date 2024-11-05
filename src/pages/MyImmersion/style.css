@@ -288,8 +288,23 @@ th:last-child {
   width: 40%;
   font-size: 13px;
   border: none;
-  border-radius: 10px;
+  border-radius: 10px !important;
   font-weight: 600;
+}
+
+.submit-industry-problem {
+  background: #51c7df;
+  height: 40px;
+  color: #fff;
+  width: 37%;
+  font-size: 14px;
+  border-radius: 10px;
+  border: none;
+  margin-top: 20px;
+}
+
+.lizasclass {
+  margin-left: 200px !important;
 }
 
 .approve-button {

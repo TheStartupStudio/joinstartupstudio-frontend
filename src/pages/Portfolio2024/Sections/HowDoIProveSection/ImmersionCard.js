@@ -44,8 +44,11 @@ function ImmersionCard(props) {
   }
 
   return (
-    <div className={'mb-3 w-100'}>
-      <PortfolioDataContainer background={'#fff'}>
+    <div className={'immersion-card-caro mb-3 w-100'}>
+      <PortfolioDataContainer
+        background={'#fff'}
+        className={'immrs-caro-width'}
+      >
         <div className={'immersion-card-resp d-flex gap-3 '}>
           <div className={'flex-grow'} style={{ width: 100 }}>
             <img

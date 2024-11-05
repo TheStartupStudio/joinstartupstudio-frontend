@@ -35,7 +35,7 @@ function MyProductivity(props) {
     useState(false)
   const mode = useSelector((state) => state.portfolio.mode)
   const filteredUnshownData = (data) => {
-    return data?.filter((data)=>data.showSection)
+    return data?.filter((data) => data.showSection)
   }
   const showImmersionModal = useSelector(
     (state) =>
@@ -191,31 +191,36 @@ function MyProductivity(props) {
 
   return (
     <>
-      {renderSection(
-        'Immersion',
-       mode === 'edit' ? immersions : filteredUnshownData(immersions),
-        ImmersionCard,
-        isEditImmersionSection,
-        immersionActions,
-        handleShowImmersionModal,
-        showImmersionModal,
-        handleHideImmersionModal,
-        'ADD IMMERSION EXPERIENCE',
-        onSaveImmersion,
-        ImmersionCardModal,
-        loadingImmersions,
-        <NoDataDisplay
-          src={immersionImage}
-          text={
-            'You don’t have any immersion experiences yet! Click the button to add one.'
-          }
-        />,
-        true
-      )}
+      {' '}
+      <div className={'immrs-render-caro'}>
+        {renderSection(
+          'Immersion',
+          mode === 'edit' ? immersions : filteredUnshownData(immersions),
+          ImmersionCard,
+          isEditImmersionSection,
+          immersionActions,
+          handleShowImmersionModal,
+          showImmersionModal,
+          handleHideImmersionModal,
+          'ADD IMMERSION EXPERIENCE',
+          onSaveImmersion,
+          ImmersionCardModal,
+          loadingImmersions,
+          <NoDataDisplay
+            src={immersionImage}
+            text={
+              'You don’t have any immersion experiences yet! Click the button to add one.'
+            }
+          />,
+          true
+        )}
+      </div>
       <div className={'mt-5'}>
         {renderSection(
           'Work Experience',
-          mode === 'edit' ? workExperiences : filteredUnshownData(workExperiences),
+          mode === 'edit'
+            ? workExperiences
+            : filteredUnshownData(workExperiences),
           WorkExperienceCard,
           isEditWorkExperienceSection,
           workExperienceActions,

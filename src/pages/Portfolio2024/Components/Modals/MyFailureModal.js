@@ -136,7 +136,13 @@ function MyFailureModal(props) {
               deleteImage={handleDeleteImage}
               deleteImageFile={handleDeleteImageFile}
             />{' '}
-            <p> Link to your failure story video.</p>
+            <p
+              style={{
+                marginTop: '20px'
+              }}
+            >
+              Link to your failure story video.
+            </p>
           </div>
         </div>
         <div className={'col-lg-6 col-md-12 '} style={{ marginTop: '10px' }}>

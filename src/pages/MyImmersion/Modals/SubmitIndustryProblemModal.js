@@ -153,12 +153,12 @@ const SubmitIndustryProblemModal = (props) => {
                 }}
                 className='left-title-immrs'
               >
-                Submitted by:
-                <ProfileHolder
+                <div className=''>Submitted by: &nbsp; {user.name}</div>
+                {/* <ProfileHolder
                   className={'no-profile'}
                   classN={'username-submit'}
                   name={props.mode === 'edit' ? props.User.name : user?.name}
-                />
+                /> */}
               </div>
             </Modal.Title>
             {/* <span
@@ -254,6 +254,7 @@ const SubmitIndustryProblemModal = (props) => {
                       type='button'
                       onClick={() => submitHandler('rejected')}
                       className={'deny-button'}
+                      industryProblem={true}
                     />
 
                     <SubmitButton
@@ -262,6 +263,7 @@ const SubmitIndustryProblemModal = (props) => {
                       type='button'
                       onClick={() => submitHandler('approved')}
                       className={'approve-button'}
+                      industryProblem={true}
                     />
                   </div>
                 ) : (
@@ -269,6 +271,7 @@ const SubmitIndustryProblemModal = (props) => {
                     text={'SAVE'}
                     disabled={props.problemIsSubmitted}
                     type='button'
+                    industryProblem={true}
                     className={'submit-button'}
                   />
                 )}

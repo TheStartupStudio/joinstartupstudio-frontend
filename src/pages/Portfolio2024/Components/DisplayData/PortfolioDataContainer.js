@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react'
-import {  useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 function PortfolioDataContainer(props) {
-
   return (
     <div
-      className={'portfolio-data-container proveit-container'}
+      className={` ${props.className} portfolio-data-container proveit-container`}
       style={{ background: props.background, minHeight: props.height }}
     >
       {props.title && (

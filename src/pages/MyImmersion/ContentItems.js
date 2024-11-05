@@ -76,10 +76,22 @@ const UploadFileInput = ({
   )
 }
 
-const SubmitButton = ({ text, type, onClick, disabled, className }) => {
+// const SubmitButton = ({ text, type, onClick, disabled, className }) => {
+//   return (
+//     <button
+//       className={className}
+//       type={type}
+//       disabled={disabled}
+//       onClick={onClick}
+//     >
+//       {text}
+//     </button>
+//   )
+// }
+const SubmitButton = ({ text, type, onClick, disabled, industryProblem }) => {
   return (
     <button
-      className={className}
+      className={industryProblem ? 'submit-industry-problem' : 'submit-button'}
       type={type}
       disabled={disabled}
       onClick={onClick}
