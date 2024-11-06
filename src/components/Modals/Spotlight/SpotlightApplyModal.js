@@ -162,7 +162,7 @@ const SpotlightApplyModal = (props) => {
             required
             rows={5}
             name='outcome'
-            placeholder={'What type of membership are you applying for?'}
+            placeholder={'What type of mentorship are you applying for?'}
           />
           <div className='parent-form-spotlight'>
             <ParentButtonApply text={'DOWNLOAD PARENT/GUARDIAN FORM'} />

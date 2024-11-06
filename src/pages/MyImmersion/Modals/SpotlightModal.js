@@ -180,7 +180,7 @@ const SpotlightModal = (props) => {
           <p className=' m-0'>{formData.productDescription}</p>
         </Col>
         <Col className='my-4'>
-          <p className='fw-bold mb-2'>Type of Membership Applying For</p>
+          <p className='fw-bold mb-2'>Type of Mentorship Applying For</p>
           <p className=' m-0'>{formData.membershipType}</p>
         </Col>
         <Row className='justify-content-between align-items-center w-100 m-0'>
