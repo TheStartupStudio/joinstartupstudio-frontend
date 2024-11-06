@@ -717,6 +717,13 @@
   margin-right: 55px !important;
 }
 
+
+@media (max-width: 403px) {
+  .portf-section-maintitle {
+    margin-inline: 10px;
+  }
+}
+
 @media (max-width: 1408px) {
   .failure-submission-parent .portfolio-submission-container {
     width: 100% !important
@@ -760,14 +767,14 @@
     margin-top: 57px;
   }
 
-  .portfolio-nav-icons div {
+  /* .portfolio-nav-icons div {
     margin-right: 0 !important;
     margin-left: 35px !important;
 
-  }
+  } */
 }
 
-@media (max-width: 345px) {
+@media (max-width:413px) {
   .portfolio-nav-icons div {
     margin-left: 10px !important;
   }
@@ -1505,20 +1512,21 @@
 
 @media (max-width:720px) and (min-width:681px) {
   .org-end-immersion {
-    margin-left: -100px !important;
+    /* margin-left: -50px !important; */
+    width: 100% !important;
   }
 
 }
 
 @media (max-width:680px) and (min-width:577px) {
   .org-end-immersion {
-    margin-left: -50px !important;
+    /* margin-left: -50px !important; */
+    width: 100% !important;
   }
 }
 
 @media (max-width:576px) {
   .org-end-immersion {
-    margin-left: -100px !important;
     width: 100% !important;
   }
 
@@ -1530,7 +1538,7 @@
 
 @media (max-width:370px) {
   .org-end-immersion {
-    margin-left: -120px !important;
+    margin-left: -10px !important;
   }
 }
 
@@ -1577,6 +1585,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+}
+
+@media (max-width:500px) {
+  .portfolio-submission-title {
+    font-size: 15px !important;
+  }
 
 }
 
@@ -2122,6 +2137,27 @@
 
 .failure-infocontent .portfolio-info-content {
   width: 100% !important;
+}
+
+.immersion-card-resp {
+  flex-wrap: wrap;
+}
+
+@media (max-width:500px) {
+  .portfolio-submission-title {
+    font: normal normal 600 18px/18px Montserrat !important
+  }
+
+}
+
+.height-portfolio-resp {
+  overflow-y: scroll;
+}
+
+@media (max-width:500px) {
+  .height-portfolio-resp {
+    overflow-y: unset !important;
+  }
 }
 
 

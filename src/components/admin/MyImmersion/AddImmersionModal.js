@@ -129,7 +129,10 @@ const AddImmersionModal = ({
         {/* Modal Header */}
         <div className='immersion-modal-header'>
           {viewExprience && (
-            <div className='portfolio-actions'>
+            <div
+              className='portfolio-actions'
+              style={{ borderTopRightRadius: '36px' }}
+            >
               {editingImmersion ? (
                 <>
                   <FaCheck
