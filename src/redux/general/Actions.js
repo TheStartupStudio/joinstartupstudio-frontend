@@ -3,7 +3,7 @@ import {
   SET_ACCORDION_TOGGLED,
   SET_IMAGE_CROPPER_DATA,
   SET_CROPPED_IMAGE,
-  GENERAL_LOGIN
+  GENERAL_LOADING
 } from './Types'
 
 export const changeSidebarState = (state) => {
@@ -36,7 +36,7 @@ export const setCroppedImage = (state) => {
 
 export const setGeneralLoading = (state) => {
   return {
-    type: GENERAL_LOGIN,
+    type: GENERAL_LOADING,
     payload: state
   }
 }

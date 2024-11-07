@@ -19,6 +19,7 @@ import {
 import useModalState from '../../../../hooks/useModalState'
 import { toast } from 'react-toastify'
 import { userLogin } from '../../../../redux'
+import { setGeneralLoading } from '../../../../redux/general/Actions'
 
 const Learners = ({
   programs,
@@ -100,35 +101,51 @@ const Learners = ({
     fetchStudents()
   }, [fetchStudents])
 
-  const handleProxyLogin = async (impersonateId, studentCognitoId) => {
-    try {
-      const response = await axiosInstance.post('/auth/proxy-auth', {
-        impersonateId
-      })
+  const handleProxyLogin = useCallback(
+    async (impersonateId, studentCognitoId) => {
+      dispatch(setGeneralLoading(true))
+      try {
+        const response = await axiosInstance.post('/auth/proxy-auth', {
+          impersonateId
+        })
 
-      console.log('response', response)
+        const { accessToken } = response.data
+        const originalToken = localStorage.getItem('access_token')
+        localStorage.setItem('original_access_token', originalToken)
+        localStorage.setItem('impersonateId', studentCognitoId)
+        localStorage.setItem('access_token', accessToken)
 
-      const { accessToken } = response.data
-      const originalToken = localStorage.getItem('access_token')
-      localStorage.setItem('original_access_token', originalToken)
-      localStorage.setItem('impersonateId', studentCognitoId)
+        axiosInstance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${accessToken}`
 
-      // Store impersonation token
-      localStorage.setItem('access_token', accessToken)
+        const loginResult = await dispatch(userLogin(null, true, 'student'))
 
-      dispatch(userLogin(null, true))
+        if (loginResult === 'impersonated') {
+          Object.keys(localStorage).forEach((key) => {
+            const value = localStorage.getItem(key)
 
-      history.push('/dashboard')
-    } catch (error) {
-      console.log('error', error)
-      if (error.response) {
-        // Handle specific error responses
-        toast.error(error.response.data.error || 'Something went wrong')
-      } else {
-        toast.error('Network error')
+            if (key !== 'user') {
+              document.cookie = `${key}=${value}; path=/; domain=localhost; SameSite=None; Secure`
+            }
+          })
+
+          window.location.href = 'http://localhost:3001?mode=impersonation'
+        } else {
+          console.error('Impersonation failed or returned an unexpected result')
+        }
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.error || 'Something went wrong')
+        } else {
+          toast.error('Network error')
+        }
+      } finally {
+        dispatch(setGeneralLoading(false))
       }
-    }
-  }
+    },
+    [dispatch]
+  )
 
   const columnDefs = useMemo(() => {
     const baseColumnDefs = [

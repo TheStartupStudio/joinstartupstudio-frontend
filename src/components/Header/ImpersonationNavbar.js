@@ -21,6 +21,7 @@ const ImpersonationNavbar = ({ originalToken }) => {
       history.push('/dashboard')
       setTimeout(() => {
         dispatch(setGeneralLoading(false))
+        window.location.reload()
       }, 2000)
     } else {
       console.log('No original token found to revert')

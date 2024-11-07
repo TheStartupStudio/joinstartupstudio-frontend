@@ -15,13 +15,18 @@ import renderRoutes from './Router/renderRoutes'
 import AppLocale from './lang'
 import ReSigninModal from './pages/Auth/Login/ReSigninModal'
 import { useTokenAuthentication } from './hooks/useTokenAuthentication'
+import useImpersonation from './hooks/useImpersonation'
 
 function Router(props) {
+  const originalToken = localStorage.getItem('original_access_token')
+
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user } = useSelector((state) => state.user)
 
   const { authModal, handleLoginRedirect, handleCloseModal } =
     useTokenAuthentication(isAuthenticated)
+
+  useImpersonation(originalToken)
 
   return (
     <>

@@ -91,6 +91,54 @@ export const refreshToken = async () => {
   })
 }
 
+export const createUserToken = (user, isAdmin) => {
+  const payloadData = {
+    ...user.data,
+    profileImage: user.data.profile_image,
+    language: localStorage.getItem('currentLanguage')
+  }
+
+  return {
+    token: user.data.cognito_Id,
+    user: payloadData,
+    isAdmin
+  }
+}
+
+export const fetchUserData = async (impersonationMode) => {
+  if (impersonationMode === 'instructor') {
+    return axiosInstance.get('/instructor/')
+  } else {
+    return axiosInstance.get('/users/')
+  }
+}
+
+export const fetchAdminAccess = async () => {
+  const accessResponse = await axiosInstance.get('/studentsInstructorss/admin')
+  return accessResponse.data.allow
+}
+
+export const saveUserToken = (userToken, isImpersonation) => {
+  if (isImpersonation === 'student') {
+    document.cookie = `user=${JSON.stringify(
+      userToken
+    )}; path=/; domain=localhost; SameSite=None; Secure`
+  } else {
+    localStorage.setItem('user', JSON.stringify(userToken))
+  }
+}
+
+export const handleUserRedirect = (user) => {
+  if (user.data.payment_type === 'school' && !user.data.last_login) {
+    return 'passwordResetRequired'
+  }
+
+  if (user.data.is_active !== true) {
+    window.location.href = '/verify-email'
+    return
+  }
+}
+
 export const validateEmail = (email) => {
   const re =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/

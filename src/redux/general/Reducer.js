@@ -3,7 +3,7 @@ import {
   SET_ACCORDION_TOGGLED,
   SET_IMAGE_CROPPER_DATA,
   SET_CROPPED_IMAGE,
-  GENERAL_LOGIN
+  GENERAL_LOADING
 } from './Types'
 
 const INIT_STATE = {
@@ -27,7 +27,7 @@ export default (state = INIT_STATE, action) => {
     case SET_CROPPED_IMAGE:
       return { ...state, croppedImage: action.payload }
 
-    case GENERAL_LOGIN:
+    case GENERAL_LOADING:
       return { ...state, generalLoading: action.payload }
 
     default:

@@ -78,14 +78,11 @@ const Instructors = ({ programs, levels, periods, universities }) => {
           impersonateId
         })
 
-        console.log('response', response)
-
         const { accessToken } = response.data
         const originalToken = localStorage.getItem('access_token')
+
         localStorage.setItem('original_access_token', originalToken)
         localStorage.setItem('impersonateId', studentCognitoId)
-
-        // Store impersonation token
         localStorage.setItem('access_token', accessToken)
 
         axiosInstance.defaults.headers.common[
@@ -103,9 +100,7 @@ const Instructors = ({ programs, levels, periods, universities }) => {
           console.error('Impersonation failed or returned an unexpected result')
         }
       } catch (error) {
-        console.log('error', error)
         if (error.response) {
-          // Handle specific error responses
           toast.error(error.response.data.error || 'Something went wrong')
         } else {
           toast.error('Network error')
