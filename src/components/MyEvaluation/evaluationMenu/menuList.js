@@ -24,14 +24,19 @@ const MenuList = ({
           eventKey={eventKey}
           className='menu_accordion-toggle cursor-pointer'
         >
-          <span>{title}</span>
+          <span
+            className='eval-section-title'
+            style={{ textTransform: 'uppercase', marginLeft: '7px' }}
+          >
+            {title}
+          </span>
           {title !== 'PORTFOLIO' && title !== 'CERTIFICATE' && (
             <FontAwesomeIcon icon={faAngleDown} className={iconStyles} />
           )}
         </Accordion.Toggle>
 
         <Accordion.Collapse eventKey={eventKey}>
-          <div>{children}</div>
+          <div style={{ textTransform: 'uppercase' }}>{children}</div>
         </Accordion.Collapse>
       </Card>
     </div>

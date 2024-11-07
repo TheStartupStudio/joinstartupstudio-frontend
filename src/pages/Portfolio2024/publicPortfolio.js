@@ -1,5 +1,5 @@
-import React, { useEffect,  useState } from 'react'
-import {  useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import PortfolioHeader from './Components/Header/PortfolioHeader'
@@ -15,7 +15,6 @@ function PublicPortfolio(props) {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
-
 
   useEffect(() => {
     setIsLoading(true)
@@ -46,7 +45,7 @@ function PublicPortfolio(props) {
 
   if (privatePortfolioMessage) {
     return (
-      <div className='portfolio-container'>
+      <div className='portfolio-container' style={{ marginRight: 0 }}>
         <div className='private-portfolio-message'>
           {privatePortfolioMessage}
         </div>
@@ -54,7 +53,7 @@ function PublicPortfolio(props) {
     )
   }
   return (
-    <div className='portfolio-container'>
+    <div className='portfolio-container' style={{ marginRight: 0 }}>
       <PortfolioHeader
         user={publicPortfolio.user}
         userStory={publicPortfolio?.whoAmI?.userBasicInfo}

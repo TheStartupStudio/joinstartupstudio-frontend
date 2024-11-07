@@ -70,11 +70,22 @@ function EvaluationMenu(props) {
   }
 
   return (
-    <div className='col-12 col-lg-3 inbox-menu'>
-      <h4>My Evaluation</h4>
+    <div
+      className='evaluations-inbox-menu col-12 col-lg-3 inbox-menu'
+      style={{
+        marginTop: '5px '
+      }}
+    >
+      <h4
+        className='eval-main-title'
+        style={{ textTransform: 'uppercase', lineHeight: '20px' }}
+      >
+        My Evaluations
+      </h4>
       <Accordion
         activeKey={activeEventKey}
         onSelect={(e) => setActiveEventKey(e)}
+        style={{ textTransform: 'uppercase' }}
       >
         <MenuList
           title={'LTS JOURNAL'}

@@ -1,11 +1,47 @@
 /* .iamr-inbox {
   min-height: 100vh;
 } */
+.eval-section-title {
+  font: normal normal 600 14px/18px Montserrat;
+}
 
 .inbox-menu {
   background-color: #f8f7f7;
   padding: 0;
   padding-bottom: 20px;
+}
+
+@media (min-width:992px) {
+  .evaluations-inbox-menu {
+    width: 30%;
+  }
+
+  .evaluations-journal-section {
+    width: 70%;
+  }
+}
+
+.eval-feedback-title {
+  font: normal normal 600 15px/19px Montserrat;
+
+}
+
+.eval-feedback {
+  height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start !important;
+  gap: 20px;
+}
+
+@media (max-width:660px) {
+  .title-filter-container {
+    flex-wrap: wrap;
+  }
+
+  .title-filter-container .dropdown-button {
+    width: 200px !important;
+  }
 }
 
 .iamr-inbox .inbox-menu h4 {
@@ -24,12 +60,18 @@
 }
 
 .iamr-inbox .inbox-menu .menu-option h5 {
-  font: normal normal 600 14px/18px Montserrat;
+  font: normal normal 600 14px/14px Montserrat;
   letter-spacing: 0px;
-  margin-left: 22px;
+  margin-left: 50px;
   width: 70%;
   padding: 10px 0px;
   word-break: break-word;
+}
+
+@media (max-width: 550px) {
+  .iamr-inbox .inbox-menu h4 {
+    font: normal normal bold 24px/16px Montserrat !important;
+  }
 }
 
 .iamr-inbox .inbox-menu .menu-option .unread-tickets-number {
@@ -66,15 +108,23 @@
 .iamr-inbox .inbox-tickets-container .top-menu {
   position: relative;
   justify-content: space-between;
+
+}
+
+.iamr-inbox .inbox-tickets-container .top-menu {
+  margin-left: 5px !important;
+  margin-bottom: 30px !important;
 }
 
 .inbox-tickets-container .top-menu .tickets-filter {
-  /* width: 138px; */
+  width: 138px;
   height: 47px;
   background: #f8f7f7 0% 0% no-repeat padding-box;
   opacity: 1;
   cursor: pointer;
   position: relative;
+  border-radius: 12px;
+  margin-right: 10px !important;
 }
 
 .inbox-tickets-container .top-menu .tickets-filter p {
@@ -108,7 +158,7 @@
   border-radius: 20px;
   opacity: 1;
   width: 100%;
-  height: 133px;
+  height: 60px;
   align-items: center;
   position: relative;
   cursor: pointer;
@@ -125,8 +175,8 @@
 }
 
 .inbox-tickets-container .single-ticket img {
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
 }
 
@@ -635,6 +685,8 @@
   font-size: 20px;
   font-weight: 600;
   margin-top: 30px;
+  font: normal normal bold 24px/16px Montserrat;
+  line-height: .8;
 }
 
 @media (max-width: 630px) {
