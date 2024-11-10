@@ -14,6 +14,7 @@ import {
   faTimes,
   faArrowLeft
 } from '@fortawesome/free-solid-svg-icons'
+import closeIcon from '../../assets/images/close-icon-eval.svg'
 
 import ContentUploads from '../../pages/LtsJournal/ContentUploads/ContentUploads'
 import CertificationSkills from '../../pages/LtsJournal/CertificationSkills/CertificationSkills'
@@ -76,7 +77,7 @@ const ShotList = (props) => {
           <ShotCard key={index} shot={shot} />
         ))}
       </div>
-      <div className='video-card'>
+      <div className='video-card' style={{ paddingBottom: '10px' }}>
         <video
           ref={videoRef}
           poster={props.data?.video?.thumbnail}
@@ -607,7 +608,8 @@ const EvaluateStudentModal = (props) => {
             }}
             className='evaluate-close-button'
           >
-            <FontAwesomeIcon icon={faTimes} />
+            {/* <FontAwesomeIcon icon={faTimes} /> */}
+            <img src={closeIcon} alt='#' width='100%' />
           </div>
 
           {props.journalSelected == 'PORTFOLIO' && (
@@ -788,7 +790,9 @@ const EvaluateStudentModal = (props) => {
 
           {props.journalSelected != 'PORTFOLIO' && (
             <div
-              className='portfolio-data-container eval-feedback'
+              className={`portfolio-data-container eval-feedback  ${
+                instructorEditing ? 'edit-eval-feedback' : null
+              } `}
               style={{
                 background: '#fff',
 
@@ -797,12 +801,18 @@ const EvaluateStudentModal = (props) => {
               }}
             >
               <div className='eval-feedback-title py-2'>
-                INSTRUCTOR FEEDBACK
+                {instructorEditing ? (
+                  <h5> EDIT INSTRUCTOR FEEDBACK</h5>
+                ) : (
+                  <h5> INSTRUCTOR FEEDBACK</h5>
+                )}
               </div>
               <div className='feedback-action'>
                 <div className='feedback-action-box' onClick={toggleEditing}>
                   {instructorEditing ? (
-                    <FaCheck className={'action-icon public-icon'} />
+                    <>
+                      <FaCheck className={'action-icon public-icon'} />
+                    </>
                   ) : (
                     <FaPencilAlt className={'action-icon pencil-icon'} />
                   )}

@@ -20,8 +20,11 @@ function MenuOption({
     <>
       {allowedToShow && (
         <div
+          // className={`menu-option d-flex justify-content-between ${
+          //   selectedJournal == title ? 'journal-active' : ''
+          // }`}
           className={`menu-option d-flex justify-content-between ${
-            selectedJournal == title ? 'journal-active' : ''
+            selectedJournal === title ? 'journal-active' : ''
           }`}
           onClick={handleClick}
         >

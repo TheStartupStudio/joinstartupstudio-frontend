@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import searchIcon from '../../assets/images/search-icon.png'
+// import searchIcon from '../../assets/images/search-icon.png'
+import searchIcon from '../../assets/images/search-icon-eval.svg'
 import {
   faFilter,
   faChevronLeft,
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons'
+import filterIcon from '../../assets/images/filter-icon-eval.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { debounce } from 'lodash'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -70,14 +72,17 @@ const FilterDropdown = ({
       onClick={() => setFilterExpanded((prev) => !prev)} // Toggle filter expanded
       ref={dropdownRef}
     >
-      <FontAwesomeIcon
-        icon={faFilter}
+      {/* <FontAwesomeIcon
+        icon={filterIcon}
         style={{
           color: '#707070',
           fontSize: '22px',
           marginRight: '5px'
         }}
-      />
+      /> */}
+      <div style={{ marginRight: '5px' }}>
+        <img src={filterIcon} alt='#' width='90%' />
+      </div>
       <p className='m-0'>{'FILTER'}</p>
       {filterExpanded && (
         <div>
@@ -290,7 +295,7 @@ const Students = (props) => {
                   type='button'
                   id='button-addon1'
                 >
-                  <img src={searchIcon} alt='#' width='90%' />
+                  <img src={searchIcon} alt='#' width='100%' />
                 </button>
               </div>
               <input
