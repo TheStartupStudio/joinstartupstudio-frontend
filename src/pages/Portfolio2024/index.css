@@ -558,6 +558,11 @@
   z-index: 2;
 }
 
+.portfolio-modal-title {
+  line-height: .8;
+}
+
+
 @media (max-width:450px) {
   .portfolio-modal-title {
     width: 200px;
@@ -738,6 +743,7 @@
   }
 
 }
+
 
 @media (max-width: 768px) {
   .failure-desc {
@@ -1216,6 +1222,13 @@
 .inputs-aligning .w-100.rounded-0.p-1 {
   margin-left: 10px !important;
 }
+
+.readonly-desc-width .w-100.rounded-0.p-1 p {
+  width: 98% !important;
+  word-break: break-all;
+
+}
+
 
 .view-marketready-color {
   color: #52c7de !important;

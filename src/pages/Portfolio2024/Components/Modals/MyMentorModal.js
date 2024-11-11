@@ -248,7 +248,7 @@ const MyMentorModal = (props) => {
             title='Description'
             type='textarea'
             value={mentorDetails.mentorDescription}
-            containerClassNames='mt-3'
+            containerClassNames='readonly-desc-width mt-3'
             readOnly={readOnly}
             labelAlign={'start'}
             inputHeight={100}
