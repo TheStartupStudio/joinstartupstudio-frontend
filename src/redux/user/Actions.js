@@ -133,140 +133,6 @@ import {
 //   }
 // }
 
-// export const userLogin =
-//   (old_password, isImpersonation = false, impersonationMode = 'instructor') =>
-//   async (dispatch) => {
-//     try {
-//       dispatch({ type: LOADING })
-
-//       axiosInstance.defaults.headers.common[
-//         'Authorization'
-//       ] = `Bearer ${localStorage.getItem('access_token')}`
-//       axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
-
-//       if (isImpersonation) {
-//         let isAdmin = false
-//         let user = {}
-
-//         if (impersonationMode === 'instructor') {
-//           user = await axiosInstance.get('/instructor/')
-//         } else {
-//           user = await axiosInstance.get('/users/')
-//         }
-
-//         if (impersonationMode === 'instructor') {
-//           const accessResponse = await axiosInstance.get(
-//             '/studentsInstructorss/admin'
-//           )
-//           isAdmin = accessResponse.data.allow
-//         }
-
-//         const payloadData = {
-//           ...user.data,
-//           profileImage: user.data.profile_image,
-//           language: localStorage.getItem('currentLanguage')
-//         }
-
-//         const userData = {
-//           token: user.data.cognito_Id,
-//           user: payloadData,
-//           isAdmin
-//         }
-
-//         const user_token = {
-//           user: payloadData,
-//           token: localStorage.getItem('access_token'),
-//           isAdmin
-//         }
-
-//         if (impersonationMode === 'student') {
-//           document.cookie = `user=${JSON.stringify(
-//             user_token
-//           )}; path=/; domain=localhost; SameSite=None; Secure`
-//         } else {
-//           localStorage.setItem('user', JSON.stringify(user_token))
-//         }
-
-//         dispatch({
-//           type: USER_LOGIN_SUCCESS,
-//           payload: userData
-//         })
-
-//         dispatch({
-//           type: LOGIN_LOADING,
-//           payload: false
-//         })
-
-//         return Promise.resolve('impersonated')
-//       }
-
-//       const user = await axiosInstance.get('/instructor/')
-
-//       const currentUser = await Auth.currentAuthenticatedUser({
-//         bypassCache: true
-//       })
-
-//       if (currentUser.attributes['custom:isVerified'] === 0) {
-//         window.location.href = '/verify-email'
-//         return
-//       }
-
-//       if (user.data.payment_type === 'school' && !user.data.last_login) {
-//         dispatch({ type: LOGIN_LOADING, payload: false })
-//         dispatch({ type: NEED_RESET, payload: old_password })
-//         return 'passwordResetRequired'
-//       }
-
-//       if (user.data.is_active !== true) {
-//         window.location.href = '/verify-email'
-//         return
-//       }
-
-//       const accessResponse = await axiosInstance.get(
-//         '/studentsInstructorss/admin'
-//       )
-//       const isAdmin = accessResponse.data.allow
-
-//       const payloadData = {
-//         ...user.data,
-//         profileImage: user.data.profile_image,
-//         language: localStorage.getItem('currentLanguage')
-//       }
-
-//       const userData = {
-//         token: user.data.cognito_Id,
-//         user: payloadData,
-//         isAdmin
-//       }
-
-//       const user_token = {
-//         user: payloadData,
-//         token: localStorage.getItem('access_token'),
-//         isAdmin
-//       }
-
-//       localStorage.setItem('user', JSON.stringify(user_token))
-
-//       dispatch({
-//         type: USER_LOGIN_SUCCESS,
-//         payload: userData
-//       })
-
-//       dispatch({
-//         type: LOGIN_LOADING,
-//         payload: false
-//       })
-//       if (user) {
-//         return 'instructor'
-//       }
-//     } catch (err) {
-//       dispatch({
-//         type: USER_LOGIN_ERROR,
-//         payload: err?.message
-//       })
-//     }
-//   }
-
 export const userLogin =
   (old_password, isImpersonation = false, impersonationMode = 'instructor') =>
   async (dispatch) => {
@@ -293,7 +159,7 @@ export const userLogin =
         })
         dispatch({ type: LOGIN_LOADING, payload: false })
 
-        return Promise.resolve('impersonated')
+        return 'impersonated'
       }
 
       const user = await fetchUserData('instructor')
@@ -321,7 +187,9 @@ export const userLogin =
       dispatch({ type: USER_LOGIN_SUCCESS, payload: userToken })
       dispatch({ type: LOGIN_LOADING, payload: false })
 
-      return 'instructor'
+      if (user) {
+        return 'instructor'
+      }
     } catch (err) {
       dispatch({ type: USER_LOGIN_ERROR, payload: err?.message })
     }

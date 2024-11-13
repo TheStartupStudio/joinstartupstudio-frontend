@@ -119,13 +119,32 @@ export const fetchAdminAccess = async () => {
 }
 
 export const saveUserToken = (userToken, isImpersonation) => {
+  const domain = getDomainFromClientName()
+
+  debugger
+
   if (isImpersonation === 'student') {
     document.cookie = `user=${JSON.stringify(
       userToken
-    )}; path=/; domain=localhost; SameSite=None; Secure`
+    )}; path=/; domain=${domain}; SameSite=None; Secure`
   } else {
     localStorage.setItem('user', JSON.stringify(userToken))
   }
+}
+
+export const getDomainFromClientName = () => {
+  const clientName = getClientFromHostname()
+
+  const domain =
+    clientName === 'ims-dev'
+      ? 'mainplatform-dev.learntostart.com'
+      : clientName === 'ims'
+      ? 'main.learntostart.com'
+      : clientName === 'localhost'
+      ? 'localhost'
+      : `${clientName}.main.learntostart.com`
+
+  return domain
 }
 
 export const handleUserRedirect = (user) => {
@@ -387,15 +406,15 @@ export const convertImageFileToFormData = (imageFile) => {
 
 export const getClientFromHostname = () => {
   const hostnameParts = window.location.hostname.split('.')
-  return hostnameParts.length > 3 ? hostnameParts[0] : ''
+  return hostnameParts[0]
 }
 
 export const constructLoginUrl = (client, role) => {
-  if (client) {
+  if (client !== 'ims' && client !== 'main' && client !== 'localhost') {
     return `https://${client}.${role}.learntostart.com/${role}-login`
   } else if (role === 'ims') {
-    return '/ims-login'
+    return `/ims-login`
   } else if (role === 'main') {
-    return 'https://main.learntostart.com/main-login'
+    return `https://main.learntostart.com/main-login`
   }
 }

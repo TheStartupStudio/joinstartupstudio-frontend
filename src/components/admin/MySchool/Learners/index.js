@@ -20,6 +20,7 @@ import useModalState from '../../../../hooks/useModalState'
 import { toast } from 'react-toastify'
 import { userLogin } from '../../../../redux'
 import { setGeneralLoading } from '../../../../redux/general/Actions'
+import { getDomainFromClientName } from '../../../../utils/helpers'
 
 const Learners = ({
   programs,
@@ -129,8 +130,13 @@ const Learners = ({
               document.cookie = `${key}=${value}; path=/; domain=localhost; SameSite=None; Secure`
             }
           })
+          const domain = getDomainFromClientName()
 
-          window.location.href = 'http://localhost:3001?mode=impersonation'
+          if (domain === 'localhost') {
+            window.location.href = 'http://localhost:8080/?mode=impersonation'
+          } else {
+            window.location.href = `https://${domain}/?mode=impersonation`
+          }
         } else {
           console.error('Impersonation failed or returned an unexpected result')
         }

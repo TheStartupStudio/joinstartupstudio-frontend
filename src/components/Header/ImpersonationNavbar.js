@@ -10,19 +10,25 @@ const ImpersonationNavbar = ({ originalToken }) => {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const handleEndProxyLogin = useCallback(() => {
+  const handleEndProxyLogin = useCallback(async () => {
     dispatch(setGeneralLoading(true))
     if (originalToken) {
       localStorage.setItem('access_token', originalToken)
       localStorage.removeItem('original_access_token')
       localStorage.removeItem('impersonateId')
 
-      dispatch(userLogin(null, false))
-      history.push('/dashboard')
-      setTimeout(() => {
+      const loginRes = await dispatch(userLogin(null, false))
+
+      if (loginRes === 'instructor') {
+        history.push('/dashboard')
+        setTimeout(() => {
+          dispatch(setGeneralLoading(false))
+          window.location.reload()
+        }, 2000)
+      } else {
+        console.error(`Unexpected role: ${loginRes}`)
         dispatch(setGeneralLoading(false))
-        window.location.reload()
-      }, 2000)
+      }
     } else {
       console.log('No original token found to revert')
     }

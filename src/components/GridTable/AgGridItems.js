@@ -641,10 +641,9 @@ const Actions = ({
             )
           }
         >
-          {/* <a href='/my-school/learners' className='pe-1'> */}
           <FontAwesomeIcon icon={faDoorOpen} style={{ fontSize: '16px' }} />
-          {/* </a> */}
-          <p className='m-0 pe-2'> Proxy Login</p>
+
+          <p className='m-0 pe-2'> Proxy</p>
         </div>
       </div>
 
