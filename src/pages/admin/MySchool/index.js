@@ -6,6 +6,7 @@ import './style.css'
 const MySchoolContainer = () => {
   return (
     <LtsContainerWrapper
+      className={'school-lts-container'}
       title={'MANAGE MY SCHOOL'}
       titleDescription={
         'View school details, instructors, students and reports'

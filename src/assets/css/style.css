@@ -3729,6 +3729,17 @@ wave>wave:first-child {
   background-color: white;
   cursor: pointer;
   padding: 15px;
+  height: 63px;
+  width: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.check-button svg {
+  font-size: 25px !important;
+  font-weight: 300 !important;
+  color: #707070;
 }
 
 .saved-video-thumb-icon {
@@ -5163,6 +5174,14 @@ ul.sidebar-menu-item .collapse a:hover {
 
 .portf-input-title {
   background-color: #f6f7f7 !important;
+}
+
+
+.school-page-desc {
+  font: normal normal normal 12px/16px Montserrat !important;
+  letter-spacing: 0.48px;
+  color: #000000;
+  opacity: 1;
 }
 
 .you-href {

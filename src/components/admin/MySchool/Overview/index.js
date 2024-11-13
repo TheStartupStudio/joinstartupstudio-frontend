@@ -51,7 +51,7 @@ const Overview = ({ universityId, programs }) => {
         <LoadingAnimation show={true} />
       ) : (
         <>
-          <Row className='py-3'>
+          <Row className='overview-school-program-info py-3'>
             <Col md='4'>
               <SchoolDetails
                 schoolDetails={schoolDetails}

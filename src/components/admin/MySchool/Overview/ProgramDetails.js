@@ -77,14 +77,14 @@ const ProgramDetails = ({
           <Col className='justify-content-center align-items-center'>
             <div className='item-profile__details'>
               <img src={DefaultImage} alt='Profile' />
-              <p className='p-0 m-0'>Program Details</p>
+              <p className='schooldetails-font p-0 m-0'>Program Details</p>
             </div>
           </Col>
-          <Col className='py-3'>
-            <label htmlFor='' className='pb-2'>
+          <Col className='schoolname-column-padd py-3'>
+            <label htmlFor='' className='schoolname-font pb-2'>
               Number of Instructors
             </label>
-            <p className='p-0 m-0'>
+            <p className='schoolnamedetail-font p-0 m-0'>
               {schoolDetails.program_details?.numberOfInstructors}
             </p>
           </Col>
@@ -109,7 +109,7 @@ const ProgramDetails = ({
                           <>
                             <input
                               type='checkbox'
-                              className='agGrid-customFilters__checkbox'
+                              className='agGrid-customFilters__checkbox '
                               onChange={() => handleCheckboxChange(program.id)}
                               checked={selectedPrograms.includes(program.id)}
                             />

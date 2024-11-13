@@ -37,7 +37,7 @@ const ActiveUsers = ({ universityId }) => {
   }
 
   return (
-    <InfoBox style={{ minHeight: '330px', height: '330px' }}>
+    <InfoBox cn={'chart-info-box'}>
       {chartLoading ? (
         <div
           style={{ height: '300px' }}
@@ -47,13 +47,14 @@ const ActiveUsers = ({ universityId }) => {
         </div>
       ) : (
         <div className='border '>
-          <Row>
+          <Row className='linechart-over-row'>
             <Col
               md='10'
               className='pe-0 cursor-pointer'
               onClick={activeUsersViewModeHandler}
             >
               <LineChart
+                className={'linechart-overview'}
                 rangeFilter={rangeFilter}
                 datasets={[
                   {
@@ -133,7 +134,7 @@ const ActiveUsers = ({ universityId }) => {
 
           <hr className='m-1' />
           <Col md='5'>
-            <Dropdown>
+            <Dropdown style={{ width: '140px ' }}>
               <Dropdown.Toggle
                 variant='success'
                 className='bg-transparent'
