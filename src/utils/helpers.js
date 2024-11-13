@@ -410,7 +410,12 @@ export const getClientFromHostname = () => {
 }
 
 export const constructLoginUrl = (client, role) => {
-  if (client !== 'ims' && client !== 'main' && client !== 'localhost') {
+  if (
+    client !== 'ims' &&
+    client !== 'main' &&
+    client !== 'ims-dev' &&
+    client !== 'localhost'
+  ) {
     return `https://${client}.${role}.learntostart.com/${role}-login`
   } else if (role === 'ims') {
     return `/ims-login`
