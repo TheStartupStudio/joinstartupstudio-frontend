@@ -17,8 +17,15 @@ import GridTable from '../../../GridTable'
 import HeaderActions from '../HeaderActions'
 import { toast } from 'react-toastify'
 import useModalState from '../../../../hooks/useModalState'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { userLogin } from '../../../../redux'
+import { USER_LOGIN_SUCCESS } from '../../../../redux/user/Types'
+import { setGeneralLoading } from '../../../../redux/general/Actions'
 
 const Instructors = ({ programs, levels, periods, universities }) => {
+  const dispatch = useDispatch()
+  const history = useHistory()
   const [modals, setModalState] = useModalState()
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -62,6 +69,49 @@ const Instructors = ({ programs, levels, periods, universities }) => {
   useEffect(() => {
     fetchInstructors()
   }, [fetchInstructors])
+
+  const handleProxyLogin = useCallback(
+    async (impersonateId, studentCognitoId) => {
+      dispatch(setGeneralLoading(true))
+      try {
+        const response = await axiosInstance.post('/auth/proxy-auth', {
+          impersonateId
+        })
+
+        const { accessToken } = response.data
+        const originalToken = localStorage.getItem('access_token')
+
+        localStorage.setItem('original_access_token', originalToken)
+        localStorage.setItem('impersonateId', studentCognitoId)
+        localStorage.setItem('access_token', accessToken)
+
+        axiosInstance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${accessToken}`
+
+        const loginResult = await dispatch(userLogin(null, true))
+
+        if (loginResult === 'impersonated') {
+          window.location.href = '/dashboard'
+          setTimeout(() => {
+            dispatch(setGeneralLoading(false))
+          }, 1000)
+        } else {
+          console.error('Impersonation failed or returned an unexpected result')
+        }
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.error || 'Something went wrong')
+        } else {
+          toast.error('Network error')
+        }
+        dispatch(setGeneralLoading(false))
+      } finally {
+        dispatch(setGeneralLoading(false))
+      }
+    },
+    [dispatch]
+  )
 
   const columnDefs = useMemo(
     () => [
@@ -170,7 +220,7 @@ const Instructors = ({ programs, levels, periods, universities }) => {
       },
       {
         field: 'actions',
-        flex: 3,
+        flex: 4,
         cellRenderer: (params) => {
           let user = {
             ...params.data.University,
@@ -185,12 +235,20 @@ const Instructors = ({ programs, levels, periods, universities }) => {
               instructors={rowData}
               handleViewStudent='editInstructorModal'
               onSuccess={refreshInstructors}
+              handleProxyLogin={handleProxyLogin}
             />
           )
         }
       }
     ],
-    [universities, levels, programs, rowData, refreshInstructors]
+    [
+      universities,
+      levels,
+      programs,
+      rowData,
+      refreshInstructors,
+      handleProxyLogin
+    ]
   )
 
   const handleSchoolFilterChange = (selectedOption) => {

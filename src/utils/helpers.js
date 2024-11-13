@@ -91,6 +91,73 @@ export const refreshToken = async () => {
   })
 }
 
+export const createUserToken = (user, isAdmin) => {
+  const payloadData = {
+    ...user.data,
+    profileImage: user.data.profile_image,
+    language: localStorage.getItem('currentLanguage')
+  }
+
+  return {
+    token: user.data.cognito_Id,
+    user: payloadData,
+    isAdmin
+  }
+}
+
+export const fetchUserData = async (impersonationMode) => {
+  if (impersonationMode === 'instructor') {
+    return axiosInstance.get('/instructor/')
+  } else {
+    return axiosInstance.get('/users/')
+  }
+}
+
+export const fetchAdminAccess = async () => {
+  const accessResponse = await axiosInstance.get('/studentsInstructorss/admin')
+  return accessResponse.data.allow
+}
+
+export const saveUserToken = (userToken, isImpersonation) => {
+  const domain = getDomainFromClientName()
+
+  debugger
+
+  if (isImpersonation === 'student') {
+    document.cookie = `user=${JSON.stringify(
+      userToken
+    )}; path=/; domain=${domain}; SameSite=None; Secure`
+  } else {
+    localStorage.setItem('user', JSON.stringify(userToken))
+  }
+}
+
+export const getDomainFromClientName = () => {
+  const clientName = getClientFromHostname()
+
+  const domain =
+    clientName === 'ims-dev'
+      ? 'mainplatform-dev.learntostart.com'
+      : clientName === 'ims'
+      ? 'main.learntostart.com'
+      : clientName === 'localhost'
+      ? 'localhost'
+      : `${clientName}.main.learntostart.com`
+
+  return domain
+}
+
+export const handleUserRedirect = (user) => {
+  if (user.data.payment_type === 'school' && !user.data.last_login) {
+    return 'passwordResetRequired'
+  }
+
+  if (user.data.is_active !== true) {
+    window.location.href = '/verify-email'
+    return
+  }
+}
+
 export const validateEmail = (email) => {
   const re =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -339,15 +406,15 @@ export const convertImageFileToFormData = (imageFile) => {
 
 export const getClientFromHostname = () => {
   const hostnameParts = window.location.hostname.split('.')
-  return hostnameParts.length > 3 ? hostnameParts[0] : ''
+  return hostnameParts[0]
 }
 
 export const constructLoginUrl = (client, role) => {
-  if (client) {
+  if (client !== 'ims' && client !== 'main' && client !== 'localhost') {
     return `https://${client}.${role}.learntostart.com/${role}-login`
   } else if (role === 'ims') {
-    return '/ims-login'
+    return `/ims-login`
   } else if (role === 'main') {
-    return 'https://main.learntostart.com/main-login'
+    return `https://main.learntostart.com/main-login`
   }
 }
