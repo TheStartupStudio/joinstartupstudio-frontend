@@ -443,6 +443,70 @@
 }
 
 
+.immersion-card-text {
+  width: 70% !important;
+}
+
+.immersion-portfolio-card {
+  width: max-content !important;
+  justify-self: left;
+}
+
+.immersion-card-resp {
+  /* flex-wrap: wrap; */
+  display: flex;
+  width: 100%;
+}
+
+@media (max-width:915px) {
+
+  .immersion-card-resp {
+    flex-direction: column;
+  }
+
+  .immersion-card-right {
+    width: 100% !important;
+  }
+
+}
+
+@media (max-width:590px) {
+
+  .immersion-card-img {
+    width: 50% !important;
+  }
+
+  .org-end-immersion {
+    align-items: flex-start !important;
+  }
+
+  .organization-date-flex {
+    flex-direction: column;
+  }
+
+  .portfolio-submission-title {
+    font: normal normal 600 18px / 18px Montserrat !important;
+  }
+}
+
+.organization-date-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.immersion-card-right {
+  flex-wrap: wrap;
+  display: flex;
+  gap: 1.3rem;
+  width: 65%;
+}
+
+.immersion-card-text {
+  width: 70% !important;
+}
+
+
+
 .nav-icon-title {
   font: normal normal 600 18px/26px Montserrat;
   letter-spacing: 0px;
@@ -559,7 +623,7 @@
 }
 
 .portfolio-modal-title {
-  line-height: .8;
+  line-height: .8 !important;
 }
 
 
@@ -706,9 +770,9 @@
   padding: 30px 0 !important;
 }
 
-.immrs-render-caro:first-child {
+/* .immrs-render-caro:first-child {
   padding: 30px 0 !important;
-}
+} */
 
 .immrs-render-caro .immersion-card-caro {
   width: 95% !important;
@@ -720,6 +784,10 @@
 
 .failure-submission-parent {
   margin-right: 55px !important;
+}
+
+.yespadding-caro {
+  padding: 0px 20px !important;
 }
 
 
@@ -897,13 +965,130 @@
 @media (max-width: 576px) {
   .portfolio-modal-wrapper .modal-content {
     min-width: 88.5% !important;
-    margin-top: 20% !important;
+    margin-top: 50% !important;
+  }
+
+  .add-project-modal .modal-content {
+    margin-top: 490% !important;
+  }
+
+  .edit-immersion-modal .modal-content {
+    margin-top: 130% !important;
+  }
+
+  .userbasicinfo-modal .modal-content {
+    margin-top: 170% !important;
+  }
+
+  .failure-modal-resp .modal-content {
+    margin-top: 140% !important;
+  }
+}
+
+@media (max-width: 466px) {
+  .failure-modal-resp .modal-content {
+    margin-top: 190% !important;
+  }
+}
+
+
+@media (max-width: 488px) {
+  .edit-immersion-modal .modal-content {
+    margin-top: 200% !important;
+  }
+
+
+  .edit-education-modal .modal-content {
+    margin-top: 100% !important;
+  }
+
+  .userbasicinfo-modal .modal-content {
+    margin-top: 200% !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .edit-immersion-modal .modal-content {
+    margin-top: 270% !important;
+  }
+}
+
+@media (max-width: 383px) {
+  .edit-immersion-modal .modal-content {
+    margin-top: 320% !important;
+  }
+
+  .edit-education-modal .modal-content {
+    margin-top: 120% !important;
+  }
+
+  .failure-modal-resp .modal-content {
+    margin-top: 250% !important;
+  }
+}
+
+
+@media (max-width: 554px) {
+  .add-project-modal .modal-content {
+    margin-top: 550% !important;
+  }
+}
+
+
+
+@media (max-width: 520px) {
+  .add-project-modal .modal-content {
+    margin-top: 600% !important;
+  }
+}
+
+@media (max-width: 498px) {
+  .add-project-modal .modal-content {
+    margin-top: 670% !important;
+  }
+}
+
+
+
+@media (max-width: 450px) {
+  .add-project-modal .modal-content {
+    margin-top: 730% !important;
+  }
+}
+
+@media (max-width: 436px) {
+  .add-project-modal .modal-content {
+    margin-top: 780% !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .add-project-modal .modal-content {
+    margin-top: 860% !important;
+  }
+
+  .userbasicinfo-modal .modal-content {
+    margin-top: 250% !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .add-project-modal .modal-content {
+    margin-top: 920% !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .add-project-modal .modal-content {
+    margin-top: 1100% !important;
   }
 }
 
 
 @media (max-width: 376px) {
-  .portfolio-user-box {}
+  .userbasicinfo-modal .modal-content {
+    margin-top: 280% !important;
+  }
 }
 
 @media (max-width: 490px) and (min-width: 404px) {
@@ -1548,12 +1733,21 @@
   }
 }
 
+@media (max-width:420px) {
+  .immersion-portfolio-card {
+    width: 100% !important;
+  }
 
-@media (max-width:370px) {
+  .immersion-card-img {
+    width: 100% !important;
+  }
+}
+
+/* @media (max-width:400px) {
   .org-end-immersion {
     margin-left: -10px !important;
   }
-}
+} */
 
 .submission-wrapper-portfolio {
   width: 45%;
@@ -2152,9 +2346,7 @@
   width: 100% !important;
 }
 
-.immersion-card-resp {
-  flex-wrap: wrap;
-}
+
 
 @media (max-width:500px) {
   .portfolio-submission-title {

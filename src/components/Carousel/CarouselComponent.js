@@ -7,14 +7,15 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 const CarouselComponent = ({
-                             data,
-                             itemsToShow = 1,
-                             breakPoints = [],
-                             renderItems,
-                             transitionDuration = '0.5s',
-                             transitionTimingFunction = 'ease-in-out',
-                             initialActiveIndex = 0
-                           }) => {
+  className,
+  data,
+  itemsToShow = 1,
+  breakPoints = [],
+  renderItems,
+  transitionDuration = '0.5s',
+  transitionTimingFunction = 'ease-in-out',
+  initialActiveIndex = 0
+}) => {
   const [activeIndex, setActiveIndex] = useState(initialActiveIndex)
   const [currentItemsToShow, setCurrentItemsToShow] = useState(itemsToShow)
   const [totalPages, setTotalPages] = useState(
@@ -72,7 +73,7 @@ const CarouselComponent = ({
   }, [initialActiveIndex])
 
   return (
-    <div className='my-carousel'>
+    <div className={`my-carousel `}>
       <div
         className='inner'
         style={{
@@ -83,7 +84,7 @@ const CarouselComponent = ({
         {data?.map((item, index) => (
           <div
             key={index}
-            className='carousel-slide-item'
+            className={`carousel-slide-item ${className}`}
             style={{
               width: `${100 / currentItemsToShow}%`
             }}
