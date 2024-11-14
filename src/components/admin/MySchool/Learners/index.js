@@ -124,22 +124,22 @@ const Learners = ({
         ] = `Bearer ${accessToken}`
 
         const loginResult = await dispatch(userLogin(null, true, 'student'))
+        const domain = getDomainFromClientName()
+        const client = getClientFromHostname()
 
         if (loginResult === 'impersonated') {
           Object.keys(localStorage).forEach((key) => {
             const value = localStorage.getItem(key)
 
             if (key !== 'user') {
-              document.cookie = `${key}=${value}; path=/; domain=localhost; SameSite=None; Secure`
+              document.cookie = `${key}=${value}; path=/; domain=${domain}; SameSite=None; Secure`
             }
           })
-          const client = getClientFromHostname()
-          const domain = getDomainFromClientName()
 
           if (client === 'localhost') {
             window.location.href = 'http://localhost:8080/?mode=impersonation'
           } else if (client === 'ims-dev') {
-            window.location.href = `https://${client}${domain}/?mode=impersonation`
+            window.location.href = `https://mainplatform-dev${domain}/?mode=impersonation`
           } else {
             window.location.href = `https://${client}.main${domain}/?mode=impersonation`
           }
