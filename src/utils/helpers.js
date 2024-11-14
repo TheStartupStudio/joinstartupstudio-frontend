@@ -121,8 +121,6 @@ export const fetchAdminAccess = async () => {
 export const saveUserToken = (userToken, isImpersonation) => {
   const domain = getDomainFromClientName()
 
-  debugger
-
   if (isImpersonation === 'student') {
     document.cookie = `user=${JSON.stringify(
       userToken
@@ -135,16 +133,7 @@ export const saveUserToken = (userToken, isImpersonation) => {
 export const getDomainFromClientName = () => {
   const clientName = getClientFromHostname()
 
-  const domain =
-    clientName === 'ims-dev'
-      ? 'mainplatform-dev.learntostart.com'
-      : clientName === 'ims'
-      ? 'main.learntostart.com'
-      : clientName === 'localhost'
-      ? 'localhost'
-      : `${clientName}.main.learntostart.com`
-
-  return domain
+  return clientName === 'localhost' ? 'localhost' : `.learntostart.com`
 }
 
 export const handleUserRedirect = (user) => {

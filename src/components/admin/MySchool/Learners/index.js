@@ -20,7 +20,10 @@ import useModalState from '../../../../hooks/useModalState'
 import { toast } from 'react-toastify'
 import { userLogin } from '../../../../redux'
 import { setGeneralLoading } from '../../../../redux/general/Actions'
-import { getDomainFromClientName } from '../../../../utils/helpers'
+import {
+  getClientFromHostname,
+  getDomainFromClientName
+} from '../../../../utils/helpers'
 
 const Learners = ({
   programs,
@@ -121,21 +124,24 @@ const Learners = ({
         ] = `Bearer ${accessToken}`
 
         const loginResult = await dispatch(userLogin(null, true, 'student'))
+        const domain = getDomainFromClientName()
+        const client = getClientFromHostname()
 
         if (loginResult === 'impersonated') {
           Object.keys(localStorage).forEach((key) => {
             const value = localStorage.getItem(key)
 
             if (key !== 'user') {
-              document.cookie = `${key}=${value}; path=/; domain=localhost; SameSite=None; Secure`
+              document.cookie = `${key}=${value}; path=/; domain=${domain}; SameSite=None; Secure`
             }
           })
-          const domain = getDomainFromClientName()
 
-          if (domain === 'localhost') {
+          if (client === 'localhost') {
             window.location.href = 'http://localhost:8080/?mode=impersonation'
+          } else if (client === 'ims-dev') {
+            window.location.href = `https://mainplatform-dev${domain}/?mode=impersonation`
           } else {
-            window.location.href = `https://${domain}/?mode=impersonation`
+            window.location.href = `https://${client}.main${domain}/?mode=impersonation`
           }
         } else {
           console.error('Impersonation failed or returned an unexpected result')
