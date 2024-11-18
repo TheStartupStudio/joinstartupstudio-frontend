@@ -520,9 +520,10 @@
   }
 
   .mobile-footer {
-
-    bottom: -350px !important;
-    background-color: aquamarine !important;
+    width: 100%;
+    /* bottom: -350px !important; */
+    /* background-color: blueviolet !important; */
+    /* background-color: aquamarine !important; */
   }
 
   #prev-button {
@@ -565,6 +566,7 @@
 
   .mobile-footer {
     display: block;
+    position: absolute;
   }
 
   .page-title {
