@@ -824,6 +824,12 @@
   height: 400px !important;
 }
 
+@media (max-width: 380px) {
+  .mentors-container-nomod {
+    margin-top: 30px !important;
+  }
+}
+
 .mentors-container-nomod .mentor-info-box {
   justify-content: start !important;
 }
@@ -1410,7 +1416,7 @@
 
 .readonly-desc-width .w-100.rounded-0.p-1 p {
   width: 98% !important;
-  word-break: break-all;
+  word-break: break-word;
 
 }
 
