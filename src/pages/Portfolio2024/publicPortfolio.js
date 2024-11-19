@@ -45,7 +45,10 @@ function PublicPortfolio(props) {
 
   if (privatePortfolioMessage) {
     return (
-      <div className='portfolio-container' style={{ marginRight: 0 }}>
+      <div
+        className='portfolio-container'
+        style={{ marginRight: 0, background: '#e4e9f4' }}
+      >
         <div className='private-portfolio-message'>
           {privatePortfolioMessage}
         </div>
@@ -53,7 +56,10 @@ function PublicPortfolio(props) {
     )
   }
   return (
-    <div className='portfolio-container' style={{ marginRight: 0 }}>
+    <div
+      className='portfolio-container'
+      style={{ marginRight: 0, background: '#e4e9f4' }}
+    >
       <PortfolioHeader
         user={publicPortfolio.user}
         userStory={publicPortfolio?.whoAmI?.userBasicInfo}

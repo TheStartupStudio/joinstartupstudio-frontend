@@ -640,6 +640,11 @@
   margin-top: -10px !important;
 }
 
+@media (max-width:400px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 70% !important;
+  }
+}
 
 
 @media (max-width:576px) {
@@ -734,6 +739,13 @@
 .portfolio-nav-icons {
   width: 785px;
   height: 99px;
+}
+
+
+@media (max-width:1114px) and (min-width:1025px) {
+  .portfolio-nav-icons {
+    width: 700px !important;
+  }
 }
 
 .portf-userinfo .user-info-box {
@@ -879,10 +891,10 @@
 }
 
 @media (max-width: 795px) {
-  .portfolio-nav-icons {
+  /* .portfolio-nav-icons {
     width: 85vw;
     margin-inline: 0 !important;
-  }
+  } */
 
 
   .my-portfolio-logo {
@@ -890,6 +902,14 @@
   }
 
 }
+
+@media (max-width: 857px) {
+  .portfolio-nav-icons {
+    width: 85vw;
+    margin-inline: 0 !important;
+  }
+}
+
 
 /* 
 @media (max-width: 1252px) {
@@ -968,6 +988,14 @@
   }
 }
 
+@media (max-width:400px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 120% !important;
+  }
+}
+
+
+
 @media (max-width: 576px) {
   .portfolio-modal-wrapper .modal-content {
     min-width: 88.5% !important;
@@ -988,6 +1016,16 @@
 
   .failure-modal-resp .modal-content {
     margin-top: 140% !important;
+  }
+}
+
+@media (max-width:400px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 120% !important;
+  }
+
+  .skills-show-modal .modal-content {
+    margin-top: 120% !important;
   }
 }
 
@@ -2187,6 +2225,7 @@
   letter-spacing: 0.84px;
   color: #231f20;
   text-transform: capitalize;
+  line-height: .8;
 }
 
 .skill-type {
@@ -2438,6 +2477,10 @@
 
 .project-submission-image .portfolio-submission-image {
   height: 197.1px !important;
+}
+
+.d-flex.justify-content-between.gap-2 {
+  flex-wrap: wrap !important;
 }
 
 .project-submission-image .project-submission .portfolio-submission-container {}

@@ -102,6 +102,7 @@ const ProjectSection = ({
             title={`MARKET-READY ${title} SKILLS`}
             show={showSkillsModal === type}
             onHide={() => setShowSkillsModal(undefined)}
+            class={'skills-show-modal'}
           >
             {evidences?.map((evidence, index) => {
               const skillsByCategory = {}
