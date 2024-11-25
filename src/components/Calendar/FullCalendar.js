@@ -271,6 +271,7 @@ const FullCalendarComponent = (props) => {
       arg?.jsEvent?.target?.classList?.value?.includes('fc-event')
     const event = props.events?.find((event) => event.id == arg.event?.id)
 
+
     if (condition) {
       tippy(arg.el, {
         theme: 'custom',
@@ -470,6 +471,7 @@ const FullCalendarComponent = (props) => {
         event={foundedEvent}
         onEdit={(event) => dispatch(editEventStart(event))}
       />
+      {console.log("triumf473")}
       {taskEventModal && <TaskEventModal
         show={taskEventModal}
         onHide={closeTaskEventModal}
