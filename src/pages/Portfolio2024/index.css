@@ -410,7 +410,7 @@
 .nav-icons {
   /* margin-inline: 100px; */
   /* margin-left: 200px !important; */
-  margin-bottom: 30px;
+  margin-bottom: 60px;
 }
 
 .nav-icons .nav-icon-box {
@@ -725,7 +725,7 @@
 
 @media (max-width: 403px) {
   .portf-section-maintitle {
-    margin-inline: 10px;
+    margin-inline: 30px;
   }
 }
 
@@ -758,6 +758,19 @@
 
 .mentors-container-nomod .mentor-info-box {
   justify-content: start !important;
+}
+
+@media (max-width:1114px) and (min-width:1025px) {
+  .portfolio-nav-icons {
+    width: 700px !important;
+  }
+}
+
+@media (max-width: 857px) {
+  .portfolio-nav-icons {
+    width: 85vw;
+    margin-inline: 0 !important;
+  }
 }
 
 @media (max-width: 460px) {
@@ -961,7 +974,7 @@
 }
 
 
-@media (max-width: 520px) {
+@media (max-width: 621px) {
   .portfolio-section-title {
     width: fit-content;
   }
