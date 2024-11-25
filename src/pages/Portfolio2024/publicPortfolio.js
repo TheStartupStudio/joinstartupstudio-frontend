@@ -1,4 +1,4 @@
-import React, { useEffect,  useState } from 'react'
+import React, { useEffect, useRef,   useState } from 'react'
 import {  useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -15,6 +15,17 @@ function PublicPortfolio(props) {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
+
+  const scrollableRef = useRef(null);
+
+  const scrollToTop = () => {
+    if (scrollableRef.current) {
+      scrollableRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    }
+  };
 
 
   useEffect(() => {
@@ -54,7 +65,18 @@ function PublicPortfolio(props) {
     )
   }
   return (
-    <div className='portfolio-container'>
+    <div
+      ref={scrollableRef}
+      style={{
+        height: '800px',
+        overflowY: 'auto',
+      }}
+    >
+      <div style={{
+        height: '800px',
+      }}>
+        <div className={`portfolio-container`} >
+    
       <PortfolioHeader
         user={publicPortfolio.user}
         userStory={publicPortfolio?.whoAmI?.userBasicInfo}
@@ -80,7 +102,9 @@ function PublicPortfolio(props) {
         </>
       )}
 
-      <PortfolioNavigator />
+      <PortfolioNavigator scrollToTop={scrollToTop} />
+    </div>
+    </div>
     </div>
   )
 }

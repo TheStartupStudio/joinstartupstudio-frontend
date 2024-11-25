@@ -118,6 +118,8 @@ function Header() {
           setNotifications(res.data.notifications)
         }
 
+        console.log(res.data.notifications, "triumf23")
+
         setUnreadNotifications(res.data.unreadNotifications)
       })
     }

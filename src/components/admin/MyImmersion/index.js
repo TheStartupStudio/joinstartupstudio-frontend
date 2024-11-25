@@ -6,7 +6,8 @@ import {
   ActiveInactiveFilter,
   CustomSelectCellEditor,
   ProgramsFilter,
-  TransferFilter
+  TransferFilter,
+  StepFilter,
 } from './AgGridItems'
 import { SkillBox } from '../MySchool/ContentItems'
 import { useParams, useHistory } from 'react-router-dom'
@@ -114,8 +115,21 @@ const MyImmersion = ({
       {
         headerName: 'Step',
         field: 'step',
-        flex: 1
+        flex: 1,
+        filter: StepFilter,
+        cellRenderer: (params) => {
+          return (
+            <div className=''>
+              <SkillBox
+                withStatus={true}
+                color={`status__${params?.value}`}
+                text={params?.value}
+              />
+            </div>
+          );
+        },
       },
+
       {
         headerName: 'INDUSTRY',
         field: 'industry',
