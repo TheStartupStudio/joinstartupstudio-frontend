@@ -13,9 +13,11 @@
   align-items: end;
   height: 100%;
 }
+
 .journal-entries__video {
   max-width: 100%;
 }
+
 .journal-entries__video-thumbnail {
   max-width: 100%;
 }
@@ -57,10 +59,12 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
 .days-of-task-box:hover {
   background: #51c7df !important;
   color: #fff !important;
 }
+
 .default-btn {
   width: 150px;
   height: 37px;
@@ -75,9 +79,11 @@
   justify-content: center;
   text-align: center;
 }
+
 .default-btn:hover {
   color: white;
 }
+
 @media (max-width: 767.98px) {
   .editor-table-data {
     width: 100% !important;

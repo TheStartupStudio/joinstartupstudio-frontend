@@ -24,17 +24,17 @@ const ContentItem = ({ content }) => {
   const shouldRenderList = listItemTitles.includes(title.toLowerCase())
 
   return (
-    <div className="content-item-container ">
-      <span className="content-item-title">{title}:</span>
+    <div className='content-item-container '>
+      <span className='content-item-title'>{title}:</span>
       {shouldRenderList ? (
         <span
-          className="content-item-description "
+          className='content-item-description '
           dangerouslySetInnerHTML={{
             __html: extractTextWithBulletPoints(description)
           }}
         />
       ) : (
-        <span className="content-item-description ">{description}</span>
+        <span className='content-item-description '>{description}</span>
       )}
     </div>
   )
@@ -47,21 +47,21 @@ const BriefingModal = (props) => {
     <Modal
       show={props.show}
       onHide={props.onHide}
-      backdrop="static"
+      backdrop='static'
       keyboard={false}
-      id="briefing-modal"
-      className="briefing-modal"
+      id='briefing-modal'
+      className='briefing-modal briefing-modal-backg'
     >
       <Modal.Header>
         <Modal.Title>Briefing</Modal.Title>
         <button
-          type="button"
-          className="btn-close mb-1 close-briefing-modal"
-          aria-label="Close"
+          type='button'
+          className='btn-close mb-1 close-briefing-modal'
+          aria-label='Close'
           onClick={props.onHide}
         />
       </Modal.Header>
-      <Modal.Body className="briefing-modal-body">
+      <Modal.Body className='briefing-modal-body'>
         <ContentItem
           content={{
             title: 'Date',
