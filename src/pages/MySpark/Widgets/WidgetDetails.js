@@ -25,6 +25,8 @@ function WidgetDetails(props) {
   const widgetName = location?.state?.widgetName
   const widgetType = location?.state?.widgetType
   const widgetApiType = location?.state?.widgetApiType
+
+
   function reduceInputs(inputs, nonPromptFields) {
     return inputs?.reduce(
       (result, input) => {
