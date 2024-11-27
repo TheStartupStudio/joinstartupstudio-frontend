@@ -122,6 +122,7 @@ const CustomDropdown = ({
   name,
   width,
   btnClassName,
+  spanClassName,
   title,
   onClick,
   maxHeight,
@@ -227,7 +228,7 @@ const CustomDropdown = ({
         error={error}
       >
         <span
-          className='p-0 w-100'
+          className={`${spanClassName} p-0 w-100`}
           style={{
             overflow: 'hidden',
             whiteSpace: 'nowrap',

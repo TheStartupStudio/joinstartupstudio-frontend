@@ -131,12 +131,16 @@
   padding-top: 10px !important;
 }
 
+/* .lizalizaliza {
+  background: transparent linear-gradient(135deg, #EE3C96 24%, #52C7DE 77%) 0% 0% no-repeat padding-box !important;
+} */
+
 .item-profile__details img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 16px;
+  height: 19px;
+  /* border-radius: 50%; */
   background-color: #c8cdd880;
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 
 .details-info-box {
@@ -590,6 +594,43 @@
 
 
 }
+
+.recentact-img {
+  margin-bottom: 10px !important;
+}
+
+.recentact-img img {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.item-img-myschool {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #c8cdd880;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gradientbtns-cont .custom__input-container {
+  width: 50% !important;
+}
+
+.immrs-opps {
+  font: normal normal normal 15px/19px Montserrat !important;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  overflow: unset !important;
+
+}
+
+.immrs-opps-cont span.arrow {
+  margin-left: -10px !important;
+}
+
 
 /* font: normal normal normal 15px/19px Montserrat;
 letter-spacing: 0px;
