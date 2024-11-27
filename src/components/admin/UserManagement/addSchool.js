@@ -36,7 +36,6 @@ const AddSchool = ({ data, show, onHide, mode }) => {
     handleSubmit(async () => {
       setLoading(true)
       if (mode === 'edit') {
-        console.log('edit mode')
       } else {
         await axiosInstance.post('/university', formData).then((res) => {
           if (res.status === 200) {

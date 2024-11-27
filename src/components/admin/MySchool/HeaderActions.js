@@ -179,7 +179,6 @@ const HeaderActions = ({
   }
 
   const handleBulkDeleteAction = () => {
-    console.log('selectedRows', selectedRows)
     setBulkDeleteStudents(selectedRows.map((student) => student))
     setModalState('deleteUserModal', true)
   }

@@ -556,7 +556,6 @@ const Actions = ({
   handleProxyLogin,
   onSuccess
 }) => {
-  console.log('user', user)
   const [modals, setModalState] = useModalState()
 
   const handleViewUser = (handleViewStudent) => {

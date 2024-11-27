@@ -339,7 +339,6 @@ const Learners = ({
       field: 'actions',
       flex: 4,
       cellRenderer: (params) => {
-        console.log('params', params)
         let user = params.data
 
         return (

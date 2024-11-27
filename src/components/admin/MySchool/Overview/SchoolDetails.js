@@ -13,9 +13,6 @@ const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
   const [hasChanges, setHasChanges] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  console.log('hasChanges', hasChanges)
-  console.log('mode', mode)
-
   useEffect(() => {
     setNewName(schoolDetails.school_details?.name)
     setHasChanges(false)
