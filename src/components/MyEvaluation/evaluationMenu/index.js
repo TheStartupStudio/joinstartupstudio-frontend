@@ -14,7 +14,6 @@ function EvaluationMenu(props) {
   const [journalCategoryOptions, setJournalCategoryOptions] = useState([])
 
   const getUserTitles = async (category) => {
-    console.log(category, 'categgory')
     try {
       const { data } = await axiosInstance.get(
         `/ltsJournals/fromInstructorAllJournals`,
@@ -25,8 +24,6 @@ function EvaluationMenu(props) {
           }
         }
       )
-
-      console.log(data, 'dataEvaluationMenu')
 
       let journalOptions = []
 

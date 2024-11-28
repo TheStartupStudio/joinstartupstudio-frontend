@@ -149,7 +149,6 @@ const FilterDropdown = ({
 }
 
 const Students = (props) => {
-  console.log(props, 'propsStudents')
   const dropdownRef = useRef(null)
   const { user, isAdmin } = useSelector((state) => state.user.user)
   const [filterExpanded, setFilterExpanded] = useState(false)
@@ -165,7 +164,7 @@ const Students = (props) => {
   const itemsPerPage = 6
 
   const getStudents = async () => {
-    const url = `/instructor/my-students/${user.instructorInfo.id}`
+    const url = `/instructor/my-students/${user?.instructorInfo?.id}`
     try {
       const res = await axiosInstance.get(url)
       const sortedStudents = res.data.students.sort((a, b) =>
@@ -200,7 +199,9 @@ const Students = (props) => {
 
   const filterStudents = (student) => {
     const normalizedYearFilter = yearFilter.replace(/\s+/g, '').toLowerCase()
-    const normalizedStudentYear = student.year.replace(/\s+/g, '').toLowerCase()
+    const normalizedStudentYear = student?.year
+      ?.replace(/\s+/g, '')
+      .toLowerCase()
 
     const normalizedPeriodFilter = periodFilter.toLowerCase()
     const normalizedStudentPeriod = student?.period?.name.match(/\d+/)?.[0]
@@ -262,13 +263,10 @@ const Students = (props) => {
   return (
     <div className='evaluations-journal-section col-12 col-lg-9 inbox-tickets-container px-4 d-flex justify-content-between flex-column'>
       <div>
-        {console.log(props.journalSelected, 'prpos.journalSelected')}
-
         <div
           className='journal-select-title'
           style={{ textTransform: 'uppercase' }}
         >
-          {console.log(props.journalSelected, 'journal')}
           {props.journalSelected == 'PORTFOLIO'
             ? 'PORTFOLIOS'
             : props.journalSelected.title}
@@ -321,8 +319,7 @@ const Students = (props) => {
                 />
               ))
             : 'No students available'}
-          {console.log(props, 'props.journal')}
-          {console.log(selectedUser, 'selectedUser')}
+
           {selectedUser && props.journalSelected ? (
             <EvaluateStudentModal
               userId={selectedUser.id}
