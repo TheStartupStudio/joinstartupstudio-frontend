@@ -64,7 +64,7 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
         centered
         size='sm'
       >
-        <Modal.Header className='position-relative p-3'>
+        <Modal.Header className='position-relative p-3 reset-password-modal'>
           <Modal.Title
             className='px-3 py-3 d-flex fw-normal flex-column'
             style={{ fontSize: '16px' }}
@@ -84,13 +84,16 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
             Reset Password
           </Modal.Title>
 
-          <div className={`check-button fw-bold`} onClick={() => onHide()}>
+          <div
+            className={`check-button reset-pasw-checkbtn fw-bold`}
+            onClick={() => onHide()}
+          >
             X
           </div>
         </Modal.Header>
         <Modal.Body>
           <Col>
-            <p>User details</p>
+            <p className='userdetails'>Create a new password</p>
             <CustomInput
               placeholder={'New Password'}
               type={'password'}
@@ -105,8 +108,14 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
             />
           </Col>
           <Col md='12' className='d-flex justify-content-end pt-3'>
-            <Row className='m-0 col-5 justify-content-end'>
+            <Row
+              className='m-0 col-5 justify-content-between'
+              style={{
+                width: '100%'
+              }}
+            >
               <LtsButton
+                className={'cancel-btns'}
                 text={'CANCEL'}
                 background={'transparent'}
                 color={'#000'}
@@ -122,7 +131,7 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
                   )
                 }
                 background={'#52C7DE'}
-                className={'ms-2'}
+                className={'ms-2 cancel-btns'}
                 color={'#fff'}
                 border={'none'}
                 onClick={submitHandler}

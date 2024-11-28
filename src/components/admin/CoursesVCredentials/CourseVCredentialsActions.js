@@ -280,7 +280,7 @@ const CourseVCredentialsActions = ({
                   className='d-flex align-items-center'
                   style={{ color: '#9297A1' }}
                 >
-                  Uanctive
+                  Unactive
                   <LtsCheckbox
                     className={'ps-1'}
                     name='deactivated'

@@ -25,6 +25,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Certification1Badge from '../../../../assets/images/market-ready-1-badge.png'
 import Certification2Badge from '../../../../assets/images/market-ready-2-badge.png'
 import { CustomInput, LtsButton } from '../../../../ui/ContentItems'
+import buttonTick from '../../../../assets/images/myschool-tick.svg'
 
 const StudentActionsModal = ({
   show,
@@ -172,7 +173,7 @@ const StudentActionsModal = ({
         // style={{ marginTop: '3.9%' }}
         // dialogClassName='custom-modal-lg'
       >
-        <Modal.Header className='position-relative p-3'>
+        <Modal.Header className='position-relative p-3 instructor-modal-details'>
           <Modal.Title
             className='px-3 py-3 w-100 d-flex fw-normal flex-column'
             style={{ fontSize: '16px' }}
@@ -206,8 +207,14 @@ const StudentActionsModal = ({
             </div>
           </Modal.Title>
           {mode !== 'edit' ? (
-            <div className={`check-button fw-bold`} onClick={() => onHide()}>
-              X
+            <div
+              className={`check-button fw-bold`}
+              style={{
+                borderTopRightRadius: '50%'
+              }}
+              onClick={() => onHide()}
+            >
+              Xjnjj
             </div>
           ) : submitLoading ? (
             <div className={`check-button fw-bold`}>
@@ -227,9 +234,9 @@ const StudentActionsModal = ({
           )}
         </Modal.Header>
         <Modal.Body>
-          <Row className='m-0'>
+          <Row className='m-0 reset-password-body'>
             <Col md='6'>
-              <p>User details</p>
+              <p className='userdetails'>User details</p>
               <CustomInput
                 placeholder={'User Name (required)'}
                 type={'text'}
@@ -260,12 +267,12 @@ const StudentActionsModal = ({
                 />
               )} */}
               <div className='py-3'>
-                <p>Set Status</p>
+                <p className='userdetails'>Set Status</p>
                 <span
-                  className='d-flex align-items-center'
+                  className='d-flex align-items-center status-toggle-font'
                   style={{ color: '#9297A1' }}
                 >
-                  Uanctive
+                  Inactive
                   <LtsCheckbox
                     className={'ps-1'}
                     name='deactivated'
@@ -280,7 +287,7 @@ const StudentActionsModal = ({
                 </span>
               </div>
               <div className='py-3'>
-                <p>Certification Progress</p>
+                <p className='userdetails'>Certification Progress</p>
                 <div
                   className='d-flex justify-content-evenly text-center w-50'
                   style={{ fontSize: '14px' }}
@@ -340,8 +347,9 @@ const StudentActionsModal = ({
             </Col>
             <Col md='6'>
               <div className='pb-3'>
-                <p className='m-0'> Select School Assignment</p>
+                <p className='m-0 userdetails'> Select School Assignment</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   name='universityId'
@@ -375,8 +383,9 @@ const StudentActionsModal = ({
                 />
               </div>
               <div className='pb-3'>
-                <p className='m-0'>Select Level(s)</p>
+                <p className='m-0 userdetails'>Select Level(s)</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   multiple
@@ -394,8 +403,9 @@ const StudentActionsModal = ({
                 />
               </div>
               <div className='pb-3'>
-                <p className='m-0'>Assign Program(s)</p>
+                <p className='m-0 userdetails'>Assign Program(s)</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   multiple
@@ -417,8 +427,9 @@ const StudentActionsModal = ({
                 />
               </div>
               <div className='pb-3'>
-                <p className='m-0'> Assign Instructor</p>
+                <p className='m-0 userdetails'> Assign Instructor</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   name='instructor_id'
@@ -450,8 +461,9 @@ const StudentActionsModal = ({
                 />
               </div>
               <div className='pb-3'>
-                <p className='m-0'> Select Class Period</p>
+                <p className='m-0 userdetails'> Select Class Period</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   name='period'
@@ -513,20 +525,20 @@ const StudentActionsModal = ({
               <span className='col-6 d-flex align-items-center'>
                 <p
                   href='#'
-                  className='m-0 cursor-pointer'
+                  className='m-0 cursor-pointer userdetails'
                   onClick={deleteUserFromEdit}
                 >
-                  <FontAwesomeIcon icon={faUserMinus} className='pe-2' />
+                  <FontAwesomeIcon icon={faUserMinus} className='pe-2 ' />
                   Delete User
                 </p>
               </span>
               <span className='col-6 d-flex align-items-center justify-content-end'>
                 <p
                   href='#'
-                  className='m-0 cursor-pointer'
+                  className='m-0 cursor-pointer userdetails'
                   onClick={resetPasswordFromEdit}
                 >
-                  <FontAwesomeIcon icon={faUserLock} className='pe-2' />
+                  <FontAwesomeIcon icon={faUserLock} className='pe-2 ' />
                   Reset password
                 </p>
               </span>
