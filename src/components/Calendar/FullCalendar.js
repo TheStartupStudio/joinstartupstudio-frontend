@@ -241,7 +241,7 @@ const FullCalendarComponent = (props) => {
 
   const convertDate = (date) => {
     const inputDate = new Date(date)
-    const day = inputDate.getDate()
+    const day = inputDate.getUTCDate()
     const month = inputDate.toLocaleString('en-US', { month: 'long' })
     const year = inputDate.getFullYear()
 
