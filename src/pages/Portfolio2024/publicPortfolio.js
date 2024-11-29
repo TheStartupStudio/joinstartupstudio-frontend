@@ -47,10 +47,9 @@ function PublicPortfolio(props) {
     }
 
     getPublicPortfolioAPI()
-  }, [username])
+  }, [username, props.userName])
 
   if (isLoading) {
-    // return <div className="loading-indicator">Loading...</div>
     return <PortfolioSkeletonLoader />
   }
 
@@ -66,6 +65,7 @@ function PublicPortfolio(props) {
       </div>
     )
   }
+
   return (
     <div
       className='portfolio-container'
@@ -79,39 +79,16 @@ function PublicPortfolio(props) {
         <WhoAmI
           data={publicPortfolio?.whoAmI}
           user={publicPortfolio?.user}
-          portfolioType={'public'}
+          portfolioType='public'
         />
       )}
       {activeSection === 'what-section' && (
-        <>
-          <WhatCanIDo
-            portfolioType={'public'}
-            data={publicPortfolio?.whatCanIDo}
-          />
-          {activeSection === 'who-section' && (
-            <WhoAmI
-              data={publicPortfolio?.whoAmI}
-              user={publicPortfolio?.user}
-              portfolioType={'public'}
-            />
-          )}
-          {activeSection === 'what-section' && (
-            <>
-              <WhatCanIDo
-                portfolioType={'public'}
-                data={publicPortfolio?.whatCanIDo}
-              />
-            </>
-          )}
-          {activeSection === 'how-section' && (
-            <>
-              <HowDoIProve data={publicPortfolio?.howDoIProve} />
-            </>
-          )}
-
-          <PortfolioNavigator scrollToTop={scrollToTop} />
-        </div>
-      </div>
+        <WhatCanIDo portfolioType='public' data={publicPortfolio?.whatCanIDo} />
+      )}
+      {activeSection === 'how-section' && (
+        <HowDoIProve data={publicPortfolio?.howDoIProve} />
+      )}
+      <PortfolioNavigator scrollToTop={scrollToTop} />
     </div>
   )
 }
