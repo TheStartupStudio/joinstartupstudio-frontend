@@ -170,7 +170,7 @@ const MyMentorModal = (props) => {
       onToggleSection={(showSection) => {
         setMentorDetails({ ...mentorDetails, showSection })
       }}
-      class={'portf-modal-widths'}
+      class={`${props.className} portf-modal-widths `}
       switchId={isEdit() ? 'edit-mentor-switch' : 'add-mentor-switch'}
       switchName={isEdit() ? 'edit-mentor-switch' : 'add-mentor-switch'}
     >
