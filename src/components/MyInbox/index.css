@@ -169,17 +169,21 @@
 .status.not_started {
   color: #bbbdbf;
 }
+
 .status.submitted,
 .status.pending {
   color: #51c7df;
 }
+
 .status.saved {
   color: #231f20;
 }
+
 .status.received_feedback,
 .status.rejected {
   color: #ff3399;
 }
+
 .status.proficient,
 .status.approved {
   color: #99cc33;

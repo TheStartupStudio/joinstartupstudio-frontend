@@ -31,18 +31,19 @@ function JournalsBody(props) {
   const history = useHistory()
   let [journals, setJournals] = useState([])
   let [loaded, setLoaded] = useState(false)
-  let [journalActive, setJournalActive] = useState(false)
+  let [journalActive, setJournalActive] = useState('student-lts')
   const [journalsData, setJournalsData] = useState()
   const [fetchingUserData, setFetchingUserData] = useState(true)
   const [notAllowed, setNotAllowed] = useState(false)
   const currentLanguage = useSelector((state) => state.lang.locale)
   const [user, setUser] = useState({})
   const [globalCategory, setGlobalCategory] = useState('lts')
+  const userBasicInfo = useSelector(
+    (state) => state.portfolio.whoSection.userBasicInfo
+  )
 
   let contentContainer = useRef()
-  const studentInfo = useSelector(
-    (state) => state.users.studentInfo
-  )
+  const studentInfo = useSelector((state) => state.users.studentInfo)
 
   async function getJournals(category = 'student-lts', redir = true) {
     setGlobalCategory(category)
@@ -121,9 +122,9 @@ function JournalsBody(props) {
     dispatch(changeSidebarState(false))
   })
 
-  useEffect(()=>{
-    if(user.id) dispatch(getStudentInfoById(user.id))
-  },[user.id])
+  useEffect(() => {
+    if (user.id) dispatch(getStudentInfoById(user.id))
+  }, [user.id])
   function updateJournalEntry(journals, journal) {
     return journals.map((item) => {
       return {
@@ -224,8 +225,7 @@ function JournalsBody(props) {
                       </span>
                     </div>
                     <div className='mt-2 col-12 justify-content-lg-end row m-0 p-0'>
-                      <div
-                        className='user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 d-flex justify-content-md-end'>
+                      <div className='user-image-and-name col-12 col-md-6 col-lg-3 col-xl-3 d-flex justify-content-md-end'>
                         <img
                           className='rounded-circle user-image'
                           src={
@@ -251,6 +251,7 @@ function JournalsBody(props) {
                           styles={customStyles}
                           onChange={async (data) => {
                             getJournals(data.value)
+                            setJournalActive(data)
                           }}
                         />
                       </div>
@@ -274,6 +275,7 @@ function JournalsBody(props) {
                                   contentContainer={contentContainer}
                                   backRoute={props.match.url}
                                   saved={journalChanged}
+                                  journalType={journalActive}
                                 />
                               </>
                             )}

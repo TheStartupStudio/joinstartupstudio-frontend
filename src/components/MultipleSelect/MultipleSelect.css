@@ -1,10 +1,10 @@
-.multiselect-dropdown {
+.multiple-select_dropdown {
     position: relative;
     background: #FFFFFF 0% 0% no-repeat padding-box;
 
 }
 
-.multiselect-title {
+.multiple-select_label {
     text-align: left;
     font: normal normal normal 14px/19px Montserrat;
     letter-spacing: 0px;
@@ -15,7 +15,7 @@
 /*    letter-spacing: 0px;*/
 /*}*/
 
-.multiselect-option-checkbox input {
+.multiple-select_option-checkbox input {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -28,7 +28,7 @@
     cursor: pointer;
 }
 
-.multiselect-option-checkbox::before input {
+.multiple-select_option_checkbox::before input {
     content: "";
     position: absolute;
     top: 50%;
@@ -41,19 +41,19 @@
     transition: background-color 0.2s;
 }
 
-.multiselect-option-checkbox:checked::before input {
+.multiple-select_option-checkbox:checked::before input {
     background-color: #52C7DE;
     border-color: #52C7DE;
     width: 20px;
     height: 20px;
 }
 
-.multiselect-option-checkbox:hover input {
+.multiselect-option_checkbox:hover input {
     border-color: #52C7DE;
 }
 
 
-.dropdown-input {
+.multiple-select_dropdown-input {
     display: flex;
     flex-wrap: wrap; /* Added property */
     align-items: center;
@@ -78,12 +78,12 @@
 }
 
 
-.dropdown-input.open {
+.multiple-select_dropdown-input.open {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-.dropdown-input .placeholder {
+.multiple-select_dropdown-input .placeholder {
     color: #bbbdbf;
     font-size: 13px;
     font-weight: 600;
@@ -117,7 +117,7 @@
     margin-left: 4px;
 }
 
-.dropdown-options {
+.multiple-select_dropdown-options {
     width: 100%;
     position: absolute;
     top: 100%;
@@ -132,19 +132,3 @@
     overflow-y: auto;
     padding: 8px;
 }
-
-.option-label {
-    display: flex;
-    align-items: self-start;
-    margin-bottom: 8px;
-    font-size: 14px !important;
-}
-
-.option-label input {
-    margin-right: 4px;
-    /*width: 14px !important;*/
-    justify-content: center;
-    display: flex;
-    margin-top: 4px;
-}
-

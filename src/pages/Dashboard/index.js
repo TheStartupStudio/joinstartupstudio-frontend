@@ -6,38 +6,45 @@ import { changeSidebarState } from '../../redux'
 import {
   closeTaskModal,
   getEventsStart,
-   getPeriodsStart,
+  getPeriodsStart,
   openTaskModal
 } from '../../redux/dashboard/Actions'
 import LevelWrapper from '../../components/LevelWrapper'
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
 import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
+import useImpersonation from '../../hooks/useImpersonation'
 
 function Dashboard() {
+  const originalToken = localStorage.getItem('original_access_token')
+
   const dispatch = useDispatch()
   const periods = useSelector((state) => state.dashboard.periods)
   const events = useSelector((state) => state.dashboard.events)
-   // useEffect(() => {
+  // useEffect(() => {
   //   if (loggedUser) {
   //     const newTime = axiosInstance.get('/myPerformanceData/loginTime')
   //     console.log(newTime)
   //   }
   // }, [])
+
   const user = {
     level: 'HS'
   }
 
   const [newMessage, setNewMessage] = useState([])
   const [chatId, setChatId] = useState('')
-  const [startDate, setStartDate] = useState(null)
+
+  useImpersonation(originalToken)
+
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  }, [])
+  }, [dispatch])
+
   useEffect(() => {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
-  }, [])
+  }, [dispatch])
 
   function getFormattedDate() {
     const today = new Date()
@@ -62,15 +69,15 @@ function Dashboard() {
   }
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-12 col-md-12 col-xl-9 pe-0 me-0">
-          <div className="account-page-padding page-border">
-            <h3 className="page-title">
-              <IntlMessages id="navigation.dashboard" />
+    <div className='container-fluid'>
+      <div className='row'>
+        <div className='col-12 col-md-12 col-xl-9 pe-0 me-0'>
+          <div className='account-page-padding page-border'>
+            <h3 className='page-title'>
+              <IntlMessages id='navigation.dashboard' />
             </h3>
-            <p className="page-description">
-              <IntlMessages id="dashboard.page_description" />
+            <p className='page-description'>
+              <IntlMessages id='dashboard.page_description' />
             </p>
 
             <LevelWrapper user={user}>
@@ -101,11 +108,10 @@ function Dashboard() {
             {/*    <ActiveStudents />*/}
             {/*  </div>*/}
             {/*</div>*/}
-
           </div>
         </div>
-        <div className="col-12 col-xl-3 px-0">
-          <div className="account-page-padding" style={{ paddingLeft: '20px' }}>
+        <div className='col-12 col-xl-3 px-0'>
+          <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
             <FullCalendarComponent
               events={events}
               periods={periods}
@@ -119,16 +125,18 @@ function Dashboard() {
                 fontSize: 14
               }}
               onClick={openTaskEventModal}
-              className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
+              className='px-4 py-2 border-0 color transform text-uppercase  w-100 my-1'
             >
               Create Task/Event
             </button>
-            <TaskEventModal
-              show={taskEventModal}
-              onHide={closeTaskEventModal}
-              periods={periods}
-              startDate={getFormattedDate()}
-            />
+            {taskEventModal && (
+              <TaskEventModal
+                show={taskEventModal}
+                onHide={closeTaskEventModal}
+                periods={periods}
+                startDate={getFormattedDate()}
+              />
+            )}
             <NotificationSection />
             {/*<CertificationRequestsWidget />*/}
             {/* <Messenger

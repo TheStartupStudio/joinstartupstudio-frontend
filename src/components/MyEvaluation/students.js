@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import searchIcon from '../../assets/images/search-icon.png'
+// import searchIcon from '../../assets/images/search-icon.png'
+import searchIcon from '../../assets/images/search-icon-eval.svg'
 import {
   faFilter,
   faChevronLeft,
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons'
+import filterIcon from '../../assets/images/filter-icon-eval.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { debounce } from 'lodash'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -70,14 +72,17 @@ const FilterDropdown = ({
       onClick={() => setFilterExpanded((prev) => !prev)} // Toggle filter expanded
       ref={dropdownRef}
     >
-      <FontAwesomeIcon
-        icon={faFilter}
+      {/* <FontAwesomeIcon
+        icon={filterIcon}
         style={{
           color: '#707070',
           fontSize: '22px',
           marginRight: '5px'
         }}
-      />
+      /> */}
+      <div style={{ marginRight: '5px' }}>
+        <img src={filterIcon} alt='#' width='90%' />
+      </div>
       <p className='m-0'>{'FILTER'}</p>
       {filterExpanded && (
         <div>
@@ -144,7 +149,6 @@ const FilterDropdown = ({
 }
 
 const Students = (props) => {
-  console.log(props, 'propsStudents')
   const dropdownRef = useRef(null)
   const { user, isAdmin } = useSelector((state) => state.user.user)
   const [filterExpanded, setFilterExpanded] = useState(false)
@@ -160,7 +164,7 @@ const Students = (props) => {
   const itemsPerPage = 6
 
   const getStudents = async () => {
-    const url = `/instructor/my-students/${user.instructorInfo.id}`
+    const url = `/instructor/my-students/${user?.instructorInfo?.id}`
     try {
       const res = await axiosInstance.get(url)
       const sortedStudents = res.data.students.sort((a, b) =>
@@ -195,7 +199,9 @@ const Students = (props) => {
 
   const filterStudents = (student) => {
     const normalizedYearFilter = yearFilter.replace(/\s+/g, '').toLowerCase()
-    const normalizedStudentYear = student.year.replace(/\s+/g, '').toLowerCase()
+    const normalizedStudentYear = student?.year
+      ?.replace(/\s+/g, '')
+      .toLowerCase()
 
     const normalizedPeriodFilter = periodFilter.toLowerCase()
     const normalizedStudentPeriod = student?.period?.name.match(/\d+/)?.[0]
@@ -255,12 +261,12 @@ const Students = (props) => {
   }
 
   return (
-    <div className='col-12 col-lg-9 inbox-tickets-container px-4 d-flex justify-content-between flex-column'>
+    <div className='evaluations-journal-section col-12 col-lg-9 inbox-tickets-container px-4 d-flex justify-content-between flex-column'>
       <div>
-        {console.log(props.journalSelected, 'prpos.journalSelected')}
-
-        <div className='journal-select-title'>
-          {console.log(props.journalSelected, 'journal')}
+        <div
+          className='journal-select-title'
+          style={{ textTransform: 'uppercase' }}
+        >
           {props.journalSelected == 'PORTFOLIO'
             ? 'PORTFOLIOS'
             : props.journalSelected.title}
@@ -278,7 +284,7 @@ const Students = (props) => {
           />
           <div
             className='connections-search col-12 col-sm-8 col-lg-6 mt-2 mt-sm-0'
-            style={{ height: '48px' }}
+            style={{ height: '48px', width: '345px' }}
           >
             <div className='input-group h-100'>
               <div className='input-group-prepend my-auto'>
@@ -287,7 +293,7 @@ const Students = (props) => {
                   type='button'
                   id='button-addon1'
                 >
-                  <img src={searchIcon} alt='#' width='90%' />
+                  <img src={searchIcon} alt='#' width='100%' />
                 </button>
               </div>
               <input
@@ -313,8 +319,7 @@ const Students = (props) => {
                 />
               ))
             : 'No students available'}
-          {console.log(props, 'props.journal')}
-          {console.log(selectedUser, 'selectedUser')}
+
           {selectedUser && props.journalSelected ? (
             <EvaluateStudentModal
               userId={selectedUser.id}

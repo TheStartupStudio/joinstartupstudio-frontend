@@ -23,7 +23,8 @@ const SpotlightApplyModal = (props) => {
     outcome: '',
     // product_or_service: '',
     Business_Plan: '',
-    Pitch_Deck: ''
+    Pitch_Deck: '',
+    parentGuardianApprovalForm: ''
   }
   const [spotlightSimpleModal, setSpotlightSimpleModal] = useState({
     type: '',
@@ -64,7 +65,8 @@ const SpotlightApplyModal = (props) => {
       return toast.error('Please fill in all the fields.')
     } else if (
       formData.Business_Plan.length == 0 ||
-      formData.Pitch_Deck.length == 0
+      formData.Pitch_Deck.length == 0 ||
+      formData.parentGuardianApprovalForm.length == 0
     ) {
       setLoading(false)
       return toast.error('Please fill in all the fields.')
@@ -77,7 +79,9 @@ const SpotlightApplyModal = (props) => {
     handleSubmit(async () => {
       setLoading(true)
       const data = new FormData()
-
+      if (formData.parentGuardianApprovalForm instanceof File) {
+        data.append('documents', formData.parentGuardianApprovalForm)
+      }
       if (formData.Business_Plan instanceof File) {
         data.append('documents', formData.Business_Plan)
       }
@@ -95,7 +99,8 @@ const SpotlightApplyModal = (props) => {
         const updatedData = {
           ...formData,
           Business_Plan: fileLocations[0],
-          Pitch_Deck: fileLocations[1]
+          Pitch_Deck: fileLocations[1],
+          parentGuardianApprovalForm: fileLocations[2]
         }
 
         await axiosInstance
@@ -157,7 +162,7 @@ const SpotlightApplyModal = (props) => {
             required
             rows={5}
             name='outcome'
-            placeholder={'What type of membership are you applying for?'}
+            placeholder={'What type of mentorship are you applying for?'}
           />
           <div className='parent-form-spotlight'>
             <ParentButtonApply text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
@@ -165,11 +170,11 @@ const SpotlightApplyModal = (props) => {
         </div>
         <div className='apply-inputs col-12 col-lg-6'>
           <UploadFileInput
-            filename={formData.parentGuardianApprovalForm}
+            filename={formData.parentGuardianApprovalForm.name}
             placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
             name='parentGuardianApprovalForm'
             onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
-            mode={props.mode}
+            mode={'new'}
           />
 
           <UploadFileInput
@@ -216,7 +221,7 @@ const SpotlightApplyModal = (props) => {
           </div>
         </div>
       </div>
-      <div className='w-100 pb-5'>
+      <div className='w-100 pb-5' style={{ marginTop: '-45px' }}>
         <div className='row float-end'>
           <button
             className='apply-save-button edit-account me-5'
@@ -227,7 +232,10 @@ const SpotlightApplyModal = (props) => {
             }}
           >
             {loading ? (
-              <span className='spinner-border spinner-border-sm' />
+              <span
+                className='spinner-border spinner-border-sm'
+                style={{ fontSize: '13px', fontWeight: 600 }}
+              />
             ) : (
               // <IntlMessages id="general.save" />
               <>SAVE</>

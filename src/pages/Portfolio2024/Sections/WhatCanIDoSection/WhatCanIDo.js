@@ -58,6 +58,7 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
         {projects?.length > 0 ? (
           <>
             <CarouselComponent
+              className={'yespadding-caro'}
               data={projects}
               renderItems={(item, index) => {
                 return (

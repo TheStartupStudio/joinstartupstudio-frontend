@@ -6,7 +6,7 @@ import UserCertifications from './UserCertifications'
 function UserInfo(props) {
   return (
     <div
-      className={'d-flex gap-3 portfolio-user-box'}
+      className={`${props.className} d-flex gap-3 portfolio-user-box`}
       style={{ marginTop: '30px' }}
     >
       <UserImage

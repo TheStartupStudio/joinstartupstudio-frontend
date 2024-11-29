@@ -885,7 +885,10 @@ const EnLangs = {
 
   //Alerts
   'alerts.name_required': 'Name is required',
-  'alerts.email_required': 'Email is required',
+  'alerts.email_required':
+    'Email address is required. Please enter your email.',
+  'alerts.email_not_valid':
+    'The email address you entered is not valid. Please enter a valid email address',
   'alerts.password_required': 'Password is required',
   'alerts.subject_required': 'Please enter a subject',
   'alerts.valid_email': 'Please enter a valid email address',

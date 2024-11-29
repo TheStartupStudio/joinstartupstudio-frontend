@@ -72,7 +72,7 @@ const ActiveInactiveFilter = ({ model, onModelChange, getValue }) => {
   useGridFilter({ doesFilterPass })
 
   const handleCheckboxChange = (newValue) => {
-    onModelChange(newValue)
+    onModelChange(model === newValue ? null : newValue); // allows to unclick the checkbox
   }
 
   return (
@@ -98,6 +98,46 @@ const ActiveInactiveFilter = ({ model, onModelChange, getValue }) => {
     </div>
   )
 }
+
+const StepFilter = ({ model, onModelChange }) => {
+  const doesFilterPass = useCallback(
+    (params) => {
+      const { data } = params;
+      const value = data.step; 
+
+      if (model) {
+        return value === Number(model); 
+      }
+      return true; 
+    },
+    [model]
+  );
+
+  useGridFilter({ doesFilterPass });
+
+  const handleCheckboxChange = (newValue) => {
+    onModelChange(model === newValue ? null : newValue); 
+  };
+
+  return (
+    <div style={{ padding: '4px' }}>
+      {[1, 2, 3, 4].map((step) => (
+        <div
+          key={step}
+          className="agGrid-customFilters__checkbox-container d-flex py-1"
+        >
+          <input
+            type="checkbox"
+            className="agGrid-customFilters__checkbox"
+            onChange={() => handleCheckboxChange(step)}
+            checked={model === step}
+          />
+          {step}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const LevelsFilter = ({ model, onModelChange, getValue }) => {
   const [selectedLevels, setSelectedLevels] = useState(model || [])
@@ -556,5 +596,6 @@ export {
   TransferFilter,
   CustomSelectCellEditor,
   CustomSelect,
-  Actions
+  Actions,
+  StepFilter
 }

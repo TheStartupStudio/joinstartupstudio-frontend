@@ -971,7 +971,7 @@ export default function StudentsTable({ instructorId }) {
         key: 'IAMRStatus',
         selector: (row) =>
           row.completedSkills1 ? row.completedSkills1 : 'NONE',
-        sortable: true,
+        sortable: false,
         omit: !selectedOptions.includes('certification'),
         cell: (record) => {
           return (

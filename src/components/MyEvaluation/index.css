@@ -1,11 +1,80 @@
 /* .iamr-inbox {
   min-height: 100vh;
 } */
+.eval-section-title {
+  font: normal normal 600 14px/18px Montserrat;
+}
 
 .inbox-menu {
   background-color: #f8f7f7;
   padding: 0;
   padding-bottom: 20px;
+}
+
+@media (min-width:992px) {
+  .evaluations-inbox-menu {
+    width: 30%;
+  }
+
+  .evaluations-journal-section {
+    width: 70%;
+  }
+}
+
+.eval-feedback-title h5 {
+  font: normal normal 600 15px/19px Montserrat;
+  margin-bottom: 0 !important;
+}
+
+.eval-feedback {
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: start !important;
+  gap: 20px;
+}
+
+.edit-eval-feedback {
+  margin-bottom: 30px !important;
+}
+
+.title-filter-container h5 {
+  text-align: left;
+  font: normal normal bold 24px/16px Montserrat;
+  letter-spacing: 0.96px;
+  color: #231F20;
+  text-transform: uppercase;
+  opacity: 1;
+  line-height: 1;
+}
+
+.title-filter-container .dropdown-button {
+  text-align: left;
+  font: normal normal 600 17px/20px Montserrat;
+  letter-spacing: 0.68px;
+  color: #000000;
+  text-transform: uppercase;
+  opacity: 1;
+  margin-right: 20px;
+}
+
+.dropdown-item-student {
+  text-align: left;
+  font: normal normal 17px/19px Montserrat;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  font-weight: 500;
+}
+
+@media (max-width:660px) {
+  .title-filter-container {
+    flex-wrap: wrap;
+  }
+
+  .title-filter-container .dropdown-button {
+    width: 200px !important;
+  }
 }
 
 .iamr-inbox .inbox-menu h4 {
@@ -23,13 +92,26 @@
   position: relative;
 }
 
+@media (max-width: 690px) {
+  .eval-feedback {
+    margin-bottom: 20px;
+  }
+
+}
+
 .iamr-inbox .inbox-menu .menu-option h5 {
-  font: normal normal 600 14px/18px Montserrat;
+  font: normal normal 600 14px/14px Montserrat;
   letter-spacing: 0px;
-  margin-left: 22px;
+  margin-left: 50px;
   width: 70%;
   padding: 10px 0px;
   word-break: break-word;
+}
+
+@media (max-width: 550px) {
+  .iamr-inbox .inbox-menu h4 {
+    font: normal normal bold 24px/16px Montserrat !important;
+  }
 }
 
 .iamr-inbox .inbox-menu .menu-option .unread-tickets-number {
@@ -66,15 +148,23 @@
 .iamr-inbox .inbox-tickets-container .top-menu {
   position: relative;
   justify-content: space-between;
+
+}
+
+.iamr-inbox .inbox-tickets-container .top-menu {
+  margin-left: 5px !important;
+  margin-bottom: 30px !important;
 }
 
 .inbox-tickets-container .top-menu .tickets-filter {
-  /* width: 138px; */
+  width: 138px;
   height: 47px;
   background: #f8f7f7 0% 0% no-repeat padding-box;
   opacity: 1;
   cursor: pointer;
   position: relative;
+  border-radius: 12px;
+  margin-right: 10px !important;
 }
 
 .inbox-tickets-container .top-menu .tickets-filter p {
@@ -108,7 +198,7 @@
   border-radius: 20px;
   opacity: 1;
   width: 100%;
-  height: 133px;
+  height: 60px;
   align-items: center;
   position: relative;
   cursor: pointer;
@@ -125,8 +215,8 @@
 }
 
 .inbox-tickets-container .single-ticket img {
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   object-fit: contain;
 }
 
@@ -443,15 +533,18 @@
 }
 
 .evaluate-container {
-  padding: 20px 40px;
-  width: 80%;
+  padding: 30px 50px !important;
+  /* width: 80%; */
+  width: 1050px;
   height: 90%;
-  background-color: white;
-  border-radius: 15px;
   position: relative;
   /* padding-bottom: 50px; */
   /* Space for the footer */
   position: relative;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #707070;
+  border-radius: 26px !important;
+  opacity: 1;
 }
 
 .journal-entries-tittle {
@@ -477,6 +570,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
 }
 
 .dropdown-button {
@@ -502,8 +596,9 @@
   position: absolute;
   background-color: white;
   min-width: 100%;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  box-shadow: 0px 3px 6px #00000029;
+  border: 1px solid #F3F3F3;
+  border-radius: 12px;
   /* Adjust the radius as needed */
   z-index: 1;
 }
@@ -568,7 +663,7 @@
   align-items: center;
   padding: 10px;
   flex-direction: row;
-  margin-top: -30px;
+  margin-top: 30px;
   /* height: 20%; */
 }
 
@@ -626,15 +721,19 @@
   position: absolute;
   right: 10px;
   top: 10px;
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 600;
   cursor: pointer;
+  padding: 10px;
+  margin-top: -10px;
 }
 
 .journal-select-title {
   font-size: 20px;
   font-weight: 600;
   margin-top: 30px;
+  font: normal normal bold 24px/16px Montserrat;
+  line-height: .8;
 }
 
 @media (max-width: 630px) {

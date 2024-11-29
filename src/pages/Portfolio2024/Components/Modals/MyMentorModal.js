@@ -170,6 +170,7 @@ const MyMentorModal = (props) => {
       onToggleSection={(showSection) => {
         setMentorDetails({ ...mentorDetails, showSection })
       }}
+      class={`${props.className} portf-modal-widths `}
       switchId={isEdit() ? 'edit-mentor-switch' : 'add-mentor-switch'}
       switchName={isEdit() ? 'edit-mentor-switch' : 'add-mentor-switch'}
     >
@@ -189,7 +190,7 @@ const MyMentorModal = (props) => {
             readOnly={readOnly}
           />
         </div>
-        <div className='mentor-modal-inputs'>
+        <div className='mentor-modal-inputs inputs-aligning'>
           <LabeledInput
             title='Mentor Name'
             type='text'
@@ -227,7 +228,7 @@ const MyMentorModal = (props) => {
           />
         </div>
       </div>
-      <div className='mt-3'>
+      <div className='mt-3 inputs-aligning'>
         {!readOnly ? (
           <>
             <div className='portfolio-quill-label-sm'>Description</div>
@@ -247,7 +248,7 @@ const MyMentorModal = (props) => {
             title='Description'
             type='textarea'
             value={mentorDetails.mentorDescription}
-            containerClassNames='mt-3'
+            containerClassNames='readonly-desc-width mt-3'
             readOnly={readOnly}
             labelAlign={'start'}
             inputHeight={100}

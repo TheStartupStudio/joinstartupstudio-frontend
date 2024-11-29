@@ -63,7 +63,7 @@ function AddMyMentor(props) {
         src={imagePlaceholder}
       />
 
-      <div className={'add-new-mentor px-2 pt-3'}>
+      <div className={'add-new-mentor p-1'}>
         {`Click the add button to add a new ${props.type ?? 'mentor'} ${
           props.type === 'competitiveness' ? '' : 'relationship.'
         }`}

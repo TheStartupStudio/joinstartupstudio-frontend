@@ -1,4 +1,5 @@
 import {
+  faDoorOpen,
   faExclamationTriangle,
   faEye,
   faGripLines,
@@ -552,6 +553,7 @@ const Actions = ({
   instructors,
   handleViewStudent,
   periods,
+  handleProxyLogin,
   onSuccess
 }) => {
   const [modals, setModalState] = useModalState()
@@ -629,6 +631,19 @@ const Actions = ({
           </a>
           <p className='m-0 pe-2'> Delete user</p>
         </div>
+        <div
+          className='action-item cursor-pointer'
+          onClick={() =>
+            handleProxyLogin(
+              'e91c37a6-c94c-4b47-a01a-f94da596cd18',
+              user.cognito_Id
+            )
+          }
+        >
+          <FontAwesomeIcon icon={faDoorOpen} style={{ fontSize: '16px' }} />
+
+          <p className='m-0 pe-2'> Proxy</p>
+        </div>
       </div>
 
       {modals.editInstructorModal && (
@@ -688,7 +703,7 @@ const Actions = ({
         <DeleteUserModal
           show={modals.deleteUserModal}
           onHide={() => setModalState('deleteUserModal', false)}
-          user={user}
+          users={user}
           instructors={instructors}
           onSuccess={onSuccess}
         />

@@ -81,10 +81,10 @@ const Index = ({
   isLoadingCompetitiveness
 }) => {
   const mode = useSelector((state) => state.portfolio.mode)
-   const publishToPeers = useSelector((state) => state.portfolio.publishToPeers)
-   const publishToPublic = useSelector(
-     (state) => state.portfolio.publishToPublic
-   )
+  const publishToPeers = useSelector((state) => state.portfolio.publishToPeers)
+  const publishToPublic = useSelector(
+    (state) => state.portfolio.publishToPublic
+  )
   useEffect(() => {
     const fetchDataSequentially = async () => {
       await fetchUserBasicInfo()
@@ -117,7 +117,7 @@ const Index = ({
     }
   }, [sharingSettings])
 
-const shareIcon =  () => {
+  const shareIcon = () => {
     const iconStyle = { width: 30, height: 30, objectFit: 'contain' }
     if (sharingSettings?.isPeerShared && !sharingSettings?.isPublicShared) {
       return (
@@ -149,29 +149,22 @@ const shareIcon =  () => {
     }
   }
 
-
-  const scrollableRef = useRef(null);
-
+  const scrollableRef = useRef(null)
 
   const scrollToTop = () => {
     if (scrollableRef.current) {
-      scrollableRef.current.scrollTop = 0;
+      scrollableRef.current.scrollTop = 0
     }
-  };
+  }
 
   return (
     <>
-
-      <div
-        ref={scrollableRef}
-        style={{ height: '800px', overflowY: 'scroll',
-      }}
-      >
-
-        <div style={{
-          height: '800px',
-        }}>
-
+      <div ref={scrollableRef} style={{ height: '800px', overflowY: 'scroll' }}>
+        <div
+          style={{
+            height: '800px'
+          }}
+        >
           <div
             className={`portfolio-container ${
               mode === 'edit' ? 'portfolio_edit-mode' : 'portfolio_preview-mode'
@@ -185,51 +178,67 @@ const shareIcon =  () => {
                   {
                     type: 'edit',
                     action: () => changeMode('edit'),
-                    tooltipContent: <Tooltip id='tooltip' className={'tooltip-content'}>
-                      Click here to return to edit mode
-                    </Tooltip>,
+                    tooltipContent: (
+                      <Tooltip id='tooltip' className={'tooltip-content'}>
+                        Click here to return to edit mode
+                      </Tooltip>
+                    ),
                     icon: <FaPencilAlt className={'action-icon pencil-icon'} />
                   },
                   {
                     type: 'preview',
                     action: () => changeMode('preview'),
-                    tooltipContent: <Tooltip id='tooltip' className={'tooltip-content'}>
-                      Click here to preview
-                    </Tooltip>,
+                    tooltipContent: (
+                      <Tooltip id='tooltip' className={'tooltip-content'}>
+                        Click here to preview
+                      </Tooltip>
+                    ),
                     icon: <FaX className={'action-icon eye-icon'} />
-
                   },
                   {
                     type: 'publish',
                     action: () => setPublishModalVisibility(true),
                     isDisplayed: true,
-                    tooltipContent: <Tooltip id='tooltip' className={'tooltip-content '}>
-                      <div
-                        className={'text-center bold-text'}>{`${sharingSettings?.isPublicShared || sharingSettings?.isPeerShared ? 'PUBLISHED' :
-                        'UNPUBLISHED'}`}</div>
+                    tooltipContent: (
+                      <Tooltip id='tooltip' className={'tooltip-content '}>
+                        <div className={'text-center bold-text'}>{`${
+                          sharingSettings?.isPublicShared ||
+                          sharingSettings?.isPeerShared
+                            ? 'PUBLISHED'
+                            : 'UNPUBLISHED'
+                        }`}</div>
 
-
-                      <div className={'text-center'}>
-                        {`Click to ${!sharingSettings?.isPublicShared && !sharingSettings?.isPeerShared ? "PUBLISH" :
-                          'UNPUBLISH'} portfolio.`}
-                      </div>
-                    </Tooltip>,
+                        <div className={'text-center'}>
+                          {`Click to ${
+                            !sharingSettings?.isPublicShared &&
+                            !sharingSettings?.isPeerShared
+                              ? 'PUBLISH'
+                              : 'UNPUBLISH'
+                          } portfolio.`}
+                        </div>
+                      </Tooltip>
+                    ),
                     icon: shareIcon()
                   },
                   {
                     type: 'share',
                     action: () => setShareModalVisibility(true),
                     isDisplayed:
-                      sharingSettings?.isPublicShared || sharingSettings?.isPeerShared,
-                    tooltipContent: <Tooltip
-                      id='tooltip'
-                      className={'tooltip-content text-center'}
-                    >
-                      <div className={'text-center'}>
-                        Click here share your portfolio
-                      </div>
-                    </Tooltip>,
-                    icon: <IoShareOutline className={'action-icon share-icon'} />
+                      sharingSettings?.isPublicShared ||
+                      sharingSettings?.isPeerShared,
+                    tooltipContent: (
+                      <Tooltip
+                        id='tooltip'
+                        className={'tooltip-content text-center'}
+                      >
+                        <div className={'text-center'}>
+                          Click here share your portfolio
+                        </div>
+                      </Tooltip>
+                    ),
+                    icon: (
+                      <IoShareOutline className={'action-icon share-icon'} />
+                    )
                   }
                 ]}
               />
@@ -238,7 +247,6 @@ const shareIcon =  () => {
             )}
             <PortfolioHeader userStory={userBasicInfo} user={loggedUser} />
             <div>
-
               {activeSection === 'who-section' && (
                 <WhoAmI
                   data={{
@@ -309,103 +317,101 @@ const shareIcon =  () => {
           </div>
         </div>
       </div>
-        </>
+    </>
+  )
+}
 
+const mapStateToProps = (state) => {
+  const {
+    user: { user: loggedUser }
+  } = state.user
 
-        )
-        }
-
-        const mapStateToProps = (state) => {
-        const {
-        user: {user: loggedUser}
-      } = state.user
-
-        const {
-        activeSection,
-        publishPortfolioModal,
-        sharingSettings,
-        areLoadingSharingSettings,
-        showSharePortfolioModal,
-        showSharePortfolioModalContent: sharePortfolioModalContent,
-        whoSection: {
-        userBasicInfo,
-        userStory,
-        myRelationships,
-        myFailures,
-        myMentors,
-        userBasicInfo: {isLoading: isLoadingUserBasicInfo},
-        userStory: {isLoading: isLoadingUserStory},
-        myRelationships: {isLoading: isLoadingMyRelationships},
-        myFailures: {isLoading: isLoadingMyFailures},
-        myMentors: {isLoading: isLoadingMyMentors}
-      },
-        howSection: {
-        myAlignments: {
+  const {
+    activeSection,
+    publishPortfolioModal,
+    sharingSettings,
+    areLoadingSharingSettings,
+    showSharePortfolioModal,
+    showSharePortfolioModalContent: sharePortfolioModalContent,
+    whoSection: {
+      userBasicInfo,
+      userStory,
+      myRelationships,
+      myFailures,
+      myMentors,
+      userBasicInfo: { isLoading: isLoadingUserBasicInfo },
+      userStory: { isLoading: isLoadingUserStory },
+      myRelationships: { isLoading: isLoadingMyRelationships },
+      myFailures: { isLoading: isLoadingMyFailures },
+      myMentors: { isLoading: isLoadingMyMentors }
+    },
+    howSection: {
+      myAlignments: {
         educations,
         credentials,
-        educations: {isLoading: isLoadingEducations},
-        credentials: {isLoading: isLoadingCredentials}
+        educations: { isLoading: isLoadingEducations },
+        credentials: { isLoading: isLoadingCredentials }
       },
-        myProductivity: {
+      myProductivity: {
         immersions,
         workExperiences,
-        immersions: {isLoading: isLoadingImmersions},
-        workExperiences: {isLoading: isLoadingWorkExperiences}
+        immersions: { isLoading: isLoadingImmersions },
+        workExperiences: { isLoading: isLoadingWorkExperiences }
       },
-        myCompetitiveness,
-        myCompetitiveness: {isLoading: isLoadingCompetitiveness}
-      }
-      } = state.portfolio
-        return {
-        loggedUser,
-        activeSection,
-        publishPortfolioModal,
-        sharingSettings,
-        areLoadingSharingSettings,
-        showSharePortfolioModal,
-        sharePortfolioModalContent,
-        userBasicInfo,
-        userStory,
-        myRelationships,
-        myFailures,
-        myMentors,
-        isLoadingUserBasicInfo,
-        isLoadingUserStory,
-        isLoadingMyRelationships,
-        isLoadingMyFailures,
-        isLoadingMyMentors,
-        // HOW DO I PROVE IT //
-        educations,
-        credentials,
-        immersions,
-        workExperiences,
-        myCompetitiveness,
-        isLoadingEducations,
-        isLoadingImmersions,
-        isLoadingCredentials,
-        isLoadingWorkExperiences,
-        isLoadingCompetitiveness
-      }
-      }
+      myCompetitiveness,
+      myCompetitiveness: { isLoading: isLoadingCompetitiveness }
+    }
+  } = state.portfolio
+  return {
+    loggedUser,
+    activeSection,
+    publishPortfolioModal,
+    sharingSettings,
+    areLoadingSharingSettings,
+    showSharePortfolioModal,
+    sharePortfolioModalContent,
+    userBasicInfo,
+    userStory,
+    myRelationships,
+    myFailures,
+    myMentors,
+    isLoadingUserBasicInfo,
+    isLoadingUserStory,
+    isLoadingMyRelationships,
+    isLoadingMyFailures,
+    isLoadingMyMentors,
+    // HOW DO I PROVE IT //
+    educations,
+    credentials,
+    immersions,
+    workExperiences,
+    myCompetitiveness,
+    isLoadingEducations,
+    isLoadingImmersions,
+    isLoadingCredentials,
+    isLoadingWorkExperiences,
+    isLoadingCompetitiveness
+  }
+}
 
-        const mapDispatchToProps = (dispatch) => ({
-        fetchUserBasicInfo: () => dispatch(getUserBasicInfo()),
-        fetchUserStory: () => dispatch(getUserStory()),
-        fetchMyRelationships: () => dispatch(getMyRelationships()),
+const mapDispatchToProps = (dispatch) => ({
+  fetchUserBasicInfo: () => dispatch(getUserBasicInfo()),
+  fetchUserStory: () => dispatch(getUserStory()),
+  fetchMyRelationships: () => dispatch(getMyRelationships()),
 
-        fetchMyFailures: () => dispatch(getMyFailures()),
-        fetchMyMentors: () => dispatch(getMyMentors()),
-        fetchSharingSettings: () => dispatch(getSharingSettings()),
-        setShareContent: (content) => dispatch(setShareModalContent(content)),
-        setPublishModalVisibility: (visible) => dispatch(setPublishModal(visible)),
-        setShareModalVisibility: (visible) => dispatch(setShareModal(visible)),
-        changeMode: (mode) => dispatch(changeViewMode(mode)),
-        // HOW DO I PROVE IT //
-        fetchMyEducations: () => dispatch(getMyEducations()),
-        fetchMyCredentials: () => dispatch(getMyCredentials()),
-        fetchMyImmersions: () => dispatch(getMyImmersions()),
-        fetchMyWorkExperiences: () => dispatch(getMyWorkExperiences()),
-        fetchMyCompetitiveness: () => dispatch(getMyCompetitiveness())
-      })
+  fetchMyFailures: () => dispatch(getMyFailures()),
+  fetchMyMentors: () => dispatch(getMyMentors()),
+  fetchSharingSettings: () => dispatch(getSharingSettings()),
+  setShareContent: (content) => dispatch(setShareModalContent(content)),
+  setPublishModalVisibility: (visible) => dispatch(setPublishModal(visible)),
+  setShareModalVisibility: (visible) => dispatch(setShareModal(visible)),
+  changeMode: (mode) => dispatch(changeViewMode(mode)),
+  // HOW DO I PROVE IT //
+  fetchMyEducations: () => dispatch(getMyEducations()),
+  fetchMyCredentials: () => dispatch(getMyCredentials()),
+  fetchMyImmersions: () => dispatch(getMyImmersions()),
+  fetchMyWorkExperiences: () => dispatch(getMyWorkExperiences()),
+  fetchMyCompetitiveness: () => dispatch(getMyCompetitiveness())
+})
 
-        export default connect(mapStateToProps, mapDispatchToProps)(Index)
+export default connect(mapStateToProps, mapDispatchToProps)(Index)

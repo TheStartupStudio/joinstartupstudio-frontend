@@ -193,7 +193,11 @@ function UserBasicInfoModal(props) {
   }
 
   return (
-    <PortfolioModalWrapper {...props} actions={actions}>
+    <PortfolioModalWrapper
+      {...props}
+      actions={actions}
+      class={'portf-modal-widths userbasicinfo-modal'}
+    >
       <>
         <div className={'row'}>
           <div className={'col-md-6'}>

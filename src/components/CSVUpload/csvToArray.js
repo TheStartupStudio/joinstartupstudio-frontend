@@ -17,8 +17,6 @@ const csvToArray = (str, delimiter = ',') => {
       return header
     })
 
-  console.log('headers', headers)
-
   if (
     headers[0] !== 'firstname' ||
     headers[1] !== 'lastname' ||

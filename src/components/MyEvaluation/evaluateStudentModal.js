@@ -14,6 +14,7 @@ import {
   faTimes,
   faArrowLeft
 } from '@fortawesome/free-solid-svg-icons'
+import closeIcon from '../../assets/images/close-icon-eval.svg'
 
 import ContentUploads from '../../pages/LtsJournal/ContentUploads/ContentUploads'
 import CertificationSkills from '../../pages/LtsJournal/CertificationSkills/CertificationSkills'
@@ -76,7 +77,7 @@ const ShotList = (props) => {
           <ShotCard key={index} shot={shot} />
         ))}
       </div>
-      <div className='video-card'>
+      <div className='video-card' style={{ paddingBottom: '10px' }}>
         <video
           ref={videoRef}
           poster={props.data?.video?.thumbnail}
@@ -607,7 +608,8 @@ const EvaluateStudentModal = (props) => {
             }}
             className='evaluate-close-button'
           >
-            <FontAwesomeIcon icon={faTimes} />
+            {/* <FontAwesomeIcon icon={faTimes} /> */}
+            <img src={closeIcon} alt='#' width='100%' />
           </div>
 
           {props.journalSelected == 'PORTFOLIO' && (
@@ -666,7 +668,7 @@ const EvaluateStudentModal = (props) => {
               journalEntries.entries &&
               journalEntries.entries.length > 0 &&
               journalEntries.entries.map((entry, index) => (
-                <div key={index} style={{ margin: '30px 0' }}>
+                <div key={index} style={{ margin: '30px 0', height: '100%' }}>
                   <div className='journal-entries-title'>{entry.title}</div>
                   <div className='user-entries'>
                     {userJournalEntries[index]?.content
@@ -787,23 +789,41 @@ const EvaluateStudentModal = (props) => {
           )} */}
 
           {props.journalSelected != 'PORTFOLIO' && (
-            <div className='portfolio-data-container'>
-              <div className=' py-2'>INSTRUCTOR FEEDBACK</div>
+            <div
+              className={`portfolio-data-container eval-feedback  ${
+                instructorEditing ? 'edit-eval-feedback' : null
+              } `}
+              style={{
+                background: '#fff',
+
+                boxShadow: '0px 3px 10px #00000029',
+                borderRadius: '28px'
+              }}
+            >
+              <div className='eval-feedback-title py-2'>
+                {instructorEditing ? (
+                  <h5> EDIT INSTRUCTOR FEEDBACK</h5>
+                ) : (
+                  <h5> INSTRUCTOR FEEDBACK</h5>
+                )}
+              </div>
               <div className='feedback-action'>
                 <div className='feedback-action-box' onClick={toggleEditing}>
                   {instructorEditing ? (
-                    <FaCheck className={'action-icon public-icon'} />
+                    <>
+                      <FaCheck className={'action-icon public-icon'} />
+                    </>
                   ) : (
                     <FaPencilAlt className={'action-icon pencil-icon'} />
                   )}
                 </div>
               </div>
-              <div style={{ fontSize: '12px', color: 'grey' }}>
+              <div style={{ fontSize: '13px', color: 'grey' }}>
                 {!instructorEditing ? (
                   feedbackContent ? (
                     stripHtmlTags(feedbackContent)
                   ) : (
-                    <div style={{ fontSize: '12px', color: 'grey' }}>
+                    <div style={{ fontSize: '13px', color: 'grey' }}>
                       No Feedback given yet. Click the pencil icon to add new
                       feedback.
                     </div>

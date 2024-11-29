@@ -200,7 +200,7 @@ const ImmersionCardModal = (props) => {
       onHide={props.onHide}
       title={props.title}
       actions={modalActions}
-      class={'edit-immersion-modal'}
+      class={'portf-modal-widths edit-immersion-modal'}
       showSectionCheckbox={true}
       isShownSection={!immersionData.showSection}
       onToggleSection={(showSection) => {

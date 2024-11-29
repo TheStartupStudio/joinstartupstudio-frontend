@@ -238,7 +238,7 @@ function ProjectModal(props) {
       show={props.show}
       onHide={props.onHide}
       actions={projectModalActions}
-      class={'add-project-modal '}
+      class={'portf-modal-widths add-project-modal '}
     >
       <div className={'mb-4'}>
         <div className={'portfolio-info-title my-2'}>{'Project Title'}</div>
@@ -278,7 +278,6 @@ function ProjectModal(props) {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
           menuItem3: 'Content Upload #3'
-
         }
       )}
       {renderEditProject(
@@ -292,7 +291,6 @@ function ProjectModal(props) {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
           menuItem3: 'Content Upload #3'
-
         }
       )}
 

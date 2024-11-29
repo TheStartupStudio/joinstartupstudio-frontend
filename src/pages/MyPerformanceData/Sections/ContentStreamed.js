@@ -63,7 +63,7 @@ export const DisplayCircleData = ({
 }
 
 const ContentStreamed = ({ instructorId }) => {
-  console.log('instructorId', instructorId)
+
   const dispatch = useDispatch()
   const windowWidth = useWindowWidth()
   const [filterBy, setFilterBy] = useState('')
@@ -76,32 +76,36 @@ const ContentStreamed = ({ instructorId }) => {
     setFilterBy(event.target.value)
 
     if (instructorId) {
-      dispatch(
-        fetchInstructorMasterclassPercentage(event.target.value, instructorId)
-      )
+      // dispatch(
+      //   fetchInstructorMasterclassPercentage(event.target.value, instructorId)
+      // )
       dispatch(
         fetchInstructorPodcastPercentage(event.target.value, instructorId)
       )
       dispatch(fetchInstructorQAPercentage(event.target.value, instructorId))
     } else {
-      dispatch(fetchMasterclassPercentage(event.target.value))
+      // dispatch(fetchMasterclassPercentage(event.target.value))
       dispatch(fetchPodcastPercentage(event.target.value))
       dispatch(fetchQAPercentage(event.target.value))
     }
   }
 
   useEffect(() => {
-    dispatch(fetchMasterclassPercentage(''))
+    // dispatch(fetchMasterclassPercentage(''))
+    if(filterBy !== '') {
+
     dispatch(fetchPodcastPercentage(''))
     dispatch(fetchQAPercentage(''))
-  }, [dispatch])
+    }
+
+  }, [dispatch, filterBy])
 
   useEffect(() => {
-    setMasterclassPercentage(myPerformanceData.masterclassPercentage)
+    // setMasterclassPercentage(myPerformanceData.masterclassPercentage)
     setPodcastPercentage(myPerformanceData.podcastPercentage)
     setQaPercentage(myPerformanceData.qaPercentage)
   }, [
-    myPerformanceData.masterclassPercentage,
+    // myPerformanceData.masterclassPercentage,
     myPerformanceData.podcastPercentage,
     myPerformanceData.qaPercentage
   ])

@@ -3,8 +3,11 @@ import { useValidation } from '../../../hooks/useValidation'
 import useIsFormEmpty from '../../../hooks/useIsFormEmpty'
 import LoadingAnimation from '../../../ui/loadingAnimation'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { CustomInput } from '../MySchool/ContentItems'
-import { CustomCheckbox, LtsButton } from '../../../ui/ContentItems'
+import {
+  CustomCheckbox,
+  CustomInput,
+  LtsButton
+} from '../../../ui/ContentItems'
 import { useForm } from '../../../hooks/useForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {

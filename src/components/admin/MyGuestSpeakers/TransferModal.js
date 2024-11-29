@@ -5,12 +5,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import {
-  CustomDropdown,
-  CustomInput,
-  SubmitButton
-} from '../MySchool/ContentItems'
-import { LtsButton } from '../../../ui/ContentItems'
+import { CustomDropdown, SubmitButton } from '../MySchool/ContentItems'
+import { CustomInput, LtsButton } from '../../../ui/ContentItems'
 import { useForm } from '../../../hooks/useForm'
 import { useValidation } from '../../../hooks/useValidation'
 import axiosInstance from '../../../utils/AxiosInstance'

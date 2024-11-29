@@ -113,15 +113,16 @@ const TableReflections = (props) => {
       journalId: tableReflection.journalId,
       reflectionsTableId: props.reflectionTable?.id
     }
-
     if (reflectionsTable.isEdit === false) {
       isCreateValue.reflectionsTableId = props.reflectionTable.id
-    } else {
-      isCreateValue.id = props.reflectionTable.id
     }
+    // else {
+    //   isCreateValue.id = props.reflectionTable.id
+    // }
 
     const newValue =
       props.name === 'userReflectionsTable' ? isEditValue : isCreateValue
+
     axiosInstance
       .patch(
         `/LtsJournals/user-reflections-table/${
@@ -422,7 +423,9 @@ const TableReflections = (props) => {
         show={showModal}
         title={props.reflectionTable.FontAwesomeIcontitle}
         tableTitle={props.tableTitle}
-        onSave={() => onSave()}
+        onSave={() => {
+          onSave()
+        }}
         onHide={() => setShowModal(false)}
       />
     </div>

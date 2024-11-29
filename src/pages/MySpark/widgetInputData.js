@@ -586,8 +586,8 @@ export const widgetInputData = {
     {
       ...description,
       value: '',
-      description: 'Learn how to program through our easy to understand course',
-      placeholder: 'The description of the company.',
+      description: 'The description of the company.',
+      placeholder: 'Learn how to program through our easy to understand course',
       order: 3
     },
     ...hiddenWidgetInputs
@@ -645,7 +645,7 @@ export const widgetInputData = {
       ...description,
       value: '',
       placeholder: 'We strive to be the best when it comes to content creation',
-      description: 'We strive to be the best when it comes to content creation',
+      description: 'The description of the company',
       order: 3
     },
     { ...tone, order: 4 },
@@ -696,25 +696,25 @@ export const widgetInputData = {
     },
     { ...tone, order: 3 },
     ...hiddenWidgetInputs
-  ],
-  image: [
-    {
-      ...name,
-      value: '',
-      description: 'The name of the image.',
-      order: 1
-    },
-    {
-      ...description,
-      value: '',
-      description: 'The description of the image.',
-      placeholder: 'Blue butterfly',
-      order: 2
-    },
-    { ...style, order: 3 },
-    { ...medium, order: 4 },
-    { ...filter, order: 5 },
-    { ...resolution, order: 6 },
-    ...filterFields(hiddenWidgetInputs, ['Creativity', 'Language'])
   ]
+  // image: [
+  //   {
+  //     ...name,
+  //     value: '',
+  //     description: 'The name of the image.',
+  //     order: 1
+  //   },
+  //   {
+  //     ...description,
+  //     value: '',
+  //     description: 'The description of the image.',
+  //     placeholder: 'Blue butterfly',
+  //     order: 2
+  //   },
+  //   { ...style, order: 3 },
+  //   { ...medium, order: 4 },
+  //   { ...filter, order: 5 },
+  //   { ...resolution, order: 6 },
+  //   ...filterFields(hiddenWidgetInputs, ['Creativity', 'Language'])
+  // ]
 }

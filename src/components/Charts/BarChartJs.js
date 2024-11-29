@@ -124,7 +124,12 @@ const BarChartJs = ({ data, loading }) => {
     </>
   )
 }
-const LineChart = ({ datasets, rangeFilter, numberOfIntervals = 7 }) => {
+const LineChart = ({
+  className,
+  datasets,
+  rangeFilter,
+  numberOfIntervals = 7
+}) => {
   const [filter, setFilter] = useState(rangeFilter.value || 'last30Days')
   const currentDate = new Date()
 
@@ -264,7 +269,7 @@ const LineChart = ({ datasets, rangeFilter, numberOfIntervals = 7 }) => {
   }
 
   return (
-    <div style={{ height: '30vh' }}>
+    <div className={`${className}`} style={{ height: '30vh' }}>
       <Line data={getFilteredData()} options={options} />
       <div id='legend-container'></div>
     </div>

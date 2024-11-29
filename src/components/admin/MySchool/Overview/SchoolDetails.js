@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { CustomInput, InfoBox } from '../ContentItems'
+import { InfoBox } from '../ContentItems'
 import { Col, Row } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSchool } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import CustomSpinner from '../../../CustomSpinner'
+import { CustomInput } from '../../../../ui/ContentItems'
 
 const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
   const [mode, setMode] = useState('view')
   const [newName, setNewName] = useState(schoolDetails.school_details?.name)
   const [hasChanges, setHasChanges] = useState(false)
   const [loading, setLoading] = useState(false)
-
-  console.log('hasChanges', hasChanges)
-  console.log('mode', mode)
 
   useEffect(() => {
     setNewName(schoolDetails.school_details?.name)
@@ -64,8 +62,8 @@ const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
               <div className='item-profile__details'>
                 <div
                   style={{
-                    height: '50px',
-                    width: '50px',
+                    height: '36px',
+                    width: '36px',
                     borderRadius: '50%',
                     padding: '5px',
                     background: '#C8CDD880',
@@ -77,7 +75,7 @@ const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
                 >
                   <FontAwesomeIcon icon={faSchool} />
                 </div>
-                <p className='p-0 m-0'>School Details</p>
+                <p className='schooldetails-font p-0 m-0'>School Details</p>
               </div>
             </Col>
             <Col md='5' sm='12'>
@@ -87,8 +85,8 @@ const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
               </div>
             </Col>
           </Row>
-          <Col className='py-3'>
-            <label htmlFor='' className='pb-2'>
+          <Col className='schoolname-column-padd py-3'>
+            <label htmlFor='' className='schoolname-font pb-2'>
               School Name
             </label>
             {mode === 'edit' ? (
@@ -99,17 +97,19 @@ const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
                 handleChange={handleInputChange}
               />
             ) : (
-              <p className='p-0 m-0'>{schoolDetails.school_details?.name}</p>
+              <p className='schoolnamedetail-font p-0 m-0'>
+                {schoolDetails.school_details?.name}
+              </p>
             )}
           </Col>
-          <Col className='py-3'>
-            <label htmlFor='' className='pb-2'>
+          <Col className='py-1'>
+            <label htmlFor='' className=' pb-2'>
               Specialist
             </label>
-            <p className='p-0 m-0'>
+            <p className='specialistname-font p-0 m-0'>
               {schoolDetails.school_details?.specialist.name}
             </p>
-            <p className='p-0 m-0'>
+            <p className='specialistemail-font p-0 m-0'>
               {schoolDetails.school_details?.specialist?.email}
             </p>
           </Col>

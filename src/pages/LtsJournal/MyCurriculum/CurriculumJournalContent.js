@@ -60,6 +60,8 @@ function CurriculumJournalContent(props) {
     journalCategory: null
   })
 
+  console.log('Student Assignments:', journal?.studentAssignments);
+
   useEffect(() => {
     getInstructorDebriefData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -224,6 +226,7 @@ function CurriculumJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
+        console.log(journalData, "triumf229")
 
         // if (
         //   journalData.userEntry &&

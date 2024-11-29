@@ -63,11 +63,17 @@ axiosInstance.interceptors.request.use(
 
     if (token) request.headers.Authorization = `Bearer ${token.token}`
 
+    const impersonateId = localStorage.getItem('impersonateId')
+    if (impersonateId) {
+      request.headers['x-impersonate-user'] = impersonateId
+    }
+
     request.headers['x-client-name'] = clientName
 
     return request
   },
   (error) => {
+    console.log('error axios', error)
     return Promise.reject(error)
   }
 )

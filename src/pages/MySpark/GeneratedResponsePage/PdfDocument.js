@@ -1,3 +1,51 @@
+import React from 'react'
+import { imageResolutionToPercentage } from '../mySparkHelpersFuncs'
+import './PdfDocument.css'
+
+const PdfDocument = ({ archivedDocument }) => {
+  const imageDimensions = archivedDocument
+    ? imageResolutionToPercentage(archivedDocument.imageResolution)
+    : { width: 'auto', height: 'auto' }
+
+  return (
+    <div className='pdf-document'>
+      <div className='page'>
+        <div className='section'>
+          <span>
+            <h2>{archivedDocument?.widgetName?.toUpperCase()}</h2>
+          </span>
+          <span>
+            <h3>{archivedDocument?.title}</h3>
+          </span>
+        </div>
+      </div>
+      <div className='page content'>
+        <div className='section'>
+          {archivedDocument.type !== 'image' ? (
+            <div
+              dangerouslySetInnerHTML={{ __html: archivedDocument?.myContent }}
+            />
+          ) : (
+            <div className='image-container'>
+              <img
+                src={archivedDocument?.imageUrl}
+                alt={archivedDocument?.name}
+                style={{
+                  margin: '0 auto',
+                  width: imageDimensions.width,
+                  height: imageDimensions.height
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default PdfDocument
+
 // import React from 'react'
 // import {
 //   Document,
@@ -20,11 +68,11 @@
 //     flexGrow: 1
 //   }
 // })
-//
+
 // const PdfDocument = ({ archivedDocument }) => {
 //   return (
 //     <Document>
-//       <Page size="A4">
+//       <Page size='A4'>
 //         <View style={styles.page}>
 //           <View style={styles.section}>
 //             <Text style={{ fontSize: 14 }}>
@@ -66,5 +114,5 @@
 //     </Document>
 //   )
 // }
-//
+
 // export default PdfDocument

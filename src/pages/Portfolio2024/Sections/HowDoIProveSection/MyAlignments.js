@@ -26,6 +26,8 @@ function MyAlignments(props) {
 
   const educations = props.data?.educations?.data
   const credentials = props.data?.credentials?.data
+
+
   const dispatch = useDispatch()
   const [isEditEducationSection, setIsEditEducationSection] = useState(false)
   const [isEditCredentialSection, setIsEditCredentialSection] = useState(false)

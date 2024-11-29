@@ -139,9 +139,13 @@ const UserBasicInfo = (props) => {
           </div>
           <div className={'col-md-6'}>
             <div className={'d-flex flex-column h-100'}>
-              <UserInfo userInfo={state} user={props.user} />
+              <UserInfo
+                userInfo={state}
+                user={props.user}
+                className='portf-userinfo'
+              />
 
-              <div className={' mt-3'}>
+              <div className={'userinfo-valueprop mt-3'}>
                 <PortfolioInfoBox
                   title={'My Value Proposition'}
                   content={displayContent(
@@ -149,7 +153,7 @@ const UserBasicInfo = (props) => {
                     null,
                     'No value proposition added yet! Click the edit button to add your value proposition.'
                   )}
-                  contentClasses={'w-100 mt-2'}
+                  contentClasses={' w-100 mt-2'}
                   height={150}
                 />
               </div>

@@ -90,7 +90,6 @@ const EvidenceBody = ({
           const skillCopy = { ...skill }
           delete skillCopy.category
 
-
           // const category = skill.category
           //
           // if (!acc[category]) {
@@ -98,8 +97,6 @@ const EvidenceBody = ({
           // }
           //
           // acc[category].push(skillCopy)
-
-
 
           const camelCasedCategory = skill.category
             .toLowerCase()
@@ -146,7 +143,6 @@ const EvidenceBody = ({
 
   const handleEvidenceTitleChange = (value) => {
     setEvidenceTitle(value)
-
   }
   const handleLinkChange = (value) => {
     setLinkInputValue(value)
@@ -279,7 +275,6 @@ const EvidenceBody = ({
           />
         </div>
         <div style={{ gridArea: 'input' }}>
-
           <div className={'mb-1'}>
             <LabeledInput
               title={`Title for Content Upload`}

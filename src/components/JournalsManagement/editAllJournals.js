@@ -8,19 +8,13 @@ import './index.css'
 import searchIcon from '../../assets/images/search-icon.png'
 import copy from '../../assets/images/copy.svg'
 import 'react-quill/dist/quill.snow.css'
-import KendoTextEditor from './TextEditor'
-import { EditorTools } from '@progress/kendo-react-editor'
-import '@progress/kendo-theme-default/dist/all.css'
-import { v4 as uuidv4 } from 'uuid'
-import { useHistory, useParams } from 'react-router-dom'
-import PositionSelector from '../PositionSelector/PositionSelector'
-import CustomContent from './CustomContent/CustomContent'
-import LtsButton from '../LTSButtons/LTSButton'
-import ReactTable from '../ReactTable/ReactTable'
+import { QuillEditorBox } from '../../ui/ContentItems'
 import AccordionModal from './AccordionModal'
+import ReactTable from '../ReactTable/ReactTable'
 import { FaEdit, FaTrash } from 'react-icons/fa'
+import LtsButton from '../LTSButtons/LTSButton'
 
-export default function EditAllJournals(props) {
+export default function EditJournals2(props) {
   const [journals, setJournals] = useState([])
   const [journalOptions, setJournalOptions] = useState([])
   const [selectedJournal, setSelectedJournal] = useState({})
@@ -44,16 +38,17 @@ export default function EditAllJournals(props) {
   }
 
   useEffect(() => {
-    getJournalsTasks()
-    getJournalsWeeks()
-    getTrainings()
-    getJournals()
-  }, [])
-
-  useEffect(() => {
     if (selectedJournal?.value?.ltsJournalAccordions)
       setAccordions(selectedJournal?.value?.ltsJournalAccordions)
   }, [selectedJournal?.value?.ltsJournalAccordions])
+
+
+  useEffect(() => {
+    getJournals2()
+    getJournals2Weeks()
+    getTrainings()
+    getJournals()
+  }, [])
 
   useEffect(() => {
     if (journals?.length) {
@@ -86,6 +81,8 @@ export default function EditAllJournals(props) {
       value: e.value,
       label: e.label
     })
+
+
   }
 
   useEffect(() => {
@@ -108,8 +105,10 @@ export default function EditAllJournals(props) {
       .get('/ltsJournals/journals-descriptions')
       .then(({ data }) => {
         // setJournals(data.filter((d) => d.category.includes('new')))
-        setJournals(data)
-        setFetchingJournals(false)
+        // setFetchingJournals(false)
+        const newData = data.filter((data) => data.category && data.category === 'my-mentorship')
+        // debugger
+        setJournals((prevJournals) => [...prevJournals, ...newData])
       })
       .catch((e) => e)
   }
@@ -124,7 +123,7 @@ export default function EditAllJournals(props) {
     }
   }
 
-  const getJournalsTasks = async () => {
+  const getJournals2 = async () => {
     try {
       const response = await axiosInstance.get(
         '/ltsJournals/journals-descriptions2'
@@ -135,12 +134,11 @@ export default function EditAllJournals(props) {
       }))
       setJournals((prevJournals) => [...prevJournals, ...newData])
       setFetchingJournals(false)
-      // setBreakdowns(data.breakdowns)
     } catch (error) {
       console.error(error)
     }
   }
-  const getJournalsWeeks = async () => {
+  const getJournals2Weeks = async () => {
     try {
       const response = await axiosInstance.get(
         '/ltsJournals/journals-descriptions2-weeks'
@@ -151,82 +149,27 @@ export default function EditAllJournals(props) {
       }))
       setJournals((prevJournals) => [...prevJournals, ...newData])
       setFetchingJournals(false)
-      // setBreakdowns(data.breakdowns)
     } catch (error) {
       console.error(error)
     }
   }
   // const { journalId, type } = useParams()
 
-  console.log('selectedJournal', selectedJournal)
   const handleSubmit = async () => {
     setLoading(true)
-    if (selectedJournal.value.hasOwnProperty('type')) {
-      debugger
-      if (!journalType?.includes('my-training')) {
-        await axiosInstance
-          .put(`LtsJournals/${journalId}/editJournal2`, {
-            paragraph: selectedJournal?.value?.paragraph,
-            title: selectedJournal?.value?.title,
-            type: selectedJournal?.value?.type,
-            customContent: selectedJournal?.value?.customContent,
-            steps: selectedJournal?.value?.steps,
-            ltsConnection: selectedJournal?.value?.ltsConnection,
-            curriculumOverview: selectedJournal?.value?.curriculumOverview,
-            programOpportunities: selectedJournal?.value?.programOpportunities,
-            expectedOutcomes: selectedJournal?.value?.expectedOutcomes,
-            studentAssignments: selectedJournal?.value?.studentAssignments
-          })
-          .then((res) => {
-            setJournals(
-              journals.map((journal) =>
-                res.data.id === journal.id ? res.data : journal
-              )
-            )
-            setSelectedJournal((prevState) => ({
-              ...prevState,
-              value: res.data?.updatedJournal?.journal
-            }))
-            toast.success('Journal modified successfully!')
-            setLoading(false)
-          })
-          .catch((err) => {
-            toast.error('An error occurred, please try again!')
-            setLoading(false)
-          })
-      } else {
-        await axiosInstance
-          .put(`my-training/${journalId}`, {
-            openingText: selectedJournal?.value?.openingText,
-            title: selectedJournal?.value?.title,
-            implementationSteps: selectedJournal?.value?.implementationSteps,
-            pedagogyOptions: selectedJournal?.value?.pedagogyOptions
-            // type: selectedJournal?.value?.type,
-          })
-          .then((res) => {
-            setJournals(
-              journals.map((journal) =>
-                res.data.id === journal.id ? res.data : journal
-              )
-            )
-            setSelectedJournal((prevState) => ({
-              ...prevState,
-              value: res.data?.updatedJournal?.journal
-            }))
-            toast.success('Journal modified successfully!')
-            setLoading(false)
-          })
-          .catch((err) => {
-            toast.error('An error occurred, please try again!')
-            setLoading(false)
-          })
-      }
-    } else {
-      debugger
+    if (!journalType.includes('my-training')) {
       await axiosInstance
-        .put(`LtsJournals/${selectedJournal.value.id}/editJournal`, {
-          content: selectedJournal.value?.content,
-          title: selectedJournal?.value?.title
+        .put(`LtsJournals/${journalId}/editJournal2`, {
+          paragraph: selectedJournal?.value?.paragraph,
+          title: selectedJournal?.value?.title,
+          type: selectedJournal?.value?.type,
+          customContent: selectedJournal?.value?.customContent,
+          steps: selectedJournal?.value?.steps,
+          ltsConnection: selectedJournal?.value?.ltsConnection,
+          curriculumOverview: selectedJournal?.value?.curriculumOverview,
+          programOpportunities: selectedJournal?.value?.programOpportunities,
+          expectedOutcomes: selectedJournal?.value?.expectedOutcomes,
+          studentAssignments: selectedJournal?.value?.studentAssignments
         })
         .then((res) => {
           setJournals(
@@ -236,7 +179,33 @@ export default function EditAllJournals(props) {
           )
           setSelectedJournal((prevState) => ({
             ...prevState,
-            value: res.data
+            value: res.data?.updatedJournal?.journal
+          }))
+          toast.success('Journal modified successfully!')
+          setLoading(false)
+        })
+        .catch((err) => {
+          toast.error('An error occurred, please try again!')
+          setLoading(false)
+        })
+    } else {
+      await axiosInstance
+        .put(`my-training/${journalId}`, {
+          openingText: selectedJournal?.value?.openingText,
+          title: selectedJournal?.value?.title,
+          implementationSteps: selectedJournal?.value?.implementationSteps,
+          pedagogyOptions: selectedJournal?.value?.pedagogyOptions
+          // type: selectedJournal?.value?.type,
+        })
+        .then((res) => {
+          setJournals(
+            journals.map((journal) =>
+              res.data.id === journal.id ? res.data : journal
+            )
+          )
+          setSelectedJournal((prevState) => ({
+            ...prevState,
+            value: res.data?.updatedJournal?.journal
           }))
           toast.success('Journal modified successfully!')
           setLoading(false)
@@ -294,7 +263,7 @@ export default function EditAllJournals(props) {
           {!!children && (
             <img
               src={searchIcon}
-              alt='#'
+              alt="#"
               style={{
                 color: '#333d3d',
                 height: '25px',
@@ -440,19 +409,18 @@ export default function EditAllJournals(props) {
       )
     }
   ]
-
   return (
     <div>
       {!fetchingJournals ? (
-        <div className='row'>
-          <div className='col-9'>
+        <div className="row">
+          <div className="col-9">
             <Select
               value={
                 selectedJournal?.label
                   ? { label: selectedJournal?.label }
                   : {
-                      label: 'SEARCH JOURNALS BY NAME OR CATEGORY'
-                    }
+                    label: 'SEARCH JOURNALS BY NAME OR CATEGORY'
+                  }
               }
               onChange={handleJournalSelect}
               options={journalOptions}
@@ -501,12 +469,12 @@ export default function EditAllJournals(props) {
                 DropdownIndicator: () => null,
                 IndicatorSeparator: () => null
               }}
-              classNamePrefix='vyrill'
+              classNamePrefix="vyrill"
               // autoFocus={false}
             />
           </div>
-          <div className='col-3 image-upload-widget d-flex align-items-center'>
-            <label htmlFor='file-input' className='d-flex m-0 p-0'>
+          <div className="col-3 image-upload-widget d-flex align-items-center">
+            <label htmlFor="file-input" className="d-flex m-0 p-0">
               <FontAwesomeIcon
                 icon={faFileUpload}
                 style={{
@@ -517,58 +485,58 @@ export default function EditAllJournals(props) {
                 }}
               />
             </label>
+
             {imageUploadingLoader && (
-              <p style={{ color: '#01c5d1' }} className='ms-2 p-0 my-auto'>
+              <p style={{ color: '#01c5d1' }} className="ms-2 p-0 my-auto">
                 Uploading image, please wait!
               </p>
             )}
+
             {!uploadedImageUrl && !imageUploadingLoader && (
-              <p className='ms-2 p-0 my-auto' style={{ color: '#707070' }}>
+              <p className="ms-2 p-0 my-auto" style={{ color: '#707070' }}>
                 Upload image to generate html
               </p>
             )}
-            <>
-              {uploadedImageUrl && !imageUploadingLoader && (
-                <span
-                  className='input-group-text bg-transparent text-dark ms-2 w-100 justify-content-center'
-                  style={{ borderLeft: '0px !important' }}
-                  onClick={() => {
-                    toast.success(
-                      'HTML Code Copied, you can paste it on the journal content!'
-                    )
-                    navigator.clipboard.writeText(
-                      `<img src="${uploadedImageUrl}" class="w-100"><br>`
-                    )
-                  }}
-                >
-                  <span
-                    className='copy-portfolio-span'
-                    style={{ fontSize: '15px' }}
-                  >
-                    Copy Generated Html Code
-                    <img src={copy} width='22px' alt='#' className='ms-2' />
-                  </span>
-                </span>
-              )}
 
-              <input
-                type='file'
-                name='myImage'
-                className='d-none'
-                id='file-input'
-                disabled={imageUploadingLoader}
-                onChange={(event) => {
-                  // setSelectedImage(event.target.files[0]);
-                  imageUpload(event.target.files[0])
+            {uploadedImageUrl && !imageUploadingLoader && (
+              <span
+                className="input-group-text bg-transparent text-dark ms-2 w-100 justify-content-center"
+                style={{ borderLeft: '0px !important' }}
+                onClick={() => {
+                  toast.success(
+                    'HTML Code Copied, you can paste it on the journal content!'
+                  )
+                  navigator.clipboard.writeText(
+                    `<img src="${uploadedImageUrl}" class="w-100"><br>`
+                  )
                 }}
-              />
-            </>
-            )
+              >
+                <span
+                  className="copy-portfolio-span"
+                  style={{ fontSize: '15px' }}
+                >
+                  Copy Generated Html Code
+                  <img src={copy} width="22px" alt="#" className="ms-2" />
+                </span>
+              </span>
+            )}
+
+            <input
+              type="file"
+              name="myImage"
+              className="d-none"
+              id="file-input"
+              disabled={imageUploadingLoader}
+              onChange={(event) => {
+                // setSelectedImage(event.target.files[0]);
+                imageUpload(event.target.files[0])
+              }}
+            />
           </div>
         </div>
       ) : (
-        <div className='d-flex justify-content-center align-items-center flex-column mt-5 pt-5'>
-          <div className='lds-facebook'>
+        <div className="d-flex justify-content-center align-items-center flex-column mt-5 pt-5">
+          <div className="lds-facebook">
             <div></div>
             <div></div>
             <div></div>
@@ -577,39 +545,27 @@ export default function EditAllJournals(props) {
         </div>
       )}
       {selectedJournal && (
-        <div style={{ width: 530 }} className='mt-2'>
+        <div style={{ width: 530 }} className="mt-2">
           <div>Title</div>
           <input
-            type='text'
-            className='w-100 p-2'
-            name='title'
+            type="text"
+            className="w-100 p-2"
+            name="title"
             value={selectedJournal?.value?.title}
             onChange={handleJournalUpdate}
           />
-          {selectedJournal &&
-            !selectedJournal?.value?.hasOwnProperty('type') && (
-              <textarea
-                className='p-2 w-100 mt-2'
-                value={selectedJournal?.value?.content}
-                onChange={handleJournalUpdate}
-                name='content'
-                id=''
-                cols='30'
-                rows='16'
-              ></textarea>
-            )}
           {selectedJournal?.value?.paragraph && (
             <>
               <div>Paragraph</div>
 
               <textarea
-                className='p-2 w-100 mt-2'
+                className="p-2 w-100 mt-2"
                 value={selectedJournal?.value?.paragraph}
                 onChange={handleJournalUpdate}
-                name='paragraph'
-                id=''
-                cols='30'
-                rows='4'
+                name="paragraph"
+                id=""
+                cols="30"
+                rows="4"
               ></textarea>
             </>
           )}{' '}
@@ -618,13 +574,13 @@ export default function EditAllJournals(props) {
               <div>Opening text</div>
 
               <textarea
-                className='p-2 w-100 mt-2'
+                className="p-2 w-100 mt-2"
                 value={selectedJournal?.value?.openingText}
                 onChange={handleTrainingsUpdate}
-                name='openingText'
-                id=''
-                cols='30'
-                rows='4'
+                name="openingText"
+                id=""
+                cols="30"
+                rows="4"
               ></textarea>
             </>
           )}
@@ -635,24 +591,24 @@ export default function EditAllJournals(props) {
                   <h2>{step?.type.split('-').join(' ')}</h2>
                   <div>Step title</div>
                   <input
-                    type='text'
-                    className='form-control'
+                    type="text"
+                    className="form-control"
                     value={step?.title}
                     onChange={(e) =>
                       handleChangeSteps(index, 'title', e.target.value)
                     }
                   />
-                  <div>Step content</div>
-                  <KendoTextEditor
+                  <QuillEditorBox
+                    title={'Step content'}
                     value={step?.stepContent}
-                    handleChange={(e) =>
+                    onChange={(e) =>
                       handleChangeSteps(index, 'stepContent', e)
                     }
                   />
-                  <div>Popup content</div>
-                  <KendoTextEditor
+                  <QuillEditorBox
+                    title={'Popup content'}
                     value={step?.popupContent}
-                    handleChange={(e) =>
+                    onChange={(e) =>
                       handleChangeSteps(index, 'popupContent', e)
                     }
                     minHeight={200}
@@ -667,8 +623,8 @@ export default function EditAllJournals(props) {
                   <h2>Pedagogy Option {index + 1}</h2>
                   <div>Pedagogy box title</div>
                   <input
-                    type='text'
-                    className='form-control'
+                    type="text"
+                    className="form-control"
                     value={step?.title}
                     onChange={(e) =>
                       handleChangePedagogyOptions(
@@ -678,10 +634,10 @@ export default function EditAllJournals(props) {
                       )
                     }
                   />
-                  <div>Step box content</div>
-                  <KendoTextEditor
+                  <QuillEditorBox
+                    title={'Step box content'}
                     value={step?.content}
-                    handleChange={(e) =>
+                    onChange={(e) =>
                       handleChangePedagogyOptions(index, 'content', e)
                     }
                     minHeight={100}
@@ -696,8 +652,8 @@ export default function EditAllJournals(props) {
                   <h2>Step {index + 1}</h2>
                   <div>Step title</div>
                   <input
-                    type='text'
-                    className='form-control'
+                    type="text"
+                    className="form-control"
                     value={step?.title}
                     onChange={(e) =>
                       handleChangeImplementationSteps(
@@ -707,66 +663,58 @@ export default function EditAllJournals(props) {
                       )
                     }
                   />
-                  <div>Step content</div>
-                  <KendoTextEditor
+                  <QuillEditorBox
+                    title={'Step content'}
                     value={step?.stepContent}
-                    handleChange={(e) =>
+                    onChange={(e) =>
                       handleChangeImplementationSteps(index, 'stepContent', e)
                     }
                   />
                 </>
               )
             })}
-          {/* {selectedJournal.value?.studentAssignments && ( */}
-          {selectedJournal &&
-            selectedJournal?.value?.hasOwnProperty('type') && (
+           {selectedJournal.value?.studentAssignments && (
+          <>
+            <QuillEditorBox
+              title={'Student assignment content'}
+              value={selectedJournal?.value?.studentAssignments || ''}
+              onChange={handleChangeStudentAssignments}
+              minHeight={150}
+            />
+          </>
+           )}
+          <>
+            <h2>Lts Connection Model</h2>
+            {selectedJournal?.value?.ltsConnection && (
               <>
-                <>
-                  <h2>Student assignment content</h2>
-                  <KendoTextEditor
-                    value={selectedJournal?.value?.studentAssignments || ''}
-                    handleChange={handleChangeStudentAssignments}
-                    minHeight={150}
-                  />
-                </>
-                {/* )} */}
-                <>
-                  <h2>Lts Connection Model</h2>
-                  {selectedJournal?.value?.ltsConnection && (
+                <QuillEditorBox
+                  title={'# First paragraph'}
+                  value={selectedJournal?.value?.ltsConnection?.firstParagraph}
+                  onChange={(e) =>
+                    handleChangeLtsConnection('firstParagraph', e)
+                  }
+                  minHeight={150}
+                />
+                {selectedJournal?.value?.ltsConnection?.secondParagraph !=
+                  null &&
+                  typeof selectedJournal?.value?.ltsConnection
+                    ?.secondParagraph !== 'undefined' && (
                     <>
-                      <div># First paragraph</div>
-                      <KendoTextEditor
+                      <QuillEditorBox
+                        title={'# Second paragraph'}
                         value={
-                          selectedJournal?.value?.ltsConnection?.firstParagraph
+                          selectedJournal?.value?.ltsConnection?.secondParagraph
                         }
-                        handleChange={(e) =>
-                          handleChangeLtsConnection('firstParagraph', e)
+                        onChange={(e) =>
+                          handleChangeLtsConnection('secondParagraph', e)
                         }
                         minHeight={150}
                       />
-                      {selectedJournal?.value?.ltsConnection?.secondParagraph !=
-                        null &&
-                        typeof selectedJournal?.value?.ltsConnection
-                          ?.secondParagraph !== 'undefined' && (
-                          <>
-                            <div># Second paragraph</div>
-                            <KendoTextEditor
-                              value={
-                                selectedJournal?.value?.ltsConnection
-                                  ?.secondParagraph
-                              }
-                              handleChange={(e) =>
-                                handleChangeLtsConnection('secondParagraph', e)
-                              }
-                              minHeight={150}
-                            />
-                          </>
-                        )}
                     </>
                   )}
-                </>
               </>
             )}
+          </>
           {selectedJournal?.value?.programOpportunities && (
             <>
               <h1>Program Opportunities</h1>
@@ -777,8 +725,8 @@ export default function EditAllJournals(props) {
                     <div>
                       <h3>Image Url {i + 1}</h3>
                       <input
-                        type='text'
-                        className='form-control'
+                        type="text"
+                        className="form-control"
                         value={x?.imageUrl}
                         onChange={(e) =>
                           handleChangeProgramOpportunities(
@@ -790,10 +738,10 @@ export default function EditAllJournals(props) {
                       />
                     </div>
                     <div>
-                      <h3>Content {i + 1}</h3>
-                      <KendoTextEditor
+                      <QuillEditorBox
+                        title={`Content ${i + 1}`}
                         value={x?.content}
-                        handleChange={(e) =>
+                        onChange={(e) =>
                           handleChangeProgramOpportunities(i, 'content', e)
                         }
                         minHeight={150}
@@ -814,8 +762,8 @@ export default function EditAllJournals(props) {
                     <div>
                       <h3>Image Url {i + 1}</h3>
                       <input
-                        type='text'
-                        className='form-control'
+                        type="text"
+                        className="form-control"
                         value={x?.imageUrl}
                         onChange={(e) =>
                           handleChangeCurriculumOverview(
@@ -827,10 +775,11 @@ export default function EditAllJournals(props) {
                       />
                     </div>
                     <div>
-                      <h3>Content {i + 1}</h3>
-                      <KendoTextEditor
+
+                      <QuillEditorBox
+                        title={`Content ${i + 1}`}
                         value={x?.content}
-                        handleChange={(e) =>
+                        onChange={(e) =>
                           handleChangeCurriculumOverview(i, 'content', e)
                         }
                         minHeight={150}
@@ -851,8 +800,8 @@ export default function EditAllJournals(props) {
                     <div>
                       <h3>Image Url {i + 1}</h3>
                       <input
-                        type='text'
-                        className='form-control'
+                        type="text"
+                        className="form-control"
                         value={x?.imageUrl}
                         onChange={(e) =>
                           handleChangeExpectedOutcomes(
@@ -863,12 +812,12 @@ export default function EditAllJournals(props) {
                         }
                       />
                     </div>
-                    <div className='row'>
+                    <div className="row">
                       <div className={'col-sm-6'}>
                         <h6>Padding of image {i + 1}</h6>
                         <input
-                          type='text'
-                          className='form-control'
+                          type="text"
+                          className="form-control"
                           value={x?.padding}
                           onChange={(e) =>
                             handleChangeExpectedOutcomes(
@@ -882,8 +831,8 @@ export default function EditAllJournals(props) {
                       <div className={'col-sm-6'}>
                         <h6>Width of image {i + 1}</h6>
                         <input
-                          type='text'
-                          className='form-control'
+                          type="text"
+                          className="form-control"
                           value={x?.width}
                           onChange={(e) =>
                             handleChangeExpectedOutcomes(
@@ -897,10 +846,11 @@ export default function EditAllJournals(props) {
                     </div>
 
                     <div>
-                      <h3>Content {i + 1}</h3>
-                      <KendoTextEditor
+
+                      <QuillEditorBox
+                        title={`Content ${i + 1}`}
                         value={x?.content}
-                        handleChange={(e) =>
+                        onChange={(e) =>
                           handleChangeExpectedOutcomes(i, 'content', e)
                         }
                         minHeight={150}
@@ -912,7 +862,7 @@ export default function EditAllJournals(props) {
             </>
           )}
           <button
-            className='float-end mt-2 px-md-5 save-button add-new-note-button-text'
+            className="float-end mt-2 px-md-5 save-button add-new-note-button-text"
             style={{ fontSize: '16px', height: 'auto' }}
             onClick={() => {
               return handleSubmit()
@@ -923,8 +873,7 @@ export default function EditAllJournals(props) {
           </button>
         </div>
       )}
-
-      <div className={'row mt-4'}>
+      <div className={'row mt-4 w-100'}>
         <div className={'col-md-6'}>
           {selectedJournal?.value?.category === 'my-mentorship' &&
             selectedJournal?.value?.title

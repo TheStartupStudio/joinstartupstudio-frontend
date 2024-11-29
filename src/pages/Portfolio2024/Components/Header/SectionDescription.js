@@ -21,7 +21,7 @@ function SectionDescription(props) {
 
   return (
     <div className={' section-description-container'}>
-      <div>
+      <div className='portf-section-maintitle'>
         <div
           className={
             'd-flex gap-3 align-items-center mb-3 portfolio-section-title'

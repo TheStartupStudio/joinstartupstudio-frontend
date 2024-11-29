@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import axiosInstance from '../../../../utils/AxiosInstance'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import GridTable from '../../../GridTable'
 import { SkillBox } from '../ContentItems'
 import { useParams, useHistory } from 'react-router-dom'
@@ -17,6 +17,13 @@ import {
   TransferFilter
 } from '../../../GridTable/AgGridItems'
 import useModalState from '../../../../hooks/useModalState'
+import { toast } from 'react-toastify'
+import { userLogin } from '../../../../redux'
+import { setGeneralLoading } from '../../../../redux/general/Actions'
+import {
+  getClientFromHostname,
+  getDomainFromClientName
+} from '../../../../utils/helpers'
 
 const Learners = ({
   programs,
@@ -29,6 +36,8 @@ const Learners = ({
   usedIn,
   instructors
 }) => {
+  const dispatch = useDispatch()
+  const history = useHistory()
   const { user } = useSelector((state) => state.user.user)
   const [modals, setModalState] = useModalState()
   const [selectedInstructor, setSelectedInstructor] = useState(null)
@@ -39,7 +48,6 @@ const Learners = ({
   const [selectedRows, setSelectedRows] = useState([])
   const [rowData, setRowData] = useState([])
   const { instructorId } = useParams()
-  const history = useHistory()
 
   useEffect(() => {
     if (instructorId || instructor_id) {
@@ -96,6 +104,60 @@ const Learners = ({
   useEffect(() => {
     fetchStudents()
   }, [fetchStudents])
+
+  const handleProxyLogin = useCallback(
+    async (impersonateId, studentCognitoId) => {
+      dispatch(setGeneralLoading(true))
+      try {
+        const response = await axiosInstance.post('/auth/proxy-auth', {
+          impersonateId
+        })
+
+        const { accessToken } = response.data
+        const originalToken = localStorage.getItem('access_token')
+        localStorage.setItem('original_access_token', originalToken)
+        localStorage.setItem('impersonateId', studentCognitoId)
+        localStorage.setItem('access_token', accessToken)
+
+        axiosInstance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${accessToken}`
+
+        const loginResult = await dispatch(userLogin(null, true, 'student'))
+        const domain = getDomainFromClientName()
+        const client = getClientFromHostname()
+
+        if (loginResult === 'impersonated') {
+          Object.keys(localStorage).forEach((key) => {
+            const value = localStorage.getItem(key)
+
+            if (key !== 'user') {
+              document.cookie = `${key}=${value}; path=/; domain=${domain}; SameSite=None; Secure`
+            }
+          })
+
+          if (client === 'localhost') {
+            window.location.href = 'http://localhost:8080/?mode=impersonation'
+          } else if (client === 'ims-dev') {
+            window.location.href = `https://mainplatform-dev${domain}/?mode=impersonation`
+          } else {
+            window.location.href = `https://${client}.main${domain}/?mode=impersonation`
+          }
+        } else {
+          console.error('Impersonation failed or returned an unexpected result')
+        }
+      } catch (error) {
+        if (error.response) {
+          toast.error(error.response.data.error || 'Something went wrong')
+        } else {
+          toast.error('Network error')
+        }
+      } finally {
+        dispatch(setGeneralLoading(false))
+      }
+    },
+    [dispatch]
+  )
 
   const columnDefs = useMemo(() => {
     const baseColumnDefs = [
@@ -275,7 +337,7 @@ const Learners = ({
 
     baseColumnDefs.push({
       field: 'actions',
-      flex: 3,
+      flex: 4,
       cellRenderer: (params) => {
         let user = params.data
 
@@ -288,6 +350,7 @@ const Learners = ({
             programs={programs}
             instructors={instructors}
             periods={periods}
+            handleProxyLogin={handleProxyLogin}
             onSuccess={refreshStudents}
           />
         )
@@ -302,10 +365,15 @@ const Learners = ({
     levels,
     programs,
     instructors,
-    refreshStudents
+    refreshStudents,
+    handleProxyLogin
   ])
 
   const handleInstructorFilterChange = (selectedOption) => {
+    if (!selectedOption) {
+      setSelectedSchoolFilter(null)
+      return
+    }
     setSelectedInstructor(null)
     const selectedSchool = instructors.find((i) => i.id === selectedOption.id)
     setSelectedSchoolFilter(selectedSchool)
@@ -345,12 +413,13 @@ const Learners = ({
             value: instructor.User.name,
             id: instructor.id
           })),
+          hasResetOption: true,
           onChange: handleInstructorFilterChange
         }}
         lastDropdownProps={{
           title: 'Add Student',
           onClick: (newValue) => {
-            newValue.value === 'add-manualy'
+            newValue?.value === 'add-manualy'
               ? setModalState('studentAddActionModal', true)
               : setModalState('showAddStudentsBulkModal', true)
           }

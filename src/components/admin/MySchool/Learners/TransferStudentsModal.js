@@ -7,10 +7,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { CustomDropdown, CustomInput, SubmitButton } from '../ContentItems'
+import { CustomDropdown, SubmitButton } from '../ContentItems'
 import { useValidation } from '../../../../hooks/useValidation'
 import { useForm } from '../../../../hooks/useForm'
 import useIsFormEmpty from '../../../../hooks/useIsFormEmpty'
+import { CustomInput } from '../../../../ui/ContentItems'
 
 const TransferStudentsModal = ({
   show,
@@ -21,7 +22,6 @@ const TransferStudentsModal = ({
   periods,
   mode
 }) => {
-  console.log('user', user)
   const [openDropdown, setOpenDropdown] = useState(null)
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -35,7 +35,6 @@ const TransferStudentsModal = ({
   }
 
   const { formData, handleChangeSelect } = useForm(initialState, user, loading)
-  console.log('formData', formData)
 
   const { errors, handleSubmit } = useValidation(formData, setFormSubmitted)
 
@@ -46,7 +45,6 @@ const TransferStudentsModal = ({
   const submitHandler = () => {
     handleSubmit(async () => {
       setLoading(true)
-      console.log('test submit')
     })
   }
   const isFormEmpty = useIsFormEmpty(formData, ['profession', 'deactivated'])

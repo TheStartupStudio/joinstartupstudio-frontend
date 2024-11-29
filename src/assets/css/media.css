@@ -520,9 +520,10 @@
   }
 
   .mobile-footer {
-
-    bottom: -350px !important;
-    background-color: aquamarine !important;
+    width: 100%;
+    /* bottom: -350px !important; */
+    /* background-color: blueviolet !important; */
+    /* background-color: aquamarine !important; */
   }
 
   #prev-button {
@@ -565,6 +566,7 @@
 
   .mobile-footer {
     display: block;
+    position: absolute;
   }
 
   .page-title {
@@ -831,8 +833,11 @@
     margin-right: 20px;
   }
 
-  .public-portfolio {
+  /* .public-portfolio {
     width: 93%;
+  } */
+  .public-portfolio {
+    width: 100%;
   }
 
   .align-items-center.published-portfolio {
@@ -889,6 +894,10 @@
   .dashboard-notification {
     margin-top: 15px;
   }
+}
+
+.public-portfolio .portfolio-container {
+  margin-right: 0 !important;
 }
 
 @media (max-width: 1097px) {

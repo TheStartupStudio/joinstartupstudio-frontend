@@ -9,9 +9,11 @@ import {
   deleteBriefingStart,
   editBriefingStart
 } from '../../redux/header/Actions'
-import { useForm, useValidation } from './useForm'
+import { useForm } from '../../hooks/useForm'
+import { useValidation } from '../../hooks/useValidation'
 import { DateInput, TextEditor, TextInput } from '../../ui/ContentItems'
 import useIsFormEmpty from '../../hooks/useIsFormEmpty'
+import { QuillEditorBox } from '../../ui/ContentItems'
 
 const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
   const dispatch = useDispatch()
@@ -59,11 +61,11 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
       show={show}
       onHide={onHide}
       keyboard={false}
-      size="lg"
-      id="edit_briefing-modal"
+      size='lg'
+      id='edit_briefing-modal'
     >
-      <Modal.Header className="position-relative ">
-        <Modal.Title className="px-3 py-3">EDIT BRIEFING</Modal.Title>
+      <Modal.Header className='position-relative '>
+        <Modal.Title className='px-3 py-3'>EDIT BRIEFING</Modal.Title>
         <div
           className={`check-button ${isDisabled ? 'disabled' : ''}`}
           onClick={!isDisabled ? submitHandler : null}
@@ -71,32 +73,32 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
           <FontAwesomeIcon icon={faCheck} />
         </div>
       </Modal.Header>
-      <Modal.Body className="briefing-modal-body">
+      <Modal.Body className='briefing-modal-body'>
         <Row>
-          <Col className="me-auto col-3">
+          <Col className='me-auto col-3'>
             <TextInput
-              title="Link"
-              name="link"
+              title='Link'
+              name='link'
               value={formData.link}
               handleChange={handleChange}
               showError={formSubmitted}
               error={errors.link}
             />
           </Col>
-          <Col className=" col-3">
+          <Col className=' col-3'>
             <TextInput
-              title="Source"
-              name="source"
+              title='Source'
+              name='source'
               value={formData.source}
               handleChange={handleChange}
               showError={formSubmitted}
               error={errors.source}
             />
           </Col>
-          <Col className="col-5">
+          <Col className='col-5'>
             <DateInput
-              title="Date"
-              name="date"
+              title='Date'
+              name='date'
               value={formData.date}
               handleChange={handleChange}
               showError={formSubmitted}
@@ -105,10 +107,10 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
           </Col>
         </Row>
         <Row>
-          <Col className="col-12">
+          <Col className='col-12'>
             <TextInput
-              title="Title"
-              name="title"
+              title='Title'
+              name='title'
               value={formData.title}
               handleChange={handleChange}
               showError={formSubmitted}
@@ -117,22 +119,22 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
           </Col>
         </Row>
         <Row>
-          <Col className="col-12">
-            <TextEditor
-              title="Synopsis"
-              name="synopsis"
+          <Col className='col-12'>
+            <QuillEditorBox
+              title='Synopsis'
+              name='synopsis'
               value={formData.synopsis}
-              handleChange={handleChangeEditor}
+              onChange={handleChangeEditor}
               showError={formSubmitted}
               error={errors.synopsis}
             />
           </Col>
         </Row>
         <Row>
-          <Col className="col-12">
+          <Col className='col-12'>
             <TextInput
-              title="Discussion Question"
-              name="discussionQuestion"
+              title='Discussion Question'
+              name='discussionQuestion'
               value={formData.discussionQuestion}
               handleChange={handleChange}
               showError={formSubmitted}
@@ -141,12 +143,12 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
           </Col>
         </Row>
         <Row>
-          <Col className="col-12">
-            <TextEditor
-              title="Discussion Points"
-              name="discussionPoints"
+          <Col className='col-12'>
+            <QuillEditorBox
+              title='Discussion Points'
+              name='discussionPoints'
               value={formData.discussionPoints}
-              handleChange={handleChangeEditor}
+              onChange={handleChangeEditor}
               showError={formSubmitted}
               error={errors.discussionPoints}
             />
@@ -154,7 +156,7 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
         </Row>
 
         <p
-          className="d-flex justify-content-end cursor-pointer pt-3"
+          className='d-flex justify-content-end cursor-pointer pt-3'
           onClick={() => deleteBriefing()}
         >
           DELETE NEWS BRIEFINGS

@@ -59,7 +59,7 @@ function MyFailure(props) {
     <>
       <div className={'my-failures-container position-relative'}>
         <div className={'row'}>
-          <div className={'col-md-5'}>
+          <div className={'failure-submission-parent col-md-5'}>
             <PortfolioSubmission
               videoUrl={myFailure?.videoUrl}
               thumbnailUrl={myFailure?.thumbnailUrl}
@@ -68,7 +68,7 @@ function MyFailure(props) {
             />
           </div>
           <div
-            className={'failure-infocontent col-md-7'}
+            className={'failure-desc failure-infocontent col-md-7'}
             style={{ marginTop: '20px' }}
           >
             <PortfolioInfo title={' FAILURE '} content={myFailure?.failure} />

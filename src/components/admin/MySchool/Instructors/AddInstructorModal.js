@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { CustomDropdown, CustomInput, SubmitButton } from '../ContentItems'
+import { CustomDropdown, SubmitButton } from '../ContentItems'
 import LtsCheckbox from '../../../../ui/LtsCheckbox'
 import { useValidation } from '../../../../hooks/useValidation'
 import { useForm } from '../../../../hooks/useForm'
@@ -16,6 +16,7 @@ import useIsFormEmpty from '../../../../hooks/useIsFormEmpty'
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
+import { CustomInput, LtsButton } from '../../../../ui/ContentItems'
 
 const AddInstructorModal = ({
   show,
@@ -224,7 +225,7 @@ const AddInstructorModal = ({
                 showError={formSubmitted}
                 error={errors.email}
               />
-              {mode !== 'edit' && (
+              {/* {mode !== 'edit' && (
                 <CustomInput
                   placeholder={'Password (required)'}
                   type={'password'}
@@ -234,7 +235,7 @@ const AddInstructorModal = ({
                   showError={formSubmitted}
                   error={errors.password}
                 />
-              )}
+              )} */}
               <div className='py-3'>
                 <p>Set Status</p>
                 <span
@@ -338,8 +339,8 @@ const AddInstructorModal = ({
           </Row>
           {mode === 'add' ? (
             <Col md='12' className='d-flex justify-content-end'>
-              <Row className='m-0 col-5 justify-content-evenly'>
-                <SubmitButton
+              <Row className='m-0 col-5 justify-content-end'>
+                <LtsButton
                   text={'CANCEL'}
                   width={'100px'}
                   background={'transparent'}
@@ -347,7 +348,7 @@ const AddInstructorModal = ({
                   border={'1px solid #ccc'}
                   onClick={() => onHide()}
                 />
-                <SubmitButton
+                <LtsButton
                   onClick={submitHandler}
                   text={
                     loading ? (
@@ -357,6 +358,7 @@ const AddInstructorModal = ({
                     )
                   }
                   background={'#52C7DE'}
+                  className={'ms-2'}
                   color={'#fff'}
                   border={'none'}
                 />

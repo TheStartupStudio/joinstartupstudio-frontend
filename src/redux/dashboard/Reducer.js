@@ -22,7 +22,7 @@ import {
   OPEN_CALENDAR_EVENT_MODAL,
   POST_EVENT_ERROR,
   POST_EVENT_START,
-  POST_EVENT_SUCCESS,
+  POST_EVENT_SUCCESS
 } from './Types'
 
 const initialState = {
@@ -34,7 +34,7 @@ const initialState = {
   editTaskEventModal: false,
   taskEventModalInClick: false,
   calendarEventModal: false,
-  calendarDeleteEventModal: false,
+  calendarDeleteEventModal: false
 }
 
 const dashboardReducer = (state = initialState, action) => {
@@ -44,7 +44,7 @@ const dashboardReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
-        error: null,
+        error: null
       }
       break
     case GET_PERIODS_SUCCESS:
@@ -52,7 +52,7 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         periods: payload.periods,
         loading: false,
-        error: null,
+        error: null
       }
       break
 
@@ -60,7 +60,7 @@ const dashboardReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error: payload.error,
+        error: payload.error
       }
       break
 
@@ -68,7 +68,7 @@ const dashboardReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
-        error: null,
+        error: null
       }
       break
 
@@ -77,7 +77,7 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         events: payload.events,
         loading: false,
-        error: null,
+        error: null
       }
       break
 
@@ -85,7 +85,7 @@ const dashboardReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error: payload.error,
+        error: payload.error
       }
       break
 
@@ -93,7 +93,7 @@ const dashboardReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
-        error: null,
+        error: null
       }
       break
 
@@ -104,7 +104,7 @@ const dashboardReducer = (state = initialState, action) => {
         loading: false,
         error: null,
         addTaskEventModal: false,
-        taskEventModalInClick: false,
+        taskEventModalInClick: false
       }
       break
 
@@ -112,7 +112,7 @@ const dashboardReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error: payload.error,
+        error: payload.error
       }
       break
 
@@ -120,13 +120,12 @@ const dashboardReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
-        error: null,
+        error: null
       }
       break
 
     case EDIT_EVENT_SUCCESS:
       const updatedEvent = payload.event
-
       const updatedEvents = state.events.map((event) => {
         if (event.id === updatedEvent.id) {
           const newUpdatedEvent = { ...updatedEvent }
@@ -140,7 +139,7 @@ const dashboardReducer = (state = initialState, action) => {
         events: updatedEvents,
         loading: false,
         error: null,
-        editTaskEventModal: false,
+        editTaskEventModal: false
         // calendarEventModal: false,
       }
       break
@@ -149,14 +148,14 @@ const dashboardReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error: payload.error,
+        error: payload.error
       }
       break
     case DELETE_EVENT_START:
       return {
         ...state,
         loading: true,
-        error: null,
+        error: null
       }
       break
     case DELETE_EVENT_SUCCESS:
@@ -167,13 +166,13 @@ const dashboardReducer = (state = initialState, action) => {
         loading: false,
         error: null,
         calendarEventModal: false,
-        calendarDeleteEventModal: false,
+        calendarDeleteEventModal: false
       }
     case DELETE_EVENT_ERROR:
       return {
         ...state,
         loading: false,
-        error: payload.error,
+        error: payload.error
       }
       break
 
@@ -181,7 +180,7 @@ const dashboardReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
-        error: null,
+        error: null
       }
       break
     case CHANGE_EVENT_DATE_SUCCESS:
@@ -194,31 +193,31 @@ const dashboardReducer = (state = initialState, action) => {
           return event
         }),
         loading: false,
-        error: null,
+        error: null
       }
       break
     case CHANGE_EVENT_DATE_ERROR:
       return {
         ...state,
         loading: false,
-        error: payload.error,
+        error: payload.error
       }
       break
     case OPEN_TASK_MODAL:
       if (payload.type == 'create') {
         return {
           ...state,
-          addTaskEventModal: true,
+          addTaskEventModal: true
         }
       } else if (payload.type == 'update') {
         return {
           ...state,
-          editTaskEventModal: true,
+          editTaskEventModal: true
         }
       } else if (payload.type == 'create-in-click') {
         return {
           ...state,
-          taskEventModalInClick: true,
+          taskEventModalInClick: true
         }
       }
 
@@ -226,17 +225,17 @@ const dashboardReducer = (state = initialState, action) => {
       if (payload.type == 'create') {
         return {
           ...state,
-          addTaskEventModal: false,
+          addTaskEventModal: false
         }
       } else if (payload.type == 'update') {
         return {
           ...state,
-          editTaskEventModal: false,
+          editTaskEventModal: false
         }
       } else if (payload.type == 'create-in-click') {
         return {
           ...state,
-          taskEventModalInClick: false,
+          taskEventModalInClick: false
         }
       }
 
