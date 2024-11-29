@@ -244,12 +244,14 @@ const FullCalendarComponent = (props) => {
     )
   }
 
-  function convertDate(date) {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
+  const convertDate = (date) => {
+    const inputDate = new Date(date)
+    const day = inputDate.getUTCDate()
+    const month = inputDate.toLocaleString('en-US', { month: 'long' })
+    const year = inputDate.getFullYear()
+
+    const formattedDate = `${month} ${day}`
+    return formattedDate
   }
 
   const getFullYear = (date) => {
