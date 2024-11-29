@@ -10,13 +10,18 @@ const LtsImmersion = () => {
     setImmersionStep(null) // Close the add immersion modal
   }
   return (
-    <InfoBox cn={'d-flex align-items-center justify-content-between'}>
+    <InfoBox
+      cn={'d-flex align-items-center justify-content-between'}
+      style={{ flexWrap: 'wrap' }}
+    >
       <Col md='4'>
-        <h1 className='p-0 m-0'>LTS IMMERSION</h1>
+        <h1 className='ltsimmrs-title-mysc p-0 m-0'>LTS IMMERSION</h1>
       </Col>
-      <Col md='8' className='d-flex justify-content-end'>
+      <Col md='8' className='ltsimmrs-buttons d-flex justify-content-end'>
         <CustomGradientButton className={'me-2'}>
-          <a href='/my-immersion-admin'>View immersion Opportunities</a>
+          <a href='/my-immersion-admin' className='immrs-opps'>
+            View immersion Opportunities
+          </a>
         </CustomGradientButton>
         <CustomDropdown
           options={[

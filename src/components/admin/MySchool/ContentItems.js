@@ -238,10 +238,10 @@ const CustomDropdown = ({
           {multiple
             ? selectedOptions.length > 0
               ? selectedOptions.map((option) => option.name).join(', ')
-              : title || 'Select an option'
+              : title || 'Add immersion Opportunity'
             : selectedOptions
             ? selectedOptions.name
-            : title || 'Select an option'}
+            : title || 'Add immersion Opportunity'}
         </span>
 
         {!multiple && !isSelectable && selectedOptions && hasResetOption && (

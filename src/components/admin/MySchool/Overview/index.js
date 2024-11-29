@@ -74,7 +74,7 @@ const Overview = ({ universityId, programs }) => {
           <Col className='py-3'>
             <LtsImmersion />
           </Col>
-          <Row className='py-3'>
+          <Row className='recact-courses-row py-3'>
             <Col md='5'>
               <RecentActivity />
             </Col>
