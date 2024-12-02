@@ -640,12 +640,47 @@
   margin-top: -10px !important;
 }
 
-@media (max-width:400px) {
+/* @media (max-width:400px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 70% !important;
+  }
+} */
+
+@media (max-width: 589px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 20% !important;
+  }
+}
+
+@media (max-width: 518px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 80% !important;
+  }
+}
+
+@media (max-width: 555px) {
   .preview-modal-resp .modal-content {
     margin-top: 70% !important;
   }
 }
 
+@media (max-width: 435px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 120% !important;
+  }
+}
+
+@media (max-width: 435px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 120% !important;
+  }
+}
+
+@media (max-width: 371px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 150% !important;
+  }
+}
 
 @media (max-width:576px) {
   .portfolio-modal-wrapper .modal-dialog {
@@ -2484,6 +2519,16 @@
 }
 
 .project-submission-image .project-submission .portfolio-submission-container {}
+
+@media (max-width:548px) {
+
+
+  .hdipi-cards-titles .education-section-alignment,
+  .immrs-render-caro,
+  .comp-card-margins {
+    margin-top: 30px !important;
+  }
+}
 
 /*/////////////////////////////////////////////*/
 /*/////////////////////////////////////////////*/

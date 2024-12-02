@@ -12,7 +12,7 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
   const mode = useSelector((state) => state.portfolio.mode)
 
   const filteredUnshownData = (data) => {
-    return data?.filter((data)=>data.showSection)
+    return data?.filter((data) => data.showSection)
   }
   useEffect(() => {
     if (propsLoadings) {
@@ -53,9 +53,11 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
     }
   }
 
-
   return (
-    <div className={'d-flex flex-column gap-4'} style={{ marginTop: '30px' }}>
+    <div
+      className={'d-flex flex-column gap-4 hdipi-cards-titles'}
+      style={{ marginTop: '30px' }}
+    >
       {renderSection(
         loadings?.myAlignments,
         'my-alignment',
@@ -79,8 +81,9 @@ function HowDoIProveIt({ loadings: propsLoadings, data, user }) {
         'My Competitiveness',
         'The value of the outcomes you produce inside of your field of interest.',
         MyCompetitiveness,
-        mode === 'edit' ?
-          data?.myCompetitiveness?.data : filteredUnshownData(data?.myCompetitiveness?.data)
+        mode === 'edit'
+          ? data?.myCompetitiveness?.data
+          : filteredUnshownData(data?.myCompetitiveness?.data)
       )}
     </div>
   )
