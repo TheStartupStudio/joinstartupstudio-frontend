@@ -47,64 +47,48 @@ function PublicPortfolio(props) {
     }
 
     getPublicPortfolioAPI()
-  }, [username])
+  }, [username, props.userName])
 
   if (isLoading) {
-    // return <div className="loading-indicator">Loading...</div>
     return <PortfolioSkeletonLoader />
   }
 
   if (privatePortfolioMessage) {
     return (
-      <div className='portfolio-container' style={{ marginRight: 0 }}>
+      <div
+        className='portfolio-container'
+        style={{ marginRight: 0, background: '#e4e9f4' }}
+      >
         <div className='private-portfolio-message'>
           {privatePortfolioMessage}
         </div>
       </div>
     )
   }
+
   return (
     <div
-      ref={scrollableRef}
-      style={{
-        height: '800px',
-        overflowY: 'auto'
-      }}
+      className='portfolio-container'
+      style={{ marginRight: 0, background: '#e4e9f4' }}
     >
-      <div
-        style={{
-          height: '800px'
-        }}
-      >
-        <div className={`portfolio-container`}>
-          <PortfolioHeader
-            user={publicPortfolio.user}
-            userStory={publicPortfolio?.whoAmI?.userBasicInfo}
-          />
-          {activeSection === 'who-section' && (
-            <WhoAmI
-              data={publicPortfolio?.whoAmI}
-              user={publicPortfolio?.user}
-              portfolioType={'public'}
-            />
-          )}
-          {activeSection === 'what-section' && (
-            <>
-              <WhatCanIDo
-                portfolioType={'public'}
-                data={publicPortfolio?.whatCanIDo}
-              />
-            </>
-          )}
-          {activeSection === 'how-section' && (
-            <>
-              <HowDoIProve data={publicPortfolio?.howDoIProve} />
-            </>
-          )}
-
-          <PortfolioNavigator scrollToTop={scrollToTop} />
-        </div>
-      </div>
+      <PortfolioHeader
+        user={publicPortfolio.user}
+        userStory={publicPortfolio?.whoAmI?.userBasicInfo}
+      />
+      {activeSection === 'who-section' && (
+        <WhoAmI
+          data={publicPortfolio?.whoAmI}
+          user={publicPortfolio?.user}
+          portfolioType='public'
+        />
+      )}
+      {activeSection === 'what-section' && (
+        <WhatCanIDo portfolioType='public' data={publicPortfolio?.whatCanIDo} />
+      )}
+      {activeSection === 'how-section' && (
+        <HowDoIProve data={publicPortfolio?.howDoIProve} />
+      )}
+      <PortfolioNavigator scrollToTop={scrollToTop} />
     </div>
   )
 }

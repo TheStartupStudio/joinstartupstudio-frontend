@@ -92,6 +92,7 @@ function MyMentor(props) {
           data={data}
           category={props.category}
           mode={mode}
+          className={'preview-modal-resp'}
         />
       )}
     </div>

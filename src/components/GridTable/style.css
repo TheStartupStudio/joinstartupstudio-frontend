@@ -24,6 +24,7 @@
   cursor: pointer;
   position: relative;
 }
+
 .agGrid-customFilters__checkbox:checked::before {
   content: '\2713';
   font-size: 14px;
@@ -33,6 +34,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .agGrid-customFilters__checkbox:checked {
   width: 20px;
   height: 20px;
@@ -57,9 +59,11 @@
   --ag-header-background-color: #ededed;
   --ag-row-border-color: #ededed;
 }
+
 .ag-theme-quartz .ag-header {
   font-size: 13px;
 }
+
 .ag-theme-quartz .ag-header-cell {
   font-size: 13px;
 }

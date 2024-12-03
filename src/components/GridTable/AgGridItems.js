@@ -611,7 +611,7 @@ const Actions = ({
           <a href='/my-school/learners' className='pe-1'>
             <FontAwesomeIcon icon={faUser} style={{ fontSize: '16px' }} />
           </a>
-          <p className='m-0 pe-2'> View student</p>
+          <p className='m-0 pe-2'> View User</p>
         </div>
         <div
           className='action-item cursor-pointer'
