@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { InfoBox } from '../ContentItems'
 import { Col, Row } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSchool } from '@fortawesome/free-solid-svg-icons'
+import schoolIcon from '../../../../assets/images/myschool-college.svg'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import CustomSpinner from '../../../CustomSpinner'
 import { CustomInput } from '../../../../ui/ContentItems'
@@ -63,7 +63,7 @@ const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
                 <div
                   style={{
                     height: '36px',
-                    width: '36px',
+                    width: '46px',
                     borderRadius: '50%',
                     padding: '5px',
                     background: '#C8CDD880',
@@ -73,7 +73,8 @@ const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
                     marginRight: '10px'
                   }}
                 >
-                  <FontAwesomeIcon icon={faSchool} />
+                  {/* <FontAwesomeIcon icon={schoolIcon} /> */}
+                  <img src={schoolIcon} width={100} height={100}></img>
                 </div>
                 <p className='schooldetails-font p-0 m-0'>School Details</p>
               </div>
