@@ -67,3 +67,10 @@
 .ag-theme-quartz .ag-header-cell {
   font-size: 13px;
 }
+
+.agactions-title {
+  font: normal normal 400 12px/16px Montserrat;
+  letter-spacing: 0.48px;
+  color: #000000;
+  opacity: 1;
+}

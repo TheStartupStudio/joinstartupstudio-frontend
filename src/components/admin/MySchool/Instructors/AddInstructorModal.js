@@ -163,7 +163,7 @@ const AddInstructorModal = ({
         }}
         centered
       >
-        <Modal.Header className='position-relative p-3'>
+        <Modal.Header className='position-relative p-3 instructor-modal-details'>
           <Modal.Title
             className='px-3 py-3 d-flex fw-normal flex-column'
             style={{ fontSize: '16px' }}

@@ -611,7 +611,7 @@ const Actions = ({
           <a href='/my-school/learners' className='pe-1'>
             <FontAwesomeIcon icon={faUser} style={{ fontSize: '16px' }} />
           </a>
-          <p className='m-0 pe-2'> View User</p>
+          <p className='m-0 pe-2 agactions-title'> View User</p>
         </div>
         <div
           className='action-item cursor-pointer'
@@ -620,7 +620,7 @@ const Actions = ({
           <a href='/my-school/learners' className='pe-1'>
             <FontAwesomeIcon icon={faKey} style={{ fontSize: '16px' }} />
           </a>
-          <p className='m-0 pe-2'> Reset password</p>
+          <p className='m-0 pe-2 agactions-title'> Reset password</p>
         </div>
         <div
           className='action-item cursor-pointer'
@@ -629,7 +629,7 @@ const Actions = ({
           <a href='/my-school/learners' className='pe-1'>
             <FontAwesomeIcon icon={faUserMinus} style={{ fontSize: '16px' }} />
           </a>
-          <p className='m-0 pe-2'> Delete user</p>
+          <p className='m-0 pe-2 agactions-title'> Delete user</p>
         </div>
         <div
           className='action-item cursor-pointer'
@@ -642,7 +642,7 @@ const Actions = ({
         >
           <FontAwesomeIcon icon={faDoorOpen} style={{ fontSize: '16px' }} />
 
-          <p className='m-0 pe-2'> Proxy</p>
+          <p className='m-0 pe-2 agactions-title'> Proxy</p>
         </div>
       </div>
 
