@@ -50,6 +50,7 @@ function ImmersionCard(props) {
         className={'immrs-caro-width'}
       >
         <div className={'immersion-card-resp d-flex gap-3 '}>
+          {' '}
           <div className='immersion-card-right'>
             <div className={'flex-grow'} style={{ width: 100 }}>
               <img

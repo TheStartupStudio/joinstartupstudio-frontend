@@ -60,7 +60,7 @@ function CurriculumJournalContent(props) {
     journalCategory: null
   })
 
-  console.log('Student Assignments:', journal?.studentAssignments);
+  console.log('Student Assignments:', journal?.studentAssignments)
 
   useEffect(() => {
     getInstructorDebriefData()
@@ -226,7 +226,7 @@ function CurriculumJournalContent(props) {
     ])
       .then(([journalData, userJournalEntries, instructorDebriefData]) => {
         setJournal(journalData)
-        console.log(journalData, "triumf229")
+        console.log(journalData, 'triumf229')
 
         // if (
         //   journalData.userEntry &&
@@ -991,7 +991,7 @@ function CurriculumJournalContent(props) {
                   title={'ASSIGNMENT TO POST FOR STUDENTS'}
                 >
                   {openAccordion === 'studentAssignment' && (
-                    <div className='accordion-content'>
+                    <div className='accordion-content poststudent-content'>
                       <div
                         style={{
                           fontFamily: 'Montserrat',

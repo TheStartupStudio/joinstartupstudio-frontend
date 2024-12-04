@@ -33,6 +33,11 @@
   color: #333d3d;
 }
 
+
+.poststudent-content span {
+  font-size: 13px !important;
+}
+
 .custom-breakdowns-container {
   display: flex;
   flex-direction: column;
@@ -51,25 +56,31 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
 .days-of-task-box:hover {
   background: #51c7df !important;
   color: #fff !important;
 }
+
 #textEditorContent {
   height: 170px;
 }
+
 /* add lesson */
 .add-lesson-container {
   transition: opacity 1s ease-in-out, height 1s ease-in-out;
   overflow: hidden;
 }
+
 .add-lesson-container p {
   font-size: 13px;
   padding: 0px 10px;
 }
+
 .add-lesson-container p:hover {
   color: #51c7df;
 }
+
 .add-lesson-container-transition {
   position: absolute;
   bottom: -20px;
@@ -93,22 +104,26 @@
     height: 150px;
   }
 }
+
 @media screen and (max-width: 1137px) {
   #textEditorContent {
     height: 160px;
     padding-bottom: 15px;
   }
 }
+
 @media screen and (max-width: 785px) {
   #textEditorContent {
     height: 150px;
     padding-bottom: 20px;
   }
 }
+
 .instructor-debrief-editor .ql-container {
   height: 0% !important;
   min-height: 120px !important;
 }
+
 @media screen and (max-width: 1173px) {
   .instructor-debrief-button {
     margin-top: 10px !important;
