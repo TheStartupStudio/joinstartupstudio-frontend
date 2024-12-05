@@ -162,7 +162,7 @@ const Learners = ({
   const columnDefs = useMemo(() => {
     const baseColumnDefs = [
       {
-        headerName: 'Username',
+        headerName: 'user name',
         field: 'name',
         flex: 2,
         checkboxSelection: true,
@@ -170,7 +170,7 @@ const Learners = ({
           return (
             <>
               <div
-                className='pb-0 m-0'
+                className='pb-0 m-0 learners-subtitles'
                 style={{ height: '14px', fontWeight: '500' }}
               >
                 {params.data?.name}

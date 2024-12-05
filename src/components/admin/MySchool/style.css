@@ -726,13 +726,30 @@
   letter-spacing: 0px;
 }
 
-/* text-align: left;
-font: normal normal medium 14px/16px Montserrat;
-letter-spacing: 0.56px;
-color: #000000;
-opacity: 1; */
+.ag-header-cell-text {
 
-/* font: normal normal normal 15px/19px Montserrat;
-letter-spacing: 0px;
-color: #000000;
-opacity: 1; */
+  text-align: left;
+  font: normal normal 600 10px/16px Montserrat !important;
+  letter-spacing: 0.4px;
+  color: #707070;
+  text-transform: uppercase !important;
+  opacity: 1;
+}
+
+.ag-header-viewport,
+.ag-header-container,
+.ag-header-row.ag-header-row-column,
+.ag-header.ag-pivot-off.ag-header-allow-overflow {
+  height: 40px !important;
+  min-height: 40px !important;
+  align-items: center;
+  background: #EDEDED 0% 0% no-repeat padding-box !important;
+}
+
+.ag-header-row.ag-header-row-column {
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-top: -4px !important;
+  background: #EDEDED 0% 0% no-repeat padding-box !important;
+}

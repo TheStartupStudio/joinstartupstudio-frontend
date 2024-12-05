@@ -19,6 +19,9 @@ import DeleteUserModal from '../admin/MySchool/DeleteUserModal'
 import StudentActionsModal from '../admin/MySchool/Learners/StudentActionsModal'
 import TransferStudentsModal from '../admin/MySchool/Learners/TransferStudentsModal'
 import { faDelicious } from '@fortawesome/free-brands-svg-icons'
+import deletePersonIcon from '../../assets/images/persondelete.png'
+import personwkeyIcon from '../../assets/images/personwkey.png'
+import personIcon from '../../assets/images/person.png'
 
 const CustomHeader = ({ displayName, options, handleOptionClick }) => {
   const [showDropdown, setShowDropdown] = useState(false)
@@ -609,7 +612,8 @@ const Actions = ({
           onClick={() => handleViewUser(handleViewStudent)}
         >
           <a href='/my-school/learners' className='pe-1'>
-            <FontAwesomeIcon icon={faUser} style={{ fontSize: '16px' }} />
+            <img src={personIcon} width={21} height={24}></img>
+            {/* <FontAwesomeIcon icon={faUser} style={{ fontSize: '16px' }} /> */}
           </a>
           <p className='m-0 pe-2 agactions-title'> View User</p>
         </div>
@@ -618,7 +622,8 @@ const Actions = ({
           onClick={() => handleResetPassword()}
         >
           <a href='/my-school/learners' className='pe-1'>
-            <FontAwesomeIcon icon={faKey} style={{ fontSize: '16px' }} />
+            <img src={personwkeyIcon} width={21} height={24}></img>
+            {/* <FontAwesomeIcon icon={faKey} style={{ fontSize: '16px' }} /> */}
           </a>
           <p className='m-0 pe-2 agactions-title'> Reset password</p>
         </div>
@@ -627,7 +632,8 @@ const Actions = ({
           onClick={() => handleDeleteUser(true)}
         >
           <a href='/my-school/learners' className='pe-1'>
-            <FontAwesomeIcon icon={faUserMinus} style={{ fontSize: '16px' }} />
+            <img src={deletePersonIcon} width={21} height={24}></img>
+            {/* <FontAwesomeIcon icon={faUserMinus} style={{ fontSize: '16px' }} /> */}
           </a>
           <p className='m-0 pe-2 agactions-title'> Delete user</p>
         </div>

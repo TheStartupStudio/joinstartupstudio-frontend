@@ -22,6 +22,8 @@ import { useHistory } from 'react-router-dom'
 import { userLogin } from '../../../../redux'
 import { USER_LOGIN_SUCCESS } from '../../../../redux/user/Types'
 import { setGeneralLoading } from '../../../../redux/general/Actions'
+import reportFileIcon from '../../../../assets/images/studentlist.png'
+import userReportIcon from '../../../../assets/images/userreport.png'
 
 const Instructors = ({ programs, levels, periods, universities }) => {
   const dispatch = useDispatch()
@@ -203,7 +205,8 @@ const Instructors = ({ programs, levels, periods, universities }) => {
             className='d-flex align-items-center students__cell'
           >
             <p className='m-0 pe-2'> {params.data.students}</p>
-            <FontAwesomeIcon icon={faFile} />
+            <img src={reportFileIcon} width={20} height={24}></img>
+            {/* <FontAwesomeIcon icon={faFile} /> */}
           </a>
         )
       },
@@ -214,7 +217,8 @@ const Instructors = ({ programs, levels, periods, universities }) => {
             href={`/my-school/reports/${params.data.id} `}
             className='reports_cell'
           >
-            <FontAwesomeIcon icon={faChalkboardTeacher} />
+            <img src={userReportIcon} width={22} height={22}></img>
+            {/* <FontAwesomeIcon icon={faChalkboardTeacher} /> */}
           </a>
         )
       },
