@@ -61,16 +61,16 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
     <>
       <Modal
         show={show}
-        className={'delete-user-modal'}
+        className={' reset-password-modal delete-user-modal'}
         onHide={() => {
           onHide()
         }}
         centered
       >
-        <Modal.Header className='position-relative p-3'>
+        <Modal.Header className='position-relative p-3 reset-password-modal'>
           <Modal.Title
-            className='px-3 py-3 d-flex fw-normal flex-column'
-            style={{ fontSize: '16px' }}
+            className='deleteuser-title px-3 py-3 d-flex fw-normal flex-column'
+            // style={{ fontSize: '16px' }}
           >
             <div
               className='d-flex align-items-center justify-content-center mb-3'
@@ -86,13 +86,16 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
             </div>
             {`Delete ${isMultipleUsers ? 'Users' : 'User'}`}
           </Modal.Title>
-          <div className={`check-button fw-bold`} onClick={() => onHide()}>
+          <div
+            className={`check-button fw-bold reset-pasw-checkbtn`}
+            onClick={() => onHide()}
+          >
             X
           </div>
         </Modal.Header>
         <Modal.Body className='text-center '>
           <Col>
-            <p className='text-center'>
+            <p className='text-center userdetails'>
               {`Are you sure you want to delete ${
                 isMultipleUsers ? 'these users' : 'this user'
               }?`}
@@ -100,6 +103,7 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
           </Col>
           <Col md='12' className='d-flex justify-content-center'>
             <LtsButton
+              className={'delete-btns'}
               text={
                 loading ? (
                   <span className='spinner-border spinner-border-sm' />

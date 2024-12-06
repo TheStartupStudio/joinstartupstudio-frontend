@@ -20,6 +20,7 @@ import { Col, Row } from 'react-bootstrap'
 import { setLoginLoading } from '../../../redux/user/Actions'
 
 function Login() {
+  console.log('LOGIN')
   const [user, setUser] = useState({})
   const [loading, setLoading] = useState(false)
   const isLoading = useSelector((state) => state.user.loginLoading)

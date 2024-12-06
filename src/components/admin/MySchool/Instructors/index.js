@@ -277,7 +277,7 @@ const Instructors = ({ programs, levels, periods, universities }) => {
   )
 
   return (
-    <div className='' style={{ background: '#fff' }}>
+    <div className='' style={{ background: '#fff', borderRadius: '12px' }}>
       <HeaderActions
         universities={universities}
         levels={levels}

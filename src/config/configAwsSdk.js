@@ -2,7 +2,9 @@ import AWS from 'aws-sdk'
 import dotenv from 'dotenv'
 import config from '../config.json'
 
-dotenv.config()
+// dotenv.config()
+
+// console.log(dotenv.config, 'dotenconfig')
 
 const configureAwsSdk = () => {
   const region = process.env.REACT_APP_CLIENT_BASE_URL.includes('dev')
