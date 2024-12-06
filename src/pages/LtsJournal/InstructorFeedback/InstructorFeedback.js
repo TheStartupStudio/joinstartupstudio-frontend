@@ -8,7 +8,9 @@ import notificationSocket from '../../../utils/notificationSocket'
 import NotificationTypes from '../../../utils/notificationTypes'
 
 function InstructorFeedback(props) {
-  const { id:loggedUserId, name: loggedUserName } = useSelector((state) => state.user.user.user)
+  const { id: loggedUserId, name: loggedUserName } = useSelector(
+    (state) => state.user.user.user
+  )
   const [instructorFeedback, setInstructorFeedback] = useState(null)
   const routeMatch = useRouteMatch()
   const [, , ...ids] = routeMatch.url.split('/')
@@ -20,6 +22,7 @@ function InstructorFeedback(props) {
   }
   // console.log('props', props)
   const handleSave = (updatedData) => {
+    console.log(updatedData, 'data')
     const isEdit = !!updatedData.id
     let newData = {
       ...updatedData,
@@ -30,13 +33,20 @@ function InstructorFeedback(props) {
       instructorId: loggedUserId
     }
 
+    console.log(newData, 'newData')
+
     delete newData.id
 
     const journalType = () => {
+      console.log(props, 'propsJournalType')
       let type = props.journalType.value
-      if(type === 'personal-finance') {
+        ? props.journalType.value
+        : props.journalType
+      if (type === 'personal-finance') {
         return 'student-personal-finance'
       }
+
+      console.log(type, 'type')
       return type
     }
 
@@ -50,13 +60,16 @@ function InstructorFeedback(props) {
           })
           toast.success('Instructor feedback updated successfully!')
 
-
           notificationSocket?.emit('sendNotification', {
-            sender: { id: loggedUserId,  name: loggedUserName },
+            sender: { id: loggedUserId, name: loggedUserName },
             receivers: [{ id: userId }],
             type: NotificationTypes.INSTRUCTOR_FEEDBACK_ADDED.key,
             url: `/${journalType()}/${props.data?.journalId}`,
-            description: ` on ${props.journal?.title} of ${props.journalType?.label}`
+            description: ` on ${props.journal?.title} of ${
+              props.journalType.label
+                ? props.journalType.label
+                : props.journalType
+            }`
           })
         })
         .catch((e) => {
@@ -75,7 +88,11 @@ function InstructorFeedback(props) {
             receivers: [{ id: userId }],
             type: NotificationTypes.INSTRUCTOR_FEEDBACK_UPDATED.key,
             url: `/${journalType()}/${props.data?.journalId}`,
-            description: ` on ${props.journal?.title} of ${props.journalType?.label}`
+            description: ` on ${props.journal?.title} of ${
+              props.journalType.label
+                ? props.journalType.label
+                : props.journalType
+            }`
           })
           toast.success('Instructor feedback updated successfully!')
         })
@@ -83,8 +100,6 @@ function InstructorFeedback(props) {
           toast.error('Error occurred during updating instructor feedback!')
         })
     }
-
-
   }
   useEffect(() => {
     if (props.data) setInstructorFeedback(props.data)

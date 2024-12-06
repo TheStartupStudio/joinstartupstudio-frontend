@@ -410,7 +410,7 @@
 .nav-icons {
   /* margin-inline: 100px; */
   /* margin-left: 200px !important; */
-  margin-bottom: 30px;
+  margin-bottom: 60px;
 }
 
 .nav-icons .nav-icon-box {
@@ -418,9 +418,7 @@
   cursor: pointer;
 }
 
-.lizalizaliza {
-  font-size: 2rem;
-}
+
 
 .nav-icon {
   width: 45px;
@@ -903,6 +901,19 @@
   justify-content: start !important;
 }
 
+@media (max-width:1114px) and (min-width:1025px) {
+  .portfolio-nav-icons {
+    width: 700px !important;
+  }
+}
+
+@media (max-width: 857px) {
+  .portfolio-nav-icons {
+    width: 85vw;
+    margin-inline: 0 !important;
+  }
+}
+
 @media (max-width: 460px) {
   .portfolio-container {
     padding: 10px !important;
@@ -1247,7 +1258,7 @@
 }
 
 
-@media (max-width: 520px) {
+@media (max-width: 621px) {
   .portfolio-section-title {
     width: fit-content;
   }

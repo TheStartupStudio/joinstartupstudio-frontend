@@ -117,8 +117,13 @@ const FullCalendarComponent = (props) => {
                   fontWeight: 'normal'
                 }}
               >
-                {foundedEvent?.startTime ? convertToAMPM(foundedEvent?.startTime.slice(0, 5)) : ''} -{' '}
-                {foundedEvent?.endTime ? convertToAMPM(foundedEvent?.endTime.slice(0, 5)): ''}
+                {foundedEvent?.startTime
+                  ? convertToAMPM(foundedEvent?.startTime.slice(0, 5))
+                  : ''}{' '}
+                -{' '}
+                {foundedEvent?.endTime
+                  ? convertToAMPM(foundedEvent?.endTime.slice(0, 5))
+                  : ''}
               </div>
             </li>
           </ul>
@@ -241,7 +246,7 @@ const FullCalendarComponent = (props) => {
 
   const convertDate = (date) => {
     const inputDate = new Date(date)
-    const day = inputDate.getDate()
+    const day = inputDate.getUTCDate()
     const month = inputDate.toLocaleString('en-US', { month: 'long' })
     const year = inputDate.getFullYear()
 
@@ -282,122 +287,83 @@ const FullCalendarComponent = (props) => {
           tooltip.innerHTML =
             event.type === 'event'
               ? `<div style="width: 195px">
-                               
-                                  <div className={"d-flex g-2 w-100  "} style='margin:0px; padding:0px'>
-                                        <div
-                                        style=
-                                        "    text-transform: uppercase;
-                                              text-align: center;
-                                              margin-bottom: 4px;
-                                              padding-bottom: 6px;
-                                              border-bottom: 1px solid #e3e3e3;
-                                              font-size: 12px;
-                                              font-weight: 400;
-                                              padding-top: 3px;
-                                         "
-                                        >
-                                          ${ convertDate(event?.startDate)}
-                                          ${
-                                            event?.endDate
-                                              ? ' - ' +
-                                                convertDate(event?.endDate)
-                                              : ''
-                                          },
-                                          ${getFullYear(event?.startDate)}
-                                         
-                                        </div>
-                                        
-                                      
-                                        <ul 
-                                        class="event-ul"
-                                        style={"width:100%; margin:0px; padding-left:1rem; font-size:14px"}
-                                        >
-                                          <li class="event-li" style="color:#FF3399;list-style-type:square;
-                                           font-size: 20px;
-                                            margin:0px; padding:0px
-                                            ">
-                                            <span class="event-span" style="font-size: 12.5px;
-                                            font-weight:400;
-                                            margin:0px; padding:0px">
-                                            Event: ${event?.name}
-                                            </span>
-                                             <div class="event-name" style="font-size:12px;font-weight:500; color:#231F20; font: normal normal normal Montserrat;">
-                                        ${event?.user?.name}
-                                        </div>
-                                          <div class="event-time" className={"ml-2"} style="font-size: 10px; color:#231F20; font-weight:normal">
-                                          ${event?.startTime ? convertToAMPM(
-                                            event?.startTime.slice(0, 5)
-                                          ): ''} -
-                                          ${event?.endTime ? convertToAMPM(
-                                            event?.endTime.slice(0, 5)
-                                          ) : ''}
-                                        </div>
-                                          </li>
-                                        
-                                        
-                                          </ul>
-                                          
-                                 
-                            </div>`
+                <div className={"d-flex g-2 w-100"} style='margin:0px; padding:0px'>
+                  <div style="
+                      text-transform: uppercase;
+                      text-align: center;
+                      margin-bottom: 4px;
+                      padding-bottom: 6px;
+                      border-bottom: 1px solid #e3e3e3;
+                      font-size: 12px;
+                      font-weight: 400;
+                      padding-top: 3px;
+                    ">
+                    ${convertDate(event?.startDate)}
+                    ${
+                      event?.endDate ? ' - ' + convertDate(event?.endDate) : ''
+                    },
+                    ${new Date(event?.startDate).getFullYear()}
+                  </div>
+                  <ul class="event-ul" style="width:100%; margin:0px; padding-left:1rem; font-size:14px">
+                    <li class="event-li" style="color:#FF3399;list-style-type:square; font-size: 20px; margin:0px; padding:0px">
+                      <span class="event-span" style="font-size: 12.5px; font-weight:400; margin:0px; padding:0px">
+                        Event: ${event?.name}
+                      </span>
+                      <div class="event-name" style="font-size:12px;font-weight:500; color:#231F20; font: normal normal normal Montserrat;">
+                        ${event?.user?.name}
+                      </div>
+                      <div class="event-time" className={"ml-2"} style="font-size: 10px; color:#231F20; font-weight:normal">
+                        ${
+                          event?.startTime
+                            ? convertToAMPM(event?.startTime.slice(0, 5))
+                            : ''
+                        } - ${
+                  event?.endTime
+                    ? convertToAMPM(event?.endTime.slice(0, 5))
+                    : ''
+                }
+                      </div>
+                    </li>
+                  </ul>
+                </div>`
               : `<div style="width: 195px">
-                               
-                                  <div className={"d-flex g-2 w-100  "} style='margin:0px; padding:0px'>
-                                       <div>
-                                        <div
-                                        style=
-                                        "    text-transform: uppercase;
-                                              text-align: center;
-                                              margin-bottom: 4px;
-                                              padding-bottom: 6px;
-                                              border-bottom: 1px solid #e3e3e3;
-                                              font-size: 12px;
-                                              font-weight: 400;
-                                              padding-top: 3px;
-                                         "
-                                        >
-                                          ${convertDate(event?.startDate)}
-                                          ${
-                                            event?.endDate
-                                              ? ' - ' +
-                                                convertDate(event?.endDate)
-                                              : ''
-                                          },
-                                          ${getFullYear(event?.startDate)}
-                                         
-                                        </div>
-                                        </div>
-                                        
-                                      
-                                        <ul 
-                                        class="event-ul"
-                                        style={"width:100%; margin:0px; padding-left:1rem; font-size:14px"}
-                                        >
-                                          <li class="event-li" style="color:#A7CA42;list-style-type:square;
-                                           font-size: 20px;
-                                            margin:0px; padding:0px
-                                            ">
-                                            <span class="event-span" style="font-size: 12.5px;
-                                            font-weight:400;
-                                            margin:0px; padding:0px">
-                                            Task: ${event?.name}
-                                            </span>
-                                             <div class="event-name" style="font-size:12px;font-weight:500; color:#231F20; font: normal normal normal Montserrat;">
-                                        ${event?.user?.name}
-                                        </div>
-                                     
-                                          </li>
-                                        
-                                        
-                                          </ul>
-                                          
-                                 
-                            </div>`
+                <div className={"d-flex g-2 w-100"} style='margin:0px; padding:0px'>
+                  <div>
+                    <div style="
+                        text-transform: uppercase;
+                        text-align: center;
+                        margin-bottom: 4px;
+                        padding-bottom: 6px;
+                        border-bottom: 1px solid #e3e3e3;
+                        font-size: 12px;
+                        font-weight: 400;
+                        padding-top: 3px;
+                      ">
+                      ${convertDate(event?.startDate)}
+                      ${
+                        event?.endDate
+                          ? ' - ' + convertDate(event?.endDate)
+                          : ''
+                      },
+                      ${new Date(event?.startDate).getFullYear()}
+                    </div>
+                  </div>
+                  <ul class="event-ul" style="width:100%; margin:0px; padding-left:1rem; font-size:14px">
+                    <li class="event-li" style="color:#A7CA42;list-style-type:square; font-size: 20px; margin:0px; padding:0px">
+                      <span class="event-span" style="font-size: 12.5px; font-weight:400; margin:0px; padding:0px">
+                        Task: ${event?.name}
+                      </span>
+                      <div class="event-name" style="font-size:12px;font-weight:500; color:#231F20; font: normal normal normal Montserrat;">
+                        ${event?.user?.name}
+                      </div>
+                    </li>
+                  </ul>
+                </div>`
           return tooltip
         }
       })
     }
   }
-
   function getFormattedDate() {
     const today = new Date()
     const year = today.getFullYear().toString()
@@ -462,7 +428,7 @@ const FullCalendarComponent = (props) => {
         )}
         moreLinkClassNames={'more-link'}
         nextDayThreshold={'00:00:00'}
-        timeZone="UTC"
+        timeZone='UTC'
       />
       <CalendarEventModal
         show={calendarEventModal}
@@ -470,14 +436,17 @@ const FullCalendarComponent = (props) => {
         event={foundedEvent}
         onEdit={(event) => dispatch(editEventStart(event))}
       />
-      {taskEventModal && <TaskEventModal
-        show={taskEventModal}
-        onHide={closeTaskEventModal}
-        periods={props.periods}
-        event={null}
-        onEdit={null}
-        startDate={props.startDate ? props.startDate : startDate}
-      />}
+
+      {taskEventModal && (
+        <TaskEventModal
+          show={taskEventModal}
+          onHide={closeTaskEventModal}
+          periods={props.periods}
+          event={null}
+          onEdit={null}
+          startDate={props.startDate ? props.startDate : startDate}
+        />
+      )}
     </>
   )
 }

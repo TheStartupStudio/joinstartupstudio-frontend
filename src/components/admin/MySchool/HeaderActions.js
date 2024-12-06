@@ -35,7 +35,7 @@ const HeaderActions = ({
     {
       name: 'level',
       value: 'LS',
-      label: 'LS',
+      label: 'Lower School',
       year: ['K', '1st', '2nd', '3rd', '4th', '5th']
     },
     {
@@ -179,7 +179,6 @@ const HeaderActions = ({
   }
 
   const handleBulkDeleteAction = () => {
-    console.log('selectedRows', selectedRows)
     setBulkDeleteStudents(selectedRows.map((student) => student))
     setModalState('deleteUserModal', true)
   }
@@ -199,7 +198,7 @@ const HeaderActions = ({
 
   return (
     <>
-      <Row className='py-3 m-0'>
+      <Row className='py-3 m-0 instructors-search-btns'>
         {usedIn === 'reports' && (
           <Col md='8' className='ps-0'>
             <h4 className='m-0 p-0'>{tableTitle}</h4>
@@ -213,7 +212,7 @@ const HeaderActions = ({
               btnClassName={'gray-border'}
               options={firstDropdownProps.options}
               onClick={firstDropdownProps.onChange}
-              width={'300px'}
+              // width={'300px'}
             />
           </Col>
         )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -15,6 +15,17 @@ function PublicPortfolio(props) {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
+
+  const scrollableRef = useRef(null)
+
+  const scrollToTop = () => {
+    if (scrollableRef.current) {
+      scrollableRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+    }
+  }
 
   useEffect(() => {
     setIsLoading(true)
@@ -36,10 +47,9 @@ function PublicPortfolio(props) {
     }
 
     getPublicPortfolioAPI()
-  }, [username])
+  }, [username, props.userName])
 
   if (isLoading) {
-    // return <div className="loading-indicator">Loading...</div>
     return <PortfolioSkeletonLoader />
   }
 
@@ -55,6 +65,7 @@ function PublicPortfolio(props) {
       </div>
     )
   }
+
   return (
     <div
       className='portfolio-container'
@@ -68,24 +79,16 @@ function PublicPortfolio(props) {
         <WhoAmI
           data={publicPortfolio?.whoAmI}
           user={publicPortfolio?.user}
-          portfolioType={'public'}
+          portfolioType='public'
         />
       )}
       {activeSection === 'what-section' && (
-        <>
-          <WhatCanIDo
-            portfolioType={'public'}
-            data={publicPortfolio?.whatCanIDo}
-          />
-        </>
+        <WhatCanIDo portfolioType='public' data={publicPortfolio?.whatCanIDo} />
       )}
       {activeSection === 'how-section' && (
-        <>
-          <HowDoIProve data={publicPortfolio?.howDoIProve} />
-        </>
+        <HowDoIProve data={publicPortfolio?.howDoIProve} />
       )}
-
-      <PortfolioNavigator />
+      <PortfolioNavigator scrollToTop={scrollToTop} />
     </div>
   )
 }

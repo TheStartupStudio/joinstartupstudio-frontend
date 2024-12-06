@@ -346,9 +346,7 @@ const Navbar = (props) => {
                     <Link
                       style={{ width: '95%' }}
                       className='dropdown-item py-2 dropdown-menu-hover'
-                      onClick={() => {
-                        history.push('/logout')
-                      }}
+                      to='/logout'
                     >
                       <IntlMessages id='navigation.logout' />
                     </Link>

@@ -10,11 +10,13 @@ import RecentActivity from './RecentActivity'
 import CoursesAndCredentials from './CoursesAndCredentials'
 import LtsImmersion from './LtsImmersion'
 
-export const ItemProfileDetails = ({ img, title }) => {
+export const ItemProfileDetails = ({ img, title, className }) => {
   return (
     <Col md='6' sm='12'>
-      <div className='item-profile__details'>
-        <img src={img || DefaultImage} alt='' />
+      <div className={` ${className} item-profile__details`}>
+        <div className='item-img-myschool'>
+          <img src={img || DefaultImage} alt='' />
+        </div>
         <p className='p-0 m-0'>{title}</p>
       </div>
     </Col>
@@ -74,7 +76,7 @@ const Overview = ({ universityId, programs }) => {
           <Col className='py-3'>
             <LtsImmersion />
           </Col>
-          <Row className='py-3'>
+          <Row className='recact-courses-row py-3'>
             <Col md='5'>
               <RecentActivity />
             </Col>

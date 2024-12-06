@@ -131,12 +131,16 @@
   padding-top: 10px !important;
 }
 
+/* .lizalizaliza {
+  background: transparent linear-gradient(135deg, #EE3C96 24%, #52C7DE 77%) 0% 0% no-repeat padding-box !important;
+} */
+
 .item-profile__details img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 16px;
+  height: 19px;
+  /* border-radius: 50%; */
   background-color: #c8cdd880;
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 
 .details-info-box {
@@ -551,3 +555,183 @@
   color: #000000;
   opacity: 1;
 }
+
+@media (max-width: 1138px) {
+  .linechart-over-row {
+    flex-wrap: nowrap !important;
+
+  }
+}
+
+@media (max-width: 767px) {
+  .overview-school-program-info {
+    gap: 30px !important;
+  }
+
+  .pe-0.cursor-pointer.col-md-10:has(.linechart-overview) {
+    width: 85% !important;
+  }
+
+  .recact-courses-row {
+    gap: 30px !important;
+  }
+}
+
+.ltsimmrs-title-mysc {
+  text-align: left;
+  font: normal normal normal 29px/35px Montserrat;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+}
+
+@media (max-width:566px) {
+  .ltsimmrs-buttons {
+    flex-wrap: wrap;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+  }
+
+
+}
+
+.recentact-img {
+  margin-bottom: 10px !important;
+}
+
+.recentact-img img {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.item-img-myschool {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #c8cdd880;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gradientbtns-cont .custom__input-container {
+  width: 50% !important;
+}
+
+.immrs-opps {
+  font: normal normal normal 15px/19px Montserrat !important;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  overflow: unset !important;
+
+}
+
+.immrs-opps-cont span.arrow {
+  margin-left: -10px !important;
+}
+
+.instructors-search-btns .col,
+.custom-searchbar,
+.col-md-4 {
+  margin-bottom: 10px !important;
+}
+
+
+/* .instructors-search-btns .custom_dropdown {
+  width: unset !important;
+} */
+
+.modal-content:has(.instructor-modal-details) {
+  background: #ffffff !important;
+}
+
+.userdetails {
+  text-align: left;
+  font: normal normal 500 12px/16px Montserrat;
+  letter-spacing: 0.48px;
+  color: #000000;
+  opacity: 1;
+  margin-bottom: 0 !important;
+}
+
+.reset-password-modal .modal-content {
+  background: #ffffff !important;
+  padding-inline: 50px;
+  padding-top: 20px !important;
+  padding-bottom: 10px !important;
+  width: 403px !important;
+  height: 361px !important;
+
+}
+
+.deleteuser-title {
+  font: normal normal 400 14px/16px Montserrat;
+  letter-spacing: 0.56px;
+  color: #000000;
+  opacity: 1;
+}
+
+.delete-user-modal .modal-content {
+  height: 291px !important;
+}
+
+.delete-btns {
+  margin-top: 20px !important;
+  width: 198px !important;
+  height: 40px !important;
+  background: #EE3C96 0% 0% no-repeat padding-box !important;
+  box-shadow: 0px 3px 6px #00000029 !important;
+  border-radius: 12px !important;
+  opacity: 1;
+  font: normal normal 400 17px/20px Montserrat;
+  letter-spacing: 0px;
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
+
+.modal-dialog:has(.reset-password-modal) {
+  justify-content: center !important;
+}
+
+@media (max-width:387px) {
+  .reset-password-modal .modal-content {
+    padding-inline: 30px;
+  }
+
+  .reset-pasw-checkbtn {
+    right: -30px !important;
+
+  }
+
+}
+
+.reset-pasw-checkbtn {
+  position: absolute;
+  top: -20px !important;
+  right: -50px;
+  border-top-right-radius: 50% !important;
+}
+
+
+
+.cancel-btns {
+  width: 114px;
+  height: 40px;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 12px;
+  opacity: 1;
+  font: normal normal 400 17px/20px Montserrat;
+  letter-spacing: 0px;
+}
+
+/* text-align: left;
+font: normal normal medium 14px/16px Montserrat;
+letter-spacing: 0.56px;
+color: #000000;
+opacity: 1; */
+
+/* font: normal normal normal 15px/19px Montserrat;
+letter-spacing: 0px;
+color: #000000;
+opacity: 1; */

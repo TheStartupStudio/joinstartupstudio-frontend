@@ -41,6 +41,9 @@ function PortfolioNavigator(props) {
     props.scrollToTop()
   }
 
+  console.log(handleNextSection, 'triumf99')
+  console.log("scrollToTop exists:", typeof props.scrollToTop === 'function');
+
   const handlePreviousSection = () => {
     let changeSectionIndex = activeSectionIndex - 1
     while (changeSectionIndex >= 0 && sections[changeSectionIndex].disabled) {

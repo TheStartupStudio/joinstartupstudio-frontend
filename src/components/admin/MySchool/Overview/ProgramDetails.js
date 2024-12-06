@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { InfoBox, SkillBox } from '../ContentItems'
 import { Col, Row } from 'react-bootstrap'
-import DefaultImage from '../../../../assets/images/profile-image.png'
+import DefaultImage from '../../../../assets/images/myschool-logo.svg'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import CustomSpinner from '../../../CustomSpinner'
 
@@ -76,7 +76,28 @@ const ProgramDetails = ({
         <>
           <Col className='justify-content-center align-items-center'>
             <div className='item-profile__details'>
-              <img src={DefaultImage} alt='Profile' />
+              <div
+                style={{
+                  height: '36px',
+                  width: '36px',
+                  borderRadius: '50%',
+                  padding: '5px',
+                  background: '#C8CDD880',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: '10px'
+                }}
+              >
+                <img
+                  src={DefaultImage}
+                  alt='Profile'
+                  style={{
+                    width: '23px',
+                    height: '23px'
+                  }}
+                />
+              </div>
               <p className='schooldetails-font p-0 m-0'>Program Details</p>
             </div>
           </Col>

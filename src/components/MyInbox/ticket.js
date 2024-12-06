@@ -48,12 +48,16 @@ function Ticket({
         }}
       >
         <img
-          src={ticket.User.profile_image ? ticket.User.profile_image : imgTest}
+          src={
+            ticket && ticket.User && ticket.User.profile_image
+              ? ticket.User.profile_image
+              : imgTest
+          }
           alt='profile'
           className='rounded-circle'
         />
         <div className='ticket-information d-flex flex-column mx-2 min-w-0'>
-          <h5 className='from'>{ticket.User.name}</h5>
+          <h5 className='from'>{ticket?.User?.name}</h5>
           <p className='subject'>
             Subject: <span className='fw-bold'> {ticket.subject} </span>
           </p>

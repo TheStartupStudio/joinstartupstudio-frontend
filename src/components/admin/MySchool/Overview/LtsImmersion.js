@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { CustomDropdown, CustomGradientButton, InfoBox } from '../ContentItems'
 import { Col } from 'react-bootstrap'
 import AddImmersionModal from '../../MyImmersion/AddImmersionModal'
+import immersionLogo from '../../../../assets/images/myschool-immrs-logo.svg'
 
 const LtsImmersion = () => {
   const [immersionStep, setImmersionStep] = useState()
@@ -10,15 +11,34 @@ const LtsImmersion = () => {
     setImmersionStep(null) // Close the add immersion modal
   }
   return (
-    <InfoBox cn={'d-flex align-items-center justify-content-between'}>
-      <Col md='4'>
-        <h1 className='p-0 m-0'>LTS IMMERSION</h1>
+    <InfoBox
+      cn={'d-flex align-items-center justify-content-between'}
+      style={{ flexWrap: 'wrap' }}
+    >
+      <Col md='4' style={{ display: 'flex', alignItems: 'center' }}>
+        <img src={immersionLogo} className='lizalizaliza'></img>
+        <h1 className='ltsimmrs-title-mysc p-0 m-0'>
+          LTS IMMERSION
+          <span
+            style={{
+              fontSize: '18px',
+              position: 'relative',
+              top: '-7px'
+            }}
+          >
+            ™
+          </span>
+        </h1>
       </Col>
-      <Col md='8' className='d-flex justify-content-end'>
+      <Col md='8' className='ltsimmrs-buttons d-flex justify-content-end'>
         <CustomGradientButton className={'me-2'}>
-          <a href='/my-immersion-admin'>View immersion Opportunities</a>
+          <a href='/my-immersion-admin' className='immrs-opps'>
+            View immersion Opportunities
+          </a>
         </CustomGradientButton>
         <CustomDropdown
+          btnClassName={'immrs-opps-cont'}
+          spanClassName={'immrs-opps'}
           options={[
             {
               name: 'Step 1: Industry Problem',

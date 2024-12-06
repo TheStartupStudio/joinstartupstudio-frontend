@@ -179,7 +179,6 @@ const Reports = ({ instructors, universityId }) => {
             btnClassName={'gray-border'}
             options={dropdownOptions}
             onClick={(item) => {
-              console.log('item', item)
               dataToView === 'school'
                 ? handleSchoolFilter(item)
                 : handleInstructorFilter(item)

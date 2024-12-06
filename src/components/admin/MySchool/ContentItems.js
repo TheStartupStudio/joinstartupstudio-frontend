@@ -122,6 +122,7 @@ const CustomDropdown = ({
   name,
   width,
   btnClassName,
+  spanClassName,
   title,
   onClick,
   maxHeight,
@@ -227,7 +228,7 @@ const CustomDropdown = ({
         error={error}
       >
         <span
-          className='p-0 w-100'
+          className={`${spanClassName} p-0 w-100`}
           style={{
             overflow: 'hidden',
             whiteSpace: 'nowrap',
@@ -238,10 +239,10 @@ const CustomDropdown = ({
           {multiple
             ? selectedOptions.length > 0
               ? selectedOptions.map((option) => option.name).join(', ')
-              : title || 'Select an option'
+              : title || 'Add immersion Opportunity'
             : selectedOptions
             ? selectedOptions.name
-            : title || 'Select an option'}
+            : title || 'Add immersion Opportunity'}
         </span>
 
         {!multiple && !isSelectable && selectedOptions && hasResetOption && (

@@ -47,15 +47,18 @@ const TaskEventModal = (props) => {
   const [periods, setPeriods] = useState(props.periods)
   const [isOpenPeriodSelector, setIsOpenPeriodSelector] = useState(false)
 
-
   useEffect(() => {
     let newState = { ...state };
 
     if (isEdit() && props.event) {
       newState = {
         name: props.event?.name,
-        startDate: props.event?.startDate,
-        endDate: props.event?.endDate || null,
+        startDate: props.event?.startDate
+          ? new Date(props.event.startDate).toISOString().split("T")[0]
+          : null,
+
+        endDate: props.event?.endDate ? new Date(props.event.endDate).toISOString().split("T")[0]
+          : null,
         startTime: props.event?.startTime,
         endTime: props.event?.endTime,
         description: props.event?.description,
@@ -153,6 +156,15 @@ const TaskEventModal = (props) => {
     return props.startDate != null
   }
 
+
+
+
+  useEffect(() => {
+   if(props?.event?.type === "event"){
+     toggleTab('event')
+   } 
+  }, [props?.event?.type,toggleTab])
+
   useEffect(() => {
     if (isEndTimeBeforeStartTime()) {
       const newState = { ...state }
@@ -225,6 +237,7 @@ const TaskEventModal = (props) => {
       keyboard={false}
       className='edit-modal general-modal-header task-event-modal'
     >
+      
       <Modal.Header className='add-new-note-title general-modal-header my-auto p-0 mx-4'>
         <h3 className='mb-0 pt-4 mt-2 '>
           {isEdit() ? (
@@ -352,7 +365,7 @@ const TaskEventModal = (props) => {
                     onChange={(e) =>
                       handleInputChange('endDate', e.target.value)
                     }
-                    value={state.endDate}
+                    value={state.endDate}      
                   />
                 )}
               </FormattedMessage>

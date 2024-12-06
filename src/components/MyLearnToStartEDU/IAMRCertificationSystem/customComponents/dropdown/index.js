@@ -18,7 +18,6 @@ function Dropdown({ title, children, expanded, toggle, className }) {
     >
       <div className='header' onClick={() => toggle((prev) => !prev)}>
         <p className='title'>{title}</p>
-        <FontAwesomeIcon icon={!expanded ? faChevronDown : faChevronUp} />
       </div>
       <div className={`dropdown-options ${expanded ? 'show' : ''}`}>
         {children}
