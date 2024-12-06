@@ -10,16 +10,21 @@ const CoursesAndCredentials = () => {
     <InfoBox style={{ minHeight: '162px' }}>
       <ItemProfileDetails
         img={tickIcon}
-        title={'Courses & Credentials'}
+        title={'Courses & Credentials '}
         className={'recentact-img'}
       />
       <div className='d-flex gradientbtns-cont' style={{ width: '100%' }}>
         <CustomGradientButton className={'me-2'}>
-          <a href='#'>View Available Courses & Credentials</a>
+          <a href='#' className='immrs-opps immrs-opp-1'>
+            View Available Courses & Credentials
+          </a>
         </CustomGradientButton>
         <CustomGradientButton className={'me-2'}>
-          <a href='#'>Add Courses & Credentials</a>
-          <FontAwesomeIcon icon={faPlus} className='me-2' />
+          <a href='#' className='immrs-opps immrs-opp-2'>
+            Add Courses & Credentials
+            <span style={{ fontSize: '20px ', marginLeft: '-5px' }}>+</span>
+          </a>
+          {/* <FontAwesomeIcon icon={faPlus} className='me-2' /> */}
         </CustomGradientButton>
       </div>
     </InfoBox>
