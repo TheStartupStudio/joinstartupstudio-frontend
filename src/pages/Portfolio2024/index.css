@@ -503,7 +503,11 @@
   width: 70% !important;
 }
 
-
+@media (max-width:725px) {
+  .nav-icon-title {
+    font-size: smaller !important;
+  }
+}
 
 .nav-icon-title {
   font: normal normal 600 18px/26px Montserrat;
@@ -914,7 +918,16 @@
   }
 }
 
+@media (max-width:421px) {
+  .my-portfolio-logo {
+    width: 100% !important;
+  }
+}
+
 @media (max-width: 460px) {
+
+
+
   .portfolio-container {
     padding: 10px !important;
   }
@@ -924,7 +937,7 @@
   }
 
   .portfolio-nav-icons {
-    margin-top: 57px;
+    margin-top: -57px;
   }
 
   /* .portfolio-nav-icons div {
@@ -934,12 +947,22 @@
   } */
 }
 
-@media (max-width:413px) {
-  .portfolio-nav-icons div {
-    margin-left: 10px !important;
+@media (max-width:497px) {
+  .hcipi-text {
+    bottom: -61px !important;
   }
+
 }
 
+@media (max-width:385px) {
+  .wcid-text {
+    width: 40px !important;
+  }
+
+  .horizontal-separator {
+    margin-inline: 5px !important;
+  }
+}
 
 
 
@@ -949,14 +972,23 @@
   }
 }
 
+@media (max-width:421px) {
+  .my-portfolio-logo-container {
+    padding-inline: 5px !important;
+  }
+
+  .my-portfolio-logo {
+    width: 350px !important;
+  }
+}
 
 
-@media (max-width: 420px) {
+/* @media (max-width: 420px) {
   .my-portfolio-logo {
     width: 300px !important;
 
   }
-}
+} */
 
 @media (max-width: 795px) {
   /* .portfolio-nav-icons {
@@ -1030,22 +1062,72 @@
   }
 } */
 
-@media (max-width: 668px) {
+/* @media (max-width: 668px) {
   .portfolio-nav-icons {
     display: grid !important;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
   }
 
-  /* .portfolio-nav-icons div {
+  .portfolio-nav-icons div {
     margin-right: 30px !important;
-  } */
+  }
 
 
   .horizontal-separator {
     display: none;
   }
 
+
+} */
+
+@media (max-width: 552px) {
+  .nav-icon-box img {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .nav-icon-title {
+    font-size: 12px !important;
+  }
+}
+
+
+
+@media (max-width: 496px) {
+  /* .nav-icon-box img {
+    width: 50px !important;
+    height: 50px !important;
+  } */
+
+  .nav-icon-title {
+    font-size: 11px !important;
+    margin-inline: 5px;
+    width: 100px !important;
+  }
+
+  .horizontal-separator {
+    margin-inline: 10px !important;
+  }
+}
+
+@media (max-width:385px) {
+  .wcid-text {
+    width: 40px !important;
+  }
+
+  .horizontal-separator {
+    margin-inline: 5px !important;
+  }
+}
+
+
+
+@media (max-width:385px) {
+  .wcid-text {
+    width: 70px !important;
+    bottom: -61px !important;
+  }
 
 }
 
