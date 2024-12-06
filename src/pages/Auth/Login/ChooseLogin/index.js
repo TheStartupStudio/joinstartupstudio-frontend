@@ -61,6 +61,8 @@ const ChooseLogin = () => {
     const client = getClientFromHostname()
     const loginUrl = constructLoginUrl(client, role)
 
+    console.log(loginUrl, 'loginUrl')
+
     if (loginUrl.startsWith('/')) {
       history.push(loginUrl)
     } else {

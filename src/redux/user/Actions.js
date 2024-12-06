@@ -196,7 +196,10 @@ export const userLogin =
   }
 
 export const userLogout = () => {
+  console.log('userLogouut')
   localStorage.clear()
+
+  console.log(localStorage, 'localstorage')
   return {
     type: USER_LOGOUT
   }
