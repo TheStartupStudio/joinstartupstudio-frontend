@@ -140,6 +140,8 @@ const Learners = ({
             window.location.href = 'http://localhost:8080/?mode=impersonation'
           } else if (client === 'ims-dev') {
             window.location.href = `https://mainplatform-dev${domain}/?mode=impersonation`
+          } else if (client === 'ims') {
+            window.location.href = `https://main${domain}/?mode=impersonation`
           } else {
             window.location.href = `https://${client}.main${domain}/?mode=impersonation`
           }
