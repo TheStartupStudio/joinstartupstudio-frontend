@@ -12,11 +12,28 @@ const LtsImmersion = () => {
   }
   return (
     <InfoBox
-      cn={'d-flex align-items-center justify-content-between'}
-      style={{ flexWrap: 'wrap' }}
+      cn={
+        'lts-immrs-container d-flex align-items-center justify-content-between'
+      }
+      style={{
+        flexWrap: 'wrap',
+        height: '74px'
+      }}
     >
-      <Col md='4' style={{ display: 'flex', alignItems: 'center' }}>
-        <img src={immersionLogo} className='lizalizaliza'></img>
+      <Col
+        md='4'
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}
+      >
+        <img
+          src={immersionLogo}
+          className='lizalizaliza'
+          width={44.5}
+          height={45}
+        ></img>
         <h1 className='ltsimmrs-title-mysc p-0 m-0'>
           LTS IMMERSION
           <span

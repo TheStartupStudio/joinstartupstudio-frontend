@@ -8,6 +8,8 @@ import { useForm } from '../../../hooks/useForm'
 import { useValidation } from '../../../hooks/useValidation'
 import { toast } from 'react-toastify'
 import { CustomInput, LtsButton } from '../../../ui/ContentItems'
+import personwkeyIcon from '../../../assets/images/personwkey.png'
+import tickIcon from '../../../assets/images/tick.png'
 
 const changeUserPassword = async (cognito_Id, newPassword) => {
   const cognito = configureAwsSdk()
@@ -79,7 +81,8 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
                 borderRadius: '50%'
               }}
             >
-              <FontAwesomeIcon icon={faUserLock} />
+              <img src={personwkeyIcon} width={21} height={24}></img>
+              {/* <FontAwesomeIcon icon={faUserLock} /> */}
             </div>
             Reset Password
           </Modal.Title>
@@ -88,7 +91,7 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
             className={`check-button reset-pasw-checkbtn fw-bold`}
             onClick={() => onHide()}
           >
-            X
+            <img src={tickIcon} width={50} height={38}></img>
           </div>
         </Modal.Header>
         <Modal.Body>

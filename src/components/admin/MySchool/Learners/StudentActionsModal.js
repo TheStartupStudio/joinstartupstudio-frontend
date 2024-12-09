@@ -26,6 +26,11 @@ import Certification1Badge from '../../../../assets/images/market-ready-1-badge.
 import Certification2Badge from '../../../../assets/images/market-ready-2-badge.png'
 import { CustomInput, LtsButton } from '../../../../ui/ContentItems'
 import buttonTick from '../../../../assets/images/myschool-tick.svg'
+import tickIcon from '../../../../assets/images/tick.png'
+import userManageIcon from '../../../../assets/images/usermanage.png'
+import deletePersonIcon from '../../../../assets/images/persondelete.png'
+import personwkeyIcon from '../../../../assets/images/personwkey.png'
+import viewPortfIcon from '../../../../assets/images/viewportf.png'
 
 const StudentActionsModal = ({
   show,
@@ -188,7 +193,8 @@ const StudentActionsModal = ({
                 borderRadius: '50%'
               }}
             >
-              <FontAwesomeIcon icon={faUserPlus} />
+              <img src={userManageIcon} width={20} height={16}></img>
+              {/* <FontAwesomeIcon icon={faUserPlus} /> */}
             </div>
             <div className='d-flex w-100 align-items-center justify-content-between'>
               <span>
@@ -214,7 +220,7 @@ const StudentActionsModal = ({
               }}
               onClick={() => onHide()}
             >
-              Xjnjj
+              <img src={tickIcon} width={50} height={38}></img>
             </div>
           ) : submitLoading ? (
             <div className={`check-button fw-bold`}>
@@ -222,14 +228,16 @@ const StudentActionsModal = ({
             </div>
           ) : isDisabled ? (
             <div className={`check-button `} onClick={() => onHide()}>
-              <FontAwesomeIcon icon={faTimes} />
+              <img src={tickIcon} width={50} height={38}></img>
+              {/* <FontAwesomeIcon icon={faTimes} /> */}
             </div>
           ) : (
             <div
               className={`check-button  ${isDisabled ? 'disabled' : ''}`}
               onClick={!isDisabled ? submitHandler : null}
             >
-              <FontAwesomeIcon icon={faCheck} />
+              <img src={tickIcon} width={50} height={38}></img>
+              {/* <FontAwesomeIcon icon={faCheck} /> */}
             </div>
           )}
         </Modal.Header>
@@ -340,8 +348,9 @@ const StudentActionsModal = ({
 
               {mode === 'edit' ? (
                 <a href={`/user-portfolio/${formData.username}`}>
-                  <FontAwesomeIcon icon={faIdBadge} className='me-2' /> View
-                  Student Portfolio
+                  <img src={viewPortfIcon} height={15}></img>
+                  {/* <FontAwesomeIcon icon={faIdBadge} className='me-2' />  */}
+                  View Student Portfolio
                 </a>
               ) : null}
             </Col>
@@ -527,8 +536,14 @@ const StudentActionsModal = ({
                   href='#'
                   className='m-0 cursor-pointer userdetails'
                   onClick={deleteUserFromEdit}
+                  style={{
+                    display: 'flex',
+                    gap: '5px',
+                    alignItems: 'center'
+                  }}
                 >
-                  <FontAwesomeIcon icon={faUserMinus} className='pe-2 ' />
+                  <img src={deletePersonIcon} width={20} height={24}></img>
+                  {/* <FontAwesomeIcon icon={faUserMinus} className='pe-2 ' /> */}
                   Delete User
                 </p>
               </span>
@@ -537,8 +552,10 @@ const StudentActionsModal = ({
                   href='#'
                   className='m-0 cursor-pointer userdetails'
                   onClick={resetPasswordFromEdit}
+                  style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
                 >
-                  <FontAwesomeIcon icon={faUserLock} className='pe-2 ' />
+                  <img src={personwkeyIcon} width={20} height={24}></img>
+                  {/* <FontAwesomeIcon icon={faUserLock} className='pe-2 ' /> */}
                   Reset password
                 </p>
               </span>

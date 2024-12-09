@@ -12,6 +12,12 @@
   color: #52c7de;
 }
 
+
+/* .ag-cell-value:has(.students__cell) {
+  left: 493px
+} */
+
+
 .students__cell,
 .students__cell svg,
 .reports_cell,
@@ -59,3 +65,10 @@ font: normal normal normal 12px/14px Montserrat;
 letter-spacing: 0.48px;
 color: #000000;
 opacity: 1; */
+
+.students__cell {
+  font: normal normal 300 14px/16px Montserrat;
+  letter-spacing: 0.56px;
+  color: #000000;
+  opacity: 1;
+}

@@ -56,22 +56,38 @@ const MySchoolRouter = ({
       <div className='my-school__container'>
         <Row className='my-school__panel mb-3 m-0'>
           <Col>
-            <NavLink to='/my-school/overview' activeClassName='active'>
+            <NavLink
+              to='/my-school/overview'
+              activeClassName='active'
+              className={'schoolpanel-nav-title'}
+            >
               Overview
             </NavLink>
           </Col>
           <Col>
-            <NavLink to='/my-school/instructors' activeClassName='active'>
+            <NavLink
+              to='/my-school/instructors'
+              activeClassName='active'
+              className={'schoolpanel-nav-title'}
+            >
               Instructors
             </NavLink>
           </Col>
           <Col>
-            <NavLink to='/my-school/learners' activeClassName='active'>
+            <NavLink
+              to='/my-school/learners'
+              activeClassName='active'
+              className={'schoolpanel-nav-title'}
+            >
               Learners
             </NavLink>
           </Col>
           <Col>
-            <NavLink to='/my-school/reports' activeClassName='active'>
+            <NavLink
+              to='/my-school/reports'
+              activeClassName='active'
+              className={'schoolpanel-nav-title'}
+            >
               Reports
             </NavLink>
           </Col>

@@ -577,27 +577,88 @@
   }
 }
 
+
 .ltsimmrs-title-mysc {
   text-align: left;
   font: normal normal normal 29px/35px Montserrat;
   letter-spacing: 0px;
   color: #000000;
   opacity: 1;
+
 }
+
+@media (max-width:767px) {
+  .lts-immrs-container {
+    height: 140px !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+
+  }
+
+}
+
 
 @media (max-width:566px) {
   .ltsimmrs-buttons {
     flex-wrap: wrap;
     justify-content: flex-start !important;
     gap: 10px !important;
+
   }
 
+  .lts-immrs-container {
+    height: 200px !important;
+  }
 
 }
+
+.ltsimmrs-buttons {
+  margin-bottom: 20px !important;
+}
+
+@media (max-width:1241px) and (min-width:768px) {
+  .lts-immrs-container {
+    height: 90px !important;
+
+  }
+
+}
+
+
+@media (max-width:480px) {
+  .custom-gradient_button:has(.immrs-opp-1) {
+    height: 75px !important;
+    max-height: 75px !important;
+  }
+}
+
+@media (max-width:393px) {
+  .custom-gradient_button:has(.immrs-opp-2) {
+    height: 75px !important;
+    max-height: 75px !important;
+  }
+}
+
+
 
 .recentact-img {
   margin-bottom: 10px !important;
 }
+
+
+.col-md-6:has(.recentact-img) {
+  width: 60% !important;
+}
+
+.recentact-img p {
+  margin-left: 10px !important;
+  width: max-content !important;
+  font: normal normal 400 14px/16px Montserrat;
+  letter-spacing: 0.56px;
+  color: #000000;
+  opacity: 1;
+}
+
 
 .recentact-img img {
   width: 18px !important;
@@ -706,6 +767,13 @@
 
 }
 
+@media (max-width:998px) {
+  body {
+    height: unset !important;
+  }
+
+}
+
 .reset-pasw-checkbtn {
   position: absolute;
   top: -20px !important;
@@ -725,13 +793,44 @@
   letter-spacing: 0px;
 }
 
-/* text-align: left;
-font: normal normal medium 14px/16px Montserrat;
-letter-spacing: 0.56px;
-color: #000000;
-opacity: 1; */
+.ag-header-cell-text {
 
-/* font: normal normal normal 15px/19px Montserrat;
-letter-spacing: 0px;
-color: #000000;
-opacity: 1; */
+  text-align: left;
+  font: normal normal 600 10px/16px Montserrat !important;
+  letter-spacing: 0.4px;
+  color: #707070;
+  text-transform: uppercase !important;
+  opacity: 1;
+}
+
+.ag-header-viewport,
+.ag-header-container,
+.ag-header-row.ag-header-row-column,
+.ag-header.ag-pivot-off.ag-header-allow-overflow {
+  height: 40px !important;
+  min-height: 40px !important;
+  align-items: center;
+  background: #EDEDED 0% 0% no-repeat padding-box !important;
+}
+
+.ag-header-row.ag-header-row-column {
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-top: -4px !important;
+  background: #EDEDED 0% 0% no-repeat padding-box !important;
+}
+
+@media (max-width:480px) {
+  /* .schoolpanel-nav-title {
+    font-size: smaller !important;
+  } */
+
+
+  .my-school__panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 150px !important;
+    flex-wrap: wrap !important;
+  }
+}
