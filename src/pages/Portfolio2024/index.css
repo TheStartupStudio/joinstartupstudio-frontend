@@ -49,6 +49,10 @@
   .lizas-column {
     width: 100%;
   }
+
+  .userinfo-row {
+    flex-direction: column-reverse !important;
+  }
 }
 
 
@@ -2590,18 +2594,26 @@
   .mentor-modal-firstrow {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 30px;
   }
+
+
 
   .mentor-modal-inputs {
     margin-left: 0 !important;
-    width: 100%
+    width: 100%;
+
+  }
+
+  .mentor-modal-inputs .portf-quill-mentor {
+    margin-bottom: 20px;
   }
 
   .mentor-modal-imgs {
     width: 100%;
   }
 }
+
 
 .portf-maintitle {
   font: normal normal 600 17px/20px Montserrat !important;
