@@ -21,9 +21,9 @@ function Ticket({
 
   let uploadUrl
   if (ticket?.type === 'approval') {
-    uploadUrl = `/student-iamr/${ticket.User?.id}/1/uploads`
+    uploadUrl = `/student-iamr/${ticket.User?.id}/1/uploads#inbox`
   } else {
-    uploadUrl = `/student-iamr/${ticket.User?.id}/${ticket.IamrSkill?.id}/uploads/${ticket.UserSkillUpload?.id}`
+    uploadUrl = `/student-iamr/${ticket.User?.id}/${ticket.IamrSkill?.id}/uploads/${ticket.UserSkillUpload?.id}#inbox`
   }
 
   const readByInstructorHandler = async () => {

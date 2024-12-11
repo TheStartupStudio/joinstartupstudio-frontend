@@ -18,6 +18,7 @@ import {
 import TaskEventModal from '../../components/Modals/TaskEventModal'
 import LoadingAnimation from '../../ui/loadingAnimation'
 import { setBackButton } from '../../redux/backButtonReducer'
+import { useLocation } from 'react-router-dom/cjs/react-router-dom'
 
 export default function StudentIAMR() {
   return (
@@ -29,6 +30,7 @@ export default function StudentIAMR() {
 
 function StudentIamrContainer() {
   const dispatch = useDispatch()
+  const location = useLocation()
   const {
     loading,
     student,
@@ -49,12 +51,16 @@ function StudentIamrContainer() {
   }, [])
 
   useEffect(() => {
-    dispatch(setBackButton(true, 'my-students'))
+    if (location.hash === '#inbox') {
+      dispatch(setBackButton(true, 'my-inbox'))
+    } else {
+      dispatch(setBackButton(true, 'my-students'))
+    }
 
     return () => {
       dispatch(setBackButton(false, ''))
     }
-  }, [dispatch])
+  }, [dispatch, location.hash])
 
   useEffect(() => {
     setLoading(true)
@@ -131,14 +137,16 @@ function StudentIamrContainer() {
             >
               Create Task/Event
             </button>
-            {taskEventModal && <TaskEventModal
-              show={taskEventModal}
-              onHide={closeTaskEventModal}
-              periods={periods}
-              event={null}
-              onEdit={null}
-              startDate={null}
-            />}
+            {taskEventModal && (
+              <TaskEventModal
+                show={taskEventModal}
+                onHide={closeTaskEventModal}
+                periods={periods}
+                event={null}
+                onEdit={null}
+                startDate={null}
+              />
+            )}
             {/* <CertificationRequestsWidget /> */}
           </div>
         </div>
