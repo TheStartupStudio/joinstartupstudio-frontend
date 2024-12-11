@@ -125,16 +125,16 @@
   }
 }
 
-@media (max-width: 668px) {
+/* @media (max-width: 668px) {
   .right-login-content {
     margin-top: 60px !important;
   }
-}
+} */
 
 @media (max-width: 768px) {
   .social-media-items {
     position: relative;
-    top: 450px !important;
+    top: 390px !important;
 
   }
 }

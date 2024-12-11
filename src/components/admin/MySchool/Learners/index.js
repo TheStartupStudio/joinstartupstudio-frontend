@@ -402,7 +402,7 @@ const Learners = ({
   )
 
   return (
-    <div style={{ background: '#fff' }}>
+    <div className='' style={{ background: '#fff', borderRadius: '12px' }}>
       <HeaderActions
         usedIn={usedIn || 'student'}
         tableTitle={tableTitle}

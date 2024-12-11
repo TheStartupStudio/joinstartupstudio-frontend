@@ -834,3 +834,13 @@
     flex-wrap: wrap !important;
   }
 }
+
+
+.ag-center-cols-viewport,
+.ag-center-cols-container,
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-column-last.ag-cell-value,
+.ag-row-even.ag-row-no-focus.ag-row.ag-row-level-0.ag-row-position-absolute.ag-row-first.ag-row-not-inline-editing {
+  overflow-x: scroll !important;
+
+  scrollbar-width: none !important;
+}
