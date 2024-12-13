@@ -231,11 +231,11 @@ const HeaderActions = ({
                     value: '1',
                     icon: ''
                   },
-                  {
-                    name: 'Step 2:Immersion Experience',
-                    value: '2',
-                    icon: ''
-                  },
+                  // {
+                  //   name: 'Step 2:Immersion Experience',
+                  //   value: '2',
+                  //   icon: ''
+                  // }, // commented because it was asked to be removed
                   {
                     name: 'Step 3: Internship',
                     value: '3',
