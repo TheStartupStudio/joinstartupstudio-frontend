@@ -47,21 +47,21 @@ const FilterDropdown = ({
   const handleYearFilterClick = (filter) => {
     setYearFilter(filter)
     setPeriodFilter('') // Clear period filter
-    setFilter(filter)
+    setFilter(filter) // Update current filter
     setFilterExpanded(false) // Close the filter dropdown
   }
 
   const handlePeriodFilterClick = (filter) => {
     setPeriodFilter(filter)
     setYearFilter('') // Clear year filter
-    setFilter(filter)
+    setFilter(filter) // Update current filter
     setFilterExpanded(false) // Close the filter dropdown
   }
 
   const handleClearFilters = () => {
     setYearFilter('')
     setPeriodFilter('')
-    setFilter('')
+    setFilter('') // Reset current filter
     setFilterExpanded(false) // Close the filter dropdown
     clearFilters()
   }
@@ -72,42 +72,24 @@ const FilterDropdown = ({
       onClick={() => setFilterExpanded((prev) => !prev)} // Toggle filter expanded
       ref={dropdownRef}
     >
-      {/* <FontAwesomeIcon
-        icon={filterIcon}
-        style={{
-          color: '#707070',
-          fontSize: '22px',
-          marginRight: '5px'
-        }}
-      /> */}
       <div style={{ marginRight: '5px' }}>
-        <img src={filterIcon} alt='#' width='90%' />
+        <img src={filterIcon} alt='filter-icon' width='90%' />
       </div>
       <p className='m-0'>{'FILTER'}</p>
       {filterExpanded && (
-        <div>
-          <div
-            className='evaluation-filter-expanded'
-            style={{
-              display: 'flex',
-              justifyContent: 'space-around'
-            }}
-          >
+        <div className='evaluation-filter-expanded'>
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
             <div className='years-period-container'>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 Year
               </div>
-
               {yearfilters.map((filter) => (
                 <div
                   className={`years-items ${
                     filter === currentFilter ? 'active' : ''
                   }`}
                   key={filter}
-                  onClick={() => {
-                    handleYearFilterClick(filter)
-                    setFilterExpanded(false) // Close the filter dropdown after selection
-                  }}
+                  onClick={() => handleYearFilterClick(filter)}
                 >
                   {filter.toUpperCase()}
                 </div>
@@ -131,16 +113,31 @@ const FilterDropdown = ({
                       filter === currentFilter ? 'active' : ''
                     }`}
                     key={filter}
-                    onClick={() => {
-                      handlePeriodFilterClick(filter)
-                      setFilterExpanded(false) // Close the filter dropdown after selection
-                    }}
+                    onClick={() => handlePeriodFilterClick(filter)}
                   >
                     {filter.toUpperCase()}
                   </div>
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* Clear Filters Button */}
+          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+            <button
+              className='clear-filters-btn'
+              onClick={handleClearFilters}
+              style={{
+                backgroundColor: '#FE7F81',
+                color: '#fff',
+                padding: '3px 6px',
+                border: 'none',
+                cursor: 'pointer',
+                borderRadius: '5px'
+              }}
+            >
+              Clear Filters
+            </button>
           </div>
         </div>
       )}
