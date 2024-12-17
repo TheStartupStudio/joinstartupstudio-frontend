@@ -260,11 +260,13 @@ function Header() {
           dispatch(updateTnC())
         }}
       />
-      <StudentOfInstructors
-        allow={() => isAdmin}
-        onShow={countStudentOfInstructor}
-        onHide={() => setCountStudentOfInstructor(false)}
-      />
+      {isAdmin && (
+        <StudentOfInstructors
+          allow={() => isAdmin}
+          onShow={countStudentOfInstructor}
+          onHide={() => setCountStudentOfInstructor(false)}
+        />
+      )}
       <PeerSharingModal
         show={peerSharingModal}
         onHide={closePeerSharingModal}

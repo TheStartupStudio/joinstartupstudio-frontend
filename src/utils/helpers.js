@@ -91,7 +91,7 @@ export const refreshToken = async () => {
   })
 }
 
-export const createUserToken = (user, isAdmin) => {
+export const createUserToken = (user, isAdmin, userRole) => {
   const payloadData = {
     ...user.data,
     profileImage: user.data.profile_image,
@@ -101,24 +101,35 @@ export const createUserToken = (user, isAdmin) => {
   return {
     token: user.data.cognito_Id,
     user: payloadData,
-    isAdmin
+    isAdmin,
+    role: userRole
   }
 }
 
 export const fetchUserData = async (impersonationMode) => {
   if (impersonationMode === 'instructor') {
-    return axiosInstance.get('/instructor/')
+    return axiosInstance.get('/users/')
   } else {
     return axiosInstance.get('/users/')
   }
 }
 
+export const fetchUserRole = async () => {
+  try {
+    const res = await axiosInstance.get('/users/role')
+    return res.data
+  } catch (error) {
+    console.error('Error fetching user role:', error)
+    throw error
+  }
+}
+
 export const fetchAdminAccess = async () => {
-  const accessResponse = await axiosInstance.get('/studentsInstructorss/admin')
+  const accessResponse = await axiosInstance.get('/users/admin')
   return accessResponse.data.allow
 }
 
-export const saveUserToken = (userToken, isImpersonation) => {
+export const saveUserToken = (userToken, isImpersonation, userRole) => {
   const domain = getDomainFromClientName()
 
   if (isImpersonation === 'student') {
@@ -127,6 +138,7 @@ export const saveUserToken = (userToken, isImpersonation) => {
     )}; path=/; domain=${domain}; SameSite=None; Secure`
   } else {
     localStorage.setItem('user', JSON.stringify(userToken))
+    localStorage.setItem('role', userRole)
   }
 }
 

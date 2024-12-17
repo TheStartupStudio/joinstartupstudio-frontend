@@ -13,7 +13,7 @@ import { setAccordionToggled } from '../../redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
 import Group3888Image from '../../assets/images/HS-Sidebar-Icons/Group 3888/Group 3888@2x.png'
 
-const Body = (props) => {
+const InstructorSidebar = (props) => {
   const { isAdmin } = useSelector((state) => state.user.user)
   const dispatch = useDispatch()
   const location = useLocation()
@@ -114,9 +114,9 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'journals'}>
-        <DropdownItem title={'MY LTS JOURNAL'} to={'/student-lts'} />
+        <DropdownItem title={'MY LTS JOURNAL'} to={'/lts-journal'} />
         <DropdownItem title={'MY MENTORSHIP JOURNAL'} to={'/my-mentorship'} />
-        <DropdownItem title={'MY WELLNESS JOURNAL'} to={'/student-wellnes'} />
+        <DropdownItem title={'MY WELLNESS JOURNAL'} to={'/wellness-journal'} />
         <DropdownItem
           title={'MY PERSONAL FINANCE JOURNAL'}
           to={'/student-personal-finance'}
@@ -140,4 +140,4 @@ const Body = (props) => {
   )
 }
 
-export default Body
+export default InstructorSidebar

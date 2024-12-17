@@ -59,8 +59,10 @@ function Profile(props) {
         setFeedbackRequests(res.data.certification_feedback_requests)
       })
     }
-    questionAndFeedbacksHandler()
-  }, [])
+    if (user.role_id !== 1) {
+      questionAndFeedbacksHandler()
+    }
+  }, [user.role_id])
 
   useEffect(() => {
     getDashboardWidgetData()

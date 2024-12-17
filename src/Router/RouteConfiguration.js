@@ -5,6 +5,7 @@ import LtsJournal from '../pages/LtsJournal'
 import TestJournal from '../pages/LtsJournal/MyCurriculum/CurriculumJournal'
 import StudentJournals from '../pages/studentJournals'
 import VerifyEmailByCode from '../pages/Register/verifyEmailByCode'
+import AddOccupationItemForm from '../components/Pathways/CreateOccupation'
 
 const Iamr = React.lazy(() => import('../pages/Iamr'))
 const Terms = React.lazy(() => import('../pages/Terms'))
@@ -145,97 +146,35 @@ export const adminRoutes = [
   }
 ]
 
-export const authRoutes = [
-  { path: '/test-page', component: TestPage },
-
+export const mutualRoutes = [
   { path: '/dashboard', component: Dashboard, exact: true },
+  { path: '/pathways', component: Pathways, exact: true, props: {} },
+  { path: '/my-classroom', component: MyClassroom, exact: true },
+  { path: '/my-classroom/request/:id', component: MyClassroom },
+  { path: '/savedMedia', component: SavedMedia },
+  { path: '/csv-upload', component: CSVUpload },
+  { path: '/portfolio', component: Portfolio },
+  { path: '/my-portfolio', component: Portfolio2024, exact: true },
   { path: '/beyond-your-course', component: BeyondYourCourse, exact: true },
   { path: '/beyond-your-course/:id', component: BeyondYourCourse, exact: true },
-  { path: '/my-immersion', component: MyImmersion, exact: true },
-  { path: '/my-immersion/:step', component: Steps },
-  { path: '/terms', component: Terms },
-  { path: '/old-portfolio', component: EditPortfolioNew, exact: true },
-  { path: '/my-portfolio', component: Portfolio2024, exact: true },
-  { path: '/resources', component: Resources },
-  { path: '/my-students', component: MyStudents },
-  { path: '/iamr-certification-guide', component: IamrCertificationGuide },
-  { path: '/my-certification-guide', component: MyCertificationGuide },
-  { path: '/my-curriculum', component: MyCurriculum },
-  { path: '/portfolio', component: Portfolio },
-  { path: '/csv-upload', component: CSVUpload },
-  { path: '/savedMedia', component: SavedMedia },
   { path: '/story-in-motion', component: StoryInMotion },
   { path: '/UserProject/:uid', component: UserPortfolioProj },
-  { path: '/PreviewMyStartupProfile/:id', component: Preview },
   { path: '/:page/videos', component: AllVideos },
   { path: '/spotlight', component: Spotlight, exact: true },
   { path: '/startup-livestream', component: LiveStream, exact: true },
   { path: '/account', component: Profile, exact: true },
-  { path: '/account/:id', component: userProfile, exact: true },
   { path: '/profile-preview', component: ProfilePreview, exact: true },
   { path: '/my-journal/:month/:id', component: MyJournals, exact: true },
-  { path: '/my-account', component: Profile, exact: true },
   { path: '/verify', component: VerifyEmail },
+  { path: '/my-account', component: Profile, exact: true },
   { path: '/logout', component: Logout },
-  { path: '/briefings', component: Briefings },
   { path: '/iamr', component: Iamr },
-  { path: '/student-iamr/:studentId/:id?/:type?', component: StudentIAMR },
-  { path: '/my-evaluation', component: MyEvaluation },
-  { path: '/my-inbox', component: MyInbox },
+  { path: '/terms', component: Terms },
   { path: '/my-spark/archive', component: MySparkArchivePage, exact: true },
   { path: '/my-spark/widgets', component: MySpark, exact: true },
   { path: '/my-spark/widgets/:widgetName', component: MySparkWidgetDetails },
-  { path: '/edit-journals2', component: JournalsManagement2, exact: true },
-  { path: '/edit-journals', component: JournalsManagement, exact: true },
-  { path: '/my-notes/:id?', component: MyNotes },
   { path: '/sample-note', component: SampleNote },
   { path: '/:page/video/:id', component: BeyondYourCourseVideo },
-  { path: '/my-classroom', component: MyClassroom, exact: true },
-  { path: '/my-classroom/request/:id', component: MyClassroom },
-  { path: '/my-performance-data/:id?', component: MyPerformanceData },
-  {
-    path: '/my-spark/generate-page/:id',
-    component: MySparkGeneratePage,
-    exact: true
-  },
-  {
-    path: '/my-spark/generate-page/response',
-    component: MySparkGeneratePage,
-    exact: true
-  },
-  {
-    path: '/edit-journals2/:type/:journalId',
-    component: JournalsManagement2,
-    exact: true
-  },
-  {
-    path: '/My-Market-Ready-Guide',
-    component: MyMarketReadyGuide,
-    exact: true
-  },
-  {
-    path: '/iamr-certification-system/:certificationType?/:id?/:type?',
-    component: IamrCertificationSystem
-  },
-  {
-    path: '/iamr-certification-system',
-    component: IamrCertificationSystem,
-    exact: true
-  },
-  { path: '/archived-portfolio', component: EditPortfolioNew, exact: true }
-]
-
-export const authRoutesWithProps = [
-  { path: '/pathways', component: Pathways, exact: true, props: {} },
-  { path: '/hs4-journal/', component: LtsJournal, props: { category: 'hs4' } },
-  { path: '/hs3-journal/', component: LtsJournal, props: { category: 'hs3' } },
-  { path: '/hs2-journal/', component: LtsJournal, props: { category: 'hs2' } },
-  { path: '/hs1-journal/', component: LtsJournal, props: { category: 'hs1' } },
-  {
-    path: '/student-portfolio/:username',
-    component: StudentPortfolio2024,
-    exact: true
-  },
   {
     path: '/peer-portfolio/:username',
     component: PeerPortfolio2024,
@@ -251,10 +190,20 @@ export const authRoutesWithProps = [
     component: Pathways,
     props: { category: 'my-training' }
   },
+  { path: '/archived-portfolio', component: EditPortfolioNew, exact: true },
+  { path: '/hs4-journal/', component: LtsJournal, props: { category: 'hs4' } },
+  { path: '/hs3-journal/', component: LtsJournal, props: { category: 'hs3' } },
+  { path: '/hs2-journal/', component: LtsJournal, props: { category: 'hs2' } },
+  { path: '/hs1-journal/', component: LtsJournal, props: { category: 'hs1' } },
   {
-    path: '/my-training',
-    component: MyTraining,
-    props: { category: 'my-training' }
+    path: '/my-spark/generate-page/:id',
+    component: MySparkGeneratePage,
+    exact: true
+  },
+  {
+    path: '/my-spark/generate-page/response',
+    component: MySparkGeneratePage,
+    exact: true
   },
   {
     path: '/my-mentorship/',
@@ -267,14 +216,14 @@ export const authRoutesWithProps = [
     props: { category: 'market-ready' }
   },
   {
-    path: '/students-journals/:studentId',
-    component: StudentJournals,
-    props: { category: 'my-training' }
-  },
-  {
     path: '/student-leadership/',
     component: LtsJournal,
     props: { category: 'student-leadership' }
+  },
+  {
+    path: '/lts-journal/',
+    component: LtsJournal,
+    props: { category: 'student-lts' }
   },
   {
     path: '/student-personal-finance/',
@@ -282,15 +231,65 @@ export const authRoutesWithProps = [
     props: { category: 'student-personal-finance' }
   },
   {
-    path: '/student-wellnes/',
+    path: '/wellness-journal/',
     component: LtsJournal,
     props: { category: 'student-wellnes' }
+  }
+]
+
+export const instructorRoutes = [
+  // authRoutes
+  { path: '/test-page', component: TestPage },
+  { path: '/my-immersion', component: MyImmersion, exact: true },
+  { path: '/my-immersion/:step', component: Steps },
+  { path: '/old-portfolio', component: EditPortfolioNew, exact: true },
+  { path: '/resources', component: Resources },
+  { path: '/my-students', component: MyStudents },
+  { path: '/iamr-certification-guide', component: IamrCertificationGuide },
+  { path: '/my-certification-guide', component: MyCertificationGuide },
+  { path: '/my-curriculum', component: MyCurriculum },
+  { path: '/PreviewMyStartupProfile/:id', component: Preview },
+  { path: '/account/:id', component: userProfile, exact: true },
+  { path: '/briefings', component: Briefings },
+  { path: '/student-iamr/:studentId/:id?/:type?', component: StudentIAMR },
+  { path: '/my-evaluation', component: MyEvaluation },
+  { path: '/my-inbox', component: MyInbox },
+  { path: '/edit-journals2', component: JournalsManagement2, exact: true },
+  { path: '/edit-journals', component: JournalsManagement, exact: true },
+  { path: '/my-notes/:id?', component: MyNotes },
+  { path: '/my-performance-data/:id?', component: MyPerformanceData },
+  {
+    path: '/edit-journals2/:type/:journalId',
+    component: JournalsManagement2,
+    exact: true
   },
   {
-    path: '/student-lts/',
-    component: LtsJournal,
-    props: { category: 'student-lts' }
+    path: '/iamr-certification-system/:certificationType?/:id?/:type?',
+    component: IamrCertificationSystem
   },
+  {
+    path: '/iamr-certification-system',
+    component: IamrCertificationSystem,
+    exact: true
+  },
+
+  // authRoutesWithProps
+  {
+    path: '/student-portfolio/:username',
+    component: StudentPortfolio2024,
+    exact: true
+  },
+  {
+    path: '/my-training',
+    component: MyTraining,
+    props: { category: 'my-training' }
+  },
+  {
+    path: '/students-journals/:studentId',
+    component: StudentJournals,
+    props: { category: 'my-training' }
+  },
+
   {
     path: '/new-hs1-journal/',
     component: TestJournal,
@@ -338,6 +337,35 @@ export const authRoutesWithProps = [
   }
 ]
 
+export const studentRoutes = [
+  // AuthRoutes
+  {
+    path: '/create-occupation/:occupationGroupId',
+    component: AddOccupationItemForm
+  },
+  { path: '/my-immersion', component: MyImmersion, exact: true },
+  { path: '/my-immersion/:step', component: Steps },
+  { path: '/iamr/:certificationType?/:id?/:type?', component: Iamr },
+  { path: '/my-notes/:id?', component: MyNotes, exact: true },
+  {
+    path: '/My-Market-Ready-Guide',
+    component: IamrCertificationGuide,
+    exact: true
+  },
+  {
+    path: '/edit-portfolio/recommendation/:id',
+    component: EditPortfolioNew,
+    exact: true
+  },
+
+  // AuthRoutesWithProps
+  {
+    path: '/my-course-in-entrepreneurship/journal',
+    component: LtsJournal,
+    props: { category: 'entrepreneurship' }
+  }
+]
+
 export const publicRoutes = [
   { path: '/verify-email', component: VerifyEmailByCode, exact: false },
   { path: '/lts-secure', component: SecurePage, exact: true },
@@ -376,3 +404,191 @@ export const redirects = [
   { from: '/ims-login', to: '/dashboard' },
   { from: '/', to: '/dashboard', exact: true }
 ]
+
+// export const authRoutes = [
+//   { path: '/test-page', component: TestPage },
+//   { path: '/dashboard', component: Dashboard, exact: true },
+//   { path: '/beyond-your-course', component: BeyondYourCourse, exact: true },
+//   { path: '/beyond-your-course/:id', component: BeyondYourCourse, exact: true },
+//   { path: '/my-immersion', component: MyImmersion, exact: true },
+//   { path: '/my-immersion/:step', component: Steps },
+//   { path: '/terms', component: Terms },
+//   { path: '/old-portfolio', component: EditPortfolioNew, exact: true },
+//   { path: '/my-portfolio', component: Portfolio2024, exact: true },
+//   { path: '/resources', component: Resources },
+//   { path: '/my-students', component: MyStudents },
+//   { path: '/iamr-certification-guide', component: IamrCertificationGuide },
+//   { path: '/my-certification-guide', component: MyCertificationGuide },
+//   { path: '/my-curriculum', component: MyCurriculum },
+//   { path: '/portfolio', component: Portfolio },
+//   { path: '/csv-upload', component: CSVUpload },
+//   { path: '/savedMedia', component: SavedMedia },
+//   { path: '/story-in-motion', component: StoryInMotion },
+//   { path: '/UserProject/:uid', component: UserPortfolioProj },
+//   { path: '/PreviewMyStartupProfile/:id', component: Preview },
+//   { path: '/:page/videos', component: AllVideos },
+//   { path: '/spotlight', component: Spotlight, exact: true },
+//   { path: '/startup-livestream', component: LiveStream, exact: true },
+//   { path: '/account', component: Profile, exact: true },
+//   { path: '/account/:id', component: userProfile, exact: true },
+//   { path: '/profile-preview', component: ProfilePreview, exact: true },
+//   { path: '/my-journal/:month/:id', component: MyJournals, exact: true },
+//   { path: '/my-account', component: Profile, exact: true },
+//   { path: '/verify', component: VerifyEmail },
+//   { path: '/logout', component: Logout },
+//   { path: '/briefings', component: Briefings },
+//   { path: '/iamr', component: Iamr },
+//   { path: '/student-iamr/:studentId/:id?/:type?', component: StudentIAMR },
+//   { path: '/my-evaluation', component: MyEvaluation },
+//   { path: '/my-inbox', component: MyInbox },
+//   { path: '/my-spark/archive', component: MySparkArchivePage, exact: true },
+//   { path: '/my-spark/widgets', component: MySpark, exact: true },
+//   { path: '/my-spark/widgets/:widgetName', component: MySparkWidgetDetails },
+//   { path: '/edit-journals2', component: JournalsManagement2, exact: true },
+//   { path: '/edit-journals', component: JournalsManagement, exact: true },
+//   { path: '/my-notes/:id?', component: MyNotes },
+//   { path: '/sample-note', component: SampleNote },
+//   { path: '/:page/video/:id', component: BeyondYourCourseVideo },
+//   { path: '/my-classroom', component: MyClassroom, exact: true },
+//   { path: '/my-classroom/request/:id', component: MyClassroom },
+//   { path: '/my-performance-data/:id?', component: MyPerformanceData },
+//   {
+//     path: '/my-spark/generate-page/:id',
+//     component: MySparkGeneratePage,
+//     exact: true
+//   },
+//   {
+//     path: '/my-spark/generate-page/response',
+//     component: MySparkGeneratePage,
+//     exact: true
+//   },
+//   {
+//     path: '/edit-journals2/:type/:journalId',
+//     component: JournalsManagement2,
+//     exact: true
+//   },
+
+//   {
+//     path: '/iamr-certification-system/:certificationType?/:id?/:type?',
+//     component: IamrCertificationSystem
+//   },
+//   {
+//     path: '/iamr-certification-system',
+//     component: IamrCertificationSystem,
+//     exact: true
+//   },
+//   { path: '/archived-portfolio', component: EditPortfolioNew, exact: true }
+// ]
+
+// export const authRoutesWithProps = [
+//   { path: '/pathways', component: Pathways, exact: true, props: {} },
+//   { path: '/hs4-journal/', component: LtsJournal, props: { category: 'hs4' } },
+//   { path: '/hs3-journal/', component: LtsJournal, props: { category: 'hs3' } },
+//   { path: '/hs2-journal/', component: LtsJournal, props: { category: 'hs2' } },
+//   { path: '/hs1-journal/', component: LtsJournal, props: { category: 'hs1' } },
+//   {
+//     path: '/student-portfolio/:username',
+//     component: StudentPortfolio2024,
+//     exact: true
+//   },
+//   {
+//     path: '/peer-portfolio/:username',
+//     component: PeerPortfolio2024,
+//     exact: true
+//   },
+//   {
+//     path: '/public-portfolio/:username',
+//     component: PublicPortfolio2024,
+//     exact: true
+//   },
+//   {
+//     path: '/pathways/:occupationId?/:occupationJobId?',
+//     component: Pathways,
+//     props: { category: 'my-training' }
+//   },
+//   {
+//     path: '/my-training',
+//     component: MyTraining,
+//     props: { category: 'my-training' }
+//   },
+//   {
+//     path: '/my-mentorship/',
+//     component: LtsJournal,
+//     props: { category: 'my-mentorship' }
+//   },
+//   {
+//     path: '/market-ready/',
+//     component: LtsJournal,
+//     props: { category: 'market-ready' }
+//   },
+//   {
+//     path: '/students-journals/:studentId',
+//     component: StudentJournals,
+//     props: { category: 'my-training' }
+//   },
+//   {
+//     path: '/student-leadership/',
+//     component: LtsJournal,
+//     props: { category: 'student-leadership' }
+//   },
+//   {
+//     path: '/student-personal-finance/',
+//     component: LtsJournal,
+//     props: { category: 'student-personal-finance' }
+//   },
+//   {
+//     path: '/student-wellnes/',
+//     component: LtsJournal,
+//     props: { category: 'student-wellnes' }
+//   },
+//   {
+//     path: '/student-lts/',
+//     component: LtsJournal,
+//     props: { category: 'student-lts' }
+//   },
+//   {
+//     path: '/new-hs1-journal/',
+//     component: TestJournal,
+//     props: { category: 'hs1' }
+//   },
+//   {
+//     path: '/new-hs2-journal/',
+//     component: TestJournal,
+//     props: { category: 'hs2' }
+//   },
+//   {
+//     path: '/new-hs3-journal/',
+//     component: TestJournal,
+//     props: { category: 'hs3' }
+//   },
+//   {
+//     path: '/new-hs4-journal/',
+//     component: TestJournal,
+//     props: { category: 'hs4' }
+//   },
+//   {
+//     path: '/new-hs1-journal/:type/',
+//     component: TestJournal,
+//     props: { category: 'new-hs1' }
+//   },
+//   {
+//     path: '/new-hs2-journal/:type/',
+//     component: TestJournal,
+//     props: { category: 'new-hs2' }
+//   },
+//   {
+//     path: '/new-hs3journal/:type/',
+//     component: TestJournal,
+//     props: { category: 'new-hs3' }
+//   },
+//   {
+//     path: '/new-hs4-journal/:type/',
+//     component: TestJournal,
+//     props: { category: 'new-hs4' }
+//   },
+//   {
+//     path: '/financial-literacy/',
+//     component: TestJournal,
+//     props: { category: 'financial-literacy' }
+//   }
+// ]

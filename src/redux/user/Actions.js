@@ -11,127 +11,20 @@ import {
   USER_EDIT_ERROR,
   NEED_RESET,
   UPDATE_USER_TNC,
-  SESSION_START_TIME,
-  SESSION_END_TIME,
-  USER_ACTIVITY,
   SET_LOGIN_LOADING,
   USER_CHANGE_PROFESSION
 } from './Types'
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
-import { toast } from 'react-toastify'
-import IntlMessages from '../../utils/IntlMessages'
+
 import {
   createUserToken,
   fetchAdminAccess,
   fetchUserData,
+  fetchUserRole,
   handleUserRedirect,
   saveUserToken
 } from '../../utils/helpers'
-
-// export const userLogin = (old_password) => async (dispatch) => {
-//   try {
-//     dispatch({ type: LOADING })
-
-//     // Set the authorization header
-//     axiosInstance.defaults.headers.common[
-//       'Authorization'
-//     ] = `Bearer ${localStorage.getItem('access_token')}`
-//     axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
-
-//     // Get user data
-//     const user = await axiosInstance.get('/instructor/')
-
-//     // Check current user attributes
-//     const currentUser = await Auth.currentAuthenticatedUser({
-//       bypassCache: true
-//     }).then((res) => {
-//       console.log('res auth', res)
-//       return res
-//     })
-
-//     if (currentUser.attributes['custom:isVerified'] === 0) {
-//       window.location.href = '/verify-email'
-//       return
-//     }
-
-//     // Handle password reset
-//     if (user.data.payment_type === 'school' && !user.data.last_login) {
-//       dispatch({ type: LOGIN_LOADING, payload: false })
-//       dispatch({ type: NEED_RESET, payload: old_password })
-//       return 'passwordResetRequired'
-//     }
-
-//     // Check for inactive account
-//     if (user.data.is_active !== true) {
-//       window.location.href = '/verify-email'
-//       return
-//     }
-
-//     // Handle subscription-related redirections
-//     // if (
-//     //   (!user.data.stripe_subscription_id ||
-//     //     user.data.stripe_subscription_id === null) &&
-//     //   user.data.customer_id === null
-//     // ) {
-//     //   window.location = '/register'
-//     // } else if (
-//     //   user.data.customer_id !== null &&
-//     //   user.data.stripe_subscription_id === null
-//     // ) {
-//     //   if (user.data.payment_type === 'SUB') {
-//     //     window.location = '/subscription-ended'
-//     //   } else if (user.data.payment_type === 'TRIAL') {
-//     //     window.location = '/trial-ended'
-//     //   }
-//     // }
-
-//     // Get super admin status
-//     const accessResponse = await axiosInstance.get(
-//       '/studentsInstructorss/admin'
-//     )
-//     const isAdmin = accessResponse.data.allow
-
-//     const payloadData = {
-//       ...user.data,
-//       profileImage: user.data.profile_image,
-//       language: localStorage.getItem('currentLanguage')
-//     }
-
-//     const userData = {
-//       token: user.data.cognito_Id,
-//       user: payloadData,
-//       isAdmin
-//     }
-
-//     const user_token = {
-//       user: payloadData,
-//       token: localStorage.getItem('access_token'),
-//       isAdmin
-//     }
-
-//     // Save data to local storage
-//     localStorage.setItem('user', JSON.stringify(user_token))
-
-//     dispatch({
-//       type: USER_LOGIN_SUCCESS,
-//       payload: userData
-//     })
-
-//     dispatch({
-//       type: LOGIN_LOADING,
-//       payload: false
-//     })
-//     if (user) {
-//       return 'instructor'
-//     }
-//   } catch (err) {
-//     dispatch({
-//       type: USER_LOGIN_ERROR,
-//       payload: err?.message
-//     })
-//   }
-// }
 
 export const userLogin =
   (old_password, isImpersonation = false, impersonationMode = 'instructor') =>
@@ -146,12 +39,12 @@ export const userLogin =
 
       if (isImpersonation) {
         const user = await fetchUserData(impersonationMode)
-        const isAdmin =
-          impersonationMode === 'instructor' ? await fetchAdminAccess() : false
+        const userRole = await fetchUserRole()
+        const isAdmin = await fetchAdminAccess()
 
-        const userToken = createUserToken(user, isAdmin)
+        const userToken = createUserToken(user, isAdmin, userRole)
 
-        saveUserToken(userToken, impersonationMode)
+        saveUserToken(userToken, impersonationMode, userRole)
 
         dispatch({
           type: USER_LOGIN_SUCCESS,
@@ -163,6 +56,7 @@ export const userLogin =
       }
 
       const user = await fetchUserData('instructor')
+      const userRole = await fetchUserRole()
       const currentUser = await Auth.currentAuthenticatedUser({
         bypassCache: true
       })
@@ -180,9 +74,9 @@ export const userLogin =
       }
 
       const isAdmin = await fetchAdminAccess()
-      const userToken = createUserToken(user, isAdmin)
+      const userToken = createUserToken(user, isAdmin, userRole)
 
-      saveUserToken(userToken, false)
+      saveUserToken(userToken, false, userRole)
 
       dispatch({ type: USER_LOGIN_SUCCESS, payload: userToken })
       dispatch({ type: LOGIN_LOADING, payload: false })
@@ -196,10 +90,8 @@ export const userLogin =
   }
 
 export const userLogout = () => {
-  console.log('userLogouut')
   localStorage.clear()
 
-  console.log(localStorage, 'localstorage')
   return {
     type: USER_LOGOUT
   }
