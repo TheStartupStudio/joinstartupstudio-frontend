@@ -7,7 +7,7 @@ import {
   CustomSelectCellEditor,
   ProgramsFilter,
   TransferFilter,
-  StepFilter,
+  StepFilter
 } from './AgGridItems'
 import { SkillBox } from '../MySchool/ContentItems'
 import { useParams, useHistory } from 'react-router-dom'
@@ -126,8 +126,8 @@ const MyImmersion = ({
                 text={params?.value}
               />
             </div>
-          );
-        },
+          )
+        }
       },
 
       {

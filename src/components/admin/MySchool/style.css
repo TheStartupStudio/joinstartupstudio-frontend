@@ -336,7 +336,9 @@
   font-size: 12px;
 }
 
-.agGrid__actions .action-item {
+/* 
+.agGrid__actions */
+.action-item {
   display: flex;
   align-items: center;
   margin: 0 5px;

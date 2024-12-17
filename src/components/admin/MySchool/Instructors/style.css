@@ -72,3 +72,11 @@ opacity: 1; */
   color: #000000;
   opacity: 1;
 }
+
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+  left: 52% !important;
+}
+
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.students__cell) {
+  left: 41% !important;
+}
