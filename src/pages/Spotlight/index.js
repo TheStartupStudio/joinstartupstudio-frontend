@@ -33,6 +33,7 @@ function StartupLive() {
   const [width, setWidth] = useState(window.innerWidth)
   const [startIndex, setStartIndex] = useState(0)
   const [endIndex, setEndIndex] = useState(4)
+  const [isApplicationSaved, setIsApplicationSaved] = useState(false);
   const actualpage = window.location.href.includes('encouragement')
     ? 'encouragement'
     : window.location.href.includes('master-classes')
@@ -42,6 +43,11 @@ function StartupLive() {
   const resize = () => {
     setWidth(window.innerWidth)
   }
+  const handleSaveAndContinue = () => {
+    setIsApplicationSaved(true); 
+    closeSpotlightApplyModal();
+  };
+
   useEffect(() => {
     dispatch(setBackButton(true, 'my-immersion'))
 
@@ -108,7 +114,9 @@ function StartupLive() {
           // type={'applyNow'}
           // onOpen={() => openSpotlightApplyModal()}
         >
-          Apply for the Spotlight Competition
+          {isApplicationSaved
+            ? 'Edit My Spotlight Application'  
+            : 'Apply for the Spotlight Competition'} 
         </button>
       </div>
     )
@@ -889,20 +897,21 @@ function StartupLive() {
           title={'Pitch Evaluation'}
         />
       )}{' '}
-      {/* {spotlightApplyModal && (
+      {spotlightApplyModal && (
         <SpotlightApplyModal
           show={spotlightApplyModal}
           onHide={() => closeSpotlightApplyModal()}
           title={'Apply to Pitch'}
+          onSave={handleSaveAndContinue}
         />
-      )} */}
-      <SpotlightModal
+      )}
+      {/* <SpotlightModal
         show={spotlightApplyModal}
         onHide={() => closeSpotlightApplyModal()}
         // User={ticket.User}
         mode='add'
         // updateUserSolutionStatus={updateUserSolutionStatus}
-      />
+      /> */}
     </Container>
   )
 }

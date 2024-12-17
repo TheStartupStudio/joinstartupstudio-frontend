@@ -9,13 +9,18 @@ import { UploadFileInput } from '../../../pages/MyImmersion/ContentItems'
 import { useForm } from '../../../hooks/useForm'
 import { useValidation } from '../../../hooks/useValidation'
 import { ParentButtonApply } from './ParentButtonApply'
-import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
+import { faFileUpload, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import DeleteImmersionModal from '../../admin/MyImmersion/DeleteImmersionModal'
+import SubmitModal from './SpotlightSubmitModal'
 
 const SpotlightApplyModal = (props) => {
   const [loading, setLoading] = useState(false)
   const [agreed, setAgreed] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [showDeleteImmersionModal, setShowDeleteImmersionModal] = useState(false);
+  const[showSubmitModal, setShowSubmitModal] = useState(false);
+  const [showMainPitch, setShowMainPitch] = useState(true);
   const initialState = {
     who_is_pitching: '',
     product: '',
@@ -72,6 +77,7 @@ const SpotlightApplyModal = (props) => {
       return toast.error('Please fill in all the fields.')
     }
     submitHandler()
+    openSubmitModal();
   }
 
   const submitHandler = async () => {
@@ -119,8 +125,58 @@ const SpotlightApplyModal = (props) => {
       }
     })
   }
+  const handleDeleteUser = () => {
+    setShowDeleteImmersionModal(true); 
+    setShowMainPitch(false);
+    
+  };
+
+  const closeDeleteUserModal = () => {
+    setShowDeleteImmersionModal(false); 
+    setShowMainPitch(true);
+  };
+
+  const openSubmitModal = () => {
+    setShowSubmitModal(true);
+    setShowMainPitch(false);
+  };
+
+  const closeSubmitModal = () => {
+    setShowSubmitModal(false);
+    setShowMainPitch(true);
+  };
 
   return (
+    <>
+      {showDeleteImmersionModal && (
+        <DeleteImmersionModal
+          show={showDeleteImmersionModal}
+          onClose={() => setShowDeleteImmersionModal(false)}
+          onDelete={() => {
+            closeDeleteUserModal()
+          }}
+          title='Delete Application'
+          message='Are you sure you want to delete this application?'
+        />
+      )}
+
+
+      { showSubmitModal && (
+        <SubmitModal
+          show={showSubmitModal}
+          onClose={closeSubmitModal}
+          title='Submit Application'
+          message='Are you sure you want to submit this application?'
+          onSubmit={() => {
+            closeSubmitModal();
+            submitHandler();
+          }}
+        />
+      )
+}
+{
+  showMainPitch && (
+    
     <ModalWrapper
       title={props.title}
       show={props.show}
@@ -164,11 +220,11 @@ const SpotlightApplyModal = (props) => {
             name='outcome'
             placeholder={'What type of mentorship are you applying for?'}
           />
+        </div>
+        <div className='apply-inputs col-12 col-lg-6'>
           <div className='parent-form-spotlight'>
             <ParentButtonApply text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
           </div>
-        </div>
-        <div className='apply-inputs col-12 col-lg-6'>
           <UploadFileInput
             filename={formData.parentGuardianApprovalForm.name}
             placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
@@ -221,28 +277,45 @@ const SpotlightApplyModal = (props) => {
           </div>
         </div>
       </div>
-      <div className='w-100 pb-5' style={{ marginTop: '-45px' }}>
-        <div className='row float-end'>
-          <button
-            className='apply-save-button edit-account me-5'
-            disabled={loading}
-            onClick={() => {
-              setLoading(true)
-              verify()
-            }}
+
+      <div className='w-100 pb-5' style={{ marginTop: '15px', marginBottom: '-55px' }}>
+        <div className='d-flex justify-content-between align-items-center flex-wrap'>
+          <p
+            href='#'
+            className='m-0 cursor-pointer d-flex align-items-center'
+            onClick={handleDeleteUser}
           >
-            {loading ? (
-              <span
-                className='spinner-border spinner-border-sm'
-                style={{ fontSize: '13px', fontWeight: 600 }}
-              />
-            ) : (
-              // <IntlMessages id="general.save" />
-              <>SAVE</>
-            )}
-          </button>
+            <FontAwesomeIcon icon={faExclamationTriangle} className='me-2' />
+            Delete Application
+          </p>
+
+          <div className='d-flex align-items-center'>
+            <button onClick={props.onSave} className='save-and-continue-text me-3 d-flex align-items-center'>
+              <i className='bi bi-bookmark me-1'></i> Save and Continue Later
+            </button>
+            <button
+              className='apply-save-button edit-account '
+              disabled={loading}
+              onClick={() => {
+                
+                setLoading(true);
+                verify();
+                
+              }}
+            >
+              {loading ? (
+                <span
+                  className='spinner-border spinner-border-sm'
+                  style={{ fontSize: '13px', fontWeight: 600 }}
+                />
+              ) : (
+                <>SUBMIT Application</>
+              )}
+            </button>
+          </div>
         </div>
       </div>
+      
       {spotlightSimpleModal.type === 'termsAndConditions' && (
         <SpotlightSimpleModal
           boxShadow={true}
@@ -266,7 +339,8 @@ const SpotlightApplyModal = (props) => {
         />
       )}{' '}
     </ModalWrapper>
-  )
-}
+  )}
+</>
+)}
 
 export default SpotlightApplyModal

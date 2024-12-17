@@ -1,6 +1,7 @@
 import IntlMessages from '../../utils/IntlMessages'
 const TermsPage = () => {
   return (
+    
     <div className='row terms'>
       <div className='col-md-12 px-md-5 col-sm-11 mx-auto mt-5'>
         <div className='px-3 px-md-5 py-5'>
