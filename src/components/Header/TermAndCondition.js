@@ -37,16 +37,6 @@ const TermAndCondition = (props) => {
       className='TnC_modal_dialog'
     >
       <Modal.Body className='py-xs-2 py-sm-5 tnc_modal-body'>
-        {/* {loading ? (
-          <div className='d-flex justify-content-center align-items-center flex-column '>
-            <div className='lds-facebook'>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <p style={{ color: '#01c5d1' }}>Saving the choice, please wait!</p>
-          </div>
-        ) : ( */}
         <>
           <div className='mt-4 mb-4 px-lg-5 text-start'></div>
           <div className='text-center px-lg-5 d-flex flex-column align-items-center'>
