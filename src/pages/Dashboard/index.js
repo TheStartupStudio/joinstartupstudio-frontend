@@ -14,25 +14,18 @@ import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
 import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
 import useImpersonation from '../../hooks/useImpersonation'
+import RecentAchievements from './RecentAchievement'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
-
+  const userRole = localStorage.getItem('role')
   const dispatch = useDispatch()
   const periods = useSelector((state) => state.dashboard.periods)
   const events = useSelector((state) => state.dashboard.events)
-  // useEffect(() => {
-  //   if (loggedUser) {
-  //     const newTime = axiosInstance.get('/myPerformanceData/loginTime')
-  //     console.log(newTime)
-  //   }
-  // }, [])
 
   const user = {
     level: 'HS'
   }
-
-  const [newMessage, setNewMessage] = useState([])
   const [chatId, setChatId] = useState('')
 
   useImpersonation(originalToken)
@@ -59,8 +52,6 @@ function Dashboard() {
     (state) => state.dashboard.addTaskEventModal
   )
   const openTaskEventModal = () => {
-    // const formattedDate = getFormattedDate()
-    // setStartDate(formattedDate)
     dispatch(openTaskModal('create'))
   }
 
@@ -80,34 +71,21 @@ function Dashboard() {
               <IntlMessages id='dashboard.page_description' />
             </p>
 
-            <LevelWrapper user={user}>
-              <Profile
-                newMessage={newMessage}
+            {/* <LevelWrapper user={user}> */}
+            {/* <Profile
                 chatOpened={chatId}
                 clearChat={() => setChatId('')}
                 level={'MS'}
-              />
-              <Profile
-                newMessage={newMessage}
-                chatOpened={chatId}
-                clearChat={() => setChatId('')}
-                level={'HS'}
-              />
-            </LevelWrapper>
-
-            {/*<div className="my-4">*/}
-            {/*  <div className="row">*/}
-            {/*    <div className="col-md-12 col-lg-8">*/}
-            {/*      <h3*/}
-            {/*        className="page-title"*/}
-            {/*        style={{ textTransform: 'capitalize' }}*/}
-            {/*      >*/}
-            {/*        Recently Active Students*/}
-            {/*      </h3>*/}
-            {/*    </div>*/}
-            {/*    <ActiveStudents />*/}
-            {/*  </div>*/}
-            {/*</div>*/}
+                userRole={userRole}
+              /> */}
+            <Profile
+              chatOpened={chatId}
+              clearChat={() => setChatId('')}
+              level={'HS'}
+              userRole={userRole}
+            />
+            {/* </LevelWrapper> */}
+            {userRole === 'student' && <RecentAchievements />}
           </div>
         </div>
         <div className='col-12 col-xl-3 px-0'>
@@ -117,18 +95,19 @@ function Dashboard() {
               periods={periods}
               // startDate={getFormattedDate()}
             />
-
-            <button
-              style={{
-                backgroundColor: '#51c7df',
-                color: '#fff',
-                fontSize: 14
-              }}
-              onClick={openTaskEventModal}
-              className='px-4 py-2 border-0 color transform text-uppercase  w-100 my-1'
-            >
-              Create Task/Event
-            </button>
+            {userRole !== 'student' && (
+              <button
+                style={{
+                  backgroundColor: '#51c7df',
+                  color: '#fff',
+                  fontSize: 14
+                }}
+                onClick={openTaskEventModal}
+                className='px-4 py-2 border-0 color transform text-uppercase  w-100 my-1'
+              >
+                Create Task/Event
+              </button>
+            )}
             {taskEventModal && (
               <TaskEventModal
                 show={taskEventModal}
