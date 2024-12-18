@@ -12,7 +12,7 @@ const SkillContent = ({ skill }) => {
   return (
     <div style={{ borderRadius: '10px', overflow: 'hidden' }}>
       <ReactPlayer
-        className="video_inner media-lightbox__video-player "
+        className='video_inner media-lightbox__video-player '
         style={{ padding: '20px 5px 20px 20px' }}
         // url={skill?.video}
         url={
@@ -22,15 +22,15 @@ const SkillContent = ({ skill }) => {
         light={
           'https://d5tx03iw7t69i.cloudfront.net/Journal/MarketReadyGuide/MRG-Thumbnail.jpg'
         }
-        width="100%"
-        height="500px"
+        width='100%'
+        height='500px'
         config={{
           file: { attributes: { controlsList: 'nodownload' } }
         }}
         playing={true}
       />
-      <p className="page-content-title mb-2"></p>
-      <p className="page-content-text ps-3">
+      <p className='page-content-title mb-2'></p>
+      <p className='page-content-text ps-3'>
         Watch the video to learn how the Certification System works
       </p>
     </div>

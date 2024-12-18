@@ -71,7 +71,10 @@ const StudentSidebar = (props) => {
           title='MY MARKET-READY GUIDE'
           to='/My-Market-Ready-Guide'
         />
-        <DropdownItem title='Certification System' to='/iamr' />
+        <DropdownItem
+          title='Certification System'
+          to='/iamr-certification-system'
+        />
       </ParentDropdownItem>
       <SidebarItem
         onClick={() => {

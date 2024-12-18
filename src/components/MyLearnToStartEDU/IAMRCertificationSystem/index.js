@@ -8,10 +8,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import './index.css'
 import useOnClickOutside from 'use-onclickoutside'
-import { useParams } from 'react-router-dom/cjs/react-router-dom'
 import Certificate1 from '../../../assets/images/market-ready-1-badge.jpg'
 import Certificate2 from '../../../assets/images/market-ready-2-badge.png'
-import { Col, Row } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 import { Link, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import { useEffect } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
@@ -31,15 +30,15 @@ const CertificationCard = ({
   const [showModal, setShowModal] = useState(false)
 
   const handleClick = (event) => {
-    // if (
-    //   certificationType === 'student-certification-2' &&
-    //   certificationOneStatus !== 'approved'
-    // ) {
-    //   event.preventDefault()
-    //   setShowModal(true)
-    // } else {
-    onClick()
-    // }
+    if (
+      certificationType === 'student-certification-2' &&
+      certificationOneStatus !== 'approved'
+    ) {
+      event.preventDefault()
+      setShowModal(true)
+    } else {
+      onClick()
+    }
   }
   return (
     <>
@@ -74,6 +73,7 @@ const CertificationCard = ({
         certificationOneStatus !== 'approved' && (
           <CompletionModal
             show={showModal}
+            className='completion-modal'
             onHide={() => setShowModal(false)}
             title={'Market - Ready Certification 2 Skills'}
             description={
@@ -86,7 +86,9 @@ const CertificationCard = ({
 }
 
 const IAMRCertificationSystem = () => {
+  const dispatch = useDispatch()
   const { setSkills, setLoading } = useIamrContext()
+  const userRole = localStorage.getItem('role')
   const loggedUser = useSelector((state) => state.user.user.user)
   const [expanded, setExpanded] = useState(true)
   const accordionRef = useRef(null)
@@ -113,24 +115,17 @@ const IAMRCertificationSystem = () => {
     }
   ])
 
-  const marketReady = getCertificationType(certificationType)
-
-  const dispatch = useDispatch()
-
   useEffect(() => {
-    if (
-      urlSegments[2] === 'student-certification-1' ||
-      urlSegments[2] === 'student-certification-2'
-    ) {
-      dispatch(setBackButton(true, 'iamr-certification-system'))
-    } else {
+    if (userRole !== 'student') {
       dispatch(setBackButton(true, 'my-certification-guide'))
-    }
 
-    return () => {
-      dispatch(setBackButton(false, ''))
+      return () => {
+        dispatch(setBackButton(false, ''))
+      }
     }
-  }, [dispatch, urlSegments])
+  }, [dispatch, userRole])
+
+  const marketReady = getCertificationType(certificationType)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -139,7 +134,7 @@ const IAMRCertificationSystem = () => {
         const { data } = await axiosInstance.get(
           `/iamr/skills/user/${loggedUser.id}`
         )
-        const { skills, certificationOneStatus, certificationTwoStatus } = data
+        const { skills, certificationOneStatus } = data
         setSkills(skills)
         setCertificationOneStatus(certificationOneStatus)
       } catch (error) {

@@ -5,10 +5,11 @@ import AccordionItem from './accordionItem'
 import CertificationAccordionItem from './certificationAccordionItem'
 import './index.css'
 import axiosInstance from '../../../../utils/AxiosInstance'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setBackButton } from '../../../../redux/backButtonReducer'
 
 const GroupingString = ({ text }) => (
-  <div className="grouping-string pt-3">{text}</div>
+  <div className='grouping-string pt-3'>{text}</div>
 )
 
 const AccordionItems = ({
@@ -49,6 +50,7 @@ const AccordionItems = ({
 )
 
 const SkillsAccordion = ({ hideExpanded, certificationType }) => {
+  const dispatch = useDispatch()
   const { skills, loading, setSkills, setJournalEntries, setLoading } =
     useIamrContext()
   const activeKey = useState({ certificationType: null, id: null, type: null })
@@ -56,6 +58,14 @@ const SkillsAccordion = ({ hideExpanded, certificationType }) => {
   const [certificationStatus, setCertificationStatus] = useState()
   const loggedUser = useSelector((state) => state.user.user.user)
   const { id, type } = useParams()
+
+  useEffect(() => {
+    dispatch(setBackButton(true, 'iamr-certification-system'))
+
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch])
 
   useEffect(() => {
     setActiveKey({ certificationType, id: parseInt(id), type: type })
@@ -96,7 +106,7 @@ const SkillsAccordion = ({ hideExpanded, certificationType }) => {
   return (
     <>
       {!loading && (
-        <div className="accordion-data pb-2 pt-3" id="accordionExample0">
+        <div className='accordion-data pb-2 pt-3' id='accordionExample0'>
           <AccordionItems
             skills={skills.filter((skill) => skill.type === certificationType)}
             activeKey={activeKey}

@@ -168,7 +168,15 @@ export const mutualRoutes = [
   { path: '/verify', component: VerifyEmail },
   { path: '/my-account', component: Profile, exact: true },
   { path: '/logout', component: Logout },
-  { path: '/iamr', component: Iamr },
+  {
+    path: '/iamr-certification-system',
+    component: IamrCertificationSystem,
+    exact: true
+  },
+  {
+    path: '/iamr-certification-system/:certificationType?/:id?/:type?',
+    component: IamrCertificationSystem
+  },
   { path: '/terms', component: Terms },
   { path: '/my-spark/archive', component: MySparkArchivePage, exact: true },
   { path: '/my-spark/widgets', component: MySpark, exact: true },
@@ -263,15 +271,15 @@ export const instructorRoutes = [
     component: JournalsManagement2,
     exact: true
   },
-  {
-    path: '/iamr-certification-system/:certificationType?/:id?/:type?',
-    component: IamrCertificationSystem
-  },
-  {
-    path: '/iamr-certification-system',
-    component: IamrCertificationSystem,
-    exact: true
-  },
+  // {
+  //   path: '/iamr-certification-system/:certificationType?/:id?/:type?',
+  //   component: IamrCertificationSystem
+  // },
+  // {
+  //   path: '/iamr-certification-system',
+  //   component: IamrCertificationSystem,
+  //   exact: true
+  // },
 
   // authRoutesWithProps
   {
