@@ -18,16 +18,16 @@ const InstructorNotes = (props) => {
   const { id } = useParams()
 
   useEffect(() => {
-    const fetchUrl =
-      props.userRole === 'student'
-        ? `/instructor-notes/student/${user?.id}`
-        : `/instructor-notes/${id}`
+    const fetchUrl = id
+      ? `/instructor-notes/${id}`
+      : `/instructor-notes/student/${user?.id}`
 
     if (!fetchUrl) return
 
     const fetchNotes = async () => {
       try {
         const { data } = await axiosInstance.get(fetchUrl)
+        console.log('data', data)
         setReceivedNotes(data)
       } catch (error) {
         console.error('Error fetching notes:', error)

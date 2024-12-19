@@ -449,69 +449,73 @@ function MyAccount() {
                     </InputGroup>
                   </div>
                 </div>
-                <div className='d-flex mx-3 my-3'>
-                  {!instructorNotes && (
-                    <Col md='6' className='pe-2'>
-                      <div
-                        className={`my-account  ${
-                          instructorNotes
-                            ? 'intructor-notes__btn-active'
-                            : 'intructor-notes__btn'
-                        }  `}
-                        onClick={instructorNotesHandler}
-                      >
-                        <FontAwesomeIcon
-                          icon={faClipboardList}
-                          size='xl'
-                          style={
-                            instructorNotes
-                              ? { color: 'white', fontSize: '40px' }
-                              : { color: '#707070', fontSize: '40px' }
-                          }
-                        />
-                        <h4>INSTRUCTOR NOTES</h4>
-                      </div>
-                    </Col>
-                  )}
-                  {!platformBadges && (
-                    <Col
-                      md='6'
-                      className={`${!platformBadges ? 'ps-0' : 'ps-2'} `}
-                      ref={platformBadgesRef}
-                    >
-                      <div
-                        className={`my-account  ${
-                          platformBadges
-                            ? 'intructor-notes__btn-active'
-                            : 'intructor-notes__btn'
-                        }  `}
-                        onClick={platformBadgeHandler}
-                      >
-                        <FontAwesomeIcon
-                          icon={faCircleNotch}
-                          size='xl'
-                          style={
-                            platformBadges
-                              ? { color: 'white', fontSize: '40px' }
-                              : { color: '#707070', fontSize: '40px' }
-                          }
-                        />
-                        <h4>PLATFORM BADGES</h4>
-                      </div>
-                    </Col>
-                  )}
-                </div>
-                {instructorNotes && (
-                  <InstructorNotes
-                    instructorNotesHandler={instructorNotesHandler}
-                    userRole={userRole}
-                  />
-                )}
-                {platformBadges && (
-                  <PlatformBadges
-                    userRole={userRole}
-                    platformBadgeHandler={platformBadgeHandler}
-                  />
+                {userRole === 'student' && (
+                  <>
+                    <div className='d-flex mx-3 my-3'>
+                      {!instructorNotes && (
+                        <Col md='6' className='pe-2'>
+                          <div
+                            className={`my-account  ${
+                              instructorNotes
+                                ? 'intructor-notes__btn-active'
+                                : 'intructor-notes__btn'
+                            }  `}
+                            onClick={instructorNotesHandler}
+                          >
+                            <FontAwesomeIcon
+                              icon={faClipboardList}
+                              size='xl'
+                              style={
+                                instructorNotes
+                                  ? { color: 'white', fontSize: '40px' }
+                                  : { color: '#707070', fontSize: '40px' }
+                              }
+                            />
+                            <h4>INSTRUCTOR NOTES</h4>
+                          </div>
+                        </Col>
+                      )}
+                      {!platformBadges && (
+                        <Col
+                          md='6'
+                          className={`${!platformBadges ? 'ps-0' : 'ps-2'} `}
+                          ref={platformBadgesRef}
+                        >
+                          <div
+                            className={`my-account  ${
+                              platformBadges
+                                ? 'intructor-notes__btn-active'
+                                : 'intructor-notes__btn'
+                            }  `}
+                            onClick={platformBadgeHandler}
+                          >
+                            <FontAwesomeIcon
+                              icon={faCircleNotch}
+                              size='xl'
+                              style={
+                                platformBadges
+                                  ? { color: 'white', fontSize: '40px' }
+                                  : { color: '#707070', fontSize: '40px' }
+                              }
+                            />
+                            <h4>PLATFORM BADGES</h4>
+                          </div>
+                        </Col>
+                      )}
+                    </div>
+                    {instructorNotes && (
+                      <InstructorNotes
+                        instructorNotesHandler={instructorNotesHandler}
+                        userRole={userRole}
+                      />
+                    )}
+                    {platformBadges && (
+                      <PlatformBadges
+                        userRole={userRole}
+                        platformBadgeHandler={platformBadgeHandler}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             </div>
