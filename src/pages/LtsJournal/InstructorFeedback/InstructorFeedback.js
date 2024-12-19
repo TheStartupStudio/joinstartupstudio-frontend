@@ -8,7 +8,6 @@ import notificationSocket from '../../../utils/notificationSocket'
 import NotificationTypes from '../../../utils/notificationTypes'
 
 function InstructorFeedback(props) {
-  const userRole = localStorage.getItem('role')
   const { id: loggedUserId, name: loggedUserName } = useSelector(
     (state) => state.user.user.user
   )
@@ -99,7 +98,7 @@ function InstructorFeedback(props) {
 
   return (
     <JournalTextEditor
-      userRole={userRole}
+      userRole={props.userRole}
       userData={instructorFeedback?.userInstructorFeedback}
       value={instructorFeedback?.userInstructorFeedback?.content}
       handleSave={(data) => {
