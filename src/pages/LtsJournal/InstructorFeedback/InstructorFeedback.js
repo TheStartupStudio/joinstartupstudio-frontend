@@ -8,6 +8,7 @@ import notificationSocket from '../../../utils/notificationSocket'
 import NotificationTypes from '../../../utils/notificationTypes'
 
 function InstructorFeedback(props) {
+  const userRole = localStorage.getItem('role')
   const { id: loggedUserId, name: loggedUserName } = useSelector(
     (state) => state.user.user.user
   )
@@ -17,12 +18,7 @@ function InstructorFeedback(props) {
 
   const [userId, journalId] = ids.map((id) => +id)
 
-  const handleChangeInstructorFeedback = (data) => {
-    console.log('data', data)
-  }
-  // console.log('props', props)
   const handleSave = (updatedData) => {
-    console.log(updatedData, 'data')
     const isEdit = !!updatedData.id
     let newData = {
       ...updatedData,
@@ -33,12 +29,9 @@ function InstructorFeedback(props) {
       instructorId: loggedUserId
     }
 
-    console.log(newData, 'newData')
-
     delete newData.id
 
     const journalType = () => {
-      console.log(props, 'propsJournalType')
       let type = props.journalType.value
         ? props.journalType.value
         : props.journalType
@@ -46,7 +39,6 @@ function InstructorFeedback(props) {
         return 'student-personal-finance'
       }
 
-      console.log(type, 'type')
       return type
     }
 
@@ -107,9 +99,9 @@ function InstructorFeedback(props) {
 
   return (
     <JournalTextEditor
+      userRole={userRole}
       userData={instructorFeedback?.userInstructorFeedback}
       value={instructorFeedback?.userInstructorFeedback?.content}
-      handleChange={handleChangeInstructorFeedback}
       handleSave={(data) => {
         handleSave({
           ...data,

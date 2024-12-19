@@ -1,79 +1,79 @@
 .journal_text_editor-title {
-    padding: 12px 40px 12px 12px;
-    background-color: rgb(229, 229, 229);
-    margin-bottom: 0px;
-    font: normal normal 600 12px / 14px Montserrat;
-    letter-spacing: 0.68px;
-    color: #333d3d;
-    text-transform: uppercase;
+  padding: 12px 40px 12px 12px;
+  background-color: rgb(229, 229, 229);
+  margin-bottom: 0px;
+  font: normal normal 600 12px / 14px Montserrat;
+  letter-spacing: 0.68px;
+  color: #333d3d;
+  text-transform: uppercase;
 }
 
 .journal_text_editor-input_box {
-    position: relative;
+  position: relative;
 }
 
 .journal_text_editor-input {
-    min-height: 200px;
-    width: 100%;
-    background: #fff;
-    padding: 12px;
+  min-height: 200px;
+  width: 100%;
+  background: #fff;
+  padding: 12px;
 }
 .journal_text_editor-input_box .ql-toolbar.ql-snow button {
-    height: 22px;
-width:22px;
+  height: 22px;
+  width: 22px;
 }
 
 .journal_text_editor-input_box .ql-toolbar.ql-snow {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    background-color: #f6f7f7 !important;
-    /*border: 2px solid #d9dadb;*/
-    border: 0px !important;
-    border-bottom: 2px solid #ededee;
-    border-radius: 6px 6px 0 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background-color: #f6f7f7 !important;
+  /*border: 2px solid #d9dadb;*/
+  border: 0px !important;
+  border-bottom: 2px solid #ededee;
+  border-radius: 6px 6px 0 0;
 }
 
 .journal_text_editor-input_box .ql-container.ql-snow {
-
-    border: 0px !important;
-
+  border: 0px !important;
 }
-
 
 .journal_text_editor-save_button-box {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
 .journal_text_editor-footer-box {
-    width: 100%;
-    padding: 0 10px 0 10px;
-    background: #fff
+  width: 100%;
+  padding: 0 10px 0 10px;
+  background: #fff;
 }
 
 .journal_text_editor-footer {
-    background: #fff;
-    font: normal normal 600 10px / 10px Montserrat;
-    letter-spacing: 0.4px;
-    color: #bbbdbf;
-    text-transform: capitalize;
-    border-top: 2px solid rgb(229, 229, 229);
-    padding: 6px 0
+  background: #fff;
+  font: normal normal 600 10px / 10px Montserrat;
+  letter-spacing: 0.4px;
+  color: #bbbdbf;
+  text-transform: capitalize;
+  border-top: 2px solid rgb(229, 229, 229);
+  padding: 6px 0;
 }
 
 .journal_text_editor-footer strong {
-    font: normal normal 600 10px / 14px Montserrat;
-    letter-spacing: 0.4px;
-    color: #333d3d !important;
-    margin-right: 10px !important;
+  font: normal normal 600 10px / 14px Montserrat;
+  letter-spacing: 0.4px;
+  color: #333d3d !important;
+  margin-right: 10px !important;
 }
 
 .journal_text_editor-footer span {
-    margin-right: 10px !important;
+  margin-right: 10px !important;
 }
 
 .journal_text_editor-footer_pencil-icon {
-    font: normal normal 600 14px / 14px Montserrat;
-    letter-spacing: 0.4px;
-    color: #333d3d !important;
+  font: normal normal 600 14px / 14px Montserrat;
+  letter-spacing: 0.4px;
+  color: #333d3d !important;
+}
+.hide-ql-toolbar .quill .ql-toolbar {
+  display: none !important;
 }
