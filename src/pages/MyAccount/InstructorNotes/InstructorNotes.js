@@ -27,7 +27,6 @@ const InstructorNotes = (props) => {
     const fetchNotes = async () => {
       try {
         const { data } = await axiosInstance.get(fetchUrl)
-        console.log('data', data)
         setReceivedNotes(data)
       } catch (error) {
         console.error('Error fetching notes:', error)

@@ -15,15 +15,7 @@ const initialState = {
     submitted: false,
     userSolution: []
   },
-  spotlights: {
-    data: [],
-    totalItems: 0,
-    currentPage: 1,
-    limit: 5,
-    totalPages: 0,
-    submitted: false,
-    userSpotlight: {}
-  },
+  spotlights: [],
 
   error: null,
   message: ''
@@ -86,10 +78,7 @@ const myImmersionReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        spotlights: {
-          ...state.spotlights,
-          ...payload
-        },
+        spotlights: payload,
         error: null
       }
     case types.FETCH_ALL_SPOTLIGHTS_REJECTED:
@@ -228,6 +217,52 @@ const myImmersionReducer = (state = initialState, action) => {
           ...state.industryProblems,
           ...payload
         },
+        error: payload
+      }
+    case types.CREATE_INDUSTRY_PROBLEM_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.CREATE_INDUSTRY_PROBLEM_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        industryProblems: {
+          ...state.industryProblems,
+          data: state.industryProblems.data.map((problem) =>
+            problem.id === payload.industry_problem_ID &&
+            problem.company_id === payload.company_ID
+              ? { ...problem, submitted: true }
+              : problem
+          )
+        },
+        error: null
+      }
+    case types.CREATE_INDUSTRY_PROBLEM_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        error: payload
+      }
+    case types.CREATE_SPOTLIGHT_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.CREATE_SPOTLIGHT_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        spotlights: [...state.spotlights, action.payload],
+        error: null
+      }
+    case types.CREATE_SPOTLIGHT_REJECTED:
+      return {
+        ...state,
+        loading: false,
         error: payload
       }
     default:
