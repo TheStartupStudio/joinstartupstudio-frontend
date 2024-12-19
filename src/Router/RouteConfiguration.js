@@ -1,5 +1,5 @@
 import React from 'react'
-import userProfile from '../pages/Profile/userProfile'
+import userProfile from '../pages/MyAccount/userProfile'
 import CSVUpload from '../components/CSVUpload'
 import LtsJournal from '../pages/LtsJournal'
 import TestJournal from '../pages/LtsJournal/MyCurriculum/CurriculumJournal'
@@ -27,7 +27,7 @@ const Resources = React.lazy(() => import('../pages/Resources'))
 const Spotlight = React.lazy(() => import('../pages/Spotlight'))
 const MyStudents = React.lazy(() => import('../pages/MyStudents'))
 const MyJournals = React.lazy(() => import('../pages/MyJournals'))
-const Profile = React.lazy(() => import('../pages/Profile/index'))
+const MyAccount = React.lazy(() => import('../pages/MyAccount'))
 const MyImmersion = React.lazy(() => import('../pages/MyImmersion'))
 const Steps = React.lazy(() => import('../pages/MyImmersion/Steps'))
 const Resubscribe = React.lazy(() => import('../pages/Resubscribe'))
@@ -44,7 +44,7 @@ const AllVideos = React.lazy(() =>
   import('../pages/BeyondYourCourse/allVideos')
 )
 const ProfilePreview = React.lazy(() =>
-  import('../pages/Profile/profilePreview')
+  import('../pages/MyAccount/profilePreview')
 )
 const MyMarketReadyGuide = React.lazy(() =>
   import('../pages/MyMarketReadyGuide')
@@ -162,11 +162,11 @@ export const mutualRoutes = [
   { path: '/:page/videos', component: AllVideos },
   { path: '/spotlight', component: Spotlight, exact: true },
   { path: '/startup-livestream', component: LiveStream, exact: true },
-  { path: '/account', component: Profile, exact: true },
+  { path: '/account', component: MyAccount, exact: true },
   { path: '/profile-preview', component: ProfilePreview, exact: true },
   { path: '/my-journal/:month/:id', component: MyJournals, exact: true },
   { path: '/verify', component: VerifyEmail },
-  { path: '/my-account', component: Profile, exact: true },
+  { path: '/my-account', component: MyAccount, exact: true },
   { path: '/logout', component: Logout },
   {
     path: '/iamr-certification-system',

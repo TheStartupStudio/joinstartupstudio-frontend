@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
 import avator from '../../assets/images/profile-image.png'
 import NavbarProfileMenu from './NavbarProfileMenu'
 
@@ -10,9 +9,6 @@ const NavbarProfile = ({
   userRole
 }) => {
   const [showDropDown, setShowDropDown] = useState(false)
-  const userBasicInfo = useSelector(
-    (state) => state.portfolio.whoSection.userBasicInfo
-  )
 
   const closeDropDownMenu = () => {
     if (showDropDown) {
@@ -43,17 +39,7 @@ const NavbarProfile = ({
         >
           <div className='profile-dropdown me-1 ms-3 desktop-menu d-none d-xl-block'>
             <img
-              // src={
-              //   props.mainState?.user?.user?.user?.profileImage
-              //     ? props.mainState?.user?.user?.user?.profileImage
-              //     : avator
-              // }
-
-              src={
-                userBasicInfo?.data?.userImageUrl
-                  ? userBasicInfo?.data?.userImageUrl
-                  : avator
-              }
+              src={user?.profileImage ? user?.profileImage : avator}
               alt='Profile'
             />
           </div>

@@ -9,7 +9,6 @@ import {
   getPeriodsStart,
   openTaskModal
 } from '../../redux/dashboard/Actions'
-import LevelWrapper from '../../components/LevelWrapper'
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
 import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
@@ -22,10 +21,6 @@ function Dashboard() {
   const dispatch = useDispatch()
   const periods = useSelector((state) => state.dashboard.periods)
   const events = useSelector((state) => state.dashboard.events)
-
-  const user = {
-    level: 'HS'
-  }
   const [chatId, setChatId] = useState('')
 
   useImpersonation(originalToken)
@@ -70,21 +65,12 @@ function Dashboard() {
             <p className='page-description'>
               <IntlMessages id='dashboard.page_description' />
             </p>
-
-            {/* <LevelWrapper user={user}> */}
-            {/* <Profile
-                chatOpened={chatId}
-                clearChat={() => setChatId('')}
-                level={'MS'}
-                userRole={userRole}
-              /> */}
             <Profile
               chatOpened={chatId}
               clearChat={() => setChatId('')}
-              level={'HS'}
               userRole={userRole}
             />
-            {/* </LevelWrapper> */}
+
             {userRole === 'student' && <RecentAchievements />}
           </div>
         </div>

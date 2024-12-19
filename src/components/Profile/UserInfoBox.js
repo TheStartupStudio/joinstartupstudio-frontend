@@ -58,12 +58,7 @@ const UserInfoBox = ({ user }) => {
     >
       <div className='dashboard-profile'>
         <img
-          src={
-            userBasicInfo?.data?.userImageUrl
-              ? userBasicInfo?.data?.userImageUrl
-              : avator
-          }
-          // src={user?.profile_image ? user?.profile_image : avator}
+          src={user?.profile_image ? user?.profile_image : avator}
           alt='Profile'
           className='ms-2'
         />

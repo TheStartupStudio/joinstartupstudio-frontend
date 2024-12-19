@@ -2,27 +2,40 @@ import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import NewNoteModal from '../../Modals/InstructorNotes/NewNoteModal'
+import NewNoteModal from '../../../components/Modals/InstructorNotes/NewNoteModal'
 import InstructorNotesBox from './InstructorNotesBox'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../../utils/AxiosInstance'
 import notificationSocket from '../../../utils/notificationSocket'
 import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
 
 const InstructorNotes = (props) => {
+  const { user } = useSelector((state) => state.user.user)
   const [newNoteModal, setNewNoteModal] = useState(false)
   const [receivedNotes, setReceivedNotes] = useState([])
   const [sliceIndex, setSliceIndex] = useState(3)
   const { id } = useParams()
 
   useEffect(() => {
+    const fetchUrl =
+      props.userRole === 'student'
+        ? `/instructor-notes/student/${user?.id}`
+        : `/instructor-notes/${id}`
+
+    if (!fetchUrl) return
+
     const fetchNotes = async () => {
-      await axiosInstance
-        .get(`/instructor-notes/${id}`)
-        .then(({ data }) => setReceivedNotes(data.data))
+      try {
+        const { data } = await axiosInstance.get(fetchUrl)
+        setReceivedNotes(data)
+      } catch (error) {
+        console.error('Error fetching notes:', error)
+      }
     }
+
     fetchNotes()
-  }, [id])
+  }, [id, props.userRole, user?.id])
 
   const handleShowMore = () => {
     if (typeof sliceIndex === 'undefined') {
@@ -44,33 +57,35 @@ const InstructorNotes = (props) => {
   }
 
   return (
-    <div className="p-3">
-      <div className="border p-3 my-account">
+    <div className='p-3'>
+      <div className='border p-3 my-account'>
         <div
           className={`my-account col-md-6   ${'intructor-notes__btn-active'}  `}
           onClick={props.instructorNotesHandler}
         >
           <FontAwesomeIcon
             icon={faClipboardList}
-            size="xl"
+            size='xl'
             style={{ color: 'white', fontSize: '40px' }}
           />
           <h4>INSTRUCTOR NOTES</h4>
         </div>
 
-        <div className="my-account mt-4 mb-2 intructor-notes">
-          <h4 className="mt-2">INSTRUCTOR NOTES</h4>
+        <div className='my-account mt-4 mb-2 intructor-notes'>
+          <h4 className='mt-2'>INSTRUCTOR NOTES</h4>
           <InstructorNotesBox
+            setReceivedNotes={setReceivedNotes}
             receivedNotes={receivedNotes}
             sliceIndex={sliceIndex}
+            userRole={props.userRole}
           />
 
           {receivedNotes?.length > 3 && (
-            <div className="d-flex justify-content-end">
+            <div className='d-flex justify-content-end'>
               <a
                 href
                 style={{ fontSize: '16px', cursor: 'pointer' }}
-                className="text-info"
+                className='text-info'
                 onClick={handleShowMore}
               >
                 {typeof sliceIndex !== 'undefined' ? 'View all' : 'View less'}
@@ -79,18 +94,22 @@ const InstructorNotes = (props) => {
           )}
         </div>
 
-        <NewNoteModal
-          show={newNoteModal}
-          onSave={onSaveNote}
-          onHide={() => setNewNoteModal(false)}
-          close={() => setNewNoteModal(false)}
-        />
+        {props.userRole !== 'student' && (
+          <NewNoteModal
+            show={newNoteModal}
+            onSave={onSaveNote}
+            onHide={() => setNewNoteModal(false)}
+            close={() => setNewNoteModal(false)}
+          />
+        )}
       </div>
-      <div className="end-button me-3">
-        <button className="btn" onClick={() => setNewNoteModal(true)}>
-          Add a note
-        </button>
-      </div>
+      {props.userRole !== 'student' && (
+        <div className='end-button me-3'>
+          <button className='btn' onClick={() => setNewNoteModal(true)}>
+            Add a note
+          </button>
+        </div>
+      )}
     </div>
   )
 }
