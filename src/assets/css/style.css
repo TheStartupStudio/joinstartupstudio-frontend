@@ -5404,3 +5404,47 @@ _:future,
   width: 36px !important;
   height: 36px !important;
 }
+
+
+/* Safari 7.1+ */
+
+_::-webkit-full-page-media,
+_:future,
+:root .sfari-onlyyy {
+  margin-top: 10px !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .right-login-content {
+  margin-top: -20px !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .public-login-form {
+  padding-top: 45px !important;
+  height: 37vh !important;
+}
+
+
+_::-webkit-full-page-media,
+_:future,
+:root section#footer {
+  position: absolute;
+  bottom: 0 !important;
+
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root section#footer .row.mx-md-4.footer-copyright .col-sm-12.col-lg-4.text-align-left-footer {
+  margin-left: 80px;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .choose-login_container {
+  height: 100vh !important;
+
+}

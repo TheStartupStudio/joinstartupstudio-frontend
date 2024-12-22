@@ -153,8 +153,10 @@ const ProjectSection = ({
                 )
               )
             })}
-
-            <SectionActions actions={actions} />
+            <SectionActions
+              actions={actions}
+              className='projectsection-border'
+            />
           </PortfolioModalWrapper>
         )}
       </div>

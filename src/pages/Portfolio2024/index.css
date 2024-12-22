@@ -147,6 +147,10 @@
   padding: 0;
 }
 
+.projectsection-border {
+  border-radius: 0px 50px 0px 0px !important;
+}
+
 .custom-switch-container {
   display: flex;
   position: relative;
@@ -434,6 +438,13 @@
   height: 60px !important;
 }
 
+@media (max-width:1055px) {
+  .portfolio-modal-wrapper .modal-dialog {
+    margin: 30px !important;
+  }
+}
+
+
 @media (max-width:960px) {
   .immersion-portfolio-card {
     flex-direction: column !important;
@@ -640,7 +651,31 @@
   }
 }
 
+.modal-dialog {
 
+  /* position: fixed !important; */
+  /* Keeps the modal in place regardless of scrolling */
+  /* top: 20px !important; */
+  /* Ensures a consistent gap from the top */
+  /* left: 50% !important; */
+  /* Center horizontally */
+  /* transform: translateX(-50%) !important; */
+  /* Adjust for horizontal centering */
+  /* max-height: calc(100vh - 4px) !important; */
+  /* Ensures the modal doesn't exceed the viewport height */
+  /* overflow-y: auto !important; */
+  /* Adds scrolling if the content overflows */
+  /* width: 90% !important; */
+  /* Adjust width as needed for responsiveness */
+  /* max-width: 500px !important; */
+  /* Limit maximum width for better UX */
+
+
+  /* z-index: 1000; */
+  /* Ensures it appears above other elements */
+
+
+}
 
 .delete-failure-btn div {
   margin-top: -10px !important;
@@ -652,55 +687,81 @@
   }
 } */
 
-@media (max-width: 589px) {
-  .preview-modal-resp .modal-content {
+
+
+/* @media (max-width: 589px) {
+  .preview-modal-resp .modal-dialog {
     margin-top: 20% !important;
   }
-}
 
-@media (max-width: 518px) {
-  .preview-modal-resp .modal-content {
-    margin-top: 80% !important;
-  }
-}
-
-@media (max-width: 555px) {
-  .preview-modal-resp .modal-content {
-    margin-top: 70% !important;
-  }
-}
-
-@media (max-width: 435px) {
-  .preview-modal-resp .modal-content {
-    margin-top: 120% !important;
-  }
-}
-
-@media (max-width: 435px) {
-  .preview-modal-resp .modal-content {
-    margin-top: 120% !important;
-  }
-}
-
-@media (max-width: 371px) {
-  .preview-modal-resp .modal-content {
-    margin-top: 150% !important;
-  }
-}
+} */
 
 @media (max-width:576px) {
   .portfolio-modal-wrapper .modal-dialog {
-    height: 100%;
+    /* height: 100%;
     margin-top: 0px !important;
-    margin-inline: 30px !important;
+    margin-inline: 30px !important; */
+    /* position: fixed; */
+    /* Keeps the modal in place regardless of scrolling */
+    top: 20px;
+    /* Ensures a consistent gap from the top */
+    /* left: 50%; */
+    /* Center horizontally */
+    /* transform: translateX(-50%); */
+    /* Adjust for horizontal centering */
+    /* max-height: calc(100vh - 40px); */
+    /* Ensures the modal doesn't exceed the viewport height */
+    overflow-y: auto;
+    /* Adds scrolling if the content overflows */
+  }
+
+}
+
+/* 
+@media (max-width: 555px) {
+  .preview-modal-resp .modal-dialog {
+    margin-top: 20% !important;
+  }
+} */
+
+
+/* @media (max-width: 518px) {
+  .preview-modal-resp .modal-dialog {
+    margin-top: 30% !important;
+  }
+} */
+
+
+/* @media (max-width: 435px) {
+  .preview-modal-resp .modal-dialog {
+    margin-top: 40% !important;
+  }
+} */
+
+/* @media (max-width:400px) {
+  .preview-modal-resp .modal-dialog {
+    margin-top: 50% !important;
+  }
+} */
+
+@media (max-width:400px) {
+  /* .preview-modal-resp .modal-dialog {
+    margin-top: 50% !important;
+  } */
+
+  .skills-show-modal .modal-dialog {
+    margin-top: 120% !important;
   }
 }
 
-@media (max-width:1055px) {
-  .portfolio-modal-wrapper .modal-dialog {
-    margin: 30px !important;
-  }
+
+
+@media (max-width: 371px) {
+  /* .preview-modal-resp .modal-dialog {
+    margin-top: 50% !important;
+  } */
 }
+
 
 
 .portfolio-modal-wrapper .modal-content {
@@ -713,7 +774,7 @@
   min-width: 85%;
   /* height: 850px !important; */
   height: max-content !important;
-  margin-top: -10px !important;
+  margin-top: 5px !important;
   padding: 20px;
 
   display: flex !important;
@@ -1142,151 +1203,140 @@
   }
 }
 
-@media (max-width:400px) {
-  .preview-modal-resp .modal-content {
-    margin-top: 120% !important;
-  }
+.add-project-modal .portfolio-actions {
+  border-radius: 0px 50px 0px 28px !important;
 }
-
-
 
 @media (max-width: 576px) {
   .portfolio-modal-wrapper .modal-content {
     min-width: 88.5% !important;
-    margin-top: 50% !important;
+    /* margin-top: 50% !important; */
   }
 
+  /* 
   .add-project-modal .modal-content {
     margin-top: 490% !important;
-  }
+  } */
 
-  .edit-immersion-modal .modal-content {
+  /* .edit-immersion-modal .modal-content {
     margin-top: 130% !important;
-  }
-
+  } */
+  /* 
   .userbasicinfo-modal .modal-content {
     margin-top: 170% !important;
-  }
-
+  } */
+  /* 
   .failure-modal-resp .modal-content {
     margin-top: 140% !important;
-  }
+  } */
 }
 
-@media (max-width:400px) {
-  .preview-modal-resp .modal-content {
-    margin-top: 120% !important;
-  }
-
-  .skills-show-modal .modal-content {
-    margin-top: 120% !important;
-  }
-}
 
 @media (max-width: 466px) {
-  .failure-modal-resp .modal-content {
+  /* .failure-modal-resp .modal-content {
     margin-top: 190% !important;
-  }
+  } */
 }
 
 
 @media (max-width: 488px) {
-  .edit-immersion-modal .modal-content {
+  /* .edit-immersion-modal .modal-content {
     margin-top: 200% !important;
-  }
+  } */
 
 
-  .edit-education-modal .modal-content {
-    margin-top: 100% !important;
-  }
+  /* .edit-education-modal .modal-content {
+    margin-top: 50% !important;
+  } */
 
-  .userbasicinfo-modal .modal-content {
+  /* .userbasicinfo-modal .modal-content {
     margin-top: 200% !important;
-  }
+  } */
 }
 
-@media (max-width: 450px) {
+/* @media (max-width: 450px) {
   .edit-immersion-modal .modal-content {
     margin-top: 270% !important;
   }
-}
+} */
 
 @media (max-width: 383px) {
-  .edit-immersion-modal .modal-content {
+  /* .edit-immersion-modal .modal-content {
     margin-top: 320% !important;
-  }
+  } */
 
+  /* 
   .edit-education-modal .modal-content {
     margin-top: 120% !important;
-  }
-
+  } */
+  /* 
   .failure-modal-resp .modal-content {
     margin-top: 250% !important;
-  }
+  } */
 }
 
-
+/* 
 @media (max-width: 554px) {
   .add-project-modal .modal-content {
     margin-top: 550% !important;
   }
-}
+} */
 
 
-
+/* 
 @media (max-width: 520px) {
   .add-project-modal .modal-content {
     margin-top: 600% !important;
   }
-}
+} */
 
-@media (max-width: 498px) {
+/* @media (max-width: 498px) {
   .add-project-modal .modal-content {
     margin-top: 670% !important;
   }
-}
+} */
 
 
 
-@media (max-width: 450px) {
+/* @media (max-width: 450px) {
   .add-project-modal .modal-content {
     margin-top: 730% !important;
   }
-}
+} */
 
-@media (max-width: 436px) {
+/* @media (max-width: 436px) {
   .add-project-modal .modal-content {
     margin-top: 780% !important;
   }
-}
+} */
 
 @media (max-width: 420px) {
-  .add-project-modal .modal-content {
+  /* .add-project-modal .modal-content {
     margin-top: 860% !important;
-  }
+  } */
 
-  .userbasicinfo-modal .modal-content {
+  /* .userbasicinfo-modal .modal-content {
     margin-top: 250% !important;
-  }
+  } */
 }
 
-@media (max-width: 400px) {
+/* @media (max-width: 400px) {
   .add-project-modal .modal-content {
     margin-top: 920% !important;
   }
-}
+} */
 
-@media (max-width: 380px) {
+/* @media (max-width: 380px) {
   .add-project-modal .modal-content {
     margin-top: 1100% !important;
   }
-}
+} */
 
 
 @media (max-width: 376px) {
-  .userbasicinfo-modal .modal-content {
+  /* .userbasicinfo-modal .modal-content {
     margin-top: 280% !important;
-  }
+  } */
 }
 
 @media (max-width: 490px) and (min-width: 404px) {
