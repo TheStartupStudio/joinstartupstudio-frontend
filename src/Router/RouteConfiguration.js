@@ -169,12 +169,12 @@ export const mutualRoutes = [
   { path: '/my-account', component: MyAccount, exact: true },
   { path: '/logout', component: Logout },
   {
-    path: '/iamr-certification-system',
+    path: '/iamr',
     component: IamrCertificationSystem,
     exact: true
   },
   {
-    path: '/iamr-certification-system/:certificationType?/:id?/:type?',
+    path: '/iamr/:certificationType?/:id?/:type?',
     component: IamrCertificationSystem
   },
   { path: '/terms', component: Terms },
@@ -351,6 +351,7 @@ export const studentRoutes = [
     path: '/create-occupation/:occupationGroupId',
     component: AddOccupationItemForm
   },
+
   { path: '/my-immersion', component: MyImmersion, exact: true },
   { path: '/my-immersion/:step', component: Steps },
   { path: '/iamr/:certificationType?/:id?/:type?', component: Iamr },

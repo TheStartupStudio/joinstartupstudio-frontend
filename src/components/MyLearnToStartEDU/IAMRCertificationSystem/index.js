@@ -43,7 +43,7 @@ const CertificationCard = ({
   return (
     <>
       <Link
-        to={`iamr-certification-system/${certificationType}/${firstElId}/content`}
+        to={`iamr/${certificationType}/${firstElId}/content`}
         onClick={(e) => handleClick(e)}
         className='col-md-6 col-sm-12'
       >
@@ -210,8 +210,7 @@ const IAMRCertificationSystem = () => {
 
   return (
     <div className='iamr-container p-3'>
-      {urlSegments[1] === 'iamr-certification-system' &&
-      urlSegments.length <= 3 ? (
+      {urlSegments[1] === 'iamr' && urlSegments.length <= 3 ? (
         <div className='row'>
           <div className='col-12 col-xl-12 px-0'>
             <div className='iamr-page-padding iamr-page-header '>

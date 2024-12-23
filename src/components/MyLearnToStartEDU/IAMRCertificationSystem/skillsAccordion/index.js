@@ -60,7 +60,7 @@ const SkillsAccordion = ({ hideExpanded, certificationType }) => {
   const { id, type } = useParams()
 
   useEffect(() => {
-    dispatch(setBackButton(true, 'iamr-certification-system'))
+    dispatch(setBackButton(true, 'iamr'))
 
     return () => {
       dispatch(setBackButton(false, ''))

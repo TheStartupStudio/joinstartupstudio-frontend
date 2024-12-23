@@ -15,48 +15,52 @@ const NotificationListItem = ({
   description,
   url,
   onEdit,
-  onDelete
+  onDelete,
+  userRole
 }) => {
   return (
-    <Link className="notification-content-list-container" to={url}>
+    <Link className='notification-content-list-container' to={url}>
       <div className={'notification-content'}>
         <div className={'dot-container'}>
           <span className={'notification-content-list-item-dot'}></span>
         </div>
-        <span className="notification-content-title">
+        <span className='notification-content-title'>
           {title}:{'  '}
-          <span className="notification-content-description">
+          <span className='notification-content-description'>
             {description}
           </span>
         </span>
       </div>
 
-      <div style={{ display: 'flex', gap: 4 }}>
-        <div
-          className="edit-notification notification-button"
-          onClick={(e) => {
-            e.preventDefault()
-            onEdit()
-          }}
-          style={{ cursor: 'pointer' }}
-        >
-          <FontAwesomeIcon icon={faEdit} />
+      {userRole !== 'student' && (
+        <div style={{ display: 'flex', gap: 4 }}>
+          <div
+            className='edit-notification notification-button'
+            onClick={(e) => {
+              e.preventDefault()
+              onEdit()
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <FontAwesomeIcon icon={faEdit} />
+          </div>
+          <div
+            className='delete-notification notification-button'
+            onClick={(e) => {
+              e.preventDefault()
+              onDelete()
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <FontAwesomeIcon icon={faTrashAlt} />
+          </div>
         </div>
-        <div
-          className="delete-notification notification-button"
-          onClick={(e) => {
-            e.preventDefault()
-            onDelete()
-          }}
-          style={{ cursor: 'pointer' }}
-        >
-          <FontAwesomeIcon icon={faTrashAlt} />
-        </div>
-      </div>
+      )}
     </Link>
   )
 }
 const NotificationBox = (props) => {
+  const userRole = localStorage.getItem('role')
   const { user } = useSelector((state) => state.user.user)
   const [receivedNotifications, setReceivedNotifications] = useState([])
 
@@ -181,6 +185,7 @@ const NotificationBox = (props) => {
               return (
                 <NotificationListItem
                   key={index}
+                  userRole={userRole}
                   title={notification?.title}
                   description={notification?.description}
                   url={notification?.url}
