@@ -262,7 +262,7 @@ function Header() {
       />
       {isAdmin && (
         <StudentOfInstructors
-          allow={() => isAdmin}
+          allow={isAdmin}
           onShow={countStudentOfInstructor}
           onHide={() => setCountStudentOfInstructor(false)}
         />

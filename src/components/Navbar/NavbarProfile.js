@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import avator from '../../assets/images/profile-image.png'
 import NavbarProfileMenu from './NavbarProfileMenu'
 
@@ -9,14 +9,21 @@ const NavbarProfile = ({
   userRole
 }) => {
   const [showDropDown, setShowDropDown] = useState(false)
+  let timeoutId
 
   const closeDropDownMenu = () => {
     if (showDropDown) {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setShowDropDown(false)
       }, 200)
     }
   }
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeoutId) // Cleanup timeout on unmount
+    }
+  }, [])
 
   return (
     <li
