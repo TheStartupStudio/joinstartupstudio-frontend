@@ -14,6 +14,7 @@ import {
   SET_LOGIN_LOADING,
   USER_CHANGE_PROFESSION
 } from './Types'
+
 import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
 
@@ -38,13 +39,13 @@ export const userLogin =
       axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
 
       if (isImpersonation) {
-        const user = await fetchUserData(impersonationMode)
+        const user = await fetchUserData('instructor')
         const userRole = await fetchUserRole()
         const isAdmin = await fetchAdminAccess()
 
         const userToken = createUserToken(user, isAdmin, userRole)
 
-        saveUserToken(userToken, impersonationMode, userRole)
+        saveUserToken(userToken, false, userRole)
 
         dispatch({
           type: USER_LOGIN_SUCCESS,

@@ -21,15 +21,13 @@ function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user } = useSelector((state) => state.user)
 
-  console.log('user', user)
-
   const { authModal, handleLoginRedirect, handleCloseModal } =
     useTokenAuthentication(isAuthenticated)
 
   const roleRoutes = () => {
     if (!isAuthenticated) return publicRoutes
 
-    switch (user?.user.role_id) {
+    switch (user?.user?.role_id) {
       case 1:
         return [...mutualRoutes, ...studentRoutes]
       case 2:

@@ -42,16 +42,17 @@ const IamrBox = ({ userRole, user }) => {
   }, [user.id, userRole])
 
   useEffect(() => {
-    const questionAndFeedbacksHandler = async () => {
-      await axiosInstance.get('/instructor/iamr/tickets').then((res) => {
-        setStudentQuestions(res.data.student_questions)
-        setFeedbackRequests(res.data.certification_feedback_requests)
-      })
-    }
-    if (user.role_id !== 1) {
+    if (userRole !== 'student') {
+      const questionAndFeedbacksHandler = async () => {
+        await axiosInstance.get('/instructor/iamr/tickets').then((res) => {
+          setStudentQuestions(res.data.student_questions)
+          setFeedbackRequests(res.data.certification_feedback_requests)
+        })
+      }
+
       questionAndFeedbacksHandler()
     }
-  }, [user.role_id])
+  }, [userRole])
 
   return (
     <div className='notification-box col-lg-6 col-sm-12 mt-4 row position-relative iamr-box'>

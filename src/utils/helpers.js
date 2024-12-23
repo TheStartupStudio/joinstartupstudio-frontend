@@ -130,16 +130,10 @@ export const fetchAdminAccess = async () => {
 }
 
 export const saveUserToken = (userToken, isImpersonation, userRole) => {
-  const domain = getDomainFromClientName()
+  // const domain = getDomainFromClientName()
 
-  if (isImpersonation === 'student') {
-    document.cookie = `user=${JSON.stringify(
-      userToken
-    )}; path=/; domain=${domain}; SameSite=None; Secure`
-  } else {
-    localStorage.setItem('user', JSON.stringify(userToken))
-    localStorage.setItem('role', userRole)
-  }
+  localStorage.setItem('user', JSON.stringify(userToken))
+  localStorage.setItem('role', userRole)
 }
 
 export const getDomainFromClientName = () => {
