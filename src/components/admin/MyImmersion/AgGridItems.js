@@ -58,25 +58,30 @@ const ActiveInactiveFilter = ({ model, onModelChange, getValue }) => {
   const doesFilterPass = useCallback(
     (params) => {
       const { data } = params
-
       const value = data.status
 
-      if (model) {
-        return value === model
+      // If model is null, do not filter (allow all rows)
+      if (!model) {
+        return true
       }
-      return true
+
+      // Apply the filter based on the model value (active/inactive)
+      return value === model
     },
     [model]
   )
 
+  // This hook applies the filtering logic to the grid
   useGridFilter({ doesFilterPass })
 
+  // Handle checkbox changes for the 'active' and 'inactive' statuses
   const handleCheckboxChange = (newValue) => {
-    onModelChange(model === newValue ? null : newValue); // allows to unclick the checkbox
+    onModelChange(model === newValue ? null : newValue) // Toggle model or clear filter
   }
 
   return (
     <div style={{ padding: '4px' }}>
+      {/* Checkbox for 'Active' */}
       <div className='agGrid-customFilters__checkbox-container d-flex py-1'>
         <input
           type='checkbox'
@@ -86,14 +91,16 @@ const ActiveInactiveFilter = ({ model, onModelChange, getValue }) => {
         />
         Active
       </div>
+
+      {/* Checkbox for 'Inactive' */}
       <div className='agGrid-customFilters__checkbox-container d-flex py-1'>
         <input
           type='checkbox'
           className='agGrid-customFilters__checkbox'
-          onChange={() => handleCheckboxChange('unactive')}
-          checked={model === 'unactive'}
+          onChange={() => handleCheckboxChange('inactive')} // Note: corrected 'unactive' to 'inactive'
+          checked={model === 'inactive'}
         />
-        Unactive
+        Inactive
       </div>
     </div>
   )
@@ -102,33 +109,33 @@ const ActiveInactiveFilter = ({ model, onModelChange, getValue }) => {
 const StepFilter = ({ model, onModelChange }) => {
   const doesFilterPass = useCallback(
     (params) => {
-      const { data } = params;
-      const value = data.step; 
+      const { data } = params
+      const value = data.step
 
       if (model) {
-        return value === Number(model); 
+        return value === Number(model)
       }
-      return true; 
+      return true
     },
     [model]
-  );
+  )
 
-  useGridFilter({ doesFilterPass });
+  useGridFilter({ doesFilterPass })
 
   const handleCheckboxChange = (newValue) => {
-    onModelChange(model === newValue ? null : newValue); 
-  };
+    onModelChange(model === newValue ? null : newValue)
+  }
 
   return (
     <div style={{ padding: '4px' }}>
       {[1, 2, 3, 4].map((step) => (
         <div
           key={step}
-          className="agGrid-customFilters__checkbox-container d-flex py-1"
+          className='agGrid-customFilters__checkbox-container d-flex py-1'
         >
           <input
-            type="checkbox"
-            className="agGrid-customFilters__checkbox"
+            type='checkbox'
+            className='agGrid-customFilters__checkbox'
             onChange={() => handleCheckboxChange(step)}
             checked={model === step}
           />
@@ -136,8 +143,8 @@ const StepFilter = ({ model, onModelChange }) => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
 const LevelsFilter = ({ model, onModelChange, getValue }) => {
   const [selectedLevels, setSelectedLevels] = useState(model || [])

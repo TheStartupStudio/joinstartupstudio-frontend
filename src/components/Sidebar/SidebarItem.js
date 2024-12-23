@@ -1,7 +1,8 @@
+import { Link } from 'react-router-dom'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Col } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 const IconContainer = ({ srcImage }) => {
   return (
@@ -19,56 +20,42 @@ const SidebarItem = ({
   title,
   isDropdown
 }) => {
+  const [isDropdownOpen, setDropdownOpen] = useState(false)
+
+  const handleItemClick = (e) => {
+    if (isDropdown) {
+      e.preventDefault()
+      setDropdownOpen((prev) => !prev)
+    } else if (onClick) {
+      onClick()
+    }
+  }
+
   return (
-    <li>
-      {to ? (
-        <Link to={to} className={className}>
-          <div className='d-flex w-100' style={{ alignItems: 'center' }}>
-            <IconContainer srcImage={srcImage} />
-            <div className='flex-grow-1 ms-1'>
-              <span className={'text-uppercase'} style={{ fontSize: '13px' }}>
-                {title}
-              </span>
-            </div>
-            {isDropdown && (
-              <FontAwesomeIcon
-                icon={faAngleDown}
-                className='me-2 me-md-0'
-                style={{
-                  fontSize: '16px',
-                  color: '#333D3D'
-                }}
-              />
-            )}
+    <li className='sub-li'>
+      <Link onClick={handleItemClick} to={to || '#'} className={className}>
+        <div className='d-flex w-100' style={{ alignItems: 'center' }}>
+          <IconContainer srcImage={srcImage} />
+          <div className='flex-grow-1 ms-1'>
+            <span className={'text-uppercase'} style={{ fontSize: '13px' }}>
+              {title}
+            </span>
           </div>
-        </Link>
-      ) : (
-        <>
-          <a onClick={onClick ?? null} className={className}>
-            <div className='d-flex w-100' style={{ alignItems: 'center' }}>
-              <IconContainer srcImage={srcImage} />
-              <div className='flex-grow-1 ms-1'>
-                <span className={'text-uppercase'} style={{ fontSize: '13px' }}>
-                  {title}
-                </span>
-              </div>
-              {isDropdown && (
-                <FontAwesomeIcon
-                  icon={faAngleDown}
-                  className='me-2 me-md-0'
-                  style={{
-                    fontSize: '16px',
-                    color: '#333D3D'
-                  }}
-                />
-              )}
-            </div>
-          </a>
-        </>
-      )}
-      {isDropdown && (
+          {isDropdown && (
+            <FontAwesomeIcon
+              icon={faAngleDown}
+              className='me-2 me-md-0'
+              style={{
+                fontSize: '16px',
+                color: '#333D3D'
+              }}
+            />
+          )}
+        </div>
+      </Link>
+      {isDropdown && isDropdownOpen && (
         <div
-          className='accordion accordion-flush dropdown-accordion-border'
+          className='accordion accordion-flush'
           id='accordionFlushExample'
         ></div>
       )}

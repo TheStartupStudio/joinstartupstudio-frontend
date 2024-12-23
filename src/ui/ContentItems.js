@@ -11,6 +11,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
 
+import './styles.css'
+
 const TextInput = ({ title, name, value, handleChange, showError, error }) => (
   <div className='content-item__container'>
     <label className='content-item__title'>{title}:</label>
@@ -72,7 +74,7 @@ const QuillEditor = ({ title, name, value, onChange, showError, error }) => {
     <>
       <label className='content-item__title'>{title}:</label>
       <ReactQuill
-        theme='snow'
+        theme='custom'
         name='textQuillStandart'
         modules={quillModules}
         formats={quillFormats}
@@ -86,17 +88,12 @@ const QuillEditor = ({ title, name, value, onChange, showError, error }) => {
 const QuillEditorBox = ({ title, name, value, onChange, showError, error }) => {
   const quillModules = {
     toolbar: [
-      [{ header: '1' }, { header: '2' }],
-      [
-        'bold',
-        'italic',
-        'underline',
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { align: [] },
-        'blockquote',
-        'link'
-      ]
+      [{ header: '1' }, { header: '2' }, { header: [3, 4, 5, 6] }], // Header options
+      ['bold', 'italic', 'underline', 'strike'], // Text formatting
+      [{ list: 'ordered' }, { list: 'bullet' }], // Lists
+      [{ align: [] }], // Alignment options
+      ['blockquote', 'link', 'image'], // Other options
+      ['clean'] // Clear formatting
     ]
   }
 
@@ -127,7 +124,6 @@ const QuillEditorBox = ({ title, name, value, onChange, showError, error }) => {
     </div>
   )
 }
-
 
 const SelectInput = ({
   title,

@@ -129,7 +129,7 @@ const UserBasicInfo = (props) => {
   return (
     <>
       <>
-        <div className={'row'}>
+        <div className={'row userinfo-row'}>
           <div className={'col-md-6'}>
             <PortfolioSubmission
               videoUrl={state.videoUrl}

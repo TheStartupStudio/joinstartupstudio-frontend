@@ -823,6 +823,10 @@
   border-color: #7ac0e3;
 }
 
+.active {
+
+  color: #FE7F81;
+}
 .page-number:hover:not(.active):not(.disabled),
 .chevron:hover:not(.disabled) {
   background-color: #f0f0f0;

@@ -42,7 +42,7 @@
 .general-modal-wrapper .modal-content {
   border-radius: 0px !important;
   padding: 10px 35px !important;
-  background-color: #fbfbfb !important;
+  /* background-color: #fbfbfb !important; */
 }
 
 .spotlight-apply-modal .modal-content,
