@@ -1,32 +1,27 @@
 import React, { useState } from 'react'
-import { NavLink, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import CustomLoginInput from './ui/CustomLoginInput'
+import SUSLogo from '../../../assets/images/LTS-logo-horizontal.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import './index.css'
+import { loginLoading, userLogin } from '../../../redux'
+import { Col, NavLink, Row } from 'react-bootstrap'
+import { FormattedMessage } from 'react-intl'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import { FormattedMessage } from 'react-intl'
 import { Auth } from 'aws-amplify'
-import { userLogin, loginLoading } from '../../../redux'
 import IntlMessages from '../../../utils/IntlMessages'
 import { validateEmail } from '../../../utils/helpers'
-import './index.css'
 import FormWrapper from './ui/FormWrapper'
-import CustomLoginInput from './ui/CustomLoginInput'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faArrowLeft,
-  faArrowRight,
-  faBackward
-} from '@fortawesome/free-solid-svg-icons'
-import { Col, Row } from 'react-bootstrap'
 import { setLoginLoading } from '../../../redux/user/Actions'
 
-function Login() {
-  console.log('LOGIN')
-  const [user, setUser] = useState({})
+const ChooseLogin = () => {
+  const history = useHistory()
+  const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const isLoading = useSelector((state) => state.user.loginLoading)
-  const history = useHistory()
-
-  const dispatch = useDispatch()
+  const [user, setUser] = useState({})
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -34,10 +29,6 @@ function Login() {
       ...prevValues,
       [name]: value
     }))
-  }
-
-  const enterLogin = (e) => {
-    if (e.key.toLowerCase() == 'enter') handleSubmit(e)
   }
 
   const handleSubmit = async (event) => {
@@ -90,21 +81,37 @@ function Login() {
     // dispatch(loginLoading(false))
   }
 
+  const enterLogin = (e) => {
+    if (e.key.toLowerCase() == 'enter') handleSubmit(e)
+  }
+
   return (
     <div
-      className='container-fluid md-px-5 ps-md-5 login_container position-relative'
-      style={{ backgroundColor: '#e4e9f4' }}
+      className='container-fluid md-px-5 ps-md-5 choose-login_container'
+      style={{
+        backgroundColor: '#e4e9f4'
+      }}
     >
-      <a
-        href='/'
-        className=' d-flex align-items-center cursor-pointer'
-        style={{ position: 'absolute', top: '20px', left: '20px' }}
-      >
-        <FontAwesomeIcon icon={faArrowLeft} className='me-2' />
-        <h6 className='p-0 m-0'>Choose Login</h6>
-      </a>
-      <Row className='m-0 p-0 ps-md-5 center-content'>
-        <Col md='7' lg='6' xl='5' className='ms-sm-1'>
+      <Row className='m-0 p-0 align-items-center center-content justify-evenly'>
+        <Col md='6' sm='12'>
+          <div className='row'>
+            <div className='col-sm-12 col-md-9  mx-auto'>
+              <div className='login-left-content sfari-onlyyy'>
+                <div className='login-logo'>
+                  <img src={SUSLogo} alt='logo' />
+                </div>
+                <h1 className='login-title' style={{ color: '#000' }}>
+                  Welcome...
+                </h1>
+                <p style={{ color: '#000' }}>
+                  ...to Learn to Start Powered by The Startup Studio. Please
+                  choose from the options to the right to begin your login.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Col>
+        <Col md='5' sm='12' className='right-login-content'>
           <FormWrapper
             className='col-xl-8 col-lg-12 col-md-12 mx-auto px-4 pb-3 pt-4 login-form-resp '
             style={{ height: '60vh', minHeight: '60vh' }}
@@ -175,4 +182,4 @@ function Login() {
   )
 }
 
-export default Login
+export default ChooseLogin

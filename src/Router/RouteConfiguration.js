@@ -61,9 +61,6 @@ const CreateAccount = React.lazy(() =>
 const ForgotPassword = React.lazy(() =>
   import('../pages/Auth/Login/forgotPassword')
 )
-
-const ChooseLogin = React.lazy(() => import('../pages/Auth/Login/ChooseLogin'))
-
 const MyCurriculum = React.lazy(() =>
   import('../pages/MyLearnToStartEDU/MyCurriculum/MyCurriculum')
 )
@@ -384,8 +381,7 @@ export const publicRoutes = [
   { path: '/terms', component: Terms, exact: true },
   { path: '/my-immersion', component: MyImmersion, exact: false },
   { path: '/verify', component: VerifyEmail, exact: false },
-  { path: '/ims-login', component: Login, exact: false },
-  { path: '/', component: ChooseLogin, exact: true },
+  { path: '/', component: Login, exact: false },
   { path: '/logout', component: Logout, exact: false },
   { path: '/register', component: Register, exact: true },
   { path: '/trial-ended', component: Resubscribe, exact: true },
