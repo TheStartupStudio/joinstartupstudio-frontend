@@ -77,11 +77,11 @@
   border-radius: 50%;
 }
 
-input:checked+.slider {
+input:checked + .slider {
   background-color: #2196f3;
 }
 
-input:checked+.slider:before {
+input:checked + .slider:before {
   transform: translateX(18px);
 }
 
@@ -197,8 +197,6 @@ textarea {
   align-items: center;
   cursor: pointer;
 }
-
-
 
 .action-box-delete {
   background: #ffffff 0% 0% no-repeat padding-box;

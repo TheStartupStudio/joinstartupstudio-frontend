@@ -15,8 +15,8 @@ import StudentOfInstructors from '../GetInstructorStudents/index.js'
 import useOnClickOutside from 'use-onclickoutside'
 import { useHistory } from 'react-router-dom'
 import PeerSharingModal from '../Modals/PeerSharingModal'
-import MobileNavbar from './MobileNavbar.js'
-import Navbar from './Navbar.js'
+import Navbar from '../Navbar/index.js'
+import MobileNavbar from '../Navbar/MobileNavbar.js'
 
 function Header() {
   const dispatch = useDispatch()
@@ -260,11 +260,13 @@ function Header() {
           dispatch(updateTnC())
         }}
       />
-      <StudentOfInstructors
-        allow={() => isAdmin}
-        onShow={countStudentOfInstructor}
-        onHide={() => setCountStudentOfInstructor(false)}
-      />
+      {isAdmin && (
+        <StudentOfInstructors
+          allow={isAdmin}
+          onShow={countStudentOfInstructor}
+          onHide={() => setCountStudentOfInstructor(false)}
+        />
+      )}
       <PeerSharingModal
         show={peerSharingModal}
         onHide={closePeerSharingModal}

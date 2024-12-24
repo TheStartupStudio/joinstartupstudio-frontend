@@ -5,11 +5,9 @@ import Sidebar from '../../components/Sidebar/index'
 import Footer from '../../components/Footer/index'
 import { changeSidebarState } from '../../redux'
 import { ToastContainer } from 'react-toastify'
-import { useHistory } from 'react-router-dom'
 import LoadingAnimation from '../../ui/loadingAnimation'
-
-import ImpersonationNavbar from '../../components/Header/ImpersonationNavbar'
 import BloorBackgroundWrapper from '../../ui/BlurBackgroundWrapper'
+import ImpersonationNavbar from '../../components/Navbar/ImpersonationNavbar'
 
 function Layout({ children }) {
   const originalToken = localStorage.getItem('original_access_token')

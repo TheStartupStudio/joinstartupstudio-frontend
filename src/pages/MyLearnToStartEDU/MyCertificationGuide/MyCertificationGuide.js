@@ -21,7 +21,7 @@ const MyCertificationGuide = () => {
         title={'IAMR CERTIFICATION SYSTEM'}
         description={`This is the complete certification system
         that you can use as a model in your classroom.`}
-        to={'/iamr-certification-system'}
+        to={'/iamr'}
         itemNumberImage={
           <NumberImage image={numberTwo} width={80} height={80} />
         }

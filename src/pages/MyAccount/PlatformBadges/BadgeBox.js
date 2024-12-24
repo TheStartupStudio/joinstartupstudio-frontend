@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import BadgeItem from './BadgeItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -21,8 +21,9 @@ import {
 } from '../../../redux/platformBadges/actions'
 import { useParams } from 'react-router-dom'
 
-const BadgeBox = () => {
+const BadgeBox = ({ userRole }) => {
   const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.user.user)
   const { id } = useParams()
   const {
     masterclassVideos,
@@ -37,17 +38,18 @@ const BadgeBox = () => {
   } = useSelector((state) => state.platformBadges)
 
   useEffect(() => {
-    if (id) {
-      dispatch(fetchProfficientIamrSkills(id))
-      dispatch(fetchCompletedJournals(id))
-      dispatch(fetchPortfolioContent(id))
-      dispatch(fetchCompletedMentorMeetings(id))
-      dispatch(fetchCompletedFeedbacks(id))
-      dispatch(fetchCompletedSprints(id))
-      dispatch(fetchWatchedPodcastVideos(id))
-      dispatch(fetchWatchedMasterclassVideos(id))
+    const fetchId = userRole === 'student' ? user?.id : id
+    if (fetchId) {
+      dispatch(fetchProfficientIamrSkills(fetchId))
+      dispatch(fetchCompletedJournals(fetchId))
+      dispatch(fetchPortfolioContent(fetchId))
+      dispatch(fetchCompletedMentorMeetings(fetchId))
+      dispatch(fetchCompletedFeedbacks(fetchId))
+      dispatch(fetchCompletedSprints(fetchId))
+      dispatch(fetchWatchedPodcastVideos(fetchId))
+      dispatch(fetchWatchedMasterclassVideos(fetchId))
     }
-  }, [dispatch, id])
+  }, [dispatch, id, user.id, userRole])
 
   if (loading) {
     return (

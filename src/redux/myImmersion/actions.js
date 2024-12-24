@@ -36,14 +36,11 @@ export const fetchAllIndustryProblems = (
   }
 }
 
-export const fetchSpotlights = (currentPage, itemsPerPage) => {
+export const fetchSpotlights = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchSpotlightsPending())
-      const data = await myImmersionService.fetchSpotlights(
-        currentPage,
-        itemsPerPage
-      )
+      const data = await myImmersionService.fetchSpotlights()
       dispatch(fetchSpotlightsFulfilled(data))
     } catch (error) {
       dispatch(fetchSpotlightsRejected(error))

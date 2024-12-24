@@ -7,8 +7,6 @@ import {
   LevelsFilter,
   ProgramsFilter
 } from '../../../GridTable/AgGridItems'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChalkboardTeacher, faFile } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import { SkillBox } from '../ContentItems'
 import AddInstructorBulkModal from './AddInstructorBulkModal'
@@ -17,17 +15,13 @@ import GridTable from '../../../GridTable'
 import HeaderActions from '../HeaderActions'
 import { toast } from 'react-toastify'
 import useModalState from '../../../../hooks/useModalState'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import { userLogin } from '../../../../redux'
-import { USER_LOGIN_SUCCESS } from '../../../../redux/user/Types'
-import { setGeneralLoading } from '../../../../redux/general/Actions'
 import reportFileIcon from '../../../../assets/images/studentlist.png'
 import userReportIcon from '../../../../assets/images/userreport.png'
+import useProxyLogin from '../../../../hooks/useProxyLogin'
 
 const Instructors = ({ programs, levels, periods, universities }) => {
-  const dispatch = useDispatch()
-  const history = useHistory()
+  const { handleProxyLogin } = useProxyLogin()
+
   const [modals, setModalState] = useModalState()
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -71,49 +65,6 @@ const Instructors = ({ programs, levels, periods, universities }) => {
   useEffect(() => {
     fetchInstructors()
   }, [fetchInstructors])
-
-  const handleProxyLogin = useCallback(
-    async (impersonateId, studentCognitoId) => {
-      dispatch(setGeneralLoading(true))
-      try {
-        const response = await axiosInstance.post('/auth/proxy-auth', {
-          impersonateId
-        })
-
-        const { accessToken } = response.data
-        const originalToken = localStorage.getItem('access_token')
-
-        localStorage.setItem('original_access_token', originalToken)
-        localStorage.setItem('impersonateId', studentCognitoId)
-        localStorage.setItem('access_token', accessToken)
-
-        axiosInstance.defaults.headers.common[
-          'Authorization'
-        ] = `Bearer ${accessToken}`
-
-        const loginResult = await dispatch(userLogin(null, true))
-
-        if (loginResult === 'impersonated') {
-          window.location.href = '/dashboard'
-          setTimeout(() => {
-            dispatch(setGeneralLoading(false))
-          }, 1000)
-        } else {
-          console.error('Impersonation failed or returned an unexpected result')
-        }
-      } catch (error) {
-        if (error.response) {
-          toast.error(error.response.data.error || 'Something went wrong')
-        } else {
-          toast.error('Network error')
-        }
-        dispatch(setGeneralLoading(false))
-      } finally {
-        dispatch(setGeneralLoading(false))
-      }
-    },
-    [dispatch]
-  )
 
   const columnDefs = useMemo(
     () => [
@@ -205,7 +156,12 @@ const Instructors = ({ programs, levels, periods, universities }) => {
             className='d-flex align-items-center students__cell'
           >
             <p className='m-0 pe-2'> {params.data.students}</p>
-            <img src={reportFileIcon} width={20} height={24}></img>
+            <img
+              src={reportFileIcon}
+              width={20}
+              height={24}
+              alt='report file'
+            />
             {/* <FontAwesomeIcon icon={faFile} /> */}
           </a>
         )
@@ -217,7 +173,12 @@ const Instructors = ({ programs, levels, periods, universities }) => {
             href={`/my-school/reports/${params.data.id} `}
             className='reports_cell'
           >
-            <img src={userReportIcon} width={22} height={22}></img>
+            <img
+              src={userReportIcon}
+              width={22}
+              height={22}
+              alt='user report'
+            />
             {/* <FontAwesomeIcon icon={faChalkboardTeacher} /> */}
           </a>
         )

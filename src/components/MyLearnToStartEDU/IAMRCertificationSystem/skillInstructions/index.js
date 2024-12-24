@@ -52,26 +52,26 @@ const SkillInstructions = ({ skill, groupingStrings }) => {
 
   return (
     <>
-      <p className="skill-title">
-        <span className="text-info fw-bold">{skill.category} - </span>
-        <span className="fw-bold">{skill?.title} - </span> Instructions &
+      <p className='skill-title'>
+        <span className='text-info fw-bold'>{skill?.category} - </span>
+        <span className='fw-bold'>{skill?.title} - </span> Instructions &
         Questions
       </p>
       <ReactPlayer
-        className="video_inner media-lightbox__video-player my-3"
+        className='video_inner media-lightbox__video-player my-3'
         url={skill?.video}
         controls={true}
         light={
           'https://d5tx03iw7t69i.cloudfront.net/Journal/MarketReadyGuide/MRG-Thumbnail.jpg'
         }
         playing={true}
-        width="100%"
-        height="300px"
+        width='100%'
+        height='300px'
         config={{
           file: { attributes: { controlsList: 'nodownload' } }
         }}
       />
-      <p className="page-content-title my-2">GUIDANCE/INSTRUCTIONAL:</p>
+      <p className='page-content-title my-2'>GUIDANCE/INSTRUCTIONAL:</p>
       <Description skill={skill} />
       {loading ? (
         <LoadingAnimation show={loading} />
@@ -83,7 +83,7 @@ const SkillInstructions = ({ skill, groupingStrings }) => {
               expanded={expandedDropdown}
               toggle={setExpandedDropdown}
             >
-              <ul className="tickets-options">
+              <ul className='tickets-options'>
                 {tickets.map((ticket) => (
                   <DropdownOption
                     ticket={ticket}
@@ -104,11 +104,11 @@ const SkillInstructions = ({ skill, groupingStrings }) => {
             <TicketChat ticket={selectedTicket} updateTickets={updateTickets} />
           )}
           <button
-            className="ms-auto float-end mt-2 mb-4 new-ticket-btn rounded fw-bold"
+            className='ms-auto float-end mt-2 mb-4 new-ticket-btn rounded fw-bold'
             onClick={() => setShowNewTicketModal(true)}
           >
-            <FontAwesomeIcon icon={faPlus} className="me-2 align-middle" />
-            <span className="align-middle">Add question </span>
+            <FontAwesomeIcon icon={faPlus} className='me-2 align-middle' />
+            <span className='align-middle'>Add question </span>
           </button>
         </>
       )}

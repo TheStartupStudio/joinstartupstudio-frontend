@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { FaPencil } from 'react-icons/fa6'
 import LtsButton from '../LTSButtons/LTSButton'
 import './JournalTextEditor.css'
 import ReactQuill from 'react-quill'
 import moment from 'moment/moment'
 import { useSelector } from 'react-redux'
-import IntlMessages from '../../utils/IntlMessages'
-import { useRouteMatch } from 'react-router-dom'
 
 const JournalTextEditor = ({
   userData,
-  handleChange,
   handleSave,
   value,
   title,
   previewMode,
-  alignFooter
+  alignFooter,
+  userRole
 }) => {
   const currentLanguage = useSelector((state) => state.lang.locale)
   const [content, setContent] = useState('')
@@ -43,7 +40,11 @@ const JournalTextEditor = ({
     >
       <div className='journal_text_editor-title'>{title}</div>
       {previewMode !== 'on' && (
-        <div className='journal_text_editor-input_box journal-entries__entry-reflection-body'>
+        <div
+          className={`journal_text_editor-input_box journal-entries__entry-reflection-body ${
+            userRole === 'student' ? 'hide-ql-toolbar' : ''
+          }`}
+        >
           <ReactQuill
             theme='snow'
             name='textQuillStandart'
@@ -52,9 +53,11 @@ const JournalTextEditor = ({
             onChange={handleChangeContent}
             value={content}
           />
-          <div className='journal_text_editor-save_button-box'>
-            <LtsButton name='Save' onClick={onSaveContent} />
-          </div>
+          {userRole !== 'student' && (
+            <div className='journal_text_editor-save_button-box'>
+              <LtsButton name='Save' onClick={onSaveContent} />
+            </div>
+          )}
         </div>
       )}
       {previewMode === 'on' && (
@@ -80,13 +83,6 @@ const JournalTextEditor = ({
                 .format('MMM DD, YYYY HH:mm')}
             </span>
           )}
-          {/*<span>*/}
-          {/*<FaPencil*/}
-          {/*  className="journal_text_editor-footer_pencil-icon"*/}
-          {/*  width={16}*/}
-          {/*  height={16}*/}
-          {/*/>*/}
-          {/*</span>*/}
         </div>
       </div>
     </div>
