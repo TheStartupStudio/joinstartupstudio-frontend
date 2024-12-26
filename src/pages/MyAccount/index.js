@@ -340,9 +340,13 @@ function MyAccount() {
   return (
     <div className='container-fluid mx-auto'>
       <div className='row mx-auto'>
-        <div className='col-12 col-xl-9'>
+        <div className={`col-12 ${userRole !== 'student' ? 'col-xl-9' : ''}`}>
           <div className='col-12 col-md-12 px-0'>
-            <div className='account-page-padding page-border'>
+            <div
+              className={`account-page-padding ${
+                userRole !== 'student' ? 'page-border' : ''
+              }`}
+            >
               <div className='row pe-0'>
                 <div className='col-md-8 pe-0'>
                   <h3 className='page-title mb-0'>
@@ -398,9 +402,9 @@ function MyAccount() {
                       </div>
                     </div>
 
-                    <div className='mt-3'>
+                    <div className='mt-3 w-100 '>
                       {user.bio ? (
-                        <p>{user.bio}</p>
+                        <p className='w-100 text-wrap text-break'>{user.bio}</p>
                       ) : (
                         <>
                           <p>You can write your biography here.</p>
