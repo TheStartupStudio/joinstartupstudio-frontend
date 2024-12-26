@@ -119,6 +119,18 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
               onClick={handleDeleteUsers}
             />
           </Col>
+          <Col md='12' className='d-flex justify-content-center mt-3'>
+            <span
+              className='cancel-text'
+              style={{
+                cursor: 'pointer',
+                color: '#000',
+              }}
+              onClick={() => onHide()}
+            >
+              Cancel
+            </span>
+          </Col>
         </Modal.Body>
       </Modal>
     </>

@@ -77,6 +77,7 @@ const BriefingsArchive = () => {
           onHide={() => setAddBriefingModal(false)}
           mode='add'
           user={user}
+          hideDelete={true} 
         />
       )}
     </div>

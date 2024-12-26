@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch} from 'react-redux'
 import './style.css'
 import ImmersionImage from '../../assets/images/Immersion/immersionMainImg (2).png'
 import PrerequisiteModal from './Modals/PrerequisiteModal'
+import { changeSidebarState } from '../../redux'
 
 const buttonStyle = (top, left, width, height) => ({
   position: 'absolute',
@@ -53,6 +55,12 @@ const MyImmersion = () => {
     padding: '50px ',
     boxShadow: ' 3px 3px 3px  3px #00000029'
   }
+  const dispatch = useDispatch()
+
+    useEffect(() => {
+      dispatch(changeSidebarState(false))
+    })
+    
   return (
     <div className='container-fluid iamr-page'>
       <div className='pt-4 '>
