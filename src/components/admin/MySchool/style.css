@@ -844,5 +844,5 @@
 .ag-row-even.ag-row-no-focus.ag-row.ag-row-level-0.ag-row-position-absolute.ag-row-first.ag-row-not-inline-editing {
   overflow-x: scroll !important;
 
-  scrollbar-width: none !important;
+  scrollbar-width: thin !important;
 }

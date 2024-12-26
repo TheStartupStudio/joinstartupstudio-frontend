@@ -48,7 +48,7 @@ function Sidebar(props) {
       <div className='scroll sidebar-sticky sidebar-scroll'>
         <PerfectScrollbar
           option={{ suppressScrollX: true, wheelPropagation: false }}
-          className='sidebar-sticky'
+          className='sidebar-sticky sidebar-overflow-fix'
         >
           <div>
             <Header props={props} />

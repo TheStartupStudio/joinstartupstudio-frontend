@@ -5404,3 +5404,7 @@ _:future,
   width: 36px !important;
   height: 36px !important;
 }
+
+.sidebar-overflow-fix {
+  overflow: unset !important;
+}
