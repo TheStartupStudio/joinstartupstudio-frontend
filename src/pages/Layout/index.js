@@ -43,7 +43,7 @@ function Layout({ children }) {
         />
         <div
           id='content'
-          // className='w-100'
+        // className='w-100'
         >
           {sideBarState ? (
             <div className='backdrop' onClick={toggleBackdrop}></div>

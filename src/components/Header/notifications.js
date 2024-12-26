@@ -44,7 +44,10 @@ const Notifications = (props) => {
         props.setShowNotifications(false)
         setLoading(false)
         // history.push(`/${notification.url}`)
-        history.replace(notification.url)
+        const HashUrl = notification.url.includes('#inbox')
+          ? notification.url
+          : `${notification.url}#inbox`;
+        history.replace(HashUrl)
       })
   }
 

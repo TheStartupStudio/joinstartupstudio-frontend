@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import MyLearnToStartEDU from '../MyLearnToStartEDU'
 import MyLtsGridItem from '../MyLtsGridItem'
 import NumberImage from '../NumberImage'
@@ -7,8 +7,15 @@ import lts2 from '../../../assets/images/MyCurriculum/LTS2 Logo.png'
 import lts3 from '../../../assets/images/MyCurriculum/LTS3 Logo.png'
 import lts4 from '../../../assets/images/MyCurriculum/LTS4 Logo.png'
 import financialLiteracy from '../../../assets/images/MyCurriculum/LTS-FinancialLit Logo.png'
+import { changeSidebarState } from '../../../redux'
+import { useDispatch } from 'react-redux'
 
 const MyCurriculum = () => {
+    const dispatch = useDispatch()
+  
+    useEffect(() => {
+        dispatch(changeSidebarState(false))
+    })
   return (
     <MyLearnToStartEDU title={'My curriculum'}>
       <MyLtsGridItem

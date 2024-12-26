@@ -15,7 +15,7 @@ import { DateInput, TextEditor, TextInput } from '../../ui/ContentItems'
 import useIsFormEmpty from '../../hooks/useIsFormEmpty'
 import { QuillEditorBox } from '../../ui/ContentItems'
 
-const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
+const BriefingEditor = ({ briefing, user, mode, onHide, show, hideDelete }) => {
   const dispatch = useDispatch()
   const [formSubmitted, setFormSubmitted] = useState(false)
   const initialState = {
@@ -154,13 +154,14 @@ const BriefingEditor = ({ briefing, user, mode, onHide, show }) => {
             />
           </Col>
         </Row>
-
+        {!hideDelete && ( 
         <p
           className='d-flex justify-content-end cursor-pointer pt-3'
           onClick={() => deleteBriefing()}
         >
           DELETE NEWS BRIEFINGS
         </p>
+        )}
       </Modal.Body>
     </Modal>
   )

@@ -1,10 +1,11 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Accordion } from 'react-bootstrap'
 import '../index.css'
 import MenuList from './menuList'
 import MenuOption from './menuOption'
 import { useEffect, useState } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { changeSidebarState } from '../../../redux'
 
 function EvaluationMenu(props) {
   const { isAdmin } = useSelector((state) => state.user.user)
@@ -12,6 +13,12 @@ function EvaluationMenu(props) {
 
   const [journalCategory, setJournalCategory] = useState('')
   const [journalCategoryOptions, setJournalCategoryOptions] = useState([])
+   const dispatch = useDispatch()
+
+    useEffect(() => {
+           dispatch(changeSidebarState(false))
+      })
+    
 
   const getUserTitles = async (category) => {
     try {

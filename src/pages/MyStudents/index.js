@@ -1,10 +1,18 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import { useDispatch } from 'react-redux'
 import StudentsTable from '../../components/StudentsTable/studentsTable'
 import StudentData from '../../components/MyStudents/studentData'
 import './index.css'
 import { StudentCountProvider } from '../../components/MyStudents/studentCountContext'
+import { changeSidebarState } from '../../redux'
 
 const MyStudents = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+        dispatch(changeSidebarState(false))
+      })
+      
   return (
     <StudentCountProvider>
       <div id='main-body'>

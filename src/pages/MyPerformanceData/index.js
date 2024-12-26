@@ -1,11 +1,19 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Container, Row } from 'react-bootstrap'
 import './style.css'
 import SectionOne from './Sections/SectionOne'
 import SectionTwo from './Sections/SectionTwo'
 import SectionThree from './Sections/SectionThree'
+import { useDispatch } from 'react-redux'
+import { changeSidebarState } from '../../redux'
 
 function MyPerformanceData({ instructorId }) {
+    const dispatch = useDispatch()
+  
+    useEffect(() => {
+          dispatch(changeSidebarState(false))
+    })
+        
   return (
     <Container fluid>
       <Row className={'g-2'}>

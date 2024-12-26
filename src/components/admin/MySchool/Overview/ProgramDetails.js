@@ -148,16 +148,17 @@ const ProgramDetails = ({
                   )}
                 </>
               ) : schoolDetails.program_details?.programsImplemented?.length ? (
-                schoolDetails.program_details.programsImplemented.map(
-                  (program) => (
+                schoolDetails.program_details.programsImplemented.map((program, index) => {
+                  const colors = ['green', 'blue', 'red'];
+                  return (
                     <SkillBox
                       key={program.id}
                       className='d-flex align-items-center justify-content-center'
-                      color={'green'}
+                      color={colors[index % colors.length]}
                       text={program.name}
                     />
                   )
-                )
+                })
               ) : (
                 <SkillBox
                   className='d-flex align-items-center justify-content-center'

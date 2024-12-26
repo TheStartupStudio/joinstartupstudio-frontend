@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import Pathways from '../../components/Pathways'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchOccupationGroups } from '../../redux/pathways/actions'
+import { changeSidebarState } from '../../redux'
 
 const PathwaysContianer = () => {
   const dispatch = useDispatch()
@@ -11,6 +12,10 @@ const PathwaysContianer = () => {
     dispatch(fetchOccupationGroups())
   }, [dispatch])
 
+    useEffect(() => {
+      dispatch(changeSidebarState(false))
+    })
+    
   return (
     <div className="p-3">
       <div className="header py-3 ">
