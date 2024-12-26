@@ -5,12 +5,12 @@ import './index.css'
 export default function IamrSkills() {
   return (
     <IamrProvider>
-      <IamrCertificationSystem />
+      <IamrCertificationSystemContainer />
     </IamrProvider>
   )
 }
 
-function IamrCertificationSystem() {
+function IamrCertificationSystemContainer() {
   return (
     <div className='container-fluid iamr-page'>
       <div className='row'>

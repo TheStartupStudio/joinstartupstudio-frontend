@@ -1,34 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Col, Image, InputGroup, Form, Button } from 'react-bootstrap'
-import { toast } from 'react-toastify'
-import { Link, useParams } from 'react-router-dom'
+import { Col, Image, InputGroup, Form } from 'react-bootstrap'
+import { useParams } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
-import Auth from '@aws-amplify/auth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faEnvelope,
-  faPencilAlt,
   faClipboardList,
   faCircleNotch
 } from '@fortawesome/free-solid-svg-icons'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
-import { validateEmail, validateNumber } from '../../utils/helpers'
-import { userUpdate, userUpdateProfileImage } from '../../redux'
-import EditProfileModal from '../../components/Modals/Profile/editProfileModal'
-import EditPasswordModal from '../../components/Modals/Profile/editPasswordModal'
-import AddNewUserTag from '../../components/Modals/Profile/addNewUserTag'
-import ShareMyPortfolio from '../../components/Modals/Profile/shareMyPortfolio'
 import defaultImage from '../../assets/images/profile-image.png'
 import '../PortfolioNew/style/previewPortfolio.css'
-import { editSocialMedia } from '../../redux/user/Actions'
 import StudentData from '../../components/MyStudents/studentData'
 import { StudentCountProvider } from '../../components/MyStudents/studentCountContext'
-import { getStudentInfoById, getUserWithIdAction } from '../../redux/users/Actions'
+import {
+  getStudentInfoById,
+  getUserWithIdAction
+} from '../../redux/users/Actions'
 import './style.css'
-import InstructorNotes from '../../components/Profile/InstructorNotes/InstructorNotes'
-import PlatformBadges from '../../components/Profile/PlatformBadges'
+import InstructorNotes from './InstructorNotes/InstructorNotes'
+import PlatformBadges from './PlatformBadges'
 
 function Profile(props) {
   const dispatch = useDispatch()
@@ -36,26 +29,23 @@ function Profile(props) {
   const [socialMedia, setSocialMedia] = useState({})
   const [userTags, setUserTags] = useState({})
   const [allTags, setAllTags] = useState({})
-  const [showEditPasswordModal, setShowEditPasswordModal] = useState(false)
   const [instructorNotes, setInstructorNotes] = useState(false)
   const [platformBadges, setPlatformBadges] = useState(false)
   const [userPortfolio, setUserPortfolio] = useState({})
   const [userTagsId, setUserTagsId] = useState([])
   const [isContactable, setIsContactable] = useState(false)
-  const currentLanguage = useSelector((state) => state.lang.locale)
+
   const userProfile = useSelector((state) => state.users.selectedUser)
-  const studentInfo = useSelector(
-    (state) => state.users.studentInfo
-  )
+  const studentInfo = useSelector((state) => state.users.studentInfo)
   const { id } = useParams()
 
   useEffect(() => {
     dispatch(getUserWithIdAction(id))
   }, [id])
 
-  useEffect(()=>{
-    if(user.id) dispatch(getStudentInfoById(user.id))
-  },[user.id])
+  useEffect(() => {
+    if (user.id) dispatch(getStudentInfoById(user.id))
+  }, [user.id])
 
   useEffect(() => {
     getUserData()

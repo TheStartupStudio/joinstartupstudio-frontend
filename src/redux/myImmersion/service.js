@@ -30,11 +30,11 @@ const fetchIndustryProblems = async (
   }
 }
 
-const fetchSpotlights = async (currentPage, itemsPerPage) => {
+const fetchSpotlights = async () => {
   try {
-    const response = await axiosInstance.get(
-      `/immersion/spotlights?page=${currentPage}&limit=${itemsPerPage}`
-    )
+    const response = await axiosInstance.get(`/immersion/spotlights`)
+
+    console.log('response', response)
 
     if (response.status === 200) {
       return response.data

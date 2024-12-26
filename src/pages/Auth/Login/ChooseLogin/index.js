@@ -61,8 +61,6 @@ const ChooseLogin = () => {
     const client = getClientFromHostname()
     const loginUrl = constructLoginUrl(client, role)
 
-    console.log(loginUrl, 'loginUrl')
-
     if (loginUrl.startsWith('/')) {
       history.push(loginUrl)
     } else {
@@ -81,7 +79,7 @@ const ChooseLogin = () => {
         <Col md='6' sm='12'>
           <div className='row'>
             <div className='col-sm-12 col-md-9  mx-auto'>
-              <div className='login-left-content'>
+              <div className='login-left-content sfari-onlyyy'>
                 <div className='login-logo'>
                   <img src={SUSLogo} alt='logo' />
                 </div>
@@ -93,7 +91,7 @@ const ChooseLogin = () => {
                   choose from the options to the right to begin your login.
                 </p>
 
-                <div className='social-media-items'>
+                {/* <div className='social-media-items'>
                   <SociaMediaItem
                     href={`https://www.linkedin.com/company/learntostart/`}
                     icon={'linkedin'}
@@ -106,7 +104,7 @@ const ChooseLogin = () => {
                     href={`https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3`}
                     icon={'spotify'}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -116,7 +114,7 @@ const ChooseLogin = () => {
             <h2 className='text-center right-login-text'>
               <IntlMessages id='general.ready' />?
             </h2>
-            <h6 className='mb-4 right-login-text'>
+            <h6 className='mb-4 right-login-text '>
               Choose your role to log in
             </h6>
             <div className='button-type_container'>
@@ -147,6 +145,20 @@ const ChooseLogin = () => {
               </a>
             </p>
           </FormWrapper>
+          <div className='social-media-items'>
+            <SociaMediaItem
+              href={`https://www.linkedin.com/company/learntostart/`}
+              icon={'linkedin'}
+            />
+            <SociaMediaItem
+              href={`https://vimeo.com/showcase/9368302`}
+              icon={'vimeo'}
+            />
+            <SociaMediaItem
+              href={`https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3`}
+              icon={'spotify'}
+            />
+          </div>
         </Col>
       </Row>
     </div>

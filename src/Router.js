@@ -4,10 +4,11 @@ import { connect, useSelector } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import {
   adminRoutes,
-  authRoutes,
-  authRoutesWithProps,
+  instructorRoutes,
+  mutualRoutes,
   publicRoutes,
-  redirects
+  redirects,
+  studentRoutes
 } from './Router/RouteConfiguration'
 import NotFound from './pages/NotFound'
 import PublicLayout from './pages/Layout/publicLayout'
@@ -22,6 +23,21 @@ function Router(props) {
 
   const { authModal, handleLoginRedirect, handleCloseModal } =
     useTokenAuthentication(isAuthenticated)
+
+  const roleRoutes = () => {
+    if (!isAuthenticated) return publicRoutes
+
+    switch (user?.user?.role_id) {
+      case 1:
+        return [...mutualRoutes, ...studentRoutes]
+      case 2:
+        return [...mutualRoutes, ...instructorRoutes]
+      case 3:
+        return [...mutualRoutes, ...instructorRoutes, ...adminRoutes]
+      default:
+        return mutualRoutes
+    }
+  }
 
   return (
     <>
@@ -40,9 +56,7 @@ function Router(props) {
         {isAuthenticated ? (
           <Layout>
             <Switch>
-              {renderRoutes(authRoutes)}
-              {user?.isAdmin && renderRoutes(adminRoutes)}
-              {renderRoutes(authRoutesWithProps)}
+              {renderRoutes(roleRoutes())}
               {redirects.map((redirect) => (
                 <Redirect
                   key={redirect.from}

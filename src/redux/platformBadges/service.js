@@ -1,10 +1,8 @@
 import axiosInstance from '../../utils/AxiosInstance'
 
-const fetchWatchedMasterClassVidoes = async (studentID) => {
+const fetchWatchedMasterClassVidoes = async () => {
   try {
-    const response = await axiosInstance.get(
-      `/contents/video/interaction/${studentID}`
-    )
+    const response = await axiosInstance.get(`/contents/video/interaction`)
 
     if (response.status === 200) {
       return response.data
@@ -16,11 +14,9 @@ const fetchWatchedMasterClassVidoes = async (studentID) => {
   }
 }
 
-const fetchWatchedPodcastVidoes = async (studentID) => {
+const fetchWatchedPodcastVidoes = async () => {
   try {
-    const response = await axiosInstance.get(
-      `/podcast/video/interaction/${studentID}`
-    )
+    const response = await axiosInstance.get(`/podcast/video/interaction`)
 
     if (response.status === 200) {
       return response.data

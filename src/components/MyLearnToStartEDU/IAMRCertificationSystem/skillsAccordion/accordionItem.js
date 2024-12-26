@@ -17,9 +17,7 @@ const AccordionItem = ({
 
   const changeRoute = (type) => {
     setActiveKey({ certificationType, id: skill.id, type: type })
-    history.push(
-      `/iamr-certification-system/${certificationType}/${skill.id}/${type}`
-    )
+    history.push(`/iamr/${certificationType}/${skill.id}/${type}`)
     hideExpanded()
   }
 
@@ -51,14 +49,14 @@ const AccordionItem = ({
       )}`}
       key={skill.id}
     >
-      <h2 className="accordion-header bg-transparent" id="headingTwo">
+      <h2 className='accordion-header bg-transparent' id='headingTwo'>
         <button
-          className="accordion-button collapsed accordion_button accordion-button-inner accordion-button-text pb-0 pt-3"
-          type="button"
-          data-bs-toggle="collapse"
+          className='accordion-button collapsed accordion_button accordion-button-inner accordion-button-text pb-0 pt-3'
+          type='button'
+          data-bs-toggle='collapse'
           data-bs-target={isDisabled ? '#' : `#collapse_inner${skill.id}`}
-          aria-expanded="false"
-          aria-controls="collapseTwo"
+          aria-expanded='false'
+          aria-controls='collapseTwo'
           disabled={isDisabled}
           style={{ opacity: isDisabled ? '0.5' : '1' }}
           onClick={() => {
@@ -69,9 +67,7 @@ const AccordionItem = ({
               return
             }
             setActiveKey({ certificationType, id: skill.id, type: 'content' })
-            history.push(
-              `/iamr-certification-system/${certificationType}/${skill.id}/instructions`
-            )
+            history.push(`/iamr/${certificationType}/${skill.id}/instructions`)
           }}
         >
           <span
@@ -86,11 +82,11 @@ const AccordionItem = ({
         className={`accordion-collapse collapse ps-4 ${
           showCollapse ? 'show' : ''
         }`}
-        aria-labelledby="headingTwo"
-        data-bs-parent="#accordionExample0"
+        aria-labelledby='headingTwo'
+        data-bs-parent='#accordionExample0'
       >
-        <div className="accordion-body py-0">
-          <div className="mt-0 pt-0">
+        <div className='accordion-body py-0'>
+          <div className='mt-0 pt-0'>
             {/* <Link
               to={'#'}
               onClick={() => changeRoute('instructions')}

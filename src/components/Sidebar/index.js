@@ -11,10 +11,13 @@ import './index.css'
 
 import Header from './Header'
 import Footer from './Footer'
-import Body from './Body'
+import InstructorSidebar from './InstructorSidebar'
+import StudentSidebar from './StudentSidebar'
 
 function Sidebar(props) {
   const sideBarState = useSelector((state) => state.general.sidebarState)
+  const role = localStorage.getItem('role')
+  console.log('role', role)
 
   const location = useLocation()
 
@@ -52,7 +55,12 @@ function Sidebar(props) {
         >
           <div>
             <Header props={props} />
-            <Body props={props} />
+            {role === 'student' ? (
+              <StudentSidebar props={props} />
+            ) : (
+              <InstructorSidebar props={props} />
+            )}
+            {/* <InstructorSidebar props={props} /> */}
             {/* <Footer /> */}
           </div>
         </PerfectScrollbar>

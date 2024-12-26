@@ -1,30 +1,21 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { useState } from 'react'
-import axiosInstance from '../../../utils/AxiosInstance'
 import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import DeleteNoteModal from '../../Modals/DeleteNoteModal'
+import DeleteNoteModal from '../../../components/Modals/DeleteNoteModal'
 import InstructorNoteItem from './InstructorNoteItem'
 import notificationSocket from '../../../utils/notificationSocket'
-import NewNoteModal from '../../Modals/InstructorNotes/NewNoteModal'
+import NewNoteModal from '../../../components/Modals/InstructorNotes/NewNoteModal'
 
-const InstructorNotesBox = (props) => {
-  const [receivedNotes, setReceivedNotes] = useState([])
+const InstructorNotesBox = ({
+  receivedNotes,
+  setReceivedNotes,
+  sliceIndex,
+  userRole
+}) => {
   const [studentNote, setStudentNote] = useState([])
   const [deleteNoteModal, setDeleteNoteModal] = useState(false)
   const [editNoteModal, setEditNoteModal] = useState(false)
-  const { id } = useParams()
-
-  useEffect(() => {
-    const fetchNotes = async () => {
-      await axiosInstance
-        .get(`/instructor-notes/${id}`)
-        .then(({ data }) => setReceivedNotes(data.data))
-    }
-    fetchNotes()
-  }, [id])
 
   useEffect(() => {
     notificationSocket.on('newNote', ({ note }) => {
@@ -34,7 +25,7 @@ const InstructorNotesBox = (props) => {
     return () => {
       // notificationSocket.disconnect()
     }
-  }, [])
+  }, [setReceivedNotes])
 
   useEffect(() => {
     if (receivedNotes.length) {
@@ -49,7 +40,7 @@ const InstructorNotesBox = (props) => {
       })
       handleCloseNoteModal()
     }
-  }, [receivedNotes])
+  }, [receivedNotes, setReceivedNotes])
 
   useEffect(() => {
     if (receivedNotes.length) {
@@ -59,7 +50,7 @@ const InstructorNotesBox = (props) => {
       })
       handleCloseDeleteNoteModal()
     }
-  }, [receivedNotes])
+  }, [receivedNotes, setReceivedNotes])
 
   const handleOpenNoteModal = (index) => {
     const notificationFounded = [...receivedNotes].find((n, i) => i === index)
@@ -109,10 +100,7 @@ const InstructorNotesBox = (props) => {
         <div className={'notification-list'}>
           {receivedNotes && receivedNotes.length ? (
             receivedNotes
-              .slice(
-                0,
-                props.sliceIndex !== undefined ? props.sliceIndex : undefined
-              )
+              .slice(0, sliceIndex !== undefined ? sliceIndex : undefined)
               ?.map((note, index) => {
                 return (
                   <InstructorNoteItem
@@ -122,11 +110,12 @@ const InstructorNotesBox = (props) => {
                     createdAt={note?.createdAt}
                     onEdit={() => handleOpenNoteModal(index)}
                     onDelete={() => handleOpenDeleteNotificationModal(index)}
+                    userRole={userRole}
                   />
                 )
               })
           ) : (
-            <p className="no-notes-message">No notes found</p>
+            <p className='no-notes-message'>No notes found</p>
           )}
         </div>
       </div>
