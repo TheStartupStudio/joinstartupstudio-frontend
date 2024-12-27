@@ -293,7 +293,7 @@ function MyAccount() {
                       />
                     </div>
 
-                    <div className='mt-3 w-100 '>
+                    {/* <div className='mt-3 w-100 '>
                       {user.bio ? (
                         <p className='w-100 text-wrap text-break'>{user.bio}</p>
                       ) : (
@@ -301,7 +301,7 @@ function MyAccount() {
                           <p>You can write your biography here.</p>
                         </>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div
