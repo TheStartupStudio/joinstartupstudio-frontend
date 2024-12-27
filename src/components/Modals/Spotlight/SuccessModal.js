@@ -5,7 +5,7 @@ import './styles.css'
 
 const SuccessModal = ({ onClose }) => {
   return (
-    <div className='modal-container-submit'>
+    <div className='modal-container-delete'>
       <div className='immersion-modal-header'>
         <FontAwesomeIcon
           icon={faCheckCircle}

@@ -25,31 +25,29 @@ import StudentData from '../../components/MyStudents/studentData'
 import { StudentCountProvider } from '../../components/MyStudents/studentCountContext'
 import InstructorNotes from './InstructorNotes/InstructorNotes'
 import PlatformBadges from './PlatformBadges'
+import UserSocialMedia from '../Portfolio2024/Components/UserSocialMedia'
+import { getUserBasicInfo } from '../../redux/portfolio/Actions'
 
 function MyAccount() {
   const dispatch = useDispatch()
   const userRole = localStorage.getItem('role')
   const platformBadgesRef = useRef(null)
   const [user, setUser] = useState({})
-  const [socialMedia, setSocialMedia] = useState({})
   const [showEditProfileModal, setShowEditProfileModal] = useState(false)
-  const [userTags, setUserTags] = useState({})
-  const [allTags, setAllTags] = useState({})
   const [showEditPasswordModal, setShowEditPasswordModal] = useState(false)
   const [shareMyPortfolioModal, setShareMyPortfolioModal] = useState(false)
   const [tagsModal, setTagsModal] = useState(false)
   const [addUserTagsModal, setAddUserTagsModal] = useState(false)
-  const [cancelSubscriptionModal, setCancelSubscriptionModal] = useState(false)
   const [userPortfolio, setUserPortfolio] = useState({})
   const [editPage, setEditPage] = useState(false)
   const [loading, setLoading] = useState(false)
   const [userTagsId, setUserTagsId] = useState([])
   const [tagName, setTagName] = useState('')
-  const [isContactable, setIsContactable] = useState(false)
   const userId = useSelector((state) => state.user.user.user.id)
   const profileImage = useSelector((state) => state.user.profile_image)
   const [instructorNotes, setInstructorNotes] = useState(false)
   const [platformBadges, setPlatformBadges] = useState(false)
+  const { userBasicInfo } = useSelector((state) => state.portfolio.whoSection)
 
   const instructorNotesHandler = () => {
     setPlatformBadges(false)
@@ -61,40 +59,23 @@ function MyAccount() {
   }
 
   useEffect(() => {
+    dispatch(getUserBasicInfo())
+  }, [dispatch])
+
+  useEffect(() => {
     getUserData()
     getUserPortfolio()
     getUserTags()
   }, [])
 
-  useEffect(() => {
-    getAllTags()
-  }, [userTags])
-
   const getUserData = async () => {
     await axiosInstance
       .get(`/users/${userId}`)
       .then((response) => {
-        setIsContactable(response.data.is_contact)
         setUser(response.data)
-        setSocialMedia(response.data.social_links)
       })
       .catch((err) => err)
   }
-
-  // const updateIsContactable = async () => {
-  //   const oldContactableValue = isContactable
-  //   setIsContactable(!isContactable)
-
-  //   await axiosInstance
-  //     .put(`/users`, {
-  //       is_contact: !oldContactableValue
-  //     })
-  //     .then()
-  //     .catch((e) => {
-  //       setIsContactable(!oldContactableValue)
-  //       toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-  //     })
-  // }
 
   const getUserPortfolio = async () => {
     await axiosInstance
@@ -112,22 +93,6 @@ function MyAccount() {
         let ids = []
         response.data.map((item) => ids.push(item.id))
         setUserTagsId(ids)
-        setUserTags(response.data)
-      })
-      .catch((err) => err)
-  }
-
-  const getAllTags = async () => {
-    await axiosInstance
-      .get('/tags/')
-      .then((response) => {
-        // response.data.map((tag) => {
-        //   tag.formattedTitle = intl.formatMessage({
-        //     id: tag.name,
-        //     defaultMessage: tag.name
-        //   })
-        // })
-        setAllTags(response.data.filter((tag) => !userTagsId.includes(tag.id)))
       })
       .catch((err) => err)
   }
@@ -222,7 +187,6 @@ function MyAccount() {
       .put(`/users`, params)
       .then((res) => {
         setUser(res.data)
-        setSocialMedia(res.data.social_links)
         setLoading(false)
         const user = JSON.parse(localStorage.getItem('user'))
         const userProfession = user ? user.user?.profession : null
@@ -264,78 +228,12 @@ function MyAccount() {
       setShowEditPasswordModal(false)
     } else if (modal === 'shareModal') {
       setShareMyPortfolioModal(false)
-    } else if (modal === 'subscriptionModal') {
-      setCancelSubscriptionModal(false)
     } else if (modal === 'tags') {
       setTagsModal(false)
     } else if (modal === 'addUserTagModal') {
       setAddUserTagsModal(false)
     }
   }
-
-  // const cancelSubscription = async () => {
-  //   await axiosInstance
-  //     .post(`/users/cancel-subscription`, {
-  //       lang: currentLanguage
-  //     })
-  //     .then(async (res) => {
-  //       userLogout()
-  //     })
-  //     .catch((err) => err)
-  // }
-
-  // const userLogout = async () => {
-  //   await Auth.signOut({ global: true })
-  //     .then(() => {
-  //       window.location = '/logout'
-  //     })
-  //     .catch((err) => err)
-  // }
-
-  // const saveUserTags = async (data, toDelete) => {
-  //   setLoading(true)
-
-  //   if (toDelete.length > 0) {
-  //     await deleteUserTag(toDelete, data.length > 0 ? false : true)
-  //   }
-  //   if (data.length > 0) {
-  //     await addTag(data)
-  //     setLoading(false)
-  //   }
-  // }
-
-  // const addTag = async (data) => {
-  //   await axiosInstance
-  //     .post(`/tags/user`, data)
-  //     .then(async (res) => {
-  //       if (res.data.message === 'more') {
-  //         toast.error(<IntlMessages id='my_account.add_my_profile_tags_more' />)
-  //         await getUserTags()
-  //         setLoading(false)
-  //         closeModal('tags')
-  //       } else {
-  //         toast.success(<IntlMessages id='alerts.success_change' />)
-  //         await getUserTags()
-  //         setLoading(false)
-  //         closeModal('tags')
-  //       }
-  //     })
-  //     .catch((err) => setLoading(false))
-  // }
-
-  // const deleteUserTag = async (data, showToast) => {
-  //   await axiosInstance
-  //     .delete('/tags/', { data })
-  //     .then(async () => {
-  //       if (showToast == true) {
-  //         toast.success(<IntlMessages id='alerts.success_change' />)
-  //       }
-  //       await getUserTags()
-  //       setLoading(false)
-  //       closeModal('tags')
-  //     })
-  //     .catch((err) => setLoading(false))
-  // }
 
   return (
     <div className='container-fluid mx-auto'>
@@ -386,20 +284,13 @@ function MyAccount() {
                     <div className='col-10 col-md-6 col-lg-6 offset-lg-0'>
                       <h2 className='mt-4 mb-0'>{user.name}</h2>
                       <h5 className='mb-0'>
-                        {user.profession ? user.profession : ''}
+                        {userBasicInfo.data.userTitle
+                          ? userBasicInfo.data.userTitle
+                          : ''}
                       </h5>
-                    </div>
-                    <div className='col-2 col-md-2 col-lg-3 mt-md-0'>
-                      <div
-                        className='float-lg-end float-end mx-2 mx-md-0 mt-4 mt-sm-0 pt-md-4 px-md-4'
-                        onClick={() => openEditProfileModal('profile')}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <FontAwesomeIcon
-                          className='edit-pencil'
-                          icon={faPencilAlt}
-                        />
-                      </div>
+                      <UserSocialMedia
+                        data={userBasicInfo?.data?.socialMediaLinks}
+                      />
                     </div>
 
                     <div className='mt-3 w-100 '>
@@ -535,14 +426,14 @@ function MyAccount() {
           </div>
         )}
       </div>
-      <AddNewUserTag
+      {/* <AddNewUserTag
         show={addUserTagsModal}
         onHide={() => closeModal('addUserTagModal')}
         setTagName={setTagName}
         tagName={tagName}
         onSave={addTagtoUser}
         loading={loading}
-      />
+      /> */}
       <EditProfileModal
         show={showEditProfileModal}
         onHide={() => closeModal('profileModal')}

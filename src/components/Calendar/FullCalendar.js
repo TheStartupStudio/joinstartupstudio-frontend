@@ -434,10 +434,14 @@ const FullCalendarComponent = (props) => {
         show={calendarEventModal}
         onHide={closeCalendarModal}
         event={foundedEvent}
-        onEdit={(event) => dispatch(editEventStart(event))}
+        onEdit={
+          props.userRole !== 'student'
+            ? (event) => dispatch(editEventStart(event))
+            : () => {}
+        }
       />
 
-      {taskEventModal && (
+      {taskEventModal && props.userRole !== 'student' && (
         <TaskEventModal
           show={taskEventModal}
           onHide={closeTaskEventModal}

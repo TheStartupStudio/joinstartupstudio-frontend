@@ -79,6 +79,7 @@ function Dashboard() {
             <FullCalendarComponent
               events={events}
               periods={periods}
+              userRole={userRole}
               // startDate={getFormattedDate()}
             />
             {userRole !== 'student' && (

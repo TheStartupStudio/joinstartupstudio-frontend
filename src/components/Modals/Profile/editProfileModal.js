@@ -21,13 +21,7 @@ import { IsUserLevelAuthorized } from '../../../utils/helpers'
 import { readFile } from '../../../utils/canvasUtils'
 import ImageCropper from '../../ImageCropper'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  setImageCropperData,
-  setCroppedImage,
-  userUpdateProfileImage
-} from '../../../redux'
-import { getImageDataURL, readImageFile } from '../../../utils/helpers'
-import { userEdit } from '../../../redux/user/Actions'
+import { setImageCropperData, userUpdateProfileImage } from '../../../redux'
 import { toast } from 'react-toastify'
 
 const EditProfileModal = (props) => {
@@ -115,7 +109,7 @@ const EditProfileModal = (props) => {
           setLoading(false)
           setUserData((prevValues) => ({
             ...prevValues,
-            ['profile_image']: response.data.fileLocation
+            profile_image: response.data.fileLocation
           }))
           dispatch(userUpdateProfileImage(response.data.fileLocation))
           localStorage.setItem('profileImage', response.data.fileLocation)
@@ -138,8 +132,8 @@ const EditProfileModal = (props) => {
       keyboard={false}
       className='edit-modal general-modal-header edit-profile-modal'
     >
-      <Modal.Header className='pb-0 general-modal-header mx-4'>
-        {props.page == 'profile' ? (
+      <Modal.Header className='pb-0 general-modal-header mx-4 d-flex justify-content-between'>
+        {props.page === 'profile' ? (
           <h3 className='mt-4 mb-0 contact-bio'>
             <IntlMessages id='my_account.edit_my_bio' />
           </h3>
@@ -148,6 +142,7 @@ const EditProfileModal = (props) => {
             <IntlMessages id='my_account.edit_contact_information' />
           </h3>
         )}
+
         <button
           type='button'
           className='btn-close me-1 pt-3 mt-0 me-md-1 mb-md-2 ms-2 ms-md-0 mt-2 mt-md-0 my-auto'
@@ -159,12 +154,12 @@ const EditProfileModal = (props) => {
       </Modal.Header>
       <Modal.Body
         className={`${
-          props.page == 'profile'
+          props.page === 'profile'
             ? 'pe-4 pe-md-0 me-md-5 me-0 pe-md-auto px-4'
             : ''
         } `}
       >
-        {props.page == 'profile' ? (
+        {props.page === 'profile' ? (
           <div>
             <div className='row mt-2'>
               <div className=' col-lg-4 col-md-12 text-center'>
@@ -192,6 +187,7 @@ const EditProfileModal = (props) => {
                             : defaultImage
                         }
                         className='mt-2'
+                        alt='profile'
                       />
                     )}
                   </div>
@@ -433,7 +429,7 @@ const EditProfileModal = (props) => {
         <div className='row p-0 mb-3'>
           <div
             className={`${
-              props.page == 'profile' ? 'col-md-12' : 'col-md-10 mx-auto'
+              props.page === 'profile' ? 'col-md-12' : 'col-md-10 mx-auto'
             }`}
           >
             <button
