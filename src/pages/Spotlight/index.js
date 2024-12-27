@@ -22,8 +22,10 @@ function StartupLive() {
   })
 
   useEffect(() => {
-    dispatch(fetchSpotlights())
-  }, [dispatch])
+    if (userRole === 'student') {
+      dispatch(fetchSpotlights())
+    }
+  }, [dispatch, userRole])
 
   useEffect(() => {
     dispatch(setBackButton(true, 'my-immersion'))

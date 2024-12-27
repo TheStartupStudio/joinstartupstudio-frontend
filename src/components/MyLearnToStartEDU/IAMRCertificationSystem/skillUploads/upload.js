@@ -29,7 +29,6 @@ const Upload = ({
   const {
     handleChange,
     resetValues,
-    selectedTags,
     values,
     errors,
     showErrors,
