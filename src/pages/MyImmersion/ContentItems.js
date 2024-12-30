@@ -38,6 +38,8 @@ const UploadFileInput = ({
   name,
   onChange,
   mode,
+  error,
+  showError,
   video
 }) => {
   const handleClick = () => {
@@ -47,32 +49,38 @@ const UploadFileInput = ({
   }
 
   return (
-    <label
-      className='  immersion-upload-file-input border'
-      onClick={handleClick}
-    >
-      <span className='file-input-placeholder'>
-        {mode === 'edit'
-          ? fileNameExtracter(filename)
-          : filename
-          ? filename
-          : placeholder}
-      </span>
-      <FontAwesomeIcon
-        icon={!video ? faUpload : faLink}
-        className='file-input-icon'
-      />
-      {mode !== 'edit' && (
-        <input
-          type='file'
-          id='inputGroupFile'
-          name={name}
-          accept='application/pdf, video/*'
-          className='file-input'
-          onChange={onChange}
+    <>
+      <label
+        style={{ height: '40px', borderRadius: '10px' }}
+        className={`immersion-upload-file-input ${
+          showError && error ? 'error-border' : 'border'
+        }`}
+        onClick={handleClick}
+      >
+        <span className='file-input-placeholder'>
+          {mode === 'edit'
+            ? fileNameExtracter(filename)
+            : filename
+            ? filename
+            : placeholder}
+        </span>
+        <FontAwesomeIcon
+          icon={!video ? faUpload : faLink}
+          className='file-input-icon'
         />
-      )}
-    </label>
+        {mode !== 'edit' && (
+          <input
+            type='file'
+            id='inputGroupFile'
+            name={name}
+            accept='application/pdf, video/*'
+            className='file-input'
+            onChange={onChange}
+          />
+        )}
+      </label>
+      {showError && error && <small className='ps-1'>{error}</small>}
+    </>
   )
 }
 

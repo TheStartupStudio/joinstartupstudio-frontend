@@ -1,52 +1,54 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import './style.css'
 import { Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import {
+  createIndustryProblem,
   fetchUserProblemSolution,
   handleIndustryProblemStatus
 } from '../../../redux/myImmersion/actions'
 import LoadingAnimation from '../../../ui/loadingAnimation'
 import { useForm } from '../../../hooks/useForm'
+import { useValidation } from '../../../hooks/useValidation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faUpload,
-  faLink,
-  faArrowLeft,
-  faEnvelope
-} from '@fortawesome/free-solid-svg-icons'
-import {
-  ParentGuardianButton,
-  ProfileHolder,
-  SubmitButton,
-  TermsAndConditionsCheckbox,
-  Textarea,
-  UploadFileInput
-} from '../ContentItems'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { SubmitButton, Textarea, UploadFileInput } from '../ContentItems'
 import notificationTypes from '../../../utils/notificationTypes'
 import notificationSocket from '../../../utils/notificationSocket'
-import { FaEye, FaX } from 'react-icons/fa6'
 import mailIcon from '../../../assets/images/mail-icon.svg'
+import axiosInstance from '../../../utils/AxiosInstance'
 
 // import ParentButtonApply from '../../../components/Modals/Spotlight/ParentButtonApply.js'
 
 const SubmitIndustryProblemModal = (props) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.user.user)
-  const { loading, industryProblems } = useSelector(
-    (state) => state.myImmersion
-  )
+  const { industryProblems } = useSelector((state) => state.myImmersion)
+
+  const [loading, setLoading] = useState(false)
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  const loggedUser = useSelector((state) => state.user.user.user)
+
   const initialState = {
+    immersion_id: props.immersion.problemID,
+    industry_problem_ID: props.immersion.problemID,
+    company_ID: props.immersion.problemID,
+    company_name: props.immersion.companyName,
     solutionDescription: '',
-    status: '',
-    parentGuardianApprovalForm: '',
+    status: 'pending',
+    // parentGuardianApprovalForm: '',
     pitchDeck: '',
     pitchVideo: '',
-    termsAndConditions: false,
-    submissionDate: new Date()
+    termsAndConditions: true,
+    submissionDate: Date.now()
   }
+
+  const { formData, handleChange, handleChangeFile } = useForm(initialState)
+  const { errors, handleSubmit } = useValidation(formData, setFormSubmitted, [
+    'termsAndConditions'
+  ])
 
   useEffect(() => {
     if (props.mode === 'edit') {
@@ -56,35 +58,87 @@ const SubmitIndustryProblemModal = (props) => {
     }
   }, [dispatch, props.user_id, props.industry_solution_id, props.mode])
 
-  const { formData, handleChange, handleChangeFile } = useForm(
-    initialState,
-    industryProblems.userSolution,
-    props.mode,
-    loading
-  )
+  const submitHandler = (status, e) => {
+    if (props.userRole === 'student') {
+      e.preventDefault()
+      handleSubmit(async () => {
+        setLoading(true)
 
-  const submitHandler = (status) => {
-    const res = dispatch(
-      handleIndustryProblemStatus(industryProblems.userSolution?.id, status)
-    )
+        const data = new FormData()
+        data.append('company_name', formData.company_name)
+        data.append('immersion_id', formData.immersion_id)
+        data.append('industry_problem_ID', formData.industry_problem_ID)
+        data.append('company_ID', formData.company_ID)
+        data.append('solutionDescription', formData.solutionDescription)
+        data.append('status', formData.status)
+        data.append('submissionDate', formData.submissionDate)
 
-    if (res) {
-      toast.success('User solution status updated successfully!')
-      props.updateUserSolutionStatus(props.id, status)
-      props.onHide()
-      const type =
-        status === 'approved'
-          ? notificationTypes.INDUSTRY_PROBLEM_APPROVED.key
-          : notificationTypes.INDUSTRY_PROBLEM_DENIED.key
+        if (formData.pitchDeck instanceof File) {
+          data.append('documents', formData.pitchDeck)
+        }
 
-      notificationSocket?.emit('sendNotification', {
-        sender: user,
-        receivers: [{ id: props.user_id }],
-        type: type,
-        url: '/my-immersion/step-1'
+        if (formData.pitchVideo instanceof File) {
+          data.append('documents', formData.pitchVideo)
+        }
+
+        try {
+          const response = await axiosInstance.post('/upload/documents', data, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          })
+
+          const { fileLocations } = response.data
+
+          const updatedData = {
+            ...formData,
+            pitchDeck: fileLocations[0],
+            pitchVideo: fileLocations[1]
+          }
+
+          try {
+            await dispatch(createIndustryProblem(updatedData))
+            toast.success('Solution submitted successfully')
+            props.onHide()
+            if (loggedUser.Instructor) {
+              notificationSocket.emit('sendNotification', {
+                sender: loggedUser,
+                receivers: [loggedUser.Instructor.User],
+                type: notificationTypes.INDUSTRY_PROBLEM.key,
+                url: `/my-inbox#industry_problem_submissions`
+              })
+            }
+          } catch (error) {
+            toast.error(error.message || 'Failed to create industry problem')
+          } finally {
+            setLoading(false)
+          }
+        } catch (error) {
+          toast.error('Failed to submit solution')
+          setLoading(false)
+        }
       })
     } else {
-      toast.error('Failed to update user solution status.')
+      const res = dispatch(
+        handleIndustryProblemStatus(industryProblems.userSolution?.id, status)
+      )
+
+      if (res) {
+        toast.success('User solution status updated successfully!')
+        props.updateUserSolutionStatus(props.id, status)
+        props.onHide()
+        const type =
+          status === 'approved'
+            ? notificationTypes.INDUSTRY_PROBLEM_APPROVED.key
+            : notificationTypes.INDUSTRY_PROBLEM_DENIED.key
+
+        notificationSocket?.emit('sendNotification', {
+          sender: user,
+          receivers: [{ id: props.user_id }],
+          type: type,
+          url: '/my-immersion/step-1'
+        })
+      } else {
+        toast.error('Failed to update user solution status.')
+      }
     }
   }
 
@@ -110,7 +164,7 @@ const SubmitIndustryProblemModal = (props) => {
         >
           {' '}
           <div className='mail-icon-cont'>
-            <img src={mailIcon} className='step1-mail-icon'></img>
+            <img src={mailIcon} className='step1-mail-icon' alt='mail' />
           </div>
           <Modal.Header style={{ marginTop: '30px' }}>
             <div
@@ -193,6 +247,8 @@ const SubmitIndustryProblemModal = (props) => {
                   name='solutionDescription'
                   value={formData.solutionDescription}
                   onChange={props.mode !== 'edit' ? handleChange : () => {}}
+                  error={errors.solutionDescription}
+                  showError={formSubmitted}
                 />
               </div>
             </Col>
@@ -211,6 +267,8 @@ const SubmitIndustryProblemModal = (props) => {
                   name='pitchDeck'
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
+                  error={errors.pitchDeck}
+                  showError={formSubmitted}
                 />
                 <UploadFileInput
                   filename={
@@ -223,6 +281,8 @@ const SubmitIndustryProblemModal = (props) => {
                   onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                   mode={props.mode}
                   accept='video/*' // Pass the accept attribute to restrict uploads to video files
+                  error={errors.pitchVideo}
+                  showError={formSubmitted}
                   video={true}
                 />
 
@@ -268,9 +328,13 @@ const SubmitIndustryProblemModal = (props) => {
                   </div>
                 ) : (
                   <SubmitButton
-                    text={'SAVE'}
-                    disabled={props.problemIsSubmitted}
+                    text={loading ? 'Loading...' : 'SAVE'}
                     type='button'
+                    onClick={
+                      props.userRole === 'student'
+                        ? (e) => submitHandler('', e)
+                        : () => {}
+                    }
                     industryProblem={true}
                     className={'submit-button'}
                   />
@@ -283,12 +347,6 @@ const SubmitIndustryProblemModal = (props) => {
                 className='immrs-parent-form'
                 text={'DOWNLOAD PARENT/GUARDIAN FORM'}
               />
-<<<<<<< HEAD
-=======
-            </Col> */}
-
-            {/* <Col className='d-flex justify-content-end'>
->>>>>>> origin/immersion-fixes
               {props.mode === 'edit' ? (
                 <div className='d-flex'>
                   <SubmitButton

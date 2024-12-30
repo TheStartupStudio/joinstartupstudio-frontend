@@ -5,7 +5,10 @@ import axiosInstance from '../../../utils/AxiosInstance'
 import './SpotlightModal.css'
 import '../../../pages/StartupProfile/style/index.css'
 import SpotlightSimpleModal from './SpotlightSimpleModal'
-import { UploadFileInput } from '../../../pages/MyImmersion/ContentItems'
+import {
+  TermsAndConditionsCheckbox,
+  UploadFileInput
+} from '../../../pages/MyImmersion/ContentItems'
 import { useForm } from '../../../hooks/useForm'
 import { useValidation } from '../../../hooks/useValidation'
 import { ParentButtonApply } from './ParentButtonApply'
@@ -24,7 +27,10 @@ const SpotlightApplyModal = (props) => {
     useState(false)
   const [showSubmitModal, setShowSubmitModal] = useState(false)
   const [showMainPitch, setShowMainPitch] = useState(true)
-
+  const [spotlightSimpleModal, setSpotlightSimpleModal] = useState({
+    type: '',
+    show: null
+  })
   const [formSubmitted, setFormSubmitted] = useState(false)
   const initialState = {
     name: '',
@@ -38,11 +44,6 @@ const SpotlightApplyModal = (props) => {
     applicationDate: Date.now()
   }
 
-  const [spotlightSimpleModal, setSpotlightSimpleModal] = useState({
-    type: '',
-    show: null
-  })
-
   const closeSimpleSpotlightModal = (type) => {
     let newSpotlightSimpleModal = { ...spotlightSimpleModal }
     newSpotlightSimpleModal.type = type
@@ -50,11 +51,8 @@ const SpotlightApplyModal = (props) => {
     setSpotlightSimpleModal(newSpotlightSimpleModal)
   }
 
-  const { formData, handleChange, handleChangeFile } = useForm(
-    initialState,
-    'new',
-    loading
-  )
+  const { formData, handleChange, handleChangeFile, handleChangeCheckbox } =
+    useForm(initialState, 'new', loading)
   const { handleSubmit } = useValidation(formData, setFormSubmitted)
 
   const verify = () => {
@@ -78,7 +76,6 @@ const SpotlightApplyModal = (props) => {
       return toast.error('Please fill in all the fields.')
     }
     submitHandler()
-    openSubmitModal()
   }
 
   const submitHandler = async () => {
@@ -120,6 +117,7 @@ const SpotlightApplyModal = (props) => {
               url: `/my-inbox#spotlight_applications`
             })
             toast.success('Application submitted successfully!')
+            openSubmitModal()
             props.onHide()
             props.onSuccess()
           })
@@ -273,27 +271,15 @@ const SpotlightApplyModal = (props) => {
                   for Spotlight.
                 </p>
               </div>
-              {/* <div className='d-flex align-items-center'>
-            <input
-              type='checkbox'
-              name='agree'
-              className='form-check-input spotlight-checkbox'
-              onChange={(e) => {
-                setAgreed(e.target.value)
-                handleChangeCheckbox(e)
-              }}
-            />
-            <span className='term ps-3'>
-              I agree to the Spotlight{' '}
-              <span
-                className='text-blue blue-text font-bold'
-                style={{ cursor: 'pointer' }}
-                onClick={() => openSimpleSpotlightModal('termsAndConditions')}
-              >
-                Terms & Conditions
-              </span>
-            </span>
-          </div>*/}
+              <TermsAndConditionsCheckbox
+                text={'I agree to the Spotlight'}
+                blueText={'Terms & Conditions'}
+                name={'termsAndConditions'}
+                onChange={handleChangeCheckbox}
+                checked={formData.termsAndConditions}
+                // error={errors.termsAndConditions}
+                // showError={formSubmitted}
+              />
             </div>
           </div>
           <div
@@ -323,7 +309,7 @@ const SpotlightApplyModal = (props) => {
                 </button>
                 <button
                   className='apply-save-button edit-account '
-                  disabled={loading}
+                  disabled={loading || props.userRole !== 'student'}
                   onClick={() => {
                     setLoading(true)
                     verify()

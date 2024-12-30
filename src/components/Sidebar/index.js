@@ -8,16 +8,13 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import $ from 'jquery'
 import './index.css'
-
 import Header from './Header'
-import Footer from './Footer'
 import InstructorSidebar from './InstructorSidebar'
 import StudentSidebar from './StudentSidebar'
 
 function Sidebar(props) {
   const sideBarState = useSelector((state) => state.general.sidebarState)
   const role = localStorage.getItem('role')
-  console.log('role', role)
 
   const location = useLocation()
 
@@ -60,8 +57,6 @@ function Sidebar(props) {
             ) : (
               <InstructorSidebar props={props} />
             )}
-            {/* <InstructorSidebar props={props} /> */}
-            {/* <Footer /> */}
           </div>
         </PerfectScrollbar>
       </div>

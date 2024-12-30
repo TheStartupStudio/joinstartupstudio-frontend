@@ -35,7 +35,6 @@ const Learners = ({
   const { user } = useSelector((state) => state.user.user)
   const [modals, setModalState] = useModalState()
   const [, setSelectedInstructor] = useState(null)
-  // const [instructors, setInstructors] = useState([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSchoolFilter, setSelectedSchoolFilter] = useState(null)

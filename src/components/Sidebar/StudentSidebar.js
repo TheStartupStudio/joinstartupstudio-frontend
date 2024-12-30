@@ -4,7 +4,7 @@ import SidebarItem from './SidebarItem'
 import ParentSidebarItem from './ParentSidebarItem'
 import ParentDropdownItem from './ParentDropdownItem'
 import DropdownItem from './DropdownItem'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setAccordionToggled } from '../../redux'
 import Group3884Image from '../../assets/images/HS-Sidebar-Icons/Group-3884@2x.png'
 import Group3885Image from '../../assets/images/HS-Sidebar-Icons/Group-3885@2x.png'
@@ -12,7 +12,6 @@ import Group3887Image from '../../assets/images/HS-Sidebar-Icons/Group-3887@2x.p
 import Group3888Image from '../../assets/images/HS-Sidebar-Icons/Group-3888@2x.png'
 
 const StudentSidebar = (props) => {
-  const { isAdmin } = useSelector((state) => state.user.user)
   const dispatch = useDispatch()
 
   return (

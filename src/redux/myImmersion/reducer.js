@@ -244,7 +244,7 @@ const myImmersionReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error: payload
+        error: action.error
       }
     case types.CREATE_SPOTLIGHT_PENDING:
       return {

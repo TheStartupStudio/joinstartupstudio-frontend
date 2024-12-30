@@ -61,7 +61,7 @@ const ImportJournalEntryModal = ({
           {!!children && (
             <img
               src={searchIcon}
-              alt="#"
+              alt='#'
               style={{
                 color: '#333d3d',
                 height: '25px',
@@ -82,22 +82,22 @@ const ImportJournalEntryModal = ({
     <Modal
       show={show}
       onHide={hideModal}
-      backdrop="static"
+      backdrop='static'
       keyboard={false}
-      className="import-entry-modal"
+      className='import-entry-modal'
       centered
     >
-      <Modal.Header className="contact-us-title my-auto mx-4">
-        <h3 className="mb-0 pt-4 mt-2 ">IMPORT JOURNAL ENTRY</h3>
+      <Modal.Header className='contact-us-title my-auto mx-4'>
+        <h3 className='mb-0 pt-4 mt-2 '>IMPORT JOURNAL ENTRY</h3>
         <button
-          type="button"
-          className="btn-close me-1"
-          aria-label="Close"
+          type='button'
+          className='btn-close me-1'
+          aria-label='Close'
           onClick={hideModal}
         />
       </Modal.Header>
-      <Modal.Body className="m-4 p-0">
-        <div className="contact-us">
+      <Modal.Body className='m-4 p-0'>
+        <div className='contact-us'>
           <Select
             value={
               selectedJournal?.label
@@ -154,50 +154,59 @@ const ImportJournalEntryModal = ({
               DropdownIndicator: () => null,
               IndicatorSeparator: () => null
             }}
-            classNamePrefix="vyrill"
+            classNamePrefix='vyrill'
             // autoFocus={false}
           />
           {journal && (
-            <h5 className="text-center mt-3">
-              <span className="fw-bold">JOURNAL: </span> {journal.title}
+            <h5 className='text-center mt-3'>
+              <span className='fw-bold'>JOURNAL: </span> {journal.title}
             </h5>
           )}
 
-          <div className="journal-container mb-3">
+          <div className='journal-container mb-3'>
             {journal && (
               <>
-                {journal.entries.map((entry) => (
-                  <div className="entry py-3" key={entry.id}>
-                    <p>
-                      <span className="fw-bold">Journal Entry: </span>{' '}
-                      {entry.title}{' '}
-                    </p>
-                    <p className="fw-bold">Your entries: </p>
-                    {entry.userAnswers.map((answer) => (
-                      <div
-                        className={`answer m-3 ${
-                          selectedEntry?.id === answer.id ? 'selected' : ''
-                        }`}
-                        onClick={() =>
-                          setSelectedEntry({
-                            journalTitle: journal.title,
-                            journalEntry: entry.title,
-                            userEntry: answer.content,
-                            id: answer.id
-                          })
-                        }
-                        key={answer.id}
-                      >
-                        <div>{answer.content.replace(/<[^>]+>/g, '')}</div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
+                {journal.entries.map((entry) => {
+                  const isHtml = /<[a-z][\s\S]*>/i.test(entry.title)
+                  return (
+                    <div className='entry py-3' key={entry.id}>
+                      <p>
+                        <span className='fw-bold'>Journal Entry: </span>
+                        {isHtml ? (
+                          <span
+                            dangerouslySetInnerHTML={{ __html: entry.title }}
+                          />
+                        ) : (
+                          entry.title
+                        )}
+                      </p>
+                      <p className='fw-bold'>Your entries: </p>
+                      {entry.userAnswers.map((answer) => (
+                        <div
+                          className={`answer m-3 ${
+                            selectedEntry?.id === answer.id ? 'selected' : ''
+                          }`}
+                          onClick={() =>
+                            setSelectedEntry({
+                              journalTitle: journal.title,
+                              journalEntry: entry.title,
+                              userEntry: answer.content,
+                              id: answer.id
+                            })
+                          }
+                          key={answer.id}
+                        >
+                          <div>{answer.content.replace(/<[^>]+>/g, '')}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                })}
               </>
             )}
           </div>
           {selectedEntry && (
-            <button type="submit" onClick={handleImport}>
+            <button type='submit' onClick={handleImport}>
               IMPORT
             </button>
           )}

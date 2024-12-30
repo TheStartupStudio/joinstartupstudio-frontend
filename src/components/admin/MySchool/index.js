@@ -6,6 +6,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getPeriodsStart } from '../../../redux/dashboard/Actions'
 import LoadingAnimation from '../../../ui/loadingAnimation'
 
+const levelDescriptions = {
+  HS: 'High School',
+  MS: 'Middle School',
+  LS: 'Lower School',
+  HE: 'Higher Education'
+}
+
 const MySchool = () => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -15,6 +22,11 @@ const MySchool = () => {
   const [universities, setUniversities] = useState([])
   const { universityId } = useSelector((state) => state.user.user.user)
   const periods = useSelector((state) => state.dashboard.periods)
+
+  const transformedLevels = levels?.map((level) => ({
+    ...level,
+    displayName: levelDescriptions[level.name] || level.name
+  }))
 
   useEffect(() => {
     dispatch(getPeriodsStart())
@@ -73,11 +85,12 @@ const MySchool = () => {
       ) : (
         <MySchoolRouter
           programs={programs}
-          levels={levels}
+          levels={transformedLevels}
           instructors={instructors}
           periods={periods}
           universityId={universityId}
           universities={universities}
+          levelDescriptions={levelDescriptions}
         />
       )}
     </div>

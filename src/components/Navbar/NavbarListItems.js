@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react'
-import { NavLink } from 'react-bootstrap'
 import HSmySpark from '../../assets/images/LTS-HS/Spark .svg'
 import HSGooglePlay from '../../assets/images/LTS-HS/Story in motion-01.svg'
 import HSCommunity from '../../assets/images/LTS-HS/Community-01.svg'
@@ -9,6 +8,7 @@ import Notifications from '../Header/notifications'
 import NavbarProfile from './NavbarProfile'
 import notesIcon from '../../assets/images/notes-icon.svg'
 import { faHeart as heart } from '@fortawesome/free-regular-svg-icons'
+import { NavLink } from 'react-router-dom/cjs/react-router-dom'
 
 const NavbarIcon = (props) => {
   return (
@@ -48,11 +48,13 @@ const NavbarListItems = (props) => {
           to={'/story-in-motion'}
           cn={`hs-icon ${props.isMobile ? 'safari_only' : ''}`}
           srcWithFocus={HSGooglePlay}
+          setShowNotifications={setShowNotifications}
         />
         <NavbarIcon
           to={'/my-spark/widgets'}
           cn={`spark-icon ${props.isMobile ? 'safari_only' : ''}`}
           srcWithFocus={HSmySpark}
+          setShowNotifications={setShowNotifications}
         />
         <NavbarIcon
           to={'/my-classroom'}
@@ -60,6 +62,7 @@ const NavbarListItems = (props) => {
           srcWithFocus={HSCommunity}
           width={'55px'}
           height={'45px'}
+          setShowNotifications={setShowNotifications}
         />
       </div>
 

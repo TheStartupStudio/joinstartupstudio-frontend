@@ -1,17 +1,4 @@
-import {
-  faCheck,
-  faIdBadge,
-  faTimes,
-  faUserLock,
-  faUserMinus,
-  faUserPlus
-} from '@fortawesome/free-solid-svg-icons'
-import {
-  CustomDropdown,
-  // CustomInput,
-  SkillBox,
-  SubmitButton
-} from '../ContentItems'
+import { CustomDropdown, SkillBox } from '../ContentItems'
 import { Auth } from 'aws-amplify'
 import { toast } from 'react-toastify'
 import React, { useState } from 'react'
@@ -21,11 +8,9 @@ import LtsCheckbox from '../../../../ui/LtsCheckbox'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import useIsFormEmpty from '../../../../hooks/useIsFormEmpty'
 import { useValidation } from '../../../../hooks/useValidation'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Certification1Badge from '../../../../assets/images/market-ready-1-badge.png'
 import Certification2Badge from '../../../../assets/images/market-ready-2-badge.png'
 import { CustomInput, LtsButton } from '../../../../ui/ContentItems'
-import buttonTick from '../../../../assets/images/myschool-tick.svg'
 import tickIcon from '../../../../assets/images/tick.png'
 import userManageIcon from '../../../../assets/images/usermanage.png'
 import deletePersonIcon from '../../../../assets/images/persondelete.png'
@@ -193,8 +178,12 @@ const StudentActionsModal = ({
                 borderRadius: '50%'
               }}
             >
-              <img src={userManageIcon} width={20} height={16}></img>
-              {/* <FontAwesomeIcon icon={faUserPlus} /> */}
+              <img
+                src={userManageIcon}
+                width={20}
+                height={16}
+                alt='user manage'
+              />
             </div>
             <div className='d-flex w-100 align-items-center justify-content-between'>
               <span>
@@ -220,7 +209,7 @@ const StudentActionsModal = ({
               }}
               onClick={() => onHide()}
             >
-              <img src={tickIcon} width={50} height={38}></img>
+              <img src={tickIcon} width={50} height={38} alt='tick' />
             </div>
           ) : submitLoading ? (
             <div className={`check-button fw-bold`}>
@@ -228,7 +217,7 @@ const StudentActionsModal = ({
             </div>
           ) : isDisabled ? (
             <div className={`check-button `} onClick={() => onHide()}>
-              <img src={tickIcon} width={50} height={38}></img>
+              <img src={tickIcon} width={50} height={38} alt='tick' />
               {/* <FontAwesomeIcon icon={faTimes} /> */}
             </div>
           ) : (
@@ -236,7 +225,7 @@ const StudentActionsModal = ({
               className={`check-button  ${isDisabled ? 'disabled' : ''}`}
               onClick={!isDisabled ? submitHandler : null}
             >
-              <img src={tickIcon} width={50} height={38}></img>
+              <img src={tickIcon} width={50} height={38} alt='tick' />
               {/* <FontAwesomeIcon icon={faCheck} /> */}
             </div>
           )}
@@ -348,8 +337,7 @@ const StudentActionsModal = ({
 
               {mode === 'edit' ? (
                 <a href={`/user-portfolio/${formData.username}`}>
-                  <img src={viewPortfIcon} height={15}></img>
-                  {/* <FontAwesomeIcon icon={faIdBadge} className='me-2' />  */}
+                  <img src={viewPortfIcon} height={15} alt='view port' />
                   View Student Portfolio
                 </a>
               ) : null}
@@ -477,28 +465,23 @@ const StudentActionsModal = ({
                   exclusive
                   name='period'
                   btnClassName={'gray-border'}
-                  options={periods?.map((period) => {
-                    return {
-                      name: period.name,
-                      value: period.name,
-                      id: period.id
-                    }
-                  })}
+                  title={'Assign periods'}
+                  options={periods}
                   isOpen={openDropdown === 'period'}
                   setOpenDropdown={() => handleDropdownClick('period')}
-                  onClick={(event) => handleChangeSelect(event, 'period')}
-                  showError={formSubmitted}
-                  error={errors.period}
+                  onClick={(selectedOptions) =>
+                    handleChangeDropdown(selectedOptions, mode, 'period')
+                  }
                   preselectedOptions={
                     mode === 'edit'
-                      ? [
-                          {
-                            name: formData.period?.name,
-                            id: formData.period?.id
-                          }
-                        ]
+                      ? {
+                          name: formData.period?.name,
+                          id: formData.period?.id
+                        }
                       : []
                   }
+                  showError={formSubmitted}
+                  error={errors.period}
                 />
               </div>
             </Col>
@@ -542,8 +525,12 @@ const StudentActionsModal = ({
                     alignItems: 'center'
                   }}
                 >
-                  <img src={deletePersonIcon} width={20} height={24}></img>
-                  {/* <FontAwesomeIcon icon={faUserMinus} className='pe-2 ' /> */}
+                  <img
+                    src={deletePersonIcon}
+                    width={20}
+                    height={24}
+                    alt='delete icon'
+                  />
                   Delete User
                 </p>
               </span>
@@ -554,8 +541,12 @@ const StudentActionsModal = ({
                   onClick={resetPasswordFromEdit}
                   style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
                 >
-                  <img src={personwkeyIcon} width={20} height={24}></img>
-                  {/* <FontAwesomeIcon icon={faUserLock} className='pe-2 ' /> */}
+                  <img
+                    src={personwkeyIcon}
+                    width={20}
+                    height={24}
+                    alt='person key icon'
+                  />
                   Reset password
                 </p>
               </span>

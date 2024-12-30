@@ -117,6 +117,30 @@ export const handleSpotlightStatus = (id, status, feedbackMessage = '') => {
     }
   }
 }
+export const createIndustryProblem = (data) => {
+  return async (dispatch) => {
+    try {
+      dispatch(createIndustryProblemPending())
+      const res = await myImmersionService.createIndustryProblem(data)
+      dispatch(createIndustryProblemFulfilled(res))
+    } catch (error) {
+      const errorMessage = error.response?.data?.message
+      dispatch(createIndustryProblemRejected(errorMessage))
+      throw new Error(errorMessage)
+    }
+  }
+}
+export const createSpotlight = (data) => {
+  return async (dispatch) => {
+    try {
+      dispatch(createSpotlightPending())
+      const res = await myImmersionService.createSpotlight(data)
+      dispatch(createSpotlightFulfilled(res))
+    } catch (error) {
+      dispatch(createSpotlightRejected(error))
+    }
+  }
+}
 
 export const fetchStepPending = () => ({
   type: types.FETCH_STEP_PENDING
@@ -196,4 +220,23 @@ export function handleIndustryProblemStatusFulfilled(payload) {
 }
 export function handleIndustryProblemStatusRejected(error) {
   return { type: types.HANDLE_INDUSTRY_PROBLEM_STATUS_REJECTED, error }
+}
+export const createIndustryProblemPending = () => ({
+  type: types.CREATE_INDUSTRY_PROBLEM_PENDING
+})
+export function createIndustryProblemFulfilled(payload) {
+  return { type: types.CREATE_INDUSTRY_PROBLEM_FULFILLED, payload }
+}
+export function createIndustryProblemRejected(error) {
+  return { type: types.CREATE_INDUSTRY_PROBLEM_REJECTED, error }
+}
+
+export const createSpotlightPending = () => ({
+  type: types.CREATE_SPOTLIGHT_PENDING
+})
+export function createSpotlightFulfilled(payload) {
+  return { type: types.CREATE_SPOTLIGHT_FULFILLED, payload }
+}
+export function createSpotlightRejected(error) {
+  return { type: types.CREATE_SPOTLIGHT_REJECTED, error }
 }

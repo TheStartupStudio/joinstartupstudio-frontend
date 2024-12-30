@@ -1,14 +1,6 @@
-import {
-  faCheck,
-  faTimes,
-  faUserLock,
-  faUserMinus,
-  faUserPlus
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { CustomDropdown, SubmitButton } from '../ContentItems'
+import { CustomDropdown } from '../ContentItems'
 import LtsCheckbox from '../../../../ui/LtsCheckbox'
 import { useValidation } from '../../../../hooks/useValidation'
 import { useForm } from '../../../../hooks/useForm'
@@ -182,14 +174,18 @@ const AddInstructorModal = ({
                 borderRadius: '50%'
               }}
             >
-              <img src={userManageIcon} width={20} height={16}></img>
-              {/* <FontAwesomeIcon icon={faUserPlus} /> */}
+              <img
+                src={userManageIcon}
+                width={20}
+                height={16}
+                alt='user manage'
+              />
             </div>
             {mode === 'add' ? 'Add Instructor' : 'Edit Instructor Details'}
           </Modal.Title>
           {mode !== 'edit' ? (
             <div className={`check-button fw-bold`} onClick={() => onHide()}>
-              <img src={tickIcon} width={50} height={38}></img>
+              <img src={tickIcon} width={50} height={38} alt='tick' />
             </div>
           ) : submitLoading ? (
             <div className={`check-button fw-bold`}>
@@ -197,15 +193,14 @@ const AddInstructorModal = ({
             </div>
           ) : isDisabled ? (
             <div className={`check-button `} onClick={() => onHide()}>
-              <img src={tickIcon} width={50} height={38}></img>
-              {/* <FontAwesomeIcon icon={faTimes} /> */}
+              <img src={tickIcon} width={50} height={38} alt='tick' />
             </div>
           ) : (
             <div
               className={`check-button  ${isDisabled ? 'disabled' : ''}`}
               onClick={!isDisabled ? submitHandler : null}
             >
-              <img src={tickIcon} width={50} height={38}></img>
+              <img src={tickIcon} width={50} height={38} alt='tick' />
               {/* <FontAwesomeIcon icon={faCheck} /> */}
             </div>
           )}
@@ -380,8 +375,12 @@ const AddInstructorModal = ({
                   onClick={deleteUserFromEdit}
                   style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
                 >
-                  <img src={deletePersonIcon} width={20} height={24}></img>
-                  {/* <FontAwesomeIcon icon={faUserMinus} className='pe-2' /> */}
+                  <img
+                    src={deletePersonIcon}
+                    width={20}
+                    height={24}
+                    alt='delete person'
+                  />
                   Delete User
                 </p>
               </span>
@@ -392,8 +391,12 @@ const AddInstructorModal = ({
                   onClick={resetPasswordFromEdit}
                   style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
                 >
-                  <img src={personwkeyIcon} width={20} height={24}></img>
-                  {/* <FontAwesomeIcon icon={faUserLock} className='pe-2' /> */}
+                  <img
+                    src={personwkeyIcon}
+                    width={20}
+                    height={24}
+                    alt='person key'
+                  />
                   Reset password
                 </p>
               </span>

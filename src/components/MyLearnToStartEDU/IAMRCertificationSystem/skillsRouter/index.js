@@ -81,7 +81,7 @@ const SkillsRouter = ({ groupingStrings }) => {
         )}
       </div>
     )
-  }, [skill, type, loading, groupingStrings])
+  }, [skill, type, loading])
 
   return <>{MemoizedSkillsRouter}</>
 }
