@@ -116,6 +116,85 @@ label:focus,
   width: 100%;
 }
 
+.dot {
+  height: 10px;
+  width: 10px;
+  background-color: #a7ca42;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot__status__active,
+.dot__transfer__transferred {
+  height: 10px;
+  width: 10px;
+  background-color: #a7ca42;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot__transfer__requested {
+  height: 10px;
+  width: 10px;
+  background-color: #52c7de;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot__transfer__denied {
+  height: 10px;
+  width: 10px;
+  background-color: #ea3b97;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot__status__unactive,
+.dot__transfer__none {
+  height: 10px;
+  width: 10px;
+  background-color: #5f646d;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot__active,
+.dot__transferred,
+.dot__approved {
+  height: 10px;
+  width: 10px;
+  background-color: #a7ca42;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot__requested {
+  height: 10px;
+  width: 10px;
+  background-color: #52c7de;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot__denied,
+.dot__rejected {
+  height: 10px;
+  width: 10px;
+  background-color: #ea3b97;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot__unactive,
+.dot__pending,
+.dot__none {
+  height: 10px;
+  width: 10px;
+  background-color: #5f646d;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 nav#sidebar {
   position: relative;
 }
@@ -1124,20 +1203,18 @@ img.icon-play {
 .prerequisite-title {
   font: normal normal 600 21px/21px Montserrat !important;
   letter-spacing: 0.84px;
-  color: #EE3C96;
+  color: #ee3c96;
   text-transform: uppercase;
   opacity: 1;
-
 }
 
 .prerequisite-subtitle {
   text-align: center;
   font: normal normal 300 21px/32px Montserrat !important;
   letter-spacing: 0.84px;
-  color: #231F20;
+  color: #231f20;
   opacity: 1;
 }
-
 
 .document-modal {
   height: 600px;
@@ -5218,7 +5295,6 @@ ul.sidebar-menu-item .collapse a:hover {
   background-color: #f6f7f7 !important;
 }
 
-
 .school-page-desc {
   font: normal normal normal 12px/16px Montserrat !important;
   letter-spacing: 0.48px;
@@ -5407,4 +5483,44 @@ _:future,
 
 .sidebar-overflow-fix {
   overflow: unset !important;
+}
+
+/* Safari 7.1+ */
+
+_::-webkit-full-page-media,
+_:future,
+:root .sfari-onlyyy {
+  margin-top: 10px !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .right-login-content {
+  margin-top: -20px !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .public-login-form {
+  padding-top: 45px !important;
+  height: 37vh !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root section#footer {
+  position: absolute;
+  bottom: 0 !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root section#footer .row.mx-md-4.footer-copyright .col-sm-12.col-lg-4.text-align-left-footer {
+  margin-left: 80px;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .choose-login_container {
+  height: 100vh !important;
 }

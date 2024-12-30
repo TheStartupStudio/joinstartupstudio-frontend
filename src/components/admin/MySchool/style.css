@@ -447,12 +447,16 @@
   margin-inline: 20px !important;
 }
 
+.overview-topinfobox-border {
+  border-top-right-radius: 50px !important;
+}
+
 .overview-school-program-info .info-box {
   height: 268px !important;
   min-height: 268px !important;
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029 !important;
-  border-radius: 12px !important;
+  border-radius: 12px;
   opacity: 1;
   padding-inline: 20px !important;
   padding-top: 0 !important;
@@ -775,4 +779,9 @@
   overflow-x: scroll !important;
 
   scrollbar-width: thin !important;
+}
+
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.transfer-status-cont) {
+  padding-left: 0px !important;
+  margin-left: -8px !important;
 }

@@ -243,7 +243,7 @@ const Learners = ({
         cellRenderer: (params) => {
           let status = params.value[0]?.status
           return (
-            <div>
+            <div className='transfer-status-cont'>
               <SkillBox
                 withStatus={true}
                 color={`transfer__${

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { InfoBox, SkillBox } from '../ContentItems'
 import { Col, Row } from 'react-bootstrap'
-import DefaultImage from '../../../../assets/images/myschool-logo.svg'
+import DefaultImage from '../../../../assets/images/logo-mini.svg'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import CustomSpinner from '../../../CustomSpinner'
 
@@ -64,6 +64,7 @@ const ProgramDetails = ({
       setMode={setMode}
       hasChanges={hasChanges}
       onSaveChanges={handleSaveChanges}
+      cn={'overview-topinfobox-border'}
     >
       {loading ? (
         <div
