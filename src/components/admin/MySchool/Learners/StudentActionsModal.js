@@ -465,28 +465,23 @@ const StudentActionsModal = ({
                   exclusive
                   name='period'
                   btnClassName={'gray-border'}
-                  options={periods?.map((period) => {
-                    return {
-                      name: period.name,
-                      value: period.name,
-                      id: period.id
-                    }
-                  })}
+                  title={'Assign periods'}
+                  options={periods}
                   isOpen={openDropdown === 'period'}
                   setOpenDropdown={() => handleDropdownClick('period')}
-                  onClick={(event) => handleChangeSelect(event, 'period')}
-                  showError={formSubmitted}
-                  error={errors.period}
+                  onClick={(selectedOptions) =>
+                    handleChangeDropdown(selectedOptions, mode, 'period')
+                  }
                   preselectedOptions={
                     mode === 'edit'
-                      ? [
-                          {
-                            name: formData.period?.name,
-                            id: formData.period?.id
-                          }
-                        ]
+                      ? {
+                          name: formData.period?.name,
+                          id: formData.period?.id
+                        }
                       : []
                   }
+                  showError={formSubmitted}
+                  error={errors.period}
                 />
               </div>
             </Col>
