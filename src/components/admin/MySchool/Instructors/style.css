@@ -72,3 +72,98 @@ opacity: 1; */
   color: #000000;
   opacity: 1;
 }
+
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+  left: 52% !important;
+}
+
+@media (max-width: 1238px) {
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+    left: 53% !important;
+  }
+}
+
+
+@media (max-width: 1133px) {
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+    left: 55% !important;
+  }
+}
+
+@media (max-width:1031px) {
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+    left: 58% !important;
+  }
+}
+
+@media (max-width:1024px) {
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+    left: 53% !important;
+  }
+}
+
+@media (max-width: 887px) {
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+    left: 57% !important;
+  }
+}
+
+@media (max-width:765px) {
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+    left: 61% !important;
+  }
+}
+
+@media (max-width:719px) {
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+    left: 65% !important;
+  }
+}
+
+@media (max-width:672px) {
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.reports_cell) {
+    left: 425px !important;
+  }
+}
+
+
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.students__cell) {
+  left: 41% !important;
+}
+
+
+@media (max-width:1110px) {
+
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.students__cell) {
+    left: 42.5% !important;
+  }
+}
+
+@media (max-width:793px) {
+
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.students__cell) {
+    left: 44% !important;
+  }
+}
+
+@media (max-width:740px) {
+
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.students__cell) {
+    left: 46% !important;
+  }
+}
+
+
+@media (max-width:705px) {
+
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.students__cell) {
+    left: 48.5% !important;
+  }
+}
+
+@media (max-width:672px) {
+
+  .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.students__cell) {
+    left: 317px !important;
+  }
+}

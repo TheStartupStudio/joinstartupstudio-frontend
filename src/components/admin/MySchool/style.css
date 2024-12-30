@@ -294,7 +294,9 @@
   font-size: 12px;
 }
 
-.agGrid__actions .action-item {
+/* 
+.agGrid__actions */
+.action-item {
   display: flex;
   align-items: center;
   margin: 0 5px;
@@ -445,12 +447,16 @@
   margin-inline: 20px !important;
 }
 
+.overview-topinfobox-border {
+  border-top-right-radius: 50px !important;
+}
+
 .overview-school-program-info .info-box {
   height: 268px !important;
   min-height: 268px !important;
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029 !important;
-  border-radius: 12px !important;
+  border-radius: 12px;
   opacity: 1;
   padding-inline: 20px !important;
   padding-top: 0 !important;
@@ -763,4 +769,19 @@
     height: 150px !important;
     flex-wrap: wrap !important;
   }
+}
+
+
+.ag-center-cols-viewport,
+.ag-center-cols-container,
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-column-last.ag-cell-value,
+.ag-row-even.ag-row-no-focus.ag-row.ag-row-level-0.ag-row-position-absolute.ag-row-first.ag-row-not-inline-editing {
+  overflow-x: scroll !important;
+
+  scrollbar-width: thin !important;
+}
+
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.transfer-status-cont) {
+  padding-left: 0px !important;
+  margin-left: -8px !important;
 }

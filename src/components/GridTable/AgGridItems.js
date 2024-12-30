@@ -606,51 +606,51 @@ const Actions = ({
 
   return (
     <>
-      <div className='d-flex align-items-center agGrid__actions'>
-        <div
-          className='action-item cursor-pointer'
-          onClick={() => handleViewUser(handleViewStudent)}
-        >
-          <a href='/my-school/learners' className='pe-1'>
-            <img src={personIcon} width={21} height={24}></img>
-            {/* <FontAwesomeIcon icon={faUser} style={{ fontSize: '16px' }} /> */}
-          </a>
-          <p className='m-0 pe-2 agactions-title'> View User</p>
-        </div>
-        <div
-          className='action-item cursor-pointer'
-          onClick={() => handleResetPassword()}
-        >
-          <a href='/my-school/learners' className='pe-1'>
-            <img src={personwkeyIcon} width={21} height={24}></img>
-            {/* <FontAwesomeIcon icon={faKey} style={{ fontSize: '16px' }} /> */}
-          </a>
-          <p className='m-0 pe-2 agactions-title'> Reset password</p>
-        </div>
-        <div
-          className='action-item cursor-pointer'
-          onClick={() => handleDeleteUser(true)}
-        >
-          <a href='/my-school/learners' className='pe-1'>
-            <img src={deletePersonIcon} width={21} height={24}></img>
-            {/* <FontAwesomeIcon icon={faUserMinus} style={{ fontSize: '16px' }} /> */}
-          </a>
-          <p className='m-0 pe-2 agactions-title'> Delete user</p>
-        </div>
-        <div
-          className='action-item cursor-pointer'
-          onClick={() =>
-            handleProxyLogin(
-              'e91c37a6-c94c-4b47-a01a-f94da596cd18',
-              user.cognito_Id
-            )
-          }
-        >
-          <FontAwesomeIcon icon={faDoorOpen} style={{ fontSize: '16px' }} />
-
-          <p className='m-0 pe-2 agactions-title'> Proxy</p>
-        </div>
+      {/* <div className='d-flex align-items-center agGrid__actions'> */}
+      <div
+        className='action-item cursor-pointer'
+        onClick={() => handleViewUser(handleViewStudent)}
+      >
+        <a href='/my-school/learners' className='pe-1'>
+          <img src={personIcon} width={21} height={24}></img>
+          {/* <FontAwesomeIcon icon={faUser} style={{ fontSize: '16px' }} /> */}
+        </a>
+        <p className='m-0 pe-2 agactions-title'> View User</p>
       </div>
+      <div
+        className='action-item cursor-pointer'
+        onClick={() => handleResetPassword()}
+      >
+        <a href='/my-school/learners' className='pe-1'>
+          <img src={personwkeyIcon} width={21} height={24}></img>
+          {/* <FontAwesomeIcon icon={faKey} style={{ fontSize: '16px' }} /> */}
+        </a>
+        <p className='m-0 pe-2 agactions-title'> Reset password</p>
+      </div>
+      <div
+        className='action-item cursor-pointer'
+        onClick={() => handleDeleteUser(true)}
+      >
+        <a href='/my-school/learners' className='pe-1'>
+          <img src={deletePersonIcon} width={21} height={24}></img>
+          {/* <FontAwesomeIcon icon={faUserMinus} style={{ fontSize: '16px' }} /> */}
+        </a>
+        <p className='m-0 pe-2 agactions-title'> Delete user</p>
+      </div>
+      <div
+        className='action-item cursor-pointer'
+        onClick={() =>
+          handleProxyLogin(
+            'e91c37a6-c94c-4b47-a01a-f94da596cd18',
+            user.cognito_Id
+          )
+        }
+      >
+        <FontAwesomeIcon icon={faDoorOpen} style={{ fontSize: '16px' }} />
+
+        <p className='m-0 pe-2 agactions-title'> Proxy</p>
+      </div>
+      {/* </div> */}
 
       {modals.editInstructorModal && (
         <AddInstructorModal

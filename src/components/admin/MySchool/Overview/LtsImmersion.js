@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { CustomDropdown, CustomGradientButton, InfoBox } from '../ContentItems'
 import { Col } from 'react-bootstrap'
 import AddImmersionModal from '../../MyImmersion/AddImmersionModal'
-import immersionLogo from '../../../../assets/images/myschool-immrs-logo.svg'
+import immersionLogo from '../../../../assets/images/LTS Immersion Mark.svg'
 
 const LtsImmersion = () => {
   const [immersionStep, setImmersionStep] = useState()

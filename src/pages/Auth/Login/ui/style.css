@@ -125,12 +125,11 @@
   }
 }
 
-@media (max-width: 668px) {
+/* @media (max-width: 668px) {
   .right-login-content {
     margin-top: 60px !important;
   }
-}
-
+}*/
 @media (min-width: 767px) {
   .social-media-items {
     position: relative;

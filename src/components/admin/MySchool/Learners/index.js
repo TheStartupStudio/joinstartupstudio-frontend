@@ -243,7 +243,7 @@ const Learners = ({
         cellRenderer: (params) => {
           let status = params.value[0]?.status
           return (
-            <div>
+            <div className='transfer-status-cont'>
               <SkillBox
                 withStatus={true}
                 color={`transfer__${
@@ -342,7 +342,7 @@ const Learners = ({
   )
 
   return (
-    <div style={{ background: '#fff' }}>
+    <div className='' style={{ background: '#fff', borderRadius: '12px' }}>
       <HeaderActions
         usedIn={usedIn || 'student'}
         tableTitle={tableTitle}
