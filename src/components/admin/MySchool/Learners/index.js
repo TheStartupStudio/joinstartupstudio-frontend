@@ -28,8 +28,7 @@ const Learners = ({
   periods,
   universities,
   usedIn,
-  instructors,
-  levelDescriptions
+  instructors
 }) => {
   const { handleProxyLogin } = useProxyLogin()
   const history = useHistory()
@@ -292,7 +291,6 @@ const Learners = ({
             periods={periods}
             handleProxyLogin={handleProxyLogin}
             onSuccess={refreshStudents}
-            levelDescriptions={levelDescriptions}
           />
         )
       }
@@ -307,8 +305,7 @@ const Learners = ({
     programs,
     instructors,
     refreshStudents,
-    handleProxyLogin,
-    levelDescriptions
+    handleProxyLogin
   ])
 
   const handleInstructorFilterChange = (selectedOption) => {

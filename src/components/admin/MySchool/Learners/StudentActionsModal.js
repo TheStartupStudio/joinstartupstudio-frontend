@@ -28,15 +28,10 @@ const StudentActionsModal = ({
   instructors = [],
   periods = [],
   onSuccess,
-  levelDescriptions = {},
   resetPasswordFromEdit = () => {},
   deleteUserFromEdit = () => {},
   transferHandler = () => {}
 }) => {
-  const transformedLevels = levels.map((level) => ({
-    ...level,
-    displayName: levelDescriptions[level.name] || level.name
-  }))
   const [openDropdown, setOpenDropdown] = useState(null)
   const [loading, setLoading] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -393,7 +388,7 @@ const StudentActionsModal = ({
                   multiple
                   name='levels'
                   btnClassName={'gray-border'}
-                  options={transformedLevels}
+                  options={levels}
                   onClick={(selectedOptions) =>
                     handleChangeDropdown(selectedOptions, mode, 'levels')
                   }

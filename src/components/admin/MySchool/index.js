@@ -23,6 +23,11 @@ const MySchool = () => {
   const { universityId } = useSelector((state) => state.user.user.user)
   const periods = useSelector((state) => state.dashboard.periods)
 
+  const transformedLevels = levels?.map((level) => ({
+    ...level,
+    displayName: levelDescriptions[level.name] || level.name
+  }))
+
   useEffect(() => {
     dispatch(getPeriodsStart())
   }, [dispatch])
@@ -80,7 +85,7 @@ const MySchool = () => {
       ) : (
         <MySchoolRouter
           programs={programs}
-          levels={levels}
+          levels={transformedLevels}
           instructors={instructors}
           periods={periods}
           universityId={universityId}

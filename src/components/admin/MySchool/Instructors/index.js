@@ -207,7 +207,6 @@ const Instructors = ({
               handleViewStudent='editInstructorModal'
               onSuccess={refreshInstructors}
               handleProxyLogin={handleProxyLogin}
-              levelDescriptions={levelDescriptions}
             />
           )
         }
@@ -219,8 +218,7 @@ const Instructors = ({
       programs,
       rowData,
       refreshInstructors,
-      handleProxyLogin,
-      levelDescriptions
+      handleProxyLogin
     ]
   )
 

@@ -553,8 +553,7 @@ const Actions = ({
   handleViewStudent,
   periods,
   handleProxyLogin,
-  onSuccess,
-  levelDescriptions
+  onSuccess
 }) => {
   const [modals, setModalState] = useModalState()
 
@@ -686,7 +685,6 @@ const Actions = ({
           instructors={instructors}
           mode='edit'
           onSuccess={onSuccess}
-          levelDescriptions={levelDescriptions}
           resetPasswordFromEdit={resetPasswordFromEditStudent}
           deleteUserFromEdit={deleteUserFromEditStudent}
           transferHandler={transferHandler}
