@@ -26,7 +26,8 @@ const Page = ({
   instructors,
   periods,
   universityId,
-  universities
+  universities,
+  levelDescriptions
 }) => {
   const { page } = useParams()
 
@@ -39,6 +40,7 @@ const Page = ({
       periods={periods}
       universityId={universityId}
       universities={universities}
+      levelDescriptions={levelDescriptions}
     />
   )
 }
@@ -49,7 +51,8 @@ const MySchoolRouter = ({
   instructors,
   periods,
   universityId,
-  universities
+  universities,
+  levelDescriptions
 }) => {
   return (
     <Router>
@@ -104,6 +107,7 @@ const MySchoolRouter = ({
                 periods={periods}
                 universityId={universityId}
                 universities={universities}
+                levelDescriptions={levelDescriptions}
               />
             )}
           />

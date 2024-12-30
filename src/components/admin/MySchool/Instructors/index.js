@@ -19,7 +19,13 @@ import reportFileIcon from '../../../../assets/images/studentlist.png'
 import userReportIcon from '../../../../assets/images/userreport.png'
 import useProxyLogin from '../../../../hooks/useProxyLogin'
 
-const Instructors = ({ programs, levels, periods, universities }) => {
+const Instructors = ({
+  programs,
+  levels,
+  periods,
+  universities,
+  levelDescriptions
+}) => {
   const { handleProxyLogin } = useProxyLogin()
 
   const [modals, setModalState] = useModalState()
@@ -201,6 +207,7 @@ const Instructors = ({ programs, levels, periods, universities }) => {
               handleViewStudent='editInstructorModal'
               onSuccess={refreshInstructors}
               handleProxyLogin={handleProxyLogin}
+              levelDescriptions={levelDescriptions}
             />
           )
         }
@@ -212,7 +219,8 @@ const Instructors = ({ programs, levels, periods, universities }) => {
       programs,
       rowData,
       refreshInstructors,
-      handleProxyLogin
+      handleProxyLogin,
+      levelDescriptions
     ]
   )
 

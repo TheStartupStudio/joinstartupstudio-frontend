@@ -28,14 +28,14 @@ const Learners = ({
   periods,
   universities,
   usedIn,
-  instructors
+  instructors,
+  levelDescriptions
 }) => {
   const { handleProxyLogin } = useProxyLogin()
   const history = useHistory()
   const { user } = useSelector((state) => state.user.user)
   const [modals, setModalState] = useModalState()
   const [, setSelectedInstructor] = useState(null)
-  // const [instructors, setInstructors] = useState([])
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSchoolFilter, setSelectedSchoolFilter] = useState(null)
@@ -292,6 +292,7 @@ const Learners = ({
             periods={periods}
             handleProxyLogin={handleProxyLogin}
             onSuccess={refreshStudents}
+            levelDescriptions={levelDescriptions}
           />
         )
       }
@@ -306,7 +307,8 @@ const Learners = ({
     programs,
     instructors,
     refreshStudents,
-    handleProxyLogin
+    handleProxyLogin,
+    levelDescriptions
   ])
 
   const handleInstructorFilterChange = (selectedOption) => {

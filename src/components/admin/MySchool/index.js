@@ -6,6 +6,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getPeriodsStart } from '../../../redux/dashboard/Actions'
 import LoadingAnimation from '../../../ui/loadingAnimation'
 
+const levelDescriptions = {
+  HS: 'High School',
+  MS: 'Middle School',
+  LS: 'Lower School',
+  HE: 'Higher Education'
+}
+
 const MySchool = () => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -78,6 +85,7 @@ const MySchool = () => {
           periods={periods}
           universityId={universityId}
           universities={universities}
+          levelDescriptions={levelDescriptions}
         />
       )}
     </div>
