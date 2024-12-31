@@ -7,6 +7,7 @@ import MenuOption from './menuOption'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { setBackButton } from '../../../redux/backButtonReducer'
+import { changeSidebarState } from '../../../redux'
 
 function InboxMenu() {
   const {
@@ -30,6 +31,10 @@ function InboxMenu() {
       dispatch(setBackButton(false, ''))
     }
   }, [dispatch])
+
+    useEffect(() => {
+          dispatch(changeSidebarState(false))
+    })
 
   useEffect(() => {
     const hash = location.hash.substring(1)

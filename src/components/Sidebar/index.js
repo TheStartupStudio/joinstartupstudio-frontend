@@ -8,13 +8,13 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 import $ from 'jquery'
 import './index.css'
-
 import Header from './Header'
-import Footer from './Footer'
-import Body from './Body'
+import InstructorSidebar from './InstructorSidebar'
+import StudentSidebar from './StudentSidebar'
 
 function Sidebar(props) {
   const sideBarState = useSelector((state) => state.general.sidebarState)
+  const role = localStorage.getItem('role')
 
   const location = useLocation()
 
@@ -48,12 +48,15 @@ function Sidebar(props) {
       <div className='scroll sidebar-sticky sidebar-scroll'>
         <PerfectScrollbar
           option={{ suppressScrollX: true, wheelPropagation: false }}
-          className='sidebar-sticky'
+          className='sidebar-sticky sidebar-overflow-fix'
         >
           <div>
             <Header props={props} />
-            <Body props={props} />
-            {/* <Footer /> */}
+            {role === 'student' ? (
+              <StudentSidebar props={props} />
+            ) : (
+              <InstructorSidebar props={props} />
+            )}
           </div>
         </PerfectScrollbar>
       </div>

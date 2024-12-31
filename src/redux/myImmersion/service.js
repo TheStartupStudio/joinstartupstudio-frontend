@@ -30,11 +30,11 @@ const fetchIndustryProblems = async (
   }
 }
 
-const fetchSpotlights = async (currentPage, itemsPerPage) => {
+const fetchSpotlights = async () => {
   try {
-    const response = await axiosInstance.get(
-      `/immersion/spotlights?page=${currentPage}&limit=${itemsPerPage}`
-    )
+    const response = await axiosInstance.get(`/immersion/spotlights`)
+
+    console.log('response', response)
 
     if (response.status === 200) {
       return response.data
@@ -108,6 +108,28 @@ const handleIndustryProblemStatus = async (id, status) => {
     throw error
   }
 }
+const createIndustryProblem = async (data) => {
+  try {
+    const response = await axiosInstance.post('/immersion/problems', data)
+
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    throw error
+  }
+}
+const createSpotlight = async (data) => {
+  try {
+    const response = await axiosInstance.post('/immersion/spotlights', data)
+
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    throw error
+  }
+}
 
 const updateStatusInArray = (array, selectedItem, status) => {
   return array.map((item) =>
@@ -126,7 +148,9 @@ const myImmersionService = {
   fetchUserSpotlightApplication,
   handleSpotlightStatus,
   handleIndustryProblemStatus,
-  updateStatusInArray
+  updateStatusInArray,
+  createIndustryProblem,
+  createSpotlight
 }
 
 export default myImmersionService

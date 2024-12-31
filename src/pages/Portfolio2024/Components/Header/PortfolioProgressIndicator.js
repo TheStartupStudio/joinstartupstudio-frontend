@@ -45,6 +45,7 @@ function PortfolioProgressIndicator(props) {
         />
         <HorizontalSeparator />
         <ProgressIcon
+          className={'hcipi-text'}
           icons={{ coloredIcon: howIconColor, grayIcon: howIconGray }}
           title={'How Do I Prove It?'}
           activateSection={() => {

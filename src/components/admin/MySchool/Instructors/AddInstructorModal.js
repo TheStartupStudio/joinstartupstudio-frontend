@@ -1,14 +1,6 @@
-import {
-  faCheck,
-  faTimes,
-  faUserLock,
-  faUserMinus,
-  faUserPlus
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import { Col, Modal, Row } from 'react-bootstrap'
-import { CustomDropdown, SubmitButton } from '../ContentItems'
+import { CustomDropdown } from '../ContentItems'
 import LtsCheckbox from '../../../../ui/LtsCheckbox'
 import { useValidation } from '../../../../hooks/useValidation'
 import { useForm } from '../../../../hooks/useForm'
@@ -17,6 +9,10 @@ import { Auth } from 'aws-amplify'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import { CustomInput, LtsButton } from '../../../../ui/ContentItems'
+import tickIcon from '../../../../assets/images/tick.png'
+import userManageIcon from '../../../../assets/images/usermanage.png'
+import deletePersonIcon from '../../../../assets/images/persondelete.png'
+import personwkeyIcon from '../../../../assets/images/personwkey.png'
 
 const AddInstructorModal = ({
   show,
@@ -163,7 +159,7 @@ const AddInstructorModal = ({
         }}
         centered
       >
-        <Modal.Header className='position-relative p-3'>
+        <Modal.Header className='position-relative p-3 instructor-modal-details'>
           <Modal.Title
             className='px-3 py-3 d-flex fw-normal flex-column'
             style={{ fontSize: '16px' }}
@@ -178,13 +174,18 @@ const AddInstructorModal = ({
                 borderRadius: '50%'
               }}
             >
-              <FontAwesomeIcon icon={faUserPlus} />
+              <img
+                src={userManageIcon}
+                width={20}
+                height={16}
+                alt='user manage'
+              />
             </div>
             {mode === 'add' ? 'Add Instructor' : 'Edit Instructor Details'}
           </Modal.Title>
           {mode !== 'edit' ? (
             <div className={`check-button fw-bold`} onClick={() => onHide()}>
-              X
+              <img src={tickIcon} width={50} height={38} alt='tick' />
             </div>
           ) : submitLoading ? (
             <div className={`check-button fw-bold`}>
@@ -192,14 +193,15 @@ const AddInstructorModal = ({
             </div>
           ) : isDisabled ? (
             <div className={`check-button `} onClick={() => onHide()}>
-              <FontAwesomeIcon icon={faTimes} />
+              <img src={tickIcon} width={50} height={38} alt='tick' />
             </div>
           ) : (
             <div
               className={`check-button  ${isDisabled ? 'disabled' : ''}`}
               onClick={!isDisabled ? submitHandler : null}
             >
-              <FontAwesomeIcon icon={faCheck} />
+              <img src={tickIcon} width={50} height={38} alt='tick' />
+              {/* <FontAwesomeIcon icon={faCheck} /> */}
             </div>
           )}
         </Modal.Header>
@@ -371,8 +373,14 @@ const AddInstructorModal = ({
                   href='#'
                   className='m-0 cursor-pointer'
                   onClick={deleteUserFromEdit}
+                  style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
                 >
-                  <FontAwesomeIcon icon={faUserMinus} className='pe-2' />
+                  <img
+                    src={deletePersonIcon}
+                    width={20}
+                    height={24}
+                    alt='delete person'
+                  />
                   Delete User
                 </p>
               </span>
@@ -381,8 +389,14 @@ const AddInstructorModal = ({
                   href='#'
                   className='m-0 cursor-pointer'
                   onClick={resetPasswordFromEdit}
+                  style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
                 >
-                  <FontAwesomeIcon icon={faUserLock} className='pe-2' />
+                  <img
+                    src={personwkeyIcon}
+                    width={20}
+                    height={24}
+                    alt='person key'
+                  />
                   Reset password
                 </p>
               </span>

@@ -8,7 +8,6 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { IoMdOpen } from 'react-icons/io'
 
 function SectionActions(props) {
-
   const foundedAction = (type) =>
     props.actions?.find((action) => action.type === type)
   const addButton = foundedAction('add')
@@ -22,7 +21,7 @@ function SectionActions(props) {
   return (
     <React.Fragment>
       <div
-        className={`portfolio-actions ${
+        className={`portfolio-actions ${props.className}  ${
           props.positionRelative ? 'position-relative' : ''
         }`}
         style={{ ...props.styles }}

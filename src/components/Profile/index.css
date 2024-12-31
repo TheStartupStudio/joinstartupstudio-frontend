@@ -97,3 +97,10 @@
 .iamr-inbox_link:hover {
   color: #99cc33;
 }
+.iamr-box {
+  background-color: #f8f7f7;
+  margin-left: 0;
+  min-height: 166px;
+  height: 250px;
+  font-weight: 600;
+}

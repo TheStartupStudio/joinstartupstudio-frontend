@@ -1,0 +1,72 @@
+import React, { useEffect, useState } from 'react'
+import { Col } from 'react-bootstrap'
+import UserSocialMedia from '../../pages/Portfolio2024/Components/UserSocialMedia'
+import avator from '../../assets/images/profile-image.png'
+
+const UserInfoBox = ({ user, userBasicInfo }) => {
+  const [lastLogin, setLastLogin] = useState(null)
+
+  useEffect(() => {
+    if (user?.last_login === null) {
+      return setLastLogin('None')
+    }
+    const milliseconds = user?.last_login * 1000
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    const date = new Date(milliseconds)
+    const formatedDate =
+      monthNames[date.getMonth()] +
+      ' ' +
+      date.getUTCDate() +
+      ', ' +
+      date.getFullYear()
+    setLastLogin(formatedDate)
+  }, [user.last_login])
+
+  return (
+    <Col
+      lg={6}
+      sm={12}
+      style={{
+        backgroundColor: '#F8F7F7',
+        borderRadius: 0,
+        minHeight: '166px'
+      }}
+      className='notification-box'
+    >
+      <div className='dashboard-profile'>
+        <img
+          src={
+            userBasicInfo?.userImageUrl ? userBasicInfo?.userImageUrl : avator
+          }
+          alt='Profile'
+          className='ms-2'
+        />
+        <div className='profile-margin'>
+          <h3>{userBasicInfo?.name}</h3>
+          {/*<p>{user?.profession}</p>*/}
+          <p>{userBasicInfo?.userTitle}</p>
+          <UserSocialMedia data={userBasicInfo?.socialMediaLinks} />
+          <div className='dashboard_lastLogin w-100'>
+            <span className='me-1'>Last Login:</span>
+            {lastLogin}
+          </div>
+        </div>
+      </div>
+    </Col>
+  )
+}
+
+export default UserInfoBox

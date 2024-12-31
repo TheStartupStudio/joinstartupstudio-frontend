@@ -47,6 +47,9 @@ const ActiveUsers = ({ universityId }) => {
         </div>
       ) : (
         <div className='border '>
+            <div style={{ margin: '10px 0 0 10px' }}>
+          <p  className=' p-0 m-0'>Program Details</p>
+          </div>
           <Row className='linechart-over-row'>
             <Col
               md='10'

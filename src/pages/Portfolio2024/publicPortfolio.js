@@ -67,6 +67,11 @@ function PublicPortfolio(props) {
   }
 
   return (
+    <div ref={scrollableRef}
+      style={{
+        height: '800px',
+        overflowY: 'auto',
+      }}>
     <div
       className='portfolio-container'
       style={{ marginRight: 0, background: '#e4e9f4' }}
@@ -89,6 +94,7 @@ function PublicPortfolio(props) {
         <HowDoIProve data={publicPortfolio?.howDoIProve} />
       )}
       <PortfolioNavigator scrollToTop={scrollToTop} />
+    </div>
     </div>
   )
 }

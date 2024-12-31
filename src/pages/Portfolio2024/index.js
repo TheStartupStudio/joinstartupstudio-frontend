@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import PortfolioHeader from './Components/Header/PortfolioHeader'
 import PortfolioActions from './Components/Actions/PortfolioActions'
 import PortfolioNavigator from './Components/PortfolioNavigator'
@@ -34,6 +34,7 @@ import { FaX } from 'react-icons/fa6'
 import shareToPeersIcon from '../../assets/images/HS-Portfolio-Icons/Share Icon PEERS v2 (BLU)x1200.png'
 import shareToPublicIcon from '../../assets/images/HS-Portfolio-Icons/Share Icon (BLU)x1200.png'
 import noSharePinkIcon from '../../assets/images/HS-Portfolio-Icons/NO Share Icon (PINK)x1200.png'
+import { changeSidebarState } from '../../redux'
 
 const Index = ({
   loggedUser,
@@ -80,11 +81,17 @@ const Index = ({
   isLoadingWorkExperiences,
   isLoadingCompetitiveness
 }) => {
+  const dispatch = useDispatch()
   const mode = useSelector((state) => state.portfolio.mode)
   const publishToPeers = useSelector((state) => state.portfolio.publishToPeers)
   const publishToPublic = useSelector(
     (state) => state.portfolio.publishToPublic
   )
+
+  useEffect(() => {
+    dispatch(changeSidebarState(false))
+  }, [])
+
   useEffect(() => {
     const fetchDataSequentially = async () => {
       await fetchUserBasicInfo()

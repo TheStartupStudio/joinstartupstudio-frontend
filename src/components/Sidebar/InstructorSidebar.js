@@ -4,7 +4,6 @@ import LtsEduImage from '../../assets/images/HS-Sidebar-Icons/lts-edu-sidebar.sv
 import ClassroomImage from '../../assets/images/HS-Sidebar-Icons/classroom-sidebar.svg'
 import MarketImage from '../../assets/images/HS-Sidebar-Icons/market-sidebar.svg'
 import JournalImage from '../../assets/images/HS-Sidebar-Icons/journal-sidebar.svg'
-import SparkImage from '../../assets/images/HS-Sidebar-Icons/spark-sidebar.svg'
 import SidebarItem from './SidebarItem'
 import ParentSidebarItem from './ParentSidebarItem'
 import ParentDropdownItem from './ParentDropdownItem'
@@ -12,10 +11,9 @@ import DropdownItem from './DropdownItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAccordionToggled } from '../../redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
-import IntlMessages from '../../utils/IntlMessages'
 import Group3888Image from '../../assets/images/HS-Sidebar-Icons/Group 3888/Group 3888@2x.png'
 
-const Body = (props) => {
+const InstructorSidebar = (props) => {
   const { isAdmin } = useSelector((state) => state.user.user)
   const dispatch = useDispatch()
   const location = useLocation()
@@ -27,7 +25,7 @@ const Body = (props) => {
       <SidebarItem
         onClick={() => {
           dispatch(setAccordionToggled(false))
-          props.hideHeaderIcons()
+          props.props.hideHeaderIcons()
         }}
         to={'/dashboard'}
         className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
@@ -116,9 +114,9 @@ const Body = (props) => {
         isDropdown={true}
       />
       <ParentDropdownItem id={'journals'}>
-        <DropdownItem title={'MY LTS JOURNAL'} to={'/student-lts'} />
+        <DropdownItem title={'MY LTS JOURNAL'} to={'/lts-journal'} />
         <DropdownItem title={'MY MENTORSHIP JOURNAL'} to={'/my-mentorship'} />
-        <DropdownItem title={'MY WELLNESS JOURNAL'} to={'/student-wellnes'} />
+        <DropdownItem title={'MY WELLNESS JOURNAL'} to={'/wellness-journal'} />
         <DropdownItem
           title={'MY PERSONAL FINANCE JOURNAL'}
           to={'/student-personal-finance'}
@@ -138,29 +136,8 @@ const Body = (props) => {
         title='MY PORTFOLIO'
         isDropdown={false}
       />
-      {/* <ParentSidebarItem
-        ariaControls="mySpark"
-        href="#mySpark"
-        srcImage={FolderSidebarImage}
-        title="MY SPARK"
-        isDropdown={true}
-      />
-      <ParentDropdownItem id={'mySpark'}>
-        <DropdownItem title={'SPARK WIDGETS'} to={'/my-spark/widgets'} />
-        <DropdownItem title={'SPARK ARCHIVE'} to={'/my-spark/archive'} />
-      </ParentDropdownItem>
-      <SidebarItem
-        to={'/my-portfolio'}
-        className={`${
-          location.pathname.includes('my-portfolio') ? 'active' : ''
-        }`}
-        srcImage={SparkImage}
-        title='MY PORTFOLIO'
-        isDropdown={false}
-      />
-      */}
     </ul>
   )
 }
 
-export default Body
+export default InstructorSidebar

@@ -9,6 +9,7 @@ import './index.css'
 import LoadingAnimation from '../../../../ui/loadingAnimation'
 
 const SkillUploads = ({ skill }) => {
+  const skillStatus = skill.SkillStatus.map((skillStatus) => skillStatus.status)
   const [showUpload, setShowUpload] = useState(false)
   const [selectedUpload, setSelectedUpload] = useState(false)
 
@@ -28,15 +29,15 @@ const SkillUploads = ({ skill }) => {
   newArr.map((el) => usedTags.push(...el))
 
   return (
-    <div className="skill-uploads">
-      <div className="d-flex w-100 justify-content-between">
-        <p className="skill-title">
+    <div className='skill-uploads'>
+      <div className='d-flex w-100 justify-content-between'>
+        <p className='skill-title'>
           {(selectedUpload || showUpload) && (
             <FontAwesomeIcon
               icon={faChevronLeft}
-              color="#01c5d1"
-              className="me-2"
-              title="Back"
+              color='#01c5d1'
+              className='me-2'
+              title='Back'
               cursor={'pointer'}
               onClick={() => {
                 if (requestLoading) return
@@ -45,10 +46,10 @@ const SkillUploads = ({ skill }) => {
               }}
             />
           )}
-          <span className="text-info fw-bold">{skill.category} - </span>
-          <span className="fw-bold">{skill?.title} - </span> STUDENT UPLOADS
+          <span className='text-info fw-bold'>{skill.category} - </span>
+          <span className='fw-bold'>{skill?.title} - </span> STUDENT UPLOADS
         </p>
-        <p className="skill-title text-end">
+        <p className='skill-title text-end'>
           {showUpload && !selectedUpload && (
             <UploadStatus status={'New upload'} />
           )}
@@ -72,7 +73,7 @@ const SkillUploads = ({ skill }) => {
           uploads={uploads}
           setSelectedUpload={setSelectedUpload}
           setShowUpload={setShowUpload}
-          skillStatus={skill.SkillStatus.status}
+          skillStatus={skillStatus}
           deleteUpload={deleteUpload}
         />
       )}

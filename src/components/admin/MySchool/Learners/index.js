@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import axiosInstance from '../../../../utils/AxiosInstance'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import GridTable from '../../../GridTable'
 import { SkillBox } from '../ContentItems'
 import { useParams, useHistory } from 'react-router-dom'
@@ -17,13 +17,7 @@ import {
   TransferFilter
 } from '../../../GridTable/AgGridItems'
 import useModalState from '../../../../hooks/useModalState'
-import { toast } from 'react-toastify'
-import { userLogin } from '../../../../redux'
-import { setGeneralLoading } from '../../../../redux/general/Actions'
-import {
-  getClientFromHostname,
-  getDomainFromClientName
-} from '../../../../utils/helpers'
+import useProxyLogin from '../../../../hooks/useProxyLogin'
 
 const Learners = ({
   programs,
@@ -36,12 +30,11 @@ const Learners = ({
   usedIn,
   instructors
 }) => {
-  const dispatch = useDispatch()
+  const { handleProxyLogin } = useProxyLogin()
   const history = useHistory()
   const { user } = useSelector((state) => state.user.user)
   const [modals, setModalState] = useModalState()
-  const [selectedInstructor, setSelectedInstructor] = useState(null)
-  // const [instructors, setInstructors] = useState([])
+  const [, setSelectedInstructor] = useState(null)
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSchoolFilter, setSelectedSchoolFilter] = useState(null)
@@ -60,6 +53,7 @@ const Learners = ({
   }, [instructorId, instructor_id])
 
   const fetchStudents = useCallback(async () => {
+    let isMounted = true
     setLoading(true)
     let url = ''
     if (instructorId || instructor_id) {
@@ -89,11 +83,15 @@ const Learners = ({
           : 'none',
         universityName: student.University.name
       }))
-      setRowData(formattedData)
+      if (isMounted) setRowData(formattedData)
     } catch (error) {
       setLoading(false)
     } finally {
       setLoading(false)
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [instructorId, instructor_id, user.universityId])
 
@@ -105,66 +103,10 @@ const Learners = ({
     fetchStudents()
   }, [fetchStudents])
 
-  const handleProxyLogin = useCallback(
-    async (impersonateId, studentCognitoId) => {
-      dispatch(setGeneralLoading(true))
-      try {
-        const response = await axiosInstance.post('/auth/proxy-auth', {
-          impersonateId
-        })
-
-        const { accessToken } = response.data
-        const originalToken = localStorage.getItem('access_token')
-        localStorage.setItem('original_access_token', originalToken)
-        localStorage.setItem('impersonateId', studentCognitoId)
-        localStorage.setItem('access_token', accessToken)
-
-        axiosInstance.defaults.headers.common[
-          'Authorization'
-        ] = `Bearer ${accessToken}`
-
-        const loginResult = await dispatch(userLogin(null, true, 'student'))
-        const domain = getDomainFromClientName()
-        const client = getClientFromHostname()
-
-        if (loginResult === 'impersonated') {
-          Object.keys(localStorage).forEach((key) => {
-            const value = localStorage.getItem(key)
-
-            if (key !== 'user') {
-              document.cookie = `${key}=${value}; path=/; domain=${domain}; SameSite=None; Secure`
-            }
-          })
-
-          if (client === 'localhost') {
-            window.location.href = 'http://localhost:8080/?mode=impersonation'
-          } else if (client === 'ims-dev') {
-            window.location.href = `https://mainplatform-dev${domain}/?mode=impersonation`
-          } else if (client === 'ims') {
-            window.location.href = `https://main${domain}/?mode=impersonation`
-          } else {
-            window.location.href = `https://${client}.main${domain}/?mode=impersonation`
-          }
-        } else {
-          console.error('Impersonation failed or returned an unexpected result')
-        }
-      } catch (error) {
-        if (error.response) {
-          toast.error(error.response.data.error || 'Something went wrong')
-        } else {
-          toast.error('Network error')
-        }
-      } finally {
-        dispatch(setGeneralLoading(false))
-      }
-    },
-    [dispatch]
-  )
-
   const columnDefs = useMemo(() => {
     const baseColumnDefs = [
       {
-        headerName: 'Username',
+        headerName: 'user name',
         field: 'name',
         flex: 2,
         checkboxSelection: true,
@@ -172,7 +114,7 @@ const Learners = ({
           return (
             <>
               <div
-                className='pb-0 m-0'
+                className='pb-0 m-0 learners-subtitles'
                 style={{ height: '14px', fontWeight: '500' }}
               >
                 {params.data?.name}
@@ -305,7 +247,7 @@ const Learners = ({
         cellRenderer: (params) => {
           let status = params.value[0]?.status
           return (
-            <div>
+            <div className='transfer-status-cont'>
               <SkillBox
                 withStatus={true}
                 color={`transfer__${
@@ -404,7 +346,7 @@ const Learners = ({
   )
 
   return (
-    <div style={{ background: '#fff' }}>
+    <div className='' style={{ background: '#fff', borderRadius: '12px' }}>
       <HeaderActions
         usedIn={usedIn || 'student'}
         tableTitle={tableTitle}

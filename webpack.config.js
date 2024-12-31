@@ -29,19 +29,32 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)$/i,
         use: [
+          'style-loader',
           {
-            loader: 'file-loader',
+            loader: 'css-loader',
             options: {
-              name: '[name].[contenthash].[ext]',
-              outputPath: 'assets/images'
+              url: true
             }
           }
         ]
+      },
+      // {
+      //   test: /\.(png|jpe?g|gif|svg)$/i,
+      //   use: [
+      //     {
+      //       loader: 'file-loader',
+      //       options: {
+      //         name: '[name].[contenthash].[ext]',
+      //         outputPath: 'assets/images',
+      //         publicPath: '/assets/images'
+      //       }
+      //     }
+      //   ]
+      // },
+      {
+        test: /\.(jpg|jpeg|png|svg|gif|woff|woff2|ttf|eot|otf)$/i,
+        type: 'asset/resource'
       },
       {
         test: /\.csv$/,
@@ -61,6 +74,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './public/index.html',
+      favicon: './public/favicon.png',
       minify: {
         collapseWhitespace: true,
         removeComments: true,

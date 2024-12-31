@@ -12,7 +12,7 @@ function PortfolioHeader(props) {
 
   return (
     <div className='portfolio-main-wrapper'>
-      <PortfolioProgressIndicator />
+      {/* <PortfolioProgressIndicator /> */}
       <div className={'my-portfolio-logo-container'}>
         <img
           src={myPortfolioLogo}
@@ -20,6 +20,7 @@ function PortfolioHeader(props) {
           className={'my-portfolio-logo'}
         />
       </div>
+      <PortfolioProgressIndicator />
       {activeSection === 'who-section' && (
         <SectionDescription
           sectionTitle={'Who am i?'}

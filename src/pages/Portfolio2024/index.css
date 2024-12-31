@@ -410,8 +410,6 @@
   cursor: pointer;
 }
 
-
-
 .nav-icon {
   width: 45px;
   height: 45px;
@@ -489,6 +487,12 @@
 
 .immersion-card-text {
   width: 70% !important;
+}
+
+@media (max-width: 725px) {
+  .nav-icon-title {
+    font-size: smaller !important;
+  }
 }
 
 .nav-icon-title {
@@ -619,9 +623,45 @@
   margin-top: -10px !important;
 }
 
-@media (max-width: 400px) {
+/* @media (max-width:400px) {
   .preview-modal-resp .modal-content {
     margin-top: 70% !important;
+  }
+} */
+
+@media (max-width: 589px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 20% !important;
+  }
+}
+
+@media (max-width: 518px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 80% !important;
+  }
+}
+
+@media (max-width: 555px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 70% !important;
+  }
+}
+
+@media (max-width: 435px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 120% !important;
+  }
+}
+
+@media (max-width: 435px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 120% !important;
+  }
+}
+
+@media (max-width: 371px) {
+  .preview-modal-resp .modal-content {
+    margin-top: 150% !important;
   }
 }
 
@@ -777,10 +817,29 @@
   padding: 0px 20px !important;
 }
 
+@media (max-width: 621px) {
+  .portfolio-section-title {
+    width: fit-content;
+  }
+}
+
 @media (max-width: 403px) {
   .portf-section-maintitle {
     margin-inline: 30px;
   }
+}
+
+@media (max-width: 404px) {
+  .section-description-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* .portfolio-triangle-icon {
+    margin-left: -30px !important;
+  } */
 }
 
 @media (max-width: 1408px) {
@@ -830,6 +889,12 @@
   }
 }
 
+@media (max-width: 421px) {
+  .my-portfolio-logo {
+    width: 100% !important;
+  }
+}
+
 @media (max-width: 460px) {
   .portfolio-container {
     padding: 10px !important;
@@ -840,7 +905,7 @@
   }
 
   .portfolio-nav-icons {
-    margin-top: 57px;
+    margin-top: -57px;
   }
 
   /* .portfolio-nav-icons div {
@@ -850,9 +915,19 @@
   } */
 }
 
-@media (max-width: 413px) {
-  .portfolio-nav-icons div {
-    margin-left: 10px !important;
+@media (max-width: 497px) {
+  .hcipi-text {
+    bottom: -61px !important;
+  }
+}
+
+@media (max-width: 385px) {
+  .wcid-text {
+    width: 40px !important;
+  }
+
+  .horizontal-separator {
+    margin-inline: 5px !important;
   }
 }
 
@@ -862,11 +937,21 @@
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 421px) {
+  .my-portfolio-logo-container {
+    padding-inline: 5px !important;
+  }
+
+  .my-portfolio-logo {
+    width: 350px !important;
+  }
+}
+
+/* @media (max-width: 420px) {
   .my-portfolio-logo {
     width: 300px !important;
   }
-}
+} */
 
 @media (max-width: 795px) {
   /* .portfolio-nav-icons {
@@ -937,19 +1022,66 @@
   }
 } */
 
-@media (max-width: 668px) {
+/* @media (max-width: 668px) {
   .portfolio-nav-icons {
     display: grid !important;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
   }
 
-  /* .portfolio-nav-icons div {
+  .portfolio-nav-icons div {
     margin-right: 30px !important;
-  } */
+  }
 
   .horizontal-separator {
     display: none;
+  }
+
+
+} */
+
+@media (max-width: 552px) {
+  .nav-icon-box img {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .nav-icon-title {
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width: 496px) {
+  /* .nav-icon-box img {
+    width: 50px !important;
+    height: 50px !important;
+  } */
+
+  .nav-icon-title {
+    font-size: 11px !important;
+    margin-inline: 5px;
+    width: 100px !important;
+  }
+
+  .horizontal-separator {
+    margin-inline: 10px !important;
+  }
+}
+
+@media (max-width: 385px) {
+  .wcid-text {
+    width: 40px !important;
+  }
+
+  .horizontal-separator {
+    margin-inline: 5px !important;
+  }
+}
+
+@media (max-width: 385px) {
+  .wcid-text {
+    width: 70px !important;
+    bottom: -61px !important;
   }
 }
 
@@ -2414,6 +2546,14 @@
 }
 
 .project-submission-image .project-submission .portfolio-submission-container {
+}
+
+@media (max-width: 548px) {
+  .hdipi-cards-titles .education-section-alignment,
+  .immrs-render-caro,
+  .comp-card-margins {
+    margin-top: 30px !important;
+  }
 }
 
 /*/////////////////////////////////////////////*/

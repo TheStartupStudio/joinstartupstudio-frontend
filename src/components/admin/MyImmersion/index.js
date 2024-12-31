@@ -7,7 +7,7 @@ import {
   CustomSelectCellEditor,
   ProgramsFilter,
   TransferFilter,
-  StepFilter,
+  StepFilter
 } from './AgGridItems'
 import { SkillBox } from '../MySchool/ContentItems'
 import { useParams, useHistory } from 'react-router-dom'
@@ -100,6 +100,7 @@ const MyImmersion = ({
       {
         field: 'status',
         filter: ActiveInactiveFilter,
+        sortable: false,
         cellRenderer: (params) => {
           return (
             <div className=''>
@@ -116,6 +117,7 @@ const MyImmersion = ({
         headerName: 'Step',
         field: 'step',
         flex: 1,
+        sortable: false,
         filter: StepFilter,
         cellRenderer: (params) => {
           return (
@@ -126,13 +128,14 @@ const MyImmersion = ({
                 text={params?.value}
               />
             </div>
-          );
-        },
+          )
+        }
       },
 
       {
         headerName: 'INDUSTRY',
         field: 'industry',
+        sortable: false,
         flex: 2,
         cellRenderer: (params) => {
           return (
@@ -148,6 +151,7 @@ const MyImmersion = ({
       {
         headerName: 'DESCRIPTION',
         field: 'company_description',
+        sortable: false,
         flex: 3,
         cellRenderer: (params) => {
           return (
@@ -165,6 +169,7 @@ const MyImmersion = ({
     baseColumnDefs.push({
       field: 'actions',
       flex: 3,
+      sortable: false,
       cellRenderer: (params) => {
         let immersion = params.data
         return (

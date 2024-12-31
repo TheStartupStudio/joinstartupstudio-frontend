@@ -25,7 +25,6 @@ function PortfolioNavigator(props) {
     (section, index) => section.type === activeSection
   )
 
-
   const handleNextSection = () => {
     let changeSectionIndex = activeSectionIndex + 1
     while (
@@ -41,9 +40,6 @@ function PortfolioNavigator(props) {
     props.scrollToTop()
   }
 
-  console.log(handleNextSection, 'triumf99')
-  console.log("scrollToTop exists:", typeof props.scrollToTop === 'function');
-
   const handlePreviousSection = () => {
     let changeSectionIndex = activeSectionIndex - 1
     while (changeSectionIndex >= 0 && sections[changeSectionIndex].disabled) {
@@ -55,8 +51,6 @@ function PortfolioNavigator(props) {
     }
     props.scrollToTop()
   }
-
-
 
   // DO NOT DELETE THESE TWO FUNCTIONS !!!
   // todo: use these functions when all sections are disabled

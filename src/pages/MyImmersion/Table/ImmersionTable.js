@@ -1,20 +1,18 @@
 import React, { useMemo, useState } from 'react'
 import { useTable, useResizeColumns } from 'react-table'
 import '../style.css'
-import ProblemModal from '../Modals/ProblemModal'
 import { Button } from 'react-bootstrap'
 import SubmitIndustryProblemModal from '../Modals/SubmitIndustryProblemModal'
-import SubmitExperienceModal from '../Modals/SpotlightModal'
+import SpotlightModal from '../Modals/SpotlightModal'
 import { formatDateString } from '../../../utils/helpers'
 import AddImmersionModal from '../../../components/admin/MyImmersion/AddImmersionModal'
 
-const ImmersionTable = React.memo(({ data, step, immersions }) => {
+const ImmersionTable = React.memo(({ data, step }) => {
+  const userRole = localStorage.getItem('role')
   const [problemModal, setProblemModal] = useState(false)
   const [industryProblemModal, setIndustryProblemModal] = useState(false)
   const [experienceModal, setExperienceModal] = useState(false)
   const [clickedImmersion, setClickedImmersion] = useState(null)
-
-  const [selectedImmersion, setSelectedImmersion] = useState(null)
 
   const tableData = React.useMemo(() => {
     if (!data) return []
@@ -37,7 +35,7 @@ const ImmersionTable = React.memo(({ data, step, immersions }) => {
       }
       return commonData
     })
-  }, [data, step])
+  }, [data])
 
   const columnsStep1 = useMemo(
     () => [
@@ -207,10 +205,11 @@ const ImmersionTable = React.memo(({ data, step, immersions }) => {
         />
       )}
       {experienceModal && clickedImmersion && (
-        <SubmitExperienceModal
+        <SpotlightModal
           show={experienceModal}
           immersion={clickedImmersion} // Pass the entire immersion object
           onHide={() => setExperienceModal(false)}
+          userRole={userRole}
           mode='add'
         />
       )}
@@ -221,6 +220,7 @@ const ImmersionTable = React.memo(({ data, step, immersions }) => {
           immersion={clickedImmersion} // Pass the entire immersion object
           onHide={() => setIndustryProblemModal(false)}
           mode='add'
+          userRole={userRole}
         />
       )}
     </>

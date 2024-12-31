@@ -33,7 +33,7 @@ const PrerequisiteModal = (props) => {
         </h3>
         <div className='p-5'>
           <p
-            className='d-flex justify-content-center text-center align-items-center h-100'
+            className='prerequisite-subtitle d-flex justify-content-center text-center align-items-center h-100'
             style={{ fontSize: '19px', marginTop: '-10px', fontWeight: '100' }}
           >
             {props.content}

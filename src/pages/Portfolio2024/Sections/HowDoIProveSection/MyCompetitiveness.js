@@ -69,7 +69,7 @@ function MyCompetitiveness(props) {
     dispatch(hideAddCompetitivenessModal())
   }
   return (
-    <div className={'container'}>
+    <div className={'container comp-card-margins '}>
       {myCompetitiveness?.length === 1 &&
       myCompetitiveness[0].isAddBox &&
       !isEditSection ? (

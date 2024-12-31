@@ -91,9 +91,6 @@ function LtsJournal(props) {
     getJournals()
   }, [])
 
-  useEffect(() => {
-    dispatch(changeSidebarState(false))
-  })
 
   let titleMapping = {
     hs1: 'my_journal.hs1_title',

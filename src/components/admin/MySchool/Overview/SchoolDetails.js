@@ -47,6 +47,7 @@ const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
       setMode={setMode}
       hasChanges={hasChanges}
       onSaveChanges={handleSaveChanges}
+      cn={'overview-topinfobox-border'}
     >
       {loading ? (
         <div

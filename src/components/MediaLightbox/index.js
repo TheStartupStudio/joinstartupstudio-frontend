@@ -38,6 +38,18 @@ export default function MediaLightbox(props) {
   let [saveTimer, setSaveTimer] = useState(0)
   let [watchedVideo, setWatchedVideo] = useState(false)
   const videoRef = useRef(null)
+  const [isPiPActive, setIsPiPActive] = useState(false); //pip (picture to picture)
+
+  const handleEnterPiP = () => {
+    setIsPiPActive(true);
+    videoRef.current.getInternalPlayer().pause();
+  };
+
+  const handleLeavePiP = () => {
+    setIsPiPActive(false);
+    videoRef.current.getInternalPlayer().play();
+  };
+
 
   useEffect(() => {
     setWatchTime(0)
@@ -95,7 +107,7 @@ export default function MediaLightbox(props) {
     }
   }
   return (
-    <div className='media-lightbox'>
+    <div className='media-lightbox' style={isPiPActive ? { visibility: 'hidden' } : {}}>
       <div className='media-lightbox__inner'>
         <div className='media-lightbox__overlay' />
 
@@ -115,6 +127,8 @@ export default function MediaLightbox(props) {
                   controls={true}
                   width='100%'
                   height='100%'
+                  onEnablePIP={handleEnterPiP}
+                  onDisablePIP={handleLeavePiP}
                   config={{
                     file: { attributes: { controlsList: 'nodownload' } }
                   }}

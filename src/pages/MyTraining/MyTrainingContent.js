@@ -672,10 +672,7 @@ function MyTrainingContent(props) {
                             portion for each. Now, you have a model for
                             students.
                           </p>
-                          <a
-                            href={'/iamr-certification-system'}
-                            className='default-btn'
-                          >
+                          <a href={'/iamr'} className='default-btn'>
                             MY CERTIFICATION
                           </a>
                         </div>

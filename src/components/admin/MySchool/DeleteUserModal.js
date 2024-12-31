@@ -8,7 +8,8 @@ import configureAwsSdk from '../../../config/configAwsSdk'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import { LtsButton } from '../../../ui/ContentItems'
-
+import backArrowIcon from '../../../assets/images/backarrow.png'
+import deletePersonIcon from '../../../assets/images/persondelete.png'
 const deleteUserFromCognito = async (cognito_Id) => {
   const cognito = configureAwsSdk()
 
@@ -82,7 +83,8 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
                 borderRadius: '50%'
               }}
             >
-              <FontAwesomeIcon icon={faUserMinus} />
+              <img src={deletePersonIcon} width={21} height={24}></img>
+              {/* <FontAwesomeIcon icon={faUserMinus} /> */}
             </div>
             {`Delete ${isMultipleUsers ? 'Users' : 'User'}`}
           </Modal.Title>
@@ -90,7 +92,7 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
             className={`check-button fw-bold reset-pasw-checkbtn`}
             onClick={() => onHide()}
           >
-            X
+            <img src={backArrowIcon} width={50} height={38}></img>
           </div>
         </Modal.Header>
         <Modal.Body className='text-center '>
@@ -116,6 +118,18 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
               border={'1px solid #ccc'}
               onClick={handleDeleteUsers}
             />
+          </Col>
+          <Col md='12' className='d-flex justify-content-center mt-3'>
+            <span
+              className='cancel-text'
+              style={{
+                cursor: 'pointer',
+                color: '#000',
+              }}
+              onClick={() => onHide()}
+            >
+              Cancel
+            </span>
           </Col>
         </Modal.Body>
       </Modal>

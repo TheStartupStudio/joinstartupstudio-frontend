@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { InfoBox, SkillBox } from '../ContentItems'
 import { Col, Row } from 'react-bootstrap'
-import DefaultImage from '../../../../assets/images/myschool-logo.svg'
+import DefaultImage from '../../../../assets/images/logo-mini.svg'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import CustomSpinner from '../../../CustomSpinner'
 
@@ -64,6 +64,7 @@ const ProgramDetails = ({
       setMode={setMode}
       hasChanges={hasChanges}
       onSaveChanges={handleSaveChanges}
+      cn={'overview-topinfobox-border'}
     >
       {loading ? (
         <div
@@ -148,16 +149,17 @@ const ProgramDetails = ({
                   )}
                 </>
               ) : schoolDetails.program_details?.programsImplemented?.length ? (
-                schoolDetails.program_details.programsImplemented.map(
-                  (program) => (
+                schoolDetails.program_details.programsImplemented.map((program, index) => {
+                  const colors = ['green', 'blue', 'red'];
+                  return (
                     <SkillBox
                       key={program.id}
                       className='d-flex align-items-center justify-content-center'
-                      color={'green'}
+                      color={colors[index % colors.length]}
                       text={program.name}
                     />
                   )
-                )
+                })
               ) : (
                 <SkillBox
                   className='d-flex align-items-center justify-content-center'

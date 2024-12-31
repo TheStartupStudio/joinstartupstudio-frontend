@@ -15,12 +15,19 @@ import Accordion from 'react-bootstrap/Accordion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown, faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment/moment'
+import { changeSidebarState } from '../../redux'
+import { useDispatch } from 'react-redux'
 
 const MyTraining = (props) => {
   const [trainings, setTrainings] = useState([])
   const match = useRouteMatch()
   const history = useHistory()
   let [journalActive, setJournalActive] = useState(false)
+    const dispatch = useDispatch()
+  
+    useEffect(() => {
+          dispatch(changeSidebarState(false))
+        })
 
   async function getTrainings(redir = true) {
     try {

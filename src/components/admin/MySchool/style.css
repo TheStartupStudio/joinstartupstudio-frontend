@@ -21,48 +21,6 @@
   right: 35px !important;
 }
 
-.dot {
-  height: 10px;
-  width: 10px;
-  background-color: #a7ca42;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.dot__status__active,
-.dot__transfer__transferred {
-  height: 10px;
-  width: 10px;
-  background-color: #a7ca42;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.dot__transfer__requested {
-  height: 10px;
-  width: 10px;
-  background-color: #52c7de;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.dot__transfer__denied {
-  height: 10px;
-  width: 10px;
-  background-color: #ea3b97;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.dot__status__unactive,
-.dot__transfer__none {
-  height: 10px;
-  width: 10px;
-  background-color: #5f646d;
-  border-radius: 50%;
-  display: inline-block;
-}
-
 .my-school__container {
   background-color: #e4e9f4;
   padding: 2rem 2rem 2rem 2rem;
@@ -336,7 +294,9 @@
   font-size: 12px;
 }
 
-.agGrid__actions .action-item {
+/* 
+.agGrid__actions */
+.action-item {
   display: flex;
   align-items: center;
   margin: 0 5px;
@@ -475,7 +435,6 @@
   max-width: 500px;
 }
 
-
 .school-lts-container hr {
   margin: 0 !important;
 }
@@ -488,12 +447,16 @@
   margin-inline: 20px !important;
 }
 
+.overview-topinfobox-border {
+  border-top-right-radius: 50px !important;
+}
+
 .overview-school-program-info .info-box {
   height: 268px !important;
   min-height: 268px !important;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029 !important;
-  border-radius: 12px !important;
+  border-radius: 12px;
   opacity: 1;
   padding-inline: 20px !important;
   padding-top: 0 !important;
@@ -520,7 +483,6 @@
 }
 
 .item-profile__details {
-
   font: normal normal 300 14px/14px Montserrat !important;
   letter-spacing: 0.56px;
   color: #000000;
@@ -542,11 +504,10 @@
 }
 
 .specialistname-font {
-
   font: normal normal 500 12px/16px Montserrat !important;
   letter-spacing: 0.48px;
   color: #000000;
-  opacity: 1
+  opacity: 1;
 }
 
 .specialistemail-font {
@@ -559,7 +520,6 @@
 @media (max-width: 1138px) {
   .linechart-over-row {
     flex-wrap: nowrap !important;
-
   }
 }
 
@@ -585,18 +545,65 @@
   opacity: 1;
 }
 
-@media (max-width:566px) {
+@media (max-width: 767px) {
+  .lts-immrs-container {
+    height: 140px !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+  }
+}
+
+@media (max-width: 566px) {
   .ltsimmrs-buttons {
     flex-wrap: wrap;
     justify-content: flex-start !important;
     gap: 10px !important;
   }
 
+  .lts-immrs-container {
+    height: 200px !important;
+  }
+}
 
+.ltsimmrs-buttons {
+  margin-bottom: 20px !important;
+}
+
+@media (max-width: 1241px) and (min-width: 768px) {
+  .lts-immrs-container {
+    height: 90px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-gradient_button:has(.immrs-opp-1) {
+    height: 75px !important;
+    max-height: 75px !important;
+  }
+}
+
+@media (max-width: 393px) {
+  .custom-gradient_button:has(.immrs-opp-2) {
+    height: 75px !important;
+    max-height: 75px !important;
+  }
 }
 
 .recentact-img {
   margin-bottom: 10px !important;
+}
+
+.col-md-6:has(.recentact-img) {
+  width: 60% !important;
+}
+
+.recentact-img p {
+  margin-left: 10px !important;
+  width: max-content !important;
+  font: normal normal 400 14px/16px Montserrat;
+  letter-spacing: 0.56px;
+  color: #000000;
+  opacity: 1;
 }
 
 .recentact-img img {
@@ -624,7 +631,6 @@
   color: #000000;
   opacity: 1;
   overflow: unset !important;
-
 }
 
 .immrs-opps-cont span.arrow {
@@ -636,7 +642,6 @@
 .col-md-4 {
   margin-bottom: 10px !important;
 }
-
 
 /* .instructors-search-btns .custom_dropdown {
   width: unset !important;
@@ -662,7 +667,6 @@
   padding-bottom: 10px !important;
   width: 403px !important;
   height: 361px !important;
-
 }
 
 .deleteuser-title {
@@ -680,13 +684,13 @@
   margin-top: 20px !important;
   width: 198px !important;
   height: 40px !important;
-  background: #EE3C96 0% 0% no-repeat padding-box !important;
+  background: #ee3c96 0% 0% no-repeat padding-box !important;
   box-shadow: 0px 3px 6px #00000029 !important;
   border-radius: 12px !important;
   opacity: 1;
   font: normal normal 400 17px/20px Montserrat;
   letter-spacing: 0px;
-  color: #FFFFFF;
+  color: #ffffff;
   text-transform: uppercase;
 }
 
@@ -694,16 +698,20 @@
   justify-content: center !important;
 }
 
-@media (max-width:387px) {
+@media (max-width: 387px) {
   .reset-password-modal .modal-content {
     padding-inline: 30px;
   }
 
   .reset-pasw-checkbtn {
     right: -30px !important;
-
   }
+}
 
+@media (max-width: 998px) {
+  body {
+    height: unset !important;
+  }
 }
 
 .reset-pasw-checkbtn {
@@ -712,8 +720,6 @@
   right: -50px;
   border-top-right-radius: 50% !important;
 }
-
-
 
 .cancel-btns {
   width: 114px;
@@ -725,13 +731,57 @@
   letter-spacing: 0px;
 }
 
-/* text-align: left;
-font: normal normal medium 14px/16px Montserrat;
-letter-spacing: 0.56px;
-color: #000000;
-opacity: 1; */
+.ag-header-cell-text {
+  text-align: left;
+  font: normal normal 600 10px/16px Montserrat !important;
+  letter-spacing: 0.4px;
+  color: #707070;
+  text-transform: uppercase !important;
+  opacity: 1;
+}
 
-/* font: normal normal normal 15px/19px Montserrat;
-letter-spacing: 0px;
-color: #000000;
-opacity: 1; */
+.ag-header-viewport,
+.ag-header-container,
+.ag-header-row.ag-header-row-column,
+.ag-header.ag-pivot-off.ag-header-allow-overflow {
+  height: 40px !important;
+  min-height: 40px !important;
+  align-items: center;
+  background: #ededed 0% 0% no-repeat padding-box !important;
+}
+
+.ag-header-row.ag-header-row-column {
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-top: -4px !important;
+  background: #ededed 0% 0% no-repeat padding-box !important;
+}
+
+@media (max-width: 480px) {
+  /* .schoolpanel-nav-title {
+    font-size: smaller !important;
+  } */
+
+  .my-school__panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 150px !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+
+.ag-center-cols-viewport,
+.ag-center-cols-container,
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-column-last.ag-cell-value,
+.ag-row-even.ag-row-no-focus.ag-row.ag-row-level-0.ag-row-position-absolute.ag-row-first.ag-row-not-inline-editing {
+  overflow-x: scroll !important;
+
+  scrollbar-width: thin !important;
+}
+
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.transfer-status-cont) {
+  padding-left: 0px !important;
+  margin-left: -8px !important;
+}

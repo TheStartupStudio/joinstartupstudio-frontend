@@ -3,14 +3,12 @@ import {
   faAward,
   faChalkboardTeacher,
   faCheck,
-  faExclamation,
   faEye,
   faEyeSlash,
   faGraduationCap,
   faPencilAlt,
   faSearch,
   faTimes,
-  faTrashAlt,
   faUsers
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -284,7 +282,7 @@ const CustomDropdown = ({
                     }
                   />
                 )}
-                {option.name}
+                {option.displayName || option.name}
               </div>
             ))}
           </div>
