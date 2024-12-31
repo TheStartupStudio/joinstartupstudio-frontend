@@ -186,11 +186,6 @@ export const mutualRoutes = [
     exact: true
   },
   {
-    path: '/public-portfolio/:username',
-    component: PublicPortfolio2024,
-    exact: true
-  },
-  {
     path: '/pathways/:occupationId?/:occupationJobId?',
     component: Pathways,
     props: { category: 'my-training' }
@@ -381,7 +376,7 @@ export const publicRoutes = [
   { path: '/terms', component: Terms, exact: true },
   { path: '/my-immersion', component: MyImmersion, exact: false },
   { path: '/verify', component: VerifyEmail, exact: false },
-  { path: '/', component: Login, exact: false },
+  { path: '/', component: Login, exact: true },
   { path: '/logout', component: Logout, exact: false },
   { path: '/register', component: Register, exact: true },
   { path: '/trial-ended', component: Resubscribe, exact: true },
