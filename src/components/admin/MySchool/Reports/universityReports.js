@@ -24,7 +24,7 @@ const UniversityReports = ({
       <InfoBox cn='my-3' style={{ maxHeight: '350px' }}>
         <Row className='justify-content-between align-items-center'>
           <Col md='6'>
-            <span class='me-2'>Active Users</span>
+            <span className='me-2'>Active Users</span>
           </Col>
           <Col md='6' className='d-flex justify-content-end'>
             <CustomDropdown

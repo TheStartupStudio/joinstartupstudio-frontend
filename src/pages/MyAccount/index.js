@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Image, InputGroup, Form, Button, Col } from 'react-bootstrap'
 import { toast } from 'react-toastify'
@@ -16,7 +16,6 @@ import { validateEmail, validateNumber } from '../../utils/helpers'
 import { userUpdate, userUpdateProfileImage } from '../../redux'
 import EditProfileModal from '../../components/Modals/Profile/editProfileModal'
 import EditPasswordModal from '../../components/Modals/Profile/editPasswordModal'
-import AddNewUserTag from '../../components/Modals/Profile/addNewUserTag'
 import ShareMyPortfolio from '../../components/Modals/Profile/shareMyPortfolio'
 import defaultImage from '../../assets/images/profile-image.png'
 import '../PortfolioNew/style/previewPortfolio.css'
@@ -36,13 +35,9 @@ function MyAccount() {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false)
   const [showEditPasswordModal, setShowEditPasswordModal] = useState(false)
   const [shareMyPortfolioModal, setShareMyPortfolioModal] = useState(false)
-  const [tagsModal, setTagsModal] = useState(false)
-  const [addUserTagsModal, setAddUserTagsModal] = useState(false)
   const [userPortfolio, setUserPortfolio] = useState({})
   const [editPage, setEditPage] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [userTagsId, setUserTagsId] = useState([])
-  const [tagName, setTagName] = useState('')
   const userId = useSelector((state) => state.user.user.user.id)
   const profileImage = useSelector((state) => state.user.profile_image)
   const [instructorNotes, setInstructorNotes] = useState(false)
@@ -62,20 +57,19 @@ function MyAccount() {
     dispatch(getUserBasicInfo())
   }, [dispatch])
 
-  useEffect(() => {
-    getUserData()
-    getUserPortfolio()
-    getUserTags()
-  }, [])
-
-  const getUserData = async () => {
+  const getUserData = useCallback(async () => {
     await axiosInstance
       .get(`/users/${userId}`)
       .then((response) => {
         setUser(response.data)
       })
       .catch((err) => err)
-  }
+  }, [userId])
+
+  useEffect(() => {
+    getUserData()
+    getUserPortfolio()
+  }, [getUserData])
 
   const getUserPortfolio = async () => {
     await axiosInstance
@@ -84,48 +78,6 @@ function MyAccount() {
         setUserPortfolio(response.data)
       })
       .catch((err) => err)
-  }
-
-  const getUserTags = async () => {
-    await axiosInstance
-      .get(`/tags/users/${userId}`)
-      .then((response) => {
-        let ids = []
-        response.data.map((item) => ids.push(item.id))
-        setUserTagsId(ids)
-      })
-      .catch((err) => err)
-  }
-
-  const addTagtoUser = async () => {
-    setLoading(true)
-    if (tagName) {
-      await axiosInstance
-        .post(`tags/user/personalTag`, { name: tagName })
-        .then(async (res) => {
-          if (res.data.message === 'more') {
-            toast.error(
-              <IntlMessages id='my_account.add_my_profile_tags_more' />
-            )
-            await getUserTags()
-            setLoading(false)
-            closeModal('addUserTagModal')
-            closeModal('tags')
-          } else {
-            toast.success(<IntlMessages id='alerts.success_change' />)
-            await getUserTags()
-            setLoading(false)
-            closeModal('addUserTagModal')
-            closeModal('tags')
-          }
-        })
-        .catch((err) => {
-          setLoading(false)
-          toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-          closeModal('addUserTagModal')
-          setTagName('')
-        })
-    }
   }
 
   const editUser = async (changedUser, changedMedias) => {
@@ -228,10 +180,6 @@ function MyAccount() {
       setShowEditPasswordModal(false)
     } else if (modal === 'shareModal') {
       setShareMyPortfolioModal(false)
-    } else if (modal === 'tags') {
-      setTagsModal(false)
-    } else if (modal === 'addUserTagModal') {
-      setAddUserTagsModal(false)
     }
   }
 
@@ -273,8 +221,8 @@ function MyAccount() {
                       <div className='round-image-wrapper'>
                         <Image
                           src={
-                            user.profile_image
-                              ? user.profile_image
+                            userBasicInfo.data?.userImageUrl
+                              ? userBasicInfo.data?.userImageUrl
                               : defaultImage
                           }
                           className='editbio-user-image mx-auto my-account'
@@ -282,7 +230,7 @@ function MyAccount() {
                       </div>
                     </div>
                     <div className='col-10 col-md-6 col-lg-6 offset-lg-0'>
-                      <h2 className='mt-4 mb-0'>{user.name}</h2>
+                      <h2 className='mt-4 mb-0'>{userBasicInfo?.data?.name}</h2>
                       <h5 className='mb-0'>
                         {userBasicInfo.data.userTitle
                           ? userBasicInfo.data.userTitle
@@ -426,14 +374,6 @@ function MyAccount() {
           </div>
         )}
       </div>
-      {/* <AddNewUserTag
-        show={addUserTagsModal}
-        onHide={() => closeModal('addUserTagModal')}
-        setTagName={setTagName}
-        tagName={tagName}
-        onSave={addTagtoUser}
-        loading={loading}
-      /> */}
       <EditProfileModal
         show={showEditProfileModal}
         onHide={() => closeModal('profileModal')}
@@ -449,26 +389,11 @@ function MyAccount() {
         userData={user}
         loading={loading}
       />
-      {/*{tagsModal && (*/}
-      {/*  <ProfileTags*/}
-      {/*    show={tagsModal}*/}
-      {/*    onHide={() => closeModal('tags')}*/}
-      {/*    userTags={userTags}*/}
-      {/*    allTags={allTags}*/}
-      {/*    saveUserTags={saveUserTags}*/}
-      {/*    loading={loading}*/}
-      {/*  />*/}
-      {/*)}*/}
       <ShareMyPortfolio
         show={shareMyPortfolioModal}
         onHide={() => closeModal('shareModal')}
         userLink={userPortfolio.url}
       />
-      {/*<CancelSubscriptionModal*/}
-      {/*  show={cancelSubscriptionModal}*/}
-      {/*  onHide={() => closeModal('subscriptionModal')}*/}
-      {/*  cancelSubscription={cancelSubscription}*/}
-      {/*/>*/}
     </div>
   )
 }

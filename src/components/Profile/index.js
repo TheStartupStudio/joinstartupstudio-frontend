@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Row from 'react-bootstrap/Row'
 import axiosInstance from '../../utils/AxiosInstance'
 import { IsUserLevelAuthorized } from '../../utils/helpers'
@@ -8,17 +8,34 @@ import IamrBox from './IamrBox'
 import RwlInfoBox from './RwlInfoBox'
 import RwlBox from './RwlBox'
 import UserInfoBox from './UserInfoBox'
+import { getUserBasicInfo } from '../../redux/portfolio/Actions'
 
 function Profile(props) {
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.user.user.user)
   const [newMessages, setNewMessages] = useState([])
   const isAllowedLevel = IsUserLevelAuthorized()
   const [dashboardWidget, setDashboardWidget] = useState({})
+  const { userBasicInfo } = useSelector((state) => state.portfolio.whoSection)
+
+  useEffect(() => {
+    dispatch(getUserBasicInfo())
+  }, [dispatch])
+
+  const getNewMessages = useCallback(async () => {
+    if (!isAllowedLevel) return
+    await axiosInstance
+      .get('/privateChat/unread-messages')
+      .then((data) => {
+        setNewMessages(data.data)
+      })
+      .catch((err) => err)
+  }, [isAllowedLevel])
 
   useEffect(() => {
     getDashboardWidgetData()
     getNewMessages()
-  }, [])
+  }, [getNewMessages])
 
   const getDashboardWidgetData = async () => {
     await axiosInstance.get('/dashboard').then((res) => {
@@ -32,7 +49,7 @@ function Profile(props) {
     const arrivalMessage = props.newMessage
     if (
       arrivalMessage?.chatOpen &&
-      arrivalMessage?.currentConversation ==
+      arrivalMessage?.currentConversation ===
         arrivalMessage?.arrivalMessage.room_id
     )
       return
@@ -64,23 +81,13 @@ function Profile(props) {
   useEffect(() => {
     if (!props.chatOpened) return
     const room_id = props.chatOpened
-    setNewMessages(newMessages.filter((room) => room.id != room_id))
+    setNewMessages(newMessages.filter((room) => room.id !== room_id))
     props.clearChat('')
-  }, [props.chatOpened])
-
-  const getNewMessages = async () => {
-    if (!isAllowedLevel) return
-    await axiosInstance
-      .get('/privateChat/unread-messages')
-      .then((data) => {
-        setNewMessages(data.data)
-      })
-      .catch((err) => err)
-  }
+  }, [props.chatOpened, newMessages, props])
 
   return (
     <Row className='mx-0'>
-      <UserInfoBox user={user} />
+      <UserInfoBox user={user} userBasicInfo={userBasicInfo.data} />
 
       <RwlBox dashboardWidget={dashboardWidget} userRole={props.userRole} />
 

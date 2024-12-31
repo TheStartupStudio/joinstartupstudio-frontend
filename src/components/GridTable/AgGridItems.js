@@ -266,10 +266,10 @@ const TransferFilter = ({ model, onModelChange, getValue }) => {
   )
 }
 const ACADEMY_TRANSFER_OPTIONS = [
-  'needs-review',
-  'approved',
-  'pending',
-  'archived'
+  { id: 1, type: 'needs-review' },
+  { id: 2, type: 'approved' },
+  { id: 3, type: 'pending' },
+  { id: 4, type: 'archived' }
 ]
 const AccademyTransferFilter = ({ model, onModelChange, getValue }) => {
   const [selectedStatus, setSelectedStatus] = useState(model || [])
@@ -304,15 +304,15 @@ const AccademyTransferFilter = ({ model, onModelChange, getValue }) => {
       {ACADEMY_TRANSFER_OPTIONS.map((transfer) => (
         <div
           className='agGrid-customFilters__checkbox-container d-flex py-1'
-          key={transfer}
+          key={transfer.id}
         >
           <input
             type='checkbox'
             className='agGrid-customFilters__checkbox'
-            onChange={() => handleCheckboxChange(transfer)}
-            checked={selectedStatus.includes(transfer)}
+            onChange={() => handleCheckboxChange(transfer.type)}
+            checked={selectedStatus.includes(transfer.type)}
           />
-          {transfer}
+          {transfer.type}
         </div>
       ))}
     </div>

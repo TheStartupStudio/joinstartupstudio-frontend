@@ -12,6 +12,7 @@ const Navbar = (props) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const userRole = localStorage.getItem('role')
+  const { userBasicInfo } = useSelector((state) => state.portfolio.whoSection)
 
   const [showMobileDropDown, setShowMobileDropDown] = useState(false)
   const backButton = useSelector((state) => state.backButton)
@@ -81,7 +82,11 @@ const Navbar = (props) => {
               </div>
             )}
           </ul>
-          <NavbarListItems {...props} userRole={userRole} />
+          <NavbarListItems
+            {...props}
+            userRole={userRole}
+            userBasicInfo={userBasicInfo.data}
+          />
         </div>
       </div>
     </nav>

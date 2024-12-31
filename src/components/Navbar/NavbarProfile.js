@@ -6,7 +6,8 @@ const NavbarProfile = ({
   setShowNotifications,
   user,
   setCountStudentOfInstructor,
-  userRole
+  userRole,
+  userBasicInfo
 }) => {
   const [showDropDown, setShowDropDown] = useState(false)
   let timeoutId
@@ -46,12 +47,20 @@ const NavbarProfile = ({
         >
           <div className='profile-dropdown me-1 ms-3 desktop-menu d-none d-xl-block'>
             <img
-              src={user?.profileImage ? user?.profileImage : avator}
+              src={
+                userBasicInfo?.userImageUrl
+                  ? userBasicInfo?.userImageUrl
+                  : avator
+              }
               alt='Profile'
             />
           </div>
           <div className='profile-dropdown-info desktop-menu'>
-            <h5>{user?.name ? user?.name : localStorage.getItem('name')}</h5>
+            <h5>
+              {userBasicInfo?.name
+                ? userBasicInfo?.name
+                : localStorage.getItem('name')}
+            </h5>
             <p>{user?.email}</p>
           </div>
         </button>

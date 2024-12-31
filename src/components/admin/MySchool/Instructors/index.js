@@ -36,6 +36,7 @@ const Instructors = ({
   const [rowData, setRowData] = useState([])
 
   const fetchInstructors = useCallback(async () => {
+    let isMounted = true
     setLoading(true)
     try {
       const { data } = await axiosInstance.get('/users/instructors')
@@ -56,12 +57,16 @@ const Instructors = ({
           universityId: instructor.universityId,
           universityName: instructor.University.universityName
         }))
-      setRowData(formattedData)
+      if (isMounted) setRowData(formattedData)
     } catch (error) {
       toast.error('Something went wrong!')
       setLoading(false)
     } finally {
       setLoading(false)
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [])
   const refreshInstructors = useCallback(() => {

@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Col } from 'react-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
 import UserSocialMedia from '../../pages/Portfolio2024/Components/UserSocialMedia'
-import { getUserBasicInfo } from '../../redux/portfolio/Actions'
 import avator from '../../assets/images/profile-image.png'
 
-const UserInfoBox = ({ user }) => {
-  const dispatch = useDispatch()
+const UserInfoBox = ({ user, userBasicInfo }) => {
   const [lastLogin, setLastLogin] = useState(null)
-
-  useEffect(() => {
-    dispatch(getUserBasicInfo())
-  }, [dispatch])
 
   useEffect(() => {
     if (user?.last_login === null) {
@@ -42,9 +35,6 @@ const UserInfoBox = ({ user }) => {
     setLastLogin(formatedDate)
   }, [user.last_login])
 
-  const userBasicInfo = useSelector(
-    (state) => state.portfolio.whoSection.userBasicInfo
-  )
   return (
     <Col
       lg={6}
@@ -58,15 +48,17 @@ const UserInfoBox = ({ user }) => {
     >
       <div className='dashboard-profile'>
         <img
-          src={user?.profile_image ? user?.profile_image : avator}
+          src={
+            userBasicInfo?.userImageUrl ? userBasicInfo?.userImageUrl : avator
+          }
           alt='Profile'
           className='ms-2'
         />
         <div className='profile-margin'>
-          <h3>{user?.name}</h3>
+          <h3>{userBasicInfo?.name}</h3>
           {/*<p>{user?.profession}</p>*/}
-          <p>{userBasicInfo?.data?.userTitle}</p>
-          <UserSocialMedia data={userBasicInfo?.data?.socialMediaLinks} />
+          <p>{userBasicInfo?.userTitle}</p>
+          <UserSocialMedia data={userBasicInfo?.socialMediaLinks} />
           <div className='dashboard_lastLogin w-100'>
             <span className='me-1'>Last Login:</span>
             {lastLogin}

@@ -28,15 +28,31 @@ const Overview = ({ universityId, programs }) => {
   const [schoolDetails, setSchoolDetails] = useState({})
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
+    let isMounted = true
+
+    const timeoutId = setTimeout(() => {
+      if (isMounted) setLoading(false)
     }, 1500)
+
+    return () => {
+      isMounted = false
+      clearTimeout(timeoutId)
+    }
   }, [])
 
   const fetchSchoolDetails = useCallback(async () => {
-    axiosInstance.get('/my-school/overview').then(({ data }) => {
-      setSchoolDetails(data)
-    })
+    let isMounted = true
+
+    try {
+      const { data } = await axiosInstance.get('/my-school/overview')
+      if (isMounted) setSchoolDetails(data)
+    } catch (error) {
+      console.error('Error fetching school details:', error)
+    }
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const refreshData = useCallback(() => {

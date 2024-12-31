@@ -53,6 +53,7 @@ const Learners = ({
   }, [instructorId, instructor_id])
 
   const fetchStudents = useCallback(async () => {
+    let isMounted = true
     setLoading(true)
     let url = ''
     if (instructorId || instructor_id) {
@@ -82,11 +83,15 @@ const Learners = ({
           : 'none',
         universityName: student.University.name
       }))
-      setRowData(formattedData)
+      if (isMounted) setRowData(formattedData)
     } catch (error) {
       setLoading(false)
     } finally {
       setLoading(false)
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [instructorId, instructor_id, user.universityId])
 

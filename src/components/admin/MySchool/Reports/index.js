@@ -212,7 +212,7 @@ const Reports = ({ instructors, universityId }) => {
           <Col md='3' className='d-flex justify-content-end'>
             <InfoBox cn={'pt-2'} style={{ maxHeight: '40px', width: '200px' }}>
               <span className='d-flex align-items-center'>
-                <span class='dot me-2'></span>
+                <span className='dot me-2'></span>
                 Online Users:{' '}
                 {dataToView === 'instructor'
                   ? (sectionOneData?.activeStudents ||

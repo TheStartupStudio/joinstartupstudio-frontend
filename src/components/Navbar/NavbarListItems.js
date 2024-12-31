@@ -77,12 +77,17 @@ const NavbarListItems = (props) => {
           style={{ borderRight: '1px solid #BBBDBF', height: '20px' }}
         ></div>
         <li className='nav-item my-auto me-2 position-relative'>
-          <a
+          <button
             className={`nav-link icon-menu px-2 my-auto nav-notifications position-relative ${
               showNotifications ? 'active' : ''
             }`}
             onClick={() => setShowNotifications((state) => !state)}
-            href
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer'
+            }}
           >
             <FontAwesomeIcon
               icon={faBell}
@@ -97,7 +102,7 @@ const NavbarListItems = (props) => {
                 {props.unreadNotifications}
               </span>
             )}
-          </a>
+          </button>
           {showNotifications && (
             <Notifications
               unreadNotifications={props.unreadNotifications}
@@ -156,6 +161,7 @@ const NavbarListItems = (props) => {
             user={props.user}
             setShowNotifications={setShowNotifications}
             userRole={props.userRole}
+            userBasicInfo={props.userBasicInfo}
           />
         )}
       </div>

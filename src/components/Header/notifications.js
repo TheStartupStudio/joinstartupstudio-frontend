@@ -46,7 +46,7 @@ const Notifications = (props) => {
         // history.push(`/${notification.url}`)
         const HashUrl = notification.url.includes('#inbox')
           ? notification.url
-          : `${notification.url}#inbox`;
+          : `${notification.url}#inbox`
         history.replace(HashUrl)
       })
   }
@@ -68,18 +68,29 @@ const Notifications = (props) => {
             {props.notifications.map((notification) => {
               return (
                 <React.Fragment key={notification.id}>
-                  <a
+                  {/* <a
                     className={`nav-link notification-link px-0 pb-0`}
                     onClick={() => notificationClick(notification)}
                     key={notification.id}
                     style={{
                       color: notification.read ? 'rgba(0,0,0,.55)' : 'black'
                     }}
-                    href
+                    > */}
+                  <button
+                    className={`nav-link notification-link px-0 pb-0`}
+                    onClick={() => notificationClick(notification)}
+                    style={{
+                      color: notification.read ? 'rgba(0,0,0,.55)' : 'black',
+                      background: 'none',
+                      border: 'none',
+                      textAlign: 'left',
+                      padding: 0,
+                      cursor: 'pointer'
+                    }}
                   >
                     {notification.Sender.name}
                     {NotificationTypes[notification.type]?.value}
-                  </a>
+                  </button>
                   <span className='notification-date'>
                     {formatDate(notification.createdAt)}
                   </span>
