@@ -2,6 +2,16 @@
   display: flex;
 }
 
+@media (max-width: 1024px) {
+  body {
+    height: unset !important;
+  }
+}
+
+body {
+  height: unset !important;
+}
+
 .spotlight-column {
   padding-left: 0 !important;
   height: 100%;
@@ -9,12 +19,12 @@
 
 .spotlight-page-wrapper {
   padding: 40px 0px !important;
+  margin-bottom: 30px !important;
   /* height: 100%; */
 }
 
 .spotlight-wrapper {
-  background: transparent linear-gradient(180deg, #e4e9f4 0%, #fbfbfb 100%) 0%
-    0% no-repeat padding-box;
+  background: transparent linear-gradient(180deg, #e4e9f4 0%, #fbfbfb 100%) 0% 0% no-repeat padding-box;
   width: 100%;
   padding: 15px !important;
   height: 100%;
@@ -372,6 +382,7 @@
   background-color: #c8cdd880;
   margin-right: 10px;
 }
+
 .application-link {
   letter-spacing: 0.56;
   text-align: left;
@@ -379,4 +390,12 @@
   letter-spacing: 0.56px;
   color: #51c7df;
   opacity: 1;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root section#footer {
+
+  margin-top: 0px !important;
+
 }

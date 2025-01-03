@@ -708,10 +708,14 @@
   }
 }
 
-@media (max-width: 998px) {
+@media (max-width: 1024px) {
   body {
     height: unset !important;
   }
+}
+
+body {
+  height: unset !important;
 }
 
 .reset-pasw-checkbtn {

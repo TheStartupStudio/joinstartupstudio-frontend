@@ -229,9 +229,9 @@ nav#sidebar {
 /*  height: 100%;*/
 /*}*/
 
-.sidebar-scroll {
+/* .sidebar-scroll {
   height: 100vh;
-}
+} */
 
 .sidebar-header img {
   width: 172px;
@@ -5481,9 +5481,9 @@ _:future,
   height: 36px !important;
 }
 
-.sidebar-overflow-fix {
+/* .sidebar-overflow-fix {
   overflow: unset !important;
-}
+} */
 
 /* Safari 7.1+ */
 
@@ -5508,9 +5508,20 @@ _:future,
 
 _::-webkit-full-page-media,
 _:future,
+:root .col-sm-12.col-lg-4.text-align-left-footer {
+  margin-bottom: -10px !important;
+  margin-top: -2px !important;
+}
+
+
+_::-webkit-full-page-media,
+_:future,
 :root section#footer {
-  position: absolute;
+  position: absolute !important;
   bottom: 0 !important;
+  height: 70px !important;
+  padding: 5px !important;
+
 }
 
 _::-webkit-full-page-media,
@@ -5524,3 +5535,36 @@ _:future,
 :root .choose-login_container {
   height: 100vh !important;
 }
+
+.footer-cont _::-webkit-full-page-media,
+_:future,
+:root .footer-menu ul {
+  margin-top: -10px !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .col-sm-12.col-lg-4.text-align-left-footer {
+  margin-bottom: -10px !important;
+  margin-top: -2px !important;
+}
+
+
+_::-webkit-full-page-media,
+_:future,
+:root .choose-login_container:has(.public-login-form) {
+  overflow-y: scroll !important;
+}
+
+
+_::-webkit-full-page-media,
+_:future,
+:root div#content {
+  overflow-y: scroll !important;
+}
+
+/* _::-webkit-full-page-media,
+_:future,
+:root body {
+  overflow-y: scroll !important;
+} */
