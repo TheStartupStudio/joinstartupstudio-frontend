@@ -52,6 +52,7 @@ const JournalTextEditor = ({
             formats={quillFormats}
             onChange={handleChangeContent}
             value={content}
+            readOnly={userRole === 'student'}
           />
           {userRole !== 'student' && (
             <div className='journal_text_editor-save_button-box'>

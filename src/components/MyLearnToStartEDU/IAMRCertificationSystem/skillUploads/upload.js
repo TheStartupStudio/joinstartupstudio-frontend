@@ -222,14 +222,7 @@ const Upload = ({
           </div>
           {allowUpdate && (
             <div className='pt-3 d-flex justify-content-end flex-column'>
-              <div
-                className='row m-0 my-3 pb-4'
-                style={
-                  userRole !== 'student'
-                    ? { borderBottom: '1px solid #ccc' }
-                    : {}
-                }
-              >
+              <div className='row m-0 my-3 pb-4'>
                 <div className='col-12 col-sm-6 m-0 p-0'>
                   <button
                     className='lts-button float-end mt-2 me-sm-3'
@@ -253,7 +246,7 @@ const Upload = ({
                   </button>
                 </div>
               </div>
-              {userRole !== 'student' && (
+              {/* {userRole !== 'student' && (
                 <div className='row m-0'>
                   <div className='col-12 col-sm-6 m-0 p-0'>
                     <button
@@ -280,7 +273,7 @@ const Upload = ({
                     </button>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           )}
         </form>

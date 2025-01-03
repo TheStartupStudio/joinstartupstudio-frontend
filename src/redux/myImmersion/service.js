@@ -34,8 +34,6 @@ const fetchSpotlights = async () => {
   try {
     const response = await axiosInstance.get(`/immersion/spotlights`)
 
-    console.log('response', response)
-
     if (response.status === 200) {
       return response.data
     }

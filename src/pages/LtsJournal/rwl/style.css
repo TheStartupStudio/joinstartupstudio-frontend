@@ -26,10 +26,12 @@
 }
 
 .rwl-button_body {
-  position: absolute;
-  top: 75px;
-  left: 0;
+  /* position: absolute; */
+  /* top: 75px; */
+  /* left: 0; */
   width: 100%;
+  display: flex;
+  /* min-height: 400px; */
   background: var(--unnamed-color-ffffff) 0% 0% no-repeat padding-box;
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029;
@@ -37,6 +39,10 @@
   border: none;
   opacity: 1;
   color: #000;
+  z-index: 2;
+}
+.rwl-button_body.invisible {
+  display: none;
 }
 
 .rwl-button_body .form-check {
@@ -70,7 +76,9 @@
   width: 313px;
   height: 18px;
   /* UI Properties */
-  font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-300) var(--unnamed-font-size-12) / var(--unnamed-line-spacing-14) var(--unnamed-font-family-montserrat);
+  font: var(--unnamed-font-style-normal) normal var(--unnamed-font-weight-300)
+    var(--unnamed-font-size-12) / var(--unnamed-line-spacing-14)
+    var(--unnamed-font-family-montserrat);
   letter-spacing: var(--unnamed-character-spacing-0);
   color: var(--unnamed-color-3d3d3d);
   text-align: left;
@@ -138,7 +146,6 @@
     height: 51px;
   }
 }
-
 
 @media screen and (min-width: 992px) {
   .rwl-buttons_container {

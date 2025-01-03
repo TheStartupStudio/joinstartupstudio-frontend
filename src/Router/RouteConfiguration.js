@@ -171,6 +171,11 @@ export const mutualRoutes = [
     exact: true
   },
   {
+    path: '/public-portfolio/:username',
+    component: PublicPortfolio2024,
+    exact: true
+  },
+  {
     path: '/iamr/:certificationType?/:id?/:type?',
     component: IamrCertificationSystem
   },

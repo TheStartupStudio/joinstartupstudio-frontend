@@ -24,6 +24,7 @@ const SpotlightApplyBtn = ({ isApplicationSaved, onOpen }) => {
 
 const SpotlightCompetition = () => {
   const dispatch = useDispatch()
+  const userRole = localStorage.getItem('role')
   const [spotlightApplyModal, setSpotlightApplyModal] = useState(false)
   const [isApplicationSaved, setIsApplicationSaved] = useState(false)
 
@@ -63,6 +64,7 @@ const SpotlightCompetition = () => {
           title={'Apply to Pitch'}
           onSuccess={() => dispatch(fetchSpotlights())}
           onSave={handleSaveAndContinue}
+          userRole={userRole}
         />
       )}
     </>
