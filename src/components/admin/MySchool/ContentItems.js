@@ -121,6 +121,7 @@ const CustomDropdown = ({
   width,
   btnClassName,
   spanClassName,
+  itemClassName,
   title,
   onClick,
   maxHeight,
@@ -264,7 +265,7 @@ const CustomDropdown = ({
               <div
                 key={index}
                 name={name}
-                className='dropdown-list-item'
+                className={`dropdown-list-item ${itemClassName}`}
                 onClick={() => !multiple && handleOptionClick(option)}
               >
                 {isSelectable && (
