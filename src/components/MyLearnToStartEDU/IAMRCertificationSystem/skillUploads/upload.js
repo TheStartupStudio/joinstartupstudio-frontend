@@ -240,7 +240,7 @@ const Upload = ({
                     type='submit'
                     value='submit'
                     name='submit'
-                    disabled={userRole === 'student' ? false : true}
+                    disabled={userRole === 'student' && upload ? false : true}
                   >
                     {loading === 'submit' ? 'SUBMITTING' : 'SUBMIT'}
                   </button>
