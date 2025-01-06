@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Row } from 'react-bootstrap'
 import spotlightBulb from '../../assets/images/Immersion/SpotlightBulbImg2.png'
 import SpotlightApplyModal from '../../components/Modals/Spotlight/SpotlightApplyModal'
@@ -24,8 +24,18 @@ const SpotlightApplyBtn = ({ isApplicationSaved, onOpen }) => {
 
 const SpotlightCompetition = () => {
   const dispatch = useDispatch()
+  const userRole = localStorage.getItem('role')
   const [spotlightApplyModal, setSpotlightApplyModal] = useState(false)
   const [isApplicationSaved, setIsApplicationSaved] = useState(false)
+  const [applicationData, setApplicationData] = useState(null)
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('spotlightApplicationData')
+    if (savedData) {
+      setIsApplicationSaved(true)
+      setApplicationData(JSON.parse(savedData))
+    }
+  }, [])
 
   const openSpotlightApplyModal = () => {
     setSpotlightApplyModal(true)
@@ -33,10 +43,42 @@ const SpotlightCompetition = () => {
   const closeSpotlightApplyModal = () => {
     setSpotlightApplyModal(false)
   }
-  const handleSaveAndContinue = () => {
+  const handleSaveAndContinue = async (data) => {
+    const updatedData = { ...data }
+
+    const serializeFile = async (file) => {
+      if (!(file instanceof File)) {
+        return file
+      }
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () =>
+          resolve({ base64: reader.result, name: file.name })
+        reader.onerror = (error) => reject(error)
+        reader.readAsDataURL(file)
+      })
+    }
+
+    updatedData.businessPlan = await serializeFile(data.businessPlan)
+    updatedData.pitchDeck = await serializeFile(data.pitchDeck)
+    updatedData.parentGuardianApprovalForm = await serializeFile(
+      data.parentGuardianApprovalForm
+    )
+
+    localStorage.setItem(
+      'spotlightApplicationData',
+      JSON.stringify(updatedData)
+    )
     setIsApplicationSaved(true)
     closeSpotlightApplyModal()
   }
+
+  const handleRemoveSavedApplication = () => {
+    localStorage.removeItem('spotlightApplicationData')
+    setIsApplicationSaved(false)
+  }
+
   return (
     <>
       <Row>
@@ -62,7 +104,11 @@ const SpotlightCompetition = () => {
           onHide={() => closeSpotlightApplyModal()}
           title={'Apply to Pitch'}
           onSuccess={() => dispatch(fetchSpotlights())}
-          onSave={handleSaveAndContinue}
+          onSave={(data) => handleSaveAndContinue(data)}
+          initialData={applicationData}
+          isApplicationSaved={isApplicationSaved}
+          userRole={userRole}
+          removeSavedApplication={handleRemoveSavedApplication}
         />
       )}
     </>

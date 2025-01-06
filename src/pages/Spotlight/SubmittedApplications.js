@@ -27,7 +27,10 @@ const SubmittedApplications = ({ spotlights, setArchiveSpotlightModal }) => {
 
       <Col className='px-5 pt-0 pb-3'>
         {spotlights?.map((spotlight) => (
-          <div className='d-flex align-items-center py-2 application-link'>
+          <div
+            className='d-flex align-items-center py-2 application-link'
+            key={spotlight.id}
+          >
             <span className={`dot__${spotlight.status} me-2`}></span>
             <span
               className='cursor-pointer'
