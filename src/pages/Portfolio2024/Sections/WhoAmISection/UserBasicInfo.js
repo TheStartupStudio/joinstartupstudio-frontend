@@ -131,13 +131,6 @@ const UserBasicInfo = (props) => {
       <>
         <div className={'row userinfo-row'}>
           <div className={'col-md-6'}>
-            <PortfolioSubmission
-              videoUrl={state.videoUrl}
-              thumbnailUrl={state.thumbnailUrl}
-              title={'MY PERSONAL BRAND STORY'}
-            />
-          </div>
-          <div className={'col-md-6'}>
             <div className={'d-flex flex-column h-100'}>
               <UserInfo
                 userInfo={state}
@@ -158,6 +151,13 @@ const UserBasicInfo = (props) => {
                 />
               </div>
             </div>
+          </div>
+          <div className={'col-md-6'}>
+            <PortfolioSubmission
+              videoUrl={state.videoUrl}
+              thumbnailUrl={state.thumbnailUrl}
+              title={'MY PERSONAL BRAND STORY'}
+            />
           </div>
         </div>
       </>
