@@ -9,6 +9,9 @@ import PortfolioSkeletonLoader from './Components/PortfolioSkeletonLoader'
 import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
 import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
 import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { setBackButton} from '../../redux/backButtonReducer' 
 
 function StudentPortfolio() {
   const [publicPortfolio, setPublicPortfolio] = useState({})
@@ -16,6 +19,9 @@ function StudentPortfolio() {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
+
+  const dispatch = useDispatch()
+  const location = useLocation()
 
   useEffect(() => {
     setIsLoading(true)
@@ -38,6 +44,15 @@ function StudentPortfolio() {
 
     getPublicPortfolioAPI()
   }, [username])
+
+  useEffect(() => {
+  
+      dispatch(setBackButton(true, 'my-students'))
+  
+    return () => {
+      dispatch(setBackButton(false, ''))
+    }
+  }, [dispatch, location.state?.from])
 
   if (isLoading) {
     return <PortfolioSkeletonLoader />

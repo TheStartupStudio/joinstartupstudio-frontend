@@ -25,6 +25,7 @@ import StudentData from '../../components/MyStudents/studentData'
 import { StudentCountProvider } from '../../components/MyStudents/studentCountContext'
 import InstructorNotes from './InstructorNotes/InstructorNotes'
 import PlatformBadges from './PlatformBadges'
+import { useLocation } from 'react-router-dom'
 
 function MyAccount() {
   const dispatch = useDispatch()
@@ -50,6 +51,10 @@ function MyAccount() {
   const profileImage = useSelector((state) => state.user.profile_image)
   const [instructorNotes, setInstructorNotes] = useState(false)
   const [platformBadges, setPlatformBadges] = useState(false)
+  const location = useLocation()
+  const masterclassRef = useRef(null)
+  const storyInMotionRef = useRef(null)
+  const proficientSkillsRef = useRef(null)
 
   const instructorNotesHandler = () => {
     setPlatformBadges(false)
@@ -58,6 +63,9 @@ function MyAccount() {
   const platformBadgeHandler = () => {
     setInstructorNotes(false)
     setPlatformBadges((state) => !state)
+    if (platformBadgesRef.current) {
+      platformBadgesRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   useEffect(() => {
@@ -69,6 +77,21 @@ function MyAccount() {
   useEffect(() => {
     getAllTags()
   }, [userTags])
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    if (params.get('platformBadges') === 'true') {
+      platformBadgeHandler()
+      const section = params.get('section')
+      if (section === 'masterclass' && masterclassRef.current) {
+        masterclassRef.current.scrollIntoView({ behavior: 'smooth' })
+      } else if (section === 'story-in-motion' && storyInMotionRef.current) {
+        storyInMotionRef.current.scrollIntoView({ behavior: 'smooth' })
+      } else if (section === 'proficient-skills' && proficientSkillsRef.current) {
+        proficientSkillsRef.current.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }, [location.search])
 
   const getUserData = async () => {
     await axiosInstance

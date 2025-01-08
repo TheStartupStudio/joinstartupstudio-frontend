@@ -192,7 +192,7 @@ function TicketChat({ ticket, close, isTicketOpened }) {
           <div className="status col-12 col-sm-6 mt-2 mt-lg-0 p-0 d-flex align-items-center justify-content-end">
             <p className="m-0 me-2">{ticket.resolved ? 'Resolved' : ''}</p>
             <a
-              href={`/student-iamr/${ticket.user_id}`}
+              href={`/student-iamr/${ticket.user_id}#inbox`}
               className="lts-button d-flex justify-content-center align-items-center"
             >
               VIEW IAMR

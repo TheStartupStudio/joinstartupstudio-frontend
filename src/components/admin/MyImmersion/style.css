@@ -122,7 +122,7 @@ input:checked+.slider:before {
   /* border: 1px solid #ccc; */
   border-radius: 5px !important;
   font-size: 14px;
-  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1607843137254902);
+  /* box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1607843137254902); */
   background: none;
   margin-top: 15px;
 
