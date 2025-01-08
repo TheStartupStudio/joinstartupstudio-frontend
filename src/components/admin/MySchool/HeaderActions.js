@@ -271,7 +271,6 @@ const HeaderActions = ({
           </>
         )}
       </Row>
-
       <DeactivateDialogModal
         show={modals.showBulkDeactivationModal}
         onHide={() => setModalState('showBulkDeactivationModal', false)}
@@ -290,7 +289,6 @@ const HeaderActions = ({
           bulkNextYear()
         }}
       />
-
       <EditBulkModal
         show={modals.showBulkEditModal}
         onHide={() => setModalState('showBulkEditModal', false)}
@@ -299,6 +297,7 @@ const HeaderActions = ({
         levels={levels}
         onSuccess={onSuccess}
       />
+
       {bulkEditingStudents?.length > 0 && (
         <>
           <ConfirmationModal
@@ -335,7 +334,6 @@ const HeaderActions = ({
           />
         </>
       )}
-
       {bulkDeleteStudents.length > 0 && (
         <DeleteUserModal
           show={modals.deleteUserModal}

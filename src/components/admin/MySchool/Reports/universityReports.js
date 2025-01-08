@@ -21,16 +21,16 @@ const UniversityReports = ({
 }) => {
   return (
     <>
-      <InfoBox cn='my-3' style={{ maxHeight: '350px' }}>
+      <InfoBox cn='my-3 actusers-infobox' style={{ maxHeight: '330px' }}>
         <Row className='justify-content-between align-items-center'>
           <Col md='6'>
             <span className='me-2 act-users-title'>Active Users</span>
           </Col>
           <Col md='6' className='d-flex justify-content-end'>
-            <label className='custom-liza-checkbox'>
+            {/* <label className='custom-liza-checkbox'>
               <input type='checkbox' className='checkboxi-in' />
               <span className='checkmark-liza'></span>
-            </label>
+            </label> */}
             <CustomDropdown
               title='Filter by program'
               btnClassName={'gray-border'}

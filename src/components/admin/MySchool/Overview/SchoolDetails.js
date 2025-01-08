@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { InfoBox } from '../ContentItems'
 import { Col, Row } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import schoolIcon from '../../../../assets/images/myschool-college.svg'
+// import schoolIcon from '../../../../assets/images/myschool-college.svg'
+import schoolIcon from '../../../../assets/images/college-university-icon/college-university-icon@2x.png'
+// import schoolIcon from '../../../../assets/images/college-university-icon (1)/college-university-icon@2x.jpg'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import CustomSpinner from '../../../CustomSpinner'
 import { CustomInput } from '../../../../ui/ContentItems'
@@ -75,7 +77,12 @@ const SchoolDetails = ({ schoolDetails, onSuccess, universityId }) => {
                   }}
                 >
                   {/* <FontAwesomeIcon icon={schoolIcon} /> */}
-                  <img src={schoolIcon} width={100} height={100}></img>
+                  <img
+                    src={schoolIcon}
+                    width={100}
+                    height={100}
+                    className='nobackg-img'
+                  ></img>
                 </div>
                 <p className='schooldetails-font p-0 m-0'>School Details</p>
               </div>

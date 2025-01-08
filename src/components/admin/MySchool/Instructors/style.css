@@ -167,3 +167,21 @@ opacity: 1; */
     left: 317px !important;
   }
 }
+
+
+.ag-ltr .ag-header-cell-resize {
+  right: unset !important;
+}
+
+.ag-sort-indicator-icon.ag-sort-descending-icon.ag-hidden {
+  display: block !important;
+}
+
+.ag-icon.ag-icon-menu {
+  display: block !important;
+}
+
+.ag-header-icon.ag-header-cell-menu-button {
+  background-color: #52c7de !important;
+  display: block !important;
+}

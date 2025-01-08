@@ -847,6 +847,7 @@ p.m-0.pb-2 {
   align-items: center;
   font-size: 14px;
   color: #333;
+
 }
 
 .custom-liza-checkbox input {
@@ -882,10 +883,24 @@ p.m-0.pb-2 {
   display: none;
   position: absolute;
   background: #52C7DE 0% 0% no-repeat padding-box;
-  box-shadow: inset 0px 3px 3px #00000029;
   opacity: 1;
 }
 
 .custom-liza-checkbox input:checked+.checkmark-liza::after {
   display: block;
+}
+
+
+.datatoview-col {
+  padding-bottom: 10px !important;
+}
+
+@media (max-width:767px) {
+  .actusers-infobox {
+    max-height: 360px !important;
+  }
+}
+
+.nobackg-img {
+  background-color: unset !important;
 }

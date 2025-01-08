@@ -173,7 +173,7 @@ const Reports = ({ instructors, universityId }) => {
   return (
     <div>
       <Row className='justify-content-between'>
-        <Col md={`${selectedInstructor ? 5 : 6}`}>
+        <Col md={`${selectedInstructor ? 5 : 6}`} className='datatoview-col'>
           <CustomDropdown
             title='Select Data to view'
             btnClassName={'gray-border '}
