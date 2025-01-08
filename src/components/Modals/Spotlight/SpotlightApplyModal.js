@@ -19,6 +19,7 @@ import notificationSocket from '../../../utils/notificationSocket'
 import { useSelector } from 'react-redux'
 import notificationTypes from '../../../utils/notificationTypes'
 import DeleteModal from './SpotlightDeleteModal'
+import { LtsButton } from '../../../ui/ContentItems'
 
 const SpotlightApplyModal = (props) => {
   const [loading, setLoading] = useState(false)
@@ -175,15 +176,6 @@ const SpotlightApplyModal = (props) => {
       }
     })
   }
-  const handleDeleteUser = () => {
-    setShowDeleteImmersionModal(true)
-    setShowMainPitch(false)
-  }
-
-  const closeDeleteUserModal = () => {
-    setShowDeleteImmersionModal(false)
-    setShowMainPitch(true)
-  }
 
   const openSubmitModal = () => {
     setShowSubmitModal(true)
@@ -201,9 +193,7 @@ const SpotlightApplyModal = (props) => {
         <DeleteModal
           show={showDeleteImmersionModal}
           onClose={() => setShowDeleteImmersionModal(false)}
-          onDelete={() => {
-            closeDeleteUserModal()
-          }}
+          onDelete={props.removeSavedApplication}
           title='Delete Application'
           message='Are you sure you want to delete this application?'
         />
@@ -321,11 +311,17 @@ const SpotlightApplyModal = (props) => {
             className='w-100 pb-5'
             style={{ marginTop: '15px', marginBottom: '-55px' }}
           >
-            <div className='d-flex justify-content-between align-items-center flex-wrap'>
+            <div
+              className={`d-flex justify-content-${
+                !props.isApplicationSaved ? 'end' : 'between'
+              } align-items-center flex-wrap`}
+            >
               <p
                 href='#'
-                className='m-0 cursor-pointer d-flex align-items-center'
-                onClick={handleDeleteUser}
+                className={`${
+                  !props.isApplicationSaved ? 'd-none' : ''
+                } m-0 cursor-pointer d-flex align-items-center`}
+                onClick={() => setShowDeleteImmersionModal(true)}
               >
                 <FontAwesomeIcon
                   icon={faExclamationTriangle}
@@ -335,30 +331,27 @@ const SpotlightApplyModal = (props) => {
               </p>
 
               <div className='d-flex align-items-center'>
-                <button
+                <LtsButton
+                  className={'cancel-btns py-2'}
+                  text={'Save and Continue Later'}
+                  background={'transparent'}
+                  color={'#000'}
+                  border={'1px solid #ccc'}
                   onClick={() => props.onSave(formData)}
-                  className='save-and-continue-text me-3 d-flex align-items-center'
-                >
-                  <i className='bi bi-bookmark me-1'></i> Save and Continue
-                  Later
-                </button>
-                <button
-                  className='apply-save-button edit-account '
-                  disabled={loading || props.userRole !== 'student'}
+                />
+
+                <LtsButton
+                  text={'SUBMIT APPLICATION'}
+                  loading={loading}
+                  background={'#52C7DE'}
+                  className={'ms-2 cancel-btns py-2'}
+                  color={'#fff'}
+                  border={'none'}
                   onClick={() => {
                     setLoading(true)
                     verify()
                   }}
-                >
-                  {loading ? (
-                    <span
-                      className='spinner-border spinner-border-sm'
-                      style={{ fontSize: '13px', fontWeight: 600 }}
-                    />
-                  ) : (
-                    <>SUBMIT Application</>
-                  )}
-                </button>
+                />
               </div>
             </div>
           </div>
