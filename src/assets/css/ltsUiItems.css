@@ -264,6 +264,11 @@
   box-shadow: none;
   padding: 4px 10px;
   font-size: 0.855rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: opacity 0.2s ease;
 }
 
 /* Gradient Button style */
