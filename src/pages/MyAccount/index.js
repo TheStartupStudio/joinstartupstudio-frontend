@@ -52,9 +52,6 @@ function MyAccount() {
   const [instructorNotes, setInstructorNotes] = useState(false)
   const [platformBadges, setPlatformBadges] = useState(false)
   const location = useLocation()
-  const masterclassRef = useRef(null)
-  const storyInMotionRef = useRef(null)
-  const proficientSkillsRef = useRef(null)
 
   const instructorNotesHandler = () => {
     setPlatformBadges(false)
@@ -82,14 +79,6 @@ function MyAccount() {
     const params = new URLSearchParams(location.search)
     if (params.get('platformBadges') === 'true') {
       platformBadgeHandler()
-      const section = params.get('section')
-      if (section === 'masterclass' && masterclassRef.current) {
-        masterclassRef.current.scrollIntoView({ behavior: 'smooth' })
-      } else if (section === 'story-in-motion' && storyInMotionRef.current) {
-        storyInMotionRef.current.scrollIntoView({ behavior: 'smooth' })
-      } else if (section === 'proficient-skills' && proficientSkillsRef.current) {
-        proficientSkillsRef.current.scrollIntoView({ behavior: 'smooth' })
-      }
     }
   }, [location.search])
 
