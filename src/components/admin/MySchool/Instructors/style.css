@@ -171,6 +171,7 @@ opacity: 1; */
 
 .ag-ltr .ag-header-cell-resize {
   right: unset !important;
+  display: none !important;
 }
 
 .ag-sort-indicator-icon.ag-sort-descending-icon.ag-hidden {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import SUSLogoStudent from '../../assets/images/LTS-logo-horizontal.png'
+import SUSLogoStudent from '../../assets/images/LTS Logo v2 (H-Light)x1200.png'
 // import ltsHSLogo from '../../assets/images/LTS-HS/LTS HS Logo v2-2.png'
 import ltsHSLogo from '../../assets/images/HS-Sidebar/Market-READY label.png'
 
