@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import BadgeItem from './BadgeItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -36,6 +36,29 @@ const BadgeBox = ({ userRole }) => {
     portfolio,
     loading
   } = useSelector((state) => state.platformBadges)
+  const masterclassRef = useRef(null)
+  const storyInMotionRef = useRef(null)
+  const proficientSkillsRef = useRef(null)
+
+  const handleScroll = (ref) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const section = params.get('section')
+
+    // Scroll to the correct section if it exists
+    if (section === 'masterclass' && masterclassRef.current) {
+      masterclassRef.current.scrollIntoView({ behavior: 'smooth' })
+    } else if (section === 'story-in-motion' && storyInMotionRef.current) {
+      storyInMotionRef.current.scrollIntoView({ behavior: 'smooth' })
+    } else if (section === 'proficient-skills' && proficientSkillsRef.current) {
+      proficientSkillsRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [])
 
   useEffect(() => {
     const fetchId = userRole === 'student' ? user?.id : id
@@ -64,20 +87,26 @@ const BadgeBox = ({ userRole }) => {
 
   return (
     <div className='d-flex flex-col mt-2' style={{ flexDirection: 'column' }}>
-      <BadgeItem
-        icon={<FontAwesomeIcon icon={faLightbulb} className='me-3' />}
-        title={'MASTERCLASS'}
-        activeRange={masterclassVideos.length}
-      />
-      <BadgeItem
-        icon={<FontAwesomeIcon icon={faPlay} className='me-3' />}
-        title={'STORY IN MOTION'}
-        activeRange={podcastVideos.length}
-      />
-      <BadgeItem
-        title={'PROFICIENT SKILLS'}
-        activeRange={proficientSkills.length}
-      />
+      <div ref={masterclassRef} onClick={() => handleScroll(masterclassRef)}>
+        <BadgeItem
+          icon={<FontAwesomeIcon icon={faLightbulb} className="me-3" />}
+          title="MASTERCLASS"
+          activeRange={masterclassVideos.length}
+        />
+      </div>
+      <div ref={storyInMotionRef} onClick={() => handleScroll(storyInMotionRef)}>
+        <BadgeItem
+          icon={<FontAwesomeIcon icon={faPlay} className="me-3" />}
+          title="STORY IN MOTION"
+          activeRange={podcastVideos.length}
+        />
+      </div>
+      <div ref={proficientSkillsRef} onClick={() => handleScroll(proficientSkillsRef)}>
+        <BadgeItem
+          title="PROFICIENT SKILLS"
+          activeRange={proficientSkills.length}
+        />
+      </div>
       <BadgeItem title={'LTS JOURNAL'} activeRange={ltsJournals.length} />
       <BadgeItem
         icon={<FontAwesomeIcon icon={faCheck} className='me-3' />}

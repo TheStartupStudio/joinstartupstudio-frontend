@@ -25,7 +25,19 @@ function MyMentors(props) {
     if (props.data)
       setMyMentors([...props.data, { category: 'my-mentors', isAddBox: true }])
   }, [props.data])
+  
   const mode = useSelector((state) => state.portfolio.mode)
+
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+
   const actions = [
     {
       type: 'edit',
@@ -66,12 +78,13 @@ function MyMentors(props) {
           />
         ) : (
           <CarouselComponent
+            className={isMobile ? 'mobile-carousel' : ''}
             data={
               mode === 'edit' && isEditSection
                 ? myMentors
                 : myMentors?.filter((mentor) => !mentor.isAddBox)
             }
-            itemsToShow={3}
+            itemsToShow={isMobile ? 1 : 3}
             renderItems={(item) => {
               if (!item.isAddBox) {
                 return <MyMentor data={item} isEditSection={isEditSection} />

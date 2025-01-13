@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getPeriodsStart } from '../../../redux/dashboard/Actions'
 import { getStudentInfoById } from '../../../redux/users/Actions'
 
+import { useHistory } from 'react-router-dom'
+
 const EditStudentModal = (props) => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -25,6 +27,8 @@ const EditStudentModal = (props) => {
   const studentInfo = useSelector(
     (state) => state.users.studentInfo
   )
+
+  const history = useHistory()
 
 
   const defaultData = {
@@ -208,6 +212,13 @@ const EditStudentModal = (props) => {
     setResetLoading(false)
   }
 
+  const navigateToPortfolio = () => {
+    history.push(`/student-portfolio/${props.data.username}`, { from: 'my-students' })
+  }
+
+
+  
+
   return data?.id ? (
     <Modal
       show={props.show}
@@ -235,7 +246,8 @@ const EditStudentModal = (props) => {
             </div>
             <div className='col-12 col-sm-5 col-lg-5 view-student-portfolio-journals d-flex justify-content-start justify-content-sm-end align-items-end pe-lg-4 p-0'>
               <Link
-                to={`/student-portfolio/${props.data.username}`}
+                to="#"
+                onClick={navigateToPortfolio}
                 className='d-flex'
               >
                 <span>Portfolio</span>

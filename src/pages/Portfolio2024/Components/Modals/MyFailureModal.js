@@ -132,7 +132,7 @@ function MyFailureModal(props) {
               onChangeVideoUrl={(videoUrl) => setVideoUrl(videoUrl)}
               onChangeImageCrop={updateCroppedImage}
               value={thumbnailUrl}
-              title={'MY FAILURE STORY'}
+              title={'MY FAILURE STORYsdadas'}
               deleteImage={handleDeleteImage}
               deleteImageFile={handleDeleteImageFile}
             />{' '}

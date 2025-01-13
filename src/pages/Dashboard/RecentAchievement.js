@@ -29,7 +29,7 @@ const badgeImages = {
   20: Badg20Colored
 }
 
-const AchievementBox = ({ icon, title, count }) => {
+const AchievementBox = ({ icon, title, count, onClick }) => {
   const getBadgeImage = () => {
     const keys = Object.keys(badgeImages)
       .map(Number)
@@ -42,7 +42,7 @@ const AchievementBox = ({ icon, title, count }) => {
     return badgeImages[keys[keys.length - 1]]
   }
   return (
-    <div className='achievement-box'>
+    <div className='achievement-box' onClick={onClick}>
       <div className='achievement-header'>
         <span className='pe-2'>{icon}</span>
         <span>{title}</span>
@@ -70,27 +70,34 @@ const RecentAchievements = () => {
     return <SmallLoader height={'100px'} />
   }
 
+  const handleRedirect = (section) => {
+    window.location.href = `/account?platformBadges=true&section=${section}`
+  }
+
   return (
-    <a href='/account?platformBadges=true' className='achievement-container'>
+    <div className='achievement-container'>
       <h3>Recent Achievements</h3>
       <div className='achievement-box-container'>
         <AchievementBox
           icon={<FontAwesomeIcon icon={faLightbulb} />}
           title='MASTERCLASS'
           count={masterclassVideos?.length}
+          onClick={() => handleRedirect('masterclass')}
         />
         <AchievementBox
           icon={<FontAwesomeIcon icon={faPlay} />}
           title='STORY IN MOTION'
           count={podcastVideos?.length}
+          onClick={() => handleRedirect('story-in-motion')}
         />
         <AchievementBox
           icon={<FontAwesomeIcon icon={faCheckCircle} />}
           title='PROFICIENT SKILLS'
           count={proficientSkills?.length}
+          onClick={() => handleRedirect('proficient-skills')}
         />
       </div>
-    </a>
+    </div>
   )
 }
 
