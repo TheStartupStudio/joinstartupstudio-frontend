@@ -12,6 +12,7 @@ const SpotlightSimpleModal = (props) => {
       }`}
     >
       <div
+        className={`${props.className}`}
         style={{
           font: 'normal normal 300 17px/20px Montserrat',
           letterSpacing: 0.68,

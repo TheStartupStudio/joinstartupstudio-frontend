@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch} from 'react-redux'
+import { useDispatch } from 'react-redux'
 import './style.css'
 import ImmersionImage from '../../assets/images/Immersion/immersionMainImg (2).png'
+import ImmersionImage2 from '../../assets/images/mainImmersionImage2.png'
 import PrerequisiteModal from './Modals/PrerequisiteModal'
 import { changeSidebarState } from '../../redux'
 
@@ -57,10 +58,10 @@ const MyImmersion = () => {
   }
   const dispatch = useDispatch()
 
-    useEffect(() => {
-      dispatch(changeSidebarState(false))
-    })
-    
+  useEffect(() => {
+    dispatch(changeSidebarState(false))
+  })
+
   return (
     <div className='container-fluid iamr-page'>
       <div className='pt-4 '>
@@ -79,7 +80,13 @@ const MyImmersion = () => {
           src={ImmersionImage}
           alt='Background'
           style={{ width: '90%', height: 'auto' }}
-          className='main-immrs-image'
+          className='main-immrs-image main-immrs-image-one'
+        />
+        <img
+          src={ImmersionImage2}
+          alt='Background'
+          style={{ width: '90%', height: 'auto' }}
+          className='main-immrs-image main-immrs-image-two'
         />
 
         <MyButton

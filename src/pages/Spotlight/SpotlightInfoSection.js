@@ -103,6 +103,7 @@ const SpotlightInfoSection = () => {
       </Container>
       {spotlightSimpleModal.type === 'whatIsSpotlight' && (
         <SpotlightSimpleModal
+          className={'whatisspot-modal'}
           show={
             spotlightSimpleModal.type === 'whatIsSpotlight' &&
             spotlightSimpleModal.show
@@ -119,6 +120,7 @@ const SpotlightInfoSection = () => {
       )}{' '}
       {spotlightSimpleModal.type === 'rulesOfSpotlight' && (
         <SpotlightSimpleModal
+          className={'whatisspot-modal'}
           show={
             spotlightSimpleModal.type === 'rulesOfSpotlight' &&
             spotlightSimpleModal.show
@@ -170,6 +172,7 @@ const SpotlightInfoSection = () => {
       )}{' '}
       {spotlightSimpleModal.type === 'applicationProcess' && (
         <SpotlightSimpleModal
+          className={'applicationproc-modal'}
           show={
             spotlightSimpleModal.type === 'applicationProcess' &&
             spotlightSimpleModal.show
@@ -201,6 +204,7 @@ const SpotlightInfoSection = () => {
       )}
       {spotlightSimpleModal.type === 'pitchEvaluation' && (
         <SpotlightSimpleModal
+          className={'pitch-evaluation-modal'}
           classes={'pitch-evaluation-wrapper'}
           show={
             spotlightSimpleModal.type === 'pitchEvaluation' &&

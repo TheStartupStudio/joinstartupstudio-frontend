@@ -104,6 +104,23 @@ body {
 @media (max-width: 430px) {
   .spotlight-btn-desc {
     top: -50px !important;
+
+  }
+}
+
+@media (max-width:430px) and (min-width:371px) {
+
+  .spotlight-btn-desc {
+    left: 20px !important;
+
+  }
+
+  .spotlight-btn-cont.p-3.px-5.border.d-flex.flex-column.align-items-center.justify-content-center {
+    padding-bottom: 20px !important;
+  }
+
+  .spotlight-learn-more-btn {
+    margin-top: 65px !important;
   }
 }
 
@@ -139,7 +156,19 @@ body {
 .apply-title {
   display: flex;
   align-items: center;
+  width: 257px;
 }
+
+/* body:has(.apply-title) {
+  height: unset !important;
+} */
+/* 
+@media (max-width:520px) {
+  .whatisspot-modal {
+    margin-top: 40% !important;
+  }
+} */
+
 
 .apply-btn-wrapper {
   height: 45px;
