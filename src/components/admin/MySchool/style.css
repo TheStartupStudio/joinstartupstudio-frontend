@@ -87,6 +87,36 @@
 
 .h-100.col-md-4 .chart-info-box {
   padding-top: 10px !important;
+
+}
+
+/* _::-webkit-full-page-media,
+_:future,
+:root  */
+.overview-school-program-info .info-box {
+  height: 350px !important;
+  max-height: 350px !important;
+}
+
+
+_::-webkit-full-page-media,
+_:future,
+:root .overview-school-program-info .info-box {
+  height: 300px !important;
+  max-height: 300px !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value.ag-cell-focus .custom-select {
+  width: 100% !important;
+  height: 25px !important;
+  border: 1px solid #d7d9d9 !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  color: #333 !important;
+  position: relative !important;
+  background-color: white !important;
 }
 
 /* .lizalizaliza {
@@ -248,6 +278,18 @@
 }
 
 /* CustomSelectCellEditor.css */
+_::-webkit-full-page-media,
+_:future,
+:root .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value.ag-cell-focus .custom-select {
+  width: 100% !important;
+  height: 25px !important;
+  border: 1px solid #d7d9d9 !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  color: #333 !important;
+  position: relative !important;
+  background-color: white !important;
+}
 
 .custom-select {
   width: 100%;
@@ -257,6 +299,44 @@
   font-size: 12px;
   color: #333;
   position: relative;
+  background-color: white !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .custom-select {
+  width: 100% !important;
+  height: 25px !important;
+  border: 1px solid #d7d9d9 !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  color: #333 !important;
+  position: relative !important;
+  background-color: #fff !important;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  line-height: 1.5 !important;
+  height: 30px !important;
+  display: inline-block !important;
+  text-align: left;
+  vertical-align: middle !important;
+  padding-left: 5px !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.custom-select) {
+  width: 115px !important;
+}
+
+
+
+_::-webkit-full-page-media,
+_:future,
+:root .d-flex.align-items-center.justify-content-center.h-100:has(.custom-select) {
+  width: 100% !important;
 }
 
 .custom-select:focus {
@@ -452,8 +532,8 @@
 }
 
 .overview-school-program-info .info-box {
-  height: 268px !important;
-  min-height: 268px !important;
+  height: 295px !important;
+  min-height: 295px !important;
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 6px #00000029 !important;
   border-radius: 12px;
@@ -708,10 +788,14 @@
   }
 }
 
-@media (max-width: 998px) {
+@media (max-width: 1024px) {
   body {
     height: unset !important;
   }
+}
+
+body {
+  height: unset !important;
 }
 
 .reset-pasw-checkbtn {
@@ -784,4 +868,119 @@
 .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.transfer-status-cont) {
   padding-left: 0px !important;
   margin-left: -8px !important;
+}
+
+
+.on-users-number {
+  font: normal normal bold 12px/14px Montserrat;
+  letter-spacing: 0.48px;
+  color: #000000;
+  padding-left: .5rem;
+}
+
+.on-users-text {
+  font: normal normal normal 12px/14px Montserrat;
+  letter-spacing: 0.48px;
+  color: #000000;
+}
+
+.datatoview-dropdown.dropdown-list-item {
+  padding: .6rem .8rem .6rem .8rem !important;
+}
+
+
+.act-users-title {
+  text-align: left;
+  font: normal normal 600 18px/22px Montserrat !important;
+  letter-spacing: 0px;
+  color: #000000;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.progress-cert-title {
+  font: normal normal 400 17px/16px Montserrat;
+  letter-spacing: 0.68px;
+  color: #000000;
+  opacity: 1;
+  margin-bottom: 20px;
+}
+
+.progress-cert-circles h1 {
+  margin-top: 10px !important;
+}
+
+.countTotalReport span.w-50.p-0,
+p.m-0.pb-2 {
+  font: normal normal normal 14px/18px Montserrat;
+  letter-spacing: 0.09px;
+  color: #5A607F;
+  opacity: 1;
+}
+
+.countTotalReport h3 {
+  margin-top: -5px !important;
+}
+
+.custom-liza-checkbox {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+
+}
+
+.custom-liza-checkbox input {
+  display: none;
+}
+
+.custom-liza-checkbox .checkmark-liza {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  position: relative;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.custom-liza-checkbox input:checked+.checkmark-liza {
+  background-color: #52c7de;
+  border-color: #52c7de;
+}
+
+.custom-liza-checkbox .checkmark-liza::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  display: none;
+  position: absolute;
+  background: #52C7DE 0% 0% no-repeat padding-box;
+  opacity: 1;
+}
+
+.custom-liza-checkbox input:checked+.checkmark-liza::after {
+  display: block;
+}
+
+
+.datatoview-col {
+  padding-bottom: 10px !important;
+}
+
+@media (max-width:767px) {
+  .actusers-infobox {
+    max-height: 360px !important;
+  }
+}
+
+.nobackg-img {
+  background-color: unset !important;
 }

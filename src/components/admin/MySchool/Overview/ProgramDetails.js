@@ -97,6 +97,7 @@ const ProgramDetails = ({
                     width: '23px',
                     height: '23px'
                   }}
+                  className='nobackg-img'
                 />
               </div>
               <p className='schooldetails-font p-0 m-0'>Program Details</p>
@@ -149,17 +150,19 @@ const ProgramDetails = ({
                   )}
                 </>
               ) : schoolDetails.program_details?.programsImplemented?.length ? (
-                schoolDetails.program_details.programsImplemented.map((program, index) => {
-                  const colors = ['green', 'blue', 'red'];
-                  return (
-                    <SkillBox
-                      key={program.id}
-                      className='d-flex align-items-center justify-content-center'
-                      color={colors[index % colors.length]}
-                      text={program.name}
-                    />
-                  )
-                })
+                schoolDetails.program_details.programsImplemented.map(
+                  (program, index) => {
+                    const colors = ['green', 'blue', 'red']
+                    return (
+                      <SkillBox
+                        key={program.id}
+                        className='d-flex align-items-center justify-content-center'
+                        color={colors[index % colors.length]}
+                        text={program.name}
+                      />
+                    )
+                  }
+                )
               ) : (
                 <SkillBox
                   className='d-flex align-items-center justify-content-center'

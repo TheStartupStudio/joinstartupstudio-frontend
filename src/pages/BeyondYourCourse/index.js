@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -12,13 +12,11 @@ import { changeSidebarState } from '../../redux'
 import Video from '../../components/Video'
 import SavedVideosWidget from '../../components/Video/savedVideosWidget'
 import { VideoModal } from '../../components/Modals/videoModal'
-import { NotesButton } from '../../components/Notes'
 
 export default function BeyondYourCourse() {
   const dispatch = useDispatch()
   const [encouragementVideos, setEncouragementVideos] = useState([])
   const [masterClassVideos, setMasterClassVideos] = useState([])
-  const [startupLiveVideos, setStartupLiveVideos] = useState([])
   const [startVideoIndex, setStartVideoIndex] = useState(0)
   const [endVideoIndex, setEndVideoIndex] = useState(4)
   const [endVideoIndexMobile, setEndVideoIndexMobile] = useState(2)
@@ -139,19 +137,7 @@ export default function BeyondYourCourse() {
       .catch((err) => err)
   }
 
-  useEffect(() => {
-    getEncouragementVideos()
-    getMasterClassVideos()
-    getUserConnections()
-    getSavedVideos()
-    if (!isNaN(videoId)) getVideoData()
-  }, [])
-
-  useEffect(() => {
-    videoData && setShowVideoModal(true)
-  }, [videoData])
-
-  const getVideoData = async () => {
+  const getVideoData = useCallback(async () => {
     await axiosInstance
       .get(`/contents/${videoId}`)
       .then((response) => {
@@ -162,7 +148,19 @@ export default function BeyondYourCourse() {
           setVideoData(response.data)
       })
       .catch((err) => err)
-  }
+  }, [videoId])
+
+  useEffect(() => {
+    getEncouragementVideos()
+    getMasterClassVideos()
+    getUserConnections()
+    getSavedVideos()
+    if (!isNaN(videoId)) getVideoData()
+  }, [videoId, getVideoData])
+
+  useEffect(() => {
+    videoData && setShowVideoModal(true)
+  }, [videoData])
 
   const getUserConnections = async () => {
     await axiosInstance.get('/connect').then((res) => {
@@ -190,10 +188,10 @@ export default function BeyondYourCourse() {
 
   const handlePreviousVideo = async (page, startIndex, endIndex) => {
     if (startIndex > 0) {
-      if (page == 1) {
+      if (page === 1) {
         setStartVideoIndex(startIndex - 1)
         setEndVideoIndex(endIndex - 1)
-      } else if (page == 2) {
+      } else if (page === 2) {
         setStartMasterClassVideoIndex(startIndex - 1)
         setEndMasterClassVideoIndex(endIndex - 1)
       }
@@ -201,12 +199,12 @@ export default function BeyondYourCourse() {
   }
 
   const handleNextVideo = async (page, startIndex, endIndex) => {
-    if (page == 1) {
+    if (page === 1) {
       if (endIndex < encouragementVideos.length) {
         setStartVideoIndex(startIndex + 1)
         setEndVideoIndex(endIndex + 1)
       }
-    } else if (page == 2) {
+    } else if (page === 2) {
       if (endIndex < masterClassVideos.length) {
         setStartMasterClassVideoIndex(startIndex + 1)
         setEndMasterClassVideoIndex(endIndex + 1)
@@ -215,12 +213,12 @@ export default function BeyondYourCourse() {
   }
 
   const handleNextVideoMobile = async (page, startIndex, endIndexMobile) => {
-    if (page == 1) {
+    if (page === 1) {
       if (endIndexMobile < encouragementVideos.length) {
         setStartVideoIndex(startIndex + 1)
         setEndVideoIndexMobile(endIndexMobile + 1)
       }
-    } else if (page == 2) {
+    } else if (page === 2) {
       if (endIndexMobile < masterClassVideos.length) {
         setStartMasterClassVideoIndex(startIndex + 1)
         setEndMasterClassVideoIndexMobile(endIndexMobile + 1)
@@ -234,10 +232,10 @@ export default function BeyondYourCourse() {
     endIndexMobile
   ) => {
     if (startIndex > 0) {
-      if (page == 1) {
+      if (page === 1) {
         setStartVideoIndex(startIndex - 1)
         setEndVideoIndexMobile(endIndexMobile - 1)
-      } else if (page == 2) {
+      } else if (page === 2) {
         setStartMasterClassVideoIndex(startIndex - 1)
         setEndMasterClassVideoIndexMobile(endIndexMobile - 1)
       }

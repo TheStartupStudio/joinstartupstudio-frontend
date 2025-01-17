@@ -229,9 +229,9 @@ nav#sidebar {
 /*  height: 100%;*/
 /*}*/
 
-.sidebar-scroll {
+/* .sidebar-scroll {
   height: 100vh;
-}
+} */
 
 .sidebar-header img {
   width: 172px;
@@ -5481,9 +5481,9 @@ _:future,
   height: 36px !important;
 }
 
-.sidebar-overflow-fix {
+/* .sidebar-overflow-fix {
   overflow: unset !important;
-}
+} */
 
 /* Safari 7.1+ */
 
@@ -5504,23 +5504,126 @@ _:future,
 :root .public-login-form {
   padding-top: 45px !important;
   height: 37vh !important;
+  margin-bottom: 35px !important;
 }
+
+_::-webkit-full-page-media,
+_:future,
+:root .col-sm-12.col-lg-4.text-align-left-footer {
+  margin-bottom: -10px !important;
+  margin-top: -2px !important;
+}
+
+/* _::-webkit-full-page-media,
+_:future,
+:root .footer-menu {
+  margin-top: -10px !important;
+
+} */
+
+
+/* _::-webkit-full-page-media,
+_:future,
+:root section#footer {
+  position: absolute !important;
+  bottom: -5px !important;
+  right: -30px !important;
+  height: 70px !important;
+  padding: 5px !important;
+  width: 110%;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .footer-menu {
+  margin-top: -10px !important;
+
+}
+
+.ag-ltr .ag-header-viewport .ag-header-cell-resize::after {
+  display: none !important;
+}
+
+*/
+/* _::-webkit-full-page-media,
+_:future,
+:root section#footer {
+  height: 80px !important;
+  margin-top: -60px !important;
+  position: relative;
+  bottom: 0 !important;
+} */
+
+/* _::-webkit-full-page-media,
+_:future,
+:root .choose-login_container {
+  height: 100vh !important;
+
+}
+
+*/
 
 _::-webkit-full-page-media,
 _:future,
 :root section#footer {
+  margin-right: -20px !important;
+  padding-right: 20px !important;
+  right: 0 !important;
+  width: 100vw !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .footer-menu ul {
+  margin-top: -10px !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root .col-sm-12.col-lg-4.text-align-left-footer {
+  margin-bottom: -10px !important;
+  margin-top: -2px !important;
+}
+
+
+/* _::-webkit-full-page-media,
+_:future,
+:root .choose-login_container:has(.public-login-form) {
+  overflow-y: scroll !important;
+} */
+
+
+_::-webkit-full-page-media,
+_:future,
+:root div#root:has(.public-login-form) div#content {
+  height: 100% !important;
+  overflow-y: unset !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root div#root:has(.public-login-form) {
+  overflow-y: hidden !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root div#root:has(.public-login-form) section#footer {
   position: absolute;
   bottom: 0 !important;
+  /* margin-top: -30px !important; */
 }
+
 
 _::-webkit-full-page-media,
 _:future,
-:root section#footer .row.mx-md-4.footer-copyright .col-sm-12.col-lg-4.text-align-left-footer {
-  margin-left: 80px;
+:root body:has(div#root:has(.public-login-form)) {
+  height: 100% !important;
 }
+
 
 _::-webkit-full-page-media,
 _:future,
-:root .choose-login_container {
-  height: 100vh !important;
+:root body {
+  height: unset !important;
 }

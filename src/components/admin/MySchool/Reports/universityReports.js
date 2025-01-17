@@ -21,20 +21,25 @@ const UniversityReports = ({
 }) => {
   return (
     <>
-      <InfoBox cn='my-3' style={{ maxHeight: '350px' }}>
+      <InfoBox cn='my-3 actusers-infobox' style={{ maxHeight: '330px' }}>
         <Row className='justify-content-between align-items-center'>
           <Col md='6'>
-            <span className='me-2'>Active Users</span>
+            <span className='me-2 act-users-title'>Active Users</span>
           </Col>
           <Col md='6' className='d-flex justify-content-end'>
+            {/* <label className='custom-liza-checkbox'>
+              <input type='checkbox' className='checkboxi-in' />
+              <span className='checkmark-liza'></span>
+            </label> */}
             <CustomDropdown
               title='Filter by program'
               btnClassName={'gray-border'}
               options={[
-                { name: 'Market-Ready (LTS1)', value: 'LTS1' },
-                { name: 'Market-Ready (LTS2)', value: 'LTS2' },
-                { name: 'Market-Ready (LTS3)', value: 'LTS3' },
-                { name: 'Market-Ready (LTS4)', value: 'LTS4' }
+                { name: 'Market-Ready (LTS 1)', value: 'LTS1' },
+                { name: 'Market-Ready (LTS 2)', value: 'LTS2' },
+                { name: 'Market-Ready (LTS 3)', value: 'LTS3' },
+                { name: 'Market-Ready (LTS 4)', value: 'LTS4' },
+                { name: 'Financial Literacy', value: 'LTS4' }
               ]}
               onClick={(school) => setFilterProgram(school.value)}
               width='250px'
@@ -74,12 +79,17 @@ const UniversityReports = ({
       </InfoBox>
 
       <InfoBox cn='my-3'>
-        <Row className=' justify-content-around'>
+        <Row className=' justify-content-around' style={{ gap: '13px' }}>
           {studentsCountLoading
             ? Array(8)
                 .fill()
                 .map((_, idx) => <CountTotalReport key={idx} loading={true} />)
             : studentsCount?.yearLevelResults?.map((item, idx) => (
+                // <>
+                //   <label className='custom-liza-checkbox'>
+                //     <input type='checkbox' />
+                //     <span className='checkmark-liza'></span>
+                //   </label>
                 <CountTotalReport
                   key={idx}
                   title={item.value + ' Students'}
@@ -104,7 +114,10 @@ const UniversityReports = ({
               ))}
         </Row>
 
-        <Row className='m-0 py-5 justify-content-around'>
+        <Row className='m-0 py-5 justify-content-around progress-cert-circles'>
+          <div style={{ height: '20px' }} className='progress-cert-title'>
+            Progress towards Certification
+          </div>
           {progressLoading ? (
             <div
               style={{ height: '300px' }}
@@ -124,7 +137,7 @@ const UniversityReports = ({
         </Row>
 
         <Col className='col-12 d-flex justify-content-end'>
-          <Row className='m-0 justify-content-around'>
+          <Row className='m-0 justify-content-around' style={{ gap: '13px' }}>
             {studentsCountLoading
               ? Array(2)
                   .fill()

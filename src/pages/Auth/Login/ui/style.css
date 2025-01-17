@@ -77,8 +77,8 @@
 
 @media (max-width: 767px) {
   .public-login-form {
-    height: calc(35vh - 42px);
-    min-height: 35vh;
+    height: calc(50vh - 42px) !important;
+    min-height: 50vh !important;
     justify-content: center;
   }
 }
@@ -119,11 +119,18 @@
   }
 }
 
-@media (max-width: 1008px) and (min-width: 768px) {
+@media (max-width: 470px) {
+  .login-form-resp {
+    height: 50vh !important;
+  }
+}
+
+
+/* @media (max-width: 1008px) and (min-width: 768px) {
   .login-form-resp {
     width: 90vw !important;
   }
-}
+} */
 
 /* @media (max-width: 668px) {
   .right-login-content {

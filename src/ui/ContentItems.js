@@ -229,12 +229,13 @@ const LtsButton = ({
   color,
   border,
   onClick,
-  type
+  type,
+  loading = false
 }) => {
   return (
     <button
       type={type}
-      disabled={disabled}
+      disabled={disabled || loading}
       className={`customUI-item LtsButton ${className}`}
       onClick={onClick}
       style={{
@@ -245,7 +246,14 @@ const LtsButton = ({
         borderRadius: '10px'
       }}
     >
-      {text}
+      {loading ? (
+        <span
+          className='spinner-border spinner-border-sm'
+          style={{ fontSize: '13px', fontWeight: 600 }}
+        />
+      ) : (
+        text
+      )}
     </button>
   )
 }

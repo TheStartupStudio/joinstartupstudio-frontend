@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ModalWrapper from './ModalWrapper'
 import { toast } from 'react-toastify'
 import axiosInstance from '../../../utils/AxiosInstance'
@@ -19,6 +19,7 @@ import notificationSocket from '../../../utils/notificationSocket'
 import { useSelector } from 'react-redux'
 import notificationTypes from '../../../utils/notificationTypes'
 import DeleteModal from './SpotlightDeleteModal'
+import { LtsButton } from '../../../ui/ContentItems'
 
 const SpotlightApplyModal = (props) => {
   const [loading, setLoading] = useState(false)
@@ -31,6 +32,7 @@ const SpotlightApplyModal = (props) => {
     type: '',
     show: null
   })
+  // eslint-disable-next-line no-unused-vars
   const [formSubmitted, setFormSubmitted] = useState(false)
   const initialState = {
     name: '',
@@ -51,26 +53,66 @@ const SpotlightApplyModal = (props) => {
     setSpotlightSimpleModal(newSpotlightSimpleModal)
   }
 
-  const { formData, handleChange, handleChangeFile, handleChangeCheckbox } =
-    useForm(initialState, 'new', loading)
+  const {
+    formData,
+    handleChange,
+    handleChangeFile,
+    handleChangeCheckbox,
+    setFormData
+  } = useForm(initialState, props.isApplicationSaved ? 'edit' : 'new', loading)
   const { handleSubmit } = useValidation(formData, setFormSubmitted)
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('spotlightApplicationData')
+    if (savedData && props.isApplicationSaved) {
+      const parsedData = JSON.parse(savedData)
+
+      const deserializeFile = (fileData) => {
+        if (fileData?.base64) {
+          const byteString = atob(fileData.base64.split(',')[1])
+          const mimeType = fileData.base64
+            .split(',')[0]
+            .split(':')[1]
+            .split(';')[0]
+          const ab = new ArrayBuffer(byteString.length)
+          const ia = new Uint8Array(ab)
+
+          for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i)
+          }
+
+          return new File([ab], fileData.name, { type: mimeType })
+        }
+
+        return null
+      }
+
+      parsedData.businessPlan = deserializeFile(parsedData.businessPlan)
+      parsedData.pitchDeck = deserializeFile(parsedData.pitchDeck)
+      parsedData.parentGuardianApprovalForm = deserializeFile(
+        parsedData.parentGuardianApprovalForm
+      )
+
+      setFormData(parsedData)
+    }
+  }, [setFormData, props.isApplicationSaved])
 
   const verify = () => {
     if (!formData.termsAndConditions) {
       setLoading(false)
       return toast.error('Please agree with term and condition.')
     } else if (
-      formData.name.length == 0 ||
-      formData.productName.length == 0 ||
-      formData.productDescription.length == 0 ||
-      formData.membershipType.length == 0
+      formData.name.length === 0 ||
+      formData.productName.length === 0 ||
+      formData.productDescription.length === 0 ||
+      formData.membershipType.length === 0
     ) {
       setLoading(false)
       return toast.error('Please fill in all the fields.')
     } else if (
-      formData.businessPlan.length == 0 ||
-      formData.pitchDeck.length == 0 ||
-      formData.parentGuardianApprovalForm.length == 0
+      formData.businessPlan.length === 0 ||
+      formData.pitchDeck.length === 0 ||
+      formData.parentGuardianApprovalForm.length === 0
     ) {
       setLoading(false)
       return toast.error('Please fill in all the fields.')
@@ -79,7 +121,6 @@ const SpotlightApplyModal = (props) => {
   }
 
   const submitHandler = async () => {
-    // e.preventDefault()
     handleSubmit(async () => {
       setLoading(true)
       const data = new FormData()
@@ -108,7 +149,7 @@ const SpotlightApplyModal = (props) => {
         }
 
         await axiosInstance
-          .post('/immersion/spotlights/', updatedData)
+          .post('/immersion/spotlights', updatedData)
           .then(() => {
             notificationSocket.emit('sendNotification', {
               sender: loggedUser,
@@ -120,22 +161,13 @@ const SpotlightApplyModal = (props) => {
             openSubmitModal()
             props.onHide()
             props.onSuccess()
+            props.removeSavedApplication()
           })
           .catch((err) => {
             toast.error(
               err.response?.data?.message || 'Failed to submit spotlight data.'
             )
           })
-
-        // await axiosInstance
-        //   .post('/users/sendPitch', {
-        //     updatedData
-        //   })
-        //   .then((response) => {
-        // toast.success(response.data.message)
-        // props.onHide()
-        //     setLoading(false)
-        //   })
       } catch (error) {
         toast.error('Failed to submit solution')
         setLoading(false)
@@ -143,15 +175,6 @@ const SpotlightApplyModal = (props) => {
         setLoading(false)
       }
     })
-  }
-  const handleDeleteUser = () => {
-    setShowDeleteImmersionModal(true)
-    setShowMainPitch(false)
-  }
-
-  const closeDeleteUserModal = () => {
-    setShowDeleteImmersionModal(false)
-    setShowMainPitch(true)
   }
 
   const openSubmitModal = () => {
@@ -170,9 +193,7 @@ const SpotlightApplyModal = (props) => {
         <DeleteModal
           show={showDeleteImmersionModal}
           onClose={() => setShowDeleteImmersionModal(false)}
-          onDelete={() => {
-            closeDeleteUserModal()
-          }}
+          onDelete={props.removeSavedApplication}
           title='Delete Application'
           message='Are you sure you want to delete this application?'
         />
@@ -209,6 +230,7 @@ const SpotlightApplyModal = (props) => {
                 required
                 onChange={(e) => handleChange(e)}
                 placeholder={'Who is pitching?'}
+                value={formData.name}
               />
               <input
                 className='apply-button mt-2 mb-2 w-100 ps-2 py-3 pitch-input border'
@@ -217,6 +239,7 @@ const SpotlightApplyModal = (props) => {
                 onChange={(e) => handleChange(e)}
                 required
                 placeholder={'What is your product or service called?'}
+                value={formData.productName}
               />
               <textarea
                 className='apply-button mt-2 mb-2 w-100 ps-2 py-3 pitch-inputtextarea border'
@@ -226,6 +249,7 @@ const SpotlightApplyModal = (props) => {
                 required
                 name='productDescription'
                 placeholder={'Briefly describe your product or service.'}
+                value={formData.productDescription}
               />
               <textarea
                 className='apply-button mt-0 mb-2 w-100 ps-2 py-3 pitch-inputtextarea border'
@@ -235,6 +259,7 @@ const SpotlightApplyModal = (props) => {
                 rows={5}
                 name='membershipType'
                 placeholder={'What type of mentorship are you applying for?'}
+                value={formData.membershipType}
               />
             </div>
             <div className='apply-inputs col-12 col-lg-6'>
@@ -242,7 +267,7 @@ const SpotlightApplyModal = (props) => {
                 <ParentButtonApply text={'DOWNLOAD PARENT/GUARDIAN FORM'} />
               </div>
               <UploadFileInput
-                filename={formData.parentGuardianApprovalForm.name}
+                filename={formData.parentGuardianApprovalForm?.name}
                 placeholder={'Upload Parent/Guardian Approval Form(PDF)'}
                 name='parentGuardianApprovalForm'
                 onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
@@ -250,14 +275,14 @@ const SpotlightApplyModal = (props) => {
               />
 
               <UploadFileInput
-                filename={formData.pitchDeck.name}
+                filename={formData.pitchDeck?.name}
                 placeholder={'Upload Pitch Deck (PDF)'}
                 name='pitchDeck'
                 onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
                 mode={'new'}
               />
               <UploadFileInput
-                filename={formData.businessPlan.name}
+                filename={formData.businessPlan?.name}
                 placeholder={'Upload Business Plan (PDF)'}
                 name='businessPlan'
                 onChange={props.mode !== 'edit' ? handleChangeFile : () => {}}
@@ -276,7 +301,7 @@ const SpotlightApplyModal = (props) => {
                 blueText={'Terms & Conditions'}
                 name={'termsAndConditions'}
                 onChange={handleChangeCheckbox}
-                checked={formData.termsAndConditions}
+                checked={formData?.termsAndConditions}
                 // error={errors.termsAndConditions}
                 // showError={formSubmitted}
               />
@@ -286,11 +311,17 @@ const SpotlightApplyModal = (props) => {
             className='w-100 pb-5'
             style={{ marginTop: '15px', marginBottom: '-55px' }}
           >
-            <div className='d-flex justify-content-between align-items-center flex-wrap'>
+            <div
+              className={`d-flex justify-content-${
+                !props.isApplicationSaved ? 'end' : 'between'
+              } align-items-center flex-wrap`}
+            >
               <p
                 href='#'
-                className='m-0 cursor-pointer d-flex align-items-center'
-                onClick={handleDeleteUser}
+                className={`${
+                  !props.isApplicationSaved ? 'd-none' : ''
+                } m-0 cursor-pointer d-flex align-items-center`}
+                onClick={() => setShowDeleteImmersionModal(true)}
               >
                 <FontAwesomeIcon
                   icon={faExclamationTriangle}
@@ -300,30 +331,27 @@ const SpotlightApplyModal = (props) => {
               </p>
 
               <div className='d-flex align-items-center'>
-                <button
-                  onClick={props.onSave}
-                  className='save-and-continue-text me-3 d-flex align-items-center'
-                >
-                  <i className='bi bi-bookmark me-1'></i> Save and Continue
-                  Later
-                </button>
-                <button
-                  className='apply-save-button edit-account '
-                  disabled={loading || props.userRole !== 'student'}
+                <LtsButton
+                  className={'cancel-btns py-2'}
+                  text={'Save and Continue Later'}
+                  background={'transparent'}
+                  color={'#000'}
+                  border={'1px solid #ccc'}
+                  onClick={() => props.onSave(formData)}
+                />
+
+                <LtsButton
+                  text={'SUBMIT APPLICATION'}
+                  loading={loading}
+                  background={'#52C7DE'}
+                  className={'ms-2 cancel-btns py-2'}
+                  color={'#fff'}
+                  border={'none'}
                   onClick={() => {
                     setLoading(true)
                     verify()
                   }}
-                >
-                  {loading ? (
-                    <span
-                      className='spinner-border spinner-border-sm'
-                      style={{ fontSize: '13px', fontWeight: 600 }}
-                    />
-                  ) : (
-                    <>SUBMIT Application</>
-                  )}
-                </button>
+                />
               </div>
             </div>
           </div>

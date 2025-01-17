@@ -26,6 +26,7 @@ import InstructorNotes from './InstructorNotes/InstructorNotes'
 import PlatformBadges from './PlatformBadges'
 import UserSocialMedia from '../Portfolio2024/Components/UserSocialMedia'
 import { getUserBasicInfo } from '../../redux/portfolio/Actions'
+import { useLocation } from 'react-router-dom'
 
 function MyAccount() {
   const dispatch = useDispatch()
@@ -43,6 +44,7 @@ function MyAccount() {
   const [instructorNotes, setInstructorNotes] = useState(false)
   const [platformBadges, setPlatformBadges] = useState(false)
   const { userBasicInfo } = useSelector((state) => state.portfolio.whoSection)
+  const location = useLocation()
 
   const instructorNotesHandler = () => {
     setPlatformBadges(false)
@@ -51,11 +53,21 @@ function MyAccount() {
   const platformBadgeHandler = () => {
     setInstructorNotes(false)
     setPlatformBadges((state) => !state)
+    if (platformBadgesRef.current) {
+      platformBadgesRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   useEffect(() => {
     dispatch(getUserBasicInfo())
   }, [dispatch])
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    if (params.get('platformBadges') === 'true') {
+      platformBadgeHandler()
+    }
+  }, [location.search])
 
   const getUserData = useCallback(async () => {
     await axiosInstance

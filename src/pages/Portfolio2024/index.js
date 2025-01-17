@@ -160,7 +160,14 @@ const Index = ({
 
   const scrollToTop = () => {
     if (scrollableRef.current) {
-      scrollableRef.current.scrollTop = 0
+      scrollableRef.current.scrollTo({
+        top: 0,
+        behavior:'smooth'
+      })
+
+      scrollableRef.current.scrollIntoView({
+        behavior:'smooth'
+      })
     }
   }
 

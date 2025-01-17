@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 // import Language from '../Language'
 import IntlMessages from '../../utils/IntlMessages'
 import SUSLogo from '../../assets/images/sus-institute-logo.png'
-import SUSLogoStudent from '../../assets/images/LTS-logo-horizontal.png'
+import SUSLogoStudent from '../../assets/images/LTS Logo v2 (H-Light)x1200.png'
 import HSLogounder from '../../assets/images/HS-Sidebar/Market-READY label.png'
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
 
