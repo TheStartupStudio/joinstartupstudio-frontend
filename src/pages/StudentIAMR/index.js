@@ -45,6 +45,7 @@ function StudentIamrContainer() {
   const periods = useSelector((state) => state.dashboard.periods)
   const events = useSelector((state) => state.dashboard.events)
 
+  const { myInboxHash } = useSelector((state) => state.general)
   useEffect(() => {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
@@ -52,15 +53,15 @@ function StudentIamrContainer() {
 
   useEffect(() => {
     if (location.hash === '#inbox') {
-      dispatch(setBackButton(true, 'my-inbox'))
+      dispatch(setBackButton(true, `my-inbox#${myInboxHash}`));
     } else {
-      dispatch(setBackButton(true, 'my-students'))
+      dispatch(setBackButton(true, 'my-students'));
     }
 
     return () => {
-      dispatch(setBackButton(false, ''))
-    }
-  }, [dispatch, location.hash])
+      dispatch(setBackButton(false, ''));
+    };
+  }, [dispatch, location.hash, myInboxHash]);
 
   useEffect(() => {
     setLoading(true)

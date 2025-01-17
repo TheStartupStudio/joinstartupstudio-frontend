@@ -3,13 +3,21 @@ import {
   SET_ACCORDION_TOGGLED,
   SET_IMAGE_CROPPER_DATA,
   SET_CROPPED_IMAGE,
-  GENERAL_LOADING
+  GENERAL_LOADING,
+  SET_MY_INBOX_HASH
 } from './Types'
 
 export const changeSidebarState = (state) => {
   return {
     type: CHANGE_SIDEBAR_STATE,
     payload: state
+  }
+}
+
+export const setMyInboxHash = (hash) => {
+  return {
+    type: SET_MY_INBOX_HASH,
+    payload: hash
   }
 }
 

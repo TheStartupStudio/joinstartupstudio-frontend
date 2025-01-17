@@ -98,7 +98,7 @@ function InboxTickets() {
         if (updatedData[key]?.rows) {
           updatedData[key].rows = updatedData[key].rows.map((ticket) =>
             ticket.id === ticketId
-              ? { ...ticket, read_by_instructor: true }
+              ? { ...ticket, read_by_instructor: true, updated: Date.now() }
               : ticket
           )
         }
