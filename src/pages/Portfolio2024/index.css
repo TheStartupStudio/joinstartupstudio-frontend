@@ -1808,10 +1808,17 @@
 }
 
 .immersion-card-img {
-  width: 280px;
+  /* width: 280px; */
   height: 280px;
   margin-bottom: 30px !important;
 }
+
+@media (max-width:386px) {
+  .immersion-card-img .portfolio-submission-title {
+    font-size: 12px !important;
+  }
+}
+
 
 .immersion-card-img .portfolio-submission-container {
   width: 100%;
@@ -2554,6 +2561,49 @@
   .immrs-render-caro,
   .comp-card-margins {
     margin-top: 30px !important;
+  }
+}
+
+
+.workexp-org-desc {
+  width: 100% !important;
+}
+
+.proveit-card-resp.d-flex.gap-3 {
+  flex-wrap: wrap !important;
+}
+
+.workexp-org-desc ul {
+  word-wrap: break-word;
+  /* For breaking long words */
+  overflow-wrap: anywhere;
+  /* Break words if necessary */
+}
+
+.workexp-org-desc li {
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  margin-bottom: 5px;
+  /* Add spacing between list items */
+}
+
+@media (max-width:584px) {
+
+  .workexp-org-desc ul {
+    padding-left: 0 !important
+  }
+
+  .workexp-org-desc li {
+    width: 200px !important;
+  }
+}
+
+@media (max-width:389px) {
+
+
+
+  .workexp-org-desc li {
+    width: 50% !important;
   }
 }
 
