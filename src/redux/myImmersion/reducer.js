@@ -15,15 +15,7 @@ const initialState = {
     submitted: false,
     userSolution: []
   },
-  experiences: {
-    data: [],
-    totalItems: 0,
-    currentPage: 1,
-    limit: 5,
-    totalPages: 0,
-    submitted: false,
-    userExperience: {}
-  },
+  spotlights: [],
 
   error: null,
   message: ''
@@ -76,27 +68,24 @@ const myImmersionReducer = (state = initialState, action) => {
         industryProblems: payload,
         error: payload
       }
-    case types.FETCH_ALL_EXPERIENCES_PENDING:
+    case types.FETCH_ALL_SPOTLIGHTS_PENDING:
       return {
         ...state,
         loading: true,
         error: null
       }
-    case types.FETCH_ALL_EXPERIENCES_FULFILLED:
+    case types.FETCH_ALL_SPOTLIGHTS_FULFILLED:
       return {
         ...state,
         loading: false,
-        experiences: {
-          ...state.experiences,
-          ...payload
-        },
+        spotlights: payload,
         error: null
       }
-    case types.FETCH_ALL_EXPERIENCES_REJECTED:
+    case types.FETCH_ALL_SPOTLIGHTS_REJECTED:
       return {
         ...state,
         loading: false,
-        experiences: payload,
+        spotlights: payload,
         error: payload
       }
     case types.FETCH_ALL_INDUSTRIES_PENDING:
@@ -148,57 +137,57 @@ const myImmersionReducer = (state = initialState, action) => {
         error: payload
       }
 
-    case types.FETCH_USER_EXPERIENCE_APPLICATION_PENDING:
+    case types.FETCH_SPOTLIGHT_APPLICATION_PENDING:
       return {
         ...state,
         loading: true,
         error: null
       }
-    case types.FETCH_USER_EXPERIENCE_APPLICATION_FULFILLED:
+    case types.FETCH_SPOTLIGHT_APPLICATION_FULFILLED:
       return {
         ...state,
         loading: false,
-        experiences: {
-          ...state.experiences,
-          userExperience: payload
+        spotlights: {
+          ...state.spotlights,
+          userSpotlight: payload
         },
         industries: payload,
         error: null
       }
-    case types.FETCH_USER_EXPERIENCE_APPLICATION_REJECTED:
+    case types.FETCH_SPOTLIGHT_APPLICATION_REJECTED:
       return {
         ...state,
         loading: false,
         experiences: {
           ...state.experiences,
-          userExperience: payload
+          userSpotlight: payload
         },
 
         error: payload
       }
 
-    case types.HANDLE_EXPERIENCE_STATUS_PENDING:
+    case types.HANDLE_SPOTLIGHT_STATUS_PENDING:
       return {
         ...state,
         loading: true,
         error: null
       }
-    case types.HANDLE_EXPERIENCE_STATUS_FULFILLED:
+    case types.HANDLE_SPOTLIGHT_STATUS_FULFILLED:
       return {
         ...state,
         loading: false,
-        experiences: {
-          ...state.experiences,
+        spotlights: {
+          ...state.spotlights,
           ...payload
         },
         error: null
       }
-    case types.HANDLE_EXPERIENCE_STATUS_REJECTED:
+    case types.HANDLE_SPOTLIGHT_STATUS_REJECTED:
       return {
         ...state,
         loading: false,
-        experiences: {
-          ...state.experiences,
+        spotlights: {
+          ...state.spotlights,
           ...payload
         },
         error: payload
@@ -228,6 +217,52 @@ const myImmersionReducer = (state = initialState, action) => {
           ...state.industryProblems,
           ...payload
         },
+        error: payload
+      }
+    case types.CREATE_INDUSTRY_PROBLEM_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.CREATE_INDUSTRY_PROBLEM_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        industryProblems: {
+          ...state.industryProblems,
+          data: state.industryProblems.data.map((problem) =>
+            problem.id === payload.industry_problem_ID &&
+            problem.company_id === payload.company_ID
+              ? { ...problem, submitted: true }
+              : problem
+          )
+        },
+        error: null
+      }
+    case types.CREATE_INDUSTRY_PROBLEM_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        error: action.error
+      }
+    case types.CREATE_SPOTLIGHT_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.CREATE_SPOTLIGHT_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        spotlights: [...state.spotlights, action.payload],
+        error: null
+      }
+    case types.CREATE_SPOTLIGHT_REJECTED:
+      return {
+        ...state,
+        loading: false,
         error: payload
       }
     default:

@@ -111,9 +111,9 @@ const EducationCardModal = (props) => {
       onHide={props.onHide}
       title={props.title}
       actions={modalActions}
-      class={'edit-education-modal'}
+      class={'portf-modal-widths edit-education-modal'}
       showSectionCheckbox={true}
-      isShownSection={educationData.showSection}
+      isShownSection={!educationData.showSection}
       onToggleSection={(showSection) => {
         setEducationData({ ...educationData, showSection })
       }}

@@ -70,6 +70,7 @@ export const RemoveDialogModal = (props) => {
       backdrop='static'
       keyboard={false}
       id='subscription-modal'
+      className={`${props.className}`}
     >
       <Modal.Body
         style={{

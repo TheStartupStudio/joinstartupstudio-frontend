@@ -6,10 +6,15 @@ import MyFailures from './MyFailures'
 import MyMentors from './MyMentors'
 import PortfolioSectionDataLoader from '../../Components/PortfolioSectionDataLoader'
 import UserStory from './UserStory'
+import { useSelector } from 'react-redux'
 
 function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
   const [loadings, setLoadings] = useState(null)
+  const mode = useSelector((state) => state.portfolio.mode)
 
+  const filteredUnshownData = (data) => {
+    return data?.filter((data)=>data.showSection)
+  }
   useEffect(() => {
     if (propsLoadings) {
       setLoadings(propsLoadings)
@@ -32,9 +37,8 @@ function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
       <PortfolioSectionDataLoader />
     )
   }
-  console.log('data', data)
   return (
-    <div className={'d-flex flex-column gap-4'}>
+    <div className={'d-flex flex-column gap-4'} style={{ marginTop: '30px' }}>
       {renderSection(
         loadings?.userBasicInfo,
         'user-basic-info',
@@ -42,39 +46,96 @@ function WhoAmI({ loadings: propsLoadings, data, user, portfolioType }) {
         UserBasicInfo,
         data?.userBasicInfo?.data
       )}
-      {data?.userStory &&
-        renderSection(
-          loadings?.userStory,
-          'user-story',
-          'My Story',
-          UserStory,
-          data?.userStory?.data
-        )}
+      {data?.userStory && data?.userStory?.data ? <>
 
-      {data?.myRelationships &&
-        renderSection(
-          loadings?.myRelationships,
-          'my-relationship',
-          'My Relationships',
-          MyRelationships,
-          data?.myRelationships?.data
-        )}
+          { data?.userStory?.data?.showUserStory !== 0  &&  mode === 'preview' &&
+            renderSection(
+              loadings?.userStory,
+              'user-story',
+              'My Story',
+              UserStory,
+              data?.userStory?.data
+            )}
+
+          {mode === 'edit' &&
+            renderSection(
+              loadings?.userStory,
+              'user-story',
+              'My Story',
+              UserStory,
+              data?.userStory?.data
+            )}
+
+
+        </>:
+
+        <>
+
+          {
+            renderSection(
+              loadings?.userStory,
+              'user-story',
+              'My Story',
+              UserStory,
+              data?.userStory?.data
+            )}
+        </>
+
+      }
+
+
+      {data?.myRelationships && data?.myRelationships?.data ? <>
+          {data?.myRelationships?.data?.showRelationships !== 0 &&  mode === 'preview' &&
+            renderSection(
+              loadings?.myRelationships,
+              'my-relationship',
+              'My Relationships',
+              MyRelationships,
+              data?.myRelationships?.data
+            )}
+
+          {mode === 'edit' &&
+            renderSection(
+              loadings?.myRelationships,
+              'my-relationship',
+              'My Relationships',
+              MyRelationships,
+              data?.myRelationships?.data
+            )}
+
+        </> :
+
+        <>
+          {renderSection(
+            loadings?.myRelationships,
+            'my-relationship',
+            'My Relationships',
+            MyRelationships,
+            data?.myRelationships?.data
+          )}
+        </>
+
+
+      }
+
       {renderSection(
         loadings?.myFailures,
         'my-failures',
         'My Failures',
         MyFailures,
-        data?.myFailures?.data,
+        mode === 'edit' ? data?.myFailures?.data : filteredUnshownData(data?.myFailures?.data),
         450
       )}
+
       {renderSection(
         loadings?.myMentors,
         'my-mentors',
         'My Mentors',
         MyMentors,
-        data?.myMentors?.data,
+        mode === 'edit' ? data?.myMentors?.data : filteredUnshownData(data?.myMentors?.data),
         450
       )}
+
     </div>
   )
 }

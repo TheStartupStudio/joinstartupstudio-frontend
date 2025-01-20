@@ -20,8 +20,9 @@ function PortfolioProgressIndicator(props) {
     <>
       <div
         className={
-          'nav-icons d-flex  align-items-center position-relative portfolio-nav-icons'
+          'portfolio-nav-icons nav-icons d-flex  align-items-center position-relative '
         }
+
         // className={'nav-icons d-flex  align-items-center  portfolio-nav-icons'}
       >
         <ProgressIcon
@@ -44,6 +45,7 @@ function PortfolioProgressIndicator(props) {
         />
         <HorizontalSeparator />
         <ProgressIcon
+          className={'hcipi-text'}
           icons={{ coloredIcon: howIconColor, grayIcon: howIconGray }}
           title={'How Do I Prove It?'}
           activateSection={() => {

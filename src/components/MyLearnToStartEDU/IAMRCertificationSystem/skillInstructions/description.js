@@ -1,13 +1,13 @@
 const Description = ({ skill }) => {
   return (
-    <div className="page-content-text">
-      <p> {skill.description} </p>
-      <p className="mb-1">
+    <div className='page-content-text'>
+      <p> {skill?.description} </p>
+      <p className='mb-1'>
         In order to earn proficiency in the skill of research literacy, you must
         prove <strong> at least three </strong> of the following abilities:
       </p>
       <ul>
-        {skill.SkillTags.map((tag) => (
+        {skill?.SkillTags.map((tag) => (
           <li>{tag.name}</li>
         ))}
       </ul>

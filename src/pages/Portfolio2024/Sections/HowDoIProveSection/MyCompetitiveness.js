@@ -15,17 +15,24 @@ import CarouselComponent from '../../../../components/Carousel/CarouselComponent
 function MyCompetitiveness(props) {
   const dispatch = useDispatch()
   const [myCompetitiveness, setMyCompetitiveness] = useState([])
+  const [isEditSection, setIsEditSection] = useState(false)
+
   const showModal = useSelector(
     (state) =>
       state.portfolio.howSection.myCompetitiveness.showAddCompetitivenessModal
   )
-
-  const [isEditSection, setIsEditSection] = useState(false)
-
-  useEffect(() => {
-    if (props.data) setMyCompetitiveness(props.data)
-  }, [props.data])
   const mode = useSelector((state) => state.portfolio.mode)
+
+  const filteredUnshownData = (data) => {
+    return data?.filter((data) => data.showSection)
+  }
+  useEffect(() => {
+    if (props.data)
+      setMyCompetitiveness([
+        ...props.data,
+        { category: 'my-competitiveness', isAddBox: true }
+      ])
+  }, [props.data])
 
   const actions = [
     {
@@ -38,7 +45,10 @@ function MyCompetitiveness(props) {
     },
     {
       type: 'add',
-      action: () => handleShowModal(),
+      action: () => {
+        handleShowModal()
+        setIsEditSection(true)
+      },
       isDisplayed: mode === 'edit' && myCompetitiveness?.length === 0
     },
     {
@@ -58,55 +68,61 @@ function MyCompetitiveness(props) {
   const handleHideModal = () => {
     dispatch(hideAddCompetitivenessModal())
   }
-
   return (
-    <div className={'container'}>
-      {myCompetitiveness?.length > 0 ? (
-        <>
-          <CarouselComponent
-            data={myCompetitiveness}
-            itemsToShow={3}
-            renderItems={(item) => {
-              return (
-                <>
-                  <MyMentor
-                    data={item}
-                    isEditSection={isEditSection}
-                    category={'my-competitiveness'}
-                  />
-                </>
-              )
-            }}
-            breakPoints={[
-              { width: 500, itemsToShow: 1 },
-              { width: 768, itemsToShow: 2 },
-              { width: 1200, itemsToShow: 3 },
-              { width: 1600, itemsToShow: 4 }
-            ]}
-            transitionDuration='0.5s'
-            transitionTimingFunction='ease-in-out'
-          />
-        </>
+    <div className={'container comp-card-margins '}>
+      {myCompetitiveness?.length === 1 &&
+      myCompetitiveness[0].isAddBox &&
+      !isEditSection ? (
+        <NoDataDisplay
+          src={mentorsImage}
+          text={
+            'You don’t have any competitiveness yet! Click the button to add one.'
+          }
+        />
       ) : (
-        <>
-          <NoDataDisplay
-            src={mentorsImage}
-            // classNames={'mt-5'}
-            text={
-              'You don’t have any competitiveness yet! Click the button to add one.'
+        <CarouselComponent
+          data={myCompetitiveness}
+          itemsToShow={3}
+          renderItems={(item) => {
+            if (!item.isAddBox) {
+              return (
+                <MyMentor
+                  data={item}
+                  isEditSection={isEditSection}
+                  category={'my-competitiveness'}
+                />
+              )
+            } else {
+              return mode === 'edit' && isEditSection ? (
+                <AddMyMentor
+                  title={`Add new "My Competitiveness" section`}
+                  modalTitle={'Add Competitiveness'}
+                  isEditSection={isEditSection}
+                  category={'my-competitiveness'}
+                  type={'competitiveness'}
+                />
+              ) : null
             }
-          />
-        </>
+          }}
+          breakPoints={[
+            { width: 500, itemsToShow: 1 },
+            { width: 768, itemsToShow: 2 },
+            { width: 1200, itemsToShow: 3 },
+            { width: 1600, itemsToShow: 4 }
+          ]}
+          transitionDuration='0.5s'
+          transitionTimingFunction='ease-in-out'
+          initialActiveIndex={0}
+        />
       )}
 
       <div className={'col-md-4'} style={{ marginLeft: 90 }}>
-        {myCompetitiveness?.length > 0 && isEditSection && (
-          <AddMyMentor
-            title={`Add new "My Competitiveness" section`}
-            modalTitle={'Add Competitiveness'}
-            isEditSection={isEditSection}
+        {mode === 'edit' && showModal && (
+          <MyMentorModal
+            onHide={handleHideModal}
+            show={showModal}
+            title={`Add competitiveness`}
             category={'my-competitiveness'}
-            type={'competitiveness'}
           />
         )}
       </div>

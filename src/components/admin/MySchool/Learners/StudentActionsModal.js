@@ -1,17 +1,4 @@
-import {
-  faCheck,
-  faIdBadge,
-  faTimes,
-  faUserLock,
-  faUserMinus,
-  faUserPlus
-} from '@fortawesome/free-solid-svg-icons'
-import {
-  CustomDropdown,
-  CustomInput,
-  SkillBox,
-  SubmitButton
-} from '../ContentItems'
+import { CustomDropdown, SkillBox } from '../ContentItems'
 import { Auth } from 'aws-amplify'
 import { toast } from 'react-toastify'
 import React, { useState } from 'react'
@@ -21,10 +8,14 @@ import LtsCheckbox from '../../../../ui/LtsCheckbox'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import useIsFormEmpty from '../../../../hooks/useIsFormEmpty'
 import { useValidation } from '../../../../hooks/useValidation'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Certification1Badge from '../../../../assets/images/market-ready-1-badge.png'
 import Certification2Badge from '../../../../assets/images/market-ready-2-badge.png'
-import { LtsButton } from '../../../../ui/ContentItems'
+import { CustomInput, LtsButton } from '../../../../ui/ContentItems'
+import tickIcon from '../../../../assets/images/tick.png'
+import userManageIcon from '../../../../assets/images/usermanage.png'
+import deletePersonIcon from '../../../../assets/images/persondelete.png'
+import personwkeyIcon from '../../../../assets/images/personwkey.png'
+import viewPortfIcon from '../../../../assets/images/viewportf.png'
 
 const StudentActionsModal = ({
   show,
@@ -49,7 +40,7 @@ const StudentActionsModal = ({
     universityId: '',
     email: '',
     name: '',
-    password: '',
+    password: 'Learntostart1?',
     levels: [],
     programs: [],
     instructor_id: '',
@@ -172,7 +163,7 @@ const StudentActionsModal = ({
         // style={{ marginTop: '3.9%' }}
         // dialogClassName='custom-modal-lg'
       >
-        <Modal.Header className='position-relative p-3'>
+        <Modal.Header className='position-relative p-3 instructor-modal-details'>
           <Modal.Title
             className='px-3 py-3 w-100 d-flex fw-normal flex-column'
             style={{ fontSize: '16px' }}
@@ -187,7 +178,12 @@ const StudentActionsModal = ({
                 borderRadius: '50%'
               }}
             >
-              <FontAwesomeIcon icon={faUserPlus} />
+              <img
+                src={userManageIcon}
+                width={20}
+                height={16}
+                alt='user manage'
+              />
             </div>
             <div className='d-flex w-100 align-items-center justify-content-between'>
               <span>
@@ -206,8 +202,14 @@ const StudentActionsModal = ({
             </div>
           </Modal.Title>
           {mode !== 'edit' ? (
-            <div className={`check-button fw-bold`} onClick={() => onHide()}>
-              X
+            <div
+              className={`check-button fw-bold`}
+              style={{
+                borderTopRightRadius: '50%'
+              }}
+              onClick={() => onHide()}
+            >
+              <img src={tickIcon} width={50} height={38} alt='tick' />
             </div>
           ) : submitLoading ? (
             <div className={`check-button fw-bold`}>
@@ -215,21 +217,23 @@ const StudentActionsModal = ({
             </div>
           ) : isDisabled ? (
             <div className={`check-button `} onClick={() => onHide()}>
-              <FontAwesomeIcon icon={faTimes} />
+              <img src={tickIcon} width={50} height={38} alt='tick' />
+              {/* <FontAwesomeIcon icon={faTimes} /> */}
             </div>
           ) : (
             <div
               className={`check-button  ${isDisabled ? 'disabled' : ''}`}
               onClick={!isDisabled ? submitHandler : null}
             >
-              <FontAwesomeIcon icon={faCheck} />
+              <img src={tickIcon} width={50} height={38} alt='tick' />
+              {/* <FontAwesomeIcon icon={faCheck} /> */}
             </div>
           )}
         </Modal.Header>
         <Modal.Body>
-          <Row className='m-0'>
+          <Row className='m-0 reset-password-body'>
             <Col md='6'>
-              <p>User details</p>
+              <p className='userdetails'>User details</p>
               <CustomInput
                 placeholder={'User Name (required)'}
                 type={'text'}
@@ -248,7 +252,7 @@ const StudentActionsModal = ({
                 showError={formSubmitted}
                 error={errors.email}
               />
-              {mode !== 'edit' && (
+              {/* {mode !== 'edit' && (
                 <CustomInput
                   placeholder={'Password (required)'}
                   type={'password'}
@@ -258,14 +262,14 @@ const StudentActionsModal = ({
                   showError={formSubmitted}
                   error={errors.password}
                 />
-              )}
+              )} */}
               <div className='py-3'>
-                <p>Set Status</p>
+                <p className='userdetails'>Set Status</p>
                 <span
-                  className='d-flex align-items-center'
+                  className='d-flex align-items-center status-toggle-font'
                   style={{ color: '#9297A1' }}
                 >
-                  Uanctive
+                  Inactive
                   <LtsCheckbox
                     className={'ps-1'}
                     name='deactivated'
@@ -280,7 +284,7 @@ const StudentActionsModal = ({
                 </span>
               </div>
               <div className='py-3'>
-                <p>Certification Progress</p>
+                <p className='userdetails'>Certification Progress</p>
                 <div
                   className='d-flex justify-content-evenly text-center w-50'
                   style={{ fontSize: '14px' }}
@@ -331,15 +335,18 @@ const StudentActionsModal = ({
                 </div>
               </div>
 
-              <a href={`/user-portfolio/${formData.username}`}>
-                <FontAwesomeIcon icon={faIdBadge} className='me-2' /> View
-                Student Portfolio
-              </a>
+              {mode === 'edit' ? (
+                <a href={`/user-portfolio/${formData.username}`}>
+                  <img src={viewPortfIcon} height={15} alt='view port' />
+                  View Student Portfolio
+                </a>
+              ) : null}
             </Col>
             <Col md='6'>
               <div className='pb-3'>
-                <p className='m-0'> Select School Assignment</p>
+                <p className='m-0 userdetails'> Select School Assignment</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   name='universityId'
@@ -373,8 +380,9 @@ const StudentActionsModal = ({
                 />
               </div>
               <div className='pb-3'>
-                <p className='m-0'>Select Level(s)</p>
+                <p className='m-0 userdetails'>Select Level(s)</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   multiple
@@ -392,8 +400,9 @@ const StudentActionsModal = ({
                 />
               </div>
               <div className='pb-3'>
-                <p className='m-0'>Assign Program(s)</p>
+                <p className='m-0 userdetails'>Assign Program(s)</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   multiple
@@ -415,8 +424,9 @@ const StudentActionsModal = ({
                 />
               </div>
               <div className='pb-3'>
-                <p className='m-0'> Assign Instructor</p>
+                <p className='m-0 userdetails'> Assign Instructor</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   name='instructor_id'
@@ -448,34 +458,30 @@ const StudentActionsModal = ({
                 />
               </div>
               <div className='pb-3'>
-                <p className='m-0'> Select Class Period</p>
+                <p className='m-0 userdetails'> Select Class Period</p>
                 <CustomDropdown
+                  spanClassName={'dropdowns-select-font'}
                   isSelectable
                   exclusive
                   name='period'
                   btnClassName={'gray-border'}
-                  options={periods?.map((period) => {
-                    return {
-                      name: period.name,
-                      value: period.name,
-                      id: period.id
-                    }
-                  })}
+                  title={'Assign periods'}
+                  options={periods}
                   isOpen={openDropdown === 'period'}
                   setOpenDropdown={() => handleDropdownClick('period')}
-                  onClick={(event) => handleChangeSelect(event, 'period')}
-                  showError={formSubmitted}
-                  error={errors.period}
+                  onClick={(selectedOptions) =>
+                    handleChangeDropdown(selectedOptions, mode, 'period')
+                  }
                   preselectedOptions={
                     mode === 'edit'
-                      ? [
-                          {
-                            name: formData.period?.name,
-                            id: formData.period?.id
-                          }
-                        ]
+                      ? {
+                          name: formData.period?.name,
+                          id: formData.period?.id
+                        }
                       : []
                   }
+                  showError={formSubmitted}
+                  error={errors.period}
                 />
               </div>
             </Col>
@@ -511,20 +517,36 @@ const StudentActionsModal = ({
               <span className='col-6 d-flex align-items-center'>
                 <p
                   href='#'
-                  className='m-0 cursor-pointer'
+                  className='m-0 cursor-pointer userdetails'
                   onClick={deleteUserFromEdit}
+                  style={{
+                    display: 'flex',
+                    gap: '5px',
+                    alignItems: 'center'
+                  }}
                 >
-                  <FontAwesomeIcon icon={faUserMinus} className='pe-2' />
+                  <img
+                    src={deletePersonIcon}
+                    width={20}
+                    height={24}
+                    alt='delete icon'
+                  />
                   Delete User
                 </p>
               </span>
               <span className='col-6 d-flex align-items-center justify-content-end'>
                 <p
                   href='#'
-                  className='m-0 cursor-pointer'
+                  className='m-0 cursor-pointer userdetails'
                   onClick={resetPasswordFromEdit}
+                  style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
                 >
-                  <FontAwesomeIcon icon={faUserLock} className='pe-2' />
+                  <img
+                    src={personwkeyIcon}
+                    width={20}
+                    height={24}
+                    alt='person key icon'
+                  />
                   Reset password
                 </p>
               </span>

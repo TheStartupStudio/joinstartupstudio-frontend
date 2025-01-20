@@ -28,8 +28,8 @@ function useFetchTickets(
       url: `instructor/iamr/tickets?page=${page}&type=industry_problem`
     },
     {
-      type: 'immersion_experience_applications',
-      url: `instructor/iamr/tickets?page=${page}&type=immersion_experience`
+      type: 'spotlight_applications',
+      url: `instructor/iamr/tickets?page=${page}&type=spotlight`
     }
   ]
 

@@ -129,19 +129,16 @@ const UserBasicInfo = (props) => {
   return (
     <>
       <>
-        <div className={'row'}>
-          <div className={'col-md-6'}>
-            <PortfolioSubmission
-              videoUrl={state.videoUrl}
-              thumbnailUrl={state.thumbnailUrl}
-              title={'MY PERSONAL BRAND STORY'}
-            />
-          </div>
+        <div className={'row userinfo-row'}>
           <div className={'col-md-6'}>
             <div className={'d-flex flex-column h-100'}>
-              <UserInfo userInfo={state} user={props.user} />
+              <UserInfo
+                userInfo={state}
+                user={props.user}
+                className='portf-userinfo'
+              />
 
-              <div className={' mt-3'}>
+              <div className={'userinfo-valueprop mt-3'}>
                 <PortfolioInfoBox
                   title={'My Value Proposition'}
                   content={displayContent(
@@ -149,11 +146,18 @@ const UserBasicInfo = (props) => {
                     null,
                     'No value proposition added yet! Click the edit button to add your value proposition.'
                   )}
-                  contentClasses={'mt-2'}
+                  contentClasses={' w-100 mt-2'}
                   height={150}
                 />
               </div>
             </div>
+          </div>
+          <div className={'col-md-6'}>
+            <PortfolioSubmission
+              videoUrl={state.videoUrl}
+              thumbnailUrl={state.thumbnailUrl}
+              title={'MY PERSONAL BRAND STORY'}
+            />
           </div>
         </div>
       </>

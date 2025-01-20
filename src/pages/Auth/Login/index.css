@@ -8,7 +8,6 @@
   width: 15rem;
 }
 
-
 .login-title {
   margin-top: 20px;
   margin-bottom: 0;
@@ -46,8 +45,6 @@
   color: black;
   font-size: 30px;
 }
-
-
 
 .login-create-account {
   text-align: right;
@@ -178,6 +175,11 @@
   overflow: hidden;
 }
 
+.resignin-modal .modal-dialog {
+  max-width: 500px;
+  width: 500px;
+}
+
 @media (max-width: 767.98px) {
   .choose-login_container {
     min-height: calc(100vh - 92px);
@@ -189,6 +191,7 @@
 
   .right-login-content {
     margin-bottom: 20px !important;
+    margin-right: 20px !important;
   }
 
   .center-content {
@@ -219,7 +222,7 @@
 
   .login-left-content {
     margin-bottom: 20px;
-    margin-left: 5px !important;
+    /* margin-left: 5px !important; */
     display: flex;
     justify-content: center !important;
     text-align: center;
@@ -233,12 +236,11 @@
 
   .social-media-items {
     font-size: smaller;
-
   }
 
-  .right-login-form {
+  /* .right-login-form {
     margin: 0px 10px !important;
-  }
+  } */
 }
 
 @media (min-width: 767.98px) {

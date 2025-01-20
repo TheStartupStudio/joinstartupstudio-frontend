@@ -21,7 +21,7 @@ function SectionActions(props) {
   return (
     <React.Fragment>
       <div
-        className={`portfolio-actions ${
+        className={`portfolio-actions ${props.className}  ${
           props.positionRelative ? 'position-relative' : ''
         }`}
         style={{ ...props.styles }}

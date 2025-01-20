@@ -36,17 +36,14 @@ export const fetchAllIndustryProblems = (
   }
 }
 
-export const fetchExperiences = (currentPage, itemsPerPage) => {
+export const fetchSpotlights = () => {
   return async (dispatch) => {
     try {
-      dispatch(fetchExperiencesPending())
-      const data = await myImmersionService.fetchExperiences(
-        currentPage,
-        itemsPerPage
-      )
-      dispatch(fetchExperiencesFulfilled(data))
+      dispatch(fetchSpotlightsPending())
+      const data = await myImmersionService.fetchSpotlights()
+      dispatch(fetchSpotlightsFulfilled(data))
     } catch (error) {
-      dispatch(fetchExperiencesRejected(error))
+      dispatch(fetchSpotlightsRejected(error))
     }
   }
 }
@@ -77,17 +74,17 @@ export const fetchUserProblemSolution = (user_ID, solution_ID) => {
     }
   }
 }
-export const fetchUserExperienceApplication = (user_ID, experience_ID) => {
+export const fetchSpotlightApplication = (user_ID, spotlight_ID) => {
   return async (dispatch) => {
     try {
-      dispatch(fetchUserExperienceApplicationPending())
-      const data = await myImmersionService.fetchUserExperienceApplication(
+      dispatch(fetchSpotlightApplicationPending())
+      const data = await myImmersionService.fetchUserSpotlightApplication(
         user_ID,
-        experience_ID
+        spotlight_ID
       )
-      dispatch(fetchUserExperienceApplicationFulfilled(data))
+      dispatch(fetchSpotlightApplicationFulfilled(data))
     } catch (error) {
-      dispatch(fetchUserExperienceApplicationRejected(error))
+      dispatch(fetchSpotlightApplicationRejected(error))
     }
   }
 }
@@ -105,14 +102,42 @@ export const handleIndustryProblemStatus = (id, status) => {
     }
   }
 }
-export const handleExperienceStatus = (id, status) => {
+export const handleSpotlightStatus = (id, status, feedbackMessage = '') => {
   return async (dispatch) => {
     try {
-      dispatch(handleExperienceStatusPending())
-      const data = await myImmersionService.handleExperienceStatus(id, status)
-      dispatch(handleExperienceStatusFulfilled(data))
+      dispatch(handleSpotlightStatusPending())
+      const data = await myImmersionService.handleSpotlightStatus(
+        id,
+        status,
+        feedbackMessage
+      )
+      dispatch(handleSpotlightStatusFulfilled(data))
     } catch (error) {
-      dispatch(handleExperienceStatusRejected(error))
+      dispatch(handleSpotlightStatusRejected(error))
+    }
+  }
+}
+export const createIndustryProblem = (data) => {
+  return async (dispatch) => {
+    try {
+      dispatch(createIndustryProblemPending())
+      const res = await myImmersionService.createIndustryProblem(data)
+      dispatch(createIndustryProblemFulfilled(res))
+    } catch (error) {
+      const errorMessage = error.response?.data?.message
+      dispatch(createIndustryProblemRejected(errorMessage))
+      throw new Error(errorMessage)
+    }
+  }
+}
+export const createSpotlight = (data) => {
+  return async (dispatch) => {
+    try {
+      dispatch(createSpotlightPending())
+      const res = await myImmersionService.createSpotlight(data)
+      dispatch(createSpotlightFulfilled(res))
+    } catch (error) {
+      dispatch(createSpotlightRejected(error))
     }
   }
 }
@@ -137,14 +162,14 @@ export function fetchAllIndustryProblemsRejected(error) {
   return { type: types.FETCH_ALL_INDUSTRY_PROBLEMS_REJECTED, error }
 }
 
-export const fetchExperiencesPending = () => ({
-  type: types.FETCH_ALL_EXPERIENCES_PENDING
+export const fetchSpotlightsPending = () => ({
+  type: types.FETCH_ALL_SPOTLIGHTS_PENDING
 })
-export function fetchExperiencesFulfilled(payload) {
-  return { type: types.FETCH_ALL_EXPERIENCES_FULFILLED, payload }
+export function fetchSpotlightsFulfilled(payload) {
+  return { type: types.FETCH_ALL_SPOTLIGHTS_FULFILLED, payload }
 }
-export function fetchExperiencesRejected(error) {
-  return { type: types.FETCH_ALL_EXPERIENCES_REJECTED, error }
+export function fetchSpotlightsRejected(error) {
+  return { type: types.FETCH_ALL_SPOTLIGHTS_REJECTED, error }
 }
 
 export const fetchAllIndustriesPending = () => ({
@@ -167,24 +192,24 @@ export function fetchUserProblemSolutionsRejected(error) {
   return { type: types.FETCH_USER_PROBLEM_SOLUTION_REJECTED, error }
 }
 
-export const fetchUserExperienceApplicationPending = () => ({
-  type: types.FETCH_USER_EXPERIENCE_APPLICATION_PENDING
+export const fetchSpotlightApplicationPending = () => ({
+  type: types.FETCH_SPOTLIGHT_APPLICATION_PENDING
 })
-export function fetchUserExperienceApplicationFulfilled(payload) {
-  return { type: types.FETCH_USER_EXPERIENCE_APPLICATION_FULFILLED, payload }
+export function fetchSpotlightApplicationFulfilled(payload) {
+  return { type: types.FETCH_SPOTLIGHT_APPLICATION_FULFILLED, payload }
 }
-export function fetchUserExperienceApplicationRejected(error) {
-  return { type: types.FETCH_USER_EXPERIENCE_APPLICATION_REJECTED, error }
+export function fetchSpotlightApplicationRejected(error) {
+  return { type: types.FETCH_SPOTLIGHT_APPLICATION_REJECTED, error }
 }
 
-export const handleExperienceStatusPending = () => ({
-  type: types.HANDLE_EXPERIENCE_STATUS_PENDING
+export const handleSpotlightStatusPending = () => ({
+  type: types.HANDLE_SPOTLIGHT_STATUS_PENDING
 })
-export function handleExperienceStatusFulfilled(payload) {
-  return { type: types.HANDLE_EXPERIENCE_STATUS_FULFILLED, payload }
+export function handleSpotlightStatusFulfilled(payload) {
+  return { type: types.HANDLE_SPOTLIGHT_STATUS_FULFILLED, payload }
 }
-export function handleExperienceStatusRejected(error) {
-  return { type: types.HANDLE_EXPERIENCE_STATUS_REJECTED, error }
+export function handleSpotlightStatusRejected(error) {
+  return { type: types.HANDLE_SPOTLIGHT_STATUS_REJECTED, error }
 }
 
 export const handleIndustryProblemStatusPending = () => ({
@@ -195,4 +220,23 @@ export function handleIndustryProblemStatusFulfilled(payload) {
 }
 export function handleIndustryProblemStatusRejected(error) {
   return { type: types.HANDLE_INDUSTRY_PROBLEM_STATUS_REJECTED, error }
+}
+export const createIndustryProblemPending = () => ({
+  type: types.CREATE_INDUSTRY_PROBLEM_PENDING
+})
+export function createIndustryProblemFulfilled(payload) {
+  return { type: types.CREATE_INDUSTRY_PROBLEM_FULFILLED, payload }
+}
+export function createIndustryProblemRejected(error) {
+  return { type: types.CREATE_INDUSTRY_PROBLEM_REJECTED, error }
+}
+
+export const createSpotlightPending = () => ({
+  type: types.CREATE_SPOTLIGHT_PENDING
+})
+export function createSpotlightFulfilled(payload) {
+  return { type: types.CREATE_SPOTLIGHT_FULFILLED, payload }
+}
+export function createSpotlightRejected(error) {
+  return { type: types.CREATE_SPOTLIGHT_REJECTED, error }
 }

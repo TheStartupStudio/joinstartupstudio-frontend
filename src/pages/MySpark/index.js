@@ -14,7 +14,6 @@ import missionStatementIcon from '../../assets/images/My Spark Widget Icons/8.Mi
 import socialPostIcon from '../../assets/images/My Spark Widget Icons/9.Social-Post.svg'
 import socialPostCaptionIcon from '../../assets/images/My Spark Widget Icons/10.Social-Post-Caption.svg'
 import videoScriptIcon from '../../assets/images/My Spark Widget Icons/11.Video-Script.svg'
-import imageIcon from '../../assets/images/My Spark Widget Icons/12.Image.svg'
 import { useHistory } from 'react-router-dom'
 import LTSButton from '../../components/LTSButtons/LTSButton'
 import useWindowWidth from '../../hooks/useWindowWidth'
@@ -22,88 +21,100 @@ import useWindowWidth from '../../hooks/useWindowWidth'
 function MySpark() {
   const widgets = [
     {
+      id: 1,
       name: 'Article',
       icon: articleIcon,
       getMazeApiType: 'document',
       type: 'article'
     },
     {
+      id: 2,
       name: 'About us',
       icon: aboutUsIcon,
       getMazeApiType: 'document',
       type: 'about-us'
     },
     {
+      id: 3,
       name: 'Faq',
       icon: faqIcon,
       getMazeApiType: 'document',
       type: 'faq'
     },
     {
+      id: 4,
       name: 'Startup names',
       icon: startUpNamesIcon,
       getMazeApiType: 'document',
       type: 'startup-names'
     },
     {
+      id: 5,
       name: 'Vision statement',
       icon: visionStatementIcon,
       getMazeApiType: 'document',
       type: 'vision-statement'
     },
     {
+      id: 6,
       name: 'Value proposition',
       icon: valuePropositionIcon,
       getMazeApiType: 'document',
       type: 'value-proposition'
     },
     {
+      id: 7,
       name: 'Startup ideas',
       icon: startUpIdeasIcon,
       getMazeApiType: 'document',
       type: 'startup-ideas'
     },
     {
+      id: 8,
       name: 'Mission statement',
       icon: missionStatementIcon,
       getMazeApiType: 'document',
       type: 'mission-statement'
     },
     {
+      id: 9,
       name: 'Social post',
       icon: socialPostIcon,
       getMazeApiType: 'document',
       type: 'social-post'
     },
     {
+      id: 10,
       name: 'Social post caption',
       icon: socialPostCaptionIcon,
       getMazeApiType: 'document',
       type: 'social-post-caption'
     },
     {
+      id: 11,
       name: 'Video script',
       icon: videoScriptIcon,
       getMazeApiType: 'document',
       type: 'video-script'
-    },
-    {
-      name: 'Image',
-      icon: imageIcon,
-      getMazeApiType: 'image',
-      type: 'image'
     }
+    // {
+    // id:12,
+    //   name: 'Image',
+    //   icon: imageIcon,
+    //   getMazeApiType: 'image',
+    //   type: 'image'
+    // }
   ]
   const history = useHistory()
   const windowWidth = useWindowWidth()
   return (
     <Container fluid>
       <Row>
-        <div className="col-12 col-xl-12 px-0">
-          <div className="account-page-padding page-border">
-            <div className="row ps-2 pb-4">
-              <div className="col-md-6 d-flex align-items-start flex-column  ">
-                <h3 className="page-title mb-0">My SPARK</h3>
+        <div className='col-12 col-xl-12 px-0'>
+          <div className='account-page-padding page-border'>
+            <div className='row ps-2 pb-4'>
+              <div className='col-md-6 d-flex align-items-start flex-column  '>
+                <h3 className='page-title mb-0'>My SPARK</h3>
                 <p className={'page-description'}>
                   Use the AI tool, My Spark, to help inspire you to create your
                   own versions of each piece of content.
@@ -137,6 +148,7 @@ function MySpark() {
                           md={4}
                           lg={3}
                           className={'spark-widget-box__container mb-3 mt-5'}
+                          key={widget.id}
                         >
                           <div
                             className={

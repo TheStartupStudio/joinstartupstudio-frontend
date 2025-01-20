@@ -17,6 +17,7 @@ import {
   TransferFilter
 } from '../../../GridTable/AgGridItems'
 import useModalState from '../../../../hooks/useModalState'
+import useProxyLogin from '../../../../hooks/useProxyLogin'
 
 const Learners = ({
   programs,
@@ -29,17 +30,17 @@ const Learners = ({
   usedIn,
   instructors
 }) => {
+  const { handleProxyLogin } = useProxyLogin()
+  const history = useHistory()
   const { user } = useSelector((state) => state.user.user)
   const [modals, setModalState] = useModalState()
-  const [selectedInstructor, setSelectedInstructor] = useState(null)
-  // const [instructors, setInstructors] = useState([])
+  const [, setSelectedInstructor] = useState(null)
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSchoolFilter, setSelectedSchoolFilter] = useState(null)
   const [selectedRows, setSelectedRows] = useState([])
   const [rowData, setRowData] = useState([])
   const { instructorId } = useParams()
-  const history = useHistory()
 
   useEffect(() => {
     if (instructorId || instructor_id) {
@@ -52,6 +53,7 @@ const Learners = ({
   }, [instructorId, instructor_id])
 
   const fetchStudents = useCallback(async () => {
+    let isMounted = true
     setLoading(true)
     let url = ''
     if (instructorId || instructor_id) {
@@ -81,11 +83,15 @@ const Learners = ({
           : 'none',
         universityName: student.University.name
       }))
-      setRowData(formattedData)
+      if (isMounted) setRowData(formattedData)
     } catch (error) {
       setLoading(false)
     } finally {
       setLoading(false)
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [instructorId, instructor_id, user.universityId])
 
@@ -100,7 +106,7 @@ const Learners = ({
   const columnDefs = useMemo(() => {
     const baseColumnDefs = [
       {
-        headerName: 'Username',
+        headerName: 'user name',
         field: 'name',
         flex: 2,
         checkboxSelection: true,
@@ -108,7 +114,7 @@ const Learners = ({
           return (
             <>
               <div
-                className='pb-0 m-0'
+                className='pb-0 m-0 learners-subtitles'
                 style={{ height: '14px', fontWeight: '500' }}
               >
                 {params.data?.name}
@@ -241,7 +247,7 @@ const Learners = ({
         cellRenderer: (params) => {
           let status = params.value[0]?.status
           return (
-            <div>
+            <div className='transfer-status-cont'>
               <SkillBox
                 withStatus={true}
                 color={`transfer__${
@@ -275,7 +281,7 @@ const Learners = ({
 
     baseColumnDefs.push({
       field: 'actions',
-      flex: 3,
+      flex: 4,
       cellRenderer: (params) => {
         let user = params.data
 
@@ -288,6 +294,7 @@ const Learners = ({
             programs={programs}
             instructors={instructors}
             periods={periods}
+            handleProxyLogin={handleProxyLogin}
             onSuccess={refreshStudents}
           />
         )
@@ -302,10 +309,15 @@ const Learners = ({
     levels,
     programs,
     instructors,
-    refreshStudents
+    refreshStudents,
+    handleProxyLogin
   ])
 
   const handleInstructorFilterChange = (selectedOption) => {
+    if (!selectedOption) {
+      setSelectedSchoolFilter(null)
+      return
+    }
     setSelectedInstructor(null)
     const selectedSchool = instructors.find((i) => i.id === selectedOption.id)
     setSelectedSchoolFilter(selectedSchool)
@@ -334,7 +346,7 @@ const Learners = ({
   )
 
   return (
-    <div style={{ background: '#fff' }}>
+    <div className='' style={{ background: '#fff', borderRadius: '12px' }}>
       <HeaderActions
         usedIn={usedIn || 'student'}
         tableTitle={tableTitle}
@@ -345,12 +357,13 @@ const Learners = ({
             value: instructor.User.name,
             id: instructor.id
           })),
+          hasResetOption: true,
           onChange: handleInstructorFilterChange
         }}
         lastDropdownProps={{
           title: 'Add Student',
           onClick: (newValue) => {
-            newValue.value === 'add-manualy'
+            newValue?.value === 'add-manualy'
               ? setModalState('studentAddActionModal', true)
               : setModalState('showAddStudentsBulkModal', true)
           }

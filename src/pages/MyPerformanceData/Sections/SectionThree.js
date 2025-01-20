@@ -20,6 +20,8 @@ function SectionThree({ instructorId }) {
   }
 
   useEffect(() => {
+    if(curriculumCompletion !== '') {
+
     if (instructorId) {
       dispatch(
         fetchInstructorDebriefDataWithId(curriculumCompletion, instructorId)
@@ -27,6 +29,8 @@ function SectionThree({ instructorId }) {
     } else {
       dispatch(fetchInstructorDebriefData(curriculumCompletion))
     }
+    }
+
   }, [dispatch, curriculumCompletion, instructorId])
 
   function handleProgressValue(value) {

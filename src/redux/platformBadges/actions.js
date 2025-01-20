@@ -1,26 +1,22 @@
 import platformBadgesService from './service'
 import * as types from './types'
 
-export const fetchWatchedMasterclassVideos = (studentID) => {
+export const fetchWatchedMasterclassVideos = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchWatchedMasterclassVideosPending())
-      const data = await platformBadgesService.fetchWatchedMasterClassVidoes(
-        studentID
-      )
+      const data = await platformBadgesService.fetchWatchedMasterClassVidoes()
       dispatch(fetchWatchedMasterClassVideosFulfilled(data))
     } catch (error) {
       dispatch(fetchWatchedMasterClassVideosRejected(error))
     }
   }
 }
-export const fetchWatchedPodcastVideos = (studentID) => {
+export const fetchWatchedPodcastVideos = () => {
   return async (dispatch) => {
     try {
       dispatch(fetchWatchedPodcastVideosPending())
-      const data = await platformBadgesService.fetchWatchedPodcastVidoes(
-        studentID
-      )
+      const data = await platformBadgesService.fetchWatchedPodcastVidoes()
       dispatch(fetchWatchedPodcastVideosFulfilled(data))
     } catch (error) {
       dispatch(fetchWatchedPodcastVideosRejected(error))

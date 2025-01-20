@@ -33,13 +33,18 @@ function StoryModal(props) {
   ]
 
   return (
-    <PortfolioModalWrapper {...props} actions={actions}>
+    <PortfolioModalWrapper
+      {...props}
+      actions={actions}
+      class={'portf-modal-widths'}
+    >
       <div className={'row'}>
         <div className={'col-sm-12'}>
           <ReactQuill
             className={'portfolio-quill'}
             value={story}
             onChange={(value) => setStory(value)}
+            placeholder='Use this space to tell your story.'
           />
         </div>
       </div>

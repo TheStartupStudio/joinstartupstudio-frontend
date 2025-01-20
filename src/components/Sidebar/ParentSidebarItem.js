@@ -8,8 +8,8 @@ const ParentSidebarItem = ({
   isDropdown,
   to = null
 }) => (
-  <li
-    className='dropdownMenuSidebarHover'
+  <ul
+    className='dropdownMenuSidebarHover list-unstyled'
     data-bs-toggle='collapse'
     href={href}
     role='button'
@@ -22,7 +22,7 @@ const ParentSidebarItem = ({
       to={to}
       isDropdown={isDropdown}
     />
-  </li>
+  </ul>
 )
 
 export default ParentSidebarItem

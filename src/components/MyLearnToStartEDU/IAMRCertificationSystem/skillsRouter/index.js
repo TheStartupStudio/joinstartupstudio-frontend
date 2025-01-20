@@ -29,36 +29,32 @@ const SkillsRouter = ({ groupingStrings }) => {
 
   const MemoizedSkillsRouter = useMemo(() => {
     return (
-      <div className="py-4">
+      <div className='py-4'>
         {loading ? (
           <LoadingAnimation show={loading} />
         ) : !skill && type && type !== 'certification-status' ? (
-          <div className="py-5">
-            <p className="page-content-title text-center my-5 fw-bold">
+          <div className='py-5'>
+            <p className='page-content-title text-center my-5 fw-bold'>
               Skill not found!
             </p>
           </div>
         ) : (
           <>
+            <Route exact path={'/iamr'} component={IAMRWelcomePage} />
             <Route
               exact
-              path={'/iamr-certification-system'}
-              component={IAMRWelcomePage}
-            />
-            <Route
-              exact
-              path={`/iamr-certification-system/:certificationType/:id/content`}
+              path={`/iamr/:certificationType/:id/content`}
               component={() => (
                 <SkillContent skill={skill} groupingStrings={groupingStrings} />
               )}
             />
             <Route
-              path={`/iamr-certification-system/:certificationType/:id/certification-status`}
+              path={`/iamr/:certificationType/:id/certification-status`}
               component={CertificationStatus}
             />
             <Route
               exact
-              path={`/iamr-certification-system/:certificationType/:id/instructions/:ticketId?`}
+              path={`/iamr/:certificationType/:id/instructions/:ticketId?`}
               component={() => (
                 <SkillInstructions
                   skill={skill}
@@ -68,17 +64,17 @@ const SkillsRouter = ({ groupingStrings }) => {
             />
             <Route
               exact
-              path={`/iamr-certification-system/:certificationType/:id/journal`}
+              path={`/iamr/:certificationType/:id/journal`}
               component={() => <SkillJournal skill={skill} />}
             />
             <Route
               exact
-              path={`/iamr-certification-system/:certificationType/:id/uploads/:uploadId?`}
+              path={`/iamr/:certificationType/:id/uploads/:uploadId?`}
               component={() => <SkillUploads skill={skill} />}
             />
             <Route
               exact
-              path={`/iamr-certification-system/:certificationType/:id/feedback/:ticketId?`}
+              path={`/iamr/:certificationType/:id/feedback/:ticketId?`}
               component={() => <SkillFeedbacks skill={skill} />}
             />
           </>

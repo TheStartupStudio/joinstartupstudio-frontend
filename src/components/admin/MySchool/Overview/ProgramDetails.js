@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { InfoBox, SkillBox } from '../ContentItems'
 import { Col, Row } from 'react-bootstrap'
-import DefaultImage from '../../../../assets/images/profile-image.png'
+import DefaultImage from '../../../../assets/images/logo-mini.svg'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import CustomSpinner from '../../../CustomSpinner'
 
@@ -64,6 +64,7 @@ const ProgramDetails = ({
       setMode={setMode}
       hasChanges={hasChanges}
       onSaveChanges={handleSaveChanges}
+      cn={'overview-topinfobox-border'}
     >
       {loading ? (
         <div
@@ -76,15 +77,37 @@ const ProgramDetails = ({
         <>
           <Col className='justify-content-center align-items-center'>
             <div className='item-profile__details'>
-              <img src={DefaultImage} alt='Profile' />
-              <p className='p-0 m-0'>Program Details</p>
+              <div
+                style={{
+                  height: '36px',
+                  width: '36px',
+                  borderRadius: '50%',
+                  padding: '5px',
+                  background: '#C8CDD880',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: '10px'
+                }}
+              >
+                <img
+                  src={DefaultImage}
+                  alt='Profile'
+                  style={{
+                    width: '23px',
+                    height: '23px'
+                  }}
+                  className='nobackg-img'
+                />
+              </div>
+              <p className='schooldetails-font p-0 m-0'>Program Details</p>
             </div>
           </Col>
-          <Col className='py-3'>
-            <label htmlFor='' className='pb-2'>
+          <Col className='schoolname-column-padd py-3'>
+            <label htmlFor='' className='schoolname-font pb-2'>
               Number of Instructors
             </label>
-            <p className='p-0 m-0'>
+            <p className='schoolnamedetail-font p-0 m-0'>
               {schoolDetails.program_details?.numberOfInstructors}
             </p>
           </Col>
@@ -109,7 +132,7 @@ const ProgramDetails = ({
                           <>
                             <input
                               type='checkbox'
-                              className='agGrid-customFilters__checkbox'
+                              className='agGrid-customFilters__checkbox '
                               onChange={() => handleCheckboxChange(program.id)}
                               checked={selectedPrograms.includes(program.id)}
                             />
@@ -128,14 +151,17 @@ const ProgramDetails = ({
                 </>
               ) : schoolDetails.program_details?.programsImplemented?.length ? (
                 schoolDetails.program_details.programsImplemented.map(
-                  (program) => (
-                    <SkillBox
-                      key={program.id}
-                      className='d-flex align-items-center justify-content-center'
-                      color={'green'}
-                      text={program.name}
-                    />
-                  )
+                  (program, index) => {
+                    const colors = ['green', 'blue', 'red']
+                    return (
+                      <SkillBox
+                        key={program.id}
+                        className='d-flex align-items-center justify-content-center'
+                        color={colors[index % colors.length]}
+                        text={program.name}
+                      />
+                    )
+                  }
                 )
               ) : (
                 <SkillBox

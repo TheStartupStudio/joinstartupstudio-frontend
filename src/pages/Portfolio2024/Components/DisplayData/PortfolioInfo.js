@@ -13,7 +13,7 @@ function PortfolioInfoBox(props) {
         </div>
       )}
       <div
-        className={`portfolio-info-content ${props.contentClasses ?? ''}`}
+        className={`${props.contentClasses ?? ''} portfolio-info-content `}
         style={{ minHeight: props.inputHeight }}
         dangerouslySetInnerHTML={{ __html: props.content }}
       />

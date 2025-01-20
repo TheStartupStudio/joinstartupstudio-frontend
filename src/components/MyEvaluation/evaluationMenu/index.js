@@ -1,10 +1,11 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Accordion } from 'react-bootstrap'
 import '../index.css'
 import MenuList from './menuList'
 import MenuOption from './menuOption'
 import { useEffect, useState } from 'react'
 import axiosInstance from '../../../utils/AxiosInstance'
+import { changeSidebarState } from '../../../redux'
 
 function EvaluationMenu(props) {
   const { isAdmin } = useSelector((state) => state.user.user)
@@ -12,9 +13,14 @@ function EvaluationMenu(props) {
 
   const [journalCategory, setJournalCategory] = useState('')
   const [journalCategoryOptions, setJournalCategoryOptions] = useState([])
+   const dispatch = useDispatch()
+
+    useEffect(() => {
+           dispatch(changeSidebarState(false))
+      })
+    
 
   const getUserTitles = async (category) => {
-    console.log(category, 'categgory')
     try {
       const { data } = await axiosInstance.get(
         `/ltsJournals/fromInstructorAllJournals`,
@@ -25,8 +31,6 @@ function EvaluationMenu(props) {
           }
         }
       )
-
-      console.log(data, 'dataEvaluationMenu')
 
       let journalOptions = []
 
@@ -70,11 +74,22 @@ function EvaluationMenu(props) {
   }
 
   return (
-    <div className='col-12 col-lg-3 inbox-menu'>
-      <h4>My Evaluation</h4>
+    <div
+      className='evaluations-inbox-menu col-12 col-lg-3 inbox-menu'
+      style={{
+        marginTop: '5px '
+      }}
+    >
+      <h4
+        className='eval-main-title'
+        style={{ textTransform: 'uppercase', lineHeight: '20px' }}
+      >
+        My Evaluations
+      </h4>
       <Accordion
         activeKey={activeEventKey}
         onSelect={(e) => setActiveEventKey(e)}
+        style={{ textTransform: 'uppercase' }}
       >
         <MenuList
           title={'LTS JOURNAL'}

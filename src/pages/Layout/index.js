@@ -5,11 +5,16 @@ import Sidebar from '../../components/Sidebar/index'
 import Footer from '../../components/Footer/index'
 import { changeSidebarState } from '../../redux'
 import { ToastContainer } from 'react-toastify'
+import LoadingAnimation from '../../ui/loadingAnimation'
+import BloorBackgroundWrapper from '../../ui/BlurBackgroundWrapper'
+import ImpersonationNavbar from '../../components/Navbar/ImpersonationNavbar'
 
 function Layout({ children }) {
+  const originalToken = localStorage.getItem('original_access_token')
   const [sideBarVisible, setSideBarVisible] = useState(false)
   const sideBarState = useSelector((state) => state.general.sidebarState)
   const [showHeaderSelected, setShowHeaderSelected] = useState(false)
+  const { generalLoading } = useSelector((state) => state.general)
   const dispatch = useDispatch()
 
   const toggleBackdrop = () => {
@@ -22,7 +27,13 @@ function Layout({ children }) {
 
   return (
     <React.Fragment>
-      <div className='wrapper'>
+      {generalLoading && (
+        <BloorBackgroundWrapper>
+          <LoadingAnimation show={true} />
+        </BloorBackgroundWrapper>
+      )}
+      {originalToken && <ImpersonationNavbar originalToken={originalToken} />}
+      <div className='wrapper' style={originalToken && { marginTop: '32px' }}>
         <Sidebar
           handleSideBar={setSideBarVisible}
           sideBarVisible={sideBarVisible}
@@ -30,7 +41,7 @@ function Layout({ children }) {
         />
         <div
           id='content'
-          // className='w-100'
+        // className='w-100'
         >
           {sideBarState ? (
             <div className='backdrop' onClick={toggleBackdrop}></div>

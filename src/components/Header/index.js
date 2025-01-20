@@ -15,8 +15,8 @@ import StudentOfInstructors from '../GetInstructorStudents/index.js'
 import useOnClickOutside from 'use-onclickoutside'
 import { useHistory } from 'react-router-dom'
 import PeerSharingModal from '../Modals/PeerSharingModal'
-import MobileNavbar from './MobileNavbar.js'
-import Navbar from './Navbar.js'
+import Navbar from '../Navbar/index.js'
+import MobileNavbar from '../Navbar/MobileNavbar.js'
 
 function Header() {
   const dispatch = useDispatch()
@@ -192,19 +192,19 @@ function Header() {
         (window.location.href.includes('dashboard') ||
           window.location.href ===
             `${process.env.REACT_APP_CLIENT_BASE_URL}/account`) ? (
-        <div className="verify-email">
+        <div className='verify-email'>
           {userMessage !== '' ? (
             <p>
               <IntlMessages id={`${userMessage}`} />
             </p>
           ) : (
             <p>
-              <img className="mr-2" src={triangleAlertIcon} alt="triangle" />
-              <IntlMessages id="user.verify_email" />
-              <Link to="#" className="link" onClick={() => sendVerifyEmail()}>
-                <IntlMessages id="user.click_to_verify_email" />
+              <img className='mr-2' src={triangleAlertIcon} alt='triangle' />
+              <IntlMessages id='user.verify_email' />
+              <Link to='#' className='link' onClick={() => sendVerifyEmail()}>
+                <IntlMessages id='user.click_to_verify_email' />
               </Link>
-              <IntlMessages id="user.resend_verification_email" />
+              <IntlMessages id='user.resend_verification_email' />
             </p>
           )}
         </div>
@@ -260,11 +260,13 @@ function Header() {
           dispatch(updateTnC())
         }}
       />
-      <StudentOfInstructors
-        allow={() => isAdmin}
-        onShow={countStudentOfInstructor}
-        onHide={() => setCountStudentOfInstructor(false)}
-      />
+      {isAdmin && (
+        <StudentOfInstructors
+          allow={isAdmin}
+          onShow={countStudentOfInstructor}
+          onHide={() => setCountStudentOfInstructor(false)}
+        />
+      )}
       <PeerSharingModal
         show={peerSharingModal}
         onHide={closePeerSharingModal}

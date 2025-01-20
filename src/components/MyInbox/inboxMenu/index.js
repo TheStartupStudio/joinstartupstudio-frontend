@@ -7,6 +7,7 @@ import MenuOption from './menuOption'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { setBackButton } from '../../../redux/backButtonReducer'
+import { changeSidebarState } from '../../../redux'
 
 function InboxMenu() {
   const {
@@ -14,7 +15,7 @@ function InboxMenu() {
     certificationFeedbackQuestions,
     approvalRequests,
     industryProblems,
-    immersionExperiences,
+    spotlights,
     selectQuestionsMenu
   } = useInboxContext()
   const { isAdmin } = useSelector((state) => state.user.user)
@@ -31,6 +32,10 @@ function InboxMenu() {
     }
   }, [dispatch])
 
+    useEffect(() => {
+          dispatch(changeSidebarState(false))
+    })
+
   useEffect(() => {
     const hash = location.hash.substring(1)
     if (hash) {
@@ -44,7 +49,7 @@ function InboxMenu() {
         setActiveEventKey('0')
       } else if (
         hash === 'industry_problem_submissions' ||
-        hash === 'immersion_experience_applications'
+        hash === 'spotlight_applications'
       ) {
         setActiveEventKey('1')
       }
@@ -93,9 +98,9 @@ function InboxMenu() {
           />
           <MenuOption
             allowedToShow={true}
-            questionMenu={'immersion_experience_applications'}
-            title={'IMMERSION APPLICATIONS'}
-            categoryOption={immersionExperiences?.unreadCount}
+            questionMenu={'spotlight_applications'}
+            title={'SPOTLIGHT APPLICATIONS'}
+            categoryOption={spotlights?.unreadCount}
           />
           {/* <MenuOption
             allowedToShow={true}

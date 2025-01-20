@@ -166,15 +166,16 @@ const MyMentorModal = (props) => {
       {...props}
       actions={actions}
       showSectionCheckbox={!readOnly}
-      isShownSection={mentorDetails.showSection}
+      isShownSection={!mentorDetails.showSection}
       onToggleSection={(showSection) => {
         setMentorDetails({ ...mentorDetails, showSection })
       }}
+      class={`${props.className} portf-modal-widths `}
       switchId={isEdit() ? 'edit-mentor-switch' : 'add-mentor-switch'}
       switchName={isEdit() ? 'edit-mentor-switch' : 'add-mentor-switch'}
     >
-      <div className='row'>
-        <div className='col-md-4 d-flex align-items-center flex-column justify-content-center'>
+      <div className='mentor-modal-firstrow row'>
+        <div className='d-flex flex-column justify-content-center mentor-modal-imgs'>
           <ReactImageUpload
             value={userImageUrl}
             {...imageProperties}
@@ -189,7 +190,7 @@ const MyMentorModal = (props) => {
             readOnly={readOnly}
           />
         </div>
-        <div className='col-md-8'>
+        <div className='mentor-modal-inputs inputs-aligning'>
           <LabeledInput
             title='Mentor Name'
             type='text'
@@ -227,7 +228,7 @@ const MyMentorModal = (props) => {
           />
         </div>
       </div>
-      <div className='mt-3'>
+      <div className='mt-3 inputs-aligning'>
         {!readOnly ? (
           <>
             <div className='portfolio-quill-label-sm'>Description</div>
@@ -247,7 +248,7 @@ const MyMentorModal = (props) => {
             title='Description'
             type='textarea'
             value={mentorDetails.mentorDescription}
-            containerClassNames='mt-3'
+            containerClassNames='readonly-desc-width mt-3'
             readOnly={readOnly}
             labelAlign={'start'}
             inputHeight={100}
@@ -259,7 +260,12 @@ const MyMentorModal = (props) => {
       </div>
       {isEdit() && !readOnly && (
         <div className='mt-5' onClick={() => setConfirmDeleteModal(true)}>
-          <LtsButton variant='text' align='end' name='DELETE MENTOR' />
+          <LtsButton
+            className='mydelete-failure-btn'
+            variant='text'
+            align='end'
+            name='DELETE MENTOR'
+          />
         </div>
       )}
       {confirmDeleteModal && (

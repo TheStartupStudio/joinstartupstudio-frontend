@@ -10,14 +10,19 @@ function LabeledSwitchInput(props) {
     name,
     labelDirection,
     isToggling,
+    className,
     styles
   } = props
 
   const labelPositionClass = `label-${labelDirection}`
   return (
     <div
-      className={`labeled-switch-container ${labelPositionClass}`}
-      style={styles}
+      className={`labeled-switch-container ${className} ${labelPositionClass} `}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+      }}
     >
       <label className={'show-section switch-label'} htmlFor={id}>
         {label}

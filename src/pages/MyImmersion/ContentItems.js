@@ -1,9 +1,15 @@
-import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
+import {
+  faFileUpload,
+  faUpload,
+  faLink
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Avatar from '../../assets/images/profile-image.png'
 import './style.css'
 import { fileNameExtracter } from '../../utils/helpers'
 import { FETCH_ALL_COMPANIES_PENDING } from '../../redux/myImmersion/types'
+import React from 'react'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 const Textarea = ({ placeholder, name, value, onChange, error, showError }) => {
   return (
@@ -26,7 +32,16 @@ const Textarea = ({ placeholder, name, value, onChange, error, showError }) => {
   )
 }
 
-const UploadFileInput = ({ filename, placeholder, name, onChange, mode }) => {
+const UploadFileInput = ({
+  filename,
+  placeholder,
+  name,
+  onChange,
+  mode,
+  error,
+  showError,
+  video
+}) => {
   const handleClick = () => {
     if (mode === 'edit' && filename) {
       window.open(filename, '_blank')
@@ -34,33 +49,57 @@ const UploadFileInput = ({ filename, placeholder, name, onChange, mode }) => {
   }
 
   return (
-    <label className='immersion-upload-file-input border' onClick={handleClick}>
-      <span className='file-input-placeholder'>
-        {mode === 'edit'
-          ? fileNameExtracter(filename)
-          : filename
-          ? filename
-          : placeholder}
-      </span>
-      <FontAwesomeIcon icon={faFileUpload} className='file-input-icon' />
-      {mode !== 'edit' && (
-        <input
-          type='file'
-          id='inputGroupFile'
-          name={name}
-          accept='application/pdf, video/*'
-          className='file-input'
-          onChange={onChange}
+    <>
+      <label
+        style={{ height: '40px', borderRadius: '10px' }}
+        className={`immersion-upload-file-input ${
+          showError && error ? 'error-border' : 'border'
+        }`}
+        onClick={handleClick}
+      >
+        <span className='file-input-placeholder'>
+          {mode === 'edit'
+            ? fileNameExtracter(filename)
+            : filename
+            ? filename
+            : placeholder}
+        </span>
+        <FontAwesomeIcon
+          icon={!video ? faUpload : faLink}
+          className='file-input-icon'
         />
-      )}
-    </label>
+        {mode !== 'edit' && (
+          <input
+            type='file'
+            id='inputGroupFile'
+            name={name}
+            accept='application/pdf, video/*'
+            className='file-input'
+            onChange={onChange}
+          />
+        )}
+      </label>
+      {showError && error && <small className='ps-1'>{error}</small>}
+    </>
   )
 }
 
-const SubmitButton = ({ text, type, onClick, disabled, className }) => {
+// const SubmitButton = ({ text, type, onClick, disabled, className }) => {
+//   return (
+//     <button
+//       className={className}
+//       type={type}
+//       disabled={disabled}
+//       onClick={onClick}
+//     >
+//       {text}
+//     </button>
+//   )
+// }
+const SubmitButton = ({ text, type, onClick, disabled, industryProblem }) => {
   return (
     <button
-      className={className}
+      className={industryProblem ? 'submit-industry-problem' : 'submit-button'}
       type={type}
       disabled={disabled}
       onClick={onClick}
@@ -69,18 +108,34 @@ const SubmitButton = ({ text, type, onClick, disabled, className }) => {
     </button>
   )
 }
-const ProfileHolder = ({ profileImage, name }) => {
+const ProfileHolder = ({ profileImage, name, className, classN }) => {
   return (
-    <div className='d-flex align-items-center mb-5 '>
-      <div className='profile-dropdown me-1 desktop-menu d-none d-xl-block'>
+    <div className={`${classN} d-flex align-items-center mb-5 `}>
+      <div
+        className={`profile-dropdown me-1 desktop-menu d-none d-xl-block ${className}`}
+      >
         <img src={profileImage ? profileImage : Avatar} alt='Profile' />
       </div>
-      <div className='profile-dropdown-info desktop-menu'>
+      <div className={` profile-dropdown-info desktop-menu `}>
         <h5>{name ? name : localStorage.getItem('name')}</h5>
       </div>
     </div>
   )
 }
+// }
+
+// const TooltipAction = (props) => {
+//   return (
+//     <OverlayTrigger placement='bottom' overlay={props.tooltipContent}>
+//       <div
+//         className={'action-box cursor-pointer'}
+//         onClick={() => props.onClick?.()}
+//       >
+//         {props.icon}
+//       </div>
+//     </OverlayTrigger>
+//   )
+// }
 
 const TermsAndConditionsCheckbox = ({
   text,
@@ -111,7 +166,7 @@ const TermsAndConditionsCheckbox = ({
 }
 
 const ParentGuardianButton = ({ text, className }) => {
-  return <button className='parentGuardian-button'>{text}</button>
+  return <button className='parentGuardian-button '>{text}</button>
 }
 
 export {

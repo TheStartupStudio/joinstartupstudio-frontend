@@ -173,13 +173,13 @@ const Reports = ({ instructors, universityId }) => {
   return (
     <div>
       <Row className='justify-content-between'>
-        <Col md={`${selectedInstructor ? 5 : 6}`}>
+        <Col md={`${selectedInstructor ? 5 : 6}`} className='datatoview-col'>
           <CustomDropdown
             title='Select Data to view'
-            btnClassName={'gray-border'}
+            btnClassName={'gray-border '}
+            itemClassName={'datatoview-dropdown'}
             options={dropdownOptions}
             onClick={(item) => {
-              console.log('item', item)
               dataToView === 'school'
                 ? handleSchoolFilter(item)
                 : handleInstructorFilter(item)
@@ -211,15 +211,24 @@ const Reports = ({ instructors, universityId }) => {
         )}
         {(dataToView === 'school' || selectedInstructor) && (
           <Col md='3' className='d-flex justify-content-end'>
-            <InfoBox cn={'pt-2'} style={{ maxHeight: '40px', width: '200px' }}>
+            <InfoBox
+              cn={'pt-2 pb-2'}
+              style={{
+                maxHeight: '40px',
+                width: '200px',
+                alignContent: 'center'
+              }}
+            >
               <span className='d-flex align-items-center'>
-                <span class='dot me-2'></span>
-                Online Users:{' '}
-                {dataToView === 'instructor'
-                  ? (sectionOneData?.activeStudents ||
-                      sectionOneData?.activeStudents?.length) ??
-                    0
-                  : '12'}
+                <span className='dot me-2'></span>
+                <span className='on-users-text'> Online Users: </span>
+                <span className='on-users-number'>
+                  {dataToView === 'instructor'
+                    ? (sectionOneData?.activeStudents ||
+                        sectionOneData?.activeStudents?.length) ??
+                      0
+                    : '12'}
+                </span>
               </span>
             </InfoBox>
           </Col>

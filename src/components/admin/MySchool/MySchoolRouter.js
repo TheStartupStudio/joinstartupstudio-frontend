@@ -26,7 +26,8 @@ const Page = ({
   instructors,
   periods,
   universityId,
-  universities
+  universities,
+  levelDescriptions
 }) => {
   const { page } = useParams()
 
@@ -39,6 +40,7 @@ const Page = ({
       periods={periods}
       universityId={universityId}
       universities={universities}
+      levelDescriptions={levelDescriptions}
     />
   )
 }
@@ -49,29 +51,46 @@ const MySchoolRouter = ({
   instructors,
   periods,
   universityId,
-  universities
+  universities,
+  levelDescriptions
 }) => {
   return (
     <Router>
       <div className='my-school__container'>
         <Row className='my-school__panel mb-3 m-0'>
           <Col>
-            <NavLink to='/my-school/overview' activeClassName='active'>
+            <NavLink
+              to='/my-school/overview'
+              activeClassName='active'
+              className={'schoolpanel-nav-title'}
+            >
               Overview
             </NavLink>
           </Col>
           <Col>
-            <NavLink to='/my-school/instructors' activeClassName='active'>
+            <NavLink
+              to='/my-school/instructors'
+              activeClassName='active'
+              className={'schoolpanel-nav-title'}
+            >
               Instructors
             </NavLink>
           </Col>
           <Col>
-            <NavLink to='/my-school/learners' activeClassName='active'>
+            <NavLink
+              to='/my-school/learners'
+              activeClassName='active'
+              className={'schoolpanel-nav-title'}
+            >
               Learners
             </NavLink>
           </Col>
           <Col>
-            <NavLink to='/my-school/reports' activeClassName='active'>
+            <NavLink
+              to='/my-school/reports'
+              activeClassName='active'
+              className={'schoolpanel-nav-title'}
+            >
               Reports
             </NavLink>
           </Col>
@@ -88,6 +107,7 @@ const MySchoolRouter = ({
                 periods={periods}
                 universityId={universityId}
                 universities={universities}
+                levelDescriptions={levelDescriptions}
               />
             )}
           />

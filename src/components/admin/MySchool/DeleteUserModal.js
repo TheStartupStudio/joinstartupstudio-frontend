@@ -8,8 +8,9 @@ import configureAwsSdk from '../../../config/configAwsSdk'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import { LtsButton } from '../../../ui/ContentItems'
-
-const deleteUser = async (cognito_Id) => {
+import backArrowIcon from '../../../assets/images/backarrow.png'
+import deletePersonIcon from '../../../assets/images/persondelete.png'
+const deleteUserFromCognito = async (cognito_Id) => {
   const cognito = configureAwsSdk()
 
   const params = {
@@ -24,39 +25,53 @@ const deleteUser = async (cognito_Id) => {
   }
 }
 
-const DeleteUserModal = ({ show, onHide, user, onSuccess }) => {
-  const isDisabled = false
+const normalizeUsers = (users) => {
+  return Array.isArray(users) ? users : [users]
+}
+
+const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
   const [loading, setLoading] = useState(false)
 
-  const handleDeleteUser = async (cognito_Id) => {
+  const handleDeleteUsers = async () => {
     setLoading(true)
     try {
-      await deleteUser(cognito_Id)
-      await axiosInstance.delete(`/instructor/${user.id}`)
+      const normalizedUsers = normalizeUsers(users)
+
+      for (const user of normalizedUsers) {
+        await deleteUserFromCognito(user.cognito_Id)
+
+        await axiosInstance.delete(`/instructor/${user.id}`)
+      }
+
       setLoading(false)
       onSuccess()
-      toast.success('Instructor deleted successfully!')
+      toast.success(
+        `${normalizedUsers.length > 1 ? 'Users' : 'User'} deleted successfully!`
+      )
       onHide()
     } catch (error) {
+      console.log('error', error.message)
       setLoading(false)
-      toast.error('Failed to delete instructor.')
+      toast.error('Failed to delete user(s).')
     }
   }
+
+  const isMultipleUsers = Array.isArray(users) && users.length > 1
 
   return (
     <>
       <Modal
         show={show}
-        className={''}
+        className={' reset-password-modal delete-user-modal'}
         onHide={() => {
           onHide()
         }}
         centered
       >
-        <Modal.Header className='position-relative p-3'>
+        <Modal.Header className='position-relative p-3 reset-password-modal'>
           <Modal.Title
-            className='px-3 py-3 d-flex fw-normal flex-column'
-            style={{ fontSize: '16px' }}
+            className='deleteuser-title px-3 py-3 d-flex fw-normal flex-column'
+            // style={{ fontSize: '16px' }}
           >
             <div
               className='d-flex align-items-center justify-content-center mb-3'
@@ -68,34 +83,53 @@ const DeleteUserModal = ({ show, onHide, user, onSuccess }) => {
                 borderRadius: '50%'
               }}
             >
-              <FontAwesomeIcon icon={faUserMinus} />
+              <img src={deletePersonIcon} width={21} height={24}></img>
+              {/* <FontAwesomeIcon icon={faUserMinus} /> */}
             </div>
-            Delete User
+            {`Delete ${isMultipleUsers ? 'Users' : 'User'}`}
           </Modal.Title>
-          <div className={`check-button fw-bold`} onClick={() => onHide()}>
-            X
+          <div
+            className={`check-button fw-bold reset-pasw-checkbtn`}
+            onClick={() => onHide()}
+          >
+            <img src={backArrowIcon} width={50} height={38}></img>
           </div>
         </Modal.Header>
         <Modal.Body className='text-center '>
           <Col>
-            <p className='text-center'>
-              Are you sure you want to delete this user?
+            <p className='text-center userdetails'>
+              {`Are you sure you want to delete ${
+                isMultipleUsers ? 'these users' : 'this user'
+              }?`}
             </p>
           </Col>
           <Col md='12' className='d-flex justify-content-center'>
             <LtsButton
+              className={'delete-btns'}
               text={
                 loading ? (
                   <span className='spinner-border spinner-border-sm' />
                 ) : (
-                  'YES, DELETE USER'
+                  `YES, DELETE ${isMultipleUsers ? 'USERS' : 'USER'}`
                 )
               }
               background={'#EE3C96'}
               color={'#FFF'}
               border={'1px solid #ccc'}
-              onClick={() => handleDeleteUser(user.cognito_Id)}
+              onClick={handleDeleteUsers}
             />
+          </Col>
+          <Col md='12' className='d-flex justify-content-center mt-3'>
+            <span
+              className='cancel-text'
+              style={{
+                cursor: 'pointer',
+                color: '#000',
+              }}
+              onClick={() => onHide()}
+            >
+              Cancel
+            </span>
           </Col>
         </Modal.Body>
       </Modal>

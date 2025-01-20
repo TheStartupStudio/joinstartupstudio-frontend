@@ -53,11 +53,12 @@ const WhatCanIDo = ({ fetchProjects, myProjects, portfolioType, data }) => {
   ]
 
   return (
-    <div className={'position-relative'}>
+    <div className={'position-relative'} style={{ marginTop: '30px' }}>
       <div className={'row gap-4'}>
         {projects?.length > 0 ? (
           <>
             <CarouselComponent
+              className={'yespadding-caro'}
               data={projects}
               renderItems={(item, index) => {
                 return (

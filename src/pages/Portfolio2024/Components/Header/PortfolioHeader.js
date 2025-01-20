@@ -11,8 +11,8 @@ function PortfolioHeader(props) {
   const activeSection = useSelector((state) => state.portfolio.activeSection)
 
   return (
-    <div>
-      <PortfolioProgressIndicator />
+    <div className='portfolio-main-wrapper'>
+      {/* <PortfolioProgressIndicator /> */}
       <div className={'my-portfolio-logo-container'}>
         <img
           src={myPortfolioLogo}
@@ -20,6 +20,7 @@ function PortfolioHeader(props) {
           className={'my-portfolio-logo'}
         />
       </div>
+      <PortfolioProgressIndicator />
       {activeSection === 'who-section' && (
         <SectionDescription
           sectionTitle={'Who am i?'}

@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import BriefingsArchive from '../../components/Briefings'
 import './style.css'
 import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
 import { useDispatch, useSelector } from 'react-redux'
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
-import { closeTaskModal, openTaskModal } from '../../redux/dashboard/Actions'
+import { closeTaskModal, getEventsStart, getPeriodsStart, openTaskModal } from '../../redux/dashboard/Actions'
 
 const Briefings = () => {
   const dispatch = useDispatch()
@@ -22,6 +22,12 @@ const Briefings = () => {
   const closeTaskEventModal = () => {
     dispatch(closeTaskModal('create'))
   }
+
+  useEffect(() => {
+    dispatch(getPeriodsStart())
+    dispatch(getEventsStart())
+  }, [dispatch])
+
 
   function getFormattedDate() {
     const today = new Date()
@@ -51,12 +57,12 @@ const Briefings = () => {
             >
               Create Task/Event
             </button>
-            <TaskEventModal
+            {taskEventModal && <TaskEventModal
               show={taskEventModal}
               onHide={closeTaskEventModal}
               periods={periods}
               startDate={getFormattedDate()}
-            />
+            />}
             <NotificationSection />
           </div>
         </div>

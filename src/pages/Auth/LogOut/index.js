@@ -20,5 +20,7 @@ export default function Logout() {
     dispatch(userLogout())
   })
 
+  console.log('heree')
+
   return <Redirect to='/' />
 }

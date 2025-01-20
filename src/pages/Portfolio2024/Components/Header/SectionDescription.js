@@ -21,7 +21,7 @@ function SectionDescription(props) {
 
   return (
     <div className={' section-description-container'}>
-      <div>
+      <div className='portf-section-maintitle'>
         <div
           className={
             'd-flex gap-3 align-items-center mb-3 portfolio-section-title'
@@ -30,8 +30,8 @@ function SectionDescription(props) {
         >
           <UserImage
             userImageUrl={props?.user?.data?.userImageUrl}
-            width={60}
-            height={60}
+            width={66}
+            height={66}
           />
           <div className={'section-title'} style={{ fontSize: '40px' }}>
             {props?.sectionTitle}
@@ -42,7 +42,7 @@ function SectionDescription(props) {
           dangerouslySetInnerHTML={{ __html: props?.sectionDescription }}
         />
       </div>
-      <div>
+      <div className='triangle-icon-parent'>
         <img
           src={props?.triangleIcon}
           className={'triangle-icon portfolio-triangle-icon'}

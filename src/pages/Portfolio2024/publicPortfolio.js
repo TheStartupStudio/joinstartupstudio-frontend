@@ -1,12 +1,10 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
-import PortfolioActions from './Components/Actions/PortfolioActions'
 import PortfolioHeader from './Components/Header/PortfolioHeader'
 import WhoAmI from './Sections/WhoAmISection/WhoAmI'
 import PortfolioNavigator from './Components/PortfolioNavigator'
-import SkeletonLoader from '../MyImmersion/SkeletonLoader/SkeletonLoader'
 import PortfolioSkeletonLoader from './Components/PortfolioSkeletonLoader'
 import WhatCanIDo from './Sections/WhatCanIDoSection/WhatCanIDo'
 import HowDoIProve from './Sections/HowDoIProveSection/HowDoIProve'
@@ -18,7 +16,18 @@ function PublicPortfolio(props) {
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
 
-  useLayoutEffect(() => {
+  const scrollableRef = useRef(null)
+
+  const scrollToTop = () => {
+    if (scrollableRef.current) {
+      scrollableRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+    }
+  }
+
+  useEffect(() => {
     setIsLoading(true)
     const getPublicPortfolioAPI = async () => {
       try {
@@ -38,16 +47,18 @@ function PublicPortfolio(props) {
     }
 
     getPublicPortfolioAPI()
-  }, [username])
+  }, [username, props.userName])
 
   if (isLoading) {
-    // return <div className="loading-indicator">Loading...</div>
     return <PortfolioSkeletonLoader />
   }
 
   if (privatePortfolioMessage) {
     return (
-      <div className='portfolio-container'>
+      <div
+        className='portfolio-container'
+        style={{ marginRight: 0, background: '#e4e9f4' }}
+      >
         <div className='private-portfolio-message'>
           {privatePortfolioMessage}
         </div>
@@ -56,7 +67,15 @@ function PublicPortfolio(props) {
   }
 
   return (
-    <div className='portfolio-container'>
+    <div ref={scrollableRef}
+      style={{
+        height: '800px',
+        overflowY: 'auto',
+      }}>
+    <div
+      className='portfolio-container'
+      style={{ marginRight: 0, background: '#e4e9f4' }}
+    >
       <PortfolioHeader
         user={publicPortfolio.user}
         userStory={publicPortfolio?.whoAmI?.userBasicInfo}
@@ -65,24 +84,17 @@ function PublicPortfolio(props) {
         <WhoAmI
           data={publicPortfolio?.whoAmI}
           user={publicPortfolio?.user}
-          portfolioType={'public'}
+          portfolioType='public'
         />
       )}
       {activeSection === 'what-section' && (
-        <>
-          <WhatCanIDo
-            portfolioType={'public'}
-            data={publicPortfolio?.whatCanIDo}
-          />
-        </>
+        <WhatCanIDo portfolioType='public' data={publicPortfolio?.whatCanIDo} />
       )}
       {activeSection === 'how-section' && (
-        <>
-          <HowDoIProve data={publicPortfolio?.howDoIProve} />
-        </>
+        <HowDoIProve data={publicPortfolio?.howDoIProve} />
       )}
-
-      <PortfolioNavigator />
+      <PortfolioNavigator scrollToTop={scrollToTop} />
+    </div>
     </div>
   )
 }

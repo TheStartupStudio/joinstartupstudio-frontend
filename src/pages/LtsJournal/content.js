@@ -20,11 +20,12 @@ import JournalBrands from './JournalBrands/index'
 import Rwl from './rwl'
 import JournalTables from './JournalTables/JournalTables'
 import AccordionItemWrapper from './UI/AccordionItemWrapper.js'
-import IntlMessages from '../../utils/IntlMessages'
 import InterviewedMentors from './InterviewedMentors'
+import InstructorFeedback from './InstructorFeedback/InstructorFeedback.js'
 
 function LtsJournalContent(props) {
   const location = useLocation()
+  const userRole = localStorage.getItem('role')
   let [showAddReflection, setShowAddReflection] = useState({})
   let [journal, setJournal] = useState({})
   let [videoWatchData, setVideoWatchData] = useState([])
@@ -641,6 +642,12 @@ function LtsJournalContent(props) {
 
         {props.match.params.journalId === '1001028' && (
           <Rwl isEditable={true} />
+        )}
+        {userRole === 'student' && journal?.instructorFeedback && (
+          <InstructorFeedback
+            data={journal?.instructorFeedback}
+            userRole={userRole}
+          />
         )}
       </div>
     </>

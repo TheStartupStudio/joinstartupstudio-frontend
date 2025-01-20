@@ -54,7 +54,6 @@ function LtsJournal(props) {
           platform: props.category === 'market-ready' ? 'student' : 'instructor'
         }
       })
-
       setJournalsData(data)
       setJournals(data)
       setLoaded(true)
@@ -82,7 +81,6 @@ function LtsJournal(props) {
   }
 
   function journalChanged(journal) {
-    debugger
     getJournals(false)
   }
   useEffect(() => {
@@ -93,9 +91,6 @@ function LtsJournal(props) {
     getJournals()
   }, [])
 
-  useEffect(() => {
-    dispatch(changeSidebarState(false))
-  })
 
   let titleMapping = {
     hs1: 'my_journal.hs1_title',

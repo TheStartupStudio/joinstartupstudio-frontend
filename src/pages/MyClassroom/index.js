@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 
 function MyClassroom() {
   const [loading, setLoading] = useState(false)
-
+  const userRole = localStorage.getItem('role')
   const [searchingUsers, setSearchingUsers] = useState(false)
 
   const [width, setWidth] = useState(null)
@@ -40,7 +40,6 @@ function MyClassroom() {
       .get(`/peerSharing/peers/${peerPage + 1}`)
       .then(({ data }) => {
         if (data) {
-          debugger
           setSharedPeers([...sharedPeers, ...data.rows])
           setPeerPage(peerPage + 1)
           setPeerCount(data.count)
@@ -60,12 +59,12 @@ function MyClassroom() {
   }
 
   useEffect(() => {
-    if (loggedUser.Role.id === 2 || loggedUser.Role.id === 3) {
-      getInstructorPeers()
-    } else {
+    if (userRole === 'student') {
       getPeers()
+    } else {
+      getInstructorPeers()
     }
-  }, [])
+  }, [userRole])
 
   return (
     <Container fluid>

@@ -1,14 +1,14 @@
 import React from 'react'
-import KendoTextEditor from '../TextEditor'
+import { QuillEditorBox } from '../../../ui/ContentItems'
 
 const ParagraphInputs = (props) => {
   return (
     <React.Fragment key={props.index}>
-      <KendoTextEditor
-        key="paragraph"
+      <QuillEditorBox
+        key='paragraph'
         value={props.data?.paragraph}
         minHeight={200}
-        handleChange={(e) => {
+        onChange={(e) => {
           const uuid = props.data?.uuid
           return props.handleChangeParagraph([
             'paragraph',

@@ -33,7 +33,7 @@ const JournalTableCellInput = (props) => {
   const debounce = useCallback(
     _.debounce(async (func, value) => {
       func('debounce', value)
-    }, 500),
+    }, 2000),
     []
   )
 
@@ -69,22 +69,46 @@ const JournalTableCellInput = (props) => {
           />
         )}
         {inputTag === 'input' && (
-          <input
-            key={props.cell?.id}
-            ref={inputRef}
-            className={`journal_table-input py-2 px-2 text-dark `}
-            disabled={isDisabled}
-            type={inputType}
-            style={newStyle}
-            name={inputName ?? ''}
-            value={value}
-            onKeyDown={handleTabKey}
-            onChange={(e) => {
-              handleChange(e.target.value)
-              setLoading?.(true)
-            }}
-            {...(inputType === 'number' && { step: 'any' })}
-          />
+          <>
+            {inputType === 'text' && (
+              <input
+                key={props.cell?.id}
+                ref={inputRef}
+                className={'journal_table-input py-2 px-2 text-dark'}
+                disabled={isDisabled}
+                type='text'
+                style={newStyle}
+                name={inputName}
+                defaultValue={value}
+                onKeyDown={handleTabKey}
+                onChange={(e) => {
+                  debounce(() => handleChange(e.target.value))
+                  setLoading?.(true)
+                }}
+              />
+            )}
+
+            {inputType === 'number' && (
+              <input
+                key={props.cell?.id}
+                ref={inputRef}
+                className={'journal_table-input py-2 px-2 text-dark'}
+                disabled={isDisabled}
+                type='number'
+                style={newStyle}
+                name={'number'}
+                // value={+value}
+                defaultValue={+value}
+                onKeyDown={handleTabKey}
+                onChange={(e) => {
+
+                  debounce(() => handleChange(+e.target.value))
+                  setLoading?.(true)
+                }}
+                step='any'
+              />
+            )}
+          </>
         )}
         {!inputTag && (
           <input

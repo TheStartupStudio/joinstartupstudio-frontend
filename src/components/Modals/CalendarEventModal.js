@@ -21,6 +21,8 @@ import {
   faEdit,
   faTrashAlt
 } from '@fortawesome/free-regular-svg-icons'
+import '../MultipleSelect/MultipleSelect.css'
+import ChipComponent from '../ChipComponent/ChipComponent'
 
 const CalendarModal = (props) => {
   const taskEventModal = useSelector(
@@ -77,33 +79,46 @@ const CalendarModal = (props) => {
     }
   }
 
+  const isSingleReactElement = (element) => {
+    return React.isValidElement(element) && !Array.isArray(element);
+  };
+
   const Event = (props) => {
+    const { type, title, eventInfo } = props;
+
     return (
       <div style={{ marginBottom: 4 }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
           }}
         >
           <div
             style={{
               width: 7,
               height: 7,
-              backgroundColor: props.type == 'event' ? '#ff3399' : '#a7ca42',
-              marginRight: 10
+              backgroundColor: type === 'event' ? '#ff3399' : '#a7ca42',
+              marginRight: 10,
             }}
           ></div>
-          <FormattedMessage id={`calendar_task-events.${props.title}`} />
+          <FormattedMessage id={`calendar_task-events.${title}`} />
         </div>
-        <div
-          style={{ marginLeft: 26 }}
-          dangerouslySetInnerHTML={{ __html: props.eventInfo }}
-        />
+        <div style={{ marginLeft: 26 }}>
+          {Array.isArray(eventInfo) ? (
+            eventInfo.map((item, index) => (
+              <div key={index}>{item}</div>
+            ))
+          ) : isSingleReactElement(eventInfo) ? (
+            eventInfo
+          ) : typeof eventInfo === 'string' ? (
+            <div dangerouslySetInnerHTML={{ __html: eventInfo }} />
+          ) : null}
+        </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -207,21 +222,27 @@ const CalendarModal = (props) => {
             title={'requirements'}
           />
           <Event
-            eventInfo={props.event?.periods?.map((period) => period.name)}
-            type={props.event?.type}
-            title={'chosen_classes'}
-          />
-        </Modal.Body>
-      </Modal>
-      <TaskEventModal
-        event={props.event}
-        eventPeriods={props.eventPeriods}
-        show={taskEventModal}
+            eventInfo={
+            <div className={'d-flex gap-1 flex-wrap'}>
+              {props.event?.periods?.map((period) =>
+                <ChipComponent
+              label={period.name} />
+              )}</div>}
+              type={props.event?.type}
+              title={'chosen_classes'}
+              />
+
+            </Modal.Body>
+              </Modal>
+            {taskEventModal && <TaskEventModal
+              event={props.event}
+            eventPeriods={props.eventPeriods}
+            show={taskEventModal}
         onHide={closeTaskEventModal}
         periods={periods}
         onEdit={props.onEdit}
         startDate={null}
-      />
+      />}
       <DeleteEventModal
         show={calendarDeleteEventModal}
         onHide={closeDeleteEventModal}

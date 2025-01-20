@@ -971,7 +971,7 @@ export default function StudentsTable({ instructorId }) {
         key: 'IAMRStatus',
         selector: (row) =>
           row.completedSkills1 ? row.completedSkills1 : 'NONE',
-        sortable: true,
+        sortable: false,
         omit: !selectedOptions.includes('certification'),
         cell: (record) => {
           return (
@@ -1202,7 +1202,6 @@ export default function StudentsTable({ instructorId }) {
                         <img src={searchIcon} alt='#' width='90%' />
                       </button>
                     </div>
-
                     <input
                       type='text'
                       className='form-control'

@@ -26,13 +26,13 @@ const ProjectSection = ({
 
   return (
     <div
-      className={'portfolio-info-container mb-3'}
+      className={'portf-learn-cont portfolio-info-container mb-3'}
       style={{ padding: '40px' }}
     >
-      <div className={'mb-3'}>
+      <div className={' mb-3'} style={{ textAlign: 'center' }}>
         <span
-          className={'portfolio-info-title me-1'}
-          style={{ fontSize: '16px' }}
+          className={'portf-maintitle portfolio-info-title me-1'}
+          // style={{ fontSize: '16px' }}
         >
           {title}
         </span>
@@ -73,6 +73,7 @@ const ProjectSection = ({
             padding={{ padding: '0px' }}
             onClick={() => setShowSkillsModal(type)}
             style={{ marginBottom: '10px' }}
+            className='view-marketready-color'
           ></LtsButton>
         </div>
 
@@ -82,9 +83,14 @@ const ProjectSection = ({
               <React.Fragment key={evidence?.title}>
                 <div className={'project-submission col-md-4'} key={index}>
                   <PortfolioSubmission
-                    title={evidence?.title}
+                    title={
+                      evidence?.evidenceTitle?.length
+                        ? evidence?.evidenceTitle
+                        : `Upload content ${index + 1}`
+                    }
                     videoUrl={evidence?.linkInputValue}
                     thumbnailUrl={evidence?.imageUrl}
+                    className='project-submission-image'
                   />
                 </div>
               </React.Fragment>
@@ -96,6 +102,7 @@ const ProjectSection = ({
             title={`MARKET-READY ${title} SKILLS`}
             show={showSkillsModal === type}
             onHide={() => setShowSkillsModal(undefined)}
+            class={'skills-show-modal'}
           >
             {evidences?.map((evidence, index) => {
               const skillsByCategory = {}
@@ -114,7 +121,7 @@ const ProjectSection = ({
                 evidence?.selectedSkills?.length > 0 && (
                   <div className={'skill-group-by-section'} key={index}>
                     <div className={'skill-group-title py-2'}>
-                      {evidence.title}
+                      {evidence.evidenceTitle}
                     </div>
 
                     {Object.keys(skillsByCategory)?.length > 0 &&
@@ -146,8 +153,10 @@ const ProjectSection = ({
                 )
               )
             })}
-
-            <SectionActions actions={actions} />
+            <SectionActions
+              actions={actions}
+              className='projectsection-border'
+            />
           </PortfolioModalWrapper>
         )}
       </div>

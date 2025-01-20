@@ -3,7 +3,7 @@ export const initialState = {
   certificationFeedbackQuestions: { rows: [], count: 0, unreadCount: 0 },
   approvalRequests: { rows: [], count: 0, unreadCount: 0 },
   industryProblems: { rows: [], count: 0, unreadCount: 0 },
-  immersionExperiences: { rows: [], count: 0, unreadCount: 0 },
+  spotlights: { rows: [], count: 0, unreadCount: 0 },
   questionsMenuSelected: 'student_questions',
   loading: false,
   replying: false
@@ -20,8 +20,8 @@ const inboxReducer = (state, action) => {
       return { ...state, approvalRequests: payload }
     case 'SET_INDUSTRY_PROBLEMS':
       return { ...state, industryProblems: payload }
-    case 'SET_IMMERSION_EXPERIENCE':
-      return { ...state, immersionExperiences: payload }
+    case 'SET_SPOTLIGHTS':
+      return { ...state, spotlights: payload }
     case 'SET_QUESTIONS_MENU_SELECTED':
       return { ...state, questionsMenuSelected: payload }
     case 'SET_LOADING':
@@ -46,8 +46,8 @@ const inboxReducer = (state, action) => {
       return { ...state, approvalRequests: { ...payload } }
     case 'UPDATE_INDUSTRY_PROBLEMS':
       return { ...state, industryProblems: { ...payload } }
-    case 'UPDATE_IMMERSION_EXPERIENCE':
-      return { ...state, immersionExperiences: { ...payload } }
+    case 'UPDATE_SPOTLIGHTS':
+      return { ...state, spotlights: { ...payload } }
     case 'DECREASE_STUDENT_QUESTIONS_UNREAD':
       return {
         ...state,
@@ -80,12 +80,12 @@ const inboxReducer = (state, action) => {
           unreadCount: state.industryProblems.unreadCount - 1
         }
       }
-    case 'DECREASE_IMMERSION_EXPERIENCE':
+    case 'DECREASE_SPOTLIGHTS':
       return {
         ...state,
-        immersionExperiences: {
-          ...state.immersionExperiences,
-          unreadCount: state.immersionExperiences.unreadCount - 1
+        spotlights: {
+          ...state.spotlights,
+          unreadCount: state.spotlights.unreadCount - 1
         }
       }
     default:

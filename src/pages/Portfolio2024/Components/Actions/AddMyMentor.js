@@ -1,5 +1,6 @@
 import React from 'react'
-import imagePlaceholder from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+// import imagePlaceholder from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+import imagePlaceholder from '../../../../assets/images/mentorplaceholder.png'
 import SectionActions from './SectionActions'
 import { useDispatch, useSelector } from 'react-redux'
 import MyMentorModal from '../Modals/MyMentorModal'
@@ -28,7 +29,7 @@ function AddMyMentor(props) {
       ? state.portfolio.howSection.myCompetitiveness.showAddCompetitivenessModal
       : state.portfolio.whoSection.myMentors.showAddMentorModal
   )
-
+  // console.log('props.category', props.category)
   const handleShowModal = () => {
     if (props.category === 'my-competitiveness') {
       dispatch(showAddCompetitivenessModal())
@@ -62,7 +63,7 @@ function AddMyMentor(props) {
         src={imagePlaceholder}
       />
 
-      <div className={'add-new-mentor px-2 pt-3'}>
+      <div className={'add-new-mentor p-1'}>
         {`Click the add button to add a new ${props.type ?? 'mentor'} ${
           props.type === 'competitiveness' ? '' : 'relationship.'
         }`}

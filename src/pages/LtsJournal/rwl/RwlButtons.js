@@ -57,172 +57,172 @@ const RwlButtons = (props) => {
   }
 
   return (
-    <div
-      className={` rwl-buttons_container ${props.isOpened ? 'expanded' : ''}`}
-    >
-      <RwlButton
-        isOpened={openAccordion === 'read'}
-        handleAccordionClick={() => handleAccordionClick('read')}
-        isExanded={true}
-        title={
-          <button
-            className={`rwl-buttons  ${
-              openAccordion === 'read' ? 'active' : ' '
-            }`}
-          >
-            <img
-              src={
-                openAccordion === 'read' ? ReadImageWIthBackground : ReadImage
-              }
-              alt='Read'
-            />
-          </button>
-        }
+    <>
+      <div
+        className={` rwl-buttons_container ${props.isOpened ? 'expanded' : ''}`}
       >
-        {openAccordion === 'read' && (
-          <div className='rwl-button_body' style={{ marginTop: '10px' }}>
-            <Form>
-              {props.items
-                ?.filter((item) => item.categoryID === 1)
-                .map((item, index) => (
-                  <Form.Check
-                    key={`default-${index}`}
-                    type='checkbox'
-                    name={`${item.name}`}
-                    id={item.id}
-                    label={item.name}
-                    checked={props.userSelections.some(
-                      (userSel) => userSel.itemID === item.id
-                    )}
-                    onClick={
-                      props.isEditable
-                        ? (e) => createUserSelection(e.target.id, 1)
-                        : undefined
-                    }
-                    disabled={
-                      props.userSelections.filter(
-                        (userSel) =>
-                          userSel.categoryID === 1 && !userSel.isChecked
-                      ).length >= 2
-                    }
-                  />
-                ))}
-            </Form>
-          </div>
-        )}
-      </RwlButton>
-      <RwlButton
-        isOpened={openAccordion === 'watch'}
-        handleAccordionClick={() => handleAccordionClick('watch')}
-        isExanded={true}
-        title={
-          <button
-            className={`rwl-buttons  ${
-              openAccordion === 'watch' ? 'active' : ' '
-            }`}
-          >
-            <img
-              src={
-                openAccordion === 'watch'
-                  ? WatchImageWIthBackground
-                  : WatchImage
-              }
-              alt='Watch'
-            />
-          </button>
-        }
-      >
-        {openAccordion === 'watch' && (
-          <div className='rwl-button_body' style={{ marginTop: '10px' }}>
-            <Form>
-              {props.items
-                ?.filter((item) => item.categoryID === 2)
-                .map((item, index) => (
-                  <Form.Check
-                    key={`default-${index}`}
-                    type='checkbox'
-                    id={item.id}
-                    label={item.name}
-                    checked={props.userSelections.some(
-                      (userSel) => userSel.itemID === item.id
-                    )}
-                    onClick={
-                      props.isEditable
-                        ? (e) => createUserSelection(e.target.id, 2)
-                        : undefined
-                    }
-                    disabled={
-                      props.userSelections.filter(
-                        (userSel) =>
-                          userSel.categoryID === 2 && !userSel.isChecked
-                      ).length >= 2
-                    }
-                  />
-                ))}
-            </Form>
-          </div>
-        )}
-      </RwlButton>
-      <RwlButton
-        isOpened={openAccordion === 'listen'}
-        handleAccordionClick={() => handleAccordionClick('listen')}
-        isExanded={true}
-        title={
-          <button
-            className={`rwl-buttons  ${
-              openAccordion === 'listen' ? 'active' : ' '
-            }`}
-          >
-            <img
-              src={
-                openAccordion === 'listen'
-                  ? ListenImageWIthBackground
-                  : ListenImage
-              }
-              alt='Listen'
-            />
-          </button>
-        }
-      >
-        {openAccordion === 'listen' && (
-          <div className='rwl-button_body' style={{ marginTop: '10px' }}>
-            <Form>
-              {props.items
-                ?.filter((item) => item.categoryID === 3)
-                .map((item, index) => (
-                  <Form.Check
-                    key={`default-${index}`}
-                    type='checkbox'
-                    id={item.id}
-                    label={item.name}
-                    checked={props.userSelections.some(
-                      (userSel) => userSel.itemID === item.id
-                    )}
-                    onClick={
-                      props.isEditable
-                        ? (e) => createUserSelection(e.target.id, 3)
-                        : undefined
-                    }
-                    disabled={
-                      props.userSelections.filter(
-                        (userSel) =>
-                          userSel.categoryID === 3 && !userSel.isChecked
-                      ).length >= 2
-                    }
-                  />
-                ))}
-            </Form>
-          </div>
-        )}
-      </RwlButton>
-
-      {recommendationModal && (
-        <RecommendationModal
-          show={recommendationModal}
-          onHide={() => setRecommendationModal(false)}
+        <RwlButton
+          isOpened={openAccordion === 'read'}
+          handleAccordionClick={() => handleAccordionClick('read')}
+          isExanded={true}
+          title={
+            <button
+              className={`rwl-buttons  ${
+                openAccordion === 'read' ? 'active' : ' '
+              }`}
+            >
+              <img
+                src={
+                  openAccordion === 'read' ? ReadImageWIthBackground : ReadImage
+                }
+                alt='Read'
+              />
+            </button>
+          }
         />
+
+        <RwlButton
+          isOpened={openAccordion === 'watch'}
+          handleAccordionClick={() => handleAccordionClick('watch')}
+          isExanded={true}
+          title={
+            <button
+              className={`rwl-buttons  ${
+                openAccordion === 'watch' ? 'active' : ' '
+              }`}
+            >
+              <img
+                src={
+                  openAccordion === 'watch'
+                    ? WatchImageWIthBackground
+                    : WatchImage
+                }
+                alt='Watch'
+              />
+            </button>
+          }
+        />
+        <RwlButton
+          isOpened={openAccordion === 'listen'}
+          handleAccordionClick={() => handleAccordionClick('listen')}
+          isExanded={true}
+          title={
+            <button
+              className={`rwl-buttons  ${
+                openAccordion === 'listen' ? 'active' : ' '
+              }`}
+            >
+              <img
+                src={
+                  openAccordion === 'listen'
+                    ? ListenImageWIthBackground
+                    : ListenImage
+                }
+                alt='Listen'
+              />
+            </button>
+          }
+        />
+
+        {recommendationModal && (
+          <RecommendationModal
+            show={recommendationModal}
+            onHide={() => setRecommendationModal(false)}
+          />
+        )}
+      </div>
+      {openAccordion === 'read' && (
+        <div className='rwl-button_body' style={{ marginTop: '10px' }}>
+          <Form>
+            {props.items
+              ?.filter((item) => item.categoryID === 1)
+              .map((item, index) => (
+                <Form.Check
+                  key={`default-${index}`}
+                  type='checkbox'
+                  name={`${item.name}`}
+                  id={item.id}
+                  label={item.name}
+                  checked={props.userSelections.some(
+                    (userSel) => userSel.itemID === item.id
+                  )}
+                  onClick={
+                    props.isEditable
+                      ? (e) => createUserSelection(e.target.id, 1)
+                      : undefined
+                  }
+                  disabled={
+                    props.userSelections.filter(
+                      (userSel) =>
+                        userSel.categoryID === 1 && !userSel.isChecked
+                    ).length >= 2
+                  }
+                />
+              ))}
+          </Form>
+        </div>
       )}
-    </div>
+      {openAccordion === 'watch' && (
+        <div className='rwl-button_body' style={{ marginTop: '10px' }}>
+          <Form>
+            {props.items
+              ?.filter((item) => item.categoryID === 2)
+              .map((item, index) => (
+                <Form.Check
+                  key={`default-${index}`}
+                  type='checkbox'
+                  id={item.id}
+                  label={item.name}
+                  checked={props.userSelections.some(
+                    (userSel) => userSel.itemID === item.id
+                  )}
+                  onClick={
+                    props.isEditable
+                      ? (e) => createUserSelection(e.target.id, 2)
+                      : undefined
+                  }
+                  disabled={
+                    props.userSelections.filter(
+                      (userSel) =>
+                        userSel.categoryID === 2 && !userSel.isChecked
+                    ).length >= 2
+                  }
+                />
+              ))}
+          </Form>
+        </div>
+      )}
+      {openAccordion === 'listen' && (
+        <div className='rwl-button_body' style={{ marginTop: '10px' }}>
+          <Form>
+            {props.items
+              ?.filter((item) => item.categoryID === 3)
+              .map((item, index) => (
+                <Form.Check
+                  key={`default-${index}`}
+                  type='checkbox'
+                  id={item.id}
+                  label={item.name}
+                  checked={props.userSelections.some(
+                    (userSel) => userSel.itemID === item.id
+                  )}
+                  onClick={
+                    props.isEditable
+                      ? (e) => createUserSelection(e.target.id, 3)
+                      : undefined
+                  }
+                  disabled={
+                    props.userSelections.filter(
+                      (userSel) =>
+                        userSel.categoryID === 3 && !userSel.isChecked
+                    ).length >= 2
+                  }
+                />
+              ))}
+          </Form>
+        </div>
+      )}
+    </>
   )
 }
 

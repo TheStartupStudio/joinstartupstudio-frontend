@@ -1,3 +1,18 @@
+.error {
+  width: 100%;
+  color: red;
+  font-size: 11px;
+}
+
+.pw-revelared__icon {
+  position: absolute;
+  font-size: inherit;
+  top: 50%;
+  transform: translateY(calc(50% - 12px));
+  right: 8px;
+  cursor: pointer;
+}
+
 .customUI-item {
   font: normal normal medium 12px/16px Montserrat;
   letter-spacing: 0.48px;
@@ -86,10 +101,12 @@
   flex-direction: column;
   text-align: start;
 }
+
 .ltsGradientButton__container small {
   color: red;
   font-size: 12px;
 }
+
 .ltsGradientButton__button {
   border: double 1px transparent;
   border-radius: 10px;
@@ -104,9 +121,11 @@
   z-index: 10;
   cursor: pointer;
 }
+
 .ltsGradientButton__button.no-color-border {
   border-color: #ccc;
 }
+
 .ltsGradientButton__button a,
 .ltsGradientButton__button span {
   display: flex;
@@ -120,10 +139,12 @@
 /* Custom input styles */
 .customInput__container {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+  align-items: center;
   text-align: start;
   color: #9297a1;
 }
+
 .customInput__container .hint-icon {
   position: absolute;
   top: 30%;
@@ -139,6 +160,7 @@
   border-radius: 50%;
   cursor: pointer;
 }
+
 .customInput__container .hint-menu {
   position: absolute;
   top: -90%;
@@ -167,13 +189,17 @@
   border-top: 10px solid #000;
   transform: translateX(50%);
 }
+
 .customInput__container small {
   width: 100%;
   color: red;
   font-size: 11px;
 }
+
 .customInput {
   border: thin solid #dededeb3;
+  width: 100%;
+  margin: 0.485rem 0;
   height: 40px;
   background: var(#ffffff) 0% 0% no-repeat padding-box;
   background: rgba(255, 255, 255, 1) 0% 0% no-repeat padding-box;
@@ -183,6 +209,11 @@
   color: #333d3db3;
   padding: 0 8px;
   position: relative;
+  font-size: 0.855rem;
+}
+
+.customInput::placeholder {
+  color: #9d9d9db3 !important;
 }
 
 /* Custom Checkbox styles */
@@ -192,6 +223,7 @@
   color: #000000;
   opacity: 1;
 }
+
 .customCheckbox {
   min-width: 20px;
   height: 20px;
@@ -205,6 +237,7 @@
   cursor: pointer;
   position: relative;
 }
+
 .customCheckbox:checked::before {
   content: '\2713';
   color: #ffffff;
@@ -213,6 +246,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .customCheckbox:checked {
   width: 20px;
   height: 20px;
@@ -230,4 +264,155 @@
   box-shadow: none;
   padding: 4px 10px;
   font-size: 0.855rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: opacity 0.2s ease;
+}
+
+/* Gradient Button style */
+.custom__input-container {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  width: auto;
+  cursor: pointer;
+}
+
+/* .custom__input__title {
+  font: normal normal normal 14px/20px Montserrat;
+  letter-spacing: 0.68px;
+  color: #707070;
+  padding: 5px;
+  width: auto;
+} */
+.custom__input-container small {
+  color: red;
+  font-size: 12px;
+}
+
+.custom-gradient_button {
+  border: double 1px transparent;
+  border-radius: 10px;
+  background-image: linear-gradient(white, white),
+    linear-gradient(to right, #db438a, #5db1cc);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  height: 41px;
+  max-height: 42px;
+  z-index: 10;
+}
+
+.custom-gradient_button.gray-border {
+  border-color: #ccc;
+}
+
+.custom-gradient_button a,
+.custom-gradient_button p,
+.custom-gradient_button span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0.6rem !important;
+  color: #000;
+}
+
+/* CustomDropdown.css */
+.custom_dropdown {
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+}
+
+.dropdown-header {
+  width: 100%;
+  position: inherit;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 999;
+  font-size: 12px;
+  max-height: 400px;
+  overflow: scroll;
+}
+
+.dropdown-list-item {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.dropdown-list-item:hover {
+  background: #f1f1f1;
+}
+
+.arrow {
+  margin-left: 10px;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+.agGrid-customFilters__checkbox {
+  width: 20px;
+  height: 20px;
+  background: var(#ffffff) 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 6px;
+  opacity: 1;
+  margin: 0 5px;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.agGrid-customFilters__checkbox:checked::before {
+  content: '\2713';
+  font-size: 14px;
+  color: #ffffff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.agGrid-customFilters__checkbox:checked {
+  width: 20px;
+  height: 20px;
+  background: #52c7de !important;
+  background: #52c7de 0% 0% no-repeat padding-box !important;
+  box-shadow: inset 0px 3px 3px #00000029;
+  opacity: 1;
+}
+
+/* Blur background wrapper style */
+.blur-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

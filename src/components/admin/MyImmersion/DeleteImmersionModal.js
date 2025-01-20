@@ -17,7 +17,7 @@ const DeleteModal = ({
 }) => {
   return (
     <div className='modal-container-delete'>
-      <div className='modal-header'>
+      <div className='immersion-modal-header'>
         <div className='portfolio-actions'>
           <FontAwesomeIcon
             icon={faArrowLeft}
@@ -51,7 +51,6 @@ const DeleteModal = ({
           alignItems: 'center',
           border: 'none'
         }}
-        className='modal-footer'
       >
         <button className='delete-confirm-button' onClick={onDelete}>
           YES, DELETE EXPERIENCE

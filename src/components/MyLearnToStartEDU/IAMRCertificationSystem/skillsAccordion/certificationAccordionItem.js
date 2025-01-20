@@ -23,12 +23,10 @@ const CertificationAccordionItem = ({
       }`}
     >
       <h2
-        className="accordion-header"
-        id="headingTwo"
+        className='accordion-header'
+        id='headingTwo'
         onClick={() => {
-          history.push(
-            `/iamr-certification-system/${certificationType}/${id}/certification-status`
-          )
+          history.push(`/iamr/${certificationType}/${id}/certification-status`)
           setActiveKey({
             certificationType,
             id: id,
@@ -38,12 +36,12 @@ const CertificationAccordionItem = ({
         }}
       >
         <button
-          className="grouping-string accordion-button collapsed accordion_button accordion-button-inner accordion-button-text pb-0"
-          type="button"
-          data-bs-toggle="collapse"
+          className='grouping-string accordion-button collapsed accordion_button accordion-button-inner accordion-button-text pb-0'
+          type='button'
+          data-bs-toggle='collapse'
           data-bs-target={`#collapse_inner-certificate-${id}`}
-          aria-expanded="false"
-          aria-controls="collapseTwo"
+          aria-expanded='false'
+          aria-controls='collapseTwo'
           style={{ opacity: !finishedContent ? '0.5' : 1, color: '#BBBDC0' }}
           disabled={!finishedContent}
         >
@@ -54,8 +52,8 @@ const CertificationAccordionItem = ({
       <div
         id={`collapse_inner-certificate-${id}`}
         className={`accordion-collapse collapse ps-4 `}
-        aria-labelledby="headingTwo"
-        data-bs-parent="#accordionExample0"
+        aria-labelledby='headingTwo'
+        data-bs-parent='#accordionExample0'
       ></div>
     </div>
   )

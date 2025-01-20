@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import imagePlaceholder from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+// import imagePlaceholder from '../../../../assets/images/HS-Portfolio-Icons/mentors.png'
+import imagePlaceholder from '../../../../assets/images/mentorplaceholder.png'
 import SectionActions from '../../Components/Actions/SectionActions'
 import { useDispatch, useSelector } from 'react-redux'
 import MyMentorModal from '../../Components/Modals/MyMentorModal'
@@ -58,7 +59,11 @@ function MyMentor(props) {
   ]
 
   return (
-    <div className={'my-mentors-container position-relative'}>
+    <div
+      className={
+        'mentors-container-nomod my-mentors-container position-relative'
+      }
+    >
       <img
         className={'placeholder-mentor-img my-mentors-image'}
         alt={'submission-image'}
@@ -69,10 +74,10 @@ function MyMentor(props) {
         <div className={'mentor-name'}>{data?.mentorName}</div>
         <div className={'mentor-role'}>{data?.mentorRole}</div>
         <div className={'mentor-company'}>{data?.mentorCompany}</div>
-        <div
+        {/* <div
           className={'mentor-description'}
           dangerouslySetInnerHTML={{ __html: data?.mentorDescription }}
-        />
+        /> */}
       </div>
       <SectionActions actions={actions} />
       {showModalId === data?.id && (
@@ -87,6 +92,7 @@ function MyMentor(props) {
           data={data}
           category={props.category}
           mode={mode}
+          className={'preview-modal-resp'}
         />
       )}
     </div>

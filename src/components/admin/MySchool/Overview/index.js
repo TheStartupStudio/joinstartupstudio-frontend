@@ -10,11 +10,13 @@ import RecentActivity from './RecentActivity'
 import CoursesAndCredentials from './CoursesAndCredentials'
 import LtsImmersion from './LtsImmersion'
 
-export const ItemProfileDetails = ({ img, title }) => {
+export const ItemProfileDetails = ({ img, title, className }) => {
   return (
     <Col md='6' sm='12'>
-      <div className='item-profile__details'>
-        <img src={img || DefaultImage} alt='' />
+      <div className={` ${className} item-profile__details`}>
+        <div className='item-img-myschool'>
+          <img src={img || DefaultImage} alt='' />
+        </div>
         <p className='p-0 m-0'>{title}</p>
       </div>
     </Col>
@@ -26,15 +28,31 @@ const Overview = ({ universityId, programs }) => {
   const [schoolDetails, setSchoolDetails] = useState({})
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
+    let isMounted = true
+
+    const timeoutId = setTimeout(() => {
+      if (isMounted) setLoading(false)
     }, 1500)
+
+    return () => {
+      isMounted = false
+      clearTimeout(timeoutId)
+    }
   }, [])
 
   const fetchSchoolDetails = useCallback(async () => {
-    axiosInstance.get('/my-school/overview').then(({ data }) => {
-      setSchoolDetails(data)
-    })
+    let isMounted = true
+
+    try {
+      const { data } = await axiosInstance.get('/my-school/overview')
+      if (isMounted) setSchoolDetails(data)
+    } catch (error) {
+      console.error('Error fetching school details:', error)
+    }
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const refreshData = useCallback(() => {
@@ -51,7 +69,7 @@ const Overview = ({ universityId, programs }) => {
         <LoadingAnimation show={true} />
       ) : (
         <>
-          <Row className='py-3'>
+          <Row className='overview-school-program-info py-2'>
             <Col md='4'>
               <SchoolDetails
                 schoolDetails={schoolDetails}
@@ -71,10 +89,10 @@ const Overview = ({ universityId, programs }) => {
               <ActiveUsers universityId={universityId} />
             </Col>
           </Row>
-          <Col className='py-3'>
+          <Col className='py-2'>
             <LtsImmersion />
           </Col>
-          <Row className='py-3'>
+          <Row className='recact-courses-row py-3'>
             <Col md='5'>
               <RecentActivity />
             </Col>

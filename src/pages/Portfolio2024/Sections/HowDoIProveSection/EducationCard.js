@@ -55,7 +55,10 @@ function EducationCard(props) {
             />
           </div>
           <div className={'flex-grow-1'}>
-            <div className={'d-flex justify-content-between gap-2'}>
+            <div
+              className={'d-flex justify-content-between gap-2'}
+              style={{ flexWrap: 'wrap' }}
+            >
               <div>
                 <div className={' proveit-title-org organization-name mb-2'}>
                   {education?.organizationName}

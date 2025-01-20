@@ -21,7 +21,7 @@
   position: relative;
 }
 
-.modal-header {
+.immersion-modal-header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -77,15 +77,15 @@
   border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #2196f3;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(18px);
 }
 
-.modal-body {
+.immersion-modal-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -103,9 +103,11 @@ input:checked + .slider:before {
   display: flex;
   flex-direction: column;
 }
+
 .input-group:nth-child(3) {
   grid-column: span 2;
 }
+
 .input-group h3 {
   margin-bottom: 10px;
 }
@@ -120,7 +122,7 @@ input:checked + .slider:before {
   /* border: 1px solid #ccc; */
   border-radius: 5px !important;
   font-size: 14px;
-  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1607843137254902);
+  /* box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1607843137254902); */
   background: none;
   margin-top: 15px;
 
@@ -137,11 +139,11 @@ textarea {
   width: 100%;
 }
 
-.modal-footer {
+/* .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-}
+} */
 
 .cancel-button,
 .add-button {
@@ -188,26 +190,15 @@ textarea {
   box-shadow: 0px 3px 10px #00000029 !important;
   /*padding: 10px 15px;*/
   padding: 15px 15px;
-  width: 55px;
-  height: 50px;
+  width: 65px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
 }
 
-.action-box {
-  background: #ffffff 0% 0% no-repeat padding-box;
-  box-shadow: 0px 3px 10px #00000029 !important;
-  /*padding: 10px 15px;*/
-  padding: 15px 15px;
-  width: 55px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
+
 
 .action-box-delete {
   background: #ffffff 0% 0% no-repeat padding-box;
@@ -228,20 +219,21 @@ textarea {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(80, 80, 80); /* Dim background */
+  background-color: rgba(80, 80, 80);
+  /* Dim background */
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
 }
 
-.modal-container {
+/* .modal-container {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   width: 60%;
   max-width: 90%;
-}
+} */
 
 .modal-container-delete {
   position: fixed;

@@ -18,6 +18,7 @@ const Upload = ({
   submitUpload,
   usedTags
 }) => {
+  const userRole = localStorage.getItem('role')
   const [expandedSkillDropdown, setExpandedSkillDropdown] = useState(false)
   const [expandedTypeDropdown, setExpandedTypeDropdown] = useState(false)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
@@ -28,7 +29,6 @@ const Upload = ({
   const {
     handleChange,
     resetValues,
-    selectedTags,
     values,
     errors,
     showErrors,
@@ -94,34 +94,34 @@ const Upload = ({
 
   return (
     <>
-      <div className="upload my-3 w-100">
+      <div className='upload my-3 w-100'>
         <form onSubmit={handleFormSubmit}>
-          <div className="row">
-            <div className="col-12 col-md-6 mb-2">
+          <div className='row'>
+            <div className='col-12 col-md-6 mb-2'>
               <input
-                className="upload-item"
-                type="text"
-                placeholder="Title"
-                name="title"
+                className='upload-item'
+                type='text'
+                placeholder='Title'
+                name='title'
                 onChange={(e) => allowUpdate && handleChange(e)}
                 value={values.title}
                 readOnly={!allowUpdate}
               />
-              <p className="field-error m-0">
+              <p className='field-error m-0'>
                 {showErrors && errors?.[showErrors]?.title}
               </p>
             </div>
-            <div className="col-12 col-md-6 mb-2">
+            <div className='col-12 col-md-6 mb-2'>
               <Dropdown
                 title={`${values.type ? values.type : 'Type'}`}
                 expanded={expandedTypeDropdown}
                 toggle={setExpandedTypeDropdown}
               >
-                <ul className="custom-dropdown-options">
+                <ul className='custom-dropdown-options'>
                   {types.map((type) => (
                     <li
                       key={type}
-                      name="type"
+                      name='type'
                       onClick={() => {
                         allowUpdate &&
                           handleChange({
@@ -135,20 +135,20 @@ const Upload = ({
                   ))}
                 </ul>
               </Dropdown>
-              <p className="field-error m-0">
+              <p className='field-error m-0'>
                 {showErrors && errors?.[showErrors]?.type}
               </p>
             </div>
-            <div className="col-12 col-md-6 mb-2 mb-md-0 import-entry-input">
+            <div className='col-12 col-md-6 mb-2 mb-md-0 import-entry-input'>
               <div
-                className="upload-item d-flex"
+                className='upload-item d-flex'
                 onClick={() => allowUpdate && setShowEntryModal(true)}
               >
                 {values?.imported_journal_entry ? (
                   <span>
                     {' '}
                     Journal entry from:{' '}
-                    <span className="fw-bold">
+                    <span className='fw-bold'>
                       {values.imported_journal_entry?.journalTitle}
                     </span>
                   </span>
@@ -158,36 +158,36 @@ const Upload = ({
               </div>
               {values?.imported_journal_entry && allowUpdate && (
                 <span
-                  className="remove-entry"
+                  className='remove-entry'
                   onClick={() => handleJournalEntryImport(null)}
                 >
                   REMOVE
                 </span>
               )}
             </div>
-            <div className="col-12 col-md-6 mb-0">
+            <div className='col-12 col-md-6 mb-0'>
               <input
-                className="upload-item"
-                type="text"
-                placeholder="Link"
-                name="link"
+                className='upload-item'
+                type='text'
+                placeholder='Link'
+                name='link'
                 onChange={(e) => allowUpdate && handleChange(e)}
                 value={values.link}
                 readOnly={!allowUpdate}
               />
             </div>
-            <div className="col-12 mb-2">
-              <p className="field-error m-0">
+            <div className='col-12 mb-2'>
+              <p className='field-error m-0'>
                 {showErrors && errors?.[showErrors]?.link_journal}
               </p>
             </div>
-            <div className="col-12">
+            <div className='col-12'>
               <Dropdown
                 title={`${skill.title} - SKILL DROP DOWN MENU`}
                 expanded={expandedSkillDropdown}
                 toggle={setExpandedSkillDropdown}
               >
-                <ul className="custom-dropdown-options">
+                <ul className='custom-dropdown-options'>
                   {skill.SkillTags.map(
                     (tag) =>
                       !updatedUsedTabs.includes(tag.id) && (
@@ -205,7 +205,7 @@ const Upload = ({
                   )}
                 </ul>
               </Dropdown>
-              <p className="field-error m-0">
+              <p className='field-error m-0'>
                 {showErrors && errors?.[showErrors]?.tags}
               </p>
             </div>
@@ -221,60 +221,59 @@ const Upload = ({
             ))}
           </div>
           {allowUpdate && (
-            <div className="pt-3 d-flex justify-content-end flex-column">
-              <div
-                className="row m-0 my-3 pb-4"
-                style={{ borderBottom: '1px solid #ccc' }}
-              >
-                <div className="col-12 col-sm-6 m-0 p-0">
+            <div className='pt-3 d-flex justify-content-end flex-column'>
+              <div className='row m-0 my-3 pb-4'>
+                <div className='col-12 col-sm-6 m-0 p-0'>
                   <button
-                    className="lts-button float-end mt-2 me-sm-3"
-                    type="submit"
-                    value="save"
-                    name="save"
+                    className='lts-button float-end mt-2 me-sm-3'
+                    type='submit'
+                    value='save'
+                    name='save'
                     disabled={loading || !hasUnsavedChanges}
                   >
                     {loading === 'save' ? 'SAVING' : 'SAVE'}
                   </button>
                 </div>
-                <div className="col-12 col-sm-6 m-0 p-0">
+                <div className='col-12 col-sm-6 m-0 p-0'>
                   <button
-                    className="lts-button float-start mt-2 ms-sm-3"
-                    type="submit"
-                    value="submit"
-                    name="submit"
-                    disabled={true}
+                    className='lts-button float-start mt-2 ms-sm-3'
+                    type='submit'
+                    value='submit'
+                    name='submit'
+                    disabled={userRole === 'student' && upload ? false : true}
                   >
                     {loading === 'submit' ? 'SUBMITTING' : 'SUBMIT'}
                   </button>
                 </div>
               </div>
-              <div className="row m-0">
-                <div className="col-12 col-sm-6 m-0 p-0">
-                  <button
-                    className="lts-button float-end mt-2 me-sm-3"
-                    type="submit"
-                    style={{ background: '#99CC33' }}
-                    value="save"
-                    name="save"
-                    disabled={true}
-                  >
-                    {'PROFICIENT'}
-                  </button>
+              {/* {userRole !== 'student' && (
+                <div className='row m-0'>
+                  <div className='col-12 col-sm-6 m-0 p-0'>
+                    <button
+                      className='lts-button float-end mt-2 me-sm-3'
+                      type='submit'
+                      style={{ background: '#99CC33' }}
+                      value='save'
+                      name='save'
+                      disabled={true}
+                    >
+                      {'PROFICIENT'}
+                    </button>
+                  </div>
+                  <div className='col-12 col-sm-6 m-0 p-0'>
+                    <button
+                      className='lts-button float-start mt-2 ms-sm-3'
+                      type='submit'
+                      value='submit'
+                      style={{ background: '#FF3399' }}
+                      name='submit'
+                      disabled={true}
+                    >
+                      {'DEVELOPING'}
+                    </button>
+                  </div>
                 </div>
-                <div className="col-12 col-sm-6 m-0 p-0">
-                  <button
-                    className="lts-button float-start mt-2 ms-sm-3"
-                    type="submit"
-                    value="submit"
-                    style={{ background: '#FF3399' }}
-                    name="submit"
-                    disabled={true}
-                  >
-                    {'DEVELOPING'}
-                  </button>
-                </div>
-              </div>
+              )} */}
             </div>
           )}
         </form>

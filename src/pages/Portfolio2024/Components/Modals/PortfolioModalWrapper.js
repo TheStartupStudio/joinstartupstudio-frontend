@@ -52,7 +52,7 @@ function PortfolioModalWrapper(props) {
                   labelDirection={'left'}
                   value={props.isShownSection}
                   onChange={(value) => {
-                    props.onToggleSection?.(!value)
+                    props.onToggleSection?.(value)
                   }}
                   name={props.switchName}
                   id={props.switchId}

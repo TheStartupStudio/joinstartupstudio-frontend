@@ -68,9 +68,7 @@ const NewNoteModal = (props) => {
         'codeView'
       ]
     ],
-    callBackSave: function (contents, isChanged) {
-      console.log(contents)
-    }
+    callBackSave: function (contents, isChanged) {}
   }
 
   const handleUserInput = (event) => {
@@ -88,9 +86,9 @@ const NewNoteModal = (props) => {
   const onSaveNote = async (event) => {
     event.preventDefault()
     if (subject.length === 0) {
-      toast.error(<IntlMessages id="instructor_notes.notes_title_neddet" />)
+      toast.error(<IntlMessages id='instructor_notes.notes_title_neddet' />)
     } else if (noteText.length === 0) {
-      toast.error(<IntlMessages id="instructor_notes.notes_title_text" />)
+      toast.error(<IntlMessages id='instructor_notes.notes_title_text' />)
     } else {
       const data = {
         instructor_id: user?.id,
@@ -108,7 +106,7 @@ const NewNoteModal = (props) => {
       setSubject('')
       setNoteText('')
 
-      toast.success(<IntlMessages id="instructor_notes.success_added" />)
+      toast.success(<IntlMessages id='instructor_notes.success_added' />)
       setTimeout(() => {
         props.close()
       }, 1000)
@@ -130,41 +128,41 @@ const NewNoteModal = (props) => {
       show={props.show}
       onHide={props.onHide}
       close={props.closeAddModalSaved}
-      backdrop="static"
+      backdrop='static'
       keyboard={false}
       style={{ marginTop: '3.9%' }}
-      className="edit-modal general-modal-header"
+      className='edit-modal general-modal-header'
     >
-      <Modal.Header className="add-new-note-title general-modal-header my-auto p-0 mx-4">
-        <h3 className="mb-0 pt-4 mt-2 ">
+      <Modal.Header className='add-new-note-title general-modal-header my-auto p-0 mx-4'>
+        <h3 className='mb-0 pt-4 mt-2 '>
           {props.edit ? `EDIT NOTE` : `ADD A NOTE`}
         </h3>
         <button
-          type="button"
-          className="btn-close me-1"
-          aria-label="Close"
+          type='button'
+          className='btn-close me-1'
+          aria-label='Close'
           onClick={props.onHide}
         />
       </Modal.Header>
-      <Modal.Body className="mt-4 mb-3 mx-4 add-new-note">
-        <div className="row w-100"></div>
-        <div className="row p-0 add-new-note">
-          <div className="col-md-8 mx-auto"></div>
-          <FormattedMessage id="instructor_notes.notes_title">
+      <Modal.Body className='mt-4 mb-3 mx-4 add-new-note'>
+        <div className='row w-100'></div>
+        <div className='row p-0 add-new-note'>
+          <div className='col-md-8 mx-auto'></div>
+          <FormattedMessage id='instructor_notes.notes_title'>
             {(placeholder) => (
               <input
-                className="my-2 mb-4 p-2 w-100"
-                type="text"
+                className='my-2 mb-4 p-2 w-100'
+                type='text'
                 value={subject ?? subject}
-                name="noteTitle"
+                name='noteTitle'
                 style={{ borderRadius: '0' }}
                 onChange={handleUserInput}
                 placeholder={placeholder}
               />
             )}
           </FormattedMessage>
-          <div className="px-0">
-            <FormattedMessage id="my_notes.notes_modal_body">
+          <div className='px-0'>
+            <FormattedMessage id='my_notes.notes_modal_body'>
               {(placeholder) => (
                 <SunEditor
                   setOptions={options}
@@ -179,7 +177,7 @@ const NewNoteModal = (props) => {
           </div>
 
           {foulWords && (
-            <div className="p-2 foul-words-notice">
+            <div className='p-2 foul-words-notice'>
               {FoulWords.printMessage(foulWords)}
             </div>
           )}
@@ -187,13 +185,13 @@ const NewNoteModal = (props) => {
       </Modal.Body>
       <div
         style={{ border: '0px' }}
-        className="mt-0 pt-0 border-0 border-none mx-4 pe-1 mb-4"
+        className='mt-0 pt-0 border-0 border-none mx-4 pe-1 mb-4'
       >
         <button
-          className="float-end m-0 px-md-5 save-button add-new-note-button-text ms-1"
+          className='float-end m-0 px-md-5 save-button add-new-note-button-text ms-1'
           onClick={props.edit ? onEditNote : onSaveNote}
         >
-          {loading ? 'loading' : <IntlMessages id="general.save" />}
+          {loading ? 'loading' : <IntlMessages id='general.save' />}
         </button>
       </div>
     </Modal>

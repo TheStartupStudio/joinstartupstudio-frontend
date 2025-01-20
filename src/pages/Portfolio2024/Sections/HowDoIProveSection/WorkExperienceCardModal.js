@@ -132,9 +132,9 @@ const WorkExperienceCardModal = (props) => {
       onHide={props.onHide}
       title={props.title}
       actions={modalActions}
-      class={'edit-education-modal'}
+      class={'portf-modal-widths edit-education-modal'}
       showSectionCheckbox={true}
-      isShownSection={workExperienceData.showSection}
+      isShownSection={!workExperienceData.showSection}
       onToggleSection={(showSection) => {
         setWorkExperienceData({ ...workExperienceData, showSection })
       }}

@@ -696,25 +696,25 @@ export const widgetInputData = {
     },
     { ...tone, order: 3 },
     ...hiddenWidgetInputs
-  ],
-  image: [
-    {
-      ...name,
-      value: '',
-      description: 'The name of the image.',
-      order: 1
-    },
-    {
-      ...description,
-      value: '',
-      description: 'The description of the image.',
-      placeholder: 'Blue butterfly',
-      order: 2
-    },
-    { ...style, order: 3 },
-    { ...medium, order: 4 },
-    { ...filter, order: 5 },
-    { ...resolution, order: 6 },
-    ...filterFields(hiddenWidgetInputs, ['Creativity', 'Language'])
   ]
+  // image: [
+  //   {
+  //     ...name,
+  //     value: '',
+  //     description: 'The name of the image.',
+  //     order: 1
+  //   },
+  //   {
+  //     ...description,
+  //     value: '',
+  //     description: 'The description of the image.',
+  //     placeholder: 'Blue butterfly',
+  //     order: 2
+  //   },
+  //   { ...style, order: 3 },
+  //   { ...medium, order: 4 },
+  //   { ...filter, order: 5 },
+  //   { ...resolution, order: 6 },
+  //   ...filterFields(hiddenWidgetInputs, ['Creativity', 'Language'])
+  // ]
 }

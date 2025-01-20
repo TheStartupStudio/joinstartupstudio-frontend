@@ -7,8 +7,6 @@ import {
   LevelsFilter,
   ProgramsFilter
 } from '../../../GridTable/AgGridItems'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChalkboardTeacher, faFile } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import { SkillBox } from '../ContentItems'
 import AddInstructorBulkModal from './AddInstructorBulkModal'
@@ -17,8 +15,19 @@ import GridTable from '../../../GridTable'
 import HeaderActions from '../HeaderActions'
 import { toast } from 'react-toastify'
 import useModalState from '../../../../hooks/useModalState'
+import reportFileIcon from '../../../../assets/images/studentlist.png'
+import userReportIcon from '../../../../assets/images/userreport.png'
+import useProxyLogin from '../../../../hooks/useProxyLogin'
 
-const Instructors = ({ programs, levels, periods, universities }) => {
+const Instructors = ({
+  programs,
+  levels,
+  periods,
+  universities,
+  levelDescriptions
+}) => {
+  const { handleProxyLogin } = useProxyLogin()
+
   const [modals, setModalState] = useModalState()
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -27,6 +36,7 @@ const Instructors = ({ programs, levels, periods, universities }) => {
   const [rowData, setRowData] = useState([])
 
   const fetchInstructors = useCallback(async () => {
+    let isMounted = true
     setLoading(true)
     try {
       const { data } = await axiosInstance.get('/users/instructors')
@@ -47,12 +57,16 @@ const Instructors = ({ programs, levels, periods, universities }) => {
           universityId: instructor.universityId,
           universityName: instructor.University.universityName
         }))
-      setRowData(formattedData)
+      if (isMounted) setRowData(formattedData)
     } catch (error) {
       toast.error('Something went wrong!')
       setLoading(false)
     } finally {
       setLoading(false)
+    }
+
+    return () => {
+      isMounted = false
     }
   }, [])
   const refreshInstructors = useCallback(() => {
@@ -153,7 +167,13 @@ const Instructors = ({ programs, levels, periods, universities }) => {
             className='d-flex align-items-center students__cell'
           >
             <p className='m-0 pe-2'> {params.data.students}</p>
-            <FontAwesomeIcon icon={faFile} />
+            <img
+              src={reportFileIcon}
+              width={20}
+              height={24}
+              alt='report file'
+            />
+            {/* <FontAwesomeIcon icon={faFile} /> */}
           </a>
         )
       },
@@ -164,13 +184,19 @@ const Instructors = ({ programs, levels, periods, universities }) => {
             href={`/my-school/reports/${params.data.id} `}
             className='reports_cell'
           >
-            <FontAwesomeIcon icon={faChalkboardTeacher} />
+            <img
+              src={userReportIcon}
+              width={22}
+              height={22}
+              alt='user report'
+            />
+            {/* <FontAwesomeIcon icon={faChalkboardTeacher} /> */}
           </a>
         )
       },
       {
         field: 'actions',
-        flex: 3,
+        flex: 4,
         cellRenderer: (params) => {
           let user = {
             ...params.data.University,
@@ -185,12 +211,20 @@ const Instructors = ({ programs, levels, periods, universities }) => {
               instructors={rowData}
               handleViewStudent='editInstructorModal'
               onSuccess={refreshInstructors}
+              handleProxyLogin={handleProxyLogin}
             />
           )
         }
       }
     ],
-    [universities, levels, programs, rowData, refreshInstructors]
+    [
+      universities,
+      levels,
+      programs,
+      rowData,
+      refreshInstructors,
+      handleProxyLogin
+    ]
   )
 
   const handleSchoolFilterChange = (selectedOption) => {
@@ -219,7 +253,7 @@ const Instructors = ({ programs, levels, periods, universities }) => {
   )
 
   return (
-    <div className='' style={{ background: '#fff' }}>
+    <div className='' style={{ background: '#fff', borderRadius: '12px' }}>
       <HeaderActions
         universities={universities}
         levels={levels}
@@ -230,6 +264,7 @@ const Instructors = ({ programs, levels, periods, universities }) => {
             value: university.name,
             id: university.id
           })),
+          hasResetOption: true,
           onChange: handleSchoolFilterChange
         }}
         lastDropdownProps={{

@@ -6,38 +6,33 @@ import { changeSidebarState } from '../../redux'
 import {
   closeTaskModal,
   getEventsStart,
-   getPeriodsStart,
+  getPeriodsStart,
   openTaskModal
 } from '../../redux/dashboard/Actions'
-import LevelWrapper from '../../components/LevelWrapper'
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
 import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
+import useImpersonation from '../../hooks/useImpersonation'
+import RecentAchievements from './RecentAchievement'
 
 function Dashboard() {
+  const originalToken = localStorage.getItem('original_access_token')
+  const userRole = localStorage.getItem('role')
   const dispatch = useDispatch()
   const periods = useSelector((state) => state.dashboard.periods)
   const events = useSelector((state) => state.dashboard.events)
-   // useEffect(() => {
-  //   if (loggedUser) {
-  //     const newTime = axiosInstance.get('/myPerformanceData/loginTime')
-  //     console.log(newTime)
-  //   }
-  // }, [])
-  const user = {
-    level: 'HS'
-  }
-
-  const [newMessage, setNewMessage] = useState([])
   const [chatId, setChatId] = useState('')
-  const [startDate, setStartDate] = useState(null)
+
+  useImpersonation(originalToken)
+
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  }, [])
+  }, [dispatch])
+
   useEffect(() => {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
-  }, [])
+  }, [dispatch])
 
   function getFormattedDate() {
     const today = new Date()
@@ -52,8 +47,6 @@ function Dashboard() {
     (state) => state.dashboard.addTaskEventModal
   )
   const openTaskEventModal = () => {
-    // const formattedDate = getFormattedDate()
-    // setStartDate(formattedDate)
     dispatch(openTaskModal('create'))
   }
 
@@ -62,73 +55,54 @@ function Dashboard() {
   }
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-12 col-md-12 col-xl-9 pe-0 me-0">
-          <div className="account-page-padding page-border">
-            <h3 className="page-title">
-              <IntlMessages id="navigation.dashboard" />
+    <div className='container-fluid'>
+      <div className='row'>
+        <div className='col-12 col-md-12 col-xl-9 pe-0 me-0'>
+          <div className='account-page-padding page-border'>
+            <h3 className='page-title'>
+              <IntlMessages id='navigation.dashboard' />
             </h3>
-            <p className="page-description">
-              <IntlMessages id="dashboard.page_description" />
+            <p className='page-description'>
+              <IntlMessages id='dashboard.page_description' />
             </p>
+            <Profile
+              chatOpened={chatId}
+              clearChat={() => setChatId('')}
+              userRole={userRole}
+            />
 
-            <LevelWrapper user={user}>
-              <Profile
-                newMessage={newMessage}
-                chatOpened={chatId}
-                clearChat={() => setChatId('')}
-                level={'MS'}
-              />
-              <Profile
-                newMessage={newMessage}
-                chatOpened={chatId}
-                clearChat={() => setChatId('')}
-                level={'HS'}
-              />
-            </LevelWrapper>
-
-            {/*<div className="my-4">*/}
-            {/*  <div className="row">*/}
-            {/*    <div className="col-md-12 col-lg-8">*/}
-            {/*      <h3*/}
-            {/*        className="page-title"*/}
-            {/*        style={{ textTransform: 'capitalize' }}*/}
-            {/*      >*/}
-            {/*        Recently Active Students*/}
-            {/*      </h3>*/}
-            {/*    </div>*/}
-            {/*    <ActiveStudents />*/}
-            {/*  </div>*/}
-            {/*</div>*/}
-
+            {userRole === 'student' && <RecentAchievements />}
           </div>
         </div>
-        <div className="col-12 col-xl-3 px-0">
-          <div className="account-page-padding" style={{ paddingLeft: '20px' }}>
+        <div className='col-12 col-xl-3 px-0'>
+          <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
             <FullCalendarComponent
               events={events}
               periods={periods}
+              userRole={userRole}
               // startDate={getFormattedDate()}
             />
-
-            <button
-              style={{
-                backgroundColor: '#51c7df',
-                color: '#fff',
-                fontSize: 14
-              }}
-              onClick={openTaskEventModal}
-              className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
-            >
-              Create Task/Event
-            </button>
-            <TaskEventModal
-              show={taskEventModal}
-              onHide={closeTaskEventModal}
-              periods={periods}
-              startDate={getFormattedDate()}
-            />
+            {userRole !== 'student' && (
+              <button
+                style={{
+                  backgroundColor: '#51c7df',
+                  color: '#fff',
+                  fontSize: 14
+                }}
+                onClick={openTaskEventModal}
+                className='px-4 py-2 border-0 color transform text-uppercase  w-100 my-1'
+              >
+                Create Task/Event
+              </button>
+            )}
+            {taskEventModal && (
+              <TaskEventModal
+                show={taskEventModal}
+                onHide={closeTaskEventModal}
+                periods={periods}
+                startDate={getFormattedDate()}
+              />
+            )}
             <NotificationSection />
             {/*<CertificationRequestsWidget />*/}
             {/* <Messenger

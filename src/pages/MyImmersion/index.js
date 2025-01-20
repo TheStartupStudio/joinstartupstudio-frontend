@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch} from 'react-redux'
 import './style.css'
-import ImmersionImage from '../../assets/images/Immersion/Immersion Graphic.png'
+import ImmersionImage from '../../assets/images/Immersion/immersionMainImg (2).png'
 import PrerequisiteModal from './Modals/PrerequisiteModal'
+import { changeSidebarState } from '../../redux'
 
 const buttonStyle = (top, left, width, height) => ({
   position: 'absolute',
@@ -19,15 +21,16 @@ const buttonStyle = (top, left, width, height) => ({
   borderRadius: '50%',
   background:
     'linear-gradient(white, white) padding-box,linear-gradient(to right, rgba(219, 54, 148, 1), rgba(128, 197, 220, 1)) border-box',
-  border: '8px solid transparent'
+  border: '8px solid transparent',
+  fontSize: '14px'
 })
 
-const MyButton = ({ href, top, left, width, height }) => {
+const MyButton = ({ href, top, left, width, height, className }) => {
   return (
     <a
       href={href}
       style={{ ...buttonStyle(top, left, width, height) }}
-      className='hover-effect'
+      className={className}
     >
       START
     </a>
@@ -52,6 +55,12 @@ const MyImmersion = () => {
     padding: '50px ',
     boxShadow: ' 3px 3px 3px  3px #00000029'
   }
+  const dispatch = useDispatch()
+
+    useEffect(() => {
+      dispatch(changeSidebarState(false))
+    })
+    
   return (
     <div className='container-fluid iamr-page'>
       <div className='pt-4 '>
@@ -69,22 +78,26 @@ const MyImmersion = () => {
         <img
           src={ImmersionImage}
           alt='Background'
-          style={{ width: '80%', height: 'auto' }}
+          style={{ width: '90%', height: 'auto' }}
+          className='main-immrs-image'
         />
+
         <MyButton
+          className='st1-immr-btn hover-effect'
           href='/my-immersion/step-1'
-          top={24.5}
-          left={19}
-          width={8}
-          height={17}
+          top={30.7}
+          left={18}
+          width={7.2}
+          height={12.8}
         />
         <MyButton
+          className='st2-immr-btn hover-effect'
           // href='/my-immersion/step-2'
           href='/spotlight'
-          top={24.5}
-          left={37}
-          width={8}
-          height={17}
+          top={30.7}
+          left={36.2}
+          width={7.2}
+          height={12.8}
         />
 
         <p
@@ -92,13 +105,13 @@ const MyImmersion = () => {
           onClick={() =>
             setPrerequisitesModal({
               state: true,
-              title: 'Apply for internship',
+              title: 'APPLY FOR INTERNSHIP',
               content:
                 'You must first complete the prerequisites for this step before you can start'
             })
           }
-          style={buttonStyle(24.5, 54.2, 8, 17)}
-          className='hover-effect'
+          style={buttonStyle(30.7, 53.7, 7.2, 12.8)}
+          className='st3-immr-btn hover-effect'
         >
           START
         </p>
@@ -107,13 +120,13 @@ const MyImmersion = () => {
           onClick={() =>
             setPrerequisitesModal({
               state: true,
-              title: 'Apply for entry level employement',
+              title: 'APPLY FOR ENTRY LEVEL EMPLOYEMENT',
               content:
                 'You must first complete the prerequisites for this step before you can start'
             })
           }
-          style={buttonStyle(24.5, 71.3, 8, 17)}
-          className='hover-effect'
+          style={buttonStyle(30.7, 71.5, 7.2, 12.8)}
+          className='st4-immr-btn hover-effect'
         >
           START
         </p>

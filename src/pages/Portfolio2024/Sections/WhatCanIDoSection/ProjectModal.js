@@ -138,7 +138,7 @@ function ProjectModal(props) {
         }
 
         props.onHide()
-        toast.success('Project updated successfully!')
+        toast.success('Project created successfully!')
       })
   }
 
@@ -161,7 +161,7 @@ function ProjectModal(props) {
           props.onUpdateProject(res.data.project)
           props.onHide()
           setIsSaving(false)
-          toast.success('Project created successfully!')
+          toast.success('Project updated successfully!')
         })
     } catch (error) {
       console.error('Error saving projects:', error)
@@ -238,7 +238,7 @@ function ProjectModal(props) {
       show={props.show}
       onHide={props.onHide}
       actions={projectModalActions}
-      class={'add-project-modal '}
+      class={'portf-modal-widths add-project-modal '}
     >
       <div className={'mb-4'}>
         <div className={'portfolio-info-title my-2'}>{'Project Title'}</div>
@@ -246,7 +246,7 @@ function ProjectModal(props) {
           title={'Project title'}
           type={'text'}
           align={'start'}
-          placeholder={'A New Alumni Spotlight'}
+          placeholder={'Give your project a name'}
           labelAlign={'start'}
           value={projectTitle}
           onChange={(value) => setProjectTitle(value)}
@@ -264,9 +264,6 @@ function ProjectModal(props) {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
           menuItem3: 'Content Upload #3'
-          // menuItem1: 'Market Analysis Document',
-          // menuItem2: 'Industry Analysis Document',
-          // menuItem3: 'Problem Identification'
         }
       )}
       {renderEditProject(
@@ -281,9 +278,6 @@ function ProjectModal(props) {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
           menuItem3: 'Content Upload #3'
-          // menuItem1: 'Solution Slide Deck',
-          // menuItem2: 'Concept Plan Document',
-          // menuItem3: 'Business Plan Document'
         }
       )}
       {renderEditProject(
@@ -297,15 +291,17 @@ function ProjectModal(props) {
           menuItem1: 'Content Upload #1',
           menuItem2: 'Content Upload #2',
           menuItem3: 'Content Upload #3'
-          // menuItem1: 'Brand Charter Document',
-          // menuItem2: 'Brand Guidelines Booklet',
-          // menuItem3: 'Brand Video'
         }
       )}
 
       {isEdit && (
         <div className={' mt-5'} onClick={() => setConfirmDeleteModal(true)}>
-          <LtsButton variant={'text'} align={'end'} name={'DELETE PROJECT'} />
+          <LtsButton
+            className='mydelete-failure-btn'
+            variant={'text'}
+            align={'end'}
+            name={'DELETE PROJECT'}
+          />
         </div>
       )}
 

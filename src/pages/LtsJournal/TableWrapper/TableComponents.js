@@ -147,8 +147,7 @@ export const JournalTableCellInput = (props) => {
             value={value}
             onKeyDown={handleTabKey}
             onChange={(e) => {
-              console.log('e', e)
-              debounce(() => handleChange(e.target.value))
+               handleChange(e.target.value)
               setLoading?.(true)
             }}
           />

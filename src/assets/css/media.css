@@ -140,7 +140,6 @@
 }
 
 @media (min-width: 992px) and (max-width: 1269px) {
-
   .dropdown-menushow1 {
     top: 38px !important;
     right: -3px !important;
@@ -482,7 +481,6 @@
 }
 
 @media (max-width: 1024px) {
-
   .portfolio-container {
     margin-right: 0 !important;
   }
@@ -513,16 +511,16 @@
     color: #ffff;
   }
 
-
   #footer {
     bottom: 0;
     z-index: 10;
   }
 
   .mobile-footer {
-
-    bottom: -350px !important;
-    background-color: aquamarine !important;
+    width: 100%;
+    /* bottom: -350px !important; */
+    /* background-color: blueviolet !important; */
+    /* background-color: aquamarine !important; */
   }
 
   #prev-button {
@@ -565,6 +563,7 @@
 
   .mobile-footer {
     display: block;
+    position: absolute;
   }
 
   .page-title {
@@ -652,9 +651,6 @@
 }
 
 @media (min-width: 991.9px) {
-
-
-
   .university-logo {
     text-align: center !important;
   }
@@ -732,8 +728,6 @@
 }
 
 @media (max-width: 991.98px) {
-
-
   /*#content {*/
   /*  width: calc(100% - 250px);*/
   /*}*/
@@ -771,7 +765,7 @@
   }
 
   .dropdown-menushow1 {
-    width: 15rem;
+    width: 16rem;
     top: 3.7rem;
     right: -10px;
   }
@@ -781,18 +775,13 @@
     margin-top: 15px;
   }
 
-
   .desktop-menu {
     display: none !important;
   }
 
-
-
   .dropdown-menushow1 * {
     width: 95%;
   }
-
-
 
   .beyond-videos-desktop {
     display: none;
@@ -831,8 +820,11 @@
     margin-right: 20px;
   }
 
-  .public-portfolio {
+  /* .public-portfolio {
     width: 93%;
+  } */
+  .public-portfolio {
+    width: 100%;
   }
 
   .align-items-center.published-portfolio {
@@ -891,6 +883,10 @@
   }
 }
 
+.public-portfolio .portfolio-container {
+  margin-right: 0 !important;
+}
+
 @media (max-width: 1097px) {
   .course-button a {
     height: auto;
@@ -924,7 +920,6 @@
   /* .sidebar-scroll {
     width: 200px !important;
   } */
-
 }
 
 @media (max-width: 1200px) {
@@ -1564,7 +1559,6 @@
 }
 
 @media (min-width: 983px) and (max-width: 991.9px) {
-
   .portfolio-colors-input {
     margin-right: 280px;
   }
@@ -1584,13 +1578,10 @@
   }
 }
 
-
 @media (min-width: 992px) and (max-width: 1258px) {
   .pp-left-padding {
     padding-left: 14%;
   }
-
-
 
   .profile-ml {
     margin-left: 90px !important;
@@ -1997,7 +1988,6 @@
   }
 } */
 
-
 @media (max-width: 340px) {
   .brand-video-container {
     grid-template-columns: 1fr !important;
@@ -2009,8 +1999,6 @@
   }
 }
 
-
-
 @media (max-width: 767px) {
   .portfolio-user-info {
     margin-top: 20px;
@@ -2021,7 +2009,6 @@
 }
 
 @media (min-width: 1000px) and (max-width: 1243px) {
-
   .react-datepicker__navigation {
     margin-top: 0px !important;
   }
@@ -2030,7 +2017,6 @@
     top: 2.5rem;
     right: -10px;
   }
-
 
   .react-datepicker__navigation--next {
     margin-left: 40px;
@@ -2249,10 +2235,6 @@
 }
 
 @media (min-width: 991px) {
-
-
-
-
   .beyound-all-videos-thumb img {
     height: 180px !important;
   }
@@ -2263,9 +2245,6 @@
 }
 
 @media (max-width: 992px) {
-
-
-
   .beyound-all-videos-thumb img {
     height: auto !important;
   }
@@ -2353,8 +2332,6 @@
   .notifications-wrapper {
     top: 49px;
   }
-
-
 
   /* .sl-offline-image-preview {
     height: 600px;

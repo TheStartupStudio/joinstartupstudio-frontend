@@ -13,7 +13,7 @@ const AddImmersionModal = ({
   viewExprience,
   onClose,
   immersionStep,
-  onSuccess,
+  onSuccess = () => {},
   justView
 }) => {
   // Initialize states for form fields
@@ -127,9 +127,12 @@ const AddImmersionModal = ({
     <div className='modal-overlay'>
       <div className='modal-container'>
         {/* Modal Header */}
-        <div className='modal-header'>
+        <div className='immersion-modal-header'>
           {viewExprience && (
-            <div className='portfolio-actions'>
+            <div
+              className='portfolio-actions'
+              style={{ borderTopRightRadius: '36px' }}
+            >
               {editingImmersion ? (
                 <>
                   <FaCheck
@@ -138,6 +141,7 @@ const AddImmersionModal = ({
                     style={{ cursor: 'pointer' }}
                     title='Save Changes'
                   />
+
                   {!justView && (
                     <FaEye
                       className={'action-box pencil-icon'}
@@ -199,7 +203,7 @@ const AddImmersionModal = ({
         </div>
 
         {/* Modal Body */}
-        <div className='modal-body'>
+        <div className='immersion-modal-body'>
           <div className='input-group'>
             <p className='input-group-title'>Company Details</p>
             <input
@@ -286,7 +290,7 @@ const AddImmersionModal = ({
         {showDeleteConfirm && (
           <div className='modal-overlay'>
             <div className='modal-container-delete'>
-              <div className='modal-header'>
+              <div className='immersion-modal-header'>
                 <div className='portfolio-actions'>
                   <FontAwesomeIcon
                     icon={faArrowLeft}

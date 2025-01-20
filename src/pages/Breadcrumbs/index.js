@@ -2,8 +2,10 @@ import React, { useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   adminRoutes,
-  authRoutes,
-  publicRoutes
+  instructorRoutes,
+  mutualRoutes,
+  publicRoutes,
+  studentRoutes
 } from '../../Router/RouteConfiguration'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faChevronRight } from '@fortawesome/free-solid-svg-icons'
@@ -20,7 +22,13 @@ function Breadcrumbs() {
   const pathSegments = location.pathname.split('/')[1]
 
   const breadcrumbs = useMemo(() => {
-    const allRoutes = [...adminRoutes, ...authRoutes, ...publicRoutes]
+    const allRoutes = [
+      ...adminRoutes,
+      ...instructorRoutes,
+      ...studentRoutes,
+      ...mutualRoutes,
+      ...publicRoutes
+    ]
 
     const matchedRoute = allRoutes.find((route) =>
       route.path.includes(pathSegments)
