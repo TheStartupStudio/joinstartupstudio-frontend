@@ -92,7 +92,9 @@ const ApplyForPitch = (props) => {
       className='w-100 px-md-5'
     >
       <Modal.Header className='contact-us-title my-auto p-0 mx-4 general-modal-header'>
-        <h3 className='mb-0 pt-4 mt-2 '>APPLY TO PITCH</h3>
+        <h3 className='mb-0 pt-4 mt-2  apptopitch-title-modal'>
+          APPLY TO PITCH
+        </h3>
         <button
           type='button'
           className='btn-close me-1'

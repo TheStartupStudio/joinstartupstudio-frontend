@@ -10,6 +10,7 @@ import { fileNameExtracter } from '../../utils/helpers'
 import { FETCH_ALL_COMPANIES_PENDING } from '../../redux/myImmersion/types'
 import React from 'react'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import uploadIcon from '../../assets/images/upload-spot-icon.svg'
 
 const Textarea = ({ placeholder, name, value, onChange, error, showError }) => {
   return (
@@ -64,10 +65,11 @@ const UploadFileInput = ({
             ? filename
             : placeholder}
         </span>
-        <FontAwesomeIcon
+        {/* <FontAwesomeIcon
           icon={!video ? faUpload : faLink}
           className='file-input-icon'
-        />
+        /> */}
+        <img className='upload-spot-icon' src={uploadIcon}></img>
         {mode !== 'edit' && (
           <input
             type='file'
@@ -144,7 +146,8 @@ const TermsAndConditionsCheckbox = ({
   onChange,
   checked,
   error,
-  showError
+  showError,
+  className
 }) => {
   return (
     <>
@@ -156,8 +159,11 @@ const TermsAndConditionsCheckbox = ({
           name={name}
           onChange={onChange}
         />
-        <label htmlFor='terms'>
-          {text} <a href='/terms'>{blueText}</a>
+        <label htmlFor='terms' className={`${className}`}>
+          {text}
+          <a href='/terms' className='terms-blue-text'>
+            {blueText}
+          </a>
         </label>
       </div>
       {showError && error && <small className=''>{error}</small>}

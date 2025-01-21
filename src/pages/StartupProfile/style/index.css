@@ -5,6 +5,7 @@
   color: #231f20;
   opacity: 1;
 }
+
 .StartupPortfolio_description {
   text-align: left;
   font: normal normal 600 13px/16px Montserrat;
@@ -12,6 +13,7 @@
   color: #333d3d83;
   opacity: 1;
 }
+
 .StartupPortfolio_addNew {
   border: 0px;
   text-align: center;
@@ -21,6 +23,8 @@
   background: #51c7df 0% 0% no-repeat padding-box;
   opacity: 1;
 }
+
+
 .NewestProjectsByTheCommunity_title {
   text-align: left;
   font: normal normal bold 24px/16px Montserrat;
@@ -28,6 +32,7 @@
   color: #231f20;
   opacity: 1;
 }
+
 .NewestProjectsByTheCommunity_card_title {
   text-align: left;
   font: normal normal bold 15px/22px Montserrat;
@@ -36,6 +41,7 @@
   opacity: 1;
   line-height: 1;
 }
+
 .NewestProjectsByTheCommunity_card_slogan {
   text-align: left;
   font: normal normal 300 6px/18px Montserrat;
@@ -44,6 +50,7 @@
   color: #707070;
   opacity: 1;
 }
+
 .NewestProjectsByTheCommunity_card_description {
   text-align: left;
   font: normal normal 300 11px Montserrat;
@@ -53,6 +60,7 @@
   opacity: 1;
   word-break: break-word;
 }
+
 .ProjectCard {
   width: 215px;
   height: 249px !important;
@@ -76,13 +84,15 @@
   color: #231f20;
   opacity: 1;
 }
-.startup_project_name > svg {
+
+.startup_project_name>svg {
   text-align: left;
   font: normal normal 600 24px Montserrat;
   letter-spacing: 0px;
   color: #707070;
   opacity: 1;
 }
+
 .startup_project_slogane {
   text-align: left;
   font: normal normal 600 17px/20px Montserrat;
@@ -90,10 +100,12 @@
   color: #333d3d83;
   opacity: 1;
 }
+
 .startup_project_pen_edit_icon {
   color: #707070;
   font-size: 19px;
 }
+
 .published_company_description {
   word-break: break-all;
   text-align: left;
@@ -103,6 +115,7 @@
   opacity: 1;
   word-break: break-word;
 }
+
 .edit_project_video_title {
   text-align: left;
   font: normal normal 600 24px Montserrat;
@@ -110,13 +123,15 @@
   color: #231f20;
   opacity: 1;
 }
-.edit_project_video_title > svg {
+
+.edit_project_video_title>svg {
   text-align: left;
   font: normal normal 600 24px Montserrat;
   letter-spacing: 0px;
   color: #707070;
   opacity: 1;
 }
+
 .edit_project_video_info {
   text-align: right;
   font: normal normal 600 17px/20px Montserrat;
@@ -124,6 +139,7 @@
   color: #707070;
   opacity: 1;
 }
+
 .published_first_company_founders {
   text-align: left;
   font: normal normal 600 24px/29px Montserrat;
@@ -131,19 +147,23 @@
   color: #231f20;
   opacity: 1;
 }
+
 .my-connection-box {
   width: 215px !important;
   height: 225px !important;
 }
+
 .founders-wrapper .my-connection-box {
   width: 209px !important;
 }
+
 .input__position,
 .input__position::placeholder {
   font: normal normal 600 14px Montserrat;
   letter-spacing: 0px;
   opacity: 1;
 }
+
 .span_title_and_pen span {
   text-align: left;
   font: normal normal 600 24px/29px Montserrat;
@@ -151,9 +171,11 @@
   color: #231f20;
   opacity: 1;
 }
+
 .editPage {
   width: 170px !important;
 }
+
 .video-play-icon {
   color: #fff;
   position: absolute;
@@ -164,6 +186,7 @@
   /* width: 160px; */
   /* height: 160px; */
 }
+
 .edit_video_modal_promo_title {
   text-align: left;
   font: normal normal 600 24px Montserrat;
@@ -172,6 +195,7 @@
   text-transform: uppercase;
   opacity: 1;
 }
+
 .saveEditedVideo {
   width: 174px;
   height: 45px;
@@ -186,11 +210,13 @@
   float: right;
   font-family: 'Montserrat', sans-serif !important;
 }
+
 .edit-video-modal-input .edit-video-modal-input::placeholder {
   background: #ffffff 0% 0% no-repeat padding-box;
   border: 1px solid #bbbdbf;
   opacity: 1;
 }
+
 .publish-my-project {
   text-align: left;
   font: normal normal 600 20px Montserrat;
@@ -198,6 +224,7 @@
   color: #231f20;
   opacity: 1;
 }
+
 .publish-my-project-community {
   text-align: left;
   font: normal normal 300 13px/14px Montserrat;
@@ -205,6 +232,7 @@
   color: #333d3d83;
   opacity: 1;
 }
+
 .icons-option {
   position: absolute;
   right: 0px;
@@ -221,9 +249,11 @@
   /* background-color: rgb(0, 0, 0); */
   /* background-color: rgba(0, 0, 0, 0.2); */
 }
+
 .icons-option .icons-option svg {
   cursor: pointer;
 }
+
 .delete-project-modal p {
   text-align: center;
   font: normal normal 600 21px Montserrat;
@@ -231,16 +261,19 @@
   color: #ff3399;
   opacity: 1;
 }
+
 .delete-project-modal span {
   font: normal normal 600 14px Montserrat;
   cursor: pointer;
 }
+
 .edit-project-page-title {
   text-align: left;
   letter-spacing: 0px;
   opacity: 1;
   font: normal normal 600 24px Montserrat;
 }
+
 .delete-project-description {
   text-align: left;
   font: normal normal 600 13px/16px Montserrat;
@@ -248,9 +281,11 @@
   color: #333d3d83;
   opacity: 1;
 }
+
 .edit-project-page-title .blue-text {
   cursor: pointer;
 }
+
 /* .{
   text-align: center;
 font: normal normal 600 14px/10px Montserrat;
@@ -268,6 +303,7 @@ opacity: 1;
   color: #ffffff;
   opacity: 1;
 }
+
 .share-widget-share-this-project {
   text-align: left;
   font: normal normal 600 20px/24px Montserrat;
@@ -275,6 +311,7 @@ opacity: 1;
   color: #231f20;
   opacity: 1;
 }
+
 .share-widget-Startup-must-be-published-first {
   text-align: left;
   font: normal normal 300 13px/14px Montserrat;
@@ -282,6 +319,7 @@ opacity: 1;
   color: #333d3d83;
   opacity: 1;
 }
+
 /* .first_select {
   color: white !important;
 } */
@@ -292,9 +330,11 @@ opacity: 1;
   color: #fcfcfc;
   opacity: 1;
 }
+
 .css-1okebmr-indicatorSeparator {
   display: none;
 }
+
 .pitch_button {
   background-color: #bbbdbf;
   opacity: 1;
@@ -305,6 +345,7 @@ opacity: 1;
   opacity: 1;
   cursor: pointer;
 }
+
 .pitch_modal .pitch-input::placeholder,
 .pitch-input::placeholder,
 .pitch-inputtextarea::placeholder {
@@ -335,14 +376,113 @@ opacity: 1;
   border-radius: 0px !important;
   margin-top: 0;
 }
+
 .span-subscribed-to-the-Learn-to-Start {
-  text-align: left;
-  font: normal normal 500 10px/14px Montserrat;
+  font: italic normal normal 10px/15px Montserrat;
   letter-spacing: 0px;
-  /* line-height: 0px; */
-  color: #333d3d83;
+  color: #333D3D83;
   opacity: 1;
 }
+
+.apply-inputs .immersion-upload-file-input {
+  text-align: left !important;
+  font: normal normal normal 12px/16px Montserrat !important;
+  letter-spacing: 0.48px !important;
+  color: #9297A1 !important;
+  opacity: 1 !important;
+}
+
+.spot-apply-terms {
+  text-align: left;
+  font: normal normal medium 14px/15px Montserrat;
+  letter-spacing: 0px;
+  color: #333D3D83;
+}
+
+.spot-apply-terms .terms-blue-text {
+  margin-left: 5px !important;
+}
+
+.savecont-apply-spot {
+  text-align: left !important;
+  font: normal normal 400 12px/16px Montserrat !important;
+  letter-spacing: 0.48px !important;
+  color: #000000 !important;
+  opacity: 1;
+  border: none !important;
+}
+
+.submitappl-spot {
+  text-align: left;
+  font: normal normal 600 13px/16px Montserrat !important;
+  letter-spacing: 0.52px;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  opacity: 1;
+  height: 40px !important;
+  width: 247px !important;
+  background: #52C7DE 0% 0% no-repeat padding-box !important;
+  border-radius: 12px !important;
+}
+
+.spotlight-apply-modal .modal-content {
+  width: 1032px !important;
+  /* height: 568px !important; */
+}
+
+.spotlight-apply-modal .modal-dialog {
+  width: 75% !important;
+  max-width: 75% !important;
+  align-items: center !important;
+
+}
+
+.spotlight-apply-modal .modal-dialog {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+@media (max-width:576px) {
+  .spotlight-apply-modal .modal-dialog {
+    max-width: 90% !important;
+    width: 100% !important;
+  }
+
+}
+
+.spotlight-apply-modal .modal-content {
+  padding: 50px !important;
+}
+
+.spotlight-apply-modal .portf-act-spot-dnone {
+  display: block !important;
+  margin-bottom: 30px !important;
+}
+
+.spotlight-apply-modal .btn-close {
+  display: none !important;
+
+}
+
+
+
+.spot-apply-cont-row .apply-inputs.col-12.col-lg-6 {
+  padding-left: 31px !important;
+  padding-right: 10px !important;
+}
+
+.spot-apply-cont-row .col-12.col-lg-6 {
+  padding-right: 31px !important;
+}
+
+@media (max-width:992px) {
+  .spot-apply-cont-row .apply-inputs.col-12.col-lg-6 {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+}
+
 .checkmark {
   position: absolute;
   top: 0;
@@ -351,6 +491,7 @@ opacity: 1;
   width: 25px;
   background-color: #eee;
 }
+
 .input_box {
   position: absolute;
   opacity: 0;
@@ -358,27 +499,32 @@ opacity: 1;
   height: 0;
   width: 0;
 }
+
 .term {
   text-align: left;
   font: normal normal 500 14px Montserrat;
   letter-spacing: 0px;
   opacity: 1;
 }
+
 .vimeo-or-youtube {
   border: 1px solid #bbbdbf;
 }
-.vimeo-or-youtube > span {
+
+.vimeo-or-youtube>span {
   font: normal normal 500 13px Montserrat;
   letter-spacing: 0px;
   color: #707070;
   opacity: 1;
 }
-.vimeo-or-youtube > svg {
+
+.vimeo-or-youtube>svg {
   font: normal normal 500 19px Montserrat;
   letter-spacing: 0px;
   color: #707070;
   opacity: 1;
 }
+
 .addNewLogo {
   text-align: left;
   font: normal normal 500 13px/16px Montserrat;
@@ -386,12 +532,15 @@ opacity: 1;
   color: #707070;
   opacity: 1;
 }
+
 .delete-Founder-Modal .modal-content {
   box-shadow: 1px 1px 13px 1px #dae9b3;
 }
+
 .project-icon:hover {
   cursor: pointer;
 }
+
 .send-email-to-instructor .title {
   text-align: left;
   font: normal normal 600 19px Montserrat;
@@ -399,6 +548,7 @@ opacity: 1;
   color: #081818;
   opacity: 1;
 }
+
 .send-email-to-instructor .description {
   text-align: left;
   font: normal normal 600 13px/16px Montserrat;
@@ -406,6 +556,7 @@ opacity: 1;
   color: #333d3d83;
   opacity: 1;
 }
+
 .edit_founder-footer {
   z-index: 0;
 }

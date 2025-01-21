@@ -219,8 +219,7 @@ const SpotlightApplyModal = (props) => {
           classes={'spotlight-apply-modal'}
           size='lg'
         >
-          <div className='row'>
-            {/* <h1>baba</h1> */}
+          <div className='row spot-apply-cont-row'>
             <div className='col-12 col-lg-6'>
               <input
                 className='apply-button mt-2 mb-2 w-100 ps-2 py-3 pitch-input border'
@@ -297,6 +296,7 @@ const SpotlightApplyModal = (props) => {
                 </p>
               </div>
               <TermsAndConditionsCheckbox
+                className={'spot-apply-terms'}
                 text={'I agree to the Spotlight'}
                 blueText={'Terms & Conditions'}
                 name={'termsAndConditions'}
@@ -330,9 +330,12 @@ const SpotlightApplyModal = (props) => {
                 Delete Application
               </p>
 
-              <div className='d-flex align-items-center'>
+              <div
+                className='d-flex align-items-center '
+                style={{ flexWrap: 'wrap' }}
+              >
                 <LtsButton
-                  className={'cancel-btns py-2'}
+                  className={'cancel-btns py-2 savecont-apply-spot'}
                   text={'Save and Continue Later'}
                   background={'transparent'}
                   color={'#000'}
@@ -344,7 +347,7 @@ const SpotlightApplyModal = (props) => {
                   text={'SUBMIT APPLICATION'}
                   loading={loading}
                   background={'#52C7DE'}
-                  className={'ms-2 cancel-btns py-2'}
+                  className={'ms-2 cancel-btns py-2 submitappl-spot'}
                   color={'#fff'}
                   border={'none'}
                   onClick={() => {
