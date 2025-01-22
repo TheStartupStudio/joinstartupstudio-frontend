@@ -29,6 +29,9 @@ const MyStudents = React.lazy(() => import('../pages/MyStudents'))
 const MyJournals = React.lazy(() => import('../pages/MyJournals'))
 const MyAccount = React.lazy(() => import('../pages/MyAccount'))
 const MyImmersion = React.lazy(() => import('../pages/MyImmersion'))
+const MyCourseCredentials = React.lazy(() =>
+  import('../pages/MyCourseCredentialsStudent')
+)
 const Steps = React.lazy(() => import('../pages/MyImmersion/Steps'))
 const Resubscribe = React.lazy(() => import('../pages/Resubscribe'))
 const MyClassroom = React.lazy(() => import('../pages/MyClassroom'))
@@ -121,12 +124,16 @@ const MySchoolContainer = React.lazy(() => import('../pages/admin/MySchool'))
 const MyGuestSpeakersContainer = React.lazy(() =>
   import('../pages/admin/MyGuestSpeakers')
 )
-const CoursesVcredentialsContainer = React.lazy(() =>
-  import('../pages/admin/CoursesVCredentials')
-)
+// const CoursesVcredentialsContainer = React.lazy(() =>
+//   import('../pages/admin/CoursesVCredentials')
+// )
 const MyImmersionContainer = React.lazy(() =>
   import('../pages/admin/MyImmersion')
 )
+
+// const MyCourseCredentialsContainerStudent = React.lazy(() =>
+//   import('../pages/admin/MyCourseAndCredentials')
+// )
 
 const MyCourseAndCredentialsContainer = React.lazy(() =>
   import('../pages/admin/MyCourseAndCredentials')
@@ -358,6 +365,11 @@ export const studentRoutes = [
     component: AddOccupationItemForm
   },
 
+  {
+    path: '/my-course-credentials',
+    component: MyCourseCredentials,
+    exact: true
+  },
   { path: '/my-immersion', component: MyImmersion, exact: true },
   { path: '/my-immersion/:step', component: Steps },
   { path: '/iamr/:certificationType?/:id?/:type?', component: Iamr },

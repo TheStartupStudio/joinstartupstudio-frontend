@@ -203,7 +203,6 @@ const CustomDropdown = ({
     <div
       className='custom_dropdown'
       style={{ width: width, maxHeight: maxHeight }}
-      onClick={() => !multiple && handleOptionClick('Add Course or Credential')}
     >
       <CustomGradientButton
         className={`dropdown-header ${btnClassName}`}
@@ -276,7 +275,7 @@ const CustomSearchBar = ({ onChange, className }) => {
       <input
         type='text'
         className='bg-transparent'
-        placeholder='Search by company name'
+        placeholder='Search by course name'
         onChange={onChange}
       />
     </div>

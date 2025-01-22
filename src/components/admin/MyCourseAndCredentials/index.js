@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import {
   Actions,
   ActiveInactiveFilter,
+  AwardTypeFilter,
   CustomSelectCellEditor,
   ProgramsFilter,
   TransferFilter
@@ -12,7 +13,7 @@ import { SkillBox } from '../MySchool/ContentItems'
 import { useParams, useHistory } from 'react-router-dom'
 
 import HeaderActions from './HeaderActions'
-import AddImmersionModal from './AddImmersionModal'
+import AddCourseandCredentialModal from './AddCourseandCredentialModal'
 import DeleteModal from './DeleteImmersionModal'
 import GridTable from '../../GridTable'
 
@@ -55,13 +56,13 @@ const MyCourseAndCredentials = ({
 
   const fetchImmersions = useCallback(() => {
     setLoading(true)
-    let url = '/immersion/immersionsAll'
+    let url = '/coursesandcredentials/get-courses-credentials'
 
     try {
       axiosInstance.get(url).then(({ data }) => {
-        const formattedData = data.data.map((immersion) => ({
-          ...immersion,
-          status: immersion.status ? 'active' : 'unactive'
+        const formattedData = data.map((courseandcredential) => ({
+          ...courseandcredential,
+          status: courseandcredential.status ? 'active' : 'unactive'
         }))
         setRowData(formattedData)
         setLoading(false)
@@ -79,7 +80,7 @@ const MyCourseAndCredentials = ({
   const handleConfirmDelete = async () => {
     try {
       await axiosInstance.delete(
-        `/immersion/immersionsAll/${deleteImmersion.id}`
+        `coursesandcredentials/remove-courses-credentials/${deleteImmersion.id}`
       )
       setShowDeleteModal(false) // Close the modal after deletion
       fetchImmersions() // Re-fetch immersions
@@ -92,36 +93,25 @@ const MyCourseAndCredentials = ({
     const baseColumnDefs = [
       {
         headerName: 'COURSE NAME',
-        field: 'course_name',
+        field: 'name_course_credential',
         flex: 2,
         checkboxSelection: true // Enable checkbox selection in this column
       },
       {
-        field: 'AWART TYPE',
-        filter: ActiveInactiveFilter,
+        headerName: 'AWARD TYPE',
+        field: 'type_award',
+        filter: AwardTypeFilter, // Attach the custom filter component
         cellRenderer: (params) => {
-          return (
-            <div className=''>
-              <SkillBox
-                withStatus={true}
-                color={`status__${params?.value}`}
-                text={params?.value}
-              />
-            </div>
-          )
+          return <div>{params.data.type_award}</div>
         }
       },
       {
         field: 'PROVIDER',
-        filter: ActiveInactiveFilter,
+
         cellRenderer: (params) => {
           return (
             <div className=''>
-              <SkillBox
-                withStatus={true}
-                color={`status__${params?.value}`}
-                text={params?.value}
-              />
+              {params.data.name_course_credential_provider}
             </div>
           )
         }
@@ -129,7 +119,7 @@ const MyCourseAndCredentials = ({
 
       {
         headerName: 'DESCRIPTION',
-        field: 'course_description',
+        field: 'course_credential_description',
         flex: 3,
         cellRenderer: (params) => {
           return (
@@ -137,7 +127,7 @@ const MyCourseAndCredentials = ({
               className='pb-0 m-0'
               style={{ height: '14px', fontWeight: '500' }}
             >
-              {params.data.company_description}
+              {params.data.course_credential_description}
             </div>
           )
         }
@@ -149,6 +139,7 @@ const MyCourseAndCredentials = ({
       flex: 3,
       cellRenderer: (params) => {
         let immersion = params.data
+
         return (
           <Actions
             user={user}
@@ -179,7 +170,9 @@ const MyCourseAndCredentials = ({
     return data?.filter((item) => {
       const matchesSearchQuery =
         searchQuery === '' ||
-        item.company_name.toLowerCase().includes(searchQuery.toLowerCase())
+        item.name_course_credential
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
 
       const matchesInstructorFilter =
         !selectedSchoolFilter || item.instructor_id === selectedSchoolFilter.id
@@ -216,14 +209,14 @@ const MyCourseAndCredentials = ({
             onClose={() => setShowDeleteModal(false)} // Close the modal
             onDelete={() => handleConfirmDelete(viewExprience)} // Confirm deletion
             title='Delete Immersion Experience'
-            message='Are you sure you want to delete this experience?'
+            message='Are you sure you want to delete this item?'
           />
         ))}
       <HeaderActions
         usedIn={usedIn || 'student'}
         tableTitle={tableTitle}
         lastDropdownProps={{
-          title: 'Add Course or Credential',
+          title: 'Add Course or Credential +',
           onClick: (newValue) => {
             setImmersionStep(newValue)
           }
@@ -249,14 +242,16 @@ const MyCourseAndCredentials = ({
       />
 
       {immersionStep && (
-        <AddImmersionModal
+        <AddCourseandCredentialModal
           onClose={handleCloseModal}
           immersionStep={immersionStep}
           onSuccess={fetchImmersions} // Pass fetchImmersions to refresh data
         />
       )}
+
+      {console.log(viewExprience, 'viewExprience')}
       {viewExprience && (
-        <AddImmersionModal
+        <AddCourseandCredentialModal
           viewExprience={viewExprience}
           onClose={handleCloseModal}
           immersionStep={immersionStep}

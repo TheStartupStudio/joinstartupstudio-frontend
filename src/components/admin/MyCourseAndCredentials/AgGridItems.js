@@ -21,7 +21,7 @@ import '../MySchool/style.css'
 // import ResetPasswordModal from './ResetPasswordModal'
 // import AddInstructorModal from './Instructors/AddInstructorModal'
 import useModalState from './useModalState'
-import AddImmersionModal from './AddImmersionModal'
+import AddCourseandCredentialModal from './AddCourseandCredentialModal'
 // import DeleteUserModal from './DeleteUserModal'
 // import StudentActionsModal from './Learners/StudentActionsModal'
 // import TransferStudentsModal from './Learners/TransferStudentsModal'
@@ -94,6 +94,56 @@ const ActiveInactiveFilter = ({ model, onModelChange, getValue }) => {
           checked={model === 'unactive'}
         />
         Unactive
+      </div>
+    </div>
+  )
+}
+
+const AwardTypeFilter = ({ model, onModelChange, getValue }) => {
+  const doesFilterPass = useCallback(
+    (params) => {
+      const { data } = params
+
+      const value = data.type_award // Adjust this to the field you're filtering
+
+      if (model) {
+        return value === model
+      }
+      return true
+    },
+    [model]
+  )
+
+  // Hook to integrate filter logic with AG Grid
+  useGridFilter({ doesFilterPass })
+
+  const handleCheckboxChange = (newValue) => {
+    if (model === newValue) {
+      onModelChange(null) // Unselect the filter if it's already selected
+    } else {
+      onModelChange(newValue)
+    }
+  }
+
+  return (
+    <div style={{ padding: '4px' }}>
+      <div className='agGrid-customFilters__checkbox-container d-flex py-1'>
+        <input
+          type='checkbox'
+          className='agGrid-customFilters__checkbox'
+          onChange={() => handleCheckboxChange('Certificate')}
+          checked={model === 'Certificate'}
+        />
+        Certificate
+      </div>
+      <div className='agGrid-customFilters__checkbox-container d-flex py-1'>
+        <input
+          type='checkbox'
+          className='agGrid-customFilters__checkbox'
+          onChange={() => handleCheckboxChange('Credential')}
+          checked={model === 'Credential'}
+        />
+        Credential
       </div>
     </div>
   )
@@ -510,8 +560,10 @@ const Actions = ({
 }) => {
   const [modals, setModalState] = useModalState()
 
-  const handleDeleteExperience = () => {
+  const handleDeleteExperience = (e) => {
+    e.preventDefault() // Prevent default navigation behavior
     setShowDeleteModal(true)
+
     setDeleteImmersion(immersion)
     // setViewExprience(immersion)
   }
@@ -519,6 +571,7 @@ const Actions = ({
   return (
     <div>
       <div className='d-flex align-items-center agGrid__actions'>
+        {/* View Item */}
         <div
           className='action-item cursor-pointer'
           onClick={() => setViewExprience(immersion)}
@@ -529,9 +582,10 @@ const Actions = ({
           <p className='m-0 pe-2'> View Item</p>
         </div>
 
+        {/* Delete Item */}
         <div
           className='action-item cursor-pointer'
-          onClick={handleDeleteExperience} // Show delete modal when clicked
+          onClick={handleDeleteExperience}
         >
           <a href='/my-school/learners' className='pe-1'>
             <FontAwesomeIcon
@@ -551,6 +605,7 @@ const Actions = ({
 export {
   CustomHeader,
   ActiveInactiveFilter,
+  AwardTypeFilter,
   LevelsFilter,
   ProgramsFilter,
   TransferFilter,

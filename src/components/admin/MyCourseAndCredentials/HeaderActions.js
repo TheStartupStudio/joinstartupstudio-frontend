@@ -27,7 +27,8 @@ const HeaderActions = ({
 }) => {
   const [modals, setModalState] = useModalState()
   // const [bulkEditingStudents, setBulkEditingStudents] = useState([])
-  const [bulkRemovingImmersions, setBulkremovingImmersions] = useState([])
+  const [bulkRemovingCourseVCredential, setBulkremovingCourseVCredential] =
+    useState([])
   const [bulkNextYearStudents, setBulkNextYearStudents] = useState([])
   const [bulkDeactivatingImmersions, setBulkDeactivatingImmersions] = useState(
     []
@@ -73,17 +74,16 @@ const HeaderActions = ({
   const handleBulkEditAction = () => {
     if (!selectedRows.length) return
 
-    setBulkremovingImmersions(selectedRows.map(getId))
+    setBulkremovingCourseVCredential(selectedRows.map(getId))
     setModalState('showBulkEditModal', true)
   }
-  const bulkRemoveImmersions = async (options) => {
+  const bulkRemoveCourseVCredential = async (options) => {
     setLoading(true)
 
     try {
-      await axiosInstance.delete(`/immersion/immersionsAll/remove`, {
-        data: {
-          immersionIds: bulkRemovingImmersions // Send data under 'data' key for DELETE request
-        }
+      // Make sure you're passing the ids correctly inside the data field
+      await axiosInstance.delete('/coursesandcredentials/remove-items', {
+        data: { ids: bulkRemovingCourseVCredential } // Corrected this line
       })
 
       onSuccess()
@@ -105,9 +105,8 @@ const HeaderActions = ({
   const bulkDeactivateImmersions = async () => {
     setLoading(true)
     try {
-      await axiosInstance.patch('/immersion/immersionsAll/batch/status', {
-        immersionIds: bulkDeactivatingImmersions,
-        status: '0'
+      await axiosInstance.put('/coursesandcredentials/update-status', {
+        ids: bulkDeactivatingImmersions
       })
       onSuccess()
       setModalState('showConfirmationModal', true)
@@ -204,55 +203,45 @@ const HeaderActions = ({
             className={usedIn === 'reports' ? 'w-100' : ''}
           />
         </Col>
-        {usedIn !== 'reports' && (
-          <>
-            <Col md='3' className='d-flex justify-content-end'>
+
+        <>
+          <Col md='3' className='d-flex justify-content-end'>
+            <CustomDropdown
+              title='Bulk Actions'
+              options={[
+                { name: 'Deactivate', value: 'deactivate' },
+                { name: 'Remove', value: 'remove' }
+              ]}
+              onClick={(newValue) => {
+                newValue?.value === 'remove'
+                  ? handleBulkEditAction()
+                  : newValue?.value === 'deactivate'
+                  ? handleBulkDeactiveAction()
+                  : handleBulkNextYearAction()
+              }}
+              btnClassName={'instructor'}
+            />
+          </Col>
+          <Col>
+            <div
+              onClick={() =>
+                lastDropdownProps.onClick('Add Course or Credential +')
+              }
+            >
               <CustomDropdown
-                title='Bulk Actions'
-                options={[
-                  { name: 'Deactivate', value: 'deactivate' },
-                  { name: 'Remove', value: 'remove' }
-                ]}
-                onClick={(newValue) => {
-                  newValue?.value === 'remove'
-                    ? handleBulkEditAction()
-                    : newValue?.value === 'deactivate'
-                    ? handleBulkDeactiveAction()
-                    : handleBulkNextYearAction()
-                }}
-                btnClassName={'instructor'}
-              />
-            </Col>
-            <Col>
-              <CustomDropdown
-                options={[
-                  {
-                    name: 'Step 1: Industry Problem',
-                    value: '1',
-                    icon: ''
-                  },
-                  {
-                    name: 'Step 2:Immersion Experience',
-                    value: '2',
-                    icon: ''
-                  },
-                  {
-                    name: 'Step 3: Internship',
-                    value: '3',
-                    icon: ''
-                  },
-                  {
-                    name: 'Step 4: Entry-Level Employment',
-                    value: '4',
-                    icon: ''
-                  }
-                ]}
-                onClick={lastDropdownProps?.onClick}
+                // options={[
+                //   {
+                //     name: 'Add Course or Credential +',
+                //     value: '1',
+                //     icon: ''
+                //   }
+                // ]}
+                // onClick={lastDropdownProps?.onClick}
                 title={lastDropdownProps?.title}
               />
-            </Col>
-          </>
-        )}
+            </div>
+          </Col>
+        </>
       </Row>
 
       <DeactivateDialogModal
@@ -277,22 +266,22 @@ const HeaderActions = ({
       <RemoveDialogModal
         show={modals.showBulkEditModal}
         onHide={() => setModalState('showBulkEditModal', false)}
-        bulkEditStudents={bulkRemovingImmersions}
+        bulkEditStudents={bulkRemovingCourseVCredential}
         handleAction={() => {
-          bulkRemoveImmersions()
+          bulkRemoveCourseVCredential()
         }}
         levels={levels}
         onSuccess={onSuccess}
       />
-      {bulkRemovingImmersions?.length > 0 && (
+      {bulkRemovingCourseVCredential?.length > 0 && (
         <>
           <ConfirmationModal
             show={modals.showConfirmationModal}
             onHide={() => {
               setModalState('showConfirmationModal', false)
-              setBulkremovingImmersions([])
+              setBulkDeactivatingImmersions([])
             }}
-            message={'Immersions removed'}
+            message={'Items removed'}
           />
         </>
       )}
@@ -316,7 +305,7 @@ const HeaderActions = ({
               setModalState('showConfirmationModal', false)
               setBulkDeactivatingImmersions([])
             }}
-            message={'Immersion(s) deactivated.'}
+            message={'Items(s) deactivated.'}
           />
         </>
       )}

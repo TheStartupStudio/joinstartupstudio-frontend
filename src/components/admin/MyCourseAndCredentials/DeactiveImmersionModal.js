@@ -27,7 +27,7 @@ export const DeactivateDialogModal = (props) => {
             flexDirection: ' column'
           }}
         >
-          Are you sure you want to deactivate Immersions ?
+          Are you sure you want to deactivate Items ?
         </div>
         <div className='mt-4 text-center'>
           <button
@@ -45,7 +45,7 @@ export const DeactivateDialogModal = (props) => {
             ) : (
               `YES ${
                 props.action_type === 'activate' ? 'activate' : 'deactivate'
-              } IMMERSIONS`
+              } ITEMS`
             )}
           </button>
         </div>
@@ -88,7 +88,7 @@ export const RemoveDialogModal = (props) => {
             flexDirection: ' column'
           }}
         >
-          Are you sure you want to remove Immersions ?
+          Are you sure you want to remove this item ?
         </div>
         <div className='mt-4 text-center'>
           <button
@@ -104,7 +104,7 @@ export const RemoveDialogModal = (props) => {
             {props.deactivateLoading ? (
               <span className='spinner-border spinner-border-sm' />
             ) : (
-              `YES Delete IMMERSIONS`
+              `YES Delete Item`
             )}
           </button>
         </div>
