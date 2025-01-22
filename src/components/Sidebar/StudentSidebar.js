@@ -57,6 +57,10 @@ const StudentSidebar = (props) => {
       <ParentDropdownItem id='whatCanIDo'>
         <DropdownItem title='MY Pathways' to='/pathways' />
         <DropdownItem title='MY Immersion' to='/my-immersion' />
+        <DropdownItem
+          title='MY Course & Credentials'
+          to='/my-course-credentials'
+        />
       </ParentDropdownItem>
       <ParentSidebarItem
         aria-controls='howDoIProveIt'
