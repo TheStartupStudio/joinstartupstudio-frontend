@@ -69,7 +69,7 @@ function MyJournals(props) {
   }, [])
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
 
   useEffect(
     function () {

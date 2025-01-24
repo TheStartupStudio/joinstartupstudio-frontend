@@ -2,7 +2,6 @@ import React, { useState, useReducer } from 'react'
 import { useSelector } from 'react-redux'
 import { toast, ToastContainer } from 'react-toastify'
 import { FormattedMessage } from 'react-intl'
-import { Auth } from 'aws-amplify'
 import { validatePassword } from '../../../utils/helpers'
 import IntlMessages from '../../../utils/IntlMessages'
 import axiosInstance from '../../../utils/AxiosInstance'
@@ -27,16 +26,16 @@ const PasswordChangeRequired = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!old_password) {
-      toast.error('Invalid parameters provided!!')
-      return setLoading(false)
-    }
+    // if (!old_password) {
+    //   toast.error('Invalid parameters provided!!')
+    //   return setLoading(false)
+    // }
 
-    if (userInput.new_password == '') {
+    if (userInput.new_password === '') {
       toast.error(<IntlMessages id='reset.password_field_empty' />)
     } else if (userInput.new_password === old_password) {
       toast.error('New password cannot be the same as your old password!')
-    } else if (userInput.new_password != userInput.confirm_new_password) {
+    } else if (userInput.new_password !== userInput.confirm_new_password) {
       toast.error(<IntlMessages id='reset.password_not_match' />)
     } else if (userInput.new_password && userInput.new_password.length < 8) {
       toast.error(<IntlMessages id='reset.password_conform_policy' />)
@@ -44,12 +43,8 @@ const PasswordChangeRequired = () => {
       toast.error(<IntlMessages id='reset.password_conform_policy' />)
     } else {
       setLoading(true)
-      const currentUser = await Auth.currentAuthenticatedUser()
-      await Auth.changePassword(
-        currentUser,
-        old_password,
-        userInput.new_password
-      )
+      await axiosInstance
+        .post('/auth/update-password', { password: userInput.new_password })
         .then(async () => {
           await axiosInstance
             .put(`/users/lastlogin`)
@@ -59,7 +54,7 @@ const PasswordChangeRequired = () => {
               )
               setLoading(false)
               setTimeout(() => {
-                window.location.href = `/ims-login`
+                window.location.href = `/`
               }, 1500)
             })
             .catch((e) => {
@@ -74,7 +69,12 @@ const PasswordChangeRequired = () => {
             err.code === 'LimitExceededException'
           )
             toast.error(err.message)
-          else toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+          else
+            toast.error(
+              err.response.data.message || (
+                <IntlMessages id='alerts.something_went_wrong' />
+              )
+            )
         })
     }
   }

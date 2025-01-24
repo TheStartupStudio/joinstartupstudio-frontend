@@ -131,39 +131,39 @@ function CreateAccount() {
           return false
         })
       if (university.exists === true) {
-        await Auth.signUp({
-          username: user.email,
-          password: user.password,
-          attributes: {
-            'custom:universityCode': user.communityCode,
-            'custom:isVerified': '0',
-            'custom:language': currentLanguage,
-            name: user.name
-          }
-        })
-          .then(async (res) => {
-            const params = {
-              name: user.name,
-              email: user.email,
-              universityId: university.universityId,
-              cognito_Id: res.userSub,
-              role: user?.role,
-              instructor_id: Number(user.instructor),
-              year: user.program,
-              level: user.type === 'student' ? 'L3' : 'L4',
-              password: user.password
-            }
-            await registerUser(params)
-            localStorage.setItem('email', user.email)
-          })
-          .catch((err) => {
-            setButtonLoading(false)
-            if (err.code === 'UsernameExistsException') {
-              toast.error(<IntlMessages id='alerts.user_exist' />)
-            } else {
-              toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-            }
-          })
+        // await Auth.signUp({
+        //   username: user.email,
+        //   password: user.password,
+        //   attributes: {
+        //     'custom:universityCode': user.communityCode,
+        //     'custom:isVerified': '0',
+        //     'custom:language': currentLanguage,
+        //     name: user.name
+        //   }
+        // })
+        //   .then(async (res) => {
+        const params = {
+          name: user.name,
+          email: user.email,
+          universityId: university.universityId,
+          // cognito_Id: res.userSub,
+          role: user?.role,
+          instructor_id: Number(user.instructor),
+          year: user.program,
+          level: user.type === 'student' ? 'L3' : 'L4',
+          password: user.password
+        }
+        await registerUser(params)
+        localStorage.setItem('email', user.email)
+        // })
+        // .catch((err) => {
+        //   setButtonLoading(false)
+        //   if (err.code === 'UsernameExistsException') {
+        //     toast.error(<IntlMessages id='alerts.user_exist' />)
+        //   } else {
+        //     toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+        //   }
+        // })
       }
     }
   }

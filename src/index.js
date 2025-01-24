@@ -10,6 +10,7 @@ import './assets/css/style.css'
 import './assets/css/media.css'
 import './assets/css/extra.css'
 import './assets/css/ltsUiItems.css'
+import { startTokenRefreshCheck } from './utils/tokenUtils'
 
 const { PUBLIC_URL } = process.env
 
@@ -30,6 +31,8 @@ Amplify.configure({
       : config.cognito.APP_CLIENT_ID
   }
 })
+
+startTokenRefreshCheck()
 
 ReactDOM.render(
   <React.Fragment>

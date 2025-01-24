@@ -54,24 +54,8 @@ const AddInstructorBulkModal = ({ show, onHide, mode = 'add', onSuccess }) => {
 
     try {
       for (let instructor of results) {
-        const { email, password, name } = instructor
-
-        const res = await Auth.signUp({
-          username: email,
-          password: password,
-          attributes: {
-            'custom:universityCode': 'dev2020',
-            'custom:isVerified': '1',
-            'custom:language': 'en',
-            'custom:email': email,
-            'custom:password': password,
-            name: name
-          }
-        })
-
         let payload = {
           ...instructor,
-          cognito_Id: res.userSub,
           stripe_subscription_id: 'true',
           payment_type: 'school',
           is_active: 1

@@ -32,9 +32,9 @@ function InboxMenu() {
     }
   }, [dispatch])
 
-    useEffect(() => {
-          dispatch(changeSidebarState(false))
-    })
+  useEffect(() => {
+    dispatch(changeSidebarState(false))
+  }, [dispatch])
 
   useEffect(() => {
     const hash = location.hash.substring(1)

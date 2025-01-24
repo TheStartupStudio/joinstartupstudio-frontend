@@ -29,58 +29,57 @@ function CSVUpload(props) {
     }
 
     const randomPassword = generateString()
-    Auth.signUp({
-      username: item['UserEmail'],
-      password: randomPassword,
-      attributes: {
-        'custom:universityCode': 'dev2020',
-        'custom:isVerified': '1',
-        'custom:language': 'en',
-        'custom:email': item['UserEmail'],
-        'custom:password': randomPassword,
-        name: item['First Name'] + ' ' + item['Surname']
-      }
-    })
-      .then(async (res) => {
-        const params = {
-          name: item['First Name'] + ' ' + item['Surname'],
-          email: item['UserEmail'],
-          universityId: {}.hasOwnProperty.call(item, 'University')
-            ? parseInt(item['University'])
-            : 1,
-          instructor_id:
-            !{}.hasOwnProperty.call(item, 'Type') ||
-            item['Type'] !== 'Instructor'
-              ? 553
-              : null,
-          cognito_Id: res.userSub,
-          level: item['Level'],
-          year: item['Year'],
-          stripe_subscription_id: 'true',
-          payment_type: 'school',
-          is_active: 1,
-          type: {}.hasOwnProperty.call(item, 'Type') ? item['Type'] : null,
-          role_id: {}.hasOwnProperty.call(item, 'Role')
-            ? parseInt(item['Role'])
-            : 1,
-          profession: {}.hasOwnProperty.call(item, 'Profession')
-            ? item['Profession']
-            : 'Student'
-        }
-        await registerUser(params)
-        localStorage.setItem('email', item['UserEmail'])
-        req(results)
-      })
-      .catch((err) => {
-        console.log(err)
-        setLoading(false)
-        //   setButtonLoading(false)
-        //   if (err.code === 'UsernameExistsException') {
-        //     toast.error(<IntlMessages id='alerts.user_exist' />)
-        //   } else {
-        //     toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-        //   }
-      })
+    // Auth.signUp({
+    //   username: item['UserEmail'],
+    //   password: randomPassword,
+    //   attributes: {
+    //     'custom:universityCode': 'dev2020',
+    //     'custom:isVerified': '1',
+    //     'custom:language': 'en',
+    //     'custom:email': item['UserEmail'],
+    //     'custom:password': randomPassword,
+    //     name: item['First Name'] + ' ' + item['Surname']
+    //   }
+    // })
+    //   .then(async (res) => {
+    const params = {
+      name: item['First Name'] + ' ' + item['Surname'],
+      email: item['UserEmail'],
+      universityId: {}.hasOwnProperty.call(item, 'University')
+        ? parseInt(item['University'])
+        : 1,
+      instructor_id:
+        !{}.hasOwnProperty.call(item, 'Type') || item['Type'] !== 'Instructor'
+          ? 553
+          : null,
+      // cognito_Id: res.userSub,
+      level: item['Level'],
+      year: item['Year'],
+      stripe_subscription_id: 'true',
+      payment_type: 'school',
+      is_active: 1,
+      type: {}.hasOwnProperty.call(item, 'Type') ? item['Type'] : null,
+      role_id: {}.hasOwnProperty.call(item, 'Role')
+        ? parseInt(item['Role'])
+        : 1,
+      profession: {}.hasOwnProperty.call(item, 'Profession')
+        ? item['Profession']
+        : 'Student'
+    }
+    await registerUser(params)
+    localStorage.setItem('email', item['UserEmail'])
+    req(results)
+    // })
+    // .catch((err) => {
+    //   console.log(err)
+    //   setLoading(false)
+    //   //   setButtonLoading(false)
+    //   //   if (err.code === 'UsernameExistsException') {
+    //   //     toast.error(<IntlMessages id='alerts.user_exist' />)
+    //   //   } else {
+    //   //     toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+    //   //   }
+    // })
   }
 
   const csvSubmit = (e) => {

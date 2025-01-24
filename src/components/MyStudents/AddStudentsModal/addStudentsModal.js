@@ -183,58 +183,57 @@ const AddStudentsModal = (props) => {
       return req(results)
     }
 
-    await Auth.signUp({
-      username: item['email'],
-      password: item['password'],
-      attributes: {
-        'custom:universityCode': 'dev2020',
-        'custom:isVerified': '1',
-        'custom:language': 'en',
-        'custom:email': item['email'],
-        'custom:password': item['password'],
-        name: item.firstname + ' ' + item.lastname
-      }
-    })
-      .then(async (res) => {
-        await axiosInstance
-          .post('/instructor/add-users', {
-            // data: {
-            ...item,
-            name: item.firstname + ' ' + item.lastname,
-            cognito_Id: res.userSub,
-            stripe_subscription_id: 'true',
-            payment_type: 'school',
-            is_active: 1
-            // }
-          })
-          .then((response) => {
-            const addedUser = response.data.user
-            addedUser.transferHistory = []
-            addedUsers = [addedUser, ...addedUsers]
-            setSuccessfullyAdded((prev) => prev + 1)
-            req(results)
-          })
-          .catch((err) => {
-            setErrors((old) => [
-              ...old,
-              {
-                message: 'Something went wrong!',
-                user: item['email']
-              }
-            ])
-            req(results)
-          })
+    // await Auth.signUp({
+    //   username: item['email'],
+    //   password: item['password'],
+    //   attributes: {
+    //     'custom:universityCode': 'dev2020',
+    //     'custom:isVerified': '1',
+    //     'custom:language': 'en',
+    //     'custom:email': item['email'],
+    //     'custom:password': item['password'],
+    //     name: item.firstname + ' ' + item.lastname
+    //   }
+    // })
+    //   .then(async (res) => {
+    await axiosInstance
+      .post('/instructor/add-users', {
+        // data: {
+        ...item,
+        name: item.firstname + ' ' + item.lastname,
+        stripe_subscription_id: 'true',
+        payment_type: 'school',
+        is_active: 1
+        // }
+      })
+      .then((response) => {
+        const addedUser = response.data.user
+        addedUser.transferHistory = []
+        addedUsers = [addedUser, ...addedUsers]
+        setSuccessfullyAdded((prev) => prev + 1)
+        req(results)
       })
       .catch((err) => {
         setErrors((old) => [
           ...old,
           {
-            message: err.message,
+            message: 'Something went wrong!',
             user: item['email']
           }
         ])
         req(results)
       })
+    // })
+    // .catch((err) => {
+    //   setErrors((old) => [
+    //     ...old,
+    //     {
+    //       message: err.message,
+    //       user: item['email']
+    //     }
+    //   ])
+    //   req(results)
+    // })
   }
 
   const csvSubmit = () => {

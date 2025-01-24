@@ -113,13 +113,18 @@ function Header() {
     if (user) {
       checkIfUserHasVerifiedEmail()
 
-      axiosInstance.get(`/notifications/${user.id}`).then((res) => {
-        if (res.data.notifications?.length > 0) {
-          setNotifications(res.data.notifications)
-        }
+      axiosInstance
+        .get(`/notifications/${user.id}`)
+        .then((res) => {
+          if (res?.data.notifications?.length > 0) {
+            setNotifications(res?.data?.notifications)
+          }
 
-        setUnreadNotifications(res.data.unreadNotifications)
-      })
+          setUnreadNotifications(res?.data?.unreadNotifications)
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
     }
   }, [user?.id])
 
@@ -128,11 +133,11 @@ function Header() {
       // dispatch(getAllPodcast({}))
       dispatch(
         getAllNotes({
-          userId: user?.sub
+          userId: user?.id
         })
       )
     },
-    [user?.sub, dispatch]
+    [user?.id, dispatch]
   )
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { setGeneralLoading } from '../../redux/general/Actions'
 import { userLogin } from '../../redux'
 import { useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const ImpersonationNavbar = ({ originalToken }) => {
   const dispatch = useDispatch()
@@ -17,17 +18,19 @@ const ImpersonationNavbar = ({ originalToken }) => {
       localStorage.removeItem('original_access_token')
       localStorage.removeItem('impersonateId')
 
-      const loginRes = await dispatch(userLogin(null, false))
-
-      if (loginRes === 'instructor') {
-        history.push('/dashboard')
+      try {
+        await dispatch(userLogin(null, false)).then((res) => {
+          if (res === 'instructor') {
+            history.push('/dashboard')
+            window.location.reload()
+          }
+        })
+      } catch (error) {
+        toast.error(error.response.data.message || 'Something went wrong')
+      } finally {
         setTimeout(() => {
           dispatch(setGeneralLoading(false))
-          window.location.reload()
         }, 2000)
-      } else {
-        console.error(`Unexpected role: ${loginRes}`)
-        dispatch(setGeneralLoading(false))
       }
     } else {
       console.log('No original token found to revert')

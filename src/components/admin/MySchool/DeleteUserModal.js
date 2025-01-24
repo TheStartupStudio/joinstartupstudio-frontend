@@ -1,29 +1,11 @@
 import React, { useState } from 'react'
-import { faCheck, faUserMinus } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Col, Modal } from 'react-bootstrap'
 import './style.css'
-import { SubmitButton } from './ContentItems'
-import configureAwsSdk from '../../../config/configAwsSdk'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import { LtsButton } from '../../../ui/ContentItems'
 import backArrowIcon from '../../../assets/images/backarrow.png'
 import deletePersonIcon from '../../../assets/images/persondelete.png'
-const deleteUserFromCognito = async (cognito_Id) => {
-  const cognito = configureAwsSdk()
-
-  const params = {
-    UserPoolId: cognito.config.UserPoolId,
-    Username: cognito_Id
-  }
-
-  try {
-    await cognito.adminDeleteUser(params).promise()
-  } catch (error) {
-    throw error
-  }
-}
 
 const normalizeUsers = (users) => {
   return Array.isArray(users) ? users : [users]
@@ -38,8 +20,6 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
       const normalizedUsers = normalizeUsers(users)
 
       for (const user of normalizedUsers) {
-        await deleteUserFromCognito(user.cognito_Id)
-
         await axiosInstance.delete(`/instructor/${user.id}`)
       }
 
@@ -83,7 +63,12 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
                 borderRadius: '50%'
               }}
             >
-              <img src={deletePersonIcon} width={21} height={24}></img>
+              <img
+                src={deletePersonIcon}
+                width={21}
+                height={24}
+                alt='delete '
+              />
               {/* <FontAwesomeIcon icon={faUserMinus} /> */}
             </div>
             {`Delete ${isMultipleUsers ? 'Users' : 'User'}`}
@@ -92,7 +77,7 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
             className={`check-button fw-bold reset-pasw-checkbtn`}
             onClick={() => onHide()}
           >
-            <img src={backArrowIcon} width={50} height={38}></img>
+            <img src={backArrowIcon} width={50} height={38} alt='delete ' />
           </div>
         </Modal.Header>
         <Modal.Body className='text-center '>
@@ -124,7 +109,7 @@ const DeleteUserModal = ({ show, onHide, users, onSuccess }) => {
               className='cancel-text'
               style={{
                 cursor: 'pointer',
-                color: '#000',
+                color: '#000'
               }}
               onClick={() => onHide()}
             >

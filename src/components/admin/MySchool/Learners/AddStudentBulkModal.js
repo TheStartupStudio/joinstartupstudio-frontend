@@ -54,24 +54,21 @@ const AddStudentBulkModal = ({ show, onHide, onSuccess }) => {
 
     try {
       for (let student of results) {
-        const { email, password, name } = student
-
-        const res = await Auth.signUp({
-          username: email,
-          password: password,
-          attributes: {
-            'custom:universityCode': 'dev2020',
-            'custom:isVerified': '1',
-            'custom:language': 'en',
-            'custom:email': email,
-            'custom:password': password,
-            name: name
-          }
-        })
+        // const res = await Auth.signUp({
+        //   username: email,
+        //   password: password,
+        //   attributes: {
+        //     'custom:universityCode': 'dev2020',
+        //     'custom:isVerified': '1',
+        //     'custom:language': 'en',
+        //     'custom:email': email,
+        //     'custom:password': password,
+        //     name: name
+        //   }
+        // })
 
         let payload = {
           ...student,
-          cognito_Id: res.userSub,
           stripe_subscription_id: 'true',
           payment_type: 'school',
           is_active: 1

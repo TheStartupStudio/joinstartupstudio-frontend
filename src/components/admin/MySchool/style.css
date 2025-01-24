@@ -666,7 +666,6 @@
   padding-top: 20px !important;
   padding-bottom: 10px !important;
   width: 403px !important;
-  height: 361px !important;
 }
 
 .deleteuser-title {
@@ -775,7 +774,6 @@ body {
   }
 }
 
-
 .ag-center-cols-viewport,
 .ag-center-cols-container,
 .ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-column-last.ag-cell-value,
@@ -785,17 +783,18 @@ body {
   scrollbar-width: thin !important;
 }
 
-.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(.transfer-status-cont) {
+.ag-cell.ag-cell-not-inline-editing.ag-cell-normal-height.ag-cell-value:has(
+    .transfer-status-cont
+  ) {
   padding-left: 0px !important;
   margin-left: -8px !important;
 }
-
 
 .on-users-number {
   font: normal normal bold 12px/14px Montserrat;
   letter-spacing: 0.48px;
   color: #000000;
-  padding-left: .5rem;
+  padding-left: 0.5rem;
 }
 
 .on-users-text {
@@ -805,9 +804,8 @@ body {
 }
 
 .datatoview-dropdown.dropdown-list-item {
-  padding: .6rem .8rem .6rem .8rem !important;
+  padding: 0.6rem 0.8rem 0.6rem 0.8rem !important;
 }
-
 
 .act-users-title {
   text-align: left;
@@ -834,7 +832,7 @@ body {
 p.m-0.pb-2 {
   font: normal normal normal 14px/18px Montserrat;
   letter-spacing: 0.09px;
-  color: #5A607F;
+  color: #5a607f;
   opacity: 1;
 }
 
@@ -867,7 +865,7 @@ p.m-0.pb-2 {
   transition: background-color 0.2s, border-color 0.2s;
 }
 
-.custom-liza-checkbox input:checked+.checkmark-liza {
+.custom-liza-checkbox input:checked + .checkmark-liza {
   background-color: #52c7de;
   border-color: #52c7de;
 }
@@ -881,11 +879,11 @@ p.m-0.pb-2 {
   transform: rotate(45deg);
   display: none;
   position: absolute;
-  background: #52C7DE 0% 0% no-repeat padding-box;
+  background: #52c7de 0% 0% no-repeat padding-box;
   box-shadow: inset 0px 3px 3px #00000029;
   opacity: 1;
 }
 
-.custom-liza-checkbox input:checked+.checkmark-liza::after {
+.custom-liza-checkbox input:checked + .checkmark-liza::after {
   display: block;
 }

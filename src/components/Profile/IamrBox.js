@@ -44,10 +44,13 @@ const IamrBox = ({ userRole, user }) => {
   useEffect(() => {
     if (userRole !== 'student') {
       const questionAndFeedbacksHandler = async () => {
-        await axiosInstance.get('/instructor/iamr/tickets').then((res) => {
-          setStudentQuestions(res.data.student_questions)
-          setFeedbackRequests(res.data.certification_feedback_requests)
-        })
+        await axiosInstance
+          .get('/instructor/iamr/tickets')
+          .then((res) => {
+            setStudentQuestions(res.data?.student_questions)
+            setFeedbackRequests(res.data?.certification_feedback_requests)
+          })
+          .catch((err) => console.log('err', err))
       }
 
       questionAndFeedbacksHandler()

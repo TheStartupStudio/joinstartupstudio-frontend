@@ -109,22 +109,21 @@ const AddInstructorModal = ({
           }
         } else {
           try {
-            const res = await Auth.signUp({
-              username: formData.email,
-              password: formData.password,
-              attributes: {
-                'custom:universityCode': 'dev2020',
-                'custom:isVerified': '1',
-                'custom:language': 'en',
-                'custom:email': formData.email,
-                'custom:password': formData.password,
-                name: formData.name
-              }
-            })
+            // const res = await Auth.signUp({
+            //   username: formData.email,
+            //   password: formData.password,
+            //   attributes: {
+            //     'custom:universityCode': 'dev2020',
+            //     'custom:isVerified': '1',
+            //     'custom:language': 'en',
+            //     'custom:email': formData.email,
+            //     'custom:password': formData.password,
+            //     name: formData.name
+            //   }
+            // })
 
             const payload = {
               ...formData,
-              cognito_Id: res.userSub,
               stripe_subscription_id: 'true',
               payment_type: 'school',
               is_active: 1

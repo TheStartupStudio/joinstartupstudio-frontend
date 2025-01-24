@@ -14,7 +14,7 @@ const INIT_STATE = {
   generalLoading: false
 }
 
-export default (state = INIT_STATE, action) => {
+const generalReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
     case CHANGE_SIDEBAR_STATE:
       return { ...state, sidebarState: action.payload }
@@ -34,3 +34,5 @@ export default (state = INIT_STATE, action) => {
       return { ...state }
   }
 }
+
+export default generalReducer
