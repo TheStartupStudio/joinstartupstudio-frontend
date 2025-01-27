@@ -100,7 +100,7 @@ function Notes({ room, page, noteTitle }) {
             page === 'startup-live-videos'
               ? room
               : null,
-          userId: user.sub,
+          userId: user._id,
           createdFrom:
             page === 'course' || page === 'welcome-course'
               ? 'course'

@@ -12,10 +12,9 @@ import {
   NEED_RESET,
   UPDATE_USER_TNC,
   SET_LOGIN_LOADING,
-  USER_CHANGE_PROFESSION
+  USER_CHANGE_PROFESSION,
+  SET_AUTH_MODAL
 } from './Types'
-
-import { Auth } from 'aws-amplify'
 import axiosInstance from '../../utils/AxiosInstance'
 
 import {
@@ -28,18 +27,23 @@ import {
 } from '../../utils/helpers'
 
 export const userLogin =
-  (old_password, isImpersonation = false, impersonationMode = 'instructor') =>
+  (old_password, isImpersonation = false) =>
   async (dispatch) => {
     try {
       dispatch({ type: LOADING })
 
-      axiosInstance.defaults.headers.common[
-        'Authorization'
-      ] = `Bearer ${localStorage.getItem('access_token')}`
+      const token = localStorage.getItem('access_token')
+      if (token) {
+        axiosInstance.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${token}`
+      } else {
+        console.error('Access token is missing from localStorage')
+      }
       axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
 
       if (isImpersonation) {
-        const user = await fetchUserData('instructor')
+        const user = await fetchUserData()
         const userRole = await fetchUserRole()
         const isAdmin = await fetchAdminAccess()
 
@@ -47,25 +51,14 @@ export const userLogin =
 
         saveUserToken(userToken, false, userRole)
 
-        dispatch({
-          type: USER_LOGIN_SUCCESS,
-          payload: { token: user.data.cognito_Id, user: userToken, isAdmin }
-        })
+        dispatch({ type: USER_LOGIN_SUCCESS, payload: userToken })
         dispatch({ type: LOGIN_LOADING, payload: false })
 
         return 'impersonated'
       }
 
-      const user = await fetchUserData('instructor')
+      const user = await fetchUserData()
       const userRole = await fetchUserRole()
-      const currentUser = await Auth.currentAuthenticatedUser({
-        bypassCache: true
-      })
-
-      if (currentUser.attributes['custom:isVerified'] === 0) {
-        window.location.href = '/verify-email'
-        return
-      }
 
       const redirectMessage = handleUserRedirect(user)
       if (redirectMessage) {
@@ -87,14 +80,19 @@ export const userLogin =
       }
     } catch (err) {
       dispatch({ type: USER_LOGIN_ERROR, payload: err?.message })
+      return undefined
     }
   }
 
-export const userLogout = () => {
-  localStorage.clear()
-
-  return {
-    type: USER_LOGOUT
+export const userLogout = () => async (dispatch) => {
+  const refresh_token = localStorage.getItem('refresh_token')
+  try {
+    await axiosInstance.post('/auth/logout', {
+      refresh_token
+    })
+    dispatch({ type: USER_LOGOUT })
+  } catch (error) {
+    return false
   }
 }
 
@@ -190,5 +188,12 @@ export const setLoginLoading = (payload) => async (dispatch) => {
     })
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const setAuthModal = (state) => {
+  return {
+    type: SET_AUTH_MODAL,
+    payload: state
   }
 }

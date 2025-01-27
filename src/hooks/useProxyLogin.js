@@ -9,7 +9,7 @@ const useProxyLogin = () => {
   const dispatch = useDispatch()
 
   const handleProxyLogin = useCallback(
-    async (impersonateId, studentCognitoId) => {
+    async (impersonateId) => {
       dispatch(setGeneralLoading(true))
       try {
         const response = await axiosInstance.post('/auth/proxy-auth', {
@@ -20,23 +20,22 @@ const useProxyLogin = () => {
         const originalToken = localStorage.getItem('access_token')
 
         localStorage.setItem('original_access_token', originalToken)
-        localStorage.setItem('impersonateId', studentCognitoId)
+        localStorage.setItem('impersonateId', impersonateId)
         localStorage.setItem('access_token', accessToken)
 
         axiosInstance.defaults.headers.common[
           'Authorization'
         ] = `Bearer ${accessToken}`
 
-        const loginResult = await dispatch(userLogin(null, true))
-
-        if (loginResult === 'impersonated') {
-          window.location.href = '/dashboard'
-          setTimeout(() => {
-            dispatch(setGeneralLoading(false))
-          }, 1000)
-        } else {
-          console.error('Impersonation failed or returned an unexpected result')
-        }
+        await dispatch(userLogin(null, true)).then((res) => {
+          if (res === 'impersonated') {
+            window.location.href = '/dashboard'
+          } else {
+            console.error(
+              'Impersonation failed or returned an unexpected result'
+            )
+          }
+        })
       } catch (error) {
         if (error.response) {
           toast.error(error.response.data.error || 'Something went wrong')
@@ -45,7 +44,9 @@ const useProxyLogin = () => {
         }
         dispatch(setGeneralLoading(false))
       } finally {
-        dispatch(setGeneralLoading(false))
+        setTimeout(() => {
+          dispatch(setGeneralLoading(false))
+        }, 1500)
       }
     },
     [dispatch]

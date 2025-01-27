@@ -9,6 +9,7 @@ import LTSJourneyEn from '../../../assets/images/lts-journey-en.png'
 import LTSJourneyEs from '../../../assets/images/lts-journey-es.png'
 import IntlMessages from '../../../utils/IntlMessages'
 import { CustomInput } from '../../../ui/ContentItems'
+import axiosInstance from '../../../utils/AxiosInstance'
 
 const ResetPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -16,9 +17,9 @@ const ResetPassword = () => {
     ?.split('&')[0]
     ?.replace('?email=', '')
     ?.trim()
-  const verificationCode = window.location.search
+  const verificationToken = window.location.search
     ?.split('&')[1]
-    ?.replace('code=', '')
+    ?.replace('token=', '')
     ?.trim()
 
   const baseUrl = process.env.REACT_APP_SERVER_BASE_URL
@@ -30,12 +31,6 @@ const ResetPassword = () => {
       confirm_new_password: ''
     }
   )
-
-  const currentLanguage =
-    localStorage.getItem('currentLanguage') !== undefined ||
-    localStorage.getItem('currentLanguage') !== ''
-      ? localStorage.getItem('currentLanguage')
-      : 'en'
 
   const handleChange = (event) => {
     const name = event.target.name
@@ -52,7 +47,7 @@ const ResetPassword = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!verificationCode || !userEmail) {
+    if (!verificationToken || !userEmail) {
       toast.error('Invalid parameters provided!!')
       return setLoading(false)
     }
@@ -67,11 +62,12 @@ const ResetPassword = () => {
       toast.error(<IntlMessages id='reset.password_conform_policy' />)
     } else {
       setLoading(true)
-      Auth.forgotPasswordSubmit(
-        userEmail,
-        verificationCode,
-        userInput.new_password
-      )
+
+      await axiosInstance
+        .post('/auth/reset-password', {
+          token: verificationToken,
+          password: userInput.new_password
+        })
         .then(() => {
           setLoading(false)
           toast.success(
@@ -80,17 +76,42 @@ const ResetPassword = () => {
           setTimeout(() => {
             window.location.href = `/`
           }, 5000)
-          // sendChangedPasswordEmail(email)
         })
-        .catch((err) => {
-          setLoading(false)
-          if (
-            err.code === 'ExpiredCodeException' ||
-            err.code === 'LimitExceededException'
+        .catch((error) => {
+          toast.error(
+            error.response.data.message || (
+              <IntlMessages id='alerts.something_went_wrong' />
+            )
           )
-            toast.error(err.message)
-          else toast.error(<IntlMessages id='alerts.something_went_wrong' />)
         })
+        .finally(() => {
+          setLoading(false)
+        })
+
+      // Auth.forgotPasswordSubmit(
+      //   userEmail,
+      //   verificationCode,
+      //   userInput.new_password
+      // )
+      //   .then(() => {
+      // setLoading(false)
+      // toast.success(
+      //   <IntlMessages id='alert.my_account.password_change_success' />
+      // )
+      // setTimeout(() => {
+      //   window.location.href = `/`
+      // }, 5000)
+      //     // sendChangedPasswordEmail(email)
+      //   })
+      //   .catch((err) => {
+      //     setLoading(false)
+      //     if (
+      //       err.code === 'ExpiredCodeException' ||
+      //       err.code === 'LimitExceededException'
+      //     )
+      //       toast.error(err.message)
+      //     else toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+      //   })
     }
   }
 

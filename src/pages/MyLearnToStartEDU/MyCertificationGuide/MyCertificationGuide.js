@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import MyLearnToStartEDU from '../MyLearnToStartEDU'
 import MyLtsGridItem from '../MyLtsGridItem'
 import numberOne from '../../../assets/images/number-one.png'
@@ -9,11 +9,11 @@ import { changeSidebarState } from '../../../redux'
 import { useDispatch } from 'react-redux'
 
 const MyCertificationGuide = () => {
-    const dispatch = useDispatch()
-  
-    useEffect(() => {
-          dispatch(changeSidebarState(false))
-        })
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(changeSidebarState(false))
+  }, [dispatch])
   return (
     <MyLearnToStartEDU title={'My certification'}>
       <MyLtsGridItem

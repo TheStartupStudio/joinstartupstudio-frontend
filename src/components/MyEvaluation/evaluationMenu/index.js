@@ -13,12 +13,11 @@ function EvaluationMenu(props) {
 
   const [journalCategory, setJournalCategory] = useState('')
   const [journalCategoryOptions, setJournalCategoryOptions] = useState([])
-   const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-    useEffect(() => {
-           dispatch(changeSidebarState(false))
-      })
-    
+  useEffect(() => {
+    dispatch(changeSidebarState(false))
+  }, [dispatch])
 
   const getUserTitles = async (category) => {
     try {

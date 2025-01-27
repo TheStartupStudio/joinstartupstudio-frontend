@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { validatePassword } from '../utils/helpers'
+import { toast } from 'react-toastify'
 
 // This is for Editor
 const stripHtmlTags = (html) => {
@@ -77,6 +78,10 @@ export const useValidation = (
       setLoading(true)
       try {
         await callback()
+      } catch (error) {
+        toast.error(
+          error.message || 'An error occurred while submitting the form.'
+        )
       } finally {
         setLoading(false)
       }

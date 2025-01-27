@@ -125,6 +125,14 @@ function MyCompetitiveness(props) {
       )}
 
       <div className={'col-md-4'} style={{ marginLeft: 90 }}>
+        {mode === 'edit' && myCompetitiveness?.length > 0 && isEditSection && (
+          <MyMentorModal
+            onHide={handleHideModal}
+            show={showModal}
+            title={`Add competitiveness`}
+            category={'my-competitiveness'}
+          />
+        )}
         {mode === 'edit' && showModal && (
           <MyMentorModal
             onHide={handleHideModal}

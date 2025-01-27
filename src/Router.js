@@ -1,6 +1,6 @@
 import { Switch, Route, Redirect } from 'react-router-dom'
 import Layout from './pages/Layout'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import {
   adminRoutes,
@@ -15,14 +15,15 @@ import PublicLayout from './pages/Layout/publicLayout'
 import renderRoutes from './Router/renderRoutes'
 import AppLocale from './lang'
 import ReSigninModal from './pages/Auth/Login/ReSigninModal'
-import { useTokenAuthentication } from './hooks/useTokenAuthentication'
+import { userLogout } from './redux'
+import { setAuthModal } from './redux/user/Actions'
 
 function Router(props) {
+  const dispatch = useDispatch()
   const currentAppLocale = AppLocale[props.locale]
-  const { isAuthenticated, user } = useSelector((state) => state.user)
-
-  const { authModal, handleLoginRedirect, handleCloseModal } =
-    useTokenAuthentication(isAuthenticated)
+  const { isAuthenticated, user, authModal } = useSelector(
+    (state) => state.user
+  )
 
   const roleRoutes = () => {
     if (!isAuthenticated) return publicRoutes
@@ -39,15 +40,27 @@ function Router(props) {
     }
   }
 
+  const handleAuthModalClose = async () => {
+    await dispatch(userLogout())
+      .then(() => {
+        console.clear()
+        dispatch(setAuthModal(false))
+        window.location.href = '/'
+      })
+      .catch((error) => {
+        console.log('error', error)
+      })
+  }
+
   return (
     <>
-      {authModal && (
+      {authModal ? (
         <ReSigninModal
           show={authModal}
-          onHide={handleCloseModal}
-          onLogin={handleLoginRedirect}
+          onHide={handleAuthModalClose}
+          onLogin={handleAuthModalClose}
         />
-      )}
+      ) : null}
       <IntlProvider
         locale={currentAppLocale.locale}
         messages={currentAppLocale.messages}

@@ -1,5 +1,9 @@
 import axios from 'axios'
-import { Auth } from 'aws-amplify'
+import {
+  getRefreshToken,
+  refreshAccessToken,
+  saveAccessToken
+} from './tokenUtils'
 
 const getSubdomain = () => {
   const hostname = window.location.hostname
@@ -7,70 +11,55 @@ const getSubdomain = () => {
   return subdomain
 }
 
+const baseURL = process.env.REACT_APP_SERVER_BASE_URL
+
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_SERVER_BASE_URL
+  baseURL
 })
-
 axiosInstance.interceptors.response.use(
-  function (response) {
-    return response
-  },
-  async function (error) {
-    const token = JSON.parse(localStorage.getItem('user'))
+  (response) => response,
+  async (error) => {
+    const refreshToken = getRefreshToken()
+    const originalRequest = error.config
 
-    if (!token || error?.response?.status !== 401 || error.config._retry) {
+    if (error?.response?.status !== 401 || originalRequest._retry) {
       return Promise.reject(error)
     }
 
     if (error?.response?.status === 401) {
-      error.config._retry = true
-    }
+      originalRequest._retry = true
 
-    const cognitoUser = await Auth.currentAuthenticatedUser()
-    const currentSession = cognitoUser.signInUserSession
-    return new Promise((resolve, reject) => {
-      const token = JSON.parse(localStorage.getItem('user'))
-      cognitoUser.refreshSession(
-        currentSession.refreshToken,
-        (err, session) => {
-          // do something with the new session
-          if (err) {
-            localStorage.clear()
-            window.location.href = '/logout'
-            reject()
-          }
-          const { idToken } = session
-          token.token = idToken.jwtToken
-          localStorage.setItem('user', JSON.stringify(token))
-          error.config.headers.Authorization = `Bearer ${idToken.jwtToken}`
-          resolve()
+      if (refreshToken) {
+        try {
+          const { newAccessToken } = await refreshAccessToken()
+          saveAccessToken(newAccessToken)
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+          return axiosInstance(originalRequest)
+        } catch (refreshError) {
+          return new Promise(() => {})
         }
-      )
-    })
-      .then(() => {
-        return axios.request(error.config)
-      })
-      .catch((e) => Promise.reject(error))
+      }
+    }
+    return Promise.reject(error)
   }
 )
-
 axiosInstance.defaults.headers.post['Content-Type'] = 'application/json'
-
 axiosInstance.interceptors.request.use(
-  (request) => {
-    const token = JSON.parse(localStorage.getItem('user'))
-    const clientName = getSubdomain()
+  async (req) => {
+    const token = localStorage.getItem('access_token')
 
-    if (token) request.headers.Authorization = `Bearer ${token.token}`
+    if (token) req.headers.Authorization = `Bearer ${token}`
+
+    const clientName = getSubdomain()
 
     const impersonateId = localStorage.getItem('impersonateId')
     if (impersonateId) {
-      request.headers['x-impersonate-user'] = impersonateId
+      req.headers['x-impersonate-user'] = impersonateId
     }
 
-    request.headers['x-client-name'] = clientName
+    req.headers['x-client-name'] = clientName
 
-    return request
+    return req
   },
   (error) => {
     console.log('error axios', error)

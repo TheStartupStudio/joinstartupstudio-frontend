@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import LtsContainerWrapper from '../../../ui/LtsContainerWrapper'
 import MySchool from '../../../components/admin/MySchool'
 import './style.css'
@@ -7,10 +7,10 @@ import { changeSidebarState } from '../../../redux'
 
 const MySchoolContainer = () => {
   const dispatch = useDispatch()
-    
-    useEffect(() => {
-          dispatch(changeSidebarState(false))
-    })
+
+  useEffect(() => {
+    dispatch(changeSidebarState(false))
+  }, [dispatch])
   return (
     <LtsContainerWrapper
       className={'school-lts-container'}

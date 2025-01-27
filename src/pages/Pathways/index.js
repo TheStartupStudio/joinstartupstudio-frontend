@@ -12,24 +12,24 @@ const PathwaysContianer = () => {
     dispatch(fetchOccupationGroups())
   }, [dispatch])
 
-    useEffect(() => {
-      dispatch(changeSidebarState(false))
-    })
-    
+  useEffect(() => {
+    dispatch(changeSidebarState(false))
+  }, [dispatch])
+
   return (
-    <div className="p-3">
-      <div className="header py-3 ">
+    <div className='p-3'>
+      <div className='header py-3 '>
         <h3>PATHWAYS</h3>
         <p>
           Engage with industry trainings from Learn to Start's Industry Partners
         </p>
       </div>
 
-      <div style={{ background: '#f8f7f7' }} className="p-2">
+      <div style={{ background: '#f8f7f7' }} className='p-2'>
         <Pathways pathways={pathways} />
       </div>
-      <div className="my-3 text-center">
-        <a href="https://www.bls.gov/ooh/" rel="noopener noreferrer">
+      <div className='my-3 text-center'>
+        <a href='https://www.bls.gov/ooh/' rel='noopener noreferrer'>
           {' '}
           U.S Bureau of Labor Statistics
         </a>

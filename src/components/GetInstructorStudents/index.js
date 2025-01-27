@@ -58,6 +58,9 @@ const StudentOfInstructors = (props) => {
         setUniChosed(0)
         setSelectedInstructorsName([])
       })
+      .catch((err) => {
+        console.log('err', err)
+      })
   }
 
   useEffect(() => {

@@ -161,7 +161,7 @@ export const adminRoutes = [
 
 export const mutualRoutes = [
   { path: '/dashboard', component: Dashboard, exact: true },
-  { path: '/pathways', component: Pathways, exact: true, props: {} },
+  { path: '/pathways', component: Pathways, exact: true },
   { path: '/my-classroom', component: MyClassroom, exact: true },
   { path: '/my-classroom/request/:id', component: MyClassroom },
   { path: '/savedMedia', component: SavedMedia },
