@@ -90,10 +90,6 @@ export const userLogout = () => async (dispatch) => {
     await axiosInstance.post('/auth/logout', {
       refresh_token
     })
-    await axiosInstance.put('/myPerformanceData/updateActivity/endTime', {
-      isActive: false
-    })
-
     dispatch({ type: USER_LOGOUT })
   } catch (error) {
     return false

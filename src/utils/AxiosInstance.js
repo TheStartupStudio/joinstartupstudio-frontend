@@ -1,12 +1,9 @@
 import axios from 'axios'
 import {
-  getAccessToken,
   getRefreshToken,
   refreshAccessToken,
   saveAccessToken
 } from './tokenUtils'
-import { setAuthModal, userLogout } from '../redux/user/Actions'
-import store from '../redux/store.js'
 
 const getSubdomain = () => {
   const hostname = window.location.hostname

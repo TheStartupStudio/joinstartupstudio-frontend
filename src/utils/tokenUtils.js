@@ -5,6 +5,7 @@ import { setAuthModal } from '../redux/user/Actions'
 import store from '../redux/store'
 
 const baseURL = process.env.REACT_APP_SERVER_BASE_URL
+let tokenRefreshInterval = null
 
 const isTokenExpired = (token) => {
   if (!token) return true
@@ -61,12 +62,25 @@ const refreshAccessToken = async () => {
 }
 
 const startTokenRefreshCheck = () => {
-  setInterval(() => {
+  if (tokenRefreshInterval) {
+    clearInterval(tokenRefreshInterval)
+  }
+
+  tokenRefreshInterval = setInterval(() => {
     const token = getAccessToken()
     if (token && isTokenExpired(token)) {
+      console.log('called')
+
       refreshAccessToken()
     }
   }, 30 * 1000)
+}
+
+const stopTokenRefreshCheck = () => {
+  if (tokenRefreshInterval) {
+    clearInterval(tokenRefreshInterval)
+    tokenRefreshInterval = null
+  }
 }
 
 export {
@@ -75,5 +89,6 @@ export {
   getAccessToken,
   getRefreshToken,
   refreshAccessToken,
-  startTokenRefreshCheck
+  startTokenRefreshCheck,
+  stopTokenRefreshCheck
 }
