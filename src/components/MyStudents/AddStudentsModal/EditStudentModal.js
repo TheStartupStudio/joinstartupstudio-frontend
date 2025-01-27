@@ -24,12 +24,9 @@ const EditStudentModal = (props) => {
   const [periodOptions, setPeriodOptions] = useState([])
   const [selectedYear, setSelectedYear] = useState(null)
   const [selectedPeriod, setSelectedPeriod] = useState(null)
-  const studentInfo = useSelector(
-    (state) => state.users.studentInfo
-  )
+  const studentInfo = useSelector((state) => state.users.studentInfo)
 
   const history = useHistory()
-
 
   const defaultData = {
     name: '',
@@ -48,9 +45,9 @@ const EditStudentModal = (props) => {
     dispatch(getPeriodsStart())
   }, [])
 
-  useEffect(()=>{
-    if(data.id) dispatch(getStudentInfoById(data.id))
-  },[data.id])
+  useEffect(() => {
+    if (data.id) dispatch(getStudentInfoById(data.id))
+  }, [data.id])
 
   useEffect(() => {
     setSelectedPeriod(data?.period_id)
@@ -202,22 +199,23 @@ const EditStudentModal = (props) => {
     setResetLoading(true)
 
     await axiosInstance
-      .put(`/instructor/change-student-password/${data.id}`)
+      .patch(`/auth/setDefaultUserPassword/${data.id}`)
       .then(async () => {
         setResetSubmitted(true)
       })
       .catch((err) => {
-        toast.error('Something went wrong, please try again!')
+        toast.error(
+          err.response.data.message || 'Something went wrong, please try again!'
+        )
       })
     setResetLoading(false)
   }
 
   const navigateToPortfolio = () => {
-    history.push(`/student-portfolio/${props.data.username}`, { from: 'my-students' })
+    history.push(`/student-portfolio/${props.data.username}`, {
+      from: 'my-students'
+    })
   }
-
-
-  
 
   return data?.id ? (
     <Modal
@@ -245,11 +243,7 @@ const EditStudentModal = (props) => {
               </span>
             </div>
             <div className='col-12 col-sm-5 col-lg-5 view-student-portfolio-journals d-flex justify-content-start justify-content-sm-end align-items-end pe-lg-4 p-0'>
-              <Link
-                to="#"
-                onClick={navigateToPortfolio}
-                className='d-flex'
-              >
+              <Link to='#' onClick={navigateToPortfolio} className='d-flex'>
                 <span>Portfolio</span>
               </Link>
               <span
@@ -292,7 +286,11 @@ const EditStudentModal = (props) => {
       <Modal.Body className='row px-0 mx-4'>
         <div className='col-12 col-lg-2 mb-2 mb-lg-0 pt-2 text-center'>
           <img
-            src={studentInfo?.data?.userImageUrl ? studentInfo?.data?.userImageUrl : defaultImage}
+            src={
+              studentInfo?.data?.userImageUrl
+                ? studentInfo?.data?.userImageUrl
+                : defaultImage
+            }
             className='border border-1 rounded-circle border border-dark text-center mx-auto'
             width={'101px'}
             height={'101px'}

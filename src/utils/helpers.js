@@ -99,18 +99,19 @@ export const createUserToken = (user, isAdmin, userRole) => {
   }
 
   return {
-    token: user.data.cognito_Id,
+    token: user.data.id,
     user: payloadData,
     isAdmin,
     role: userRole
   }
 }
 
-export const fetchUserData = async (impersonationMode) => {
-  if (impersonationMode === 'instructor') {
-    return axiosInstance.get('/users/')
-  } else {
-    return axiosInstance.get('/users/')
+export const fetchUserData = async () => {
+  try {
+    return await axiosInstance.get('/users')
+  } catch (error) {
+    console.error('Error ixn fetchUserData:', error.response || error.message)
+    throw error
   }
 }
 
@@ -119,19 +120,20 @@ export const fetchUserRole = async () => {
     const res = await axiosInstance.get('/users/role')
     return res.data
   } catch (error) {
-    console.error('Error fetching user role:', error)
     throw error
   }
 }
 
 export const fetchAdminAccess = async () => {
-  const accessResponse = await axiosInstance.get('/users/admin')
-  return accessResponse.data.allow
+  try {
+    const accessResponse = await axiosInstance.get('/users/admin')
+    return accessResponse.data.allow
+  } catch (error) {
+    throw error
+  }
 }
 
 export const saveUserToken = (userToken, isImpersonation, userRole) => {
-  // const domain = getDomainFromClientName()
-
   localStorage.setItem('user', JSON.stringify(userToken))
   localStorage.setItem('role', userRole)
 }
@@ -332,6 +334,7 @@ export const fileNameExtracter = (url) => {
 }
 
 export const uploadImage = async (imageFile) => {
+  // return
   try {
     const response = await axiosInstance.post(
       // '/upload/img-transform',

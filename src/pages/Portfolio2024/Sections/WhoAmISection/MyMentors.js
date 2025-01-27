@@ -110,6 +110,14 @@ function MyMentors(props) {
         )}
       </div>
       <div className={'col-md-4'} style={{ marginLeft: 90 }}>
+        {mode === 'edit' && myMentors?.length > 0 && isEditSection && (
+          <MyMentorModal
+            onHide={handleHideModal}
+            show={showModal}
+            title={`Add mentors`}
+            category={'my-mentors'}
+          />
+        )}
         {mode === 'edit' && showModal && (
           <MyMentorModal
             onHide={handleHideModal}

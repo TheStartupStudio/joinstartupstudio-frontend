@@ -10,16 +10,16 @@ import { FormattedMessage } from 'react-intl'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import { Auth } from 'aws-amplify'
 import IntlMessages from '../../../utils/IntlMessages'
 import { validateEmail } from '../../../utils/helpers'
 import FormWrapper from './ui/FormWrapper'
 import { setLoginLoading } from '../../../redux/user/Actions'
+import axiosInstance from '../../../utils/AxiosInstance'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 
 const ChooseLogin = () => {
   const history = useHistory()
   const dispatch = useDispatch()
-  const [loading, setLoading] = useState(false)
   const isLoading = useSelector((state) => state.user.loginLoading)
   const [user, setUser] = useState({})
 
@@ -33,7 +33,6 @@ const ChooseLogin = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    setLoading(true)
     dispatch(loginLoading(true))
 
     if (!user.email || user.email === '') {
@@ -46,43 +45,80 @@ const ChooseLogin = () => {
       toast.error(<IntlMessages id='alerts.valid_email' />)
       dispatch(loginLoading(false))
     } else {
-      await Auth.signIn(user.email, user.password)
-        .then(async (response) => {
-          localStorage.setItem(
-            'access_token',
-            response.signInUserSession.idToken.jwtToken
-          )
-          localStorage.setItem(
-            'language',
-            response.attributes['custom:language']
-          )
-          localStorage.setItem('email', user.email)
-
-          dispatch(userLogin(user.password)).then((res) => {
-            if (res === 'passwordResetRequired') {
-              history.push('/password-change-required')
-            } else if (!res) {
-              toast.error('Wrong email or password!')
-              dispatch(setLoginLoading(false))
-            } else {
-              history.push('/dashboard')
-            }
-          })
+      await axiosInstance
+        .post('/auth/login', {
+          email: user.email,
+          password: user.password
         })
-        .catch((err) => {
-          dispatch(loginLoading(false))
-          if (err.message === 'Incorrect username or password.') {
-            toast.error(<IntlMessages id='alerts.email_password_incorrect' />)
+        .then(({ data }) => {
+          localStorage.setItem('access_token', data.access_token)
+          localStorage.setItem('refresh_token', data.refresh_token)
+          dispatch(userLogin(user.password))
+            .then((res) => {
+              if (res === 'passwordResetRequired') {
+                history.push('/password-change-required')
+              } else if (!res) {
+                toast.error('Wrong email or password!')
+                dispatch(setLoginLoading(false))
+              } else {
+                history.push('/dashboard')
+              }
+            })
+            .catch((err) => {
+              console.log('err', err)
+            })
+        })
+        .catch((error) => {
+          if (error.response) {
+            toast.error(
+              error.response.data.message ||
+                'An error occurred. Please try again'
+            )
           } else {
-            toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+            toast.error(
+              'Something went wrong. Please check your internet connection.'
+            )
           }
+          dispatch(setLoginLoading(false))
         })
+
+      // await Auth.signIn(user.email, user.password)
+      //   .then(async (response) => {
+      // localStorage.setItem(
+      //   'access_token',
+      //   response.signInUserSession.idToken.jwtToken
+      // )
+      //     localStorage.setItem(
+      //       'language',
+      //       response.attributes['custom:language']
+      //     )
+      //     localStorage.setItem('email', user.email)
+
+      // dispatch(userLogin(user.password)).then((res) => {
+      //   if (res === 'passwordResetRequired') {
+      //     history.push('/password-change-required')
+      //   } else if (!res) {
+      //     toast.error('Wrong email or password!')
+      //     dispatch(setLoginLoading(false))
+      //   } else {
+      //     history.push('/dashboard')
+      //   }
+      // })
+      //   })
+      //   .catch((err) => {
+      //     dispatch(loginLoading(false))
+      //     if (err.message === 'Incorrect username or password.') {
+      //       toast.error(<IntlMessages id='alerts.email_password_incorrect' />)
+      //     } else {
+      //       toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+      //     }
+      //   })
     }
     // dispatch(loginLoading(false))
   }
 
   const enterLogin = (e) => {
-    if (e.key.toLowerCase() == 'enter') handleSubmit(e)
+    if (e.key.toLowerCase() === 'enter') handleSubmit(e)
   }
 
   return (
@@ -164,9 +200,10 @@ const ChooseLogin = () => {
             </button>
             <p className='text-center public-page-text my-4'>
               <IntlMessages id='login.forgot_password' />
-              <NavLink to={'/forgot-password'} className='ml-2 link fw-bold'>
+              <br />
+              <Link to={'/forgot-password'} className='ml-2 link fw-bold'>
                 <IntlMessages id='general.click_here' />
-              </NavLink>
+              </Link>
             </p>
             <p className=' text-center public-page-text'>
               <IntlMessages id='login.security' />

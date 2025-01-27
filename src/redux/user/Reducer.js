@@ -11,7 +11,8 @@ import {
   NEED_RESET,
   UPDATE_USER_TNC,
   SET_LOGIN_LOADING,
-  USER_CHANGE_PROFESSION
+  USER_CHANGE_PROFESSION,
+  SET_AUTH_MODAL
 } from './Types'
 
 const user = JSON.parse(localStorage.getItem('user'))
@@ -24,12 +25,15 @@ const initialState = {
   successMessage: null,
   errorMessage: null,
   loginLoading: false,
-  oldPassword: null
+  oldPassword: null,
+  authModal: false
 }
 
 const userReducer = (state = initialState, action) => {
   const { type, payload } = action
   switch (type) {
+    case SET_AUTH_MODAL:
+      return { ...state, authModal: action.payload }
     case LOGIN_LOADING:
       return {
         ...state,
@@ -70,7 +74,8 @@ const userReducer = (state = initialState, action) => {
       }
 
     case USER_LOGOUT:
-      localStorage.clear()
+      // window.location.href = '/'
+      // localStorage.clear()
 
       return {
         ...state,

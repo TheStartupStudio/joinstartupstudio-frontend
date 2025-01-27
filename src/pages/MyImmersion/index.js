@@ -60,7 +60,7 @@ const MyImmersion = () => {
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
 
   return (
     <div className='container-fluid iamr-page'>

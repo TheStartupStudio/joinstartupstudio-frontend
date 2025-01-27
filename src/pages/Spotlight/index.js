@@ -37,7 +37,7 @@ function StartupLive() {
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
 
   return (
     <Container fluid>

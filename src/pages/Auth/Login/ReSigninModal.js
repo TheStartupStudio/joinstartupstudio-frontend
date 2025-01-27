@@ -8,10 +8,8 @@ const ReSigninModal = ({ show, onHide, onLogin }) => {
   return (
     <Modal
       show={show}
-      className={'resignin-modal'}
-      onHide={() => {
-        onHide()
-      }}
+      className={`resignin-modal ${show ? 'd-flex' : ''} `}
+      onHide={onHide}
       size='SM'
       centered
     >

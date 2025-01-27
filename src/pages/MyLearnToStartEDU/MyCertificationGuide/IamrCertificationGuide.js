@@ -8,10 +8,10 @@ import '../../MyMarketReadyGuide/index.css'
 import { setBackButton } from '../../../redux/backButtonReducer'
 
 function IamrCertificationGuide() {
+  const dispatch = useDispatch()
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
-  const dispatch = useDispatch()
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(setBackButton(true, 'my-certification-guide'))

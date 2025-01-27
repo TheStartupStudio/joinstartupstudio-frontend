@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import IntlMessages from '../../utils/IntlMessages'
 import ContactUsModal from '../Modals/contactUsModal'
 import MisconductModal from '../Modals/misconductModal'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { userLogout } from '../../redux'
+import { setGeneralLoading } from '../../redux/general/Actions'
 
 const NavbarProfileMenu = ({
   setCountStudentOfInstructor,
@@ -12,6 +15,8 @@ const NavbarProfileMenu = ({
   isMobile = false,
   userRole
 }) => {
+  const dispatch = useDispatch()
+  const history = useHistory()
   const [showContactModal, setShowContactModal] = useState(false)
   const [showMisconductReportModal, setShowMisconductReportModal] =
     useState(false)
@@ -22,6 +27,22 @@ const NavbarProfileMenu = ({
   const closeModal = () => {
     setShowContactModal(false)
   }
+
+  const handleLogout = async () => {
+    dispatch(setGeneralLoading(true))
+    await dispatch(userLogout())
+      .then(() => {
+        history.push('/')
+        localStorage.clear()
+      })
+      .catch((error) => {
+        console.log('error', error)
+      })
+      .finally(() => {
+        dispatch(setGeneralLoading(false))
+      })
+  }
+
   const { isAdmin } = useSelector((state) => state.user.user)
   return (
     <>
@@ -113,13 +134,20 @@ onClick={() => {
 >
 SUPPORT
 </Link> */}
-        <Link
+        {/* <Link
           style={isMobile ? {} : { width: '95%' }}
           className='dropdown-item py-2 dropdown-menu-hover'
           to='/logout'
         >
           <IntlMessages id='navigation.logout' />
-        </Link>
+        </Link> */}
+        <button
+          style={isMobile ? {} : { width: '95%' }}
+          className='dropdown-item py-2 dropdown-menu-hover'
+          onClick={handleLogout}
+        >
+          <IntlMessages id='navigation.logout' />
+        </button>
       </div>
       {showContactModal && (
         <ContactUsModal

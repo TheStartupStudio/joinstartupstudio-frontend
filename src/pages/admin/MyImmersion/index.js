@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import LtsContainerWrapper from '../../../ui/LtsContainerWrapper'
 import MyImmersion from '../../../components/admin/MyImmersion'
 import './style.css'
@@ -6,11 +6,11 @@ import { useDispatch } from 'react-redux'
 import { changeSidebarState } from '../../../redux'
 
 const MySchoolContainer = () => {
-    const dispatch = useDispatch()
-    
-    useEffect(() => {
-          dispatch(changeSidebarState(false))
-    })
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(changeSidebarState(false))
+  }, [dispatch])
   return (
     <LtsContainerWrapper
       title={'MANAGE IMMERSION EXPERIENCES'}

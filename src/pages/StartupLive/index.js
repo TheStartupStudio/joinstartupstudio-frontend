@@ -3,7 +3,6 @@ import { Container, Row } from 'react-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import Select, { components } from 'react-select'
 import { Link } from 'react-router-dom'
-import CountdownTimer from 'react-component-countdown-timer'
 import moment from 'moment'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -185,7 +184,7 @@ function StartupLive() {
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
 
   const getStartupLiveVideos = async () => {
     await axiosInstance
@@ -244,26 +243,26 @@ function StartupLive() {
   return (
     <Container fluid>
       <Row>
-        <div className="col-12 col-xl-9 pe-0">
+        <div className='col-12 col-xl-9 pe-0'>
           <div
-            className="account-page-padding page-border"
+            className='account-page-padding page-border'
             style={{ minHeight: '100vh' }}
           >
-            <h3 className="page-title">
-              <IntlMessages id="navigation.startup_live" />
+            <h3 className='page-title'>
+              <IntlMessages id='navigation.startup_live' />
             </h3>
-            <p className="page-description">
-              <IntlMessages id="startup_live.page_description" />
+            <p className='page-description'>
+              <IntlMessages id='startup_live.page_description' />
             </p>
-            <div className="row mb-2">
-              <div className="col-12 col-lg-4 col-md-6">
-                <p className="page-description m-0 p-0">Select Startup Live</p>
+            <div className='row mb-2'>
+              <div className='col-12 col-lg-4 col-md-6'>
+                <p className='page-description m-0 p-0'>Select Startup Live</p>
                 <Select
                   options={allowedStartupLiveOptions}
                   value={selectedStartupLive}
                   onChange={setSelectedStartupLive}
                   placeholder={'Select Startup Live'}
-                  className="mb-0 me-0 custom-dropdown"
+                  className='mb-0 me-0 custom-dropdown'
                   styles={dropDownStyles}
                   autoFocus={false}
                   isSearchable={false}
@@ -273,7 +272,7 @@ function StartupLive() {
             <Row>
               {selectedStartupLive && (
                 <div
-                  className="col-12"
+                  className='col-12'
                   style={{ visibility: showStartuplive ? 'visible' : 'hidden' }}
                 >
                   {/* <iframe
@@ -287,25 +286,25 @@ function StartupLive() {
                     className='sl-offline-image-preview'
                     title='startup live'
                   ></iframe> */}
-                  <img src={StartupLiveEn} alt="Startup live" />
+                  <img src={StartupLiveEn} alt='Startup live' />
                 </div>
               )}
 
-              <div className="spotlight-container">
-                <div className="row pitch-apply">
-                  <div className="col-12 my-2 d-flex">
-                    <p className="my-auto">
+              <div className='spotlight-container'>
+                <div className='row pitch-apply'>
+                  <div className='col-12 my-2 d-flex'>
+                    <p className='my-auto'>
                       STARTING{' '}
                       <Countdown date={firstEventTime} renderer={renderer} />
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-12">
+              <div className='row'>
+                <div className='col-12'>
                   <h4
                     style={{ fontSize: '21px', letterSpacing: '0.84px' }}
-                    className="m-0"
+                    className='m-0'
                   >
                     Welcome to StartupLive
                   </h4>
@@ -325,15 +324,15 @@ function StartupLive() {
             {startupLiveVideos.length > 0 && (
               <Row>
                 <div>
-                  <div className="guidance-videos-top mt-5 guidance-encouragement-page-titles ">
+                  <div className='guidance-videos-top mt-5 guidance-encouragement-page-titles '>
                     <h3>
-                      <IntMessages id="startup_live.startup_archive" />
+                      <IntMessages id='startup_live.startup_archive' />
                     </h3>
-                    <Link className="guidance-link" to={`/startup-live/videos`}>
-                      <IntMessages id="general.view_all" />
+                    <Link className='guidance-link' to={`/startup-live/videos`}>
+                      <IntMessages id='general.view_all' />
                     </Link>
                   </div>
-                  <div className="row ps-2">
+                  <div className='row ps-2'>
                     {startupLiveVideos.map((video) => (
                       <Video
                         id={video.id}
@@ -354,8 +353,8 @@ function StartupLive() {
             )}
           </div>
         </div>
-        <div className="col-12 col-xl-3 px-3">
-          <div className="msg-widget-startup-live">
+        <div className='col-12 col-xl-3 px-3'>
+          <div className='msg-widget-startup-live'>
             <StartupMailer />
             {/* {selectedStartupLive && (
               <Chat room={selectedStartupLive.value.room} />

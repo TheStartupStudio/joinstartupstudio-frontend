@@ -31,7 +31,7 @@ export default function GuidanceEncouragement() {
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
 
   useEffect(() => {
     const endOffset = itemOffset + videosPerPage

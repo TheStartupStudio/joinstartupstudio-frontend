@@ -68,14 +68,15 @@ const NotificationBox = (props) => {
     axiosInstance
       .get(`/notifications/${user?.id}/manual-notifications`)
       .then((res) => {
-        if (res.data.notifications?.length > 0) {
-          setReceivedNotifications(res.data.notifications)
+        if (res.data?.notifications?.length > 0) {
+          setReceivedNotifications(res.data?.notifications)
         }
       })
+      .catch((err) => console.log('err', err))
   }, [user?.id])
   useEffect(() => {
     socket?.on('getNotifications', (data) => {
-      const editedNotifications = data.notifications.map((notification) => {
+      const editedNotifications = data?.notifications.map((notification) => {
         return {
           ...notification,
           Sender: { ...data.Sender }

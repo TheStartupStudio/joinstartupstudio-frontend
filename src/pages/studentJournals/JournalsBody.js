@@ -42,11 +42,8 @@ function JournalsBody(props) {
     (state) => state.portfolio.whoSection.userBasicInfo
   )
 
-
   let contentContainer = useRef()
-  const studentInfo = useSelector(
-    (state) => state.users.studentInfo
-  )
+  const studentInfo = useSelector((state) => state.users.studentInfo)
 
   async function getJournals(category = 'student-lts', redir = true) {
     setGlobalCategory(category)
@@ -123,11 +120,11 @@ function JournalsBody(props) {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
 
-  useEffect(()=>{
-    if(user.id) dispatch(getStudentInfoById(user.id))
-  },[user.id])
+  useEffect(() => {
+    if (user.id) dispatch(getStudentInfoById(user.id))
+  }, [user.id])
   function updateJournalEntry(journals, journal) {
     return journals.map((item) => {
       return {
@@ -146,7 +143,7 @@ function JournalsBody(props) {
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
 
   const options = [
     { value: 'student-lts', label: 'LTS Journal' },
@@ -233,12 +230,12 @@ function JournalsBody(props) {
                           className='rounded-circle user-image'
                           src={
                             studentInfo?.data?.userImageUrl
-                              ?  studentInfo?.data?.userImageUrl
+                              ? studentInfo?.data?.userImageUrl
                               : defaultImage
                           }
                           alt={
                             studentInfo?.data?.userImageUrl
-                              ?  studentInfo?.data?.userImageUrl
+                              ? studentInfo?.data?.userImageUrl
                               : 'no image'
                           }
                         />

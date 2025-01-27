@@ -16,6 +16,7 @@ function MyCompetitiveness(props) {
   const dispatch = useDispatch()
   const [myCompetitiveness, setMyCompetitiveness] = useState([])
   const [isEditSection, setIsEditSection] = useState(false)
+  const [isMobile, setIsMobile] = useState(false);
 
   const showModal = useSelector(
     (state) =>
@@ -26,6 +27,13 @@ function MyCompetitiveness(props) {
   const filteredUnshownData = (data) => {
     return data?.filter((data) => data.showSection)
   }
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize(); // Set initial state
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   useEffect(() => {
     if (props.data)
       setMyCompetitiveness([
@@ -82,7 +90,7 @@ function MyCompetitiveness(props) {
       ) : (
         <CarouselComponent
           data={myCompetitiveness}
-          itemsToShow={3}
+          itemsToShow={isMobile ? 1 : 3}
           renderItems={(item) => {
             if (!item.isAddBox) {
               return (
@@ -117,6 +125,14 @@ function MyCompetitiveness(props) {
       )}
 
       <div className={'col-md-4'} style={{ marginLeft: 90 }}>
+        {mode === 'edit' && myCompetitiveness?.length > 0 && isEditSection && (
+          <MyMentorModal
+            onHide={handleHideModal}
+            show={showModal}
+            title={`Add competitiveness`}
+            category={'my-competitiveness'}
+          />
+        )}
         {mode === 'edit' && showModal && (
           <MyMentorModal
             onHide={handleHideModal}

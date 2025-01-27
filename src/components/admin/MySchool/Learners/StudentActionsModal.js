@@ -107,42 +107,42 @@ const StudentActionsModal = ({
           toast.error('Something went wrong!')
         }
       } else {
-        await Auth.signUp({
-          username: formData.email,
-          password: formData.password,
-          attributes: {
-            'custom:universityCode': 'dev2020',
-            'custom:isVerified': '1',
-            'custom:language': 'en',
-            'custom:email': formData.email,
-            'custom:password': formData.password,
-            name: formData.name
-          }
-        })
-          .then(async (res) => {
-            let payload = {
-              ...formData,
-              name: formData.name,
-              cognito_Id: res.userSub,
-              stripe_subscription_id: 'true',
-              payment_type: 'school',
-              is_active: 1
-            }
-            await axiosInstance
-              .post('/instructor/add-users', payload)
-              .then(() => {
-                setLoading(false)
-                toast.success('Student added successfully!')
-                onSuccess()
-                onHide()
-              })
-              .catch((err) => {
-                console.log('err', err)
-              })
+        // await Auth.signUp({
+        //   username: formData.email,
+        //   password: formData.password,
+        //   attributes: {
+        //     'custom:universityCode': 'dev2020',
+        //     'custom:isVerified': '1',
+        //     'custom:language': 'en',
+        //     'custom:email': formData.email,
+        //     'custom:password': formData.password,
+        //     name: formData.name
+        //   }
+        // })
+        //   .then(async (res) => {
+        let payload = {
+          ...formData,
+          name: formData.name,
+          // cognito_Id: res.userSub,
+          stripe_subscription_id: 'true',
+          payment_type: 'school',
+          is_active: 1
+        }
+        await axiosInstance
+          .post('/instructor/add-users', payload)
+          .then(() => {
+            setLoading(false)
+            toast.success('Student added successfully!')
+            onSuccess()
+            onHide()
           })
           .catch((err) => {
             console.log('err', err)
           })
+        // })
+        // .catch((err) => {
+        //   console.log('err', err)
+        // })
       }
     })
   }

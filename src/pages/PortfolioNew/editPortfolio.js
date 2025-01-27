@@ -86,7 +86,7 @@ function EditPortfolio() {
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
   const getUser = async () => {
     await axiosInstance
       .get(`/users`)

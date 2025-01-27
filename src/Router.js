@@ -1,6 +1,6 @@
 import { Switch, Route, Redirect } from 'react-router-dom'
 import Layout from './pages/Layout'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { IntlProvider } from 'react-intl'
 import {
   adminRoutes,
@@ -15,14 +15,18 @@ import PublicLayout from './pages/Layout/publicLayout'
 import renderRoutes from './Router/renderRoutes'
 import AppLocale from './lang'
 import ReSigninModal from './pages/Auth/Login/ReSigninModal'
-import { useTokenAuthentication } from './hooks/useTokenAuthentication'
+import { userLogout } from './redux'
+import { setAuthModal } from './redux/user/Actions'
+import { setGeneralLoading } from './redux/general/Actions'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 function Router(props) {
+  const history = useHistory()
+  const dispatch = useDispatch()
   const currentAppLocale = AppLocale[props.locale]
-  const { isAuthenticated, user } = useSelector((state) => state.user)
-
-  const { authModal, handleLoginRedirect, handleCloseModal } =
-    useTokenAuthentication(isAuthenticated)
+  const { isAuthenticated, user, authModal, loading } = useSelector(
+    (state) => state.user
+  )
 
   const roleRoutes = () => {
     if (!isAuthenticated) return publicRoutes
@@ -39,15 +43,33 @@ function Router(props) {
     }
   }
 
+  const handleAuthModalClose = async () => {
+    dispatch(setGeneralLoading(true))
+    await dispatch(userLogout())
+      .then(() => {
+        history.push('/')
+        // window.location.href = '/'
+        localStorage.clear()
+        dispatch(setAuthModal(false))
+      })
+      .catch((error) => {
+        console.log('error', error)
+        dispatch(setGeneralLoading(false))
+      })
+      .finally(() => {
+        dispatch(setGeneralLoading(false))
+      })
+  }
+
   return (
     <>
-      {authModal && (
+      {authModal ? (
         <ReSigninModal
           show={authModal}
-          onHide={handleCloseModal}
-          onLogin={handleLoginRedirect}
+          onHide={handleAuthModalClose}
+          onLogin={handleAuthModalClose}
         />
-      )}
+      ) : null}
       <IntlProvider
         locale={currentAppLocale.locale}
         messages={currentAppLocale.messages}

@@ -42,7 +42,7 @@ export default function MediaLightbox(props) {
 
   const handleEnterPiP = () => {
     setIsPiPActive(true);
-    videoRef.current.getInternalPlayer().pause();
+    videoRef.current.getInternalPlayer().play();
   };
 
   const handleLeavePiP = () => {
@@ -60,6 +60,12 @@ export default function MediaLightbox(props) {
         : [[0, 0]]
     )
   }, [props.video, props.watchData])
+
+  useEffect(() => {
+    if (!isPiPActive) {
+      closeLightbox()
+    }
+  }, [isPiPActive])
 
   if (!props.show) return null
 
@@ -106,6 +112,8 @@ export default function MediaLightbox(props) {
       closeLightbox()
     }
   }
+
+ 
   return (
     <div className='media-lightbox' style={isPiPActive ? { visibility: 'hidden' } : {}}>
       <div className='media-lightbox__inner'>
@@ -128,7 +136,10 @@ export default function MediaLightbox(props) {
                   width='100%'
                   height='100%'
                   onEnablePIP={handleEnterPiP}
-                  onDisablePIP={handleLeavePiP}
+                  onDisablePIP={(e) => {
+                    console.log(e, "triumf140")
+                    handleLeavePiP()
+                  }}
                   config={{
                     file: { attributes: { controlsList: 'nodownload' } }
                   }}

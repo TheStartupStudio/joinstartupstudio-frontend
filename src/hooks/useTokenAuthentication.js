@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { CheckTokenValidity } from '../utils/CheckTokenValidity'
+import { Auth } from 'aws-amplify'
 
 export const useTokenAuthentication = (isAuthenticated) => {
   const [authModal, setAuthModal] = useState(false)
@@ -37,15 +38,19 @@ export const useTokenAuthentication = (isAuthenticated) => {
     }
   }, [isAuthenticated, history])
 
-  const handleLoginRedirect = () => {
-    history.push('/logout')
+  const handleLoginRedirect = async () => {
+    // history.push('/logout')
+    await Auth.signOut()
+    window.location.href = '/ims-login'
     localStorage.removeItem('signin-required')
     setAuthModal(false)
   }
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    // history.push('/logout')
+    await Auth.signOut()
+    window.location.href = '/ims-login'
     localStorage.removeItem('signin-required')
-    history.push('/logout')
     setAuthModal(false)
   }
 

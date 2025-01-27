@@ -38,7 +38,7 @@ export default function BeyondYourCourse() {
     window.addEventListener('resize', () => {
       setWidth(window.innerWidth)
     })
-  })
+  }, [dispatch])
 
   useEffect(() => {
     if (width < 580) {

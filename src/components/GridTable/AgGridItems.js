@@ -632,12 +632,7 @@ const Actions = ({
       </div>
       <div
         className='action-item cursor-pointer'
-        onClick={() =>
-          handleProxyLogin(
-            'e91c37a6-c94c-4b47-a01a-f94da596cd18',
-            user.cognito_Id
-          )
-        }
+        onClick={() => handleProxyLogin(user.id)}
       >
         <FontAwesomeIcon icon={faDoorOpen} style={{ fontSize: '16px' }} />
 

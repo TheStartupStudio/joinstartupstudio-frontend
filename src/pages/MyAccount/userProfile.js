@@ -138,6 +138,7 @@ function Profile(props) {
                           }
                           className='editbio-user-image mx-auto my-account'
                         />
+
                       </div>
                     </div>
                     <div className='col-10 col-md-6 col-lg-6 offset-lg-0'>

@@ -1,32 +1,13 @@
 import React, { useState } from 'react'
-import { faUserLock } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Col, Modal, Row } from 'react-bootstrap'
 import './style.css'
-import configureAwsSdk from '../../../config/configAwsSdk'
 import { useForm } from '../../../hooks/useForm'
 import { useValidation } from '../../../hooks/useValidation'
 import { toast } from 'react-toastify'
 import { CustomInput, LtsButton } from '../../../ui/ContentItems'
 import personwkeyIcon from '../../../assets/images/personwkey.png'
 import tickIcon from '../../../assets/images/tick.png'
-
-const changeUserPassword = async (cognito_Id, newPassword) => {
-  const cognito = configureAwsSdk()
-
-  const params = {
-    UserPoolId: cognito.config.UserPoolId,
-    Username: cognito_Id,
-    Password: newPassword,
-    Permanent: true
-  }
-
-  try {
-    await cognito.adminSetUserPassword(params).promise()
-  } catch (error) {
-    throw error
-  }
-}
+import axiosInstance from '../../../utils/AxiosInstance'
 
 const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
   const [loading, setLoading] = useState(false)
@@ -38,21 +19,27 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
   }
 
   const { formData, handleChange } = useForm(initialState, user, loading)
-  const { handleSubmit } = useValidation(formData, setFormSubmitted)
+  const { errors, handleSubmit } = useValidation(formData, setFormSubmitted)
 
   const submitHandler = () => {
     handleSubmit(async () => {
       setLoading(true)
-      try {
-        await changeUserPassword(user.cognito_Id, formData.password)
-        onSuccess()
-        setLoading(false)
-        toast.success('Password changed successfully!')
-        onHide()
-      } catch (error) {
-        setLoading(false)
-        toast.error('Failed to change password.')
-      }
+
+      await axiosInstance
+        .patch(`/auth/adminSetUserPassword/${user.id}`, {
+          newPassword: formData.password
+        })
+        .then((res) => {
+          onSuccess()
+          toast.success(res.data.message)
+          setLoading(false)
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message || 'Something went wrong')
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     })
   }
   return (
@@ -81,8 +68,12 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
                 borderRadius: '50%'
               }}
             >
-              <img src={personwkeyIcon} width={21} height={24}></img>
-              {/* <FontAwesomeIcon icon={faUserLock} /> */}
+              <img
+                src={personwkeyIcon}
+                width={21}
+                height={24}
+                alt='tick icon'
+              />
             </div>
             Reset Password
           </Modal.Title>
@@ -91,7 +82,7 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
             className={`check-button reset-pasw-checkbtn fw-bold`}
             onClick={() => onHide()}
           >
-            <img src={tickIcon} width={50} height={38}></img>
+            <img src={tickIcon} width={50} height={38} alt='tick icon' />
           </div>
         </Modal.Header>
         <Modal.Body>
@@ -102,6 +93,8 @@ const ResetPasswordModal = ({ show, onHide, user, onSuccess }) => {
               type={'password'}
               name='password'
               handleChange={handleChange}
+              showError={formSubmitted}
+              error={errors.password}
             />
             <CustomInput
               placeholder={'Repeat Password'}

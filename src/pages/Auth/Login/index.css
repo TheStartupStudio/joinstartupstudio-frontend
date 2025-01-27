@@ -73,7 +73,7 @@
   grid-template-columns: 25px auto;
 }
 
-.radio-wrapper>div {
+.radio-wrapper > div {
   display: flex;
   align-items: center;
 }
@@ -176,6 +176,8 @@
 }
 
 .resignin-modal .modal-dialog {
+  display: flex !important;
+  z-index: 1060;
   max-width: 500px;
   width: 500px;
 }

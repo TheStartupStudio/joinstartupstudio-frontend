@@ -173,14 +173,7 @@ const Index = ({
 
   return (
     <>
-      <div
-        className='height-portfolio-resp'
-        ref={scrollableRef}
-        style={{
-          height: '800px'
-          // overflowY: 'scroll',
-        }}
-      >
+      <div ref={scrollableRef} style={{ height: '800px', overflowY: 'scroll' }}>
         <div
           style={{
             height: '800px'

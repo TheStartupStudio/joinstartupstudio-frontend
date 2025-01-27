@@ -221,7 +221,7 @@ function StoryInMotion() {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
 
   const gettracks = async () => {
     setLoading(true)

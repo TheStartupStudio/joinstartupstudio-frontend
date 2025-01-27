@@ -38,7 +38,8 @@ const Notifications = (props) => {
       })
       .then(() => {
         if (!notification.read) {
-          props.setUnreadNotifications(props.unreadNotifications - 1)
+          // props.setUnreadNotifications(props.unreadNotifications - 1) 
+          props.setUnreadNotifications((prev) => prev - 1); // testing this code is working for the teacher notification bug
         }
         notification.read = true
         props.setShowNotifications(false)

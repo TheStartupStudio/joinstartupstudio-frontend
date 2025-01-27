@@ -1,16 +1,17 @@
 import { Route } from 'react-router-dom'
 
-const renderRoutes = (routes, layout) => {
+const renderRoutes = (routes) => {
   return routes.map((route) => {
-    const RouteComponent = route.props
-      ? (props) => <route.component {...props} {...route.props} />
-      : route.component
+    const RouteComponent = route.component
     return (
       <Route
         key={route.path}
         path={route.path}
         exact={route.exact || false}
-        render={(props) => <RouteComponent {...props} />}
+        // render={(props) => <RouteComponent {...props} />}
+        render={(props) => (
+          <RouteComponent {...props} {...(route.props || {})} />
+        )}
         breadcrumb={route.breadcrumb}
       />
     )

@@ -3,7 +3,8 @@ import {
   SET_ACCORDION_TOGGLED,
   SET_IMAGE_CROPPER_DATA,
   SET_CROPPED_IMAGE,
-  GENERAL_LOADING
+  GENERAL_LOADING,
+  SET_MY_INBOX_HASH
 } from './Types'
 
 const INIT_STATE = {
@@ -11,16 +12,20 @@ const INIT_STATE = {
   isAccordionToggled: false,
   imageCropperData: null,
   croppedImage: null,
-  generalLoading: false
+  generalLoading: false,
+  myInboxHash: ""
 }
 
-export default (state = INIT_STATE, action) => {
+const generalReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
     case CHANGE_SIDEBAR_STATE:
       return { ...state, sidebarState: action.payload }
 
     case SET_ACCORDION_TOGGLED:
       return { ...state, isAccordionToggled: action.payload }
+
+          case SET_MY_INBOX_HASH:
+            return { ...state, myInboxHash: action.payload }
 
     case SET_IMAGE_CROPPER_DATA:
       return { ...state, imageCropperData: action.payload }
@@ -34,3 +39,5 @@ export default (state = INIT_STATE, action) => {
       return { ...state }
   }
 }
+
+export default generalReducer

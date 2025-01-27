@@ -35,24 +35,35 @@ const MySchool = () => {
   useEffect(() => {
     setLoading(true)
     const fetchUniversities = async () => {
-      await axiosInstance.get('/universities').then((res) => {
-        setUniversities(res.data.universities)
-        setLoading(false)
-      })
+      await axiosInstance
+        .get('/universities')
+        .then((res) => {
+          setUniversities(res.data.universities)
+          setLoading(false)
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
     }
     fetchUniversities()
   }, [])
 
   useEffect(() => {
     const fetchPrograms = async () => {
-      await axiosInstance.get('/programs').then(({ data }) => setPrograms(data))
+      await axiosInstance
+        .get('/programs')
+        .then(({ data }) => setPrograms(data))
+        .catch((err) => console.log('err', err))
     }
     fetchPrograms()
   }, [])
 
   useEffect(() => {
     const fetchLevels = async () => {
-      await axiosInstance.get('/levels').then(({ data }) => setLevels(data))
+      await axiosInstance
+        .get('/levels')
+        .then(({ data }) => setLevels(data))
+        .catch((err) => console.log('err', err))
     }
     fetchLevels()
   }, [])
@@ -71,6 +82,7 @@ const MySchool = () => {
 
         setLoading(false)
       } catch (error) {
+        console.log('error', error)
         setLoading(false)
       }
     }
