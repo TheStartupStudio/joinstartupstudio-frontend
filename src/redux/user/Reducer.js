@@ -74,7 +74,8 @@ const userReducer = (state = initialState, action) => {
       }
 
     case USER_LOGOUT:
-      localStorage.clear()
+      // window.location.href = '/'
+      // localStorage.clear()
 
       return {
         ...state,

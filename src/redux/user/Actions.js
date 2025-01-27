@@ -85,6 +85,7 @@ export const userLogin =
   }
 
 export const userLogout = () => async (dispatch) => {
+  dispatch({ type: LOADING })
   const refresh_token = localStorage.getItem('refresh_token')
   try {
     await axiosInstance.post('/auth/logout', {

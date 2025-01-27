@@ -17,11 +17,14 @@ import AppLocale from './lang'
 import ReSigninModal from './pages/Auth/Login/ReSigninModal'
 import { userLogout } from './redux'
 import { setAuthModal } from './redux/user/Actions'
+import { setGeneralLoading } from './redux/general/Actions'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 function Router(props) {
+  const history = useHistory()
   const dispatch = useDispatch()
   const currentAppLocale = AppLocale[props.locale]
-  const { isAuthenticated, user, authModal } = useSelector(
+  const { isAuthenticated, user, authModal, loading } = useSelector(
     (state) => state.user
   )
 
@@ -41,14 +44,20 @@ function Router(props) {
   }
 
   const handleAuthModalClose = async () => {
+    dispatch(setGeneralLoading(true))
     await dispatch(userLogout())
       .then(() => {
-        console.clear()
+        history.push('/')
+        // window.location.href = '/'
+        localStorage.clear()
         dispatch(setAuthModal(false))
-        window.location.href = '/'
       })
       .catch((error) => {
         console.log('error', error)
+        dispatch(setGeneralLoading(false))
+      })
+      .finally(() => {
+        dispatch(setGeneralLoading(false))
       })
   }
 

@@ -6,6 +6,7 @@ import ContactUsModal from '../Modals/contactUsModal'
 import MisconductModal from '../Modals/misconductModal'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { userLogout } from '../../redux'
+import { setGeneralLoading } from '../../redux/general/Actions'
 
 const NavbarProfileMenu = ({
   setCountStudentOfInstructor,
@@ -28,12 +29,17 @@ const NavbarProfileMenu = ({
   }
 
   const handleLogout = async () => {
+    dispatch(setGeneralLoading(true))
     await dispatch(userLogout())
       .then(() => {
         history.push('/')
+        localStorage.clear()
       })
       .catch((error) => {
         console.log('error', error)
+      })
+      .finally(() => {
+        dispatch(setGeneralLoading(false))
       })
   }
 
