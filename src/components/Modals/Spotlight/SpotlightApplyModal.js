@@ -19,6 +19,7 @@ import notificationSocket from '../../../utils/notificationSocket'
 import { useSelector } from 'react-redux'
 import notificationTypes from '../../../utils/notificationTypes'
 import DeleteModal from './SpotlightDeleteModal'
+import deleteIcon from '../../../assets/images/delete-icon/deleteIconSpot.png'
 import { LtsButton } from '../../../ui/ContentItems'
 
 const SpotlightApplyModal = (props) => {
@@ -191,11 +192,13 @@ const SpotlightApplyModal = (props) => {
     <>
       {showDeleteImmersionModal && (
         <DeleteModal
+          imgClassName='showImgIcon'
           show={showDeleteImmersionModal}
           onClose={() => setShowDeleteImmersionModal(false)}
           onDelete={props.removeSavedApplication}
           title='Delete Application'
           message='Are you sure you want to delete this application?'
+          titleClassName='deleteapplspot'
         />
       )}
 
@@ -314,24 +317,21 @@ const SpotlightApplyModal = (props) => {
             <div
               className={`d-flex justify-content-${
                 !props.isApplicationSaved ? 'end' : 'between'
-              } align-items-center flex-wrap`}
+              } align-items-center flex-wrap spot-modal-end-cont`}
             >
               <p
                 href='#'
                 className={`${
                   !props.isApplicationSaved ? 'd-none' : ''
-                } m-0 cursor-pointer d-flex align-items-center`}
+                } m-0 cursor-pointer d-flex align-items-center deletapplspot`}
                 onClick={() => setShowDeleteImmersionModal(true)}
               >
-                <FontAwesomeIcon
-                  icon={faExclamationTriangle}
-                  className='me-2'
-                />
+                <img src={deleteIcon} width={23} height={24}></img>
                 Delete Application
               </p>
 
               <div
-                className='d-flex align-items-center '
+                className='d-flex align-items-center saving-submit-row-cont'
                 style={{ flexWrap: 'wrap' }}
               >
                 <LtsButton
@@ -341,6 +341,7 @@ const SpotlightApplyModal = (props) => {
                   color={'#000'}
                   border={'1px solid #ccc'}
                   onClick={() => props.onSave(formData)}
+                  imgClassName={'showImgIcon'}
                 />
 
                 <LtsButton

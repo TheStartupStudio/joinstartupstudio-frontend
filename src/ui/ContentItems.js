@@ -10,6 +10,8 @@ import {
   faTimes
 } from '@fortawesome/free-solid-svg-icons'
 import ReactQuill from 'react-quill'
+import saveIcon from '../assets/images/saveIcon.svg'
+import deleteIcon from '../assets/images/delete-icon/deleteIconSpot.png'
 
 import './styles.css'
 
@@ -229,6 +231,8 @@ const LtsButton = ({
   color,
   border,
   onClick,
+  imgClassName,
+
   type,
   loading = false
 }) => {
@@ -246,6 +250,8 @@ const LtsButton = ({
         borderRadius: '10px'
       }}
     >
+      <img className={`${imgClassName} noShowIcon `} src={saveIcon}></img>
+
       {loading ? (
         <span
           className='spinner-border spinner-border-sm'

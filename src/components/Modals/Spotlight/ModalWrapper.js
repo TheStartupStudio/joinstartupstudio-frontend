@@ -10,6 +10,7 @@ import {
   faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons'
 import { FaPencilAlt, FaCheck, FaEye } from 'react-icons/fa'
+import LeftArrowSaveICon from '../../../assets/images/arrowSave/ICON - Click to save@2x.png'
 
 const ModalWrapper = (props) => {
   return (
@@ -39,6 +40,7 @@ const ModalWrapper = (props) => {
               className='portfolio-actions portf-act-spot-dnone'
               style={{ borderRadius: ' 0px 28px' }}
             >
+              {' '}
               <span
                 style={{
                   fontSize: '20px',
@@ -49,7 +51,8 @@ const ModalWrapper = (props) => {
                 className='action-box cursor-pointer'
                 onClick={() => props.onHide()}
               >
-                <FontAwesomeIcon icon={faArrowLeft} />
+                <img src={LeftArrowSaveICon} width={30} height={33}></img>
+                {/* <FontAwesomeIcon icon={faArrowLeft} /> */}
               </span>
             </div>
           </Modal.Header>
