@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import IntlMessages from '../../utils/IntlMessages'
 import ContactUsModal from '../Modals/contactUsModal'
 import MisconductModal from '../Modals/misconductModal'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { useHistory } from 'react-router-dom'
 import { userLogout } from '../../redux'
 import { setGeneralLoading } from '../../redux/general/Actions'
 
@@ -32,13 +32,13 @@ const NavbarProfileMenu = ({
     dispatch(setGeneralLoading(true))
     await dispatch(userLogout())
       .then(() => {
-        history.push('/')
         localStorage.clear()
       })
       .catch((error) => {
         console.log('error', error)
       })
       .finally(() => {
+        history.push('/')
         dispatch(setGeneralLoading(false))
       })
   }

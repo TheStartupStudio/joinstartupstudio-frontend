@@ -18,7 +18,7 @@ import ReSigninModal from './pages/Auth/Login/ReSigninModal'
 import { userLogout } from './redux'
 import { setAuthModal } from './redux/user/Actions'
 import { setGeneralLoading } from './redux/general/Actions'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { useHistory } from 'react-router-dom'
 
 function Router(props) {
   const history = useHistory()
@@ -48,7 +48,6 @@ function Router(props) {
     await dispatch(userLogout())
       .then(() => {
         history.push('/')
-        // window.location.href = '/'
         localStorage.clear()
         dispatch(setAuthModal(false))
       })
