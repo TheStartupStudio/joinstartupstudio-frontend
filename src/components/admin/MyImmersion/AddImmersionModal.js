@@ -125,7 +125,10 @@ const AddImmersionModal = ({
 
   return (
     <div className='modal-overlay'>
-      <div className='modal-container'>
+      <div
+        className='modal-container'
+        style={{ padding: '40px', borderRadius: '36px' }}
+      >
         {/* Modal Header */}
         <div className='immersion-modal-header'>
           {viewExprience && (

@@ -881,6 +881,15 @@
   .dashboard-notification {
     margin-top: 15px;
   }
+
+  .col-sm-12.col-lg-4.text-align-left-footer {
+    /* margin-left: 90px !important; */
+    text-align: center !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 5px !important;
+  }
 }
 
 .public-portfolio .portfolio-container {

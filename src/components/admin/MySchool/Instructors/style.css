@@ -183,6 +183,6 @@ opacity: 1; */
 }
 
 .ag-header-icon.ag-header-cell-menu-button {
-  background-color: #52c7de !important;
+  /* background-color: #52c7de !important; */
   display: block !important;
 }

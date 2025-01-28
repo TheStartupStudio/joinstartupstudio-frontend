@@ -50,7 +50,6 @@ function ImmersionCard(props) {
         className={'immrs-caro-width'}
       >
         <div className={'immersion-card-resp d-flex gap-3 '}>
-          {' '}
           <div className='immersion-card-right'>
             <div className={'flex-grow'} style={{ width: 100 }}>
               <img
@@ -59,64 +58,65 @@ function ImmersionCard(props) {
                 alt={'education image'}
               />
             </div>
-          </div>
-          <div
-            className={
-              'd-flex justify-content-between flex-grow-1 gap-4 immersion-portfolio-card'
-            }
-          >
-            <div className={'immersion-card-text w-50'}>
-              <div
-                className={'d-flex justify-content-between gap-2'}
-                style={{ flexWrap: 'wrap' }}
-              >
+            <div
+              className={
+                'd-flex justify-content-between flex-grow-1 gap-4 immersion-portfolio-card'
+              }
+            >
+              <div className={'immersion-card-text w-50'}>
+                <div
+                  className={'d-flex justify-content-between gap-2'}
+                  style={{ flexWrap: 'wrap' }}
+                >
+                  <div>
+                    <div className={'proveit-title-org organization-name mb-2'}>
+                      {data?.organizationName}
+                    </div>
+                    <div
+                      className={'organization-location mb-2'}
+                      style={{ fontWeight: 300 }}
+                    >
+                      {data?.location}
+                    </div>
+                    <div
+                      className={'organization-website mb-3'}
+                      style={{ fontWeight: 300 }}
+                    >
+                      <WebsiteLink website={data?.website} />
+                    </div>
+                  </div>
+                </div>
                 <div>
-                  <div className={'proveit-title-org organization-name mb-2'}>
-                    {data?.organizationName}
+                  <div
+                    className={
+                      'proveit-title-org organization-description-label mb-2'
+                    }
+                  >
+                    The Problem
                   </div>
                   <div
-                    className={'organization-location mb-2'}
-                    style={{ fontWeight: 300 }}
-                  >
-                    {data?.location}
-                  </div>
-                  <div
-                    className={'organization-website mb-3'}
-                    style={{ fontWeight: 300 }}
-                  >
-                    <WebsiteLink website={data?.website} />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div
-                  className={
-                    'proveit-title-org organization-description-label mb-2'
-                  }
-                >
-                  The Problem
-                </div>
-                <div
-                  className={'organization-description'}
-                  style={{ fontWeight: 300, wordBreak: 'break-word' }}
-                  dangerouslySetInnerHTML={{ __html: data?.problem }}
-                />
+                    className={'organization-description'}
+                    style={{ fontWeight: 300, wordBreak: 'break-word' }}
+                    dangerouslySetInnerHTML={{ __html: data?.problem }}
+                  />
 
-                <div
-                  className={
-                    'proveit-title-org organization-description-label mb-2 mt-3'
-                  }
-                >
-                  My Solution
+                  <div
+                    className={
+                      'proveit-title-org organization-description-label mb-2 mt-3'
+                    }
+                  >
+                    My Solution
+                  </div>
+                  <div
+                    className={'organization-description'}
+                    style={{ fontWeight: 300, wordBreak: 'break-word' }}
+                    dangerouslySetInnerHTML={{ __html: data?.solution }}
+                  />
                 </div>
-                <div
-                  className={'organization-description'}
-                  style={{ fontWeight: 300, wordBreak: 'break-word' }}
-                  dangerouslySetInnerHTML={{ __html: data?.solution }}
-                />
               </div>
             </div>
           </div>
+
           <div className={' immersion-portfolio-card'}>
             {/* <div className={'immersion-card-text '}>
               <div className={'d-flex justify-content-between gap-2'}>

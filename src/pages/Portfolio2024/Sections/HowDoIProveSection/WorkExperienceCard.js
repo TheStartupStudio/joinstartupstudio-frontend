@@ -102,9 +102,9 @@ function WorkExperienceCard(props) {
                 }
               >
                 {data?.jobTitle}
-              </div>{' '}
+              </div>
               <div
-                className={'organization-description'}
+                className={'organization-description workexp-org-desc'}
                 dangerouslySetInnerHTML={{ __html: data?.description }}
                 style={{ fontWeight: 400 }}
               />

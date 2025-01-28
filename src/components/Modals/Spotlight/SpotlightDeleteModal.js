@@ -1,9 +1,10 @@
 import { React } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-
 import './styles.css'
 import { LtsButton } from '../../../ui/ContentItems'
+import trashIcon from '../../../assets/images/trashIcon.svg'
+import LeftArrowSaveICon from '../../../assets/images/arrowSave/ICON - Click to save@2x.png'
 
 const DeleteModal = ({
   onClose,
@@ -18,10 +19,13 @@ const DeleteModal = ({
 
   return (
     <>
-      <div className='modal-container-delete'>
-        <div className='immersion-modal-header'>
+      <div className='modal-container-delete delete-spotlight-modal-cont'>
+        <div
+          className='immersion-modal-header '
+          style={{ textAlign: 'left', alignItems: 'unset' }}
+        >
           <div className='portfolio-actions'>
-            <FontAwesomeIcon
+            {/* <FontAwesomeIcon
               icon={faArrowLeft}
               onClick={onClose}
               className='action-box-delete'
@@ -30,21 +34,36 @@ const DeleteModal = ({
                 fontSize: '20px',
                 width: '45px'
               }}
-            />
+            />{' '} */}
+            <img src={LeftArrowSaveICon} width={30} height={33}></img>
           </div>
+          <div
+            style={{
+              textAlign: 'left'
+            }}
+          >
+            <div className='trash-icon-delete'>
+              <img src={trashIcon} width={16} height={18}></img>
+            </div>
 
-          <h5 style={{ marginTop: '10px' }}>{title}</h5>
+            <h5 style={{ marginTop: '15px' }} className='delete-modal-title'>
+              {title}
+            </h5>
+          </div>
         </div>
         <div
           style={{
             display: 'flex',
             justifyContent: 'center',
             textAlign: 'center',
-            borderTop: '1px solid black'
+            borderTop: '1px solid #D7D9D9',
+            marginBottom: 'none'
           }}
-          className='modal-body-delete'
+          className='modal-body-delete body-delete-spot'
         >
-          <p style={{ paddingTop: '25px' }}>{message}</p>
+          <p style={{ paddingTop: '25px' }} className='body-delete-message'>
+            {message}
+          </p>
         </div>
         <div
           style={{
@@ -55,7 +74,7 @@ const DeleteModal = ({
           }}
         >
           <LtsButton
-            className={'delete-btns'}
+            className={'delete-btns pink-delete-btn'}
             text={'Yes, Delete Application'}
             background={'#EE3C96'}
             color={'#FFF'}
@@ -64,7 +83,7 @@ const DeleteModal = ({
           />
           <button
             style={{ border: 'none' }}
-            className='cancel-button'
+            className='cancel-button cancel-spot-btn'
             onClick={onClose}
           >
             Cancel

@@ -234,8 +234,9 @@ nav#sidebar {
 } */
 
 .sidebar-header img {
-  width: 172px;
+  width: 185px;
   margin-left: -10px;
+  margin-bottom: 10px;
 }
 
 #sidebar ul p {
@@ -3760,8 +3761,42 @@ wave>wave:first-child {
   color: #bbbdbf;
 }
 
+.showImgIcon {
+  display: block !important;
+  margin-right: 5px;
+}
+
+.noShowIcon {
+  display: none;
+}
+
+.deletapplspot {
+  text-align: left;
+  font: normal normal 400 12px/16px Montserrat !important;
+  letter-spacing: 0.48px !important;
+  color: #000000;
+  opacity: 1;
+  gap: 3px;
+}
+
+.delete-modal-title {
+  text-align: left;
+  font: normal normal 500 14px/16px Montserrat !important;
+  letter-spacing: 0.56px;
+  color: #000000;
+  opacity: 1;
+}
+
 .video_podcast_1 {
   border-bottom: 2px solid #707070;
+}
+
+.scrollbar-container.sidebar-sticky.sidebar-overflow-fix.ps {
+  overflow-y: scroll !important;
+}
+
+.list-unstyled.components.sidebar-menu-item.sidebar-menu-list {
+  overflow-y: scroll !important;
 }
 
 .video-saved-image img {
@@ -5451,6 +5486,7 @@ ul.sidebar-menu-item .collapse a:hover {
   }
 }
 
+
 .accordion-content-image {
   width: 100%;
   height: 100px;
@@ -5497,6 +5533,7 @@ _::-webkit-full-page-media,
 _:future,
 :root .right-login-content {
   margin-top: -20px !important;
+  margin-bottom: 50px !important;
 }
 
 _::-webkit-full-page-media,
@@ -5566,10 +5603,11 @@ _:future,
 _::-webkit-full-page-media,
 _:future,
 :root section#footer {
-  margin-right: -20px !important;
-  padding-right: 20px !important;
+  /* margin-right: -20px !important;
+  padding-right: 20px !important; */
   right: 0 !important;
   width: 100vw !important;
+
 }
 
 _::-webkit-full-page-media,
@@ -5625,5 +5663,5 @@ _:future,
 _::-webkit-full-page-media,
 _:future,
 :root body {
-  height: unset !important;
+  height: 100% !important;
 }

@@ -19,6 +19,7 @@ import notificationSocket from '../../../utils/notificationSocket'
 import { useSelector } from 'react-redux'
 import notificationTypes from '../../../utils/notificationTypes'
 import DeleteModal from './SpotlightDeleteModal'
+import deleteIcon from '../../../assets/images/delete-icon/deleteIconSpot.png'
 import { LtsButton } from '../../../ui/ContentItems'
 
 const SpotlightApplyModal = (props) => {
@@ -191,11 +192,13 @@ const SpotlightApplyModal = (props) => {
     <>
       {showDeleteImmersionModal && (
         <DeleteModal
+          imgClassName='showImgIcon'
           show={showDeleteImmersionModal}
           onClose={() => setShowDeleteImmersionModal(false)}
           onDelete={props.removeSavedApplication}
           title='Delete Application'
           message='Are you sure you want to delete this application?'
+          titleClassName='deleteapplspot'
         />
       )}
 
@@ -219,8 +222,7 @@ const SpotlightApplyModal = (props) => {
           classes={'spotlight-apply-modal'}
           size='lg'
         >
-          <div className='row'>
-            {/* <h1>baba</h1> */}
+          <div className='row spot-apply-cont-row'>
             <div className='col-12 col-lg-6'>
               <input
                 className='apply-button mt-2 mb-2 w-100 ps-2 py-3 pitch-input border'
@@ -297,6 +299,7 @@ const SpotlightApplyModal = (props) => {
                 </p>
               </div>
               <TermsAndConditionsCheckbox
+                className={'spot-apply-terms'}
                 text={'I agree to the Spotlight'}
                 blueText={'Terms & Conditions'}
                 name={'termsAndConditions'}
@@ -314,37 +317,38 @@ const SpotlightApplyModal = (props) => {
             <div
               className={`d-flex justify-content-${
                 !props.isApplicationSaved ? 'end' : 'between'
-              } align-items-center flex-wrap`}
+              } align-items-center flex-wrap spot-modal-end-cont`}
             >
               <p
                 href='#'
                 className={`${
                   !props.isApplicationSaved ? 'd-none' : ''
-                } m-0 cursor-pointer d-flex align-items-center`}
+                } m-0 cursor-pointer d-flex align-items-center deletapplspot`}
                 onClick={() => setShowDeleteImmersionModal(true)}
               >
-                <FontAwesomeIcon
-                  icon={faExclamationTriangle}
-                  className='me-2'
-                />
+                <img src={deleteIcon} width={23} height={24}></img>
                 Delete Application
               </p>
 
-              <div className='d-flex align-items-center'>
+              <div
+                className='d-flex align-items-center saving-submit-row-cont'
+                style={{ flexWrap: 'wrap' }}
+              >
                 <LtsButton
-                  className={'cancel-btns py-2'}
+                  className={'cancel-btns py-2 savecont-apply-spot'}
                   text={'Save and Continue Later'}
                   background={'transparent'}
                   color={'#000'}
                   border={'1px solid #ccc'}
                   onClick={() => props.onSave(formData)}
+                  imgClassName={'showImgIcon'}
                 />
 
                 <LtsButton
                   text={'SUBMIT APPLICATION'}
                   loading={loading}
                   background={'#52C7DE'}
-                  className={'ms-2 cancel-btns py-2'}
+                  className={'ms-2 cancel-btns py-2 submitappl-spot'}
                   color={'#fff'}
                   border={'none'}
                   onClick={() => {
