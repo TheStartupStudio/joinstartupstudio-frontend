@@ -64,7 +64,7 @@ const ResetPassword = () => {
       setLoading(true)
 
       await axiosInstance
-        .post('/auth/reset-password', {
+        .post(`/auth/reset-password?email=${userEmail}`, {
           token: verificationToken,
           password: userInput.new_password
         })

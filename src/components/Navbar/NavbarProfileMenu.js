@@ -32,13 +32,14 @@ const NavbarProfileMenu = ({
     dispatch(setGeneralLoading(true))
     await dispatch(userLogout())
       .then(() => {
+        history.push('/')
         localStorage.clear()
       })
       .catch((error) => {
         console.log('error', error)
       })
       .finally(() => {
-        history.push('/')
+        window.location.href = '/'
         dispatch(setGeneralLoading(false))
       })
   }
