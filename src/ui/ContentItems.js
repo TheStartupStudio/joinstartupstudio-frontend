@@ -201,7 +201,7 @@ const CustomInput = ({
         {type === 'password' && (
           <FontAwesomeIcon
             icon={showPassword ? faEye : faEyeSlash}
-            className='pw-revelared__icon'
+            className='password-revelared__icon'
             onClick={() => setShowPassword((state) => !state)}
           />
         )}

@@ -7,7 +7,15 @@ const ParentSidebarItem = ({
   title,
   isDropdown,
   to = null
-}) => (
+}) => {
+    const handleClick = (e) => {
+    document.querySelectorAll(".collapse.show").forEach((openDropdown) => {
+      if (openDropdown.id !== ariaControls) {
+        openDropdown.classList.remove("show");
+      }
+    });
+  };
+  return (
   <ul
     className='dropdownMenuSidebarHover list-unstyled'
     data-bs-toggle='collapse'
@@ -15,6 +23,7 @@ const ParentSidebarItem = ({
     role='button'
     aria-expanded='true'
     aria-controls={ariaControls}
+    onClick={handleClick}
   >
     <SidebarItem
       srcImage={srcImage}
@@ -24,5 +33,6 @@ const ParentSidebarItem = ({
     />
   </ul>
 )
+}
 
 export default ParentSidebarItem
