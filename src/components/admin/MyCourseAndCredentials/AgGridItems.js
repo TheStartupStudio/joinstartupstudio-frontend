@@ -344,8 +344,8 @@ const CustomSelectCellEditor = (props) => {
       <option className='select-options' value={'title'}>
         {props.placeHolder}
       </option>
-      {values.map((value) => (
-        <option className='select-options' key={value} value={value}>
+      {values.map((value, index) => (
+        <option className='select-options' key={index} value={value}>
           {value}
         </option>
       ))}

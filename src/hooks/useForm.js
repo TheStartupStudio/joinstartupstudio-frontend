@@ -21,7 +21,7 @@ export const useForm = (initialState, initialData, mode = 'add', loading) => {
     if (type === 'bool') {
       const { name, checked } = event.target
 
-      setFormData({ ...formData, [name]: checked })
+      setFormData({ ...formData, [name]: !checked })
     } else if (type === 'array') {
       const { name, value, checked } = event.target
 
@@ -70,11 +70,10 @@ export const useForm = (initialState, initialData, mode = 'add', loading) => {
   }
   const handleChangeSelect = (event, fieldName1, fieldName2) => {
     if (fieldName1) {
-      const { id, name } = event
       setFormData((prevState) => ({
         ...prevState,
-        [fieldName1]: id,
-        [fieldName2]: name
+        [fieldName1]: event?.id,
+        [fieldName2]: event?.name
       }))
     } else {
       const { value, name } = event

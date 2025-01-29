@@ -22,9 +22,9 @@ const NavbarProfile = ({
 
   useEffect(() => {
     return () => {
-      clearTimeout(timeoutId) // Cleanup timeout on unmount
+      clearTimeout(timeoutId)
     }
-  }, [])
+  }, [timeoutId])
 
   return (
     <li

@@ -247,12 +247,8 @@ const AddInstructorModal = ({
                   <LtsCheckbox
                     className={'ps-1'}
                     name='deactivated'
-                    toggle={(e) => handleChangeCheckbox(e, 'my-school')}
-                    checked={
-                      mode === 'edit'
-                        ? !formData.deactivated
-                        : !formData.deactivated
-                    }
+                    toggle={handleChangeCheckbox}
+                    checked={!formData.deactivated}
                   />
                   Active
                 </span>

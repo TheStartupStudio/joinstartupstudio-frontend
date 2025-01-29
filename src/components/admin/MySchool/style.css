@@ -192,6 +192,7 @@ _:future,
 }
 
 .skillBox-program,
+.skillBox-grey,
 .skillBox-status__unactive,
 .skillBox-transfer__none {
   border: 1px solid #d7d9d9;

@@ -27,11 +27,12 @@ function PortfolioSubmission(props) {
           cursor: props.videoUrl?.length > 0 ? 'pointer' : 'unset'
         }}
         target='_blank'
+        rel='noreferrer'
       >
         <img
           className={'portfolio-submission-image'}
           alt={'submission-image'}
-          src={props.thumbnailUrl ?? imagePlaceholder}
+          src={props.thumbnailUrl || imagePlaceholder}
         />
 
         <div className={'portfolio-submission-title'}>{props.title}</div>
