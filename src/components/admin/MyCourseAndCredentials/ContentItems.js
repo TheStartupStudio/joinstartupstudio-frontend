@@ -220,13 +220,14 @@ const CustomDropdown = ({
             display: 'block'
           }}
         >
-          {multiple
+          Bulk Actions
+          {/* {multiple
             ? selectedOptions.length > 0
               ? selectedOptions.map((option) => option.name).join(', ')
               : title || 'Select an option'
             : selectedOptions
             ? selectedOptions.name
-            : title || 'Select an option'}
+            : title || 'Select an option'} */}
         </span>
 
         <span className={`arrow ${isDropdownOpen ? 'open' : ''}`}>

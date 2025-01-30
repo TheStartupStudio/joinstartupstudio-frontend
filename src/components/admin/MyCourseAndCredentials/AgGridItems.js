@@ -576,9 +576,9 @@ const Actions = ({
           className='action-item cursor-pointer'
           onClick={() => setViewExprience(immersion)}
         >
-          <a href='/my-school/learners' className='pe-1'>
+          <span href='#' className='pe-1'>
             <FaEye style={{ fontSize: '16px', color: 'grey' }} />
-          </a>
+          </span>
           <p className='m-0 pe-2'> View Item</p>
         </div>
 

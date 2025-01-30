@@ -32,10 +32,13 @@ const ScheduleTypeDropdown = ({ formData, handleCheckboxChange }) => {
           backgroundColor: 'white',
           border: '1px solid #ccc',
           borderRadius: '5px',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          color: 'grey'
         }}
       >
-        {formData.scheduleType.length > 0
+        {formData.scheduleType.length === 1
+          ? formData.scheduleType[0]
+          : formData.scheduleType.length > 1
           ? formData.scheduleType.join(', ')
           : 'Select Schedule Type'}
       </button>
@@ -56,11 +59,7 @@ const ScheduleTypeDropdown = ({ formData, handleCheckboxChange }) => {
           }}
         >
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '10px'
-            }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
           >
             <label
               style={{
@@ -159,7 +158,10 @@ const AddCourseandCredentialModal = ({
         skills: viewExprience.skills_developed || '',
         awardType: viewExprience.type_award || '',
         completionTime: viewExprience.total_completion_time || '',
-        scheduleType: [...viewExprience.schedule_type] || [],
+        scheduleType:
+          viewExprience.schedule_type && viewExprience.schedule_type.length > 0
+            ? [...viewExprience.schedule_type]
+            : [],
         url: viewExprience.url_link || '',
         status: viewExprience.status || 'inactive',
         weeklyTimeBreakdown: viewExprience.weekly_time_breakdown // Add logic to handle image if needed

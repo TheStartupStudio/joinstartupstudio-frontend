@@ -100,9 +100,8 @@ const InstructorSidebar = (props) => {
         <DropdownItem title={'MY PATHWAYS'} to={'/pathways'} />
         <DropdownItem title={'MY IMMERSION'} to={'/my-immersion'} />
         <DropdownItem
-          disabled={true}
-          title={'COURSE & CREDENTIALS'}
-          to={'/course-credentials'}
+          title={'MY COURSE & CREDENTIALS'}
+          to='/my-course-credentials'
         />
         {/* <DropdownItem title={'MY SPOTLIGHT'} to={'/spotlight'} /> */}
       </ParentDropdownItem>

@@ -96,6 +96,13 @@ const CoursesSection = () => {
       </div>
 
       {/* Pagination Controls */}
+
+      <Modal
+        isVisible={isModalVisible}
+        onClose={closeModal}
+        course={selectedCourse}
+      />
+
       <div className='pagination'>
         <div
           style={{ marginRight: '5px' }}
@@ -115,12 +122,6 @@ const CoursesSection = () => {
           <FontAwesomeIcon icon={faChevronRight} />
         </div>
       </div>
-
-      <Modal
-        isVisible={isModalVisible}
-        onClose={closeModal}
-        course={selectedCourse}
-      />
     </div>
   )
 }
@@ -160,8 +161,13 @@ const Modal = ({ isVisible, onClose, course }) => {
         <p>
           <strong>Skills You’ll Gain:</strong> {course.skills_developed}
         </p>
+
         <a
-          href={course.url_link}
+          href={
+            course.url_link.startsWith('http')
+              ? course.url_link
+              : `https://${course.url_link}`
+          }
           target='_blank'
           rel='noopener noreferrer'
           className='go-to-course'

@@ -142,7 +142,7 @@
 
   .pagination {
 
-    position: absolute;
-    bottom: 70px;
-    left: 50%;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
   }

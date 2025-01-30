@@ -255,6 +255,11 @@ export const mutualRoutes = [
     path: '/wellness-journal/',
     component: LtsJournal,
     props: { category: 'student-wellnes' }
+  },
+  {
+    path: '/my-course-credentials',
+    component: MyCourseCredentials,
+    exact: true
   }
 ]
 
@@ -365,11 +370,6 @@ export const studentRoutes = [
     component: AddOccupationItemForm
   },
 
-  {
-    path: '/my-course-credentials',
-    component: MyCourseCredentials,
-    exact: true
-  },
   { path: '/my-immersion', component: MyImmersion, exact: true },
   { path: '/my-immersion/:step', component: Steps },
   { path: '/iamr/:certificationType?/:id?/:type?', component: Iamr },
