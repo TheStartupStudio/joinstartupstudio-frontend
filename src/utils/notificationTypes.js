@@ -58,7 +58,7 @@ export default {
   },
   IAMR_STUDENT_QUESTION: {
     key: 'IAMR_STUDENT_QUESTION',
-    value: ' asked you a instruction quesion'
+    value: ' asked you a instruction question'
   },
   IAMR_STUDENT_QUESTION_UPDATE: {
     key: 'IAMR_STUDENT_QUESTION_UPDATE',

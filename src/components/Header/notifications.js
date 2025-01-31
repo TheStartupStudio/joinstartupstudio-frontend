@@ -38,17 +38,17 @@ const Notifications = (props) => {
       })
       .then(() => {
         if (!notification.read) {
-          // props.setUnreadNotifications(props.unreadNotifications - 1) 
-          props.setUnreadNotifications((prev) => prev - 1); // testing this code is working for the teacher notification bug
+          // props.setUnreadNotifications(props.unreadNotifications - 1)
+          props.setUnreadNotifications((prev) => prev - 1) // testing this code is working for the teacher notification bug
         }
         notification.read = true
         props.setShowNotifications(false)
         setLoading(false)
-        // history.push(`/${notification.url}`)
-        const HashUrl = notification.url.includes('#inbox')
-          ? notification.url
-          : `${notification.url}#inbox`
-        history.replace(HashUrl)
+        history.push(`${notification.url}`)
+        // const HashUrl = notification.url.includes('#inbox')
+        //   ? notification.url
+        //   : `${notification.url}#inbox`
+        // history.replace(HashUrl)
       })
   }
 

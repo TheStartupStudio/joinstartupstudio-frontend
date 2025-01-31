@@ -1,13 +1,12 @@
 import { useState, useEffect, Fragment } from 'react'
 import { useParams } from 'react-router-dom'
-import axiosInstance from '../../../utils/AxiosInstance'
 import { useIamrContext } from '../iamrContext/context'
 import AccordionItem from './accordionItem'
 import CertificationAccordionItem from './certificationAccordionItem'
 import './index.css'
 
 const GroupingString = ({ text }) => (
-  <div class="grouping-string pt-3 ps-3">{text}</div>
+  <div className='grouping-string pt-3 ps-3'>{text}</div>
 )
 
 const AccordionItems = ({
@@ -21,7 +20,6 @@ const AccordionItems = ({
       const isFirstSkill = index === 0
       const isLastSkill = index === skills.length - 1
       const groupIndex = (index + 1) / 4
-      const groupIndexProp = Math.floor(index / 4)
 
       return (
         <Fragment key={skill.id}>
@@ -53,7 +51,7 @@ const RenderCertificationSkills = (
 ) => {
   return (
     <>
-      <h3 className="mt-4 mb-0 certification-title">
+      <h3 className='mt-4 mb-0 certification-title'>
         MARKET - READY CERTIFICATION {certificationNumber} SKILLS
       </h3>
       <AccordionItems
@@ -89,7 +87,7 @@ const SkillsAccordion = ({ hideExpanded, groupingStrings }) => {
 
   return (
     <>
-      <div className="accordion-data" id="accordionExample0">
+      <div className='accordion-data' id='accordionExample0'>
         {RenderCertificationSkills(
           skills,
           certificationOneStatus,

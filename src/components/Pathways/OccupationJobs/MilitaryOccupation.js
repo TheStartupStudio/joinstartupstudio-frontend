@@ -35,13 +35,13 @@ const TextHelper = ({ strongText, normalText }) => {
 const TableHelper = ({ headColumns, bodyColumns }) => {
   return (
     <>
-      <table className="table table-striped table-helper">
+      <table className='table table-striped table-helper'>
         <thead>
-          <tr className="p-1">
+          <tr className='p-1'>
             {headColumns.map((head, index) => (
-              <th scope="col" key={`head-${index}`}>
+              <th scope='col' key={`head-${index}`}>
                 <div
-                  className="d-flex align-items-center"
+                  className='d-flex align-items-center'
                   style={{ height: '100%' }}
                 >
                   {head}
@@ -54,7 +54,7 @@ const TableHelper = ({ headColumns, bodyColumns }) => {
           {bodyColumns.map((body, rowIndex) => (
             <tr key={`row-${rowIndex}`}>
               {body.map((item, itemIndex) => (
-                <td key={`item-${rowIndex}-${itemIndex}`} className="">
+                <td key={`item-${rowIndex}-${itemIndex}`} className=''>
                   <div
                     className={`d-flex align-items-center pe-2 ${
                       itemIndex === 0 ? '' : 'justify-content-end'
@@ -70,7 +70,7 @@ const TableHelper = ({ headColumns, bodyColumns }) => {
         </tbody>
       </table>
       <div style={{ background: '#fff', padding: '1%' }}>
-        <p className="">1{''} Data for Army are estimates.</p>
+        <p className=''>1{''} Data for Army are estimates.</p>
         <p>2 Data for total enlisted personnel are estimates.</p>
         <p>SOURCE: U.S. Department of Defense, Defense Manpower Data Center</p>
       </div>
@@ -107,7 +107,7 @@ const MilitaryOccupation = () => {
       <p>
         <strong>Enlisted personnel</strong> typically do the following:
       </p>
-      <div className="d-flex flex-column">
+      <div className='d-flex flex-column'>
         <li>
           Participate in, or support, military operations, such as combat or
           training operations, or humanitarian or disaster relief
@@ -116,10 +116,10 @@ const MilitaryOccupation = () => {
         <li>Perform technical and support activities</li>
         <li>Supervise junior enlisted personnel</li>
       </div>
-      <p className="pt-2">
+      <p className='pt-2'>
         <strong>Officers </strong> typically do the following:
       </p>
-      <div className="d-flex flex-column pb-3">
+      <div className='d-flex flex-column pb-3'>
         <li>
           Plan, organize, and lead troops and activities in military operations
         </li>
@@ -131,7 +131,7 @@ const MilitaryOccupation = () => {
         </li>
       </div>
       <h6>Types of Enlisted Personnel</h6>
-      <hr className="m-0 p-0" />
+      <hr className='m-0 p-0' />
       <p>
         The following are examples of types of occupations for enlisted
         personnel:
@@ -166,7 +166,7 @@ const MilitaryOccupation = () => {
           'perform a variety of tasks, such as operating technical equipment, solving problems, and collecting and interpreting information. They perform technical tasks in information technology, environmental health and safety, or intelligence:'
         }
       />
-      <div className="pb-3">
+      <div className='pb-3'>
         <li>
           Environmental health and safety specialists inspect military
           facilities and food supplies to ensure that they are safe for use and
@@ -193,7 +193,7 @@ const MilitaryOccupation = () => {
           'recruit qualified people into the military, place them in suitable occupations, and provide training programs:'
         }
       />
-      <div className="pb-3">
+      <div className='pb-3'>
         <li>
           Personnel specialists maintain information about military personnel
           and their training, job assignments, promotions, and health.
@@ -226,7 +226,7 @@ const MilitaryOccupation = () => {
           'enforce military laws and regulations and provide emergency responses to disasters:'
         }
       />
-      <div className="pb-3">
+      <div className='pb-3'>
         <li>
           Firefighters prevent and extinguish fires in buildings, on aircraft,
           and aboard ships.
@@ -247,7 +247,7 @@ const MilitaryOccupation = () => {
           'provide services that support the morale and well-being of military personnel and their families:'
         }
       />
-      <div className="pb-3">
+      <div className='pb-3'>
         <li>
           Food service specialists prepare food in dining halls, hospitals, and
           ships.
@@ -265,7 +265,7 @@ const MilitaryOccupation = () => {
           'transport military personnel and cargo. Most personnel within this occupational group are classified according to the mode of transportation, such as aircraft, motor vehicle, or ship:'
         }
       />
-      <div className="pb-3">
+      <div className='pb-3'>
         <li>Aircrew members operate equipment on aircraft.</li>
         <li>
           Cargo specialists load and unload military supplies, using forklifts
@@ -286,7 +286,7 @@ const MilitaryOccupation = () => {
           'conduct preventive and corrective maintenance on aircraft, automotive and heavy equipment, and powerhouse station equipment. These workers specialize by the type of equipment that they maintain:        '
         }
       />
-      <div className="pb-3">
+      <div className='pb-3'>
         <li>
           Aircraft mechanics inspect and service various types of aircraft.
         </li>
@@ -469,8 +469,8 @@ const MilitaryOccupation = () => {
         ]}
       />
 
-      <h6 className="mt-3 ">Types of Officers</h6>
-      <hr className="p-0 m-0" />
+      <h6 className='mt-3 '>Types of Officers</h6>
+      <hr className='p-0 m-0' />
       <p>The following are examples of types of officers:</p>
       <TextHelper
         strongText={'Combat specialty officers'}
@@ -496,7 +496,7 @@ const MilitaryOccupation = () => {
           ' provide medical services to military personnel in order to maintain or improve their health and physical readiness. Officers such as physicians, physician assistants, nurses, and dentists examine, diagnose, and treat patients. Other healthcare officers provide therapy, rehabilitative treatment, and additional healthcare for patients:'
         }
       />
-      <div className="mb-3">
+      <div className='mb-3'>
         <li>Dentists treat diseases, disorders, and injuries of the mouth.</li>
         <li>
           Nurses provide and coordinate patient care in military hospitals and
@@ -529,7 +529,7 @@ const MilitaryOccupation = () => {
           ' development officers manage recruitment, placement, and training programs in the military:'
         }
       />
-      <div class="mb-3">
+      <div className='mb-3'>
         <li>
           Personnel managers direct and oversee military personnel functions,
           such as job assignments, staff promotions, and career counseling.
@@ -567,7 +567,7 @@ const MilitaryOccupation = () => {
           ' manage and perform activities related to the safe transport of military personnel and equipment by air, ground, and water. They operate and command an aircraft or a ship:'
         }
       />
-      <div class="mb-3">
+      <div class='mb-3'>
         <li>
           Navigators use radar, radio, and other navigation equipment to
           determine their position and plan their route of travel.
