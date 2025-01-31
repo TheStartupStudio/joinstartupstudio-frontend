@@ -4,8 +4,12 @@ import { toast } from 'react-toastify'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import { Controller, useForm } from 'react-hook-form'
 import { showErrors } from '../../../../utils/helpers'
+import { useSelector } from 'react-redux'
+import notificationSocket from '../../../../utils/notificationSocket'
+import notificationTypes from '../../../../utils/notificationTypes'
 
 const NewTicketModal = ({ show, onHide, skillId, addNewTicket }) => {
+  const loggedUser = useSelector((state) => state.user.user.user)
   const {
     register,
     handleSubmit,
@@ -26,6 +30,14 @@ const NewTicketModal = ({ show, onHide, skillId, addNewTicket }) => {
         toast.success('Your question has been submitted.')
         addNewTicket(data)
         onHide()
+        if (loggedUser && loggedUser.Instructor) {
+          notificationSocket?.emit('sendNotification', {
+            sender: loggedUser,
+            receivers: [loggedUser.Instructor.User],
+            type: notificationTypes.IAMR_STUDENT_QUESTION.key,
+            url: '/my-inbox#student_questions'
+          })
+        }
       })
       .catch((e) => showErrors(e))
     reset({
@@ -51,40 +63,40 @@ const NewTicketModal = ({ show, onHide, skillId, addNewTicket }) => {
     <Modal
       show={show}
       onHide={hideModal}
-      backdrop="static"
+      backdrop='static'
       keyboard={false}
-      className="no-border-modal new-ticket-modal"
+      className='no-border-modal new-ticket-modal'
       centered
     >
-      <Modal.Header className="contact-us-title my-auto mx-4">
-        <h3 className="mb-0 pt-4 mt-2 ">ASK QUESTION</h3>
+      <Modal.Header className='contact-us-title my-auto mx-4'>
+        <h3 className='mb-0 pt-4 mt-2 '>ASK QUESTION</h3>
         <button
-          type="button"
-          className="btn-close me-1"
-          aria-label="Close"
+          type='button'
+          className='btn-close me-1'
+          aria-label='Close'
           onClick={hideModal}
         />
       </Modal.Header>
-      <Modal.Body className="m-4 p-0">
+      <Modal.Body className='m-4 p-0'>
         <form onSubmit={handleSubmit(submitTicket)}>
-          <div className="contact-us">
-            <div className="input-field mb-2">
+          <div className='contact-us'>
+            <div className='input-field mb-2'>
               <input
-                type="text"
-                name="subject"
+                type='text'
+                name='subject'
                 placeholder={'Add subject'}
                 {...register('subject', {
                   required: 'Subject is required'
                 })}
               />
-              <span className="field-error">
+              <span className='field-error'>
                 {errors.subject && errors.subject.message}
               </span>
             </div>
 
-            <div className="input-field mb-4">
+            <div className='input-field mb-4'>
               <Controller
-                name="message"
+                name='message'
                 control={control}
                 rules={{
                   required: 'Message is required',
@@ -102,12 +114,12 @@ const NewTicketModal = ({ show, onHide, skillId, addNewTicket }) => {
                 )}
               />
 
-              <span className="field-error">
+              <span className='field-error'>
                 {errors.message && errors.message.message}
               </span>
             </div>
 
-            <button type="submit" disabled={isSubmitting}>
+            <button type='submit' disabled={isSubmitting}>
               {isSubmitting ? 'SENDING' : 'SEND'}
             </button>
           </div>

@@ -39,31 +39,41 @@ const MySchool = () => {
         .get('/universities')
         .then((res) => {
           setUniversities(res.data.universities)
-          setLoading(false)
         })
         .catch((err) => {
           console.log('err', err)
+        })
+        .finally(() => {
+          setLoading(false)
         })
     }
     fetchUniversities()
   }, [])
 
   useEffect(() => {
+    setLoading(true)
     const fetchPrograms = async () => {
       await axiosInstance
         .get('/programs')
         .then(({ data }) => setPrograms(data))
         .catch((err) => console.log('err', err))
+        .finally(() => {
+          setLoading(false)
+        })
     }
     fetchPrograms()
   }, [])
 
   useEffect(() => {
+    setLoading(true)
     const fetchLevels = async () => {
       await axiosInstance
         .get('/levels')
         .then(({ data }) => setLevels(data))
         .catch((err) => console.log('err', err))
+        .finally(() => {
+          setLoading(false)
+        })
     }
     fetchLevels()
   }, [])
@@ -79,10 +89,9 @@ const MySchool = () => {
         )
 
         setInstructors(formattedData)
-
-        setLoading(false)
       } catch (error) {
         console.log('error', error)
+      } finally {
         setLoading(false)
       }
     }

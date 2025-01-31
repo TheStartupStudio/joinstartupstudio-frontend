@@ -29,13 +29,23 @@ function TicketChat({ ticket, updateTickets }) {
           values: [...messages, message]
         })
 
+        const type =
+          ticket.type === 'feedback'
+            ? notificationTypes.FEEDBACK_TICKET_REPLY.key
+            : notificationTypes.IAMR_STUDENT_QUESTION.key
+
+        const url =
+          ticket.type === 'instruction'
+            ? '/my-inbox#student_questions'
+            : '/my-inbox#certification_feedback_requests'
+
         if (loggedUser && loggedUser.Instructor) {
           notificationSocket?.emit('sendNotification', {
             sender: loggedUser,
             // later this will change
             receivers: [loggedUser.Instructor.User],
-            type: notificationTypes.IAMR_STUDENT_QUESTION.key,
-            url: '/my-inbox'
+            type,
+            url
           })
         }
       })
@@ -69,23 +79,23 @@ function TicketChat({ ticket, updateTickets }) {
   }, [messages])
 
   return (
-    <div className="ticket-chat p-0 mt-4">
-      <div className="chat-container">
-        <div className="chat-header d-flex justify-content-between">
-          <p className="subject">
-            <span className="fw-bold">Subject:</span> {ticket.subject}
+    <div className='ticket-chat p-0 mt-4'>
+      <div className='chat-container'>
+        <div className='chat-header d-flex justify-content-between'>
+          <p className='subject'>
+            <span className='fw-bold'>Subjectttttt:</span> {ticket.subject}
           </p>
-          <p className="subject text-end">
-            <span className="fw-bold">Skill:</span> {ticket.IamrSkill.title}
+          <p className='subject text-end'>
+            <span className='fw-bold'>Skill:</span> {ticket.IamrSkill.title}
           </p>
         </div>
-        <div className="messages-container">
+        <div className='messages-container'>
           {messages.map((message) => (
             <TicketMessage key={message.id} message={message} />
           ))}
           {ticket.type === 'instruction' && !ticket.resolved && (
             <button
-              className="ms-auto float-end resolve-btn rounded fw-bold"
+              className='ms-auto float-end resolve-btn rounded fw-bold'
               onClick={resolveTicket}
             >
               RESOLVE
@@ -93,7 +103,7 @@ function TicketChat({ ticket, updateTickets }) {
           )}
 
           {ticket.type === 'instruction' && ticket.resolved && (
-            <p className="resolved mt-3">Question resolved.</p>
+            <p className='resolved mt-3'>Question resolved.</p>
           )}
           <div ref={scrollRef} />
         </div>

@@ -63,6 +63,7 @@ const StudentActionsModal = ({
     mode === 'edit'
       ? {
           universityId: formData.universityId,
+          instructor_id: formData.instructor_id,
           name: formData.name,
           email: formData.email,
           profession: formData.profession,
@@ -87,6 +88,7 @@ const StudentActionsModal = ({
         let payload = {
           universityId: formData.universityId,
           universityName: formData.universityName,
+          instructor_id: formData.instructor_id,
           name: formData.name,
           email: formData.email,
           profession: formData.profession,
@@ -94,6 +96,8 @@ const StudentActionsModal = ({
           levels: formData.levels.map((item) => item.name),
           deactivated: formData.deactivated
         }
+
+        console.log('payload', payload)
         let res = await axiosInstance.patch(
           `/instructor/update-student/${formData.id}`,
           payload
@@ -107,19 +111,6 @@ const StudentActionsModal = ({
           toast.error('Something went wrong!')
         }
       } else {
-        // await Auth.signUp({
-        //   username: formData.email,
-        //   password: formData.password,
-        //   attributes: {
-        //     'custom:universityCode': 'dev2020',
-        //     'custom:isVerified': '1',
-        //     'custom:language': 'en',
-        //     'custom:email': formData.email,
-        //     'custom:password': formData.password,
-        //     name: formData.name
-        //   }
-        // })
-        //   .then(async (res) => {
         let payload = {
           ...formData,
           name: formData.name,
@@ -131,7 +122,6 @@ const StudentActionsModal = ({
         await axiosInstance
           .post('/instructor/add-users', payload)
           .then(() => {
-            setLoading(false)
             toast.success('Student added successfully!')
             onSuccess()
             onHide()
@@ -139,10 +129,9 @@ const StudentActionsModal = ({
           .catch((err) => {
             console.log('err', err)
           })
-        // })
-        // .catch((err) => {
-        //   console.log('err', err)
-        // })
+          .finally(() => {
+            setLoading(false)
+          })
       }
     })
   }
@@ -273,12 +262,8 @@ const StudentActionsModal = ({
                   <LtsCheckbox
                     className={'ps-1'}
                     name='deactivated'
-                    toggle={(e) => handleChangeCheckbox(e, 'my-school')}
-                    checked={
-                      mode === 'edit'
-                        ? !formData.deactivated
-                        : !formData.deactivated
-                    }
+                    toggle={handleChangeCheckbox}
+                    checked={!formData.deactivated}
                   />
                   Active
                 </span>
@@ -336,9 +321,8 @@ const StudentActionsModal = ({
               </div>
 
               {mode === 'edit' ? (
-                <a href={`/user-portfolio/${formData.username}`}>
+                <a href={`/student-portfolio/${formData.username}`}>
                   <img src={viewPortfIcon} height={15} alt='view port' />
-                  View Student Portfolio
                 </a>
               ) : null}
             </Col>
@@ -425,6 +409,7 @@ const StudentActionsModal = ({
               </div>
               <div className='pb-3'>
                 <p className='m-0 userdetails'> Assign Instructor</p>
+                {console.log('instructors', instructors)}
                 <CustomDropdown
                   spanClassName={'dropdowns-select-font'}
                   isSelectable
@@ -441,7 +426,7 @@ const StudentActionsModal = ({
                   isOpen={openDropdown === 'instructors'}
                   setOpenDropdown={() => handleDropdownClick('instructors')}
                   onClick={(event) =>
-                    handleChangeSelect(event, 'instructor_id')
+                    handleChangeSelect(event, 'instructor_id', 'instructorName')
                   }
                   showError={formSubmitted}
                   error={errors.instructor_id}
@@ -449,7 +434,7 @@ const StudentActionsModal = ({
                     mode === 'edit'
                       ? [
                           {
-                            name: formData.Instructor?.User?.name,
+                            name: formData.instructorName,
                             id: formData.instructor_id
                           }
                         ]

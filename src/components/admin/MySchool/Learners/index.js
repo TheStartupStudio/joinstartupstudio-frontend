@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import axiosInstance from '../../../../utils/AxiosInstance'
 import { useSelector } from 'react-redux'
 import GridTable from '../../../GridTable'
@@ -41,6 +41,7 @@ const Learners = ({
   const [selectedRows, setSelectedRows] = useState([])
   const [rowData, setRowData] = useState([])
   const { instructorId } = useParams()
+  const isMountedRef = useRef(false)
 
   useEffect(() => {
     if (instructorId || instructor_id) {
@@ -53,7 +54,6 @@ const Learners = ({
   }, [instructorId, instructor_id])
 
   const fetchStudents = useCallback(async () => {
-    let isMounted = true
     setLoading(true)
     let url = ''
     if (instructorId || instructor_id) {
@@ -81,17 +81,16 @@ const Learners = ({
             ? 'denied '
             : 'none'
           : 'none',
-        universityName: student.University.name
+        universityName: student.University.name,
+        instructorName: student.Instructor.User?.name
       }))
-      if (isMounted) setRowData(formattedData)
+      if (isMountedRef.current) {
+        setRowData(formattedData)
+      }
     } catch (error) {
-      setLoading(false)
+      console.log('error', error)
     } finally {
-      setLoading(false)
-    }
-
-    return () => {
-      isMounted = false
+      if (isMountedRef.current) setLoading(false)
     }
   }, [instructorId, instructor_id, user.universityId])
 
@@ -100,7 +99,13 @@ const Learners = ({
   }, [fetchStudents])
 
   useEffect(() => {
+    isMountedRef.current = true
+
     fetchStudents()
+
+    return () => {
+      isMountedRef.current = false
+    }
   }, [fetchStudents])
 
   const columnDefs = useMemo(() => {
@@ -132,17 +137,15 @@ const Learners = ({
       {
         field: 'status',
         filter: ActiveInactiveFilter,
-        cellRenderer: (params) => {
-          return (
-            <div className=''>
-              <SkillBox
-                withStatus={true}
-                color={`status__${params?.value}`}
-                text={params?.value}
-              />
-            </div>
-          )
-        }
+        cellRenderer: (params) => (
+          <>
+            <SkillBox
+              withStatus={true}
+              color={`status__${params?.value}`}
+              text={params?.value}
+            />
+          </>
+        )
       },
       {
         headerName: 'Programs',
@@ -245,33 +248,24 @@ const Learners = ({
         field: 'transferHistory',
         filter: TransferFilter,
         cellRenderer: (params) => {
-          let status = params.value[0]?.status
+          const status = params.value[0]?.status || 'none'
+
+          const statusMap = {
+            pending: { class: 'requested', text: 'Requested' },
+            approved: { class: 'transferred', text: 'Transferred' },
+            denied: { class: 'denied', text: 'Denied' },
+            none: { class: 'none', text: 'None' }
+          }
+
+          const { class: colorClass, text } =
+            statusMap[status] || statusMap.none
+
           return (
             <div className='transfer-status-cont'>
               <SkillBox
                 withStatus={true}
-                color={`transfer__${
-                  params.value.length
-                    ? status === 'pending'
-                      ? 'requested'
-                      : status === 'approved'
-                      ? 'transferred'
-                      : status === 'denied'
-                      ? 'denied'
-                      : 'none'
-                    : 'none'
-                }`}
-                text={
-                  params.value.length
-                    ? status === 'pending'
-                      ? 'Requested'
-                      : status === 'approved'
-                      ? 'Transferred'
-                      : status === 'denied'
-                      ? 'Denied'
-                      : 'None'
-                    : 'None'
-                }
+                color={`transfer__${colorClass}`}
+                text={text}
               />
             </div>
           )

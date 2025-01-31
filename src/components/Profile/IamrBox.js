@@ -43,17 +43,24 @@ const IamrBox = ({ userRole, user }) => {
 
   useEffect(() => {
     if (userRole !== 'student') {
+      let isMounted = true
       const questionAndFeedbacksHandler = async () => {
-        await axiosInstance
-          .get('/instructor/iamr/tickets')
-          .then((res) => {
+        try {
+          const res = await axiosInstance.get('/instructor/iamr/tickets')
+
+          if (isMounted) {
             setStudentQuestions(res.data?.student_questions)
             setFeedbackRequests(res.data?.certification_feedback_requests)
-          })
-          .catch((err) => console.log('err', err))
+          }
+        } catch (error) {
+          console.log('error', error)
+        }
       }
 
       questionAndFeedbacksHandler()
+      return () => {
+        isMounted = false
+      }
     }
   }, [userRole])
 

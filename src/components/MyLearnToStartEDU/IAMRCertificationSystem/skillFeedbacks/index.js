@@ -25,7 +25,7 @@ const SkillFeedbacks = ({ skill }) => {
 
       setLoading(false)
     })
-  }, [skill.id])
+  }, [skill.id, ticketId])
 
   const updateTickets = ({ ticketId, field, values }) => {
     setTickets((tickets) =>
@@ -40,9 +40,9 @@ const SkillFeedbacks = ({ skill }) => {
 
   return (
     <>
-      <p className="skill-title">
-        <span className="text-info fw-bold">{skill.category} - </span>
-        <span className="fw-bold">{skill?.title} - </span> FEEDBACK
+      <p className='skill-title'>
+        <span className='text-info fw-bold'>{skill.category} - </span>
+        <span className='fw-bold'>{skill?.title} - </span> FEEDBACK
       </p>
       {loading ? (
         <LoadingAnimation show={loading} />
@@ -53,9 +53,9 @@ const SkillFeedbacks = ({ skill }) => {
               title={'STUDENT UPLOADS'}
               expanded={expandedDropdown}
               toggle={setExpandedDropdown}
-              className="mt-3"
+              className='mt-3'
             >
-              <ul className="custom-dropdown-options">
+              <ul className='custom-dropdown-options'>
                 {tickets.map((ticket) => (
                   <DropdownOption
                     ticket={ticket}
@@ -71,7 +71,7 @@ const SkillFeedbacks = ({ skill }) => {
               </ul>
             </Dropdown>
           ) : (
-            <p className="page-content-text fw-normal my-5 text-center">
+            <p className='page-content-text fw-normal my-5 text-center'>
               You haven't received a feedback yet!
             </p>
           )}

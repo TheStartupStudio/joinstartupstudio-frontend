@@ -8,7 +8,7 @@ const Description = ({ skill }) => {
       </p>
       <ul>
         {skill?.SkillTags.map((tag) => (
-          <li>{tag.name}</li>
+          <li key={tag.id}>{tag.name}</li>
         ))}
       </ul>
       <p>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './style.css'
 import {
   Actions,
@@ -34,9 +34,9 @@ const Instructors = ({
   const [selectedSchoolFilter, setSelectedSchoolFilter] = useState(null)
   const [selectedRows, setSelectedRows] = useState([])
   const [rowData, setRowData] = useState([])
+  const isMountedRef = useRef(false)
 
   const fetchInstructors = useCallback(async () => {
-    let isMounted = true
     setLoading(true)
     try {
       const { data } = await axiosInstance.get('/users/instructors')
@@ -57,16 +57,13 @@ const Instructors = ({
           universityId: instructor.universityId,
           universityName: instructor.University.universityName
         }))
-      if (isMounted) setRowData(formattedData)
+      if (isMountedRef.current) setRowData(formattedData)
     } catch (error) {
       toast.error('Something went wrong!')
-      setLoading(false)
     } finally {
-      setLoading(false)
-    }
-
-    return () => {
-      isMounted = false
+      if (isMountedRef.current) {
+        setLoading(false)
+      }
     }
   }, [])
   const refreshInstructors = useCallback(() => {
@@ -74,7 +71,12 @@ const Instructors = ({
   }, [fetchInstructors])
 
   useEffect(() => {
+    isMountedRef.current = true
     fetchInstructors()
+
+    return () => {
+      isMountedRef.current = false
+    }
   }, [fetchInstructors])
 
   const columnDefs = useMemo(
@@ -101,41 +103,30 @@ const Instructors = ({
       {
         field: 'levels',
         filter: LevelsFilter,
-        cellRenderer: (params) => (
-          <>
-            {params.value?.length > 1 ? (
-              <div className='d-flex align-items-center'>
-                <SkillBox
-                  color={
-                    params.value[0] === 'LS'
-                      ? 'green'
-                      : params.value[0] === 'HS'
-                      ? 'red'
-                      : 'blue'
-                  }
-                  text={params?.value[0]}
-                />
-                <SkillBox
-                  color={'blue'}
-                  text={`+ ${params.value.length - 1}`}
-                />
-              </div>
-            ) : (
-              <div className=''>
-                <SkillBox
-                  color={
-                    params.value[0] === 'LS'
-                      ? 'green'
-                      : params.value[0] === 'HS'
-                      ? 'red'
-                      : 'blue'
-                  }
-                  text={params?.value[0]}
-                />
-              </div>
-            )}
-          </>
-        )
+        cellRenderer: (params) => {
+          const getColor = (value) =>
+            value === 'LS' ? 'green' : value === 'HS' ? 'red' : 'blue'
+          return (
+            <div className='d-flex align-items-center'>
+              {params.value?.length > 0 ? (
+                <>
+                  <SkillBox
+                    color={getColor(params.value[0])}
+                    text={params.value[0]}
+                  />
+                  {params.value.length > 1 && (
+                    <SkillBox
+                      color='blue'
+                      text={`+ ${params.value.length - 1}`}
+                    />
+                  )}
+                </>
+              ) : (
+                <SkillBox color='grey' text='None' />
+              )}
+            </div>
+          )
+        }
       },
       {
         headerName: 'Programs',
@@ -153,7 +144,7 @@ const Instructors = ({
                     }`
                   : 'No program'
               }
-              values={params.data?.programs.map((item) => item.name) || []}
+              values={params.data?.programs.map((item) => item) || []}
             />
           </div>
         ),

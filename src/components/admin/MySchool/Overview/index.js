@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import DefaultImage from '../../../../assets/images/profile-image.png'
 import axiosInstance from '../../../../utils/AxiosInstance'
@@ -26,32 +26,32 @@ export const ItemProfileDetails = ({ img, title, className }) => {
 const Overview = ({ universityId, programs }) => {
   const [loading, setLoading] = useState(true)
   const [schoolDetails, setSchoolDetails] = useState({})
+  const isMountedRef = useRef(false)
 
   useEffect(() => {
-    let isMounted = true
+    isMountedRef.current = true
 
     const timeoutId = setTimeout(() => {
-      if (isMounted) setLoading(false)
+      if (isMountedRef.current) setLoading(false)
     }, 1500)
 
     return () => {
-      isMounted = false
+      isMountedRef.current = false
       clearTimeout(timeoutId)
     }
   }, [])
 
   const fetchSchoolDetails = useCallback(async () => {
-    let isMounted = true
-
+    setLoading(true)
     try {
       const { data } = await axiosInstance.get('/my-school/overview')
-      if (isMounted) setSchoolDetails(data)
+      if (isMountedRef.current) setSchoolDetails(data)
     } catch (error) {
       console.error('Error fetching school details:', error)
-    }
-
-    return () => {
-      isMounted = false
+    } finally {
+      if (isMountedRef.current) {
+        setLoading(false)
+      }
     }
   }, [])
 
@@ -60,7 +60,13 @@ const Overview = ({ universityId, programs }) => {
   }, [fetchSchoolDetails])
 
   useEffect(() => {
+    isMountedRef.current = true
+
     fetchSchoolDetails()
+
+    return () => {
+      isMountedRef.current = false
+    }
   }, [fetchSchoolDetails])
 
   return (
