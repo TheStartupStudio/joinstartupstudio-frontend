@@ -89,7 +89,11 @@ function MyCompetitiveness(props) {
         />
       ) : (
         <CarouselComponent
-          data={myCompetitiveness}
+            data={
+              mode === 'edit' && isEditSection
+                ? myCompetitiveness
+                : myCompetitiveness?.filter(mentor => !mentor.isAddBox)
+            }
           itemsToShow={isMobile ? 1 : 3}
           renderItems={(item) => {
             if (!item.isAddBox) {
