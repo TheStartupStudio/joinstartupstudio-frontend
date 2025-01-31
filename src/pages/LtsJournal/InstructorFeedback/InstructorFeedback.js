@@ -34,8 +34,13 @@ function InstructorFeedback(props) {
       let type = props.journalType.value
         ? props.journalType.value
         : props.journalType
+
       if (type === 'personal-finance') {
         return 'student-personal-finance'
+      } else if (type === 'student-lts') {
+        return 'lts-journal'
+      } else if (type === 'student-wellnes') {
+        return 'wellness-journal'
       }
 
       return type
