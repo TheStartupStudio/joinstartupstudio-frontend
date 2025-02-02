@@ -56,9 +56,16 @@ module.exports = {
         test: /\.(jpg|jpeg|png|svg|gif|woff|woff2|ttf|eot|otf)$/i,
         type: 'asset/resource'
       },
+      // {
+      //   test: /\.csv$/,
+      //   use: 'csv-loader'
+      // }
       {
         test: /\.csv$/,
-        use: 'csv-loader'
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/files/[name][ext]'
+        }
       }
     ]
   },

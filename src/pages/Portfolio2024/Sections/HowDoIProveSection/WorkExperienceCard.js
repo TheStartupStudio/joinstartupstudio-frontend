@@ -71,24 +71,48 @@ function WorkExperienceCard(props) {
               className={'d-flex justify-content-between gap-2'}
               style={{ flexWrap: 'wrap' }}
             >
-              <div>
-                <div className={'proveit-title-org organization-name mb-2'}>
+              <div className='work-exp-org-div'>
+                <div
+                  className={'proveit-title-org organization-name mb-2'}
+                  style={{
+                    wordBreak: 'break-word',
+                    overflowWrap: 'anywhere',
+                    maxWidth: '100%'
+                  }}
+                >
                   {data?.organizationName}
                 </div>
                 <div
                   className={'organization-location mb-2'}
-                  style={{ fontWeight: 400 }}
+                  style={{
+                    fontWeight: 400,
+                    wordBreak: 'break-word',
+                    overflowWrap: 'anywhere',
+                    maxWidth: '100%'
+                  }}
                 >
                   {data?.location}
                 </div>
                 <div
                   className={'organization-website mb-3'}
-                  style={{ fontWeight: 400 }}
+                  style={{
+                    fontWeight: 400,
+                    wordBreak: 'break-word',
+                    overflowWrap: 'anywhere',
+                    maxWidth: '100%'
+                  }}
                 >
                   <WebsiteLink website={data?.website} />
                 </div>
               </div>
-              <div className={'text-end organization-date'}>
+              <div
+                className={'text-end organization-date work-exp-org-date'}
+                style={{
+                  wordBreak: 'break-word',
+                  overflowWrap: 'anywhere',
+                  maxWidth: '100%'
+                }}
+              >
                 {convertDateToMonthYear(data?.startDate)} -{' '}
                 {!data?.currentPosition
                   ? convertDateToMonthYear(data?.endDate)

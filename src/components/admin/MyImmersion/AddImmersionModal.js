@@ -8,6 +8,9 @@ import {
   faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons'
 import { FaPencilAlt, FaCheck, FaEye } from 'react-icons/fa'
+import DeleteExpImg from '../../../assets/images/delete-exp-icon/DELETE EXPERIENCE HOVER@2x.png'
+import CancelEditsImg from '../../../assets/images/cancel-edits-icon/CANCEL EDITS HOVER@2x.png'
+import TitleIcon from '../../../assets/images/edit-immrs-title-icon/Group 4652@2x.png'
 
 const AddImmersionModal = ({
   viewExprience,
@@ -126,11 +129,25 @@ const AddImmersionModal = ({
   return (
     <div className='modal-overlay'>
       <div
-        className='modal-container'
+        className='modal-container addimmrsmodal-instr-modal-cont'
         style={{ padding: '40px', borderRadius: '36px' }}
       >
         {/* Modal Header */}
         <div className='immersion-modal-header'>
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'flex-start'
+            }}
+          >
+            <img
+              src={TitleIcon}
+              width={36}
+              height={36}
+              style={{ textAlign: 'left' }}
+            ></img>
+          </div>
           {viewExprience && (
             <div
               className='portfolio-actions'
@@ -180,13 +197,22 @@ const AddImmersionModal = ({
               display: 'flex',
               marginTop: '30px',
               justifyContent: 'space-between',
-              width: '100%'
+              width: '100%',
+              paddingBottom: '20px',
+              borderBottom: '1px solid #00000029',
+              flexWrap: 'wrap'
             }}
           >
-            <h5>{viewExprience ? immersionStepName : immersionStep.name}</h5>
+            <h5 className='viewimmrs-instr-modal-title'>
+              View Immersion
+              {viewExprience ? immersionStepName : immersionStep.name}
+            </h5>
             <div className='status-toggle'>
-              <span>Status</span>
-              <span style={{ fontSize: '12px', color: 'grey' }}>
+              <span className='status-immrs-instr-span'>Status</span>
+              <span
+                className='status-options-immrs-instr'
+                style={{ fontSize: '12px', color: 'grey' }}
+              >
                 {'Inactive'}
               </span>
               <label className='switch'>
@@ -194,11 +220,16 @@ const AddImmersionModal = ({
                   type='checkbox'
                   checked={status}
                   onChange={handleStatusChange}
-                  disabled={!editingImmersion} // Only editable when in edit mode
+                  disabled={!editingImmersion}
+                  className='lizalizalizaliza'
+                  // Only editable when in edit mode
                 />
                 <span className='slider'></span>
               </label>
-              <span style={{ fontSize: '12px', color: 'grey' }}>
+              <span
+                className='status-options-immrs-instr'
+                style={{ fontSize: '12px', color: 'grey' }}
+              >
                 {'Active'}
               </span>
             </div>
@@ -208,71 +239,84 @@ const AddImmersionModal = ({
         {/* Modal Body */}
         <div className='immersion-modal-body'>
           <div className='input-group'>
-            <p className='input-group-title'>Company Details</p>
+            <p className='input-group-title comp-details-title'>
+              Company Details
+            </p>
             <input
               type='text'
               placeholder='Name of Company'
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               disabled={!editingImmersion}
+              className='apply-button'
             />
             <textarea
               placeholder='Description of Company'
               value={companyDescription}
               onChange={(e) => setCompanyDescription(e.target.value)}
               disabled={!editingImmersion}
+              className='apply-button'
             />
           </div>
 
           <div className='input-group'>
-            <p className='input-group-title'>Industry Details</p>
+            <p className='input-group-title comp-details-title'>
+              Industry Details
+            </p>
             <input
               type='text'
               placeholder='Industry'
               value={industry}
               onChange={(e) => setIndustry(e.target.value)}
               disabled={!editingImmersion}
+              className='apply-button'
             />
             <textarea
               placeholder='Industry Problem'
               value={industryProblem}
               onChange={(e) => setIndustryProblem(e.target.value)}
               disabled={!editingImmersion}
+              className='apply-button'
             />
           </div>
 
-          <div className='input-group'>
-            <p className='input-group-title'>Research Guidance</p>
+          <div className='input-group research-guid-group '>
+            <p className='input-group-title comp-details-title'>
+              Research Guidance
+            </p>
             <textarea
               style={{ width: '100%' }}
               placeholder='Research Guidance'
               value={researchGuidance}
               onChange={(e) => setResearchGuidance(e.target.value)}
               disabled={!editingImmersion}
+              className='apply-button'
             />
           </div>
         </div>
 
         {/* Modal Footer */}
-        <div className='modal-footer'>
+        <div className='modal-footer' style={{ marginBottom: '-20px' }}>
           {editingImmersion && viewExprience && (
             <>
               <div
                 className='delete-button'
                 onClick={() => setShowDeleteConfirm(true)} // Open delete confirmation modal
               >
-                <FontAwesomeIcon
+                <img src={DeleteExpImg} width={147} height={24}></img>
+                {/* <FontAwesomeIcon
                   icon={faExclamationTriangle}
                   style={{ cursor: 'pointer' }}
-                />
-                <span style={{ marginLeft: '5px' }}>Delete Experience</span>
+                /> */}
+                {/* <span style={{ marginLeft: '5px' }}>Delete Experience</span> */}
               </div>
               <div className='cancel-edit' onClick={resetFields}>
-                <FontAwesomeIcon
+                <img src={CancelEditsImg} width={108} height={24}></img>
+                {/* <FontAwesomeIcon
                   icon={faArrowLeft}
                   style={{ cursor: 'pointer' }}
                 />
-                <span style={{ marginLeft: '5px' }}>Cancel Edits</span>
+                <span style={{ marginLeft: '5px' }}>Cancel Edits</span> */}
               </div>
             </>
           )}

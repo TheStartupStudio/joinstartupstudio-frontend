@@ -3,13 +3,38 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { Modal } from 'react-bootstrap'
 import { LtsButton } from '../../../ui/ContentItems'
+import { setGeneralLoading } from '../../../redux/general/Actions'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { userLogout } from '../../../redux'
+import { setAuthModal } from '../../../redux/user/Actions'
 
-const ReSigninModal = ({ show, onHide, onLogin }) => {
+const ReSigninModal = ({ show }) => {
+  const history = useHistory()
+  const dispatch = useDispatch()
+
+  const handleAuthModalClose = async () => {
+    dispatch(setGeneralLoading(true))
+    await dispatch(userLogout())
+      .then(() => {
+        history.push('/')
+        localStorage.clear()
+        dispatch(setAuthModal(false))
+      })
+      .catch((error) => {
+        console.log('error', error)
+        dispatch(setGeneralLoading(false))
+      })
+      .finally(() => {
+        window.location.href = '/'
+        dispatch(setGeneralLoading(false))
+      })
+  }
   return (
     <Modal
       show={show}
       className={`resignin-modal ${show ? 'd-flex' : ''} `}
-      onHide={onHide}
+      onHide={handleAuthModalClose}
       size='SM'
       centered
     >
@@ -41,7 +66,7 @@ const ReSigninModal = ({ show, onHide, onLogin }) => {
           background={'#52C7DE'}
           color={'#fff'}
           border={'none'}
-          onClick={onLogin}
+          onClick={handleAuthModalClose}
         />
       </Modal.Body>
     </Modal>

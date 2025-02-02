@@ -2585,6 +2585,38 @@
   /* Add spacing between list items */
 }
 
+@media (max-width:765px) {
+  .work-exp-org-div {
+    width: 70%;
+  }
+}
+
+
+
+@media (max-width:554px) {
+  .work-exp-org-div {
+    width: 60%;
+  }
+}
+
+
+@media (max-width:655px) {
+  .work-exp-org-date {
+    text-align: left !important;
+
+  }
+}
+
+
+.work-exp-org-date {
+  margin-bottom: 10px !important;
+
+}
+
+/* .organization-date {
+  text-align: right !important;
+} */
+
 @media (max-width:584px) {
 
   .workexp-org-desc ul {

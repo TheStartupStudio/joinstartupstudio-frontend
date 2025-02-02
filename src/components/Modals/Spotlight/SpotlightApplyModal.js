@@ -311,8 +311,8 @@ const SpotlightApplyModal = (props) => {
             </div>
           </div>
           <div
-            className='w-100 pb-5'
-            style={{ marginTop: '15px', marginBottom: '-55px' }}
+            className='w-100 pb-2'
+            style={{ marginTop: '20px', marginBottom: '-55px' }}
           >
             <div
               className={`d-flex justify-content-${

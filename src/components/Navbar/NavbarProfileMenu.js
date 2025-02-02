@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import IntlMessages from '../../utils/IntlMessages'
 import ContactUsModal from '../Modals/contactUsModal'
 import MisconductModal from '../Modals/misconductModal'
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { useHistory } from 'react-router-dom'
 import { userLogout } from '../../redux'
 import { setGeneralLoading } from '../../redux/general/Actions'
 
@@ -39,6 +39,7 @@ const NavbarProfileMenu = ({
         console.log('error', error)
       })
       .finally(() => {
+        window.location.href = '/'
         dispatch(setGeneralLoading(false))
       })
   }

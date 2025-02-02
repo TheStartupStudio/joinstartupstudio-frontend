@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import DownloadIcon from '../../../assets/images/downloadSpotDoc.svg'
 import html2canvas from 'html2canvas'
+import DownloadIcon from '../../../assets/images/downloadSpotDoc.svg'
 import jsPDF from 'jspdf'
 import ParentGuardianForm from './ParentGuardianForm'
 
