@@ -259,28 +259,59 @@ export function isValidHttpUrl(string) {
   }
 }
 
+// export const beautifulDateFormat = (date, customFormat = null) => {
+//   if (!date) return
+//   const dateNow = new Date()
+//   const inputDate = new Date(date)
+
+//   const dateDifference =
+//     (dateNow.getTime() - inputDate.getTime()) / (1000 * 60 * 60 * 24.0)
+
+//   // if (customFormat) return format(new Date(date), customFormat)
+
+//   if (dateDifference > 6) {
+//     return format(
+//       new Date(inputDate.toISOString().slice(0, -1)),
+//       customFormat?.type === 'hours' ? customFormat.format : 'MMMM dd, yyyy'
+//     )
+//   } else if (dateDifference < 1 && customFormat?.type !== 'hours') {
+//     return 'Today'
+//   } else {
+//     return format(
+//       new Date(inputDate.toISOString().slice(0, -1)),
+//       customFormat?.format ?? "EEEE h:mmaaaaa'm'"
+//     )
+//   }
+// }
+
 export const beautifulDateFormat = (date, customFormat = null) => {
-  if (!date) return
-  const dateNow = new Date()
+  if (!date) return null
+
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const inputDate = new Date(date)
+  const localDate = new Date(
+    inputDate.toLocaleString('en-US', { timeZone: userTimeZone })
+  )
 
-  const dateDifference =
-    (dateNow.getTime() - inputDate.getTime()) / (1000 * 60 * 60 * 24.0)
+  const now = new Date(
+    new Date().toLocaleString('en-US', { timeZone: userTimeZone })
+  )
+  const dateDifference = (now - localDate) / (1000 * 60 * 60 * 24)
 
-  // if (customFormat) return format(new Date(date), customFormat)
+  if (customFormat?.type === 'hours') {
+    return localDate.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    })
+  }
 
-  if (dateDifference > 6) {
-    return format(
-      new Date(inputDate.toISOString().slice(0, -1)),
-      customFormat?.type === 'hours' ? customFormat.format : 'MMMM dd, yyyy'
-    )
-  } else if (dateDifference < 1 && customFormat?.type !== 'hours') {
+  if (dateDifference < 1) {
     return 'Today'
+  } else if (dateDifference < 7) {
+    return format(localDate, 'EEEE')
   } else {
-    return format(
-      new Date(inputDate.toISOString().slice(0, -1)),
-      customFormat?.format ?? "EEEE h:mmaaaaa'm'"
-    )
+    return format(localDate, 'MMMM dd, yyyy')
   }
 }
 

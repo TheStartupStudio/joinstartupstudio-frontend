@@ -68,7 +68,7 @@ const startTokenRefreshCheck = () => {
 
   tokenRefreshInterval = setInterval(() => {
     const token = getAccessToken()
-    if (token && isTokenExpired(token)) {
+    if (token) {
       console.log('called')
 
       refreshAccessToken()

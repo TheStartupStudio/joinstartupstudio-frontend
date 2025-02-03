@@ -32,10 +32,10 @@ const SubmitIndustryProblemModal = (props) => {
   const loggedUser = useSelector((state) => state.user.user.user)
 
   const initialState = {
-    immersion_id: props.immersion.problemID,
-    industry_problem_ID: props.immersion.problemID,
-    company_ID: props.immersion.problemID,
-    company_name: props.immersion.companyName,
+    immersion_id: props.immersion?.problemID,
+    industry_problem_ID: props.immersion?.problemID,
+    company_ID: props.immersion?.problemID,
+    company_name: props.immersion?.companyName,
     solutionDescription: '',
     status: 'pending',
     // parentGuardianApprovalForm: '',

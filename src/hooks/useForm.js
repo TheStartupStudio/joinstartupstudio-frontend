@@ -17,11 +17,16 @@ export const useForm = (initialState, initialData, mode = 'add', loading) => {
     setFormData({ ...formData, [name]: value })
   }
 
-  const handleChangeCheckbox = (event, type = 'bool', maxLimit = 3) => {
+  const handleChangeCheckbox = (
+    event,
+    type = 'bool',
+    reverse = false,
+    maxLimit = 3
+  ) => {
     if (type === 'bool') {
       const { name, checked } = event.target
 
-      setFormData({ ...formData, [name]: !checked })
+      setFormData({ ...formData, [name]: reverse ? checked : !checked })
     } else if (type === 'array') {
       const { name, value, checked } = event.target
 
@@ -43,7 +48,7 @@ export const useForm = (initialState, initialData, mode = 'add', loading) => {
         }
       })
     } else if (type === 'str') {
-      const { name, value, checked } = event.target
+      const { name, value } = event.target
       setFormData({ ...formData, [name]: value.toLowerCase() })
     }
   }

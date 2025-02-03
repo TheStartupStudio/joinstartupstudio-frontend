@@ -66,8 +66,6 @@ function LtsJournalContent(props) {
   //   )
   // }
 
-  console.log('journals', journal)
-
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
@@ -131,12 +129,9 @@ function LtsJournalContent(props) {
       })
   }
 
-  useEffect(
-    function () {
-      loadData()
-    },
-    [props.match.params.journalId]
-  )
+  useEffect(() => {
+    loadData()
+  }, [props.match.params.journalId])
 
   const updateUserReflectionsTable = (updatedTable, index) => {
     const updatedJournal = { ...journal }

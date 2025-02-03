@@ -160,23 +160,44 @@ function LtsJournalReflection(props) {
     })
   }
 
-  useEffect(() => {
-    unblockHandle.current = history.block((targetLocation) => {
-      if (
-        !showNotSavedModal &&
-        notSaved
-        // && props.history.location.pathname != targetLocation.pathname
-      ) {
-        showModal(targetLocation)
+  // useEffect(() => {
+  //   unblockHandle.current = history.block((targetLocation) => {
+  //     if (
+  //       !showNotSavedModal &&
+  //       notSaved
+  //       // && props.history.location.pathname != targetLocation.pathname
+  //     ) {
+  //       showModal(targetLocation)
 
+  //       return false
+  //     }
+  //     return true
+  //   })
+  //   return function () {
+  //     unblockHandle.current.current && unblockHandle.current.current()
+  //   }
+  // })
+
+  useEffect(() => {
+    if (unblockHandle.current) {
+      unblockHandle.current()
+    }
+
+    unblockHandle.current = history.block((targetLocation) => {
+      if (!showNotSavedModal && notSaved) {
+        showModal(targetLocation)
         return false
       }
       return true
     })
-    return function () {
-      unblockHandle.current.current && unblockHandle.current.current()
+
+    return () => {
+      if (unblockHandle.current) {
+        unblockHandle.current()
+        unblockHandle.current = null
+      }
     }
-  })
+  }, [history, showNotSavedModal, notSaved])
 
   // function handleConfirm() {
   //   if (unblockHandle) {

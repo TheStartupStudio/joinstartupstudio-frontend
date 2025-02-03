@@ -303,7 +303,7 @@ const SpotlightApplyModal = (props) => {
                 text={'I agree to the Spotlight'}
                 blueText={'Terms & Conditions'}
                 name={'termsAndConditions'}
-                onChange={handleChangeCheckbox}
+                onChange={(e) => handleChangeCheckbox(e, 'bool', true)}
                 checked={formData?.termsAndConditions}
                 // error={errors.termsAndConditions}
                 // showError={formSubmitted}

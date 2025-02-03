@@ -60,7 +60,7 @@ function InstructorFeedback(props) {
             sender: { id: loggedUserId, name: loggedUserName },
             receivers: [{ id: userId }],
             type: NotificationTypes.INSTRUCTOR_FEEDBACK_ADDED.key,
-            url: `/${journalType()}/${props.data?.journalId}`,
+            url: `/${journalType()}?${props.data?.journalId}`,
             description: ` on ${props.journal?.title} of ${
               props.journalType.label
                 ? props.journalType.label
@@ -83,7 +83,7 @@ function InstructorFeedback(props) {
             sender: { id: loggedUserId, name: loggedUserName },
             receivers: [{ id: userId }],
             type: NotificationTypes.INSTRUCTOR_FEEDBACK_UPDATED.key,
-            url: `/${journalType()}/${props.data?.journalId}`,
+            url: `/${journalType()}?${props.data?.journalId}`,
             description: ` on ${props.journal?.title} of ${
               props.journalType.label
                 ? props.journalType.label

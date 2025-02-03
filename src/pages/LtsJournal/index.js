@@ -11,7 +11,6 @@ import { faAngleDown, faFileAlt } from '@fortawesome/free-solid-svg-icons'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
 import searchIcon from '../../assets/images/search-icon.png'
-
 import LtsJournalContent from './content'
 
 function getEarliestUserCellDate(journal) {
@@ -40,8 +39,6 @@ function LtsJournal(props) {
   const dispatch = useDispatch()
   const history = useHistory()
   let [journals, setJournals] = useState([])
-  let [loaded, setLoaded] = useState(false)
-  let [journalActive, setJournalActive] = useState(false)
   const [journalsData, setJournalsData] = useState()
   const currentLanguage = useSelector((state) => state.lang.locale)
   let contentContainer = useRef()
@@ -56,41 +53,43 @@ function LtsJournal(props) {
       })
       setJournalsData(data)
       setJournals(data)
-      setLoaded(true)
 
       if (data.length > 0 && redir) {
         if (data[0].children && data[0].children.length > 0) {
           history.push(`${props.match.url}/${data[0].children[0].id}`)
         } else {
-          history.push(`${props.match.url}/${data[0].id}`)
+          history.push(
+            `${props.match.url}/${
+              props.location.search.split('?')[1] || data[0].id
+            }`
+          )
         }
       }
-
-      if (journalActive === 'no') activeteFirstJournal()
-    } catch (err) {}
-  }
-
-  function activeteFirstJournal() {
-    if (journals.length > 0) {
-      if (journals[0].children && journals[0].children.length > 0) {
-        history.push(`${props.match.url}/${journals[0].children[0].id}`)
-      } else {
-        history.push(`${props.match.url}/${journals[0].id}`)
-      }
+    } catch (err) {
+      console.log('err', err)
     }
   }
+
+  // function activeteFirstJournal() {
+  //   if (journals.length > 0) {
+  //     if (journals[0].children && journals[0].children.length > 0) {
+  //       history.push(`${props.match.url}/${journals[0].children[0].id}`)
+  //     } else {
+  //       history.push(`${props.match.url}/${journals[0].id}`)
+  //     }
+  //   }
+  // }
 
   function journalChanged(journal) {
     getJournals(false)
   }
   useEffect(() => {
     dispatch(changeSidebarState(false))
-  })
+  }, [dispatch])
 
   useEffect(() => {
     getJournals()
   }, [])
-
 
   let titleMapping = {
     hs1: 'my_journal.hs1_title',
