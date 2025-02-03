@@ -1,12 +1,12 @@
 .login-logo {
-  width: 10cqh;
+  /* width: 10cqh; */
   display: flex;
   justify-content: start;
 }
 
-.login-logo img {
+/* .login-logo img {
   width: 15rem;
-}
+} */
 
 .login-title {
   margin-top: 20px;
@@ -73,7 +73,7 @@
   grid-template-columns: 25px auto;
 }
 
-.radio-wrapper > div {
+.radio-wrapper>div {
   display: flex;
   align-items: center;
 }
@@ -269,7 +269,8 @@
   }
 
   .login-logo img {
-    width: 150px;
+    width: 190px;
+    height: 70px;
   }
 
   .login-title {

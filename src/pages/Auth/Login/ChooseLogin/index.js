@@ -17,6 +17,7 @@ import {
   constructLoginUrl,
   getClientFromHostname
 } from '../../../../utils/helpers'
+import SUSLogoStudent from '../../../../assets/images/LTS Logo v2 (H-Light)x1200.png'
 
 const socialIcons = {
   linkedin: faLinkedin,
@@ -81,7 +82,7 @@ const ChooseLogin = () => {
             <div className='col-sm-12 col-md-9  mx-auto'>
               <div className='login-left-content sfari-onlyyy'>
                 <div className='login-logo'>
-                  <img src={SUSLogo} alt='logo' />
+                  <img src={SUSLogoStudent} alt='logo' />
                 </div>
                 <h1 className='login-title' style={{ color: '#000' }}>
                   Welcome...

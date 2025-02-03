@@ -91,7 +91,7 @@ const ApplyForPitch = (props) => {
       keyboard={false}
       className='w-100 px-md-5'
     >
-      <Modal.Header className='contact-us-title my-auto p-0 mx-4 general-modal-header'>
+      <Modal.Header className='contact-us-title my-auto p-0 mx-4 general-modal-header apply-to-pitch-title'>
         <h3 className='mb-0 pt-4 mt-2  apptopitch-title-modal'>
           APPLY TO PITCH
         </h3>
@@ -100,7 +100,26 @@ const ApplyForPitch = (props) => {
           className='btn-close me-1'
           aria-label='Close'
           onClick={props.onHide}
-        />
+        />{' '}
+        <div
+          className='portfolio-actions portf-act-spot-dnone'
+          style={{ borderRadius: ' 0px 28px' }}
+        >
+          {' '}
+          <span
+            style={{
+              fontSize: '20px',
+              fontWeight: '700',
+              width: '65px',
+              height: '65px'
+            }}
+            className='action-box cursor-pointer'
+            onClick={() => props.onHide()}
+          >
+            <img src={LeftArrowSaveICon} width={30} height={33}></img>
+            {/* <FontAwesomeIcon icon={faArrowLeft} /> */}
+          </span>
+        </div>
       </Modal.Header>
       <Modal.Body className='mx-auto px-md-5 my-auto pitch_modal'>
         <div className='row'>

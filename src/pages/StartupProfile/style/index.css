@@ -457,14 +457,31 @@ opacity: 1;
 .spotlight-apply-modal .portf-act-spot-dnone {
   display: block !important;
   margin-bottom: 30px !important;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex !important;
+  box-shadow: 0px 3px 10px #00000029;
+  border-radius: 0px 0px 0px 28px;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }
+
+.spotlight-apply-modal .portf-act-spot-dnone span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 .spotlight-apply-modal .btn-close {
   display: none !important;
 
 }
 
-
+.apply-to-pitch-title {}
 
 .spot-apply-cont-row .apply-inputs.col-12.col-lg-6 {
   padding-left: 31px !important;

@@ -16,6 +16,7 @@ import FormWrapper from './ui/FormWrapper'
 import { setLoginLoading } from '../../../redux/user/Actions'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import SUSLogoStudent from '../../../assets/images/LTS Logo v2 (H-Light)x1200.png'
 
 const ChooseLogin = () => {
   const history = useHistory()
@@ -134,7 +135,13 @@ const ChooseLogin = () => {
             <div className='col-sm-12 col-md-9  mx-auto'>
               <div className='login-left-content sfari-onlyyy'>
                 <div className='login-logo'>
-                  <img src={SUSLogo} alt='logo' />
+                  <img
+                    src={SUSLogoStudent}
+                    alt='logo'
+                    width={320}
+                    height={120}
+                    style={{ marginLeft: '-10px' }}
+                  />
                 </div>
                 <h1 className='login-title' style={{ color: '#000' }}>
                   Welcome...
