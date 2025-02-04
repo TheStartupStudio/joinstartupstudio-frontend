@@ -17,6 +17,7 @@ import AppLocale from './lang'
 import ReSigninModal from './pages/Auth/Login/ReSigninModal'
 
 function Router(props) {
+  console.log('props', props)
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user, authModal } = useSelector(
     (state) => state.user
@@ -39,43 +40,45 @@ function Router(props) {
 
   return (
     <>
-      {authModal ? <ReSigninModal show={authModal} /> : null}
       <IntlProvider
         locale={currentAppLocale.locale}
         messages={currentAppLocale.messages}
         onError={() => ''}
       >
-        {isAuthenticated ? (
-          <Layout>
-            <Switch>
-              {renderRoutes(roleRoutes())}
-              {redirects.map((redirect) => (
-                <Redirect
-                  key={redirect.from}
-                  from={redirect.from}
-                  to={redirect.to}
-                  exact={redirect.exact || false}
-                />
-              ))}
-              <Route component={NotFound} />
-            </Switch>
-          </Layout>
-        ) : (
-          <PublicLayout>
-            <Switch>
-              {renderRoutes(publicRoutes)}
-              {redirects.map((redirect) => (
-                <Redirect
-                  key={redirect.from}
-                  from={redirect.from}
-                  to={redirect.to}
-                  exact={redirect.exact || false}
-                />
-              ))}
-              <Route component={NotFound} />
-            </Switch>
-          </PublicLayout>
-        )}
+        <>
+          {authModal ? <ReSigninModal show={authModal} /> : null}
+          {isAuthenticated ? (
+            <Layout>
+              <Switch>
+                {renderRoutes(roleRoutes())}
+                {redirects.map((redirect) => (
+                  <Redirect
+                    key={redirect.from}
+                    from={redirect.from}
+                    to={redirect.to}
+                    exact={redirect.exact || false}
+                  />
+                ))}
+                <Route component={NotFound} />
+              </Switch>
+            </Layout>
+          ) : (
+            <PublicLayout>
+              <Switch>
+                {renderRoutes(publicRoutes)}
+                {redirects.map((redirect) => (
+                  <Redirect
+                    key={redirect.from}
+                    from={redirect.from}
+                    to={redirect.to}
+                    exact={redirect.exact || false}
+                  />
+                ))}
+                <Route component={NotFound} />
+              </Switch>
+            </PublicLayout>
+          )}
+        </>
       </IntlProvider>
     </>
   )
