@@ -68,8 +68,6 @@ const startTokenRefreshCheck = () => {
     const oneMinuteBeforeExpiry = expirationTime - 30 * 1000
     const token = getAccessToken()
     if (token && currentTime >= oneMinuteBeforeExpiry) {
-      console.log('called')
-
       refreshAccessToken()
     }
   }, 30 * 1000)

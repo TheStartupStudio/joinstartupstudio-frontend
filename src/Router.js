@@ -17,7 +17,6 @@ import AppLocale from './lang'
 import ReSigninModal from './pages/Auth/Login/ReSigninModal'
 
 function Router(props) {
-  console.log('props', props)
   const currentAppLocale = AppLocale[props.locale]
   const { isAuthenticated, user, authModal } = useSelector(
     (state) => state.user
