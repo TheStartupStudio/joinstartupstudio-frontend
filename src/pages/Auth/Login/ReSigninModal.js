@@ -19,7 +19,8 @@ const ReSigninModal = ({ show }) => {
       .then(() => {
         localStorage.clear()
         dispatch(setAuthModal(false))
-        history.push('/')
+        // history.push('/')
+        window.location.href = '/'
       })
       .catch((error) => {
         console.log('error', error)
