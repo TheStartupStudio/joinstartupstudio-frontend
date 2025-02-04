@@ -50,12 +50,12 @@ const NavbarListItems = (props) => {
           srcWithFocus={HSGooglePlay}
           setShowNotifications={setShowNotifications}
         />
-        <NavbarIcon
+        {/* <NavbarIcon
           to={'/my-spark/widgets'}
           cn={`spark-icon ${props.isMobile ? 'safari_only' : ''}`}
           srcWithFocus={HSmySpark}
           setShowNotifications={setShowNotifications}
-        />
+        /> */}
         <NavbarIcon
           to={'/my-classroom'}
           cn={'comm-icon my-auto'}
