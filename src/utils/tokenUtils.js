@@ -40,24 +40,19 @@ const refreshAccessToken = async () => {
     return
   }
 
-  const currentTime = Date.now()
-  const oneMinuteBeforeExpiry = expirationTime - 30 * 1000
+  try {
+    const response = await axios.post(`${baseURL}auth/refreshToken`, {
+      refresh_token: refreshToken
+    })
 
-  if (currentTime >= oneMinuteBeforeExpiry) {
-    try {
-      const response = await axios.post(`${baseURL}auth/refreshToken`, {
-        refresh_token: refreshToken
-      })
-
-      saveAccessToken(response.data.access_token)
-      return {
-        newAccessToken: response.data.access_token
-      }
-    } catch (error) {
-      store.dispatch(setAuthModal(true))
-      localStorage.setItem('session_expired', true)
-      return
+    saveAccessToken(response.data.access_token)
+    return {
+      newAccessToken: response.data.access_token
     }
+  } catch (error) {
+    store.dispatch(setAuthModal(true))
+    localStorage.setItem('session_expired', true)
+    return
   }
 }
 
@@ -67,8 +62,12 @@ const startTokenRefreshCheck = () => {
   }
 
   tokenRefreshInterval = setInterval(() => {
+    const currentTime = Date.now()
+    const accessToken = getAccessToken()
+    const expirationTime = getTokenExpiration(accessToken)
+    const oneMinuteBeforeExpiry = expirationTime - 30 * 1000
     const token = getAccessToken()
-    if (token) {
+    if (token && currentTime >= oneMinuteBeforeExpiry) {
       console.log('called')
 
       refreshAccessToken()

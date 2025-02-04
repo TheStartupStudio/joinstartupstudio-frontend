@@ -82,11 +82,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.png',
-      minify: {
-        collapseWhitespace: true,
-        removeComments: true,
-        removeRedundantAttributes: true
-      }
+      minify: false
+      // minify: {
+      //   collapseWhitespace: true,
+      //   removeComments: true,
+      //   removeRedundantAttributes: true
+      // }
     }),
     new DotenvWebpackPlugin() // Load environment variables via dotenv-webpack
   ],

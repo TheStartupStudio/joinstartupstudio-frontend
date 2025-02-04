@@ -17,16 +17,16 @@ const ReSigninModal = ({ show }) => {
     dispatch(setGeneralLoading(true))
     await dispatch(userLogout())
       .then(() => {
-        history.push('/')
         localStorage.clear()
         dispatch(setAuthModal(false))
+        history.push('/')
       })
       .catch((error) => {
         console.log('error', error)
         dispatch(setGeneralLoading(false))
       })
       .finally(() => {
-        window.location.href = '/'
+        // window.location.href = '/'
         dispatch(setGeneralLoading(false))
       })
   }
