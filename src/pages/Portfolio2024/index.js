@@ -158,22 +158,48 @@ const Index = ({
 
   const scrollableRef = useRef(null)
 
+  // const scrollToTop = () => {
+  //   if (scrollableRef.current) {
+  //     scrollableRef.current.scrollTo({
+  //       top: 0,
+  //       behavior:'smooth'
+  //     })
+
+  //     scrollableRef.current.scrollIntoView({
+  //       behavior:'smooth'
+  //     })
+  //   }
+  // }
+
   const scrollToTop = () => {
     if (scrollableRef.current) {
-      scrollableRef.current.scrollTo({
-        top: 0,
-        behavior:'smooth'
-      })
+      if (window.innerWidth <= 768) { 
+        setTimeout(() => {
+          scrollableRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }, 0);
+      } else {
+        scrollableRef.current.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
 
-      scrollableRef.current.scrollIntoView({
-        behavior:'smooth'
-      })
+        scrollableRef.current.scrollIntoView({
+          behavior: 'smooth',
+        });
+      }
     }
-  }
+  }; // testing this scrolltotop
+
+
+  const scrollableStyle = window.innerWidth <= 768 ? {} : { height: '800px', overflowY: 'scroll' };
 
   return (
     <>
-      <div ref={scrollableRef} style={{ height: '800px', overflowY: 'scroll' }}>
+    
+      <div ref={scrollableRef} style={scrollableStyle}>
         <div
           style={{
             height: '800px'
