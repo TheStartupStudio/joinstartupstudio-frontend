@@ -220,7 +220,10 @@ const CustomDropdown = ({
             display: 'block'
           }}
         >
-          Bulk Actions
+          {title == 'Add Course or Credential +'
+            ? 'Add Course or Credential +'
+            : 'Bulk Actions'}
+          {/* Bulk Actions */}
           {/* {multiple
             ? selectedOptions.length > 0
               ? selectedOptions.map((option) => option.name).join(', ')

@@ -237,7 +237,7 @@ const HeaderActions = ({
                 //   }
                 // ]}
                 // onClick={lastDropdownProps?.onClick}
-                title={lastDropdownProps?.title}
+                title='Add Course or Credential +'
               />
             </div>
           </Col>
