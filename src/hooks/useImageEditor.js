@@ -107,6 +107,7 @@ const useImageEditor = (deleteAvatarImage, deleteAvatarImageFile) => {
 
   const handleDeleteImage = async () => {
     const deleteSuccess = await deleteImage(imageUrl)
+
     if (deleteSuccess) {
       deleteAvatarImage?.(deleteSuccess)
       setImageUrl(null)

@@ -10,6 +10,91 @@ import ReactImageUpload from '../../../pages/Portfolio2024/Components/ReactAvata
 import useImageEditor from '../../../hooks/useImageEditor'
 import axiosInstance from '../../../utils/AxiosInstance'
 
+const ScheduleTypeDropdown = ({ formData, handleCheckboxChange }) => {
+  const [isDropdownOpen, setDropdownOpen] = useState(false)
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen)
+  }
+
+  return (
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <label>Select Schedule Type</label>
+      <button
+        type='button'
+        onClick={toggleDropdown}
+        style={{
+          display: 'block',
+          width: '100%',
+          padding: '10px 15px',
+          backgroundColor: 'white',
+          border: '1px solid #ccc',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          color: 'grey'
+          // height: '60px'
+        }}
+      >
+        {formData.scheduleType ? formData.scheduleType : 'Select Schedule Type'}
+      </button>
+
+      {isDropdownOpen && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '100%',
+            left: '0',
+            zIndex: '10',
+            backgroundColor: 'white',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+            padding: '10px',
+            width: '100%'
+          }}
+        >
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+          >
+            <label
+              style={{
+                color: formData.scheduleType === 'Flexible' ? 'blue' : 'black',
+                display: 'flex'
+              }}
+            >
+              <input
+                type='radio'
+                name='scheduleType'
+                value='Flexible'
+                checked={formData.scheduleType === 'Flexible'}
+                onChange={handleCheckboxChange}
+                style={{ marginRight: '5px', height: '100%', width: '20px' }}
+              />
+              Flexible (Learn at your own pace)
+            </label>
+            <label
+              style={{
+                color: formData.scheduleType === 'Fixed' ? 'blue' : 'black',
+                display: 'flex'
+              }}
+            >
+              <input
+                type='radio'
+                name='scheduleType'
+                value='Fixed'
+                checked={formData.scheduleType === 'Fixed'}
+                onChange={handleCheckboxChange}
+                style={{ marginRight: '5px', height: '100%', width: '20px' }}
+              />
+              Fixed (Meet assigned deadlines)
+            </label>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 const EditCourseandCredentialModal = ({
   viewExprience,
   onClose,
@@ -40,7 +125,7 @@ const EditCourseandCredentialModal = ({
     skills: '',
     awardType: '',
     completionTime: '',
-    scheduleType: [], // Changed to array to store multiple selections
+    scheduleType: '', // Changed to array to store multiple selections
     url: '',
     status: 'inactive',
     image: null
@@ -52,21 +137,7 @@ const EditCourseandCredentialModal = ({
   }
 
   const handleCheckboxChange = (e) => {
-    const { value } = e.target
-    setFormData((prevData) => {
-      // Toggle the selection in the scheduleType array
-      if (prevData.scheduleType.includes(value)) {
-        return {
-          ...prevData,
-          scheduleType: prevData.scheduleType.filter((type) => type !== value)
-        }
-      } else {
-        return {
-          ...prevData,
-          scheduleType: [...prevData.scheduleType, value]
-        }
-      }
-    })
+    setFormData({ ...formData, scheduleType: e.target.value })
   }
 
   const handleStatusChange = () => {
@@ -233,44 +304,11 @@ const EditCourseandCredentialModal = ({
 
             <div className='form-group'>
               <div>
-                <label>Select Schedule Type</label>
-                <div
-                  style={{ display: 'flex', gap: '10px', alignItems: 'center' }}
-                >
-                  <label
-                    style={{
-                      color: formData.scheduleType.includes('Flexible')
-                        ? 'blue'
-                        : 'black'
-                    }}
-                  >
-                    <input
-                      type='checkbox'
-                      name='scheduleType'
-                      value='Flexible'
-                      checked={formData.scheduleType.includes('Flexible')}
-                      onChange={handleCheckboxChange}
-                    />
-                    Flexible( Learn at your own pace)
-                  </label>
-
-                  <label
-                    style={{
-                      color: formData.scheduleType.includes('Fixed')
-                        ? 'blue'
-                        : 'black'
-                    }}
-                  >
-                    <input
-                      type='checkbox'
-                      name='scheduleType'
-                      value='Fixed'
-                      checked={formData.scheduleType.includes('Fixed')}
-                      onChange={handleCheckboxChange}
-                    />
-                    Fixed (Meet assigned deadlines)
-                  </label>
-                </div>
+                {/* <label>Select Schedule Type</label> */}
+                <ScheduleTypeDropdown
+                  formData={formData}
+                  handleCheckboxChange={handleCheckboxChange}
+                />
               </div>
               <div>
                 <label>Link to Course</label>
@@ -335,7 +373,7 @@ const EditCourseandCredentialModal = ({
                 />
               </div>
             </div>
-
+            {console.log(formData, 'formdataaa')}
             <div
               style={{
                 marginLeft: 'auto'

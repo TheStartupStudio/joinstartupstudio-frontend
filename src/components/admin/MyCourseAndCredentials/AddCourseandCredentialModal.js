@@ -34,13 +34,10 @@ const ScheduleTypeDropdown = ({ formData, handleCheckboxChange }) => {
           borderRadius: '5px',
           cursor: 'pointer',
           color: 'grey'
+          // height: '60px'
         }}
       >
-        {formData.scheduleType.length === 1
-          ? formData.scheduleType[0]
-          : formData.scheduleType.length > 1
-          ? formData.scheduleType.join(', ')
-          : 'Select Schedule Type'}
+        {formData.scheduleType ? formData.scheduleType : 'Select Schedule Type'}
       </button>
 
       {isDropdownOpen && (
@@ -63,44 +60,33 @@ const ScheduleTypeDropdown = ({ formData, handleCheckboxChange }) => {
           >
             <label
               style={{
-                color: formData.scheduleType.includes('Flexible')
-                  ? 'blue'
-                  : 'black'
+                color: formData.scheduleType === 'Flexible' ? 'blue' : 'black',
+                display: 'flex'
               }}
             >
               <input
-                style={{
-                  width: '10px',
-                  display: 'inline-block',
-                  marginRight: '3px'
-                }}
-                type='checkbox'
+                type='radio'
                 name='scheduleType'
                 value='Flexible'
-                checked={formData.scheduleType.includes('Flexible')}
+                checked={formData.scheduleType === 'Flexible'}
                 onChange={handleCheckboxChange}
+                style={{ marginRight: '5px', height: '100%', width: '20px' }}
               />
               Flexible (Learn at your own pace)
             </label>
-
             <label
               style={{
-                color: formData.scheduleType.includes('Fixed')
-                  ? 'blue'
-                  : 'black'
+                color: formData.scheduleType === 'Fixed' ? 'blue' : 'black',
+                display: 'flex'
               }}
             >
               <input
-                style={{
-                  width: '10px',
-                  display: 'inline-block',
-                  marginRight: '3px'
-                }}
-                type='checkbox'
+                type='radio'
                 name='scheduleType'
                 value='Fixed'
-                checked={formData.scheduleType.includes('Fixed')}
+                checked={formData.scheduleType === 'Fixed'}
                 onChange={handleCheckboxChange}
+                style={{ marginRight: '5px', height: '100%', width: '20px' }}
               />
               Fixed (Meet assigned deadlines)
             </label>
@@ -128,7 +114,8 @@ const AddCourseandCredentialModal = ({
     imageUrl,
     setImageUrl,
     avatarEditorActions,
-    editorRef
+    editorRef,
+    handleDeleteImage
   } = useImageEditor()
 
   const [formData, setFormData] = useState({
@@ -140,7 +127,7 @@ const AddCourseandCredentialModal = ({
     skills: '',
     awardType: '',
     completionTime: '',
-    scheduleType: [], // Changed to array to store multiple selections
+    scheduleType: '', // Changed to array to store multiple selections
     url: '',
     status: 'inactive',
     image: null,
@@ -160,12 +147,17 @@ const AddCourseandCredentialModal = ({
         completionTime: viewExprience.total_completion_time || '',
         scheduleType:
           viewExprience.schedule_type && viewExprience.schedule_type.length > 0
-            ? [...viewExprience.schedule_type]
-            : [],
+            ? viewExprience.schedule_type
+            : '',
         url: viewExprience.url_link || '',
         status: viewExprience.status || 'inactive',
-        weeklyTimeBreakdown: viewExprience.weekly_time_breakdown // Add logic to handle image if needed
+        weeklyTimeBreakdown: viewExprience.weekly_time_breakdown, // Add logic to handle image if neededm
+        image: viewExprience.image_preview
       })
+
+      if (viewExprience.image_preview) {
+        setImageUrl(viewExprience.image_preview)
+      }
     }
   }, [viewExprience])
 
@@ -180,21 +172,7 @@ const AddCourseandCredentialModal = ({
   }
 
   const handleCheckboxChange = (e) => {
-    const { value } = e.target
-    setFormData((prevData) => {
-      // Toggle the selection in the scheduleType array
-      if (prevData.scheduleType.includes(value)) {
-        return {
-          ...prevData,
-          scheduleType: prevData.scheduleType.filter((type) => type !== value)
-        }
-      } else {
-        return {
-          ...prevData,
-          scheduleType: [...prevData.scheduleType, value]
-        }
-      }
-    })
+    setFormData({ ...formData, scheduleType: e.target.value })
   }
 
   const handleStatusChange = () => {
@@ -239,7 +217,7 @@ const AddCourseandCredentialModal = ({
         type_award: formData.awardType,
         total_completion_time: formData.completionTime,
         weekly_time_breakdown: formData.weeklyTimeBreakdown || '', // Handle missing field gracefully
-        schedule_type: formData.scheduleType || [], // Default to empty array
+        schedule_type: formData.scheduleType || '', // Default to empty array
         url_link: formData.url,
         status: formData.status,
         course_credential_description: formData.description,
@@ -278,7 +256,7 @@ const AddCourseandCredentialModal = ({
         skills: '',
         awardType: '',
         completionTime: '',
-        scheduleType: [], // Reset to an empty array
+        scheduleType: '', // Reset to an empty array
         url: '',
         status: 'inactive',
         image: null,
@@ -301,7 +279,7 @@ const AddCourseandCredentialModal = ({
       skills: '',
       awardType: '',
       completionTime: '',
-      scheduleType: [], // Changed to array to store multiple selections
+      scheduleType: '', // Changed to array to store multiple selections
       url: '',
       status: 'inactive',
       image: null,
@@ -585,7 +563,9 @@ const AddCourseandCredentialModal = ({
                 }}
                 className=''
               >
+                {console.log(formData.image, 'formData')}
                 <ReactImageUpload
+                  value={imageUrl}
                   {...imageProperties}
                   onChangeImageCrop={updateCroppedImage}
                   onImageLoadSuccess={handleImageLoadSuccess}

@@ -391,6 +391,9 @@ export const uploadImage = async (imageFile) => {
 }
 
 export const deleteImage = async (fileLocation) => {
+  console.log(fileLocation, 'fileLooc')
+
+  // return
   try {
     const response = await axiosInstance.delete('/upload/img', {
       data: { fileLocation }
