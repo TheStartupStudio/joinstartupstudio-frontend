@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import ReactPlayer from 'react-player'
 import badge1 from '../../assets/images/market-ready-1-badge.png'
 import badge2 from '../../assets/images/market-ready-2-badge.png'
 import image from '../../assets/images/triangle.png'
 import { SingleA } from './SingleA'
 import { Image } from './image'
-import axiosInstance from '../../utils/AxiosInstance'
 import './index.css'
 import { SingleC } from './SingleC'
 import { SingleD } from './SingleD'
 
 const IamrGuideContent = () => {
   const [showImageModal, SetShowImageModal] = useState(false)
+  const playerRef = useRef(null)
+
   const [data, setData] = useState([
     {
       title: 'Article',
@@ -179,18 +180,8 @@ const IamrGuideContent = () => {
     }
   ])
 
-  // useEffect(() => {
-  //   getMyMarketReadyData()
-  // }, [])
-
-  // const getMyMarketReadyData = async () => {
-  //   await axiosInstance.get('/ltsJournals/my-market-ready').then((response) => {
-  //     setData(response.data)
-  //   })
-  // }
-
   return (
-    <div className='row'>
+    <div className={`row `}>
       <div className='col-12 col-md-6'>
         <div
           className='beyond-your-course-video-thumb'
@@ -198,23 +189,26 @@ const IamrGuideContent = () => {
         >
           <div>
             <ReactPlayer
-              className=''
+              ref={playerRef}
+              // playsinline
               width={'100%'}
               height={'300px'}
               url={
-                // 'https://d5tx03iw7t69i.cloudfront.net/Journal/MarketReadyGuide/MRG-1-Introduction-to-My-Market-Ready-Guide-V2.mov'
                 'https://d5tx03iw7t69i.cloudfront.net/iamr/Market Ready Guide.mov'
               }
               controls
               playing={true}
+              pip={false}
               preload='metadata'
+              stopOnUnmount={false}
               light={
                 'https://d5tx03iw7t69i.cloudfront.net/Journal/MarketReadyGuide/MRG-Thumbnail.jpg'
               }
               config={{
                 file: {
                   attributes: {
-                    controlsList: 'nodownload'
+                    controlsList: 'nodownload',
+                    disablePictureInPicture: true
                   }
                 }
               }}

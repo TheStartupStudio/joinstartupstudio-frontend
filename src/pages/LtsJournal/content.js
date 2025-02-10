@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
@@ -9,7 +9,6 @@ import parse from 'html-react-parser'
 import EntriesBox from './EntriesBox'
 import TableWrapper from './TableWrapper/index'
 import TableReflections from './TableReflections/index.js'
-import _ from 'lodash'
 import MeetingManager from './ArchiveManager/MeetingManager/MeetingManager'
 import FeedbackManager from './ArchiveManager/FeedbackManager/FeedbackManager'
 import MentorMeetingManager from './ArchiveManager/MentorMeetingManager/MentorMeetingManager'
@@ -214,6 +213,10 @@ function LtsJournalContent(props) {
     }
   }
 
+  const handleShowVideo = (video) => {
+    setShowVideo(video.id)
+  }
+
   if (!journal) {
     return null
   }
@@ -233,15 +236,14 @@ function LtsJournalContent(props) {
           </div>
 
           <h4 className='page-card__content-title'>{journal.title}</h4>
-
           {videos &&
-            videos.constructor == Array &&
             videos.map((video, index) => (
               <MediaLightbox
                 video={video}
                 key={index}
                 show={showVideo === video.id}
                 onClose={() => setShowVideo(false)}
+                handleShowVideo={() => handleShowVideo(video)}
                 // watchData={videoWatchData}
                 // onVideoData={saveWatchData}
                 // onVideoWatched={saveVideoWatched}
@@ -264,7 +266,8 @@ function LtsJournalContent(props) {
                     className={`journal-entries__video-thumbnail${
                       journal.content == '' ? '--welcome-video' : ''
                     }`}
-                    onClick={() => setShowVideo(video.id)}
+                    // onClick={() => setShowVideo(video.id)}
+                    onClick={() => handleShowVideo(video)}
                   >
                     <img src={video.thumbnail} alt='thumbnail' />
                     <div
