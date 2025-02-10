@@ -4,13 +4,11 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 import { LtsButton } from '../../../ui/ContentItems'
 import { setGeneralLoading } from '../../../redux/general/Actions'
-import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { userLogout } from '../../../redux'
 import { setAuthModal } from '../../../redux/user/Actions'
 
 const ReSigninModal = ({ show }) => {
-  const history = useHistory()
   const dispatch = useDispatch()
 
   const handleAuthModalClose = async () => {
@@ -19,7 +17,6 @@ const ReSigninModal = ({ show }) => {
       .then(() => {
         localStorage.clear()
         dispatch(setAuthModal(false))
-        // history.push('/')
         window.location.href = '/'
       })
       .catch((error) => {

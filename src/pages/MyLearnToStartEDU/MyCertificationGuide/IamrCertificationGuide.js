@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import IamrGuideContent from '../../../components/MyMarketReadyGuide/IamrGuideContent'
 import { NotesButton } from '../../../components/Notes'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { changeSidebarState } from '../../../redux'
 
 import '../../MyMarketReadyGuide/index.css'

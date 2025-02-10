@@ -35,21 +35,9 @@ export default function MediaLightbox(props) {
       ? props.watchData
       : [[0, 0]]
   )
-  let [saveTimer, setSaveTimer] = useState(0)
-  let [watchedVideo, setWatchedVideo] = useState(false)
+  // let [saveTimer, setSaveTimer] = useState(0)
+  // let [watchedVideo, setWatchedVideo] = useState(false)
   const videoRef = useRef(null)
-  const [isPiPActive, setIsPiPActive] = useState(false); //pip (picture to picture)
-
-  const handleEnterPiP = () => {
-    setIsPiPActive(true);
-    videoRef.current.getInternalPlayer().play();
-  };
-
-  const handleLeavePiP = () => {
-    setIsPiPActive(false);
-    videoRef.current.getInternalPlayer().play();
-  };
-
 
   useEffect(() => {
     setWatchTime(0)
@@ -61,45 +49,39 @@ export default function MediaLightbox(props) {
     )
   }, [props.video, props.watchData])
 
-  useEffect(() => {
-    if (!isPiPActive) {
-      closeLightbox()
-    }
-  }, [isPiPActive])
-
   if (!props.show) return null
 
-  function setNewInterval(time) {
-    setIntervals([...mergeIntervals(intervals), [time, time]])
-  }
-  function updateLatestInterval(time) {
-    if (intervals.length == 0) {
-      intervals = [[time, time]]
-    }
+  // function setNewInterval(time) {
+  //   setIntervals([...mergeIntervals(intervals), [time, time]])
+  // }
+  // function updateLatestInterval(time) {
+  //   if (intervals.length == 0) {
+  //     intervals = [[time, time]]
+  //   }
 
-    if (Math.abs(intervals[intervals.length - 1][1] - time) > 2) {
-      setNewInterval(time)
-      return
-    }
-    intervals[intervals.length - 1][1] = time
-    setIntervals([...intervals])
+  //   if (Math.abs(intervals[intervals.length - 1][1] - time) > 2) {
+  //     setNewInterval(time)
+  //     return
+  //   }
+  //   intervals[intervals.length - 1][1] = time
+  //   setIntervals([...intervals])
 
-    let wt = calcWatchTime(intervals)
+  //   let wt = calcWatchTime(intervals)
 
-    setWatchTime(wt)
+  //   setWatchTime(wt)
 
-    if (saveTimer + 1 > 5) {
-      props.onVideoData && props.onVideoData(mergeIntervals(intervals))
-      setSaveTimer(0)
-    } else {
-      setSaveTimer(saveTimer + 1)
-    }
+  //   if (saveTimer + 1 > 5) {
+  //     props.onVideoData && props.onVideoData(mergeIntervals(intervals))
+  //     setSaveTimer(0)
+  //   } else {
+  //     setSaveTimer(saveTimer + 1)
+  //   }
 
-    if (wt > duration * 0.8 && !watchedVideo) {
-      props.onVideoWatched && props.onVideoWatched()
-      setWatchedVideo(true)
-    }
-  }
+  //   if (wt > duration * 0.8 && !watchedVideo) {
+  //     props.onVideoWatched && props.onVideoWatched()
+  //     setWatchedVideo(true)
+  //   }
+  // }
 
   function closeLightbox() {
     if (props.onClose && props.onClose.constructor === Function) {
@@ -108,14 +90,16 @@ export default function MediaLightbox(props) {
   }
 
   const closeFn = (input) => {
-    if (input == 'media-lightbox__content-scroll') {
+    if (input === 'media-lightbox__content-scroll') {
       closeLightbox()
     }
   }
 
- 
   return (
-    <div className='media-lightbox' style={isPiPActive ? { visibility: 'hidden' } : {}}>
+    <div
+      className='media-lightbox'
+      // style={isPiPActive ? { visibility: 'hidden' } : {}}
+    >
       <div className='media-lightbox__inner'>
         <div className='media-lightbox__overlay' />
 
@@ -135,25 +119,29 @@ export default function MediaLightbox(props) {
                   controls={true}
                   width='100%'
                   height='100%'
-                  onEnablePIP={handleEnterPiP}
-                  onDisablePIP={(e) => {
-                    console.log(e, "triumf140")
-                    handleLeavePiP()
-                  }}
+                  // onEnablePIP={handleEnterPiP}
+                  // onDisablePIP={handleLeavePiP}
+                  stopOnUnmount={false}
                   config={{
-                    file: { attributes: { controlsList: 'nodownload' } }
+                    file: {
+                      attributes: {
+                        controlsList: 'nodownload',
+                        disablePictureInPicture: true
+                      }
+                    }
                   }}
                   ref={videoRef}
-                  playing={true}
-                  onProgress={({ playedSeconds }) => {
-                    updateLatestInterval(playedSeconds)
-                  }}
+                  pip={false}
+                  playing
+                  // onProgress={({ playedSeconds }) => {
+                  //   updateLatestInterval(playedSeconds)
+                  // }}
                   onDuration={(duration) => {
                     setDuration(duration)
                   }}
-                  onSeek={(seconds) => {
-                    setNewInterval(seconds)
-                  }}
+                  // onSeek={(seconds) => {
+                  //   setNewInterval(seconds)
+                  // }}
                 />
               </div>
             </div>
