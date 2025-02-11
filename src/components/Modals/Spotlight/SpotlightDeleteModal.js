@@ -1,6 +1,6 @@
 import { React } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faEye } from '@fortawesome/free-solid-svg-icons'
 import './styles.css'
 import { LtsButton } from '../../../ui/ContentItems'
 import trashIcon from '../../../assets/images/trashIcon.svg'
@@ -19,7 +19,10 @@ const DeleteModal = ({
 
   return (
     <>
-      <div className='modal-container-delete delete-spotlight-modal-cont'>
+      <div
+        className='modal-container-delete delete-spotlight-modal-cont'
+        style={{ zIndex: '9999' }}
+      >
         <div
           className='immersion-modal-header '
           style={{ textAlign: 'left', alignItems: 'unset' }}

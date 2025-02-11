@@ -323,11 +323,20 @@ const SpotlightApplyModal = (props) => {
                 href='#'
                 className={`${
                   !props.isApplicationSaved ? 'd-none' : ''
-                } m-0 cursor-pointer d-flex align-items-center deletapplspot`}
+                } m-0 cursor-pointer d-flex  deletapplspot`}
                 onClick={() => setShowDeleteImmersionModal(true)}
               >
                 <img src={deleteIcon} width={23} height={24}></img>
-                Delete Application
+                <p
+                  style={{
+                    marginBottom: '-3px',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  {' '}
+                  Delete Application
+                </p>
               </p>
 
               <div

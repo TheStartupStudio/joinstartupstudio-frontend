@@ -5644,13 +5644,13 @@ _:future,
   overflow-y: hidden !important;
 }
 
-_::-webkit-full-page-media,
+/* _::-webkit-full-page-media,
 _:future,
 :root div#root:has(.public-login-form) section#footer {
   position: absolute;
   bottom: 0 !important;
-  /* margin-top: -30px !important; */
-}
+
+} */
 
 
 _::-webkit-full-page-media,
