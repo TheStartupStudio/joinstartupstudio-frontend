@@ -7,10 +7,10 @@ import {
   faSpotify
 } from '@fortawesome/free-brands-svg-icons'
 
-export default function Footer() {
+export default function Footer(props) {
   return (
     // <div style={{ position: 'relative' }} className='footer-cont'>
-    <section id='footer'>
+    <section className={props.className} id='footer'>
       <div className='container-fluid'>
         <div className='row mx-md-4 footer-copyright'>
           <div className='col-sm-12 col-lg-4 text-align-left-footer'>

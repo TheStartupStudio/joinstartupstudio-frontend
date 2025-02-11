@@ -298,9 +298,146 @@
   }
 }
 
-/* @media (max-width: 470px) {
-  .right-login-form {
-    padding-bottom: -30px;
+.loginpage-footer-cont {
+  display: block !important;
+  /* position: absolute;
+  bottom: 0 !important; */
+  width: 100vw;
+  margin-bottom: -42px;
+  /* margin-right: -60px !important; */
+  height: min-content;
+
+}
+
+.loginpage-footer-section {
+  display: block !important;
+}
+
+
+
+#content:has(.choose-login_container) {
+  overflow-y: scroll !important;
+}
+
+_::-webkit-full-page-media,
+_:future,
+:root body:has(.choose-login_container) section#footer {
+  margin-top: -38px !important;
+}
+
+@media (max-width:486px) {
+
+
+
+  _::-webkit-full-page-media,
+  _:future,
+  :root .public-login-form.login-form-resp {
+    min-height: 60vh !important;
   }
-} */
-/*  */
+
+
+  _::-webkit-full-page-media,
+  _:future,
+  :root .right-login-content.col-md-5.col-sm-12,
+  .public-login-form.col-xl-8.col-lg-12.col-md-12.mx-auto.px-4.pb-3.pt-4.login-form-resp {
+    margin-bottom: 0 !important;
+  }
+
+
+
+
+  _::-webkit-full-page-media,
+  _:future,
+  :root .login-left-content.sfari-onlyyy img {
+    margin-top: 30px !important;
+    margin-bottom: -10px !important;
+
+  }
+
+
+
+}
+
+
+body:has(.choose-login_container) section.loginpage-footer-section {
+  display: block !important;
+}
+
+
+
+
+@media (max-width:768px) {
+
+
+  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
+    position: static !important;
+    margin-top: 220px !important;
+    margin-left: 230px !important;
+  }
+}
+
+@media (max-width:731px) {
+
+
+  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
+    position: static !important;
+    margin-top: 250px !important;
+    margin-left: 200px !important;
+  }
+}
+
+
+@media (max-width:619px) {
+
+
+  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
+
+    margin-top: 250px !important;
+    margin-left: 175px !important;
+  }
+}
+
+@media (max-width:547px) {
+  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
+    margin-top: 230px !important;
+    margin-left: 140px !important;
+  }
+}
+
+@media (max-width:458px) {
+  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
+    margin-top: 220px !important;
+    margin-left: 105px !important;
+  }
+
+
+  _::-webkit-full-page-media,
+  _:future,
+  :root .login-left-content.sfari-onlyyy img {
+    margin-top: 20px !important;
+    margin-bottom: 10px !important;
+    width: 250px !important;
+    height: 100px !important;
+  }
+
+  .submit-loginpage-btn {
+    font-size: 20px !important;
+    margin-top: 40px !important;
+    width: 110px !important;
+  }
+
+  .public-login-form.col-xl-8.col-lg-12.col-md-12.mx-auto.px-4.pb-3.pt-4.login-form-resp {
+    margin-top: 30px !important;
+  }
+
+
+}
+
+.container-fluid.md-px-5.ps-md-5.choose-login_container {
+  display: flex;
+  align-items: flex-end;
+}
+
+#root:has(.container-fluid.md-px-5.ps-md-5.choose-login_container) {
+  overflow-y: scroll !important;
+}

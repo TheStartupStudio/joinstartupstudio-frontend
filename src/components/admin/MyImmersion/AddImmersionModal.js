@@ -11,6 +11,9 @@ import { FaPencilAlt, FaCheck, FaEye } from 'react-icons/fa'
 import DeleteExpImg from '../../../assets/images/delete-exp-icon/DELETE EXPERIENCE HOVER@2x.png'
 import CancelEditsImg from '../../../assets/images/cancel-edits-icon/CANCEL EDITS HOVER@2x.png'
 import TitleIcon from '../../../assets/images/edit-immrs-title-icon/Group 4652@2x.png'
+import tickIcon from '../../../assets/images/tick.png'
+import pencilIcon from '../../../assets/images/pencilIcon2.png'
+import eyeIcon from '../../../assets/images/eyeIconImmrs.png'
 
 const AddImmersionModal = ({
   viewExprience,
@@ -155,38 +158,66 @@ const AddImmersionModal = ({
             >
               {editingImmersion ? (
                 <>
-                  <FaCheck
-                    className={'action-box public-icon'}
-                    onClick={handleSubmit} // Save changes to backend
-                    style={{ cursor: 'pointer' }}
-                    title='Save Changes'
+                  <img
+                    src={tickIcon}
+                    onClick={handleSubmit}
+                    width={59}
+                    height={45}
+                    alt='tick icon'
+                    className=''
+                    style={{ marginTop: '5px' }}
                   />
 
                   {!justView && (
-                    <FaEye
-                      className={'action-box pencil-icon'}
-                      onClick={toggleEditing} // Switch to view-only mode
-                      style={{ cursor: 'pointer' }}
-                      title='Switch to View Mode'
-                    />
+                    <div className='action-box'>
+                      <img
+                        src={eyeIcon}
+                        className={' eye-icon'}
+                        onClick={toggleEditing} // Switch to view-only mode
+                        style={{ cursor: 'pointer' }}
+                        title='Switch to View Mode'
+                        height={100}
+                        width={100}
+                      ></img>
+                    </div>
                   )}
                 </>
               ) : (
                 <>
-                  <FaCheck
+                  {/* <FaCheck
                     className={'action-box public-icon'}
                     onClick={onClose} // Close the modal
                     style={{ cursor: 'pointer' }}
                     title='Close'
+                  /> */}
+                  <img
+                    src={tickIcon}
+                    onClick={onClose} // Close the modal
+                    width={59}
+                    height={45}
+                    alt='tick icon'
+                    className=''
+                    style={{ marginTop: '5px' }}
                   />
 
                   {!justView && (
-                    <FaPencilAlt
-                      className={'action-box pencil-icon'}
-                      onClick={toggleEditing} // Switch to edit mode
-                      style={{ cursor: 'pointer' }}
-                      title='Edit Experience'
-                    />
+                    // <FaPencilAlt
+                    //   className={'action-box pencil-icon'}
+                    //   onClick={toggleEditing} // Switch to edit mode
+                    //   style={{ cursor: 'pointer' }}
+                    //   title='Edit Experience'
+                    // />
+                    <div className='action-box'>
+                      <img
+                        src={pencilIcon}
+                        className={' eye-icon'}
+                        onClick={toggleEditing} // Switch to edit mode
+                        //   style={{ cursor: 'pointer' }}
+                        //   title='Edit Experience'
+                        height={100}
+                        width={100}
+                      ></img>
+                    </div>
                   )}
                 </>
               )}
@@ -204,7 +235,7 @@ const AddImmersionModal = ({
             }}
           >
             <h5 className='viewimmrs-instr-modal-title'>
-              View Immersion
+              View Immersion&nbsp;
               {viewExprience ? immersionStepName : immersionStep.name}
             </h5>
             <div className='status-toggle'>

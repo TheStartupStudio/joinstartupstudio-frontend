@@ -396,3 +396,9 @@ input:checked+.slider:before {
     flex-wrap: wrap;
   }
 }
+
+.eye-icon {
+  width: 50px !important;
+  height: 50px !important;
+  margin-top: 5px;
+}

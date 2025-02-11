@@ -122,7 +122,7 @@ function WorkExperienceCard(props) {
             <div>
               <div
                 className={
-                  'proveit-title-org organization-description-label mb-2'
+                  'proveit-title-org organization-description-label mb-2  jobtitle-resp'
                 }
               >
                 {data?.jobTitle}

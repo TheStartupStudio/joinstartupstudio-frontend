@@ -2572,15 +2572,15 @@
 }
 
 .workexp-org-desc ul {
-  word-wrap: break-word;
+  word-wrap: break-word !important;
   /* For breaking long words */
-  overflow-wrap: anywhere;
+  overflow-wrap: anywhere !important;
   /* Break words if necessary */
 }
 
 .workexp-org-desc li {
-  word-wrap: break-word;
-  overflow-wrap: anywhere;
+  word-wrap: break-word !important;
+  overflow-wrap: anywhere !important;
   margin-bottom: 5px;
   /* Add spacing between list items */
 }
@@ -2636,6 +2636,13 @@
     width: 50% !important;
   }
 }
+
+.jobtitle-resp {
+  word-wrap: break-word !important;
+  /* For breaking long words */
+  overflow-wrap: anywhere !important;
+}
+
 
 /*/////////////////////////////////////////////*/
 /*/////////////////////////////////////////////*/
