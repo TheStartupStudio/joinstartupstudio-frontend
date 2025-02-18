@@ -37,6 +37,9 @@ function Router(props) {
     }
   }
 
+  const isResetPasswordRoute =
+    window.location.pathname.startsWith('/reset-password')
+
   return (
     <>
       <IntlProvider
@@ -46,7 +49,7 @@ function Router(props) {
       >
         <>
           {authModal ? <ReSigninModal show={authModal} /> : null}
-          {isAuthenticated ? (
+          {isAuthenticated && !isResetPasswordRoute ? (
             <Layout>
               <Switch>
                 {renderRoutes(roleRoutes())}
