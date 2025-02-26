@@ -214,7 +214,7 @@ function Header() {
           )}
         </div>
       ) : null}
-      <Navbar
+      {/* <Navbar
         notifications={notifications}
         unreadNotifications={unreadNotifications}
         setUnreadNotifications={setUnreadNotifications}
@@ -228,9 +228,9 @@ function Header() {
         openPeerSharingModal={openPeerSharingModal}
         allowToShow={isAdmin}
         firstNote={firstNote}
-      />
+      /> */}
 
-      <MobileNavbar
+      {/* <MobileNavbar
         firstNote={firstNote}
         setFirstNote={setFirstNote}
         unreadNotifications={unreadNotifications}
@@ -244,7 +244,7 @@ function Header() {
         setCountStudentOfInstructor={setCountStudentOfInstructor}
         setShowContactModal={setShowContactModal}
         user={user}
-      />
+      /> */}
 
       <ContactUsModal
         show={showContactModal}

@@ -24,7 +24,7 @@ const EnLangs = {
   'content.my_notes': 'My Notes',
   'content.my_chat': 'My Chat',
 
-  'navigation.dashboard': 'MY DASHBOARD',
+  'navigation.dashboard': 'WELCOME TO YOUR COURSE IN ENTERPRENEURSHIP',
   'navigation.course': 'MY COURSE',
   'navigation.journal': 'MY JOURNAL',
   'navigation.portfolio': 'MY PORTFOLIO',

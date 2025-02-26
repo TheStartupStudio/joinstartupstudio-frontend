@@ -1,5 +1,6 @@
 import React from 'react'
-import FolderSidebarImage from '../../assets/images/HS-Sidebar-Icons/Dashboard (Full)-1200x.png'
+import { Link } from 'react-router-dom'
+import FolderSidebarImage from '../../assets/images/academy-icons/dashboard.png'
 import LtsEduImage from '../../assets/images/HS-Sidebar-Icons/lts-edu-sidebar.svg'
 import ClassroomImage from '../../assets/images/HS-Sidebar-Icons/classroom-sidebar.svg'
 import MarketImage from '../../assets/images/HS-Sidebar-Icons/market-sidebar.svg'
@@ -12,28 +13,107 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setAccordionToggled } from '../../redux'
 import { useLocation } from 'react-router-dom/cjs/react-router-dom'
 import Group3888Image from '../../assets/images/HS-Sidebar-Icons/Group 3888/Group 3888@2x.png'
+import LocationLogo from '../../assets/images/academy-icons/location.png'
+import EntLogo from '../../assets/images/academy-icons/icon.png'
+import MasterLogo from '../../assets/images/academy-icons/Icon.Master Classes.png'
+import PortfolioLogo from '../../assets/images/academy-icons/portfolio.png'
+import LeadLogo from '../../assets/images/academy-icons/Group.png'
+import ExpandLogo from '../../assets/images/academy-icons/fast-arrow-right.png'
+import SettingsLogo from '../../assets/images/academy-icons/settings 4.png'
+import ProfilePhoto from '../../assets/images/academy-icons/profile.jpeg'
+import { Col } from 'react-bootstrap'
 
 const InstructorSidebar = (props) => {
   const { isAdmin } = useSelector((state) => state.user.user)
   const dispatch = useDispatch()
   const location = useLocation()
+
+  const truncateEmail = (email) => {
+    if (email.length > 15) {
+      return email.slice(0, 15) + '...'
+    }
+    return email
+  }
+
   return (
-    <ul
-      className='list-unstyled components sidebar-menu-item sidebar-menu-list'
-      id='side-menu-main'
-    >
-      <SidebarItem
-        onClick={() => {
-          dispatch(setAccordionToggled(false))
-          props.props.hideHeaderIcons()
-        }}
-        to={'/dashboard'}
-        className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-        srcImage={FolderSidebarImage}
-        title='MY Dashboard'
-        isDropdown={false}
-      />
-      {isAdmin && (
+    <div class='d-flex flex-column justify-content-between h-100'>
+      <ul
+        className='list-unstyled components sidebar-menu-item sidebar-menu-list'
+        id='side-menu-main'
+      >
+        <SidebarItem
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            props.props.hideHeaderIcons()
+          }}
+          to={'/dashboard'}
+          // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+          srcImage={FolderSidebarImage}
+          title='Dashboard'
+          isDropdown={false}
+        />
+
+        <SidebarItem
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            props.props.hideHeaderIcons()
+          }}
+          to={'/dashboard'}
+          // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+          srcImage={LocationLogo}
+          title='Intro to course'
+          isDropdown={false}
+        />
+
+        <SidebarItem
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            props.props.hideHeaderIcons()
+          }}
+          to={'/dashboard'}
+          // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+          srcImage={EntLogo}
+          title='Course in enterpreneurship'
+          isDropdown={false}
+        />
+
+        <SidebarItem
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            props.props.hideHeaderIcons()
+          }}
+          to={'/dashboard'}
+          // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+          srcImage={MasterLogo}
+          title='Master classes'
+          isDropdown={false}
+        />
+
+        <SidebarItem
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            props.props.hideHeaderIcons()
+          }}
+          to={'/dashboard'}
+          // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+          srcImage={PortfolioLogo}
+          title='My portfolio'
+          isDropdown={false}
+        />
+
+        <SidebarItem
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            props.props.hideHeaderIcons()
+          }}
+          to={'/dashboard'}
+          // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+          srcImage={LeadLogo}
+          title='Leadership journal'
+          isDropdown={false}
+        />
+
+        {/* {isAdmin && (
         <>
           <ParentSidebarItem
             ariaControls='myUserManagament'
@@ -52,8 +132,8 @@ const InstructorSidebar = (props) => {
             />
           </ParentDropdownItem>
         </>
-      )}
-      <ParentSidebarItem
+      )} */}
+        {/* <ParentSidebarItem
         href='#myLtsEDU'
         aria-controls='myLtsEDU'
         srcImage={LtsEduImage}
@@ -103,7 +183,7 @@ const InstructorSidebar = (props) => {
           title={'MY COURSE & CREDENTIALS'}
           to='/my-course-credentials'
         />
-        {/* <DropdownItem title={'MY SPOTLIGHT'} to={'/spotlight'} /> */}
+       
       </ParentDropdownItem>
       <ParentSidebarItem
         ariaControls='journals'
@@ -134,8 +214,47 @@ const InstructorSidebar = (props) => {
         srcImage={Group3888Image}
         title='MY PORTFOLIO'
         isDropdown={false}
-      />
-    </ul>
+      /> */}
+      </ul>
+      <ul
+        className='list-unstyled components sidebar-menu-item sidebar-menu-list'
+        style={{ marginBottom: '55%' }}
+      >
+        <li>
+          <button className='sidebar-button'>
+            <img className='rotated' src={ExpandLogo} alt='Expand' />
+          </button>
+        </li>
+
+        <SidebarItem
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            props.props.hideHeaderIcons()
+          }}
+          to={'/dashboard'}
+          // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+          srcImage={SettingsLogo}
+          title='My account'
+          isDropdown={false}
+        />
+
+        <li className='sub-li'>
+          <Link>
+            <div className='d-flex w-100' style={{ alignItems: 'center' }}>
+              <Col md='2' className='col-2 icon_container'>
+                <img className='profile-photo' src={ProfilePhoto} alt='Icon' />
+              </Col>
+              <div className='flex-grow-1 ms-1 d-flex flex-column'>
+                <span className='font-profile'>Kenia Anders</span>
+                <span className='font-profile email-profile'>
+                  {truncateEmail('keniaanders@gmail.com')}
+                </span>
+              </div>
+            </div>
+          </Link>
+        </li>
+      </ul>
+    </div>
   )
 }
 

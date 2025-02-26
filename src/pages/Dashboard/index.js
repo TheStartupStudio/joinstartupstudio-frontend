@@ -59,12 +59,9 @@ function Dashboard() {
       <div className='row'>
         <div className='col-12 col-md-12 col-xl-9 pe-0 me-0'>
           <div className='account-page-padding page-border'>
-            <h3 className='page-title'>
+            <h3 className='page-title bold-page-title'>
               <IntlMessages id='navigation.dashboard' />
             </h3>
-            <p className='page-description'>
-              <IntlMessages id='dashboard.page_description' />
-            </p>
             <Profile
               chatOpened={chatId}
               clearChat={() => setChatId('')}

@@ -45,20 +45,15 @@ function Sidebar(props) {
       id='sidebar'
       className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
     >
-      <div className='scroll sidebar-sticky sidebar-scroll'>
-        <PerfectScrollbar
-          option={{ suppressScrollX: true, wheelPropagation: false }}
-          className='sidebar-sticky sidebar-overflow-fix'
-        >
-          <div>
-            <Header props={props} />
-            {role === 'student' ? (
-              <StudentSidebar props={props} />
-            ) : (
-              <InstructorSidebar props={props} />
-            )}
-          </div>
-        </PerfectScrollbar>
+      <div className='scroll sidebar-sticky sidebar-scroll h-100'>
+        <div className='h-100'>
+          <Header props={props} />
+          {role === 'student' ? (
+            <StudentSidebar props={props} />
+          ) : (
+            <InstructorSidebar props={props} />
+          )}
+        </div>
       </div>
     </nav>
   )

@@ -7,7 +7,7 @@ import { useState } from 'react'
 const IconContainer = ({ srcImage }) => {
   return (
     <Col md='2' className='col-2 icon_container'>
-      <img src={srcImage} alt='Icon' className='w-100 h-100' />
+      <img src={srcImage} alt='Icon' />
     </Col>
   )
 }
@@ -37,9 +37,7 @@ const SidebarItem = ({
         <div className='d-flex w-100' style={{ alignItems: 'center' }}>
           <IconContainer srcImage={srcImage} />
           <div className='flex-grow-1 ms-1'>
-            <span className={'text-uppercase'} style={{ fontSize: '13px' }}>
-              {title}
-            </span>
+            <span className={'text-uppercase'}>{title}</span>
           </div>
           {isDropdown && (
             <FontAwesomeIcon

@@ -58,9 +58,9 @@ function Layout({ children }) {
         position='bottom-left'
         autoClose={5000}
       />
-      <div className='desktop-footer'>
+      {/* <div className='desktop-footer'>
         <Footer />
-      </div>
+      </div> */}
     </React.Fragment>
   )
 }
