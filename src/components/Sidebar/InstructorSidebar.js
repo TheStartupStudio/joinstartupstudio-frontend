@@ -36,7 +36,7 @@ const InstructorSidebar = (props) => {
   }
 
   return (
-    <div class='d-flex flex-column justify-content-between h-100'>
+    <div class='d-flex flex-column justify-content-between h-93'>
       <ul
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
         id='side-menu-main'
@@ -218,7 +218,7 @@ const InstructorSidebar = (props) => {
       </ul>
       <ul
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
-        style={{ marginBottom: '55%' }}
+        style={{ marginBottom: '-10px' }}
       >
         <li>
           <button className='sidebar-button'>

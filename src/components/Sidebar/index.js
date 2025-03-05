@@ -45,8 +45,8 @@ function Sidebar(props) {
       id='sidebar'
       className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
     >
-      <div className='scroll sidebar-sticky sidebar-scroll h-100'>
-        <div className='h-100'>
+      <div className='scroll sidebar-sticky sidebar-scroll h-97'>
+        <div className='h-93'>
           <Header props={props} />
           {role === 'student' ? (
             <StudentSidebar props={props} />

@@ -14,6 +14,7 @@ import TaskEventModal from '../../components/Modals/TaskEventModal'
 import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
 import useImpersonation from '../../hooks/useImpersonation'
 import RecentAchievements from './RecentAchievement'
+import Select from 'react-select'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -22,6 +23,7 @@ function Dashboard() {
   const periods = useSelector((state) => state.dashboard.periods)
   const events = useSelector((state) => state.dashboard.events)
   const [chatId, setChatId] = useState('')
+  const [selectedLanguage, setSelectedLanguage] = useState(null)
 
   useImpersonation(originalToken)
 
@@ -54,24 +56,67 @@ function Dashboard() {
     dispatch(closeTaskModal('create'))
   }
 
+  const options = [
+    { value: 'en', label: 'English' },
+    { value: 'es', label: 'Spanish' }
+  ]
+
+  const handleChange = (selectedOption) => {
+    setSelectedLanguage(selectedOption)
+    console.log('Selected Language:', selectedOption.value)
+  }
+
   return (
     <div className='container-fluid'>
       <div className='row'>
-        <div className='col-12 col-md-12 col-xl-9 pe-0 me-0'>
-          <div className='account-page-padding page-border'>
+        <div className='col-12 col-md-12 pe-0 me-0'>
+          <div className='account-page-padding d-flex justify-content-between align-items-center'>
             <h3 className='page-title bold-page-title'>
               <IntlMessages id='navigation.dashboard' />
             </h3>
-            <Profile
-              chatOpened={chatId}
-              clearChat={() => setChatId('')}
-              userRole={userRole}
-            />
 
-            {userRole === 'student' && <RecentAchievements />}
+            <div
+              style={{
+                display: 'inline-block',
+                borderRadius: '8px',
+                background:
+                  'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                padding: '1px', // Adjust this value to control border thickness
+                height: '58px',
+                boxShadow: '0px 4px 10px 0px #00000040'
+              }}
+            >
+              <Select
+                options={options}
+                value={selectedLanguage}
+                onChange={handleChange}
+                placeholder='Select Language'
+                menuPortalTarget={document.body}
+                styles={{
+                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  control: (base) => ({
+                    ...base,
+                    width: '250px', // Fixed width
+                    minHeight: '40px', // Fixed height
+                    overflow: 'hidden',
+                    border: 'none', // Remove the default border
+                    borderRadius: '6px' // Slightly smaller than the outer container radius
+                  }),
+                  singleValue: (base) => ({
+                    ...base,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  })
+                }}
+                components={{
+                  IndicatorSeparator: () => null // Remove separator
+                }}
+              />
+            </div>
           </div>
         </div>
-        <div className='col-12 col-xl-3 px-0'>
+        {/* <div className='col-12 col-xl-3 px-0'>
           <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
             <FullCalendarComponent
               events={events}
@@ -101,8 +146,8 @@ function Dashboard() {
               />
             )}
             <NotificationSection />
-            {/*<CertificationRequestsWidget />*/}
-            {/* <Messenger
+            <CertificationRequestsWidget />
+            <Messenger
               chatOpened={(id) => setChatId(id)}
               newMessage={(message) => setNewMessage(message)}
             />
@@ -124,9 +169,9 @@ function Dashboard() {
               <Link to='/my-connections'>
                 <p className='my-auto ms-2'>Connect with my community</p>
               </Link>
-            </div> */}
+            </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

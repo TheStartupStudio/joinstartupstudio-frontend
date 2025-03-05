@@ -4039,6 +4039,117 @@ wave > wave:first-child {
   font-weight: 700;
 }
 
+.css-b62m3t-container {
+  position: relative !important;
+  z-index: 1000;
+}
+
+.css-1dimb5e-singleValue {
+  color: black;
+  font-weight: 500;
+}
+
+.css-1xc3v61-indicatorContainer svg {
+  color: black;
+}
+
+.css-1jqq78o-placeholder {
+  color: black !important;
+  font-weight: 500;
+}
+
+.css-xpolyg-control {
+  box-shadow: none !important;
+  cursor: pointer !important;
+}
+
+.css-1r50p8r-control {
+  box-shadow: none !important;
+}
+
+.css-hlgwow {
+  padding-block: 0.75rem !important;
+}
+
+.h-97 {
+  height: 97%;
+}
+
+.h-93 {
+  height: 93%;
+}
+
+.fs-9 {
+  font-size: 0.9rem;
+}
+
+.academy-dashboard-layout {
+  grid-template-columns: 3fr 4fr;
+  padding-inline: 20px;
+  padding-top: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 15%,
+    rgba(243, 251, 253, 1) 50%,
+    rgba(255, 255, 255, 1) 85%
+  );
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+  gap: 2.5rem;
+}
+
+.profile-dashboard-academy {
+  width: 6rem;
+  border-radius: 50%;
+}
+
+.view-certificate {
+  justify-self: end;
+  align-self: end;
+  color: #51c7df;
+}
+
+.academy-profile-info h3 {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  margin-bottom: 0;
+}
+
+.academy-profile-info p {
+  margin-bottom: 0;
+}
+
+.my-details-header {
+  transform: translateY(5px);
+}
+
+.academy-dashboard-card {
+  padding-inline: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+}
+
+.progress-details {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  color: #51c7df;
+}
+
+.academy-dashboard-bottom {
+  grid-column: span 2;
+  padding-block: 0.9rem;
+}
+
+.continue-course-btn {
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;

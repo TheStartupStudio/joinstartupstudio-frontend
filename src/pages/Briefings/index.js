@@ -5,7 +5,12 @@ import NotificationSection from '../NotificationSection-dashboard/NotificationSe
 import { useDispatch, useSelector } from 'react-redux'
 import FullCalendarComponent from '../../components/Calendar/FullCalendar'
 import TaskEventModal from '../../components/Modals/TaskEventModal'
-import { closeTaskModal, getEventsStart, getPeriodsStart, openTaskModal } from '../../redux/dashboard/Actions'
+import {
+  closeTaskModal,
+  getEventsStart,
+  getPeriodsStart,
+  openTaskModal
+} from '../../redux/dashboard/Actions'
 
 const Briefings = () => {
   const dispatch = useDispatch()
@@ -28,7 +33,6 @@ const Briefings = () => {
     dispatch(getEventsStart())
   }, [dispatch])
 
-
   function getFormattedDate() {
     const today = new Date()
     const year = today.getFullYear().toString()
@@ -39,11 +43,11 @@ const Briefings = () => {
   }
 
   return (
-    <div className="container-fluid">
-      <div className="row">
+    <div className='container-fluid'>
+      <div className='row'>
         <BriefingsArchive />
-        <div className="col-12 col-xl-3 px-0">
-          <div className="account-page-padding" style={{ paddingLeft: '20px' }}>
+        <div className='col-12 col-xl-3 px-0'>
+          <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
             <FullCalendarComponent events={events} periods={periods} />
 
             <button
@@ -53,16 +57,18 @@ const Briefings = () => {
                 fontSize: 14
               }}
               onClick={openTaskEventModal}
-              className="px-4 py-2 border-0 color transform text-uppercase  w-100 my-1"
+              className='px-4 py-2 border-0 color transform text-uppercase  w-100 my-1'
             >
               Create Task/Event
             </button>
-            {taskEventModal && <TaskEventModal
-              show={taskEventModal}
-              onHide={closeTaskEventModal}
-              periods={periods}
-              startDate={getFormattedDate()}
-            />}
+            {taskEventModal && (
+              <TaskEventModal
+                show={taskEventModal}
+                onHide={closeTaskEventModal}
+                periods={periods}
+                startDate={getFormattedDate()}
+              />
+            )}
             <NotificationSection />
           </div>
         </div>
