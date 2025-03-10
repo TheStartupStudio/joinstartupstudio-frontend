@@ -18,6 +18,7 @@ import tickLogo from '../../assets/images/academy-icons/blue-tick.png'
 import courseLogo from '../../assets/images/academy-icons/course-progress.png'
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
 import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
+import CircularProgress from '../../components/ProgressBar'
 
 function Layout({ children }) {
   const originalToken = localStorage.getItem('original_access_token')
@@ -102,7 +103,7 @@ function Layout({ children }) {
 
             <div
               className='d-grid academy-dashboard-card'
-              style={{ gridTemplateRows: '1fr 1fr 1fr' }}
+              style={{ gridTemplateRows: '1fr 2fr' }}
             >
               <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4'>
                 <div className='d-flex gap-3 align-items-center'>
@@ -114,26 +115,26 @@ function Layout({ children }) {
                   <img src={rightArrow} alt='right-arr' />
                 </div>
               </div>
-              <div className='d-flex gap-4 align-items-center'></div>
-              <div
-                className='d-grid text-uppercase'
-                style={{
-                  gridTemplateColumns: '1fr 1fr 1fr',
-                  alignContent: 'center',
-                  color: '#929292',
-                  fontWeight: 600,
-                  fontSize: '.75rem'
-                }}
-              >
-                <span className='text-center'>
-                  Entrepreneurship <br /> & You
-                </span>
-                <span className='text-center'>
-                  Understanding <br /> Learn to Start
-                </span>
-                <span className='text-center'>
-                  The Journey of Entrepreneurship
-                </span>
+              <div className='d-flex gap-4 align-items-center justify-content-between'>
+                <div className='d-flex flex-column gap-4'>
+                  <CircularProgress percentage={20} level={1} />
+                  <p className='text-center'>
+                    Entrepreneurship <br /> & You
+                  </p>
+                </div>
+                <div className='d-flex flex-column gap-4'>
+                  <CircularProgress percentage={0} level={2} />
+                  <p className='text-center'>
+                    Understanding <br /> Learn to Start
+                  </p>
+                </div>
+                <div className='d-flex flex-column gap-4'>
+                  <CircularProgress percentage={0} level={3} />
+                  <p className='text-center'>
+                    The Journey of <br />
+                    Entrepreneurship
+                  </p>
+                </div>
               </div>
             </div>
 

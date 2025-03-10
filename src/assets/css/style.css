@@ -100,8 +100,8 @@ label:focus,
 }
 
 #content {
-  width: calc(100% - 220px);
-  /*width: 100%;*/
+  /* width: calc(100% - 220px); */
+  width: 100%;
 
   padding: 0px;
   min-height: 100vh;
@@ -221,6 +221,7 @@ nav#sidebar {
   /* padding: 20px; */
   background: #fff;
   margin-inline: 15%;
+  height: 95px;
 }
 
 #sidebar svg {
@@ -4014,6 +4015,9 @@ wave > wave:first-child {
   all: unset;
   display: inline-block;
   padding-left: 10px;
+  padding-top: 5px;
+  padding-right: 13px;
+  border-radius: 8px;
 }
 
 .profile-photo {
@@ -4031,7 +4035,7 @@ wave > wave:first-child {
 }
 
 .rotated {
-  /* transition: transform 0.5s ease-in-out; */
+  transition: transform 0.3s ease-in-out;
   transform: rotate(180deg);
 }
 
@@ -4071,8 +4075,8 @@ wave > wave:first-child {
   padding-block: 0.75rem !important;
 }
 
-.h-97 {
-  height: 97%;
+.h-95 {
+  height: 95%;
 }
 
 .h-93 {
@@ -4148,6 +4152,14 @@ wave > wave:first-child {
   padding: 1rem;
   text-transform: uppercase;
   font-weight: 700;
+}
+
+.sidebar-button img {
+  margin-right: 0 !important;
+}
+
+.sidebar-button:hover {
+  background: #e4e9f4;
 }
 
 @media (max-width: 1024px) {

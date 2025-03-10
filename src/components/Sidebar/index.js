@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -13,6 +13,7 @@ import InstructorSidebar from './InstructorSidebar'
 import StudentSidebar from './StudentSidebar'
 
 function Sidebar(props) {
+  const [isCollapsed, setIsCollapsed] = useState(true)
   const sideBarState = useSelector((state) => state.general.sidebarState)
   const role = localStorage.getItem('role')
 
@@ -44,15 +45,25 @@ function Sidebar(props) {
     <nav
       id='sidebar'
       className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
+      style={{ width: isCollapsed ? '75px' : '220px' }}
     >
-      <div className='scroll sidebar-sticky sidebar-scroll h-97'>
+      <div className='scroll sidebar-sticky sidebar-scroll h-95'>
         <div className='h-93'>
-          <Header props={props} />
-          {role === 'student' ? (
+          <Header
+            props={props}
+            isCollapsed={isCollapsed}
+            setIsCollapsed={setIsCollapsed}
+          />
+          {/* {role === 'student' ? (
             <StudentSidebar props={props} />
           ) : (
             <InstructorSidebar props={props} />
-          )}
+          )} */}
+          <InstructorSidebar
+            props={props}
+            isCollapsed={isCollapsed}
+            setIsCollapsed={setIsCollapsed}
+          />
         </div>
       </div>
     </nav>
