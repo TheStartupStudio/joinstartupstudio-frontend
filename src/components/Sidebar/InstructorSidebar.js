@@ -32,7 +32,7 @@ const InstructorSidebar = (props) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsTextVisible(!isCollapsed)
-    }, 300)
+    }, 250)
 
     return () => clearTimeout(timer)
   }, [isCollapsed])

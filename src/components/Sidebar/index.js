@@ -45,7 +45,10 @@ function Sidebar(props) {
     <nav
       id='sidebar'
       className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
-      style={{ width: isCollapsed ? '75px' : '220px' }}
+      style={{
+        width: isCollapsed ? '75px' : '220px',
+        borderRadius: isCollapsed && '0px'
+      }}
     >
       <div className='scroll sidebar-sticky sidebar-scroll h-95'>
         <div className='h-93'>
