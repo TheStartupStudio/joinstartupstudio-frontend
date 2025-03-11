@@ -102,8 +102,8 @@ const InstructorSidebar = (props) => {
           }}
           to={'/dashboard'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={PortfolioLogo}
-          title={isTextVisible && !isCollapsed && 'My portfolio'}
+          srcImage={LeadLogo}
+          title={isTextVisible && !isCollapsed && 'Leadership journal'}
           isDropdown={false}
         />
 
@@ -114,8 +114,8 @@ const InstructorSidebar = (props) => {
           }}
           to={'/dashboard'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={LeadLogo}
-          title={isTextVisible && !isCollapsed && 'Leadership journal'}
+          srcImage={PortfolioLogo}
+          title={isTextVisible && !isCollapsed && 'My portfolio'}
           isDropdown={false}
         />
       </ul>
