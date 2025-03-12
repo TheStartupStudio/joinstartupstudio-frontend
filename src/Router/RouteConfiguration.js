@@ -6,6 +6,7 @@ import TestJournal from '../pages/LtsJournal/MyCurriculum/CurriculumJournal'
 import StudentJournals from '../pages/studentJournals'
 import VerifyEmailByCode from '../pages/Register/verifyEmailByCode'
 import AddOccupationItemForm from '../components/Pathways/CreateOccupation'
+import MyCourseEntrepreneurship from '../pages/MyCourseEntrepreneurship'
 
 const Iamr = React.lazy(() => import('../pages/Iamr'))
 const Terms = React.lazy(() => import('../pages/Terms'))
@@ -211,6 +212,11 @@ export const mutualRoutes = [
     component: Pathways,
     props: { category: 'my-training' }
   },
+  {
+    path: '/my-course-in-entrepreneurship/journal',
+    component: LtsJournal,
+    props: { category: 'entrepreneurship' }
+  },
   { path: '/archived-portfolio', component: EditPortfolioNew, exact: true },
   { path: '/hs4-journal/', component: LtsJournal, props: { category: 'hs4' } },
   { path: '/hs3-journal/', component: LtsJournal, props: { category: 'hs3' } },
@@ -260,7 +266,13 @@ export const mutualRoutes = [
     path: '/my-course-credentials',
     component: MyCourseCredentials,
     exact: true
-  }
+  },
+  {
+    path:'/my-course-in-entrepreneurship',
+    component: MyCourseEntrepreneurship,
+    exact: true
+  },
+  
 ]
 
 export const instructorRoutes = [
@@ -384,13 +396,6 @@ export const studentRoutes = [
     component: EditPortfolioNew,
     exact: true
   },
-
-  // AuthRoutesWithProps
-  {
-    path: '/my-course-in-entrepreneurship/journal',
-    component: LtsJournal,
-    props: { category: 'entrepreneurship' }
-  }
 ]
 
 export const publicRoutes = [

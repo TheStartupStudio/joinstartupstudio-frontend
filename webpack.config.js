@@ -75,6 +75,9 @@ module.exports = {
       path: require.resolve('path-browserify'), // Provide fallback for path
       fs: false, // Mock fs module to avoid errors
       module: false // Optional: mock other modules if needed
+    },
+    alias: {
+      'react-dom/server': 'react-dom/server.browser.js' 
     }
   },
   plugins: [
