@@ -19,6 +19,7 @@ import courseLogo from '../../assets/images/academy-icons/course-progress.png'
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
 import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
 import CircularProgress from '../../components/ProgressBar'
+import UserDetails from '../../components/UserDetails/UserDetails'
 
 function Layout({ children }) {
   const originalToken = localStorage.getItem('original_access_token')
@@ -64,42 +65,11 @@ function Layout({ children }) {
           </div>
 
           <div className='d-grid academy-dashboard-layout'>
-            <div
-              className='d-grid academy-dashboard-card'
-              style={{ gridTemplateRows: '1fr 1fr 1fr' }}
-            >
-              <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4'>
-                <div className='d-flex gap-3 align-items-center'>
-                  <img src={userIcon} alt='user' />
-                  <h4 className='fs-9 my-details-header'>My Details</h4>
-                </div>
-                <img src={penIcon} alt='edit' />
-              </div>
-              <div className='d-flex gap-4 align-items-center'>
-                <img
-                  className='profile-dashboard-academy'
-                  src={profilePic}
-                  alt='profile'
-                />
-                <div className='academy-profile-info'>
-                  <h3>Kenia Anders</h3>
-                  <p>Graphic designer</p>
-                  <div className='d-flex gap-2'>
-                    <img src={linkedinLogo} alt='linkedin' />
-                    <img src={facebookLogo} alt='facebook' />
-                    <img src={twitterLogo} alt='twitter' />
-                  </div>
-                </div>
-              </div>
-              <div className='d-flex gap-2 view-certificate'>
-                <img
-                  src={tickLogo}
-                  alt='blue-tick'
-                  style={{ width: '20px', height: '20px' }}
-                />
-                <p>View my certificate</p>
-              </div>
-            </div>
+            <UserDetails
+              profilePic={profilePic}
+              userName={'Kenia Anders'}
+              userProffesion={'Graphic Designer'}
+            />
 
             <div
               className='d-grid academy-dashboard-card'

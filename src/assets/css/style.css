@@ -4162,6 +4162,204 @@ wave > wave:first-child {
   background: #e4e9f4;
 }
 
+.modal-content {
+  padding: 1rem;
+}
+
+.fs-14 {
+  font-size: 14px;
+}
+
+.fs-15 {
+  font-size: 15px;
+}
+
+.modal-btn {
+  all: unset;
+  cursor: pointer;
+}
+
+.input-style {
+  display: block;
+  width: 100%;
+  appearance: none;
+  font-size: 0.875rem; /* Text-sm */
+  color: #111827; /* Gray-900 */
+  transition: border-color 0.3s;
+  background: transparent;
+}
+.input-style:focus {
+  outline: none;
+}
+
+.label-style {
+  position: absolute;
+  cursor: text;
+  left: 0.625rem; /* Start-2.5 */
+  top: 1rem; /* Top-4 */
+  z-index: 10;
+  transform-origin: 0;
+  transform: translateY(0);
+  font-size: 0.875rem; /* Text-sm */
+  color: #9297a1; /* Gray-500 */
+  transition: transform 0.3s, font-size 0.3s, color 0.3s;
+}
+
+.input-style:focus + .label-style,
+.input-style:not(:placeholder-shown) + .label-style,
+.input-style:valid + .label-style {
+  transform: translateY(-1rem) scale(0.75);
+}
+
+.input-style:placeholder-shown + .label-style {
+  transform: translateY(0);
+  font-size: 1rem;
+}
+.input-style:focus + .label-style {
+  transform: translateY(-1rem) scale(0.75);
+}
+
+[dir='rtl'] .input-style:focus + .label-style {
+  left: auto;
+  transform: translateX(25%);
+}
+
+.password-info {
+  font-size: 9px;
+  color: #707070;
+}
+
+.relative {
+  position: relative;
+}
+
+.input-container-modal {
+  border-radius: 12px;
+  border: none;
+  padding: 1rem 0.625rem 0.625rem;
+  box-shadow: 0px 3px 6px #00000029;
+}
+
+.input-container-modal img {
+  vertical-align: baseline;
+  filter: grayscale(100%) brightness(0%);
+}
+
+.profile-container {
+  box-shadow: 0px 3px 10px 2px rgba(148, 148, 148, 0.5);
+  border-radius: 5px;
+}
+
+.profile-container-pic {
+  width: 150px;
+}
+
+.trash-icon {
+  width: 22px;
+}
+
+.close-btn {
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 8px;
+  background-color: rgb(210, 210, 210);
+  border: none;
+  color: black;
+  font-weight: 600;
+  padding: 0.85rem 2.5rem;
+}
+
+.close-btn:hover {
+  background-color: rgb(210, 210, 210);
+  color: black;
+  box-shadow: 0px 3px 6px #00000029;
+}
+
+.modal-save-btn {
+  all: unset;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 8px;
+  background-color: #51c7df;
+  border: 2px solid transparent;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  padding: 0.85rem 3.75rem;
+  transition: all 0.2s ease-in;
+}
+
+.modal-save-btn:hover {
+  background-color: rgb(255, 255, 255);
+  color: #51c7df;
+  border: 2px solid #51c7df;
+}
+
+.quill {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.quill .ql-toolbar.ql-snow {
+  border: none !important;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.quill .ql-container.ql-snow {
+  border: none !important;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.quill .ql-container.ql-blank {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.quill .ql-editor.ql-blank {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.modal-credit {
+  box-sizing: content-box;
+  background-color: #e2e6ec;
+}
+
+.image-label {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.sub-close-btn {
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 8px;
+  background-color: #51c7df;
+  border: none;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  width: 250px;
+  font-size: 15px;
+  padding: 1rem;
+}
+
+.sub-close-btn:hover {
+  color: rgb(255, 255, 255);
+}
+
+.sub-modal-save-btn {
+  all: unset;
+  width: 250px;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 8px;
+  background-color: rgb(255, 255, 255);
+  border: 2px solid transparent;
+  color: #ff3399;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  padding: 1rem;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;
