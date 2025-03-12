@@ -13,6 +13,7 @@ import { changeSidebarState } from '../../redux'
 import { useDispatch } from 'react-redux'
 import './index.css'
 import { EditRecommendationModal } from '../../components/Portfolio/Recommendation/editRecommendationModal'
+import CircleIcon from '../../assets/images/circle-startup-icon.png'
 
 function MyCourseEntrepreneurship() {
   const history = useHistory()
@@ -35,28 +36,69 @@ function MyCourseEntrepreneurship() {
   return (
     <Container fluid>
       <Row>
-        <div className="col-12 col-xl-9">
+        <div className='gradient-background'>
           <div
             className="account-page-padding page-border"
             style={{ minHeight: '100vh' }}
           >
-            <h3 className="page-title">
+            <h3 className="page-title" style={{ marginLeft: '20px' }}>
               {/* <IntlMessages id='navigation.startup_live' /> */}
-              MY COURSE IN ENTREPRENEURSHIP
+             Intro to the Course
             </h3>
-            <p className="page-description">
+            <p className="page-description" style={{ marginLeft: '20px' }}>
               {/* <IntlMessages id='startup_live.page_description' /> */}
               Embarking on the Entrepreneurial Journey
             </p>
 
-            <div className="row">
-              <div className="col-12 col-md-5 mb-4">
+            <div>
+            <div className='welcome-journey-text'>
+           <div className='title-container'>
+           <img 
+                  src={CircleIcon}
+                  alt='logo'
+                  style={{ width: '36px', height: '36px' }}
+                  className='welcome-journey-text__icon'
+                />
+                <p className="welcome-journey-text__title">
+                  Welcome to the Journey 
+                  </p>
+           </div>
+                <p className='welcome-journey-text__description'>
+                  Entrepreneurship is about building{' '}
+                  <span className="you-href">YOU</span>. As such, in this course
+                  you will set the pace of your development.
+                </p>
+                <p>
+                  Throughout each module, you will engage in the levels of the
+                  LTS model to identify a problem worth solving and turn concept
+                  into execution as you build a product or service ready for
+                  market entry.
+                </p>
+                {/* <p>
+                  <a
+                    href="/my-course-in-entrepreneurship/journal"
+                    className="button button--big"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setShowModal(true)
+                    }}
+                  >
+                    START
+                  </a>
+                </p> */}
+              </div>
+              
+            </div>
+
+            <div className="col-md-12 general-video-container">
+            <div className="video-container">
                 <div style={{ width: '100%' }}>
-                  <div className="responsive-video">
+                  <div className="responsive-video-first">
                     <ReactPlayer
                       className=""
-                      width={'100%'}
-                      height={'100%'}
+                      width={'305px'}
+                      height={'192px'}
+                      style={{ margin: '15px 15px', padding: '5px' }}
                       url={
                         'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4'
                       }
@@ -77,35 +119,7 @@ function MyCourseEntrepreneurship() {
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-md-7">
-                <p className="mt-0">
-                  Entrepreneurship is about building{' '}
-                  <span className="you-href">YOU</span>. As such, in this course
-                  you will set the pace of your development.
-                </p>
-                <p>
-                  Throughout each module, you will engage in the levels of the
-                  LTS model to identify a problem worth solving and turn concept
-                  into execution as you build a product or service ready for
-                  market entry.
-                </p>
-                <p>
-                  <a
-                    href="/my-course-in-entrepreneurship/journal"
-                    className="button button--big"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setShowModal(true)
-                    }}
-                  >
-                    START
-                  </a>
-                </p>
-              </div>
-            </div>
-
-            <div className="col-md-12">
-              <div className="accordion accordion--dark" id="accordionExample">
+              <div className="accordion accordion-flex" id="accordionExample">
                 {[
                   {
                     title: 'Introducing the Entrepreneurs',
@@ -117,9 +131,9 @@ function MyCourseEntrepreneurship() {
                     type: 'levels_of_journey'
                   }
                 ].map((data, index) => (
-                  <div className="mt-2" key={index}>
-                    <div className="accordion-item">
-                      <h2 className="accordion-header" id={`heading-${index}`}>
+                  <div style={{marginRight:'-10px'}} key={index}>
+                    {/* <div className="accordion-item  accordion-item-border"> */}
+                      <h2 className="accordion-header accordion-content-section-header" id={`heading-${index}`}>
                         <button
                           className="accordion-button collapsed accordion-outter button-accordion"
                           type="button"
@@ -135,7 +149,7 @@ function MyCourseEntrepreneurship() {
                       <div
                         id={`collapse_outer${index}`}
                         eventKey={`${index}`}
-                        className={`accordion-collapse collapse `}
+                        className={`accordion-collapse accordion-content-section  collapse `}
                         aria-labelledby={`heading-${index}`}
                         data-bs-parent={`#accordionExample`}
                       >
@@ -223,28 +237,19 @@ function MyCourseEntrepreneurship() {
                           {data.type == 'levels_of_journey' && (
                             <div className="levels-of-journey">
                               <div className="levels-of-journey__level">
-                                <h3 className="levels-of-journey__title">
+                                <p className="levels-of-journey__title">
                                   <span>LEVEL 1 |</span> Entrepreneurship and
                                   You
-                                </h3>
+                                </p>
                                 <div className="levels-of-journey__description">
-                                  In the first level of this program, you will
-                                  engage in developing this mindset as your
-                                  preparation for starting your journey on the
-                                  pathway to entrepreneurship. You need proof of
-                                  yourself as an entrepreneur and to create this
-                                  proof, you will develop content that
-                                  solidifies your statement of “I Am.” Who are
-                                  you and how do you want the world to see you?
-                                  It’s time for you to communicate your
-                                  professional identity.
+                                  Entrepreneurship is a mindset,and in the first level of this program,you will engage in developing this mindset as your preparation for starting your journey on the pathway to entrepreneurship.You need proof of yourself as an entrepreneur and through this program you will create content that can publicly speak to your values,your purpose,your mindset, and your skillset.The first step in creating this proof is developing content that solidifies your statement of "I Am.".Who are you and how do you want the world to see you? It's time for you to communicate you professional identity.
                                 </div>
                               </div>
                               <div className="levels-of-journey__level">
-                                <h3 className="levels-of-journey__title">
+                                <p className="levels-of-journey__title">
                                   <span>LEVEL 2 |</span> Understanding Learn to
                                   Start
-                                </h3>
+                                </p>
                                 <div className="levels-of-journey__description">
                                   In the second level, you will immerse yourself
                                   in the LTS model. People want to work with
@@ -260,10 +265,9 @@ function MyCourseEntrepreneurship() {
                                 </div>
                               </div>
                               <div className="levels-of-journey__level">
-                                <h3 className="levels-of-journey__title">
-                                  <span>LEVEL 3 |</span> The LEARN, DEVELOP,
-                                  BRAND, & START Stages
-                                </h3>
+                                <p className="levels-of-journey__title">
+                                  <span>LEVEL 3 |</span> The LEARN Stage
+                                </p>
                                 <div className="levels-of-journey__description">
                                   Now that you have a better sense of self and
                                   your professional opportunities for
@@ -283,7 +287,7 @@ function MyCourseEntrepreneurship() {
                           )}
                         </div>
                       </div>
-                    </div>
+                    {/* </div> */}
                   </div>
                 ))}
               </div>
@@ -314,13 +318,13 @@ function MyCourseEntrepreneurship() {
             </Modal>
           </div>
         </div>
-        <div className="col-12 col-xl-3 px-2 mt-3">
+        {/* <div className="col-12 col-xl-3 px-2 mt-3">
           <ShowMessenger />
           <NotesButton />
 
-          {/* <Chat room={'5f96a12568d0c2c580fca9fe'} /> */}
+          <Chat room={'5f96a12568d0c2c580fca9fe'} />
 
-          {/* <div className={'community-connect my-2'}>
+          <div className={'community-connect my-2'}>
             <Link to='/my-connections'>
               <FontAwesomeIcon
                 icon={faUsers}
@@ -337,8 +341,8 @@ function MyCourseEntrepreneurship() {
             <Link to='/my-connections'>
               <p className='my-auto ms-2'>Connect with my community</p>
             </Link>
-          </div> */}
-        </div>
+          </div>
+        </div> */}
       </Row>
     </Container>
   )

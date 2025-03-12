@@ -1,12 +1,15 @@
 .alert-modal .modal-dialog {
   max-width: 540px;
 }
+
 .alert-modal .modal-content {
   border-radius: 0px !important;
 }
+
 .alert-modal .modal-body {
   padding: 70px 60px 50px;
 }
+
 .alert-modal .alert-modal__text {
   text-align: center;
   font: normal normal 600 18px/21px Montserrat;
@@ -14,34 +17,39 @@
   color: #707070;
   margin-bottom: 14px;
 }
+
 .alert-modal .alert-modal__buttons {
   padding: 0 30px;
 }
-.alert-modal .alert-modal__buttons > * {
+
+.alert-modal .alert-modal__buttons>* {
   display: flex;
 }
-.alert-modal .alert-modal__buttons > *:not(:last-child) {
+
+.alert-modal .alert-modal__buttons>*:not(:last-child) {
   margin-bottom: 4px;
 }
 
-.levels-of-journey {
-}
-.levels-of-journey__level {
+/* .levels-of-journey {} */
+/* .levels-of-journey__level {
   padding-left: 20px;
-}
+} */
 .levels-of-journey__level:not(:first-child) {
   margin-top: 20px;
 }
+
 .levels-of-journey__title {
-  font: normal normal 23px/28px Montserrat;
-  font-weight: 500;
+  font: normal normal 15px Montserrat;
+  /* font-weight: 700; */
   letter-spacing: 0px;
   color: #231f20;
 }
+
 .levels-of-journey__title span {
-  font: normal normal bold 23px/28px Montserrat;
+  font: normal normal bold 16px Montserrat;
 }
-.levels-of-journey__level:nth-child(1) .levels-of-journey__title span {
+
+/* .levels-of-journey__level:nth-child(1) .levels-of-journey__title span {
   color: #51c7df;
 }
 .levels-of-journey__level:nth-child(2) .levels-of-journey__title span {
@@ -49,65 +57,210 @@
 }
 .levels-of-journey__level:nth-child(3) .levels-of-journey__title span {
   color: #ff3399;
-}
+} */
 .levels-of-journey__description {
-  font: normal normal 300 16px/19px Montserrat;
+  font: normal normal 300 14px Montserrat;
   letter-spacing: 0px;
   color: #231f20;
-  padding-left: 80px;
+  /* padding-left: 80px; */
 }
 
-.entrepreneurs {
-}
-.entrepreneurs__item {
-}
-.entrepreneurs__item-inner {
-}
+/* .entrepreneurs {} */
+/* .entrepreneurs__item {} */
+/* .entrepreneurs__item-inner {} */
 .entrepreneurs__item-title {
   font: normal normal 600 24px/29px Montserrat;
   letter-spacing: 0px;
   color: #231f20;
   margin-bottom: 3px;
 }
+
 .entrepreneurs__item-position {
-  font: normal normal 500 17px/20px Montserrat;
+  font: normal normal 300 12px Montserrat;
   letter-spacing: 0px;
-  color: #bbbdbf;
+  color: rgb(0, 0, 0);
   margin-bottom: 7px;
 }
-.entrepreneurs__item-video {
-}
+
+/* .entrepreneurs__item-video {} */
 
 .key_points {
   margin-top: -27px;
 }
+
 .key_points__item {
   margin-top: 27px;
 }
-.key_points__item-inner {
-}
-.key_points__item-video {
-}
+
+/* .key_points__item-inner {} */
+/* .key_points__item-video {} */
 .key_points__item-video .react-player__play-icon {
   border-width: 14px 0px 14px 22px !important;
-  border-color: transparent transparent transparent black !important;
+  border-color: transparent transparent transparent rgb(255, 255, 255) !important;
   position: relative;
 }
+
 .key_points__item-video .react-player__play-icon::before {
   content: '';
   position: absolute;
   border-radius: 100px;
   width: 62px;
   height: 62px;
-  border: 6px solid black;
+  border: 6px solid rgb(255, 255, 255);
   top: 50%;
   left: 50%;
   transform: translate(calc(-50% - 13px), -50%);
 }
+
 .key_points__item-title {
   text-align: center;
   font: normal normal 9px/11px Montserrat;
   letter-spacing: 0px;
   color: #707070;
   margin-top: 10px;
+}
+
+.welcome-journey-text {
+  margin: 20px 10px;
+  border-radius: 20px;
+  box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
+  padding: 25px 15px 20px 25px;
+  background-color: radial-gradient(circle at 10% 50%,
+      rgb(255, 255, 255) 0%,
+      rgb(255, 255, 255) 30%,
+      transparent 90%),
+    radial-gradient(circle at 0% 60%,
+      rgba(109, 167, 248, 0.342) 0%,
+      rgba(114, 171, 251, 0.4) 30%,
+      transparent 90%);
+  position: relative;
+  margin-bottom: 2rem;
+
+}
+
+.general-video-container {
+  display: flex;
+}
+
+.video-container {
+  width: 22vw;
+}
+
+.accordion-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* border: .5px solid #bbbdbf; */
+  border-radius: 20px;
+  box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
+  width: 100%;
+  margin: 0 20px;
+  padding: 25px 25px;
+  background-color: radial-gradient(circle at 10% 50%,
+      rgb(255, 255, 255) 0%,
+      rgb(255, 255, 255) 30%,
+      transparent 90%),
+    radial-gradient(circle at 0% 60%,
+      rgba(109, 167, 248, 0.342) 0%,
+      rgba(114, 171, 251, 0.4) 30%,
+      transparent 90%);
+
+
+}
+
+.accordion-item-border {
+  background-color: #ffffffff;
+  /* border: .5px solid #bbbdbf; */
+  box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
+  border-radius: 20px;
+
+}
+
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 20px;
+}
+
+.title-container .welcome-journey-text__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.welcome-journey-text .welcome-journey-text__description {
+  margin: 0;
+}
+
+.gradient-background {
+  background:
+    radial-gradient(circle at 10% 50%,
+      rgb(255, 255, 255) 0%,
+      rgb(255, 255, 255) 30%,
+      transparent 90%),
+    radial-gradient(circle at 0% 60%,
+      rgba(109, 167, 248, 0.342) 0%,
+      rgba(114, 171, 251, 0.4) 30%,
+      transparent 90%);
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.page-title {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.page-description {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* Update accordion styles to match the new design */
+.accordion-item {
+  background: #ffffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  border-radius: 10px;
+}
+
+.accordion-content-section {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
+  margin: 10px 10px;
+  padding: 2rem;
+  width: calc(100% - 40px);
+  /* Match parent width minus margins */
+
+}
+
+.accordion-content-section-header {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
+  margin: 10px 10px;
+  width: calc(100% - 40px);
+  /* Match parent width minus margins */
+
+}
+
+.accordion-button {
+  background: transparent;
+  border-radius: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .gradient-background {
+    padding: 1rem;
+  }
+
+  .main-login-container {
+    width: 95%;
+    padding: 1rem;
+  }
 }

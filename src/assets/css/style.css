@@ -449,7 +449,19 @@ li.nav-item.dropdown {
 .responsive-video {
   padding-top: 56%;
   position: relative;
-  border: 1px solid #bbbdbf;
+  /* border: 1px solid #bbbdbf; */
+}
+
+.responsive-video-first {
+  position: relative;
+  /* border: .1px solid #bbbdbf; */
+  border-radius: 20px;
+  box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
+  width: 330px;
+  height: 225px;
+  margin: 5px 15px 5px 10px;
+  padding: 3px 0px;
+  background-color: #ffffffff;
 }
 
 .responsive-video>* {
@@ -1045,6 +1057,8 @@ a.sidenav.active {
 
 .react-player__preview {
   background-repeat: no-repeat;
+  border-radius: 20px;
+  box-shadow: 2px 2px 2px 2px rgb(123, 123, 123);
 }
 
 .next a {
@@ -1634,10 +1648,10 @@ input[type='file'] {
   top: 20%;
 }
 
-#briefing-modal {
-  /* margin-top: 15%; */
-  /*top: 10%;*/
-}
+/* #briefing-modal {
+  margin-top: 15%;
+  top: 10%;
+} */
 
 /* #password-modal {
   width: 50%;
@@ -4262,7 +4276,7 @@ wave>wave:first-child {
 }
 
 .page-card__content {
-  padding-left: 15px;
+  padding-left: 15spx;
   padding-right: 15px;
   margin-right: -15px;
   overflow-x: hidden;
@@ -4436,7 +4450,7 @@ wave>wave:first-child {
   margin-right: 6px;
 }
 
-.accordion-menu__submenu-item-details {}
+/* .accordion-menu__submenu-item-details {} */
 
 .accordion-menu__submenu-item-title {
   text-align: left;
@@ -4574,7 +4588,7 @@ strong {
   height: 100% !important;
 }
 
-.journal-entries__entry {}
+/* .journal-entries__entry {} */
 
 .journal-entries__entry:not(:last-child) {
   margin-bottom: 70px;
@@ -4624,9 +4638,9 @@ strong {
   text-decoration: underline;
 }
 
-.journal-entries__entry-reflections {}
+/* .journal-entries__entry-reflections {} */
 
-.journal-entries__entry-reflection {}
+/* .journal-entries__entry-reflection {} */
 
 .journal-entries__entry-reflection:not(:last-child) {
   margin-bottom: 24px;
@@ -4658,7 +4672,7 @@ strong {
   color: #333d3d;
 }
 
-.journal-entries__entry-reflection-actions {}
+/* .journal-entries__entry-reflection-actions {} */
 
 .journal-entries__entry-reflection-actions>* {
   cursor: pointer;
@@ -4857,7 +4871,7 @@ strong {
   z-index: 1000;
 }
 
-.media-lightbox__inner {}
+/* .media-lightbox__inner {} */
 
 .media-lightbox__overlay {
   background: #333d3d83 0% 0% no-repeat padding-box;
@@ -5341,7 +5355,8 @@ ul.sidebar-menu-item .collapse a:hover {
   text-align: left;
   font: normal normal 500 17px Montserrat;
   letter-spacing: 0px;
-  color: #51c7df;
+  font-weight: bold;
+  color: black;
 }
 
 .edit-founders__role {

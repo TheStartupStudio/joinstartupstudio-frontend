@@ -6,10 +6,10 @@
   align-items: center;
   justify-content: center;
   background-color: transparent;
-  box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.95);
+  /* box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.95);
   -webkit-box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.8);
   -moz-box-shadow: -1px 0px 15px 17px rgba(255, 255, 255, 0.8);
-  border-radius: 15px;
+  border-radius: 15px; */
 }
 
 .public-login-form button {
