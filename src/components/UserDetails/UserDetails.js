@@ -1,26 +1,30 @@
 import React, { useState } from 'react'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import { Button, Modal, ModalBody, ModalHeader } from 'reactstrap'
 import tickLogo from '../../assets/images/academy-icons/blue-tick.png'
+import cancelRenewal from '../../assets/images/academy-icons/cancel-renewal.png'
+import creditCard from '../../assets/images/academy-icons/credit-card.png'
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
+import instaLogo from '../../assets/images/academy-icons/instagram.png'
+import browserLogo from '../../assets/images/academy-icons/internet.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
 import penIcon from '../../assets/images/academy-icons/pen-icon.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
-import twitterLogo from '../../assets/images/academy-icons/twitter.png'
-import instaLogo from '../../assets/images/academy-icons/instagram.png'
 import resetLogo from '../../assets/images/academy-icons/reset.png'
-import browserLogo from '../../assets/images/academy-icons/internet.png'
 import trashIcon from '../../assets/images/academy-icons/trash.png'
-import creditCard from '../../assets/images/academy-icons/credit-card.png'
-import cancelRenewal from '../../assets/images/academy-icons/cancel-renewal.png'
-import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import twitterLogo from '../../assets/images/academy-icons/twitter.png'
 import ModalInput from '../ModalInput/ModalInput'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
+import CancelRenewalModal from './CancelRenewalModal'
+import CancelSubModal from './CancelSubModal'
+import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 
 function UserDetails({ profilePic, userName, userProffesion }) {
   const [modal, setModal] = useState(false)
   const [subsbsciptionModal, setSubscriptionModal] = useState(false)
   const [cancelSubModal, setCancelSubModal] = useState(false)
+  const [canceledRenewal, setCanceledRenewal] = useState(false)
+  const [certificate, setCertificate] = useState(false)
   const [content, setContent] = useState('')
 
   const toggle = () => setModal((prev) => !prev)
@@ -33,6 +37,15 @@ function UserDetails({ profilePic, userName, userProffesion }) {
   const toggleCancelModal = () => {
     setCancelSubModal((prev) => !prev)
     setSubscriptionModal((prev) => !prev)
+  }
+
+  const toggleCancelRenewal = () => {
+    setCancelSubModal((prev) => !prev)
+    setCanceledRenewal((prev) => !prev)
+  }
+
+  const toggleCertificate = () => {
+    setCertificate((prev) => !prev)
   }
 
   return (
@@ -66,7 +79,10 @@ function UserDetails({ profilePic, userName, userProffesion }) {
             </div>
           </div>
         </div>
-        <div className='d-flex gap-2 view-certificate align-items-center mb-3'>
+        <div
+          className='d-flex gap-2 view-certificate align-items-center mb-3 cursor-pointer'
+          onClick={toggleCertificate}
+        >
           <img
             src={tickLogo}
             alt='blue-tick'
@@ -297,36 +313,24 @@ function UserDetails({ profilePic, userName, userProffesion }) {
         </ModalBody>
       </Modal>
 
-      <Modal
-        isOpen={cancelSubModal}
-        toggle={() => setCancelSubModal((prev) => !prev)}
-      >
-        <ModalBody>
-          <div>
-            <img
-              className='modal-credit rounded-circle p-2 mb-2'
-              src={warningTriangle}
-              alt='Credit'
-            />
-            <p className='mb-0 fs-15 fw-medium'>Cancel Subscription?</p>
-          </div>
-          <p className='mt-5 text-center fw-medium'>
-            Are you sure you want to cancel your subscription?
-          </p>
+      <CancelSubModal
+        cancelSubModal={cancelSubModal}
+        setCancelSubModal={setCancelSubModal}
+        toggleCancelModal={toggleCancelModal}
+        toggleCancelRenewal={toggleCancelRenewal}
+      />
+      <CancelRenewalModal
+        canceledRenewal={canceledRenewal}
+        setCanceledRenewal={setCanceledRenewal}
+      />
 
-          <div className='d-flex gap-3 justify-content-center mt-5 mb-3'>
-            <Button
-              color='info'
-              className='sub-close-btn'
-              onClick={toggleCancelModal}
-            >
-              NO, TAKE ME BACK
-            </Button>
-            <button className='sub-modal-save-btn'>
-              YES, CANCEL SUBSCRIPTION
-            </button>
-          </div>
-        </ModalBody>
+      <Modal
+        isOpen={certificate}
+        toggle={toggleCertificate}
+        className='certificate-modal'
+      >
+        <img className='left-arrow-modal' src={leftArrow} alt='left' />
+        <ModalBody></ModalBody>
       </Modal>
     </>
   )
