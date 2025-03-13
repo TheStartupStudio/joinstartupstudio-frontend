@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import IntlMessages from '../../utils/IntlMessages'
-import Profile from '../../components/Profile'
+import Select from 'react-select'
+import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
+import profilePic from '../../assets/images/academy-icons/profile.jpeg'
+import CourseProgress from '../../components/CourseProgress/CourseProgress'
+import UserDetails from '../../components/UserDetails/UserDetails'
+import useImpersonation from '../../hooks/useImpersonation'
 import { changeSidebarState } from '../../redux'
 import {
   closeTaskModal,
@@ -9,24 +13,7 @@ import {
   getPeriodsStart,
   openTaskModal
 } from '../../redux/dashboard/Actions'
-import FullCalendarComponent from '../../components/Calendar/FullCalendar'
-import TaskEventModal from '../../components/Modals/TaskEventModal'
-import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
-import useImpersonation from '../../hooks/useImpersonation'
-import RecentAchievements from './RecentAchievement'
-import Select from 'react-select'
-import userIcon from '../../assets/images/academy-icons/profile-icon.png'
-import penIcon from '../../assets/images/academy-icons/pen-icon.png'
-import profilePic from '../../assets/images/academy-icons/profile.jpeg'
-import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
-import facebookLogo from '../../assets/images/academy-icons/facebook.png'
-import twitterLogo from '../../assets/images/academy-icons/twitter.png'
-import tickLogo from '../../assets/images/academy-icons/blue-tick.png'
-import courseLogo from '../../assets/images/academy-icons/course-progress.png'
-import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
-import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
-import CircularProgress from '../../components/ProgressBar'
-import UserDetails from '../../components/UserDetails/UserDetails'
+import IntlMessages from '../../utils/IntlMessages'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -128,62 +115,7 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        {/* <div className='col-12 col-xl-3 px-0'>
-          <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
-            <FullCalendarComponent
-              events={events}
-              periods={periods}
-              userRole={userRole}
-              // startDate={getFormattedDate()}
-            />
-            {userRole !== 'student' && (
-              <button
-                style={{
-                  backgroundColor: '#51c7df',
-                  color: '#fff',
-                  fontSize: 14
-                }}
-                onClick={openTaskEventModal}
-                className='px-4 py-2 border-0 color transform text-uppercase  w-100 my-1'
-              >
-                Create Task/Event
-              </button>
-            )}
-            {taskEventModal && (
-              <TaskEventModal
-                show={taskEventModal}
-                onHide={closeTaskEventModal}
-                periods={periods}
-                startDate={getFormattedDate()}
-              />
-            )}
-            <NotificationSection />
-            <CertificationRequestsWidget />
-            <Messenger
-              chatOpened={(id) => setChatId(id)}
-              newMessage={(message) => setNewMessage(message)}
-            />
 
-            <div className={`community-connect px-3`}>
-              <Link to='/my-connections'>
-                <FontAwesomeIcon
-                  icon={faUsers}
-                  style={{
-                    color: '#01C5D1',
-                    background: 'white',
-                    borderRadius: '50%',
-                    height: '25px',
-                    width: '36px',
-                    opacity: '1'
-                  }}
-                />
-              </Link>
-              <Link to='/my-connections'>
-                <p className='my-auto ms-2'>Connect with my community</p>
-              </Link>
-            </div>
-          </div>
-        </div> */}
         <div className='d-grid academy-dashboard-layout'>
           <UserDetails
             profilePic={profilePic}
@@ -191,42 +123,7 @@ function Dashboard() {
             userProffesion={'Graphic Designer'}
           />
 
-          <div
-            className='d-grid academy-dashboard-card'
-            style={{ gridTemplateRows: '1fr 2fr' }}
-          >
-            <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4'>
-              <div className='d-flex gap-3 align-items-center'>
-                <img src={courseLogo} alt='course' />
-                <h4 className='fs-9 my-details-header'>Course Progress</h4>
-              </div>
-              <div className='progress-details'>
-                <span>Progress Details</span>
-                <img src={rightArrow} alt='right-arr' />
-              </div>
-            </div>
-            <div className='d-flex gap-4 align-items-center justify-content-between'>
-              <div className='d-flex flex-column gap-4'>
-                <CircularProgress percentage={20} level={1} />
-                <p className='text-center'>
-                  Entrepreneurship <br /> & You
-                </p>
-              </div>
-              <div className='d-flex flex-column gap-4'>
-                <CircularProgress percentage={0} level={2} />
-                <p className='text-center'>
-                  Understanding <br /> Learn to Start
-                </p>
-              </div>
-              <div className='d-flex flex-column gap-4'>
-                <CircularProgress percentage={0} level={3} />
-                <p className='text-center'>
-                  The Journey of <br />
-                  Entrepreneurship
-                </p>
-              </div>
-            </div>
-          </div>
+          <CourseProgress />
 
           <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between'>
             <div className='d-flex align-items-center gap-3'>

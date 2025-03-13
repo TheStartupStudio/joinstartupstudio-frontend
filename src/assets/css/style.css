@@ -4423,6 +4423,20 @@ wave > wave:first-child {
   bottom: -7px;
 }
 
+.progress-details-accordion {
+  box-shadow: 2px 3px 15px rgba(0, 0, 0, 0.3);
+  border: none;
+}
+
+.accordion-icons {
+  width: 15px;
+}
+
+.accordion-content-modal {
+  font-size: 14px;
+  font-weight: 400;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;

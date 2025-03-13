@@ -29,7 +29,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
   const [subsbsciptionModal, setSubscriptionModal] = useState(false)
   const [cancelSubModal, setCancelSubModal] = useState(false)
   const [canceledRenewal, setCanceledRenewal] = useState(false)
-  const [certificate, setCertificate] = useState(true)
+  const [certificate, setCertificate] = useState(false)
   const [content, setContent] = useState('')
 
   const toggle = () => setModal((prev) => !prev)
