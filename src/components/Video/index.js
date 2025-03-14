@@ -63,7 +63,7 @@ export default function VideoView(props) {
   return (
     <>
       {props.type !== 'view-all' ? (
-        <div
+        <div style={{ width: '200px',height:'130px',borderRadius:'10px' }}
           className={`${
             props.type !== 'widget' ? 'beyond-your-course-videos' : 'mt-2'
           }`}
@@ -71,7 +71,7 @@ export default function VideoView(props) {
           <Link to={url ? url : '#'}>
             <div
               className='beyond-your-course-video-thumb'
-              style={{ width: '100%' }}
+              style={{ width: '200px',height:'130px',borderRadius:'10px' }}
             >
               <div style={{ position: 'absolute', right: '10px', top: '10px' }}>
                 <FontAwesomeIcon
@@ -101,7 +101,7 @@ export default function VideoView(props) {
                   height='250px'
                   alt='video'
                 />
-                <div className='beyond-your-course-video-thumb-icon'>
+                <div className='beyond-your-course-video-thumb-icon' style={{border:'5px solid white',borderRadius:'50%',padding:'1.5rem',display:'flex',alignItems:'center',justifyContent:'center'}}>
                   <FontAwesomeIcon icon={faPlay} />
                 </div>
               </div>
@@ -114,7 +114,7 @@ export default function VideoView(props) {
                 <h5>
                   <IntlMessages id={props.title} />
                 </h5>
-                <p
+                {/* <p
                   className='card-text'
                   style={{
                     textAlign:
@@ -122,7 +122,7 @@ export default function VideoView(props) {
                   }}
                 >
                   <IntlMessages id={props.description} />
-                </p>
+                </p> */}
               </>
             </div>
           </Link>

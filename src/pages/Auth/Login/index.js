@@ -178,21 +178,33 @@ const ChooseLogin = () => {
                 )}
               </FormattedMessage>
 
+                <div className='login-button' style={{ display: 'flex',
+                alignItems:'center',
+                justifyContent:'center',
+                width:'150px',
+                margin:'1.5rem 7rem ',
+                    borderRadius: '8px',
+                    background:
+                      'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                    padding: '2px',
+                    height: '58px',
+                    boxShadow: '0px 4px 10px 0px #00000040'}}>
               <button
                 type='submit'
-                className='mt-4 w-100'
+                className='w-100 login-btn'
                 disabled={isLoading}
                 onClick={handleSubmit}
               >
                 {isLoading ? (
                   <span className='spinner-border spinner-border-sm' />
                 ) : (
-                  <span className='d-flex align-items-center justify-content-center'>
+                  <span className='d-flex align-items-center justify-content-center' >
                     <IntlMessages id='general.login' />
                     <FontAwesomeIcon icon={faArrowRight} className='ms-2 fw-bold' />
                   </span>
                 )}
               </button>
+              </div>
 
               <p className='text-center public-page-text m-1'>
                 <IntlMessages id='login.forgot_password' />
