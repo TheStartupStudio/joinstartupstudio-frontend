@@ -4437,6 +4437,22 @@ wave > wave:first-child {
   font-weight: 400;
 }
 
+.fs-13 {
+  font-size: 13px;
+}
+
+.p-inl-13 {
+  padding-inline: 13rem;
+}
+
+.entrepreneur {
+  width: 220px;
+}
+
+.fs-18 {
+  font-size: 18px;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;

@@ -56,6 +56,10 @@ module.exports = {
         test: /\.(jpg|jpeg|png|svg|gif|woff|woff2|ttf|eot|otf)$/i,
         type: 'asset/resource'
       },
+      {
+        test: /\.(mp4|webm|mov)$/i,
+        type: 'asset/resource'
+      },
       // {
       //   test: /\.csv$/,
       //   use: 'csv-loader'
@@ -77,7 +81,7 @@ module.exports = {
       module: false // Optional: mock other modules if needed
     },
     alias: {
-      'react-dom/server': 'react-dom/server.browser.js' 
+      'react-dom/server': 'react-dom/server.browser.js'
     }
   },
   plugins: [

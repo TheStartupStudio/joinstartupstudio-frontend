@@ -1,0 +1,17 @@
+.welcome-course-header {
+  background: url('../../assets/images/academy-icons/girl.png');
+  height: 80vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.blue-text {
+  color: #51c7df;
+}
+
+.image-wyl {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}

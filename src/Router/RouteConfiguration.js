@@ -140,6 +140,8 @@ const MyCourseAndCredentialsContainer = React.lazy(() =>
   import('../pages/admin/MyCourseAndCredentials')
 )
 
+const WelcomeToCourse = React.lazy(() => import('../pages/WelcomeToCourse'))
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   // { path: '/user-management', component: UserManagement },
@@ -268,11 +270,10 @@ export const mutualRoutes = [
     exact: true
   },
   {
-    path:'/my-course-in-entrepreneurship',
+    path: '/my-course-in-entrepreneurship',
     component: MyCourseEntrepreneurship,
     exact: true
-  },
-  
+  }
 ]
 
 export const instructorRoutes = [
@@ -395,10 +396,11 @@ export const studentRoutes = [
     path: '/edit-portfolio/recommendation/:id',
     component: EditPortfolioNew,
     exact: true
-  },
+  }
 ]
 
 export const publicRoutes = [
+  { path: '/welcome-to-course', component: WelcomeToCourse, exact: true },
   { path: '/verify-email', component: VerifyEmailByCode, exact: false },
   { path: '/lts-secure', component: SecurePage, exact: true },
   { path: '/forgot-password', component: ForgotPassword, exact: true },
