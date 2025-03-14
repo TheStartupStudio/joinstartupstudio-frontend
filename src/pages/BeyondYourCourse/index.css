@@ -1,0 +1,101 @@
+.gradient-background {
+    background: radial-gradient(circle at 10% 50%, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 30%, transparent 90%), radial-gradient(circle at 0% 60%, rgba(236, 73, 242, 0.342) 0%, rgba(235, 80, 252, 0.4) 70%, transparent 90%);
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+.videos-container {
+    margin: 20px 10px;
+    border-radius: 20px;
+    box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
+    padding: 25px 15px 90px 25px;
+    background-color: radial-gradient(circle at 10% 50%,
+            rgb(255, 255, 255) 0%,
+            rgb(255, 255, 255) 30%,
+            transparent 90%),
+        radial-gradient(circle at 0% 60%,
+            rgba(109, 167, 248, 0.342) 0%,
+            rgba(114, 171, 251, 0.4) 30%,
+            transparent 90%);
+    position: relative;
+    margin-bottom: 2rem;
+
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.title-container .videos-container__title {
+    margin: 0;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.videos-container .videos-container__description {
+    margin: 0;
+}
+
+.levels-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.09);
+    /* width: 1350px; */
+    height: 49px;
+}
+
+.level-navigation {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* gap: 1rem; */
+    margin-bottom: 2rem;
+    padding: .2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.course-level {
+    padding: .75rem 5rem;
+    color: #718096;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    border-radius: 8px;
+}
+
+.course-level:hover {
+    background-color: #FF339933;
+    transform: translateY(-1px);
+}
+
+.active-level {
+    color: #2d3748;
+    font-weight: 600;
+    background-color: #FF339933;
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.09);
+}
+
+/* Add responsive styles */
+@media (max-width: 768px) {
+    .level-navigation {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .course-level {
+        padding: .5rem 1.5rem;
+    }
+}

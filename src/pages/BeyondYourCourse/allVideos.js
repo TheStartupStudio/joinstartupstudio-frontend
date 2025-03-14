@@ -7,6 +7,7 @@ import Video from '../../components/Video'
 import ReactPaginate from 'react-paginate'
 import '../Saved/index.css'
 import { setBackButton } from '../../redux/backButtonReducer'
+import './index.css'
 
 export default function GuidanceEncouragement() {
   const [pageTitle, setPageTitle] = useState('')
@@ -18,6 +19,12 @@ export default function GuidanceEncouragement() {
   const currentLanguage = useSelector((state) => state.lang.locale)
   const [connections, setConnections] = useState([])
   const videosPerPage = 9
+  const [activeLevel, setActiveLevel] = useState(0);
+  const levels = [
+    { id: 1, title: "Encouragement Videos" },
+    { id: 2, title: "Career Guidance Videos" },
+    { id: 3, title: "Story in Motion Podcast Episodes" }
+  ];
 
   const dispatch = useDispatch()
 
@@ -46,15 +53,15 @@ export default function GuidanceEncouragement() {
 
   useEffect(() => {
     if (window.location.href.includes('encouragement/videos')) {
-      setPageTitle('ENCOURAGEMENT VIDEOS')
+      setPageTitle('MASTER CLASSES | ENCOURAGEMENT VIDEOS')
       setPageDescription('beyond_your_course.encouragement_description')
       getEncouragementVideos()
     } else if (window.location.href.includes('master-classes/videos')) {
-      setPageTitle('CAREER GUIDANCE')
+      setPageTitle('MASTER CLASSES | CAREER GUIDANCE')
       setPageDescription('beyond_your_course.master_classes_description')
       getMasterClassVideos()
     } else if (window.location.href.includes('startup-live/videos')) {
-      setPageTitle('STORY IN MOTION GUEST Q&AS')
+      setPageTitle('MASTER CLASSES | STORY IN MOTION GUEST Q&AS')
       setPageDescription('startup_live.startup_archive_description')
       getStartupLiveVideos()
     }
@@ -96,7 +103,7 @@ export default function GuidanceEncouragement() {
 
   return (
     <div id='main-body'>
-      <div className='container-fluid'>
+      <div className='container-fluid gradient-background'>
         <div className='row'>
           <div className='col-12 col-xl-12'>
             <div className='account-page-padding page-border'>
@@ -117,7 +124,18 @@ export default function GuidanceEncouragement() {
                     )}
                   </p>
                 </div>
-                <div className='row'>
+                <div className="level-navigation">
+                  {levels.map((level, index) => (
+                    <div
+                      key={level.id}
+                      className={`course-level ${activeLevel === index ? 'active-level' : ''}`}
+                      onClick={() => setActiveLevel(index)}
+                    >
+                      {level.title}
+                    </div>
+                  ))}
+                </div>
+                <div className='row videos-container'>
                   {currentPageVideos?.map((video, index) => (
                     <Video
                       id={video.id}

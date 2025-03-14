@@ -18,10 +18,10 @@
   letter-spacing: 0px;
   color: #000;
   opacity: 1;
-  background-color: transparent;
+  /* background-color: transparent; */
   width: 25%;
-  height: 45px;
-  border-bottom: 2px solid #db438a !important;
+  /* height: 45px; */
+  /* border-bottom: 2px solid #db438a !important; */
   border: none;
   text-transform: uppercase;
   box-shadow: none;

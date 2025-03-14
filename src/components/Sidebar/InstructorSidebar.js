@@ -88,7 +88,7 @@ const InstructorSidebar = (props) => {
             dispatch(setAccordionToggled(false))
             props.props.hideHeaderIcons()
           }}
-          to={'/dashboard'}
+          to={'/beyond-your-course'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
           srcImage={MasterLogo}
           title={isTextVisible && !isCollapsed && 'Master classes'}

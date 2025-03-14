@@ -12,6 +12,8 @@ import { changeSidebarState } from '../../redux'
 import Video from '../../components/Video'
 import SavedVideosWidget from '../../components/Video/savedVideosWidget'
 import { VideoModal } from '../../components/Modals/videoModal'
+import './index.css'
+import masterIcon from '../../assets/images/master-icon.png'
 
 export default function BeyondYourCourse() {
   const dispatch = useDispatch()
@@ -245,9 +247,9 @@ export default function BeyondYourCourse() {
   return (
     <>
       <div id='main-body'>
-        <div className='container-fluid'>
+        <div className='container-fluid gradient-background'>
           <div className='row'>
-            <div className='col-12 col-xl-9 pe-0 me-0'>
+            <div >
               <div className='account-page-padding page-border'>
                 <h3 className='page-title'>
                   <IntMessages id='beyond_your_course.master_classes_upper' />
@@ -255,17 +257,26 @@ export default function BeyondYourCourse() {
                 <p className='page-description' style={{ fontWeight: '500' }}>
                   <IntMessages id='beyond_your_course.page_description' />
                 </p>
-                <div className='guidance-videos-top mt-5 mb-3 guidance-encouragement-page-titles'>
+                <div className='videos-container'>
+                <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
+                  <div className='title-container'>
+                   <img 
+                                    src={masterIcon}
+                                    alt='logo'
+                                    style={{ width: '36px', height: '36px' }}
+                                    className='welcome-journey-text__icon'
+                                  />
                   <h3>
                     <IntMessages id='beyond_your_course.encouragement_no_videos' />
                   </h3>
+                  </div>
                   <Link className='guidance-link' to={`/encouragement/videos`}>
                     <IntMessages id='general.view_all' />
                   </Link>
                 </div>
 
                 <div className='beyond-videos-desktop'>
-                  <div className='arrow-icon-1'>
+                  {/* <div className='arrow-icon-1'>
                     <button
                       className={`videos-track ${
                         window.location.pathname.includes(
@@ -287,7 +298,7 @@ export default function BeyondYourCourse() {
                         // style={{ marginRight: '20px' }}
                       />
                     </button>
-                  </div>
+                  </div> */}
                   <div
                     className='card-group desktop-menu card-group-beyond-your-course w-100'
                     // style={{ marginTop: '15px' }}
@@ -311,7 +322,7 @@ export default function BeyondYourCourse() {
                         />
                       ))}
                   </div>
-                  <div className='arrow-icon-1 justify-content-start'>
+                  {/* <div className='arrow-icon-1 justify-content-start'>
                     <button
                       className={`videos-track ${
                         window.location.pathname.includes(
@@ -328,12 +339,13 @@ export default function BeyondYourCourse() {
                         className='videos-track-icon'
                       />
                     </button>
-                  </div>
+                  </div> */}
+                </div>
                 </div>
 
                 <div className='row mt-2'>
                   <div className='beyond-videos-mobile mc-videos-mobile'>
-                    <div className='arrow-icon-1'>
+                    {/* <div className='arrow-icon-1'>
                       <button
                         className='videos-track'
                         onClick={() => {
@@ -349,7 +361,7 @@ export default function BeyondYourCourse() {
                           className='videos-track-icon'
                         />
                       </button>
-                    </div>
+                    </div> */}
                     <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
                       {encouragementVideos
                         ?.slice(startVideoIndex, endVideoIndexMobile)
@@ -370,7 +382,7 @@ export default function BeyondYourCourse() {
                           />
                         ))}
                     </div>
-                    <div className='arrow-icon-1 justify-content-start'>
+                    {/* <div className='arrow-icon-1 justify-content-start'>
                       <button
                         className='videos-track'
                         onClick={() => {
@@ -386,20 +398,30 @@ export default function BeyondYourCourse() {
                           className='videos-track-icon'
                         />
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
-                <div className='guidance-videos-top mt-5 mb-3 guidance-encouragement-page-titles'>
+                <div className='videos-container'>
+                <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
+                <div className='title-container'>
+                  <img 
+                                    src={masterIcon}
+                                    alt='logo'
+                                    style={{ width: '36px', height: '36px' }}
+                                    className='welcome-journey-text__icon'
+                                  />
                   <h3>
+                    
                     <IntMessages id='beyond_your_course.Career_Guidance' />
                   </h3>
+                  </div>
                   <Link className='guidance-link' to={`/master-classes/videos`}>
                     <IntMessages id='general.view_all' />
                   </Link>
                 </div>
 
                 <div className='beyond-videos-desktop'>
-                  <div className='arrow-icon-1'>
+                  {/* <div className='arrow-icon-1'>
                     <button
                       className='videos-track'
                       onClick={() => {
@@ -417,7 +439,7 @@ export default function BeyondYourCourse() {
                         // style={{ marginRight: '20px' }}
                       />
                     </button>
-                  </div>
+                  </div> */}
                   <div
                     className='card-group desktop-menu card-group-beyond-your-course w-100'
                     // style={{ marginTop: '15px' }}
@@ -444,7 +466,7 @@ export default function BeyondYourCourse() {
                         />
                       ))}
                   </div>
-                  <div className='arrow-icon-1 justify-content-start'>
+                  {/* <div className='arrow-icon-1 justify-content-start'>
                     <button
                       className='videos-track'
                       style={{ width: '2%' }}
@@ -461,7 +483,8 @@ export default function BeyondYourCourse() {
                         className='videos-track-icon'
                       />
                     </button>
-                  </div>
+                  </div> */}
+                </div>
                 </div>
 
                 <div className='row mt-2'>
@@ -527,7 +550,7 @@ export default function BeyondYourCourse() {
                 </div>
               </div>
             </div>
-            <div className='col-12 col-xl-3 px-0'>
+            {/* <div className='col-12 col-xl-3 px-0'>
               <hr
                 className='d-block d-xl-none mx-auto mt-1 mt-2 mb-3'
                 style={{ color: '#333D3D83' }}
@@ -542,7 +565,7 @@ export default function BeyondYourCourse() {
                   removeSavedVideo={(id, type) => removeSavedVideo(id, type)}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
