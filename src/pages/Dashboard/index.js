@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import IntlMessages from '../../utils/IntlMessages'
-import Profile from '../../components/Profile'
+import Select from 'react-select'
+import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
+import profilePic from '../../assets/images/academy-icons/profile.jpeg'
+import CourseProgress from '../../components/CourseProgress/CourseProgress'
+import UserDetails from '../../components/UserDetails/UserDetails'
+import useImpersonation from '../../hooks/useImpersonation'
 import { changeSidebarState } from '../../redux'
 import {
   closeTaskModal,
@@ -9,12 +13,7 @@ import {
   getPeriodsStart,
   openTaskModal
 } from '../../redux/dashboard/Actions'
-import FullCalendarComponent from '../../components/Calendar/FullCalendar'
-import TaskEventModal from '../../components/Modals/TaskEventModal'
-import NotificationSection from '../NotificationSection-dashboard/NotificationSection'
-import useImpersonation from '../../hooks/useImpersonation'
-import RecentAchievements from './RecentAchievement'
-import Select from 'react-select'
+import IntlMessages from '../../utils/IntlMessages'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -116,62 +115,53 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        {/* <div className='col-12 col-xl-3 px-0'>
-          <div className='account-page-padding' style={{ paddingLeft: '20px' }}>
-            <FullCalendarComponent
-              events={events}
-              periods={periods}
-              userRole={userRole}
-              // startDate={getFormattedDate()}
-            />
-            {userRole !== 'student' && (
-              <button
-                style={{
-                  backgroundColor: '#51c7df',
-                  color: '#fff',
-                  fontSize: 14
-                }}
-                onClick={openTaskEventModal}
-                className='px-4 py-2 border-0 color transform text-uppercase  w-100 my-1'
-              >
-                Create Task/Event
-              </button>
-            )}
-            {taskEventModal && (
-              <TaskEventModal
-                show={taskEventModal}
-                onHide={closeTaskEventModal}
-                periods={periods}
-                startDate={getFormattedDate()}
-              />
-            )}
-            <NotificationSection />
-            <CertificationRequestsWidget />
-            <Messenger
-              chatOpened={(id) => setChatId(id)}
-              newMessage={(message) => setNewMessage(message)}
-            />
 
-            <div className={`community-connect px-3`}>
-              <Link to='/my-connections'>
-                <FontAwesomeIcon
-                  icon={faUsers}
-                  style={{
-                    color: '#01C5D1',
-                    background: 'white',
-                    borderRadius: '50%',
-                    height: '25px',
-                    width: '36px',
-                    opacity: '1'
-                  }}
-                />
-              </Link>
-              <Link to='/my-connections'>
-                <p className='my-auto ms-2'>Connect with my community</p>
-              </Link>
+        <div className='d-grid academy-dashboard-layout'>
+          <UserDetails
+            profilePic={profilePic}
+            userName={'Kenia Anders'}
+            userProffesion={'Graphic Designer'}
+          />
+
+          <CourseProgress />
+
+          <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between'>
+            <div className='d-flex align-items-center gap-3'>
+              <div className='d-flex gap-1'>
+                <img src={AcademyLogo} alt='logo' style={{ width: '3rem' }} />
+                <div>
+                  <h4 className='academy-header'>
+                    <span className='header-title'>THE</span>
+                    <br />
+                    STARTUP
+                    <br />
+                    STUDIO
+                  </h4>
+                  <p className='powered' style={{ marginBottom: 0 }}>
+                    Powered by Learn to Start
+                  </p>
+                </div>
+              </div>
+              <h3 className='page-title bold-page-title'>
+                Course in Entrepreneurship
+              </h3>
+            </div>
+            <div
+              className='d-flex'
+              style={{
+                display: 'inline-block',
+                borderRadius: '8px',
+                background:
+                  'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                padding: '2px',
+                height: '58px',
+                boxShadow: '0px 4px 10px 0px #00000040'
+              }}
+            >
+              <button className='continue-course-btn'>Continue Course</button>
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   )

@@ -147,7 +147,7 @@ const InstructorSidebar = (props) => {
         />
 
         <li className='sub-li'>
-          <Link>
+          <Link to='dashboard'>
             <div className='d-flex w-100' style={{ alignItems: 'center' }}>
               <Col md='2' className='col-2 icon_container'>
                 <img className='profile-photo' src={ProfilePhoto} alt='Icon' />
