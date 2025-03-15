@@ -14,6 +14,7 @@ import {
   openTaskModal
 } from '../../redux/dashboard/Actions'
 import IntlMessages from '../../utils/IntlMessages'
+import AcademyBtn from '../../components/AcademyBtn'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -146,20 +147,7 @@ function Dashboard() {
                 Course in Entrepreneurship
               </h3>
             </div>
-            <div
-              className='d-flex'
-              style={{
-                display: 'inline-block',
-                borderRadius: '8px',
-                background:
-                  'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                padding: '2px',
-                height: '58px',
-                boxShadow: '0px 4px 10px 0px #00000040'
-              }}
-            >
-              <button className='continue-course-btn'>Continue Course</button>
-            </div>
+            <AcademyBtn title={'Continue Course'} />
           </div>
         </div>
       </div>

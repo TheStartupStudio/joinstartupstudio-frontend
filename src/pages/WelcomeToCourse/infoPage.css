@@ -15,3 +15,24 @@
   height: 58px;
   object-fit: contain;
 }
+
+.video-player-thumb {
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px -10px 15px 0px inset,
+    rgba(0, 0, 0, 0.04) 0px -18px 18px 0px inset,
+    rgba(0, 0, 0, 0.03) 0px -35px 25px 0px inset,
+    rgba(0, 0, 0, 0.02) 0px 1px 1px, rgba(0, 0, 0, 0.03) 0px 2px 1px,
+    rgba(0, 0, 0, 0.03) 0px 4px 2px, rgba(0, 0, 0, 0.03) 0px 8px 4px,
+    rgba(0, 0, 0, 0.03) 0px 16px 8px;
+}
+
+.ready-to-start {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 10px;
+}
+
+.profile-pic-ent {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+}
