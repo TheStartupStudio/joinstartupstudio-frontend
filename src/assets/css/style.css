@@ -2832,10 +2832,6 @@ ul.content-list-of-month li:hover span {
   background-color: #f8f7f7;
 }
 
-.register-section {
-  padding: 2% 5% 5% 4%;
-}
-
 .main-section-title h4 {
   font-weight: 400;
   font-size: 17px;
@@ -4263,6 +4259,7 @@ wave > wave:first-child {
   border: none;
   padding: 1rem 0.625rem 0.625rem;
   box-shadow: 0px 3px 6px #00000029;
+  background: #ffffff;
 }
 
 .input-container-modal img {
@@ -4472,6 +4469,10 @@ wave > wave:first-child {
   font-size: 24px;
 }
 
+.fs-48 {
+  font-size: 48px;
+}
+
 .mb--5 {
   margin-bottom: -5px;
 }
@@ -4482,6 +4483,40 @@ wave > wave:first-child {
 
 .grid-col-2 {
   grid-template-columns: 1fr 1fr;
+}
+
+.register-main {
+  margin: 2rem 8rem;
+}
+
+.register-section {
+  border-radius: 24px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.password-register {
+  font-size: 10px;
+  font-weight: 500;
+  color: #6f6f6f;
+  top: 55px;
+  left: 10px;
+}
+
+.blue-color {
+  color: #51c7df;
+}
+
+.blue-wrapper {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(234, 249, 251, 1) 50%,
+    rgba(255, 255, 255, 1) 100%
+  ) !important;
+}
+
+.p-t-5 {
+  padding-top: 5rem;
 }
 
 @media (max-width: 1024px) {

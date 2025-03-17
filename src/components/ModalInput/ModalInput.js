@@ -1,4 +1,4 @@
-function ModalInput({ id, labelTitle, imgSrc }) {
+function ModalInput({ id, labelTitle, imgSrc, imageStyle }) {
   return (
     <div className='relative w-100 d-flex justify-content-between input-container-modal'>
       <input id={id} type='text' className='input-style' placeholder=' ' />
@@ -6,7 +6,7 @@ function ModalInput({ id, labelTitle, imgSrc }) {
         {labelTitle}
       </label>
       <label for={id}>
-        <img className='image-label' src={imgSrc} />
+        <img className='image-label' src={imgSrc} style={imageStyle} />
       </label>
     </div>
   )

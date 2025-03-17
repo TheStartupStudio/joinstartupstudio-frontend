@@ -1,6 +1,6 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
-import courseLogo from '../../assets/images/academy-icons/academy-logo-group.png'
+import { useHistory } from 'react-router-dom'
+import AlexPhoto from '../../assets/images/academy-icons/Alex-Doyle.jpg'
 import applyStoryPic from '../../assets/images/academy-icons/apply-story.png'
 import bobProfile from '../../assets/images/academy-icons/bob-allen.png'
 import bobPic from '../../assets/images/academy-icons/bob.png'
@@ -13,7 +13,6 @@ import garyPic from '../../assets/images/academy-icons/garyc.png'
 import innovationPic from '../../assets/images/academy-icons/innovation.png'
 import powerOfStoryPic from '../../assets/images/academy-icons/power-of-story.png'
 import refresh from '../../assets/images/academy-icons/refresh.png'
-import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
 import search from '../../assets/images/academy-icons/search.png'
 import sellingYourselfPic from '../../assets/images/academy-icons/selling-yourself.png'
 import anastasiaPic from '../../assets/images/academy-icons/thisisyourjourney.png'
@@ -29,54 +28,26 @@ import businessPlan from '../../assets/videos/The-Art-of-Building-a-Business-Pla
 import powerOfStory from '../../assets/videos/The-Power-of-Story.mov'
 import understandingE from '../../assets/videos/Understanding-Entrepreneurship.mov'
 import AcademyBtn from '../../components/AcademyBtn'
+import CourseForEveryone from '../../components/WelcomeToCourse/CourseForEveryone'
+import InfoPageHeader from '../../components/WelcomeToCourse/InfoPageHeader'
+import ReasonsStartupFails from '../../components/WelcomeToCourse/ReasonsStartupFails'
+import SwiperSection from '../../components/WelcomeToCourse/SwiperSection'
 import VideoThumbnail from '../../components/WelcomeToCourse/VideoThumbnail'
-import AlexPhoto from '../../assets/images/academy-icons/Alex-Doyle.jpg'
 import './infoPage.css'
 
-import SwiperSection from '../../components/WelcomeToCourse/SwiperSection'
-
 function WelcomeToCourse() {
+  const history = useHistory()
+
+  function navigateRegister() {
+    history.push('/register')
+  }
+
   return (
     <>
-      <header className='py-4 px-5 welcome-course-header d-flex justify-content-between align-items-start'>
-        <img src={courseLogo} alt='course logo' />
-
-        <nav className='mt-4'>
-          <ul className='list-unstyled d-flex gap-4'>
-            <li>
-              <Link
-                className='text-white fs-13 fw-medium'
-                to='/explore-the-platform'
-              >
-                EXPLORE THE PLATFORM
-              </Link>
-            </li>
-            <li>
-              <Link
-                className='text-white fs-13 fw-medium'
-                to='/explore-the-course'
-              >
-                EXPLORE THE COURSE
-              </Link>
-            </li>
-            <li>
-              <Link className='text-white fs-13 fw-medium' to='/faq'>
-                FAQS
-              </Link>
-            </li>
-            <li>
-              <Link className='text-white fs-13 fw-medium' to='/contact'>
-                CONTACT
-              </Link>
-            </li>
-            <li>
-              <Link className='text-white fs-13 fw-medium' to='/'>
-                LOGIN
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </header>
+      <InfoPageHeader
+        className={'welcome-course-header'}
+        linkColor={'#ffffff'}
+      />
       <main className='p-inl-13'>
         <section className='d-flex justify-content-center flex-column mt-4-4'>
           <h2 className='fs-5 text-black'>
@@ -118,24 +89,7 @@ function WelcomeToCourse() {
             />
           </div>
         </section>
-        <section className='mt-4-4 px-5'>
-          <h2 className='text-center fs-3 fw-bold text-black'>
-            A COURSE FOR EVERYONE
-          </h2>
-          <p className='text-center fs-18'>
-            The Course in Entrepreneurship is designed to take you from ideation
-            to execution of a product or service through which you can create
-            demand in the marketplace. As you journey through our three in-depth
-            levels, you will build yourself as an entrepreneur capable of
-            vision, innovation, and iteration.
-          </p>
-          <div className='d-flex gap-3 align-items-center justify-content-center fs-15 mt-4'>
-            <p className='mb-0 text-uppercase blue-text fw-semibold'>
-              Learn more about who should take this course
-            </p>
-            <img src={rightArrow} alt='right-arrow' />
-          </div>
-        </section>
+        <CourseForEveryone />
 
         <section className='mt-4-4'>
           <h2 className='text-center fs-3 fw-bold text-black mb-4'>
@@ -239,26 +193,14 @@ function WelcomeToCourse() {
           </div>
         </section>
 
-        <section className='mt-4-4'>
-          <h2 className='text-center fs-3 fw-bold text-black mb-4'>
-            MOST STARTUPS FAIL IN THE FIRST FEW YEARS
-          </h2>
-          <p className='text-center fs-18'>
-            Learn to Start’s Course in Entrepreneurship helps you avoid the most
-            common pitfalls faced by startup founders by connecting you to
-            market and industry experts who share the lessons they learned and
-            help guide you along your journey
-          </p>
-          <div className='d-flex gap-3 align-items-center justify-content-center fs-15 mt-4'>
-            <p className='mb-0 text-uppercase blue-text fw-semibold'>
-              Read about the Top 12 reasons startups fail
-            </p>
-            <img src={rightArrow} alt='right-arrow' />
-          </div>
-        </section>
+        <ReasonsStartupFails />
         <section className='mt-4-4 d-flex justify-content-between align-items-center px-5 py-4 ready-to-start'>
           <h2 className='fs-4 fw-bold text-black'>READY TO GET STARTED?</h2>
-          <AcademyBtn title={"LET'S DO IT"} icon={faArrowRight} />
+          <AcademyBtn
+            title={"LET'S DO IT"}
+            icon={faArrowRight}
+            onClick={navigateRegister}
+          />
         </section>
         <section className='mt-4-4'>
           <h2 className='text-center fs-3 fw-bold text-black mb-4'>
@@ -450,7 +392,11 @@ function WelcomeToCourse() {
             </p>
           </div>
           <div className='d-flex justify-content-center mt-4'>
-            <AcademyBtn title={'Subscribe Now'} icon={faArrowRight} />
+            <AcademyBtn
+              title={'Subscribe Now'}
+              icon={faArrowRight}
+              onClick={navigateRegister}
+            />
           </div>
         </section>
       </main>

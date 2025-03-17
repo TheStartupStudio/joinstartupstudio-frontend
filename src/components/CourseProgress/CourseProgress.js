@@ -69,7 +69,7 @@ function CourseProgress() {
           <img src={progressLogo} alt='user' className='mb-3' />
           <div className='d-flex justify-content-between align-items-center'>
             <h3 className='fs-14' style={{ marginBottom: '0' }}>
-              Edit Personal Details
+              View Progress Details
             </h3>
           </div>
 

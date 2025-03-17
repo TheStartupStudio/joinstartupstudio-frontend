@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-function AcademyBtn({ title, icon }) {
+function AcademyBtn({ title, icon, onClick }) {
   return (
     <div
       className='d-flex'
@@ -13,7 +13,7 @@ function AcademyBtn({ title, icon }) {
         boxShadow: '0px 4px 10px 0px #00000040'
       }}
     >
-      <button className='continue-course-btn'>
+      <button className='continue-course-btn' onClick={onClick}>
         {title} <FontAwesomeIcon icon={icon} />
       </button>
     </div>

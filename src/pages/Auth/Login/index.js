@@ -125,7 +125,15 @@ const ChooseLogin = () => {
 
   return (
     <div className='container-fluid md-px-5 ps-md-5 choose-login_container-academy gradient-background'>
-      <div className='nav-buttons' style={{display: 'flex', justifyContent: 'flex-end', padding: '30px 50px', gap: '40px'}}>
+      <div
+        className='nav-buttons'
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: '30px 50px',
+          gap: '40px'
+        }}
+      >
         <p>EXPLORE THE PLATFORM</p>
         <p>EXPLORE THE COURSE</p>
         <p>FAQS</p>
@@ -138,16 +146,16 @@ const ChooseLogin = () => {
           <FormWrapper className='login-content-wrapper'>
             <div className='welcome-content'>
               <div className='login-logo'>
-                <img 
+                <img
                   src={StartupStudioLogo}
                   alt='logo'
-                  style={{ width: '247px'}}
+                  style={{ width: '247px' }}
                 />
               </div>
               <h1 className='login-title'>Welcome...</h1>
               <p>
-                ...The Startup Studio Course in Entrepreneurship <br/> powered by Learn to Start.
-                Please log in or create <br/> an account.
+                ...The Startup Studio Course in Entrepreneurship <br /> powered
+                by Learn to Start. Please log in or create <br /> an account.
               </p>
             </div>
 
@@ -178,32 +186,40 @@ const ChooseLogin = () => {
                 )}
               </FormattedMessage>
 
-                <div className='login-button' style={{ display: 'flex',
-                alignItems:'center',
-                justifyContent:'center',
-                width:'150px',
-                margin:'1.5rem 7rem ',
-                    borderRadius: '8px',
-                    background:
-                      'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                    padding: '2px',
-                    height: '58px',
-                    boxShadow: '0px 4px 10px 0px #00000040'}}>
-              <button
-                type='submit'
-                className='w-100 login-btn'
-                disabled={isLoading}
-                onClick={handleSubmit}
+              <div
+                className='login-button'
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '150px',
+                  margin: '1.5rem 7rem ',
+                  borderRadius: '8px',
+                  background:
+                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                  padding: '2px',
+                  height: '58px',
+                  boxShadow: '0px 4px 10px 0px #00000040'
+                }}
               >
-                {isLoading ? (
-                  <span className='spinner-border spinner-border-sm' />
-                ) : (
-                  <span className='d-flex align-items-center justify-content-center' >
-                    <IntlMessages id='general.login' />
-                    <FontAwesomeIcon icon={faArrowRight} className='ms-2 fw-bold' />
-                  </span>
-                )}
-              </button>
+                <button
+                  type='submit'
+                  className='w-100 login-btn'
+                  disabled={isLoading}
+                  onClick={handleSubmit}
+                >
+                  {isLoading ? (
+                    <span className='spinner-border spinner-border-sm' />
+                  ) : (
+                    <span className='d-flex align-items-center justify-content-center'>
+                      <IntlMessages id='general.login' />
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        className='ms-2 fw-bold'
+                      />
+                    </span>
+                  )}
+                </button>
               </div>
 
               <p className='text-center public-page-text m-1'>
@@ -214,17 +230,16 @@ const ChooseLogin = () => {
               </p>
               <p className='text-center public-page-text m-1 '>
                 <IntlMessages id='login.register' />
-                <Link to='#' className='ml-2 link fw-bold'>
+                <Link to='/register' className='ml-2 link fw-bold'>
                   <IntlMessages id='login.register_link' />
                 </Link>
               </p>
               <p className='text-center public-page-text font-12 m-0'>
                 <IntlMessages id='login.security' />
-               
               </p>
               <Link to='#' className='link fw-bold  font-12 security-text'>
-                  <IntlMessages id='login.protect_data' />
-                </Link>
+                <IntlMessages id='login.protect_data' />
+              </Link>
             </div>
           </FormWrapper>
         </Col>
