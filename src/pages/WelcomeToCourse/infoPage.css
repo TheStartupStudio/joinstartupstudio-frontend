@@ -36,3 +36,35 @@
   height: 52px;
   border-radius: 50%;
 }
+
+.testimonial-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.author {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.author img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  all: unset;
+  cursor: pointer;
+}
+
+.testimonial {
+  min-height: 220px;
+}
+
+.alex-photo {
+  border-radius: 12px;
+}

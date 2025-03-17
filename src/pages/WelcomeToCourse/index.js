@@ -2,16 +2,21 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import courseLogo from '../../assets/images/academy-icons/academy-logo-group.png'
 import applyStoryPic from '../../assets/images/academy-icons/apply-story.png'
+import bobProfile from '../../assets/images/academy-icons/bob-allen.png'
+import bobPic from '../../assets/images/academy-icons/bob.png'
 import brandingPic from '../../assets/images/academy-icons/branding.png'
 import businessPlanPic from '../../assets/images/academy-icons/business-plan.png'
 import chart from '../../assets/images/academy-icons/chart.png'
 import entrepreneur from '../../assets/images/academy-icons/entrepreneur.png'
+import garyProfile from '../../assets/images/academy-icons/gary-profile.jpg'
+import garyPic from '../../assets/images/academy-icons/garyc.png'
 import innovationPic from '../../assets/images/academy-icons/innovation.png'
 import powerOfStoryPic from '../../assets/images/academy-icons/power-of-story.png'
 import refresh from '../../assets/images/academy-icons/refresh.png'
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
 import search from '../../assets/images/academy-icons/search.png'
 import sellingYourselfPic from '../../assets/images/academy-icons/selling-yourself.png'
+import anastasiaPic from '../../assets/images/academy-icons/thisisyourjourney.png'
 import threePeople from '../../assets/images/academy-icons/three-people-icons.png'
 import understandingEpic from '../../assets/images/academy-icons/understandingE.png'
 import valuePropPic from '../../assets/images/academy-icons/value-prop.png'
@@ -25,12 +30,10 @@ import powerOfStory from '../../assets/videos/The-Power-of-Story.mov'
 import understandingE from '../../assets/videos/Understanding-Entrepreneurship.mov'
 import AcademyBtn from '../../components/AcademyBtn'
 import VideoThumbnail from '../../components/WelcomeToCourse/VideoThumbnail'
-import anastasiaPic from '../../assets/images/academy-icons/thisisyourjourney.png'
-import garyProfile from '../../assets/images/academy-icons/gary-profile.jpg'
-import garyPic from '../../assets/images/academy-icons/garyc.png'
-import bobProfile from '../../assets/images/academy-icons/bob-allen.png'
-import bobPic from '../../assets/images/academy-icons/bob.png'
+import AlexPhoto from '../../assets/images/academy-icons/Alex-Doyle.jpg'
 import './infoPage.css'
+
+import SwiperSection from '../../components/WelcomeToCourse/SwiperSection'
 
 function WelcomeToCourse() {
   return (
@@ -74,8 +77,8 @@ function WelcomeToCourse() {
           </ul>
         </nav>
       </header>
-      <main className='p-inl-13 pt-5'>
-        <section className='d-flex justify-content-center flex-column'>
+      <main className='p-inl-13'>
+        <section className='d-flex justify-content-center flex-column mt-4-4'>
           <h2 className='fs-5 text-black'>
             Welcome to
             <br />
@@ -115,7 +118,7 @@ function WelcomeToCourse() {
             />
           </div>
         </section>
-        <section className='mt-5 px-5'>
+        <section className='mt-4-4 px-5'>
           <h2 className='text-center fs-3 fw-bold text-black'>
             A COURSE FOR EVERYONE
           </h2>
@@ -134,7 +137,7 @@ function WelcomeToCourse() {
           </div>
         </section>
 
-        <section className='mt-5'>
+        <section className='mt-4-4'>
           <h2 className='text-center fs-3 fw-bold text-black mb-4'>
             WHAT YOU'LL LEARN
           </h2>
@@ -236,7 +239,7 @@ function WelcomeToCourse() {
           </div>
         </section>
 
-        <section className='mt-5'>
+        <section className='mt-4-4'>
           <h2 className='text-center fs-3 fw-bold text-black mb-4'>
             MOST STARTUPS FAIL IN THE FIRST FEW YEARS
           </h2>
@@ -253,11 +256,11 @@ function WelcomeToCourse() {
             <img src={rightArrow} alt='right-arrow' />
           </div>
         </section>
-        <section className='mt-5 d-flex justify-content-between align-items-center px-5 py-4 ready-to-start'>
+        <section className='mt-4-4 d-flex justify-content-between align-items-center px-5 py-4 ready-to-start'>
           <h2 className='fs-4 fw-bold text-black'>READY TO GET STARTED?</h2>
           <AcademyBtn title={"LET'S DO IT"} icon={faArrowRight} />
         </section>
-        <section className='mt-5'>
+        <section className='mt-4-4'>
           <h2 className='text-center fs-3 fw-bold text-black mb-4'>
             MEET YOUR GUIDES
           </h2>
@@ -289,7 +292,7 @@ function WelcomeToCourse() {
             </div>
           </div>
         </section>
-        <section className='mt-5'>
+        <section className='mt-4-4'>
           <h2 className='text-center text-uppercase fs-4 fw-bold text-black mb-4'>
             Meet Your Expert Entrepreneurs
           </h2>
@@ -364,6 +367,90 @@ function WelcomeToCourse() {
                 concept development, experience design, and branding.
               </p>
             </div>
+          </div>
+        </section>
+
+        <section className='mt-4-4'>
+          <h2 className='text-center text-uppercase fs-3 fw-bold text-black'>
+            A decade of Guiding & Shaping Lives
+          </h2>
+          <p className='text-center fs-18 fw-light text-black mb-5'>
+            Hear from these amazing members of The Startup Studio community as
+            they share their powerful success stories 
+          </p>
+          <SwiperSection />
+        </section>
+
+        <section
+          className='mt-4-4 d-grid gap-2'
+          style={{ gridTemplateColumns: '5fr 6fr' }}
+        >
+          <div className='align-self-center'>
+            <h4 className='fs-24 text-uppercase fw-bold text-black mb--5'>
+              Meet Alex Doyle
+            </h4>
+            <p className='text-black fw-light fs-15'>
+              Founder and CEO of Pearled Ivory
+            </p>
+            <p className='text-black fw-light fs-18'>
+              “In 2024, our company did seven figures and is still growing
+              everyday. If you are in Learn to Start, you are in the best place
+              you can be.”
+            </p>
+          </div>
+          <div>
+            <img
+              src={AlexPhoto}
+              alt='alex-doyle'
+              className='w-100 alex-photo'
+            />
+            <p className='text-black text-center fw-medium fs-18 lh-sm'>
+              Hear how The Startup Studio powered by Learn to Start guided Alex
+              on his entrepreneurial journey.
+            </p>
+          </div>
+        </section>
+
+        <section className='mt-4-4 px-5 py-4 ready-to-start'>
+          <h2 className='text-uppercase fs-3 fw-bold text-black'>
+            Ready to Begin Your Entrepreneurial Journey?
+          </h2>
+          <div className='text-black'>
+            <p className='mb--5 fs-15 fw-medium'>
+              How long do I have to access this course?
+            </p>
+            <p className='fs-18 fw-light lh-sm'>
+              The course is built to take up to 12 months to complete, but you
+              can go as fast or slow as you choose, as long as you are
+              subscribed to your technology platform.
+            </p>
+          </div>
+          <div>
+            <p className='mb--5 fs-15 fw-medium'>
+              How much does this course cost?
+            </p>
+            <p className='fs-18 fw-light lh-sm'>
+              The course is set up as a monthly subscription of $15 per month.
+              You can cancel anytime.
+            </p>
+          </div>
+          <div>
+            <p className='mb--5 fs-15 fw-medium'>
+              Who should take this course?
+            </p>
+            <p className='fs-18 fw-light lh-sm'>
+              This course is recommended for everyone.The course is built to
+              teach you what it means to authentically entrepreneur and create
+              independent and powerful mindsets regardless of your area of study
+              or your profession. You are going to learn directly from highly
+              qualified successful American entrepreneurs. .{' '}
+              <a className='blue-text fw-medium fs-15' href='#'>
+                Learn more {'>>'}
+              </a>
+            </p>
+          </div>
+          <div className='d-flex justify-content-center mt-4'>
+            <AcademyBtn title={'Subscribe Now'} icon={faArrowRight} />
           </div>
         </section>
       </main>
