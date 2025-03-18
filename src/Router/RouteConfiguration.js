@@ -7,6 +7,8 @@ import StudentJournals from '../pages/studentJournals'
 import VerifyEmailByCode from '../pages/Register/verifyEmailByCode'
 import AddOccupationItemForm from '../components/Pathways/CreateOccupation'
 import MyCourseEntrepreneurship from '../pages/MyCourseEntrepreneurship'
+import Payment from '../pages/Register/Payment'
+import ConfirmEmail from '../pages/Register/ConfirmEmail'
 
 const Iamr = React.lazy(() => import('../pages/Iamr'))
 const Terms = React.lazy(() => import('../pages/Terms'))
@@ -414,6 +416,8 @@ export const publicRoutes = [
   { path: '/register', component: Register, exact: true },
   { path: '/trial-ended', component: Resubscribe, exact: true },
   { path: '/subscription-ended', component: Resubscribe, exact: true },
+  { path: '/confirm-email', component: ConfirmEmail, exact: true },
+  { path: '/payment', component: Payment, exact: true },
   {
     path: '/password-change-required',
     component: PasswordChangeRequired,

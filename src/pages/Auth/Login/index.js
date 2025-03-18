@@ -15,7 +15,7 @@ import { validateEmail } from '../../../utils/helpers'
 import FormWrapper from './ui/FormWrapper'
 import { setLoginLoading } from '../../../redux/user/Actions'
 import axiosInstance from '../../../utils/AxiosInstance'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { Link, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import StartupStudioLogo from '../../../assets/images/startup-studio-new-logo.png'
 
 import Footer from '../../../components/Footer'
@@ -24,6 +24,9 @@ const ChooseLogin = () => {
   const dispatch = useDispatch()
   const isLoading = useSelector((state) => state.user.loginLoading)
   const [user, setUser] = useState({})
+  const location = useLocation()
+
+  const confirmEmail = location?.state?.confirmEmail
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -152,11 +155,25 @@ const ChooseLogin = () => {
                   style={{ width: '247px' }}
                 />
               </div>
-              <h1 className='login-title'>Welcome...</h1>
-              <p>
-                ...The Startup Studio Course in Entrepreneurship <br /> powered
-                by Learn to Start. Please log in or create <br /> an account.
-              </p>
+              {confirmEmail ? (
+                <>
+                  <h1 className='login-title text-black'>Thanks !</h1>
+                  <p className='text-black fs-5 fw-light lh-sm'>
+                    Your email address is confirmed.
+                    <br />
+                    You can now log into your account.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h1 className='login-title text-black'>Welcome...</h1>
+                  <p className='text-black fs-5 fw-light'>
+                    ...The Startup Studio Course in Entrepreneurship <br />{' '}
+                    powered by Learn to Start. Please log in or create <br /> an
+                    account.
+                  </p>
+                </>
+              )}
             </div>
 
             {/* Right side - Login Form */}

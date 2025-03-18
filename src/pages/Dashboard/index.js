@@ -71,7 +71,7 @@ function Dashboard() {
       <div className='row'>
         <div className='col-12 col-md-12 pe-0 me-0'>
           <div className='account-page-padding d-flex justify-content-between align-items-center'>
-            <h3 className='page-title bold-page-title'>
+            <h3 className='page-title bold-page-title text-black'>
               <IntlMessages id='navigation.dashboard' />
             </h3>
 
@@ -92,6 +92,7 @@ function Dashboard() {
                 onChange={handleChange}
                 placeholder='Select Language'
                 menuPortalTarget={document.body}
+                isSearchable={false}
                 styles={{
                   menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                   control: (base) => ({
@@ -143,7 +144,7 @@ function Dashboard() {
                   </p>
                 </div>
               </div>
-              <h3 className='page-title bold-page-title'>
+              <h3 className='page-title bold-page-title text-black mb-0'>
                 Course in Entrepreneurship
               </h3>
             </div>

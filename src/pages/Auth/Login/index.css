@@ -69,7 +69,7 @@
   grid-template-columns: 25px auto;
 }
 
-.radio-wrapper>div {
+.radio-wrapper > div {
   display: flex;
   align-items: center;
 }
@@ -302,14 +302,11 @@
   margin-bottom: -42px;
   /* margin-right: -60px !important; */
   height: min-content;
-
 }
 
 .loginpage-footer-section {
   display: block !important;
 }
-
-
 
 #content:has(.choose-login_container) {
   overflow-y: scroll !important;
@@ -321,16 +318,12 @@ _:future,
   margin-top: -38px !important;
 }
 
-@media (max-width:486px) {
-
-
-
+@media (max-width: 486px) {
   _::-webkit-full-page-media,
   _:future,
   :root .public-login-form.login-form-resp {
     min-height: 60vh !important;
   }
-
 
   _::-webkit-full-page-media,
   _:future,
@@ -339,73 +332,58 @@ _:future,
     margin-bottom: 0 !important;
   }
 
-
-
-
   _::-webkit-full-page-media,
   _:future,
   :root .login-left-content.sfari-onlyyy img {
     margin-top: 30px !important;
     margin-bottom: -10px !important;
-
   }
-
-
-
 }
-
 
 body:has(.choose-login_container) section.loginpage-footer-section {
   display: block !important;
 }
 
-
-
-
-@media (max-width:768px) {
-
-
-  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
+@media (max-width: 768px) {
+  .choose-login_container
+    .m-0.p-0.align-items-center.center-content.justify-evenly.row {
     position: static !important;
     margin-top: 220px !important;
     margin-left: 230px !important;
   }
 }
 
-@media (max-width:731px) {
-
-
-  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
+@media (max-width: 731px) {
+  .choose-login_container
+    .m-0.p-0.align-items-center.center-content.justify-evenly.row {
     position: static !important;
     margin-top: 250px !important;
     margin-left: 200px !important;
   }
 }
 
-
-@media (max-width:619px) {
-
-
-  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
-
+@media (max-width: 619px) {
+  .choose-login_container
+    .m-0.p-0.align-items-center.center-content.justify-evenly.row {
     margin-top: 250px !important;
     margin-left: 175px !important;
   }
 }
 
-@media (max-width:547px) {
-  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
+@media (max-width: 547px) {
+  .choose-login_container
+    .m-0.p-0.align-items-center.center-content.justify-evenly.row {
     margin-top: 230px !important;
     margin-left: 140px !important;
   }
 }
 
-@media (max-width:458px) {
-  .choose-login_container .m-0.p-0.align-items-center.center-content.justify-evenly.row {
+@media (max-width: 458px) {
+  .choose-login_container
+    .m-0.p-0.align-items-center.center-content.justify-evenly.row {
     margin-top: 220px !important;
     margin-left: 105px !important;
   }
-
 
   _::-webkit-full-page-media,
   _:future,
@@ -425,8 +403,6 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   .public-login-form.col-xl-8.col-lg-12.col-md-12.mx-auto.px-4.pb-3.pt-4.login-form-resp {
     margin-top: 30px !important;
   }
-
-
 }
 
 .container-fluid.md-px-5.ps-md-5.choose-login_container {
@@ -439,18 +415,23 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 }
 
 .gradient-background {
-  background:
-    radial-gradient(circle at 0% 0%,
+  background: radial-gradient(
+      circle at 0% 0%,
       rgba(249, 171, 204, 0.8) 10%,
       rgba(255, 229, 240, 0.4) 30%,
-      transparent 80%),
-    linear-gradient(to right,
+      transparent 80%
+    ),
+    linear-gradient(
+      to right,
       rgba(255, 255, 255, 0.9) 40%,
-      rgba(255, 255, 255, 0.9) 70%),
-    radial-gradient(circle at 100% 100%,
+      rgba(255, 255, 255, 0.9) 70%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
       rgba(49, 120, 218, 1) 0%,
       rgb(19, 112, 242) 20%,
-      transparent 40%);
+      transparent 40%
+    );
   min-height: 100vh;
   width: 100%;
   position: relative;
@@ -476,7 +457,6 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 
 .m-1 {
   margin: 1rem !important;
-  ;
 }
 
 .font-12 {
@@ -485,7 +465,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 
 .security-text {
   display: flex;
-  justify-content: center
+  justify-content: center;
 }
 
 #footer {
@@ -498,7 +478,6 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   background: #333d3d;
   padding: 9px;
 }
-
 
 @media (max-width: 768px) {
   .gradient-background {
@@ -545,7 +524,6 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 }
 
 .welcome-content p {
-  width: 491px;
   padding-left: 1rem;
   color: #333;
 }
@@ -566,7 +544,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 }
 
 .nav-buttons p:hover {
-  color: #51C7DF;
+  color: #51c7df;
 }
 
 .login-btn {

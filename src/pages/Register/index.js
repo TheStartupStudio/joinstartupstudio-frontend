@@ -1,5 +1,6 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import AcademyBtn from '../../components/AcademyBtn'
 import ModalInput from '../../components/ModalInput/ModalInput'
@@ -7,6 +8,8 @@ import InfoPageHeader from '../../components/WelcomeToCourse/InfoPageHeader'
 import IntlMessages from '../../utils/IntlMessages'
 
 function Register() {
+  const history = useHistory()
+
   return (
     <>
       <InfoPageHeader linkColor={'#000000'} />
@@ -18,8 +21,8 @@ function Register() {
           </h1>
           <form className='mt-4-4'>
             <div
-              className='d-grid gap-5'
-              style={{ gridTemplateColumns: '4fr 2fr' }}
+              className='d-grid gap-4'
+              style={{ gridTemplateColumns: '4fr auto 2fr' }}
             >
               <div>
                 <div>
@@ -90,6 +93,12 @@ function Register() {
                   </div>
                 </div>
               </div>
+              <hr
+                style={{
+                  height: '100%',
+                  borderLeft: '1px solid rgb(165 167 169)'
+                }}
+              />
               <div>
                 <div>
                   <p className='mb-2 fs-13 fw-medium ms-3 text-black'>
@@ -142,13 +151,17 @@ function Register() {
                 </div>
               </div>
             </div>
-            <div className='d-flex flex-column align-items-center'>
-              <p className='text-center fs-13 fw-medium mb-2 blue-color lh-sm'>
+            <div className='d-flex flex-column align-items-center mt-3'>
+              <p className='text-center fs-13 fw-medium mb-3 blue-color lh-sm'>
                 By creating an account you agree to our
                 <br /> Terms of Service and Privacy Policy
               </p>
-              <div className='mb-2'>
-                <AcademyBtn title={'Subscribe'} icon={faArrowRight} />
+              <div className='mb-3'>
+                <AcademyBtn
+                  title={'Subscribe'}
+                  icon={faArrowRight}
+                  onClick={() => history.push('/payment')}
+                />
               </div>
               <p className='fs-13 fw-light text-black mb-0'>
                 The security of your information is important.

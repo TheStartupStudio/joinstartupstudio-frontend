@@ -317,7 +317,7 @@ ul.sidebar-menu-item a {
 }
 
 ul.sidebar-menu-item li {
-  padding: 0px 10px;
+  padding: 4px 10px;
   margin: 0;
 }
 
@@ -909,7 +909,7 @@ a.sidenav.active {
 }
 
 .account-page-padding {
-  padding: 40px 20px 40px 10px;
+  padding: 40px 40px 40px 30px;
 }
 
 .page-border {
@@ -4078,6 +4078,7 @@ wave > wave:first-child {
 .css-xpolyg-control {
   box-shadow: none !important;
   cursor: pointer !important;
+  height: 56px;
 }
 
 .css-1r50p8r-control {
@@ -4086,6 +4087,7 @@ wave > wave:first-child {
 
 .css-hlgwow {
   padding-block: 0.75rem !important;
+  height: 56px;
 }
 
 .h-95 {
@@ -4102,14 +4104,14 @@ wave > wave:first-child {
 
 .academy-dashboard-layout {
   grid-template-columns: 3fr 4fr;
-  padding-inline: 20px;
+  padding-inline: 40px;
   padding-top: 20px;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 1) 15%,
-    rgba(243, 251, 253, 1) 50%,
-    rgba(255, 255, 255, 1) 85%
-  );
+    rgba(255, 255, 255, 1) 10%,
+    rgba(234, 249, 251, 1) 50%,
+    rgba(255, 255, 255, 1) 90%
+  ) !important;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
   gap: 2.5rem;
 }
@@ -4465,6 +4467,10 @@ wave > wave:first-child {
   font-size: 27px;
 }
 
+.fs-21 {
+  font-size: 21px;
+}
+
 .fs-24 {
   font-size: 24px;
 }
@@ -4517,6 +4523,27 @@ wave > wave:first-child {
 
 .p-t-5 {
   padding-top: 5rem;
+}
+
+.payment-main {
+  border-radius: 24px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 3rem 7rem;
+}
+
+.payment-section {
+  background-color: #ffffff;
+  padding: 1.5rem 2.5rem;
+  border-radius: 24px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.payment-border {
+  border-bottom: 1px solid #aeaeae;
+}
+
+.course-logo-image {
+  width: 248px;
 }
 
 @media (max-width: 1024px) {

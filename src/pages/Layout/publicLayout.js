@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import PublicHeader from '../../components/PublicHeader'
@@ -7,13 +7,25 @@ import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 
 function PublicLayout({ children }) {
   const location = useLocation()
+  const TopScroll = useRef()
+
+  useEffect(() => {
+    if (TopScroll.current) {
+      TopScroll.current.scrollIntoView({
+        behavior: 'smooth'
+      })
+    }
+  }, [location.pathname])
 
   return (
     <React.Fragment>
       <div
+        ref={TopScroll}
         id='content'
         style={{ width: '100%' }}
-        className={`${location.pathname === '/register' ? 'blue-wrapper' : ''}`}
+        className={`${
+          location.pathname === '/register' || '/payment' ? 'blue-wrapper' : ''
+        }`}
       >
         {/* <PublicHeader /> */}
         {children}
@@ -24,7 +36,8 @@ function PublicLayout({ children }) {
         />
 
         <>
-          <Footer />
+          {location.pathname !== '/payment' &&
+            location.pathname !== '/confirm-email' && <Footer />}
         </>
       </div>
     </React.Fragment>
