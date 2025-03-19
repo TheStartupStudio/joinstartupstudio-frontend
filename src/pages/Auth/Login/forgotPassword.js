@@ -6,6 +6,7 @@ import { validateEmail } from '../../../utils/helpers'
 import IntlMessages from '../../../utils/IntlMessages'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { CustomInput } from '../../../ui/ContentItems'
+import './forgotPassword.css'
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -85,14 +86,16 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div>
+    <div className='gradient-color'>
+      {/* <InfoPageHeader/> */}
       <div
         className='container-fluid my-auto px-5 d-flex align-items-center justify-content-center'
         style={{
-          backgroundColor: '#e4e9f4',
+          // backgroundColor: '#e4e9f4',
           minHeight: ' calc(100vh - 42px)'
         }}
       >
+        
         {/* <div className='row '>
           <div className='col-12 col-10 col-md-6 mt-5 mx-auto text-center'>
             <img
@@ -104,11 +107,11 @@ const ForgotPassword = () => {
           </div>
         </div> */}
 
-        <div className='w-100' style={{ marginTop: '-150px' }}>
+        <div className='w-100' style={{ marginTop: '-100px' }}>
           <div className='row my-auto'>
             <div
-              className='col-md-8 col-lg-4 mx-auto p-4 public-page-form'
-              style={{ backgroundColor: '#ffff' }}
+              className='col-md-8 col-lg-4 mx-auto public-page-form-forgot'
+              style={{ padding: '3rem 2rem' }}
             >
               <h3 className='text-center fw-bold'>
                 <IntlMessages id='forgot_password.title' />

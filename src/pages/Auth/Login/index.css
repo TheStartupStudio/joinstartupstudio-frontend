@@ -385,6 +385,13 @@ body:has(.choose-login_container) section.loginpage-footer-section {
     margin-left: 105px !important;
   }
 
+
+  @media (max-width:425px) {
+    .login-button {
+      margin: 1.5rem 4.5rem;
+    }
+  }
+
   _::-webkit-full-page-media,
   _:future,
   :root .login-left-content.sfari-onlyyy img {
@@ -430,8 +437,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
       circle at 100% 100%,
       rgba(49, 120, 218, 1) 0%,
       rgb(19, 112, 242) 20%,
-      transparent 40%
-    );
+      transparent 40%) !important;
   min-height: 100vh;
   width: 100%;
   position: relative;
@@ -469,7 +475,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 }
 
 #footer {
-  position: fixed;
+  /* position: fixed; */
   bottom: 0;
   left: 0;
   right: 0;
@@ -478,6 +484,40 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   background: #333d3d;
   padding: 9px;
 }
+
+@media(max-width:1440px) {
+  .public-login-form .login-content-wrapper {
+    margin-top: 5rem;
+  }
+}
+
+@media(max-width:1024px) {
+  .welcome-content {
+    padding: 3rem;
+  }
+
+  .welcome-content .login-title {
+    font-size: 40px !important;
+  }
+
+  .welcome-content p {
+    width: 200px !important;
+  }
+
+  .login-form-container {
+    margin: 2rem 1rem;
+  }
+
+  .main-login-container {
+    padding: 2rem 0;
+  }
+
+  .login-content-wrapper {
+    padding: 0;
+    margin: 1.5rem;
+  }
+}
+
 
 @media (max-width: 768px) {
   .gradient-background {
@@ -490,6 +530,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
     margin: 20px auto;
     top: 0;
     transform: none;
+    box-shadow: none;
   }
 
   #footer {
@@ -573,6 +614,10 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   animation: spinner-border 0.75s linear infinite;
 }
 
+.forgot-password-container {
+  margin: 2rem 1rem
+}
+
 @media (max-width: 768px) {
   .login-content-wrapper {
     flex-direction: column;
@@ -590,7 +635,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
 
   .login-form-container {
     width: 100%;
-    max-width: 100%;
+    /* max-width: 100%; */
   }
 
   .login-logo {

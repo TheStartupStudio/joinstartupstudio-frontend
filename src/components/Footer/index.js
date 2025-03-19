@@ -14,7 +14,7 @@ export default function Footer(props) {
       <div className='container-fluid'>
         <div className='row mx-md-4 footer-copyright'>
           <div className='col-sm-12 col-lg-4 text-align-left-footer'>
-            <p>© STARTUP STUDIO LLC 2023</p>
+            <p>© POWERED BY STARTUP STUDIO LLC 2025</p>
           </div>
           <div className='col-md-12 col-sm-12 col-lg-4 text-align-center-footer'>
             <a
@@ -29,6 +29,24 @@ export default function Footer(props) {
           <div className='col-md-3 col-sm-12 col-lg-4 text-align-right-footer'>
             <div className='footer-menu'>
               <ul className='mt-1 mt-lg-0'>
+              <li>
+                  <a
+                    href='https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3'
+                    rel='noreferrer'
+                    target='_blank'
+                  >
+                    <FontAwesomeIcon icon={faSpotify} />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href='#'
+                    rel='noreferrer'
+                    target='_blank'
+                  >
+                    <FontAwesomeIcon icon={faTwitter} />
+                  </a>
+                </li>
                 <li>
                   <a
                     href='https://www.linkedin.com/company/learntostart/'
@@ -47,15 +65,7 @@ export default function Footer(props) {
                     <FontAwesomeIcon icon={faVimeo} />
                   </a>
                 </li>
-                <li>
-                  <a
-                    href='https://open.spotify.com/show/0LZ1HxvXnMf6IAdyY8M9q3'
-                    rel='noreferrer'
-                    target='_blank'
-                  >
-                    <FontAwesomeIcon icon={faSpotify} />
-                  </a>
-                </li>
+               
               </ul>
             </div>
           </div>

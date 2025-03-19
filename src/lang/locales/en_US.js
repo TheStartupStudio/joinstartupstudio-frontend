@@ -11,7 +11,7 @@ const EnLangs = {
   'general.start': 'Start!',
   'general.click_here': 'Click here',
   'general.submit': 'Send',
-  'general.login': 'Login',
+  'general.login': 'Log in',
   'general.copy': 'Copied to clipboard',
   'general.copy_1': 'Copy',
   'general.message_success': 'Your message has been successfully sent.',

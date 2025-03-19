@@ -781,6 +781,19 @@ a.sidenav.active {
   padding: 1rem;
 }
 
+.beyond-your-course-video-thumb-icon-fullscreen {
+  color: #ffffffff;
+  position: relative;
+  top: 50%;
+  right: 50%;
+  margin: -30px 0 0 -30px;
+  width: 30px;
+  height: 30px;
+  border: 3px solid white;
+  border-radius: 50%;
+  padding: 1rem;
+}
+
 .beyond-your-course-video-thumb-icon svg {
   width: inherit !important;
   height: inherit !important;
@@ -815,7 +828,7 @@ a.sidenav.active {
 }
 
 #footer {
-  background: #333d3d;
+  background: #231F20;
   padding: 9px;
   /* margin-top: 30px; */
 }
@@ -3769,6 +3782,7 @@ white-space: nowrap; */
   justify-content: space-around;
   width: 100%;
   flex-flow: unset;
+  margin-right: 35px;
 }
 
 /* .slider-arrow-first {
