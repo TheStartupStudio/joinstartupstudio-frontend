@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import courseLogo from '../../assets/images/academy-icons/academy-logo-group.png'
 
-function InfoPageHeader({ className, linkColor }) {
+function InfoPageHeader({ className, linkColor, platformClass }) {
   return (
     <header
       className={`py-4 px-5 d-flex justify-content-between align-items-start ${className}`}
@@ -12,7 +12,7 @@ function InfoPageHeader({ className, linkColor }) {
         <ul className='list-unstyled d-flex gap-4'>
           <li>
             <Link
-              className='fs-13 fw-medium'
+              className={`fs-13 fw-medium ${platformClass}`}
               to='/explore-the-platform'
               style={{ color: linkColor }}
             >

@@ -142,7 +142,12 @@ const MyCourseAndCredentialsContainer = React.lazy(() =>
   import('../pages/admin/MyCourseAndCredentials')
 )
 
-const WelcomeToCourse = React.lazy(() => import('../pages/WelcomeToCourse'))
+const WelcomeToCourse = React.lazy(() =>
+  import('../pages/WelcomeToCourse/index')
+)
+const ExplorePlatform = React.lazy(() =>
+  import('../pages/WelcomeToCourse/ExplorePlatform')
+)
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
@@ -403,6 +408,7 @@ export const studentRoutes = [
 
 export const publicRoutes = [
   { path: '/welcome-to-course', component: WelcomeToCourse, exact: true },
+  { path: '/explore-the-platform', component: ExplorePlatform, exact: true },
   { path: '/verify-email', component: VerifyEmailByCode, exact: false },
   { path: '/lts-secure', component: SecurePage, exact: true },
   { path: '/forgot-password', component: ForgotPassword, exact: true },

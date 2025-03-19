@@ -137,11 +137,55 @@ const ChooseLogin = () => {
           gap: '40px'
         }}
       >
-        <p>EXPLORE THE PLATFORM</p>
-        <p>EXPLORE THE COURSE</p>
-        <p>FAQS</p>
-        <p>CONTACT</p>
-        <p>LOGIN</p>
+        <nav className='mt-4'>
+          <ul className='list-unstyled d-flex gap-4'>
+            <li>
+              <Link
+                className={`fs-13 fw-medium `}
+                to='/explore-the-platform'
+                style={{ color: '#000000' }}
+              >
+                EXPLORE THE PLATFORM
+              </Link>
+            </li>
+            <li>
+              <Link
+                className='fs-13 fw-medium'
+                to='/explore-the-course'
+                style={{ color: '#000000' }}
+              >
+                EXPLORE THE COURSE
+              </Link>
+            </li>
+            <li>
+              <Link
+                className='fs-13 fw-medium'
+                to='/faq'
+                style={{ color: '#000000' }}
+              >
+                FAQS
+              </Link>
+            </li>
+            <li>
+              <Link
+                className='fs-13 fw-medium'
+                to='/contact'
+                style={{ color: '#000000' }}
+              >
+                CONTACT
+              </Link>
+            </li>
+            <li>
+              <Link
+                className='fs-13 fw-medium'
+                to='/'
+                style={{ color: '#000000' }}
+              >
+                LOGIN
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </div>
 
       <Row className='m-0 p-0 align-items-center center-content justify-evenly'>

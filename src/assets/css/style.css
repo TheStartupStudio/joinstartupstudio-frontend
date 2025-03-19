@@ -4485,6 +4485,10 @@ wave > wave:first-child {
   font-size: 48px;
 }
 
+.fs-42 {
+  font-size: 42px;
+}
+
 .mb--5 {
   margin-bottom: -5px;
 }
@@ -4550,6 +4554,24 @@ wave > wave:first-child {
 
 .course-logo-image {
   width: 248px;
+}
+
+.course-experts {
+  box-shadow: -4px 4px 8px rgba(0, 0, 0, 0.2), 4px 4px 8px rgba(0, 0, 0, 0.2),
+    0px 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.active-course {
+  background-color: #b9dfec33;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.master-class-container {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 6px 5px;
+  border-radius: 8px;
 }
 
 @media (max-width: 1024px) {
