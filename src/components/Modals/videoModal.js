@@ -125,11 +125,15 @@ export const VideoModal = (props) => {
                 style={{ objectFit: 'cover' }}
               />
               {!shareVideo && (
-                <div className="beyond-your-course-video-thumb-icon">
+                <div className="beyond-your-course-video-thumb-icon-fullscreen">
                   <FontAwesomeIcon
                     icon={faPlay}
                     onClick={() => setPlayVideo(true)}
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: 'pointer' ,
+                      position: 'relative',
+                             bottom: '.8rem',
+                              
+                             right: '6px'}}
                   />
                 </div>
               )}

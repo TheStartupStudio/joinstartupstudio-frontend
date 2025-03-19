@@ -125,13 +125,7 @@ const ChooseLogin = () => {
 
   return (
     <div className='container-fluid md-px-5 ps-md-5 choose-login_container-academy gradient-background'>
-      <div className='nav-buttons' style={{display: 'flex', justifyContent: 'flex-end', padding: '30px 50px', gap: '40px'}}>
-        <p>EXPLORE THE PLATFORM</p>
-        <p>EXPLORE THE COURSE</p>
-        <p>FAQS</p>
-        <p>CONTACT</p>
-        <p>LOGIN</p>
-      </div>
+     {/* <InfoPageHeader/> */}
 
       <Row className='m-0 p-0 align-items-center center-content justify-evenly'>
         <Col md='10' lg='8' className='main-login-container'>

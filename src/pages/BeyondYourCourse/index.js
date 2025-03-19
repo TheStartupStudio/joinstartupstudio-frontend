@@ -14,17 +14,18 @@ import SavedVideosWidget from '../../components/Video/savedVideosWidget'
 import { VideoModal } from '../../components/Modals/videoModal'
 import './index.css'
 import masterIcon from '../../assets/images/master-icon.png'
+import Select from 'react-select'
 
 export default function BeyondYourCourse() {
   const dispatch = useDispatch()
   const [encouragementVideos, setEncouragementVideos] = useState([])
   const [masterClassVideos, setMasterClassVideos] = useState([])
   const [startVideoIndex, setStartVideoIndex] = useState(0)
-  const [endVideoIndex, setEndVideoIndex] = useState(4)
+  const [endVideoIndex, setEndVideoIndex] = useState(5)
   const [endVideoIndexMobile, setEndVideoIndexMobile] = useState(2)
   const [startMasterClassVideoIndex, setStartMasterClassVideoIndex] =
     useState(0)
-  const [endMasterClassVideoIndex, setEndMasterClassVideoIndex] = useState(4)
+  const [endMasterClassVideoIndex, setEndMasterClassVideoIndex] = useState(5)
   const [endMasterClassVideoIndexMobile, setEndMasterClassVideoIndexMobile] =
     useState(1)
   const [connections, setConnections] = useState([])
@@ -33,6 +34,17 @@ export default function BeyondYourCourse() {
   const [showVideoModal, setShowVideoModal] = useState(false)
   const [savedVideos, setSavedVideos] = useState([])
   const [width, setWidth] = useState(window.innerWidth)
+   const [selectedLanguage, setSelectedLanguage] = useState(null)
+
+  const options = [
+    { value: 'en', label: 'English' },
+    { value: 'es', label: 'Spanish' }
+  ]
+
+  const handleChange = (selectedOption) => {
+    setSelectedLanguage(selectedOption)
+    console.log('Selected Language:', selectedOption.value)
+  }
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
@@ -247,16 +259,62 @@ export default function BeyondYourCourse() {
   return (
     <>
       <div id='main-body'>
-        <div className='container-fluid gradient-background'>
+        <div className='container-fluid gradient-background-master'>
           <div className='row'>
             <div >
-              <div className='account-page-padding page-border'>
-                <h3 className='page-title'>
+              <div>
+              <div className='header-select-btn'>
+              <div className='account-page-padding'>
+                <h3 className='page-title' style={{marginLeft: '20px'}}>
                   <IntMessages id='beyond_your_course.master_classes_upper' />
                 </h3>
-                <p className='page-description' style={{ fontWeight: '500' }}>
+                <p className='page-description' style={{ fontWeight: '500',marginLeft: '20px' }}>
                   <IntMessages id='beyond_your_course.page_description' />
                 </p>
+                </div>
+                <div
+                          style={{
+                            display: 'inline-block',
+                            borderRadius: '8px',
+                            background:
+                              'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                            padding: '1px', // Adjust this value to control border thickness
+                            height: '58px',
+                            boxShadow: '0px 4px 10px 0px #00000040',
+                            marginRight:'20px',
+                            marginTop:'-20px'
+                          }}
+                        >
+                          <Select
+                            options={options}
+                            value={selectedLanguage}
+                            onChange={handleChange}
+                            placeholder='Select Language'
+                            menuPortalTarget={document.body}
+                            isSearchable={false}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                              control: (base) => ({
+                                ...base,
+                                width: '250px', // Fixed width
+                                minHeight: '40px', // Fixed height
+                                overflow: 'hidden',
+                                border: 'none', // Remove the default border
+                                borderRadius: '6px' // Slightly smaller than the outer container radius
+                              }),
+                              singleValue: (base) => ({
+                                ...base,
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
+                              })
+                            }}
+                            components={{
+                              IndicatorSeparator: () => null // Remove separator
+                            }}
+                          />
+              </div>
+                </div>
                 <div className='videos-container'>
                 <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
                   <div className='title-container'>

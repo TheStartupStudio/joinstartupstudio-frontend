@@ -14,10 +14,12 @@ import { useDispatch } from 'react-redux'
 import './index.css'
 import { EditRecommendationModal } from '../../components/Portfolio/Recommendation/editRecommendationModal'
 import CircleIcon from '../../assets/images/circle-startup-icon.png'
+import Select from 'react-select'
 
 function MyCourseEntrepreneurship() {
   const history = useHistory()
   let [showModal, setShowModal] = useState(false)
+  const [selectedLanguage, setSelectedLanguage] = useState(null)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -32,23 +34,74 @@ function MyCourseEntrepreneurship() {
       history.push('/my-course-in-entrepreneurship/journal')
     }
   }
+    const options = [
+      { value: 'en', label: 'English' },
+      { value: 'es', label: 'Spanish' }
+    ]
+  
+    const handleChange = (selectedOption) => {
+      setSelectedLanguage(selectedOption)
+      console.log('Selected Language:', selectedOption.value)
+    }
 
   return (
     <Container fluid>
       <Row>
-        <div className='gradient-background'>
+        <div className='gradient-background-course'>
           <div
-            className="account-page-padding page-border"
+            className="account-page-padding"
             style={{ minHeight: '100vh' }}
           >
-            <h3 className="page-title" style={{ marginLeft: '20px' }}>
+           <div className='d-flex space-between'>
+           <div><h3 className="page-title" style={{ marginLeft: '20px' }}>
               {/* <IntlMessages id='navigation.startup_live' /> */}
              Intro to the Course
             </h3>
             <p className="page-description" style={{ marginLeft: '20px' }}>
               {/* <IntlMessages id='startup_live.page_description' /> */}
               Embarking on the Entrepreneurial Journey
-            </p>
+            </p></div>
+             <div
+                          style={{
+                            display: 'inline-block',
+                            borderRadius: '8px',
+                            background:
+                              'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                            padding: '1px', // Adjust this value to control border thickness
+                            height: '58px',
+                            boxShadow: '0px 4px 10px 0px #00000040'
+                          }}
+                        >
+                          <Select
+                            options={options}
+                            value={selectedLanguage}
+                            onChange={handleChange}
+                            placeholder='Select Language'
+                            menuPortalTarget={document.body}
+                            isSearchable={false}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                              control: (base) => ({
+                                ...base,
+                                width: '250px', // Fixed width
+                                minHeight: '40px', // Fixed height
+                                overflow: 'hidden',
+                                border: 'none', // Remove the default border
+                                borderRadius: '6px' // Slightly smaller than the outer container radius
+                              }),
+                              singleValue: (base) => ({
+                                ...base,
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
+                              })
+                            }}
+                            components={{
+                              IndicatorSeparator: () => null // Remove separator
+                            }}
+                          />
+           </div>
+                        </div>
 
             <div>
             <div className='welcome-journey-text'>
@@ -98,7 +151,7 @@ function MyCourseEntrepreneurship() {
                       className=""
                       width={'305px'}
                       height={'192px'}
-                      style={{ margin: '15px 15px', padding: '5px' }}
+                      style={{ margin: '10px', padding: '5px' }}
                       url={
                         'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4'
                       }

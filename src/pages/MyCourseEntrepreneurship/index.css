@@ -140,6 +140,7 @@
 
 .general-video-container {
   display: flex;
+  gap: 2rem;
 }
 
 .video-container {
@@ -194,7 +195,7 @@
   margin: 0;
 }
 
-.gradient-background {
+.gradient-background-course {
   background:
     radial-gradient(circle at 10% 50%,
       rgb(255, 255, 255) 0%,
@@ -253,6 +254,16 @@
   border-radius: 10px;
 }
 
+.space-between {
+  justify-content: space-between;
+}
+
+@media(max-width:1024px) {
+  .video-container {
+    width: 300px;
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .gradient-background {
@@ -262,5 +273,13 @@
   .main-login-container {
     width: 95%;
     padding: 1rem;
+  }
+}
+
+@media(max-width: 426px) {
+  .col-md-12.general-video-container {
+    display: flex;
+    flex-direction: column;
+
   }
 }
