@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Col } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import LeadLogo from '../../assets/images/academy-icons/Group.png'
 import MasterLogo from '../../assets/images/academy-icons/Icon.Master Classes.png'
@@ -13,10 +13,12 @@ import ProfilePhoto from '../../assets/images/academy-icons/profile.jpeg'
 import SettingsLogo from '../../assets/images/academy-icons/settings 4.png'
 import { setAccordionToggled } from '../../redux'
 import SidebarItem from './SidebarItem'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
 
 const InstructorSidebar = (props) => {
   const [isTextVisible, setIsTextVisible] = useState(true)
   const dispatch = useDispatch()
+  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
 
   const truncateEmail = (email) => {
     if (email.length > 15) {
@@ -25,8 +27,8 @@ const InstructorSidebar = (props) => {
     return email
   }
 
-  const setIsCollapsed = props.setIsCollapsed
-  const isCollapsed = props.isCollapsed
+  // const setIsCollapsed = props.setIsCollapsed
+  // const isCollapsed = props.isCollapsed
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -37,7 +39,7 @@ const InstructorSidebar = (props) => {
   }, [isCollapsed])
 
   const handleSidebarToggle = () => {
-    setIsCollapsed((prev) => !prev)
+    dispatch(toggleCollapse())
   }
 
   return (

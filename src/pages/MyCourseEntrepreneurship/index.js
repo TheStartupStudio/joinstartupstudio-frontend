@@ -38,34 +38,34 @@ function MyCourseEntrepreneurship() {
       <Row>
         <div className='gradient-background'>
           <div
-            className="account-page-padding page-border"
+            className='account-page-padding page-border'
             style={{ minHeight: '100vh' }}
           >
-            <h3 className="page-title" style={{ marginLeft: '20px' }}>
+            <h3 className='page-title' style={{ marginLeft: '20px' }}>
               {/* <IntlMessages id='navigation.startup_live' /> */}
-             Intro to the Course
+              Intro to the Course
             </h3>
-            <p className="page-description" style={{ marginLeft: '20px' }}>
+            <p className='page-description' style={{ marginLeft: '20px' }}>
               {/* <IntlMessages id='startup_live.page_description' /> */}
               Embarking on the Entrepreneurial Journey
             </p>
 
             <div>
-            <div className='welcome-journey-text'>
-           <div className='title-container'>
-           <img 
-                  src={CircleIcon}
-                  alt='logo'
-                  style={{ width: '36px', height: '36px' }}
-                  className='welcome-journey-text__icon'
-                />
-                <p className="welcome-journey-text__title">
-                  Welcome to the Journey 
+              <div className='welcome-journey-text'>
+                <div className='title-container'>
+                  <img
+                    src={CircleIcon}
+                    alt='logo'
+                    style={{ width: '36px', height: '36px' }}
+                    className='welcome-journey-text__icon'
+                  />
+                  <p className='welcome-journey-text__title'>
+                    Welcome to the Journey
                   </p>
-           </div>
+                </div>
                 <p className='welcome-journey-text__description'>
                   Entrepreneurship is about building{' '}
-                  <span className="you-href">YOU</span>. As such, in this course
+                  <span className='you-href'>YOU</span>. As such, in this course
                   you will set the pace of your development.
                 </p>
                 <p>
@@ -87,15 +87,14 @@ function MyCourseEntrepreneurship() {
                   </a>
                 </p> */}
               </div>
-              
             </div>
 
-            <div className="col-md-12 general-video-container">
-            <div className="video-container">
+            <div className='col-md-12 general-video-container'>
+              <div className='video-container'>
                 <div style={{ width: '100%' }}>
-                  <div className="responsive-video-first">
+                  <div className='responsive-video-first'>
                     <ReactPlayer
-                      className=""
+                      className=''
                       width={'305px'}
                       height={'192px'}
                       style={{ margin: '15px 15px', padding: '5px' }}
@@ -104,7 +103,7 @@ function MyCourseEntrepreneurship() {
                       }
                       controls
                       playing={true}
-                      preload="metadata"
+                      preload='metadata'
                       light={
                         'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg'
                       }
@@ -119,7 +118,7 @@ function MyCourseEntrepreneurship() {
                   </div>
                 </div>
               </div>
-              <div className="accordion accordion-flex" id="accordionExample">
+              <div className='accordion accordion-flex' id='accordionExample'>
                 {[
                   {
                     title: 'Introducing the Entrepreneurs',
@@ -131,162 +130,174 @@ function MyCourseEntrepreneurship() {
                     type: 'levels_of_journey'
                   }
                 ].map((data, index) => (
-                  <div style={{marginRight:'-10px'}} key={index}>
+                  <div style={{ marginRight: '-10px' }} key={index}>
                     {/* <div className="accordion-item  accordion-item-border"> */}
-                      <h2 className="accordion-header accordion-content-section-header" id={`heading-${index}`}>
-                        <button
-                          className="accordion-button collapsed accordion-outter button-accordion"
-                          type="button"
-                          eventKey={`${index}`}
-                          data-bs-toggle="collapse"
-                          data-bs-target={`#collapse_outer${index}`}
-                          aria-expanded="false"
-                          aria-controls={`collapse_outer${index}`}
-                        >
-                          {data.title}
-                        </button>
-                      </h2>
-                      <div
-                        id={`collapse_outer${index}`}
+                    <h2
+                      className='accordion-header accordion-content-section-header'
+                      id={`heading-${index}`}
+                    >
+                      <button
+                        className='accordion-button collapsed accordion-outter button-accordion'
+                        type='button'
                         eventKey={`${index}`}
-                        className={`accordion-collapse accordion-content-section  collapse `}
-                        aria-labelledby={`heading-${index}`}
-                        data-bs-parent={`#accordionExample`}
+                        data-bs-toggle='collapse'
+                        data-bs-target={`#collapse_outer${index}`}
+                        aria-expanded='false'
+                        aria-controls={`collapse_outer${index}`}
                       >
-                        <div
-                          className="accordion-body py-4"
-                          eventKey={`${index}`}
-                        >
-                          {data.type == 'entrepreneurs' && (
-                            <div className="entrepreneurs row">
-                              {LtsCourseIntro['entrepeneurs'].map(
-                                (entData, entIndex) => (
-                                  <div className="entrepreneurs__item col-12 col-md-6">
-                                    <div className="entrepreneurs__item-inner">
-                                      <h3 className="entrepreneurs__item-title">
-                                        {entData.name}
-                                      </h3>
-                                      <div className="entrepreneurs__item-position">
-                                        {entData.position}
-                                      </div>
-                                      <div className="entrepreneurs__item-video">
-                                        <div className="responsive-video">
-                                          <ReactPlayer
-                                            className=""
-                                            width={'100%'}
-                                            height={'100%'}
-                                            url={entData.video_url}
-                                            controls
-                                            playing={true}
-                                            preload="metadata"
-                                            light={entData.thumbnail}
-                                            config={{
-                                              file: {
-                                                attributes: {
-                                                  controlsList: 'nodownload'
-                                                }
+                        {data.title}
+                      </button>
+                    </h2>
+                    <div
+                      id={`collapse_outer${index}`}
+                      eventKey={`${index}`}
+                      className={`accordion-collapse accordion-content-section  collapse `}
+                      aria-labelledby={`heading-${index}`}
+                      data-bs-parent={`#accordionExample`}
+                    >
+                      <div
+                        className='accordion-body py-4'
+                        eventKey={`${index}`}
+                      >
+                        {data.type == 'entrepreneurs' && (
+                          <div className='entrepreneurs row'>
+                            {LtsCourseIntro['entrepeneurs'].map(
+                              (entData, entIndex) => (
+                                <div className='entrepreneurs__item col-12 col-md-6'>
+                                  <div className='entrepreneurs__item-inner'>
+                                    <h3 className='entrepreneurs__item-title'>
+                                      {entData.name}
+                                    </h3>
+                                    <div className='entrepreneurs__item-position'>
+                                      {entData.position}
+                                    </div>
+                                    <div className='entrepreneurs__item-video'>
+                                      <div className='responsive-video'>
+                                        <ReactPlayer
+                                          className=''
+                                          width={'100%'}
+                                          height={'100%'}
+                                          url={entData.video_url}
+                                          controls
+                                          playing={true}
+                                          preload='metadata'
+                                          light={entData.thumbnail}
+                                          config={{
+                                            file: {
+                                              attributes: {
+                                                controlsList: 'nodownload'
                                               }
-                                            }}
-                                          />
-                                        </div>
+                                            }
+                                          }}
+                                        />
                                       </div>
                                     </div>
                                   </div>
-                                )
-                              )}
-                            </div>
-                          )}
+                                </div>
+                              )
+                            )}
+                          </div>
+                        )}
 
-                          {data.type == 'key_points' && (
-                            <div className="key_points row">
-                              {LtsCourseIntro['key_points_videos'].map(
-                                (entData, entIndex) => (
-                                  <div className="key_points__item col-12 col-md-3">
-                                    <div className="key_points__item-inner">
-                                      <div className="key_points__item-video">
-                                        <div className="responsive-video">
-                                          <ReactPlayer
-                                            className=""
-                                            width={'100%'}
-                                            height={'100%'}
-                                            url={entData.url}
-                                            controls
-                                            playing={true}
-                                            preload="metadata"
-                                            config={{
-                                              file: {
-                                                attributes: {
-                                                  controlsList: 'nodownload'
-                                                }
+                        {data.type == 'key_points' && (
+                          <div className='key_points row'>
+                            {LtsCourseIntro['key_points_videos'].map(
+                              (entData, entIndex) => (
+                                <div className='key_points__item col-12 col-md-3'>
+                                  <div className='key_points__item-inner'>
+                                    <div className='key_points__item-video'>
+                                      <div className='responsive-video'>
+                                        <ReactPlayer
+                                          className=''
+                                          width={'100%'}
+                                          height={'100%'}
+                                          url={entData.url}
+                                          controls
+                                          playing={true}
+                                          preload='metadata'
+                                          config={{
+                                            file: {
+                                              attributes: {
+                                                controlsList: 'nodownload'
                                               }
-                                            }}
-                                            light={entData.thumbnail}
-                                          />
-                                        </div>
+                                            }
+                                          }}
+                                          light={entData.thumbnail}
+                                        />
                                       </div>
-                                      <h3 className="key_points__item-title">
-                                        {entData.title}
-                                      </h3>
                                     </div>
+                                    <h3 className='key_points__item-title'>
+                                      {entData.title}
+                                    </h3>
                                   </div>
-                                )
-                              )}
-                            </div>
-                          )}
+                                </div>
+                              )
+                            )}
+                          </div>
+                        )}
 
-                          {data.type == 'levels_of_journey' && (
-                            <div className="levels-of-journey">
-                              <div className="levels-of-journey__level">
-                                <p className="levels-of-journey__title">
-                                  <span>LEVEL 1 |</span> Entrepreneurship and
-                                  You
-                                </p>
-                                <div className="levels-of-journey__description">
-                                  Entrepreneurship is a mindset,and in the first level of this program,you will engage in developing this mindset as your preparation for starting your journey on the pathway to entrepreneurship.You need proof of yourself as an entrepreneur and through this program you will create content that can publicly speak to your values,your purpose,your mindset, and your skillset.The first step in creating this proof is developing content that solidifies your statement of "I Am.".Who are you and how do you want the world to see you? It's time for you to communicate you professional identity.
-                                </div>
-                              </div>
-                              <div className="levels-of-journey__level">
-                                <p className="levels-of-journey__title">
-                                  <span>LEVEL 2 |</span> Understanding Learn to
-                                  Start
-                                </p>
-                                <div className="levels-of-journey__description">
-                                  In the second level, you will immerse yourself
-                                  in the LTS model. People want to work with
-                                  people they like, respect, and trust. So, you
-                                  will begin the LTS process by building
-                                  yourself first. With your digital “I Am” video
-                                  ready to introduce you to your cohort and the
-                                  world, it is time to assess your experiences
-                                  and mindset so far by evaluating yourself
-                                  according to the LTS model and vet potential
-                                  partners, thus creating a foundation for a
-                                  successful startup.
-                                </div>
-                              </div>
-                              <div className="levels-of-journey__level">
-                                <p className="levels-of-journey__title">
-                                  <span>LEVEL 3 |</span> The LEARN Stage
-                                </p>
-                                <div className="levels-of-journey__description">
-                                  Now that you have a better sense of self and
-                                  your professional opportunities for
-                                  collaboration, you can move on to creating the
-                                  startup, itself. You’re going to be using your
-                                  own personal experiences and passions to find
-                                  a problem worth solving and begin to construct
-                                  the framework of your startup. You’ll engage
-                                  in industry and market analysis, develop a
-                                  brand, build a business plan, create a
-                                  financial framework, and evaluate the
-                                  sustainability, profitability, and scalability
-                                  of your solution.
-                                </div>
+                        {data.type == 'levels_of_journey' && (
+                          <div className='levels-of-journey'>
+                            <div className='levels-of-journey__level'>
+                              <p className='levels-of-journey__title'>
+                                <span>LEVEL 1 |</span> Entrepreneurship and You
+                              </p>
+                              <div className='levels-of-journey__description'>
+                                Entrepreneurship is a mindset,and in the first
+                                level of this program,you will engage in
+                                developing this mindset as your preparation for
+                                starting your journey on the pathway to
+                                entrepreneurship.You need proof of yourself as
+                                an entrepreneur and through this program you
+                                will create content that can publicly speak to
+                                your values,your purpose,your mindset, and your
+                                skillset.The first step in creating this proof
+                                is developing content that solidifies your
+                                statement of "I Am.".Who are you and how do you
+                                want the world to see you? It's time for you to
+                                communicate you professional identity.
                               </div>
                             </div>
-                          )}
-                        </div>
+                            <div className='levels-of-journey__level'>
+                              <p className='levels-of-journey__title'>
+                                <span>LEVEL 2 |</span> Understanding Learn to
+                                Start
+                              </p>
+                              <div className='levels-of-journey__description'>
+                                In the second level, you will immerse yourself
+                                in the LTS model. People want to work with
+                                people they like, respect, and trust. So, you
+                                will begin the LTS process by building yourself
+                                first. With your digital “I Am” video ready to
+                                introduce you to your cohort and the world, it
+                                is time to assess your experiences and mindset
+                                so far by evaluating yourself according to the
+                                LTS model and vet potential partners, thus
+                                creating a foundation for a successful startup.
+                              </div>
+                            </div>
+                            <div className='levels-of-journey__level'>
+                              <p className='levels-of-journey__title'>
+                                <span>LEVEL 3 |</span> The LEARN Stage
+                              </p>
+                              <div className='levels-of-journey__description'>
+                                Now that you have a better sense of self and
+                                your professional opportunities for
+                                collaboration, you can move on to creating the
+                                startup, itself. You’re going to be using your
+                                own personal experiences and passions to find a
+                                problem worth solving and begin to construct the
+                                framework of your startup. You’ll engage in
+                                industry and market analysis, develop a brand,
+                                build a business plan, create a financial
+                                framework, and evaluate the sustainability,
+                                profitability, and scalability of your solution.
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
+                    </div>
                     {/* </div> */}
                   </div>
                 ))}
@@ -295,22 +306,22 @@ function MyCourseEntrepreneurship() {
 
             <Modal
               show={showModal}
-              backdrop="static"
+              backdrop='static'
               keyboard={false}
-              className="alert-modal"
+              className='alert-modal'
               centered={true}
-              size="sm"
+              size='sm'
             >
               <Modal.Body>
-                <div className="alert-modal__text">
+                <div className='alert-modal__text'>
                   Would you like to skip this page in the future and go directly
                   to the course?
                 </div>
-                <div className="alert-modal__buttons">
-                  <a href="#" onClick={goToJournal(true)} className="button">
+                <div className='alert-modal__buttons'>
+                  <a href='#' onClick={goToJournal(true)} className='button'>
                     YES, PLEASE!
                   </a>
-                  <a href="#" onClick={goToJournal()} className="button-naked">
+                  <a href='#' onClick={goToJournal()} className='button-naked'>
                     NOT RIGHT NOW
                   </a>
                 </div>

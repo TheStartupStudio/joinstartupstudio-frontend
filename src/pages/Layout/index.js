@@ -15,6 +15,7 @@ function Layout({ children }) {
   const sideBarState = useSelector((state) => state.general.sidebarState)
   const [showHeaderSelected, setShowHeaderSelected] = useState(false)
   const { generalLoading } = useSelector((state) => state.general)
+  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
   const dispatch = useDispatch()
 
   const toggleBackdrop = () => {
@@ -41,6 +42,7 @@ function Layout({ children }) {
         />
         <div
           id='content'
+          className='auth-content'
           // className='w-100'
         >
           {sideBarState ? (

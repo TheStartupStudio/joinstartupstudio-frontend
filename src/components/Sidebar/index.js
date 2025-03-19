@@ -13,9 +13,10 @@ import InstructorSidebar from './InstructorSidebar'
 import StudentSidebar from './StudentSidebar'
 
 function Sidebar(props) {
-  const [isCollapsed, setIsCollapsed] = useState(true)
   const sideBarState = useSelector((state) => state.general.sidebarState)
   const role = localStorage.getItem('role')
+
+  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
 
   const location = useLocation()
 
@@ -52,21 +53,13 @@ function Sidebar(props) {
     >
       <div className='scroll sidebar-sticky sidebar-scroll h-95'>
         <div className='h-93'>
-          <Header
-            props={props}
-            isCollapsed={isCollapsed}
-            setIsCollapsed={setIsCollapsed}
-          />
+          <Header props={props} />
           {/* {role === 'student' ? (
             <StudentSidebar props={props} />
           ) : (
             <InstructorSidebar props={props} />
           )} */}
-          <InstructorSidebar
-            props={props}
-            isCollapsed={isCollapsed}
-            setIsCollapsed={setIsCollapsed}
-          />
+          <InstructorSidebar props={props} />
         </div>
       </div>
     </nav>

@@ -1,9 +1,11 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
+import { useSelector } from 'react-redux'
 
 const Header = (props) => {
-  const isCollapsed = props.isCollapsed
+  const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
+
   return (
     <div
       className='sidebar-header d-flex gap-1'

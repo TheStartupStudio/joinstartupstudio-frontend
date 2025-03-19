@@ -18,6 +18,7 @@ import platformBadgesReducer from './platformBadges/reducer'
 import portfolioReducer from './portfolio/Reducer'
 import taskLessonReducer from './taskLessons/reducer'
 import backButtonReducer from './backButtonReducer'
+import sidebarReducer from './sidebar/Reducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   platformBadges: platformBadgesReducer,
   lessons: taskLessonReducer,
   portfolio: portfolioReducer,
-  backButton: backButtonReducer
+  backButton: backButtonReducer,
+  sidebar: sidebarReducer
 })
 export default rootReducer

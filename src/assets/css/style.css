@@ -93,6 +93,7 @@ label:focus,
 .wrapper {
   display: flex;
   width: 100%;
+  position: relative;
 }
 
 .content {
@@ -100,9 +101,8 @@ label:focus,
 }
 
 #content {
-  /* width: calc(100% - 220px); */
+  /* width: calc(100% - 75px); */
   width: 100%;
-
   padding: 0px;
   min-height: 100vh;
   transition: all 0.3s;
@@ -110,6 +110,10 @@ label:focus,
   top: 0;
   right: 0;
   background: #fff;
+}
+
+.auth-content {
+  margin-left: 75px;
 }
 
 #content.active {
@@ -196,9 +200,13 @@ label:focus,
 }
 
 nav#sidebar {
-  position: relative;
+  position: absolute;
+  height: 100%;
   border-radius: 10px;
   box-shadow: 3px 0px 5px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 #sidebar {
@@ -218,8 +226,6 @@ nav#sidebar {
 #sidebar .sidebar-header {
   margin-top: 20px;
   margin-bottom: 10px;
-  /* padding: 20px; */
-  background: #fff;
   margin-inline: 15%;
   height: 95px;
 }
