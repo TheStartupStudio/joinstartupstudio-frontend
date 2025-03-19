@@ -407,7 +407,7 @@ export const studentRoutes = [
 ]
 
 export const publicRoutes = [
-  { path: '/welcome-to-course', component: WelcomeToCourse, exact: true },
+  { path: '/', component: WelcomeToCourse, exact: true },
   { path: '/explore-the-platform', component: ExplorePlatform, exact: true },
   { path: '/verify-email', component: VerifyEmailByCode, exact: false },
   { path: '/lts-secure', component: SecurePage, exact: true },
@@ -417,7 +417,7 @@ export const publicRoutes = [
   { path: '/terms', component: Terms, exact: true },
   { path: '/my-immersion', component: MyImmersion, exact: false },
   { path: '/verify', component: VerifyEmail, exact: false },
-  { path: '/', component: Login, exact: true },
+  { path: '/login', component: Login, exact: true },
   { path: '/logout', component: Logout, exact: false },
   { path: '/register', component: Register, exact: true },
   { path: '/trial-ended', component: Resubscribe, exact: true },

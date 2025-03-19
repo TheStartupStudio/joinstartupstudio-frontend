@@ -20,7 +20,7 @@ function CancelRenewalModal({ canceledRenewal, setCanceledRenewal }) {
         console.log('error', error)
       })
       .finally(() => {
-        // window.location.href = '/'
+        window.location.href = '/login'
         dispatch(setGeneralLoading(false))
       })
   }

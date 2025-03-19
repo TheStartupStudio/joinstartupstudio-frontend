@@ -49,7 +49,7 @@ function InfoPageHeader({ className, linkColor, platformClass }) {
           <li>
             <Link
               className='fs-13 fw-medium'
-              to='/'
+              to='/login'
               style={{ color: linkColor }}
             >
               LOGIN
