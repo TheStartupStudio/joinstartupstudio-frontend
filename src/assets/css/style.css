@@ -4666,6 +4666,10 @@ wave > wave:first-child {
   padding-top: 4rem;
 }
 
+.hover-certificate:hover {
+  color: #51c7df;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;

@@ -20,6 +20,7 @@ import StartupStudioLogo from '../../../assets/images/startup-studio-new-logo.pn
 
 import Footer from '../../../components/Footer'
 import Faq from '../../../components/FAQ/Faq'
+import HowWeProtect from '../../../components/HowWeProtect'
 const ChooseLogin = () => {
   const history = useHistory()
   const dispatch = useDispatch()
@@ -27,6 +28,7 @@ const ChooseLogin = () => {
   const [user, setUser] = useState({})
   const location = useLocation()
   const [faqModal, setFaqModal] = useState(false)
+  const [protectModal, setProtectModal] = useState(false)
 
   const confirmEmail = location?.state?.confirmEmail
 
@@ -301,9 +303,13 @@ const ChooseLogin = () => {
               <p className='text-center public-page-text font-12 m-0'>
                 <IntlMessages id='login.security' />
               </p>
-              <Link to='#' className='link fw-bold  font-12 security-text'>
+              <p
+                onClick={() => setProtectModal(true)}
+                className='link fw-bold  font-12 security-text blue-color cursor-pointer'
+              >
                 <IntlMessages id='login.protect_data' />
-              </Link>
+              </p>
+              <HowWeProtect isOpen={protectModal} setIsOpen={setProtectModal} />
             </div>
           </FormWrapper>
         </Col>

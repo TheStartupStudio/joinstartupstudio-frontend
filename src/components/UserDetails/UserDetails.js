@@ -351,11 +351,11 @@ function UserDetails({ profilePic, userName, userProffesion }) {
             <div className='d-flex gap-3'>
               <div className='d-flex gap-2 align-items-center'>
                 <img src={save} alt='save' />
-                <span>Save</span>
+                <span className='hover-certificate cursor-pointer'>Save</span>
               </div>
               <div className='d-flex gap-2 align-items-center'>
                 <img src={print} alt='print' />
-                <span>Print</span>
+                <span className='hover-certificate cursor-pointer'>Print</span>
               </div>
             </div>
           </div>

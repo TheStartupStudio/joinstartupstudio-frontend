@@ -167,14 +167,16 @@ function Register() {
                 The security of your information is important.
               </p>
               <p className='fs-13 fw-medium blue-color '>
-                Learn how we protect you.
+                <IntlMessages id='login.protect_data' />
               </p>
             </div>
           </form>
         </section>
         <section className='d-flex justify-content-center mt-4 gap-2 mb-3 align-items-center'>
-          <p className='fs-18 fw-light mb-0'>Already registered?</p>
-          <Link className='fs-15 fw-medium blue-color' to='/'>
+          <p className='fs-18 fw-light mb-0'>
+            <IntlMessages id='create_account.already_registered' />
+          </p>
+          <Link className='fs-15 fw-medium blue-color' to='/login'>
             Log in here
           </Link>
         </section>
