@@ -17,7 +17,7 @@ const ReSigninModal = ({ show }) => {
       .then(() => {
         localStorage.clear()
         dispatch(setAuthModal(false))
-        window.location.href = '/'
+        window.location.href = '/login'
       })
       .catch((error) => {
         console.log('error', error)

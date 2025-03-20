@@ -1,25 +1,36 @@
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import courseLogo from '../../assets/images/academy-icons/academy-logo-group.png'
+import Faq from '../FAQ/Faq'
+import { useState } from 'react'
 
-function InfoPageHeader({ className, linkColor, platformClass }) {
+function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
+  const [faqModal, setFaqModal] = useState(false)
+
+  const history = useHistory()
+
   return (
     <header
       className={`py-4 px-5 d-flex justify-content-between align-items-start ${className}`}
     >
-      <img src={courseLogo} alt='course logo' />
+      <img
+        onClick={() => history.push('/')}
+        className='cursor-pointer'
+        src={courseLogo}
+        alt='course logo'
+      />
 
       <nav className='mt-4'>
         <ul className='list-unstyled d-flex gap-4'>
-          <li>
+          <li className={`${platformClass}`}>
             <Link
-              className={`fs-13 fw-medium ${platformClass}`}
+              className='fs-13 fw-medium'
               to='/explore-the-platform'
               style={{ color: linkColor }}
             >
               EXPLORE THE PLATFORM
             </Link>
           </li>
-          <li>
+          <li className={`${courseClass}`}>
             <Link
               className='fs-13 fw-medium'
               to='/explore-the-course'
@@ -29,13 +40,13 @@ function InfoPageHeader({ className, linkColor, platformClass }) {
             </Link>
           </li>
           <li>
-            <Link
-              className='fs-13 fw-medium'
-              to='/faq'
+            <span
+              className='fs-13 fw-medium cursor-pointer'
+              onClick={() => setFaqModal(true)}
               style={{ color: linkColor }}
             >
               FAQS
-            </Link>
+            </span>
           </li>
           <li>
             <Link
@@ -57,6 +68,7 @@ function InfoPageHeader({ className, linkColor, platformClass }) {
           </li>
         </ul>
       </nav>
+      <Faq isOpen={faqModal} setIsOpen={setFaqModal} />
     </header>
   )
 }

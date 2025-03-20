@@ -828,7 +828,7 @@ a.sidenav.active {
 }
 
 #footer {
-  background: #231F20;
+  background: #231f20;
   padding: 9px;
   /* margin-top: 30px; */
 }
@@ -4122,6 +4122,20 @@ wave > wave:first-child {
   font-size: 0.9rem;
 }
 
+.fs-20 {
+  font-size: 20px;
+}
+
+.fs-32 {
+  font-size: 32px;
+}
+
+.collar-image {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+}
+
 .academy-dashboard-layout {
   grid-template-columns: 3fr 4fr;
   padding-inline: 40px;
@@ -4586,6 +4600,70 @@ wave > wave:first-child {
 .master-class-container {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 6px 5px;
   border-radius: 8px;
+}
+
+.tick-icon-black {
+  filter: brightness(0) invert(0);
+  width: 18px;
+}
+
+.mb-course-syllabus {
+  margin-bottom: 13rem;
+}
+
+.hotspot {
+  position: absolute;
+  width: 50px; /* Adjust size */
+  height: 50px;
+  background: rgba(255, 0, 0, 0.3); /* Red overlay for testing */
+  cursor: pointer;
+}
+
+.background-platform {
+  background: radial-gradient(
+    circle at right center,
+    rgba(200, 200, 200, 0.3) 10%,
+    rgba(255, 255, 255, 1) 40%
+  );
+}
+
+.background-course {
+  background: radial-gradient(
+      circle at 112% 24%,
+      rgba(123, 223, 237, 0.3) 10%,
+      rgba(255, 255, 255, 1) 30%
+    ),
+    radial-gradient(
+      circle at left center,
+      rgba(200, 200, 200, 0.6) 7%,
+      rgba(255, 255, 255, 1) 27%
+    ),
+    radial-gradient(
+      circle at 112% 85%,
+      rgba(255, 149, 233, 0.3) 5%,
+      rgba(255, 255, 255, 1) 17%
+    );
+
+  background-blend-mode: multiply;
+}
+
+.background-welcome {
+  background: radial-gradient(
+      circle at 49% -22%,
+      rgba(123, 223, 237, 0.3) 5%,
+      rgba(255, 255, 255, 1) 30%
+    ),
+    radial-gradient(
+      circle at 112% 40%,
+      rgba(255, 149, 233, 0.3) 10%,
+      rgba(255, 255, 255, 1) 22%
+    );
+
+  background-blend-mode: multiply;
+}
+
+.pt-4-4 {
+  padding-top: 4rem;
 }
 
 @media (max-width: 1024px) {

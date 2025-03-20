@@ -19,12 +19,14 @@ import { Link, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import StartupStudioLogo from '../../../assets/images/startup-studio-new-logo.png'
 
 import Footer from '../../../components/Footer'
+import Faq from '../../../components/FAQ/Faq'
 const ChooseLogin = () => {
   const history = useHistory()
   const dispatch = useDispatch()
   const isLoading = useSelector((state) => state.user.loginLoading)
   const [user, setUser] = useState({})
   const location = useLocation()
+  const [faqModal, setFaqModal] = useState(false)
 
   const confirmEmail = location?.state?.confirmEmail
 
@@ -158,13 +160,13 @@ const ChooseLogin = () => {
               </Link>
             </li>
             <li>
-              <Link
-                className='fs-13 fw-medium'
-                to='/faq'
+              <span
+                className='fs-13 fw-medium cursor-pointer'
+                onClick={() => setFaqModal(true)}
                 style={{ color: '#000000' }}
               >
                 FAQS
-              </Link>
+              </span>
             </li>
             <li>
               <Link
@@ -186,6 +188,7 @@ const ChooseLogin = () => {
             </li>
           </ul>
         </nav>
+        <Faq isOpen={faqModal} setIsOpen={setFaqModal} />
       </div>
 
       <Row className='m-0 p-0 align-items-center center-content justify-evenly'>

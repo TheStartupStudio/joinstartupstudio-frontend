@@ -24,7 +24,9 @@ function PublicLayout({ children }) {
         id='content'
         style={{ width: '100%' }}
         className={`${
-          location.pathname === '/register' || location.pathname === '/payment'
+          location.pathname === '/register' ||
+          location.pathname === '/payment' ||
+          location.pathname === '/contact'
             ? 'blue-wrapper'
             : ''
         }`}

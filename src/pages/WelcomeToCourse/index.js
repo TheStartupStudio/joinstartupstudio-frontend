@@ -19,14 +19,6 @@ import anastasiaPic from '../../assets/images/academy-icons/thisisyourjourney.pn
 import threePeople from '../../assets/images/academy-icons/three-people-icons.png'
 import understandingEpic from '../../assets/images/academy-icons/understandingE.png'
 import valuePropPic from '../../assets/images/academy-icons/value-prop.png'
-import branding from '../../assets/videos/Branding.mov'
-import creatingValue from '../../assets/videos/Creating-a-Value-Proposition.mov'
-import applyStory from '../../assets/videos/How-to-Apply-Story-to-Entrepreneurship.mov'
-import innovation from '../../assets/videos/Innovation.mov'
-import sellingYourself from '../../assets/videos/Selling-Yourself.mov'
-import businessPlan from '../../assets/videos/The-Art-of-Building-a-Business-Plan.mov'
-import powerOfStory from '../../assets/videos/The-Power-of-Story.mov'
-import understandingE from '../../assets/videos/Understanding-Entrepreneurship.mov'
 import AcademyBtn from '../../components/AcademyBtn'
 import CourseForEveryone from '../../components/WelcomeToCourse/CourseForEveryone'
 import InfoPageHeader from '../../components/WelcomeToCourse/InfoPageHeader'
@@ -48,8 +40,8 @@ function WelcomeToCourse() {
         className={'welcome-course-header'}
         linkColor={'#ffffff'}
       />
-      <main className='p-inl-13'>
-        <section className='d-flex justify-content-center flex-column mt-4-4'>
+      <main className='p-inl-13 background-welcome pt-4-4'>
+        <section className='d-flex justify-content-center flex-column'>
           <h2 className='fs-5 text-black'>
             Welcome to
             <br />
@@ -151,42 +143,42 @@ function WelcomeToCourse() {
             >
               <VideoThumbnail
                 imageSource={understandingEpic}
-                videoUrl={understandingE}
+                videoUrl='https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/Understanding Entrepreneurship.mov'
                 content={'Understanding Entrepreneurship'}
               />
               <VideoThumbnail
                 imageSource={powerOfStoryPic}
-                videoUrl={powerOfStory}
+                videoUrl='https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/The Power of Story.mov'
                 content={'The Power of Story'}
               />
               <VideoThumbnail
                 imageSource={applyStoryPic}
-                videoUrl={applyStory}
+                videoUrl='https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/How to Apply Story to Entrepreneurship.mov'
                 content={'How to Apply Story to Entrepreneurship'}
               />
               <VideoThumbnail
                 imageSource={innovationPic}
-                videoUrl={innovation}
+                videoUrl='https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/Innovation.mov'
                 content={'Innnovation'}
               />
               <VideoThumbnail
                 imageSource={valuePropPic}
-                videoUrl={creatingValue}
+                videoUrl='https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/Creating a Value Proposition.mov'
                 content={'Creating a Value Proposition'}
               />
               <VideoThumbnail
                 imageSource={brandingPic}
-                videoUrl={branding}
+                videoUrl='https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/Branding.mov'
                 content={'Branding'}
               />
               <VideoThumbnail
                 imageSource={sellingYourselfPic}
-                videoUrl={sellingYourself}
+                videoUrl='https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/Selling Yourself.mov'
                 content={'Selling Yourself'}
               />
               <VideoThumbnail
                 imageSource={businessPlanPic}
-                videoUrl={businessPlan}
+                videoUrl='https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/The Art of Building a Business Plan.mov'
                 content={'The Art of Building a Business Plan'}
               />
             </div>

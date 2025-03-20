@@ -148,6 +148,10 @@ const WelcomeToCourse = React.lazy(() =>
 const ExplorePlatform = React.lazy(() =>
   import('../pages/WelcomeToCourse/ExplorePlatform')
 )
+const ExploreCourse = React.lazy(() =>
+  import('../pages/WelcomeToCourse/ExploreCourse')
+)
+const ContactUs = React.lazy(() => import('../pages/ContactUs/index'))
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
@@ -409,6 +413,8 @@ export const studentRoutes = [
 export const publicRoutes = [
   { path: '/', component: WelcomeToCourse, exact: true },
   { path: '/explore-the-platform', component: ExplorePlatform, exact: true },
+  { path: '/explore-the-course', component: ExploreCourse, exact: true },
+  { path: '/contact', component: ContactUs, exact: true },
   { path: '/verify-email', component: VerifyEmailByCode, exact: false },
   { path: '/lts-secure', component: SecurePage, exact: true },
   { path: '/forgot-password', component: ForgotPassword, exact: true },

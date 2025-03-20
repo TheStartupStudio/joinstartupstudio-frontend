@@ -9,7 +9,7 @@ function ExplorePlatform() {
   return (
     <>
       <InfoPageHeader linkColor={'#000000'} platformClass={'d-none'} />
-      <main className='p-inl-13'>
+      <main className='p-inl-13 background-platform'>
         <h1 className='fw-light fs-42 text-center text-black text-uppercase mt-5'>
           Explore the Platform
         </h1>
