@@ -152,6 +152,9 @@ const ExploreCourse = React.lazy(() =>
   import('../pages/WelcomeToCourse/ExploreCourse')
 )
 const ContactUs = React.lazy(() => import('../pages/ContactUs/index'))
+const LeadershipJournal = React.lazy(() =>
+  import('../pages/LeadershipJournal/index')
+)
 
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
@@ -195,6 +198,7 @@ export const mutualRoutes = [
   { path: '/verify', component: VerifyEmail },
   { path: '/my-account', component: MyAccount, exact: true },
   { path: '/logout', component: Logout },
+  { path: '/leadership-journal', component: LeadershipJournal, exact: true },
   {
     path: '/iamr',
     component: IamrCertificationSystem,

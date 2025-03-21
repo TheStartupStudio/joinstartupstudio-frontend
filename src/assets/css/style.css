@@ -4140,13 +4140,6 @@ wave > wave:first-child {
   grid-template-columns: 3fr 4fr;
   padding-inline: 40px;
   padding-top: 20px;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 1) 10%,
-    rgba(234, 249, 251, 1) 50%,
-    rgba(255, 255, 255, 1) 90%
-  ) !important;
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
   gap: 2.5rem;
 }
 
@@ -4597,6 +4590,12 @@ wave > wave:first-child {
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
+.active-leadership {
+  background-color: #e0ebc5;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
 .master-class-container {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 6px 5px;
   border-radius: 8px;
@@ -4668,6 +4667,38 @@ wave > wave:first-child {
 
 .hover-certificate:hover {
   color: #51c7df;
+}
+
+.bck-dashboard {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 10%,
+    rgba(234, 249, 251, 1) 50%,
+    rgba(255, 255, 255, 1) 90%
+  ) !important;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.custom-select-course {
+  grid-area: 1 / 1 / 2 / 3;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: hsl(0, 0%, 20%);
+  margin-left: 2px;
+  margin-right: 2px;
+  box-sizing: border-box;
+}
+
+.lead-class {
+  box-shadow: 0 -6px 8px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 10%,
+    rgba(224, 235, 197, 0.25) 50%,
+    rgba(255, 255, 255, 1) 90%
+  ) !important;
 }
 
 @media (max-width: 1024px) {

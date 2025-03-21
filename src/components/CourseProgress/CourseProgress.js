@@ -100,7 +100,7 @@ function CourseProgress() {
                   <div className='d-flex flex-column gap-3'>
                     <ProgressDone title={'Myths of Entrepreneurship'} />
                     <ProgressDone title={'Definition of Entrepreneurship'} />
-                    <InProggresCourse title={'Myths of Entrepreneurship'} />
+                    <InProggresCourse title={'Reasons Why Startups Fail'} />
                     <CourseNotStarted
                       title={'Skills and Traits of Effective Entrepreneus'}
                     />

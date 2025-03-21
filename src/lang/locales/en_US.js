@@ -418,6 +418,7 @@ const EnLangs = {
   'journal.download_jpg': 'Download JPG',
   'journal.get_your_certificate': 'Get your certificate',
   'journal.print_certificate': 'Print Certificate',
+  'journal.header': 'Leadership Journal',
 
   //Portfolio
   'portfolio.edit_page_Summary_first': 'Summary ',
@@ -649,7 +650,7 @@ const EnLangs = {
   'my_journal.search_journals': 'Search journals',
   'my_journal.created_page': 'My Journal:',
   'my_journal.select_lessons': 'Select Lessons to View',
-  'my_journal.review_course_progess':'Review Course Progess',
+  'my_journal.review_course_progess': 'Review Course Progess',
 
   //Reset passsword
   'alert.fill_password_fields': 'Please fill password fields',

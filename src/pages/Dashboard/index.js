@@ -118,7 +118,7 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className='d-grid academy-dashboard-layout'>
+        <div className='d-grid academy-dashboard-layout bck-dashboard'>
           <UserDetails
             profilePic={profilePic}
             userName={'Kenia Anders'}
