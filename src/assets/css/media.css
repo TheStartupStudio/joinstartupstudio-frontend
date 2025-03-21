@@ -2245,7 +2245,8 @@
 
 @media (min-width: 991px) {
   .beyound-all-videos-thumb img {
-    height: 180px !important;
+    /* height: 180px !important; */
+    border-radius: 25px;
   }
 
   .beyound-all-videos-thumb.spotlight img {
