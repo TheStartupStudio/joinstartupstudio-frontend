@@ -259,9 +259,9 @@ export default function BeyondYourCourse() {
   return (
     <>
       <div id='main-body'>
-        <div className='container-fluid gradient-background-master'>
+        
           <div className='row'>
-            <div >
+            
               <div>
               <div className='header-select-btn'>
               <div className='account-page-padding'>
@@ -315,6 +315,7 @@ export default function BeyondYourCourse() {
                           />
               </div>
                 </div>
+                <div className='gradient-background-master'>
                 <div className='videos-container'>
                 <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
                   <div className='title-container'>
@@ -587,7 +588,8 @@ export default function BeyondYourCourse() {
                           />
                         ))}
                     </div>
-                    <div className='arrow-icon-1 justify-content-start'>
+                    </div>
+                    {/* <div className='arrow-icon-1 justify-content-start'>
                       <button
                         className='videos-track'
                         onClick={() =>
@@ -603,11 +605,11 @@ export default function BeyondYourCourse() {
                           className='videos-track-icon'
                         />
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
-            </div>
+            
             {/* <div className='col-12 col-xl-3 px-0'>
               <hr
                 className='d-block d-xl-none mx-auto mt-1 mt-2 mb-3'
@@ -625,7 +627,7 @@ export default function BeyondYourCourse() {
               </div>
             </div> */}
           </div>
-        </div>
+        
       </div>
       {videoData && (
         <VideoModal

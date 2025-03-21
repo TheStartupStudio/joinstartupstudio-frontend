@@ -112,7 +112,13 @@ export default function VideoView(props) {
               onClick={() => setShowVideoModal(true)}
             >
               <>
-                <h5>
+                <h5 style={{
+                      display: 'flex',
+                      
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '200px'
+                }}>
                   <IntlMessages id={props.title} />
                 </h5>
                 {/* <p
@@ -135,10 +141,10 @@ export default function VideoView(props) {
           )}
         </div>
       ) : (
-        <div className='card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2'>
-          <div className='card mobile-card'>
+        <div className='card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2' style={{width:'205px',borderRadius:'25px',marginRight:'3.3rem'}}>
+          <div>
             <Link to={url ? url : '#'}>
-              <div className='beyond-your-course-video-thumb beyound-all-videos-thumb'>
+              <div className='beyond-your-course-video-thumb beyound-all-videos-thumb' style={{width:'195px'}}>
                 <div
                   style={{
                     position: 'absolute',
@@ -171,9 +177,9 @@ export default function VideoView(props) {
                   }}
                 >
                   <img
+                  className='border-radius-25'
                     src={props.thumbnail}
                     width='100%'
-                    border-radius='25px'
                     alt='#'
                     style={{
                       objectFit:
@@ -196,7 +202,7 @@ export default function VideoView(props) {
                     <h5>
                       <IntlMessages id={props.title} />
                     </h5>
-                    <p
+                    {/* <p
                       className='card-text'
                       style={{
                         textAlign:
@@ -208,7 +214,7 @@ export default function VideoView(props) {
                       ) : (
                         props.description
                       )}
-                    </p>
+                    </p> */}
                   </>
                 )}
               </div>

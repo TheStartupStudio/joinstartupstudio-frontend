@@ -5,9 +5,13 @@ import IntlMessages from '../../utils/IntlMessages'
 import { changeSidebarState } from '../../redux'
 import Video from '../../components/Video'
 import ReactPaginate from 'react-paginate'
+import { Link } from 'react-router-dom'
 import '../Saved/index.css'
 import { setBackButton } from '../../redux/backButtonReducer'
 import './index.css'
+import Select from 'react-select'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export default function GuidanceEncouragement() {
   const [pageTitle, setPageTitle] = useState('')
@@ -25,6 +29,27 @@ export default function GuidanceEncouragement() {
     { id: 2, title: "Career Guidance Videos" },
     { id: 3, title: "Story in Motion Podcast Episodes" }
   ];
+   const [selectedLanguage, setSelectedLanguage] = useState(null);
+   const [filterBy,setFilterBy]=useState(null);
+
+   const filters=[
+    {value:'tl',label:'Title'},
+    {value:'dt',label:'Date'},
+   ]
+  
+    const options = [
+      { value: 'en', label: 'English' },
+      { value: 'es', label: 'Spanish' }
+    ]
+  
+    const handleChange = (selectedOption) => {
+      setSelectedLanguage(selectedOption)
+      console.log('Selected Language:', selectedOption.value)
+    }
+
+    const handleFilter=(selectedFilter)=>{
+      setFilterBy(selectedFilter)
+    }
 
   const dispatch = useDispatch()
 
@@ -103,10 +128,10 @@ export default function GuidanceEncouragement() {
 
   return (
     <div id='main-body'>
-      <div className='container-fluid gradient-background'>
+      <div>
         <div className='row'>
           <div className='col-12 col-xl-12'>
-            <div className='account-page-padding page-border'>
+            <div className='account-padding-page'>
               <div
                 style={
                   pageVideos && pageVideos.length < 1
@@ -114,20 +139,69 @@ export default function GuidanceEncouragement() {
                     : null
                 }
               >
+                <div style={{margin:'0 1rem'}}>
+                  <div style={{marginBottom:'2rem'}}>
+                  <Link to='/beyond-your-course' style={{color:'#000000'}}>Master Classes &gt; </Link>
+                  <span>Encouragement Videos </span>
+                  </div>
+                 <div className='d-flex justify-content-between'>
                 <div>
-                  <h3 className='page-title'>
+                <h3 className='page-title'>
                     {pageTitle && <span> {pageTitle} </span>}
                   </h3>
-                  <p className='page-description'>
+                  <p className='page-description' style={{fontSize:'15px'}}>
                     {pageDescription && (
                       <IntlMessages id={`${pageDescription}`} />
                     )}
                   </p>
                 </div>
+                  <div
+                 style={{
+                                  display: 'inline-block',
+                                  borderRadius: '8px',
+                                  background:
+                                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                                  padding: '1px', // Adjust this value to control border thickness
+                                  height: '58px',
+                                  boxShadow: '0px 4px 10px 0px #00000040'
+                                }}>  
+                    <Select
+                                             options={options}
+                                             value={selectedLanguage}
+                                             onChange={handleChange}
+                                             placeholder='Select Language'
+                                             menuPortalTarget={document.body}
+                                             isSearchable={false}
+                                             styles={{
+                                               menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                               control: (base) => ({
+                                                 ...base,
+                                                 width: '250px', // Fixed width
+                                                 minHeight: '40px', // Fixed height
+                                                 overflow: 'hidden',
+                                                 border: 'none', // Remove the default border
+                                                 borderRadius: '6px' // Slightly smaller than the outer container radius
+                                               }),
+                                               singleValue: (base) => ({
+                                                 ...base,
+                                                 whiteSpace: 'nowrap',
+                                                 overflow: 'hidden',
+                                                 textOverflow: 'ellipsis'
+                                               })
+                                             }}
+                                             components={{
+                                               IndicatorSeparator: () => null // Remove separator
+                                             }}
+                                           /></div>
+                 </div>
+              
+                </div>
+           <div className='gradient-background-master'>
                 <div className="level-navigation">
                   {levels.map((level, index) => (
                     <div
                       key={level.id}
+                     
                       className={`course-level ${activeLevel === index ? 'active-level' : ''}`}
                       onClick={() => setActiveLevel(index)}
                     >
@@ -135,7 +209,64 @@ export default function GuidanceEncouragement() {
                     </div>
                   ))}
                 </div>
-                <div className='row videos-container'>
+                <div className="d-flex justify-content-between">
+                  {/* <div> */}
+                    <input type='text'
+                          className='course-btn search-journal search-journal-input'
+                          name='searchedNote'
+                          placeholder='Search journals'
+                          // onChange={handleJournalSearch}
+                          style={{
+                          backgroundColor:'white',
+                          border: 'none',
+                          outline: 'none',
+                          width: '400px'
+                          }}/>
+                  <FontAwesomeIcon icon={faSearch} className="search-icon" style={{width:'20px',height:'20px', color: '#707070',position:'relative',right:'32%',top:'20px'}} />
+                  {/* </div> */}
+                <div
+                 style={{
+                                  display: 'inline-block',
+                                  borderRadius: '8px',
+                                  background:
+                                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                                  padding: '1px', // Adjust this value to control border thickness
+                                  height: '58px',
+                                  boxShadow: '0px 4px 10px 0px #00000040',
+                             
+                                }}>  
+                    <Select
+                                             options={filters}
+                                             value={filterBy}
+                                             onChange={handleFilter}
+                                             placeholder='Sort By'
+                                             menuPortalTarget={document.body}
+                                             isSearchable={false}
+                                             styles={{
+                                               menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                               control: (base) => ({
+                                                 ...base,
+                                                 width: '157px', // Fixed width
+                                                 minHeight: '40px', // Fixed height
+                                                 overflow: 'hidden',
+                                                 border: 'none', // Remove the default border
+                                                 borderRadius: '6px' // Slightly smaller than the outer container radius
+                                               }),
+                                               singleValue: (base) => ({
+                                                 ...base,
+                                                 whiteSpace: 'nowrap',
+                                                 overflow: 'hidden',
+                                                 textOverflow: 'ellipsis'
+                                               })
+                                             }}
+                                             components={{
+                                               IndicatorSeparator: () => null // Remove separator
+                                             }}
+                                           /></div>
+
+                                           </div>
+                 
+                <div className='row videos-container '>
                   {currentPageVideos?.map((video, index) => (
                     <Video
                       id={video.id}
@@ -155,6 +286,7 @@ export default function GuidanceEncouragement() {
                       type={'view-all'}
                     />
                   ))}
+                </div>
                 </div>
               </div>
               {pageVideos.length > videosPerPage && (
