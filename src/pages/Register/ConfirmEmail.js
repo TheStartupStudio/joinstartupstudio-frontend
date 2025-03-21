@@ -23,7 +23,7 @@ function ConfirmEmail() {
 
           <Link
             to={{
-              pathname: '/',
+              pathname: '/login',
               state: { confirmEmail: true }
             }}
             className='fw-medium fs-15 blue-color'

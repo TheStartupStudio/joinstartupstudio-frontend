@@ -1,13 +1,15 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import AcademyBtn from '../../components/AcademyBtn'
 import ModalInput from '../../components/ModalInput/ModalInput'
 import InfoPageHeader from '../../components/WelcomeToCourse/InfoPageHeader'
 import IntlMessages from '../../utils/IntlMessages'
+import HowWeProtect from '../../components/HowWeProtect'
 
 function Register() {
+  const [protectModal, setProtectModal] = useState(false)
   const history = useHistory()
 
   return (
@@ -166,7 +168,10 @@ function Register() {
               <p className='fs-13 fw-light text-black mb-0'>
                 The security of your information is important.
               </p>
-              <p className='fs-13 fw-medium blue-color '>
+              <p
+                className='fs-13 fw-medium blue-color cursor-pointer '
+                onClick={() => setProtectModal(true)}
+              >
                 <IntlMessages id='login.protect_data' />
               </p>
             </div>
@@ -180,6 +185,7 @@ function Register() {
             Log in here
           </Link>
         </section>
+        <HowWeProtect isOpen={protectModal} setIsOpen={setProtectModal} />
       </main>
     </>
   )

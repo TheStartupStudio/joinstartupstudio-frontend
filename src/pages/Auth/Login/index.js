@@ -305,7 +305,7 @@ const ChooseLogin = () => {
               </p>
               <p
                 onClick={() => setProtectModal(true)}
-                className='link fw-bold  font-12 security-text blue-color cursor-pointer'
+                className='link fw-bold font-12 security-text blue-color cursor-pointer'
               >
                 <IntlMessages id='login.protect_data' />
               </p>

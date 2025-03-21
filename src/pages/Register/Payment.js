@@ -60,7 +60,7 @@ function Payment() {
 
         <p className='text-black fs-15'>
           If you have any questions, contact us at{' '}
-          <a href='/'>mycourse@learntostart.com.</a>
+          <a href='#'>mycourse@learntostart.com.</a>
         </p>
 
         <div className='d-flex gap-1'>
