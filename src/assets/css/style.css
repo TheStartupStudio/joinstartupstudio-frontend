@@ -751,8 +751,8 @@ a.sidenav.active {
 }
 
 .page-title {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -4072,10 +4072,6 @@ wave > wave:first-child {
   transform: rotate(180deg);
 }
 
-.bold-page-title {
-  font-weight: 700;
-}
-
 .css-b62m3t-container {
   position: relative !important;
   z-index: 1000;
@@ -4108,6 +4104,10 @@ wave > wave:first-child {
 .css-hlgwow {
   padding-block: 0.75rem !important;
   height: 56px;
+}
+
+.css-mfye68-control:hover {
+  box-shadow: none !important;
 }
 
 .h-95 {
@@ -4634,8 +4634,8 @@ wave > wave:first-child {
     ),
     radial-gradient(
       circle at left center,
-      rgba(200, 200, 200, 0.6) 7%,
-      rgba(255, 255, 255, 1) 27%
+      rgba(153, 204, 51, 0.2) 7%,
+      rgba(255, 255, 255, 0.2) 27%
     ),
     radial-gradient(
       circle at 112% 85%,
@@ -4644,6 +4644,10 @@ wave > wave:first-child {
     );
 
   background-blend-mode: multiply;
+}
+
+.css-p4evts-control:hover {
+  box-shadow: none;
 }
 
 .background-welcome {
@@ -4693,12 +4697,11 @@ wave > wave:first-child {
 
 .lead-class {
   box-shadow: 0 -6px 8px rgba(0, 0, 0, 0.05);
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 1) 10%,
-    rgba(224, 235, 197, 0.25) 50%,
-    rgba(255, 255, 255, 1) 90%
-  ) !important;
+  background: radial-gradient(
+    circle at 50% 24%,
+    rgba(224, 235, 197, 0.4) 5%,
+    rgba(255, 255, 255, 0.9) 80%
+  );
 }
 
 .gray-leadership {
@@ -4732,6 +4735,14 @@ wave > wave:first-child {
 
 .h-fit-content {
   height: fit-content;
+}
+
+.search-journals-width {
+  width: 39%;
+}
+
+.leadership-layout {
+  grid-template-columns: 3fr 5fr;
 }
 
 @media (max-width: 1024px) {

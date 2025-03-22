@@ -1,10 +1,12 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { collapseTrue } from '../../redux/sidebar/Actions'
 
 const Header = (props) => {
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
+  const dispatch = useDispatch()
 
   return (
     <div
@@ -12,7 +14,7 @@ const Header = (props) => {
       style={{ justifyContent: isCollapsed && 'space-between' }}
       onClick={() => props.hideHeaderIcons?.()}
     >
-      <NavLink to='/dashboard'>
+      <NavLink to='/dashboard' onClick={() => dispatch(collapseTrue())}>
         <img
           src={AcademyLogo}
           alt='logo'

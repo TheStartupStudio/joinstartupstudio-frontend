@@ -1,7 +1,8 @@
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
 
-function SectionThree() {
+function SectionThree({ setIsReflection }) {
+  setIsReflection(false)
   const paragraphs = [
     {
       id: 1,
@@ -18,8 +19,8 @@ function SectionThree() {
   ]
 
   return (
-    <>
-      <div className='col-4'>
+    <div className='leadership-layout d-grid gap-5'>
+      <div className='w-100'>
         <YourInstructor
           instructorName={'DR. Leslie Williams'}
           profilePic={
@@ -34,7 +35,7 @@ function SectionThree() {
         title={'Introduction to How do I prove it?'}
         paragraphs={paragraphs}
       />
-    </>
+    </div>
   )
 }
 

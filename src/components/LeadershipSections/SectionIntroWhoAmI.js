@@ -1,7 +1,8 @@
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 import SectionsWrapper from './SectionsWrapper'
 
-function IntroWhoAmI() {
+function IntroWhoAmI({ setIsReflection }) {
+  setIsReflection(false)
   const paragraphs = [
     {
       id: 1,
@@ -18,8 +19,8 @@ function IntroWhoAmI() {
   ]
 
   return (
-    <>
-      <div className='col-4'>
+    <div className='leadership-layout d-grid gap-5'>
+      <div className='w-100'>
         <YourInstructor
           instructorName={'DR. Leslie Williams'}
           profilePic={
@@ -34,7 +35,7 @@ function IntroWhoAmI() {
         title={'Introduction to Who am I?'}
         paragraphs={paragraphs}
       />
-    </>
+    </div>
   )
 }
 

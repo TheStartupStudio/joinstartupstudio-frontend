@@ -6,17 +6,17 @@ import bobProfile from '../../assets/images/academy-icons/bob-allen.png'
 import bobPic from '../../assets/images/academy-icons/bob.png'
 import brandingPic from '../../assets/images/academy-icons/branding.png'
 import businessPlanPic from '../../assets/images/academy-icons/business-plan.png'
-import chart from '../../assets/images/academy-icons/chart.png'
+import chart from '../../assets/images/academy-icons/svg/graph-up.svg'
 import entrepreneur from '../../assets/images/academy-icons/entrepreneur.png'
 import garyProfile from '../../assets/images/academy-icons/gary-profile.jpg'
 import garyPic from '../../assets/images/academy-icons/garyc.png'
 import innovationPic from '../../assets/images/academy-icons/innovation.png'
 import powerOfStoryPic from '../../assets/images/academy-icons/power-of-story.png'
-import refresh from '../../assets/images/academy-icons/refresh.png'
-import search from '../../assets/images/academy-icons/search.png'
+import refresh from '../../assets/images/academy-icons/svg/refresh.svg'
+import search from '../../assets/images/academy-icons/svg/search.svg'
 import sellingYourselfPic from '../../assets/images/academy-icons/selling-yourself.png'
 import anastasiaPic from '../../assets/images/academy-icons/thisisyourjourney.png'
-import threePeople from '../../assets/images/academy-icons/three-people-icons.png'
+import threePeople from '../../assets/images/academy-icons/svg/three-people.svg'
 import understandingEpic from '../../assets/images/academy-icons/understandingE.png'
 import valuePropPic from '../../assets/images/academy-icons/value-prop.png'
 import AcademyBtn from '../../components/AcademyBtn'
@@ -46,7 +46,7 @@ function WelcomeToCourse() {
             Welcome to
             <br />
             <span className='fs-3 fw-bold'>
-              THE STARTUP STUDIOS'S COURSE IN ENTREPRENEURSHIP
+              THE STARTUP STUDIO'S COURSE IN ENTREPRENEURSHIP
             </span>
           </h2>
           <div className='d-flex gap-1'>
@@ -189,7 +189,7 @@ function WelcomeToCourse() {
         <section className='mt-4-4 d-flex justify-content-between align-items-center px-5 py-4 ready-to-start'>
           <h2 className='fs-4 fw-bold text-black'>READY TO GET STARTED?</h2>
           <AcademyBtn
-            title={"LET'S DO IT"}
+            title={"LET'S DO IT! "}
             icon={faArrowRight}
             onClick={navigateRegister}
           />
@@ -345,7 +345,7 @@ function WelcomeToCourse() {
           </div>
         </section>
 
-        <section className='mt-4-4 px-5 py-4 ready-to-start'>
+        <section className='mt-4-4 px-5 py-4 ready-to-start mb-5'>
           <h2 className='text-uppercase fs-3 fw-bold text-black'>
             Ready to Begin Your Entrepreneurial Journey?
           </h2>

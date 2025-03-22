@@ -20,26 +20,8 @@ const array = [
   'Empathy'
 ]
 
-function Value() {
-  const [reflections, setReflections] = useState([{ id: 1, content: '' }])
-
-  const handleAddReflection = () => {
-    const newReflection = { id: Date.now(), content: '' }
-    setReflections([...reflections, newReflection])
-  }
-
-  const handleRemoveReflection = (id) => {
-    setReflections(reflections.filter((reflection) => reflection.id !== id))
-  }
-
-  const handleContentChange = (id, value) => {
-    setReflections(
-      reflections.map((reflection) =>
-        reflection.id === id ? { ...reflection, content: value } : reflection
-      )
-    )
-  }
-
+function Value({ setIsReflection }) {
+  setIsReflection(true)
   return (
     <div className='d-grid grid-col-2 gap-4'>
       <SectionsWrapper title={'Values'}>

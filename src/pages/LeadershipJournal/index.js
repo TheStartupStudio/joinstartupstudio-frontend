@@ -1,89 +1,29 @@
 import React, { useState } from 'react'
-import Select from 'react-select'
 import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import lockSign from '../../assets/images/academy-icons/lock.png'
 import searchJ from '../../assets/images/academy-icons/search.png'
 import tickSign from '../../assets/images/academy-icons/tick-sign.png'
+import AcademyBtn from '../../components/AcademyBtn'
 import SelectCourses from '../../components/LeadershipJournal/SelectCourses'
-import YourInstructor from '../../components/LeadershipJournal/YourInstructor'
+import Expertise from '../../components/LeadershipSections/Expertise'
+import GoToJournal from '../../components/LeadershipSections/GoToJournal'
 import IntroWhoAmI from '../../components/LeadershipSections/SectionIntroWhoAmI'
 import SectionOne from '../../components/LeadershipSections/SectionOne'
 import SectionThree from '../../components/LeadershipSections/SectionThree'
 import SectionTwo from '../../components/LeadershipSections/SectionTwo'
-import ModalInput from '../../components/ModalInput/ModalInput'
-import IntlMessages from '../../utils/IntlMessages'
 import Value from '../../components/LeadershipSections/Value'
-
-const allTabs = [
-  {
-    title: 'Section One: Who am I?',
-    mainComponent: <SectionOne />,
-    options: [
-      {
-        value: 0,
-        label: 'Intro to Who Am I?',
-        icon: tickSign,
-        textColor: 'text-black',
-        component: <IntroWhoAmI />
-      },
-      {
-        value: 1,
-        label: 'Values',
-        icon: tickSign,
-        textColor: 'text-black',
-        component: <Value />
-      },
-      {
-        value: 2,
-        label: 'Expertise',
-        icon: circleSign,
-        textColor: 'text-black'
-        // component: <Expertise />
-      },
-      {
-        value: 3,
-        label: 'Experience',
-        icon: lockSign,
-        textColor: 'text-secondary'
-        // component: <Experience />
-      },
-      {
-        value: 4,
-        label: 'Style',
-        icon: lockSign,
-        textColor: 'text-secondary'
-        // component: <Style />
-      }
-    ]
-  },
-  {
-    title: 'Section Two: What can I do?',
-    mainComponent: <SectionTwo />,
-    options: []
-  },
-  {
-    title: 'Section Three: How do I prove it?',
-    mainComponent: <SectionThree />,
-    options: []
-  }
-]
+import ModalInput from '../../components/ModalInput/ModalInput'
+import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
+import IntlMessages from '../../utils/IntlMessages'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 function LeadershipJournal() {
-  const [selectedLanguage, setSelectedLanguage] = useState(null)
+  const [isReflection, setIsReflection] = useState(false)
+
   const [activeTabData, setActiveTabData] = useState({
     activeTab: 0,
     option: null
   })
-
-  const options = [
-    { value: 'en', label: 'English' },
-    { value: 'es', label: 'Spanish' }
-  ]
-
-  const handleChange = (selectedOption) => {
-    setSelectedLanguage(selectedOption)
-    console.log('Selected Language:', selectedOption.value)
-  }
 
   const renderSection = () => {
     const { activeTab, option } = activeTabData
@@ -91,6 +31,132 @@ function LeadershipJournal() {
       ? allTabs[activeTab]?.options[option?.value]?.component
       : allTabs[activeTab]?.mainComponent
   }
+
+  const allTabs = [
+    {
+      title: 'Section One: Who am I?',
+      mainComponent: <SectionOne setIsReflection={setIsReflection} />,
+      options: [
+        {
+          value: 0,
+          label: 'Intro to Who Am I?',
+          icon: tickSign,
+          textColor: 'text-black',
+          component: <IntroWhoAmI setIsReflection={setIsReflection} />
+        },
+        {
+          value: 1,
+          label: 'Values',
+          icon: tickSign,
+          textColor: 'text-black',
+          component: <Value setIsReflection={setIsReflection} />
+        },
+        {
+          value: 2,
+          label: 'Expertise',
+          icon: circleSign,
+          textColor: 'text-black',
+          component: <Expertise setIsReflection={setIsReflection} />
+        },
+        {
+          value: 3,
+          label: 'Experience',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        },
+        {
+          value: 4,
+          label: 'Style',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        }
+      ]
+    },
+    {
+      title: 'Section Two: What can I do?',
+      mainComponent: <SectionTwo setIsReflection={setIsReflection} />,
+      options: [
+        {
+          value: 0,
+          label: 'Intro to What can I do',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        },
+        {
+          value: 1,
+          label: 'Teamwork',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        },
+        {
+          value: 2,
+          label: 'Initiative',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        },
+        {
+          value: 3,
+          label: 'Methodology',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        },
+        {
+          value: 4,
+          label: 'Self-Assessment',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        }
+      ]
+    },
+    {
+      title: 'Section Three: How do I prove it?',
+      mainComponent: <SectionThree setIsReflection={setIsReflection} />,
+      options: [
+        {
+          value: 0,
+          label: 'Intro to How do I prove it?',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        },
+        {
+          value: 1,
+          label: 'Outcomes',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        },
+        {
+          value: 2,
+          label: 'Feedback',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        },
+        {
+          value: 3,
+          label: 'Iteration',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        },
+        {
+          value: 4,
+          label: 'Vision',
+          icon: lockSign,
+          textColor: 'text-secondary',
+          component: <GoToJournal />
+        }
+      ]
+    }
+  ]
 
   return (
     <div className='container-fluid'>
@@ -108,46 +174,7 @@ function LeadershipJournal() {
               </p>
             </div>
 
-            <div
-              style={{
-                display: 'inline-block',
-                borderRadius: '8px',
-                background:
-                  'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                padding: '1px', // Adjust this value to control border thickness
-                height: '58px',
-                boxShadow: '0px 4px 10px 0px #00000040'
-              }}
-            >
-              <Select
-                options={options}
-                value={selectedLanguage}
-                onChange={handleChange}
-                placeholder='Select Language'
-                menuPortalTarget={document.body}
-                isSearchable={false}
-                styles={{
-                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                  control: (base) => ({
-                    ...base,
-                    width: '250px',
-                    minHeight: '40px',
-                    overflow: 'hidden',
-                    border: 'none',
-                    borderRadius: '6px'
-                  }),
-                  singleValue: (base) => ({
-                    ...base,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  })
-                }}
-                components={{
-                  IndicatorSeparator: () => null
-                }}
-              />
-            </div>
+            <SelectLanguage />
           </div>
         </div>
         <div className='academy-dashboard-layout lead-class mb-5'>
@@ -169,7 +196,7 @@ function LeadershipJournal() {
             ))}
           </div>
           <div className='mt-4 d-flex justify-content-between'>
-            <div className='col-5'>
+            <div className='search-journals-width'>
               <ModalInput
                 id={'searchBar'}
                 type={'search'}
@@ -178,11 +205,16 @@ function LeadershipJournal() {
                 imageStyle={{ filter: 'grayscale(1)' }}
               />
             </div>
-            <SelectCourses
-              selectedCourse={activeTabData}
-              setSelectedCourse={setActiveTabData}
-              options={allTabs[activeTabData.activeTab].options}
-            />
+            <div className='d-flex gap-3'>
+              <SelectCourses
+                selectedCourse={activeTabData}
+                setSelectedCourse={setActiveTabData}
+                options={allTabs[activeTabData.activeTab].options}
+              />
+              {isReflection && (
+                <AcademyBtn title={'Save and Continue '} icon={faArrowRight} />
+              )}
+            </div>
           </div>
           <div>
             <div className='d-flex mt-4 gap-5'>{renderSection()}</div>

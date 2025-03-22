@@ -29,7 +29,7 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse }) {
   )
 
   return (
-    <div className='col-3'>
+    <div>
       <Select
         options={options}
         value={selectedCourse?.option}
@@ -41,7 +41,7 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse }) {
           menuPortal: (base) => ({ ...base, zIndex: 9999 }),
           control: (base) => ({
             ...base,
-            width: '100%',
+            width: '275px',
             minHeight: '40px',
             overflow: 'hidden',
             borderRadius: '6px',

@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import LeadLogo from '../../assets/images/academy-icons/Group.png'
-import MasterLogo from '../../assets/images/academy-icons/Icon.Master Classes.png'
-import FolderSidebarImage from '../../assets/images/academy-icons/dashboard.png'
 import ExpandLogo from '../../assets/images/academy-icons/fast-arrow-right.png'
-import EntLogo from '../../assets/images/academy-icons/icon.png'
-import LocationLogo from '../../assets/images/academy-icons/location.png'
-import PortfolioLogo from '../../assets/images/academy-icons/portfolio.png'
 import ProfilePhoto from '../../assets/images/academy-icons/profile.jpeg'
 import SettingsLogo from '../../assets/images/academy-icons/settings 4.png'
+import SettingsIcon from '../../assets/images/academy-icons/svg/settings.svg'
+import CoursEnIcon from '../../assets/images/academy-icons/svg/course-in-e.svg'
+import DashIcon from '../../assets/images/academy-icons/svg/dashboard.svg'
+import IntroToIcon from '../../assets/images/academy-icons/svg/intro-to-course.svg'
+import LeadershipIcon from '../../assets/images/academy-icons/svg/leadership-journal.svg'
+import MasterIcon from '../../assets/images/academy-icons/svg/master-classes.svg'
+import PortfolioIcon from '../../assets/images/academy-icons/svg/my-portfolio.svg'
 import { setAccordionToggled } from '../../redux'
-import SidebarItem from './SidebarItem'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
+import SidebarItem from './SidebarItem'
 
 const InstructorSidebar = (props) => {
   const [isTextVisible, setIsTextVisible] = useState(true)
@@ -55,7 +56,7 @@ const InstructorSidebar = (props) => {
           }}
           to={'/dashboard'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={FolderSidebarImage}
+          srcImage={DashIcon}
           title={isTextVisible && !isCollapsed && 'Dashboard'}
           isDropdown={false}
         />
@@ -67,7 +68,7 @@ const InstructorSidebar = (props) => {
           }}
           to={'/my-course-in-entrepreneurship'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={LocationLogo}
+          srcImage={IntroToIcon}
           title={isTextVisible && !isCollapsed && 'Intro to course'}
           isDropdown={false}
         />
@@ -79,7 +80,7 @@ const InstructorSidebar = (props) => {
           }}
           to={'/dashboard'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={EntLogo}
+          srcImage={CoursEnIcon}
           title={isTextVisible && !isCollapsed && 'Course in enterpreneurship'}
           isDropdown={false}
         />
@@ -91,7 +92,7 @@ const InstructorSidebar = (props) => {
           }}
           to={'/beyond-your-course'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={MasterLogo}
+          srcImage={MasterIcon}
           title={isTextVisible && !isCollapsed && 'Master classes'}
           isDropdown={false}
         />
@@ -103,7 +104,7 @@ const InstructorSidebar = (props) => {
           }}
           to={'/leadership-journal'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={LeadLogo}
+          srcImage={LeadershipIcon}
           title={isTextVisible && !isCollapsed && 'Leadership journal'}
           isDropdown={false}
         />
@@ -115,7 +116,7 @@ const InstructorSidebar = (props) => {
           }}
           to={'/dashboard'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={PortfolioLogo}
+          srcImage={PortfolioIcon}
           title={isTextVisible && !isCollapsed && 'My portfolio'}
           isDropdown={false}
         />
@@ -142,7 +143,7 @@ const InstructorSidebar = (props) => {
           }}
           to={'/dashboard'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={SettingsLogo}
+          srcImage={SettingsIcon}
           title={isTextVisible && !isCollapsed && 'My account'}
           isDropdown={false}
         />

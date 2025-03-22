@@ -1,9 +1,7 @@
 import React from 'react'
 import 'react-quill/dist/quill.snow.css'
-import tickLogo from '../../assets/images/academy-icons/blue-tick.png'
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
-import penIcon from '../../assets/images/academy-icons/pen-icon.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
 

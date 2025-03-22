@@ -1,5 +1,5 @@
 import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min'
-import courseLogo from '../../assets/images/academy-icons/academy-logo-group.png'
+import courseLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
 import Faq from '../FAQ/Faq'
 import { useState } from 'react'
 

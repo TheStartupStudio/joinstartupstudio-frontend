@@ -15,6 +15,7 @@ import {
 } from '../../redux/dashboard/Actions'
 import IntlMessages from '../../utils/IntlMessages'
 import AcademyBtn from '../../components/AcademyBtn'
+import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -75,46 +76,7 @@ function Dashboard() {
               <IntlMessages id='navigation.dashboard' />
             </h3>
 
-            <div
-              style={{
-                display: 'inline-block',
-                borderRadius: '8px',
-                background:
-                  'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                padding: '1px', // Adjust this value to control border thickness
-                height: '58px',
-                boxShadow: '0px 4px 10px 0px #00000040'
-              }}
-            >
-              <Select
-                options={options}
-                value={selectedLanguage}
-                onChange={handleChange}
-                placeholder='Select Language'
-                menuPortalTarget={document.body}
-                isSearchable={false}
-                styles={{
-                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                  control: (base) => ({
-                    ...base,
-                    width: '250px', // Fixed width
-                    minHeight: '40px', // Fixed height
-                    overflow: 'hidden',
-                    border: 'none', // Remove the default border
-                    borderRadius: '6px' // Slightly smaller than the outer container radius
-                  }),
-                  singleValue: (base) => ({
-                    ...base,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  })
-                }}
-                components={{
-                  IndicatorSeparator: () => null // Remove separator
-                }}
-              />
-            </div>
+            <SelectLanguage />
           </div>
         </div>
 

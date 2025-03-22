@@ -3,7 +3,9 @@ import AccordionLead from '../../components/LeadershipJournal/AccordionLead'
 import SectionsWrapper from './SectionsWrapper'
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 
-function SectionOne() {
+function SectionOne({ setIsReflection }) {
+  setIsReflection(false)
+
   const paragraphs = [
     {
       id: 1,
@@ -95,8 +97,8 @@ function SectionOne() {
   ]
 
   return (
-    <>
-      <div className='col-4'>
+    <div className='leadership-layout d-grid gap-5'>
+      <div className='w-100'>
         <YourInstructor
           instructorName={'DR. Leslie Williams'}
           profilePic={
@@ -211,7 +213,7 @@ function SectionOne() {
           </div>
         </div>
       </SectionsWrapper>
-    </>
+    </div>
   )
 }
 
