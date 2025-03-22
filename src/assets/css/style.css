@@ -4701,6 +4701,39 @@ wave > wave:first-child {
   ) !important;
 }
 
+.gray-leadership {
+  color: #6f6f6f;
+}
+
+.my-quill-editor .ql-toolbar {
+  background-color: transparent !important;
+}
+
+.my-quill-editor .ql-toolbar.ql-snow {
+  background-color: transparent !important;
+}
+
+.my-quill-editor button {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.add-reflection {
+  transition: color 300ms ease-in;
+}
+
+.add-reflection:hover {
+  color: #51c7df;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.h-fit-content {
+  height: fit-content;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;
