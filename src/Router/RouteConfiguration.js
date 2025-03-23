@@ -156,6 +156,10 @@ const LeadershipJournal = React.lazy(() =>
   import('../pages/LeadershipJournal/index')
 )
 
+const AcademyPortfolio = React.lazy(() =>
+  import('../pages/Academy-Portfolio/index')
+)
+
 export const adminRoutes = [
   { path: '/instructor-data/:id?', component: InstructorData, breadcrumb: '' },
   // { path: '/user-management', component: UserManagement },
@@ -184,7 +188,7 @@ export const mutualRoutes = [
   { path: '/savedMedia', component: SavedMedia },
   { path: '/csv-upload', component: CSVUpload },
   { path: '/portfolio', component: Portfolio },
-  { path: '/my-portfolio', component: Portfolio2024, exact: true },
+  { path: '/my-portfolio', component: AcademyPortfolio, exact: true },
   { path: '/beyond-your-course', component: BeyondYourCourse, exact: true },
   { path: '/beyond-your-course/:id', component: BeyondYourCourse, exact: true },
   { path: '/story-in-motion', component: StoryInMotion },

@@ -1,5 +1,4 @@
 import React from 'react'
-import 'react-quill/dist/quill.snow.css'
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
@@ -32,9 +31,28 @@ function YourInstructor({ profilePic, instructorName, userProffesion }) {
               {userProffesion}
             </p>
             <div className='d-flex gap-2'>
-              <img src={linkedinLogo} alt='linkedin' />
-              <img src={facebookLogo} alt='facebook' />
-              <img src={twitterLogo} alt='twitter' />
+              <img
+                className='cursor-pointer'
+                src={linkedinLogo}
+                alt='linkedin'
+                onClick={() =>
+                  window.open('https://www.linkedin.com/', '_blank')
+                }
+              />
+              <img
+                className='cursor-pointer'
+                src={facebookLogo}
+                alt='facebook'
+                onClick={() =>
+                  window.open('https://www.facebook.com/', '_blank')
+                }
+              />
+              <img
+                className='cursor-pointer'
+                src={twitterLogo}
+                alt='twitter'
+                onClick={() => window.open('https://www.x.com/', '_blank')}
+              />
             </div>
           </div>
         </div>

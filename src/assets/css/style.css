@@ -4621,7 +4621,7 @@ wave > wave:first-child {
 .background-platform {
   background: radial-gradient(
     circle at right center,
-    rgba(200, 200, 200, 0.3) 10%,
+    rgba(200, 200, 200, 0.4) 10%,
     rgba(255, 255, 255, 1) 40%
   );
 }
@@ -4743,6 +4743,22 @@ wave > wave:first-child {
 
 .leadership-layout {
   grid-template-columns: 3fr 5fr;
+}
+
+.width-50 {
+  width: 50%;
+}
+
+.portfolio-u {
+  color: #aeaeae;
+}
+
+.portfolio-u:hover {
+  color: #51c7df;
+}
+
+.object-scale-down {
+  object-fit: scale-down;
 }
 
 @media (max-width: 1024px) {

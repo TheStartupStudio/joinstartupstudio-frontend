@@ -114,7 +114,7 @@ const InstructorSidebar = (props) => {
             dispatch(setAccordionToggled(false))
             props.props.hideHeaderIcons()
           }}
-          to={'/dashboard'}
+          to={'/my-portfolio'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
           srcImage={PortfolioIcon}
           title={isTextVisible && !isCollapsed && 'My portfolio'}

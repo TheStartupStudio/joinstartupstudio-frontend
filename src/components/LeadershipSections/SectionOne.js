@@ -145,10 +145,9 @@ function SectionOne({ setIsReflection }) {
               </div>
             </div>
           </div>
-        </div>
-        <div className='accordion mt-3' id='progressAccordion'>
+
           <div className='accordion-item progress-details-accordion'>
-            <h2 className='accordion-header' id='headingOne'>
+            <h2 className='accordion-header' id='headingTwo'>
               <button
                 className='accordion-button collapsed fw-medium'
                 type='button'
@@ -163,7 +162,7 @@ function SectionOne({ setIsReflection }) {
             <div
               id='collapseTwo'
               className='accordion-collapse collapse'
-              aria-labelledby='headingOne'
+              aria-labelledby='headingTwo'
               data-bs-parent='#progressAccordion'
             >
               <div className='accordion-body d-grid gap-2'>
@@ -178,10 +177,9 @@ function SectionOne({ setIsReflection }) {
               </div>
             </div>
           </div>
-        </div>
-        <div className='accordion mt-3' id='progressAccordion'>
+
           <div className='accordion-item progress-details-accordion'>
-            <h2 className='accordion-header' id='headingOne'>
+            <h2 className='accordion-header' id='headingThree'>
               <button
                 className='accordion-button collapsed fw-medium'
                 type='button'
@@ -196,7 +194,7 @@ function SectionOne({ setIsReflection }) {
             <div
               id='collapseThree'
               className='accordion-collapse collapse'
-              aria-labelledby='headingOne'
+              aria-labelledby='headingThree'
               data-bs-parent='#progressAccordion'
             >
               <div className='accordion-body d-grid gap-2'>

@@ -71,7 +71,7 @@ function Dashboard() {
     <div className='container-fluid'>
       <div className='row'>
         <div className='col-12 col-md-12 pe-0 me-0'>
-          <div className='account-page-padding d-flex justify-content-between align-items-center'>
+          <div className='account-page-padding d-flex justify-content-between align-items-center '>
             <h3 className='page-title bold-page-title text-black'>
               <IntlMessages id='navigation.dashboard' />
             </h3>
