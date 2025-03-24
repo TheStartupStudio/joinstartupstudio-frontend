@@ -1471,7 +1471,7 @@ const EsLangs = {
   'storyInMotion.previous_podcast_episodes': 'Previous Podcast Episodes',
   'storyInMotion.favorite': 'Favorite Episodes',
   'storyInMotion.load_more': 'Load more...',
-  'storyInMotion.guest_q&a_videos': 'Story in Motion Guest Q&As',
+  'storyInMotion.guest_q&a_videos': 'Story in Motion Podcast Episodes',
   // SAVED page
   'my_saved.MEDIA': 'MY SAVED MEDIA',
   'my_saved.MEDIA_des': 'Your favorite content in one place.',

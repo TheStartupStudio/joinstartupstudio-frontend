@@ -509,6 +509,7 @@ const EnLangs = {
   'beyond_your_course.encouragement_no_videos': 'Encouragement',
   'beyond_your_course.master_classes': 'Master Classes',
   'beyond_your_course.Career_Guidance': 'Career Guidance',
+  'beyond_your_course.startup_live': 'Story in Motion Podcast Episodes',
   'beyond_your_course.master_classes_upper': 'MASTER CLASSES',
   'beyond_your_course.encouragement': 'Encouragement',
   'beyond_your_course.encouragement_description':
@@ -573,7 +574,7 @@ const EnLangs = {
   'startup_live.join_session': 'Join Session',
   'startup_live.now_streaming': 'Now streaming',
   'startup_live.startup_archive': 'StartupLive™ Archive',
-  'startup_live.startup_archive_description': 'Watch the video Q&As here.',
+  'startup_live.startup_archive_description': 'Ongoing guidance from entrepreneurs and experts to help you on your journey',
 
   //My notes
   'my_notes.page_title': 'My Notes',

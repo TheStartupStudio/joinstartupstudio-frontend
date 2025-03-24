@@ -14,12 +14,16 @@ import SavedVideosWidget from '../../components/Video/savedVideosWidget'
 import { VideoModal } from '../../components/Modals/videoModal'
 import './index.css'
 import masterIcon from '../../assets/images/master-icon.png'
+import storyInMotion from '../../assets/images/story-in-motion-logo.png'
 import Select from 'react-select'
+import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
+
 
 export default function BeyondYourCourse() {
   const dispatch = useDispatch()
   const [encouragementVideos, setEncouragementVideos] = useState([])
   const [masterClassVideos, setMasterClassVideos] = useState([])
+  const [startupLiveVideos,setStartupLiveVideos]=useState([])
   const [startVideoIndex, setStartVideoIndex] = useState(0)
   const [endVideoIndex, setEndVideoIndex] = useState(5)
   const [endVideoIndexMobile, setEndVideoIndexMobile] = useState(2)
@@ -35,6 +39,8 @@ export default function BeyondYourCourse() {
   const [savedVideos, setSavedVideos] = useState([])
   const [width, setWidth] = useState(window.innerWidth)
    const [selectedLanguage, setSelectedLanguage] = useState(null)
+  const [startStartupLiveVideosIndex, setStartStartupLiveVideosIndex] = useState(0);
+  const [endStartupLiveVideosIndex, setEndStartupLiveVideosIndex] = useState(5);
 
   const options = [
     { value: 'en', label: 'English' },
@@ -103,6 +109,18 @@ export default function BeyondYourCourse() {
       )
     }
 
+    if (type === 'startup') {
+      setStartupLiveVideos(
+        startupLiveVideos.map((video) => {
+          if (video.id === id) {
+            video.favorite = !video.favorite
+            foundVideo = video
+          }
+          return video
+        })
+      )
+    }
+
     if (value) {
       setSavedVideos((oldVideos) => [foundVideo, ...oldVideos])
       await axiosInstance
@@ -144,6 +162,17 @@ export default function BeyondYourCourse() {
         })
       )
     }
+    if (type === 'startup') {
+      setStartupLiveVideos(
+        startupLiveVideos.map((video) => {
+          if (video.id === id) {
+            video.favorite = !video.favorite
+            foundVideo = video
+          }
+          return video
+        })
+      )
+    }
 
     await axiosInstance
       .delete(`/favorites/${id}`)
@@ -157,7 +186,7 @@ export default function BeyondYourCourse() {
       .then((response) => {
         if (
           response.data &&
-          (response.data.type === 'master' || response.data.type === 'guidance')
+          (response.data.type === 'master' || response.data.type === 'guidance' || response.data.type === 'startup')
         )
           setVideoData(response.data)
       })
@@ -167,6 +196,7 @@ export default function BeyondYourCourse() {
   useEffect(() => {
     getEncouragementVideos()
     getMasterClassVideos()
+    getStartupLiveVideos()
     getUserConnections()
     getSavedVideos()
     if (!isNaN(videoId)) getVideoData()
@@ -200,6 +230,15 @@ export default function BeyondYourCourse() {
       .catch((err) => err)
   }
 
+  const getStartupLiveVideos = async () => {
+    await axiosInstance
+      .get(`/contents/user-contents/startup-live`) 
+      .then((response) => {
+        setStartupLiveVideos(response.data)
+      })
+      .catch((err) => err)
+  }
+
   const handlePreviousVideo = async (page, startIndex, endIndex) => {
     if (startIndex > 0) {
       if (page === 1) {
@@ -208,6 +247,9 @@ export default function BeyondYourCourse() {
       } else if (page === 2) {
         setStartMasterClassVideoIndex(startIndex - 1)
         setEndMasterClassVideoIndex(endIndex - 1)
+      } else if (page === 3) {
+        setStartStartupLiveVideosIndex(startIndex - 1)
+        setEndStartupLiveVideosIndex(endIndex - 1)
       }
     }
   }
@@ -222,6 +264,11 @@ export default function BeyondYourCourse() {
       if (endIndex < masterClassVideos.length) {
         setStartMasterClassVideoIndex(startIndex + 1)
         setEndMasterClassVideoIndex(endIndex + 1)
+      }
+    } else if (page === 3) {
+      if (endIndex < startupLiveVideos.length) {
+        setStartStartupLiveVideosIndex(startIndex + 1)
+        setEndStartupLiveVideosIndex(endIndex + 1)
       }
     }
   }
@@ -238,6 +285,11 @@ export default function BeyondYourCourse() {
         setEndMasterClassVideoIndexMobile(endIndexMobile + 1)
       }
     }
+    else if (page === 3) {
+      if (endIndex < startupLiveVideos.length) {
+        setStartStartupLiveVideosIndex(startIndex + 1)
+        setEndStartupLiveVideosIndex(endIndex + 1)
+      }}
   }
 
   const handlePreviousVideoMobile = async (
@@ -329,8 +381,9 @@ export default function BeyondYourCourse() {
                     <IntMessages id='beyond_your_course.encouragement_no_videos' />
                   </h3>
                   </div>
-                  <Link className='guidance-link' to={`/encouragement/videos`}>
+                  <Link className='guidance-link' to={`/encouragement/videos`} style={{marginRight:'1rem'}}>
                     <IntMessages id='general.view_all' />
+                    <img src={rightArrow} style={{marginLeft:'10px',marginBottom:'3px'}}/>
                   </Link>
                 </div>
 
@@ -474,8 +527,9 @@ export default function BeyondYourCourse() {
                     <IntMessages id='beyond_your_course.Career_Guidance' />
                   </h3>
                   </div>
-                  <Link className='guidance-link' to={`/master-classes/videos`}>
+                  <Link className='guidance-link' to={`/master-classes/videos`} style={{marginRight:'1rem'}}>
                     <IntMessages id='general.view_all' />
+                    <img src={rightArrow} style={{marginLeft:'10px',marginBottom:'3px'}}/>
                   </Link>
                 </div>
 
@@ -545,10 +599,88 @@ export default function BeyondYourCourse() {
                   </div> */}
                 </div>
                 </div>
+                <div className='videos-container'>
+                <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
+                <div className='title-container'>
+                  <img 
+                                    src={storyInMotion}
+                                    alt='logo'
+                                    style={{ width: '36px', height: '36px' }}
+                                    className='welcome-journey-text__icon'
+                                  />
+                  <h3>
+                    
+                    <IntMessages id='beyond_your_course.startup_live' />
+                  </h3>
+                  </div>
+                  <Link className='guidance-link' to={`/startup-live/videos`} style={{marginRight:'1rem'}}>
+                    <IntMessages id='general.view_all' />
+                    <img src={rightArrow} style={{marginLeft:'10px',marginBottom:'3px'}}/>
+                  </Link>
+                </div>
+
+                <div className='beyond-videos-desktop'>
+                  {/* <div className='arrow-icon-1'>
+                    <button
+                      className='videos-track'
+                      onClick={() =>
+                        handlePreviousVideo(
+                          3,
+                          startStartupLiveVideosIndex,
+                          endStartupLiveVideosIndex
+                        )
+                      }
+                    >
+                      <FontAwesomeIcon icon={faChevronLeft} className='videos-track-icon' />
+                    </button>
+                  </div> */}
+                  <div
+                    className='card-group desktop-menu card-group-beyond-your-course w-100'
+                    // style={{ marginTop: '15px' }}
+                  >
+                    {startupLiveVideos
+                      ?.slice(startStartupLiveVideosIndex, endStartupLiveVideosIndex)
+                      .map((video, index) => (
+                        <Video
+                          id={video.id}
+                          key={index}
+                          thumbnail={video.thumbnail}
+                          title={video.title}
+                          description={video.description}
+                          page={'startup-live'}
+                          isMainPage={true}
+                          updateFavorite={(id, type, value) =>
+                            updateFavorite(id, type, value)
+                          }
+                          videoData={video}
+                          connections={connections}
+                        />
+                      ))}
+                  </div>
+                  {/* <div className='arrow-icon-1 justify-content-start'>
+                    <button
+                      className='videos-track'
+                      style={{ width: '2%' }}
+                      onClick={() =>
+                        handleNextVideo(
+                          2,
+                          startMasterClassVideoIndex,
+                          endMasterClassVideoIndex
+                        )
+                      }
+                    >
+                      <FontAwesomeIcon
+                        icon={faChevronRight}
+                        className='videos-track-icon'
+                      />
+                    </button>
+                  </div> */}
+                </div>
+                </div>
 
                 <div className='row mt-2'>
                   <div className='beyond-videos-mobile mc-videos-mobile'>
-                    <div className='arrow-icon-1'>
+                    {/* <div className='arrow-icon-1'>
                       <button
                         className='videos-track'
                         onClick={() => {
@@ -564,7 +696,7 @@ export default function BeyondYourCourse() {
                           className='videos-track-icon'
                         />
                       </button>
-                    </div>
+                    </div> */}
                     <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
                       {masterClassVideos
                         ?.slice(

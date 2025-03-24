@@ -80,10 +80,10 @@
 }
 
 .course-level {
-    padding: .75rem 5rem;
+    padding: .5rem 6.5rem;
     color: #718096;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
     display: flex;
     align-items: center;
     white-space: nowrap;

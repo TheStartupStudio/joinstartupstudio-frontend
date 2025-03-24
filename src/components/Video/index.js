@@ -183,7 +183,7 @@ export default function VideoView(props) {
                     alt='#'
                     style={{
                       objectFit:
-                        props.page === 'startup-live' ? 'contain' : 'cover'
+                        props.page === 'startup-live' ? 'cover' : 'cover'
                     }}
                   />
                   <div className='beyond-your-course-video-thumb-icon' style={{border:'5px solid white',borderRadius:'50%',padding:'1.5rem',display:'flex',alignItems:'center',justifyContent:'center'}}>

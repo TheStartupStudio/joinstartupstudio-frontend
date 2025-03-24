@@ -77,7 +77,7 @@ const InstructorSidebar = (props) => {
             dispatch(setAccordionToggled(false))
             props.props.hideHeaderIcons()
           }}
-          to={'/dashboard'}
+          to={'/my-course-in-entrepreneurship/journal'}
           // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
           srcImage={EntLogo}
           title={isTextVisible && !isCollapsed && 'Course in enterpreneurship'}

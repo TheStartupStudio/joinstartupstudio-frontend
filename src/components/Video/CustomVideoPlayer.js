@@ -154,6 +154,7 @@ const CustomVideoPlayer = ({
       onClick={handleVideoClick}
     >
       <video
+      style={{borderRadius:'25px'}}
         ref={videoRef}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}

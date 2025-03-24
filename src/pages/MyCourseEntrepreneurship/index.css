@@ -141,32 +141,33 @@
 .general-video-container {
   display: flex;
   gap: 2rem;
+  margin-top: 2rem;
+  /* Added margin top */
+  background: transparent;
+  /* Changed to transparent */
 }
 
 .video-container {
   width: 22vw;
+  position: relative;
+  z-index: 1;
+  /* Added z-index */
 }
 
 .accordion-flex {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* border: .5px solid #bbbdbf; */
   border-radius: 20px;
   box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
   width: 100%;
   margin: 0 20px;
   padding: 25px 25px;
-  background-color: radial-gradient(circle at 10% 50%,
-      rgb(255, 255, 255) 0%,
-      rgb(255, 255, 255) 30%,
-      transparent 90%),
-    radial-gradient(circle at 0% 60%,
-      rgba(109, 167, 248, 0.342) 0%,
-      rgba(114, 171, 251, 0.4) 30%,
-      transparent 90%);
-
-
+  background: #fff;
+  /* Added background */
+  position: relative;
+  z-index: 1;
+  /* Added z-index */
 }
 
 .accordion-item-border {
@@ -195,19 +196,15 @@
   margin: 0;
 }
 
+
 .gradient-background-course {
-  background:
-    radial-gradient(circle at 10% 50%,
-      rgb(255, 255, 255) 0%,
-      rgb(255, 255, 255) 30%,
-      transparent 90%),
-    radial-gradient(circle at 0% 60%,
-      rgba(109, 167, 248, 0.342) 0%,
-      rgba(114, 171, 251, 0.4) 30%,
-      transparent 90%);
-  min-height: 100vh;
-  width: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 1) 10%, rgba(234, 249, 251, 1) 50%, rgba(255, 255, 255, 1) 90%) !important;
+  min-height: auto;
   position: relative;
+  box-shadow: -1px -9px 6px -2px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  overflow-y: scroll
 }
 
 .page-title {

@@ -89,7 +89,7 @@ export const VideoModal = (props) => {
                 setPlayVideo(false)
               }}
             />
-            <FontAwesomeIcon
+            {/* <FontAwesomeIcon
               icon={videoData.favorite ? heartSaved : heartNotSaved}
               className="mt-3"
               style={{
@@ -106,7 +106,7 @@ export const VideoModal = (props) => {
                     )
                   : props.updateFavorite(!videoData.favorite)
               }
-            />
+            /> */}
             {/* {IsUserLevelAuthorized() && (
               <FontAwesomeIcon
                 icon={faShareAltSquare}
@@ -117,12 +117,12 @@ export const VideoModal = (props) => {
             )} */}
           </div>
           {!playVideo ? (
-            <div className="d-flex justify-content-center align-items-center">
+            <div className="d-flex align-items-center">
               <img
                 src={videoData?.thumbnail}
                 width="100%"
                 alt="video"
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'cover',borderRadius:'25px' }}
               />
               {!shareVideo && (
                 <div className="beyond-your-course-video-thumb-icon-fullscreen">

@@ -5,7 +5,7 @@ import IntlMessages from '../../utils/IntlMessages'
 import { changeSidebarState } from '../../redux'
 import Video from '../../components/Video'
 import ReactPaginate from 'react-paginate'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import '../Saved/index.css'
 import { setBackButton } from '../../redux/backButtonReducer'
 import './index.css'
@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 export default function GuidanceEncouragement() {
+  const history = useHistory(); // Add this hook
+  
   const [pageTitle, setPageTitle] = useState('')
   const [pageDescription, setPageDescription] = useState('')
   const [pageVideos, setPageVideos] = useState([])
@@ -78,20 +80,36 @@ export default function GuidanceEncouragement() {
 
   useEffect(() => {
     if (window.location.href.includes('encouragement/videos')) {
-      setPageTitle('MASTER CLASSES | ENCOURAGEMENT VIDEOS')
-      setPageDescription('beyond_your_course.encouragement_description')
-      getEncouragementVideos()
+      setActiveLevel(0)
     } else if (window.location.href.includes('master-classes/videos')) {
-      setPageTitle('MASTER CLASSES | CAREER GUIDANCE')
-      setPageDescription('beyond_your_course.master_classes_description')
-      getMasterClassVideos()
+      setActiveLevel(1)
     } else if (window.location.href.includes('startup-live/videos')) {
-      setPageTitle('MASTER CLASSES | STORY IN MOTION GUEST Q&AS')
-      setPageDescription('startup_live.startup_archive_description')
-      getStartupLiveVideos()
+      setActiveLevel(2)
     }
     getUserConnections()
   }, [])
+
+  useEffect(() => {
+    switch(activeLevel) {
+      case 0: // Encouragement Videos
+        setPageTitle('MASTER CLASSES | ENCOURAGEMENT VIDEOS')
+        setPageDescription('beyond_your_course.encouragement_description')
+        getEncouragementVideos()
+        break;
+      case 1: // Career Guidance Videos
+        setPageTitle('MASTER CLASSES | CAREER GUIDANCE')
+        setPageDescription('beyond_your_course.master_classes_description')
+        getMasterClassVideos()
+        break;
+      case 2: // Story in Motion Podcast Episodes
+        setPageTitle('MASTER CLASSES | STORY IN MOTION PODCAST EPISODES')
+        setPageDescription('startup_live.startup_archive_description')
+        getStartupLiveVideos()
+        break;
+      default:
+        break;
+    }
+  }, [activeLevel])
 
   const getUserConnections = async () => {
     await axiosInstance.get('/connect').then((res) => {
@@ -104,6 +122,7 @@ export default function GuidanceEncouragement() {
       .get(`/contents/by-type/guidance`)
       .then((response) => {
         setPageVideos(response.data)
+        setItemOffset(0);
       })
       .catch((err) => err)
   }
@@ -113,6 +132,7 @@ export default function GuidanceEncouragement() {
       .get(`/contents/by-type/master`)
       .then((response) => {
         setPageVideos(response.data)
+        setItemOffset(0);
       })
       .catch((err) => err)
   }
@@ -122,9 +142,39 @@ export default function GuidanceEncouragement() {
       .get(`/contents/by-type/startup-live`)
       .then((response) => {
         setPageVideos(response.data)
+        setItemOffset(0);
       })
       .catch((err) => err)
   }
+
+  // Add this function to determine the subtitle based on URL
+  const getSubtitle = () => {
+    if (window.location.href.includes('encouragement/videos')) {
+      return 'Encouragement Videos';
+    } else if (window.location.href.includes('master-classes/videos')) {
+      return 'Career Guidance';
+    } else if (window.location.href.includes('startup-live/videos')) {
+      return 'Story in Motion Podcast Episodes';
+    }
+    return '';
+  };
+
+  const handleLevelChange = (index) => {
+    setActiveLevel(index);
+    switch(index) {
+      case 0:
+        history.push('/encouragement/videos');
+        break;
+      case 1:
+        history.push('/master-classes/videos');
+        break;
+      case 2:
+        history.push('/startup-live/videos');
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <div id='main-body'>
@@ -141,8 +191,8 @@ export default function GuidanceEncouragement() {
               >
                 <div style={{margin:'0 1rem'}}>
                   <div style={{marginBottom:'2rem'}}>
-                  <Link to='/beyond-your-course' style={{color:'#000000'}}>Master Classes &gt; </Link>
-                  <span>Encouragement Videos </span>
+                    <Link to='/beyond-your-course' style={{color:'#000000'}}>Master Classes &gt; </Link>
+                    <span>{getSubtitle()}</span>
                   </div>
                  <div className='d-flex justify-content-between'>
                 <div>
@@ -203,7 +253,7 @@ export default function GuidanceEncouragement() {
                       key={level.id}
                      
                       className={`course-level ${activeLevel === index ? 'active-level' : ''}`}
-                      onClick={() => setActiveLevel(index)}
+                      onClick={() => handleLevelChange(index)}
                     >
                       {level.title}
                     </div>
