@@ -11,8 +11,9 @@ import CancelSubModal from '../UserDetails/CancelSubModal'
 import CancelRenewalModal from '../UserDetails/CancelRenewalModal'
 import ShareLink from '../../assets/images/academy-icons/svg/share-link.svg'
 import SharePortfolioModal from './SharePortfolioModal'
+import Tooltip from './Tooltip'
 
-function AboutMe({ profilePic, instructorName, userProffesion }) {
+function AboutMe({ user }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [modal, setModal] = useState(false)
   const [subsbsciptionModal, setSubscriptionModal] = useState(false)
@@ -39,12 +40,7 @@ function AboutMe({ profilePic, instructorName, userProffesion }) {
     setCanceledRenewal((prev) => !prev)
   }
 
-  const fullText = `Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-  accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-  quae ab illo inventore veritatis et quasi architecto beatae vitae
-  dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, 
-  sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, 
-  qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...`
+  const fullText = `${user?.bio}`
 
   const shortText = fullText.slice(0, 200)
 
@@ -69,21 +65,25 @@ function AboutMe({ profilePic, instructorName, userProffesion }) {
                       alt='internet'
                       className='internet-class'
                     />
-                    <p
-                      className='mb-0 fs-15 fw-medium portfolio-u text-black'
-                      onClick={() => setIsPublishedVisible((prev) => !prev)}
-                    >
-                      Portfolio published
-                    </p>
+                    <Tooltip text={'Click to unpublish'}>
+                      <p
+                        className='mb-0 fs-15 fw-medium portfolio-u text-black'
+                        onClick={() => setIsPublishedVisible((prev) => !prev)}
+                      >
+                        Portfolio published
+                      </p>
+                    </Tooltip>
                   </div>
                   <div className='d-flex gap-2 align-items-center cursor-pointer'>
                     <img src={ShareLink} alt='sharelink' />
-                    <p
-                      className='mb-0 fs-15 fw-medium portfolio-u  text-black'
-                      onClick={() => setSharePortfolio((prev) => !prev)}
-                    >
-                      Share link to portfolio
-                    </p>
+                    <Tooltip text={'Click to get link'}>
+                      <p
+                        className='mb-0 fs-15 fw-medium portfolio-u  text-black'
+                        onClick={() => setSharePortfolio((prev) => !prev)}
+                      >
+                        Share link to portfolio
+                      </p>
+                    </Tooltip>
                   </div>
                 </>
               ) : (
@@ -92,9 +92,11 @@ function AboutMe({ profilePic, instructorName, userProffesion }) {
                   onClick={() => setIsPublishedVisible((prev) => !prev)}
                 >
                   <img src={internet} alt='internet' />
-                  <p className='mb-0 fs-15 fw-medium portfolio-u'>
-                    Portfolio unpublished
-                  </p>
+                  <Tooltip text={'Click to publish'}>
+                    <p className='mb-0 fs-15 fw-medium portfolio-u'>
+                      Portfolio unpublished
+                    </p>
+                  </Tooltip>
                 </div>
               )}
             </div>
@@ -112,13 +114,13 @@ function AboutMe({ profilePic, instructorName, userProffesion }) {
         <div className='d-flex gap-4'>
           <img
             className='profile-dashboard-academy align-self-start'
-            src={profilePic}
+            src={user?.profileImage}
             alt='profile'
           />
           <div className='academy-profile-info'>
-            <h3 className='mb-2'>{instructorName}</h3>
+            <h3 className='mb-2'>{user?.name}</h3>
             <p className='text-black fs-15 fw-medium lh-sm mb-3'>
-              {userProffesion}
+              {user?.profession}
             </p>
             <div className='d-flex gap-2'>
               <img
@@ -126,7 +128,7 @@ function AboutMe({ profilePic, instructorName, userProffesion }) {
                 src={linkedinLogo}
                 alt='linkedin'
                 onClick={() =>
-                  window.open('https://www.linkedin.com/', '_blank')
+                  window.open(user?.social_links.linkedIn, '_blank')
                 }
               />
               <img
@@ -134,14 +136,16 @@ function AboutMe({ profilePic, instructorName, userProffesion }) {
                 src={facebookLogo}
                 alt='facebook'
                 onClick={() =>
-                  window.open('https://www.facebook.com/', '_blank')
+                  window.open(user?.social_links.facebook, '_blank')
                 }
               />
               <img
                 className='cursor-pointer'
                 src={twitterLogo}
                 alt='twitter'
-                onClick={() => window.open('https://www.x.com/', '_blank')}
+                onClick={() =>
+                  window.open(user?.social_links.twitter, '_blank')
+                }
               />
             </div>
             <p
@@ -161,14 +165,7 @@ function AboutMe({ profilePic, instructorName, userProffesion }) {
         </div>
       </div>
 
-      <EditUserModal
-        isOpen={modal}
-        toggle={toggle}
-        content={content}
-        setContent={setContent}
-        subToggle={subToggle}
-        profilePic={profilePic}
-      />
+      <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
 
       <SubscriptionModal
         subsbsciptionModal={subsbsciptionModal}

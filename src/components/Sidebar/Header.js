@@ -30,7 +30,9 @@ const Header = (props) => {
             <br />
             STUDIO
           </h4>
-          <p className='powered'>Powered by Learn to Start</p>
+          <p className='powered white-space-no-wrap'>
+            Powered by Learn to Start
+          </p>
         </div>
       )}
     </div>

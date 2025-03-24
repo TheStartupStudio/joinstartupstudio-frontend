@@ -9,7 +9,7 @@ import print from '../../assets/images/academy-icons/print.png'
 import save from '../../assets/images/academy-icons/save.png'
 import signature from '../../assets/images/academy-icons/sign.png'
 
-function CertificateModal({ certificate, toggleCertificate }) {
+function CertificateModal({ certificate, toggleCertificate, name }) {
   const certificateRef = useRef(null)
 
   const handleSave = () => {
@@ -106,7 +106,7 @@ function CertificateModal({ certificate, toggleCertificate }) {
               class='text-center fw-semibold border-bottom-title'
               style={{ fontSize: '64px' }}
             >
-              Kenia Anders
+              {name}
             </h2>
             <p class='text-center certification-paragraph mb-0 fw-medium mt-1 text-black'>
               has succesfully completed

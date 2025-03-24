@@ -17,7 +17,6 @@ function UserDetails({ profilePic, userName, userProffesion }) {
   const [cancelSubModal, setCancelSubModal] = useState(false)
   const [canceledRenewal, setCanceledRenewal] = useState(false)
   const [certificate, setCertificate] = useState(false)
-  const [content, setContent] = useState('')
 
   const toggle = () => setModal((prev) => !prev)
 
@@ -40,6 +39,8 @@ function UserDetails({ profilePic, userName, userProffesion }) {
     setCertificate((prev) => !prev)
   }
 
+  const { user } = JSON.parse(localStorage.getItem('user'))
+
   return (
     <>
       <div
@@ -58,19 +59,19 @@ function UserDetails({ profilePic, userName, userProffesion }) {
         <div className='d-flex gap-4 align-items-center'>
           <img
             className='profile-dashboard-academy'
-            src={profilePic}
+            src={user.profileImage}
             alt='profile'
           />
           <div className='academy-profile-info'>
-            <h3>{userName}</h3>
-            <p>{userProffesion}</p>
+            <h3>{user.name}</h3>
+            <p>{user.profession}</p>
             <div className='d-flex gap-2'>
               <img
                 className='cursor-pointer'
                 src={linkedinLogo}
                 alt='linkedin'
                 onClick={() =>
-                  window.open('https://www.linkedin.com/', '_blank')
+                  window.open(user.social_links.linkedIn, '_blank')
                 }
               />
               <img
@@ -78,14 +79,14 @@ function UserDetails({ profilePic, userName, userProffesion }) {
                 src={facebookLogo}
                 alt='facebook'
                 onClick={() =>
-                  window.open('https://www.facebook.com/', '_blank')
+                  window.open(user.social_links.facebook, '_blank')
                 }
               />
               <img
                 className='cursor-pointer'
                 src={twitterLogo}
                 alt='twitter'
-                onClick={() => window.open('https://www.x.com/', '_blank')}
+                onClick={() => window.open(user.social_links.twitter, '_blank')}
               />
             </div>
           </div>
@@ -103,14 +104,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
         </div>
       </div>
 
-      <EditUserModal
-        isOpen={modal}
-        toggle={toggle}
-        content={content}
-        setContent={setContent}
-        subToggle={subToggle}
-        profilePic={profilePic}
-      />
+      <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
 
       <SubscriptionModal
         subsbsciptionModal={subsbsciptionModal}
@@ -132,6 +126,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
       <CertificateModal
         certificate={certificate}
         toggleCertificate={toggleCertificate}
+        name={user.name}
       />
     </>
   )

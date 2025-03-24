@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { Button, Modal, ModalBody } from 'reactstrap'
@@ -14,14 +14,12 @@ import trashIcon from '../../assets/images/academy-icons/trash.png'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
 import ModalInput from '../ModalInput/ModalInput'
 
-function EditUserModal({
-  isOpen,
-  toggle,
-  content,
-  setContent,
-  subToggle,
-  profilePic
-}) {
+function EditUserModal({ isOpen, toggle, subToggle }) {
+  const { user } = JSON.parse(localStorage.getItem('user'))
+  const [content, setContent] = useState(`${user?.bio}`)
+
+  const social_links = user?.social_links || {}
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle}>
@@ -51,16 +49,19 @@ function EditUserModal({
                     id={'fullname'}
                     labelTitle={'Full Name'}
                     imgSrc={penIcon}
+                    value={user?.name}
                   />
                   <ModalInput
                     id={'email'}
                     labelTitle={'Email'}
                     imgSrc={penIcon}
+                    value={user?.email}
                   />
                   <ModalInput
                     id={'occupation'}
                     labelTitle={'Occupation'}
                     imgSrc={penIcon}
+                    value={user?.profession}
                   />
                 </div>
               </div>
@@ -74,7 +75,7 @@ function EditUserModal({
                   />
                   <img
                     className='rounded-circle profile-container-pic'
-                    src={profilePic}
+                    src={user?.profileImage}
                     alt='profile'
                   />
                 </div>
@@ -88,26 +89,31 @@ function EditUserModal({
                   id={'linkedin'}
                   labelTitle={'LinkedIn'}
                   imgSrc={linkedinLogo}
+                  value={social_links?.linkedIn}
                 />
                 <ModalInput
                   id={'facebook'}
                   labelTitle={'Facebook'}
                   imgSrc={facebookLogo}
+                  value={social_links?.facebook}
                 />
                 <ModalInput
                   id={'twitter'}
                   labelTitle={'X (Twitter)'}
                   imgSrc={twitterLogo}
+                  value={social_links?.twitter}
                 />
                 <ModalInput
                   id={'instagram'}
                   labelTitle={'Instagram'}
                   imgSrc={instaLogo}
+                  value={social_links?.instagram}
                 />
                 <ModalInput
                   id={'website'}
                   labelTitle={'Website'}
                   imgSrc={browserLogo}
+                  value={social_links?.website}
                 />
               </div>
 

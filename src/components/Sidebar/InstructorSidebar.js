@@ -42,6 +42,7 @@ const InstructorSidebar = (props) => {
   const handleSidebarToggle = () => {
     dispatch(toggleCollapse())
   }
+  const { user } = JSON.parse(localStorage.getItem('user'))
 
   return (
     <div class='d-flex flex-column justify-content-between h-93'>
@@ -152,13 +153,17 @@ const InstructorSidebar = (props) => {
           <Link to='dashboard'>
             <div className='d-flex w-100' style={{ alignItems: 'center' }}>
               <Col md='2' className='col-2 icon_container'>
-                <img className='profile-photo' src={ProfilePhoto} alt='Icon' />
+                <img
+                  className='profile-photo'
+                  src={user?.profileImage}
+                  alt='Icon'
+                />
               </Col>
               {isTextVisible && !isCollapsed && (
                 <div className='flex-grow-1 ms-1 d-flex flex-column'>
-                  <span className='font-profile'>Kenia Anders</span>
+                  <span className='font-profile'>{user?.name}</span>
                   <span className='font-profile email-profile'>
-                    {truncateEmail('keniaanders@gmail.com')}
+                    {truncateEmail(user?.email)}
                   </span>
                 </div>
               )}

@@ -24,6 +24,8 @@ function AcademyPortfolio() {
     }
   }
 
+  const { user } = JSON.parse(localStorage.getItem('user'))
+
   return (
     <div className='container-fluid'>
       <div className='row'>
@@ -44,13 +46,7 @@ function AcademyPortfolio() {
           </div>
         </div>
         <div className='academy-dashboard-layout lead-class mb-5 bck-dashboard'>
-          <AboutMe
-            profilePic={
-              'https://s3-alpha-sig.figma.com/img/68e9/25ea/570debe02d3fbad1f2da6b269789b18a?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=GCpYFKTtgB2SUX9M0uYET2FOLh1rTYhAlc2ofcE4wteGrG4sHtjXDh-f~mfKnm-NdJ4ILMiHx--z11IAt7rpWi1gAtOdQeWldJ3VyJoqhbbrIo0z9y5YOWV9gpylui2X8HOcQ4XeOmxNwmJzZMVQti3mCB4oskHIW1JkbhulnQiVBb7Zf8JYnRuXOgpZbVGQ8sCKJ73l2mte5RuBUb1nfHbbUcv0HptmrILpu~jStptKXDEi5VUSZkgJ0544TA8XNeQl9j6PCcAnXM2NFdvxu3HkMjKC-wKt1mP5urzFcRycEC0ky6Tm7BakgInlnmCB7qeNmqXjQ68ozCzHllM8Mw__'
-            }
-            instructorName={'Kenia Anders'}
-            userProffesion={'Graphic Desginer'}
-          />
+          <AboutMe user={user} />
 
           <div className='course-experts d-flex justify-content-between mt-5'>
             {tabs.map((tab, index) => (
