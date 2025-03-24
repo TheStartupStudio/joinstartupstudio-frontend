@@ -7,8 +7,10 @@ import nemoursMarketing from '../../assets/images/academy-icons/Nemours-marketin
 import socialDesign from '../../assets/images/academy-icons/SocialMedia-design.png'
 import NewProject from './NewProject'
 import { useState } from 'react'
+import EditProject from './EditProject'
 
 function MarketProjects() {
+  const [isOpen, setIsOpen] = useState(false)
   const [openNew, setOpenNew] = useState(false)
   const array = [
     {
@@ -50,11 +52,13 @@ function MarketProjects() {
               imgSrc={item.image}
               title={item.title}
               uploaded={item.uploaded}
+              setIsOpen={setIsOpen}
             />
           ))}
         </div>
       </PortfolioWrapper>
       <NewProject isOpen={openNew} setIsOpen={setOpenNew} />
+      <EditProject isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   )
 }

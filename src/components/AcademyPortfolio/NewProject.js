@@ -1,18 +1,16 @@
 import React from 'react'
 import { Button, Modal, ModalBody } from 'reactstrap'
-import cancelRenewal from '../../assets/images/academy-icons/cancel-renewal.png'
-import creditCard from '../../assets/images/academy-icons/credit-card.png'
-import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
-import ModalInput from '../ModalInput/ModalInput'
 import courseLogo from '../../assets/images/academy-icons/course-progress.png'
+import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
+import ModalInput from '../ModalInput/ModalInput'
 
 function NewProject({ isOpen, setIsOpen }) {
   return (
     <>
       <Modal
         isOpen={isOpen}
-        toggle={() => setisOpen((prev) => !prev)}
+        toggle={() => setIsOpen((prev) => !prev)}
         size='sm'
         style={{ maxWidth: '600px', width: '100%' }}
       >
