@@ -5,8 +5,11 @@ import designQueen from '../../assets/images/academy-icons/Design-queen.png'
 import pitchDeck from '../../assets/images/academy-icons/Pitch-deck.png'
 import nemoursMarketing from '../../assets/images/academy-icons/Nemours-marketing.png'
 import socialDesign from '../../assets/images/academy-icons/SocialMedia-design.png'
+import NewProject from './NewProject'
+import { useState } from 'react'
 
 function MarketProjects() {
+  const [openNew, setOpenNew] = useState(false)
   const array = [
     {
       image: designQueen,
@@ -31,21 +34,28 @@ function MarketProjects() {
   ]
 
   return (
-    <PortfolioWrapper img={courseLogo} title={'Market-Ready Projects'}>
-      <div
-        className='d-grid'
-        style={{ gridTemplateColumns: 'repeat(3,1fr)', gap: '5rem' }}
+    <>
+      <PortfolioWrapper
+        img={courseLogo}
+        title={'Market-Ready Projects'}
+        setOpenNew={setOpenNew}
       >
-        {array.map((item, index) => (
-          <MarketCard
-            key={index}
-            imgSrc={item.image}
-            title={item.title}
-            uploaded={item.uploaded}
-          />
-        ))}
-      </div>
-    </PortfolioWrapper>
+        <div
+          className='d-grid'
+          style={{ gridTemplateColumns: 'repeat(3,1fr)', gap: '5rem' }}
+        >
+          {array.map((item, index) => (
+            <MarketCard
+              key={index}
+              imgSrc={item.image}
+              title={item.title}
+              uploaded={item.uploaded}
+            />
+          ))}
+        </div>
+      </PortfolioWrapper>
+      <NewProject isOpen={openNew} setIsOpen={setOpenNew} />
+    </>
   )
 }
 

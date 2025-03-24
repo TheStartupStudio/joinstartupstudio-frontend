@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import blueInternet from '../../assets/images/academy-icons/svg/internet-blue.svg'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
+import EditEduction from './EditEduction'
 
 function PortfolioContent({
   imgSrc,
@@ -8,7 +9,9 @@ function PortfolioContent({
   fullText,
   link,
   institution,
-  duration
+  duration,
+  setIsOpen,
+  setOpenNew
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -20,7 +23,13 @@ function PortfolioContent({
         <div className='text-black'>
           <div className='d-flex justify-content-between align-items-center'>
             <h4 className='mb-0 fs-21 fw-medium'>{title}</h4>
-            <img src={penIcon} alt='pen-icon' style={{ width: '20px' }} />
+            <img
+              src={penIcon}
+              className='cursor-pointer'
+              alt='pen-icon'
+              style={{ width: '20px' }}
+              onClick={() => setIsOpen((prev) => !prev)}
+            />
           </div>
           <p className='mb-0 fs-15 fw-medium'>{institution}</p>
           <p className='mb-0 fs-15 fw-medium'>{duration}</p>

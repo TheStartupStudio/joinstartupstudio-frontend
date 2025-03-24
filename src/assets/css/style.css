@@ -4494,6 +4494,10 @@ wave > wave:first-child {
   font-size: 27px;
 }
 
+.fs-20 {
+  font-size: 20px;
+}
+
 .fs-21 {
   font-size: 21px;
 }
@@ -4754,11 +4758,33 @@ wave > wave:first-child {
 }
 
 .portfolio-u:hover {
-  color: #51c7df;
+  color: #51c7df !important;
 }
 
 .object-scale-down {
   object-fit: scale-down;
+}
+
+.internet-class {
+  filter: grayscale(100%) brightness(0%);
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.calendar-icon {
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.white-space-no-wrap {
+  white-space: nowrap;
+}
+
+.p-block-5 {
+  padding-block: 5rem !important;
 }
 
 @media (max-width: 1024px) {

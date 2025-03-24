@@ -1,6 +1,6 @@
 import plusIcon from '../../assets/images/academy-icons/svg/Plus-Icon.svg'
 
-function PortfolioWrapper({ img, title, children }) {
+function PortfolioWrapper({ img, title, children, setOpenNew }) {
   return (
     <div className='p-4 register-section w-100 h-fit-content relative'>
       <div className='d-flex gap-3 align-items-center'>
@@ -8,7 +8,11 @@ function PortfolioWrapper({ img, title, children }) {
         <h4 className='fs-14 fw-medium my-details-header text-black'>
           {title}
         </h4>
-        <span className='cursor-pointer' style={{ zIndex: '1' }}>
+        <span
+          className='cursor-pointer'
+          style={{ zIndex: '1' }}
+          onClick={() => setOpenNew((prev) => !prev)}
+        >
           <img
             className='left-arrow-modal object-scale-down'
             src={plusIcon}
