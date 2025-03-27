@@ -12,7 +12,8 @@ import {
   UPDATE_USER_TNC,
   SET_LOGIN_LOADING,
   USER_CHANGE_PROFESSION,
-  SET_AUTH_MODAL
+  SET_AUTH_MODAL,
+  SET_EMAIL
 } from './Types'
 
 const user = JSON.parse(localStorage.getItem('user'))
@@ -55,6 +56,18 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true
+      }
+
+    case SET_EMAIL:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          user: {
+            ...state.user.user,
+            email: payload
+          }
+        }
       }
 
     case USER_LOGIN_SUCCESS:
@@ -174,6 +187,7 @@ const userReducer = (state = initialState, action) => {
           social_links: payload
         }
       }
+      console.log(userObject, 'leart117')
       localStorage.setItem('user', JSON.stringify(userObject))
 
       return state

@@ -13,7 +13,8 @@ import {
   UPDATE_USER_TNC,
   SET_LOGIN_LOADING,
   USER_CHANGE_PROFESSION,
-  SET_AUTH_MODAL
+  SET_AUTH_MODAL,
+  SET_EMAIL
 } from './Types'
 import axiosInstance from '../../utils/AxiosInstance'
 
@@ -111,6 +112,7 @@ export const userUpdate = (data) => async (dispatch) => {
   }
 }
 export const userUpdateProfession = (data) => async (dispatch) => {
+  console.log('ridon114', data)
   try {
     dispatch({
       type: USER_CHANGE_PROFESSION,
@@ -123,6 +125,13 @@ export const userUpdateProfession = (data) => async (dispatch) => {
     })
   }
 }
+export const setEmail = (payload) => {
+  return (dispatch, getState) => {
+    console.log(payload, 'leart130')
+    dispatch({ type: SET_EMAIL, payload })
+  }
+}
+// export const setEmail = (payload) => ({ type: SET_EMAIL, payload })
 
 export const editSocialMedia = (socialLinks) => async (dispatch) => {
   try {

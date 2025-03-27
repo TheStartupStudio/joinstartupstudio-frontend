@@ -7,9 +7,11 @@ import {
   GET_ALL_USERS_REJECTED,
   GET_STUDENT_INFO_BY_ID,
   GET_STUDENT_INFO_BY_ID_ERROR,
-  GET_STUDENT_INFO_BY_ID_SUCCESS
+  GET_STUDENT_INFO_BY_ID_SUCCESS,
+  EDIT_USER_WITH_ID_PENDING,
+  EDIT_USER_WITH_ID_FULFILLED,
+  EDIT_USER_WITH_ID_REJECTED
 } from './Types'
-
 
 const initialState = {
   users: [],
@@ -20,7 +22,7 @@ const initialState = {
     isLoading: false,
     error: null,
     data: null
-  },
+  }
 }
 
 const usersReducer = (state = initialState, action) => {
@@ -67,9 +69,8 @@ const usersReducer = (state = initialState, action) => {
 
         studentInfo: {
           ...state.studentInfo,
-          isLoading: true,
+          isLoading: true
         }
-
       }
     case GET_STUDENT_INFO_BY_ID_SUCCESS:
       return {
@@ -89,6 +90,28 @@ const usersReducer = (state = initialState, action) => {
           error: payload.error,
           isLoading: false
         }
+      }
+    case EDIT_USER_WITH_ID_PENDING:
+      return {
+        ...state,
+        loading: true
+      }
+
+    case EDIT_USER_WITH_ID_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        selectedUser: payload,
+        users: state.users.map((user) =>
+          user.id === payload.id ? payload : user
+        )
+      }
+
+    case EDIT_USER_WITH_ID_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        error: payload.error
       }
     default:
       return state

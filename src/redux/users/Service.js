@@ -24,10 +24,20 @@ export const getStudentInfoByIdAPI = async (id) => {
   }
 }
 
+export const editUser = async (data) => {
+  try {
+    const response = await axiosInstance.put(`/users/edit-user/`, data)
+    return response
+  } catch (e) {
+    throw e?.response
+  }
+}
+
 const usersService = {
   getAllUsers,
   getUserWithId,
-  getStudentInfoByIdAPI
+  getStudentInfoByIdAPI,
+  editUser
 }
 
 export default usersService

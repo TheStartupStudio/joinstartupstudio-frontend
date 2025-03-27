@@ -153,7 +153,12 @@ function AboutMe({ user }) {
                 isExpanded && 'width-50'
               }`}
             >
-              {isExpanded ? fullText : `${shortText}...`}
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: isExpanded ? fullText : `${shortText}...`
+                }}
+              />
+
               <span
                 className='blue-color ml-2 fw-medium cursor-pointer'
                 onClick={() => setIsExpanded(!isExpanded)}
