@@ -6,20 +6,23 @@ import ExpandLogo from '../../assets/images/academy-icons/fast-arrow-right.png'
 import ProfilePhoto from '../../assets/images/academy-icons/profile.jpeg'
 import SettingsLogo from '../../assets/images/academy-icons/settings 4.png'
 import SettingsIcon from '../../assets/images/academy-icons/svg/settings.svg'
+import LogOutIcon from '../../assets/images/academy-icons/svg/LogOut.svg'
 import CoursEnIcon from '../../assets/images/academy-icons/svg/course-in-e.svg'
 import DashIcon from '../../assets/images/academy-icons/svg/dashboard.svg'
 import IntroToIcon from '../../assets/images/academy-icons/svg/intro-to-course.svg'
 import LeadershipIcon from '../../assets/images/academy-icons/svg/leadership-journal.svg'
 import MasterIcon from '../../assets/images/academy-icons/svg/master-classes.svg'
 import PortfolioIcon from '../../assets/images/academy-icons/svg/my-portfolio.svg'
-import { setAccordionToggled } from '../../redux'
+import { setAccordionToggled, userLogout } from '../../redux'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import SidebarItem from './SidebarItem'
+import { setGeneralLoading } from '../../redux/general/Actions'
 
 const InstructorSidebar = (props) => {
   const [isTextVisible, setIsTextVisible] = useState(true)
   const dispatch = useDispatch()
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
+  const { user } = useSelector((state) => state.user.user)
 
   const truncateEmail = (email) => {
     if (email.length > 15) {
@@ -42,7 +45,23 @@ const InstructorSidebar = (props) => {
   const handleSidebarToggle = () => {
     dispatch(toggleCollapse())
   }
-  const { user } = JSON.parse(localStorage.getItem('user'))
+
+  const handleLogout = async () => {
+    dispatch(setGeneralLoading(true))
+    await dispatch(userLogout())
+      .then(() => {
+        localStorage.clear()
+        // history.push('/')
+        window.location.href = '/'
+      })
+      .catch((error) => {
+        console.log('error', error)
+      })
+      .finally(() => {
+        window.location.href = '/login'
+        dispatch(setGeneralLoading(false))
+      })
+  }
 
   return (
     <div class='d-flex flex-column justify-content-between h-93'>
@@ -124,7 +143,7 @@ const InstructorSidebar = (props) => {
       </ul>
       <ul
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
-        style={{ marginBottom: '-10px' }}
+        style={{ marginTop: '-20px' }}
       >
         <li className='sub-li'>
           <button className='sidebar-button' onClick={handleSidebarToggle}>
@@ -169,6 +188,23 @@ const InstructorSidebar = (props) => {
               )}
             </div>
           </Link>
+        </li>
+        <li className='sub-li' onClick={handleLogout}>
+          <div className='logout-button'>
+            <div className='d-flex w-100' style={{ alignItems: 'center' }}>
+              <Col md='2' className='col-2 icon_container'>
+                <img
+                  className='profile-photo'
+                  src={LogOutIcon}
+                  alt='Icon'
+                  style={{ width: '26px' }}
+                />
+              </Col>
+              {isTextVisible && !isCollapsed && (
+                <div className='flex-grow-1 ms-1'>LOG OUT</div>
+              )}
+            </div>
+          </div>
         </li>
       </ul>
     </div>

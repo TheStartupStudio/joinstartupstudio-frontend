@@ -5,6 +5,7 @@ import IntlMessages from '../../utils/IntlMessages'
 import EducationPortfolio from '../../components/AcademyPortfolio/EducationPortfolio'
 import ExperiencePortfolio from '../../components/AcademyPortfolio/ExperiencePortfolio'
 import MarketProjects from '../../components/AcademyPortfolio/MarketProjects'
+import { useSelector } from 'react-redux'
 
 function AcademyPortfolio() {
   const [activeTab, setActiveTab] = useState(0)
@@ -24,7 +25,7 @@ function AcademyPortfolio() {
     }
   }
 
-  const { user } = JSON.parse(localStorage.getItem('user'))
+  const { user } = useSelector((state) => state.user.user)
 
   return (
     <div className='container-fluid'>

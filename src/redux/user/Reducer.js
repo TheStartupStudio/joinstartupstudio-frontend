@@ -13,7 +13,8 @@ import {
   SET_LOGIN_LOADING,
   USER_CHANGE_PROFESSION,
   SET_AUTH_MODAL,
-  SET_EMAIL
+  SET_EMAIL,
+  SET_BIO
 } from './Types'
 
 const user = JSON.parse(localStorage.getItem('user'))
@@ -66,6 +67,18 @@ const userReducer = (state = initialState, action) => {
           user: {
             ...state.user.user,
             email: payload
+          }
+        }
+      }
+
+    case SET_BIO:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          user: {
+            ...state.user.user,
+            bio: payload
           }
         }
       }
@@ -187,7 +200,6 @@ const userReducer = (state = initialState, action) => {
           social_links: payload
         }
       }
-      console.log(userObject, 'leart117')
       localStorage.setItem('user', JSON.stringify(userObject))
 
       return state

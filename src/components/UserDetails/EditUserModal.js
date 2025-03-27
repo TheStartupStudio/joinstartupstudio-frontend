@@ -17,6 +17,7 @@ import twitterLogo from '../../assets/images/academy-icons/twitter.png'
 import { userUpdate, userUpdateProfileImage } from '../../redux'
 import {
   editSocialMedia,
+  setBio,
   setEmail,
   userUpdateProfession
 } from '../../redux/user/Actions'
@@ -30,7 +31,6 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
 
   const { user } = useSelector((state) => state.user.user)
   const profileImage = useSelector((state) => state.user.profile_image)
-  console.log('ridon29', user)
 
   const [loading, setLoading] = useState(false)
 
@@ -57,7 +57,6 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
       console.error('User data is missing. Cannot proceed.')
       return
     }
-    console.log(changedUser, 'leart56')
     setLoading(true)
     const params = {
       name: changedUser.name,
@@ -71,12 +70,9 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     }
 
     // if (user.email !== changedUser.email) {
-    //   console.log('ridon70')
     //   if (!changedUser.email || changedUser.email === '') {
-    //     console.log('ridon71', changedUser.email)
     //     toast.error(<IntlMessages id='alerts.email_required' />)
     //   } else if (!validateEmail(changedUser.email)) {
-    //     console.log('ridon74', changedUser.email)
     //     toast.error(<IntlMessages id='alerts.valid_email' />)
     //   } else {
     //     try {
@@ -99,7 +95,6 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     //       localStorage.setItem('user', JSON.stringify(userObject))
     //     } catch (err) {
     //       setLoading(false)
-    //       console.log('ridon96')
     //       toast.error(err.response?.data || 'An error occurred')
     //     }
     //   }
@@ -139,6 +134,10 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
         if (profileImage !== res.data.profile_image) {
           localStorage.setItem('profileImage', res.data.profile_image)
           dispatch(userUpdateProfileImage(res.data.profile_image))
+        }
+
+        if (user.user.bio !== res.data.bio) {
+          dispatch(setBio(res.data.bio))
         }
 
         toast.success(<IntlMessages id='alert.my_account.success_change' />)
@@ -220,7 +219,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                 <h4 className='fs-15'>Headshot</h4>
                 <div className='d-flex flex-column p-3 gap-2 profile-container align-items-center'>
                   <img
-                    className='trash-icon align-self-end'
+                    className='trash-icon align-self-end cursor-pointer'
                     src={trashIcon}
                     alt='trash'
                   />
