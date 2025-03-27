@@ -18,6 +18,27 @@ function EditEduction({ isOpen, setIsOpen }) {
   const [endDate, setEndDate] = useState(null)
   const [isCurrentStudent, setIsCurrentStudent] = useState(false)
 
+    const [formData, setFormData] = useState({
+      organizationName: '',
+      location: '',
+      website: '',
+      startDate: null,
+      endDate: null,
+      description: '',
+      imageUrl: null,
+      currentPosition: false,
+      showSection: true,
+      jobTitle:''
+    })
+
+
+    const handleInputChange = (field, value) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }))
+    }
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={() => setIsOpen((prev) => !prev)}>
@@ -41,16 +62,19 @@ function EditEduction({ isOpen, setIsOpen }) {
                     id={'schoolname'}
                     labelTitle={'School Name'}
                     imgSrc={penIcon}
+                    onChange={(e) => handleInputChange('organizationName', e.target.value)}
                   />
                   <ModalInput
                     id={'schoolUrl'}
                     labelTitle={'School Url'}
                     imgSrc={penIcon}
+                    onChange={(e) => handleInputChange('website', e.target.value)}
                   />
                   <ModalInput
                     id={'degree'}
                     labelTitle={'Degree'}
                     imgSrc={penIcon}
+                    onChange={(e) => handleInputChange('jobTitle', e.target.value)}
                   />
                 </div>
               </div>

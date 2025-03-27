@@ -4,7 +4,8 @@ function ModalInput({
   imgSrc,
   imageStyle,
   type = 'text',
-  value = ''
+  value = '',
+  onChange
 }) {
   return (
     <div className='relative w-100 d-flex justify-content-between input-container-modal'>
@@ -14,12 +15,13 @@ function ModalInput({
         className='input-style'
         placeholder=' '
         value={value}
+        onChange={onChange}
       />
-      <label for={id} className='label-style'>
+      <label htmlFor={id} className='label-style'>
         {labelTitle}
       </label>
-      <label for={id}>
-        <img className='image-label' src={imgSrc} style={imageStyle} />
+      <label htmlFor={id}>
+        <img className='image-label' src={imgSrc} style={imageStyle} alt="" />
       </label>
     </div>
   )
