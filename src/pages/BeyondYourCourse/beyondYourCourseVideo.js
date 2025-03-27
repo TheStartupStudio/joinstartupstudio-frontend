@@ -68,10 +68,10 @@ export default function BeyondYourCourseVideo(props) {
       setPageTitle('beyond_your_course.master_classes')
       setPageDescription('beyond_your_course.master_classes_description')
       getBeyondYourCourseVideos('master')
-    } else if (window.location.href.includes('startup-live')) {
+    } else if (window.location.href.includes('story-in-motion')) {
       setPageTitle('startup_live.startup_archive')
       setPageDescription('startup_live.startup_archive_description')
-      getBeyondYourCourseVideos('startup-live')
+      getBeyondYourCourseVideos('story-in-motion')
     }
     getVideo()
   }, [id, pageTitle])

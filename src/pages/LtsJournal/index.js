@@ -556,7 +556,15 @@ function LtsJournal(props) {
          onClick={toggleModal}
          style={{ zIndex: '1' }}
        >
-         <img className='left-arrow-modal' src={leftArrow} alt='left' />
+         <img className='left-arrow-modal' src={leftArrow} alt='left' 
+         style={{
+          cursor: 'pointer',
+          position: 'relative',
+          right: '20px',
+          top: '-15px',
+          width: '20px',
+          height: '20px'
+         }} />
        </span>
        <ModalBody>
          <img src={progressLogo} alt='user' className='mb-3' />

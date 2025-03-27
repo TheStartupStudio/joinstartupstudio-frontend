@@ -12,8 +12,11 @@ import './index.css'
 import Select from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import ModalInput from '../../components/ModalInput/ModalInput'
+import searchJ from '../../assets/images/academy-icons/search.png'
+import { injectIntl } from 'react-intl';
 
-export default function GuidanceEncouragement() {
+function GuidanceEncouragement({ intl }) {
   const history = useHistory(); // Add this hook
   
   const [pageTitle, setPageTitle] = useState('')
@@ -52,6 +55,19 @@ export default function GuidanceEncouragement() {
     const handleFilter=(selectedFilter)=>{
       setFilterBy(selectedFilter)
     }
+    const handleJournalSearch = (e) => {
+      const keyword = e.target.value.toLowerCase()
+      setJournals(
+        keyword 
+          ? journalsData.filter(journal => 
+              journal.title.toLowerCase().includes(keyword) || 
+              journal.children.some(child => 
+                child.title.toLowerCase().includes(keyword)
+              )
+            )
+          : journalsData
+      )
+    }
 
   const dispatch = useDispatch()
 
@@ -83,7 +99,7 @@ export default function GuidanceEncouragement() {
       setActiveLevel(0)
     } else if (window.location.href.includes('master-classes/videos')) {
       setActiveLevel(1)
-    } else if (window.location.href.includes('startup-live/videos')) {
+    } else if (window.location.href.includes('story-in-motion/videos')) {
       setActiveLevel(2)
     }
     getUserConnections()
@@ -139,7 +155,7 @@ export default function GuidanceEncouragement() {
 
   const getStartupLiveVideos = async () => {
     await axiosInstance
-      .get(`/contents/by-type/startup-live`)
+      .get(`/contents/by-type/story-in-motion`)
       .then((response) => {
         setPageVideos(response.data)
         setItemOffset(0);
@@ -169,7 +185,7 @@ export default function GuidanceEncouragement() {
         history.push('/master-classes/videos');
         break;
       case 2:
-        history.push('/startup-live/videos');
+        history.push('/story-in-motion/videos');
         break;
       default:
         break;
@@ -252,7 +268,7 @@ export default function GuidanceEncouragement() {
                     <div
                       key={level.id}
                      
-                      className={`course-level ${activeLevel === index ? 'active-level' : ''}`}
+                      className={`course-level ${activeLevel === index ? 'active-level-master' : ''}`}
                       onClick={() => handleLevelChange(index)}
                     >
                       {level.title}
@@ -260,20 +276,25 @@ export default function GuidanceEncouragement() {
                   ))}
                 </div>
                 <div className="d-flex justify-content-between">
-                  {/* <div> */}
-                    <input type='text'
-                          className='course-btn search-journal search-journal-input'
-                          name='searchedNote'
-                          placeholder='Search journals'
-                          // onChange={handleJournalSearch}
-                          style={{
-                          backgroundColor:'white',
-                          border: 'none',
-                          outline: 'none',
-                          width: '400px'
-                          }}/>
-                  <FontAwesomeIcon icon={faSearch} className="search-icon" style={{width:'20px',height:'20px', color: '#707070',position:'relative',right:'32%',top:'20px'}} />
-                  {/* </div> */}
+                <div className="search-input-wrapper">
+                    <div className='justify-content-between'>
+            <div>
+              <ModalInput
+              
+               className='course-btn search-journal'
+               onChange={handleJournalSearch}
+                id={'searchBar'}
+                type={'search'}
+                labelTitle={intl.formatMessage({
+                  id: 'my_journal.search_journals',
+                  defaultMessage: 'Search Journals'
+                })}
+                imgSrc={searchJ}
+                imageStyle={{ filter: 'grayscale(1)' }}
+              />
+            </div>
+          </div>
+          </div>
                 <div
                  style={{
                                   display: 'inline-block',
@@ -325,8 +346,8 @@ export default function GuidanceEncouragement() {
                       title={video.title}
                       description={video.description}
                       page={
-                        window.location.href.includes('startup-live/videos')
-                          ? 'startup-live'
+                        window.location.href.includes('story-in-motion/videos')
+                          ? 'story-in-motion'
                           : pageTitle === 'CAREER GUIDANCE'
                           ? 'master-classes'
                           : 'encouragement'
@@ -336,33 +357,36 @@ export default function GuidanceEncouragement() {
                       type={'view-all'}
                     />
                   ))}
+                  
+                  {/* Pagination moved inside videos-container */}
+                  {pageVideos.length > videosPerPage && (
+                    <div className='w-100 d-flex justify-content-center mt-4'>
+                      <div className="pagination-info">
+                        <ReactPaginate
+                          previousLabel="<<"
+                          nextLabel=">>"
+                          breakLabel="..."
+                          pageCount={pageCount}
+                          marginPagesDisplayed={1}
+                          pageRangeDisplayed={3}
+                          onPageChange={handlePageClick}
+                          containerClassName="pagination custom-pagination"
+                          pageClassName="page-item"
+                          pageLinkClassName="page-link"
+                          previousClassName="page-item"
+                          previousLinkClassName="page-link"
+                          nextClassName="page-item" 
+                          nextLinkClassName="page-link"
+                          breakClassName="page-item"
+                          breakLinkClassName="page-link"
+                          activeClassName="active"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
                 </div>
               </div>
-              {pageVideos.length > videosPerPage && (
-                <div className='d-flex justify-content-center mt-4'>
-                  <ReactPaginate
-                    nextLabel='next'
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={3}
-                    marginPagesDisplayed={2}
-                    pageCount={pageCount}
-                    previousLabel='prev'
-                    pageClassName='page-item'
-                    pageLinkClassName='page-link px-3'
-                    previousClassName='page-item me-2'
-                    previousLinkClassName='page-link'
-                    nextClassName='page-item ms-2'
-                    nextLinkClassName='page-link'
-                    breakLabel='...'
-                    breakClassName='page-item'
-                    breakLinkClassName='page-link px-3'
-                    containerClassName='pagination custom-pagination mb-0'
-                    activeClassName='active'
-                    renderOnZeroPageCount={null}
-                  />
-                </div>
-              )}
             </div>
           </div>
           {/* <div className='col-12 col-xl-3 px-2 mt-3'> */}
@@ -374,3 +398,6 @@ export default function GuidanceEncouragement() {
     </div>
   )
 }
+
+// Export the component wrapped with injectIntl
+export default injectIntl(GuidanceEncouragement);

@@ -788,7 +788,7 @@
   }
 
   .beyond-videos-mobile {
-    display: flex;
+    display: none;
   }
 
   .portfolio-mobile-text-align {

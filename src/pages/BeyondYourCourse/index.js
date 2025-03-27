@@ -17,6 +17,11 @@ import masterIcon from '../../assets/images/master-icon.png'
 import storyInMotion from '../../assets/images/story-in-motion-logo.png'
 import Select from 'react-select'
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
+import Waveform from '../StoryInMotion/waveform'
+import { Modal } from 'react-bootstrap'
+import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png';
+import { useLocation } from 'react-router-dom';
+import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 
 
 export default function BeyondYourCourse() {
@@ -41,6 +46,12 @@ export default function BeyondYourCourse() {
    const [selectedLanguage, setSelectedLanguage] = useState(null)
   const [startStartupLiveVideosIndex, setStartStartupLiveVideosIndex] = useState(0);
   const [endStartupLiveVideosIndex, setEndStartupLiveVideosIndex] = useState(5);
+  const [showAudioModal, setShowAudioModal] = useState(false)
+  const [selectedAudio, setSelectedAudio] = useState(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [podcastEpisodes, setPodcastEpisodes] = useState([]);
+  const location = useLocation();
+  const [isViewAll, setIsViewAll] = useState(false);
 
   const options = [
     { value: 'en', label: 'English' },
@@ -206,6 +217,41 @@ export default function BeyondYourCourse() {
     videoData && setShowVideoModal(true)
   }, [videoData])
 
+  useEffect(() => {
+    const fetchPodcastEpisodes = async () => {
+      try {
+        const response = await axiosInstance.get('/podcast?page=0&size=5');
+        setPodcastEpisodes(response.data.data);
+      } catch (error) {
+        console.error('Error fetching podcast episodes:', error);
+      }
+    };
+
+    fetchPodcastEpisodes();
+  }, []);
+
+  useEffect(() => {
+    // Check if the query parameter `view=podcasts` is present
+    const params = new URLSearchParams(location.search);
+    setIsViewAll(params.get('view') === 'podcasts');
+  }, [location.search]);
+
+  useEffect(() => {
+    const fetchPodcastEpisodes = async () => {
+      try {
+        const endpoint = isViewAll
+          ? '/podcast?page=0&size=100' // Fetch all episodes
+          : '/podcast?page=0&size=5'; // Fetch only 5 episodes
+        const response = await axiosInstance.get(endpoint);
+        setPodcastEpisodes(response.data.data);
+      } catch (error) {
+        console.error('Error fetching podcast episodes:', error);
+      }
+    };
+
+    fetchPodcastEpisodes();
+  }, [isViewAll]);
+
   const getUserConnections = async () => {
     await axiosInstance.get('/connect').then((res) => {
       setConnections(res.data.data)
@@ -232,7 +278,7 @@ export default function BeyondYourCourse() {
 
   const getStartupLiveVideos = async () => {
     await axiosInstance
-      .get(`/contents/user-contents/startup-live`) 
+      .get(`/contents/user-contents/story-in-motion`) 
       .then((response) => {
         setStartupLiveVideos(response.data)
       })
@@ -306,6 +352,11 @@ export default function BeyondYourCourse() {
         setEndMasterClassVideoIndexMobile(endIndexMobile - 1)
       }
     }
+  }
+
+  const handleAudioClick = (podcast) => {
+    setSelectedAudio(podcast); // Set the selected podcast
+    setShowAudioModal(true); // Show the audio modal
   }
 
   return (
@@ -599,84 +650,61 @@ export default function BeyondYourCourse() {
                   </div> */}
                 </div>
                 </div>
-                <div className='videos-container'>
-                <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
-                <div className='title-container'>
-                  <img 
-                                    src={storyInMotion}
-                                    alt='logo'
-                                    style={{ width: '36px', height: '36px' }}
-                                    className='welcome-journey-text__icon'
-                                  />
-                  <h3>
-                    
-                    <IntMessages id='beyond_your_course.startup_live' />
-                  </h3>
-                  </div>
-                  <Link className='guidance-link' to={`/startup-live/videos`} style={{marginRight:'1rem'}}>
-                    <IntMessages id='general.view_all' />
-                    <img src={rightArrow} style={{marginLeft:'10px',marginBottom:'3px'}}/>
-                  </Link>
-                </div>
+                <div className="videos-container">
+  <div className="guidance-videos-top mb-3 guidance-encouragement-page-titles">
+    <div className="title-container">
+      <img
+        src={storyInMotion}
+        alt="logo"
+        style={{ width: '36px', height: '36px' }}
+        className="welcome-journey-text__icon"
+      />
+      <h3>
+        <IntMessages id="beyond_your_course.startup_live" />
+      </h3>
+    </div>
+    <Link
+      className="guidance-link"
+      to="/story-in-motion/videos"
+      style={{ marginRight: '1rem' }}
+    >
+      <IntMessages id="general.view_all" />
+      <img
+        src={rightArrow}
+        style={{ marginLeft: '10px', marginBottom: '3px' }}
+        alt="View All"
+      />
+    </Link>
+  </div>
 
-                <div className='beyond-videos-desktop'>
-                  {/* <div className='arrow-icon-1'>
-                    <button
-                      className='videos-track'
-                      onClick={() =>
-                        handlePreviousVideo(
-                          3,
-                          startStartupLiveVideosIndex,
-                          endStartupLiveVideosIndex
-                        )
-                      }
-                    >
-                      <FontAwesomeIcon icon={faChevronLeft} className='videos-track-icon' />
-                    </button>
-                  </div> */}
-                  <div
-                    className='card-group desktop-menu card-group-beyond-your-course w-100'
-                    // style={{ marginTop: '15px' }}
-                  >
-                    {startupLiveVideos
-                      ?.slice(startStartupLiveVideosIndex, endStartupLiveVideosIndex)
-                      .map((video, index) => (
-                        <Video
-                          id={video.id}
-                          key={index}
-                          thumbnail={video.thumbnail}
-                          title={video.title}
-                          description={video.description}
-                          page={'startup-live'}
-                          isMainPage={true}
-                          updateFavorite={(id, type, value) =>
-                            updateFavorite(id, type, value)
-                          }
-                          videoData={video}
-                          connections={connections}
-                        />
-                      ))}
-                  </div>
-                  {/* <div className='arrow-icon-1 justify-content-start'>
-                    <button
-                      className='videos-track'
-                      style={{ width: '2%' }}
-                      onClick={() =>
-                        handleNextVideo(
-                          2,
-                          startMasterClassVideoIndex,
-                          endMasterClassVideoIndex
-                        )
-                      }
-                    >
-                      <FontAwesomeIcon
-                        icon={faChevronRight}
-                        className='videos-track-icon'
-                      />
-                    </button>
-                  </div> */}
-                </div>
-                </div>
+  <div className="beyond-videos-desktop">
+    <div className="card-group desktop-menu card-group-beyond-your-course w-100">
+      {/* Render only podcast episodes */}
+      {podcastEpisodes.map((podcast, index) => (
+        <div
+          key={index}
+          className="beyond-your-course-video-thumb"
+          style={{ width: '200px', margin: '10px' }}
+          onClick={() => handleAudioClick({ ...podcast, page: 'podcast' })}
+        >
+          <img
+            src={podcast.thumbnail || storyInMotionPodcast}
+            alt={podcast.title}
+            style={{
+              width: '100%',
+              height: '150px',
+              objectFit: 'cover',
+              borderRadius: '25px',
+            }}
+          />
+          <h5 style={{ textAlign: 'center', marginTop: '10px' }}>
+            {podcast.title}
+          </h5>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
 
                 <div className='row mt-2'>
                   <div className='beyond-videos-mobile mc-videos-mobile'>
@@ -772,6 +800,64 @@ export default function BeyondYourCourse() {
           }
           isMainPage={true}
         />
+      )}
+      {showAudioModal && selectedAudio && (
+        <Modal
+          show={showAudioModal}
+          onHide={() => {
+            setShowAudioModal(false);
+            setIsPlaying(false);
+          }}
+          centered
+          size="lg"
+          className="podcast-modal"
+        >
+          <Modal.Header>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <img
+                    src={storyInMotion}
+                    alt="Story in Motion Logo"
+                    style={{ width: '36px', height: '36px' }}
+                  />
+                  <Modal.Title style={{ fontWeight: '400', fontSize: '15px' }}>
+                    Story in Motion Podcast Episode
+                  </Modal.Title>
+                </div>
+                <img
+                  className="left-arrow-modal"
+                  src={leftArrow} 
+                  alt="Close"
+                  style={{
+                    cursor: 'pointer',
+                    position: 'relative',
+                    right: '20px',
+                    top: '-15px',
+                    width: '20px',
+                    height: '20px',
+                    boxShadow:' -4px 0px 3px rgba(0, 0, 0, 0.08), 0px 2px 3px rgba(0, 0, 0, 0.08)'
+                  }}
+                  onClick={() => {
+                    setShowAudioModal(false);
+                    setIsPlaying(false);
+                  }}
+                />
+              </div>
+              <div style={{ fontWeight: '600', fontSize: '14px', color: '#333' }}>
+                Now Playing: {selectedAudio.title}
+              </div>
+            </div>
+          </Modal.Header>
+          <Modal.Body>
+            <Waveform
+              url={selectedAudio.url}
+              isPlayingParent={setIsPlaying}
+              isPlaying={isPlaying}
+              selectedTrack={selectedAudio}
+            />
+          </Modal.Body>
+        </Modal>
       )}
     </>
   )
