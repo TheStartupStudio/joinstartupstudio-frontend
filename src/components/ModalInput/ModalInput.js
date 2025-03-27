@@ -1,10 +1,12 @@
+import React from 'react'
+
 function ModalInput({
   id,
   labelTitle,
   imgSrc,
   imageStyle,
   type = 'text',
-  value = '',
+  value,
   onChange
 }) {
   return (
@@ -21,7 +23,7 @@ function ModalInput({
         {labelTitle}
       </label>
       <label htmlFor={id}>
-        <img className='image-label' src={imgSrc} style={imageStyle} alt="" />
+        <img className='image-label' src={imgSrc} style={imageStyle} />
       </label>
     </div>
   )

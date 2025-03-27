@@ -10,6 +10,7 @@ import CancelSubModal from './CancelSubModal'
 import CertificateModal from './CertificateModal'
 import EditUserModal from './EditUserModal'
 import SubscriptionModal from './SubscriptionModal'
+import { useSelector } from 'react-redux'
 
 function UserDetails({ profilePic, userName, userProffesion }) {
   const [modal, setModal] = useState(false)
@@ -39,7 +40,8 @@ function UserDetails({ profilePic, userName, userProffesion }) {
     setCertificate((prev) => !prev)
   }
 
-  const { user } = JSON.parse(localStorage.getItem('user'))
+  // const { user } = JSON.parse(localStorage.getItem('user'))
+  const { user } = useSelector((state) => state.user.user)
 
   return (
     <>
