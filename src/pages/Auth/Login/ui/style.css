@@ -1,5 +1,5 @@
 .public-login-form {
-  height: 60vh;
+  /* height: 60vh; */
   min-height: 60vh;
   display: flex;
   flex-direction: column;

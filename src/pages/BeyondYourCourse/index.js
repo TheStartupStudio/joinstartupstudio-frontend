@@ -14,12 +14,21 @@ import SavedVideosWidget from '../../components/Video/savedVideosWidget'
 import { VideoModal } from '../../components/Modals/videoModal'
 import './index.css'
 import masterIcon from '../../assets/images/master-icon.png'
+import storyInMotion from '../../assets/images/story-in-motion-logo.png'
 import Select from 'react-select'
+import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
+import Waveform from '../StoryInMotion/waveform'
+import { Modal } from 'react-bootstrap'
+import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png';
+import { useLocation } from 'react-router-dom';
+import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
+
 
 export default function BeyondYourCourse() {
   const dispatch = useDispatch()
   const [encouragementVideos, setEncouragementVideos] = useState([])
   const [masterClassVideos, setMasterClassVideos] = useState([])
+  const [startupLiveVideos,setStartupLiveVideos]=useState([])
   const [startVideoIndex, setStartVideoIndex] = useState(0)
   const [endVideoIndex, setEndVideoIndex] = useState(5)
   const [endVideoIndexMobile, setEndVideoIndexMobile] = useState(2)
@@ -35,6 +44,14 @@ export default function BeyondYourCourse() {
   const [savedVideos, setSavedVideos] = useState([])
   const [width, setWidth] = useState(window.innerWidth)
    const [selectedLanguage, setSelectedLanguage] = useState(null)
+  const [startStartupLiveVideosIndex, setStartStartupLiveVideosIndex] = useState(0);
+  const [endStartupLiveVideosIndex, setEndStartupLiveVideosIndex] = useState(5);
+  const [showAudioModal, setShowAudioModal] = useState(false)
+  const [selectedAudio, setSelectedAudio] = useState(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [podcastEpisodes, setPodcastEpisodes] = useState([]);
+  const location = useLocation();
+  const [isViewAll, setIsViewAll] = useState(false);
 
   const options = [
     { value: 'en', label: 'English' },
@@ -103,6 +120,18 @@ export default function BeyondYourCourse() {
       )
     }
 
+    if (type === 'startup') {
+      setStartupLiveVideos(
+        startupLiveVideos.map((video) => {
+          if (video.id === id) {
+            video.favorite = !video.favorite
+            foundVideo = video
+          }
+          return video
+        })
+      )
+    }
+
     if (value) {
       setSavedVideos((oldVideos) => [foundVideo, ...oldVideos])
       await axiosInstance
@@ -144,6 +173,17 @@ export default function BeyondYourCourse() {
         })
       )
     }
+    if (type === 'startup') {
+      setStartupLiveVideos(
+        startupLiveVideos.map((video) => {
+          if (video.id === id) {
+            video.favorite = !video.favorite
+            foundVideo = video
+          }
+          return video
+        })
+      )
+    }
 
     await axiosInstance
       .delete(`/favorites/${id}`)
@@ -157,7 +197,7 @@ export default function BeyondYourCourse() {
       .then((response) => {
         if (
           response.data &&
-          (response.data.type === 'master' || response.data.type === 'guidance')
+          (response.data.type === 'master' || response.data.type === 'guidance' || response.data.type === 'startup')
         )
           setVideoData(response.data)
       })
@@ -167,6 +207,7 @@ export default function BeyondYourCourse() {
   useEffect(() => {
     getEncouragementVideos()
     getMasterClassVideos()
+    getStartupLiveVideos()
     getUserConnections()
     getSavedVideos()
     if (!isNaN(videoId)) getVideoData()
@@ -175,6 +216,41 @@ export default function BeyondYourCourse() {
   useEffect(() => {
     videoData && setShowVideoModal(true)
   }, [videoData])
+
+  useEffect(() => {
+    const fetchPodcastEpisodes = async () => {
+      try {
+        const response = await axiosInstance.get('/podcast?page=0&size=5');
+        setPodcastEpisodes(response.data.data);
+      } catch (error) {
+        console.error('Error fetching podcast episodes:', error);
+      }
+    };
+
+    fetchPodcastEpisodes();
+  }, []);
+
+  useEffect(() => {
+    // Check if the query parameter `view=podcasts` is present
+    const params = new URLSearchParams(location.search);
+    setIsViewAll(params.get('view') === 'podcasts');
+  }, [location.search]);
+
+  useEffect(() => {
+    const fetchPodcastEpisodes = async () => {
+      try {
+        const endpoint = isViewAll
+          ? '/podcast?page=0&size=100' // Fetch all episodes
+          : '/podcast?page=0&size=5'; // Fetch only 5 episodes
+        const response = await axiosInstance.get(endpoint);
+        setPodcastEpisodes(response.data.data);
+      } catch (error) {
+        console.error('Error fetching podcast episodes:', error);
+      }
+    };
+
+    fetchPodcastEpisodes();
+  }, [isViewAll]);
 
   const getUserConnections = async () => {
     await axiosInstance.get('/connect').then((res) => {
@@ -200,6 +276,15 @@ export default function BeyondYourCourse() {
       .catch((err) => err)
   }
 
+  const getStartupLiveVideos = async () => {
+    await axiosInstance
+      .get(`/contents/user-contents/story-in-motion`) 
+      .then((response) => {
+        setStartupLiveVideos(response.data)
+      })
+      .catch((err) => err)
+  }
+
   const handlePreviousVideo = async (page, startIndex, endIndex) => {
     if (startIndex > 0) {
       if (page === 1) {
@@ -208,6 +293,9 @@ export default function BeyondYourCourse() {
       } else if (page === 2) {
         setStartMasterClassVideoIndex(startIndex - 1)
         setEndMasterClassVideoIndex(endIndex - 1)
+      } else if (page === 3) {
+        setStartStartupLiveVideosIndex(startIndex - 1)
+        setEndStartupLiveVideosIndex(endIndex - 1)
       }
     }
   }
@@ -222,6 +310,11 @@ export default function BeyondYourCourse() {
       if (endIndex < masterClassVideos.length) {
         setStartMasterClassVideoIndex(startIndex + 1)
         setEndMasterClassVideoIndex(endIndex + 1)
+      }
+    } else if (page === 3) {
+      if (endIndex < startupLiveVideos.length) {
+        setStartStartupLiveVideosIndex(startIndex + 1)
+        setEndStartupLiveVideosIndex(endIndex + 1)
       }
     }
   }
@@ -238,6 +331,11 @@ export default function BeyondYourCourse() {
         setEndMasterClassVideoIndexMobile(endIndexMobile + 1)
       }
     }
+    else if (page === 3) {
+      if (endIndex < startupLiveVideos.length) {
+        setStartStartupLiveVideosIndex(startIndex + 1)
+        setEndStartupLiveVideosIndex(endIndex + 1)
+      }}
   }
 
   const handlePreviousVideoMobile = async (
@@ -254,6 +352,11 @@ export default function BeyondYourCourse() {
         setEndMasterClassVideoIndexMobile(endIndexMobile - 1)
       }
     }
+  }
+
+  const handleAudioClick = (podcast) => {
+    setSelectedAudio(podcast); // Set the selected podcast
+    setShowAudioModal(true); // Show the audio modal
   }
 
   return (
@@ -329,8 +432,9 @@ export default function BeyondYourCourse() {
                     <IntMessages id='beyond_your_course.encouragement_no_videos' />
                   </h3>
                   </div>
-                  <Link className='guidance-link' to={`/encouragement/videos`}>
+                  <Link className='guidance-link' to={`/encouragement/videos`} style={{marginRight:'1rem'}}>
                     <IntMessages id='general.view_all' />
+                    <img src={rightArrow} style={{marginLeft:'10px',marginBottom:'3px'}}/>
                   </Link>
                 </div>
 
@@ -474,8 +578,9 @@ export default function BeyondYourCourse() {
                     <IntMessages id='beyond_your_course.Career_Guidance' />
                   </h3>
                   </div>
-                  <Link className='guidance-link' to={`/master-classes/videos`}>
+                  <Link className='guidance-link' to={`/master-classes/videos`} style={{marginRight:'1rem'}}>
                     <IntMessages id='general.view_all' />
+                    <img src={rightArrow} style={{marginLeft:'10px',marginBottom:'3px'}}/>
                   </Link>
                 </div>
 
@@ -545,10 +650,65 @@ export default function BeyondYourCourse() {
                   </div> */}
                 </div>
                 </div>
+                <div className="videos-container">
+  <div className="guidance-videos-top mb-3 guidance-encouragement-page-titles">
+    <div className="title-container">
+      <img
+        src={storyInMotion}
+        alt="logo"
+        style={{ width: '36px', height: '36px' }}
+        className="welcome-journey-text__icon"
+      />
+      <h3>
+        <IntMessages id="beyond_your_course.startup_live" />
+      </h3>
+    </div>
+    <Link
+      className="guidance-link"
+      to="/story-in-motion/videos"
+      style={{ marginRight: '1rem' }}
+    >
+      <IntMessages id="general.view_all" />
+      <img
+        src={rightArrow}
+        style={{ marginLeft: '10px', marginBottom: '3px' }}
+        alt="View All"
+      />
+    </Link>
+  </div>
+
+  <div className="beyond-videos-desktop">
+    <div className="card-group desktop-menu card-group-beyond-your-course w-100">
+      {/* Render only podcast episodes */}
+      {podcastEpisodes.map((podcast, index) => (
+        <div
+          key={index}
+          className="beyond-your-course-video-thumb"
+          style={{ width: '200px', margin: '10px' }}
+          onClick={() => handleAudioClick({ ...podcast, page: 'podcast' })}
+        >
+          <img
+            src={podcast.thumbnail || storyInMotionPodcast}
+            alt={podcast.title}
+            style={{
+              width: '100%',
+              height: '150px',
+              objectFit: 'cover',
+              borderRadius: '25px',
+            }}
+          />
+          <h5 style={{ textAlign: 'center', marginTop: '10px' }}>
+            {podcast.title}
+          </h5>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
 
                 <div className='row mt-2'>
                   <div className='beyond-videos-mobile mc-videos-mobile'>
-                    <div className='arrow-icon-1'>
+                    {/* <div className='arrow-icon-1'>
                       <button
                         className='videos-track'
                         onClick={() => {
@@ -564,7 +724,7 @@ export default function BeyondYourCourse() {
                           className='videos-track-icon'
                         />
                       </button>
-                    </div>
+                    </div> */}
                     <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
                       {masterClassVideos
                         ?.slice(
@@ -640,6 +800,64 @@ export default function BeyondYourCourse() {
           }
           isMainPage={true}
         />
+      )}
+      {showAudioModal && selectedAudio && (
+        <Modal
+          show={showAudioModal}
+          onHide={() => {
+            setShowAudioModal(false);
+            setIsPlaying(false);
+          }}
+          centered
+          size="lg"
+          className="podcast-modal"
+        >
+          <Modal.Header>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <img
+                    src={storyInMotion}
+                    alt="Story in Motion Logo"
+                    style={{ width: '36px', height: '36px' }}
+                  />
+                  <Modal.Title style={{ fontWeight: '400', fontSize: '15px' }}>
+                    Story in Motion Podcast Episode
+                  </Modal.Title>
+                </div>
+                <img
+                  className="left-arrow-modal"
+                  src={leftArrow} 
+                  alt="Close"
+                  style={{
+                    cursor: 'pointer',
+                    position: 'relative',
+                    right: '20px',
+                    top: '-15px',
+                    width: '20px',
+                    height: '20px',
+                    boxShadow:' -4px 0px 3px rgba(0, 0, 0, 0.08), 0px 2px 3px rgba(0, 0, 0, 0.08)'
+                  }}
+                  onClick={() => {
+                    setShowAudioModal(false);
+                    setIsPlaying(false);
+                  }}
+                />
+              </div>
+              <div style={{ fontWeight: '600', fontSize: '14px', color: '#333' }}>
+                Now Playing: {selectedAudio.title}
+              </div>
+            </div>
+          </Modal.Header>
+          <Modal.Body>
+            <Waveform
+              url={selectedAudio.url}
+              isPlayingParent={setIsPlaying}
+              isPlaying={isPlaying}
+              selectedTrack={selectedAudio}
+            />
+          </Modal.Body>
+        </Modal>
       )}
     </>
   )

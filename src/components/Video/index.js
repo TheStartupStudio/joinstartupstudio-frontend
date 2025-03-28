@@ -60,18 +60,28 @@ export default function VideoView(props) {
     }
   }
 
+  const handleClick = () => {
+    if (props.page === 'startup-live') {
+      props.onClick && props.onClick(props.videoData);
+    } else {
+      setShowNotesButton(true);
+      setShowVideoModal(true);
+    }
+  }
+
   return (
     <>
       {props.type !== 'view-all' ? (
-        <div style={{ width: '200px',height:'130px',borderRadius:'25px' }}
+        <div style={{ width: '200px',borderRadius:'25px' }}
           className={`${
             props.type !== 'widget' ? 'beyond-your-course-videos' : 'mt-2'
           }`}
         >
           <Link to={url ? url : '#'}>
             <div
+              onClick={handleClick}
               className='beyond-your-course-video-thumb'
-              style={{ width: '200px',height:'130px',borderRadius:'25px' }}
+              style={{ width: '200px',borderRadius:'25px' }}
             >
               <div style={{ position: 'absolute', right: '10px', top: '10px' }}>
                 <FontAwesomeIcon
@@ -89,12 +99,7 @@ export default function VideoView(props) {
                 />
               </div>
 
-              <div
-                onClick={() => {
-                  setShowVideoModal(true)
-                  setShowNotesButton(true)
-                }}
-              >
+              <div>
                 <img
                 style={{borderRadius:'20px',boxShadow:'0px 10px 10px 8px rgba(0, 0, 0, 0.09)'}}
                   src={props.thumbnail}
@@ -182,8 +187,9 @@ export default function VideoView(props) {
                     width='100%'
                     alt='#'
                     style={{
+                      borderRadius:'25px',
                       objectFit:
-                        props.page === 'startup-live' ? 'contain' : 'cover'
+                        props.page === 'startup-live' ? 'cover' : 'cover'
                     }}
                   />
                   <div className='beyond-your-course-video-thumb-icon' style={{border:'5px solid white',borderRadius:'50%',padding:'1.5rem',display:'flex',alignItems:'center',justifyContent:'center'}}>

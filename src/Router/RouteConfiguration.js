@@ -289,6 +289,7 @@ export const mutualRoutes = [
     component: MyCourseEntrepreneurship,
     exact: true
   }
+  
 ]
 
 export const instructorRoutes = [
