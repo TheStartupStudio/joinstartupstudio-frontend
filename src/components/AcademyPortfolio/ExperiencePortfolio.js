@@ -39,16 +39,16 @@ function ExperiencePortfolio() {
             key={experience.id}
             setIsOpen={() => handleEdit(experience)}
             imgSrc={experience.imageUrl || universityFlorida}
-            title={experience.organizationName || null}
-            institution={experience.location || null}
+            title={experience.organizationName || ''}
+            institution={experience.location || ''} 
             duration={experience.startDate ? 
               `${new Date(experience.startDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} - ${
                 experience.currentPosition ? 'Present' : 
                 new Date(experience.endDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-              }` : null
+              }` : ''
             }
-            link={experience.website || null}
-            fullText={experience.description?.replace(/<[^>]*>/g, '') || null}
+            link={experience.website || ''}
+            fullText={experience.description?.replace(/<[^>]*>/g, '') || ''} // Provide default empty string
           />
         ))}
       </PortfolioWrapper>
