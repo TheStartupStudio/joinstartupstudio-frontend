@@ -43,7 +43,7 @@ function AboutMe({ user }) {
 
   const fullText = `${user?.bio}`
 
-  const shortText = fullText.slice(0, 200)
+  const shortText = fullText?.slice(0, 200)
 
   return (
     <>
