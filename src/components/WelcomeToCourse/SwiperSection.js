@@ -11,6 +11,7 @@ import WillyProfile from '../../assets/images/academy-icons/Willy-C.jpg'
 import RyanProfile from '../../assets/images/academy-icons/Ryan-K.jpg'
 import SabrinaProfile from '../../assets/images/academy-icons/Sabrina-R.jpg'
 import BlankProfile from '../../assets/images/academy-icons/blank-profile.jpg'
+import AmyProfile from '../../assets/images/academy-icons/Amy-Ni.png'
 
 const testimonials = [
   {
@@ -36,7 +37,7 @@ const testimonials = [
     name: 'Amy Ni',
     title:
       'Masters Student and Research Assistant at the Grady College of Journalism and Mass Communication at the University of Georgia',
-    image: BlankProfile
+    image: AmyProfile
   },
   {
     text: '“The Startup Studio has been transformative in my professional journey. The program has helped me build confidence, gain clarity about who I am, and develop critical skills through hands-on real-world project development. I have been able to approach challenges in my career with purpose and adaptability.”',

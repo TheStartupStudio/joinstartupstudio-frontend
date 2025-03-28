@@ -4799,6 +4799,27 @@ wave > wave:first-child {
   font-size: 9px;
 }
 
+.logout-button {
+  padding: 10px 10px;
+  display: flex;
+  transition: 0.3s ease;
+  background: transparent;
+  margin-bottom: 5px;
+  position: relative;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.7rem;
+  color: #000000;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #e4e9f4;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;

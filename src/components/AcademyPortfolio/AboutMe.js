@@ -12,6 +12,7 @@ import CancelRenewalModal from '../UserDetails/CancelRenewalModal'
 import ShareLink from '../../assets/images/academy-icons/svg/share-link.svg'
 import SharePortfolioModal from './SharePortfolioModal'
 import Tooltip from './Tooltip'
+import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 
 function AboutMe({ user }) {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -114,7 +115,7 @@ function AboutMe({ user }) {
         <div className='d-flex gap-4'>
           <img
             className='profile-dashboard-academy align-self-start'
-            src={user?.profileImage}
+            src={user.profileImage ? user.profileImage : blankProfile}
             alt='profile'
           />
           <div className='academy-profile-info'>

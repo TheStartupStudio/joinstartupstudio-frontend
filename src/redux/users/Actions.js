@@ -69,8 +69,6 @@ export const editUserById = (data) => {
 
       const storedUser = JSON.parse(localStorage.getItem('user')) || {}
 
-      console.log('ridon72', storedUser)
-
       localStorage.setItem(
         'user',
         JSON.stringify({
