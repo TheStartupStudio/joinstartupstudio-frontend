@@ -47,15 +47,14 @@ function MyCourseEntrepreneurship() {
   return (
     <Container fluid>
       <Row>
-        <div className='gradient-background-course'>
-          <div className='account-page-padding' style={{ minHeight: '100vh' }}>
-            <div className='d-flex space-between'>
-              <div>
+          <div style={{ minHeight: '100vh' }}>
+            <div className='d-flex space-between align-items-center' style={{margin:'40px 40px 40px 30px'}}>
+              <div >
                 <h3 className='page-title' style={{ marginLeft: '20px' }}>
                   {/* <IntlMessages id='navigation.startup_live' /> */}
                   Intro to the Course
                 </h3>
-                <p className='page-description' style={{ marginLeft: '20px' }}>
+                <p  style={{ marginLeft: '20px' }}>
                   {/* <IntlMessages id='startup_live.page_description' /> */}
                   Embarking on the Entrepreneurial Journey
                 </p>
@@ -101,8 +100,8 @@ function MyCourseEntrepreneurship() {
                 />
               </div>
             </div>
-
-            <div>
+<div  className='gradient-background-course' >
+            <div style={{margin:'0 -15px'}}>
               <div className='welcome-journey-text'>
                 <div className='title-container'>
                   <img
@@ -144,7 +143,7 @@ function MyCourseEntrepreneurship() {
             <div className='col-md-12 general-video-container'>
               <div className='video-container'>
                 <div style={{ width: '100%' }}>
-                  <div className='responsive-video-first'>
+                  <div className='responsive-video-first responsive-accordion'>
                     <ReactPlayer
                       className=''
                       width={'305px'}
@@ -252,7 +251,7 @@ function MyCourseEntrepreneurship() {
                         )}
 
                         {data.type == 'key_points' && (
-                          <div className='key_points row'>
+                          <div className='key_points row responsive-accordion'>
                             {LtsCourseIntro['key_points_videos'].map(
                               (entData, entIndex) => (
                                 <div className='key_points__item col-12 col-md-3'>
@@ -380,7 +379,8 @@ function MyCourseEntrepreneurship() {
               </Modal.Body>
             </Modal>
           </div>
-        </div>
+          </div>
+       
         {/* <div className="col-12 col-xl-3 px-2 mt-3">
           <ShowMessenger />
           <NotesButton />

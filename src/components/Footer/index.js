@@ -2,10 +2,10 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faVimeo,
-  faLinkedinIn,
-  faTwitter,
-  faSpotify
+  faLinkedinIn, 
+  faSpotify,
 } from '@fortawesome/free-brands-svg-icons'
+import xIconImage from '../../assets/images/X-icon.png' 
 
 export default function Footer(props) {
   return (
@@ -40,11 +40,20 @@ export default function Footer(props) {
                 </li>
                 <li>
                   <a
-                    href='#'
+                    href='https://twitter.com/learn2start'
                     rel='noreferrer'
                     target='_blank'
                   >
-                    <FontAwesomeIcon icon={faTwitter} />
+                    <img 
+                      src={xIconImage} 
+                      style={{
+                        width: '16px', 
+                        height: '16px',
+                        filter: 'brightness(0) invert(1)', 
+                        verticalAlign: 'baseline' 
+                      }}
+                      alt="X (Twitter)"
+                    />
                   </a>
                 </li>
                 <li>

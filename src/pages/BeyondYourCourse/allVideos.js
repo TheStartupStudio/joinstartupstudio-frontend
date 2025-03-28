@@ -5,15 +5,20 @@ import IntlMessages from '../../utils/IntlMessages'
 import { changeSidebarState } from '../../redux'
 import Video from '../../components/Video'
 import ReactPaginate from 'react-paginate'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import '../Saved/index.css'
 import { setBackButton } from '../../redux/backButtonReducer'
 import './index.css'
 import Select from 'react-select'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import ModalInput from '../../components/ModalInput/ModalInput'
+import searchJ from '../../assets/images/academy-icons/search.png'
+import { injectIntl } from 'react-intl';
 
-export default function GuidanceEncouragement() {
+function GuidanceEncouragement({ intl }) {
+  const history = useHistory(); // Add this hook
+  
   const [pageTitle, setPageTitle] = useState('')
   const [pageDescription, setPageDescription] = useState('')
   const [pageVideos, setPageVideos] = useState([])
@@ -50,6 +55,19 @@ export default function GuidanceEncouragement() {
     const handleFilter=(selectedFilter)=>{
       setFilterBy(selectedFilter)
     }
+    const handleJournalSearch = (e) => {
+      const keyword = e.target.value.toLowerCase()
+      setJournals(
+        keyword 
+          ? journalsData.filter(journal => 
+              journal.title.toLowerCase().includes(keyword) || 
+              journal.children.some(child => 
+                child.title.toLowerCase().includes(keyword)
+              )
+            )
+          : journalsData
+      )
+    }
 
   const dispatch = useDispatch()
 
@@ -78,20 +96,36 @@ export default function GuidanceEncouragement() {
 
   useEffect(() => {
     if (window.location.href.includes('encouragement/videos')) {
-      setPageTitle('MASTER CLASSES | ENCOURAGEMENT VIDEOS')
-      setPageDescription('beyond_your_course.encouragement_description')
-      getEncouragementVideos()
+      setActiveLevel(0)
     } else if (window.location.href.includes('master-classes/videos')) {
-      setPageTitle('MASTER CLASSES | CAREER GUIDANCE')
-      setPageDescription('beyond_your_course.master_classes_description')
-      getMasterClassVideos()
-    } else if (window.location.href.includes('startup-live/videos')) {
-      setPageTitle('MASTER CLASSES | STORY IN MOTION GUEST Q&AS')
-      setPageDescription('startup_live.startup_archive_description')
-      getStartupLiveVideos()
+      setActiveLevel(1)
+    } else if (window.location.href.includes('story-in-motion/videos')) {
+      setActiveLevel(2)
     }
     getUserConnections()
   }, [])
+
+  useEffect(() => {
+    switch(activeLevel) {
+      case 0: // Encouragement Videos
+        setPageTitle('MASTER CLASSES | ENCOURAGEMENT VIDEOS')
+        setPageDescription('beyond_your_course.encouragement_description')
+        getEncouragementVideos()
+        break;
+      case 1: // Career Guidance Videos
+        setPageTitle('MASTER CLASSES | CAREER GUIDANCE')
+        setPageDescription('beyond_your_course.master_classes_description')
+        getMasterClassVideos()
+        break;
+      case 2: // Story in Motion Podcast Episodes
+        setPageTitle('MASTER CLASSES | STORY IN MOTION PODCAST EPISODES')
+        setPageDescription('startup_live.startup_archive_description')
+        getStartupLiveVideos()
+        break;
+      default:
+        break;
+    }
+  }, [activeLevel])
 
   const getUserConnections = async () => {
     await axiosInstance.get('/connect').then((res) => {
@@ -104,6 +138,7 @@ export default function GuidanceEncouragement() {
       .get(`/contents/by-type/guidance`)
       .then((response) => {
         setPageVideos(response.data)
+        setItemOffset(0);
       })
       .catch((err) => err)
   }
@@ -113,18 +148,49 @@ export default function GuidanceEncouragement() {
       .get(`/contents/by-type/master`)
       .then((response) => {
         setPageVideos(response.data)
+        setItemOffset(0);
       })
       .catch((err) => err)
   }
 
   const getStartupLiveVideos = async () => {
     await axiosInstance
-      .get(`/contents/by-type/startup-live`)
+      .get(`/contents/by-type/story-in-motion`)
       .then((response) => {
         setPageVideos(response.data)
+        setItemOffset(0);
       })
       .catch((err) => err)
   }
+
+  // Add this function to determine the subtitle based on URL
+  const getSubtitle = () => {
+    if (window.location.href.includes('encouragement/videos')) {
+      return 'Encouragement Videos';
+    } else if (window.location.href.includes('master-classes/videos')) {
+      return 'Career Guidance';
+    } else if (window.location.href.includes('startup-live/videos')) {
+      return 'Story in Motion Podcast Episodes';
+    }
+    return '';
+  };
+
+  const handleLevelChange = (index) => {
+    setActiveLevel(index);
+    switch(index) {
+      case 0:
+        history.push('/encouragement/videos');
+        break;
+      case 1:
+        history.push('/master-classes/videos');
+        break;
+      case 2:
+        history.push('/story-in-motion/videos');
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <div id='main-body'>
@@ -141,8 +207,8 @@ export default function GuidanceEncouragement() {
               >
                 <div style={{margin:'0 1rem'}}>
                   <div style={{marginBottom:'2rem'}}>
-                  <Link to='/beyond-your-course' style={{color:'#000000'}}>Master Classes &gt; </Link>
-                  <span>Encouragement Videos </span>
+                    <Link to='/beyond-your-course' style={{color:'#000000'}}>Master Classes &gt; </Link>
+                    <span>{getSubtitle()}</span>
                   </div>
                  <div className='d-flex justify-content-between'>
                 <div>
@@ -202,28 +268,33 @@ export default function GuidanceEncouragement() {
                     <div
                       key={level.id}
                      
-                      className={`course-level ${activeLevel === index ? 'active-level' : ''}`}
-                      onClick={() => setActiveLevel(index)}
+                      className={`course-level ${activeLevel === index ? 'active-level-master' : ''}`}
+                      onClick={() => handleLevelChange(index)}
                     >
                       {level.title}
                     </div>
                   ))}
                 </div>
                 <div className="d-flex justify-content-between">
-                  {/* <div> */}
-                    <input type='text'
-                          className='course-btn search-journal search-journal-input'
-                          name='searchedNote'
-                          placeholder='Search journals'
-                          // onChange={handleJournalSearch}
-                          style={{
-                          backgroundColor:'white',
-                          border: 'none',
-                          outline: 'none',
-                          width: '400px'
-                          }}/>
-                  <FontAwesomeIcon icon={faSearch} className="search-icon" style={{width:'20px',height:'20px', color: '#707070',position:'relative',right:'32%',top:'20px'}} />
-                  {/* </div> */}
+                <div className="search-input-wrapper">
+                    <div className='justify-content-between'>
+            <div>
+              <ModalInput
+              
+               className='course-btn search-journal'
+               onChange={handleJournalSearch}
+                id={'searchBar'}
+                type={'search'}
+                labelTitle={intl.formatMessage({
+                  id: 'my_journal.search_journals',
+                  defaultMessage: 'Search Journals'
+                })}
+                imgSrc={searchJ}
+                imageStyle={{ filter: 'grayscale(1)' }}
+              />
+            </div>
+          </div>
+          </div>
                 <div
                  style={{
                                   display: 'inline-block',
@@ -275,8 +346,8 @@ export default function GuidanceEncouragement() {
                       title={video.title}
                       description={video.description}
                       page={
-                        window.location.href.includes('startup-live/videos')
-                          ? 'startup-live'
+                        window.location.href.includes('story-in-motion/videos')
+                          ? 'story-in-motion'
                           : pageTitle === 'CAREER GUIDANCE'
                           ? 'master-classes'
                           : 'encouragement'
@@ -286,33 +357,36 @@ export default function GuidanceEncouragement() {
                       type={'view-all'}
                     />
                   ))}
+                  
+                  {/* Pagination moved inside videos-container */}
+                  {pageVideos.length > videosPerPage && (
+                    <div className='w-100 d-flex justify-content-center mt-4'>
+                      <div className="pagination-info">
+                        <ReactPaginate
+                          previousLabel="<<"
+                          nextLabel=">>"
+                          breakLabel="..."
+                          pageCount={pageCount}
+                          marginPagesDisplayed={1}
+                          pageRangeDisplayed={3}
+                          onPageChange={handlePageClick}
+                          containerClassName="pagination custom-pagination"
+                          pageClassName="page-item"
+                          pageLinkClassName="page-link"
+                          previousClassName="page-item"
+                          previousLinkClassName="page-link"
+                          nextClassName="page-item" 
+                          nextLinkClassName="page-link"
+                          breakClassName="page-item"
+                          breakLinkClassName="page-link"
+                          activeClassName="active"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
                 </div>
               </div>
-              {pageVideos.length > videosPerPage && (
-                <div className='d-flex justify-content-center mt-4'>
-                  <ReactPaginate
-                    nextLabel='next'
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={3}
-                    marginPagesDisplayed={2}
-                    pageCount={pageCount}
-                    previousLabel='prev'
-                    pageClassName='page-item'
-                    pageLinkClassName='page-link px-3'
-                    previousClassName='page-item me-2'
-                    previousLinkClassName='page-link'
-                    nextClassName='page-item ms-2'
-                    nextLinkClassName='page-link'
-                    breakLabel='...'
-                    breakClassName='page-item'
-                    breakLinkClassName='page-link px-3'
-                    containerClassName='pagination custom-pagination mb-0'
-                    activeClassName='active'
-                    renderOnZeroPageCount={null}
-                  />
-                </div>
-              )}
             </div>
           </div>
           {/* <div className='col-12 col-xl-3 px-2 mt-3'> */}
@@ -324,3 +398,6 @@ export default function GuidanceEncouragement() {
     </div>
   )
 }
+
+// Export the component wrapped with injectIntl
+export default injectIntl(GuidanceEncouragement);
