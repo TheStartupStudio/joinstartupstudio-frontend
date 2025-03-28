@@ -167,18 +167,8 @@ const userReducer = (state = initialState, action) => {
         }
       }
     }
-    case USER_CHANGE_PROFILE_IMAGE: {
-      const userObject = {
-        token: localStorage.getItem('access_token'),
-        user: {
-          ...state.user.user,
-          profileImage: payload,
-          profile_image: payload
-        }
-      }
 
-      localStorage.setItem('user', JSON.stringify(userObject))
-
+    case USER_CHANGE_PROFILE_IMAGE:
       return {
         ...state,
         user: {
@@ -190,7 +180,6 @@ const userReducer = (state = initialState, action) => {
           }
         }
       }
-    }
 
     case EDIT_SOCIAL_MEDIA: {
       const userObject = {

@@ -3,9 +3,6 @@ import { Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import ExpandLogo from '../../assets/images/academy-icons/fast-arrow-right.png'
-import ProfilePhoto from '../../assets/images/academy-icons/profile.jpeg'
-import SettingsLogo from '../../assets/images/academy-icons/settings 4.png'
-import SettingsIcon from '../../assets/images/academy-icons/svg/settings.svg'
 import LogOutIcon from '../../assets/images/academy-icons/svg/LogOut.svg'
 import CoursEnIcon from '../../assets/images/academy-icons/svg/course-in-e.svg'
 import DashIcon from '../../assets/images/academy-icons/svg/dashboard.svg'
@@ -13,10 +10,12 @@ import IntroToIcon from '../../assets/images/academy-icons/svg/intro-to-course.s
 import LeadershipIcon from '../../assets/images/academy-icons/svg/leadership-journal.svg'
 import MasterIcon from '../../assets/images/academy-icons/svg/master-classes.svg'
 import PortfolioIcon from '../../assets/images/academy-icons/svg/my-portfolio.svg'
+import SettingsIcon from '../../assets/images/academy-icons/svg/settings.svg'
 import { setAccordionToggled, userLogout } from '../../redux'
+import { setGeneralLoading } from '../../redux/general/Actions'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import SidebarItem from './SidebarItem'
-import { setGeneralLoading } from '../../redux/general/Actions'
+import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 
 const InstructorSidebar = (props) => {
   const [isTextVisible, setIsTextVisible] = useState(true)
@@ -174,7 +173,7 @@ const InstructorSidebar = (props) => {
               <Col md='2' className='col-2 icon_container'>
                 <img
                   className='profile-photo'
-                  src={user?.profileImage}
+                  src={user.profileImage ? user.profileImage : blankProfile}
                   alt='Icon'
                 />
               </Col>

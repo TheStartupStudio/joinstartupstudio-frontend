@@ -11,6 +11,7 @@ import CertificateModal from './CertificateModal'
 import EditUserModal from './EditUserModal'
 import SubscriptionModal from './SubscriptionModal'
 import { useSelector } from 'react-redux'
+import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 
 function UserDetails({ profilePic, userName, userProffesion }) {
   const [modal, setModal] = useState(false)
@@ -40,7 +41,6 @@ function UserDetails({ profilePic, userName, userProffesion }) {
     setCertificate((prev) => !prev)
   }
 
-  // const { user } = JSON.parse(localStorage.getItem('user'))
   const { user } = useSelector((state) => state.user.user)
 
   return (
@@ -61,7 +61,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
         <div className='d-flex gap-4 align-items-center'>
           <img
             className='profile-dashboard-academy'
-            src={user.profileImage}
+            src={user.profileImage ? user.profileImage : blankProfile}
             alt='profile'
           />
           <div className='academy-profile-info'>

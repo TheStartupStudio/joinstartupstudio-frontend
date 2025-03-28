@@ -132,7 +132,6 @@ export const setEmail = (payload) => {
 }
 
 export const setBio = (payload) => {
-  console.log(payload, 'ridon135')
   return (dispatch) => {
     dispatch({ type: SET_BIO, payload })
   }

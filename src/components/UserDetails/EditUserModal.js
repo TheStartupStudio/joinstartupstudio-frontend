@@ -14,6 +14,7 @@ import resetLogo from '../../assets/images/academy-icons/reset.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import trashIcon from '../../assets/images/academy-icons/trash.png'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
+import uploadImage from '../../assets/images/academy-icons/svg/upload-image.svg'
 import { userUpdate, userUpdateProfileImage } from '../../redux'
 import {
   editSocialMedia,
@@ -27,131 +28,150 @@ import IntlMessages from '../../utils/IntlMessages'
 import ModalInput from '../ModalInput/ModalInput'
 
 function EditUserModal({ isOpen, toggle, subToggle }) {
-  const [editPage, setEditPage] = useState(false)
-
-  const { user } = useSelector((state) => state.user.user)
-  const profileImage = useSelector((state) => state.user.profile_image)
-
   const [loading, setLoading] = useState(false)
+  const [imageFile, setImageFile] = useState(null)
+  const { user } = useSelector((state) => state.user.user)
+  const [changedUser, setChangedUser] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    bio: user?.bio || '',
+    profession: user?.profession || '',
+    profile_image: user?.profile_image || ''
+  })
+  const [changedMedias, setChangedMedias] = useState({
+    facebook: user?.social_links?.facebook || '',
+    twitter: user?.social_links?.twitter || '',
+    website: user?.social_links?.website || '',
+    instagram: user?.social_links?.instagram || '',
+    linkedIn: user?.social_links?.linkedIn || ''
+  })
 
   const dispatch = useDispatch()
 
-  const [changedUser, setChangedUser] = useState({
-    name: user.name || '',
-    email: user.email || '',
-    bio: user.bio || '',
-    profession: user.profession || '',
-    profile_image: user.profile_image || ''
-  })
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0]
+    if (validateFile(selectedFile)) {
+      setImageFile(selectedFile)
+    }
+  }
 
-  const [changedMedias, setChangedMedias] = useState({
-    facebook: user.social_links?.facebook || '',
-    twitter: user.social_links?.twitter || '',
-    website: user.social_links?.website || '',
-    instagram: user.social_links?.instagram || '',
-    linkedIn: user.social_links?.linkedIn || ''
-  })
+  const handleDrop = (event) => {
+    event.preventDefault()
+    const droppedFile = event.dataTransfer.files[0]
+    if (validateFile(droppedFile)) {
+      setImageFile(droppedFile)
+    }
+  }
 
-  const editUser = async (changedUser, changedMedias) => {
+  const validateFile = (file) => {
+    if (!file) return false
+
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
+    const maxSize = 1 * 1024 * 1024
+    console.log('file:', file)
+    if (!validTypes.includes(file.type)) {
+      toast.error('Only PNG, JPG, or JPEG files are allowed.')
+      return false
+    }
+    if (file.size > maxSize) {
+      toast.error('File size must be under 2MB.')
+      return false
+    }
+    return true
+  }
+
+  const editUser = async (changedUser, changedMedias, imageFile) => {
     if (!changedUser?.name) {
-      console.error('User data is missing. Cannot proceed.')
+      toast.error(<IntlMessages id='alerts.name_required' />)
       return
     }
-    setLoading(true)
-    const params = {
-      name: changedUser.name,
-      bio: changedUser.bio,
-      profession: changedUser.profession,
-      social_links: changedMedias,
-      profile_image: changedUser.profile_image,
-      language: changedUser.language,
-      phone_number: changedUser.phone_number,
-      email: changedUser.email
+    if (!changedUser.email || changedUser.email === '') {
+      toast.error(<IntlMessages id='alerts.email_required' />)
+      return
+    }
+    if (!validateEmail(changedUser.email)) {
+      toast.error(<IntlMessages id='alerts.valid_email' />)
+      return
     }
 
-    // if (user.email !== changedUser.email) {
-    //   if (!changedUser.email || changedUser.email === '') {
-    //     toast.error(<IntlMessages id='alerts.email_required' />)
-    //   } else if (!validateEmail(changedUser.email)) {
-    //     toast.error(<IntlMessages id='alerts.valid_email' />)
-    //   } else {
-    //     try {
-    //       await axiosInstance.put(`/users/change-email`, {
-    //         new_email: changedUser.email
-    //       })
+    setLoading(true)
 
-    //       toast.success('Your email has been changed successfully')
-    //       // setUser(res.data)
+    try {
+      let profileImageUrl = changedUser.profile_image
 
-    //       const storageUser = JSON.parse(localStorage.getItem('user'))
-    //       const userObject = {
-    //         token: localStorage.getItem('access_token'),
-    //         user: {
-    //           ...storageUser.user,
-    //           email: changedUser.email
-    //         }
-    //       }
-    //       dispatch(setEmail(changedUser.email))
-    //       localStorage.setItem('user', JSON.stringify(userObject))
-    //     } catch (err) {
-    //       setLoading(false)
-    //       toast.error(err.response?.data || 'An error occurred')
-    //     }
-    //   }
-    // }
+      if (!profileImageUrl) {
+        dispatch(userUpdateProfileImage(profileImageUrl))
+      }
 
-    await axiosInstance
-      .put(`/users`, params)
-      .then((res) => {
-        setLoading(false)
-        const user = JSON.parse(localStorage.getItem('user'))
-        const userProfession = user ? user.user?.profession : null
+      if (imageFile) {
+        const formData = new FormData()
+        formData.append('img', imageFile)
 
-        if (userProfession !== res.data.profession) {
-          const updatedUser = {
-            ...user,
-            profession: res.data.profession
-          }
-          localStorage.setItem('user', JSON.stringify(updatedUser))
-          dispatch(userUpdateProfession(res.data.profession))
+        const res = await axiosInstance.post('/upload/img', formData)
+
+        if (res.data.success) {
+          profileImageUrl = res.data.fileLocation
+          dispatch(userUpdateProfileImage(profileImageUrl))
+        } else {
+          toast.error('Image upload failed')
         }
+      }
 
-        if (user.email !== changedUser.email) {
-          if (!changedUser.email || changedUser.email === '') {
-            toast.error(<IntlMessages id='alerts.email_required' />)
-          } else if (!validateEmail(changedUser.email)) {
-            toast.error(<IntlMessages id='alerts.valid_email' />)
-          } else {
-            dispatch(setEmail(changedUser.email))
-          }
+      const params = {
+        name: changedUser.name,
+        bio: changedUser.bio,
+        profession: changedUser.profession,
+        social_links: changedMedias,
+        profile_image: profileImageUrl,
+        language: changedUser.language,
+        phone_number: changedUser.phone_number,
+        email: changedUser.email
+      }
+
+      const res = await axiosInstance.put('/users', params)
+
+      setLoading(false)
+      const user = JSON.parse(localStorage.getItem('user'))
+      const userProfession = user ? user.user?.profession : null
+
+      if (user.email !== changedUser.email) {
+        dispatch(setEmail(changedUser.email))
+      }
+
+      if (localStorage.getItem('name') !== res.data.name) {
+        localStorage.setItem('name', res.data.name)
+        dispatch(userUpdate(res.data.name))
+      }
+
+      if (userProfession !== res.data.profession) {
+        const updatedUser = {
+          ...user,
+          profession: res.data.profession
         }
+        localStorage.setItem('user', JSON.stringify(updatedUser))
+        dispatch(userUpdateProfession(res.data.profession))
+      }
 
-        if (localStorage.getItem('name') !== res.data.name) {
-          localStorage.setItem('name', res.data.name)
-          dispatch(userUpdate(res.data.name))
-        }
+      // if (profileImageUrl !== res.data.profile_image) {
+      //   localStorage.setItem('profileImage', res.data.profile_image)
+      //   dispatch(userUpdateProfileImage(res.data.profile_image))
+      // }
 
-        if (profileImage !== res.data.profile_image) {
-          localStorage.setItem('profileImage', res.data.profile_image)
-          dispatch(userUpdateProfileImage(res.data.profile_image))
-        }
+      if (user.user.bio !== res.data.bio) {
+        dispatch(setBio(res.data.bio))
+      }
 
-        if (user.user.bio !== res.data.bio) {
-          dispatch(setBio(res.data.bio))
-        }
-
-        toast.success(<IntlMessages id='alert.my_account.success_change' />)
-        dispatch(editSocialMedia(params.social_links))
-      })
-      .catch((err) => {
-        toast.error(<IntlMessages id='alerts.something_went_wrong' />)
-        setLoading(false)
-      })
+      toast.success(<IntlMessages id='alert.my_account.success_change' />)
+      dispatch(editSocialMedia(params.social_links))
+    } catch (err) {
+      toast.error(<IntlMessages id='alerts.something_went_wrong' />)
+      setLoading(false)
+    }
   }
 
   function handleSubmit(e) {
     e.preventDefault()
-    editUser(changedUser, changedMedias)
+    editUser(changedUser, changedMedias, imageFile)
     toggle()
   }
 
@@ -218,16 +238,77 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
               <div>
                 <h4 className='fs-15'>Headshot</h4>
                 <div className='d-flex flex-column p-3 gap-2 profile-container align-items-center'>
-                  <img
-                    className='trash-icon align-self-end cursor-pointer'
-                    src={trashIcon}
-                    alt='trash'
-                  />
-                  <img
-                    className='rounded-circle profile-container-pic'
-                    src={user?.profileImage}
-                    alt='profile'
-                  />
+                  {changedUser.profile_image ? (
+                    <>
+                      <img
+                        className='trash-icon align-self-end cursor-pointer'
+                        src={trashIcon}
+                        alt='trash'
+                        onClick={() =>
+                          setChangedUser({ ...changedUser, profile_image: '' })
+                        }
+                      />
+                      <img
+                        className='rounded-circle profile-container-pic'
+                        src={user?.profileImage}
+                        alt='profile'
+                      />
+                    </>
+                  ) : (
+                    <div className='container d-flex justify-content-center align-items-center'>
+                      <div
+                        className='upload-box text-center cursor-pointer'
+                        onClick={() =>
+                          document.getElementById('fileInput').click()
+                        }
+                        onDrop={handleDrop}
+                        onDragOver={(e) => e.preventDefault()}
+                      >
+                        <input
+                          type='file'
+                          id='fileInput'
+                          className='d-none'
+                          accept='image/png, image/jpeg, image/jpg'
+                          onChange={handleFileChange}
+                        />
+                        <div className='upload-area'>
+                          {imageFile ? (
+                            <img
+                              src={URL.createObjectURL(imageFile)}
+                              alt='Uploaded Preview'
+                              className='uploaded-image'
+                              style={{
+                                width: '100px',
+                                height: '100px',
+                                objectFit: 'cover'
+                              }}
+                            />
+                          ) : (
+                            <>
+                              <img
+                                src={uploadImage}
+                                alt='Upload Icon'
+                                className='upload-icon'
+                              />
+                              <p className='upload-text'>
+                                <span className='fw-medium'>
+                                  Click to upload
+                                </span>
+                                <br />
+                                <span className='text-secondary'>
+                                  or drag and drop
+                                </span>
+                              </p>
+                              <p className='fs-14'>
+                                Only png, jpg, or jpeg file format supported
+                                (max. 2Mb)
+                              </p>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
