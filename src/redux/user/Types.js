@@ -24,3 +24,5 @@ export const USER_REMOVE_ERROR_MESSAGE = 'USER_REMOVE_ERROR_MESSAGE'
 // update user term and condition
 export const UPDATE_USER_TNC = 'UPDATE_USER_TNC'
 export const SET_AUTH_MODAL = 'SET_AUTH_MODAL'
+export const SET_EMAIL = 'SET_EMAIL'
+export const SET_BIO = 'SET_BIO'

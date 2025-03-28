@@ -751,8 +751,8 @@ a.sidenav.active {
 }
 
 .page-title {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -4073,10 +4073,6 @@ wave>wave:first-child {
   transform: rotate(180deg);
 }
 
-.bold-page-title {
-  font-weight: 700;
-}
-
 .css-b62m3t-container {
   position: relative !important;
   z-index: 1000;
@@ -4109,6 +4105,10 @@ wave>wave:first-child {
 .css-hlgwow {
   padding-block: 0.75rem !important;
   height: 56px;
+}
+
+.css-mfye68-control:hover {
+  box-shadow: none !important;
 }
 
 .h-95 {
@@ -4495,6 +4495,10 @@ wave>wave:first-child {
   font-size: 27px;
 }
 
+.fs-20 {
+  font-size: 20px;
+}
+
 .fs-21 {
   font-size: 21px;
 }
@@ -4619,7 +4623,7 @@ wave>wave:first-child {
   cursor: pointer;
 }
 
-.background-platform {
+
   background: radial-gradient(circle at right center,
       rgba(200, 200, 200, 0.3) 10%,
       rgba(255, 255, 255, 1) 40%);
@@ -4628,6 +4632,7 @@ wave>wave:first-child {
 .background-course {
   background: radial-gradient(circle at 112% 24%,
       rgba(123, 223, 237, 0.3) 10%,
+
       rgba(255, 255, 255, 1) 30%),
     radial-gradient(circle at left center,
       rgba(200, 200, 200, 0.6) 7%,
@@ -4637,6 +4642,10 @@ wave>wave:first-child {
       rgba(255, 255, 255, 1) 17%);
 
   background-blend-mode: multiply;
+}
+
+.css-p4evts-control:hover {
+  box-shadow: none;
 }
 
 .background-welcome {
@@ -4680,34 +4689,124 @@ wave>wave:first-child {
 
 .lead-class {
   box-shadow: 0 -6px 8px rgba(0, 0, 0, 0.05);
-  background: linear-gradient(90deg,
-      rgba(255, 255, 255, 1) 10%,
-      rgba(224, 235, 197, 0.25) 50%,
-      rgba(255, 255, 255, 1) 90%) !important;
+  background: radial-gradient(
+    circle at 50% 24%,
+    rgba(224, 235, 197, 0.4) 5%,
+    rgba(255, 255, 255, 0.9) 80%
+  );
 }
 
-@media (max-width: 1360px) {
-  .general-video-container {
-    gap: 4rem;
-  }
-
-
+.gray-leadership {
+  color: #6f6f6f;
 }
 
-@media (max-width: 1250px) {
-  .general-video-container {
-    gap: 5rem;
-  }
-
-  .responsive-accordion .key_points__item {
-    width: 150px;
-  }
+.my-quill-editor .ql-toolbar {
+  background-color: transparent !important;
 }
 
-@media (max-width: 1150px) {
-  .general-video-container {
-    gap: 8rem;
-  }
+.my-quill-editor .ql-toolbar.ql-snow {
+  background-color: transparent !important;
+}
+
+.my-quill-editor button {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.add-reflection {
+  transition: color 300ms ease-in;
+}
+
+.add-reflection:hover {
+  color: #51c7df;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.h-fit-content {
+  height: fit-content;
+}
+
+.search-journals-width {
+  width: 39%;
+}
+
+.leadership-layout {
+  grid-template-columns: 3fr 5fr;
+}
+
+.width-50 {
+  width: 50%;
+}
+
+.portfolio-u {
+  color: #aeaeae;
+}
+
+.portfolio-u:hover {
+  color: #51c7df !important;
+}
+
+.object-scale-down {
+  object-fit: scale-down;
+}
+
+.internet-class {
+  filter: grayscale(100%) brightness(0%);
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+}
+
+.calendar-icon {
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.white-space-no-wrap {
+  white-space: nowrap;
+}
+
+.p-block-5 {
+  padding-block: 5rem !important;
+}
+
+.tooltip-arrow {
+  display: none !important;
+}
+
+.tooltip-inner {
+  background-color: black !important;
+  color: white !important;
+  border-radius: 4px !important;
+  padding: 2px 6px;
+  font-size: 9px;
+}
+
+.logout-button {
+  padding: 10px 10px;
+  display: flex;
+  transition: 0.3s ease;
+  background: transparent;
+  margin-bottom: 5px;
+  position: relative;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.7rem;
+  color: #000000;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #e4e9f4;
+
 }
 
 @media (max-width: 1024px) {

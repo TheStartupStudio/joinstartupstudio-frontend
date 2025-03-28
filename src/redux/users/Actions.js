@@ -59,3 +59,36 @@ export const getStudentInfoErrorById = (response) => {
     payload: { error: response.error }
   }
 }
+
+export const editUserById = (data) => {
+  return async (dispatch) => {
+    dispatch({ type: types.EDIT_USER_WITH_ID_PENDING })
+
+    try {
+      const response = await usersService.editUser(data)
+
+      const storedUser = JSON.parse(localStorage.getItem('user')) || {}
+
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          ...storedUser,
+          user: {
+            ...storedUser.user,
+            ...response.data.data
+          }
+        })
+      )
+
+      dispatch({
+        type: types.EDIT_USER_WITH_ID_FULFILLED,
+        payload: response.data
+      })
+    } catch (error) {
+      dispatch({
+        type: types.EDIT_USER_WITH_ID_REJECTED,
+        payload: error.response?.data || error.message
+      })
+    }
+  }
+}

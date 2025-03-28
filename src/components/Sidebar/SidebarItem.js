@@ -3,6 +3,8 @@ import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Col } from 'react-bootstrap'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { collapseTrue } from '../../redux/sidebar/Actions'
 
 const IconContainer = ({ srcImage }) => {
   return (
@@ -21,8 +23,10 @@ const SidebarItem = ({
   isDropdown
 }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false)
+  const dispatch = useDispatch()
 
   const handleItemClick = (e) => {
+    dispatch(collapseTrue())
     if (isDropdown) {
       e.preventDefault()
       setDropdownOpen((prev) => !prev)

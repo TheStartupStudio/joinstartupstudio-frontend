@@ -13,7 +13,9 @@ import {
   UPDATE_USER_TNC,
   SET_LOGIN_LOADING,
   USER_CHANGE_PROFESSION,
-  SET_AUTH_MODAL
+  SET_AUTH_MODAL,
+  SET_EMAIL,
+  SET_BIO
 } from './Types'
 import axiosInstance from '../../utils/AxiosInstance'
 
@@ -121,6 +123,17 @@ export const userUpdateProfession = (data) => async (dispatch) => {
       type: USER_EDIT_ERROR,
       payload: 'Server Error'
     })
+  }
+}
+export const setEmail = (payload) => {
+  return (dispatch) => {
+    dispatch({ type: SET_EMAIL, payload })
+  }
+}
+
+export const setBio = (payload) => {
+  return (dispatch) => {
+    dispatch({ type: SET_BIO, payload })
   }
 }
 

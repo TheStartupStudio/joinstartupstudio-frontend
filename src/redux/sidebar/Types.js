@@ -1,1 +1,2 @@
 export const TOGGLE_COLLAPSE = 'TOGGLE_COLLAPSE'
+export const COLLAPSE_TRUE = 'COLLAPSE_TRUE'

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Pyramid from '../../assets/images/academy-icons/Model-in-E.png'
+import Pyramid from '../../assets/images/academy-icons/svg/model-in-e.svg'
 import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
 import StoryLogo from '../../assets/images/academy-icons/story1.png'
 import RealtionshipLogo from '../../assets/images/academy-icons/relationship.png'
@@ -163,7 +163,7 @@ function ExploreCourseImg() {
             className='position-absolute d-flex flex-column gap-2 p-4'
             style={{
               left: tooltip.x + 10,
-              top: tooltip.y + 10,
+              top: tooltip.y - 150,
               background: ' rgba(255, 255, 255, 0.2)',
               backdropFilter: 'blur(25px)',
               color: 'black',

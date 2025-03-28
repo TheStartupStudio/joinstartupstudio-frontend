@@ -13,7 +13,7 @@ function AcademyBtn({ title, icon, onClick }) {
         boxShadow: '0px 4px 10px 0px #00000040'
       }}
     >
-      <button className='continue-course-btn' onClick={onClick}>
+      <button className='continue-course-btn fs-14' onClick={onClick}>
         {title} <FontAwesomeIcon icon={icon} />
       </button>
     </div>

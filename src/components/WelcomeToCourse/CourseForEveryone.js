@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
-import briefcaseLogo from '../../assets/images/academy-icons/briefcase-line-icon.png'
-import employeesLogo from '../../assets/images/academy-icons/employees-building.png'
-import foundersLogo from '../../assets/images/academy-icons/founders-icon.png'
+import briefcaseLogo from '../../assets/images/academy-icons/svg/briefcase.svg'
+import employeesLogo from '../../assets/images/academy-icons/svg/employees-building.svg'
+import foundersLogo from '../../assets/images/academy-icons//svg/rocket.svg'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
-import retireesLogo from '../../assets/images/academy-icons/retiress-icon.png'
+import retireesLogo from '../../assets/images/academy-icons/svg/umbrella.svg'
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
-import studentsLogo from '../../assets/images/academy-icons/students-icon.png'
+import studentsLogo from '../../assets/images/academy-icons/svg/students.svg'
 
 function CourseForEveryone() {
   const [modal, setModal] = useState(false)

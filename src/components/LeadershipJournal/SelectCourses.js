@@ -1,47 +1,9 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
-import circleSign from '../../assets/images/academy-icons/circle-fill.png'
-import lockSign from '../../assets/images/academy-icons/lock.png'
-import tickSign from '../../assets/images/academy-icons/tick-sign.png'
 
-function SelectCourses() {
-  const [selectedLanguage, setSelectedLanguage] = useState(null)
-
-  const options = [
-    {
-      value: 'intro-to-who-am-i',
-      title: 'Intro to Who Am I?',
-      icon: tickSign,
-      textColor: 'text-black'
-    },
-    {
-      value: 'values',
-      title: 'Values',
-      icon: tickSign,
-      textColor: 'text-black'
-    },
-    {
-      value: 'expertise',
-      title: 'Expertise',
-      icon: circleSign,
-      textColor: 'text-black'
-    },
-    {
-      value: 'experience',
-      title: 'Experience',
-      icon: lockSign,
-      textColor: 'text-secondary'
-    },
-    {
-      value: 'style',
-      title: 'Style',
-      icon: lockSign,
-      textColor: 'text-secondary'
-    }
-  ]
-
+function SelectCourses({ options, selectedCourse, setSelectedCourse }) {
   const handleChange = (selectedOption) => {
-    setSelectedLanguage(selectedOption)
+    setSelectedCourse((prev) => ({ ...prev, option: selectedOption }))
     console.log('Selected Language:', selectedOption.value)
   }
 
@@ -54,7 +16,7 @@ function SelectCourses() {
       <div className='d-flex align-items-center gap-2 '>
         <img className='accordion-icons' src={data.icon} alt='tick' />
         <span className={`accordion-content-modal ${data.textColor}`}>
-          {data.title}
+          {data.label}
         </span>
       </div>
     </div>
@@ -62,15 +24,15 @@ function SelectCourses() {
 
   const CustomSingleValue = ({ data }) => (
     <div className='custom-select-course' style={{ alignContent: 'end' }}>
-      {data.title}
+      {data.label}
     </div>
   )
 
   return (
-    <div className='col-3'>
+    <div>
       <Select
         options={options}
-        value={selectedLanguage}
+        value={selectedCourse?.option}
         onChange={handleChange}
         placeholder='Select Journals to View'
         menuPortalTarget={document.body}
@@ -79,7 +41,7 @@ function SelectCourses() {
           menuPortal: (base) => ({ ...base, zIndex: 9999 }),
           control: (base) => ({
             ...base,
-            width: '100%',
+            width: '275px',
             minHeight: '40px',
             overflow: 'hidden',
             borderRadius: '6px',
