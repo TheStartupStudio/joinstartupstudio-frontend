@@ -4145,7 +4145,9 @@ wave > wave:first-child {
 
 .profile-dashboard-academy {
   width: 6rem;
+  height: 6rem;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .view-certificate {
