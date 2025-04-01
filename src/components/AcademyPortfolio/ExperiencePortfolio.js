@@ -14,7 +14,7 @@ function ExperiencePortfolio() {
   const [selectedExperience, setSelectedExperience] = useState(null)
 
   const experienceData = useSelector(
-    (state) => state.portfolio.howSection?.myProductivity?.workExperiences?.data
+    (state) => state.portfolio.howSection?.myProductivity?.workExperiences?.data || []
   )
   const dispatch = useDispatch()
 
@@ -40,7 +40,7 @@ function ExperiencePortfolio() {
             setIsOpen={() => handleEdit(experience)}
             imgSrc={experience.imageUrl || universityFlorida}
             title={experience.organizationName || ''}
-            institution={experience.location || ''} 
+            institution={experience.location || ''}
             duration={experience.startDate ? 
               `${new Date(experience.startDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} - ${
                 experience.currentPosition ? 'Present' : 
@@ -48,7 +48,7 @@ function ExperiencePortfolio() {
               }` : ''
             }
             link={experience.website || ''}
-            fullText={experience.description?.replace(/<[^>]*>/g, '') || ''} // Provide default empty string
+            fullText={experience.description?.replace(/<[^>]*>/g, '') || ''}
           />
         ))}
       </PortfolioWrapper>
