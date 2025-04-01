@@ -15,7 +15,7 @@ function PortfolioContent({
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const shortText = fullText.slice(0, 200)
+  const shortText = fullText.length > 200 ? fullText.slice(0, 200) : fullText
   return (
     <>
       <div className='d-flex gap-4'>
@@ -49,12 +49,15 @@ function PortfolioContent({
             }`}
           >
             {isExpanded ? fullText : `${shortText}...`}
-            <span
-              className='blue-color ml-2 fw-medium cursor-pointer'
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
-              {isExpanded ? 'Read Less' : 'Read More'}
-            </span>
+
+            {fullText.length > 200 && (
+              <span
+                className='blue-color ml-2 fw-medium cursor-pointer'
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
+                {isExpanded ? 'Read Less' : 'Read More'}
+              </span>
+            )}
           </p>
         </div>
       </div>
