@@ -42,8 +42,6 @@ function Sidebar(props) {
     }
   }, [])
 
-  console.log('ridon45', navHeight, location?.pathname)
-
   const getClass = () => {
     if (navHeight > 2100) {
       return 'h-99'

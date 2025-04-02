@@ -2,6 +2,7 @@ import { useState } from 'react'
 import blueInternet from '../../assets/images/academy-icons/svg/internet-blue.svg'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import EditEduction from './EditEduction'
+import DOMPurify from 'dompurify'
 
 function PortfolioContent({
   imgSrc,
@@ -49,10 +50,16 @@ function PortfolioContent({
           </div>
           <p
             className={`mt-3 fs-15 fw-light text-black ${
-              isExpanded && 'width-50'
+              isExpanded ? 'width-50' : ''
             }`}
           >
-            {isExpanded ? fullText : `${shortText}...`}
+            <span
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(
+                  isExpanded ? fullText : `${shortText}...`
+                )
+              }}
+            />
 
             {fullText.length > 200 && (
               <span
