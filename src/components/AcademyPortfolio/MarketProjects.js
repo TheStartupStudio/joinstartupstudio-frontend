@@ -1,39 +1,38 @@
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import PortfolioWrapper from './PortfolioWrapper'
 import courseLogo from '../../assets/images/academy-icons/course-progress.png'
 import MarketCard from './MarketCard'
-import designQueen from '../../assets/images/academy-icons/Design-queen.png'
-import pitchDeck from '../../assets/images/academy-icons/Pitch-deck.png'
 import nemoursMarketing from '../../assets/images/academy-icons/Nemours-marketing.png'
-import socialDesign from '../../assets/images/academy-icons/SocialMedia-design.png'
 import NewProject from './NewProject'
-import { useState } from 'react'
 import EditProject from './EditProject'
+import { getMarketProjects } from '../../redux/portfolio/Actions'
+import { toast } from 'react-toastify'
 
 function MarketProjects() {
+  const dispatch = useDispatch()
   const [isOpen, setIsOpen] = useState(false)
   const [openNew, setOpenNew] = useState(false)
-  const array = [
-    {
-      image: designQueen,
-      title: 'Who Am I? Design Queen',
-      uploaded: 'December 2025'
-    },
-    {
-      image: pitchDeck,
-      title: 'Design Pitch Deck',
-      uploaded: 'December 2025'
-    },
-    {
-      image: nemoursMarketing,
-      title: 'Day in the Life: Nemours Marketing Intern',
-      uploaded: 'December 2025'
-    },
-    {
-      image: socialDesign,
-      title: 'Designing for Social Media',
-      uploaded: 'December 2025'
-    }
-  ]
+  const [selectedProject, setSelectedProject] = useState(null)
+
+
+  const { data: projects, loading, error } = useSelector(
+    (state) => state.portfolio?.marketProjects || {}
+  )
+
+  useEffect(() => {
+    dispatch(getMarketProjects())
+  }, [dispatch])
+
+
+  if (error) {
+    return <div>Error loading projects: {error}</div>
+  }
+
+  const handleEdit = (project) => {
+    setSelectedProject(project)
+    setIsOpen(true)
+  }
 
   return (
     <>
@@ -42,23 +41,29 @@ function MarketProjects() {
         title={'Market-Ready Projects'}
         setOpenNew={setOpenNew}
       >
-        <div
-          className='d-grid'
-          style={{ gridTemplateColumns: 'repeat(3,1fr)', gap: '5rem' }}
-        >
-          {array.map((item, index) => (
+        <div className='d-grid' style={{ gridTemplateColumns: 'repeat(3,1fr)', gap: '5rem' }}>
+          {projects?.map((project, index) => (
             <MarketCard
-              key={index}
-              imgSrc={item.image}
-              title={item.title}
-              uploaded={item.uploaded}
-              setIsOpen={setIsOpen}
+              key={project.id || index}
+              imgSrc={project.coverUrl || nemoursMarketing}
+              title={project.title}
+              description={project.description}
+              url={project.contentUrl}
+              uploaded={new Date(project.createdAt).toLocaleDateString('en-US', {
+                month: 'long',
+                year: 'numeric'
+              })}
+              setIsOpen={() => handleEdit(project)}
             />
           ))}
         </div>
       </PortfolioWrapper>
       <NewProject isOpen={openNew} setIsOpen={setOpenNew} />
-      <EditProject isOpen={isOpen} setIsOpen={setIsOpen} />
+      <EditProject 
+        isOpen={isOpen} 
+        setIsOpen={setIsOpen}
+        projectData={selectedProject}
+      />
     </>
   )
 }

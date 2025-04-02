@@ -3,7 +3,7 @@ import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 function MarketCard({ imgSrc, title, uploaded, setIsOpen }) {
   return (
     <div>
-      <img src={imgSrc} alt='design-queen' className='w-100' />
+      <img src={imgSrc} alt='design-queen' className='w-100 project-img' />
       <div className='d-flex justify-content-between'>
         <h5 className='mb-0 text-black fs-21 fw-medium'>{title}</h5>
         <img

@@ -12,8 +12,10 @@ import educationIcon from '../../assets/images/academy-icons/svg/education&ac.sv
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import trashIcon from '../../assets/images/academy-icons/trash.png'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
+import uploadImage from '../../assets/images/academy-icons/svg/upload-image.svg'
 import ModalInput from '../ModalInput/ModalInput'
 import { deleteMyEducation, updateMyEducation } from '../../redux/portfolio/Actions'
+import axiosInstance from '../../utils/AxiosInstance'
 
 function EditEduction({ isOpen, setIsOpen, educationData }) {
   const dispatch = useDispatch()
@@ -23,6 +25,7 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
   const [isCurrentStudent, setIsCurrentStudent] = useState(false)
+  const [imageFile, setImageFile] = useState(null)
 
   const [formData, setFormData] = useState({
     organizationName: '',
@@ -92,6 +95,38 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
     return Object.keys(newErrors).length === 0
   }
 
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0]
+    if (validateFile(selectedFile)) {
+      setImageFile(selectedFile)
+    }
+  }
+
+  const handleDrop = (event) => {
+    event.preventDefault()
+    const droppedFile = event.dataTransfer.files[0]
+    if (validateFile(droppedFile)) {
+      setImageFile(droppedFile)
+    }
+  }
+
+  const validateFile = (file) => {
+    if (!file) return false
+
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
+    const maxSize = 1 * 1024 * 1024 // 1MB
+    
+    if (!validTypes.includes(file.type)) {
+      toast.error('Only PNG, JPG, or JPEG files are allowed.')
+      return false
+    }
+    if (file.size > maxSize) {
+      toast.error('File size must be under 1MB.')
+      return false
+    }
+    return true
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -101,8 +136,28 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
       toast.error('Please fill in all required fields')
       return
     }
-    
+
     try {
+      let logoUrl = formData.imageUrl
+
+      if (imageFile) {
+        const imageData = new FormData()
+        imageData.append('img', imageFile)
+
+        const res = await axiosInstance.post('/upload/img', imageData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+
+        if (res.data.success) {
+          logoUrl = res.data.fileLocation
+        } else {
+          toast.error('Image upload failed')
+          return
+        }
+      }
+
       const payload = {
         id: educationData.id,
         organizationName: formData.organizationName,
@@ -111,7 +166,7 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
         startDate: startDate ? startDate.toISOString() : null,
         endDate: isCurrentStudent ? null : endDate ? endDate.toISOString() : null,
         description: content,
-        imageUrl: formData.imageUrl,
+        imageUrl: logoUrl,
         currentPosition: isCurrentStudent,
         showSection: formData.showSection,
         jobTitle: formData.jobTitle,
@@ -183,16 +238,68 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
             <div>
               <h4 className='fs-15'>School Logo</h4>
               <div className='d-flex flex-column p-3 gap-2 profile-container align-items-center'>
-                <img
-                  className='trash-icon align-self-end'
-                  src={trashIcon}
-                  alt='trash'
-                />
-                <img
-                  className='rounded-circle profile-container-pic'
-                  src={formData.imageUrl || universityFlorida}
-                  alt='profile'
-                />
+                {formData.imageUrl ? (
+                  <>
+                    <img
+                      className='trash-icon align-self-end cursor-pointer'
+                      src={trashIcon}
+                      alt='trash'
+                      onClick={() => handleInputChange('imageUrl', null)}
+                    />
+                    <img
+                      className='rounded-circle profile-container-pic'
+                      src={formData.imageUrl}
+                      alt='profile'
+                    />
+                  </>
+                ) : (
+                  <div className='container d-flex justify-content-center align-items-center'>
+                    <div
+                      className='upload-box text-center cursor-pointer'
+                      onClick={() => document.getElementById('fileInput').click()}
+                      onDrop={handleDrop}
+                      onDragOver={(e) => e.preventDefault()}
+                    >
+                      <input
+                        type='file'
+                        id='fileInput'
+                        className='d-none'
+                        accept='image/png, image/jpeg, image/jpg'
+                        onChange={handleFileChange}
+                      />
+                      <div className='upload-area'>
+                        {imageFile ? (
+                          <img
+                            src={URL.createObjectURL(imageFile)}
+                            alt='Uploaded Preview'
+                            className='uploaded-image'
+                            style={{
+                              width: '100px',
+                              height: '100px',
+                              objectFit: 'cover'
+                            }}
+                          />
+                        ) : (
+                          <>
+                            <img
+                              src={uploadImage}
+                              alt='Upload Icon'
+                              className='upload-icon'
+                            />
+                            <p className='upload-text'>
+                              <span className='fw-medium'>Click to upload</span>
+                              <br />
+                              <span className='text-secondary'>or drag and drop</span>
+                            </p>
+                            <p className='fs-14'>
+                              Only png, jpg, or jpeg file format supported (max. 1MB)
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

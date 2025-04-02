@@ -1697,6 +1697,11 @@ input[type='file'] {
   position: relative;
 }
 
+.project-img {
+  aspect-ratio: 16/11;
+  object-fit: contain
+}
+
 .profile-preview h3 {
   font-size: 35px;
   letter-spacing: 0px;

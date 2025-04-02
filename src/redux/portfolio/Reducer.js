@@ -328,6 +328,11 @@ const initialState = {
       data: []
     }
   },
+  marketProjects: {
+    data: [],
+    loading: false,
+    error: null
+  }
 
 }
 
@@ -2653,6 +2658,32 @@ const portfolioReducer = (state = initialState, action) => {
         }
       }
 
+    case 'GET_MARKET_PROJECTS':
+      return {
+        ...state,
+        marketProjects: {
+          ...state.marketProjects,
+          loading: true
+        }
+      }
+    case 'GET_MARKET_PROJECTS_SUCCESS':
+      return {
+        ...state,
+        marketProjects: {
+          data: action.payload.data,
+          loading: false,
+          error: null
+        }
+      }
+    case 'GET_MARKET_PROJECTS_ERROR':
+      return {
+        ...state,
+        marketProjects: {
+          ...state.marketProjects,
+          loading: false,
+          error: action.payload.error
+        }
+      }
     default:
       return state
   }

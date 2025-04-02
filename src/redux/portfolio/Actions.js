@@ -196,7 +196,19 @@ import {
   TOGGLE_MY_FAILURE_SUCCESS,
   GET_STUDENT_INFO_BY_ID,
   GET_STUDENT_INFO_BY_ID_SUCCESS,
-  GET_STUDENT_INFO_BY_ID_ERROR, GET_BASIC_USER_INFO_ERROR
+  GET_STUDENT_INFO_BY_ID_ERROR, GET_BASIC_USER_INFO_ERROR,
+  GET_MARKET_PROJECTS,
+  GET_MARKET_PROJECTS_SUCCESS,
+  GET_MARKET_PROJECTS_ERROR,
+  CREATE_MARKET_PROJECT,
+  CREATE_MARKET_PROJECT_SUCCESS,
+  CREATE_MARKET_PROJECT_ERROR,
+  UPDATE_MARKET_PROJECT,
+  UPDATE_MARKET_PROJECT_SUCCESS,
+  UPDATE_MARKET_PROJECT_ERROR,
+  DELETE_MARKET_PROJECT,
+  DELETE_MARKET_PROJECT_SUCCESS,
+  DELETE_MARKET_PROJECT_ERROR
 } from './Constants'
 import {
   createMyFailuresAPI,
@@ -244,7 +256,12 @@ import {
   getUserStoryAPI,
   updateUserStoryAPI,
   createUserStoryAPI,
+  getMarketProjectsAPI,
+  createMarketProjectAPI,
+  updateMarketProjectAPI,
+  deleteMarketProjectAPI
 } from './Service'
+import { toast } from 'react-toastify'
 
 export const getPublicPortfolio = () => async (dispatch) => {
   dispatch({ type: GET_PUBLIC_PORTFOLIO })
@@ -1753,3 +1770,97 @@ export const deleteMyCompetitivenessImageError = (error) => {
     payload: { error }
   }
 }
+
+
+export const getMarketProjects = () => async (dispatch) => {
+  dispatch({ type: 'GET_MARKET_PROJECTS' })
+  try {
+    const response = await getMarketProjectsAPI()
+    dispatch({
+      type: 'GET_MARKET_PROJECTS_SUCCESS',
+      payload: { data: response.data }
+    })
+    return response.data
+  } catch (error) {
+    dispatch({
+      type: 'GET_MARKET_PROJECTS_ERROR',
+      payload: { error: error.message }
+    })
+    toast.error('Failed to fetch market projects')
+  }
+}
+
+// CREATE Actions
+export const createMarketProject = (project) => async (dispatch) => {
+  dispatch({ type: CREATE_MARKET_PROJECT })
+  try {
+    const response = await createMarketProjectAPI(project)
+    dispatch(createMarketProjectSuccess(response.data))
+    toast.success('Market project created successfully!')
+    return response.data
+  } catch (e) {
+    dispatch(createMarketProjectError(e))
+    toast.error('Error creating market project')
+    throw e
+  }
+}
+
+export const createMarketProjectSuccess = (data) => ({
+  type: CREATE_MARKET_PROJECT_SUCCESS,
+  payload: { data }
+})
+
+export const createMarketProjectError = (error) => ({
+  type: CREATE_MARKET_PROJECT_ERROR,
+  payload: { error }
+})
+
+// UPDATE Actions
+export const updateMarketProject = (projectId, project) => async (dispatch) => {
+  dispatch({ type: UPDATE_MARKET_PROJECT })
+  try {
+    const response = await updateMarketProjectAPI(projectId, project)
+    dispatch(updateMarketProjectSuccess(response.data))
+    toast.success('Market project updated successfully!')
+    return response.data
+  } catch (e) {
+    dispatch(updateMarketProjectError(e))
+    toast.error('Error updating market project')
+    throw e
+  }
+}
+
+export const updateMarketProjectSuccess = (data) => ({
+  type: UPDATE_MARKET_PROJECT_SUCCESS,
+  payload: { data }
+})
+
+export const updateMarketProjectError = (error) => ({
+  type: UPDATE_MARKET_PROJECT_ERROR,
+  payload: { error }
+})
+
+// DELETE Actions
+export const deleteMarketProject = (projectId) => async (dispatch) => {
+  dispatch({ type: DELETE_MARKET_PROJECT })
+  try {
+    const response = await deleteMarketProjectAPI(projectId)
+    dispatch(deleteMarketProjectSuccess(projectId))
+    toast.success('Market project deleted successfully!')
+    return response.data
+  } catch (e) {
+    dispatch(deleteMarketProjectError(e))
+    toast.error('Error deleting market project')
+    throw e
+  }
+}
+
+export const deleteMarketProjectSuccess = (projectId) => ({
+  type: DELETE_MARKET_PROJECT_SUCCESS,
+  payload: { id: projectId }
+})
+
+export const deleteMarketProjectError = (error) => ({
+  type: DELETE_MARKET_PROJECT_ERROR,
+  payload: { error }
+})
