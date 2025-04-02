@@ -63,7 +63,9 @@ const InstructorSidebar = (props) => {
   }
 
   return (
-    <div class='d-flex flex-column justify-content-between h-93'>
+    <div
+      class={`d-flex flex-column justify-content-between ${props.getOtherNavClass()}`}
+    >
       <ul
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
         id='side-menu-main'

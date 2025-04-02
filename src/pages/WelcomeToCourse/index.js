@@ -1,6 +1,6 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { useHistory } from 'react-router-dom'
-import AlexPhoto from '../../assets/images/academy-icons/Alex-Doyle.jpg'
+import AlexPhoto from '../../assets/images/academy-icons/Meet Alex Doyle - Thumbnail.jpg'
 import applyStoryPic from '../../assets/images/academy-icons/apply-story.png'
 import bobProfile from '../../assets/images/academy-icons/bob-allen.png'
 import bobPic from '../../assets/images/academy-icons/bob.png'

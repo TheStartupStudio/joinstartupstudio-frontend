@@ -19,7 +19,11 @@ function PortfolioContent({
   return (
     <>
       <div className='d-flex gap-4'>
-        <img src={imgSrc} alt={title} className='align-self-start' />
+        <img
+          src={imgSrc}
+          alt={title}
+          className='align-self-start portfolio-school-image'
+        />
         <div className='text-black flex-grow-1'>
           <div className='d-flex justify-content-between align-items-center'>
             <h4 className='mb-0 fs-21 fw-medium'>{title}</h4>

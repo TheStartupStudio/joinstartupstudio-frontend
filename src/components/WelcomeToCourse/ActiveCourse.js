@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import MasterClass from '../../assets/images/academy-icons/master-class.png'
 import VideoCourse from './VideoCourse'
+import SIM from '../../assets/images/academy-icons/2. Story in Motion - Jeremy.jpg'
+import GaryPicture from '../../assets/images/academy-icons/1. Course in Entrepreneurship - Gary.jpg'
+import LJ from '../../assets/images/academy-icons/3. Leadereship Journal - Leslie.jpg'
 
 function ActiveCourse() {
   const [activeTab, setActiveTab] = useState('Master Classes')
@@ -30,8 +33,7 @@ function ActiveCourse() {
       `,
       video:
         'https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/Introducing the Entrepreneurs - Gary Conroy.mov',
-      image:
-        'https://d5tx03iw7t69i.cloudfront.net/LTS-Course-Intro/Gary_Thumbnail.jpg'
+      image: GaryPicture
     },
     'Leadership Journal': {
       title: 'LEADERSHIP JOURNAL',
@@ -39,14 +41,14 @@ function ActiveCourse() {
       text: `Our Leadership Journal gives you the opportunity to develop all aspects of leadership including values, expertise, experience, style, teamwork, initiative, methodology, self-assessment, outcomes, feedback, iteration, and vision.`,
 
       video: 'https://www.example.com/leadership-video.mp4',
-      image: MasterClass
+      image: LJ
     },
     'Story in Motion': {
       title: 'STORY IN MOTION',
       subtitle: 'Meet our Story in Motion Host, Jeremy Hall',
       text: `Find inspiration and guidance from top industry professionals who share their story, allowing you to follow their trajectory from start to present. Find out what character traits, skills, and experiences they developed to start their businesses.`,
       video: 'https://www.example.com/story-in-motion-video.mp4',
-      image: MasterClass
+      image: SIM
     }
   }
   return (

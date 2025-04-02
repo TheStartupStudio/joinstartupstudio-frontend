@@ -14,7 +14,10 @@ import trashIcon from '../../assets/images/academy-icons/trash.png'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
 import uploadImage from '../../assets/images/academy-icons/svg/upload-image.svg'
 import ModalInput from '../ModalInput/ModalInput'
-import { deleteMyEducation, updateMyEducation } from '../../redux/portfolio/Actions'
+import {
+  deleteMyEducation,
+  updateMyEducation
+} from '../../redux/portfolio/Actions'
 import axiosInstance from '../../utils/AxiosInstance'
 
 function EditEduction({ isOpen, setIsOpen, educationData }) {
@@ -40,14 +43,15 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
     jobTitle: ''
   })
 
-
   useEffect(() => {
     if (educationData) {
       setFormData({
         organizationName: educationData.organizationName || '',
         location: educationData.location || '',
         website: educationData.website || '',
-        startDate: educationData.startDate ? new Date(educationData.startDate) : null,
+        startDate: educationData.startDate
+          ? new Date(educationData.startDate)
+          : null,
         endDate: educationData.endDate ? new Date(educationData.endDate) : null,
         description: educationData.description || '',
         imageUrl: educationData.imageUrl,
@@ -55,7 +59,9 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
         showSection: educationData.showSection || true,
         jobTitle: educationData.jobTitle || ''
       })
-      setStartDate(educationData.startDate ? new Date(educationData.startDate) : null)
+      setStartDate(
+        educationData.startDate ? new Date(educationData.startDate) : null
+      )
       setEndDate(educationData.endDate ? new Date(educationData.endDate) : null)
       setContent(educationData.description || '')
       setIsCurrentStudent(educationData.currentPosition || false)
@@ -63,7 +69,7 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
   }, [educationData])
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value
     }))
@@ -71,7 +77,7 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
 
   const validateForm = () => {
     const newErrors = {}
-    
+
     if (!formData.organizationName?.trim()) {
       newErrors.organizationName = 'School name is required'
     }
@@ -115,7 +121,7 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
 
     const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
     const maxSize = 1 * 1024 * 1024 // 1MB
-    
+
     if (!validTypes.includes(file.type)) {
       toast.error('Only PNG, JPG, or JPEG files are allowed.')
       return false
@@ -164,7 +170,11 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
         location: formData.location,
         website: formData.website,
         startDate: startDate ? startDate.toISOString() : null,
-        endDate: isCurrentStudent ? null : endDate ? endDate.toISOString() : null,
+        endDate: isCurrentStudent
+          ? null
+          : endDate
+          ? endDate.toISOString()
+          : null,
         description: content,
         imageUrl: logoUrl,
         currentPosition: isCurrentStudent,
@@ -183,16 +193,15 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
     }
   }
 
-
-    const handleDelete = async () => {
-      try {
-        await dispatch(deleteMyEducation(educationData.id))
-        toast.success('Experience deleted successfully!')
-        setIsOpen(false)
-      } catch (error) {
-        toast.error('Failed to delete experience')
-      }
+  const handleDelete = async () => {
+    try {
+      await dispatch(deleteMyEducation(educationData.id))
+      toast.success('Experience deleted successfully!')
+      setIsOpen(false)
+    } catch (error) {
+      toast.error('Failed to delete experience')
     }
+  }
 
   return (
     <Modal isOpen={isOpen} toggle={() => setIsOpen((prev) => !prev)}>
@@ -205,7 +214,10 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className='mt-5 d-grid gap-5' style={{ gridTemplateColumns: '4fr 2fr' }}>
+          <div
+            className='mt-5 d-grid gap-5'
+            style={{ gridTemplateColumns: '4fr 2fr' }}
+          >
             <div>
               <h4 className='fs-15'>School Details</h4>
               <div className='d-flex flex-column gap-3'>
@@ -214,9 +226,13 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                   labelTitle={'School Name*'}
                   imgSrc={penIcon}
                   value={formData.organizationName}
-                  onChange={(e) => handleInputChange('organizationName', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('organizationName', e.target.value)
+                  }
                 />
-                {errors.organizationName && <span className="text-danger">{errors.organizationName}</span>}
+                {errors.organizationName && (
+                  <span className='text-danger'>{errors.organizationName}</span>
+                )}
                 <ModalInput
                   id={'schoolUrl'}
                   labelTitle={'School Url*'}
@@ -224,15 +240,21 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                   value={formData.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
                 />
-                {errors.website && <span className="text-danger">{errors.website}</span>}
+                {errors.website && (
+                  <span className='text-danger'>{errors.website}</span>
+                )}
                 <ModalInput
                   id={'degree'}
                   labelTitle={'Degree*'}
                   imgSrc={penIcon}
                   value={formData.jobTitle}
-                  onChange={(e) => handleInputChange('jobTitle', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('jobTitle', e.target.value)
+                  }
                 />
-                {errors.jobTitle && <span className="text-danger">{errors.jobTitle}</span>}
+                {errors.jobTitle && (
+                  <span className='text-danger'>{errors.jobTitle}</span>
+                )}
               </div>
             </div>
             <div>
@@ -256,7 +278,9 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                   <div className='container d-flex justify-content-center align-items-center'>
                     <div
                       className='upload-box text-center cursor-pointer'
-                      onClick={() => document.getElementById('fileInput').click()}
+                      onClick={() =>
+                        document.getElementById('fileInput').click()
+                      }
                       onDrop={handleDrop}
                       onDragOver={(e) => e.preventDefault()}
                     >
@@ -289,10 +313,13 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                             <p className='upload-text'>
                               <span className='fw-medium'>Click to upload</span>
                               <br />
-                              <span className='text-secondary'>or drag and drop</span>
+                              <span className='text-secondary'>
+                                or drag and drop
+                              </span>
                             </p>
                             <p className='fs-14'>
-                              Only png, jpg, or jpeg file format supported (max. 1MB)
+                              Only png, jpg, or jpeg file format supported (max.
+                              1MB)
                             </p>
                           </>
                         )}
@@ -312,6 +339,19 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   className='form-control'
+                  popperPlacement='bottom-start'
+                  popperModifiers={[
+                    {
+                      name: 'preventOverflow',
+                      options: {
+                        boundary: 'window'
+                      }
+                    },
+                    {
+                      name: 'flip',
+                      enabled: false // Prevents flipping upward
+                    }
+                  ]}
                   customInput={
                     <div className='d-flex align-items-center gap-2'>
                       <FaRegCalendarAlt className='calendar-icon' />
@@ -333,7 +373,9 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                     </div>
                   }
                 />
-                {errors.startDate && <span className="text-danger">{errors.startDate}</span>}
+                {errors.startDate && (
+                  <span className='text-danger'>{errors.startDate}</span>
+                )}
               </div>
               <div className='w-100 d-flex flex-column gap-2'>
                 <label className='fs-15 fw-medium'>End Date*</label>
@@ -363,7 +405,9 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                     </div>
                   }
                 />
-                {errors.endDate && <span className="text-danger">{errors.endDate}</span>}
+                {errors.endDate && (
+                  <span className='text-danger'>{errors.endDate}</span>
+                )}
               </div>
               <div className='flex flex-col items-center'>
                 <label
@@ -396,29 +440,31 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                   ]
                 }}
               />
-              {errors.description && <span className="text-danger">{errors.description}</span>}
+              {errors.description && (
+                <span className='text-danger'>{errors.description}</span>
+              )}
             </div>
           </div>
           <div className='d-flex justify-content-end mt-3 ms-2'>
             <div className='d-flex gap-3'>
-              <Button 
-                              className='modal-save-btn' 
-                              onClick={handleDelete} 
-                              type="button"
-                              style={{ backgroundColor: 'red' }}
-                            >
-                              DELETE
-                            </Button>
+              <Button
+                className='modal-save-btn'
+                onClick={handleDelete}
+                type='button'
+                style={{ backgroundColor: 'red' }}
+              >
+                DELETE
+              </Button>
               <Button
                 className='close-btn'
-                type="button"
+                type='button'
                 onClick={() => setIsOpen(false)}
               >
                 CANCEL
               </Button>
-              <Button 
+              <Button
                 className='modal-save-btn'
-                type="submit"
+                type='submit'
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'SAVING...' : 'SAVE'}

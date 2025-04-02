@@ -419,6 +419,9 @@ const EnLangs = {
   'journal.get_your_certificate': 'Get your certificate',
   'journal.print_certificate': 'Print Certificate',
   'journal.header': 'Leadership Journal',
+  'portfolio.header': 'My Portfolio',
+  'portfolio.content':
+    'Share your empowerment, wellness, and performance with the global community',
 
   //Portfolio
   'portfolio.edit_page_Summary_first': 'Summary ',
@@ -574,7 +577,8 @@ const EnLangs = {
   'startup_live.join_session': 'Join Session',
   'startup_live.now_streaming': 'Now streaming',
   'startup_live.startup_archive': 'StartupLive™ Archive',
-  'startup_live.startup_archive_description': 'Ongoing guidance from entrepreneurs and experts to help you on your journey',
+  'startup_live.startup_archive_description':
+    'Ongoing guidance from entrepreneurs and experts to help you on your journey',
 
   //My notes
   'my_notes.page_title': 'My Notes',
