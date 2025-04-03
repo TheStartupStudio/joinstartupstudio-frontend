@@ -7,7 +7,10 @@ const Tooltip = ({ text, children }) => {
   const tooltipInstance = useRef(null)
 
   useEffect(() => {
-    if (tooltipRef.current) {
+    if (!tooltipRef.current) return
+
+    try {
+      tooltipInstance.current?.dispose()
       tooltipInstance.current = new BSTooltip(tooltipRef.current, {
         title: text,
         placement: 'bottom',
@@ -15,23 +18,12 @@ const Tooltip = ({ text, children }) => {
         offset: [10, -10]
       })
 
-      const showTooltip = () => tooltipInstance.current?.show()
-      const hideTooltip = () => tooltipInstance.current?.hide()
-
-      tooltipRef.current.addEventListener('mouseenter', showTooltip)
-      tooltipRef.current.addEventListener('mouseleave', hideTooltip)
-
       return () => {
-        if (tooltipRef.current) {
-          // Double-check tooltipRef.current is available
-          tooltipRef.current.removeEventListener('mouseenter', showTooltip)
-          tooltipRef.current.removeEventListener('mouseleave', hideTooltip)
-        }
-        if (tooltipInstance.current) {
-          tooltipInstance.current.dispose()
-          tooltipInstance.current = null
-        }
+        tooltipInstance.current?.dispose()
+        tooltipInstance.current = null
       }
+    } catch (error) {
+      console.error('Tooltip initialization error:', error)
     }
   }, [text])
 
