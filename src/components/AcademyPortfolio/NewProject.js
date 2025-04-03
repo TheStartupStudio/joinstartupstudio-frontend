@@ -173,7 +173,7 @@ function NewProject({ isOpen, setIsOpen }) {
                     src={trashIcon}
                     alt='trash'
                     onClick={() => {
-                      handleInputChange('coverUrl', universityFlorida)
+                      handleInputChange('coverUrl', '')
                       setImageFile(null)
                     }}
                   />

@@ -214,17 +214,20 @@ function NewEducation({ isOpen, setIsOpen }) {
             <div>
               <h4 className='fs-15'>School Logo</h4>
               <div className='d-flex flex-column p-3 gap-2 profile-container align-items-center'>
-                {formData.imageUrl ? (
+                {formData.imageUrl || imageFile ? (
                   <>
                     <img
                       className='trash-icon align-self-end cursor-pointer'
                       src={trashIcon}
                       alt='trash'
-                      onClick={() => handleInputChange('imageUrl', null)}
+                      onClick={() => {
+                        setImageFile(null)
+                        handleInputChange('imageUrl', null)
+                      }}
                     />
                     <img
                       className='rounded-circle profile-container-pic'
-                      src={formData.imageUrl}
+                      src={imageFile ? URL.createObjectURL(imageFile) : formData.imageUrl}
                       alt='profile'
                     />
                   </>
@@ -244,34 +247,19 @@ function NewEducation({ isOpen, setIsOpen }) {
                         onChange={handleFileChange}
                       />
                       <div className='upload-area'>
-                        {imageFile ? (
-                          <img
-                            src={URL.createObjectURL(imageFile)}
-                            alt='Uploaded Preview'
-                            className='uploaded-image'
-                            style={{
-                              width: '100px',
-                              height: '100px',
-                              objectFit: 'cover'
-                            }}
-                          />
-                        ) : (
-                          <>
-                            <img
-                              src={uploadImage}
-                              alt='Upload Icon'
-                              className='upload-icon'
-                            />
-                            <p className='upload-text'>
-                              <span className='fw-medium'>Click to upload</span>
-                              <br />
-                              <span className='text-secondary'>or drag and drop</span>
-                            </p>
-                            <p className='fs-14'>
-                              Only png, jpg, or jpeg file format supported (max. 1MB)
-                            </p>
-                          </>
-                        )}
+                        <img
+                          src={uploadImage}
+                          alt='Upload Icon'
+                          className='upload-icon'
+                        />
+                        <p className='upload-text'>
+                          <span className='fw-medium'>Click to upload</span>
+                          <br />
+                          <span className='text-secondary'>or drag and drop</span>
+                        </p>
+                        <p className='fs-14'>
+                          Only png, jpg, or jpeg file format supported (max. 1MB)
+                        </p>
                       </div>
                     </div>
                   </div>

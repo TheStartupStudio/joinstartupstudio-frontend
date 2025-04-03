@@ -181,7 +181,7 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
         startDate: null,
         endDate: null,
         description: '',
-        imageUrl: null,
+        imageUrl: '',
         currentPosition: false,
         showSection: true,
         jobTitle: '',
@@ -252,7 +252,10 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                       className='trash-icon align-self-end cursor-pointer'
                       src={trashIcon}
                       alt='trash'
-                      onClick={() => handleInputChange('imageUrl', null)}
+                      onClick={() => {
+                        handleInputChange('imageUrl', null)
+                        setImageFile(null)
+                      }}
                     />
                     <img
                       className='rounded-circle profile-container-pic'

@@ -207,17 +207,20 @@ function NewExperience({ isOpen, setIsOpen }) {
             <div>
               <h4 className='fs-15'>Experience Image/Logo</h4>
               <div className='d-flex flex-column p-3 gap-2 profile-container align-items-center'>
-                {formData.imageUrl ? (
+                {formData.imageUrl || imageFile ? (
                   <>
                     <img
                       className='trash-icon align-self-end cursor-pointer'
                       src={trashIcon}
                       alt='trash'
-                      onClick={() => handleInputChange('imageUrl', null)}
+                      onClick={() => {
+                        setImageFile(null)
+                        handleInputChange('imageUrl', null)
+                      }}
                     />
                     <img
                       className='rounded-circle profile-container-pic'
-                      src={formData.imageUrl}
+                      src={imageFile ? URL.createObjectURL(imageFile) : formData.imageUrl}
                       alt='profile'
                     />
                   </>
