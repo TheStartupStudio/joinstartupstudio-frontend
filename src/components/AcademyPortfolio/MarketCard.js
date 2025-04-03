@@ -2,7 +2,7 @@ import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 
 function MarketCard({ imgSrc, title, uploaded, setIsOpen, url }) {
   return (
-    <div>
+    <div className='d-flex flex-column gap-2'>
       <a href={url} target='_blank' rel='noopener noreferrer' className='text-decoration-none'>
       <img src={imgSrc} alt='design-queen' className='w-100 project-img' />
         </a>
