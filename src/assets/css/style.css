@@ -281,7 +281,7 @@ nav#sidebar {
 
 #sidebar ul li a:hover,
 #sidebar ul li .active {
-  background: #e4e9f4;
+  background: #daf6ff;
 }
 
 a.sidenav.active {
@@ -378,7 +378,7 @@ button#sidebarCollapse {
 .dropdown-item.active,
 .dropdown-item:active,
 .dropdown-item:hover {
-  background: #e4e9f4;
+  background: #000000;
   color: #000 !important;
 }
 
@@ -4292,7 +4292,7 @@ wave > wave:first-child {
 }
 
 .sidebar-button:hover {
-  background: #e4e9f4;
+  background: #daf6ff;
 }
 
 .modal-content {
@@ -4910,7 +4910,7 @@ wave > wave:first-child {
 }
 
 .logout-button:hover {
-  background: #e4e9f4;
+  background: #daf6ff;
 }
 
 .portfolio-school-image {
