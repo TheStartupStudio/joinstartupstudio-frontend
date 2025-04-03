@@ -7,6 +7,7 @@ import PortfolioWrapper from './PortfolioWrapper'
 import NewExperience from './NewExperience'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMyWorkExperiences } from '../../redux/portfolio/Actions'
+import experienceDefault from '../../assets/images/experience-logo.jpg'
 
 function ExperiencePortfolio() {
   const [isOpen, setIsOpen] = useState(false)
@@ -39,7 +40,7 @@ function ExperiencePortfolio() {
           <PortfolioContent
             key={experience.id}
             setIsOpen={() => handleEdit(experience)}
-            imgSrc={experience.imageUrl || universityFlorida}
+            imgSrc={experience.imageUrl || experienceDefault}
             title={experience.organizationName || ''}
             institution={experience.location || ''}
             duration={

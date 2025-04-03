@@ -7,6 +7,7 @@ import EditEduction from './EditEduction'
 import NewEducation from './NewEducation'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMyEducations } from '../../redux/portfolio/Actions'
+import educationLogo from '../../assets/images/education-logo.png'
 
 function EducationPortfolio() {
   const [isOpen, setIsOpen] = useState(false)
@@ -38,7 +39,7 @@ function EducationPortfolio() {
           <PortfolioContent
             key={education.id}
             setIsOpen={() => handleEdit(education)}
-            imgSrc={education.imageUrl || universityFlorida}
+            imgSrc={education.imageUrl || educationLogo}
             title={education.organizationName || null}
             institution={education.location || null}
             duration={

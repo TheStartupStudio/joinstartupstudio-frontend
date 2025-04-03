@@ -8,6 +8,7 @@ import NewProject from './NewProject'
 import EditProject from './EditProject'
 import { getMarketProjects } from '../../redux/portfolio/Actions'
 import { toast } from 'react-toastify'
+import projectDefault from '../../assets/images/project-logo.jpeg'
 
 function MarketProjects() {
   const dispatch = useDispatch()
@@ -45,7 +46,7 @@ function MarketProjects() {
           {projects?.map((project, index) => (
             <MarketCard
               key={project.id || index}
-              imgSrc={project.coverUrl || nemoursMarketing}
+              imgSrc={project.coverUrl || projectDefault}
               title={project.title}
               description={project.description}
               url={project.contentUrl}

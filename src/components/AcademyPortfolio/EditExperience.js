@@ -174,6 +174,19 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
       toast.error('Failed to update experience')
     } finally {
       setIsSubmitting(false)
+      setFormData({
+        organizationName: '',
+        location: '',
+        website: '', 
+        startDate: null,
+        endDate: null,
+        description: '',
+        imageUrl: null,
+        currentPosition: false,
+        showSection: true,
+        jobTitle: '',
+        type: 'work'
+      })
     }
   }
 
