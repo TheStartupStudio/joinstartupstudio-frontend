@@ -99,21 +99,17 @@ const InstructorSidebar = (props) => {
           />
         </Tooltip>
 
-        <Tooltip text={'Course in Entrepreneurship'}>
-          <SidebarItem
-            onClick={() => {
-              dispatch(setAccordionToggled(false))
-              props.props.hideHeaderIcons()
-            }}
-            to={'/dashboard'}
-            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-            srcImage={CoursEnIcon}
-            title={
-              isTextVisible && !isCollapsed && 'Course in enterpreneurship'
-            }
-            isDropdown={false}
-          />
-        </Tooltip>
+        <SidebarItem
+          onClick={() => {
+            dispatch(setAccordionToggled(false))
+            props.props.hideHeaderIcons()
+          }}
+          to={'/my-course-in-entrepreneurship/journal/51'}
+          // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+          srcImage={CoursEnIcon}
+          title={isTextVisible && !isCollapsed && 'Course in enterpreneurship'}
+          isDropdown={false}
+        />
 
         <Tooltip text={'Master Classes'}>
           <SidebarItem
