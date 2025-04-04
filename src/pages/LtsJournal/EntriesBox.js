@@ -98,7 +98,7 @@ const EntriesBox = (props) => {
   }
 
   return entries && entries.length > 0 ? (
-    <div style={{ border: '1px solid #BBBDBF' }}>
+    <div>
       {journal.title === 'MY PROJECT SPRINTS' && loading ? (
         <div
           className='d-flex justify-content-center align-items-center'
@@ -170,7 +170,7 @@ const EntriesBox = (props) => {
             <h4
               style={{
                 padding: '12px 40px 12px 12px',
-                backgroundColor: '#e5e5e5',
+                // backgroundColor: '#e5e5e5',
                 marginBottom: 0,
                 fontSize: 12,
                 fontWeight: 700

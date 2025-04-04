@@ -21,6 +21,7 @@ import JournalTables from './JournalTables/JournalTables'
 import AccordionItemWrapper from './UI/AccordionItemWrapper.js'
 import InterviewedMentors from './InterviewedMentors'
 import InstructorFeedback from './InstructorFeedback/InstructorFeedback.js'
+import circleIcon from '../../assets/images/circle-user-icon.png'
 
 function LtsJournalContent(props) {
   const location = useLocation()
@@ -30,9 +31,10 @@ function LtsJournalContent(props) {
   let [videoWatchData, setVideoWatchData] = useState([])
   let [userJournalEntries, setUserJournalEntries] = useState({})
   let [loading, setLoading] = useState(false)
-  let [showVideo, setShowVideo] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Track the current video index
+  const [showVideo, setShowVideo] = useState(null); // Track the currently playing video
 
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
@@ -213,9 +215,23 @@ function LtsJournalContent(props) {
     }
   }
 
+  const handleNextVideo = () => {
+    if (currentVideoIndex < videos.length - 1) {
+      setCurrentVideoIndex(currentVideoIndex + 1);
+      setShowVideo(null); // Reset the currently playing video
+    }
+  };
+
+  const handlePreviousVideo = () => {
+    if (currentVideoIndex > 0) {
+      setCurrentVideoIndex(currentVideoIndex - 1);
+      setShowVideo(null); // Reset the currently playing video
+    }
+  };
+
   const handleShowVideo = (video) => {
-    setShowVideo(video.id)
-  }
+    setShowVideo(video.id); // Set the currently playing video
+  };
 
   if (!journal) {
     return null
@@ -225,72 +241,116 @@ function LtsJournalContent(props) {
     journal.videos && journal.videos.constructor == Array
       ? journal.videos
       : [journal.video]
-  ).filter(Boolean)
+  ).filter(video => video && video.id);
 
   return (
     <>
-      <div className='row'>
-        <div className='col-12'>
-          <div className='journal-entries__back'>
+      <div className="d-flex justify-content-between align-items-start" style={{ gap: '2rem' }}>
+        {/* Video Container */}
+        <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%' }}>
+          <div className="journal-entries__back">
             <NavLink to={props.backRoute}>Back</NavLink>
           </div>
+         <div className='d-flex align-items-center'>
+         <img
+            src={circleIcon}
+            alt="circle-icon"
+            style={{ width: '40px', height: '40px', marginRight: '10px' }}
+          />
+          <h4 className="page-card__content-title">{journal.title}</h4>
 
-          <h4 className='page-card__content-title'>{journal.title}</h4>
-          {videos &&
-            videos.map((video, index) => (
-              <MediaLightbox
-                video={video}
-                key={index}
-                show={showVideo === video.id}
-                onClose={() => setShowVideo(false)}
-                handleShowVideo={() => handleShowVideo(video)}
-                // watchData={videoWatchData}
-                // onVideoData={saveWatchData}
-                // onVideoWatched={saveVideoWatched}
-              />
-            ))}
-          {videos && videos.constructor == Array && videos.length > 0 && (
-            <div
-              className={`journal-entries__videos journal-entries__videos--${
-                videos.length > 1 ? 'multiple' : 'single'
-              }`}
-            >
-              {videos.map((video, index) => (
+         </div>
+          {videos && videos.length > 0 && (
+            <div className="journal-entries__videos">
+              {/* Display only the current video if it exists */}
+              {videos[currentVideoIndex] && (
                 <div
-                  key={index}
                   className={`journal-entries__video${
-                    journal.content == '' ? '--welcome-video' : ''
+                    journal.content === '' ? '--welcome-video' : ''
                   }`}
                 >
                   <div
                     className={`journal-entries__video-thumbnail${
-                      journal.content == '' ? '--welcome-video' : ''
+                      journal.content === '' ? '--welcome-video' : ''
                     }`}
-                    // onClick={() => setShowVideo(video.id)}
-                    onClick={() => handleShowVideo(video)}
+                    onClick={() => handleShowVideo(videos[currentVideoIndex])}
                   >
-                    <img src={video.thumbnail} alt='thumbnail' />
+                    <img src={videos[currentVideoIndex].thumbnail} alt="thumbnail" />
                     <div
                       className={`journal-entries__video-thumbnail-icon${
-                        journal.content == '' ? '--welcome-video' : ''
+                        journal.content === '' ? '--welcome-video' : ''
                       }`}
                     >
                       <FontAwesomeIcon icon={faPlay} />
                     </div>
                   </div>
                 </div>
-              ))}
+              )}
+
+              {/* Render the video player if a video is selected */}
+              {showVideo === videos[currentVideoIndex]?.id && (
+                <MediaLightbox
+                  video={videos[currentVideoIndex]}
+                  show={true}
+                  onClose={() => setShowVideo(null)}
+                />
+              )}
+
+              {/* Navigation Buttons */}
+              <div className="nav-videos">
+                <button
+                  className="btn"
+                  onClick={handlePreviousVideo}
+                  disabled={currentVideoIndex === 0}
+                >
+                  &#8592; Previous
+                </button>
+                <button
+                  className="btn"
+                  onClick={handleNextVideo}
+                  disabled={currentVideoIndex === videos.length - 1}
+                >
+                  Next &#8594;
+                </button>
+              </div>
             </div>
           )}
+        </div>
 
-          {journal?.content?.includes('<div') ||
-          journal?.content?.includes('<p') ? (
-            parse(`${journal.content}`)
+        {/* Other Container */}
+        <div id="content-container" className="content-container" style={{ flex: '1 1 50%' }}>
+          {journal.entries && journal.entries.length > 0 ? (
+            <div className="col-12">
+              <div className="journal-entries">
+                <EntriesBox
+                  entries={journal.entries}
+                  entryBoxTitle={journal?.title}
+                  journal={journal}
+                  isEditable={true}
+                  isDeletable={true}
+                  userJournalEntries={userJournalEntries}
+                  deleteReflection={(entry, userJournalEntry) =>
+                    deleteReflection(entry, userJournalEntry)
+                  }
+                  updateReflection={(entry, userJournalEntry) =>
+                    updateReflection(entry, userJournalEntry)
+                  }
+                  addReflection={(entry) => addReflection(entry)}
+                  handleShowAddReflection={(reflection) =>
+                    handleShowAddReflection(reflection)
+                  }
+                  showAddReflection={showAddReflection}
+                  isAddReflection={isAddReflection}
+                />
+              </div>
+            </div>
           ) : (
-            <p className='page-card__content-description'>{journal.content}</p>
+            <p>No journal entries available.</p>
           )}
+          {/* <p className="page-card__content-description">{journal.content}</p> */}
         </div>
       </div>
+   
       {/* THIS IS WHERE THE DROPDOWN THING GOES */}
       {props.match.params.journalId.includes('1001006') ? (
         <div
@@ -395,8 +455,8 @@ function LtsJournalContent(props) {
         </div>
       ) : null}
 
-      <div className='row'>
-        {journal.entries && journal.entries.length ? (
+      <div>
+        {/* {journal.entries && journal.entries.length ? (
           <div className='col-12'>
             <div className='journal-entries'>
               <EntriesBox
@@ -424,7 +484,7 @@ function LtsJournalContent(props) {
               />
             </div>
           </div>
-        ) : null}
+        ) : null} */}
         {journal.hasAccordion ? (
           <div className='col-12'>
             <div className={'custom-breakdowns-container'}>

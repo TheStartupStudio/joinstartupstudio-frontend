@@ -22,6 +22,7 @@ import { Modal } from 'react-bootstrap'
 import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png';
 import { useLocation } from 'react-router-dom';
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
+import moment from 'moment';
 
 
 export default function BeyondYourCourse() {
@@ -679,7 +680,6 @@ export default function BeyondYourCourse() {
 
   <div className="beyond-videos-desktop">
     <div className="card-group desktop-menu card-group-beyond-your-course w-100">
-      {/* Render only podcast episodes */}
       {podcastEpisodes.map((podcast, index) => (
         <div
           key={index}
@@ -700,6 +700,9 @@ export default function BeyondYourCourse() {
           <h5 style={{ textAlign: 'center', marginTop: '10px' }}>
             {podcast.title}
           </h5>
+          <p style={{ textAlign: 'center', color: '#666', fontSize: '14px' }}>
+            {moment(podcast.date || podcast.createdAt).format('MMM D, YYYY')}
+          </p>
         </div>
       ))}
     </div>

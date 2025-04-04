@@ -83,7 +83,7 @@ export default function VideoView(props) {
               className='beyond-your-course-video-thumb'
               style={{ width: '200px',borderRadius:'25px' }}
             >
-              <div style={{ position: 'absolute', right: '10px', top: '10px' }}>
+              {/* <div style={{ position: 'absolute', right: '10px', top: '10px' }}>
                 <FontAwesomeIcon
                   icon={videoData.favorite ? heartSaved : heartNotSaved}
                   style={{
@@ -97,7 +97,7 @@ export default function VideoView(props) {
                       : props.removeSavedVideo()
                   }
                 />
-              </div>
+              </div> */}
 
               <div>
                 <img
@@ -157,7 +157,7 @@ export default function VideoView(props) {
                     top: '10px'
                   }}
                 >
-                  <FontAwesomeIcon
+                  {/* <FontAwesomeIcon
                     icon={videoData.favorite ? heartSaved : heartNotSaved}
                     style={{
                       width: '25px',
@@ -173,7 +173,7 @@ export default function VideoView(props) {
                         ? updateFavorite(!videoData.favorite)
                         : props.removeSavedVideo()
                     }
-                  />
+                  /> */}
                 </div>
                 <div
                   onClick={() => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink, useHistory, Switch, Route } from 'react-router-dom'
+import { NavLink, useHistory, Switch, Route, useParams } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
 import './ltsjournal.css'
@@ -27,20 +27,25 @@ import SelectCourses from '../../components/LeadershipJournal/SelectCourses'
 import ModalInput from '../../components/ModalInput/ModalInput'
 import searchJ from '../../assets/images/academy-icons/search.png'
 import MediaLightbox from '../../components/MediaLightbox';
+import ReactQuill from 'react-quill'; 
 
 function LtsJournal(props) {
   const dispatch = useDispatch()
   const history = useHistory()
+  const { journalId } = useParams(); 
   const [journals, setJournals] = useState([])
   const [journalsData, setJournalsData] = useState([])
   const [selectedLesson, setSelectedLesson] = useState('')
   const [activeLevel, setActiveLevel] = useState(0)
+  const [editorContent, setEditorContent] = useState(''); 
   const currentLanguage = useSelector((state) => state.lang.locale)
   const contentContainer = useRef()
   const [modal, setModal] = useState(false);
   const toggleModal = () => setModal(!modal);
   const [showVideo, setShowVideo] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [videos, setVideos] = useState([]);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Track the current video index
   
   const handleShowVideo = (video) => {
     setShowVideo(video.id);
@@ -61,130 +66,111 @@ function LtsJournal(props) {
     'Vulcan Manual (DM)',
   ]
 
-  // Replace the single lessonOptions with an object containing options for each level
   const lessonsByLevel = {
-    0: [ // Level 1 options - matches modal structure
-      { id: 'myths', title: "Myths of Entrepreneurship", status: 'done' },
-      { id: 'definition', title: "Definition of Entrepreneurship", status: 'done' },
-      { id: 'reasons', title: "Reasons Why Startups Fail", status: 'inProgress' },
-      { id: 'skills', title: "Skills and Traits of Effective Entrepreneurs", status: 'notStarted' },
-      { id: 'people', title: "People Buy Into People", status: 'notStarted' },
-      { id: 'selfBrand', title: "Creating Your Self Brand First", status: 'notStarted' },
-      { id: 'task1', title: "Task #1: Create your Individual Value Proposition", status: 'notStarted' },
-      { id: 'task2', title: "Task #2: Create your I Am Video", status: 'notStarted' }
-    ],
-    1: [ // Level 2 options - matches modal structure
-      { id: 'journey', title: "The Journey of Entrepreneurship", status: 'notStarted' },
-      { id: 'intro', title: "An Introduction to the LTS Model and Four Environments", status: 'notStarted' },
-      { id: 'coreSkills', title: "The Core Skills and LEARN Stage of the LTS Model", status: 'notStarted' },
-      { id: 'develop', title: "The DEVELOP Stage of the LTS Model", status: 'notStarted' },
-      { id: 'start', title: "Understanding START & the Test Metrics of LTS", status: 'notStarted' },
-      { id: 'task3', title: "Task #3: Evaluate Your Mindset and Skill Set", status: 'notStarted' },
-      { id: 'process', title: "The Process of Entrepreneurship", status: 'notStarted' },
-      { id: 'task4', title: "Task #4: Build Your Team and Find Your Mentor", status: 'notStarted' }
-    ],
-    2: [ // Level 3 options - matches modal structure
-      {
-        id: "3.1",
-        title: "Level 3.1: The Journey of Entrepreneurship",
-        isParent: true,
-        children: [
-          { id: 'journey31', title: "The Journey of Entrepreneurship" },
-          { id: 'process31', title: "The Process and Skill of Storytelling" },
-          { id: 'relevancy', title: "Relevancy in World 4.0" },
-          { id: 'learn', title: "The LEARN Stage" },
-          { id: 'problems', title: "Problems Worth Solving" },
-          { id: 'task5', title: "Task #5: Identify a Problem Worth Solving, Assumptions, and Market Trends" },
-          { id: 'task6', title: "Task #6: Conduct an Industry Analysis" }
-        ]
-      },
-      {
-        id: "3.2",
-        title: "Level 3.2: The Develop Stage",
-        isParent: true,
-        children: [
-          { id: 'solution', title: "Finding the Solution" },
-          { id: 'value', title: "Creating Your Startup's Value Proposition" },
-          { id: 'task7', title: "Task #7: Create Your Startup's Value Proposition" },
-          { id: 'testing', title: "Testing Your Startup's Value Proposition" },
-          { id: 'task8', title: "Task #8: Conduct Market Validation for Your Startup's Value Proposition" },
-          { id: 'inovation', title: "Understanding Innovation and Its Enemies" },
-          { id: 'skills', title: "The Five Skills of Innovation" },
-          { id: 'develop', title: "The DEVELOP Stage" },
-          { id: 'task9', title: "Develop Your Startup's Business Model" },
-          { id: 'task10', title: "Write Your Startup's Concept Plan" },
-        ]
-      },
-      {
-        id: "3.3",
-        title: "Level 3.3: The Develop Stage",
-        isParent: true,
-        children: [
-          { id: 'brand', title: "Definition of Brand" },
-          { id: 'branding', title: "Branding Strategies" },
-          { id: 'relation', title: "The Relationship Between Story and Brand" },
-          { id: 'charter', title: "The Brand Charter" },
-          { id: 'creating', title: "Task #11: Creating Your Startup's Brand Charter" },
-          { id: 'vehicles', title: "The Brand Vehicles" },
-          { id: 'task12', title: "Task #12: Create Your Startup's Brand Vehicles" },
-          { id: 'fundamental', title: "The Fundamental Elements of Story" },
-          { id: 'bussines', title: "Stories Your Bussines Can Tell" },
-          { id: 'storyteller', title: "Embracing Your Inner Storyteller" },
-          { id: 'task13', title: "Task #13: Conduct Focus Groups" },
-          { id: 'marketing', title: "The Marketing Plan" },
-          { id: 'task14', title: "Task #14: Creating Your Startup's Marketing Plan" },
-        ]
-      },
-      {
-        id: "3.4",
-        title: "Level 3.4: The Start Stage",
-        isParent: true,
-        children: [
-          { id: 'brand', title: "Introduction to the Business Plan" },
-          { id: 'branding', title: "The Business Development Management Map" },
-          { id: 'relation', title: "Task #15: Create Your Startup's Business Development Management Map" },
-          { id: 'charter', title: "The Test Metric of Sustainability" },
-          { id: 'creating', title: "Task #16: Test The Sustainability of Your Startup" },
-          { id: 'vehicles', title: "The Process of Entrepreneurship Reintroduction" },
-          { id: 'task12', title: "Parts of a Business Plan" },
-          { id: 'fundamental', title: "Task #17: Write Your Startup's Business Plan" },
-          { id: 'bussines', title: "The Test Metric of Efficiency" },
-          { id: 'storyteller', title: "Task #18: Test the Efficiency of Your Startup" },
-          { id: 'task13', title: "An Introduction to the Financial Plan" },
-          { id: 'marketing', title: "Task #19: Create Your Startup's Financial Plan" },
-          { id: 'task14', title: "Task #20: Test the Potential Profitability of Your Startup" },
-          { id: 'task14', title: "Brand Generation" },
-          { id: 'task14', title: "Business Plan Musts" },
-          { id: 'task14', title: "Task #21: Write the Executive Summary of Your Startup's Business" },
-          { id: 'task14', title: "Task #22: Create Your Startup's Brand Introductory Video" },
-          { id: 'task14', title: "Selling You" },
-          { id: 'task14', title: "Pitching Yourself" },
-          { id: 'task14', title: "Reminders Going Forwards" },
-          { id: 'task14', title: "Task #23: Create Your Final I Am Video" },
-          { id: 'task14', title: "Task #24: Build Your Team and Find Your Mentor" },
-          { id: 'task14', title: "Task #25: Build Your Startup's Final Pitch" },
-        ]
-      }
-    ]
-  };
-
-  const [videos, setVideos] = useState([
+  0: [ // Level 1 options
+    { id: 'myths', title: "Myths of Entrepreneurship", status: 'done', redirectId: 51 },
+    { id: 'definition', title: "Definition of Entrepreneurship", status: 'done', redirectId: 52 },
+    { id: 'reasons', title: "Reasons Why Startups Fail", status: 'inProgress', redirectId: 53 },
+    { id: 'skills', title: "Skills and Traits of Effective Entrepreneurs", status: 'notStarted', redirectId: 54 },
+    { id: 'people', title: "People Buy Into People", status: 'notStarted', redirectId: 55 },
+    { id: 'selfBrand', title: "Creating Your Self Brand First", status: 'notStarted', redirectId: 56 },
+    { id: 'task1', title: "Task #1: Create your Individual Value Proposition", status: 'notStarted', redirectId: 57 },
+    { id: 'task2', title: "Task #2: Create your I Am Video", status: 'notStarted', redirectId: 58 }
+  ],
+  1: [ // Level 2 options
+    { id: 'journey', title: "The Journey of Entrepreneurship", status: 'notStarted', redirectId: 60 },
+    { id: 'intro', title: "An Introduction to the LTS Model and Four Environments", status: 'notStarted', redirectId: 61 },
+    { id: 'coreSkills', title: "The Core Skills and LEARN Stage of the LTS Model", status: 'notStarted', redirectId: 62 },
+    { id: 'develop', title: "The DEVELOP Stage of the LTS Model", status: 'notStarted', redirectId: 63 },
+    { id: 'start', title: "Understanding START & the Test Metrics of LTS", status: 'notStarted', redirectId: 64 },
+    { id: 'task3', title: "Task #3: Evaluate Your Mindset and Skill Set", status: 'notStarted', redirectId: 65 },
+    { id: 'process', title: "The Process of Entrepreneurship", status: 'notStarted', redirectId: 66 },
+    { id: 'task4', title: "Task #4: Build Your Team and Find Your Mentor", status: 'notStarted', redirectId: 67 }
+  ],
+  2: [ // Level 3 options
     {
-      id: 'level1video',
-      url: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4',
-      thumbnail: 'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg'
+      id: "3.1",
+      title: "Level 3.1: The Journey of Entrepreneurship",
+      isParent: true,
+      children: [
+        { id: 'journey31', title: "The Journey of Entrepreneurship", status: 'notStarted', redirectId: 70 },
+        { id: 'process31', title: "The Process and Skill of Storytelling", redirectId: 71 },
+        { id: 'relevancy', title: "Relevancy in World 4.0", redirectId: 72 },
+        { id: 'learn', title: "The LEARN Stage", redirectId: 73 },
+        { id: 'problems', title: "Problems Worth Solving", redirectId: 74 },
+        { id: 'task5', title: "Task #5: Identify a Problem Worth Solving, Assumptions, and Market Trends", redirectId: 75 },
+        { id: 'task6', title: "Task #6: Conduct an Industry Analysis", redirectId: 76 }
+      ]
     },
     {
-      id: 'level2video',
-      url: 'https://d5tx03iw7t69i.cloudfront.net/Month_2/welcome-level2.mp4',
-      thumbnail: 'https://d5tx03iw7t69i.cloudfront.net/Month_2/welcome-level2-thumb.jpg'
+      id: "3.2",
+      title: "Level 3.2: The Develop Stage",
+      isParent: true,
+      children: [
+        { id: 'solution', title: "Finding the Solution", redirectId: 78 },
+        { id: 'value', title: "Creating Your Startup's Value Proposition", redirectId: 79 },
+        { id: 'task7', title: "Task #7: Create Your Startup's Value Proposition", redirectId: 80 },
+        { id: 'testing', title: "Testing Your Startup's Value Proposition", redirectId: 81 },
+        { id: 'task8', title: "Task #8: Conduct Market Validation for Your Startup's Value Proposition", redirectId: 82 },
+        { id:'definition', title:"Defining Innovation",redirectId:84},
+        { id: 'inovation', title: "Understanding Innovation and Its Enemies", redirectId: 85 },
+        { id: 'skills', title: "The Five Skills of Innovation", redirectId: 86 },
+        { id: 'develop', title: "The DEVELOP Stage", redirectId: 87 },
+        { id: 'task9', title: "Task #9: Develop Your Startup's Business Model", redirectId: 88 },
+        { id: 'task10', title: "Task #10: Write Your Startup's Concept Plan", redirectId: 89 }
+      ]
     },
     {
-      id: 'level3video',
-      url: 'https://d5tx03iw7t69i.cloudfront.net/Month_3/welcome-level3.mp4',
-      thumbnail: 'https://d5tx03iw7t69i.cloudfront.net/Month_3/welcome-level3-thumb.jpg'
+      id: "3.3",
+      title: "Level 3.3: The Develop Stage",
+      isParent: true,
+      children: [
+        { id: 'brand', title: "Definition of Brand", redirectId: 91 },
+        { id: 'branding', title: "Branding Strategies", redirectId: 92 },
+        { id: 'relation', title: "The Relationship Between Story and Brand", redirectId: 93 },
+        { id: 'charter', title: "The Brand Charter & Task #11: Creating Your Startup's Brand Charter", redirectId: 94 },
+        { id: 'vehicles', title: "The Brand Vehicles", redirectId: 95 },
+        { id: 'task12', title: "Task #12: Create Your Startup's Brand Vehicles", redirectId: 96 },
+        { id: 'fundamental', title: "The Fundamental Elements of Story", redirectId: 97 },
+        { id: 'bussines', title: "Stories Your Business Can Tell", redirectId: 98 },
+        { id: 'storyteller', title: "Embracing Your Inner Storyteller", redirectId: 99},
+        { id: 'task13', title: "Task #13: Conduct Focus Groups", redirectId: 100 },
+        { id: 'marketing', title: "The Marketing Plan", redirectId: 101 },
+        { id: 'task14', title: "Task #14: Creating Your Startup's Marketing Plan", redirectId: 102 }
+      ]
+    },
+    {
+      id: "3.4",
+      title: "Level 3.4: The Start Stage",
+      isParent: true,
+      children: [
+        { id: 'brand', title: "Introduction to the Business Plan", redirectId: 104 },
+        { id: 'branding', title: "The Business Development Management Map", redirectId: 105 },
+        { id: 'relation', title: "Task #15: Create Your Startup's Business Development Management Map", redirectId: 106 },
+        { id: 'charter', title: "The Test Metric of Sustainability", redirectId: 107 },
+        { id: 'creating', title: "Task #16: Test The Sustainability of Your Startup", redirectId: 108 },
+        { id: 'vehicles', title: "The Process of Entrepreneurship Reintroduction", redirectId: 109 },
+        { id: 'task12', title: "Parts of a Business Plan", redirectId: 110 },
+        { id: 'fundamental', title: "Task #17: Write Your Startup's Business Plan", redirectId: 111 },
+        { id: 'bussines', title: "The Test Metric of Efficiency", redirectId: 112 },
+        { id: 'storyteller', title: "Task #18: Test the Efficiency of Your Startup", redirectId: 113 },
+        { id: 'task13', title: "An Introduction to the Financial Plan", redirectId: 114 },
+        { id: 'marketing', title: "Task #19: Create Your Startup's Financial Plan", redirectId: 115 },
+        { id: 'task14', title: "The Test Metric of Profitability", redirectId: 116 },
+        { id: 'profitability', title: "Task #20: Test the Potential Profitability of Your Startup", redirectId: 117 },
+        { id: 'generation', title: "Brand Generation", redirectId: 118 },
+        { id: 'plan', title: "Business Plan Musts", redirectId: 119 },
+        { id: 'executive', title: "Task #21: Write the Executive Summary of Your Startup's Business", redirectId: 120 },
+        { id: 'introductory', title: "Task #22: Create Your Startup's Brand Introductory Video", redirectId: 121 },
+        { id: 'selling', title: "Selling You", redirectId: 122 },
+        { id: 'pitching', title: "Pitching Yourself", redirectId: 123 },
+        { id: 'reminders', title: "Reminders Going Forwards", redirectId: 124 },
+        { id: 'final', title: "Task #23: Create Your Final I Am Video", redirectId: 125 },
+        { id: 'task24', title: "Task #24: Build Your Startup's Final Pitch",redirectId:126}
+      ]
     }
-  ]);
+  ]
+};
 
   async function getJournals(redir = true) {
     try {
@@ -200,10 +186,8 @@ function LtsJournal(props) {
   
       if (data.length > 0 && redir) {
         if (data[0].children?.length > 0) {
-          // Fixed template literal syntax
           history.push(`${props.match.url}/${data[0].children[0].id}`);
         } else {
-          // Fixed template literal syntax
           history.push(
             `${props.match.url}/${
               props.location.search.split('?')[1] || data[0].id
@@ -247,15 +231,45 @@ function LtsJournal(props) {
   }
 
   useEffect(() => {
-    setSelectedLesson(''); // Reset selected lesson when level changes
+    setSelectedLesson(''); 
   }, [activeLevel]);
 
-  // Add this effect to update videos based on active level
+  
   useEffect(() => {
-    // Show only the video for the current level
     const currentVideo = videos.filter((video, index) => index === activeLevel);
     setVideos(currentVideo);
   }, [activeLevel]);
+
+  useEffect(() => {
+    const matchedVideos = videos.filter((video) => video.redirectId === parseInt(journalId));
+    if (matchedVideos.length > 0) {
+      setVideos(matchedVideos); 
+      setCurrentVideoIndex(0);
+    } else {
+      setVideos([]);
+    }
+  }, [journalId]);
+
+  useEffect(() => {
+
+    const levelVideos = videos.filter((video) => {
+      const levelRedirectIds = lessonsByLevel[activeLevel]?.map((lesson) => lesson.redirectId);
+      return levelRedirectIds?.includes(video.redirectId);
+    });
+    setVideos(levelVideos);
+  }, [activeLevel]);
+
+  const handleNextVideo = () => {
+    if (currentVideoIndex < videos.length - 1) {
+      setCurrentVideoIndex(currentVideoIndex + 1);
+    }
+  };
+
+  const handlePreviousVideo = () => {
+    if (currentVideoIndex > 0) {
+      setCurrentVideoIndex(currentVideoIndex - 1);
+    }
+  };
 
   return (
     <>
@@ -318,18 +332,40 @@ function LtsJournal(props) {
   <select 
     className='course-btn select-lesson search-journal-input' 
     value={selectedLesson}
-    onChange={(e) => setSelectedLesson(e.target.value)}
+    onChange={(e) => {
+      const lessonId = e.target.value;
+      setSelectedLesson(lessonId);
+      const selectedLesson = lessonsByLevel[activeLevel].find(
+        (lesson) =>
+          lesson.id === lessonId ||
+          lesson.children?.some((child) => child.id === lessonId)
+      );
+      if (selectedLesson) {
+        const lessonRedirectId =
+          selectedLesson.redirectId ||
+          selectedLesson.children?.find((child) => child.id === lessonId)
+            ?.redirectId ||
+          52; // Default redirect ID
+        history.push(
+          `/my-course-in-entrepreneurship/journal/${lessonRedirectId}`
+        );
+      }
+    }}
   >
     <option value="">
-      {props.intl.formatMessage({ 
-        id: 'my_journal.select_lessons', 
-        defaultMessage: 'Select Lessons to View' 
+      {props.intl.formatMessage({
+        id: 'my_journal.select_lessons',
+        defaultMessage: 'Select Lessons to View',
       })}
     </option>
-    {lessonsByLevel[activeLevel].map(lesson => 
+    {lessonsByLevel[activeLevel].map((lesson) =>
       lesson.isParent ? (
-        <optgroup key={lesson.id} label={lesson.title} style={{color: '#333', fontWeight: 'bold'}}>
-          {lesson.children.map(child => (
+        <optgroup
+          key={lesson.id}
+          label={lesson.title}
+          style={{ color: '#333', fontWeight: '600' }}
+        >
+          {lesson.children.map((child) => (
             <option key={child.id} value={child.id}>
               {child.title}
             </option>
@@ -366,87 +402,55 @@ function LtsJournal(props) {
                   
 
                    
-{/* 
-                    <div className='course-dropdown-section'>
-                      <select
-                        className='course-dropdown'
-                        value={selectedLesson}
-                        onChange={(e) => setSelectedLesson(e.target.value)}
-                      >
-                        <option value="">
-                          Select lesson to access
-                        </option>
-                        {journalsData.map(journal => (
-                          <option key={journal.id} value={journal.id}>
-                            {journal.title}
-                          </option>
-                        ))}
-                      </select>
-                    </div> */}
 
-                    {/* <div className='course-signature-section'>
-                      <div>SIGNATURE BY LIGHT TO SHIP USE</div>
-                      <div className='course-learn-forward'>LEARNFORWARD</div>
-                    </div> */}
-         <div className="col-md-12 general-video-container">
-  <div className="video-container-journal">
+         {/* <div className="col-md-12 general-video-container"> */}
+  {/* <div className="video-container-journal">
     <div>
       <div className="video-container-bg">
         <div className="video-title">
           <img src={circleIcon} alt="circle-icon" />
-          <h6>{levels[activeLevel].description}</h6>
+          <h6>{levels[activeLevel]?.description}</h6>
         </div>
-        {videos && videos.map((video, index) => (
-          <MediaLightbox
-            key={index}
-            video={video}
-            show={showVideo === video.id}
-            onClose={() => setShowVideo(false)}
-            handleShowVideo={() => handleShowVideo(video)}
-          />
-        ))}
-        {videos && videos.constructor === Array && videos.length > 0 && (
-          <div className={`journal-entries__videos journal-entries__videos--${videos.length > 1 ? 'multiple' : 'single'}`}>
-            {videos.map((video, index) => (
-              <div key={index} className="journal-entries__video">
-                <div 
-                  className="journal-entries__video-thumbnail"
-                  onClick={() => handleShowVideo(video)}
-                >
-                  <img src={video.thumbnail} alt="thumbnail" />
-                  <div className="journal-entries__video-thumbnail-icon">
-                    <FontAwesomeIcon icon={faPlay} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        {videos.length > 0 && (
+          <>
+            <ReactPlayer
+              url={videos[currentVideoIndex].url}
+              controls
+              width="100%"
+              height="auto"
+              light={videos[currentVideoIndex].thumbnail}
+            />
+            <div className="video-navigation-buttons d-flex justify-content-between mt-3">
+              <button
+                className="btn btn-primary"
+                onClick={handlePreviousVideo}
+                disabled={currentVideoIndex === 0}
+              >
+                Previous
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={handleNextVideo}
+                disabled={currentVideoIndex === videos.length - 1}
+              >
+                Next
+              </button>
+            </div>
+          </>
         )}
-        <div className='course-navigation'>
-          <button className='course-nav-btn' onClick={() => handleLevelNavigation('previous')}>
-            <FontAwesomeIcon icon={faArrowLeft} />
-            Previous
-          </button>
-          <button className='course-nav-btn' onClick={() => handleLevelNavigation('next')}>
-            Next
-            <FontAwesomeIcon icon={faArrowRight}/>
-          </button>
-        </div>
       </div>
     </div>
-  </div>
-  <div className='content-container'>
-    <img src={UserIcon} style={{ width:'55%',height:'50%'}} alt="user" />
-  </div>
-</div>
+  </div> */}
+  {/* <div className='content-container'>
+    <ReactQuill
+      theme="snow"
+      value={editorContent}
+      onChange={setEditorContent}
+      placeholder="Write your notes here..."
+    />
+  </div> */}
+{/* </div> */}
 
-                    {/* <div className='course-search-section'>
-                      {searchItems.map((item, index) => (
-                        <div key={index} className='course-search-item'>
-                          {item}
-                        </div>
-                      ))}
-                    </div> */}
                   </div>
 
                   {/* Existing Journal Content */}
@@ -709,6 +713,15 @@ function LtsJournal(props) {
                    <CourseNotStarted title='Branding Strategies' />
                    <CourseNotStarted title='The Relationship Between Story and Brand' />
                    <CourseNotStarted title='The Brand Charter' />
+                   <CourseNotStarted title="Task #11: Creating Your Startup's Brand Charter" />
+                   <CourseNotStarted title='The Brand Vehicles' />
+                   <CourseNotStarted title="Task #12: Create Your Startup's Brand Vehicles" />
+                   <CourseNotStarted title='The Fundamental Elements of Story' />
+                   <CourseNotStarted title='Stories Your Business Can Tell' />
+                   <CourseNotStarted title='Embracing Your Inner Storyteller' />
+                   <CourseNotStarted title='Task #13: Conduct Focus Groups' />
+                   <CourseNotStarted title='The Marketing Plan' />
+                   <CourseNotStarted title="Task #14: Creating Your Startup's Marketing Plan" />
                    <CourseNotStarted title="Task #11: Creating Your Startup's Brand Charter" />
                    <CourseNotStarted title='The Brand Vehicles' />
                    <CourseNotStarted title="Task #12: Create Your Startup's Brand Vehicles" />

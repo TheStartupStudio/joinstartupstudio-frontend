@@ -186,10 +186,17 @@ function StoryInMotion({ intl }) {
                     onChange={handleSearch}
                     id={'searchBar'}
                     type={'search'}
-                    labelTitle={intl.formatMessage({
-                      id: 'my_journal.search_journals',
-                      defaultMessage: 'Search Journals',
-                    })}
+                    labelTitle={
+                      activeLevel === 2
+                        ? intl.formatMessage({
+                            id: 'my_journal.search_podcasts',
+                            defaultMessage: 'Search podcasts',
+                          })
+                        : intl.formatMessage({
+                            id: 'my_journal.search_lessons_',
+                            defaultMessage: 'Search lessons',
+                          })
+                    }
                     imgSrc={searchJ}
                     imageStyle={{ filter: 'grayscale(1)' }}
                   />
@@ -262,6 +269,20 @@ function StoryInMotion({ intl }) {
                       <h5 className="podcast-title" style={{ textAlign: 'center', marginTop: '10px' }}>
                         {video.title}
                       </h5>
+                      <p
+                        style={{
+                          textAlign: 'center',
+                          color: '#666',
+                          fontSize: '12px',
+                          marginTop: '5px',
+                        }}
+                      >
+                        {new Intl.DateTimeFormat('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        }).format(new Date(video.date || video.createdAt))}
+                      </p>
                     </div>
                   ) : (
                     <Video

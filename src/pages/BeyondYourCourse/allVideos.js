@@ -286,8 +286,8 @@ function GuidanceEncouragement({ intl }) {
                 id={'searchBar'}
                 type={'search'}
                 labelTitle={intl.formatMessage({
-                  id: 'my_journal.search_journals',
-                  defaultMessage: 'Search Journals'
+                  id: 'my_journal.search_lessons_',
+                  defaultMessage: 'Search lessons'
                 })}
                 imgSrc={searchJ}
                 imageStyle={{ filter: 'grayscale(1)' }}

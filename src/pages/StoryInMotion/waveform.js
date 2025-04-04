@@ -41,12 +41,11 @@ export default function Waveform({
   isPlaying,
   selectedTrack
 }) {
-  const dispatch = useDispatch()
-  const wavesurfer = useRef(null)
-  const [duration, setDuration] = useState()
-  const [now, setNow] = useState()
-  // create new WaveSurfer instance
-  // On component mount and when url changes
+  const dispatch = useDispatch();
+  const wavesurfer = useRef(null);
+  const [duration, setDuration] = useState();
+  const [now, setNow] = useState();
+  const [isPlayingLocal, setIsPlayingLocal] = useState(false); // Local state for play/pause button
 
   useEffect(() => {
     if (url) {
@@ -55,119 +54,111 @@ export default function Waveform({
         backend: 'MediaElement',
         normalize: true,
         interact: false
-      })
-      wavesurfer.current.load(url)
+      });
+      wavesurfer.current.load(url);
 
       wavesurfer?.current?.on('finish', function async() {
-        wavesurfer?.current?.pause()
-        isPlayingParent(false)
-        dispatch(createWatchedPodcast(selectedTrack.id))
-      })
+        wavesurfer?.current?.pause();
+        setIsPlayingLocal(false); // Reset to play button when finished
+        isPlayingParent(false);
+        dispatch(createWatchedPodcast(selectedTrack.id));
+      });
 
-      if (isPlaying) {
-        wavesurfer.current.on('ready', function async() {
-          setDuration(wavesurfer?.current?.getDuration())
-          wavesurfer.current.play()
-        })
-      }
-      return () => wavesurfer.current.destroy()
+      wavesurfer.current.on('ready', function async() {
+        setDuration(wavesurfer?.current?.getDuration());
+      });
+
+      return () => wavesurfer.current.destroy();
     }
     // eslint-disable-next-line
-  }, [url])
-
-  // wavesurfer?.current?.on('finish', function async() {
-  //   wavesurfer?.current?.pause()
-  //   isPlayingParent(false)
-  //   console.log('rendered time')
-  // })
+  }, [url]);
 
   wavesurfer?.current?.on('audioprocess', function async() {
-    setNow(wavesurfer.current.getCurrentTime())
-  })
+    setNow(wavesurfer.current.getCurrentTime());
+  });
 
   const handlePlayPause = async () => {
     if (url) {
-      wavesurfer?.current?.playPause()
+      wavesurfer?.current?.playPause();
+      setIsPlayingLocal((prev) => !prev); // Toggle local play/pause state
+      isPlayingParent(!isPlayingLocal); // Update parent state
     }
-  }
-
-  useEffect(() => {
-    setDuration(wavesurfer?.current?.getDuration())
-    handlePlayPause()
-    // eslint-disable-next-line
-  }, [isPlaying])
+  };
 
   const goBackward = () => {
-    wavesurfer.current.skip(-10)
-    setNow(wavesurfer.current.getCurrentTime())
-  }
+    wavesurfer.current.skip(-10);
+    setNow(wavesurfer.current.getCurrentTime());
+  };
+
   const goForward = () => {
-    wavesurfer.current.skip(10)
-    setNow(wavesurfer.current.getCurrentTime())
-  }
+    wavesurfer.current.skip(10);
+    setNow(wavesurfer.current.getCurrentTime());
+  };
 
   function getMinutes(t) {
-    var min = parseInt(parseInt(t) / 60)
-    var sec = parseInt(t % 60)
+    var min = parseInt(parseInt(t) / 60);
+    var sec = parseInt(t % 60);
     if (sec < 10) {
-      sec = '0' + sec
+      sec = '0' + sec;
     }
     if (min < 10) {
-      min = '0' + min
+      min = '0' + min;
     }
-    return min + ':' + sec
+    return min + ':' + sec;
   }
+
   return (
     <div>
+      <div>
+        <p style={{ color: '#666', fontSize: '14px' }}>
+          {selectedTrack?.date
+            ? new Intl.DateTimeFormat('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              }).format(new Date(selectedTrack.date))
+            : 'Unknown Date'}
+        </p>
+      </div>
       <div
-        id='waveform'
+        id="waveform"
         style={{ overflow: 'none' }}
-        className='waveform formWaveSurferOptions wform '
-        // ref={waveformRef}
+        className="waveform formWaveSurferOptions wform"
       />
-      <div className='controls d-flex'>
-        <span className='float-start col-1 col-sm-4 my-auto'>
+      <div className="controls d-flex">
+        <span className="float-start col-1 col-sm-4 my-auto">
           {now ? getMinutes(now) : '00:00'}
         </span>
 
-        <div className='col-9 col-sm-4 text-center'>
+        <div className="col-9 col-sm-4 text-center">
           <FontAwesomeIcon
             icon={faStepBackward}
             style={darts}
             onClick={goBackward}
           />
-          {isPlaying ? (
+          {isPlayingLocal ? (
             <FontAwesomeIcon
               icon={faPause}
               style={darts}
-              className='mx-4'
-              onClick={() => isPlayingParent(false)}
+              className="mx-4"
+              onClick={handlePlayPause} // Pause when clicked
             />
           ) : (
             <FontAwesomeIcon
               icon={faPlay}
               style={darts}
-              className='mx-4'
-              onClick={() => {
-                isPlayingParent(true)
-              }}
+              className="mx-4"
+              onClick={handlePlayPause} // Play when clicked
             />
           )}
-          {/* <span className='my-auto'>
-            <FontAwesomeIcon
-              icon={faStepForward}
-              style={darts}
-              onClick={goForward}
-            />
-          </span> */}
         </div>
-        <span className='float-end col-1 col-sm-4 my-auto'>
-          <span className='float-end my-auto'>
+        <span className="float-end col-1 col-sm-4 my-auto">
+          <span className="float-end my-auto">
             {duration ? getMinutes(duration) : '00:00'}
           </span>
         </span>
         <hr style={Style.hr} />
       </div>
     </div>
-  )
+  );
 }
