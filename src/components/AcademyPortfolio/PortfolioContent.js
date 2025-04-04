@@ -2,6 +2,7 @@ import { useState } from 'react'
 import blueInternet from '../../assets/images/academy-icons/svg/internet-blue.svg'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import EditEduction from './EditEduction'
+import DOMPurify from 'dompurify'
 
 function PortfolioContent({
   imgSrc,
@@ -15,11 +16,15 @@ function PortfolioContent({
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const shortText = fullText.slice(0, 200)
+  const shortText = fullText.length > 200 ? fullText.slice(0, 200) : fullText
   return (
     <>
       <div className='d-flex gap-4'>
-        <img src={imgSrc} alt={title} className='align-self-start' />
+        <img
+          src={imgSrc}
+          alt={title}
+          className='align-self-start portfolio-school-image'
+        />
         <div className='text-black flex-grow-1'>
           <div className='d-flex justify-content-between align-items-center'>
             <h4 className='mb-0 fs-21 fw-medium'>{title}</h4>
@@ -45,16 +50,25 @@ function PortfolioContent({
           </div>
           <p
             className={`mt-3 fs-15 fw-light text-black ${
-              isExpanded && 'width-50'
+              isExpanded ? 'width-50' : ''
             }`}
           >
-            {isExpanded ? fullText : `${shortText}...`}
             <span
-              className='blue-color ml-2 fw-medium cursor-pointer'
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
-              {isExpanded ? 'Read Less' : 'Read More'}
-            </span>
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(
+                  isExpanded ? fullText : `${shortText}...`
+                )
+              }}
+            />
+
+            {fullText.length > 200 && (
+              <span
+                className='blue-color ml-2 fw-medium cursor-pointer'
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
+                {isExpanded ? 'Read Less' : 'Read More'}
+              </span>
+            )}
           </p>
         </div>
       </div>

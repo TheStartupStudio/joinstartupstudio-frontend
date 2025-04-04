@@ -34,12 +34,10 @@ function AcademyPortfolio() {
           <div className='account-page-padding d-flex justify-content-between align-items-center'>
             <div>
               <h3 className='page-title bold-page-title text-black mb-2'>
-                <IntlMessages id='journal.header' />
+                <IntlMessages id='portfolio.header' />
               </h3>
               <p className='mb-0 fs-13 fw-light text-black'>
-                Leadership comes in many forms but the foundation is leading
-                yourself first. Use this journal to inspire your development as
-                a leader.
+                <IntlMessages id='portfolio.content' />
               </p>
             </div>
 

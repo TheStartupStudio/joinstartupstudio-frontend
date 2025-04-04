@@ -481,5 +481,46 @@ export const deleteMyCompetitivenessAPI = async (id) => {
     console.log('Error occurred during creating my competitiveness', e)
   }
 }
+
+// Add to Service.js
+export const getMarketProjectsAPI = async () => {
+  try {
+    const response = await axiosInstance.get('/hsPortfolio/marketProjects')
+    return response
+  } catch (e) {
+    console.log('Error occurred during fetching market projects', e)
+    throw e
+  }
+}
+
+export const createMarketProjectAPI = async (project) => {
+  try {
+    const response = await axiosInstance.post('/hsPortfolio/marketProjects', project)
+    return response
+  } catch (e) {
+    console.log('Error occurred during creating market project', e)
+    throw e
+  }
+}
+
+export const updateMarketProjectAPI = async (projectId, project) => {
+  try {
+    const response = await axiosInstance.put(`/hsPortfolio/marketProjects/${projectId}`, project)
+    return response
+  } catch (e) {
+    console.log('Error occurred during updating market project', e)
+    throw e
+  }
+}
+
+export const deleteMarketProjectAPI = async (projectId) => {
+  try {
+    const response = await axiosInstance.delete(`/hsPortfolio/marketProjects/${projectId}`)
+    return response
+  } catch (e) {
+    console.log('Error occurred during deleting market project', e)
+    throw e
+  }
+}
 // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 // await delay(2000)

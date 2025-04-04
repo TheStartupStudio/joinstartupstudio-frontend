@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -19,6 +19,58 @@ function Sidebar(props) {
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
 
   const location = useLocation()
+
+  const navRef = useRef(null)
+  const [navHeight, setNavHeight] = useState(0)
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      if (navRef.current) {
+        setNavHeight(navRef.current.offsetHeight)
+      }
+    })
+
+    // Observe the nav element for height changes
+    if (navRef.current) {
+      observer.observe(navRef.current)
+    }
+
+    return () => {
+      if (navRef.current) {
+        observer.unobserve(navRef.current)
+      }
+    }
+  }, [])
+
+  const getClass = () => {
+    if (navHeight > 2100) {
+      return 'h-99'
+    } else {
+      return 'h-95'
+    }
+  }
+
+  const getNavClass = () => {
+    if (navHeight > 2100) {
+      return 'h-107'
+    } else if (navHeight > 830) {
+      return 'h-98'
+    } else if (navHeight > 1350) {
+      return 'h-103'
+    } else if (navHeight > 1480) {
+      return 'h-105'
+    } else {
+      return 'h-93'
+    }
+  }
+
+  const getOtherNavClass = () => {
+    if (navHeight > 2100) {
+      return 'h-101'
+    } else {
+      return 'h-95'
+    }
+  }
 
   useEffect(() => {
     $(document).on('click', '.dropdownMenuSidebarHover', function () {
@@ -44,6 +96,7 @@ function Sidebar(props) {
 
   return (
     <nav
+      ref={navRef}
       id='sidebar'
       className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
       style={{
@@ -51,15 +104,18 @@ function Sidebar(props) {
         borderRadius: isCollapsed && '0px'
       }}
     >
-      <div className='scroll sidebar-sticky sidebar-scroll h-95'>
-        <div className='h-93'>
+      <div className={`scroll sidebar-sticky sidebar-scroll ${getClass()}`}>
+        <div className={getNavClass()}>
           <Header props={props} />
           {/* {role === 'student' ? (
             <StudentSidebar props={props} />
           ) : (
             <InstructorSidebar props={props} />
           )} */}
-          <InstructorSidebar props={props} />
+          <InstructorSidebar
+            props={props}
+            getOtherNavClass={getOtherNavClass}
+          />
         </div>
       </div>
     </nav>

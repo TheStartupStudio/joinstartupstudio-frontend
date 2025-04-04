@@ -43,7 +43,7 @@ function AboutMe({ user }) {
 
   const fullText = `${user?.bio}`
 
-  const shortText = fullText?.slice(0, 200)
+  const shortText = fullText.length > 200 ? fullText.slice(0, 200) : fullText
 
   return (
     <>
@@ -160,12 +160,14 @@ function AboutMe({ user }) {
                 }}
               />
 
-              <span
-                className='blue-color ml-2 fw-medium cursor-pointer'
-                onClick={() => setIsExpanded(!isExpanded)}
-              >
-                {isExpanded ? 'Read Less' : 'Read More'}
-              </span>
+              {fullText.length > 200 && (
+                <span
+                  className='blue-color ml-2 fw-medium cursor-pointer'
+                  onClick={() => setIsExpanded(!isExpanded)}
+                >
+                  {isExpanded ? 'Read Less' : 'Read More'}
+                </span>
+              )}
             </p>
           </div>
         </div>
