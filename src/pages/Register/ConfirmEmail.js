@@ -1,56 +1,46 @@
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import courseLogo from '../../assets/images/academy-icons/academy-logo-group.png'
 import visaLogo from '../../assets/images/academy-icons/visa-logo.png'
+import axiosInstance from '../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
+import AcademyBtn from '../../components/AcademyBtn'
 
 function ConfirmEmail() {
+  const searchParams = new URLSearchParams(window.location.search)
+  const token = searchParams?.get('token')
+  const history = useHistory()
+
+  async function verifyEmail() {
+    await axiosInstance
+      .get(`/auth/verify-email?token=${token}`)
+      .then((res) => {
+        toast.success('Email verified successfully')
+        history.push('/login', { confirmEmail: true })
+      })
+      .catch((error) => {
+        toast.error('Error verifying email', error?.response?.data?.message)
+      })
+  }
+
+  verifyEmail()
+
   return (
     <>
-      <div className='d-flex justify-content-center p-5'>
-        <div className='d-flex flex-column payment-main'>
-          <img
-            src={courseLogo}
-            alt='course-logo'
-            className='course-logo-image align-self-center'
-          />
-          <h2 className='text-uppercase fs-24 fw-bold mt-5 text-black'>
-            Please Confirm Your Email
-          </h2>
-          <p className='fs-15 text-black '>
-            Congratulations on taking the first step on an
-            <br /> exciting journey. Please confirm your email by
-            <br /> clicking on the link below.
-          </p>
-
-          <Link
-            to={{
-              pathname: '/login',
-              state: { confirmEmail: true }
-            }}
-            className='fw-medium fs-15 blue-color'
+      {' '}
+      <div className='bg-light d-flex justify-content-center align-items-center vh-100'>
+        <div className='text-center'>
+          <div
+            className='spinner-border text-primary mb-4'
+            style={{ width: '4rem', height: '4rem' }}
+            role='status'
           >
-            httsp://eanengvaeiganvenafe
-          </Link>
-
-          <p className='mt-3 fs-15 text-black'>
-            This link will expire in 30 minutes.
-          </p>
-          <p className='fs-15 text-black'>
-            Thanks!
-            <br /> The Startup Studio Team
-          </p>
-          <p className='fs-13 fst-italic text-black'>
-            If you believe this email was sent in error, you can safely
-            <br /> ignore this email.
-          </p>
-
-          <div className='align-self-center'>
-            <p className='text-center text-black text-uppercase fs-13 fw-medium mb-0 mt-5'>
-              The Startup Studio
-            </p>
-            <p className='fs-13 fw-medium text-black'>
-              https://mystartupcourse.com
-            </p>
+            <span className='visually-hidden'>Loading...</span>
           </div>
+          <h2 className='mb-2'>Verifying your email</h2>
+          <p className='text-muted'>
+            Please wait while we verify your email address.
+          </p>
+          <p className='text-secondary small'>This won’t take long…</p>
         </div>
       </div>
     </>

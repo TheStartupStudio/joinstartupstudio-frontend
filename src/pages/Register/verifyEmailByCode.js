@@ -5,6 +5,8 @@ import { userLogin } from '../../redux'
 import { useDispatch } from 'react-redux'
 import './index.css'
 import IntlMessages from '../../utils/IntlMessages'
+import { jwtDecode } from 'jwt-decode'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 
 const VerifyEmailByCode = (props) => {
   const url = new URL(window.location.href)
@@ -12,6 +14,8 @@ const VerifyEmailByCode = (props) => {
   const [error, setError] = useState(null)
   const [buttonLoading, setButtonLoading] = useState(false)
   const dispatch = useDispatch()
+  const jwtDecoded = jwtDecode(localStorage.getItem('access_token'))
+  const history = useHistory()
 
   const submitCode = (e) => {
     e.preventDefault()
@@ -21,14 +25,14 @@ const VerifyEmailByCode = (props) => {
     }
 
     setButtonLoading(true)
-    fetch(`${process.env.REACT_APP_SERVER_BASE_URL}/users/verify`, {
+    fetch(`${process.env.REACT_APP_SERVER_BASE_URL}users/verify`, {
       method: 'post',
       headers: new Headers({
-        Authorization: `Basic ${localStorage.getItem('access_token')}`,
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }),
-      body: JSON.stringify({ email: localStorage.getItem('email') })
+      body: JSON.stringify({ email: jwtDecoded.email })
     })
       .then((res) => res.json())
       .then((data) => {
@@ -38,15 +42,15 @@ const VerifyEmailByCode = (props) => {
         if (url.searchParams.has('hash')) {
           params['hash'] = url.searchParams.get('hash')
         } else {
-          params['email'] = localStorage.getItem('email')
+          params['email'] = jwtDecoded.email
         }
 
         fetch(
-          `${process.env.REACT_APP_SERVER_BASE_URL}/users/verify-email-by-code`,
+          `${process.env.REACT_APP_SERVER_BASE_URL}users/verify-email-by-code`,
           {
             method: 'post',
             headers: new Headers({
-              Authorization: `Basic ${localStorage.getItem('access_token')}`,
+              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
               // 'Accept': 'application/json',
               'Content-Type': 'application/json'
             }),
@@ -58,6 +62,7 @@ const VerifyEmailByCode = (props) => {
             setButtonLoading(false)
             if (expiration.isValid) {
               dispatch(userLogin())
+              history.push('/dashboard')
             } else {
               setError(expiration.error)
             }

@@ -32,6 +32,8 @@ const ChooseLogin = () => {
 
   const confirmEmail = location?.state?.confirmEmail
 
+  console.log('ridon35', location)
+
   const handleChange = (event) => {
     const { name, value } = event.target
     setUser((prevValues) => ({
