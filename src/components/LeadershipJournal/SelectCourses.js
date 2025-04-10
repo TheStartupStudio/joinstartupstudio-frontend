@@ -1,17 +1,28 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
+import lockSign from '../../assets/images/academy-icons/lock.png'
 
 function SelectCourses({ options, selectedCourse, setSelectedCourse }) {
   const handleChange = (selectedOption) => {
-    setSelectedCourse((prev) => ({ ...prev, option: selectedOption }))
-    console.log('Selected Language:', selectedOption.value)
+    if (selectedOption.icon !== lockSign) {
+      setSelectedCourse((prev) => ({ ...prev, option: selectedOption }))
+      console.log('Selected Language:', selectedOption.value)
+    }
+  }
+
+  const isOptionDisabled = (option) => {
+    return option.icon === lockSign
   }
 
   const CustomOption = ({ data, innerRef, innerProps }) => (
     <div
       ref={innerRef}
       {...innerProps}
-      style={{ cursor: 'pointer', padding: '8px' }}
+      style={{ 
+        cursor: data.icon === lockSign ? 'not-allowed' : 'pointer',
+        padding: '8px',
+        opacity: data.icon === lockSign ? 0.6 : 1
+      }}
     >
       <div className='d-flex align-items-center gap-2 '>
         <img className='accordion-icons' src={data.icon} alt='tick' />
@@ -34,6 +45,7 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse }) {
         options={options}
         value={selectedCourse?.option}
         onChange={handleChange}
+        isOptionDisabled={isOptionDisabled}
         placeholder='Select Journals to View'
         menuPortalTarget={document.body}
         isSearchable={false}

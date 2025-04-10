@@ -9,25 +9,27 @@ import {
   GET_FINISHED_JOURNAL_SUCCESS,
   SAVE_FINISHED_JOURNAL_SUCCESS,
   SAVE_FINISHED_COURSE_SUCCESS,
-  SET_JOURNAL_TITLES
+  SET_JOURNAL_TITLES,
+  GET_JOURNAL_DATA_REQUEST,
+  GET_JOURNAL_DATA_SUCCESS,
+  GET_JOURNAL_DATA_ERROR
 } from './Types'
 
 const initialState = {
+  journalData: null,
   loading: false,
+  error: null,
   journal: '',
   finishedJournals: '',
   finishedCourses: '',
   successMessage: null,
   errorMessage: null,
   journalFinished: false,
-
   journalTitles: []
 }
 
 const journalReducer = (state = initialState, action) => {
-  const { type, payload } = action
-
-  switch (type) {
+  switch (action.type) {
     case LOADING_J:
       return {
         ...state,
@@ -55,7 +57,7 @@ const journalReducer = (state = initialState, action) => {
         ...state,
         successMessage: null,
         errorMessage: null,
-        journal: payload
+        journal: action.payload
       }
 
     case JOURNAL_GET_ERROR:
@@ -70,8 +72,8 @@ const journalReducer = (state = initialState, action) => {
         ...state,
         successMessage: null,
         errorMessage: null,
-        finishedJournals: payload.journals,
-        finishedCourses: payload.courses
+        finishedJournals: action.payload.journals,
+        finishedCourses: action.payload.courses
       }
 
     case SAVE_FINISHED_JOURNAL_SUCCESS:
@@ -80,7 +82,7 @@ const journalReducer = (state = initialState, action) => {
         loading: false,
         successMessage: null,
         errorMessage: null,
-        finishedJournals: [...state.finishedJournals, payload]
+        finishedJournals: [...state.finishedJournals, action.payload]
       }
 
     case SAVE_FINISHED_COURSE_SUCCESS:
@@ -89,13 +91,13 @@ const journalReducer = (state = initialState, action) => {
         loading: false,
         successMessage: null,
         errorMessage: null,
-        finishedCourses: [...state.finishedCourses, payload]
+        finishedCourses: [...state.finishedCourses, action.payload]
       }
 
     case JOURNAL_FINISHED_SUCCESS:
       return {
         ...state,
-        journalFinished: payload
+        journalFinished: action.payload
       }
 
     case JOURNAL_FINISHED_ERROR:
@@ -106,8 +108,36 @@ const journalReducer = (state = initialState, action) => {
     case SET_JOURNAL_TITLES:
       return {
         ...state,
-        journalTitles: payload
+        journalTitles: action.payload
       }
+    case GET_JOURNAL_DATA_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case GET_JOURNAL_DATA_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        journalData: action.payload,
+        error: null
+      }
+    case GET_JOURNAL_DATA_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      }
+    case 'CLEAR_JOURNAL_DATA':
+      return {
+        ...state,
+        journalData: null
+      }
+    
+    case 'RESET_JOURNAL_STATE':
+      return initialState
+
     default:
       return state
   }

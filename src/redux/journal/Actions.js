@@ -9,7 +9,10 @@ import {
   GET_FINISHED_JOURNAL_SUCCESS,
   SAVE_FINISHED_JOURNAL_SUCCESS,
   SAVE_FINISHED_COURSE_SUCCESS,
-  SET_JOURNAL_TITLES
+  SET_JOURNAL_TITLES,
+  GET_JOURNAL_DATA_REQUEST,
+  GET_JOURNAL_DATA_SUCCESS, 
+  GET_JOURNAL_DATA_ERROR
 } from './Types'
 
 import axiosInstance from '../../utils/AxiosInstance'
@@ -150,4 +153,22 @@ export const saveFinishedCourses = (data) => async (dispatch) => {
     type: SAVE_FINISHED_COURSE_SUCCESS,
     payload: data
   })
+}
+
+export const getJournalData = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_JOURNAL_DATA_REQUEST })
+    
+    const { data } = await axiosInstance.get(`/ltsJournals/${id}/`)
+    
+    dispatch({
+      type: GET_JOURNAL_DATA_SUCCESS,
+      payload: data
+    })
+  } catch (error) {
+    dispatch({
+      type: GET_JOURNAL_DATA_ERROR,
+      payload: error?.response?.data?.message || 'Failed to fetch journal data'
+    })
+  }
 }

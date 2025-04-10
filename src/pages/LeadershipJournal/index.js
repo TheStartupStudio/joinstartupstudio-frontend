@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import lockSign from '../../assets/images/academy-icons/lock.png'
 import searchJ from '../../assets/images/academy-icons/search.png'
@@ -16,14 +16,34 @@ import ModalInput from '../../components/ModalInput/ModalInput'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 import IntlMessages from '../../utils/IntlMessages'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import axiosInstance from '../../utils/AxiosInstance'
 
 function LeadershipJournal() {
   const [isReflection, setIsReflection] = useState(false)
-
+  const [allTabs, setAllTabs] = useState([])
+  const [loading, setLoading] = useState(true)
   const [activeTabData, setActiveTabData] = useState({
     activeTab: 0,
     option: null
   })
+
+  const valueRefs = useRef({})
+
+  const getComponentWithRef = (Component, id) => {
+    if (Component.type === Value) {
+      return React.cloneElement(Component, {
+        ref: (el) => (valueRefs.current[id] = el)
+      })
+    }
+    return Component
+  }
+
+  const handleSaveAndContinue = async () => {
+    const currentOption = allTabs[activeTabData.activeTab]?.options[activeTabData.option?.value]
+    if (currentOption?.id && valueRefs.current[currentOption.id]) {
+      await valueRefs.current[currentOption.id].saveChanges()
+    }
+  }
 
   const renderSection = () => {
     const { activeTab, option } = activeTabData
@@ -32,131 +52,96 @@ function LeadershipJournal() {
       : allTabs[activeTab]?.mainComponent
   }
 
-  const allTabs = [
-    {
-      title: 'Section One: Who am I?',
+  const staticComponents = {
+    'SECTION ONE: WHO AM I?': {
       mainComponent: <SectionOne setIsReflection={setIsReflection} />,
-      options: [
-        {
-          value: 0,
-          label: 'Intro to Who Am I?',
-          icon: tickSign,
-          textColor: 'text-black',
-          component: <IntroWhoAmI setIsReflection={setIsReflection} />
-        },
-        {
-          value: 1,
-          label: 'Values',
-          icon: tickSign,
-          textColor: 'text-black',
-          component: <Value setIsReflection={setIsReflection} />
-        },
-        {
-          value: 2,
-          label: 'Expertise',
-          icon: circleSign,
-          textColor: 'text-black',
-          component: <Expertise setIsReflection={setIsReflection} />
-        },
-        {
-          value: 3,
-          label: 'Experience',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        },
-        {
-          value: 4,
-          label: 'Style',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        }
-      ]
+      introComponent: <IntroWhoAmI setIsReflection={setIsReflection} />
     },
-    {
-      title: 'Section Two: What can I do?',
+    'SECTION TWO: WHAT CAN I DO?': {
       mainComponent: <SectionTwo setIsReflection={setIsReflection} />,
-      options: [
-        {
-          value: 0,
-          label: 'Intro to What can I do',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        },
-        {
-          value: 1,
-          label: 'Teamwork',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        },
-        {
-          value: 2,
-          label: 'Initiative',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        },
-        {
-          value: 3,
-          label: 'Methodology',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        },
-        {
-          value: 4,
-          label: 'Self-Assessment',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        }
-      ]
+      introComponent: <SectionTwo setIsReflection={setIsReflection} />
     },
-    {
-      title: 'Section Three: How do I prove it?',
+    'SECTION THREE: HOW DO I PROVE IT?': {
       mainComponent: <SectionThree setIsReflection={setIsReflection} />,
-      options: [
+      introComponent: <GoToJournal />
+    }
+  }
+
+  const transformApiDataToTabs = (data, finishedContent) => {
+    const parentSections = data.filter(item => !item.parentId)
+      .sort((a, b) => a.order - b.order)
+
+    return parentSections.map(section => {
+      const children = data.filter(item => item.parentId === section.id)
+        .sort((a, b) => a.order - b.order)
+
+      const sectionTitle = section.title
+      const staticSection = staticComponents[sectionTitle]
+
+      const allItems = [sectionTitle, ...children.map(child => child.title)]
+      const nextUnfinishedIndex = allItems.findIndex(item => !finishedContent.includes(item))
+
+      const options = [
         {
           value: 0,
-          label: 'Intro to How do I prove it?',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
+          label: `Intro to ${sectionTitle}`,
+          icon: finishedContent.includes(sectionTitle) ? tickSign : 
+                nextUnfinishedIndex === 0 ? circleSign : lockSign,
+          textColor: finishedContent.includes(sectionTitle) || nextUnfinishedIndex === 0 
+            ? 'text-black' 
+            : 'text-secondary',
+          component: staticSection?.introComponent
         },
-        {
-          value: 1,
-          label: 'Outcomes',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        },
-        {
-          value: 2,
-          label: 'Feedback',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        },
-        {
-          value: 3,
-          label: 'Iteration',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        },
-        {
-          value: 4,
-          label: 'Vision',
-          icon: lockSign,
-          textColor: 'text-secondary',
-          component: <GoToJournal />
-        }
+        ...children.map((child, index) => {
+          const itemIndex = index + 1
+          const isFinished = finishedContent.includes(child.title)
+          const isNext = nextUnfinishedIndex === itemIndex
+          
+          return {
+            value: itemIndex,
+            label: child.title,
+            icon: isFinished ? tickSign : isNext ? circleSign : lockSign,
+            textColor: isFinished || isNext ? 'text-black' : 'text-secondary',
+            component: getComponentWithRef(
+              <Value id={child.id} setIsReflection={setIsReflection} />,
+              child.id
+            ),
+            id: child.id
+          }
+        })
       ]
+
+      return {
+        title: sectionTitle,
+        mainComponent: staticSection?.mainComponent,
+        options
+      }
+    })
+  }
+
+  useEffect(() => {
+    const fetchJournalContent = async () => {
+      try {
+        setLoading(true)
+        const [contentResponse, finishedResponse] = await Promise.all([
+          axiosInstance.get('/ltsJournals/LtsJournalContent'),
+          axiosInstance.get('/ltsJournals/LtsJournalFinishedContent')
+        ])
+        
+        const transformedTabs = transformApiDataToTabs(
+          contentResponse.data, 
+          finishedResponse.data.finishedContent
+        )
+        setAllTabs(transformedTabs)
+      } catch (error) {
+        console.error('Error fetching journal content:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+
+    fetchJournalContent()
+  }, [])
 
   return (
     <div className='container-fluid'>
@@ -178,47 +163,57 @@ function LeadershipJournal() {
           </div>
         </div>
         <div className='academy-dashboard-layout lead-class mb-5'>
-          <div className='course-experts d-flex'>
-            {allTabs.map((tab, index) => (
-              <span
-                key={index}
-                className={`fs-14 fw-medium text-center p-2 cursor-pointer col-4 ${
-                  allTabs[activeTabData.activeTab].title === tab.title
-                    ? 'active-leadership'
-                    : ''
-                }`}
-                onClick={() =>
-                  setActiveTabData({ activeTab: index, option: null })
-                }
-              >
-                {tab.title}
-              </span>
-            ))}
-          </div>
-          <div className='mt-4 d-flex justify-content-between'>
-            <div className='search-journals-width'>
-              <ModalInput
-                id={'searchBar'}
-                type={'search'}
-                labelTitle={'Search journals'}
-                imgSrc={searchJ}
-                imageStyle={{ filter: 'grayscale(1)' }}
-              />
-            </div>
-            <div className='d-flex gap-3'>
-              <SelectCourses
-                selectedCourse={activeTabData}
-                setSelectedCourse={setActiveTabData}
-                options={allTabs[activeTabData.activeTab].options}
-              />
-              {isReflection && (
-                <AcademyBtn title={'Save and Continue '} icon={faArrowRight} />
-              )}
-            </div>
-          </div>
-          <div>
-            <div className='d-flex mt-4 gap-5'>{renderSection()}</div>
-          </div>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <>
+              <div className='course-experts d-flex'>
+                {allTabs.map((tab, index) => (
+                  <span
+                    key={index}
+                    className={`fs-14 fw-medium text-center p-2 cursor-pointer col-4 ${
+                      allTabs[activeTabData.activeTab].title === tab.title
+                        ? 'active-leadership'
+                        : ''
+                    }`}
+                    onClick={() =>
+                      setActiveTabData({ activeTab: index, option: null })
+                    }
+                  >
+                    {tab.title}
+                  </span>
+                ))}
+              </div>
+              <div className='mt-4 d-flex justify-content-between'>
+                <div className='search-journals-width'>
+                  <ModalInput
+                    id={'searchBar'}
+                    type={'search'}
+                    labelTitle={'Search journals'}
+                    imgSrc={searchJ}
+                    imageStyle={{ filter: 'grayscale(1)' }}
+                  />
+                </div>
+                <div className='d-flex gap-3'>
+                  <SelectCourses
+                    selectedCourse={activeTabData}
+                    setSelectedCourse={setActiveTabData}
+                    options={allTabs[activeTabData.activeTab].options}
+                  />
+                  {isReflection && (
+                    <AcademyBtn 
+                      title={'Save and Continue'} 
+                      icon={faArrowRight}
+                      onClick={handleSaveAndContinue} 
+                    />
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className='d-flex mt-4 gap-5'>{renderSection()}</div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
