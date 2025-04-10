@@ -51,16 +51,9 @@ function LtsJournal(props) {
   const [loaded, setLoaded] = useState(false);
   const [videos, setVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Track the current video index
-  // const [videoProgress, setVideoProgress] = useState({
-  //   51: 'not_started', // Example video ID with its progress state
-  //   52: 'not_started',
-  //   53: 'not_started',
-  //   // Add all video IDs here
-  // });
-  
-  // const handleShowVideo = (video) => {
-  //   setShowVideo(video.id);
-  // ]
+  const [finishedContent, setFinishedContent] = useState([]);
+  const [levelProgress, setLevelProgress] = useState(null);
+
   const levels = [
     { title: 'Level 1: Entrepreneurship and You',description:'Welcome to Level 1', active: true },
     { title: 'Level 2: Understanding Learn to Start',description:'Welcome to Level 2', active: false },
@@ -218,6 +211,20 @@ function LtsJournal(props) {
     getJournals()
   }, [dispatch])
 
+  useEffect(() => {
+    const fetchFinishedContent = async () => {
+      try {
+        const response = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
+        setFinishedContent(response.data.finishedContent);
+        setLevelProgress(response.data.levelProgress);
+      } catch (error) {
+        console.error('Error fetching finished content:', error);
+      }
+    };
+
+    fetchFinishedContent();
+  }, []);
+
   const handleJournalSearch = (e) => {
     const keyword = e.target.value.toLowerCase()
     setJournals(
@@ -290,23 +297,40 @@ function LtsJournal(props) {
         fontWeight: 'bolder', 
       };
   
-      const childOptions = lesson.children?.map((child) => ({
-        value: child.id,
-        label: child.title,
-        icon: lockSign,
-        textColor: 'text-dark',
-        fontWeight: 'normal',
-      })) || [];
+      const childOptions = lesson.children?.map((child) => {
+        // Find the next unfinished redirectId for this level
+        const nextUnfinishedId = lessonsByLevel[activeLevel]
+          .flatMap(l => l.children || [])
+          .find(l => !finishedContent.includes(l.redirectId))?.redirectId;
+  
+        let icon = lockSign;
+        if (finishedContent.includes(child.redirectId)) {
+          icon = tickSign;
+        } else if (child.redirectId === nextUnfinishedId) {
+          icon = circleSign;
+        }
+  
+        return {
+          value: child.id,
+          label: child.title,
+          icon: icon,
+          textColor: 'text-dark',
+          fontWeight: 'normal',
+          disabled: !finishedContent.includes(child.redirectId) && child.redirectId !== nextUnfinishedId
+        };
+      }) || [];
   
       return [parentOption, ...childOptions];
     } else {
+      // Find the next unfinished redirectId for this level
+      const nextUnfinishedId = lessonsByLevel[activeLevel]
+        .find(l => !finishedContent.includes(lesson.redirectId))?.redirectId;
+  
       let icon = lockSign;
-      if (activeLevel === 0) {
-        if (index === 0 || index === 1) {
-          icon = tickSign; 
-        } else if (index === 2) {
-          icon = circleSign;
-        }
+      if (finishedContent.includes(lesson.redirectId)) {
+        icon = tickSign;
+      } else if (lesson.redirectId === nextUnfinishedId) {
+        icon = circleSign;
       }
   
       return {
@@ -315,6 +339,7 @@ function LtsJournal(props) {
         icon: icon,
         textColor: 'text-dark',
         fontWeight: 'normal',
+        disabled: !finishedContent.includes(lesson.redirectId) && lesson.redirectId !== nextUnfinishedId
       };
     }
   });
@@ -632,7 +657,10 @@ function LtsJournal(props) {
              >
                <div className='accordion-body d-flex gap-4'>
                  <div className='d-flex flex-column gap-4'>
-                   <CircularProgress percentage={20} level={1} />
+                   <CircularProgress 
+                     percentage={levelProgress?.level1?.percentage || 0} 
+                     level={1} 
+                   />
                  </div>
                  <div className='d-flex flex-column gap-3'>
                    <ProgressDone title={'Myths of Entrepreneurship'} />
@@ -679,7 +707,10 @@ function LtsJournal(props) {
              >
                <div className='accordion-body d-flex gap-4'>
                  <div className='d-flex flex-column gap-4'>
-                   <CircularProgress percentage={0} level={2} />
+                   <CircularProgress 
+                     percentage={levelProgress?.level2?.percentage || 0} 
+                     level={2} 
+                   />
                  </div>
                  <div className='d-flex flex-column gap-3'>
                    <CourseNotStarted title='The Journey of Entrepreneurship' />
@@ -716,7 +747,10 @@ function LtsJournal(props) {
              >
                <div className='accordion-body d-flex gap-4'>
                  <div className='d-flex flex-column gap-4'>
-                   <CircularProgress percentage={0} level={3} />
+                   <CircularProgress 
+                     percentage={levelProgress?.level3?.percentage || 0} 
+                     level={3} 
+                   />
                  </div>
                  <div className='d-flex flex-column gap-3 text-black'>
                    <p className='mb-0'>
