@@ -4345,6 +4345,7 @@ wave>wave:first-child {
 }
 
 .quill {
+  margin-bottom: 1rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
@@ -5454,10 +5455,10 @@ strong {
   text-decoration: underline;
 }
 
-/* .journal-entries__entry-reflections {
-}
-
-.journal-entries__entry-reflection {
+/* .journal-entries__entry-reflection p {
+  box-shadow: 0px 3px 6px #00000029;
+  padding: 10px;
+  border-radius: 10px;
 } */
 
 .journal-entries__entry-reflection:not(:last-child) {
@@ -5548,6 +5549,19 @@ strong {
   overflow-y: auto;
 }
 
+.journal-entries__entry-reflection-body-content-after {
+  background: #ffffff;
+  border-radius: 6px;
+  font: normal normal 300 12px/14px Montserrat;
+  letter-spacing: 0.48px;
+  color: #434b4b;
+  padding: 12px;
+  width: 100%;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1rem;
+}
+
 .journal-entries__entry-reflection-body-content>* {
   margin: 0;
 }
@@ -5559,7 +5573,7 @@ strong {
 .journal-entries__entry-reflection-body .ql-toolbar.ql-snow {
   padding-top: 2px;
   padding-bottom: 2px;
-  background-color: #f6f7f7 !important;
+  /* background-color: #f6f7f7 !important; */
   border: 2px solid #d9dadb;
   border-bottom: 2px solid #ededee;
   border-radius: 6px 6px 0 0;

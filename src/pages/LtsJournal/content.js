@@ -22,6 +22,7 @@ import AccordionItemWrapper from './UI/AccordionItemWrapper.js'
 import InterviewedMentors from './InterviewedMentors'
 import InstructorFeedback from './InstructorFeedback/InstructorFeedback.js'
 import circleIcon from '../../assets/images/circle-user-icon.png'
+import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
 
 function LtsJournalContent(props) {
   const location = useLocation()
@@ -218,19 +219,19 @@ function LtsJournalContent(props) {
   const handleNextVideo = () => {
     if (currentVideoIndex < videos.length - 1) {
       setCurrentVideoIndex(currentVideoIndex + 1);
-      setShowVideo(null); // Reset the currently playing video
+      setShowVideo(null); 
     }
   };
 
   const handlePreviousVideo = () => {
     if (currentVideoIndex > 0) {
       setCurrentVideoIndex(currentVideoIndex - 1);
-      setShowVideo(null); // Reset the currently playing video
+      setShowVideo(null); 
     }
   };
 
   const handleShowVideo = (video) => {
-    setShowVideo(video.id); // Set the currently playing video
+    setShowVideo(video.id); 
   };
 
   if (!journal) {
@@ -262,7 +263,7 @@ function LtsJournalContent(props) {
          </div>
           {videos && videos.length > 0 && (
             <div className="journal-entries__videos">
-              {/* Display only the current video if it exists */}
+              
               {videos[currentVideoIndex] && (
                 <div
                   className={`journal-entries__video${
@@ -287,7 +288,6 @@ function LtsJournalContent(props) {
                 </div>
               )}
 
-              {/* Render the video player if a video is selected */}
               {showVideo === videos[currentVideoIndex]?.id && (
                 <MediaLightbox
                   video={videos[currentVideoIndex]}
@@ -296,7 +296,7 @@ function LtsJournalContent(props) {
                 />
               )}
 
-              {/* Navigation Buttons */}
+
               <div className="nav-videos">
                 <button
                   className="btn"
@@ -317,8 +317,16 @@ function LtsJournalContent(props) {
           )}
         </div>
 
-        {/* Other Container */}
+
         <div id="content-container" className="content-container" style={{ flex: '1 1 50%' }}>
+       <div className='d-flex align-items-center reflection-header'>
+       <img
+            src={WhoAmI}
+            alt="page-icon"
+            style={{ width: '36px',height:'36px',marginRight: '10px' }}
+          />
+          <h6>Reflection</h6>
+       </div>
           {journal.entries && journal.entries.length > 0 ? (
             <div className="col-12">
               <div className="journal-entries">
@@ -350,8 +358,7 @@ function LtsJournalContent(props) {
           {/* <p className="page-card__content-description">{journal.content}</p> */}
         </div>
       </div>
-   
-      {/* THIS IS WHERE THE DROPDOWN THING GOES */}
+
       {props.match.params.journalId.includes('1001006') ? (
         <div
           className='col-12 journal_intro-accordion-title'

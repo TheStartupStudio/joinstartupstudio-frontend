@@ -23,11 +23,16 @@ import CircularProgress from '../../components/ProgressBar';
 import ProgressDone from '../../components/CourseProgress/ProgressDone';
 import InProggresCourse from '../../components/CourseProgress/InProggresCourse';
 import CourseNotStarted from '../../components/CourseProgress/CourseNotStarted';
-import SelectCourses from '../../components/LeadershipJournal/SelectCourses'
 import ModalInput from '../../components/ModalInput/ModalInput'
 import searchJ from '../../assets/images/academy-icons/search.png'
 import MediaLightbox from '../../components/MediaLightbox';
 import ReactQuill from 'react-quill'; 
+import lockSign from '../../assets/images/academy-icons/lock.png'
+import circleSign from '../../assets/images/academy-icons/circle-fill.png'
+import tickSign from '../../assets/images/academy-icons/tick-sign.png'
+import SelectLessons from './SelectLessons'
+
+
 
 function LtsJournal(props) {
   const dispatch = useDispatch()
@@ -35,7 +40,7 @@ function LtsJournal(props) {
   const { journalId } = useParams(); 
   const [journals, setJournals] = useState([])
   const [journalsData, setJournalsData] = useState([])
-  const [selectedLesson, setSelectedLesson] = useState('')
+  const [selectedLesson, setSelectedLesson] = useState(null)
   const [activeLevel, setActiveLevel] = useState(0)
   const [editorContent, setEditorContent] = useState(''); 
   const currentLanguage = useSelector((state) => state.lang.locale)
@@ -46,12 +51,16 @@ function LtsJournal(props) {
   const [loaded, setLoaded] = useState(false);
   const [videos, setVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Track the current video index
+  // const [videoProgress, setVideoProgress] = useState({
+  //   51: 'not_started', // Example video ID with its progress state
+  //   52: 'not_started',
+  //   53: 'not_started',
+  //   // Add all video IDs here
+  // });
   
-  const handleShowVideo = (video) => {
-    setShowVideo(video.id);
-  };
-
-  // Course data
+  // const handleShowVideo = (video) => {
+  //   setShowVideo(video.id);
+  // ]
   const levels = [
     { title: 'Level 1: Entrepreneurship and You',description:'Welcome to Level 1', active: true },
     { title: 'Level 2: Understanding Learn to Start',description:'Welcome to Level 2', active: false },
@@ -67,7 +76,7 @@ function LtsJournal(props) {
   ]
 
   const lessonsByLevel = {
-  0: [ // Level 1 options
+  0: [ 
     { id: 'myths', title: "Myths of Entrepreneurship", status: 'done', redirectId: 51 },
     { id: 'definition', title: "Definition of Entrepreneurship", status: 'done', redirectId: 52 },
     { id: 'reasons', title: "Reasons Why Startups Fail", status: 'inProgress', redirectId: 53 },
@@ -77,7 +86,7 @@ function LtsJournal(props) {
     { id: 'task1', title: "Task #1: Create your Individual Value Proposition", status: 'notStarted', redirectId: 57 },
     { id: 'task2', title: "Task #2: Create your I Am Video", status: 'notStarted', redirectId: 58 }
   ],
-  1: [ // Level 2 options
+  1: [
     { id: 'journey', title: "The Journey of Entrepreneurship", status: 'notStarted', redirectId: 60 },
     { id: 'intro', title: "An Introduction to the LTS Model and Four Environments", status: 'notStarted', redirectId: 61 },
     { id: 'coreSkills', title: "The Core Skills and LEARN Stage of the LTS Model", status: 'notStarted', redirectId: 62 },
@@ -87,7 +96,7 @@ function LtsJournal(props) {
     { id: 'process', title: "The Process of Entrepreneurship", status: 'notStarted', redirectId: 66 },
     { id: 'task4', title: "Task #4: Build Your Team and Find Your Mentor", status: 'notStarted', redirectId: 67 }
   ],
-  2: [ // Level 3 options
+  2: [
     {
       id: "3.1",
       title: "Level 3.1: The Journey of Entrepreneurship",
@@ -231,7 +240,7 @@ function LtsJournal(props) {
   }
 
   useEffect(() => {
-    setSelectedLesson(''); 
+    setSelectedLesson(null); 
   }, [activeLevel]);
 
   
@@ -271,6 +280,45 @@ function LtsJournal(props) {
     }
   };
 
+ 
+  const options = lessonsByLevel[activeLevel]?.flatMap((lesson, index) => {
+    if (activeLevel === 2) {
+      const parentOption = {
+        value: lesson.id,
+        label: lesson.title,
+        textColor: 'text-dark',
+        fontWeight: 'bolder', 
+      };
+  
+      const childOptions = lesson.children?.map((child) => ({
+        value: child.id,
+        label: child.title,
+        icon: lockSign,
+        textColor: 'text-dark',
+        fontWeight: 'normal',
+      })) || [];
+  
+      return [parentOption, ...childOptions];
+    } else {
+      let icon = lockSign;
+      if (activeLevel === 0) {
+        if (index === 0 || index === 1) {
+          icon = tickSign; 
+        } else if (index === 2) {
+          icon = circleSign;
+        }
+      }
+  
+      return {
+        value: lesson.id,
+        label: lesson.title,
+        icon: icon,
+        textColor: 'text-dark',
+        fontWeight: 'normal',
+      };
+    }
+  });
+
   return (
     <>
     <div id='main-body'>
@@ -278,7 +326,6 @@ function LtsJournal(props) {
         <div className='row'>
           <div className='px-0'>
             <div>
-              {/* Course Header */}
               <div style={{margin: '40px 40px 40px 30px'}}>
               <h3 className="page-title" style={{ marginLeft: '20px' }}>
                            
@@ -292,7 +339,6 @@ function LtsJournal(props) {
 
               <div >
                 <div className='styled-scrollbar gradient-background-journal' ref={contentContainer}>
-                  {/* Course Content */}
                   <div className='course-container'>
                     <div className='levels-container'>
                       {levels.map((level, index) => (
@@ -318,8 +364,8 @@ function LtsJournal(props) {
                 id={'searchBar'}
                 type={'search'}
                 labelTitle={props.intl.formatMessage({
-                  id: 'my_journal.search_journals',
-                  defaultMessage: 'Search Journals'
+                  id: 'my_journal.search_lessons',
+                  defaultMessage: 'Search lessons'
                 })}
                 imgSrc={searchJ}
                 imageStyle={{ filter: 'grayscale(1)' }}
@@ -328,56 +374,44 @@ function LtsJournal(props) {
           </div>
 </div>
 
-<div className="search-input-wrapper">
-  <select 
-    className='course-btn select-lesson search-journal-input' 
-    value={selectedLesson}
-    onChange={(e) => {
-      const lessonId = e.target.value;
-      setSelectedLesson(lessonId);
-      const selectedLesson = lessonsByLevel[activeLevel].find(
+<div className="select-lessons">
+  <SelectLessons
+    options={options}
+    selectedCourse={selectedLesson}
+    setSelectedCourse={(selectedOption) => {
+      if (!selectedOption || !selectedOption.value) {
+        console.error('Invalid selected option:', selectedOption);
+        return;
+      }
+
+      setSelectedLesson(selectedOption);
+
+      const lessonId = selectedOption.value;
+      const selectedLesson = lessonsByLevel[activeLevel]?.find(
         (lesson) =>
           lesson.id === lessonId ||
           lesson.children?.some((child) => child.id === lessonId)
       );
+
       if (selectedLesson) {
         const lessonRedirectId =
           selectedLesson.redirectId ||
           selectedLesson.children?.find((child) => child.id === lessonId)
-            ?.redirectId ||
-          52; // Default redirect ID
-        history.push(
-          `/my-course-in-entrepreneurship/journal/${lessonRedirectId}`
-        );
+            ?.redirectId;
+
+        if (lessonRedirectId) {
+          // Navigate to the selected 
+          history.push(
+            `/my-course-in-entrepreneurship/journal/${lessonRedirectId}`
+          );
+        } else {
+          console.error('Redirect ID not found for the selected lesson.');
+        }
+      } else {
+        console.error('Selected lesson not found in the current level.');
       }
     }}
-  >
-    <option value="">
-      {props.intl.formatMessage({
-        id: 'my_journal.select_lessons',
-        defaultMessage: 'Select Lessons to View',
-      })}
-    </option>
-    {lessonsByLevel[activeLevel].map((lesson) =>
-      lesson.isParent ? (
-        <optgroup
-          key={lesson.id}
-          label={lesson.title}
-          style={{ color: '#333', fontWeight: '600' }}
-        >
-          {lesson.children.map((child) => (
-            <option key={child.id} value={child.id}>
-              {child.title}
-            </option>
-          ))}
-        </optgroup>
-      ) : (
-        <option key={lesson.id} value={lesson.id}>
-          {lesson.title}
-        </option>
-      )
-    )}
-  </select>
+  />
 </div>
 
                         <div style={{
@@ -453,7 +487,6 @@ function LtsJournal(props) {
 
                   </div>
 
-                  {/* Existing Journal Content */}
                   <Switch>
                     <Route
                       path={`${props.match.url}/:journalId`}
@@ -469,7 +502,6 @@ function LtsJournal(props) {
                   </Switch>
                 </div>
 
-                {/* Existing Sidebar */}
                 <div className='page-card__sidebar col-lg-4 col-md-5'>
                   {/* <div className='page-card__sidebar-header'>
                     <label className='search-input'>
