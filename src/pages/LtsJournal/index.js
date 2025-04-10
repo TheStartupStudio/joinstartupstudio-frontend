@@ -287,59 +287,67 @@ function LtsJournal(props) {
     }
   };
 
- 
+  const getOptionStatus = (redirectId, lessons) => {
+    const index = lessons.findIndex(lesson => lesson.redirectId === redirectId);
+    const lastCompletedIndex = lessons.findIndex(lesson => {
+      const nextItemIndex = lessons.indexOf(lesson) + 1;
+      return finishedContent.includes(lesson.redirectId) && 
+             (!lessons[nextItemIndex] || !finishedContent.includes(lessons[nextItemIndex].redirectId));
+    });
+  
+    if (finishedContent.includes(redirectId)) {
+      return { status: 'done', disabled: false };
+    } else if (index === lastCompletedIndex + 1) {
+      return { status: 'inProgress', disabled: false };
+    } else {
+      return { status: 'notStarted', disabled: true };
+    }
+  };
+  
   const options = lessonsByLevel[activeLevel]?.flatMap((lesson, index) => {
     if (activeLevel === 2) {
       const parentOption = {
         value: lesson.id,
         label: lesson.title,
         textColor: 'text-dark',
-        fontWeight: 'bolder', 
+        fontWeight: 'bolder',
+        disabled: false
       };
   
-      const childOptions = lesson.children?.map((child) => {
-        // Find the next unfinished redirectId for this level
-        const nextUnfinishedId = lessonsByLevel[activeLevel]
-          .flatMap(l => l.children || [])
-          .find(l => !finishedContent.includes(l.redirectId))?.redirectId;
-  
-        let icon = lockSign;
-        if (finishedContent.includes(child.redirectId)) {
-          icon = tickSign;
-        } else if (child.redirectId === nextUnfinishedId) {
-          icon = circleSign;
-        }
+      const childOptions = lesson.children?.map(child => {
+        const status = getOptionStatus(
+          child.redirectId, 
+          lesson.children
+        );
   
         return {
           value: child.id,
           label: child.title,
-          icon: icon,
-          textColor: 'text-dark',
-          fontWeight: 'normal',
-          disabled: !finishedContent.includes(child.redirectId) && child.redirectId !== nextUnfinishedId
+          icon: status.status === 'done' ? tickSign : 
+               status.status === 'inProgress' ? circleSign : 
+               lockSign,
+          textColor: status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
+          disabled: status.disabled,
+          redirectId: child.redirectId
         };
-      }) || [];
+      });
   
-      return [parentOption, ...childOptions];
+      return [parentOption, ...(childOptions || [])];
     } else {
-      // Find the next unfinished redirectId for this level
-      const nextUnfinishedId = lessonsByLevel[activeLevel]
-        .find(l => !finishedContent.includes(lesson.redirectId))?.redirectId;
-  
-      let icon = lockSign;
-      if (finishedContent.includes(lesson.redirectId)) {
-        icon = tickSign;
-      } else if (lesson.redirectId === nextUnfinishedId) {
-        icon = circleSign;
-      }
+      const status = getOptionStatus(
+        lesson.redirectId,
+        lessonsByLevel[activeLevel]
+      );
   
       return {
         value: lesson.id,
         label: lesson.title,
-        icon: icon,
-        textColor: 'text-dark',
-        fontWeight: 'normal',
-        disabled: !finishedContent.includes(lesson.redirectId) && lesson.redirectId !== nextUnfinishedId
+        icon: status.status === 'done' ? tickSign : 
+             status.status === 'inProgress' ? circleSign : 
+             lockSign,
+        textColor: status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
+        disabled: status.disabled,
+        redirectId: lesson.redirectId
       };
     }
   });
