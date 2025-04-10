@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink, useHistory, Switch, Route, useParams } from 'react-router-dom'
+import { NavLink, useHistory, Switch, Route, useParams, Redirect } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
 import './ltsjournal.css'
@@ -31,6 +31,7 @@ import lockSign from '../../assets/images/academy-icons/lock.png'
 import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import tickSign from '../../assets/images/academy-icons/tick-sign.png'
 import SelectLessons from './SelectLessons'
+import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions';
 
 
 
@@ -51,8 +52,10 @@ function LtsJournal(props) {
   const [loaded, setLoaded] = useState(false);
   const [videos, setVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Track the current video index
-  const [finishedContent, setFinishedContent] = useState([]);
-  const [levelProgress, setLevelProgress] = useState(null);
+
+  const { finishedContent, levelProgress, loading } = useSelector(
+    (state) => state.course
+  );
 
   const levels = [
     { title: 'Level 1: Entrepreneurship and You',description:'Welcome to Level 1', active: true },
@@ -212,18 +215,8 @@ function LtsJournal(props) {
   }, [dispatch])
 
   useEffect(() => {
-    const fetchFinishedContent = async () => {
-      try {
-        const response = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent');
-        setFinishedContent(response.data.finishedContent);
-        setLevelProgress(response.data.levelProgress);
-      } catch (error) {
-        console.error('Error fetching finished content:', error);
-      }
-    };
-
-    fetchFinishedContent();
-  }, []);
+    dispatch(fetchLtsCoursefinishedContent());
+  }, [dispatch]);
 
   const handleJournalSearch = (e) => {
     const keyword = e.target.value.toLowerCase()
@@ -352,6 +345,50 @@ function LtsJournal(props) {
     }
   });
 
+  const isContentAccessible = (journalId) => {
+    const numericId = parseInt(journalId);
+    
+    if (finishedContent.includes(numericId)) {
+      return true;
+    }
+  
+    const lastCompletedId = [...finishedContent].sort((a, b) => b - a)[0];
+  
+    for (let level = 0; level <= 2; level++) {
+      const lessons = lessonsByLevel[level];
+      if (!lessons) continue;
+  
+      if (level === 2) {
+        for (const section of lessons) {
+          const children = section.children || [];
+          for (let i = 0; i < children.length; i++) {
+            if (children[i].redirectId === numericId) {
+
+              if (i === 0) {
+                return lastCompletedId === children[i].redirectId - 1;
+              }
+              return finishedContent.includes(children[i - 1].redirectId);
+            }
+          }
+        }
+      } else {
+        for (let i = 0; i < lessons.length; i++) {
+          if (lessons[i].redirectId === numericId) {
+            if (i === 0 && level === 0) return true;
+            
+            if (i === 0) {
+              const prevLevelLessons = lessonsByLevel[level - 1];
+              const lastItemPrevLevel = prevLevelLessons[prevLevelLessons.length - 1];
+              return finishedContent.includes(lastItemPrevLevel.redirectId);
+            }
+            return finishedContent.includes(lessons[i - 1].redirectId);
+          }
+        }
+      }
+    }
+    return false;
+  };
+
   return (
     <>
     <div id='main-body'>
@@ -433,7 +470,6 @@ function LtsJournal(props) {
             ?.redirectId;
 
         if (lessonRedirectId) {
-          // Navigate to the selected 
           history.push(
             `/my-course-in-entrepreneurship/journal/${lessonRedirectId}`
           );
@@ -523,14 +559,22 @@ function LtsJournal(props) {
                   <Switch>
                     <Route
                       path={`${props.match.url}/:journalId`}
-                      render={(renderProps) => (
-                        <LtsJournalContent
-                          {...renderProps}
-                          contentContainer={contentContainer}
-                          backRoute={props.match.url}
-                          saved={journalChanged}
-                        />
-                      )}
+                      render={(renderProps) => {
+                        const { journalId } = renderProps.match.params;
+                        
+                        if (!isContentAccessible(journalId)) {
+                          return <Redirect to={`${props.match.url}/51`} />;
+                        }
+              
+                        return (
+                          <LtsJournalContent
+                            {...renderProps}
+                            contentContainer={contentContainer}
+                            backRoute={props.match.url}
+                            saved={journalChanged}
+                          />
+                        );
+                      }}
                     />
                   </Switch>
                 </div>

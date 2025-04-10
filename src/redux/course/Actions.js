@@ -8,7 +8,10 @@ import {
   GET_NOTE_ERROR,
   SAVE_NOTE_SUCCESS,
   SAVE_NOTE_ERROR,
-  NOTE_REMOVED_SUCCESS
+  NOTE_REMOVED_SUCCESS,
+  FETCH_LTS_COURSE_FINISHED_CONTENT_PENDING,
+  FETCH_LTS_COURSE_FINISHED_CONTENT_FULFILLED,
+  FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED
 } from './Types'
 
 import axiosInstance from '../../utils/AxiosInstance'
@@ -108,6 +111,24 @@ export const saveOrEditNote = (data) => async (dispatch) => {
     dispatch({
       type: SAVE_NOTE_ERROR,
       payload: err?.response?.data?.message || 'Server Error'
+    })
+  }
+}
+
+export const fetchLtsCoursefinishedContent = () => async (dispatch) => {
+  try {
+    dispatch({ type: FETCH_LTS_COURSE_FINISHED_CONTENT_PENDING })
+    
+    const response = await axiosInstance.get('/ltsJournals/LtsCoursefinishedContent')
+    
+    dispatch({
+      type: FETCH_LTS_COURSE_FINISHED_CONTENT_FULFILLED,
+      payload: response.data
+    })
+  } catch (error) {
+    dispatch({
+      type: FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED,
+      payload: error?.response?.data?.message || 'Server Error'
     })
   }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import axiosInstance from '../../utils/AxiosInstance'
 import {
   faInfo,
@@ -20,8 +20,10 @@ import { useHistory } from 'react-router-dom'
 import NotSavedModal from '../../components/Modals/notSavedNoteModal'
 import _ from 'lodash'
 import { ReflectionInfoBox } from '../../components/Modals/ReflectionInfoBox'
+import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions';
 
 function LtsJournalReflection(props) {
+  const dispatch = useDispatch()
   const journalId = props.journal?.id;
   const journalEntryId = props.journalEntry?.id;
   const entryId = props.entry?.id;
@@ -136,6 +138,7 @@ function LtsJournalReflection(props) {
       }
     } finally {
       setSaving(false);
+      dispatch(fetchLtsCoursefinishedContent());
     }
   };
 
