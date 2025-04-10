@@ -51,16 +51,8 @@ function LtsJournal(props) {
   const [loaded, setLoaded] = useState(false);
   const [videos, setVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Track the current video index
-  // const [videoProgress, setVideoProgress] = useState({
-  //   51: 'not_started', // Example video ID with its progress state
-  //   52: 'not_started',
-  //   53: 'not_started',
-  //   // Add all video IDs here
-  // });
-  
-  // const handleShowVideo = (video) => {
-  //   setShowVideo(video.id);
-  // ]
+
+
   const levels = [
     { title: 'Level 1: Entrepreneurship and You',description:'Welcome to Level 1', active: true },
     { title: 'Level 2: Understanding Learn to Start',description:'Welcome to Level 2', active: false },
@@ -91,10 +83,10 @@ function LtsJournal(props) {
     { id: 'intro', title: "An Introduction to the LTS Model and Four Environments", status: 'notStarted', redirectId: 61 },
     { id: 'coreSkills', title: "The Core Skills and LEARN Stage of the LTS Model", status: 'notStarted', redirectId: 62 },
     { id: 'develop', title: "The DEVELOP Stage of the LTS Model", status: 'notStarted', redirectId: 63 },
-    { id: 'start', title: "Understanding START & the Test Metrics of LTS", status: 'notStarted', redirectId: 64 },
-    { id: 'task3', title: "Task #3: Evaluate Your Mindset and Skill Set", status: 'notStarted', redirectId: 65 },
-    { id: 'process', title: "The Process of Entrepreneurship", status: 'notStarted', redirectId: 66 },
-    { id: 'task4', title: "Task #4: Build Your Team and Find Your Mentor", status: 'notStarted', redirectId: 67 }
+    { id: 'start', title: "Understanding START & the Test Metrics of LTS", status: 'notStarted', redirectId: 65 },
+    { id: 'task3', title: "Task #1: Evaluate Your Mindset and Skill Set", status: 'notStarted', redirectId: 66 },
+    { id: 'process', title: "The Process of Entrepreneurship", status: 'notStarted', redirectId: 67 },
+    { id: 'task4', title: "Task #2: Build Your Team and Find Your Mentor", status: 'notStarted', redirectId: 68 },
   ],
   2: [
     {
@@ -121,7 +113,6 @@ function LtsJournal(props) {
         { id: 'task7', title: "Task #7: Create Your Startup's Value Proposition", redirectId: 80 },
         { id: 'testing', title: "Testing Your Startup's Value Proposition", redirectId: 81 },
         { id: 'task8', title: "Task #8: Conduct Market Validation for Your Startup's Value Proposition", redirectId: 82 },
-        { id:'definition', title:"Defining Innovation",redirectId:84},
         { id: 'inovation', title: "Understanding Innovation and Its Enemies", redirectId: 85 },
         { id: 'skills', title: "The Five Skills of Innovation", redirectId: 86 },
         { id: 'develop', title: "The DEVELOP Stage", redirectId: 87 },
@@ -137,13 +128,13 @@ function LtsJournal(props) {
         { id: 'brand', title: "Definition of Brand", redirectId: 91 },
         { id: 'branding', title: "Branding Strategies", redirectId: 92 },
         { id: 'relation', title: "The Relationship Between Story and Brand", redirectId: 93 },
-        { id: 'charter', title: "The Brand Charter & Task #11: Creating Your Startup's Brand Charter", redirectId: 94 },
-        { id: 'vehicles', title: "The Brand Vehicles", redirectId: 95 },
-        { id: 'task12', title: "Task #12: Create Your Startup's Brand Vehicles", redirectId: 96 },
-        { id: 'fundamental', title: "The Fundamental Elements of Story", redirectId: 97 },
-        { id: 'bussines', title: "Stories Your Business Can Tell", redirectId: 98 },
-        { id: 'storyteller', title: "Embracing Your Inner Storyteller", redirectId: 99},
-        { id: 'task13', title: "Task #13: Conduct Focus Groups", redirectId: 100 },
+        { id: 'charter', title: "The Brand Charter&Task #11: Creating Your Startup's Brand Charter",redirectId:94},
+        { id: 'vehicles', title: "The Brand Vehicles", redirectId: 95},
+        { id: 'task12', title: "Task #12: Create Your Startup's Brand Vehicles", redirectId: 96},
+        { id: 'fundamental', title: "The Fundamental Elements of Story", redirectId: 97},
+        { id: 'bussines', title: "Stories Your Business Can Tell", redirectId: 98},
+        { id: 'storyteller', title: "Embracing Your Inner Storyteller", redirectId:99},
+        { id: 'task13', title: "Task #13: Conduct Focus Groups", redirectId: 100},
         { id: 'marketing', title: "The Marketing Plan", redirectId: 101 },
         { id: 'task14', title: "Task #14: Creating Your Startup's Marketing Plan", redirectId: 102 }
       ]
@@ -175,6 +166,7 @@ function LtsJournal(props) {
         { id: 'pitching', title: "Pitching Yourself", redirectId: 123 },
         { id: 'reminders', title: "Reminders Going Forwards", redirectId: 124 },
         { id: 'final', title: "Task #23: Create Your Final I Am Video", redirectId: 125 },
+        // { id: 'task4', title: "Task #4: Build Your Team and Find Your Mentor",redirectId:126},
         { id: 'task24', title: "Task #24: Build Your Startup's Final Pitch",redirectId:126}
       ]
     }
