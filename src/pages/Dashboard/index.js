@@ -16,6 +16,7 @@ import {
 import IntlMessages from '../../utils/IntlMessages'
 import AcademyBtn from '../../components/AcademyBtn'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
+import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions';
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -26,15 +27,18 @@ function Dashboard() {
   const [chatId, setChatId] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState(null)
 
+    const { finishedContent, levelProgress, loading } = useSelector(
+      (state) => state.course
+    );
+
   useImpersonation(originalToken)
 
-  useEffect(() => {
-    dispatch(changeSidebarState(false))
-  }, [dispatch])
 
   useEffect(() => {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
+    dispatch(fetchLtsCoursefinishedContent())
+    dispatch(changeSidebarState(false))
   }, [dispatch])
 
   function getFormattedDate() {
