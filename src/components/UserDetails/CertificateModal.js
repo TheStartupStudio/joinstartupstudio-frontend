@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
@@ -8,35 +8,41 @@ import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import print from '../../assets/images/academy-icons/print.png'
 import save from '../../assets/images/academy-icons/save.png'
 import signature from '../../assets/images/academy-icons/sign.png'
+import { useDispatch, useSelector } from 'react-redux'
 
 function CertificateModal({ certificate, toggleCertificate, name }) {
   const certificateRef = useRef(null)
+  const dispatch = useDispatch()
+
+  const { finishedContent, levelProgress, loading, totalProgress } = useSelector(
+    (state) => state.course
+  );
+
+  const isCompleted = totalProgress === 100;
 
   const handleSave = () => {
+    if (!isCompleted) return;
+    
     html2canvas(certificateRef.current, { scale: 2 }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png')
-
       const pdf = new jsPDF('l', 'mm', 'a4')
-
       const pageWidth = 297
       const pageHeight = 210
       const imgWidth = pageWidth - 20
       const imgHeight = (canvas.height * imgWidth) / canvas.width
-
       let position = (pageHeight - imgHeight) / 2
-
       pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight)
       pdf.save('certificate.pdf')
     })
   }
 
   const handlePrint = () => {
+    if (!isCompleted) return;
+
     const printContent = certificateRef.current.innerHTML
     const originalContent = document.body.innerHTML
-
     document.body.innerHTML = printContent
     window.print()
-
     document.body.innerHTML = originalContent
     window.location.reload()
   }
@@ -48,34 +54,32 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
       className='certificate-modal'
       style={{ maxWidth: '1100px' }}
     >
-      <span
-        className=' cursor-pointer'
-        onClick={toggleCertificate}
-        style={{ zIndex: '1' }}
-      >
+      <span className='cursor-pointer' onClick={toggleCertificate} style={{ zIndex: '1' }}>
         <img className='left-arrow-modal' src={leftArrow} alt='left' />
       </span>
       <ModalBody>
         <img src={courseLogo} alt='logo' />
         <div className='d-flex justify-content-between align-items-center mt-3'>
           <h3 className='fs-14' style={{ marginBottom: '0' }}>
-            My Course Certificate
+            My Course Certificate {!isCompleted && '(Course not completed)'}
           </h3>
           <div className='d-flex gap-3'>
             <div className='d-flex gap-2 align-items-center'>
-              <img src={save} alt='save' />
+              <img src={save} alt='save' style={{ opacity: isCompleted ? 1 : 0.5 }} />
               <span
-                className='hover-certificate cursor-pointer'
+                className={`hover-certificate ${isCompleted ? 'cursor-pointer' : 'text-muted'}`}
                 onClick={handleSave}
+                style={{ opacity: isCompleted ? 1 : 0.5 }}
               >
                 Save
               </span>
             </div>
             <div className='d-flex gap-2 align-items-center'>
-              <img src={print} alt='print' />
+              <img src={print} alt='print' style={{ opacity: isCompleted ? 1 : 0.5 }} />
               <span
-                className='hover-certificate cursor-pointer'
+                className={`hover-certificate ${isCompleted ? 'cursor-pointer' : 'text-muted'}`}
                 onClick={handlePrint}
+                style={{ opacity: isCompleted ? 1 : 0.5 }}
               >
                 Print
               </span>
@@ -83,7 +87,7 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
           </div>
         </div>
         <div
-          className='d-flex flex-column align-items-center mt-5 certificate-wrapper'
+          className={`d-flex flex-column align-items-center mt-5 certificate-wrapper ${!isCompleted ? 'certificate-blur' : ''}`}
           ref={certificateRef}
         >
           <div className='d-flex gap-3 align-items-center'>
@@ -134,6 +138,11 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
             </p>
           </div>
         </div>
+        {!isCompleted && (
+          <div className="text-center mt-3 text-danger">
+            Complete the course (Current Progress: {totalProgress}%) to unlock your certificate
+          </div>
+        )}
       </ModalBody>
     </Modal>
   )

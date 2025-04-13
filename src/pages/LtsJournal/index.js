@@ -121,7 +121,7 @@ function LtsJournal(props) {
         { id: 'skills', title: "The Five Skills of Innovation", redirectId: 86 },
         { id: 'develop', title: "The DEVELOP Stage", redirectId: 87 },
         { id: 'task9', title: "Task #9: Develop Your Startup's Business Model", redirectId: 88 },
-        { id: 'task10', title: "Task #10: Write Your Startup's Concept Plan", redirectId: 89 }
+        { id: 'task10', title: "Write Your Startup's Concept Plan", redirectId: 89 }
       ]
     },
     {
@@ -148,7 +148,7 @@ function LtsJournal(props) {
       title: "Level 3.4: The Start Stage",
       isParent: true,
       children: [
-        { id: 'brand', title: "Introduction to the Business Plan", redirectId: 104 },
+        { id: 'brand1', title: "Introduction to the Business Plan", redirectId: 104 },
         { id: 'branding', title: "The Business Development Management Map", redirectId: 105 },
         { id: 'relation', title: "Task #15: Create Your Startup's Business Development Management Map", redirectId: 106 },
         { id: 'charter', title: "The Test Metric of Sustainability", redirectId: 107 },
@@ -324,7 +324,7 @@ function LtsJournal(props) {
   const options = lessonsByLevel[activeLevel]?.flatMap((lesson, index) => {
     if (activeLevel === 2) {
       const parentOption = {
-        value: lesson.id,
+        value: `${lesson.id}_parent`,
         label: lesson.title,
         textColor: 'text-dark',
         fontWeight: 'bolder',
@@ -333,41 +333,42 @@ function LtsJournal(props) {
   
       const childOptions = lesson.children?.map(child => {
         const status = getOptionStatus(
-          child.redirectId, 
+          child.redirectId,
           lesson.children,
-          true // Add this flag for level 3
+          true
         );
   
         return {
-          value: child.id,
+          value: `${lesson.id}_${child.id}`, // Create unique value by combining parent and child IDs
           label: child.title,
-          icon: status.status === 'done' ? tickSign : 
-               status.status === 'inProgress' ? circleSign : 
-               lockSign,
+          icon: status.status === 'done' ? tickSign :
+            status.status === 'inProgress' ? circleSign :
+              lockSign,
           textColor: status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
           disabled: status.disabled,
-          redirectId: child.redirectId
+          redirectId: child.redirectId,
+          parentId: lesson.id // Add parent ID reference
         };
       });
   
       return [parentOption, ...(childOptions || [])];
-    } else {
-      const status = getOptionStatus(
-        lesson.redirectId,
-        lessonsByLevel[activeLevel]
-      );
-  
-      return {
-        value: lesson.id,
-        label: lesson.title,
-        icon: status.status === 'done' ? tickSign : 
-             status.status === 'inProgress' ? circleSign : 
-             lockSign,
-        textColor: status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
-        disabled: status.disabled,
-        redirectId: lesson.redirectId
-      };
     }
+  
+    const status = getOptionStatus(
+      lesson.redirectId,
+      lessonsByLevel[activeLevel]
+    );
+  
+    return {
+      value: lesson.id,
+      label: lesson.title,
+      icon: status.status === 'done' ? tickSign :
+        status.status === 'inProgress' ? circleSign :
+          lockSign,
+      textColor: status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
+      disabled: status.disabled,
+      redirectId: lesson.redirectId
+    };
   });
 
   const isContentAccessible = (journalId) => {
@@ -505,28 +506,25 @@ function LtsJournal(props) {
 
       setSelectedLesson(selectedOption);
 
-      const lessonId = selectedOption.value;
-      const selectedLesson = lessonsByLevel[activeLevel]?.find(
-        (lesson) =>
-          lesson.id === lessonId ||
-          lesson.children?.some((child) => child.id === lessonId)
-      );
+      if (activeLevel === 2) {
+        const [parentId, childId] = selectedOption.value.split('_');
+        if (childId === 'parent') return; // Skip parent options
 
-      if (selectedLesson) {
-        const lessonRedirectId =
-          selectedLesson.redirectId ||
-          selectedLesson.children?.find((child) => child.id === lessonId)
-            ?.redirectId;
+        // Find the correct section and child based on both parent and child IDs
+        const selectedSection = lessonsByLevel[2].find(section => section.id === parentId);
+        const selectedLesson = selectedSection?.children?.find(child => child.id === childId);
 
-        if (lessonRedirectId) {
-          history.push(
-            `/my-course-in-entrepreneurship/journal/${lessonRedirectId}`
-          );
-        } else {
-          console.error('Redirect ID not found for the selected lesson.');
+        if (selectedLesson?.redirectId) {
+          history.push(`/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`);
         }
       } else {
-        console.error('Selected lesson not found in the current level.');
+        const selectedLesson = lessonsByLevel[activeLevel]?.find(
+          lesson => lesson.id === selectedOption.value
+        );
+
+        if (selectedLesson?.redirectId) {
+          history.push(`/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`);
+        }
       }
     }}
   />
