@@ -532,7 +532,9 @@ function LtsJournal(props) {
   />
 </div>
 
-                        <div style={{
+                        <div
+                        className='review-course-btn'
+                         style={{
                   display: 'inline-block',
                   borderRadius: '8px',
                   background:
@@ -718,15 +720,7 @@ function LtsJournal(props) {
          onClick={toggleModal}
          style={{ zIndex: '1' }}
        >
-         <img className='left-arrow-modal' src={leftArrow} alt='left' 
-         style={{
-          cursor: 'pointer',
-          position: 'relative',
-          right: '20px',
-          top: '-15px',
-          width: '20px',
-          height: '20px'
-         }} />
+         <img className='left-arrow' src={leftArrow} alt='left'  />
        </span>
        <ModalBody>
          <img src={progressLogo} alt='user' className='mb-3' />

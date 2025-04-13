@@ -114,6 +114,18 @@ function StoryInMotion({ intl }) {
     setPageCount(Math.ceil(filteredVideos.length / videosPerPage));
   };
 
+  const handleJournalSearch = (event) => {
+    const keyword = event.target.value.toLowerCase();
+    setSearchKeyword(keyword);
+
+    const filteredVideos = pageVideos.filter((video) =>
+      video.title.toLowerCase().includes(keyword)
+    );
+
+    setCurrentPageVideos(filteredVideos.slice(0, videosPerPage));
+    setPageCount(Math.ceil(filteredVideos.length / videosPerPage));
+  };
+
   const getSubtitle = () => {
     if (activeLevel === 0) {
       return 'Encouragement Videos';
@@ -183,7 +195,7 @@ function StoryInMotion({ intl }) {
                 <div>
                   <ModalInput
                     className="course-btn search-journal"
-                    onChange={handleSearch}
+                    onChange={(e) => handleJournalSearch(e)}
                     id={'searchBar'}
                     type={'search'}
                     labelTitle={

@@ -246,12 +246,12 @@ function LtsJournalContent(props) {
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-start" style={{ gap: '2rem' }}>
+      <div className="d-flex justify-content-between align-items-start general-video-container" style={{ gap: '2rem' }}>
         {/* Video Container */}
         <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%' }}>
-          <div className="journal-entries__back">
+          {/* <div className="journal-entries__back">
             <NavLink to={props.backRoute}>Back</NavLink>
-          </div>
+          </div> */}
          <div className='d-flex align-items-center'>
          <img
             src={circleIcon}

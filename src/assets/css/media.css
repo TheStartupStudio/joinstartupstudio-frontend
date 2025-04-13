@@ -2279,6 +2279,12 @@
   }
 }
 
+@media (max-width: 770px) {
+  .beyond-your-course-videos {
+    margin: 0 8rem !important;
+  }
+}
+
 @media (min-width: 768px) {
   .msg-widget-startup-live {
     padding-top: 110px;
