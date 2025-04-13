@@ -103,6 +103,7 @@ const courseReducer = (state = initialState, action) => {
         loading: false,
         finishedContent: payload.finishedContent,
         levelProgress: payload.levelProgress,
+        totalProgress: payload.totalProgress,
         error: null
       }
     case FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED:
