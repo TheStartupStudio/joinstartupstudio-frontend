@@ -25,7 +25,6 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
   }, [id, refreshKey]) 
 
   const handleContentChange = (entryId, data) => {
-    console.log('Received data:', data); 
     setPendingChanges(prev => ({
       ...prev,
       [entryId]: {
@@ -50,12 +49,10 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
                 order: data.order 
               }
             )
-            console.log('POST success:', postResponse)
             refreshData() 
             return postResponse
   
           } catch (postError) {
-            console.log('POST failed, trying PUT:', postError)
             
             if (postError.response?.status === 400 || data.isExisting) {
               const putResponse = await axiosInstance.put(
@@ -65,7 +62,6 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
                   order: data.order 
                 }
               )
-              console.log('PUT success:', putResponse)
               refreshData() 
               return putResponse
             }
@@ -83,12 +79,52 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
     }
   }))
 
+  const parseContent = (content) => {
+    if (!content) return null;
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    
+    // Extract paragraphs
+    const paragraphs = Array.from(doc.querySelectorAll('p')).map(p => p.textContent);
+    
+    // Extract list items
+    const listItems = Array.from(doc.querySelectorAll('li')).map(li => li.textContent);
+
+    return { paragraphs, listItems };
+  };
+
+  const { paragraphs, listItems } = parseContent(journalData?.content) || {};
+
   setIsReflection(true)
   
   return (
     <div className='d-grid grid-col-2 gap-4'>
       <SectionsWrapper title={journalData?.title}>
-        <div dangerouslySetInnerHTML={{ __html: journalData?.content }} />
+        {paragraphs?.map((paragraph, index) => (
+          <p key={index} className='lh-sm'>
+            {paragraph}
+          </p>
+        ))}
+
+        {listItems?.length > 0 && (
+          <>
+            <p className='mb-0 fs-15 fw-medium'>
+              {journalData?.title}
+              <span className='fs-13 fw-light'>
+              </span>
+            </p>
+            {listItems.map((item, index) => (
+              <div key={index} className='d-flex gap-3 ml-2'>
+                <FontAwesomeIcon
+                  icon={faCircle}
+                  style={{ fontSize: '3px', marginTop: '0.65rem' }}
+                />
+                {item}
+              </div>
+            ))}
+          </>
+        )}
       </SectionsWrapper>
 
       <SectionsWrapper img={Light} title={'Reflection'}>
