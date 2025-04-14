@@ -140,7 +140,7 @@ function CertificateModal({ certificate, toggleCertificate, name }) {
         </div>
         {!isCompleted && (
           <div className="text-center mt-3 text-danger">
-            Complete the course (Current Progress: {totalProgress}%) to unlock your certificate
+            Complete the course (Current Total Progress: {totalProgress}%) to unlock your certificate
           </div>
         )}
       </ModalBody>

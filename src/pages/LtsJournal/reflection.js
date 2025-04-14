@@ -83,7 +83,7 @@ function LtsJournalReflection(props) {
     'align',
   ];
 
-  const handleSubmit = async (from, value) => {
+const handleSubmit = async (from, value) => {
     if (saving) return;
 
     setSaving(true);
@@ -91,7 +91,7 @@ function LtsJournalReflection(props) {
 
     if (foulWords) {
       await FoulWords.register(loggedUser.id, foulWords, JOURNALS);
-      setFoulWords(null);
+      setFoulWords(null); 
     }
 
     const myTraining = history.location.pathname.includes('my-training');
@@ -100,13 +100,15 @@ function LtsJournalReflection(props) {
       if (!entryId) {
         let { data } = await axiosInstance.post(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`,
-          from === 'debounce'
+          from === 'debounce'  
             ? { content: value, trainingId: myTraining ? journalId : null }
             : { content, trainingId: myTraining ? journalId : null }
         );
 
         props.saved && props.saved(data);
         setNotSaved(false);
+        toast.success('Your answer has been saved successfully!');
+        // Don't hide editor when creating new entry
       } else {
         let { data } = await axiosInstance.put(
           `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`,
@@ -114,6 +116,7 @@ function LtsJournalReflection(props) {
             ? { content: value, trainingId: myTraining ? journalId : null }
             : { content, trainingId: myTraining ? journalId : null }
         );
+        toast.success('Your answer has been changed successfully!');
 
         props.saved &&
           props.saved({
@@ -123,9 +126,9 @@ function LtsJournalReflection(props) {
           });
 
         setNotSaved(false);
+        setEditing(false); // Only hide toolbar when editing existing entry
       }
       setContentDidUpdate(false);
-      setEditing(false); // Hide the toolbar after saving
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.errors.map((e) => e.message).join('.'));
@@ -140,7 +143,7 @@ function LtsJournalReflection(props) {
       setSaving(false);
       dispatch(fetchLtsCoursefinishedContent());
     }
-  };
+};
 
   const handleContentChange = (value) => {
     setContent(value);
