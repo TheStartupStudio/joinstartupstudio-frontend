@@ -8,6 +8,8 @@ import IntlMessages from '../../utils/IntlMessages'
 import { jwtDecode } from 'jwt-decode'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import CourseLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+import axiosInstance from '../../utils/AxiosInstance'
+import { toast } from 'react-toastify'
 
 const VerifyEmailByCode = (props) => {
   const url = new URL(window.location.href)
@@ -74,6 +76,15 @@ const VerifyEmailByCode = (props) => {
       })
   }
 
+  async function resendEmail(data) {
+    try {
+      await axiosInstance.post('/users/resend-email', { email: data })
+    } catch (error) {
+      console.error('Failed to resend email:', error)
+      setError('Failed to resend email. Please try again.')
+    }
+  }
+
   return (
     <>
       <div className='d-flex justify-content-center p-5'>
@@ -98,7 +109,12 @@ const VerifyEmailByCode = (props) => {
             If you still don't see it, please click the button below to resend
             the email.
           </p>
-          <button className='btn btn-primary mt-3'>Resend Email</button>
+          <button
+            className='btn btn-primary mt-3'
+            onClick={() => resendEmail(jwtDecoded?.email)}
+          >
+            Resend Email
+          </button>
         </div>
       </div>
     </>
