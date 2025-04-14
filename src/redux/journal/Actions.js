@@ -12,7 +12,10 @@ import {
   SET_JOURNAL_TITLES,
   GET_JOURNAL_DATA_REQUEST,
   GET_JOURNAL_DATA_SUCCESS, 
-  GET_JOURNAL_DATA_ERROR
+  GET_JOURNAL_DATA_ERROR,
+  FETCH_JOURNAL_FINISHED_CONTENT_PENDING,
+  FETCH_JOURNAL_FINISHED_CONTENT_FULFILLED,
+  FETCH_JOURNAL_FINISHED_CONTENT_REJECTED
 } from './Types'
 
 import axiosInstance from '../../utils/AxiosInstance'
@@ -172,3 +175,29 @@ export const getJournalData = (id) => async (dispatch) => {
     })
   }
 }
+
+export const fetchJournalFinishedContent = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchJournalFinishedContentPending())
+      const response = await axiosInstance.get('/ltsJournals/LtsJournalFinishedContent')
+      dispatch(fetchJournalFinishedContentFulfilled(response.data.finishedContent))
+    } catch (error) {
+      dispatch(fetchJournalFinishedContentRejected(error))
+    }
+  }
+}
+
+export const fetchJournalFinishedContentPending = () => ({
+  type: FETCH_JOURNAL_FINISHED_CONTENT_PENDING
+})
+
+export const fetchJournalFinishedContentFulfilled = (payload) => ({
+  type: FETCH_JOURNAL_FINISHED_CONTENT_FULFILLED,
+  payload
+})
+
+export const fetchJournalFinishedContentRejected = (error) => ({
+  type: FETCH_JOURNAL_FINISHED_CONTENT_REJECTED,
+  error
+})

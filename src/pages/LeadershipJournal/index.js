@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchJournalFinishedContent } from '../../redux/journal/Actions'
 import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import lockSign from '../../assets/images/academy-icons/lock.png'
 import searchJ from '../../assets/images/academy-icons/search.png'
@@ -19,7 +21,7 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
-import { useDispatch } from 'react-redux'
+import store from '../../redux/store'
 
 function LeadershipJournal() {
   const [isReflection, setIsReflection] = useState(false)
@@ -31,6 +33,9 @@ function LeadershipJournal() {
   })
 
   const dispatch = useDispatch()
+  const { finishedContent, loading: finishedContentLoading } = useSelector(
+    (state) => state.journal
+  )
 
   const valueRefs = useRef({})
 
@@ -49,6 +54,7 @@ function LeadershipJournal() {
     if (currentOption?.id && valueRefs.current[currentOption.id]) {
       await valueRefs.current[currentOption.id].saveChanges()
     }
+    fetchJournalContent()
   }
 
   const renderSection = () => {
@@ -120,7 +126,8 @@ function LeadershipJournal() {
               <Value id={child.id} setIsReflection={setIsReflection} />,
               child.id
             ),
-            id: child.id
+            id: child.id,
+            isNext
           }
         })
       ]
@@ -133,29 +140,38 @@ function LeadershipJournal() {
     })
   }
 
-  useEffect(() => {
-    const fetchJournalContent = async () => {
-      try {
-        setLoading(true)
-        const [contentResponse, finishedResponse] = await Promise.all([
-          axiosInstance.get('/ltsJournals/LtsJournalContent'),
-          axiosInstance.get('/ltsJournals/LtsJournalFinishedContent')
-        ])
+  const fetchJournalContent = async () => {
+    try {
+      setLoading(true)
+      const [contentResponse] = await Promise.all([
+        axiosInstance.get('/ltsJournals/LtsJournalContent'),
+        dispatch(fetchJournalFinishedContent())
+      ])
 
-        const transformedTabs = transformApiDataToTabs(
-          contentResponse.data,
-          finishedResponse.data.finishedContent
-        )
-        setAllTabs(transformedTabs)
-      } catch (error) {
-        console.error('Error fetching journal content:', error)
-      } finally {
-        setLoading(false)
-      }
+      // Store finishedContent locally from redux state
+      const { finishedContent } = store.getState().journal
+
+      const transformedTabs = transformApiDataToTabs(
+        contentResponse.data,
+        finishedContent
+      )
+
+      setAllTabs(transformedTabs)
+    } catch (error) {
+      console.error('Error fetching journal content:', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  const isContentCompleted = (title) => {
+    return finishedContent.includes(title)
+  }
+
+  useEffect(() => {
     fetchJournalContent()
-  }, [])
+    // Remove finishedContent from dependencies
+  }, [dispatch])
 
   return (
     <div className='container-fluid'>
@@ -219,6 +235,9 @@ function LeadershipJournal() {
                     selectedCourse={activeTabData}
                     setSelectedCourse={setActiveTabData}
                     options={allTabs[activeTabData.activeTab].options}
+                    isDisabled={(option) =>
+                      !isContentCompleted(option.label) && !option.isNext
+                    }
                   />
                   {isReflection && (
                     <AcademyBtn
