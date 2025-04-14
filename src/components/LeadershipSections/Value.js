@@ -1,4 +1,4 @@
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
+import { faCircle, faPlay } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import ReactQuill from 'react-quill'
@@ -6,19 +6,24 @@ import AddDoc from '../../assets/images/academy-icons/add-doc.png'
 import Light from '../../assets/images/academy-icons/light.png'
 import SectionsWrapper from './SectionsWrapper'
 import LeadershipTextEditor from './LeadershipTextEditor'
+import MediaLightbox from '../../components/MediaLightbox'
 import axiosInstance from '../../utils/AxiosInstance'
 import { useDispatch, useSelector } from 'react-redux'
 import { getJournalData } from '../../redux/journal/Actions'
+import { toast } from 'react-toastify'
 
 const Value = forwardRef(({ id, setIsReflection }, ref) => {
   const [pendingChanges, setPendingChanges] = useState({})
   const [refreshKey, setRefreshKey] = useState(0)
+  const [showVideo, setShowVideo] = useState(false)
   const dispatch = useDispatch()
   const { journalData, loading, error } = useSelector((state) => state.journal)
 
   const refreshData = () => {
     dispatch(getJournalData(id))
   }
+
+  console.log('Ardi 23 ', journalData?.video)
 
   useEffect(() => {
     refreshData()
@@ -51,6 +56,7 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
                 }
               )
               refreshData()
+              toast.success('answer submitted successfully!')
               return postResponse
             } catch (postError) {
               if (postError.response?.status === 400 || data.isExisting) {
@@ -61,6 +67,7 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
                     order: data.order
                   }
                 )
+                toast.success('Changes saved successfully!')
                 refreshData()
                 return putResponse
               }
@@ -105,6 +112,48 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
   return (
     <div className='d-grid grid-col-2 gap-4 grid-col-1-mob'>
       <SectionsWrapper title={journalData?.title}>
+        {journalData?.video && (
+          <>
+            <div className="mb-4">
+              <div
+                className="journal-entries__video-thumbnail"
+                onClick={() => setShowVideo(true)}
+                style={{
+                  cursor: 'pointer',
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <img
+                  src={journalData.video.thumbnail}
+                  alt="video thumbnail"
+                  style={{ width: '100%' }}
+                />
+                <div className="journal-entries__video-thumbnail-icon"
+                  style={{
+                    position: 'absolute',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPlay} />
+                </div>
+              </div>
+            </div>
+
+            {showVideo && (
+              <MediaLightbox
+                video={journalData.video}
+                show={showVideo}
+                onClose={() => setShowVideo(false)}
+              />
+            )}
+          </>
+        )}
+
         {paragraphs?.map((paragraph, index) => (
           <p key={index} className='lh-sm'>
             {paragraph}

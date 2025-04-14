@@ -142,27 +142,36 @@ function LeadershipJournal() {
 
   const fetchJournalContent = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const [contentResponse] = await Promise.all([
         axiosInstance.get('/ltsJournals/LtsJournalContent'),
         dispatch(fetchJournalFinishedContent())
-      ])
+      ]);
 
-      // Store finishedContent locally from redux state
-      const { finishedContent } = store.getState().journal
+      // Get current finishedContent from redux state
+      const { finishedContent } = store.getState().journal;
 
+      // Transform new data while keeping existing tabs in state
       const transformedTabs = transformApiDataToTabs(
         contentResponse.data,
         finishedContent
-      )
+      );
 
-      setAllTabs(transformedTabs)
+      // Only update state after new data is ready
+      setAllTabs(prevTabs => {
+        // Keep showing previous tabs until new ones are ready
+        if (transformedTabs?.length) {
+          return transformedTabs;
+        }
+        return prevTabs;
+      });
+
     } catch (error) {
-      console.error('Error fetching journal content:', error)
+      console.error('Error fetching journal content:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const isContentCompleted = (title) => {
     return finishedContent.includes(title)
