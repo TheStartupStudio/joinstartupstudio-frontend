@@ -53,21 +53,6 @@ function LtsJournalContent(props) {
     setShowAddReflection(showAddReflection)
   }
 
-  // async function saveWatchData(data) {
-  //   await axiosInstance.put(
-  //     `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
-  //     {
-  //       videoWatchData: JSON.stringify(data)
-  //     }
-  //   )
-  // }
-
-  // async function saveVideoWatched() {
-  //   await axiosInstance.put(
-  //     `/ltsJournals/${props.match.params.journalId}/watchedVideo`
-  //   )
-  // }
-
   async function getJournal() {
     try {
       let { data } = await axiosInstance.get(
@@ -239,82 +224,80 @@ function LtsJournalContent(props) {
   }
 
   let videos = (
-    journal.videos && journal.videos.constructor == Array
+    journal.videos && journal.videos.constructor === Array
       ? journal.videos
       : [journal.video]
-  ).filter(video => video && video.id);
+  ).filter((video) => video && video.id);
+
+  videos = videos.sort((a, b) => (a.id === 100000 ? -1 : b.id === 100000 ? 1 : 0));
 
   return (
     <>
       <div className="d-flex justify-content-between align-items-start general-video-container" style={{ gap: '2rem' }}>
-        {/* Video Container */}
+ 
+        
         <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%' }}>
-          {/* <div className="journal-entries__back">
-            <NavLink to={props.backRoute}>Back</NavLink>
-          </div> */}
-         <div className='d-flex align-items-center'>
-         <img
-            src={circleIcon}
-            alt="circle-icon"
-            style={{ width: '40px', height: '40px', marginRight: '10px' }}
-          />
-          <h4 className="page-card__content-title">{journal.title}</h4>
-
-         </div>
-          {videos && videos.length > 0 && (
-            <div className="journal-entries__videos">
-              
-              {videos[currentVideoIndex] && (
+               {/* Video Container */}
+          {/* Video Container */}
+          {/* Title Section */}
+          <div className="d-flex align-items-center">
+            <img
+              src={circleIcon}
+              alt="circle-icon"
+              style={{ width: '40px', height: '40px', marginRight: '10px' }}
+            />
+            <h4 className="page-card__content-title">{journal.title}</h4> {/* Title remains here */}
+</div>
+          <div className="journal-entries__videos">
+            {videos[currentVideoIndex] && (
+              <div
+                className={`journal-entries__video${
+                  journal.content === '' ? '--welcome-video' : ''
+                }`}
+              >
                 <div
-                  className={`journal-entries__video${
+                  className={`journal-entries__video-thumbnail${
                     journal.content === '' ? '--welcome-video' : ''
                   }`}
+                  onClick={() => handleShowVideo(videos[currentVideoIndex])}
                 >
+                  <img src={videos[currentVideoIndex].thumbnail} alt="thumbnail" />
                   <div
-                    className={`journal-entries__video-thumbnail${
+                    className={`journal-entries__video-thumbnail-icon${
                       journal.content === '' ? '--welcome-video' : ''
                     }`}
-                    onClick={() => handleShowVideo(videos[currentVideoIndex])}
                   >
-                    <img src={videos[currentVideoIndex].thumbnail} alt="thumbnail" />
-                    <div
-                      className={`journal-entries__video-thumbnail-icon${
-                        journal.content === '' ? '--welcome-video' : ''
-                      }`}
-                    >
-                      <FontAwesomeIcon icon={faPlay} />
-                    </div>
+                    <FontAwesomeIcon icon={faPlay} />
                   </div>
                 </div>
-              )}
-
-              {showVideo === videos[currentVideoIndex]?.id && (
-                <MediaLightbox
-                  video={videos[currentVideoIndex]}
-                  show={true}
-                  onClose={() => setShowVideo(null)}
-                />
-              )}
-
-
-              <div className="nav-videos">
-                <button
-                  className="btn"
-                  onClick={handlePreviousVideo}
-                  disabled={currentVideoIndex === 0}
-                >
-                  &#8592; Previous
-                </button>
-                <button
-                  className="btn"
-                  onClick={handleNextVideo}
-                  disabled={currentVideoIndex === videos.length - 1}
-                >
-                  Next &#8594;
-                </button>
               </div>
+            )}
+
+            {showVideo === videos[currentVideoIndex]?.id && (
+              <MediaLightbox
+                video={videos[currentVideoIndex]}
+                show={true}
+                onClose={() => setShowVideo(null)}
+              />
+            )}
+
+            <div className="nav-videos">
+              <button
+                className="btn"
+                onClick={handlePreviousVideo}
+                disabled={currentVideoIndex === 0}
+              >
+                &#8592; Previous
+              </button>
+              <button
+                className="btn"
+                onClick={handleNextVideo}
+                disabled={currentVideoIndex === videos.length - 1}
+              >
+                Next &#8594;
+              </button>
             </div>
-          )}
+          </div>
         </div>
 
 

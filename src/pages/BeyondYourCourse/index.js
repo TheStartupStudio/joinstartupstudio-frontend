@@ -221,7 +221,11 @@ export default function BeyondYourCourse() {
   useEffect(() => {
     const fetchPodcastEpisodes = async () => {
       try {
-        const response = await axiosInstance.get('/podcast?page=0&size=5');
+        const endpoint = isViewAll
+          ? '/podcast?page=0&size=100' 
+          : '/podcast?page=0&size=5'; 
+        const response = await axiosInstance.get(endpoint);
+        console.log('Podcast Episodes Response:', response.data.data); // Log the response
         setPodcastEpisodes(response.data.data);
       } catch (error) {
         console.error('Error fetching podcast episodes:', error);
@@ -232,7 +236,6 @@ export default function BeyondYourCourse() {
   }, []);
 
   useEffect(() => {
-    // Check if the query parameter `view=podcasts` is present
     const params = new URLSearchParams(location.search);
     setIsViewAll(params.get('view') === 'podcasts');
   }, [location.search]);
@@ -241,9 +244,10 @@ export default function BeyondYourCourse() {
     const fetchPodcastEpisodes = async () => {
       try {
         const endpoint = isViewAll
-          ? '/podcast?page=0&size=100' // Fetch all episodes
-          : '/podcast?page=0&size=5'; // Fetch only 5 episodes
+          ? '/podcast?page=0&size=100' 
+          : '/podcast?page=0&size=5'; 
         const response = await axiosInstance.get(endpoint);
+        console.log('Podcast Episodes Response:', response.data.data); // Log the response
         setPodcastEpisodes(response.data.data);
       } catch (error) {
         console.error('Error fetching podcast episodes:', error);
@@ -356,8 +360,8 @@ export default function BeyondYourCourse() {
   }
 
   const handleAudioClick = (podcast) => {
-    setSelectedAudio(podcast); // Set the selected podcast
-    setShowAudioModal(true); // Show the audio modal
+    setSelectedAudio(podcast); 
+    setShowAudioModal(true); 
   }
 
   return (
