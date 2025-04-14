@@ -7,6 +7,7 @@ import './index.css'
 import IntlMessages from '../../utils/IntlMessages'
 import { jwtDecode } from 'jwt-decode'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import CourseLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
 
 const VerifyEmailByCode = (props) => {
   const url = new URL(window.location.href)
@@ -74,32 +75,33 @@ const VerifyEmailByCode = (props) => {
   }
 
   return (
-    <div className='verify-wrapper'>
-      <div className='verify-form public-page-form'>
-        <h1>
-          <span>Verify Your Account</span>
-        </h1>
-        <p>
-          Please check your email for your unique verification code and then
-          enter your code below.
-        </p>
-        <input
-          className='form-item'
-          type='number'
-          onChange={(e) => setCode(e.target.value)}
-        />
-        {error && <p className='verify-error'>{error}</p>}
-        <div className='verify-btn-wrapper'>
-          <button className='verify-btn' onClick={submitCode}>
-            {buttonLoading ? (
-              <span className='spinner-border spinner-border-sm' />
-            ) : (
-              <IntlMessages id='general.go_next' />
-            )}
-          </button>
+    <>
+      <div className='d-flex justify-content-center p-5'>
+        <div className='d-flex align-items-center flex-column payment-main'>
+          <img
+            src={CourseLogo}
+            alt='course-logo'
+            className='course-logo-image'
+          />
+          <h2 className='text-uppercase fs-24 fw-bold mt-5 text-black'>
+            Check your email
+          </h2>
+          <p className='text-black fs-15'>
+            We have sent you an email with a link to confirm your email address.
+            Please check your inbox and click the link to complete your
+            registration.
+          </p>
+          <p className='text-black fs-15'>
+            If you don't see the email, please check your spam or junk folder.
+          </p>
+          <p className='text-black fs-15'>
+            If you still don't see it, please click the button below to resend
+            the email.
+          </p>
+          <button className='btn btn-primary mt-3'>Resend Email</button>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

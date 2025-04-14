@@ -19,7 +19,7 @@ function SectionThree({ setIsReflection }) {
   ]
 
   return (
-    <div className='leadership-layout d-grid gap-5'>
+    <div className='leadership-layout d-grid gap-5 grid-col-1-mob'>
       <div className='w-100'>
         <YourInstructor
           instructorName={'DR. Leslie Williams'}

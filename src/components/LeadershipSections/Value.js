@@ -14,7 +14,7 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
   const [pendingChanges, setPendingChanges] = useState({})
   const [refreshKey, setRefreshKey] = useState(0)
   const dispatch = useDispatch()
-  const { journalData, loading, error } = useSelector(state => state.journal)
+  const { journalData, loading, error } = useSelector((state) => state.journal)
 
   const refreshData = () => {
     dispatch(getJournalData(id))
@@ -22,18 +22,18 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
 
   useEffect(() => {
     refreshData()
-  }, [id, refreshKey]) 
+  }, [id, refreshKey])
 
   const handleContentChange = (entryId, data) => {
-    console.log('Received data:', data); 
-    setPendingChanges(prev => ({
+    console.log('Received data:', data)
+    setPendingChanges((prev) => ({
       ...prev,
       [entryId]: {
         content: data.content,
         isExisting: data.isExisting,
         journalId: id,
         entryId: entryId,
-        order: typeof data.order === 'number' ? data.order : 0 
+        order: typeof data.order === 'number' ? data.order : 0
       }
     }))
   }
@@ -41,42 +41,43 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
   useImperativeHandle(ref, () => ({
     saveChanges: async () => {
       try {
-        const savePromises = Object.entries(pendingChanges).map(async ([entryId, data]) => {
-          try {
-            const postResponse = await axiosInstance.post(
-              `/ltsJournals/ltsjournalEntries/${id}/${entryId}`,
-              { 
-                content: data.content,
-                order: data.order 
-              }
-            )
-            console.log('POST success:', postResponse)
-            refreshData() 
-            return postResponse
-  
-          } catch (postError) {
-            console.log('POST failed, trying PUT:', postError)
-            
-            if (postError.response?.status === 400 || data.isExisting) {
-              const putResponse = await axiosInstance.put(
+        const savePromises = Object.entries(pendingChanges).map(
+          async ([entryId, data]) => {
+            try {
+              const postResponse = await axiosInstance.post(
                 `/ltsJournals/ltsjournalEntries/${id}/${entryId}`,
-                { 
+                {
                   content: data.content,
-                  order: data.order 
+                  order: data.order
                 }
               )
-              console.log('PUT success:', putResponse)
-              refreshData() 
-              return putResponse
+              console.log('POST success:', postResponse)
+              refreshData()
+              return postResponse
+            } catch (postError) {
+              console.log('POST failed, trying PUT:', postError)
+
+              if (postError.response?.status === 400 || data.isExisting) {
+                const putResponse = await axiosInstance.put(
+                  `/ltsJournals/ltsjournalEntries/${id}/${entryId}`,
+                  {
+                    content: data.content,
+                    order: data.order
+                  }
+                )
+                console.log('PUT success:', putResponse)
+                refreshData()
+                return putResponse
+              }
+
+              throw postError
             }
-            
-            throw postError
           }
-        })
-  
+        )
+
         await Promise.all(savePromises)
         setPendingChanges({})
-        setRefreshKey(prev => prev + 1) 
+        setRefreshKey((prev) => prev + 1)
       } catch (error) {
         console.error('Error saving reflections:', error)
       }
@@ -84,9 +85,9 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
   }))
 
   setIsReflection(true)
-  
+
   return (
-    <div className='d-grid grid-col-2 gap-4'>
+    <div className='d-grid grid-col-2 gap-4 grid-col-1-mob'>
       <SectionsWrapper title={journalData?.title}>
         <div dangerouslySetInnerHTML={{ __html: journalData?.content }} />
       </SectionsWrapper>

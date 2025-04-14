@@ -48,7 +48,7 @@ function AboutMe({ user }) {
   return (
     <>
       <div className='d-grid academy-dashboard-card pb-5 relative'>
-        <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4 mb-5'>
+        <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4 mb-5 flex-col-mob gap-3 align-start-mob'>
           <div className='d-flex gap-3 align-items-center'>
             <img src={userIcon} alt='user' />
             <h4 className='fs-14 my-details-header text-black'>About Me</h4>
@@ -151,7 +151,7 @@ function AboutMe({ user }) {
             </div>
             <p
               className={`mt-3 fs-15 fw-light text-black ${
-                isExpanded && 'width-50'
+                isExpanded && 'width-50 w-100-mob'
               }`}
             >
               <div

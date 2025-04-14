@@ -15,7 +15,7 @@ function ConfirmEmail() {
       .get(`/auth/verify-email?token=${token}`)
       .then((res) => {
         toast.success('Email verified successfully')
-        history.push('/login', { confirmEmail: true })
+        history.push('/', { confirmEmail: true })
       })
       .catch((error) => {
         toast.error('Error verifying email', error?.response?.data?.message)
@@ -26,21 +26,29 @@ function ConfirmEmail() {
 
   return (
     <>
-      {' '}
-      <div className='bg-light d-flex justify-content-center align-items-center vh-100'>
-        <div className='text-center'>
-          <div
-            className='spinner-border text-primary mb-4'
-            style={{ width: '4rem', height: '4rem' }}
-            role='status'
-          >
-            <span className='visually-hidden'>Loading...</span>
-          </div>
-          <h2 className='mb-2'>Verifying your email</h2>
-          <p className='text-muted'>
-            Please wait while we verify your email address.
+      <div className='d-flex justify-content-center p-5'>
+        <div className='d-flex align-items-center flex-column payment-main'>
+          <img
+            src={courseLogo}
+            alt='course-logo'
+            className='course-logo-image'
+          />
+          <h2 className='text-uppercase fs-24 fw-bold mt-5 text-black'>
+            Check your email
+          </h2>
+          <p className='text-black fs-15'>
+            We have sent you an email with a link to confirm your email address.
+            Please check your inbox and click the link to complete your
+            registration.
           </p>
-          <p className='text-secondary small'>This won’t take long…</p>
+          <p className='text-black fs-15'>
+            If you don't see the email, please check your spam or junk folder.
+          </p>
+          <p className='text-black fs-15'>
+            If you still don't see it, please click the button below to resend
+            the email.
+          </p>
+          <button className='btn btn-primary mt-3'>Resend Email</button>
         </div>
       </div>
     </>

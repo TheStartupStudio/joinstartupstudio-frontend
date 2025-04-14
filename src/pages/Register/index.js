@@ -329,7 +329,7 @@ function Register() {
           <p className='fs-18 fw-light mb-0'>
             <IntlMessages id='create_account.already_registered' />
           </p>
-          <Link className='fs-15 fw-medium blue-color' to='/login'>
+          <Link className='fs-15 fw-medium blue-color' to='/'>
             Log in here
           </Link>
         </section>

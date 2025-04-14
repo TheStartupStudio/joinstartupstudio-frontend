@@ -11,6 +11,7 @@ import Payment from '../pages/Register/Payment'
 import ConfirmEmail from '../pages/Register/ConfirmEmail'
 import CheckEmail from '../pages/Register/CheckEmail'
 import CheckSubscription from '../pages/Register/CheckSubscription'
+import CancelSubscription from '../pages/Register/CancelSubscription'
 
 const Iamr = React.lazy(() => import('../pages/Iamr'))
 const Terms = React.lazy(() => import('../pages/Terms'))
@@ -185,6 +186,8 @@ export const adminRoutes = [
 export const mutualRoutes = [
   { path: '/dashboard', component: Dashboard, exact: true },
   { path: '/subscribe', component: CheckSubscription, exact: true },
+  { path: '/payment', component: Payment, exact: true },
+  { path: '/cancel-payment', component: CancelSubscription, exact: true },
   { path: '/pathways', component: Pathways, exact: true },
   { path: '/my-classroom', component: MyClassroom, exact: true },
   { path: '/my-classroom/request/:id', component: MyClassroom },
@@ -422,7 +425,7 @@ export const studentRoutes = [
 ]
 
 export const publicRoutes = [
-  { path: '/', component: WelcomeToCourse, exact: true },
+  // { path: '/', component: WelcomeToCourse, exact: true },
   { path: '/explore-the-platform', component: ExplorePlatform, exact: true },
   { path: '/explore-the-course', component: ExploreCourse, exact: true },
   { path: '/contact', component: ContactUs, exact: true },
@@ -434,14 +437,13 @@ export const publicRoutes = [
   { path: '/terms', component: Terms, exact: true },
   { path: '/my-immersion', component: MyImmersion, exact: false },
   { path: '/verify', component: VerifyEmail, exact: false },
-  { path: '/login', component: Login, exact: true },
+  { path: '/', component: Login, exact: true },
   { path: '/logout', component: Logout, exact: false },
   { path: '/register', component: Register, exact: true },
   { path: '/check-email', component: CheckEmail, exact: true },
   { path: '/trial-ended', component: Resubscribe, exact: true },
   { path: '/subscription-ended', component: Resubscribe, exact: true },
   { path: '/confirm-email', component: ConfirmEmail, exact: true },
-  { path: '/payment', component: Payment, exact: true },
   {
     path: '/password-change-required',
     component: PasswordChangeRequired,
@@ -463,5 +465,10 @@ export const publicRoutes = [
 export const redirects = [
   { from: '/register', to: '/dashboard' },
   { from: '/ims-login', to: '/dashboard' },
-  { from: '/', to: '/dashboard', exact: true }
+  { from: '/', to: '/dashboard', exact: true },
+  {
+    from: '*',
+    to: '/subscribe',
+    condition: (user) => user?.user?.stripe_subscription_id === false
+  }
 ]

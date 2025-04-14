@@ -18,11 +18,8 @@ function CourseProgress() {
 
   return (
     <>
-      <div
-        className='d-grid academy-dashboard-card'
-        style={{ gridTemplateRows: '1fr 2fr' }}
-      >
-        <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4'>
+      <div className='d-grid academy-dashboard-card grid-row-1-2 grid-row-none-mob'>
+        <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4 gap-2'>
           <div className='d-flex gap-3 align-items-center'>
             <img src={courseLogo} alt='course' />
             <h4 className='fs-9 my-details-header'>Course Progress</h4>
@@ -35,7 +32,7 @@ function CourseProgress() {
             <img src={rightArrow} alt='right-arr' />
           </div>
         </div>
-        <div className='d-flex gap-4 align-items-center justify-content-between'>
+        <div className='d-flex gap-4 align-items-center justify-content-between flex-col-mob mt-2rem-mob'>
           <div className='d-flex flex-column gap-4'>
             <CircularProgress percentage={20} level={1} />
             <p className='text-center'>
@@ -93,7 +90,7 @@ function CourseProgress() {
                 aria-labelledby='headingOne'
                 data-bs-parent='#progressAccordion'
               >
-                <div className='accordion-body d-flex gap-4'>
+                <div className='accordion-body d-flex gap-4 flex-col-mob'>
                   <div className='d-flex flex-column gap-4'>
                     <CircularProgress percentage={20} level={1} />
                   </div>
@@ -140,7 +137,7 @@ function CourseProgress() {
                 aria-labelledby='headingTwo'
                 data-bs-parent='#progressAccordion'
               >
-                <div className='accordion-body d-flex gap-4'>
+                <div className='accordion-body d-flex gap-4 flex-col-mob'>
                   <div className='d-flex flex-column gap-4'>
                     <CircularProgress percentage={0} level={2} />
                   </div>
@@ -177,7 +174,7 @@ function CourseProgress() {
                 aria-labelledby='headingThree'
                 data-bs-parent='#progressAccordion'
               >
-                <div className='accordion-body d-flex gap-4'>
+                <div className='accordion-body d-flex gap-4 flex-col-mob'>
                   <div className='d-flex flex-column gap-4'>
                     <CircularProgress percentage={0} level={3} />
                   </div>

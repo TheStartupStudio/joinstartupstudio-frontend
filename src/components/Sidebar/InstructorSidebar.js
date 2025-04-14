@@ -17,12 +17,43 @@ import { toggleCollapse } from '../../redux/sidebar/Actions'
 import SidebarItem from './SidebarItem'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import Tooltip from '../AcademyPortfolio/Tooltip'
+import CancelRenewalModal from '../UserDetails/CancelRenewalModal'
+import CancelSubModal from '../UserDetails/CancelSubModal'
+import CertificateModal from '../UserDetails/CertificateModal'
+import EditUserModal from '../UserDetails/EditUserModal'
+import SubscriptionModal from '../UserDetails//SubscriptionModal'
 
 const InstructorSidebar = (props) => {
   const [isTextVisible, setIsTextVisible] = useState(true)
   const dispatch = useDispatch()
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
   const { user } = useSelector((state) => state.user.user)
+  const [modal, setModal] = useState(false)
+  const [subsbsciptionModal, setSubscriptionModal] = useState(false)
+  const [cancelSubModal, setCancelSubModal] = useState(false)
+  const [canceledRenewal, setCanceledRenewal] = useState(false)
+  const [certificate, setCertificate] = useState(false)
+
+  const toggle = () => setModal((prev) => !prev)
+
+  const subToggle = () => {
+    setModal((prev) => !prev)
+    setSubscriptionModal((prev) => !prev)
+  }
+
+  const toggleCancelModal = () => {
+    setCancelSubModal((prev) => !prev)
+    setSubscriptionModal((prev) => !prev)
+  }
+
+  const toggleCancelRenewal = () => {
+    setCancelSubModal((prev) => !prev)
+    setCanceledRenewal((prev) => !prev)
+  }
+
+  const toggleCertificate = () => {
+    setCertificate((prev) => !prev)
+  }
 
   const truncateEmail = (email) => {
     if (email.length > 15) {
@@ -30,9 +61,6 @@ const InstructorSidebar = (props) => {
     }
     return email
   }
-
-  // const setIsCollapsed = props.setIsCollapsed
-  // const isCollapsed = props.isCollapsed
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -58,7 +86,7 @@ const InstructorSidebar = (props) => {
         console.log('error', error)
       })
       .finally(() => {
-        window.location.href = '/login'
+        window.location.href = '/'
         dispatch(setGeneralLoading(false))
       })
   }
@@ -99,17 +127,21 @@ const InstructorSidebar = (props) => {
           />
         </Tooltip>
 
-        <SidebarItem
-          onClick={() => {
-            dispatch(setAccordionToggled(false))
-            props.props.hideHeaderIcons()
-          }}
-          to={'/my-course-in-entrepreneurship/journal/51'}
-          // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-          srcImage={CoursEnIcon}
-          title={isTextVisible && !isCollapsed && 'Course in enterpreneurship'}
-          isDropdown={false}
-        />
+        <Tooltip text={'Master Classes'}>
+          <SidebarItem
+            onClick={() => {
+              dispatch(setAccordionToggled(false))
+              props.props.hideHeaderIcons()
+            }}
+            to={'/my-course-in-entrepreneurship/journal/51'}
+            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+            srcImage={CoursEnIcon}
+            title={
+              isTextVisible && !isCollapsed && 'Course in enterpreneurship'
+            }
+            isDropdown={false}
+          />
+        </Tooltip>
 
         <Tooltip text={'Master Classes'}>
           <SidebarItem
@@ -158,7 +190,7 @@ const InstructorSidebar = (props) => {
         style={{ marginTop: '-20px' }}
       >
         <Tooltip text={`${isCollapsed ? 'Open Menu' : 'Close Menu'}`}>
-          <li className='sub-li'>
+          <li className='sub-li  d-none-tab'>
             <button className='sidebar-button' onClick={handleSidebarToggle}>
               <img
                 className='rotated'
@@ -170,17 +202,30 @@ const InstructorSidebar = (props) => {
           </li>
         </Tooltip>
         <Tooltip text={'My Account'}>
-          <SidebarItem
+          <li
+            className='sub-li'
             onClick={() => {
               dispatch(setAccordionToggled(false))
               props.props.hideHeaderIcons()
+              toggle()
             }}
-            to={'/dashboard'}
-            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
-            srcImage={SettingsIcon}
-            title={isTextVisible && !isCollapsed && 'My account'}
-            isDropdown={false}
-          />
+          >
+            <div className='logout-button'>
+              <div className='d-flex w-100' style={{ alignItems: 'center' }}>
+                <Col md='2' className='col-2 icon_container'>
+                  <img
+                    className='profile-photo'
+                    src={SettingsIcon}
+                    alt='Icon'
+                    style={{ width: '26px' }}
+                  />
+                </Col>
+                {isTextVisible && !isCollapsed && (
+                  <div className='flex-grow-1 ms-1'>My Account</div>
+                )}
+              </div>
+            </div>
+          </li>
         </Tooltip>
 
         <li className='sub-li'>
@@ -224,6 +269,30 @@ const InstructorSidebar = (props) => {
           </li>
         </Tooltip>
       </ul>
+      <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
+
+      <SubscriptionModal
+        subsbsciptionModal={subsbsciptionModal}
+        setSubscriptionModal={setSubscriptionModal}
+        toggleCancelModal={toggleCancelModal}
+      />
+
+      <CancelSubModal
+        cancelSubModal={cancelSubModal}
+        setCancelSubModal={setCancelSubModal}
+        toggleCancelModal={toggleCancelModal}
+        toggleCancelRenewal={toggleCancelRenewal}
+      />
+      <CancelRenewalModal
+        canceledRenewal={canceledRenewal}
+        setCanceledRenewal={setCanceledRenewal}
+      />
+
+      <CertificateModal
+        certificate={certificate}
+        toggleCertificate={toggleCertificate}
+        name={user.name}
+      />
     </div>
   )
 }

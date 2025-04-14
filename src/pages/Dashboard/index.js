@@ -16,6 +16,8 @@ import {
 import IntlMessages from '../../utils/IntlMessages'
 import AcademyBtn from '../../components/AcademyBtn'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
@@ -70,14 +72,20 @@ function Dashboard() {
   return (
     <div className='container-fluid'>
       <div className='row'>
-        <div className='col-12 col-md-12 pe-0 me-0'>
-          <div className='account-page-padding d-flex justify-content-between align-items-center '>
+        <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+          <div className='account-page-padding d-flex justify-content-between align-items-center flex-col-tab align-start-tab'>
             <h3 className='page-title bold-page-title text-black'>
               <IntlMessages id='navigation.dashboard' />
             </h3>
 
             <SelectLanguage />
           </div>
+          <img
+            src={MenuIcon}
+            alt='menu'
+            className='menu-icon-cie self-start-tab cursor-pointer'
+            onClick={() => dispatch(toggleCollapse())}
+          />
         </div>
 
         <div className='d-grid academy-dashboard-layout bck-dashboard'>
@@ -89,8 +97,8 @@ function Dashboard() {
 
           <CourseProgress />
 
-          <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between'>
-            <div className='d-flex align-items-center gap-3'>
+          <div className='academy-dashboard-card academy-dashboard-bottom d-flex align-items-center justify-content-between flex-col-mob mb-1rem-tab gap-1rem-mob '>
+            <div className='d-flex align-items-center gap-3 flex-col-mob'>
               <div className='d-flex gap-1'>
                 <img src={AcademyLogo} alt='logo' style={{ width: '3rem' }} />
                 <div>
@@ -106,7 +114,7 @@ function Dashboard() {
                   </p>
                 </div>
               </div>
-              <h3 className='page-title bold-page-title text-black mb-0'>
+              <h3 className='page-title bold-page-title text-black mb-0 text-center-mob'>
                 Course in Entrepreneurship
               </h3>
             </div>

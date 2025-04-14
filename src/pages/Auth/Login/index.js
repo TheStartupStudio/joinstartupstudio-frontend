@@ -32,8 +32,6 @@ const ChooseLogin = () => {
 
   const confirmEmail = location?.state?.confirmEmail
 
-  console.log('ridon35', location)
-
   const handleChange = (event) => {
     const { name, value } = event.target
     setUser((prevValues) => ({
@@ -184,7 +182,7 @@ const ChooseLogin = () => {
             <li>
               <Link
                 className='fs-13 fw-medium'
-                to='/login'
+                to='/'
                 style={{ color: '#000000' }}
               >
                 LOGIN
