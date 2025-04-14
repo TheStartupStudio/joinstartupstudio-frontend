@@ -103,7 +103,7 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
   setIsReflection(true)
 
   return (
-    <div className='d-grid grid-col-2 gap-4'>
+    <div className='d-grid grid-col-2 gap-4 grid-col-1-mob'>
       <SectionsWrapper title={journalData?.title}>
         {paragraphs?.map((paragraph, index) => (
           <p key={index} className='lh-sm'>
