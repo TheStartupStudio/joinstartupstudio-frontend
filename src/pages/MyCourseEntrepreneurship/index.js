@@ -15,6 +15,9 @@ import './index.css'
 import { EditRecommendationModal } from '../../components/Portfolio/Recommendation/editRecommendationModal'
 import CircleIcon from '../../assets/images/circle-startup-icon.png'
 import Select from 'react-select'
+import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
 
 function MyCourseEntrepreneurship() {
   const history = useHistory()
@@ -47,61 +50,34 @@ function MyCourseEntrepreneurship() {
   return (
     <Container fluid>
       <Row>
-          <div style={{ minHeight: '100vh' }}>
-            <div className='d-flex space-between align-items-center' style={{margin:'40px 40px 40px 30px'}}>
-              <div >
-                <h3 className='page-title' style={{ marginLeft: '20px' }}>
-                  {/* <IntlMessages id='navigation.startup_live' /> */}
-                  Intro to the Course
-                </h3>
-                <p  style={{ marginLeft: '20px' }}>
-                  {/* <IntlMessages id='startup_live.page_description' /> */}
-                  Embarking on the Entrepreneurial Journey
-                </p>
+        <div style={{ minHeight: '100vh' }}>
+          <div
+            className='d-flex space-between align-items-center'
+            style={{ margin: '40px 40px 40px 30px' }}
+          >
+            <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+              <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
+                <div>
+                  <h3 className='page-title bold-page-title text-black mb-0'>
+                    Intro to the Course
+                  </h3>
+                  <p className='fs-13 fw-light text-black'>
+                    Embarking on the Entrepreneurial Journey
+                  </p>
+                </div>
+
+                <SelectLanguage />
               </div>
-              <div className='select-btn'
-                style={{
-                  display: 'inline-block',
-                  borderRadius: '8px',
-                  background:
-                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                  padding: '1px', // Adjust this value to control border thickness
-                  height: '58px',
-                  boxShadow: '0px 4px 10px 0px #00000040'
-                }}
-              >
-                <Select
-                  options={options}
-                  value={selectedLanguage}
-                  onChange={handleChange}
-                  placeholder='Select Language'
-                  menuPortalTarget={document.body}
-                  isSearchable={false}
-                  styles={{
-                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    control: (base) => ({
-                      ...base,
-                      width: '250px', // Fixed width
-                      minHeight: '40px', // Fixed height
-                      overflow: 'hidden',
-                      border: 'none', // Remove the default border
-                      borderRadius: '6px' // Slightly smaller than the outer container radius
-                    }),
-                    singleValue: (base) => ({
-                      ...base,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    })
-                  }}
-                  components={{
-                    IndicatorSeparator: () => null // Remove separator
-                  }}
-                />
-              </div>
+              <img
+                src={MenuIcon}
+                alt='menu'
+                className='menu-icon-cie self-start-tab cursor-pointer'
+                onClick={() => dispatch(toggleCollapse())}
+              />
             </div>
-<div  className='gradient-background-course' >
-            <div style={{margin:'0 -15px'}}>
+          </div>
+          <div className='gradient-background-course'>
+            <div style={{ margin: '0 -15px' }}>
               <div className='welcome-journey-text'>
                 <div className='title-container'>
                   <img
@@ -379,8 +355,8 @@ function MyCourseEntrepreneurship() {
               </Modal.Body>
             </Modal>
           </div>
-          </div>
-       
+        </div>
+
         {/* <div className="col-12 col-xl-3 px-2 mt-3">
           <ShowMessenger />
           <NotesButton />
