@@ -13,7 +13,7 @@ import PortfolioIcon from '../../assets/images/academy-icons/svg/my-portfolio.sv
 import SettingsIcon from '../../assets/images/academy-icons/svg/settings.svg'
 import { setAccordionToggled, userLogout } from '../../redux'
 import { setGeneralLoading } from '../../redux/general/Actions'
-import { toggleCollapse } from '../../redux/sidebar/Actions'
+import { collapseTrue, toggleCollapse } from '../../redux/sidebar/Actions'
 import SidebarItem from './SidebarItem'
 import blankProfile from '../../assets/images/academy-icons/blankProfile.jpg'
 import Tooltip from '../AcademyPortfolio/Tooltip'
@@ -206,6 +206,7 @@ const InstructorSidebar = (props) => {
             className='sub-li'
             onClick={() => {
               dispatch(setAccordionToggled(false))
+              dispatch(collapseTrue())
               props.props.hideHeaderIcons()
               toggle()
             }}
