@@ -1,8 +1,36 @@
 import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import courseLogo from '../../assets/images/academy-icons/academy-logo-group.png'
 import visaLogo from '../../assets/images/academy-icons/visa-logo.png'
+import axiosInstance from '../../utils/AxiosInstance'
+import { useDispatch } from 'react-redux'
+import { setStripe } from '../../redux/user/Actions'
+import { useEffect, useState } from 'react'
 
 function Payment() {
+  const dispatch = useDispatch()
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axiosInstance.get('/users')
+        console.log(response.data)
+        setUser(response.data)
+      } catch (error) {
+        console.error('Error fetching user:', error)
+      }
+    }
+
+    fetchUser()
+  }, [])
+
+  useEffect(() => {
+    if (user?.stripe_subscription_id) {
+      dispatch(setStripe(user.stripe_subscription_id))
+      console.log('stripe_subscription_id:', user.stripe_subscription_id)
+    }
+  }, [user, dispatch])
+
   return (
     <div className='d-flex justify-content-center p-5'>
       <div className='d-flex align-items-center flex-column payment-main'>

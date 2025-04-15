@@ -19,7 +19,7 @@ function PortfolioContent({
   const shortText = fullText.length > 200 ? fullText.slice(0, 200) : fullText
   return (
     <>
-      <div className='d-flex gap-4'>
+      <div className='d-flex gap-4 flex-col-mob'>
         <img
           src={imgSrc}
           alt={title}
@@ -56,7 +56,11 @@ function PortfolioContent({
             <span
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(
-                  isExpanded ? fullText : `${shortText}...`
+                  isExpanded
+                    ? fullText
+                    : fullText.length > 200
+                    ? `${shortText}...`
+                    : shortText
                 )
               }}
             />

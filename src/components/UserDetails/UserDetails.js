@@ -43,6 +43,8 @@ function UserDetails({ profilePic, userName, userProffesion }) {
 
   const { user } = useSelector((state) => state.user.user)
 
+  console.log('ridon46', user)
+
   return (
     <>
       <div

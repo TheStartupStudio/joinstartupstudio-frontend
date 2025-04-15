@@ -7,10 +7,16 @@ const Tooltip = ({ text, children }) => {
   const tooltipInstance = useRef(null)
 
   useEffect(() => {
-    if (!tooltipRef.current) return
+    const shouldEnableTooltip = window.innerWidth >= 1024
+
+    // Don't initialize if screen too small
+    if (!tooltipRef.current || !shouldEnableTooltip) return
 
     try {
+      // Cleanup any existing
       tooltipInstance.current?.dispose()
+
+      // Initialize tooltip
       tooltipInstance.current = new BSTooltip(tooltipRef.current, {
         title: text,
         placement: 'bottom',
@@ -28,7 +34,12 @@ const Tooltip = ({ text, children }) => {
   }, [text])
 
   return (
-    <span ref={tooltipRef} style={{ cursor: 'pointer' }}>
+    <span
+      ref={tooltipRef}
+      style={{
+        cursor: window.innerWidth >= 1024 ? 'pointer' : 'default'
+      }}
+    >
       {children}
     </span>
   )

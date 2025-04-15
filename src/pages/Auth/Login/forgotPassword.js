@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { NavLink,Link } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { FormattedMessage } from 'react-intl'
 import { validateEmail } from '../../../utils/helpers'
@@ -7,7 +7,7 @@ import IntlMessages from '../../../utils/IntlMessages'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { CustomInput } from '../../../ui/ContentItems'
 import './forgotPassword.css'
-import  StartupLogo from '../../../assets/images/startup-logo-forgot-password.png'
+import StartupLogo from '../../../assets/images/startup-logo-forgot-password.png'
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -88,68 +88,71 @@ const ForgotPassword = () => {
 
   return (
     <div className='gradient-color'>
-   <div className='d-flex justify-content-between p-2'>
-   <img src={StartupLogo} style={{width:'250px',height:'120px', margin:'1rem 2rem'}}/>
-      <div
-        className='nav-buttons'
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          padding: '30px 50px',
-          gap: '40px'
-        }}
-      >
-        <nav className='mt-4'>
-          <ul className='list-unstyled d-flex gap-4'>
-            <li>
-              <Link
-                className={`fs-13 fw-medium `}
-                to='/explore-the-platform'
-                style={{ color: '#000000' }}
-              >
-                EXPLORE THE PLATFORM
-              </Link>
-            </li>
-            <li>
-              <Link
-                className='fs-13 fw-medium'
-                to='/explore-the-course'
-                style={{ color: '#000000' }}
-              >
-                EXPLORE THE COURSE
-              </Link>
-            </li>
-            <li>
-              <Link
-                className='fs-13 fw-medium'
-                to='/faq'
-                style={{ color: '#000000' }}
-              >
-                FAQS
-              </Link>
-            </li>
-            <li>
-              <Link
-                className='fs-13 fw-medium'
-                to='/contact'
-                style={{ color: '#000000' }}
-              >
-                CONTACT
-              </Link>
-            </li>
-            <li>
-              <Link
-                className='fs-13 fw-medium'
-                to='/login'
-                style={{ color: '#000000' }}
-              >
-                LOGIN
-              </Link>
-            </li>
-          </ul>
-        </nav>
+      <div className='d-flex justify-content-between p-2'>
+        <img
+          src={StartupLogo}
+          style={{ width: '250px', height: '120px', margin: '1rem 2rem' }}
+        />
+        <div
+          className='nav-buttons'
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            padding: '30px 50px',
+            gap: '40px'
+          }}
+        >
+          <nav className='mt-4'>
+            <ul className='list-unstyled d-flex gap-4'>
+              <li>
+                <Link
+                  className={`fs-13 fw-medium `}
+                  to='/explore-the-platform'
+                  style={{ color: '#000000' }}
+                >
+                  EXPLORE THE PLATFORM
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className='fs-13 fw-medium'
+                  to='/explore-the-course'
+                  style={{ color: '#000000' }}
+                >
+                  EXPLORE THE COURSE
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className='fs-13 fw-medium'
+                  to='/faq'
+                  style={{ color: '#000000' }}
+                >
+                  FAQS
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className='fs-13 fw-medium'
+                  to='/contact'
+                  style={{ color: '#000000' }}
+                >
+                  CONTACT
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className='fs-13 fw-medium'
+                  to='/'
+                  style={{ color: '#000000' }}
+                >
+                  LOGIN
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
-   </div>
       <div
         className='container-fluid my-auto px-5 d-flex align-items-center justify-content-center'
         style={{
@@ -157,7 +160,6 @@ const ForgotPassword = () => {
           minHeight: ' calc(100vh - 42px)'
         }}
       >
-        
         {/* <div className='row '>
           <div className='col-12 col-10 col-md-6 mt-5 mx-auto text-center'>
             <img
@@ -212,7 +214,7 @@ const ForgotPassword = () => {
           </div>
           <p className='text-center mt-3 mb-0 pb-4 public-page-text link'>
             <IntlMessages id='forgot_password.mistake' />
-            <NavLink to='/login' className='ml-2 link'>
+            <NavLink to='/' className='ml-2 link'>
               <IntlMessages id='general.login' />
             </NavLink>
           </p>

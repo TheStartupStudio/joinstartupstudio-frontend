@@ -15,6 +15,9 @@ import PublicLayout from './pages/Layout/publicLayout'
 import renderRoutes from './Router/renderRoutes'
 import AppLocale from './lang'
 import ReSigninModal from './pages/Auth/Login/ReSigninModal'
+import CheckSubscription from './pages/Register/CheckSubscription'
+import CancelSubscription from './pages/Register/CancelSubscription'
+import Payment from './pages/Register/Payment'
 
 function Router(props) {
   const currentAppLocale = AppLocale[props.locale]
@@ -24,6 +27,14 @@ function Router(props) {
 
   const roleRoutes = () => {
     if (!isAuthenticated) return publicRoutes
+
+    // if (!user?.user?.stripe_subscription_id) {
+    //   return [
+    //     { path: '/subscribe', component: CheckSubscription, exact: true },
+    //     { path: '/cancel-payment', component: CancelSubscription, exact: true },
+    //     { path: '/payment', component: Payment, exact: true }
+    //   ]
+    // }
 
     switch (user?.user?.role_id) {
       case 1:

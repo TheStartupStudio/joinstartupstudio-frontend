@@ -194,7 +194,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
 
           <form>
             <div
-              className='mt-5 d-grid gap-5'
+              className='mt-5 d-grid gap-5 grid-col-4-2'
               style={{ gridTemplateColumns: '4fr 2fr' }}
             >
               <div>

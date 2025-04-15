@@ -1,42 +1,131 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import AddDoc from '../../assets/images/academy-icons/add-doc.png'
+import axiosInstance from '../../utils/AxiosInstance'
 
-function LeadershipTextEditor({ title }) {
-  const [reflections, setReflections] = useState([{ id: 1, content: '' }])
+function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswers, order = 0 }) {
+  const [reflections, setReflections] = useState([])
+  const [startDate, setStartDate] = useState('')
+  const [editDate, setEditDate] = useState('')
+
+  useEffect(() => {
+    const resizeObserverError = window.ResizeObserver.prototype.observe
+    window.ResizeObserver.prototype.observe = function (target) {
+      try {
+        return resizeObserverError.call(this, target)
+      } catch (error) {
+        if (error instanceof Error && !error.message.includes('loop completed with undelivered notifications')) {
+          throw error
+        }
+      }
+    }
+
+    return () => {
+      window.ResizeObserver.prototype.observe = resizeObserverError
+    }
+  }, [])
+
+  useEffect(() => {
+    if (userAnswers && userAnswers.length > 0) {
+      const sortedAnswers = [...userAnswers].sort((a, b) => a.order - b.order)
+
+      setReflections(sortedAnswers.map(answer => ({
+        id: answer.id,
+        content: answer.content,
+        isExisting: true,
+        order: answer.order || 0,
+        questionId: id
+      })))
+      setStartDate(new Date(userAnswers[0].createdAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }))
+      setEditDate(new Date(userAnswers[0].updatedAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }))
+    } else {
+      setReflections([{ 
+        id: id, 
+        content: '', 
+        isExisting: false,
+        order: 0,
+        questionId: id
+      }])
+    }
+  }, [userAnswers, id])
 
   const handleAddReflection = () => {
-    const newReflection = { id: Date.now(), content: '' }
+    const questionReflections = reflections.filter(r => r.questionId === id)
+    const newOrder = questionReflections.length
+
+    const newReflection = {
+      id: id,
+      content: '',
+      isExisting: false,
+      order: newOrder,
+      questionId: id
+    }
     setReflections([...reflections, newReflection])
   }
 
-  const handleRemoveReflection = (id) => {
-    setReflections(reflections.filter((reflection) => reflection.id !== id))
+  const handleRemoveReflection = async (reflectionId, isExisting) => {
+    try {
+      if (isExisting) {
+        await axiosInstance.delete(`/ltsJournals/ltsjournalEntries/${journalId}/${reflectionId}`)
+      }
+
+      const updatedReflections = reflections.filter(r => r.id !== reflectionId)
+      const questionReflections = updatedReflections.filter(r => r.questionId === id)
+      
+      const reorderedReflections = updatedReflections.map(r => {
+        if (r.questionId === id) {
+          const index = questionReflections.indexOf(r)
+          return { ...r, order: index }
+        }
+        return r
+      })
+
+      setReflections(reorderedReflections)
+    } catch (error) {
+      console.error('Error removing reflection:', error)
+    }
   }
 
-  const handleContentChange = (id, value) => {
-    setReflections(
-      reflections.map((reflection) =>
-        reflection.id === id ? { ...reflection, content: value } : reflection
-      )
-    )
+  const handleContentChange = (reflectionId, content) => {
+    setReflections(prev => prev.map(r =>
+      r.id === reflectionId ? { ...r, content } : r
+    ))
+    
+    const reflection = reflections.find(r => r.id === reflectionId)
+    onContentChange(reflectionId, {
+      content,
+      isExisting: reflection?.isExisting,
+      order: reflection?.order,
+      questionId: id
+    })
   }
+
+  const questionReflections = reflections.filter(r => r.questionId === id)
+    .sort((a, b) => a.order - b.order)
 
   return (
     <>
       <h3 className='fs-18 fw-medium text-black'>{title}</h3>
       <div className='d-flex gap-3 mb-2'>
-        <div className='gray-leadership fs-13 '>
+        <div className='gray-leadership fs-13'>
           <span className='fw-medium'>Started:</span>
-          <span className='fw-light'> Sept. 21, 2025 20:56</span>
+          <span className='fw-light'> {startDate || 'Not started'}</span>
         </div>
-        <div className='gray-leadership fs-13 '>
+        <div className='gray-leadership fs-13'>
           <span className='fw-medium'>Edited:</span>
-          <span className='fw-light'> Sept. 21, 2025 20:56</span>
+          <span className='fw-light'> {editDate || 'Not edited'}</span>
         </div>
       </div>
       <div></div>
-      {reflections.map((reflection, index) => (
+      {questionReflections.map((reflection, index) => (
         <div key={reflection.id} className='reflection-container mb-4'>
           <ReactQuill
             value={reflection.content}
@@ -56,12 +145,12 @@ function LeadershipTextEditor({ title }) {
           <div className='d-flex mt-2 justify-content-between'>
             <div
               className={`d-flex gap-2 align-items-center ${
-                reflection.id === reflections[0].id ? 'visibility-hidden' : ''
+                reflection.id === questionReflections[0].id ? 'visibility-hidden' : ''
               }`}
             >
               <p
                 className='mb-0 fs-15 fw-medium cursor-pointer add-reflection'
-                onClick={() => handleRemoveReflection(reflection.id)}
+                onClick={() => handleRemoveReflection(reflection.id, reflection.isExisting)}
               >
                 Remove the reflection
               </p>

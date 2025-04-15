@@ -26,7 +26,8 @@ function PublicLayout({ children }) {
         className={`${
           location.pathname === '/register' ||
           location.pathname === '/payment' ||
-          location.pathname === '/contact'
+          location.pathname === '/contact' ||
+          location.pathname === '/check-email'
             ? 'blue-wrapper'
             : ''
         }`}
@@ -41,7 +42,8 @@ function PublicLayout({ children }) {
 
         <>
           {location.pathname !== '/payment' &&
-            location.pathname !== '/confirm-email' && <Footer />}
+            location.pathname !== '/confirm-email' &&
+            location.pathname !== '/check-email' && <Footer />}
         </>
       </div>
     </React.Fragment>

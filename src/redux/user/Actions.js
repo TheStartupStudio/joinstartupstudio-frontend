@@ -15,7 +15,8 @@ import {
   USER_CHANGE_PROFESSION,
   SET_AUTH_MODAL,
   SET_EMAIL,
-  SET_BIO
+  SET_BIO,
+  SET_STRIPE
 } from './Types'
 import axiosInstance from '../../utils/AxiosInstance'
 
@@ -134,6 +135,12 @@ export const setEmail = (payload) => {
 export const setBio = (payload) => {
   return (dispatch) => {
     dispatch({ type: SET_BIO, payload })
+  }
+}
+
+export const setStripe = (payload) => {
+  return (dispatch) => {
+    dispatch({ type: SET_STRIPE, payload })
   }
 }
 

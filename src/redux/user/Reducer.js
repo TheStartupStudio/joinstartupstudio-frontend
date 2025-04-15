@@ -14,7 +14,8 @@ import {
   USER_CHANGE_PROFESSION,
   SET_AUTH_MODAL,
   SET_EMAIL,
-  SET_BIO
+  SET_BIO,
+  SET_STRIPE
 } from './Types'
 
 const user = JSON.parse(localStorage.getItem('user'))
@@ -79,6 +80,26 @@ const userReducer = (state = initialState, action) => {
           user: {
             ...state.user.user,
             bio: payload
+          }
+        }
+      }
+
+    case SET_STRIPE:
+      const userObject = {
+        token: localStorage.getItem('access_token'),
+        user: {
+          ...state.user.user,
+          stripe_subscription_id: payload
+        }
+      }
+      localStorage.setItem('user', JSON.stringify(userObject))
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          user: {
+            ...state.user.user,
+            stripe_subscription_id: payload
           }
         }
       }

@@ -13,6 +13,7 @@ import InstructorSidebar from './InstructorSidebar'
 import StudentSidebar from './StudentSidebar'
 
 function Sidebar(props) {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const sideBarState = useSelector((state) => state.general.sidebarState)
   const role = localStorage.getItem('role')
 
@@ -22,6 +23,15 @@ function Sidebar(props) {
 
   const navRef = useRef(null)
   const [navHeight, setNavHeight] = useState(0)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
@@ -100,7 +110,13 @@ function Sidebar(props) {
       id='sidebar'
       className={`sidebar-area ${sideBarState ? ' sidenav active' : ''}`}
       style={{
-        width: isCollapsed ? '75px' : '220px',
+        width: isCollapsed
+          ? windowWidth <= 1024
+            ? '0px'
+            : '75px'
+          : windowWidth <= 1024
+          ? '100%'
+          : '220px',
         borderRadius: isCollapsed && '0px'
       }}
     >

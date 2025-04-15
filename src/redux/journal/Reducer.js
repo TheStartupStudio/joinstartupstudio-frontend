@@ -1,40 +1,28 @@
-import {
-  LOADING_J,
-  JOURNAL_SAVE_SUCCESS,
-  JOURNAL_SAVE_ERROR,
-  JOURNAL_GET_SUCCESS,
-  JOURNAL_GET_ERROR,
-  JOURNAL_FINISHED_SUCCESS,
-  JOURNAL_FINISHED_ERROR,
-  GET_FINISHED_JOURNAL_SUCCESS,
-  SAVE_FINISHED_JOURNAL_SUCCESS,
-  SAVE_FINISHED_COURSE_SUCCESS,
-  SET_JOURNAL_TITLES
-} from './Types'
+import * as types from './Types'
 
 const initialState = {
+  journalData: null,
   loading: false,
+  error: null,
   journal: '',
   finishedJournals: '',
   finishedCourses: '',
   successMessage: null,
   errorMessage: null,
   journalFinished: false,
-
-  journalTitles: []
+  journalTitles: [],
+  finishedContent: []
 }
 
 const journalReducer = (state = initialState, action) => {
-  const { type, payload } = action
-
-  switch (type) {
-    case LOADING_J:
+  switch (action.type) {
+    case types.LOADING_J:
       return {
         ...state,
         loading: true
       }
 
-    case JOURNAL_SAVE_SUCCESS:
+    case types.JOURNAL_SAVE_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -42,7 +30,7 @@ const journalReducer = (state = initialState, action) => {
         errorMessage: null
       }
 
-    case JOURNAL_SAVE_ERROR:
+    case types.JOURNAL_SAVE_ERROR:
       return {
         ...state,
         loading: false,
@@ -50,64 +38,111 @@ const journalReducer = (state = initialState, action) => {
         errorMessage: false
       }
 
-    case JOURNAL_GET_SUCCESS:
+    case types.JOURNAL_GET_SUCCESS:
       return {
         ...state,
         successMessage: null,
         errorMessage: null,
-        journal: payload
+        journal: action.payload
       }
 
-    case JOURNAL_GET_ERROR:
+    case types.JOURNAL_GET_ERROR:
       return {
         ...state,
         successMessage: null,
         errorMessage: null,
         journal: ''
       }
-    case GET_FINISHED_JOURNAL_SUCCESS:
+    case types.GET_FINISHED_JOURNAL_SUCCESS:
       return {
         ...state,
         successMessage: null,
         errorMessage: null,
-        finishedJournals: payload.journals,
-        finishedCourses: payload.courses
+        finishedJournals: action.payload.journals,
+        finishedCourses: action.payload.courses
       }
 
-    case SAVE_FINISHED_JOURNAL_SUCCESS:
+    case types.SAVE_FINISHED_JOURNAL_SUCCESS:
       return {
         ...state,
         loading: false,
         successMessage: null,
         errorMessage: null,
-        finishedJournals: [...state.finishedJournals, payload]
+        finishedJournals: [...state.finishedJournals, action.payload]
       }
 
-    case SAVE_FINISHED_COURSE_SUCCESS:
+    case types.SAVE_FINISHED_COURSE_SUCCESS:
       return {
         ...state,
         loading: false,
         successMessage: null,
         errorMessage: null,
-        finishedCourses: [...state.finishedCourses, payload]
+        finishedCourses: [...state.finishedCourses, action.payload]
       }
 
-    case JOURNAL_FINISHED_SUCCESS:
+    case types.JOURNAL_FINISHED_SUCCESS:
       return {
         ...state,
-        journalFinished: payload
+        journalFinished: action.payload
       }
 
-    case JOURNAL_FINISHED_ERROR:
+    case types.JOURNAL_FINISHED_ERROR:
       return {
         ...state,
         journalFinished: ''
       }
-    case SET_JOURNAL_TITLES:
+    case types.SET_JOURNAL_TITLES:
       return {
         ...state,
-        journalTitles: payload
+        journalTitles: action.payload
       }
+    case types.GET_JOURNAL_DATA_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.GET_JOURNAL_DATA_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        journalData: action.payload,
+        error: null
+      }
+    case types.GET_JOURNAL_DATA_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload
+      }
+    case types.FETCH_JOURNAL_FINISHED_CONTENT_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case types.FETCH_JOURNAL_FINISHED_CONTENT_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        finishedContent: action.payload,
+        error: null
+      }
+    case types.FETCH_JOURNAL_FINISHED_CONTENT_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        error: action.error
+      }
+    case 'CLEAR_JOURNAL_DATA':
+      return {
+        ...state,
+        journalData: null
+      }
+    
+    case 'RESET_JOURNAL_STATE':
+      return initialState
+
     default:
       return state
   }

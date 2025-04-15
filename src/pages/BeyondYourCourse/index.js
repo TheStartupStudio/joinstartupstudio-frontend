@@ -19,17 +19,16 @@ import Select from 'react-select'
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png'
 import Waveform from '../StoryInMotion/waveform'
 import { Modal } from 'react-bootstrap'
-import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png';
-import { useLocation } from 'react-router-dom';
+import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png'
+import { useLocation } from 'react-router-dom'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
-import moment from 'moment';
-
+import moment from 'moment'
 
 export default function BeyondYourCourse() {
   const dispatch = useDispatch()
   const [encouragementVideos, setEncouragementVideos] = useState([])
   const [masterClassVideos, setMasterClassVideos] = useState([])
-  const [startupLiveVideos,setStartupLiveVideos]=useState([])
+  const [startupLiveVideos, setStartupLiveVideos] = useState([])
   const [startVideoIndex, setStartVideoIndex] = useState(0)
   const [endVideoIndex, setEndVideoIndex] = useState(5)
   const [endVideoIndexMobile, setEndVideoIndexMobile] = useState(2)
@@ -44,15 +43,16 @@ export default function BeyondYourCourse() {
   const [showVideoModal, setShowVideoModal] = useState(false)
   const [savedVideos, setSavedVideos] = useState([])
   const [width, setWidth] = useState(window.innerWidth)
-   const [selectedLanguage, setSelectedLanguage] = useState(null)
-  const [startStartupLiveVideosIndex, setStartStartupLiveVideosIndex] = useState(0);
-  const [endStartupLiveVideosIndex, setEndStartupLiveVideosIndex] = useState(5);
+  const [selectedLanguage, setSelectedLanguage] = useState(null)
+  const [startStartupLiveVideosIndex, setStartStartupLiveVideosIndex] =
+    useState(0)
+  const [endStartupLiveVideosIndex, setEndStartupLiveVideosIndex] = useState(5)
   const [showAudioModal, setShowAudioModal] = useState(false)
   const [selectedAudio, setSelectedAudio] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [podcastEpisodes, setPodcastEpisodes] = useState([]);
-  const location = useLocation();
-  const [isViewAll, setIsViewAll] = useState(false);
+  const [podcastEpisodes, setPodcastEpisodes] = useState([])
+  const location = useLocation()
+  const [isViewAll, setIsViewAll] = useState(false)
 
   const options = [
     { value: 'en', label: 'English' },
@@ -198,7 +198,9 @@ export default function BeyondYourCourse() {
       .then((response) => {
         if (
           response.data &&
-          (response.data.type === 'master' || response.data.type === 'guidance' || response.data.type === 'startup')
+          (response.data.type === 'master' ||
+            response.data.type === 'guidance' ||
+            response.data.type === 'startup')
         )
           setVideoData(response.data)
       })
@@ -222,40 +224,40 @@ export default function BeyondYourCourse() {
     const fetchPodcastEpisodes = async () => {
       try {
         const endpoint = isViewAll
-          ? '/podcast?page=0&size=100' 
-          : '/podcast?page=0&size=5'; 
-        const response = await axiosInstance.get(endpoint);
-        console.log('Podcast Episodes Response:', response.data.data); // Log the response
-        setPodcastEpisodes(response.data.data);
+          ? '/podcast?page=0&size=100'
+          : '/podcast?page=0&size=5'
+        const response = await axiosInstance.get(endpoint)
+        console.log('Podcast Episodes Response:', response.data.data) // Log the response
+        setPodcastEpisodes(response.data.data)
       } catch (error) {
-        console.error('Error fetching podcast episodes:', error);
+        console.error('Error fetching podcast episodes:', error)
       }
-    };
+    }
 
-    fetchPodcastEpisodes();
-  }, []);
+    fetchPodcastEpisodes()
+  }, [])
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    setIsViewAll(params.get('view') === 'podcasts');
-  }, [location.search]);
+    const params = new URLSearchParams(location.search)
+    setIsViewAll(params.get('view') === 'podcasts')
+  }, [location.search])
 
   useEffect(() => {
     const fetchPodcastEpisodes = async () => {
       try {
         const endpoint = isViewAll
-          ? '/podcast?page=0&size=100' 
-          : '/podcast?page=0&size=5'; 
-        const response = await axiosInstance.get(endpoint);
-        console.log('Podcast Episodes Response:', response.data.data); // Log the response
-        setPodcastEpisodes(response.data.data);
+          ? '/podcast?page=0&size=100'
+          : '/podcast?page=0&size=5'
+        const response = await axiosInstance.get(endpoint)
+        console.log('Podcast Episodes Response:', response.data.data) // Log the response
+        setPodcastEpisodes(response.data.data)
       } catch (error) {
-        console.error('Error fetching podcast episodes:', error);
+        console.error('Error fetching podcast episodes:', error)
       }
-    };
+    }
 
-    fetchPodcastEpisodes();
-  }, [isViewAll]);
+    fetchPodcastEpisodes()
+  }, [isViewAll])
 
   const getUserConnections = async () => {
     await axiosInstance.get('/connect').then((res) => {
@@ -283,7 +285,7 @@ export default function BeyondYourCourse() {
 
   const getStartupLiveVideos = async () => {
     await axiosInstance
-      .get(`/contents/user-contents/story-in-motion`) 
+      .get(`/contents/user-contents/story-in-motion`)
       .then((response) => {
         setStartupLiveVideos(response.data)
       })
@@ -335,12 +337,12 @@ export default function BeyondYourCourse() {
         setStartMasterClassVideoIndex(startIndex + 1)
         setEndMasterClassVideoIndexMobile(endIndexMobile + 1)
       }
-    }
-    else if (page === 3) {
+    } else if (page === 3) {
       if (endIndex < startupLiveVideos.length) {
         setStartStartupLiveVideosIndex(startIndex + 1)
         setEndStartupLiveVideosIndex(endIndex + 1)
-      }}
+      }
+    }
   }
 
   const handlePreviousVideoMobile = async (
@@ -360,75 +362,76 @@ export default function BeyondYourCourse() {
   }
 
   const handleAudioClick = (podcast) => {
-    setSelectedAudio(podcast); 
-    setShowAudioModal(true); 
+    setSelectedAudio(podcast)
+    setShowAudioModal(true)
   }
 
   return (
     <>
       <div id='main-body'>
-        
-          <div className='row'>
-            
-              <div>
-              <div className='header-select-btn'>
+        <div className='row'>
+          <div>
+            <div className='header-select-btn'>
               <div className='account-page-padding'>
-                <h3 className='page-title' style={{marginLeft: '20px'}}>
+                <h3 className='page-title' style={{ marginLeft: '20px' }}>
                   <IntMessages id='beyond_your_course.master_classes_upper' />
                 </h3>
-                <p className='page-description' style={{ fontWeight: '500',marginLeft: '20px' }}>
+                <p
+                  className='page-description'
+                  style={{ fontWeight: '500', marginLeft: '20px' }}
+                >
                   <IntMessages id='beyond_your_course.page_description' />
                 </p>
-                </div>
-                <div
-                          style={{
-                            display: 'inline-block',
-                            borderRadius: '8px',
-                            background:
-                              'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                            padding: '1px', // Adjust this value to control border thickness
-                            height: '58px',
-                            boxShadow: '0px 4px 10px 0px #00000040',
-                            marginRight:'20px',
-                            marginTop:'-20px'
-                          }}
-                        >
-                          <Select
-                            options={options}
-                            value={selectedLanguage}
-                            onChange={handleChange}
-                            placeholder='Select Language'
-                            menuPortalTarget={document.body}
-                            isSearchable={false}
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                              control: (base) => ({
-                                ...base,
-                                width: '250px', // Fixed width
-                                minHeight: '40px', // Fixed height
-                                overflow: 'hidden',
-                                border: 'none', // Remove the default border
-                                borderRadius: '6px' // Slightly smaller than the outer container radius
-                              }),
-                              singleValue: (base) => ({
-                                ...base,
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis'
-                              })
-                            }}
-                            components={{
-                              IndicatorSeparator: () => null // Remove separator
-                            }}
-                          />
               </div>
-                </div>
-                <div className='gradient-background-master'>
-                <div className='videos-container'>
+              <div
+                style={{
+                  display: 'inline-block',
+                  borderRadius: '8px',
+                  background:
+                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                  padding: '1px', // Adjust this value to control border thickness
+                  height: '58px',
+                  boxShadow: '0px 4px 10px 0px #00000040',
+                  marginRight: '20px',
+                  marginTop: '-20px'
+                }}
+              >
+                <Select
+                  options={options}
+                  value={selectedLanguage}
+                  onChange={handleChange}
+                  placeholder='Select Language'
+                  menuPortalTarget={document.body}
+                  isSearchable={false}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    control: (base) => ({
+                      ...base,
+                      width: '250px', // Fixed width
+                      minHeight: '40px', // Fixed height
+                      overflow: 'hidden',
+                      border: 'none', // Remove the default border
+                      borderRadius: '6px' // Slightly smaller than the outer container radius
+                    }),
+                    singleValue: (base) => ({
+                      ...base,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    })
+                  }}
+                  components={{
+                    IndicatorSeparator: () => null // Remove separator
+                  }}
+                />
+              </div>
+            </div>
+            <div className='gradient-background-master'>
+              <div className='videos-container'>
                 <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
-                <div>
-                  <div className='beyond-videos-mobile mc-videos-mobile'>
-                    {/* <div className='arrow-icon-1'>
+                  <div>
+                    <div className='beyond-videos-mobile mc-videos-mobile'>
+                      {/* <div className='arrow-icon-1'>
                       <button
                         className='videos-track'
                         onClick={() => {
@@ -445,27 +448,27 @@ export default function BeyondYourCourse() {
                         />
                       </button>
                     </div> */}
-                    <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
-                      {encouragementVideos
-                        ?.slice(startVideoIndex, endVideoIndexMobile)
-                        .map((video, index) => (
-                          <Video
-                            id={video.id}
-                            key={index}
-                            thumbnail={video.thumbnail}
-                            title={video.title}
-                            description={video.description}
-                            page={'encouragement'}
-                            isMainPage={true}
-                            updateFavorite={(id, type, value) =>
-                              updateFavorite(id, type, value)
-                            }
-                            videoData={video}
-                            connections={connections}
-                          />
-                        ))}
-                    </div>
-                    {/* <div className='arrow-icon-1 justify-content-start'>
+                      <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
+                        {encouragementVideos
+                          ?.slice(startVideoIndex, endVideoIndexMobile)
+                          .map((video, index) => (
+                            <Video
+                              id={video.id}
+                              key={index}
+                              thumbnail={video.thumbnail}
+                              title={video.title}
+                              description={video.description}
+                              page={'encouragement'}
+                              isMainPage={true}
+                              updateFavorite={(id, type, value) =>
+                                updateFavorite(id, type, value)
+                              }
+                              videoData={video}
+                              connections={connections}
+                            />
+                          ))}
+                      </div>
+                      {/* <div className='arrow-icon-1 justify-content-start'>
                       <button
                         className='videos-track'
                         onClick={() => {
@@ -482,22 +485,29 @@ export default function BeyondYourCourse() {
                         />
                       </button>
                     </div> */}
+                    </div>
                   </div>
-                </div>
                   <div className='title-container'>
-                   <img 
-                                    src={masterIcon}
-                                    alt='logo'
-                                    style={{ width: '36px', height: '36px' }}
-                                    className='welcome-journey-text__icon'
-                                  />
-                  <h3>
-                    <IntMessages id='beyond_your_course.encouragement_no_videos' />
-                  </h3>
+                    <img
+                      src={masterIcon}
+                      alt='logo'
+                      style={{ width: '36px', height: '36px' }}
+                      className='welcome-journey-text__icon'
+                    />
+                    <h3>
+                      <IntMessages id='beyond_your_course.encouragement_no_videos' />
+                    </h3>
                   </div>
-                  <Link className='guidance-link' to={`/encouragement/videos`} style={{marginRight:'1rem'}}>
+                  <Link
+                    className='guidance-link'
+                    to={`/encouragement/videos`}
+                    style={{ marginRight: '1rem' }}
+                  >
                     <IntMessages id='general.view_all' />
-                    <img src={rightArrow} style={{marginLeft:'10px',marginBottom:'3px'}}/>
+                    <img
+                      src={rightArrow}
+                      style={{ marginLeft: '10px', marginBottom: '3px' }}
+                    />
                   </Link>
                 </div>
 
@@ -567,26 +577,31 @@ export default function BeyondYourCourse() {
                     </button>
                   </div> */}
                 </div>
-                </div>
+              </div>
 
-              
-                <div className='videos-container'>
+              <div className='videos-container'>
                 <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
-                <div className='title-container'>
-                  <img 
-                                    src={masterIcon}
-                                    alt='logo'
-                                    style={{ width: '36px', height: '36px' }}
-                                    className='welcome-journey-text__icon'
-                                  />
-                  <h3>
-                    
-                    <IntMessages id='beyond_your_course.Career_Guidance' />
-                  </h3>
+                  <div className='title-container'>
+                    <img
+                      src={masterIcon}
+                      alt='logo'
+                      style={{ width: '36px', height: '36px' }}
+                      className='welcome-journey-text__icon'
+                    />
+                    <h3>
+                      <IntMessages id='beyond_your_course.Career_Guidance' />
+                    </h3>
                   </div>
-                  <Link className='guidance-link' to={`/master-classes/videos`} style={{marginRight:'1rem'}}>
+                  <Link
+                    className='guidance-link'
+                    to={`/master-classes/videos`}
+                    style={{ marginRight: '1rem' }}
+                  >
                     <IntMessages id='general.view_all' />
-                    <img src={rightArrow} style={{marginLeft:'10px',marginBottom:'3px'}}/>
+                    <img
+                      src={rightArrow}
+                      style={{ marginLeft: '10px', marginBottom: '3px' }}
+                    />
                   </Link>
                 </div>
 
@@ -655,12 +670,12 @@ export default function BeyondYourCourse() {
                     </button>
                   </div> */}
                 </div>
-                </div>
-                <div className="videos-container">
-  <div className="guidance-videos-top mb-3 guidance-encouragement-page-titles">
-        <div >
-                  <div className='beyond-videos-mobile mc-videos-mobile'>
-                    {/* <div className='arrow-icon-1'>
+              </div>
+              <div className='videos-container'>
+                <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
+                  <div>
+                    <div className='beyond-videos-mobile mc-videos-mobile'>
+                      {/* <div className='arrow-icon-1'>
                       <button
                         className='videos-track'
                         onClick={() => {
@@ -677,29 +692,29 @@ export default function BeyondYourCourse() {
                         />
                       </button>
                     </div> */}
-                    <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
-                      {masterClassVideos
-                        ?.slice(
-                          startMasterClassVideoIndex,
-                          endMasterClassVideoIndexMobile
-                        )
-                        .map((video, index) => (
-                          <Video
-                            id={video.id}
-                            key={index}
-                            thumbnail={video.thumbnail}
-                            title={video.title}
-                            description={video.description}
-                            page={'master-classes'}
-                            isMainPage={true}
-                            updateFavorite={(id, type, value) =>
-                              updateFavorite(id, type, value)
-                            }
-                            videoData={video}
-                            connections={connections}
-                          />
-                        ))}
-                    </div>
+                      <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
+                        {masterClassVideos
+                          ?.slice(
+                            startMasterClassVideoIndex,
+                            endMasterClassVideoIndexMobile
+                          )
+                          .map((video, index) => (
+                            <Video
+                              id={video.id}
+                              key={index}
+                              thumbnail={video.thumbnail}
+                              title={video.title}
+                              description={video.description}
+                              page={'master-classes'}
+                              isMainPage={true}
+                              updateFavorite={(id, type, value) =>
+                                updateFavorite(id, type, value)
+                              }
+                              videoData={video}
+                              connections={connections}
+                            />
+                          ))}
+                      </div>
                     </div>
                     {/* <div className='arrow-icon-1 justify-content-start'>
                       <button
@@ -721,68 +736,74 @@ export default function BeyondYourCourse() {
                   </div>
                 </div>
                 <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
-    <div className="title-container">
-      <img
-        src={storyInMotion}
-        alt="logo"
-        style={{ width: '36px', height: '36px' }}
-        className="welcome-journey-text__icon"
-      />
-      <h3>
-        <IntMessages id="beyond_your_course.startup_live" />
-      </h3>
-    </div>
-    <Link
-      className="guidance-link"
-      to="/story-in-motion/videos"
-      style={{ marginRight: '1rem' }}
-    >
-      <IntMessages id="general.view_all" />
-      <img
-        src={rightArrow}
-        style={{ marginLeft: '10px', marginBottom: '3px' }}
-        alt="View All"
-      />
-    </Link>
-    </div>
-    <div className="beyond-videos-desktop">
-    <div className="card-group desktop-menu card-group-beyond-your-course w-100">
-      {podcastEpisodes.map((podcast, index) => (
-        <div
-          key={index}
-          className="beyond-your-course-video-thumb"
-          style={{ width: '200px', margin: '10px' }}
-          onClick={() => handleAudioClick({ ...podcast, page: 'podcast' })}
-        >
-          <img
-            src={podcast.thumbnail || storyInMotionPodcast}
-            alt={podcast.title}
-            style={{
-              width: '100%',
-              height: '150px',
-              objectFit: 'cover',
-              borderRadius: '25px',
-            }}
-          />
-          <h5 style={{ textAlign: 'center', marginTop: '10px' }}>
-            {podcast.title}
-          </h5>
-          <p style={{ textAlign: 'center', color: '#666', fontSize: '14px' }}>
-            {moment(podcast.date || podcast.createdAt).format('MMM D, YYYY')}
-          </p>
-        </div>
-      ))}
-    </div>
-  </div>
-  </div>
-
- 
-</div>
-
-            
+                  <div className='title-container'>
+                    <img
+                      src={storyInMotion}
+                      alt='logo'
+                      style={{ width: '36px', height: '36px' }}
+                      className='welcome-journey-text__icon'
+                    />
+                    <h3>
+                      <IntMessages id='beyond_your_course.startup_live' />
+                    </h3>
+                  </div>
+                  <Link
+                    className='guidance-link'
+                    to='/story-in-motion/videos'
+                    style={{ marginRight: '1rem' }}
+                  >
+                    <IntMessages id='general.view_all' />
+                    <img
+                      src={rightArrow}
+                      style={{ marginLeft: '10px', marginBottom: '3px' }}
+                      alt='View All'
+                    />
+                  </Link>
+                </div>
+                <div className='beyond-videos-desktop'>
+                  <div className='card-group desktop-menu card-group-beyond-your-course w-100'>
+                    {podcastEpisodes.map((podcast, index) => (
+                      <div
+                        key={index}
+                        className='beyond-your-course-video-thumb'
+                        style={{ width: '200px', margin: '10px' }}
+                        onClick={() =>
+                          handleAudioClick({ ...podcast, page: 'podcast' })
+                        }
+                      >
+                        <img
+                          src={podcast.thumbnail || storyInMotionPodcast}
+                          alt={podcast.title}
+                          style={{
+                            width: '100%',
+                            height: '150px',
+                            objectFit: 'cover',
+                            borderRadius: '25px'
+                          }}
+                        />
+                        <h5 style={{ textAlign: 'center', marginTop: '10px' }}>
+                          {podcast.title}
+                        </h5>
+                        <p
+                          style={{
+                            textAlign: 'center',
+                            color: '#666',
+                            fontSize: '14px'
+                          }}
+                        >
+                          {moment(podcast.date || podcast.createdAt).format(
+                            'MMM D, YYYY'
+                          )}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            
-            {/* <div className='col-12 col-xl-3 px-0'>
+            </div>
+          </div>
+
+          {/* <div className='col-12 col-xl-3 px-0'>
               <hr
                 className='d-block d-xl-none mx-auto mt-1 mt-2 mb-3'
                 style={{ color: '#333D3D83' }}
@@ -798,8 +819,7 @@ export default function BeyondYourCourse() {
                 />
               </div>
             </div> */}
-          </div>
-        
+        </div>
       </div>
       {videoData && (
         <VideoModal
@@ -817,20 +837,35 @@ export default function BeyondYourCourse() {
         <Modal
           show={showAudioModal}
           onHide={() => {
-            setShowAudioModal(false);
-            setIsPlaying(false);
+            setShowAudioModal(false)
+            setIsPlaying(false)
           }}
           centered
-          size="lg"
-          className="podcast-modal"
+          size='lg'
+          className='podcast-modal'
         >
           <Modal.Header>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                width: '100%'
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+                >
                   <img
                     src={storyInMotion}
-                    alt="Story in Motion Logo"
+                    alt='Story in Motion Logo'
                     style={{ width: '36px', height: '36px' }}
                   />
                   <Modal.Title style={{ fontWeight: '400', fontSize: '15px' }}>
@@ -838,9 +873,9 @@ export default function BeyondYourCourse() {
                   </Modal.Title>
                 </div>
                 <img
-                  className="left-arrow-modal"
-                  src={leftArrow} 
-                  alt="Close"
+                  className='left-arrow-modal'
+                  src={leftArrow}
+                  alt='Close'
                   style={{
                     cursor: 'pointer',
                     position: 'relative',
@@ -848,15 +883,18 @@ export default function BeyondYourCourse() {
                     top: '-15px',
                     width: '20px',
                     height: '20px',
-                    boxShadow:' -4px 0px 3px rgba(0, 0, 0, 0.08), 0px 2px 3px rgba(0, 0, 0, 0.08)'
+                    boxShadow:
+                      ' -4px 0px 3px rgba(0, 0, 0, 0.08), 0px 2px 3px rgba(0, 0, 0, 0.08)'
                   }}
                   onClick={() => {
-                    setShowAudioModal(false);
-                    setIsPlaying(false);
+                    setShowAudioModal(false)
+                    setIsPlaying(false)
                   }}
                 />
               </div>
-              <div style={{ fontWeight: '600', fontSize: '14px', color: '#333' }}>
+              <div
+                style={{ fontWeight: '600', fontSize: '14px', color: '#333' }}
+              >
                 Now Playing: {selectedAudio.title}
               </div>
             </div>

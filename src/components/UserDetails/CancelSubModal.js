@@ -1,5 +1,6 @@
 import { Button, Modal, ModalBody } from 'reactstrap'
 import warningTriangle from '../../assets/images/academy-icons/warning-triangle.png'
+import axiosInstance from '../../utils/AxiosInstance'
 
 function CancelSubModal({
   cancelSubModal,
@@ -7,6 +8,24 @@ function CancelSubModal({
   toggleCancelModal,
   toggleCancelRenewal
 }) {
+  const handleCancelSubscription = async () => {
+    try {
+      const response = await axiosInstance.post(
+        '/course-subscription/cancel-subscription',
+        {}
+      )
+
+      if (response.status === 200) {
+        toggleCancelRenewal()
+      }
+    } catch (error) {
+      console.error('Error canceling subscription:', error)
+      alert(
+        'Something went wrong while canceling the subscription. Please try again.'
+      )
+    }
+  }
+
   return (
     <Modal
       isOpen={cancelSubModal}
@@ -33,7 +52,10 @@ function CancelSubModal({
           >
             NO, TAKE ME BACK
           </Button>
-          <button className='sub-modal-save-btn' onClick={toggleCancelRenewal}>
+          <button
+            className='sub-modal-save-btn'
+            onClick={handleCancelSubscription}
+          >
             YES, CANCEL SUBSCRIPTION
           </button>
         </div>

@@ -182,7 +182,7 @@ const ChooseLogin = () => {
             <li>
               <Link
                 className='fs-13 fw-medium'
-                to='/login'
+                to='/'
                 style={{ color: '#000000' }}
               >
                 LOGIN

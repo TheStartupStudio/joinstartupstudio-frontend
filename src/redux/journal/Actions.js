@@ -9,7 +9,13 @@ import {
   GET_FINISHED_JOURNAL_SUCCESS,
   SAVE_FINISHED_JOURNAL_SUCCESS,
   SAVE_FINISHED_COURSE_SUCCESS,
-  SET_JOURNAL_TITLES
+  SET_JOURNAL_TITLES,
+  GET_JOURNAL_DATA_REQUEST,
+  GET_JOURNAL_DATA_SUCCESS, 
+  GET_JOURNAL_DATA_ERROR,
+  FETCH_JOURNAL_FINISHED_CONTENT_PENDING,
+  FETCH_JOURNAL_FINISHED_CONTENT_FULFILLED,
+  FETCH_JOURNAL_FINISHED_CONTENT_REJECTED
 } from './Types'
 
 import axiosInstance from '../../utils/AxiosInstance'
@@ -151,3 +157,47 @@ export const saveFinishedCourses = (data) => async (dispatch) => {
     payload: data
   })
 }
+
+export const getJournalData = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: GET_JOURNAL_DATA_REQUEST })
+    
+    const { data } = await axiosInstance.get(`/ltsJournals/${id}/`)
+    
+    dispatch({
+      type: GET_JOURNAL_DATA_SUCCESS,
+      payload: data
+    })
+  } catch (error) {
+    dispatch({
+      type: GET_JOURNAL_DATA_ERROR,
+      payload: error?.response?.data?.message || 'Failed to fetch journal data'
+    })
+  }
+}
+
+export const fetchJournalFinishedContent = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchJournalFinishedContentPending())
+      const response = await axiosInstance.get('/ltsJournals/LtsJournalFinishedContent')
+      dispatch(fetchJournalFinishedContentFulfilled(response.data.finishedContent))
+    } catch (error) {
+      dispatch(fetchJournalFinishedContentRejected(error))
+    }
+  }
+}
+
+export const fetchJournalFinishedContentPending = () => ({
+  type: FETCH_JOURNAL_FINISHED_CONTENT_PENDING
+})
+
+export const fetchJournalFinishedContentFulfilled = (payload) => ({
+  type: FETCH_JOURNAL_FINISHED_CONTENT_FULFILLED,
+  payload
+})
+
+export const fetchJournalFinishedContentRejected = (error) => ({
+  type: FETCH_JOURNAL_FINISHED_CONTENT_REJECTED,
+  error
+})
