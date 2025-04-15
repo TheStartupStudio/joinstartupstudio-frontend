@@ -51,7 +51,7 @@ function LtsJournal(props) {
   const [showVideo, setShowVideo] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [videos, setVideos] = useState([]);
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Track the current video index
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); 
 
   const { finishedContent, levelProgress, loading } = useSelector(
     (state) => state.course
@@ -63,13 +63,6 @@ function LtsJournal(props) {
     { title: 'Level 3: The Journey of Entrepreneurship',description:'Welcome to Level 3', active: false },
   ]
 
-  const searchItems = [
-    'The StarLog Studio - G.',
-    'Course in Entrepreneur.',
-    'Amr - backend-plastic.',
-    'Index.js - IE-time - Yls.',
-    'Vulcan Manual (DM)',
-  ]
 
   const lessonsByLevel = {
   0: [ 
@@ -281,9 +274,7 @@ function LtsJournal(props) {
   };
 
   const getOptionStatus = (redirectId, lessons, isLevel3 = false) => {
-    // Special handling for level 3
     if (isLevel3) {
-      // Get all children from all sections flattened into a single array
       const allLevel3Content = lessonsByLevel[2]
         .flatMap(section => section.children)
         .sort((a, b) => a.redirectId - b.redirectId);
@@ -304,7 +295,6 @@ function LtsJournal(props) {
       }
     }
 
-    // Regular handling for other levels remains the same
     const index = lessons.findIndex(lesson => lesson.redirectId === redirectId);
     const lastCompletedIndex = lessons.findIndex(lesson => {
       const nextItemIndex = lessons.indexOf(lesson) + 1;
@@ -339,7 +329,7 @@ function LtsJournal(props) {
         );
   
         return {
-          value: `${lesson.id}_${child.id}`, // Create unique value by combining parent and child IDs
+          value: `${lesson.id}_${child.id}`, 
           label: child.title,
           icon: status.status === 'done' ? tickSign :
             status.status === 'inProgress' ? circleSign :
@@ -347,7 +337,7 @@ function LtsJournal(props) {
           textColor: status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
           disabled: status.disabled,
           redirectId: child.redirectId,
-          parentId: lesson.id // Add parent ID reference
+          parentId: lesson.id 
         };
       });
   
