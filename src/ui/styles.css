@@ -1,32 +1,36 @@
 .ql-toolbar {
-    background-color: #f5f5f5 !important; /* Light background */
-    border: 1px solid #ddd !important; /* Border */
-    padding: 5px !important; /* Add some padding to the toolbar */
+    background-color: #f5f5f5 !important;
+    border: 1px solid #ddd !important;
+    padding: 5px !important;
 }
 
 .ql-toolbar .ql-formats {
-    margin: 5px !important; /* Adjust spacing between button groups */
+    margin: 5px !important;
 }
 
 .ql-toolbar button {
-    background-color: white !important; /* White button background */
-    border: 1px solid #ccc !important; /* Border around buttons */
-    border-radius: 2px !important; /* Slight rounding for box appearance */
-    padding: 8px 8px !important; /* Adjust padding to make buttons larger */
-    margin: 3px !important; /* Space between buttons */
+    background-color: white !important;
+    /* border: 1px solid #ccc !important; */
+    border-radius: 2px !important;
+    padding: 8px 8px !important;
+    margin: 3px !important;
     cursor: pointer !important;
-    display: inline-block !important; /* Ensure proper alignment */
-    width: 35px !important; /* Make buttons uniformly boxy */
-    height: 35px !important; /* Uniform height for boxy look */
-    text-align: center !important; /* Center-align the icon/text inside */
-    line-height: 1.5 !important; /* Align content vertically */
+    display: inline-block !important;
+    width: 35px !important;
+    height: 35px !important;
+    text-align: center !important;
+    line-height: 1.5 !important;
 }
 
 .ql-toolbar button:hover {
-    background-color: #eee !important; /* Button hover effect */
+    background-color: #eee !important;
 }
 
 .ql-toolbar button.ql-active {
-    background-color: #ddd !important; /* Active button background */
-    border-color: #bbb !important; /* Active button border */
+    background-color: #ddd !important;
+    border-color: #bbb !important;
+}
+
+.ql-picker-label {
+    margin-top: 8px !important;
 }

@@ -56,17 +56,21 @@ function GuidanceEncouragement({ intl }) {
       setFilterBy(selectedFilter)
     }
     const handleJournalSearch = (e) => {
-      const keyword = e.target.value.toLowerCase()
-      setJournals(
-        keyword 
-          ? journalsData.filter(journal => 
-              journal.title.toLowerCase().includes(keyword) || 
-              journal.children.some(child => 
-                child.title.toLowerCase().includes(keyword)
-              )
-            )
-          : journalsData
-      )
+      const keyword = e.target.value.toLowerCase();
+
+      if (!keyword) {
+        const endOffset = itemOffset + videosPerPage;
+        setCurrentPageVideos(pageVideos.slice(itemOffset, endOffset));
+        return;
+      }
+
+      const filteredVideos = pageVideos.filter(
+        (video) =>
+          video.title.toLowerCase().includes(keyword) ||
+          video.description.toLowerCase().includes(keyword)
+      );
+
+      setCurrentPageVideos(filteredVideos);
     }
 
   const dispatch = useDispatch()

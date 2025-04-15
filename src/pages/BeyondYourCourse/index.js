@@ -221,7 +221,11 @@ export default function BeyondYourCourse() {
   useEffect(() => {
     const fetchPodcastEpisodes = async () => {
       try {
-        const response = await axiosInstance.get('/podcast?page=0&size=5');
+        const endpoint = isViewAll
+          ? '/podcast?page=0&size=100' 
+          : '/podcast?page=0&size=5'; 
+        const response = await axiosInstance.get(endpoint);
+        console.log('Podcast Episodes Response:', response.data.data); // Log the response
         setPodcastEpisodes(response.data.data);
       } catch (error) {
         console.error('Error fetching podcast episodes:', error);
@@ -232,7 +236,6 @@ export default function BeyondYourCourse() {
   }, []);
 
   useEffect(() => {
-    // Check if the query parameter `view=podcasts` is present
     const params = new URLSearchParams(location.search);
     setIsViewAll(params.get('view') === 'podcasts');
   }, [location.search]);
@@ -241,9 +244,10 @@ export default function BeyondYourCourse() {
     const fetchPodcastEpisodes = async () => {
       try {
         const endpoint = isViewAll
-          ? '/podcast?page=0&size=100' // Fetch all episodes
-          : '/podcast?page=0&size=5'; // Fetch only 5 episodes
+          ? '/podcast?page=0&size=100' 
+          : '/podcast?page=0&size=5'; 
         const response = await axiosInstance.get(endpoint);
+        console.log('Podcast Episodes Response:', response.data.data); // Log the response
         setPodcastEpisodes(response.data.data);
       } catch (error) {
         console.error('Error fetching podcast episodes:', error);
@@ -356,8 +360,8 @@ export default function BeyondYourCourse() {
   }
 
   const handleAudioClick = (podcast) => {
-    setSelectedAudio(podcast); // Set the selected podcast
-    setShowAudioModal(true); // Show the audio modal
+    setSelectedAudio(podcast); 
+    setShowAudioModal(true); 
   }
 
   return (
@@ -422,6 +426,64 @@ export default function BeyondYourCourse() {
                 <div className='gradient-background-master'>
                 <div className='videos-container'>
                 <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
+                <div>
+                  <div className='beyond-videos-mobile mc-videos-mobile'>
+                    {/* <div className='arrow-icon-1'>
+                      <button
+                        className='videos-track'
+                        onClick={() => {
+                          handlePreviousVideoMobile(
+                            1,
+                            startVideoIndex,
+                            endVideoIndexMobile
+                          )
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faChevronLeft}
+                          className='videos-track-icon'
+                        />
+                      </button>
+                    </div> */}
+                    <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
+                      {encouragementVideos
+                        ?.slice(startVideoIndex, endVideoIndexMobile)
+                        .map((video, index) => (
+                          <Video
+                            id={video.id}
+                            key={index}
+                            thumbnail={video.thumbnail}
+                            title={video.title}
+                            description={video.description}
+                            page={'encouragement'}
+                            isMainPage={true}
+                            updateFavorite={(id, type, value) =>
+                              updateFavorite(id, type, value)
+                            }
+                            videoData={video}
+                            connections={connections}
+                          />
+                        ))}
+                    </div>
+                    {/* <div className='arrow-icon-1 justify-content-start'>
+                      <button
+                        className='videos-track'
+                        onClick={() => {
+                          handleNextVideoMobile(
+                            1,
+                            startVideoIndex,
+                            endVideoIndexMobile
+                          )
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faChevronRight}
+                          className='videos-track-icon'
+                        />
+                      </button>
+                    </div> */}
+                  </div>
+                </div>
                   <div className='title-container'>
                    <img 
                                     src={masterIcon}
@@ -507,64 +569,7 @@ export default function BeyondYourCourse() {
                 </div>
                 </div>
 
-                <div className='row mt-2'>
-                  <div className='beyond-videos-mobile mc-videos-mobile'>
-                    {/* <div className='arrow-icon-1'>
-                      <button
-                        className='videos-track'
-                        onClick={() => {
-                          handlePreviousVideoMobile(
-                            1,
-                            startVideoIndex,
-                            endVideoIndexMobile
-                          )
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faChevronLeft}
-                          className='videos-track-icon'
-                        />
-                      </button>
-                    </div> */}
-                    <div className='card-group mobile-menu card-group-beyond-your-course px-3 card-mobile-menu'>
-                      {encouragementVideos
-                        ?.slice(startVideoIndex, endVideoIndexMobile)
-                        .map((video, index) => (
-                          <Video
-                            id={video.id}
-                            key={index}
-                            thumbnail={video.thumbnail}
-                            title={video.title}
-                            description={video.description}
-                            page={'encouragement'}
-                            isMainPage={true}
-                            updateFavorite={(id, type, value) =>
-                              updateFavorite(id, type, value)
-                            }
-                            videoData={video}
-                            connections={connections}
-                          />
-                        ))}
-                    </div>
-                    {/* <div className='arrow-icon-1 justify-content-start'>
-                      <button
-                        className='videos-track'
-                        onClick={() => {
-                          handleNextVideoMobile(
-                            1,
-                            startVideoIndex,
-                            endVideoIndexMobile
-                          )
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faChevronRight}
-                          className='videos-track-icon'
-                        />
-                      </button>
-                    </div> */}
-                  </div>
-                </div>
+              
                 <div className='videos-container'>
                 <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
                 <div className='title-container'>
@@ -653,63 +658,7 @@ export default function BeyondYourCourse() {
                 </div>
                 <div className="videos-container">
   <div className="guidance-videos-top mb-3 guidance-encouragement-page-titles">
-    <div className="title-container">
-      <img
-        src={storyInMotion}
-        alt="logo"
-        style={{ width: '36px', height: '36px' }}
-        className="welcome-journey-text__icon"
-      />
-      <h3>
-        <IntMessages id="beyond_your_course.startup_live" />
-      </h3>
-    </div>
-    <Link
-      className="guidance-link"
-      to="/story-in-motion/videos"
-      style={{ marginRight: '1rem' }}
-    >
-      <IntMessages id="general.view_all" />
-      <img
-        src={rightArrow}
-        style={{ marginLeft: '10px', marginBottom: '3px' }}
-        alt="View All"
-      />
-    </Link>
-  </div>
-
-  <div className="beyond-videos-desktop">
-    <div className="card-group desktop-menu card-group-beyond-your-course w-100">
-      {podcastEpisodes.map((podcast, index) => (
-        <div
-          key={index}
-          className="beyond-your-course-video-thumb"
-          style={{ width: '200px', margin: '10px' }}
-          onClick={() => handleAudioClick({ ...podcast, page: 'podcast' })}
-        >
-          <img
-            src={podcast.thumbnail || storyInMotionPodcast}
-            alt={podcast.title}
-            style={{
-              width: '100%',
-              height: '150px',
-              objectFit: 'cover',
-              borderRadius: '25px',
-            }}
-          />
-          <h5 style={{ textAlign: 'center', marginTop: '10px' }}>
-            {podcast.title}
-          </h5>
-          <p style={{ textAlign: 'center', color: '#666', fontSize: '14px' }}>
-            {moment(podcast.date || podcast.createdAt).format('MMM D, YYYY')}
-          </p>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
-
-                <div className='row mt-2'>
+        <div >
                   <div className='beyond-videos-mobile mc-videos-mobile'>
                     {/* <div className='arrow-icon-1'>
                       <button
@@ -771,6 +720,66 @@ export default function BeyondYourCourse() {
                     </div> */}
                   </div>
                 </div>
+                <div className='guidance-videos-top mb-3 guidance-encouragement-page-titles'>
+    <div className="title-container">
+      <img
+        src={storyInMotion}
+        alt="logo"
+        style={{ width: '36px', height: '36px' }}
+        className="welcome-journey-text__icon"
+      />
+      <h3>
+        <IntMessages id="beyond_your_course.startup_live" />
+      </h3>
+    </div>
+    <Link
+      className="guidance-link"
+      to="/story-in-motion/videos"
+      style={{ marginRight: '1rem' }}
+    >
+      <IntMessages id="general.view_all" />
+      <img
+        src={rightArrow}
+        style={{ marginLeft: '10px', marginBottom: '3px' }}
+        alt="View All"
+      />
+    </Link>
+    </div>
+    <div className="beyond-videos-desktop">
+    <div className="card-group desktop-menu card-group-beyond-your-course w-100">
+      {podcastEpisodes.map((podcast, index) => (
+        <div
+          key={index}
+          className="beyond-your-course-video-thumb"
+          style={{ width: '200px', margin: '10px' }}
+          onClick={() => handleAudioClick({ ...podcast, page: 'podcast' })}
+        >
+          <img
+            src={podcast.thumbnail || storyInMotionPodcast}
+            alt={podcast.title}
+            style={{
+              width: '100%',
+              height: '150px',
+              objectFit: 'cover',
+              borderRadius: '25px',
+            }}
+          />
+          <h5 style={{ textAlign: 'center', marginTop: '10px' }}>
+            {podcast.title}
+          </h5>
+          <p style={{ textAlign: 'center', color: '#666', fontSize: '14px' }}>
+            {moment(podcast.date || podcast.createdAt).format('MMM D, YYYY')}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+  </div>
+
+ 
+</div>
+
+            
               </div>
             
             {/* <div className='col-12 col-xl-3 px-0'>

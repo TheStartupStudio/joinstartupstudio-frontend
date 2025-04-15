@@ -22,6 +22,7 @@ import AccordionItemWrapper from './UI/AccordionItemWrapper.js'
 import InterviewedMentors from './InterviewedMentors'
 import InstructorFeedback from './InstructorFeedback/InstructorFeedback.js'
 import circleIcon from '../../assets/images/circle-user-icon.png'
+import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
 
 function LtsJournalContent(props) {
   const location = useLocation()
@@ -51,21 +52,6 @@ function LtsJournalContent(props) {
   const handleShowAddReflection = (showAddReflection) => {
     setShowAddReflection(showAddReflection)
   }
-
-  // async function saveWatchData(data) {
-  //   await axiosInstance.put(
-  //     `/ltsJournals/${props.match.params.journalId}/videoWatchData`,
-  //     {
-  //       videoWatchData: JSON.stringify(data)
-  //     }
-  //   )
-  // }
-
-  // async function saveVideoWatched() {
-  //   await axiosInstance.put(
-  //     `/ltsJournals/${props.match.params.journalId}/watchedVideo`
-  //   )
-  // }
 
   async function getJournal() {
     try {
@@ -218,19 +204,19 @@ function LtsJournalContent(props) {
   const handleNextVideo = () => {
     if (currentVideoIndex < videos.length - 1) {
       setCurrentVideoIndex(currentVideoIndex + 1);
-      setShowVideo(null); // Reset the currently playing video
+      setShowVideo(null); 
     }
   };
 
   const handlePreviousVideo = () => {
     if (currentVideoIndex > 0) {
       setCurrentVideoIndex(currentVideoIndex - 1);
-      setShowVideo(null); // Reset the currently playing video
+      setShowVideo(null); 
     }
   };
 
   const handleShowVideo = (video) => {
-    setShowVideo(video.id); // Set the currently playing video
+    setShowVideo(video.id); 
   };
 
   if (!journal) {
@@ -238,87 +224,92 @@ function LtsJournalContent(props) {
   }
 
   let videos = (
-    journal.videos && journal.videos.constructor == Array
+    journal.videos && journal.videos.constructor === Array
       ? journal.videos
       : [journal.video]
-  ).filter(video => video && video.id);
+  ).filter((video) => video && video.id);
+
+  videos = videos.sort((a, b) => (a.id === 100000 ? -1 : b.id === 100000 ? 1 : 0));
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-start" style={{ gap: '2rem' }}>
-        {/* Video Container */}
+      <div className="d-flex justify-content-between align-items-start general-video-container" style={{ gap: '2rem' }}>
+ 
+        
         <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%' }}>
-          <div className="journal-entries__back">
-            <NavLink to={props.backRoute}>Back</NavLink>
-          </div>
-         <div className='d-flex align-items-center'>
-         <img
-            src={circleIcon}
-            alt="circle-icon"
-            style={{ width: '40px', height: '40px', marginRight: '10px' }}
-          />
-          <h4 className="page-card__content-title">{journal.title}</h4>
-
-         </div>
-          {videos && videos.length > 0 && (
-            <div className="journal-entries__videos">
-              {/* Display only the current video if it exists */}
-              {videos[currentVideoIndex] && (
+               {/* Video Container */}
+          {/* Video Container */}
+          {/* Title Section */}
+          <div className="d-flex align-items-center">
+            <img
+              src={circleIcon}
+              alt="circle-icon"
+              style={{ width: '40px', height: '40px', marginRight: '10px' }}
+            />
+            <h4 className="page-card__content-title">{journal.title}</h4> {/* Title remains here */}
+</div>
+          <div className="journal-entries__videos">
+            {videos[currentVideoIndex] && (
+              <div
+                className={`journal-entries__video${
+                  journal.content === '' ? '--welcome-video' : ''
+                }`}
+              >
                 <div
-                  className={`journal-entries__video${
+                  className={`journal-entries__video-thumbnail${
                     journal.content === '' ? '--welcome-video' : ''
                   }`}
+                  onClick={() => handleShowVideo(videos[currentVideoIndex])}
                 >
+                  <img src={videos[currentVideoIndex].thumbnail} alt="thumbnail" />
                   <div
-                    className={`journal-entries__video-thumbnail${
+                    className={`journal-entries__video-thumbnail-icon${
                       journal.content === '' ? '--welcome-video' : ''
                     }`}
-                    onClick={() => handleShowVideo(videos[currentVideoIndex])}
                   >
-                    <img src={videos[currentVideoIndex].thumbnail} alt="thumbnail" />
-                    <div
-                      className={`journal-entries__video-thumbnail-icon${
-                        journal.content === '' ? '--welcome-video' : ''
-                      }`}
-                    >
-                      <FontAwesomeIcon icon={faPlay} />
-                    </div>
+                    <FontAwesomeIcon icon={faPlay} />
                   </div>
                 </div>
-              )}
-
-              {/* Render the video player if a video is selected */}
-              {showVideo === videos[currentVideoIndex]?.id && (
-                <MediaLightbox
-                  video={videos[currentVideoIndex]}
-                  show={true}
-                  onClose={() => setShowVideo(null)}
-                />
-              )}
-
-              {/* Navigation Buttons */}
-              <div className="nav-videos">
-                <button
-                  className="btn"
-                  onClick={handlePreviousVideo}
-                  disabled={currentVideoIndex === 0}
-                >
-                  &#8592; Previous
-                </button>
-                <button
-                  className="btn"
-                  onClick={handleNextVideo}
-                  disabled={currentVideoIndex === videos.length - 1}
-                >
-                  Next &#8594;
-                </button>
               </div>
+            )}
+
+            {showVideo === videos[currentVideoIndex]?.id && (
+              <MediaLightbox
+                video={videos[currentVideoIndex]}
+                show={true}
+                onClose={() => setShowVideo(null)}
+              />
+            )}
+
+            <div className="nav-videos">
+              <button
+                className="btn"
+                onClick={handlePreviousVideo}
+                disabled={currentVideoIndex === 0}
+              >
+                &#8592; Previous
+              </button>
+              <button
+                className="btn"
+                onClick={handleNextVideo}
+                disabled={currentVideoIndex === videos.length - 1}
+              >
+                Next &#8594;
+              </button>
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Other Container */}
+
         <div id="content-container" className="content-container" style={{ flex: '1 1 50%' }}>
+       <div className='d-flex align-items-center reflection-header'>
+       <img
+            src={WhoAmI}
+            alt="page-icon"
+            style={{ width: '36px',height:'36px',marginRight: '10px' }}
+          />
+          <h6>Reflection</h6>
+       </div>
           {journal.entries && journal.entries.length > 0 ? (
             <div className="col-12">
               <div className="journal-entries">
@@ -350,8 +341,7 @@ function LtsJournalContent(props) {
           {/* <p className="page-card__content-description">{journal.content}</p> */}
         </div>
       </div>
-   
-      {/* THIS IS WHERE THE DROPDOWN THING GOES */}
+
       {props.match.params.journalId.includes('1001006') ? (
         <div
           className='col-12 journal_intro-accordion-title'

@@ -142,7 +142,7 @@ const ChooseLogin = () => {
         }}
       >
         <nav className='mt-4'>
-          <ul className='list-unstyled d-flex gap-4'>
+          <ul className='list-unstyled nav-links'>
             <li>
               <Link
                 className={`fs-13 fw-medium `}

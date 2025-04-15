@@ -59,7 +59,7 @@ function MyCourseEntrepreneurship() {
                   Embarking on the Entrepreneurial Journey
                 </p>
               </div>
-              <div
+              <div className='select-btn'
                 style={{
                   display: 'inline-block',
                   borderRadius: '8px',

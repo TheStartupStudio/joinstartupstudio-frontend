@@ -7,7 +7,10 @@ import {
   GET_NOTE_ERROR,
   SAVE_NOTE_SUCCESS,
   SAVE_NOTE_ERROR,
-  NOTE_REMOVED_SUCCESS
+  NOTE_REMOVED_SUCCESS,
+  FETCH_LTS_COURSE_FINISHED_CONTENT_PENDING,
+  FETCH_LTS_COURSE_FINISHED_CONTENT_FULFILLED,
+  FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED
 } from './Types'
 
 const initialState = {
@@ -15,7 +18,11 @@ const initialState = {
   notes: null,
   note: '',
   successMessage: null,
-  errorMessage: null
+  errorMessage: null,
+  finishedContent: [],
+  levelProgress: null,
+  loading: false,
+  error: null
 }
 
 const courseReducer = (state = initialState, action) => {
@@ -82,6 +89,28 @@ const courseReducer = (state = initialState, action) => {
         loading: false,
         successMessage: false,
         errorMessage: false
+      }
+
+    case FETCH_LTS_COURSE_FINISHED_CONTENT_PENDING:
+      return {
+        ...state,
+        loading: true,
+        error: null
+      }
+    case FETCH_LTS_COURSE_FINISHED_CONTENT_FULFILLED:
+      return {
+        ...state,
+        loading: false,
+        finishedContent: payload.finishedContent,
+        levelProgress: payload.levelProgress,
+        totalProgress: payload.totalProgress,
+        error: null
+      }
+    case FETCH_LTS_COURSE_FINISHED_CONTENT_REJECTED:
+      return {
+        ...state,
+        loading: false,
+        error: payload
       }
 
     default:

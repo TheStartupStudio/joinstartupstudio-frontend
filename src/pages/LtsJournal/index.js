@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink, useHistory, Switch, Route, useParams } from 'react-router-dom'
+import { NavLink, useHistory, Switch, Route, useParams, Redirect } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
 import './ltsjournal.css'
@@ -23,11 +23,17 @@ import CircularProgress from '../../components/ProgressBar';
 import ProgressDone from '../../components/CourseProgress/ProgressDone';
 import InProggresCourse from '../../components/CourseProgress/InProggresCourse';
 import CourseNotStarted from '../../components/CourseProgress/CourseNotStarted';
-import SelectCourses from '../../components/LeadershipJournal/SelectCourses'
 import ModalInput from '../../components/ModalInput/ModalInput'
 import searchJ from '../../assets/images/academy-icons/search.png'
 import MediaLightbox from '../../components/MediaLightbox';
 import ReactQuill from 'react-quill'; 
+import lockSign from '../../assets/images/academy-icons/lock.png'
+import circleSign from '../../assets/images/academy-icons/circle-fill.png'
+import tickSign from '../../assets/images/academy-icons/tick-sign.png'
+import SelectLessons from './SelectLessons'
+import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions';
+
+
 
 function LtsJournal(props) {
   const dispatch = useDispatch()
@@ -35,7 +41,7 @@ function LtsJournal(props) {
   const { journalId } = useParams(); 
   const [journals, setJournals] = useState([])
   const [journalsData, setJournalsData] = useState([])
-  const [selectedLesson, setSelectedLesson] = useState('')
+  const [selectedLesson, setSelectedLesson] = useState(null)
   const [activeLevel, setActiveLevel] = useState(0)
   const [editorContent, setEditorContent] = useState(''); 
   const currentLanguage = useSelector((state) => state.lang.locale)
@@ -45,29 +51,21 @@ function LtsJournal(props) {
   const [showVideo, setShowVideo] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [videos, setVideos] = useState([]);
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Track the current video index
-  
-  const handleShowVideo = (video) => {
-    setShowVideo(video.id);
-  };
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); 
 
-  // Course data
+  const { finishedContent, levelProgress, loading } = useSelector(
+    (state) => state.course
+  );
+
   const levels = [
     { title: 'Level 1: Entrepreneurship and You',description:'Welcome to Level 1', active: true },
     { title: 'Level 2: Understanding Learn to Start',description:'Welcome to Level 2', active: false },
     { title: 'Level 3: The Journey of Entrepreneurship',description:'Welcome to Level 3', active: false },
   ]
 
-  const searchItems = [
-    'The StarLog Studio - G.',
-    'Course in Entrepreneur.',
-    'Amr - backend-plastic.',
-    'Index.js - IE-time - Yls.',
-    'Vulcan Manual (DM)',
-  ]
 
   const lessonsByLevel = {
-  0: [ // Level 1 options
+  0: [ 
     { id: 'myths', title: "Myths of Entrepreneurship", status: 'done', redirectId: 51 },
     { id: 'definition', title: "Definition of Entrepreneurship", status: 'done', redirectId: 52 },
     { id: 'reasons', title: "Reasons Why Startups Fail", status: 'inProgress', redirectId: 53 },
@@ -77,17 +75,17 @@ function LtsJournal(props) {
     { id: 'task1', title: "Task #1: Create your Individual Value Proposition", status: 'notStarted', redirectId: 57 },
     { id: 'task2', title: "Task #2: Create your I Am Video", status: 'notStarted', redirectId: 58 }
   ],
-  1: [ // Level 2 options
+  1: [
     { id: 'journey', title: "The Journey of Entrepreneurship", status: 'notStarted', redirectId: 60 },
     { id: 'intro', title: "An Introduction to the LTS Model and Four Environments", status: 'notStarted', redirectId: 61 },
     { id: 'coreSkills', title: "The Core Skills and LEARN Stage of the LTS Model", status: 'notStarted', redirectId: 62 },
     { id: 'develop', title: "The DEVELOP Stage of the LTS Model", status: 'notStarted', redirectId: 63 },
-    { id: 'start', title: "Understanding START & the Test Metrics of LTS", status: 'notStarted', redirectId: 64 },
-    { id: 'task3', title: "Task #3: Evaluate Your Mindset and Skill Set", status: 'notStarted', redirectId: 65 },
-    { id: 'process', title: "The Process of Entrepreneurship", status: 'notStarted', redirectId: 66 },
-    { id: 'task4', title: "Task #4: Build Your Team and Find Your Mentor", status: 'notStarted', redirectId: 67 }
+    { id: 'start', title: "Understanding START & the Test Metrics of LTS", status: 'notStarted', redirectId: 65 },
+    { id: 'task3', title: "Task #1: Evaluate Your Mindset and Skill Set", status: 'notStarted', redirectId: 66 },
+    { id: 'process', title: "The Process of Entrepreneurship", status: 'notStarted', redirectId: 67 },
+    { id: 'task4', title: "Task #2: Build Your Team and Find Your Mentor", status: 'notStarted', redirectId: 68 },
   ],
-  2: [ // Level 3 options
+  2: [
     {
       id: "3.1",
       title: "Level 3.1: The Journey of Entrepreneurship",
@@ -112,12 +110,11 @@ function LtsJournal(props) {
         { id: 'task7', title: "Task #7: Create Your Startup's Value Proposition", redirectId: 80 },
         { id: 'testing', title: "Testing Your Startup's Value Proposition", redirectId: 81 },
         { id: 'task8', title: "Task #8: Conduct Market Validation for Your Startup's Value Proposition", redirectId: 82 },
-        { id:'definition', title:"Defining Innovation",redirectId:84},
         { id: 'inovation', title: "Understanding Innovation and Its Enemies", redirectId: 85 },
         { id: 'skills', title: "The Five Skills of Innovation", redirectId: 86 },
         { id: 'develop', title: "The DEVELOP Stage", redirectId: 87 },
         { id: 'task9', title: "Task #9: Develop Your Startup's Business Model", redirectId: 88 },
-        { id: 'task10', title: "Task #10: Write Your Startup's Concept Plan", redirectId: 89 }
+        { id: 'task10', title: "Write Your Startup's Concept Plan", redirectId: 89 }
       ]
     },
     {
@@ -128,13 +125,13 @@ function LtsJournal(props) {
         { id: 'brand', title: "Definition of Brand", redirectId: 91 },
         { id: 'branding', title: "Branding Strategies", redirectId: 92 },
         { id: 'relation', title: "The Relationship Between Story and Brand", redirectId: 93 },
-        { id: 'charter', title: "The Brand Charter & Task #11: Creating Your Startup's Brand Charter", redirectId: 94 },
-        { id: 'vehicles', title: "The Brand Vehicles", redirectId: 95 },
-        { id: 'task12', title: "Task #12: Create Your Startup's Brand Vehicles", redirectId: 96 },
-        { id: 'fundamental', title: "The Fundamental Elements of Story", redirectId: 97 },
-        { id: 'bussines', title: "Stories Your Business Can Tell", redirectId: 98 },
-        { id: 'storyteller', title: "Embracing Your Inner Storyteller", redirectId: 99},
-        { id: 'task13', title: "Task #13: Conduct Focus Groups", redirectId: 100 },
+        { id: 'charter', title: "The Brand Charter&Task #11: Creating Your Startup's Brand Charter",redirectId:94},
+        { id: 'vehicles', title: "The Brand Vehicles", redirectId: 95},
+        { id: 'task12', title: "Task #12: Create Your Startup's Brand Vehicles", redirectId: 96},
+        { id: 'fundamental', title: "The Fundamental Elements of Story", redirectId: 97},
+        { id: 'bussines', title: "Stories Your Business Can Tell", redirectId: 98},
+        { id: 'storyteller', title: "Embracing Your Inner Storyteller", redirectId:99},
+        { id: 'task13', title: "Task #13: Conduct Focus Groups", redirectId: 100},
         { id: 'marketing', title: "The Marketing Plan", redirectId: 101 },
         { id: 'task14', title: "Task #14: Creating Your Startup's Marketing Plan", redirectId: 102 }
       ]
@@ -144,7 +141,7 @@ function LtsJournal(props) {
       title: "Level 3.4: The Start Stage",
       isParent: true,
       children: [
-        { id: 'brand', title: "Introduction to the Business Plan", redirectId: 104 },
+        { id: 'brand1', title: "Introduction to the Business Plan", redirectId: 104 },
         { id: 'branding', title: "The Business Development Management Map", redirectId: 105 },
         { id: 'relation', title: "Task #15: Create Your Startup's Business Development Management Map", redirectId: 106 },
         { id: 'charter', title: "The Test Metric of Sustainability", redirectId: 107 },
@@ -166,6 +163,7 @@ function LtsJournal(props) {
         { id: 'pitching', title: "Pitching Yourself", redirectId: 123 },
         { id: 'reminders', title: "Reminders Going Forwards", redirectId: 124 },
         { id: 'final', title: "Task #23: Create Your Final I Am Video", redirectId: 125 },
+        // { id: 'task4', title: "Task #4: Build Your Team and Find Your Mentor",redirectId:126},
         { id: 'task24', title: "Task #24: Build Your Startup's Final Pitch",redirectId:126}
       ]
     }
@@ -209,6 +207,10 @@ function LtsJournal(props) {
     getJournals()
   }, [dispatch])
 
+  useEffect(() => {
+    dispatch(fetchLtsCoursefinishedContent());
+  }, [dispatch]);
+
   const handleJournalSearch = (e) => {
     const keyword = e.target.value.toLowerCase()
     setJournals(
@@ -231,7 +233,7 @@ function LtsJournal(props) {
   }
 
   useEffect(() => {
-    setSelectedLesson(''); 
+    setSelectedLesson(null); 
   }, [activeLevel]);
 
   
@@ -271,6 +273,162 @@ function LtsJournal(props) {
     }
   };
 
+  const getOptionStatus = (redirectId, lessons, isLevel3 = false) => {
+    if (isLevel3) {
+      const allLevel3Content = lessonsByLevel[2]
+        .flatMap(section => section.children)
+        .sort((a, b) => a.redirectId - b.redirectId);
+
+      const index = allLevel3Content.findIndex(item => item.redirectId === redirectId);
+      const lastCompletedIndex = allLevel3Content.findIndex(item => {
+        const nextItem = allLevel3Content[allLevel3Content.indexOf(item) + 1];
+        return finishedContent.includes(item.redirectId) && 
+               (!nextItem || !finishedContent.includes(nextItem.redirectId));
+      });
+
+      if (finishedContent.includes(redirectId)) {
+        return { status: 'done', disabled: false };
+      } else if (index === lastCompletedIndex + 1) {
+        return { status: 'inProgress', disabled: false };
+      } else {
+        return { status: 'notStarted', disabled: true };
+      }
+    }
+
+    const index = lessons.findIndex(lesson => lesson.redirectId === redirectId);
+    const lastCompletedIndex = lessons.findIndex(lesson => {
+      const nextItemIndex = lessons.indexOf(lesson) + 1;
+      return finishedContent.includes(lesson.redirectId) && 
+             (!lessons[nextItemIndex] || !finishedContent.includes(lessons[nextItemIndex].redirectId));
+    });
+
+    if (finishedContent.includes(redirectId)) {
+      return { status: 'done', disabled: false };
+    } else if (index === lastCompletedIndex + 1) {
+      return { status: 'inProgress', disabled: false };
+    } else {
+      return { status: 'notStarted', disabled: true };
+    }
+  };
+
+  const options = lessonsByLevel[activeLevel]?.flatMap((lesson, index) => {
+    if (activeLevel === 2) {
+      const parentOption = {
+        value: `${lesson.id}_parent`,
+        label: lesson.title,
+        textColor: 'text-dark',
+        fontWeight: 'bolder',
+        disabled: false
+      };
+  
+      const childOptions = lesson.children?.map(child => {
+        const status = getOptionStatus(
+          child.redirectId,
+          lesson.children,
+          true
+        );
+  
+        return {
+          value: `${lesson.id}_${child.id}`, 
+          label: child.title,
+          icon: status.status === 'done' ? tickSign :
+            status.status === 'inProgress' ? circleSign :
+              lockSign,
+          textColor: status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
+          disabled: status.disabled,
+          redirectId: child.redirectId,
+          parentId: lesson.id 
+        };
+      });
+  
+      return [parentOption, ...(childOptions || [])];
+    }
+  
+    const status = getOptionStatus(
+      lesson.redirectId,
+      lessonsByLevel[activeLevel]
+    );
+  
+    return {
+      value: lesson.id,
+      label: lesson.title,
+      icon: status.status === 'done' ? tickSign :
+        status.status === 'inProgress' ? circleSign :
+          lockSign,
+      textColor: status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
+      disabled: status.disabled,
+      redirectId: lesson.redirectId
+    };
+  });
+
+  const isContentAccessible = (journalId) => {
+    const numericId = parseInt(journalId);
+    
+    if (finishedContent.includes(numericId)) {
+      return true;
+    }
+  
+    // Find the last completed ID from all levels
+    const lastCompletedId = Math.max(...finishedContent);
+  
+    // For level 3, check if previous level is completed
+    if (numericId === 70) {
+      const lastLevel2Item = lessonsByLevel[1][lessonsByLevel[1].length - 1];
+      return finishedContent.includes(lastLevel2Item.redirectId);
+    }
+  
+    for (let level = 0; level <= 2; level++) {
+      const lessons = lessonsByLevel[level];
+      if (!lessons) continue;
+  
+      if (level === 2) {
+        for (const section of lessons) {
+          const children = section.children || [];
+          for (let i = 0; i < children.length; i++) {
+            if (children[i].redirectId === numericId) {
+              if (i === 0 && section === lessons[0]) {
+                // First item of level 3, check if last item of level 2 is completed
+                const lastLevel2Item = lessonsByLevel[1][lessonsByLevel[1].length - 1];
+                return finishedContent.includes(lastLevel2Item.redirectId);
+              }
+              return i === 0 || finishedContent.includes(children[i - 1].redirectId);
+            }
+          }
+        }
+      } else {
+        // Regular handling for levels 1 and 2
+        for (let i = 0; i < lessons.length; i++) {
+          if (lessons[i].redirectId === numericId) {
+            if (i === 0 && level === 0) return true;
+            
+            if (i === 0) {
+              const prevLevelLessons = lessonsByLevel[level - 1];
+              const lastItemPrevLevel = prevLevelLessons[prevLevelLessons.length - 1];
+              return finishedContent.includes(lastItemPrevLevel.redirectId);
+            }
+            return finishedContent.includes(lessons[i - 1].redirectId);
+          }
+        }
+      }
+    }
+    return false;
+  };
+
+  const getCourseStatus = (redirectId) => {
+    if (finishedContent.includes(redirectId)) {
+      return 'done';
+    }
+  
+    const nextAvailableId = finishedContent.length > 0 ? 
+      Math.min(...finishedContent.map(id => id + 1)) : 51;
+  
+    if (redirectId === nextAvailableId) {
+      return 'inProgress';
+    }
+  
+    return 'notStarted';
+  };
+
   return (
     <>
     <div id='main-body'>
@@ -278,7 +436,6 @@ function LtsJournal(props) {
         <div className='row'>
           <div className='px-0'>
             <div>
-              {/* Course Header */}
               <div style={{margin: '40px 40px 40px 30px'}}>
               <h3 className="page-title" style={{ marginLeft: '20px' }}>
                            
@@ -292,7 +449,6 @@ function LtsJournal(props) {
 
               <div >
                 <div className='styled-scrollbar gradient-background-journal' ref={contentContainer}>
-                  {/* Course Content */}
                   <div className='course-container'>
                     <div className='levels-container'>
                       {levels.map((level, index) => (
@@ -318,8 +474,8 @@ function LtsJournal(props) {
                 id={'searchBar'}
                 type={'search'}
                 labelTitle={props.intl.formatMessage({
-                  id: 'my_journal.search_journals',
-                  defaultMessage: 'Search Journals'
+                  id: 'my_journal.search_lessons',
+                  defaultMessage: 'Search lessons'
                 })}
                 imgSrc={searchJ}
                 imageStyle={{ filter: 'grayscale(1)' }}
@@ -328,59 +484,45 @@ function LtsJournal(props) {
           </div>
 </div>
 
-<div className="search-input-wrapper">
-  <select 
-    className='course-btn select-lesson search-journal-input' 
-    value={selectedLesson}
-    onChange={(e) => {
-      const lessonId = e.target.value;
-      setSelectedLesson(lessonId);
-      const selectedLesson = lessonsByLevel[activeLevel].find(
-        (lesson) =>
-          lesson.id === lessonId ||
-          lesson.children?.some((child) => child.id === lessonId)
-      );
-      if (selectedLesson) {
-        const lessonRedirectId =
-          selectedLesson.redirectId ||
-          selectedLesson.children?.find((child) => child.id === lessonId)
-            ?.redirectId ||
-          52; // Default redirect ID
-        history.push(
-          `/my-course-in-entrepreneurship/journal/${lessonRedirectId}`
+<div className="select-lessons">
+  <SelectLessons
+    options={options}
+    selectedCourse={selectedLesson}
+    setSelectedCourse={(selectedOption) => {
+      if (!selectedOption || !selectedOption.value) {
+        console.error('Invalid selected option:', selectedOption);
+        return;
+      }
+
+      setSelectedLesson(selectedOption);
+
+      if (activeLevel === 2) {
+        const [parentId, childId] = selectedOption.value.split('_');
+        if (childId === 'parent') return; // Skip parent options
+
+        // Find the correct section and child based on both parent and child IDs
+        const selectedSection = lessonsByLevel[2].find(section => section.id === parentId);
+        const selectedLesson = selectedSection?.children?.find(child => child.id === childId);
+
+        if (selectedLesson?.redirectId) {
+          history.push(`/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`);
+        }
+      } else {
+        const selectedLesson = lessonsByLevel[activeLevel]?.find(
+          lesson => lesson.id === selectedOption.value
         );
+
+        if (selectedLesson?.redirectId) {
+          history.push(`/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`);
+        }
       }
     }}
-  >
-    <option value="">
-      {props.intl.formatMessage({
-        id: 'my_journal.select_lessons',
-        defaultMessage: 'Select Lessons to View',
-      })}
-    </option>
-    {lessonsByLevel[activeLevel].map((lesson) =>
-      lesson.isParent ? (
-        <optgroup
-          key={lesson.id}
-          label={lesson.title}
-          style={{ color: '#333', fontWeight: '600' }}
-        >
-          {lesson.children.map((child) => (
-            <option key={child.id} value={child.id}>
-              {child.title}
-            </option>
-          ))}
-        </optgroup>
-      ) : (
-        <option key={lesson.id} value={lesson.id}>
-          {lesson.title}
-        </option>
-      )
-    )}
-  </select>
+  />
 </div>
 
-                        <div style={{
+                        <div
+                        className='review-course-btn'
+                         style={{
                   display: 'inline-block',
                   borderRadius: '8px',
                   background:
@@ -453,23 +595,29 @@ function LtsJournal(props) {
 
                   </div>
 
-                  {/* Existing Journal Content */}
                   <Switch>
                     <Route
                       path={`${props.match.url}/:journalId`}
-                      render={(renderProps) => (
-                        <LtsJournalContent
-                          {...renderProps}
-                          contentContainer={contentContainer}
-                          backRoute={props.match.url}
-                          saved={journalChanged}
-                        />
-                      )}
+                      render={(renderProps) => {
+                        const { journalId } = renderProps.match.params;
+                        
+                        if (!isContentAccessible(journalId)) {
+                          return <Redirect to={`${props.match.url}/51`} />;
+                        }
+              
+                        return (
+                          <LtsJournalContent
+                            {...renderProps}
+                            contentContainer={contentContainer}
+                            backRoute={props.match.url}
+                            saved={journalChanged}
+                          />
+                        );
+                      }}
                     />
                   </Switch>
                 </div>
 
-                {/* Existing Sidebar */}
                 <div className='page-card__sidebar col-lg-4 col-md-5'>
                   {/* <div className='page-card__sidebar-header'>
                     <label className='search-input'>
@@ -560,15 +708,7 @@ function LtsJournal(props) {
          onClick={toggleModal}
          style={{ zIndex: '1' }}
        >
-         <img className='left-arrow-modal' src={leftArrow} alt='left' 
-         style={{
-          cursor: 'pointer',
-          position: 'relative',
-          right: '20px',
-          top: '-15px',
-          width: '20px',
-          height: '20px'
-         }} />
+         <img className='left-arrow' src={leftArrow} alt='left'  />
        </span>
        <ModalBody>
          <img src={progressLogo} alt='user' className='mb-3' />
@@ -579,6 +719,7 @@ function LtsJournal(props) {
          </div>
 
          <div className='accordion mt-5' id='progressAccordion'>
+           {/* Level 1 */}
            <div className='accordion-item progress-details-accordion'>
              <h2 className='accordion-header' id='headingOne'>
                <button
@@ -600,36 +741,32 @@ function LtsJournal(props) {
              >
                <div className='accordion-body d-flex gap-4'>
                  <div className='d-flex flex-column gap-4'>
-                   <CircularProgress percentage={20} level={1} />
+                   <CircularProgress 
+                     percentage={levelProgress?.level1?.percentage || 0} 
+                     level={1} 
+                   />
                  </div>
                  <div className='d-flex flex-column gap-3'>
-                   <ProgressDone title={'Myths of Entrepreneurship'} />
-                   <ProgressDone title={'Definition of Entrepreneurship'} />
-                   <InProggresCourse title={'Reasons Why Startups Fail'} />
-                   <CourseNotStarted
-                     title={'Skills and Traits of Effective Entrepreneus'}
-                   />
-                   <CourseNotStarted title={'People Buy Into People'} />
-                   <CourseNotStarted
-                     title={'Creating Your Self Brand First'}
-                   />
-                   <CourseNotStarted
-                     title={
-                       'Task #1: Create your Individual Value Proposition'
-                     }
-                   />
-                   <CourseNotStarted
-                     title={'Task #2: Create your I Am Video'}
-                   />
+                   {lessonsByLevel[0].map(lesson => {
+                     const status = getCourseStatus(lesson.redirectId);
+                     return status === 'done' ? (
+                       <ProgressDone title={lesson.title} />
+                     ) : status === 'inProgress' ? (
+                       <InProggresCourse title={lesson.title} />
+                     ) : (
+                       <CourseNotStarted title={lesson.title} />
+                     );
+                   })}
                  </div>
                </div>
              </div>
            </div>
 
+           {/* Level 2 */}
            <div className='accordion-item progress-details-accordion'>
-             <h2 className='accordion-header ' id='headingTwo'>
+             <h2 className='accordion-header' id='headingTwo'>
                <button
-                 className='accordion-button collapsed  text-secondary fw-medium'
+                 className='accordion-button collapsed text-secondary fw-medium'
                  type='button'
                  data-bs-toggle='collapse'
                  data-bs-target='#collapseTwo'
@@ -647,26 +784,32 @@ function LtsJournal(props) {
              >
                <div className='accordion-body d-flex gap-4'>
                  <div className='d-flex flex-column gap-4'>
-                   <CircularProgress percentage={0} level={2} />
+                   <CircularProgress 
+                     percentage={levelProgress?.level2?.percentage || 0} 
+                     level={2} 
+                   />
                  </div>
                  <div className='d-flex flex-column gap-3'>
-                   <CourseNotStarted title='The Journey of Entrepreneurship' />
-                   <CourseNotStarted title='An Introduction to the LTS Model and Four Environments' />
-                   <CourseNotStarted title='The Core Skills and LEARN Stage of the LTS Model' />
-                   <CourseNotStarted title='The DEVELOP Stage of the LTS Model' />
-                   <CourseNotStarted title='Understanding START & the Test Metrics of LTS' />
-                   <CourseNotStarted title='Task #3: Evaluate Your Mindset and Skill Set' />
-                   <CourseNotStarted title='The Process of Entrepreneurship' />
-                   <CourseNotStarted title='Task #4: Build Your Team and Find Your Mentor' />
+                   {lessonsByLevel[1].map(lesson => {
+                     const status = getCourseStatus(lesson.redirectId);
+                     return status === 'done' ? (
+                       <ProgressDone title={lesson.title} />
+                     ) : status === 'inProgress' ? (
+                       <InProggresCourse title={lesson.title} />
+                     ) : (
+                       <CourseNotStarted title={lesson.title} />
+                     );
+                   })}
                  </div>
                </div>
              </div>
            </div>
 
+           {/* Level 3 */}
            <div className='accordion-item progress-details-accordion'>
              <h2 className='accordion-header' id='headingThree'>
                <button
-                 className='accordion-button collapsed  text-secondary fw-medium'
+                 className='accordion-button collapsed text-secondary fw-medium'
                  type='button'
                  data-bs-toggle='collapse'
                  data-bs-target='#collapseThree'
@@ -684,78 +827,27 @@ function LtsJournal(props) {
              >
                <div className='accordion-body d-flex gap-4'>
                  <div className='d-flex flex-column gap-4'>
-                   <CircularProgress percentage={0} level={3} />
+                   <CircularProgress 
+                     percentage={levelProgress?.level3?.percentage || 0} 
+                     level={3} 
+                   />
                  </div>
                  <div className='d-flex flex-column gap-3 text-black'>
-                   <p className='mb-0'>
-                     Level 3.1: The Journey of Entrepreneurship
-                   </p>
-                   <CourseNotStarted title='The Journey of Entrepreneurship' />
-                   <CourseNotStarted title='The Process and Skill of Storytelling' />
-                   <CourseNotStarted title='Relevancy in World 4.0' />
-                   <CourseNotStarted title='The LEARN Stage' />
-                   <CourseNotStarted title='Problems Worth Solving' />
-                   <CourseNotStarted title='Task #5: Identify a Problem Worth Solving, Assumptions, and Market Trends' />
-                   <CourseNotStarted title='Task #6: Conduct an Industry Analysis' />
-                   <p className='mb-0'>Level 3.2: The Develop Stage</p>
-                   <CourseNotStarted title='Finding the Solution' />
-                   <CourseNotStarted title="Creating Your Startup's Value Proposition" />
-                   <CourseNotStarted title="Task #7: Create Your Startup's Value Proposition" />
-                   <CourseNotStarted title="Testing Your Startup's Value Proposition" />
-                   <CourseNotStarted title="Task #8: Conduct Market Validation for Your Startup's Value Proposition" />
-                   <CourseNotStarted title='Understanding Innovation and Its Enemies' />
-                   <CourseNotStarted title='The Five Skills of Innovation' />
-                   <CourseNotStarted title='The DEVELOP Stage' />
-                   <CourseNotStarted title="Task #9: Develop Your Startup's Business Model" />
-                   <CourseNotStarted title="Task #10: Write Your Startup's Concept Plan" />
-                   <p className='mb-0'>Level 3.3: The Brand Stage</p>
-                   <CourseNotStarted title='Definition of Brand' />
-                   <CourseNotStarted title='Branding Strategies' />
-                   <CourseNotStarted title='The Relationship Between Story and Brand' />
-                   <CourseNotStarted title='The Brand Charter' />
-                   <CourseNotStarted title="Task #11: Creating Your Startup's Brand Charter" />
-                   <CourseNotStarted title='The Brand Vehicles' />
-                   <CourseNotStarted title="Task #12: Create Your Startup's Brand Vehicles" />
-                   <CourseNotStarted title='The Fundamental Elements of Story' />
-                   <CourseNotStarted title='Stories Your Business Can Tell' />
-                   <CourseNotStarted title='Embracing Your Inner Storyteller' />
-                   <CourseNotStarted title='Task #13: Conduct Focus Groups' />
-                   <CourseNotStarted title='The Marketing Plan' />
-                   <CourseNotStarted title="Task #14: Creating Your Startup's Marketing Plan" />
-                   <CourseNotStarted title="Task #11: Creating Your Startup's Brand Charter" />
-                   <CourseNotStarted title='The Brand Vehicles' />
-                   <CourseNotStarted title="Task #12: Create Your Startup's Brand Vehicles" />
-                   <CourseNotStarted title='The Fundamental Elements of Story' />
-                   <CourseNotStarted title='Stories Your Business Can Tell' />
-                   <CourseNotStarted title='Embracing Your Inner Storyteller' />
-                   <CourseNotStarted title='Task #13: Conduct Focus Groups' />
-                   <CourseNotStarted title='The Marketing Plan' />
-                   <CourseNotStarted title="Task #14: Creating Your Startup's Marketing Plan" />
-                   <p className='mb-0'>Level 3.4: The Start Stage</p>
-                   <CourseNotStarted title='Introduction to the Business Plan' />
-                   <CourseNotStarted title='The Business Development Management Map' />
-                   <CourseNotStarted title="Task #15: Create Your Startup's Business Development Management Map" />
-                   <CourseNotStarted title='The Test Metric of Sustainability' />
-                   <CourseNotStarted title='Task #16: Test the Sustainability of Your Startup' />
-                   <CourseNotStarted title='The Process of Entrepreneurship Reintroduction' />
-                   <CourseNotStarted title='Parts of a Business Plan' />
-                   <CourseNotStarted title="Task #17: Write Your Startup's Business Plan" />
-                   <CourseNotStarted title='The Test Metric of Efficiency' />
-                   <CourseNotStarted title='Task #18: Test the Efficiency of Your Startup' />
-                   <CourseNotStarted title='An Introduction to the Financial Plan' />
-                   <CourseNotStarted title="Task #19: Create Your Startup's Financial Plan" />
-                   <CourseNotStarted title='The Test Metric of Profitability' />
-                   <CourseNotStarted title='Task #20: Test the Potential Profitability of Your Startup' />
-                   <CourseNotStarted title='Brand Generation' />
-                   <CourseNotStarted title='Business Plan Musts' />
-                   <CourseNotStarted title="Task #21: Write the Executive Summary of Your Startup's Business Plan" />
-                   <CourseNotStarted title="Task #22: Create Your Startup's Brand Introductory Video" />
-                   <CourseNotStarted title='Selling You' />
-                   <CourseNotStarted title='Pitching Yourself' />
-                   <CourseNotStarted title='Reminders Going Forward' />
-                   <CourseNotStarted title='Task #23: Create Your Final I Am Video' />
-                   <CourseNotStarted title='Task #4: Build Your Team and Find Your Mentor' />
-                   <CourseNotStarted title="Task #24: Build Your Startup's Final Pitch" />
+                   {lessonsByLevel[2].map(section => (
+                     <>
+                       <p className='mb-0'>{section.title}</p>
+                       {section.children.map(lesson => {
+                         const status = getCourseStatus(lesson.redirectId);
+                         return status === 'done' ? (
+                           <ProgressDone title={lesson.title} />
+                         ) : status === 'inProgress' ? (
+                           <InProggresCourse title={lesson.title} />
+                         ) : (
+                           <CourseNotStarted title={lesson.title} />
+                         );
+                       })}
+                     </>
+                   ))}
                  </div>
                </div>
              </div>

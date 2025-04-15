@@ -142,66 +142,189 @@
     }
 }
 
-/* Large mobile styles */
+
 @media (max-width: 768px) {
+
     .videos-container {
-        padding: 12px;
-        margin: 10px 5px;
+        /* padding: 10px; */
+        margin: 10px auto;
+        border-radius: 15px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-align: center;
+        margin: 40px 5px !important;
+
+
     }
 
     .card-group-beyond-your-course {
-        grid-template-columns: repeat(2, 1fr);
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 1rem;
+        width: 100%;
+    }
+
+
+    .beyond-your-course-video-thumb {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .beyond-your-course-video-thumb img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .title-container {
+        display: flex;
+        /* flex-direction: column; */
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .title-container .videos-container__title {
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        margin: 0;
+    }
+
+    .videos-container .videos-container__description {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+        text-align: center;
+    }
+
+    .pagination-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .pagination-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* For screens 769px and smaller */
+@media (max-width: 769px) {
+    .videos-container {
+        padding: 8px;
+        margin: 8px auto;
+        border-radius: 15px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .card-group-beyond-your-course {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .beyond-your-course-video-thumb {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .beyond-your-course-video-thumb img {
+        width: 100%;
+        height: 180px !important;
+        /* Match the height defined for 450px */
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .title-container {
+        display: flex;
+        /* flex-direction: column; */
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .title-container .videos-container__title {
+        font-size: 14px;
+        /* Match the font size defined for 450px */
+        font-weight: 600;
+        text-align: center;
+        margin: 0;
+    }
+
+    .videos-container .videos-container__description {
+        font-size: 12px;
+        /* Match the font size defined for 450px */
+        color: #666;
+        margin: 0;
+        text-align: center;
+    }
+
+    .pagination-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .pagination-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .videos-container {
+        padding: 8px;
+        margin: 8px auto;
     }
 
     .beyond-your-course-video-thumb img {
         height: 180px !important;
     }
 
-    .gradient-background-master {
-        padding: 1rem;
+    .title-container .videos-container__title {
+        font-size: 14px;
+    }
+
+    .videos-container .videos-container__description {
+        font-size: 12px;
     }
 }
 
-@media (max-width: 576px) {
+/* For screens 450px and smaller */
+@media (max-width: 450px) {
     .videos-container {
-        padding: 10px;
-        margin: 10px 0;
-    }
-
-    .card-group-beyond-your-course {
-        grid-template-columns: 1fr;
-        max-width: 100%;
-        gap: 1rem;
+        padding: 8px;
+        margin: 8px auto;
     }
 
     .beyond-your-course-video-thumb img {
-        height: 200px !important;
-    }
-}
-
-/* Small mobile styles */
-@media (max-width: 576px) {
-    .videos-container {
-        padding: 10px;
-        margin: 8px 0;
+        height: 180px !important;
+        /* Adjust height for smaller screens */
     }
 
-    .card-group-beyond-your-course {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    .title-container .videos-container__title {
+        font-size: 14px;
+        /* Reduce font size for very small screens */
     }
 
-    .beyond-your-course-video-thumb img {
-        height: 200px !important;
-    }
-
-    .beyond-videos-desktop {
-        display: none;
-    }
-
-    .beyond-videos-mobile {
-        display: block;
+    .videos-container .videos-container__description {
+        font-size: 12px;
+        /* Reduce font size for descriptions */
     }
 }
 

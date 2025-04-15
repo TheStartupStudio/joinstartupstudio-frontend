@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import Select from 'react-select'
 import AcademyLogo from '../../assets/images/academy-icons/academy-logo.png'
 import profilePic from '../../assets/images/academy-icons/profile.jpeg'
@@ -16,25 +17,29 @@ import {
 import IntlMessages from '../../utils/IntlMessages'
 import AcademyBtn from '../../components/AcademyBtn'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
+import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions';
 
 function Dashboard() {
   const originalToken = localStorage.getItem('original_access_token')
   const userRole = localStorage.getItem('role')
   const dispatch = useDispatch()
+  const history = useHistory()
   const periods = useSelector((state) => state.dashboard.periods)
   const events = useSelector((state) => state.dashboard.events)
   const [chatId, setChatId] = useState('')
   const [selectedLanguage, setSelectedLanguage] = useState(null)
 
-  useImpersonation(originalToken)
+  const { finishedContent, levelProgress, loading, totalProgress } = useSelector(
+    (state) => state.course
+  );
 
-  useEffect(() => {
-    dispatch(changeSidebarState(false))
-  }, [dispatch])
+  useImpersonation(originalToken)
 
   useEffect(() => {
     dispatch(getPeriodsStart())
     dispatch(getEventsStart())
+    dispatch(fetchLtsCoursefinishedContent())
+    dispatch(changeSidebarState(false))
   }, [dispatch])
 
   function getFormattedDate() {
@@ -66,6 +71,18 @@ function Dashboard() {
     setSelectedLanguage(selectedOption)
     console.log('Selected Language:', selectedOption.value)
   }
+
+  const handleContinueCourse = () => {
+    if (finishedContent && finishedContent.length > 0) {
+      // Get the last completed ID
+      const lastCompletedId = Math.max(...finishedContent);
+      // Navigate to the next lesson
+      history.push(`/my-course-in-entrepreneurship/journal/${lastCompletedId}`);
+    } else {
+      // If no lessons completed, start from the first lesson (ID: 51)
+      history.push('/my-course-in-entrepreneurship/journal/51');
+    }
+  };
 
   return (
     <div className='container-fluid'>
@@ -110,7 +127,10 @@ function Dashboard() {
                 Course in Entrepreneurship
               </h3>
             </div>
-            <AcademyBtn title={'Continue Course'} />
+            <AcademyBtn 
+              title={'Continue Course'} 
+              onClick={handleContinueCourse}
+            />
           </div>
         </div>
       </div>
