@@ -282,7 +282,7 @@
   }
 
   .accordion-content-section-header {
-    padding: 1rem;
+    /* padding: 1rem; */
     margin: 5px;
   }
 }
@@ -315,7 +315,7 @@
   }
 
   .accordion-content-section-header {
-    padding: 0.8rem;
+    /* padding: 0.8rem; */
     margin: 5px;
   }
 
@@ -361,7 +361,7 @@
   }
 
   .accordion-content-section-header {
-    padding: 0.6rem;
+    /* padding: 0.6rem; */
     margin: 5px;
   }
 
@@ -403,7 +403,7 @@
 
   .accordion-content-section-header {
     padding: 0.5rem;
-    margin: 5px;
+    /* margin: 5px; */
   }
 
   .welcome-journey-text {
