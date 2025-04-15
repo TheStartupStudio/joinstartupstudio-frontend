@@ -1,11 +1,9 @@
 /* Background and container styles */
 .gradient-background-story {
-  background: linear-gradient(
-    90deg,
-    #ffffff 10%,
-    rgb(255 228 248) 50%,
-    rgb(255 255 255) 90%
-  ) !important;
+  background: linear-gradient(90deg,
+      #ffffff 10%,
+      rgb(255 228 248) 50%,
+      rgb(255 255 255) 90%) !important;
   min-height: 100vh;
   width: 100%;
   position: relative;
@@ -18,18 +16,14 @@
   border-radius: 20px;
   box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
   padding: 25px 15px 50px 25px;
-  background-color: radial-gradient(
-      circle at 10% 50%,
+  background-color: radial-gradient(circle at 10% 50%,
       rgb(255, 255, 255) 0%,
       rgb(255, 255, 255) 30%,
-      transparent 90%
-    ),
-    radial-gradient(
-      circle at 0% 60%,
+      transparent 90%),
+    radial-gradient(circle at 0% 60%,
       rgba(109, 167, 248, 0.342) 0%,
       rgba(114, 171, 251, 0.4) 30%,
-      transparent 90%
-    );
+      transparent 90%);
   position: relative;
   margin-bottom: 2rem;
 }
@@ -240,8 +234,8 @@
   margin-bottom: 1.5rem;
   border-radius: 15px;
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.09);
-  width: 1350px;
-  height: 49px;
+  /* width: 1350px; */
+  /* height: 49px; */
 }
 
 .level-navigation {
@@ -464,11 +458,7 @@
   margin-right: 10px;
 }
 
-.custom-pagination
-  .page-item:not(:first-child):not(:last-child):not(:nth-child(2)):not(
-    :nth-last-child(2)
-  )
-  .page-link::after {
+.custom-pagination .page-item:not(:first-child):not(:last-child):not(:nth-child(2)):not( :nth-last-child(2)) .page-link::after {
   content: '/';
   margin-left: 8px;
   color: #707070;
@@ -523,9 +513,7 @@
   font-weight: 700;
 }
 
-.custom-pagination
-  .page-item:not(:first-child):not(:last-child)
-  .page-link::after {
+.custom-pagination .page-item:not(:first-child):not(:last-child) .page-link::after {
   content: none;
 }
 
@@ -552,9 +540,7 @@
   margin: 0 2px;
 }
 
-.custom-pagination
-  .page-item:not(:first-child):not(:last-child)
-  .page-link::after {
+.custom-pagination .page-item:not(:first-child):not(:last-child) .page-link::after {
   content: none;
 }
 
@@ -650,11 +636,7 @@
   margin-left: 5px;
 } */
 
-.custom-pagination
-  .page-item:not(:first-child):not(:last-child):not(:nth-child(2)):not(
-    :nth-last-child(2)
-  )
-  .page-link::after {
+.custom-pagination .page-item:not(:first-child):not(:last-child):not(:nth-child(2)):not( :nth-last-child(2)) .page-link::after {
   content: '/';
   /* margin-left: 8px;
   margin-right: 8px; */

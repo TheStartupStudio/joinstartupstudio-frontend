@@ -762,7 +762,7 @@ function LtsJournal(props) {
                       {levels.map((level, index) => (
                         <div
                           key={index}
-                          className={`course-level-journal ${index === activeLevel ? 'active-level' : ''}`}
+                          className={`course-level ${index === activeLevel ? 'active-level' : ''}`}
                           onClick={() => setActiveLevel(index)}
                         >
                           {level.title}
