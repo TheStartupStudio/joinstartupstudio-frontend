@@ -105,40 +105,40 @@ const ForgotPassword = () => {
           <nav className='mt-4'>
             <ul className='list-unstyled d-flex gap-4'>
               <li>
-                <Link
+                <a
                   className={`fs-13 fw-medium `}
-                  to='/explore-the-platform'
+                  href='https://mystartupcourse.com/explore-the-platform-1.html'
                   style={{ color: '#000000' }}
                 >
                   EXPLORE THE PLATFORM
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
+                <a
                   className='fs-13 fw-medium'
-                  to='/explore-the-course'
+                  href='https://mystartupcourse.com/explore-the-course.html'
                   style={{ color: '#000000' }}
                 >
                   EXPLORE THE COURSE
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  className='fs-13 fw-medium'
-                  to='/faq'
+                <span
+                  className='fs-13 fw-medium cursor-pointer'
+                  onClick={() => setFaqModal(true)}
                   style={{ color: '#000000' }}
                 >
                   FAQS
-                </Link>
+                </span>
               </li>
               <li>
-                <Link
+                <a
                   className='fs-13 fw-medium'
-                  to='/contact'
+                  href='https://mystartupcourse.com/contact.html'
                   style={{ color: '#000000' }}
                 >
                   CONTACT
-                </Link>
+                </a>
               </li>
               <li>
                 <Link

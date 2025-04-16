@@ -22,22 +22,22 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
       <nav className='mt-4'>
         <ul className='list-unstyled d-flex gap-4'>
           <li className={`${platformClass}`}>
-            <Link
-              className='fs-13 fw-medium'
-              to='/explore-the-platform'
-              style={{ color: linkColor }}
+            <a
+              className={`fs-13 fw-medium `}
+              href='https://mystartupcourse.com/explore-the-platform-1.html'
+              style={{ color: '#000000' }}
             >
               EXPLORE THE PLATFORM
-            </Link>
+            </a>
           </li>
           <li className={`${courseClass}`}>
-            <Link
+            <a
               className='fs-13 fw-medium'
-              to='/explore-the-course'
-              style={{ color: linkColor }}
+              href='https://mystartupcourse.com/explore-the-course.html'
+              style={{ color: '#000000' }}
             >
               EXPLORE THE COURSE
-            </Link>
+            </a>
           </li>
           <li>
             <span
@@ -49,13 +49,13 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
             </span>
           </li>
           <li>
-            <Link
+            <a
               className='fs-13 fw-medium'
-              to='/contact'
-              style={{ color: linkColor }}
+              href='https://mystartupcourse.com/contact.html'
+              style={{ color: '#000000' }}
             >
               CONTACT
-            </Link>
+            </a>
           </li>
           <li>
             <Link

@@ -144,22 +144,22 @@ const ChooseLogin = () => {
         <nav className='mt-4'>
           <ul className='list-unstyled nav-links'>
             <li>
-              <Link
+              <a
                 className={`fs-13 fw-medium `}
-                to='/explore-the-platform'
+                href='https://mystartupcourse.com/explore-the-platform-1.html'
                 style={{ color: '#000000' }}
               >
                 EXPLORE THE PLATFORM
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
+              <a
                 className='fs-13 fw-medium'
-                to='/explore-the-course'
+                href='https://mystartupcourse.com/explore-the-course.html'
                 style={{ color: '#000000' }}
               >
                 EXPLORE THE COURSE
-              </Link>
+              </a>
             </li>
             <li>
               <span
@@ -171,13 +171,13 @@ const ChooseLogin = () => {
               </span>
             </li>
             <li>
-              <Link
+              <a
                 className='fs-13 fw-medium'
-                to='/contact'
+                href='https://mystartupcourse.com/contact.html'
                 style={{ color: '#000000' }}
               >
                 CONTACT
-              </Link>
+              </a>
             </li>
             <li>
               <Link
