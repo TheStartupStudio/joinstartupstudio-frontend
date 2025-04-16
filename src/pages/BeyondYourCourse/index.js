@@ -23,6 +23,9 @@ import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.pn
 import { useLocation } from 'react-router-dom'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import moment from 'moment'
+import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
 
 export default function BeyondYourCourse() {
   const dispatch = useDispatch()
@@ -371,60 +374,25 @@ export default function BeyondYourCourse() {
       <div id='main-body'>
         <div className='row'>
           <div>
-            <div className='header-select-btn'>
-              <div className='account-page-padding'>
-                <h3 className='page-title' style={{ marginLeft: '20px' }}>
-                  <IntMessages id='beyond_your_course.master_classes_upper' />
-                </h3>
-                <p
-                  className='page-description'
-                  style={{ fontWeight: '500', marginLeft: '20px' }}
-                >
-                  <IntMessages id='beyond_your_course.page_description' />
-                </p>
+            <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+              <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
+                <div>
+                  <h3 className='page-title bold-page-title text-black mb-0'>
+                    <IntMessages id='beyond_your_course.master_classes_upper' />
+                  </h3>
+                  <p className='fs-13 fw-light text-black'>
+                    <IntMessages id='beyond_your_course.page_description' />
+                  </p>
+                </div>
+
+                <SelectLanguage />
               </div>
-              <div
-                style={{
-                  display: 'inline-block',
-                  borderRadius: '8px',
-                  background:
-                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                  padding: '1px', // Adjust this value to control border thickness
-                  height: '58px',
-                  boxShadow: '0px 4px 10px 0px #00000040',
-                  marginRight: '20px',
-                  marginTop: '-20px'
-                }}
-              >
-                <Select
-                  options={options}
-                  value={selectedLanguage}
-                  onChange={handleChange}
-                  placeholder='Select Language'
-                  menuPortalTarget={document.body}
-                  isSearchable={false}
-                  styles={{
-                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    control: (base) => ({
-                      ...base,
-                      width: '250px', // Fixed width
-                      minHeight: '40px', // Fixed height
-                      overflow: 'hidden',
-                      border: 'none', // Remove the default border
-                      borderRadius: '6px' // Slightly smaller than the outer container radius
-                    }),
-                    singleValue: (base) => ({
-                      ...base,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    })
-                  }}
-                  components={{
-                    IndicatorSeparator: () => null // Remove separator
-                  }}
-                />
-              </div>
+              <img
+                src={MenuIcon}
+                alt='menu'
+                className='menu-icon-cie self-start-tab cursor-pointer'
+                onClick={() => dispatch(toggleCollapse())}
+              />
             </div>
             <div className='gradient-background-master'>
               <div className='videos-container'>

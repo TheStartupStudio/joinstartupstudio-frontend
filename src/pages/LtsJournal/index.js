@@ -47,9 +47,9 @@ import circleSign from '../../assets/images/academy-icons/circle-fill.png'
 import tickSign from '../../assets/images/academy-icons/tick-sign.png'
 import SelectLessons from './SelectLessons'
 import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions'
+import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
-import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 
 function LtsJournal(props) {
   const dispatch = useDispatch()
@@ -67,7 +67,7 @@ function LtsJournal(props) {
   const [showVideo, setShowVideo] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [videos, setVideos] = useState([])
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0) // Track the current video index
 
   const { finishedContent, levelProgress, loading } = useSelector(
     (state) => state.course
@@ -89,6 +89,14 @@ function LtsJournal(props) {
       description: 'Welcome to Level 3',
       active: false
     }
+  ]
+
+  const searchItems = [
+    'The StarLog Studio - G.',
+    'Course in Entrepreneur.',
+    'Amr - backend-plastic.',
+    'Index.js - IE-time - Yls.',
+    'Vulcan Manual (DM)'
   ]
 
   const lessonsByLevel = {
@@ -424,6 +432,7 @@ function LtsJournal(props) {
             title: 'Task #23: Create Your Final I Am Video',
             redirectId: 125
           },
+          // { id: 'task4', title: "Task #4: Build Your Team and Find Your Mentor",redirectId:126},
           {
             id: 'task24',
             title: "Task #24: Build Your Startup's Final Pitch",
@@ -541,7 +550,9 @@ function LtsJournal(props) {
   }
 
   const getOptionStatus = (redirectId, lessons, isLevel3 = false) => {
+    // Special handling for level 3
     if (isLevel3) {
+      // Get all children from all sections flattened into a single array
       const allLevel3Content = lessonsByLevel[2]
         .flatMap((section) => section.children)
         .sort((a, b) => a.redirectId - b.redirectId)
@@ -566,6 +577,7 @@ function LtsJournal(props) {
       }
     }
 
+    // Regular handling for other levels remains the same
     const index = lessons.findIndex(
       (lesson) => lesson.redirectId === redirectId
     )
@@ -601,7 +613,7 @@ function LtsJournal(props) {
         const status = getOptionStatus(child.redirectId, lesson.children, true)
 
         return {
-          value: `${lesson.id}_${child.id}`,
+          value: `${lesson.id}_${child.id}`, // Create unique value by combining parent and child IDs
           label: child.title,
           icon:
             status.status === 'done'
@@ -613,7 +625,7 @@ function LtsJournal(props) {
             status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
           disabled: status.disabled,
           redirectId: child.redirectId,
-          parentId: lesson.id
+          parentId: lesson.id // Add parent ID reference
         }
       })
 
@@ -722,7 +734,6 @@ function LtsJournal(props) {
           <div className='row'>
             <div className='px-0'>
               <div>
-                {/* Course Header */}
                 <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
                   <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
                     <div>
@@ -744,26 +755,20 @@ function LtsJournal(props) {
                   />
                 </div>
 
-                <div>
-                  <div
-                    className='styled-scrollbar gradient-background-journal'
-                    ref={contentContainer}
-                  >
-                    {/* Course Content */}
-                    <div className='course-container'>
-                      <div className='levels-container'>
-                        {levels.map((level, index) => (
-                          <div
-                            key={index}
-                            className={`course-level ${
-                              index === activeLevel ? 'active-level' : ''
-                            }`}
-                            onClick={() => setActiveLevel(index)}
-                          >
-                            {level.title}
-                          </div>
-                        ))}
-                      </div>
+              <div >
+                <div className='styled-scrollbar gradient-background-journal' ref={contentContainer}>
+                  <div className='course-container'>
+                    <div className='levels-container'>
+                      {levels.map((level, index) => (
+                        <div
+                          key={index}
+                          className={`course-level ${index === activeLevel ? 'active-level' : ''}`}
+                          onClick={() => setActiveLevel(index)}
+                        >
+                          {level.title}
+                        </div>
+                      ))}
+                    </div>
 
                       <div className='course-section'>
                         <div className='course-button-group'>
@@ -776,8 +781,8 @@ function LtsJournal(props) {
                                   id={'searchBar'}
                                   type={'search'}
                                   labelTitle={props.intl.formatMessage({
-                                    id: 'my_journal.search_journals',
-                                    defaultMessage: 'Search Journals'
+                                    id: 'my_journal.search_lessons',
+                                    defaultMessage: 'Search lessons'
                                   })}
                                   imgSrc={searchJ}
                                   imageStyle={{ filter: 'grayscale(1)' }}
@@ -786,64 +791,61 @@ function LtsJournal(props) {
                             </div>
                           </div>
 
-                          <div className='search-input-wrapper'>
-                            <select
-                              className='course-btn select-lesson search-journal-input'
-                              value={selectedLesson}
-                              onChange={(e) => {
-                                const lessonId = e.target.value
-                                setSelectedLesson(lessonId)
-                                const selectedLesson = lessonsByLevel[
-                                  activeLevel
-                                ].find(
-                                  (lesson) =>
-                                    lesson.id === lessonId ||
-                                    lesson.children?.some(
-                                      (child) => child.id === lessonId
-                                    )
-                                )
-                                if (selectedLesson) {
-                                  const lessonRedirectId =
-                                    selectedLesson.redirectId ||
-                                    selectedLesson.children?.find(
-                                      (child) => child.id === lessonId
-                                    )?.redirectId ||
-                                    52 // Default redirect ID
-                                  history.push(
-                                    `/my-course-in-entrepreneurship/journal/${lessonRedirectId}`
+                          <div className='select-lessons'>
+                            <SelectLessons
+                              options={options}
+                              selectedCourse={selectedLesson}
+                              setSelectedCourse={(selectedOption) => {
+                                if (!selectedOption || !selectedOption.value) {
+                                  console.error(
+                                    'Invalid selected option:',
+                                    selectedOption
                                   )
+                                  return
+                                }
+
+                                setSelectedLesson(selectedOption)
+
+                                if (activeLevel === 2) {
+                                  const [parentId, childId] =
+                                    selectedOption.value.split('_')
+                                  if (childId === 'parent') return // Skip parent options
+
+                                  // Find the correct section and child based on both parent and child IDs
+                                  const selectedSection =
+                                    lessonsByLevel[2].find(
+                                      (section) => section.id === parentId
+                                    )
+                                  const selectedLesson =
+                                    selectedSection?.children?.find(
+                                      (child) => child.id === childId
+                                    )
+
+                                  if (selectedLesson?.redirectId) {
+                                    history.push(
+                                      `/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`
+                                    )
+                                  }
+                                } else {
+                                  const selectedLesson = lessonsByLevel[
+                                    activeLevel
+                                  ]?.find(
+                                    (lesson) =>
+                                      lesson.id === selectedOption.value
+                                  )
+
+                                  if (selectedLesson?.redirectId) {
+                                    history.push(
+                                      `/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`
+                                    )
+                                  }
                                 }
                               }}
-                            >
-                              <option value=''>
-                                {props.intl.formatMessage({
-                                  id: 'my_journal.select_lessons',
-                                  defaultMessage: 'Select Lessons to View'
-                                })}
-                              </option>
-                              {lessonsByLevel[activeLevel].map((lesson) =>
-                                lesson.isParent ? (
-                                  <optgroup
-                                    key={lesson.id}
-                                    label={lesson.title}
-                                    style={{ color: '#333', fontWeight: '600' }}
-                                  >
-                                    {lesson.children.map((child) => (
-                                      <option key={child.id} value={child.id}>
-                                        {child.title}
-                                      </option>
-                                    ))}
-                                  </optgroup>
-                                ) : (
-                                  <option key={lesson.id} value={lesson.id}>
-                                    {lesson.title}
-                                  </option>
-                                )
-                              )}
-                            </select>
+                            />
                           </div>
 
                           <div
+                            className='review-course-btn'
                             style={{
                               display: 'inline-block',
                               borderRadius: '8px',
@@ -866,132 +868,183 @@ function LtsJournal(props) {
                           </div>
                         </div>
                       </div>
+
+                      {/* <div className="col-md-12 general-video-container"> */}
+                      {/* <div className="video-container-journal">
+    <div>
+      <div className="video-container-bg">
+        <div className="video-title">
+          <img src={circleIcon} alt="circle-icon" />
+          <h6>{levels[activeLevel]?.description}</h6>
+        </div>
+        {videos.length > 0 && (
+          <>
+            <ReactPlayer
+              url={videos[currentVideoIndex].url}
+              controls
+              width="100%"
+              height="auto"
+              light={videos[currentVideoIndex].thumbnail}
+            />
+            <div className="video-navigation-buttons d-flex justify-content-between mt-3">
+              <button
+                className="btn btn-primary"
+                onClick={handlePreviousVideo}
+                disabled={currentVideoIndex === 0}
+              >
+                Previous
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={handleNextVideo}
+                disabled={currentVideoIndex === videos.length - 1}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  </div> */}
+                      {/* <div className='content-container'>
+    <ReactQuill
+      theme="snow"
+      value={editorContent}
+      onChange={setEditorContent}
+      placeholder="Write your notes here..."
+    />
+  </div> */}
+                      {/* </div> */}
                     </div>
 
-                    {/* Existing Journal Content */}
                     <Switch>
                       <Route
                         path={`${props.match.url}/:journalId`}
-                        render={(renderProps) => (
-                          <LtsJournalContent
-                            {...renderProps}
-                            contentContainer={contentContainer}
-                            backRoute={props.match.url}
-                            saved={journalChanged}
-                          />
-                        )}
+                        render={(renderProps) => {
+                          const { journalId } = renderProps.match.params
+
+                          if (!isContentAccessible(journalId)) {
+                            return <Redirect to={`${props.match.url}/51`} />
+                          }
+
+                          return (
+                            <LtsJournalContent
+                              {...renderProps}
+                              contentContainer={contentContainer}
+                              backRoute={props.match.url}
+                              saved={journalChanged}
+                            />
+                          )
+                        }}
                       />
                     </Switch>
                   </div>
 
-                  <Switch>
-                    <Route
-                      path={`${props.match.url}/:journalId`}
-                      render={(renderProps) => {
-                        const { journalId } = renderProps.match.params
+                  <div className='page-card__sidebar col-lg-4 col-md-5'>
+                    {/* <div className='page-card__sidebar-header'>
+                    <label className='search-input'>
+                      <img className='search-input__icon' src={searchIcon} alt='Search' />
+                      <input
+                        type='text'
+                        className='search-input__input'
+                        name='searchedNote'
+                        placeholder={props.intl.formatMessage({
+                          id: 'my_journal.search_journals',
+                          defaultMessage: 'Search Journals'
+                        })}
+                        onChange={handleJournalSearch}
+                      />
+                    </label>
+                  </div> */}
 
-                        if (!isContentAccessible(journalId)) {
-                          return <Redirect to={`${props.match.url}/51`} />
-                        }
+                    <div className='page-card__sidebar-content styled-scrollbar'>
+                      <Accordion
+                        defaultActiveKey='0'
+                        className='accordion-menu lizas-accordion'
+                      >
+                        {journals.map((journalItem, journalItemIdx) => (
+                          <div
+                            key={journalItem.id}
+                            className='accordion-menu__item cursor-pointer accordion-menu__item-transition'
+                          >
+                            {journalItem.children?.length ? (
+                              <>
+                                <Accordion.Toggle
+                                  as='a'
+                                  href='#'
+                                  className='accordion-menu__item-toggle'
+                                  eventKey={`${journalItemIdx}`}
+                                  onClick={() =>
+                                    journalItem.content &&
+                                    history.push(
+                                      `${props.match.url}/${journalItem.id}`
+                                    )
+                                  }
+                                >
+                                  <span>{journalItem.title}</span>
+                                  <FontAwesomeIcon icon={faAngleDown} />
+                                </Accordion.Toggle>
 
-                        return (
-                          <LtsJournalContent
-                            {...renderProps}
-                            contentContainer={contentContainer}
-                            backRoute={props.match.url}
-                            saved={journalChanged}
-                          />
-                        )
-                      }}
-                    />
-                  </Switch>
-                </div>
-
-                <div className='page-card__sidebar col-lg-4 col-md-5'>
-                  <div className='page-card__sidebar-content styled-scrollbar'>
-                    <Accordion
-                      defaultActiveKey='0'
-                      className='accordion-menu lizas-accordion'
-                    >
-                      {journals.map((journalItem, journalItemIdx) => (
-                        <div
-                          key={journalItem.id}
-                          className='accordion-menu__item cursor-pointer accordion-menu__item-transition'
-                        >
-                          {journalItem.children?.length ? (
-                            <>
-                              <Accordion.Toggle
-                                as='a'
-                                href='#'
+                                <Accordion.Collapse
+                                  eventKey={`${journalItemIdx}`}
+                                >
+                                  <ul className='accordion-menu__submenu'>
+                                    {journalItem.children.map(
+                                      (journalChildren) => (
+                                        <li
+                                          key={journalChildren.id}
+                                          className='accordion-menu__submenu-item'
+                                        >
+                                          <NavLink
+                                            to={`${props.match.url}/${journalChildren.id}`}
+                                          >
+                                            <div className='accordion-menu__submenu-item-icon'>
+                                              <FontAwesomeIcon
+                                                icon={faFileAlt}
+                                              />
+                                            </div>
+                                            <div className='accordion-menu__submenu-item-details'>
+                                              <h5 className='accordion-menu__submenu-item-title'>
+                                                {journalChildren.title}
+                                              </h5>
+                                              {journalChildren.userEntry?.[0]
+                                                ?.createdAt ? (
+                                                <div className='accordion-menu__submenu-item-subtitle'>
+                                                  {moment(
+                                                    journalChildren.userEntry[0]
+                                                      .createdAt
+                                                  )
+                                                    .locale(currentLanguage)
+                                                    .format(
+                                                      'MMMM D, YYYY | hh:mma'
+                                                    )}
+                                                </div>
+                                              ) : (
+                                                <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
+                                                  NOT STARTED
+                                                </div>
+                                              )}
+                                            </div>
+                                          </NavLink>
+                                        </li>
+                                      )
+                                    )}
+                                  </ul>
+                                </Accordion.Collapse>
+                              </>
+                            ) : (
+                              <NavLink
+                                to={`${props.match.url}/${journalItem.id}`}
                                 className='accordion-menu__item-toggle'
-                                eventKey={`${journalItemIdx}`}
-                                onClick={() =>
-                                  journalItem.content &&
-                                  history.push(
-                                    `${props.match.url}/${journalItem.id}`
-                                  )
-                                }
                               >
                                 <span>{journalItem.title}</span>
-                                <FontAwesomeIcon icon={faAngleDown} />
-                              </Accordion.Toggle>
-
-                              <Accordion.Collapse
-                                eventKey={`${journalItemIdx}`}
-                              >
-                                <ul className='accordion-menu__submenu'>
-                                  {journalItem.children.map(
-                                    (journalChildren) => (
-                                      <li
-                                        key={journalChildren.id}
-                                        className='accordion-menu__submenu-item'
-                                      >
-                                        <NavLink
-                                          to={`${props.match.url}/${journalChildren.id}`}
-                                        >
-                                          <div className='accordion-menu__submenu-item-icon'>
-                                            <FontAwesomeIcon icon={faFileAlt} />
-                                          </div>
-                                          <div className='accordion-menu__submenu-item-details'>
-                                            <h5 className='accordion-menu__submenu-item-title'>
-                                              {journalChildren.title}
-                                            </h5>
-                                            {journalChildren.userEntry?.[0]
-                                              ?.createdAt ? (
-                                              <div className='accordion-menu__submenu-item-subtitle'>
-                                                {moment(
-                                                  journalChildren.userEntry[0]
-                                                    .createdAt
-                                                )
-                                                  .locale(currentLanguage)
-                                                  .format(
-                                                    'MMMM D, YYYY | hh:mma'
-                                                  )}
-                                              </div>
-                                            ) : (
-                                              <div className='accordion-menu__submenu-item-subtitle accordion-menu__submenu-item-subtitle--not-started'>
-                                                NOT STARTED
-                                              </div>
-                                            )}
-                                          </div>
-                                        </NavLink>
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              </Accordion.Collapse>
-                            </>
-                          ) : (
-                            <NavLink
-                              to={`${props.match.url}/${journalItem.id}`}
-                              className='accordion-menu__item-toggle'
-                            >
-                              <span>{journalItem.title}</span>
-                            </NavLink>
-                          )}
-                        </div>
-                      ))}
-                    </Accordion>
+                              </NavLink>
+                            )}
+                          </div>
+                        ))}
+                      </Accordion>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1006,11 +1059,11 @@ function LtsJournal(props) {
           className='certificate-modal'
         >
           <span
-            className=' cursor-pointer'
+            className='cursor-pointer'
             onClick={toggleModal}
             style={{ zIndex: '1' }}
           >
-            <img className='left-arrow' src={leftArrow} alt='left' />
+            <img className='left-arrow-modal' src={leftArrow} alt='left' />
           </span>
           <ModalBody>
             <img src={progressLogo} alt='user' className='mb-3' />
@@ -1041,7 +1094,7 @@ function LtsJournal(props) {
                   aria-labelledby='headingOne'
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body d-flex gap-4'>
+                  <div className='accordion-body d-flex gap-4 flex-col-mob'>
                     <div className='d-flex flex-column gap-4'>
                       <CircularProgress
                         percentage={levelProgress?.level1?.percentage || 0}
@@ -1084,7 +1137,7 @@ function LtsJournal(props) {
                   aria-labelledby='headingTwo'
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body d-flex gap-4'>
+                  <div className='accordion-body d-flex gap-4 flex-col-mob'>
                     <div className='d-flex flex-column gap-4'>
                       <CircularProgress
                         percentage={levelProgress?.level2?.percentage || 0}
@@ -1127,7 +1180,7 @@ function LtsJournal(props) {
                   aria-labelledby='headingThree'
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body d-flex gap-4'>
+                  <div className='accordion-body d-flex gap-4 flex-col-mob'>
                     <div className='d-flex flex-column gap-4'>
                       <CircularProgress
                         percentage={levelProgress?.level3?.percentage || 0}

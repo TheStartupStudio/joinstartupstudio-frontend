@@ -127,7 +127,7 @@ const InstructorSidebar = (props) => {
           />
         </Tooltip>
 
-        <Tooltip text={'Master Classes'}>
+        <Tooltip text={'Course In Entrepreneurship'}>
           <SidebarItem
             onClick={() => {
               dispatch(setAccordionToggled(false))
