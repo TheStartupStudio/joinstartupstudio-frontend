@@ -16,7 +16,7 @@ import FormWrapper from './ui/FormWrapper'
 import { setLoginLoading } from '../../../redux/user/Actions'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { Link, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
-import StartupStudioLogo from '../../../assets/images/startup-studio-new-logo.png'
+import StartupStudioLogo from '../../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
 
 import Footer from '../../../components/Footer'
 import Faq from '../../../components/FAQ/Faq'
@@ -132,72 +132,14 @@ const ChooseLogin = () => {
 
   return (
     <div className='container-fluid md-px-5 ps-md-5 choose-login_container-academy gradient-background'>
-      <div
-        className='nav-buttons'
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          padding: '30px 50px',
-          gap: '40px'
-        }}
-      >
-        <nav className='mt-4'>
-          <ul className='list-unstyled nav-links'>
-            <li>
-              <a
-                className={`fs-13 fw-medium `}
-                href='https://mystartupcourse.com/explore-the-platform-1.html'
-                style={{ color: '#000000' }}
-              >
-                EXPLORE THE PLATFORM
-              </a>
-            </li>
-            <li>
-              <a
-                className='fs-13 fw-medium'
-                href='https://mystartupcourse.com/explore-the-course.html'
-                style={{ color: '#000000' }}
-              >
-                EXPLORE THE COURSE
-              </a>
-            </li>
-            <li>
-              <span
-                className='fs-13 fw-medium cursor-pointer'
-                onClick={() => setFaqModal(true)}
-                style={{ color: '#000000' }}
-              >
-                FAQS
-              </span>
-            </li>
-            <li>
-              <a
-                className='fs-13 fw-medium'
-                href='https://mystartupcourse.com/contact.html'
-                style={{ color: '#000000' }}
-              >
-                CONTACT
-              </a>
-            </li>
-            <li>
-              <Link
-                className='fs-13 fw-medium'
-                to='/'
-                style={{ color: '#000000' }}
-              >
-                LOGIN
-              </Link>
-            </li>
-          </ul>
-        </nav>
-        <Faq isOpen={faqModal} setIsOpen={setFaqModal} />
-      </div>
-
+      <a href='http://mystartupcourse.com'>
+        <img src={StartupStudioLogo} alt='course-logo' className='w-200-mob' />
+      </a>
       <Row className='m-0 p-0 align-items-center center-content justify-evenly'>
         <Col md='10' lg='8' className='main-login-container'>
           <FormWrapper className='login-content-wrapper'>
             <div className='welcome-content'>
-              <div className='login-logo'>
+              <div className='login-logo d-none-mob'>
                 <img
                   src={StartupStudioLogo}
                   alt='logo'
@@ -217,8 +159,9 @@ const ChooseLogin = () => {
                 <>
                   <h1 className='login-title text-black'>Welcome...</h1>
                   <p className='text-black fs-5 fw-light'>
-                    ...The Startup Studio Course in Entrepreneurship <br />{' '}
-                    powered by Learn to Start. Please log in or create <br /> an
+                    ...The Startup Studio Course in Entrepreneurship{' '}
+                    <br className='d-none-mob' /> powered by Learn to Start.
+                    Please log in or create <br className='d-none-mob' /> an
                     account.
                   </p>
                 </>
@@ -259,7 +202,6 @@ const ChooseLogin = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   width: '150px',
-                  margin: '1.5rem 7rem ',
                   borderRadius: '8px',
                   background:
                     'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
@@ -288,13 +230,13 @@ const ChooseLogin = () => {
                 </button>
               </div>
 
-              <p className='text-center public-page-text m-1'>
+              <p className='text-center public-page-text m-0-mob m-1'>
                 <IntlMessages id='login.forgot_password' />
                 <Link to='/forgot-password' className='ml-2 link fw-bold'>
                   <IntlMessages id='general.click_here' />
                 </Link>
               </p>
-              <p className='text-center public-page-text m-1 '>
+              <p className='text-center public-page-text m-0-mob m-1'>
                 <IntlMessages id='login.register' />
                 <Link to='/register' className='ml-2 link fw-bold'>
                   <IntlMessages id='login.register_link' />

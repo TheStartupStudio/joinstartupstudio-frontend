@@ -16,27 +16,32 @@ const Header = (props) => {
       onClick={() => props.hideHeaderIcons?.()}
     >
       <div className='d-flex gap-1'>
-        <NavLink to='/dashboard' onClick={() => dispatch(collapseTrue())}>
+        <NavLink
+          className='d-flex gap-1 align-items-center'
+          to='/dashboard'
+          onClick={() => dispatch(collapseTrue())}
+        >
           <img
             src={AcademyLogo}
             alt='logo'
             style={{ marginLeft: isCollapsed && '0px' }}
           />
+
+          {!isCollapsed && (
+            <div>
+              <h4 className='academy-header'>
+                <span className='header-title'>THE</span>
+                <br />
+                STARTUP
+                <br />
+                STUDIO
+              </h4>
+              <p className='powered white-space-no-wrap'>
+                Powered by Learn to Start
+              </p>
+            </div>
+          )}
         </NavLink>
-        {!isCollapsed && (
-          <div>
-            <h4 className='academy-header'>
-              <span className='header-title'>THE</span>
-              <br />
-              STARTUP
-              <br />
-              STUDIO
-            </h4>
-            <p className='powered white-space-no-wrap'>
-              Powered by Learn to Start
-            </p>
-          </div>
-        )}
       </div>
 
       <img

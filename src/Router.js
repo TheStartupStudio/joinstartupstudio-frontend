@@ -28,13 +28,13 @@ function Router(props) {
   const roleRoutes = () => {
     if (!isAuthenticated) return publicRoutes
 
-    // if (!user?.user?.stripe_subscription_id) {
-    //   return [
-    //     { path: '/subscribe', component: CheckSubscription, exact: true },
-    //     { path: '/cancel-payment', component: CancelSubscription, exact: true },
-    //     { path: '/payment', component: Payment, exact: true }
-    //   ]
-    // }
+    if (!user?.user?.stripe_subscription_id) {
+      return [
+        { path: '/subscribe', component: CheckSubscription, exact: true },
+        { path: '/cancel-payment', component: CancelSubscription, exact: true },
+        { path: '/payment', component: Payment, exact: true }
+      ]
+    }
 
     switch (user?.user?.role_id) {
       case 1:

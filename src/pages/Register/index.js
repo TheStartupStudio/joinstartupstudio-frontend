@@ -119,10 +119,7 @@ function Register() {
                   <p className='mb-2 fs-13 fw-medium ms-3 text-black'>
                     Account Information
                   </p>
-                  <div
-                    className='d-grid gap-3'
-                    style={{ gridTemplateColumns: '1fr 1fr' }}
-                  >
+                  <div className='d-grid gap-3 grid-col-2 grid-col-1-mob'>
                     <div className='relative'>
                       <ModalInput
                         id={'fullName'}

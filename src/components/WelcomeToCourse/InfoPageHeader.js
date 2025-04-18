@@ -10,7 +10,7 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
 
   return (
     <header
-      className={`py-4 px-5 d-flex justify-content-between align-items-start ${className}`}
+      className={`py-4 px-5 d-flex justify-content-between align-items-start p-1rem-tab ${className}`}
     >
       <img
         onClick={() => history.push('/')}

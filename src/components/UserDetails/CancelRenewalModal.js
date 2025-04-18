@@ -44,7 +44,7 @@ function CancelRenewalModal({ canceledRenewal, setCanceledRenewal }) {
           You will have access to the platform until the end of your billing
           period.
         </p>
-        <div className='d-flex gap-3 justify-content-center mt-5 mb-3'>
+        <div className='d-flex gap-3 justify-content-center mt-5 mb-3 flex-col-500'>
           <button
             className='sub-modal-save-btn'
             style={{ backgroundColor: '#DEE1E6', color: 'black' }}

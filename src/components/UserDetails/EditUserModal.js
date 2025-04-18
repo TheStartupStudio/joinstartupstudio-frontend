@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { Button, Modal, ModalBody } from 'reactstrap'
 import creditCard from '../../assets/images/academy-icons/credit-card.png'
+import cancelRenewal from '../../assets/images/academy-icons/cancel-renewal.png'
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import instaLogo from '../../assets/images/academy-icons/instagram.png'
 import browserLogo from '../../assets/images/academy-icons/internet.png'
@@ -193,10 +194,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
           </div>
 
           <form>
-            <div
-              className='mt-5 d-grid gap-5 grid-col-4-2'
-              style={{ gridTemplateColumns: '4fr 2fr' }}
-            >
+            <div className='mt-5 d-grid gap-5 grid-col-4-2 edit-user-modal'>
               <div>
                 <h4 className='fs-15'>Personal Details</h4>
                 <div className='d-flex flex-column gap-3'>
@@ -398,22 +396,20 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
                 />
               </div>
             </div>
-            <div className='d-flex justify-content-between mt-3 ms-2'>
+            <div className='d-flex justify-content-between mt-3 ms-2 flex-col-900 gap-05-900'>
               <div
-                className='d-flex align-items-center gap-2 cursor-pointer'
+                className='d-flex align-items-center justify-content-center gap-2 cursor-pointer mt-5'
                 onClick={subToggle}
               >
-                <img src={creditCard} alt='credit-card' />
-                <p className='mb-0 fs-15 fw-medium'>
-                  Manage Subscription & Billing
-                </p>
+                <img src={cancelRenewal} alt='credit-card' />
+                <p className='mb-0 fs-15 fw-medium'>Cancel Subscription</p>
               </div>
-              <div className='d-flex gap-3'>
-                <Button className='close-btn' onClick={toggle}>
+              <div className='d-flex gap-3 d-grid-900 grid-col-2-900 grid-col-1-500'>
+                <Button className='close-btn w-full-900' onClick={toggle}>
                   CANCEL
                 </Button>
                 <button
-                  className='modal-save-btn'
+                  className='modal-save-btn w-full-900'
                   onClick={handleSubmit}
                   disabled={loading}
                 >

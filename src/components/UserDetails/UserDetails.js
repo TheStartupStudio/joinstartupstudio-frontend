@@ -24,13 +24,13 @@ function UserDetails({ profilePic, userName, userProffesion }) {
 
   const subToggle = () => {
     setModal((prev) => !prev)
-    setSubscriptionModal((prev) => !prev)
+    setCancelSubModal((prev) => !prev)
   }
 
-  const toggleCancelModal = () => {
-    setCancelSubModal((prev) => !prev)
-    setSubscriptionModal((prev) => !prev)
-  }
+  // const toggleCancelModal = () => {
+  //   setCancelSubModal((prev) => !prev)
+  //   setSubscriptionModal((prev) => !prev)
+  // }
 
   const toggleCancelRenewal = () => {
     setCancelSubModal((prev) => !prev)
@@ -42,8 +42,6 @@ function UserDetails({ profilePic, userName, userProffesion }) {
   }
 
   const { user } = useSelector((state) => state.user.user)
-
-  // console.log('ridon46', user)
 
   return (
     <>
@@ -110,16 +108,16 @@ function UserDetails({ profilePic, userName, userProffesion }) {
 
       <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
 
-      <SubscriptionModal
+      {/* <SubscriptionModal
         subsbsciptionModal={subsbsciptionModal}
         setSubscriptionModal={setSubscriptionModal}
         toggleCancelModal={toggleCancelModal}
-      />
+      /> */}
 
       <CancelSubModal
         cancelSubModal={cancelSubModal}
         setCancelSubModal={setCancelSubModal}
-        toggleCancelModal={toggleCancelModal}
+        // toggleCancelModal={toggleCancelModal}
         toggleCancelRenewal={toggleCancelRenewal}
       />
       <CancelRenewalModal

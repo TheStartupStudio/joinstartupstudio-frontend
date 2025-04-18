@@ -44,7 +44,7 @@ function CancelSubModal({
           Are you sure you want to cancel your subscription?
         </p>
 
-        <div className='d-flex gap-3 justify-content-center mt-5 mb-3'>
+        <div className='d-flex gap-3 justify-content-center mt-5 mb-3 flex-col-500'>
           <Button
             color='info'
             className='sub-close-btn'

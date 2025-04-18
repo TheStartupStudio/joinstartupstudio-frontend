@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify'
 import LoadingAnimation from '../../ui/loadingAnimation'
 import BloorBackgroundWrapper from '../../ui/BlurBackgroundWrapper'
 import ImpersonationNavbar from '../../components/Navbar/ImpersonationNavbar'
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 
 function Layout({ children }) {
   const originalToken = localStorage.getItem('original_access_token')
@@ -17,6 +18,7 @@ function Layout({ children }) {
   const { generalLoading } = useSelector((state) => state.general)
   const isCollapsed = useSelector((state) => state.sidebar.isCollapsed)
   const dispatch = useDispatch()
+  const location = useLocation()
 
   const toggleBackdrop = () => {
     dispatch(changeSidebarState(false))
@@ -35,14 +37,23 @@ function Layout({ children }) {
       )}
       {originalToken && <ImpersonationNavbar originalToken={originalToken} />}
       <div className='wrapper' style={originalToken && { marginTop: '32px' }}>
-        <Sidebar
-          handleSideBar={setSideBarVisible}
-          sideBarVisible={sideBarVisible}
-          hideHeaderIcons={hideHeaderIcons}
-        />
+        {!(
+          location.pathname === '/subscribe' || location.pathname === '/payment'
+        ) && (
+          <Sidebar
+            handleSideBar={setSideBarVisible}
+            sideBarVisible={sideBarVisible}
+            hideHeaderIcons={hideHeaderIcons}
+          />
+        )}
         <div
           id='content'
-          className='auth-content'
+          className={
+            location.pathname === '/subscribe' ||
+            location.pathanme === '/payment'
+              ? ''
+              : 'auth-content'
+          }
           // className='w-100'
         >
           {sideBarState ? (

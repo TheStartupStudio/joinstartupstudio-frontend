@@ -28,17 +28,21 @@ function AboutMe({ user }) {
 
   const subToggle = () => {
     setModal((prev) => !prev)
-    setSubscriptionModal((prev) => !prev)
+    setCancelSubModal((prev) => !prev)
   }
 
-  const toggleCancelModal = () => {
-    setCancelSubModal((prev) => !prev)
-    setSubscriptionModal((prev) => !prev)
-  }
+  // const toggleCancelModal = () => {
+  //   setCancelSubModal((prev) => !prev)
+  //   setSubscriptionModal((prev) => !prev)
+  // }
 
   const toggleCancelRenewal = () => {
     setCancelSubModal((prev) => !prev)
     setCanceledRenewal((prev) => !prev)
+  }
+
+  const toggleCertificate = () => {
+    setCertificate((prev) => !prev)
   }
 
   const fullText = `${user?.bio}`
@@ -175,16 +179,16 @@ function AboutMe({ user }) {
 
       <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
 
-      <SubscriptionModal
+      {/* <SubscriptionModal
         subsbsciptionModal={subsbsciptionModal}
         setSubscriptionModal={setSubscriptionModal}
         toggleCancelModal={toggleCancelModal}
-      />
+      /> */}
 
       <CancelSubModal
         cancelSubModal={cancelSubModal}
         setCancelSubModal={setCancelSubModal}
-        toggleCancelModal={toggleCancelModal}
+        // toggleCancelModal={toggleCancelModal}
         toggleCancelRenewal={toggleCancelRenewal}
       />
       <CancelRenewalModal
@@ -192,9 +196,10 @@ function AboutMe({ user }) {
         setCanceledRenewal={setCanceledRenewal}
       />
 
-      <SharePortfolioModal
-        sharePortfolio={sharePortfolio}
-        setSharePortfolio={setSharePortfolio}
+      <CertificateModal
+        certificate={certificate}
+        toggleCertificate={toggleCertificate}
+        name={user.name}
       />
     </>
   )

@@ -4,13 +4,18 @@ import courseLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Log
 import AcademyBtn from '../../components/AcademyBtn'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { setGeneralLoading } from '../../redux/general/Actions'
+import { userLogout } from '../../redux'
 
-const stripePromise = loadStripe(
-  'pk_test_51R9mFsEAyLMjrgXG6pzfEQNhfYmglxIAcYKkcdAu3CAdv0fZ0AOfxeHeLZWsY1f4hR2GCf43CkqUAOUuLdRHi66p00WaeNlDaf'
-)
+// const stripePromise = loadStripe(
+//   'pk_test_51R9mFsEAyLMjrgXG6pzfEQNhfYmglxIAcYKkcdAu3CAdv0fZ0AOfxeHeLZWsY1f4hR2GCf43CkqUAOUuLdRHi66p00WaeNlDaf'
+// )
+const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
 
 function CheckSubscription() {
   const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
   const handleClick = async () => {
     setIsLoading(true)
     try {
@@ -31,8 +36,30 @@ function CheckSubscription() {
     }
   }
 
+  const handleLogout = async () => {
+    dispatch(setGeneralLoading(true))
+    await dispatch(userLogout())
+      .then(() => {
+        localStorage.clear()
+        // history.push('/')
+        window.location.href = '/'
+      })
+      .catch((error) => {
+        console.log('error', error)
+      })
+      .finally(() => {
+        window.location.href = '/'
+        dispatch(setGeneralLoading(false))
+      })
+  }
+
   return (
     <>
+      <div className='d-flex justify-content-end m-3'>
+        <button onClick={handleLogout} className='log-out-btn-sub'>
+          Log Out
+        </button>
+      </div>
       <div className='d-flex justify-content-center p-5'>
         <div className='d-flex align-items-center flex-column payment-main'>
           <img

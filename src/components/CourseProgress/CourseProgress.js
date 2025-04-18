@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Modal, ModalBody } from 'reactstrap'
 import courseLogo from '../../assets/images/academy-icons/course-progress.png'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
@@ -9,6 +9,7 @@ import CourseNotStarted from './CourseNotStarted'
 import InProggresCourse from './InProggresCourse'
 import ProgressDone from './ProgressDone'
 import { useDispatch, useSelector } from 'react-redux'
+import { Collapse } from 'bootstrap'
 
 function CourseProgress() {
   const [modal, setModal] = useState(false)
@@ -18,6 +19,25 @@ function CourseProgress() {
   )
 
   const toggleModal = () => setModal((prev) => !prev)
+
+  const accordionRefs = useRef([])
+
+  useEffect(() => {
+    accordionRefs.current.forEach((ref) => {
+      if (ref) {
+        new Collapse(ref, { toggle: false })
+      }
+    })
+  }, [])
+
+  const handleAccordionClick = (index, event) => {
+    event.preventDefault()
+    const target = accordionRefs.current[index]
+    if (target) {
+      const bsCollapse = Collapse.getInstance(target) || new Collapse(target)
+      bsCollapse.toggle()
+    }
+  }
 
   const lessonsByLevel = {
     0: [
@@ -450,8 +470,7 @@ function CourseProgress() {
                 <button
                   className='accordion-button collapsed text-secondary fw-medium'
                   type='button'
-                  data-bs-toggle='collapse'
-                  data-bs-target='#collapseOne'
+                  onClick={(e) => handleAccordionClick(0, e)}
                   aria-expanded='false'
                   aria-controls='collapseOne'
                 >
@@ -460,6 +479,7 @@ function CourseProgress() {
               </h2>
               <div
                 id='collapseOne'
+                ref={(el) => (accordionRefs.current[0] = el)}
                 className='accordion-collapse collapse'
                 aria-labelledby='headingOne'
                 data-bs-parent='#progressAccordion'
@@ -493,8 +513,7 @@ function CourseProgress() {
                 <button
                   className='accordion-button collapsed text-secondary fw-medium'
                   type='button'
-                  data-bs-toggle='collapse'
-                  data-bs-target='#collapseTwo'
+                  onClick={(e) => handleAccordionClick(1, e)}
                   aria-expanded='false'
                   aria-controls='collapseTwo'
                 >
@@ -503,6 +522,7 @@ function CourseProgress() {
               </h2>
               <div
                 id='collapseTwo'
+                ref={(el) => (accordionRefs.current[1] = el)}
                 className='accordion-collapse collapse'
                 aria-labelledby='headingTwo'
                 data-bs-parent='#progressAccordion'
@@ -536,8 +556,7 @@ function CourseProgress() {
                 <button
                   className='accordion-button collapsed text-secondary fw-medium'
                   type='button'
-                  data-bs-toggle='collapse'
-                  data-bs-target='#collapseThree'
+                  onClick={(e) => handleAccordionClick(2, e)}
                   aria-expanded='false'
                   aria-controls='collapseThree'
                 >
@@ -546,6 +565,7 @@ function CourseProgress() {
               </h2>
               <div
                 id='collapseThree'
+                ref={(el) => (accordionRefs.current[2] = el)}
                 className='accordion-collapse collapse'
                 aria-labelledby='headingThree'
                 data-bs-parent='#progressAccordion'
