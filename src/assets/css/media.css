@@ -681,15 +681,14 @@
 
   .beyond-your-course-videos {
     /* width: 24%; */
-    width: 33%;
+    /* width: 33%; */
     display: inline-block;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 10px;
   }
 
-  .startuplive-archive-videos .beyond-your-course-videos {
+  /* .startuplive-archive-videos .beyond-your-course-videos {
     width: 33%;
-  }
+  } */
 
   /* .all-videos-beyond-your-course-videos {
     width: 24%;
@@ -1694,6 +1693,11 @@
 }
 
 @media (min-width: 1314px) and (max-width: 1024.9px) {
+
+  .beyond-your-course-video-thumb .video-cards-beyond {
+    width: 100% !important;
+  }
+
   .tablet {
     display: show;
   }
@@ -2153,9 +2157,6 @@
 }
 
 @media (max-width: 375px) {
-  .beyond-your-course-video-thumb img {
-    height: 120px;
-  }
 
   .arrow-icon-1 {
     height: 120px;
@@ -2166,9 +2167,6 @@
 }
 
 @media (min-width: 375px) and (max-width: 425px) {
-  .beyond-your-course-video-thumb img {
-    height: 150px;
-  }
 
   .arrow-icon-1 {
     height: 150px;
@@ -2184,9 +2182,6 @@
 }
 
 @media (min-width: 425px) and (max-width: 768px) {
-  .beyond-your-course-video-thumb img {
-    height: 250px;
-  }
 
   .arrow-icon-1 {
     height: 250px;
@@ -2225,15 +2220,12 @@
 }
 
 @media (min-width: 768px) {
-  .beyond-your-course-video-thumb img {
-    height: 120px;
-  }
 
   .mc-videos-mobile .arrow-icon-1 {
     height: 350px;
   }
 
-  .mc-videos-mobile .beyond-your-course-video-thumb img {
+  .mc-videos-mobile {
     height: 350px;
   }
 
@@ -2264,9 +2256,9 @@
     flex-flow: unset;
   }
 
-  .beyond-your-course-videos {
+  /* .beyond-your-course-videos {
     margin: 0 15px;
-  }
+  } */
 
   .levels-of-journey__description {
     padding-left: 0 !important;
@@ -2280,9 +2272,9 @@
 }
 
 @media (max-width: 770px) {
-  .beyond-your-course-videos {
+  /* .beyond-your-course-videos {
     margin: 0 8rem !important;
-  }
+  } */
 }
 
 @media (min-width: 768px) {

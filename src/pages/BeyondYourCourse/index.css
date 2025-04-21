@@ -34,9 +34,24 @@
 
 .card-group-beyond-your-course {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-    padding: 1rem;
+    grid-template-columns: repeat(5, minmax(180px, 1fr));
+    gap: 3rem;
+    padding: 0.5rem;
+}
+
+
+.beyond-your-course-video-thumb img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover;
+}
+
+@media (max-width: 1340px) {
+    .card-group-beyond-your-course {
+        display: grid !important;
+        grid-template-columns: repeat(5, minmax(180px, 1fr));
+        gap: 1.5rem;
+    }
 }
 
 /* Responsive breakpoints */
@@ -48,8 +63,8 @@
 
 @media (max-width: 1000px) {
     .videos-container {
-        padding: 15px;
-        margin: 15px 5px;
+        padding: 25px !important;
+        margin: 15px 0px !important;
     }
 
     .card-group-beyond-your-course {
@@ -60,12 +75,6 @@
 
     .beyond-videos-desktop {
         gap: 1rem;
-    }
-
-    .beyond-your-course-video-thumb img {
-        height: 220px !important;
-        width: 100%;
-        object-fit: cover;
     }
 
     .level-navigation {
@@ -79,6 +88,8 @@
         width: 100%;
         padding: .5rem 1rem;
         justify-content: center;
+        color: #2d3748 !important;
+        font-weight: 600;
     }
 }
 
@@ -90,7 +101,7 @@
 
     .card-group-beyond-your-course {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 1rem;
+        /* gap: 1rem; */
     }
 }
 
@@ -115,7 +126,6 @@
 
     /* Control video height */
     .beyond-your-course-video-thumb img {
-        height: 180px !important;
         object-fit: cover;
     }
 }
@@ -137,13 +147,10 @@
         gap: 0.8rem;
     }
 
-    .beyond-your-course-video-thumb img {
-        height: 160px !important;
-    }
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 728px) {
 
     .videos-container {
         /* padding: 10px; */
@@ -153,7 +160,7 @@
         box-sizing: border-box;
         overflow: hidden;
         text-align: center;
-        margin: 40px 5px !important;
+        /* margin: 40px 5px !important; */
 
 
     }
@@ -161,7 +168,7 @@
     .card-group-beyond-your-course {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 2rem;
         width: 100%;
     }
 
@@ -212,13 +219,17 @@
         flex-direction: column;
         gap: 10px;
     }
+
+    .gradient-background-master {
+        padding: 5px !important;
+    }
 }
 
 /* For screens 769px and smaller */
 @media (max-width: 769px) {
     .videos-container {
         padding: 8px;
-        margin: 8px auto;
+        margin: 8px 0px;
         border-radius: 15px;
         width: 100%;
         box-sizing: border-box;
@@ -236,13 +247,12 @@
 
     .beyond-your-course-video-thumb {
         width: 100%;
-        max-width: 300px;
+        /* max-width: 300px; */
         margin: 0 auto;
     }
 
     .beyond-your-course-video-thumb img {
         width: 100%;
-        height: 180px !important;
         /* Match the height defined for 450px */
         object-fit: cover;
         border-radius: 10px;
@@ -289,12 +299,9 @@
 
     .videos-container {
         padding: 8px;
-        margin: 8px auto;
+        margin: 8px 0px;
     }
 
-    .beyond-your-course-video-thumb img {
-        height: 180px !important;
-    }
 
     .title-container .videos-container__title {
         font-size: 14px;
@@ -312,10 +319,6 @@
         margin: 8px auto;
     }
 
-    .beyond-your-course-video-thumb img {
-        height: 180px !important;
-        /* Adjust height for smaller screens */
-    }
 
     .title-container .videos-container__title {
         font-size: 14px;
@@ -384,7 +387,7 @@
 
 .course-level {
     padding: .5rem 6.5rem;
-    color: #718096;
+    color: #2d3748 !important;
     cursor: pointer;
     transition: all 0.1s ease;
     display: flex;
@@ -873,7 +876,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 200px;
+    /* width: 200px; */
     border-radius: 25px;
     transition: transform 0.2s ease-in-out;
 }

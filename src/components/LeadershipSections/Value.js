@@ -23,7 +23,6 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
     dispatch(getJournalData(id))
   }
 
-  console.log('Ardi 23 ', journalData?.video)
 
   useEffect(() => {
     refreshData()

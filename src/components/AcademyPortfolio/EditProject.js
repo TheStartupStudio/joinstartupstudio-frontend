@@ -131,7 +131,6 @@ function EditProject({ isOpen, setIsOpen, projectData }) {
       }
 
       await dispatch(updateMarketProject(projectData.id, payload))
-      console.log('Ardi 76, ', payload)
       toast.success('Project updated successfully!')
       setIsOpen(false)
       dispatch(getMarketProjects())

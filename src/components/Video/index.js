@@ -72,7 +72,7 @@ export default function VideoView(props) {
   return (
     <>
       {props.type !== 'view-all' ? (
-        <div style={{ width: '200px',borderRadius:'25px' }}
+        <div style={{ borderRadius:'25px' }}
           className={`${
             props.type !== 'widget' ? 'beyond-your-course-videos' : 'mt-2'
           }`}
@@ -81,7 +81,7 @@ export default function VideoView(props) {
             <div
               onClick={handleClick}
               className='beyond-your-course-video-thumb'
-              style={{ width: '200px',borderRadius:'25px' }}
+              style={{ borderRadius:'25px' }}
             >
               {/* <div style={{ position: 'absolute', right: '10px', top: '10px' }}>
                 <FontAwesomeIcon
@@ -99,19 +99,16 @@ export default function VideoView(props) {
                 />
               </div> */}
 
-              <div>
                 <img
                 style={{borderRadius:'20px',boxShadow:'0px 10px 10px 8px rgba(0, 0, 0, 0.09)'}}
                   src={props.thumbnail}
                   width='100%'
-                  height='250px'
                   alt='video'
                 />
                 <div className='beyond-your-course-video-thumb-icon' style={{border:'5px solid white',borderRadius:'50%',padding:'1.5rem',display:'flex',alignItems:'center',justifyContent:'center'}}>
                   <FontAwesomeIcon icon={faPlay} />
                 </div>
               </div>
-            </div>
             <div
               className='card-body-video'
               onClick={() => setShowVideoModal(true)}
@@ -119,22 +116,23 @@ export default function VideoView(props) {
               <>
                 <h5 style={{
                       display: 'flex',
-                      
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '200px'
+                      alignItems: 'center',
+                      justifyContent: 'center'
                 }}>
                   <IntlMessages id={props.title} />
                 </h5>
-                {/* <p
-                  className='card-text'
-                  style={{
-                    textAlign:
-                      props.page === 'master-classes' ? 'center' : 'left'
-                  }}
-                >
-                  <IntlMessages id={props.description} />
-                </p> */}
+                {videoData?.type === 'master' && (
+                  <p
+                    className='card-text'
+                    style={{
+                      textAlign: 'center',
+                      fontSize: '13px',
+                      color: '#666'
+                    }}
+                  >
+                    by <IntlMessages id={props.description} />
+                  </p>
+                )}
               </>
             </div>
           </Link>
@@ -146,7 +144,7 @@ export default function VideoView(props) {
           )}
         </div>
       ) : (
-        <div className='card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2' style={{width:'205px',borderRadius:'25px',marginRight:'3.3rem'}}>
+        <div className='card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2' style={{width:'205px',borderRadius:'25px'}}>
           <div>
             <Link to={url ? url : '#'}>
               <div className='beyond-your-course-video-thumb beyound-all-videos-thumb' style={{width:'195px'}}>
@@ -157,23 +155,6 @@ export default function VideoView(props) {
                     top: '10px'
                   }}
                 >
-                  {/* <FontAwesomeIcon
-                    icon={videoData.favorite ? heartSaved : heartNotSaved}
-                    style={{
-                      width: '25px',
-                      height: '25px',
-                      color: videoData.favorite
-                        ? '#F2359D'
-                        : props.page === 'startup-live'
-                        ? 'grey'
-                        : '#FFFFFF'
-                    }}
-                    onClick={() =>
-                      props.type !== 'widget'
-                        ? updateFavorite(!videoData.favorite)
-                        : props.removeSavedVideo()
-                    }
-                  /> */}
                 </div>
                 <div
                   onClick={() => {
@@ -208,19 +189,6 @@ export default function VideoView(props) {
                     <h5>
                       <IntlMessages id={props.title} />
                     </h5>
-                    {/* <p
-                      className='card-text'
-                      style={{
-                        textAlign:
-                          props.page === 'master-classes' ? 'center' : 'left'
-                      }}
-                    >
-                      {!props.description?.includes(' ') ? (
-                        <IntlMessages id={props.description} />
-                      ) : (
-                        props.description
-                      )}
-                    </p> */}
                   </>
                 )}
               </div>

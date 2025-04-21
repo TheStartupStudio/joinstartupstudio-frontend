@@ -118,7 +118,6 @@ function NewEducation({ isOpen, setIsOpen }) {
         const imageCreate = new FormData()
         imageCreate.append('img', imageFile)
 
-        console.log('Ardi 122,')
 
         const res = await axiosInstance.post('/upload/img', imageCreate, {
           headers: {
@@ -126,7 +125,6 @@ function NewEducation({ isOpen, setIsOpen }) {
           }
         })
 
-        console.log('Ardi 122,', res)
         if (res.data.success) {
           logoUrl = res.data.fileLocation
         } else {

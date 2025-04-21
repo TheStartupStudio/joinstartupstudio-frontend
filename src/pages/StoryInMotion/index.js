@@ -205,7 +205,7 @@ function StoryInMotion({ intl }) {
                             defaultMessage: 'Search podcasts',
                           })
                         : intl.formatMessage({
-                            id: 'my_journal.search_lessons_',
+                            id: 'my_journal.search_videos_',
                             defaultMessage: 'Search lessons',
                           })
                     }
@@ -227,33 +227,42 @@ function StoryInMotion({ intl }) {
                              
                                 }}>  
                     <Select
-                                             options={filters}
-                                             value={filterBy}
-                                             onChange={handleFilter}
-                                             placeholder='Sort By'
-                                             menuPortalTarget={document.body}
-                                             isSearchable={false}
-                                             styles={{
-                                               menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                               control: (base) => ({
-                                                 ...base,
-                                                 width: '157px', // Fixed width
-                                                 minHeight: '40px', // Fixed height
-                                                 overflow: 'hidden',
-                                                 border: 'none', // Remove the default border
-                                                 borderRadius: '6px' // Slightly smaller than the outer container radius
-                                               }),
-                                               singleValue: (base) => ({
-                                                 ...base,
-                                                 whiteSpace: 'nowrap',
-                                                 overflow: 'hidden',
-                                                 textOverflow: 'ellipsis'
-                                               })
-                                             }}
-                                             components={{
-                                               IndicatorSeparator: () => null 
-                                             }}
-                                           /></div>
+  options={filters}
+  value={filterBy}
+  onChange={handleFilter}
+  placeholder='Sort By'
+  menuPortalTarget={document.body}
+  isSearchable={false}
+  styles={{
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    control: (base) => ({
+      ...base,
+      width: '157px',
+      minHeight: '40px',
+      overflow: 'hidden',
+      border: 'none',
+      borderRadius: '6px'
+    }),
+    singleValue: (base) => ({
+      ...base,
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused ? '#51C7DF' : base.backgroundColor,
+      color: state.isFocused ? 'white' : base.color,
+      '&:hover': {
+        backgroundColor: '#51C7DF',
+        color: 'white'
+      }
+    })
+  }}
+  components={{
+    IndicatorSeparator: () => null 
+  }}
+/></div>
         </div>
 
             <div className="row videos-container">

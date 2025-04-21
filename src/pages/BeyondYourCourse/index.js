@@ -470,6 +470,7 @@ export default function BeyondYourCourse() {
                     className='guidance-link'
                     to={`/encouragement/videos`}
                     style={{ marginRight: '1rem' }}
+                    onClick={() => window.scrollTo(0, 0)}
                   >
                     <IntMessages id='general.view_all' />
                     <img
@@ -564,6 +565,7 @@ export default function BeyondYourCourse() {
                     className='guidance-link'
                     to={`/master-classes/videos`}
                     style={{ marginRight: '1rem' }}
+                    onClick={() => window.scrollTo(0, 0)}
                   >
                     <IntMessages id='general.view_all' />
                     <img
@@ -719,6 +721,7 @@ export default function BeyondYourCourse() {
                     className='guidance-link'
                     to='/story-in-motion/videos'
                     style={{ marginRight: '1rem' }}
+                    onClick={() => window.scrollTo(0, 0)}
                   >
                     <IntMessages id='general.view_all' />
                     <img
@@ -734,7 +737,7 @@ export default function BeyondYourCourse() {
                       <div
                         key={index}
                         className='beyond-your-course-video-thumb'
-                        style={{ width: '200px', margin: '10px' }}
+                        
                         onClick={() =>
                           handleAudioClick({ ...podcast, page: 'podcast' })
                         }
