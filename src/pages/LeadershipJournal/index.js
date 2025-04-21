@@ -22,6 +22,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import store from '../../redux/store'
+import { Modal } from 'react-bootstrap'
 
 function LeadershipJournal() {
   const [isReflection, setIsReflection] = useState(false)
@@ -31,6 +32,7 @@ function LeadershipJournal() {
     activeTab: 0,
     option: null
   })
+  const [showLockModal, setShowLockModal] = useState(false)
 
   const dispatch = useDispatch()
   const { finishedContent, loading: finishedContentLoading } = useSelector(
@@ -176,6 +178,47 @@ function LeadershipJournal() {
     return finishedContent.includes(title)
   }
 
+  const canAccessSection = (sectionIndex) => {
+    // Can always access first section
+    if (sectionIndex === 0) return true;
+
+    const sections = {
+      one: ['SECTION ONE: WHO AM I?', 'Values', 'Expertise', 'Experiences', 'Style'],
+      two: ['SECTION TWO: WHAT CAN I DO?', 'Teamwork', 'Initiative', 'Methodology', 'Self-Assessment'],
+      three: ['SECTION THREE: HOW DO I PROVE IT?', 'Outcomes', 'Feedback', 'Iteration', 'Vision']
+    };
+
+    // Get section title
+    const sectionTitle = allTabs[sectionIndex]?.title;
+
+    // For Section Two, check if Section One is completed
+    if (sectionTitle === 'SECTION TWO: WHAT CAN I DO?') {
+      const sectionOneComplete = sections.one.every(title => 
+        finishedContent.includes(title)
+      );
+      if (!sectionOneComplete) {
+        setShowLockModal(true);
+        return false;
+      }
+    }
+
+    // For Section Three, check if both Section One and Two are completed  
+    if (sectionTitle === 'SECTION THREE: HOW DO I PROVE IT?') {
+      const sectionOneComplete = sections.one.every(title => 
+        finishedContent.includes(title)
+      );
+      const sectionTwoComplete = sections.two.every(title => 
+        finishedContent.includes(title)
+      );
+      if (!sectionOneComplete || !sectionTwoComplete) {
+        setShowLockModal(true);
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   useEffect(() => {
     fetchJournalContent()
     // Remove finishedContent from dependencies
@@ -220,9 +263,12 @@ function LeadershipJournal() {
                         ? 'active-leadership'
                         : ''
                     }`}
-                    onClick={() =>
+                    onClick={() => {
+                      if (!canAccessSection(index)) {
+                        return
+                      }
                       setActiveTabData({ activeTab: index, option: null })
-                    }
+                    }}
                   >
                     {tab.title}
                   </span>
@@ -243,9 +289,15 @@ function LeadershipJournal() {
                     selectedCourse={activeTabData}
                     setSelectedCourse={setActiveTabData}
                     options={allTabs[activeTabData.activeTab].options}
-                    isDisabled={(option) =>
-                      !isContentCompleted(option.label) && !option.isNext
-                    }
+                    isDisabled={(option) => {
+                      // Disable Section Three options if Section Two is not completed
+                      if (allTabs[activeTabData.activeTab].title === 'SECTION THREE: HOW DO I PROVE IT?') {
+                        if (!finishedContent.includes('SECTION TWO: WHAT CAN I DO?')) {
+                          return true;
+                        }
+                      }
+                      return !isContentCompleted(option.label) && !option.isNext;
+                    }}
                   />
                   {isReflection && (
                     <AcademyBtn
@@ -263,6 +315,31 @@ function LeadershipJournal() {
           )}
         </div>
       </div>
+      {showLockModal && (
+        <Modal
+          show={showLockModal}
+          onHide={() => setShowLockModal(false)}
+          centered
+          className="lesson-locked-modal"
+        >
+          <Modal.Body className="text-center p-4 position-relative">
+            <div className="mb-3">
+              <i className="fa fa-lock fs-1"></i>
+            </div>
+            <h5 className="mb-3">Lesson Locked</h5>
+            <p>
+              This lesson is currently locked. You must complete
+              the lesson before it to gain access to this lesson.
+            </p>
+            <button 
+              className="mt-3 position-absolute top-20 end-20 rounded-5 rounded-top-0 rounded-end-0 border-0"
+              onClick={() => setShowLockModal(false)}
+            >
+              Close
+            </button>
+          </Modal.Body>
+        </Modal>
+      )}
     </div>
   )
 }
