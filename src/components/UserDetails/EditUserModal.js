@@ -186,7 +186,7 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
               Edit Personal Details
             </h3>
             <div className='d-flex gap-2'>
-              <img src={resetLogo} alt='reset' />
+              <img src={resetLogo} alt='reset' className='reset-btn-edit' />
               <h3 className='fs-15' style={{ marginBottom: '0' }}>
                 Reset Password
               </h3>

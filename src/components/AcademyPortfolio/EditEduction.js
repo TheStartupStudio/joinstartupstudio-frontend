@@ -214,10 +214,7 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div
-            className='mt-5 d-grid gap-5'
-            style={{ gridTemplateColumns: '4fr 2fr' }}
-          >
+          <div className='mt-5 d-grid gap-5 grid-col-4-2 d-flex-900 flex-col-r-900'>
             <div>
               <h4 className='fs-15'>School Details</h4>
               <div className='d-flex flex-column gap-3'>
@@ -332,7 +329,7 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
           </div>
 
           <div className='mt-5'>
-            <div className='d-flex gap-3 justify-content-between'>
+            <div className='d-flex gap-3 justify-content-between flex-col-900'>
               <div className='w-100 d-flex flex-column gap-2'>
                 <label className='fs-15 fw-medium'>Start Date*</label>
                 <DatePicker
@@ -409,9 +406,9 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
                   <span className='text-danger'>{errors.endDate}</span>
                 )}
               </div>
-              <div className='flex flex-col items-center'>
+              <div className='d-flex-900 gap-2 flex flex-col items-center'>
                 <label
-                  className='fs-15 fw-medium white-space-no-wrap'
+                  className='fs-15 fw-medium white-space-no-wrap mt-1'
                   style={{ marginBottom: '.75rem' }}
                 >
                   Current Student
@@ -446,9 +443,9 @@ function EditEduction({ isOpen, setIsOpen, educationData }) {
             </div>
           </div>
           <div className='d-flex justify-content-end mt-3 ms-2'>
-            <div className='d-flex gap-3'>
+            <div className='d-flex gap-3 flex-col-900 w-full-900'>
               <Button
-                className='modal-save-btn'
+                className='modal-save-btn pink-bck'
                 onClick={handleDelete}
                 type='button'
                 style={{ backgroundColor: 'red' }}

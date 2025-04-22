@@ -94,7 +94,7 @@ function Dashboard() {
               <IntlMessages id='navigation.dashboard' />
             </h3>
 
-            <SelectLanguage />
+            {/* <SelectLanguage /> */}
           </div>
           <img
             src={MenuIcon}

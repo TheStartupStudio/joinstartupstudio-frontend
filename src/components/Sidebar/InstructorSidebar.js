@@ -106,7 +106,9 @@ const InstructorSidebar = (props) => {
               props.props.hideHeaderIcons()
             }}
             to={'/dashboard'}
-            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+            className={`${
+              location.pathname.includes('dashboard') ? 'active' : ''
+            }`}
             srcImage={DashIcon}
             title={isTextVisible && !isCollapsed && 'Dashboard'}
             isDropdown={false}
@@ -120,7 +122,11 @@ const InstructorSidebar = (props) => {
               props.props.hideHeaderIcons()
             }}
             to={'/my-course-in-entrepreneurship'}
-            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+            className={`${
+              location.pathname === '/my-course-in-entrepreneurship'
+                ? 'active'
+                : ''
+            }`}
             srcImage={IntroToIcon}
             title={isTextVisible && !isCollapsed && 'Intro to course'}
             isDropdown={false}
@@ -134,7 +140,13 @@ const InstructorSidebar = (props) => {
               props.props.hideHeaderIcons()
             }}
             to={'/my-course-in-entrepreneurship/journal/51'}
-            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+            className={`${
+              location.pathname.includes(
+                'my-course-in-entrepreneurship/journal'
+              )
+                ? 'active'
+                : ''
+            }`}
             srcImage={CoursEnIcon}
             title={
               isTextVisible && !isCollapsed && 'Course in enterpreneurship'
@@ -150,7 +162,9 @@ const InstructorSidebar = (props) => {
               props.props.hideHeaderIcons()
             }}
             to={'/beyond-your-course'}
-            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+            className={`${
+              location.pathname.includes('beyond-your-course') ? 'active' : ''
+            }`}
             srcImage={MasterIcon}
             title={isTextVisible && !isCollapsed && 'Master classes'}
             isDropdown={false}
@@ -164,7 +178,9 @@ const InstructorSidebar = (props) => {
               props.props.hideHeaderIcons()
             }}
             to={'/leadership-journal'}
-            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+            className={`${
+              location.pathname.includes('leadership-journal') ? 'active' : ''
+            }`}
             srcImage={LeadershipIcon}
             title={isTextVisible && !isCollapsed && 'Leadership journal'}
             isDropdown={false}
@@ -178,7 +194,9 @@ const InstructorSidebar = (props) => {
               props.props.hideHeaderIcons()
             }}
             to={'/my-portfolio'}
-            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+            className={`${
+              location.pathname.includes('my-portfolio') ? 'active' : ''
+            }`}
             srcImage={PortfolioIcon}
             title={isTextVisible && !isCollapsed && 'My portfolio'}
             isDropdown={false}

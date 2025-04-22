@@ -41,8 +41,11 @@ function AboutMe({ user }) {
     setCanceledRenewal((prev) => !prev)
   }
 
-  const toggleCertificate = () => {
-    setCertificate((prev) => !prev)
+  const formatURL = (url) => {
+    if (!url) return '#'
+    return url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : `https://${url}`
   }
 
   const fullText = `${user?.bio}`
@@ -128,33 +131,41 @@ function AboutMe({ user }) {
               {user?.profession}
             </p>
             <div className='d-flex gap-2'>
-              <img
-                className='cursor-pointer'
-                src={linkedinLogo}
-                alt='linkedin'
-                onClick={() =>
-                  window.open(user?.social_links.linkedIn, '_blank')
-                }
-              />
-              <img
-                className='cursor-pointer'
-                src={facebookLogo}
-                alt='facebook'
-                onClick={() =>
-                  window.open(user?.social_links.facebook, '_blank')
-                }
-              />
-              <img
-                className='cursor-pointer'
-                src={twitterLogo}
-                alt='twitter'
-                onClick={() =>
-                  window.open(user?.social_links.twitter, '_blank')
-                }
-              />
+              {user.social_links.linkedIn && (
+                <img
+                  className='cursor-pointer'
+                  src={linkedinLogo}
+                  alt='linkedin'
+                  onClick={() =>
+                    window.open(formatURL(user.social_links.linkedIn), '_blank')
+                  }
+                />
+              )}
+
+              {user.social_links.facebook && (
+                <img
+                  className='cursor-pointer'
+                  src={facebookLogo}
+                  alt='facebook'
+                  onClick={() =>
+                    window.open(formatURL(user.social_links.facebook), '_blank')
+                  }
+                />
+              )}
+
+              {user.social_links.twitter && (
+                <img
+                  className='cursor-pointer'
+                  src={twitterLogo}
+                  alt='twitter'
+                  onClick={() =>
+                    window.open(formatURL(user.social_links.twitter), '_blank')
+                  }
+                />
+              )}
             </div>
             <p
-              className={`mt-3 fs-15 fw-light text-black ${
+              className={`mt-3 fs-15 fw-light text-black text-break ${
                 isExpanded && 'width-50 w-100-mob'
               }`}
             >
@@ -194,12 +205,6 @@ function AboutMe({ user }) {
       <CancelRenewalModal
         canceledRenewal={canceledRenewal}
         setCanceledRenewal={setCanceledRenewal}
-      />
-
-      <CertificateModal
-        certificate={certificate}
-        toggleCertificate={toggleCertificate}
-        name={user.name}
       />
     </>
   )

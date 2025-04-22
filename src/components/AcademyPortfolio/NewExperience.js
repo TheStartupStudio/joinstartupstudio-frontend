@@ -37,7 +37,7 @@ function NewExperience({ isOpen, setIsOpen }) {
   })
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value
     }))
@@ -63,7 +63,7 @@ function NewExperience({ isOpen, setIsOpen }) {
 
     const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
     const maxSize = 1 * 1024 * 1024 // 1MB
-    
+
     if (!validTypes.includes(file.type)) {
       toast.error('Only PNG, JPG, or JPEG files are allowed.')
       return false
@@ -77,11 +77,11 @@ function NewExperience({ isOpen, setIsOpen }) {
 
   const validateForm = () => {
     const newErrors = {}
-    
+
     if (!formData.organizationName?.trim()) {
       newErrors.organizationName = 'Organization name is required'
     }
-    if(!formData.website){
+    if (!formData.website) {
       newErrors.website = 'Organization URL is required'
     }
     if (!formData.jobTitle?.trim()) {
@@ -135,13 +135,19 @@ function NewExperience({ isOpen, setIsOpen }) {
       const payload = {
         ...formData,
         imageUrl: logoUrl,
-        startDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
-        endDate: formData.currentPosition ? null : formData.endDate ? new Date(formData.endDate).toISOString() : null
+        startDate: formData.startDate
+          ? new Date(formData.startDate).toISOString()
+          : null,
+        endDate: formData.currentPosition
+          ? null
+          : formData.endDate
+          ? new Date(formData.endDate).toISOString()
+          : null
       }
 
       await dispatch(addMyWorkExperience(payload))
       toast.success('Experience added successfully!')
-      
+
       setIsOpen(false)
       setFormData({
         organizationName: '',
@@ -155,7 +161,6 @@ function NewExperience({ isOpen, setIsOpen }) {
         showSection: true,
         jobTitle: ''
       })
-
     } catch (error) {
       toast.error('Failed to add experience')
     } finally {
@@ -174,7 +179,7 @@ function NewExperience({ isOpen, setIsOpen }) {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className='mt-5 d-grid gap-5' style={{ gridTemplateColumns: '4fr 2fr' }}>
+          <div className='mt-5 d-grid gap-5 grid-col-4-2 d-flex-900 flex-col-r-900'>
             <div>
               <h4 className='fs-15'>Experience Details</h4>
               <div className='d-flex flex-column gap-3'>
@@ -183,9 +188,13 @@ function NewExperience({ isOpen, setIsOpen }) {
                   labelTitle={'Organization Name*'}
                   imgSrc={penIcon}
                   value={formData.organizationName}
-                  onChange={(e) => handleInputChange('organizationName', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('organizationName', e.target.value)
+                  }
                 />
-                {errors.startDate && <span className="text-danger">{errors.organizationName}</span>}
+                {errors.startDate && (
+                  <span className='text-danger'>{errors.organizationName}</span>
+                )}
                 <ModalInput
                   id={'website'}
                   labelTitle={'Organization Url'}
@@ -193,15 +202,21 @@ function NewExperience({ isOpen, setIsOpen }) {
                   value={formData.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
                 />
-                {errors.startDate && <span className="text-danger">{errors.website}</span>}
+                {errors.startDate && (
+                  <span className='text-danger'>{errors.website}</span>
+                )}
                 <ModalInput
                   id={'jobTitle'}
                   labelTitle={'Experience Role*'}
                   imgSrc={penIcon}
                   value={formData.jobTitle}
-                  onChange={(e) => handleInputChange('jobTitle', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('jobTitle', e.target.value)
+                  }
                 />
-                {errors.startDate && <span className="text-danger">{errors.jobTitle}</span>}
+                {errors.startDate && (
+                  <span className='text-danger'>{errors.jobTitle}</span>
+                )}
               </div>
             </div>
             <div>
@@ -220,7 +235,11 @@ function NewExperience({ isOpen, setIsOpen }) {
                     />
                     <img
                       className='rounded-circle profile-container-pic'
-                      src={imageFile ? URL.createObjectURL(imageFile) : formData.imageUrl}
+                      src={
+                        imageFile
+                          ? URL.createObjectURL(imageFile)
+                          : formData.imageUrl
+                      }
                       alt='profile'
                     />
                   </>
@@ -228,7 +247,9 @@ function NewExperience({ isOpen, setIsOpen }) {
                   <div className='container d-flex justify-content-center align-items-center'>
                     <div
                       className='upload-box text-center cursor-pointer'
-                      onClick={() => document.getElementById('fileInput').click()}
+                      onClick={() =>
+                        document.getElementById('fileInput').click()
+                      }
                       onDrop={handleDrop}
                       onDragOver={(e) => e.preventDefault()}
                     >
@@ -261,10 +282,13 @@ function NewExperience({ isOpen, setIsOpen }) {
                             <p className='upload-text'>
                               <span className='fw-medium'>Click to upload</span>
                               <br />
-                              <span className='text-secondary'>or drag and drop</span>
+                              <span className='text-secondary'>
+                                or drag and drop
+                              </span>
                             </p>
                             <p className='fs-14'>
-                              Only png, jpg, or jpeg file format supported (max. 1MB)
+                              Only png, jpg, or jpeg file format supported (max.
+                              1MB)
                             </p>
                           </>
                         )}
@@ -277,7 +301,7 @@ function NewExperience({ isOpen, setIsOpen }) {
           </div>
 
           <div className='mt-5'>
-            <div className='d-flex gap-3 justify-content-between'>
+            <div className='d-flex gap-3 justify-content-between flex-col-900'>
               <div className='w-100 d-flex flex-column gap-2'>
                 <label className='fs-15 fw-medium'>Start Date*</label>
                 <DatePicker
@@ -293,11 +317,14 @@ function NewExperience({ isOpen, setIsOpen }) {
                         readOnly
                         value={
                           formData.startDate
-                            ? new Date(formData.startDate).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                              })
+                            ? new Date(formData.startDate).toLocaleDateString(
+                                'en-US',
+                                {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric'
+                                }
+                              )
                             : ''
                         }
                         style={{ background: 'transparent' }}
@@ -305,7 +332,9 @@ function NewExperience({ isOpen, setIsOpen }) {
                     </div>
                   }
                 />
-                {errors.startDate && <span className="text-danger">{errors.startDate}</span>}
+                {errors.startDate && (
+                  <span className='text-danger'>{errors.startDate}</span>
+                )}
               </div>
               <div className='w-100 d-flex flex-column gap-2'>
                 <label className='fs-15 fw-medium'>End Date*</label>
@@ -323,11 +352,14 @@ function NewExperience({ isOpen, setIsOpen }) {
                         readOnly
                         value={
                           formData.endDate && !formData.currentPosition
-                            ? new Date(formData.endDate).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                              })
+                            ? new Date(formData.endDate).toLocaleDateString(
+                                'en-US',
+                                {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric'
+                                }
+                              )
                             : ''
                         }
                         style={{ background: 'transparent' }}
@@ -335,15 +367,22 @@ function NewExperience({ isOpen, setIsOpen }) {
                     </div>
                   }
                 />
-                {errors.endDate && <span className="text-danger">{errors.endDate}</span>}
+                {errors.endDate && (
+                  <span className='text-danger'>{errors.endDate}</span>
+                )}
               </div>
-              <div className='flex flex-col items-center'>
-                <label className='fs-15 fw-medium white-space-no-wrap' style={{ marginBottom: '.75rem' }}>
+              <div className='d-flex-900 gap-2 flex flex-col items-center'>
+                <label
+                  className='fs-15 fw-medium white-space-no-wrap mt-1'
+                  style={{ marginBottom: '.75rem' }}
+                >
                   Current Position
                 </label>
                 <Switch
                   checked={formData.currentPosition}
-                  onChange={(checked) => handleInputChange('currentPosition', checked)}
+                  onChange={(checked) =>
+                    handleInputChange('currentPosition', checked)
+                  }
                   onColor='#4CAF50'
                   uncheckedIcon={false}
                   checkedIcon={false}
@@ -354,7 +393,9 @@ function NewExperience({ isOpen, setIsOpen }) {
               <h4 className='fs-15'>Description*</h4>
               <ReactQuill
                 value={formData.description}
-                onChange={(content) => handleInputChange('description', content)}
+                onChange={(content) =>
+                  handleInputChange('description', content)
+                }
                 modules={{
                   toolbar: [
                     [{ header: [1, 2, 3, false] }],
@@ -365,15 +406,25 @@ function NewExperience({ isOpen, setIsOpen }) {
                   ]
                 }}
               />
-              {errors.description && <span className="text-danger">{errors.description}</span>}
+              {errors.description && (
+                <span className='text-danger'>{errors.description}</span>
+              )}
             </div>
           </div>
           <div className='d-flex justify-content-end mt-3 ms-2'>
-            <div className='d-flex gap-3'>
-              <Button className='close-btn' onClick={() => setIsOpen(false)} type="button">
+            <div className='d-flex gap-3 flex-col-500 w-full-500'>
+              <Button
+                className='close-btn w-full-500'
+                onClick={() => setIsOpen(false)}
+                type='button'
+              >
                 CANCEL
               </Button>
-              <Button className='modal-save-btn' type="submit" disabled={isSubmitting}>
+              <Button
+                className='modal-save-btn w-full-500'
+                type='submit'
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? 'SAVING...' : 'SAVE'}
               </Button>
             </div>

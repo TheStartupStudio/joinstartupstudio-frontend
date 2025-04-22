@@ -41,6 +41,13 @@ function UserDetails({ profilePic, userName, userProffesion }) {
     setCertificate((prev) => !prev)
   }
 
+  const formatURL = (url) => {
+    if (!url) return '#'
+    return url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : `https://${url}`
+  }
+
   const { user } = useSelector((state) => state.user.user)
 
   return (
@@ -68,28 +75,38 @@ function UserDetails({ profilePic, userName, userProffesion }) {
             <h3>{user.name}</h3>
             <p>{user.profession}</p>
             <div className='d-flex gap-2'>
-              <img
-                className='cursor-pointer'
-                src={linkedinLogo}
-                alt='linkedin'
-                onClick={() =>
-                  window.open(user.social_links.linkedIn, '_blank')
-                }
-              />
-              <img
-                className='cursor-pointer'
-                src={facebookLogo}
-                alt='facebook'
-                onClick={() =>
-                  window.open(user.social_links.facebook, '_blank')
-                }
-              />
-              <img
-                className='cursor-pointer'
-                src={twitterLogo}
-                alt='twitter'
-                onClick={() => window.open(user.social_links.twitter, '_blank')}
-              />
+              {user.social_links.linkedIn && (
+                <img
+                  className='cursor-pointer'
+                  src={linkedinLogo}
+                  alt='linkedin'
+                  onClick={() =>
+                    window.open(formatURL(user.social_links.linkedIn), '_blank')
+                  }
+                />
+              )}
+
+              {user.social_links.facebook && (
+                <img
+                  className='cursor-pointer'
+                  src={facebookLogo}
+                  alt='facebook'
+                  onClick={() =>
+                    window.open(formatURL(user.social_links.facebook), '_blank')
+                  }
+                />
+              )}
+
+              {user.social_links.twitter && (
+                <img
+                  className='cursor-pointer'
+                  src={twitterLogo}
+                  alt='twitter'
+                  onClick={() =>
+                    window.open(formatURL(user.social_links.twitter), '_blank')
+                  }
+                />
+              )}
             </div>
           </div>
         </div>

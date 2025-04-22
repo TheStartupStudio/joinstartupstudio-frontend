@@ -14,7 +14,10 @@ import trashIcon from '../../assets/images/academy-icons/trash.png'
 import universityFlorida from '../../assets/images/academy-icons/universirty-florida.png'
 import uploadImage from '../../assets/images/academy-icons/svg/upload-image.svg'
 import ModalInput from '../ModalInput/ModalInput'
-import { updateMyWorkExperience, deleteMyWorkExperience } from '../../redux/portfolio/Actions'
+import {
+  updateMyWorkExperience,
+  deleteMyWorkExperience
+} from '../../redux/portfolio/Actions'
 import axiosInstance from '../../utils/AxiosInstance'
 
 function EditExperience({ isOpen, setIsOpen, experienceData }) {
@@ -23,7 +26,7 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [content, setContent] = useState('')
   const [startDate, setStartDate] = useState(null)
-  const [endDate, setEndDate] = useState(null) 
+  const [endDate, setEndDate] = useState(null)
   const [isCurrentPosition, setIsCurrentPosition] = useState(false)
   const [imageFile, setImageFile] = useState(null)
 
@@ -46,9 +49,13 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
       setFormData({
         organizationName: experienceData.organizationName || '',
         location: experienceData.location || '',
-        website: experienceData.website || '', 
-        startDate: experienceData.startDate ? new Date(experienceData.startDate) : null,
-        endDate: experienceData.endDate ? new Date(experienceData.endDate) : null,
+        website: experienceData.website || '',
+        startDate: experienceData.startDate
+          ? new Date(experienceData.startDate)
+          : null,
+        endDate: experienceData.endDate
+          ? new Date(experienceData.endDate)
+          : null,
         description: experienceData.description || '',
         imageUrl: experienceData.imageUrl,
         currentPosition: experienceData.currentPosition || false,
@@ -56,15 +63,19 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
         jobTitle: experienceData.jobTitle || '',
         type: experienceData.type || 'work'
       })
-      setStartDate(experienceData.startDate ? new Date(experienceData.startDate) : null)
-      setEndDate(experienceData.endDate ? new Date(experienceData.endDate) : null)
+      setStartDate(
+        experienceData.startDate ? new Date(experienceData.startDate) : null
+      )
+      setEndDate(
+        experienceData.endDate ? new Date(experienceData.endDate) : null
+      )
       setContent(experienceData.description || '')
       setIsCurrentPosition(experienceData.currentPosition || false)
     }
   }, [experienceData])
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value
     }))
@@ -72,9 +83,9 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
 
   const validateForm = () => {
     const newErrors = {}
-    
+
     if (!formData.organizationName?.trim()) {
-      newErrors.organizationName = 'Organization name is required'  
+      newErrors.organizationName = 'Organization name is required'
     }
     if (!formData.website) {
       newErrors.website = 'Organization URL is required'
@@ -116,7 +127,7 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
 
     const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
     const maxSize = 1 * 1024 * 1024 // 1MB
-    
+
     if (!validTypes.includes(file.type)) {
       toast.error('Only PNG, JPG, or JPEG files are allowed.')
       return false
@@ -164,7 +175,11 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
         ...formData,
         imageUrl: logoUrl,
         startDate: startDate ? startDate.toISOString() : null,
-        endDate: isCurrentPosition ? null : endDate ? endDate.toISOString() : null
+        endDate: isCurrentPosition
+          ? null
+          : endDate
+          ? endDate.toISOString()
+          : null
       }
 
       await dispatch(updateMyWorkExperience(payload))
@@ -177,7 +192,7 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
       setFormData({
         organizationName: '',
         location: '',
-        website: '', 
+        website: '',
         startDate: null,
         endDate: null,
         description: '',
@@ -211,7 +226,7 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className='mt-5 d-grid gap-5' style={{ gridTemplateColumns: '4fr 2fr' }}>
+          <div className='mt-5 d-grid gap-5 grid-col-4-2 d-flex-900 flex-col-r-900'>
             <div>
               <h4 className='fs-15'>Experience Details</h4>
               <div className='d-flex flex-column gap-3'>
@@ -220,9 +235,13 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                   labelTitle={'Organization Name*'}
                   imgSrc={penIcon}
                   value={formData.organizationName}
-                  onChange={(e) => handleInputChange('organizationName', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('organizationName', e.target.value)
+                  }
                 />
-                {errors.organizationName && <span className="text-danger">{errors.organizationName}</span>}
+                {errors.organizationName && (
+                  <span className='text-danger'>{errors.organizationName}</span>
+                )}
 
                 <ModalInput
                   id={'website'}
@@ -231,16 +250,22 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                   value={formData.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
                 />
-                {errors.website && <span className="text-danger">{errors.website}</span>}
+                {errors.website && (
+                  <span className='text-danger'>{errors.website}</span>
+                )}
 
                 <ModalInput
                   id={'jobTitle'}
                   labelTitle={'Experience Role*'}
                   imgSrc={penIcon}
                   value={formData.jobTitle}
-                  onChange={(e) => handleInputChange('jobTitle', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('jobTitle', e.target.value)
+                  }
                 />
-                {errors.jobTitle && <span className="text-danger">{errors.jobTitle}</span>}
+                {errors.jobTitle && (
+                  <span className='text-danger'>{errors.jobTitle}</span>
+                )}
               </div>
             </div>
             <div>
@@ -267,7 +292,9 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                   <div className='container d-flex justify-content-center align-items-center'>
                     <div
                       className='upload-box text-center cursor-pointer'
-                      onClick={() => document.getElementById('fileInput').click()}
+                      onClick={() =>
+                        document.getElementById('fileInput').click()
+                      }
                       onDrop={handleDrop}
                       onDragOver={(e) => e.preventDefault()}
                     >
@@ -282,7 +309,7 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                         {imageFile ? (
                           <img
                             src={URL.createObjectURL(imageFile)}
-                            alt='Uploaded Preview' 
+                            alt='Uploaded Preview'
                             className='uploaded-image'
                             style={{
                               width: '100px',
@@ -300,10 +327,13 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                             <p className='upload-text'>
                               <span className='fw-medium'>Click to upload</span>
                               <br />
-                              <span className='text-secondary'>or drag and drop</span>
+                              <span className='text-secondary'>
+                                or drag and drop
+                              </span>
                             </p>
                             <p className='fs-14'>
-                              Only png, jpg, or jpeg file format supported (max. 1MB)
+                              Only png, jpg, or jpeg file format supported (max.
+                              1MB)
                             </p>
                           </>
                         )}
@@ -316,7 +346,7 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
           </div>
 
           <div className='mt-5'>
-            <div className='d-flex gap-3 justify-content-between'>
+            <div className='d-flex gap-3 justify-content-between flex-col-900'>
               <div className='w-100 d-flex flex-column gap-2'>
                 <label className='fs-15 fw-medium'>Start Date</label>
                 <DatePicker
@@ -344,7 +374,9 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                     </div>
                   }
                 />
-                {errors.startDate && <span className="text-danger">{errors.startDate}</span>}
+                {errors.startDate && (
+                  <span className='text-danger'>{errors.startDate}</span>
+                )}
               </div>
               <div className='w-100 d-flex flex-column gap-2'>
                 <label className='fs-15 fw-medium'>End Date</label>
@@ -373,11 +405,13 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                     </div>
                   }
                 />
-                {errors.endDate && <span className="text-danger">{errors.endDate}</span>}
+                {errors.endDate && (
+                  <span className='text-danger'>{errors.endDate}</span>
+                )}
               </div>
-              <div className='flex flex-col items-center'>
+              <div className='d-flex-900 gap-2 flex flex-col items-center'>
                 <label
-                  className='fs-15 fw-medium white-space-no-wrap'
+                  className='fs-15 fw-medium white-space-no-wrap mt-1'
                   style={{ marginBottom: '.75rem' }}
                 >
                   Current Student
@@ -406,29 +440,31 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                   ]
                 }}
               />
-              {errors.description && <span className="text-danger">{errors.description}</span>}
+              {errors.description && (
+                <span className='text-danger'>{errors.description}</span>
+              )}
             </div>
           </div>
           <div className='d-flex justify-content-end mt-3 ms-2'>
-            <div className='d-flex gap-3'>
-              <Button 
-                className='modal-save-btn' 
-                onClick={handleDelete} 
-                type="button"
+            <div className='d-flex gap-3 flex-col-900 w-full-900'>
+              <Button
+                className='modal-save-btn pink-bck'
+                onClick={handleDelete}
+                type='button'
                 style={{ backgroundColor: 'red' }}
               >
                 DELETE
               </Button>
-              <Button 
-                className='close-btn' 
-                onClick={() => setIsOpen(false)} 
-                type="button"
+              <Button
+                className='close-btn'
+                onClick={() => setIsOpen(false)}
+                type='button'
               >
                 CANCEL
               </Button>
-              <Button 
-                className='modal-save-btn' 
-                type="submit" 
+              <Button
+                className='modal-save-btn'
+                type='submit'
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'SAVING...' : 'SAVE'}

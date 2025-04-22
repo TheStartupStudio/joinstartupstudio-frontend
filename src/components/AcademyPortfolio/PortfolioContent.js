@@ -49,7 +49,7 @@ function PortfolioContent({
             </a>
           </div>
           <p
-            className={`mt-3 fs-15 fw-light text-black ${
+            className={`mt-3 fs-15 fw-light text-black text-break ${
               isExpanded ? 'width-50' : ''
             }`}
           >

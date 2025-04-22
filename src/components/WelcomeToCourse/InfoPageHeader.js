@@ -13,7 +13,7 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
       className={`py-4 px-5 d-flex justify-content-between align-items-start p-1rem-tab ${className}`}
     >
       <img
-        onClick={() => history.push('/')}
+        onClick={() => (window.location.href = 'https://mystartupcourse.com')}
         className='cursor-pointer'
         src={courseLogo}
         alt='course logo'
