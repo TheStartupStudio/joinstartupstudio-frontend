@@ -225,7 +225,7 @@ function GuidanceEncouragement({ intl }) {
                     )}
                   </p>
                 </div>
-                  <div
+                  {/* <div
                  style={{
                                   display: 'inline-block',
                                   borderRadius: '8px',
@@ -263,7 +263,7 @@ function GuidanceEncouragement({ intl }) {
                                              components={{
                                                IndicatorSeparator: () => null // Remove separator
                                              }}
-                                           /></div>
+                                           /></div> */}
                  </div>
               
                 </div>

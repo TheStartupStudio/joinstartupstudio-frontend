@@ -240,7 +240,7 @@ function LeadershipJournal() {
               </p>
             </div>
 
-            <SelectLanguage />
+            {/* <SelectLanguage /> */}
           </div>
           <img
             src={MenuIcon}

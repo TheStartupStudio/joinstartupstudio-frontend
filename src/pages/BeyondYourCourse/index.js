@@ -385,7 +385,7 @@ export default function BeyondYourCourse() {
                   </p>
                 </div>
 
-                <SelectLanguage />
+                {/* <SelectLanguage /> */}
               </div>
               <img
                 src={MenuIcon}
