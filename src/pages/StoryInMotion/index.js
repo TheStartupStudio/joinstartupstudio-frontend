@@ -265,27 +265,22 @@ function StoryInMotion({ intl }) {
 /></div>
         </div>
 
-            <div className="row videos-container">
+            <div className="content-videos-container">
               {currentPageVideos.map((video, index) => (
                 <div
                   key={index}
-                  className="col-12 col-sm-6 col-md-4 col-lg-2 mb-4" 
-                  style={{ margin: '0 1rem' }}
+                  onClick={() => handleAudioClick(video)}
                 >
                   {activeLevel === 2 ? (
                     
                     <div
-                      onClick={() => handleAudioClick(video)}
-                      style={{ cursor: 'pointer' }}
-                    >
+                    className="video-cards" 
+                    onClick={() => handleAudioClick(video)}
+                  >
                       <img
                         src={video.thumbnail || storyInMotionPodcast}
                         alt={video.title}
-                        className="img-fluid"
-                        style={{
-                          borderRadius: '15px',
-                          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                        }}
+                        style={{width:'100%'}}
                       />
                       <h5 className="podcast-title" style={{ textAlign: 'center', marginTop: '10px' }}>
                         {video.title}
@@ -322,8 +317,10 @@ function StoryInMotion({ intl }) {
                 </div>
               ))}
 
-              {/* Pagination inside the podcast episodes div */}
-              {pageVideos.length > videosPerPage && (
+            </div>
+
+            {/* Pagination inside the podcast episodes div */}
+            {pageVideos.length > videosPerPage && (
                 <div className="pagination-container" style={{ marginTop: '20px' }}>
                   <ReactPaginate
                     previousLabel="<<"
@@ -343,8 +340,7 @@ function StoryInMotion({ intl }) {
                     activeClassName="active"
                   />
                 </div>
-              )}
-            </div>
+            )}
 
           </div>
         </div>

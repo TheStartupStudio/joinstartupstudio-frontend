@@ -820,7 +820,7 @@ a.sidenav.active {
 
 .beyond-your-course-video-thumb img {
   width: 100%;
-  height: 300px !important;
+  /* height: 300px !important; */
 }
 
 .ml-2 {
@@ -5144,9 +5144,6 @@ wave > wave:first-child {
   text-transform: uppercase;
 }
 
-.beyond-your-course-video-thumb img {
-  border: 1px solid #bbbdbf;
-}
 
 .sl-offline-image-preview .offlineImage {
   border: 1px solid #bbbdbf;

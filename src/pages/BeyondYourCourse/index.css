@@ -25,6 +25,76 @@
     margin-bottom: 2rem;
 }
 
+.content-videos-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3rem;
+    margin: 20px 10px;
+    border-radius: 20px;
+    box-shadow: 0px 15px 20px 8px rgba(0, 0, 0, 0.09);
+    padding: 25px;
+    background-color: radial-gradient(circle at 10% 50%,
+            rgb(255, 255, 255) 0%,
+            rgb(255, 255, 255) 30%,
+            transparent 90%),
+        radial-gradient(circle at 0% 60%,
+            rgba(109, 167, 248, 0.342) 0%,
+            rgba(114, 171, 251, 0.4) 30%,
+            transparent 90%);
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+/* Large devices (laptops/desktops) */
+@media (max-width: 1400px) {
+    .content-videos-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+}
+
+/* Medium devices (tablets) */
+@media (max-width: 1070px) {
+    .content-videos-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        padding: 20px;
+    }
+}
+
+/* Small devices (landscape phones) */
+@media (max-width: 768px) {
+    .content-videos-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        padding: 15px;
+    }
+
+    .master-class-responsive {
+        flex-direction: column !important;
+        gap: 1.5rem;
+        margin-bottom: 20px;
+    }
+}
+
+/* Extra small devices (phones) */
+@media (max-width: 576px) {
+    .content-videos-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 10px;
+        margin: 10px 5px;
+    }
+}
+
+.content-videos-container .video-cards {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
 .beyond-videos-desktop {
     display: flex;
     flex-wrap: wrap;
@@ -38,7 +108,6 @@
     gap: 3rem;
     padding: 0.5rem;
 }
-
 
 .beyond-your-course-video-thumb img {
     height: 100% !important;
@@ -146,9 +215,7 @@
     .beyond-videos-desktop {
         gap: 0.8rem;
     }
-
 }
-
 
 @media (max-width: 728px) {
 
@@ -161,8 +228,6 @@
         overflow: hidden;
         text-align: center;
         /* margin: 40px 5px !important; */
-
-
     }
 
     .card-group-beyond-your-course {
@@ -171,7 +236,6 @@
         gap: 2rem;
         width: 100%;
     }
-
 
     .beyond-your-course-video-thumb {
         width: 100%;
@@ -184,7 +248,7 @@
         height: auto;
         object-fit: cover;
         border-radius: 10px;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
     }
 
     .title-container {
@@ -256,7 +320,7 @@
         /* Match the height defined for 450px */
         object-fit: cover;
         border-radius: 10px;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
     }
 
     .title-container {
@@ -302,7 +366,6 @@
         margin: 8px 0px;
     }
 
-
     .title-container .videos-container__title {
         font-size: 14px;
     }
@@ -318,7 +381,6 @@
         padding: 8px;
         margin: 8px auto;
     }
-
 
     .title-container .videos-container__title {
         font-size: 14px;
@@ -378,7 +440,6 @@
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
 }
-
 
 .small-videos-thumb {
     display: flex;
@@ -537,9 +598,9 @@
         width: 100%;
     }
 
-    .search-input-wrapper {
+    /* .search-input-wrapper {
         width: 200px !important;
-    }
+    } */
 }
 
 .custom-pagination {
@@ -715,9 +776,8 @@
 .search-input-wrapper {
     position: relative;
     display: inline-block;
-    width: 500px
+    max-width: 500px
 }
-
 
 .custom-pagination {
     display: flex;
@@ -881,10 +941,10 @@
     transition: transform 0.2s ease-in-out;
 }
 
-.beyond-your-course-video-thumb img {
+/* .beyond-your-course-video-thumb img {
     background-color: white;
     border-radius: 25px;
-}
+} */
 
 .beyond-your-course-video-thumb:hover {
     transform: scale(1.05);
@@ -892,9 +952,8 @@
 
 .beyond-your-course-video-thumb img {
     border-radius: 10px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
 }
-
 
 .beyond-your-course-video-thumb h5 {
     font-size: 1rem;

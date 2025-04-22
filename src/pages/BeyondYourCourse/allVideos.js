@@ -214,7 +214,7 @@ function GuidanceEncouragement({ intl }) {
                     <Link to='/beyond-your-course' style={{color:'#000000'}}>Master Classes &gt; </Link>
                     <span>{getSubtitle()}</span>
                   </div>
-                 <div className='d-flex justify-content-between'>
+                 <div className='d-flex justify-content-between gap-2 master-class-responsive'>
                 <div>
                 <h3 className='page-title'>
                     {pageTitle && <span> {pageTitle} </span>}
@@ -233,7 +233,8 @@ function GuidanceEncouragement({ intl }) {
                                     'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
                                   padding: '1px', // Adjust this value to control border thickness
                                   height: '58px',
-                                  boxShadow: '0px 4px 10px 0px #00000040'
+                                  boxShadow: '0px 4px 10px 0px #00000040',
+                                  width:'252px'
                                 }}>  
                     <Select
                                              options={options}
@@ -279,7 +280,7 @@ function GuidanceEncouragement({ intl }) {
                     </div>
                   ))}
                 </div>
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-between gap-2 master-class-responsive">
                 <div className="search-input-wrapper">
                     <div className='justify-content-between'>
             <div>
@@ -308,6 +309,7 @@ function GuidanceEncouragement({ intl }) {
                                   padding: '1px', // Adjust this value to control border thickness
                                   height: '58px',
                                   boxShadow: '0px 4px 10px 0px #00000040',
+                                  width:'159px'
                              
                                 }}>  
                     <Select
@@ -341,7 +343,7 @@ function GuidanceEncouragement({ intl }) {
 
                                            </div>
                  
-                <div className='row videos-container '>
+                <div className='content-videos-container'>
                   {currentPageVideos?.map((video, index) => (
                     <Video
                       id={video.id}

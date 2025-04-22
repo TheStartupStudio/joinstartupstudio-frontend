@@ -144,10 +144,9 @@ export default function VideoView(props) {
           )}
         </div>
       ) : (
-        <div className='card-group my-2 all-videos-beyond-your-course-videos col-12 col-sm-6 col-md-4 px-2' style={{width:'205px',borderRadius:'25px'}}>
-          <div>
+        <div className='video-cards'>
             <Link to={url ? url : '#'}>
-              <div className='beyond-your-course-video-thumb beyound-all-videos-thumb' style={{width:'195px'}}>
+              <div className='beyond-your-course-video-thumb beyound-all-videos-thumb' style={{width:'100%'}}>
                 <div
                   style={{
                     position: 'absolute',
@@ -194,7 +193,6 @@ export default function VideoView(props) {
               </div>
             </Link>
           </div>
-        </div>
       )}
       <VideoModal
         show={showVideoModal}

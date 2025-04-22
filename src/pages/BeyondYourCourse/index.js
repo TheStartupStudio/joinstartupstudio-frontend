@@ -747,9 +747,8 @@ export default function BeyondYourCourse() {
                           alt={podcast.title}
                           style={{
                             width: '100%',
-                            height: '150px',
+                            height: '100%',
                             objectFit: 'cover',
-                            borderRadius: '25px'
                           }}
                         />
                         <h5 style={{ textAlign: 'center', marginTop: '10px' }}>
