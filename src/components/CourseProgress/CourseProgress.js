@@ -362,7 +362,6 @@ function CourseProgress() {
     ]
   }
 
-  // Import same getCourseStatus function used in LtsJournal
   const getCourseStatus = (redirectId) => {
     if (finishedContent.includes(redirectId)) {
       return 'done'

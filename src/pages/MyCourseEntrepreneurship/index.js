@@ -23,6 +23,8 @@ function MyCourseEntrepreneurship() {
   const history = useHistory()
   let [showModal, setShowModal] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState(null)
+  const [activeAccordion, setActiveAccordion] = useState(null);
+  const [playingVideoIndex, setPlayingVideoIndex] = useState(null);
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -47,15 +49,33 @@ function MyCourseEntrepreneurship() {
     console.log('Selected Language:', selectedOption.value)
   }
 
+  const handleAccordionClick = (index) => {
+    if (activeAccordion === index) {
+      setActiveAccordion(null);
+    } else {
+      setActiveAccordion(index);
+    }
+  };
+
+  const handlePlay = (index) => {
+    if (playingVideoIndex !== index) {
+      setPlayingVideoIndex(null); 
+      setTimeout(() => {
+        setPlayingVideoIndex(index);
+      }, 0);
+    } else {
+      setPlayingVideoIndex(index);
+    }
+  };
+
   return (
     <Container fluid>
-      <Row>
         <div style={{ minHeight: '100vh' }}>
           <div
             className='d-flex space-between align-items-center'
             style={{ margin: '40px 40px 40px 30px' }}
           >
-            <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+            <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-right-1rem-tab gap-4'>
               <div className='d-flex justify-content-between flex-col-tab align-start-tab'>
                 <div>
                   <h3 className='page-title bold-page-title text-black mb-0'>
@@ -66,7 +86,7 @@ function MyCourseEntrepreneurship() {
                   </p>
                 </div>
 
-                <SelectLanguage />
+                {/* <SelectLanguage /> */}
               </div>
               <img
                 src={MenuIcon}
@@ -77,7 +97,7 @@ function MyCourseEntrepreneurship() {
             </div>
           </div>
           <div className='gradient-background-course'>
-            <div style={{ margin: '0 -15px' }}>
+            <div>
               <div className='welcome-journey-text'>
                 <div className='title-container'>
                   <img
@@ -101,18 +121,6 @@ function MyCourseEntrepreneurship() {
                   into execution as you build a product or service ready for
                   market entry.
                 </p>
-                {/* <p>
-                  <a
-                    href="/my-course-in-entrepreneurship/journal"
-                    className="button button--big"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setShowModal(true)
-                    }}
-                  >
-                    START
-                  </a>
-                </p> */}
               </div>
             </div>
 
@@ -122,8 +130,8 @@ function MyCourseEntrepreneurship() {
                   <div className='responsive-video-first responsive-accordion'>
                     <ReactPlayer
                       className=''
-                      width={'305px'}
-                      height={'192px'}
+                      width={''}
+                      height={'95%'}
                       style={{ margin: '10px', padding: '5px' }}
                       url={
                         'https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4'
@@ -145,31 +153,30 @@ function MyCourseEntrepreneurship() {
                   </div>
                 </div>
               </div>
-              <div className='accordion accordion-flex' id='accordionExample'>
+              <div className="accordion accordion-flex" id="accordionExample">
                 {[
                   {
                     title: 'Introducing the Entrepreneurs',
-                    type: 'entrepreneurs'
+                    type: 'entrepreneurs',
                   },
                   { title: 'Key Points That You’ll Learn', type: 'key_points' },
                   {
                     title: 'Three Levels of Your Journey',
-                    type: 'levels_of_journey'
-                  }
+                    type: 'levels_of_journey',
+                  },
                 ].map((data, index) => (
                   <div style={{ marginRight: '-10px' }} key={index}>
-                    {/* <div className="accordion-item  accordion-item-border"> */}
                     <h2
-                      className='accordion-header accordion-content-section-header'
+                      className="accordion-header accordion-content-section-header"
                       id={`heading-${index}`}
                     >
                       <button
-                        className='accordion-button collapsed accordion-outter button-accordion'
-                        type='button'
-                        eventKey={`${index}`}
-                        data-bs-toggle='collapse'
-                        data-bs-target={`#collapse_outer${index}`}
-                        aria-expanded='false'
+                        className={`accordion-button ${
+                          activeAccordion === index ? 'active-accordion' : 'collapsed'
+                        } accordion-outter button-accordion`}
+                        type="button"
+                        onClick={() => handleAccordionClick(index)}
+                        aria-expanded={activeAccordion === index}
                         aria-controls={`collapse_outer${index}`}
                       >
                         {data.title}
@@ -177,94 +184,84 @@ function MyCourseEntrepreneurship() {
                     </h2>
                     <div
                       id={`collapse_outer${index}`}
-                      eventKey={`${index}`}
-                      className={`accordion-collapse accordion-content-section  collapse `}
+                      className={`accordion-collapse accordion-content-section collapse ${
+                        activeAccordion === index ? 'show' : ''
+                      }`}
                       aria-labelledby={`heading-${index}`}
-                      data-bs-parent={`#accordionExample`}
+                      data-bs-parent="#accordionExample"
                     >
-                      <div
-                        className='accordion-body py-4'
-                        eventKey={`${index}`}
-                      >
-                        {data.type == 'entrepreneurs' && (
-                          <div className='entrepreneurs row'>
-                            {LtsCourseIntro['entrepeneurs'].map(
-                              (entData, entIndex) => (
-                                <div className='entrepreneurs__item col-12 col-md-6'>
-                                  <div className='entrepreneurs__item-inner'>
-                                    <h3 className='entrepreneurs__item-title'>
-                                      {entData.name}
-                                    </h3>
-                                    <div className='entrepreneurs__item-position'>
-                                      {entData.position}
-                                    </div>
-                                    <div className='entrepreneurs__item-video'>
-                                      <div className='responsive-video'>
-                                        <ReactPlayer
-                                          className=''
-                                          width={'100%'}
-                                          height={'100%'}
-                                          url={entData.video_url}
-                                          controls
-                                          playing={true}
-                                          preload='metadata'
-                                          light={entData.thumbnail}
-                                          config={{
-                                            file: {
-                                              attributes: {
-                                                controlsList: 'nodownload'
-                                              }
-                                            }
-                                          }}
-                                        />
-                                      </div>
+                      <div className="accordion-body py-4">
+                        {data.type === 'entrepreneurs' && (
+                          <div className="entrepreneurs row">
+                            {LtsCourseIntro['entrepeneurs'].map((entData, entIndex) => (
+                              <div className="entrepreneurs__item col-12 col-md-6" key={entIndex}>
+                                <div className="entrepreneurs__item-inner">
+                                  <h3 className="entrepreneurs__item-title">{entData.name}</h3>
+                                  <div className="entrepreneurs__item-position">{entData.position}</div>
+                                  <div className="entrepreneurs__item-video">
+                                    <div className="responsive-video">
+                                      <ReactPlayer
+                                        className=""
+                                        width="100%"
+                                        height="100%"
+                                        url={entData.video_url}
+                                        controls
+                                        playing={playingVideoIndex === entIndex} 
+                                        preload="metadata"
+                                        light={entData.thumbnail}
+                                        config={{
+                                          file: {
+                                            attributes: {
+                                              controlsList: 'nodownload',
+                                            },
+                                          },
+                                        }}
+                                        onPlay={() => handlePlay(entIndex)} 
+                                        onPause={() => setPlayingVideoIndex(null)}
+                                      />
                                     </div>
                                   </div>
                                 </div>
-                              )
-                            )}
+                              </div>
+                            ))}
                           </div>
                         )}
 
-                        {data.type == 'key_points' && (
-                          <div className='key_points row responsive-accordion'>
-                            {LtsCourseIntro['key_points_videos'].map(
-                              (entData, entIndex) => (
-                                <div className='key_points__item col-12 col-md-3'>
-                                  <div className='key_points__item-inner'>
-                                    <div className='key_points__item-video'>
-                                      <div className='responsive-video'>
-                                        <ReactPlayer
-                                          className=''
-                                          width={'100%'}
-                                          height={'100%'}
-                                          url={entData.url}
-                                          controls
-                                          playing={true}
-                                          preload='metadata'
-                                          config={{
-                                            file: {
-                                              attributes: {
-                                                controlsList: 'nodownload'
-                                              }
-                                            }
-                                          }}
-                                          light={entData.thumbnail}
-                                        />
-                                      </div>
+                        {data.type === 'key_points' && (
+                          <div className="key_points row responsive-accordion">
+                            {LtsCourseIntro['key_points_videos'].map((entData, entIndex) => (
+                              <div className="key_points__item col-12 col-md-3" key={entIndex}>
+                                <div className="key_points__item-inner">
+                                  <div className="key_points__item-video">
+                                    <div className="responsive-video">
+                                      <ReactPlayer
+                                        className=""
+                                        width="100%"
+                                        height="100%"
+                                        url={entData.url}
+                                        controls
+                                        playing={true}
+                                        preload="metadata"
+                                        config={{
+                                          file: {
+                                            attributes: {
+                                              controlsList: 'nodownload',
+                                            },
+                                          },
+                                        }}
+                                        light={entData.thumbnail}
+                                      />
                                     </div>
-                                    <h3 className='key_points__item-title'>
-                                      {entData.title}
-                                    </h3>
                                   </div>
+                                  <h3 className="key_points__item-title">{entData.title}</h3>
                                 </div>
-                              )
-                            )}
+                              </div>
+                            ))}
                           </div>
                         )}
 
-                        {data.type == 'levels_of_journey' && (
-                          <div className='levels-of-journey'>
+                        {data.type === 'levels_of_journey' && (
+                          <div className="levels-of-journey">
                             <div className='levels-of-journey__level'>
                               <p className='levels-of-journey__title'>
                                 <span>LEVEL 1 |</span> Entrepreneurship and You
@@ -325,7 +322,6 @@ function MyCourseEntrepreneurship() {
                         )}
                       </div>
                     </div>
-                    {/* </div> */}
                   </div>
                 ))}
               </div>
@@ -356,33 +352,6 @@ function MyCourseEntrepreneurship() {
             </Modal>
           </div>
         </div>
-
-        {/* <div className="col-12 col-xl-3 px-2 mt-3">
-          <ShowMessenger />
-          <NotesButton />
-
-          <Chat room={'5f96a12568d0c2c580fca9fe'} />
-
-          <div className={'community-connect my-2'}>
-            <Link to='/my-connections'>
-              <FontAwesomeIcon
-                icon={faUsers}
-                style={{
-                  color: '#01C5D1',
-                  background: 'white',
-                  borderRadius: '50%',
-                  height: '25px',
-                  width: '36px',
-                  opacity: '1'
-                }}
-              />
-            </Link>
-            <Link to='/my-connections'>
-              <p className='my-auto ms-2'>Connect with my community</p>
-            </Link>
-          </div>
-        </div> */}
-      </Row>
     </Container>
   )
 }

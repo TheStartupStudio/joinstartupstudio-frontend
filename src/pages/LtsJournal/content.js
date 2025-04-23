@@ -34,8 +34,8 @@ function LtsJournalContent(props) {
   let [loading, setLoading] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Track the current video index
-  const [showVideo, setShowVideo] = useState(null); // Track the currently playing video
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); 
+  const [showVideo, setShowVideo] = useState(null); 
 
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
@@ -233,7 +233,7 @@ function LtsJournalContent(props) {
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-start general-video-container" style={{ gap: '2rem' }}>
+      <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
  
         
         <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%' }}>
@@ -301,7 +301,7 @@ function LtsJournalContent(props) {
         </div>
 
 
-        <div id="content-container" className="content-container" style={{ flex: '1 1 50%' }}>
+        <div id="content-container" className="content-container" style={{ flex: '1 1 50%' , width:'100%', boxShadow:'0px 15px 20px 8px rgba(0, 0, 0, 0.09)'}}>
        <div className='d-flex align-items-center reflection-header'>
        <img
             src={WhoAmI}

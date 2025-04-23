@@ -133,7 +133,7 @@ const InstructorSidebar = (props) => {
               dispatch(setAccordionToggled(false))
               props.props.hideHeaderIcons()
             }}
-            to={'/my-course-in-entrepreneurship/journal/51'}
+            to={'/my-course-in-entrepreneurship/journal'}
             // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
             srcImage={CoursEnIcon}
             title={
