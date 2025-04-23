@@ -1,10 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
+import ReactPlayer from 'react-player'
 import AccordionLead from '../../components/LeadershipJournal/AccordionLead'
 import SectionsWrapper from './SectionsWrapper'
 import YourInstructor from '../LeadershipJournal/YourInstructor'
 
 function SectionOne({ setIsReflection }) {
   setIsReflection(false)
+
+  const [openAccordion, setOpenAccordion] = useState(null)
+
+  const handleAccordionClick = (accordionId) => {
+    setOpenAccordion(openAccordion === accordionId ? null : accordionId)
+  }
 
   const paragraphs = [
     {
@@ -99,15 +106,19 @@ function SectionOne({ setIsReflection }) {
   return (
     <div className='leadership-layout d-grid gap-5 grid-col-1-mob '>
       <div className='w-100'>
-        <YourInstructor
-          instructorName={'DR. Leslie Williams'}
-          profilePic={
-            'https://s3-alpha-sig.figma.com/img/5281/edbe/057c844eb974d929552c412c8956de9c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=jtzM83EbGZBWpKQXVfDBL6Z4e7mbF7eog9obL16NgkFy1KNN7Mk4V9DPFN6498GnwRXbTm1FDWSUv4oGbOZIjXHxhu6ua0xXkv7J8Hl85kQmXVPbAqJuPGmjSsQr2dAmgSuVMlO1xcUV5BRmAvBmEnqJwKAt0~xEmAj4uyfHwRLuzsxidRb4HiVSBLXR5GkjOy1U2UGM4ycTtL3IAAFjlgRhYJ1qAE06tnmkIUr6p5OkRv0djxrDClPbTaLXaBTsrlclw6vo~ApVYvcJl63UzYD4fpHA6mmi5odfvnmzT1obUqtExKlr6fXjWsthlFRRJucaEfNfEqHg0GXoHnaOpQ__'
-          }
-          userProffesion={
-            'Group Head of Social Impact and EDIB at Nord Anglia Education'
-          }
-        />
+        <div className='row'>
+          <div className='col-12 mb-4'>
+            <YourInstructor
+              instructorName={'DR. Leslie Williams'}
+              profilePic={
+                'https://s3-alpha-sig.figma.com/img/5281/edbe/057c844eb974d929552c412c8956de9c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=jtzM83EbGZBWpKQXVfDBL6Z4e7mbF7eog9obL16NgkFy1KNN7Mk4V9DPFN6498GnwRXbTm1FDWSUv4oGbOZIjXHxhu6ua0xXkv7J8Hl85kQmXVPbAqJuPGmjSsQr2dAmgSuVMlO1xcUV5BRmAvBmEnqJwKAt0~xEmAj4uyfHwRLuzsxidRb4HiVSBLXR5GkjOy1U2UGM4ycTtL3IAAFjlgRhYJ1qAE06tnmkIUr6p5OkRv0djxrDClPbTaLXaBTsrlclw6vo~ApVYvcJl63UzYD4fpHA6mmi5odfvnmzT1obUqtExKlr6fXjWsthlFRRJucaEfNfEqHg0GXoHnaOpQ__'
+              }
+              userProffesion={
+                'Group Head of Social Impact and EDIB at Nord Anglia Education'
+              }
+            />
+          </div>
+        </div>
       </div>
       <SectionsWrapper
         title={'Welcome to the Leadership Journal'}
@@ -117,21 +128,17 @@ function SectionOne({ setIsReflection }) {
           <div className='accordion-item progress-details-accordion'>
             <h2 className='accordion-header' id='headingOne'>
               <button
-                className='accordion-button collapsed fw-medium'
+                className={`accordion-button fw-medium ${openAccordion !== 'one' ? 'collapsed' : ''}`}
                 type='button'
-                data-bs-toggle='collapse'
-                data-bs-target='#collapseOne'
-                aria-expanded='false'
-                aria-controls='collapseOne'
+                onClick={() => handleAccordionClick('one')}
               >
                 Section One: Who am I?
               </button>
             </h2>
             <div
               id='collapseOne'
-              className='accordion-collapse collapse'
+              className={`accordion-collapse collapse ${openAccordion === 'one' ? 'show' : ''}`}
               aria-labelledby='headingOne'
-              data-bs-parent='#progressAccordion'
             >
               <div className='accordion-body d-grid gap-2'>
                 {sectionOne.map((item) => (
@@ -149,21 +156,17 @@ function SectionOne({ setIsReflection }) {
           <div className='accordion-item progress-details-accordion'>
             <h2 className='accordion-header' id='headingTwo'>
               <button
-                className='accordion-button collapsed fw-medium'
+                className={`accordion-button fw-medium ${openAccordion !== 'two' ? 'collapsed' : ''}`}
                 type='button'
-                data-bs-toggle='collapse'
-                data-bs-target='#collapseTwo'
-                aria-expanded='false'
-                aria-controls='collapseTwo'
+                onClick={() => handleAccordionClick('two')}
               >
                 Section Two: What can I do?
               </button>
             </h2>
             <div
               id='collapseTwo'
-              className='accordion-collapse collapse'
+              className={`accordion-collapse collapse ${openAccordion === 'two' ? 'show' : ''}`}
               aria-labelledby='headingTwo'
-              data-bs-parent='#progressAccordion'
             >
               <div className='accordion-body d-grid gap-2'>
                 {sectionTwo.map((item) => (
@@ -181,21 +184,17 @@ function SectionOne({ setIsReflection }) {
           <div className='accordion-item progress-details-accordion'>
             <h2 className='accordion-header' id='headingThree'>
               <button
-                className='accordion-button collapsed fw-medium'
+                className={`accordion-button fw-medium ${openAccordion !== 'three' ? 'collapsed' : ''}`}
                 type='button'
-                data-bs-toggle='collapse'
-                data-bs-target='#collapseThree'
-                aria-expanded='false'
-                aria-controls='collapseThree'
+                onClick={() => handleAccordionClick('three')}
               >
                 Section Three: How do I prove it?
               </button>
             </h2>
             <div
               id='collapseThree'
-              className='accordion-collapse collapse'
+              className={`accordion-collapse collapse ${openAccordion === 'three' ? 'show' : ''}`}
               aria-labelledby='headingThree'
-              data-bs-parent='#progressAccordion'
             >
               <div className='accordion-body d-grid gap-2'>
                 {sectionThree.map((item) => (

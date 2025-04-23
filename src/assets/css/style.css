@@ -4885,6 +4885,28 @@ wave > wave:first-child {
 
 .search-journals-width {
   width: 39%;
+  position: relative;
+}
+
+.search-journals-width .input-container-modal{
+  z-index: 100;
+}
+
+.search-journals-width .search-results-dropdown {
+  position: absolute;
+  bottom: -40px;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding-top: 40px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-journals-width .search-result-item {
+  padding: 8px 16px;
+  cursor: pointer;
 }
 
 .leadership-layout {

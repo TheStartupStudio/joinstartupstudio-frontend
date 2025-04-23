@@ -1,6 +1,6 @@
 import { faCircle, faPlay } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import React, { useState, useEffect, forwardRef, useImperativeHandle, memo } from 'react'
 import ReactQuill from 'react-quill'
 import AddDoc from '../../assets/images/academy-icons/add-doc.png'
 import Light from '../../assets/images/academy-icons/light.png'
@@ -12,21 +12,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getJournalData } from '../../redux/journal/Actions'
 import { toast } from 'react-toastify'
 
-const Value = forwardRef(({ id, setIsReflection }, ref) => {
+const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
   const [pendingChanges, setPendingChanges] = useState({})
-  const [refreshKey, setRefreshKey] = useState(0)
   const [showVideo, setShowVideo] = useState(false)
   const dispatch = useDispatch()
-  const { journalData, loading, error } = useSelector((state) => state.journal)
+  const { journalData } = useSelector((state) => state.journal)
 
   const refreshData = () => {
     dispatch(getJournalData(id))
   }
 
-
   useEffect(() => {
     refreshData()
-  }, [id, refreshKey])
+  }, [id])
 
   const handleContentChange = (entryId, data) => {
     setPendingChanges((prev) => ({
@@ -54,8 +52,7 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
                   order: data.order
                 }
               )
-              refreshData()
-              toast.success('answer submitted successfully!')
+              toast.success('Answer submitted successfully!')
               return postResponse
             } catch (postError) {
               if (postError.response?.status === 400 || data.isExisting) {
@@ -67,10 +64,8 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
                   }
                 )
                 toast.success('Changes saved successfully!')
-                refreshData()
                 return putResponse
               }
-
               throw postError
             }
           }
@@ -78,7 +73,7 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
 
         await Promise.all(savePromises)
         setPendingChanges({})
-        setRefreshKey((prev) => prev + 1)
+        refreshData()
       } catch (error) {
         console.error('Error saving reflections:', error)
       }
@@ -122,13 +117,16 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
                   position: 'relative',
                   display: 'flex',
                   justifyContent: 'center',
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  height: '100%',
+                  maxWidth: '450px',
+                  aspectRatio: '1 / 1',
                 }}
               >
                 <img
                   src={journalData.video.thumbnail}
                   alt="video thumbnail"
-                  style={{ width: '100%' }}
+                  style={{ width: '100%', height:'100%', objectFit: 'cover' }}
                 />
                 <div className="journal-entries__video-thumbnail-icon"
                   style={{
@@ -193,6 +191,9 @@ const Value = forwardRef(({ id, setIsReflection }, ref) => {
       </SectionsWrapper>
     </div>
   )
+}), (prevProps, nextProps) => {
+  // Custom comparison function for memo
+  return prevProps.id === nextProps.id
 })
 
 export default Value

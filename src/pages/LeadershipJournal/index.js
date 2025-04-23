@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, memo, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchJournalFinishedContent } from '../../redux/journal/Actions'
 import circleSign from '../../assets/images/academy-icons/circle-fill.png'
@@ -23,11 +23,12 @@ import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import store from '../../redux/store'
 import { Modal } from 'react-bootstrap'
+import { ModalBody } from 'reactstrap'
+import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 
-function LeadershipJournal() {
+const LeadershipJournal = memo(() => {
   const [isReflection, setIsReflection] = useState(false)
   const [allTabs, setAllTabs] = useState([])
-  const [loading, setLoading] = useState(true)
   const [activeTabData, setActiveTabData] = useState({
     activeTab: 0,
     option: null
@@ -35,11 +36,30 @@ function LeadershipJournal() {
   const [showLockModal, setShowLockModal] = useState(false)
 
   const dispatch = useDispatch()
-  const { finishedContent, loading: finishedContentLoading } = useSelector(
-    (state) => state.journal
-  )
-
+  const { finishedContent } = useSelector((state) => state.journal)
   const valueRefs = useRef({})
+
+  const staticComponents = useMemo(() => ({
+    'SECTION ONE: WHO AM I?': {
+      mainComponent: <SectionOne setIsReflection={setIsReflection} />,
+      introComponent: <IntroWhoAmI setIsReflection={setIsReflection} />
+    },
+    'SECTION TWO: WHAT CAN I DO?': {
+      mainComponent: <SectionTwo setIsReflection={setIsReflection} />,
+      introComponent: <SectionTwo setIsReflection={setIsReflection} />
+    },
+    'SECTION THREE: HOW DO I PROVE IT?': {
+      mainComponent: <SectionThree setIsReflection={setIsReflection} />,
+      introComponent: <GoToJournal />
+    }
+  }), [])
+
+  const renderedSection = useMemo(() => {
+    const { activeTab, option } = activeTabData
+    return option !== null
+      ? allTabs[activeTab]?.options[option?.value]?.component
+      : allTabs[activeTab]?.mainComponent
+  }, [activeTabData, allTabs])
 
   const getComponentWithRef = (Component, id) => {
     if (Component.type === Value) {
@@ -57,28 +77,6 @@ function LeadershipJournal() {
       await valueRefs.current[currentOption.id].saveChanges()
     }
     fetchJournalContent()
-  }
-
-  const renderSection = () => {
-    const { activeTab, option } = activeTabData
-    return option !== null
-      ? allTabs[activeTab]?.options[option?.value]?.component
-      : allTabs[activeTab]?.mainComponent
-  }
-
-  const staticComponents = {
-    'SECTION ONE: WHO AM I?': {
-      mainComponent: <SectionOne setIsReflection={setIsReflection} />,
-      introComponent: <IntroWhoAmI setIsReflection={setIsReflection} />
-    },
-    'SECTION TWO: WHAT CAN I DO?': {
-      mainComponent: <SectionTwo setIsReflection={setIsReflection} />,
-      introComponent: <SectionTwo setIsReflection={setIsReflection} />
-    },
-    'SECTION THREE: HOW DO I PROVE IT?': {
-      mainComponent: <SectionThree setIsReflection={setIsReflection} />,
-      introComponent: <GoToJournal />
-    }
   }
 
   const transformApiDataToTabs = (data, finishedContent) => {
@@ -144,24 +142,15 @@ function LeadershipJournal() {
 
   const fetchJournalContent = async () => {
     try {
-      setLoading(true)
       const [contentResponse] = await Promise.all([
         axiosInstance.get('/ltsJournals/LtsJournalContent'),
         dispatch(fetchJournalFinishedContent())
       ])
 
-      // Get current finishedContent from redux state
       const { finishedContent } = store.getState().journal
+      const transformedTabs = transformApiDataToTabs(contentResponse.data, finishedContent)
 
-      // Transform new data while keeping existing tabs in state
-      const transformedTabs = transformApiDataToTabs(
-        contentResponse.data,
-        finishedContent
-      )
-
-      // Only update state after new data is ready
-      setAllTabs((prevTabs) => {
-        // Keep showing previous tabs until new ones are ready
+      setAllTabs(prevTabs => {
         if (transformedTabs?.length) {
           return transformedTabs
         }
@@ -169,59 +158,42 @@ function LeadershipJournal() {
       })
     } catch (error) {
       console.error('Error fetching journal content:', error)
-    } finally {
-      setLoading(false)
     }
   }
 
-  const isContentCompleted = (title) => {
-    return finishedContent.includes(title)
-  }
-
-  const canAccessSection = (sectionIndex) => {
-    // Can always access first section
-    if (sectionIndex === 0) return true;
+  const canAccessSection = useMemo(() => (sectionIndex) => {
+    if (sectionIndex === 0) return true
 
     const sections = {
       one: ['SECTION ONE: WHO AM I?', 'Values', 'Expertise', 'Experiences', 'Style'],
       two: ['SECTION TWO: WHAT CAN I DO?', 'Teamwork', 'Initiative', 'Methodology', 'Self-Assessment'],
       three: ['SECTION THREE: HOW DO I PROVE IT?', 'Outcomes', 'Feedback', 'Iteration', 'Vision']
-    };
+    }
 
-    // Get section title
-    const sectionTitle = allTabs[sectionIndex]?.title;
+    const sectionTitle = allTabs[sectionIndex]?.title
 
-    // For Section Two, check if Section One is completed
     if (sectionTitle === 'SECTION TWO: WHAT CAN I DO?') {
-      const sectionOneComplete = sections.one.every(title => 
-        finishedContent.includes(title)
-      );
+      const sectionOneComplete = sections.one.every(title => finishedContent.includes(title))
       if (!sectionOneComplete) {
-        setShowLockModal(true);
-        return false;
+        setShowLockModal(true)
+        return false
       }
     }
 
-    // For Section Three, check if both Section One and Two are completed  
     if (sectionTitle === 'SECTION THREE: HOW DO I PROVE IT?') {
-      const sectionOneComplete = sections.one.every(title => 
-        finishedContent.includes(title)
-      );
-      const sectionTwoComplete = sections.two.every(title => 
-        finishedContent.includes(title)
-      );
+      const sectionOneComplete = sections.one.every(title => finishedContent.includes(title))
+      const sectionTwoComplete = sections.two.every(title => finishedContent.includes(title))
       if (!sectionOneComplete || !sectionTwoComplete) {
-        setShowLockModal(true);
-        return false;
+        setShowLockModal(true)
+        return false
       }
     }
 
-    return true;
-  };
+    return true
+  }, [allTabs, finishedContent])
 
   useEffect(() => {
     fetchJournalContent()
-    // Remove finishedContent from dependencies
   }, [dispatch])
 
   return (
@@ -239,8 +211,6 @@ function LeadershipJournal() {
                 a leader.
               </p>
             </div>
-
-            {/* <SelectLanguage /> */}
           </div>
           <img
             src={MenuIcon}
@@ -250,7 +220,7 @@ function LeadershipJournal() {
           />
         </div>
         <div className='academy-dashboard-layout lead-class mb-5'>
-          {loading ? (
+          {allTabs.length === 0 ? (
             <div>Loading...</div>
           ) : (
             <>
@@ -290,13 +260,12 @@ function LeadershipJournal() {
                     setSelectedCourse={setActiveTabData}
                     options={allTabs[activeTabData.activeTab].options}
                     isDisabled={(option) => {
-                      // Disable Section Three options if Section Two is not completed
                       if (allTabs[activeTabData.activeTab].title === 'SECTION THREE: HOW DO I PROVE IT?') {
                         if (!finishedContent.includes('SECTION TWO: WHAT CAN I DO?')) {
-                          return true;
+                          return true
                         }
                       }
-                      return !isContentCompleted(option.label) && !option.isNext;
+                      return !finishedContent.includes(option.label) && !option.isNext
                     }}
                   />
                   {isReflection && (
@@ -309,39 +278,14 @@ function LeadershipJournal() {
                 </div>
               </div>
               <div>
-                <div className='d-flex mt-4 gap-5'>{renderSection()}</div>
+                <div className='d-flex mt-4 gap-5'>{renderedSection}</div>
               </div>
             </>
           )}
         </div>
       </div>
-      {showLockModal && (
-        <Modal
-          show={showLockModal}
-          onHide={() => setShowLockModal(false)}
-          centered
-          className="lesson-locked-modal"
-        >
-          <Modal.Body className="text-center p-4 position-relative">
-            <div className="mb-3">
-              <i className="fa fa-lock fs-1"></i>
-            </div>
-            <h5 className="mb-3">Lesson Locked</h5>
-            <p>
-              This lesson is currently locked. You must complete
-              the lesson before it to gain access to this lesson.
-            </p>
-            <button 
-              className="mt-3 position-absolute top-20 end-20 rounded-5 rounded-top-0 rounded-end-0 border-0"
-              onClick={() => setShowLockModal(false)}
-            >
-              Close
-            </button>
-          </Modal.Body>
-        </Modal>
-      )}
     </div>
   )
-}
+})
 
 export default LeadershipJournal
