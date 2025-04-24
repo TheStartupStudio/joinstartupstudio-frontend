@@ -27,10 +27,10 @@ function UserDetails({ profilePic, userName, userProffesion }) {
     setCancelSubModal((prev) => !prev)
   }
 
-  // const toggleCancelModal = () => {
-  //   setCancelSubModal((prev) => !prev)
-  //   setSubscriptionModal((prev) => !prev)
-  // }
+  const toggleCancelModal = () => {
+    setCancelSubModal((prev) => !prev)
+    setModal((prev) => !prev)
+  }
 
   const toggleCancelRenewal = () => {
     setCancelSubModal((prev) => !prev)
@@ -134,7 +134,7 @@ function UserDetails({ profilePic, userName, userProffesion }) {
       <CancelSubModal
         cancelSubModal={cancelSubModal}
         setCancelSubModal={setCancelSubModal}
-        // toggleCancelModal={toggleCancelModal}
+        toggleCancelModal={toggleCancelModal}
         toggleCancelRenewal={toggleCancelRenewal}
       />
       <CancelRenewalModal

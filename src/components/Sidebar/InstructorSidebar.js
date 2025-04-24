@@ -41,10 +41,10 @@ const InstructorSidebar = (props) => {
     setCancelSubModal((prev) => !prev)
   }
 
-  // const toggleCancelModal = () => {
-  //   setCancelSubModal((prev) => !prev)
-  //   setSubscriptionModal((prev) => !prev)
-  // }
+  const toggleCancelModal = () => {
+    setCancelSubModal((prev) => !prev)
+    setModal((prev) => !prev)
+  }
 
   const toggleCancelRenewal = () => {
     setCancelSubModal((prev) => !prev)
@@ -99,7 +99,23 @@ const InstructorSidebar = (props) => {
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
         id='side-menu-main'
       >
-        <Tooltip text={'Dashboard'}>
+        {isCollapsed ? (
+          <Tooltip text={'Dashboard'}>
+            <SidebarItem
+              onClick={() => {
+                dispatch(setAccordionToggled(false))
+                props.props.hideHeaderIcons()
+              }}
+              to={'/dashboard'}
+              className={`${
+                location.pathname.includes('dashboard') ? 'active' : ''
+              }`}
+              srcImage={DashIcon}
+              title={isTextVisible && !isCollapsed && 'Dashboard'}
+              isDropdown={false}
+            />
+          </Tooltip>
+        ) : (
           <SidebarItem
             onClick={() => {
               dispatch(setAccordionToggled(false))
@@ -113,9 +129,27 @@ const InstructorSidebar = (props) => {
             title={isTextVisible && !isCollapsed && 'Dashboard'}
             isDropdown={false}
           />
-        </Tooltip>
+        )}
 
-        <Tooltip text={'Intro to Course'}>
+        {isCollapsed ? (
+          <Tooltip text={'Intro to Course'}>
+            <SidebarItem
+              onClick={() => {
+                dispatch(setAccordionToggled(false))
+                props.props.hideHeaderIcons()
+              }}
+              to={'/my-course-in-entrepreneurship'}
+              className={`${
+                location.pathname === '/my-course-in-entrepreneurship'
+                  ? 'active'
+                  : ''
+              }`}
+              srcImage={IntroToIcon}
+              title={isTextVisible && !isCollapsed && 'Intro to course'}
+              isDropdown={false}
+            />
+          </Tooltip>
+        ) : (
           <SidebarItem
             onClick={() => {
               dispatch(setAccordionToggled(false))
@@ -131,9 +165,31 @@ const InstructorSidebar = (props) => {
             title={isTextVisible && !isCollapsed && 'Intro to course'}
             isDropdown={false}
           />
-        </Tooltip>
+        )}
 
-        <Tooltip text={'Course In Entrepreneurship'}>
+        {isCollapsed ? (
+          <Tooltip text={'Course In Entrepreneurship'}>
+            <SidebarItem
+              onClick={() => {
+                dispatch(setAccordionToggled(false))
+                props.props.hideHeaderIcons()
+              }}
+              to={'/my-course-in-entrepreneurship/journal/51'}
+              className={`${
+                location.pathname.includes(
+                  'my-course-in-entrepreneurship/journal'
+                )
+                  ? 'active'
+                  : ''
+              }`}
+              srcImage={CoursEnIcon}
+              title={
+                isTextVisible && !isCollapsed && 'Course in enterpreneurship'
+              }
+              isDropdown={false}
+            />
+          </Tooltip>
+        ) : (
           <SidebarItem
             onClick={() => {
               dispatch(setAccordionToggled(false))
@@ -153,9 +209,25 @@ const InstructorSidebar = (props) => {
             }
             isDropdown={false}
           />
-        </Tooltip>
+        )}
 
-        <Tooltip text={'Master Classes'}>
+        {isCollapsed ? (
+          <Tooltip text={'Master Classes'}>
+            <SidebarItem
+              onClick={() => {
+                dispatch(setAccordionToggled(false))
+                props.props.hideHeaderIcons()
+              }}
+              to={'/beyond-your-course'}
+              className={`${
+                location.pathname.includes('beyond-your-course') ? 'active' : ''
+              }`}
+              srcImage={MasterIcon}
+              title={isTextVisible && !isCollapsed && 'Master classes'}
+              isDropdown={false}
+            />
+          </Tooltip>
+        ) : (
           <SidebarItem
             onClick={() => {
               dispatch(setAccordionToggled(false))
@@ -169,9 +241,25 @@ const InstructorSidebar = (props) => {
             title={isTextVisible && !isCollapsed && 'Master classes'}
             isDropdown={false}
           />
-        </Tooltip>
+        )}
 
-        <Tooltip text={'Leadership Journal'}>
+        {isCollapsed ? (
+          <Tooltip text={'Leadership Journal'}>
+            <SidebarItem
+              onClick={() => {
+                dispatch(setAccordionToggled(false))
+                props.props.hideHeaderIcons()
+              }}
+              to={'/leadership-journal'}
+              className={`${
+                location.pathname.includes('leadership-journal') ? 'active' : ''
+              }`}
+              srcImage={LeadershipIcon}
+              title={isTextVisible && !isCollapsed && 'Leadership journal'}
+              isDropdown={false}
+            />
+          </Tooltip>
+        ) : (
           <SidebarItem
             onClick={() => {
               dispatch(setAccordionToggled(false))
@@ -185,9 +273,25 @@ const InstructorSidebar = (props) => {
             title={isTextVisible && !isCollapsed && 'Leadership journal'}
             isDropdown={false}
           />
-        </Tooltip>
+        )}
 
-        <Tooltip text={'My Portfolio'}>
+        {isCollapsed ? (
+          <Tooltip text={'My Portfolio'}>
+            <SidebarItem
+              onClick={() => {
+                dispatch(setAccordionToggled(false))
+                props.props.hideHeaderIcons()
+              }}
+              to={'/my-portfolio'}
+              className={`${
+                location.pathname.includes('my-portfolio') ? 'active' : ''
+              }`}
+              srcImage={PortfolioIcon}
+              title={isTextVisible && !isCollapsed && 'My portfolio'}
+              isDropdown={false}
+            />
+          </Tooltip>
+        ) : (
           <SidebarItem
             onClick={() => {
               dispatch(setAccordionToggled(false))
@@ -201,7 +305,7 @@ const InstructorSidebar = (props) => {
             title={isTextVisible && !isCollapsed && 'My portfolio'}
             isDropdown={false}
           />
-        </Tooltip>
+        )}
       </ul>
       <ul
         className='list-unstyled components sidebar-menu-item sidebar-menu-list'
@@ -214,12 +318,47 @@ const InstructorSidebar = (props) => {
                 className='rotated'
                 src={ExpandLogo}
                 alt='Expand'
-                style={{ transform: isCollapsed && 'rotate(0deg)' }}
+                style={{
+                  transform: isCollapsed && 'rotate(0deg)',
+                  marginLeft: '4px'
+                }}
               />
             </button>
           </li>
         </Tooltip>
-        <Tooltip text={'My Account'}>
+
+        {isCollapsed ? (
+          <Tooltip text={'My Account'}>
+            <li
+              className='sub-li'
+              onClick={() => {
+                dispatch(setAccordionToggled(false))
+                dispatch(collapseTrue())
+                props.props.hideHeaderIcons()
+                toggle()
+              }}
+            >
+              <div className='logout-button'>
+                <div className='d-flex w-100' style={{ alignItems: 'center' }}>
+                  <Col md='2' className='col-2 icon_container'>
+                    <img
+                      src={SettingsIcon}
+                      alt='Icon'
+                      style={{
+                        width: '26px',
+                        marginLeft: '3px',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  </Col>
+                  {isTextVisible && !isCollapsed && (
+                    <div className='flex-grow-1 ms-1 mb-1'>MY ACCOUNT</div>
+                  )}
+                </div>
+              </div>
+            </li>
+          </Tooltip>
+        ) : (
           <li
             className='sub-li'
             onClick={() => {
@@ -233,19 +372,22 @@ const InstructorSidebar = (props) => {
               <div className='d-flex w-100' style={{ alignItems: 'center' }}>
                 <Col md='2' className='col-2 icon_container'>
                   <img
-                    className='profile-photo'
                     src={SettingsIcon}
                     alt='Icon'
-                    style={{ width: '26px' }}
+                    style={{
+                      width: '26px',
+                      marginLeft: '3px',
+                      objectFit: 'cover'
+                    }}
                   />
                 </Col>
                 {isTextVisible && !isCollapsed && (
-                  <div className='flex-grow-1 ms-1'>My Account</div>
+                  <div className='flex-grow-1 ms-1 mb-1'>MY ACCOUNT</div>
                 )}
               </div>
             </div>
           </li>
-        </Tooltip>
+        )}
 
         <li className='sub-li'>
           <Link to='dashboard'>
@@ -253,6 +395,7 @@ const InstructorSidebar = (props) => {
               <Col md='2' className='col-2 icon_container'>
                 <img
                   className='profile-photo'
+                  style={{ marginLeft: '-3.5px' }}
                   src={user.profileImage ? user.profileImage : blankProfile}
                   alt='Icon'
                 />
@@ -268,25 +411,43 @@ const InstructorSidebar = (props) => {
             </div>
           </Link>
         </li>
-        <Tooltip text={'Log Out'}>
+        {isCollapsed ? (
+          <Tooltip text={'Log Out'}>
+            <li className='sub-li' onClick={handleLogout}>
+              <div className='logout-button'>
+                <div className='d-flex w-100' style={{ alignItems: 'center' }}>
+                  <Col md='2' className='col-2 icon_container'>
+                    <img
+                      src={LogOutIcon}
+                      alt='Icon'
+                      style={{ width: '26px', marginLeft: '3px' }}
+                    />
+                  </Col>
+                  {isTextVisible && !isCollapsed && (
+                    <div className='flex-grow-1 ms-1 mb-1'>LOG OUT</div>
+                  )}
+                </div>
+              </div>
+            </li>
+          </Tooltip>
+        ) : (
           <li className='sub-li' onClick={handleLogout}>
             <div className='logout-button'>
               <div className='d-flex w-100' style={{ alignItems: 'center' }}>
                 <Col md='2' className='col-2 icon_container'>
                   <img
-                    className='profile-photo'
                     src={LogOutIcon}
                     alt='Icon'
-                    style={{ width: '26px' }}
+                    style={{ width: '26px', marginLeft: '3px' }}
                   />
                 </Col>
                 {isTextVisible && !isCollapsed && (
-                  <div className='flex-grow-1 ms-1'>LOG OUT</div>
+                  <div className='flex-grow-1 ms-1 mb-1'>LOG OUT</div>
                 )}
               </div>
             </div>
           </li>
-        </Tooltip>
+        )}
       </ul>
       <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
 
@@ -299,7 +460,7 @@ const InstructorSidebar = (props) => {
       <CancelSubModal
         cancelSubModal={cancelSubModal}
         setCancelSubModal={setCancelSubModal}
-        // toggleCancelModal={toggleCancelModal}
+        toggleCancelModal={toggleCancelModal}
         toggleCancelRenewal={toggleCancelRenewal}
       />
       <CancelRenewalModal

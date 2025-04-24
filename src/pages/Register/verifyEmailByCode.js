@@ -80,7 +80,7 @@ const VerifyEmailByCode = (props) => {
     try {
       await axiosInstance.post('/users/resend-email', { email: data })
     } catch (error) {
-      console.error('Failed to resend email:', error)
+      toast.error('Failed to resend email')
       setError('Failed to resend email. Please try again.')
     }
   }
@@ -110,7 +110,7 @@ const VerifyEmailByCode = (props) => {
             the email.
           </p>
           <button
-            className='btn btn-primary mt-3'
+            className='resend-btn'
             onClick={() => resendEmail(jwtDecoded?.email)}
           >
             Resend Email

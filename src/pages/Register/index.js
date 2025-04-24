@@ -10,12 +10,16 @@ import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import HowWeProtect from '../../components/HowWeProtect'
 import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 function Register() {
   const [protectModal, setProtectModal] = useState(false)
   const history = useHistory()
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const validateForm = () => {
     let newErrors = {}
@@ -91,7 +95,7 @@ function Register() {
       setIsLoading(false)
       if (response.status === 200) {
         toast.success('Registration successful!')
-        history.push('/check-email')
+        history.push('/check-email', { email: formData.emailAddress })
       }
     } catch (error) {
       setIsLoading(false)
@@ -151,15 +155,34 @@ function Register() {
                       )}
                     </div>
                     <div className='relative'>
-                      <ModalInput
-                        id={'password'}
-                        labelTitle={'Password'}
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        imgSrc={penIcon}
-                        type='password'
-                        autoComplete={'new-password'}
-                      />
+                      <div className='relative w-100 d-flex justify-content-between input-container-modal'>
+                        <input
+                          id={'password'}
+                          type={showPassword ? 'text' : 'password'}
+                          className='input-style'
+                          placeholder=' '
+                          value={formData.password}
+                          onChange={handleInputChange}
+                          autoComplete={false}
+                        />
+                        <label htmlFor={'password'} className='label-style'>
+                          Password
+                        </label>
+                        <div
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          style={{
+                            cursor: 'pointer',
+                            position: 'absolute',
+                            right: '1rem',
+                            top: '50%',
+                            transform: 'translateY(-50%)'
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={showPassword ? faEye : faEyeSlash}
+                          />
+                        </div>
+                      </div>
                       {errors.password && (
                         <p className='invalid-feedback d-block position-absolute fs-10'>
                           {errors.password}
@@ -167,15 +190,39 @@ function Register() {
                       )}
                     </div>
                     <div className='relative'>
-                      <ModalInput
-                        id={'confirmPassword'}
-                        labelTitle={'Confirm Password'}
-                        value={formData.confirmPassword}
-                        onChange={handleInputChange}
-                        imgSrc={penIcon}
-                        type='password'
-                        autoComplete={'new-password'}
-                      />
+                      <div className='relative w-100 d-flex justify-content-between input-container-modal'>
+                        <input
+                          id={'confirmPassword'}
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          className='input-style'
+                          placeholder=' '
+                          value={formData.confirmPassword}
+                          onChange={handleInputChange}
+                          autoComplete={'new-password'}
+                        />
+                        <label
+                          htmlFor={'confirmPassword'}
+                          className='label-style'
+                        >
+                          Confirm Password
+                        </label>
+                        <div
+                          onClick={() =>
+                            setShowConfirmPassword((prev) => !prev)
+                          }
+                          style={{
+                            cursor: 'pointer',
+                            position: 'absolute',
+                            right: '1rem',
+                            top: '50%',
+                            transform: 'translateY(-50%)'
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={showConfirmPassword ? faEye : faEyeSlash}
+                          />
+                        </div>
+                      </div>
                       {errors.confirmPassword ? (
                         <p className='invalid-feedback d-block position-absolute fs-10'>
                           {errors.confirmPassword}
@@ -303,12 +350,40 @@ function Register() {
                 <br /> Terms of Service and Privacy Policy
               </p>
               <div className='mb-3'>
-                <AcademyBtn
-                  title={`${isLoading ? '...' : 'Register'}`}
-                  icon={faArrowRight}
-                  type='submit'
-                  disabled={isLoading}
-                />
+                <div
+                  className='login-button'
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '150px',
+                    borderRadius: '8px',
+                    background:
+                      'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                    padding: '2px',
+                    height: '58px',
+                    boxShadow: '0px 4px 10px 0px #00000040'
+                  }}
+                >
+                  <button
+                    type='submit'
+                    className='w-100 login-btn'
+                    disabled={isLoading}
+                    onClick={handleSubmit}
+                  >
+                    {isLoading ? (
+                      <span className='spinner-border spinner-border-sm' />
+                    ) : (
+                      <span className='d-flex align-items-center justify-content-center'>
+                        Register
+                        <FontAwesomeIcon
+                          icon={faArrowRight}
+                          className='ms-2 fw-bold'
+                        />
+                      </span>
+                    )}
+                  </button>
+                </div>
               </div>
               <p className='fs-13 fw-light text-black mb-0'>
                 The security of your information is important.

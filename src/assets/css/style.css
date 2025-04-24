@@ -270,7 +270,7 @@ nav#sidebar {
 }
 
 #sidebar ul.components {
-  padding: 20px 0 0 0;
+  padding: 15px 0 0 0;
 }
 
 #sidebar ul li a {
@@ -305,13 +305,16 @@ a.sidenav.active {
 ul.sidebar-menu-item img {
   margin-right: 15px;
   vertical-align: baseline;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 ul.sidebar-menu-item a {
   color: #333d3d;
   font-size: 15px;
   font-weight: 600;
-  padding: 10px 10px;
+  padding: 10px 10px 10px 14px;
   display: flex;
   transition: 0.3s ease;
   background: transparent;
@@ -4099,8 +4102,10 @@ wave > wave:first-child {
 }
 
 .profile-photo {
-  width: 30px;
+  width: 30px !important;
+  height: 30px !important;
   border-radius: 50%;
+  object-fit: cover !important;
 }
 
 .font-profile {
