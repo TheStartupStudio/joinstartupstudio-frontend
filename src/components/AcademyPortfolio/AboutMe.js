@@ -119,7 +119,7 @@ function AboutMe({ user }) {
             </span>
           </div>
         </div>
-        <div className='d-flex gap-4'>
+        <div className='d-flex gap-4 flex-col-mob'>
           <img
             className='profile-dashboard-academy align-self-start'
             src={user.profileImage ? user.profileImage : blankProfile}
