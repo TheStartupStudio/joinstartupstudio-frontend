@@ -24,12 +24,12 @@ function UserDetails({ profilePic, userName, userProffesion }) {
 
   const subToggle = () => {
     setModal((prev) => !prev)
-    setCancelSubModal((prev) => !prev)
+    setSubscriptionModal((prev) => !prev)
   }
 
   const toggleCancelModal = () => {
     setCancelSubModal((prev) => !prev)
-    setModal((prev) => !prev)
+    setSubscriptionModal((prev) => !prev)
   }
 
   const toggleCancelRenewal = () => {
@@ -125,11 +125,11 @@ function UserDetails({ profilePic, userName, userProffesion }) {
 
       <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
 
-      {/* <SubscriptionModal
+      <SubscriptionModal
         subsbsciptionModal={subsbsciptionModal}
         setSubscriptionModal={setSubscriptionModal}
         toggleCancelModal={toggleCancelModal}
-      /> */}
+      />
 
       <CancelSubModal
         cancelSubModal={cancelSubModal}

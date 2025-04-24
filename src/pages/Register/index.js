@@ -12,6 +12,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import StartupStudioLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
 
 function Register() {
   const [protectModal, setProtectModal] = useState(false)
@@ -105,7 +106,9 @@ function Register() {
 
   return (
     <>
-      <InfoPageHeader linkColor={'#000000'} />
+      <a href='http://mystartupcourse.com' className='logo-register'>
+        <img src={StartupStudioLogo} alt='course-logo' className='w-200-mob' />
+      </a>
 
       <main className='register-main'>
         <section className='px-5 pb-5 p-t-5 register-section'>
@@ -367,7 +370,7 @@ function Register() {
                 >
                   <button
                     type='submit'
-                    className='w-100 login-btn'
+                    className='w-100 register-btn'
                     disabled={isLoading}
                     onClick={handleSubmit}
                   >

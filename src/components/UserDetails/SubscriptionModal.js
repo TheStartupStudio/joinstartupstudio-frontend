@@ -1,15 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Modal, ModalBody } from 'reactstrap'
 import cancelRenewal from '../../assets/images/academy-icons/cancel-renewal.png'
 import creditCard from '../../assets/images/academy-icons/credit-card.png'
 import penIcon from '../../assets/images/academy-icons/svg/pen-icon.svg'
 import ModalInput from '../ModalInput/ModalInput'
+import axiosInstance from '../../utils/AxiosInstance'
+import { useSelector } from 'react-redux'
 
 function SubscriptionModal({
   subsbsciptionModal,
   setSubscriptionModal,
   toggleCancelModal
 }) {
+  const [invoices, setInvoices] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const user = useSelector((state) => state.user.user.user)
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/course-subscription/invoices/${user?.customerId}`
+        )
+        setInvoices(response.data)
+      } catch (error) {
+        console.error('Error fetching invoices:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (user?.customerId) fetchInvoices()
+  }, [user?.customerId])
+
+  console.log('ridon38', invoices)
+
   return (
     <Modal
       isOpen={subsbsciptionModal}
@@ -25,7 +51,7 @@ function SubscriptionModal({
         />
         <p className='mb-0 fs-15 fw-medium'>Manage Subscription & Billing</p>
 
-        <form>
+        {/* <form>
           <div className='mt-5'>
             <h4 className='fs-15'>Card Information</h4>
             <div className='d-flex flex-column gap-3'>
@@ -92,7 +118,42 @@ function SubscriptionModal({
             </Button>
             <button className='modal-save-btn'>SAVE</button>
           </div>
-        </form>
+        </form> */}
+        <div className='table-responsive'>
+          <table className='table table-bordered table-striped mt-3'>
+            <thead className='table-dark'>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Status</th>
+                <th>Invoice</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoices?.map((data) => (
+                <tr key={data.id}>
+                  <td>
+                    {new Date(data.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </td>
+                  <td>{data.amount}</td>
+                  <td>{data.currency}</td>
+                  <td className='text-capitalize'>{data.status}</td>
+                  <td>
+                    <a href={data.hosted_invoice_url} target='_blank'>
+                      View
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
         <div
           className='d-flex align-items-center justify-content-center gap-2 cursor-pointer mt-5'
           onClick={toggleCancelModal}

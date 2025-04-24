@@ -8,10 +8,10 @@ import { useDispatch } from 'react-redux'
 import { setGeneralLoading } from '../../redux/general/Actions'
 import { userLogout } from '../../redux'
 
-// const stripePromise = loadStripe(
-//   'pk_test_51R9mFsEAyLMjrgXG6pzfEQNhfYmglxIAcYKkcdAu3CAdv0fZ0AOfxeHeLZWsY1f4hR2GCf43CkqUAOUuLdRHi66p00WaeNlDaf'
-// )
-const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
+const stripePromise = loadStripe(
+  'pk_test_51R9mFsEAyLMjrgXG6pzfEQNhfYmglxIAcYKkcdAu3CAdv0fZ0AOfxeHeLZWsY1f4hR2GCf43CkqUAOUuLdRHi66p00WaeNlDaf'
+)
+// const stripePromise = loadStripe('pk_live_JnvIkZtjpceE5fSdedKFtdJN00rAR0j6Z4')
 
 function CheckSubscription() {
   const [isLoading, setIsLoading] = useState(false)

@@ -398,11 +398,13 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
             </div>
             <div className='d-flex justify-content-between mt-3 ms-2 flex-col-900 gap-05-900'>
               <div
-                className='d-flex align-items-center justify-content-center gap-2 cursor-pointer mt-5'
+                className='d-flex align-items-center gap-2 cursor-pointer'
                 onClick={subToggle}
               >
-                <img src={cancelRenewal} alt='credit-card' />
-                <p className='mb-0 fs-15 fw-medium'>Cancel Subscription</p>
+                <img src={creditCard} alt='credit-card' />
+                <p className='mb-0 fs-15 fw-medium'>
+                  Manage Subscription & Billing
+                </p>
               </div>
               <div className='d-flex gap-3 d-grid-900 grid-col-2-900 grid-col-1-500'>
                 <Button className='close-btn w-full-900' onClick={toggle}>

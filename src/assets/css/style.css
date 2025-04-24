@@ -4988,6 +4988,17 @@ wave > wave:first-child {
   width: 28px !important;
 }
 
+.register-btn {
+  height: 100%;
+  border-radius: 10px;
+  border: none;
+  background-color: white;
+}
+
+.logo-register {
+  margin-left: 3rem;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;
@@ -5075,6 +5086,10 @@ wave > wave:first-child {
 
   .register-main {
     margin: 1rem 1rem;
+  }
+
+  .logo-register {
+    margin-left: 1rem;
   }
 }
 
