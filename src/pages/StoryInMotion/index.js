@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axiosInstance from '../../utils/AxiosInstance';
 import ReactPaginate from 'react-paginate';
 import Waveform from './waveform';
@@ -22,12 +22,13 @@ function StoryInMotion({ intl }) {
   const [currentPageVideos, setCurrentPageVideos] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
-  const videosPerPage = 15;
+  const videosPerPage = 10;
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedAudio, setSelectedAudio] = useState(null); 
   const [isPlaying, setIsPlaying] = useState(false);
   const [showAudioModal, setShowAudioModal] = useState(false);
   const [filterBy, setFilterBy] = useState(null);
+  const location = useLocation();
 
   const filters = [
     { value: 'tl', label: 'Title' },
@@ -48,6 +49,14 @@ function StoryInMotion({ intl }) {
     const newOffset = (event.selected * videosPerPage) % pageVideos.length;
     setItemOffset(newOffset);
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tabParam = params.get('tab');
+    if (tabParam !== null) {
+      setActiveLevel(parseInt(tabParam));
+    }
+  }, [location]);
 
   useEffect(() => {
     switch (activeLevel) {
@@ -103,6 +112,8 @@ function StoryInMotion({ intl }) {
 
   const handleLevelChange = (index) => {
     setActiveLevel(index); // Update the active tab
+    const newUrl = `${window.location.pathname}?tab=${index}`;
+    window.history.pushState({}, '', newUrl);
   };
 
   const handleSearch = (keyword) => {
@@ -265,13 +276,12 @@ function StoryInMotion({ intl }) {
 /></div>
         </div>
 
+        <div className='content-videos-container-wrapper'>
+
+
             <div className="content-videos-container">
               {currentPageVideos.map((video, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleAudioClick(video)}
-                >
-                  {activeLevel === 2 ? (
+                  activeLevel === 2 ? (
                     
                     <div
                     className="video-cards" 
@@ -313,8 +323,8 @@ function StoryInMotion({ intl }) {
                       }
                       videoData={video}
                     />
-                  )}
-                </div>
+                  )
+
               ))}
 
             </div>
@@ -341,6 +351,8 @@ function StoryInMotion({ intl }) {
                   />
                 </div>
             )}
+
+            </div>
 
           </div>
         </div>

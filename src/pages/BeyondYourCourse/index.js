@@ -468,15 +468,12 @@ export default function BeyondYourCourse() {
                   </div>
                   <Link
                     className='guidance-link'
-                    to={`/encouragement/videos`}
+                    to={`/story-in-motion/videos?tab=0`}
+                    onClick={() => window.scrollTo({ top: 0 })}
                     style={{ marginRight: '1rem' }}
-                    onClick={() => window.scrollTo(0, 0)}
                   >
                     <IntMessages id='general.view_all' />
-                    <img
-                      src={rightArrow}
-                      style={{ marginLeft: '10px', marginBottom: '3px' }}
-                    />
+                    <img src={rightArrow} style={{ marginLeft: '10px', marginBottom: '3px' }} />
                   </Link>
                 </div>
 
@@ -563,15 +560,12 @@ export default function BeyondYourCourse() {
                   </div>
                   <Link
                     className='guidance-link'
-                    to={`/master-classes/videos`}
+                    to={`/story-in-motion/videos?tab=1`}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     style={{ marginRight: '1rem' }}
-                    onClick={() => window.scrollTo(0, 0)}
                   >
                     <IntMessages id='general.view_all' />
-                    <img
-                      src={rightArrow}
-                      style={{ marginLeft: '10px', marginBottom: '3px' }}
-                    />
+                    <img src={rightArrow} style={{ marginLeft: '10px', marginBottom: '3px' }} />
                   </Link>
                 </div>
 
@@ -719,9 +713,9 @@ export default function BeyondYourCourse() {
                   </div>
                   <Link
                     className='guidance-link'
-                    to='/story-in-motion/videos'
+                    to='/story-in-motion/videos?tab=2'
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     style={{ marginRight: '1rem' }}
-                    onClick={() => window.scrollTo(0, 0)}
                   >
                     <IntMessages id='general.view_all' />
                     <img
