@@ -117,7 +117,7 @@
   font: normal normal 9px/11px Montserrat;
   letter-spacing: 0px;
   color: #707070;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .welcome-journey-text {
@@ -141,7 +141,7 @@
 .general-video-container {
   display: flex;
   gap: 2rem;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
   /* Added margin top */
   background: transparent;
   /* Changed to transparent */
@@ -163,7 +163,7 @@
   width: 100%;
   margin: 0 20px;
   padding: 25px 25px;
-  background: #fff;
+  background: transparent;
   /* Added background */
   position: relative;
   z-index: 1;
@@ -204,7 +204,8 @@
   box-shadow: -1px -9px 6px -2px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   margin-bottom: 2rem;
-  overflow-y: scroll
+  overflow-y: scroll;
+  height: 100vh;
 }
 
 .page-title {
@@ -251,6 +252,12 @@
   border-radius: 10px;
 }
 
+.accordion-button:not(.collapsed) {
+  color: black !important;
+  background-color: white !important;
+  box-shadow: none !important;
+}
+
 .space-between {
   justify-content: space-between;
 }
@@ -259,11 +266,35 @@
   .general-video-container {
     gap: 7rem !important;
   }
+
+  .key_points__item-video .react-player__play-icon::before {
+    height: 40px !important;
+    width: 40px !important;
+  }
+}
+
+@media(max-width:1150px) {
+  .key_points__item-video .react-player__play-icon::before {
+    height: 30px !important;
+    width: 30px !important;
+  }
+
+  .col-md-3 {
+    width: 50% !important;
+  }
 }
 
 @media(max-width:1024px) {
+  .general-video-container {
+    gap: 0 !important;
+  }
+
   .video-container {
-    width: 300px;
+    width: 50%;
+  }
+
+  .responsive-video-first {
+    height: 400px;
   }
 
   .gradient-background-course {
@@ -285,19 +316,25 @@
     padding: 1rem;
     margin: 5px;
   }
+
+  .col-md-3 {
+    width: 100% !important;
+  }
+
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 769px) {
   .gradient-background-course {
-    padding: 1rem;
+    padding: 0px;
     margin-bottom: 1rem;
   }
 
   .general-video-container {
     flex-direction: column;
-    gap: 1rem;
+    gap: 3rem !important;
     margin-top: 1rem;
+    /* margin-left: -1rem; */
   }
 
   .video-container {
@@ -326,29 +363,43 @@
   }
 
   .title-container .welcome-journey-text__title {
-    font-size: 12px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    height: 35px;
   }
 
   .welcome-journey-text {
     padding: 15px;
-    margin: 10px;
   }
 
   .select-btn {
     margin-left: 2rem;
   }
+
+  #accordionExample {
+    /* margin-left: 2rem !important; */
+  }
 }
 
 @media (max-width: 576px) {
+  .gradient-background-journal {
+    padding: 1rem;
+  }
+
   .gradient-background-course {
-    padding: 0.8rem;
+    /* padding: 0.8rem; */
     margin-bottom: 0.8rem;
   }
 
   .general-video-container {
-    gap: 0.8rem;
+    gap: 3rem !important;
     margin-top: 0.8rem;
   }
+
+  /* #accordionExample {
+    margin-left: 1rem !important;
+  } */
 
   .accordion-flex {
     padding: 10px;
@@ -370,13 +421,12 @@
   }
 
   .title-container .welcome-journey-text__title {
-    font-size: 10px;
+    font-size: 15px;
   }
 
   .welcome-journey-text {
-    width: 390px !important;
+    width: 96% !important;
     padding: 10px;
-    margin: 5px;
   }
 
   .video-container {
@@ -387,9 +437,10 @@
 @media(max-width: 426px) {
   .col-md-12.general-video-container {
     flex-direction: column;
-    gap: 1rem;
-    margin-left: -3rem;
+    gap: 1rem !important;
   }
+
+
 
   .accordion-flex {
     padding: 8px;
@@ -407,9 +458,9 @@
   }
 
   .welcome-journey-text {
-    width: 320px !important;
     padding: 8px;
-    margin: 5px;
+    width: 95% !important;
+
   }
 
   .title-container {
@@ -417,12 +468,22 @@
   }
 
   .title-container .welcome-journey-text__title {
-    font-size: 9px;
+    font-size: 15px;
+  }
+
+  .entrepreneurs__item-inner {
+    margin-bottom: 2rem;
   }
 }
 
-@media(max-width:400px) {
+
+@media(max-width:321px) {
   .welcome-journey-text {
-    width: 270px !important;
+    margin-left: 0rem;
+  }
+
+  .responsive-video-first {
+    width: 250px;
+    height: 250px;
   }
 }

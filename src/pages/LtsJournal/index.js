@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
-import './ltsjournal.css'
+import './ltsJournal.css'
 import ReactPlayer from 'react-player'
 import Accordion from 'react-bootstrap/Accordion'
 import { changeSidebarState } from '../../redux'
@@ -68,10 +68,14 @@ function LtsJournal(props) {
   const [loaded, setLoaded] = useState(false)
   const [videos, setVideos] = useState([])
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0) // Track the current video index
+  const [showLockModal, setShowLockModal] = useState(false);
+  const [lockModalMessage, setLockModalMessage] = useState('');
 
   const { finishedContent, levelProgress, loading } = useSelector(
     (state) => state.course
   )
+
+  console.log('Finished Content:', finishedContent);
 
   const levels = [
     {
@@ -90,15 +94,6 @@ function LtsJournal(props) {
       active: false
     }
   ]
-
-  const searchItems = [
-    'The StarLog Studio - G.',
-    'Course in Entrepreneur.',
-    'Amr - backend-plastic.',
-    'Index.js - IE-time - Yls.',
-    'Vulcan Manual (DM)'
-  ]
-
   const lessonsByLevel = {
     0: [
       {
@@ -484,6 +479,43 @@ function LtsJournal(props) {
     dispatch(fetchLtsCoursefinishedContent())
   }, [dispatch])
 
+  useEffect(() => {
+    if (journalId) {
+      const numericId = parseInt(journalId);
+      let foundLesson = null;
+      
+      if (activeLevel === 2) {
+        lessonsByLevel[2].some(section => {
+          const found = section.children?.find(child => child.redirectId === numericId);
+          if (found) {
+            foundLesson = {
+              value: `${section.id}_${found.id}`,
+              label: found.title,
+              redirectId: found.redirectId
+            };
+            return true;
+          }
+          return false;
+        });
+      } else {
+        const found = lessonsByLevel[activeLevel]?.find(
+          lesson => lesson.redirectId === numericId
+        );
+        if (found) {
+          foundLesson = {
+            value: found.id,
+            label: found.title,
+            redirectId: found.redirectId
+          };
+        }
+      }
+      
+      if (foundLesson && !selectedLesson) {
+        setSelectedLesson(foundLesson);
+      }
+    }
+  }, [journalId, activeLevel, lessonsByLevel]);
+
   const handleJournalSearch = (e) => {
     const keyword = e.target.value.toLowerCase()
     setJournals(
@@ -499,21 +531,21 @@ function LtsJournal(props) {
     )
   }
 
-  const handleLevelNavigation = (direction) => {
-    setActiveLevel((prev) => {
-      const newLevel = direction === 'next' ? prev + 1 : prev - 1
-      return Math.max(0, Math.min(levels.length - 1, newLevel))
-    })
-  }
+  const handleLevelClick = (clickedLevel) => {
+    if (clickedLevel === 1 && !finishedContent.includes(58)) {
+      setLockModalMessage('This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.');
+      setShowLockModal(true);
+      return;
+    }
 
-  useEffect(() => {
-    setSelectedLesson(null)
-  }, [activeLevel])
+    if (clickedLevel === 2 && !finishedContent.includes(68)) {
+      setLockModalMessage('This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.');
+      setShowLockModal(true);
+      return;
+    }
 
-  useEffect(() => {
-    const currentVideo = videos.filter((video, index) => index === activeLevel)
-    setVideos(currentVideo)
-  }, [activeLevel])
+    setActiveLevel(clickedLevel);
+  };
 
   useEffect(() => {
     const matchedVideos = videos.filter(
@@ -550,9 +582,7 @@ function LtsJournal(props) {
   }
 
   const getOptionStatus = (redirectId, lessons, isLevel3 = false) => {
-    // Special handling for level 3
     if (isLevel3) {
-      // Get all children from all sections flattened into a single array
       const allLevel3Content = lessonsByLevel[2]
         .flatMap((section) => section.children)
         .sort((a, b) => a.redirectId - b.redirectId)
@@ -577,7 +607,6 @@ function LtsJournal(props) {
       }
     }
 
-    // Regular handling for other levels remains the same
     const index = lessons.findIndex(
       (lesson) => lesson.redirectId === redirectId
     )
@@ -613,7 +642,7 @@ function LtsJournal(props) {
         const status = getOptionStatus(child.redirectId, lesson.children, true)
 
         return {
-          value: `${lesson.id}_${child.id}`, // Create unique value by combining parent and child IDs
+          value: `${lesson.id}_${child.id}`,
           label: child.title,
           icon:
             status.status === 'done'
@@ -625,7 +654,7 @@ function LtsJournal(props) {
             status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
           disabled: status.disabled,
           redirectId: child.redirectId,
-          parentId: lesson.id // Add parent ID reference
+          parentId: lesson.id 
         }
       })
 
@@ -660,10 +689,8 @@ function LtsJournal(props) {
       return true
     }
 
-    // Find the last completed ID from all levels
     const lastCompletedId = Math.max(...finishedContent)
 
-    // For level 3, check if previous level is completed
     if (numericId === 70) {
       const lastLevel2Item = lessonsByLevel[1][lessonsByLevel[1].length - 1]
       return finishedContent.includes(lastLevel2Item.redirectId)
@@ -679,7 +706,6 @@ function LtsJournal(props) {
           for (let i = 0; i < children.length; i++) {
             if (children[i].redirectId === numericId) {
               if (i === 0 && section === lessons[0]) {
-                // First item of level 3, check if last item of level 2 is completed
                 const lastLevel2Item =
                   lessonsByLevel[1][lessonsByLevel[1].length - 1]
                 return finishedContent.includes(lastLevel2Item.redirectId)
@@ -691,7 +717,6 @@ function LtsJournal(props) {
           }
         }
       } else {
-        // Regular handling for levels 1 and 2
         for (let i = 0; i < lessons.length; i++) {
           if (lessons[i].redirectId === numericId) {
             if (i === 0 && level === 0) return true
@@ -745,7 +770,7 @@ function LtsJournal(props) {
                       </p>
                     </div>
 
-                    <SelectLanguage />
+                    {/* <SelectLanguage /> */}
                   </div>
                   <img
                     src={MenuIcon}
@@ -756,14 +781,14 @@ function LtsJournal(props) {
                 </div>
 
               <div >
-                <div className='styled-scrollbar gradient-background-journal' ref={contentContainer}>
-                  <div className='course-container'>
+                <div className='gradient-background-journal' ref={contentContainer}>
+                  <div >
                     <div className='levels-container'>
                       {levels.map((level, index) => (
                         <div
                           key={index}
                           className={`course-level ${index === activeLevel ? 'active-level' : ''}`}
-                          onClick={() => setActiveLevel(index)}
+                          onClick={() => handleLevelClick(index)}
                         >
                           {level.title}
                         </div>
@@ -809,9 +834,8 @@ function LtsJournal(props) {
                                 if (activeLevel === 2) {
                                   const [parentId, childId] =
                                     selectedOption.value.split('_')
-                                  if (childId === 'parent') return // Skip parent options
+                                  if (childId === 'parent') return 
 
-                                  // Find the correct section and child based on both parent and child IDs
                                   const selectedSection =
                                     lessonsByLevel[2].find(
                                       (section) => section.id === parentId
@@ -857,6 +881,7 @@ function LtsJournal(props) {
                             }}
                           >
                             <button
+                             style={{padding:'.5rem'}}
                               className='review-progress-btn'
                               onClick={toggleModal}
                             >
@@ -869,56 +894,51 @@ function LtsJournal(props) {
                         </div>
                       </div>
 
-                      {/* <div className="col-md-12 general-video-container"> */}
-                      {/* <div className="video-container-journal">
-    <div>
-      <div className="video-container-bg">
-        <div className="video-title">
-          <img src={circleIcon} alt="circle-icon" />
-          <h6>{levels[activeLevel]?.description}</h6>
-        </div>
-        {videos.length > 0 && (
-          <>
-            <ReactPlayer
-              url={videos[currentVideoIndex].url}
-              controls
-              width="100%"
-              height="auto"
-              light={videos[currentVideoIndex].thumbnail}
-            />
-            <div className="video-navigation-buttons d-flex justify-content-between mt-3">
-              <button
-                className="btn btn-primary"
-                onClick={handlePreviousVideo}
-                disabled={currentVideoIndex === 0}
-              >
-                Previous
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={handleNextVideo}
-                disabled={currentVideoIndex === videos.length - 1}
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  </div> */}
-                      {/* <div className='content-container'>
-    <ReactQuill
-      theme="snow"
-      value={editorContent}
-      onChange={setEditorContent}
-      placeholder="Write your notes here..."
-    />
-  </div> */}
-                      {/* </div> */}
                     </div>
 
                     <Switch>
+                      <Route
+                        exact
+                        path={props.match.url}
+                        render={() => (
+                          <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
+                            <div id="video-container-journal" className="video-container-bg" style={{flex:'1 1 50%',height:'350px'}}>
+                              <div className="d-flex placeholder-content-img align-items-center">
+                                <img
+                                  src={circleIcon}
+                                  alt="circle-icon"
+                                  style={{ width: '40px', height: '40px', marginRight: '10px' }}
+                                />
+                                <h6>{levels[activeLevel]?.description}</h6>
+                              </div>
+                              <div className="placeholder-content-video text-center m-4">
+                                <p className="mb-0">Select a lesson to view video content</p>
+                              </div>
+                            </div>
+
+                            <div id="content-container" className="content-container" 
+                              style={{ 
+                                flex: '1 1 50%', 
+                                width: '100%', 
+                                boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)',
+                                borderRadius: '20px',
+                                padding: '25px 25px'
+                              }}>
+                              <div className="d-flex justify-content-center align-items-center reflection-header p-4">
+                               
+                             
+                              <div className="placeholder-content text-center p-4">
+                              <img
+                                  src={UserIcon}
+                                  alt="page-icon"
+
+                                />
+                                 </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      />
                       <Route
                         path={`${props.match.url}/:journalId`}
                         render={(renderProps) => {
@@ -1094,7 +1114,7 @@ function LtsJournal(props) {
                   aria-labelledby='headingOne'
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body d-flex gap-4 flex-col-mob'>
+                  <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
                     <div className='d-flex flex-column gap-4'>
                       <CircularProgress
                         percentage={levelProgress?.level1?.percentage || 0}
@@ -1137,7 +1157,7 @@ function LtsJournal(props) {
                   aria-labelledby='headingTwo'
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body d-flex gap-4 flex-col-mob'>
+                  <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
                     <div className='d-flex flex-column gap-4'>
                       <CircularProgress
                         percentage={levelProgress?.level2?.percentage || 0}
@@ -1160,7 +1180,6 @@ function LtsJournal(props) {
                 </div>
               </div>
 
-              {/* Level 3 */}
               <div className='accordion-item progress-details-accordion'>
                 <h2 className='accordion-header' id='headingThree'>
                   <button
@@ -1180,7 +1199,7 @@ function LtsJournal(props) {
                   aria-labelledby='headingThree'
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body d-flex gap-4 flex-col-mob'>
+                  <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
                     <div className='d-flex flex-column gap-4'>
                       <CircularProgress
                         percentage={levelProgress?.level3?.percentage || 0}
@@ -1207,6 +1226,34 @@ function LtsJournal(props) {
                   </div>
                 </div>
               </div>
+            </div>
+          </ModalBody>
+        </Modal>
+      )}
+
+      {showLockModal && (
+        <Modal
+          isOpen={showLockModal}
+          toggle={() => setShowLockModal(false)}
+          className='certificate-modal' 
+        >
+          <span
+            className='cursor-pointer'
+            onClick={() => setShowLockModal(false)}
+            style={{ zIndex: '1' }}
+          >
+            <img className='left-arrow-modal' src={leftArrow} alt='left' />
+          </span>
+          <ModalBody>
+            <img src={lockSign} alt='lock' className='mb-3' />
+            <div className='d-flex justify-content-between align-items-center'>
+              <h3 className='fs-14' style={{ marginBottom: '0' }}>
+                Lesson Locked
+              </h3>
+            </div>
+
+            <div className='mt-5'>
+              <p className='text-secondary text-center'>{lockModalMessage}</p>
             </div>
           </ModalBody>
         </Modal>

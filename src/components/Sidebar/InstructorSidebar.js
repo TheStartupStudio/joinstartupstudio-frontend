@@ -174,7 +174,7 @@ const InstructorSidebar = (props) => {
                 dispatch(setAccordionToggled(false))
                 props.props.hideHeaderIcons()
               }}
-              to={'/my-course-in-entrepreneurship/journal/51'}
+              to={'/my-course-in-entrepreneurship/journal'}
               className={`${
                 location.pathname.includes(
                   'my-course-in-entrepreneurship/journal'
@@ -195,14 +195,8 @@ const InstructorSidebar = (props) => {
               dispatch(setAccordionToggled(false))
               props.props.hideHeaderIcons()
             }}
-            to={'/my-course-in-entrepreneurship/journal/51'}
-            className={`${
-              location.pathname.includes(
-                'my-course-in-entrepreneurship/journal'
-              )
-                ? 'active'
-                : ''
-            }`}
+            to={'/my-course-in-entrepreneurship/journal'}
+            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
             srcImage={CoursEnIcon}
             title={
               isTextVisible && !isCollapsed && 'Course in enterpreneurship'

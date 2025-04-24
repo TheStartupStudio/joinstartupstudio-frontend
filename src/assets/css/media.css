@@ -127,10 +127,11 @@
     width: 450px;
   }
 
+  /* 
   .sidebar-header img {
     width: 250px;
     margin-top: 40px;
-  }
+  } */
 }
 
 @media (max-width: 267.9px) {

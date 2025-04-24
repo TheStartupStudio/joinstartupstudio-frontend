@@ -1,13 +1,25 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
 
-function SelectLessons({ options, selectedCourse, setSelectedCourse }) {
+function SelectLessons({ 
+  options, 
+  selectedCourse, 
+  setSelectedCourse,
+  setShowLockModal,
+  setLockModalMessage 
+}) {
   const handleChange = (selectedOption) => {
-    if (selectedOption.disabled) {
-      return; // Don't allow selection of disabled options
+    if (selectedOption?.disabled) {
+      setLockModalMessage('This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.');
+      setShowLockModal(true);
+      return;
     }
     setSelectedCourse(selectedOption);
   };
+
+  const currentSelection = options?.find(option => 
+    option.redirectId === selectedCourse?.redirectId
+  );
 
   const CustomOption = ({ data, innerRef, innerProps }) => (
     <div
@@ -35,20 +47,20 @@ function SelectLessons({ options, selectedCourse, setSelectedCourse }) {
   );
 
   return (
-    <div>
+    <div className='select-lessons'>
       <Select
         options={options}
-        value={selectedCourse}
+        value={currentSelection || selectedCourse}
         onChange={handleChange}
+        isOptionDisabled={(option) => option.disabled}
         placeholder='Select Journals to View'
         menuPortalTarget={document.body}
         isSearchable={false}
-        isOptionDisabled={(option) => option.disabled}
         styles={{
           menuPortal: (base) => ({ ...base, zIndex: 9999 }),
           control: (base) => ({
             ...base,
-            width: '350px',
+            width: '255px',
             minHeight: '40px',
             overflow: 'hidden',
             borderRadius: '6px',
@@ -70,7 +82,7 @@ function SelectLessons({ options, selectedCourse, setSelectedCourse }) {
         }}
       />
     </div>
-  )
+  );
 }
 
 export default SelectLessons;

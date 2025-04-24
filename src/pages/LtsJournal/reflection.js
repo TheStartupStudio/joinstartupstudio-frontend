@@ -213,19 +213,47 @@ const handleSubmit = async (from, value) => {
             </span>
           ) : null}
           {editing ? (
-            <ReactQuill
-              placeholder="Write your reflection..."
-              theme="snow"
-              value={content}
-              onChange={handleContentChange}
-              onKeyDown={handleKeyDown} 
-              modules={quillModules}
-              formats={quillFormats}
-            />
+            <>
+              <ReactQuill
+                placeholder="Write your reflection..."
+                theme="snow"
+                value={content}
+                onChange={handleContentChange}
+                onKeyDown={handleKeyDown} // Submit on Enter
+                modules={quillModules}
+                formats={quillFormats}
+              />
+              {/* Submit Button */}
+              <button
+                className="submit-reflection-btn"
+                style={{
+                  margin: '5px 0 20px 0',
+                  padding: '10px 20px',
+                  backgroundColor: '#51C7DF',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  position:'relative',
+                  left:'70%',
+                  width:'150px'
+
+                }}
+                onClick={() => handleSubmit('button', content)} 
+                disabled={saving}
+              >
+                {saving ? (
+                  <FontAwesomeIcon icon={faSpinner} spin />
+                ) : (
+                  'Save'
+                )}
+              </button>
+            </>
           ) : (
             <div
               className="journal-entries__entry-reflection-body-content-after"
-              onClick={() => setEditing(true)} 
+              onClick={() => setEditing(true)}
               dangerouslySetInnerHTML={{ __html: content || 'Click to edit...' }}
             ></div>
           )}
