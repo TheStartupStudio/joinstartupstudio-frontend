@@ -385,7 +385,7 @@ export default function BeyondYourCourse() {
                   </p>
                 </div>
 
-                <SelectLanguage />
+                {/* <SelectLanguage /> */}
               </div>
               <img
                 src={MenuIcon}
@@ -468,14 +468,12 @@ export default function BeyondYourCourse() {
                   </div>
                   <Link
                     className='guidance-link'
-                    to={`/encouragement/videos`}
+                    to={`/story-in-motion/videos?tab=0`}
+                    onClick={() => window.scrollTo({ top: 0 })}
                     style={{ marginRight: '1rem' }}
                   >
                     <IntMessages id='general.view_all' />
-                    <img
-                      src={rightArrow}
-                      style={{ marginLeft: '10px', marginBottom: '3px' }}
-                    />
+                    <img src={rightArrow} style={{ marginLeft: '10px', marginBottom: '3px' }} />
                   </Link>
                 </div>
 
@@ -562,14 +560,12 @@ export default function BeyondYourCourse() {
                   </div>
                   <Link
                     className='guidance-link'
-                    to={`/master-classes/videos`}
+                    to={`/story-in-motion/videos?tab=1`}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     style={{ marginRight: '1rem' }}
                   >
                     <IntMessages id='general.view_all' />
-                    <img
-                      src={rightArrow}
-                      style={{ marginLeft: '10px', marginBottom: '3px' }}
-                    />
+                    <img src={rightArrow} style={{ marginLeft: '10px', marginBottom: '3px' }} />
                   </Link>
                 </div>
 
@@ -717,7 +713,8 @@ export default function BeyondYourCourse() {
                   </div>
                   <Link
                     className='guidance-link'
-                    to='/story-in-motion/videos'
+                    to='/story-in-motion/videos?tab=2'
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     style={{ marginRight: '1rem' }}
                   >
                     <IntMessages id='general.view_all' />
@@ -734,7 +731,7 @@ export default function BeyondYourCourse() {
                       <div
                         key={index}
                         className='beyond-your-course-video-thumb'
-                        style={{ width: '200px', margin: '10px' }}
+                        
                         onClick={() =>
                           handleAudioClick({ ...podcast, page: 'podcast' })
                         }
@@ -744,9 +741,8 @@ export default function BeyondYourCourse() {
                           alt={podcast.title}
                           style={{
                             width: '100%',
-                            height: '150px',
+                            height: '100%',
                             objectFit: 'cover',
-                            borderRadius: '25px'
                           }}
                         />
                         <h5 style={{ textAlign: 'center', marginTop: '10px' }}>

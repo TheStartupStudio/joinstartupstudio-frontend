@@ -30,7 +30,7 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
       const sortedAnswers = [...userAnswers].sort((a, b) => a.order - b.order)
 
       setReflections(sortedAnswers.map(answer => ({
-        id: answer.id,
+        id: answer.id, // Keep existing IDs for saved reflections
         content: answer.content,
         isExisting: true,
         order: answer.order || 0,
@@ -48,7 +48,7 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
       }))
     } else {
       setReflections([{ 
-        id: id, 
+        id: `${id}-${Date.now()}`, // Unique ID for initial reflection
         content: '', 
         isExisting: false,
         order: 0,
@@ -61,10 +61,11 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
     const questionReflections = reflections.filter(r => r.questionId === id)
     const newOrder = questionReflections.length
 
+    // Generate a unique ID for each reflection
     const newReflection = {
-      id: id,
+      id: `${id}-${Date.now()}`, // Make unique ID by combining question ID and timestamp
       content: '',
-      isExisting: false,
+      isExisting: false,  
       order: newOrder,
       questionId: id
     }
@@ -95,17 +96,29 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
   }
 
   const handleContentChange = (reflectionId, content) => {
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long', 
+      day: 'numeric'
+    });
+
+    if (!startDate && content.trim()) {
+      setStartDate(currentDate);
+    }
+    
+    setEditDate(currentDate);
+
     setReflections(prev => prev.map(r =>
       r.id === reflectionId ? { ...r, content } : r
-    ))
+    ));
     
-    const reflection = reflections.find(r => r.id === reflectionId)
+    const reflection = reflections.find(r => r.id === reflectionId);
     onContentChange(reflectionId, {
       content,
       isExisting: reflection?.isExisting,
       order: reflection?.order,
       questionId: id
-    })
+    });
   }
 
   const questionReflections = reflections.filter(r => r.questionId === id)

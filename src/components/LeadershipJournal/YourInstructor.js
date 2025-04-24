@@ -1,16 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import MediaLightbox from '../../components/MediaLightbox'
 import facebookLogo from '../../assets/images/academy-icons/facebook.png'
 import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
 
-function YourInstructor({ profilePic, instructorName, userProffesion }) {
+function YourInstructor({ profilePic, instructorName, userProffesion, videoUrl }) {
+  const [showVideo, setShowVideo] = useState(false)
+
+  const videoData = {
+    url: "https://learntostart-launch-dev.s3.amazonaws.com/Journal/MentorshipJournal/953ec493314eaa6a37b9a836c2679bce-1745399732978.mp4",
+    thumbnail: profilePic // Using profile pic as thumbnail, you can change this
+  }
+
   return (
     <>
       <div
         className='d-grid academy-dashboard-card pb-5'
-        style={{ gridTemplateRows: '1fr 1fr' }}
+        style={{ gridTemplateRows: '1fr auto auto', gap: '1rem' }}
       >
+        {/* Existing instructor header */}
         <div className='d-flex justify-content-between align-items-center align-self-baseline pt-4'>
           <div className='d-flex gap-3 align-items-center'>
             <img src={userIcon} alt='user' />
@@ -19,6 +30,8 @@ function YourInstructor({ profilePic, instructorName, userProffesion }) {
             </h4>
           </div>
         </div>
+
+        {/* Existing instructor info */}
         <div className='d-flex gap-4 align-items-center'>
           <img
             className='profile-dashboard-academy'
@@ -56,7 +69,52 @@ function YourInstructor({ profilePic, instructorName, userProffesion }) {
             </div>
           </div>
         </div>
+
+
+        {/* Video section */}
+        <div className="mb-1 mt-4">
+          <div
+            className="journal-entries__video-thumbnail"
+            onClick={() => setShowVideo(true)}
+            style={{
+              cursor: 'pointer',
+              position: 'relative',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              maxWidth: '450px',
+              aspectRatio: '1 / 1',
+            }}
+          >
+
+            <img
+              src={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+              alt="video thumbnail"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+
+            <div className="journal-entries__video-thumbnail-icon"
+              style={{
+                position: 'absolute',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <FontAwesomeIcon icon={faPlay} style={{ color: 'white', fontSize: '2rem' }} />
+            </div>
+          </div>
+        </div>
       </div>
+
+      {showVideo && (
+        <MediaLightbox
+          video={videoData}
+          show={showVideo}
+          onClose={() => setShowVideo(false)}
+        />
+      )}
     </>
   )
 }

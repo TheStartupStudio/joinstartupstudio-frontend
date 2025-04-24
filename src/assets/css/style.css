@@ -824,7 +824,7 @@ a.sidenav.active {
 
 .beyond-your-course-video-thumb img {
   width: 100%;
-  height: auto;
+  /* height: 300px !important; */
 }
 
 .ml-2 {
@@ -3824,7 +3824,7 @@ white-space: nowrap; */
   justify-content: space-around;
   width: 100%;
   flex-flow: unset;
-  margin-right: 35px;
+  /* margin-right: 35px; */
 }
 
 /* .slider-arrow-first {
@@ -4878,6 +4878,28 @@ wave>wave:first-child {
 
 .search-journals-width {
   width: 39%;
+  position: relative;
+}
+
+.search-journals-width .input-container-modal{
+  z-index: 100;
+}
+
+.search-journals-width .search-results-dropdown {
+  position: absolute;
+  bottom: -40px;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding-top: 40px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-journals-width .search-result-item {
+  padding: 8px 16px;
+  cursor: pointer;
 }
 
 .leadership-layout {
@@ -5077,6 +5099,7 @@ wave>wave:first-child {
 
 .beyond-your-course-videos {
   width: 100%;
+  height: 100%;
   /* margin: 0 15px; */
 }
 
@@ -5155,9 +5178,6 @@ wave>wave:first-child {
   text-transform: uppercase;
 }
 
-.beyond-your-course-video-thumb img {
-  border: 1px solid #bbbdbf;
-}
 
 .sl-offline-image-preview .offlineImage {
   border: 1px solid #bbbdbf;

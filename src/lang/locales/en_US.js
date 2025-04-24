@@ -654,6 +654,7 @@ const EnLangs = {
   'my_journal.save_journal': 'Save Journal',
   'my_journal.search_journals': 'Search journals',
   'my_journal.search_lessons_':'Search lessons',
+  'my_journal.search_videos_':'Search videos',
   'my_journal.search_podcasts':'Search podcasts',
   'my_journal.created_page': 'My Journal:',
   'my_journal.select_lessons': 'Select Lessons to View',

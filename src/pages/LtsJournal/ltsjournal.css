@@ -70,7 +70,8 @@
   padding: .5rem 2rem;
   width: 100%;
   /* margin: 0.5rem 0; */
-  color: #718096;
+  color: black !important;
+  font-weight: 600;
   cursor: pointer;
   /* transition: all .07s ease-in; */
   display: flex;

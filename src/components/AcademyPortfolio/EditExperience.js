@@ -72,6 +72,8 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
       setContent(experienceData.description || '')
       setIsCurrentPosition(experienceData.currentPosition || false)
     }
+
+    console.log()
   }, [experienceData])
 
   const handleInputChange = (field, value) => {
@@ -79,6 +81,15 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
       ...prev,
       [field]: value
     }))
+
+    // Handle date and current position changes
+    if (field === 'startDate') {
+      setStartDate(value)
+    } else if (field === 'endDate') {
+      setEndDate(value)
+    } else if (field === 'currentPosition') {
+      setIsCurrentPosition(value)
+    }
   }
 
   const validateForm = () => {
@@ -173,7 +184,9 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
       const payload = {
         id: experienceData.id,
         ...formData,
+        description: content, // Add the description from content state
         imageUrl: logoUrl,
+        currentPosition: isCurrentPosition, // Add the current position state
         startDate: startDate ? startDate.toISOString() : null,
         endDate: isCurrentPosition
           ? null
