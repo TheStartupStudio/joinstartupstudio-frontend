@@ -73,10 +73,10 @@ function MyCourseEntrepreneurship() {
         <div style={{ minHeight: '100vh' }}>
           <div
             className='d-flex space-between align-items-center'
-            style={{ margin: '40px 40px 40px 30px' }}
+            // style={{ margin: '40px 40px 40px 30px' }}
           >
-            <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-right-1rem-tab gap-4'>
-              <div className='d-flex justify-content-between flex-col-tab align-start-tab'>
+            <div className='col-12 col-md-12 pe-0 me-0 d-flex-tab justify-content-between p-1rem-tab p-right-1rem-tab gap-4'>
+              <div className='account-page-padding d-flex justify-content-between flex-col-tab align-start-tab'>
                 <div>
                   <h3 className='page-title bold-page-title text-black mb-0'>
                     Intro to the Course

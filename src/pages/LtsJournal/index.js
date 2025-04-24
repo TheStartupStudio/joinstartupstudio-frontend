@@ -902,7 +902,7 @@ function LtsJournal(props) {
                         path={props.match.url}
                         render={() => (
                           <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
-                            <div id="video-container-journal" className="video-container-bg" style={{height:'350px'}}>
+                            <div id="video-container-journal" className="video-container-bg" style={{flex:'1 1 50%',height:'350px'}}>
                               <div className="d-flex placeholder-content-img align-items-center">
                                 <img
                                   src={circleIcon}
@@ -1114,7 +1114,7 @@ function LtsJournal(props) {
                   aria-labelledby='headingOne'
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body d-flex gap-4 flex-col-mob'>
+                  <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
                     <div className='d-flex flex-column gap-4'>
                       <CircularProgress
                         percentage={levelProgress?.level1?.percentage || 0}
@@ -1157,7 +1157,7 @@ function LtsJournal(props) {
                   aria-labelledby='headingTwo'
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body d-flex gap-4 flex-col-mob'>
+                  <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
                     <div className='d-flex flex-column gap-4'>
                       <CircularProgress
                         percentage={levelProgress?.level2?.percentage || 0}
@@ -1199,7 +1199,7 @@ function LtsJournal(props) {
                   aria-labelledby='headingThree'
                   data-bs-parent='#progressAccordion'
                 >
-                  <div className='accordion-body d-flex gap-4 flex-col-mob'>
+                  <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
                     <div className='d-flex flex-column gap-4'>
                       <CircularProgress
                         percentage={levelProgress?.level3?.percentage || 0}

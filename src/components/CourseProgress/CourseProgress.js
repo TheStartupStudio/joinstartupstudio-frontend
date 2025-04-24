@@ -463,7 +463,7 @@ function CourseProgress() {
                 aria-labelledby='headingOne'
                 data-bs-parent='#progressAccordion'
               >
-                <div className='accordion-body d-flex gap-4 flex-col-mob'>
+                <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
                   <div className='d-flex flex-column gap-4'>
                     <CircularProgress
                       percentage={levelProgress?.level1?.percentage || 0}
@@ -506,7 +506,7 @@ function CourseProgress() {
                 aria-labelledby='headingTwo'
                 data-bs-parent='#progressAccordion'
               >
-                <div className='accordion-body d-flex gap-4 flex-col-mob'>
+                <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
                   <div className='d-flex flex-column gap-4'>
                     <CircularProgress
                       percentage={levelProgress?.level2?.percentage || 0}
@@ -549,7 +549,7 @@ function CourseProgress() {
                 aria-labelledby='headingThree'
                 data-bs-parent='#progressAccordion'
               >
-                <div className='accordion-body d-flex gap-4 flex-col-mob'>
+                <div className='accordion-body d-flex gap-4 flex-col-mob course-progress'>
                   <div className='d-flex flex-column gap-4'>
                     <CircularProgress
                       percentage={levelProgress?.level3?.percentage || 0}
