@@ -783,7 +783,7 @@ function LtsJournal(props) {
               <div >
                 <div className='gradient-background-journal' ref={contentContainer}>
                   <div >
-                    <div className='levels-container'>
+                    <div className='levels-container-journal'>
                       {levels.map((level, index) => (
                         <div
                           key={index}

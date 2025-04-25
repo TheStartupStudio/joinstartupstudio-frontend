@@ -54,7 +54,7 @@
   margin-bottom: 2rem;
 }
 
-.levels-container {
+.levels-container-journal {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -76,6 +76,7 @@
   /* transition: all .07s ease-in; */
   display: flex;
   align-items: center;
+  justify-content:center;
 }
 
 .course-level:hover {
@@ -459,7 +460,7 @@
 
 @media (min-width: 1024px) and (max-width: 1200px) {
 
-  .levels-container,
+  .levels-container-journal,
   .course-section,
   .content-container {
     margin-right: 1.5rem;
@@ -493,7 +494,7 @@
     /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
   }
 
-  .levels-container {
+  .levels-container-journal {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
@@ -546,7 +547,7 @@
 }
 
 @media (max-width: 769px) {
-  .levels-container {
+  .levels-container-journal {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
@@ -648,7 +649,7 @@
     overflow-x: hidden !important;
   }
 
-  .levels-container {
+  .levels-container-journal {
     gap: 0.5rem;
     padding: 0.5rem;
   }
