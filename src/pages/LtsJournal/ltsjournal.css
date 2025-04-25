@@ -66,7 +66,7 @@
   /* height: 49px; */
 }
 
-.course-level {
+.course-level-journal {
   padding: .5rem 2rem;
   width: 100%;
   /* margin: 0.5rem 0; */
@@ -79,12 +79,12 @@
   justify-content:center;
 }
 
-.course-level:hover {
+.course-level-journal:hover {
   background-color: #f7fafc;
   border-radius: 15px;
 }
 
-.active-level {
+.active-level-journal {
   color: #2d3748;
   font-weight: 600;
   background-color: #ebf8ff;
@@ -485,7 +485,7 @@
 }
 
 @media (max-width: 1024px) {
-  .course-level {
+  .course-level-journal {
     padding: 0.5rem 1rem;
     font-size: 14px;
     justify-content: center;
@@ -556,7 +556,7 @@
     text-align: center;
   }
 
-  .course-level {
+  .course-level-journal {
     padding: 0.5rem 1rem;
     font-size: 14px;
     justify-content: center;
@@ -654,7 +654,7 @@
     padding: 0.5rem;
   }
 
-  .course-level {
+  .course-level-journal {
     font-size: 12px;
     padding: 0.5rem;
   }
