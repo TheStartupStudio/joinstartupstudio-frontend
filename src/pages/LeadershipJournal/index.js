@@ -22,8 +22,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
 import store from '../../redux/store'
-import { Modal } from 'react-bootstrap'
-import { ModalBody } from 'reactstrap'
+import { ModalBody, Modal } from 'reactstrap'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 
 const LeadershipJournal = memo(() => {
@@ -276,6 +275,33 @@ const LeadershipJournal = memo(() => {
                     />
                   )}
                 </div>
+                {showLockModal && (
+                        <Modal
+                          isOpen={showLockModal}
+                          toggle={() => setShowLockModal(false)}
+                          className='certificate-modal' 
+                        >
+                          <span
+                            className='cursor-pointer'
+                            onClick={() => setShowLockModal(false)}
+                            style={{ zIndex: '1' }}
+                          >
+                            <img className='left-arrow-modal' src={leftArrow} alt='left' />
+                          </span>
+                          <ModalBody>
+                            <img src={lockSign} alt='lock' className='mb-3' />
+                            <div className='d-flex justify-content-between align-items-center'>
+                              <h3 className='fs-14' style={{ marginBottom: '0' }}>
+                                Lesson Locked
+                              </h3>
+                            </div>
+                
+                            <div className='mt-5'>
+                              <p className='text-secondary text-center'>This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.</p>
+                            </div>
+                          </ModalBody>
+                        </Modal>
+                      )}
               </div>
               <div>
                 <div className='d-flex mt-4 gap-5'>{renderedSection}</div>

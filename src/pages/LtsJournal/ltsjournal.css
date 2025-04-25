@@ -54,7 +54,7 @@
   margin-bottom: 2rem;
 }
 
-.levels-container {
+.levels-container-journal {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -66,24 +66,25 @@
   /* height: 49px; */
 }
 
-.course-level {
+.course-level-journal {
   padding: .5rem 2rem;
   width: 100%;
   /* margin: 0.5rem 0; */
   color: black !important;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   /* transition: all .07s ease-in; */
   display: flex;
   align-items: center;
+  justify-content:center;
 }
 
-.course-level:hover {
+.course-level-journal:hover {
   background-color: #f7fafc;
   border-radius: 15px;
 }
 
-.active-level {
+.active-level-journal {
   color: #2d3748;
   font-weight: 600;
   background-color: #ebf8ff;
@@ -459,7 +460,7 @@
 
 @media (min-width: 1024px) and (max-width: 1200px) {
 
-  .levels-container,
+  .levels-container-journal,
   .course-section,
   .content-container {
     margin-right: 1.5rem;
@@ -484,7 +485,7 @@
 }
 
 @media (max-width: 1024px) {
-  .course-level {
+  .course-level-journal {
     padding: 0.5rem 1rem;
     font-size: 14px;
     justify-content: center;
@@ -493,7 +494,7 @@
     /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); */
   }
 
-  .levels-container {
+  .levels-container-journal {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
@@ -546,7 +547,7 @@
 }
 
 @media (max-width: 769px) {
-  .levels-container {
+  .levels-container-journal {
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
@@ -555,7 +556,7 @@
     text-align: center;
   }
 
-  .course-level {
+  .course-level-journal {
     padding: 0.5rem 1rem;
     font-size: 14px;
     justify-content: center;
@@ -648,12 +649,12 @@
     overflow-x: hidden !important;
   }
 
-  .levels-container {
+  .levels-container-journal {
     gap: 0.5rem;
     padding: 0.5rem;
   }
 
-  .course-level {
+  .course-level-journal {
     font-size: 12px;
     padding: 0.5rem;
   }

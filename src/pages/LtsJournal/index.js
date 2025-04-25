@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
-import './ltsJournal.css'
+import './ltsjournal.css'
 import ReactPlayer from 'react-player'
 import Accordion from 'react-bootstrap/Accordion'
 import { changeSidebarState } from '../../redux'
@@ -783,11 +783,11 @@ function LtsJournal(props) {
               <div >
                 <div className='gradient-background-journal' ref={contentContainer}>
                   <div >
-                    <div className='levels-container'>
+                    <div className='levels-container-journal'>
                       {levels.map((level, index) => (
                         <div
                           key={index}
-                          className={`course-level ${index === activeLevel ? 'active-level' : ''}`}
+                          className={`course-level-journal ${index === activeLevel ? 'active-level-journal' : ''}`}
                           onClick={() => handleLevelClick(index)}
                         >
                           {level.title}
