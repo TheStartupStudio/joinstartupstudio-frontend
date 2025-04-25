@@ -24,10 +24,7 @@ function HowWeProtect({ isOpen, setIsOpen }) {
         <img className='left-arrow-modal' src={leftArrow} alt='left' />
       </span>
       <ModalBody>
-        <div
-          className='mt-4-4 d-flex gap-4 align-items-center'
-          style={{ paddingInline: '10rem' }}
-        >
+        <div className='mt-4-4 d-flex gap-4 align-items-center flex-col-r-900 p-inl-100 p-inl-1-900'>
           <div className=''>
             <h5 className='fs-15 fw-light text-uppercase text-black lh-sm'>
               Security Measures for a<br />
@@ -44,7 +41,7 @@ function HowWeProtect({ isOpen, setIsOpen }) {
           </div>
           <img src={AWS} alt='aws' className='w-100' />
         </div>
-        <div className='px-5 d-grid grid-col-2 gap-5 mt-5'>
+        <div className='px-5 d-grid grid-col-2 gap-5 mt-5 d-flex-900 flex-col-900'>
           <div>
             <img className='w-100' src={frontS} alt='shield' />
           </div>
@@ -84,7 +81,7 @@ function HowWeProtect({ isOpen, setIsOpen }) {
             </p>
           </div>
         </div>
-        <div className='px-5 gap-5 d-grid grid-col-2 mt-5'>
+        <div className='px-5 gap-5 d-grid grid-col-2 mt-5 d-flex-900 flex-col-r-900'>
           <div>
             <h5 className='fs-24 fw-bold text-uppercase text-black lh-sm'>
               Backend Security <br />
@@ -120,7 +117,7 @@ function HowWeProtect({ isOpen, setIsOpen }) {
           </div>
           <img className='w-100' src={backS} alt='security' />
         </div>
-        <div className='px-5 d-grid grid-col-2 gap-5 mt-5'>
+        <div className='px-5 d-grid grid-col-2 gap-5 mt-5 d-flex-900 flex-col-900'>
           <div>
             <img className='w-100' src={rdsMysql} alt='rds-mysql' />
           </div>
@@ -158,7 +155,7 @@ function HowWeProtect({ isOpen, setIsOpen }) {
             </p>
           </div>
         </div>
-        <div className='px-5 gap-5 d-grid grid-col-2 mt-5'>
+        <div className='px-5 gap-5 d-grid grid-col-2 mt-5 d-flex-900 flex-col-r-900'>
           <div>
             <h5 className='fs-24 fw-bold text-uppercase text-black lh-sm'>
               General Security Measures
@@ -179,7 +176,7 @@ function HowWeProtect({ isOpen, setIsOpen }) {
           </div>
           <img className='w-100' src={generalSecurity} alt='security' />
         </div>
-        <div className='px-5 d-grid grid-col-2 gap-5 mt-5'>
+        <div className='px-5 d-grid grid-col-2 gap-5 mt-5 d-flex-900 flex-col-900'>
           <div>
             <img className='w-100' src={cicd} alt='rds-mysql' />
           </div>
