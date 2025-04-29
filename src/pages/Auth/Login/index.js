@@ -159,7 +159,7 @@ const ChooseLogin = () => {
                 <>
                   <h1 className='login-title text-black'>Welcome...</h1>
                   <p className='text-black fs-5 fw-light'>
-                    ...The Startup Studio Course in Entrepreneurship{' '}
+                    ...The Startup Studio Online Academy in Entrepreneurship{' '}
                     <br className='d-none-mob' /> powered by Learn to Start.
                     Please log in or create <br className='d-none-mob' /> an
                     account.
