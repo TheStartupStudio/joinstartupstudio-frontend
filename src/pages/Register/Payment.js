@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import axiosInstance from '../../utils/AxiosInstance'
-import { setStripe } from '../../redux/user/Actions'
+import { setCustomerId, setStripe } from '../../redux/user/Actions'
 import { toast } from 'react-toastify'
 
 function Payment() {
@@ -15,6 +15,10 @@ function Payment() {
       try {
         const response = await axiosInstance.get('/users')
         const user = response.data
+
+        if (user?.customerId) {
+          dispatch(setCustomerId(user?.customerId))
+        }
 
         if (user?.stripe_subscription_id) {
           dispatch(setStripe(user.stripe_subscription_id))
