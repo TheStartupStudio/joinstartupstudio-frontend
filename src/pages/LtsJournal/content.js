@@ -229,7 +229,7 @@ function LtsJournalContent(props) {
       : [journal.video]
   ).filter((video) => video && video.id);
 
-  videos = videos.sort((a, b) => (a.id === 100000 ? -1 : b.id === 100000 ? 1 : 0));
+  // videos = videos.sort((a, b) => (a.id === 100000 ? -1 : b.id === 100000 ? 1 : 0));
 
   return (
     <>
@@ -246,7 +246,8 @@ function LtsJournalContent(props) {
               alt="circle-icon"
               style={{ width: '40px', height: '40px', marginRight: '10px' }}
             />
-            <h4 className="page-card__content-title">{journal.title}</h4> {/* Title remains here */}
+            <h4 className="page-card__content-title">{journal.title}</h4> 
+            {console.log('patrik250',journal)}
 </div>
           <div className="journal-entries__videos">
             {videos[currentVideoIndex] && (
@@ -281,22 +282,24 @@ function LtsJournalContent(props) {
               />
             )}
 
-            <div className="nav-videos">
-              <button
-                className="btn"
-                onClick={handlePreviousVideo}
-                disabled={currentVideoIndex === 0}
-              >
-                &#8592; Previous
-              </button>
-              <button
-                className="btn"
-                onClick={handleNextVideo}
-                disabled={currentVideoIndex === videos.length - 1}
-              >
-                Next &#8594;
-              </button>
-            </div>
+            {videos.length > 1 && (
+  <div className="nav-videos">
+    <button
+      className="btn"
+      onClick={handlePreviousVideo}
+      disabled={currentVideoIndex === 0}
+    >
+      &#8592; Previous
+    </button>
+    <button
+      className="btn"
+      onClick={handleNextVideo}
+      disabled={currentVideoIndex === videos.length - 1}
+    >
+      Next &#8594;
+    </button>
+  </div>
+)}
           </div>
         </div>
 

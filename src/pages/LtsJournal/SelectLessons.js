@@ -6,7 +6,8 @@ function SelectLessons({
   selectedCourse, 
   setSelectedCourse,
   setShowLockModal,
-  setLockModalMessage 
+  setLockModalMessage,
+  placeholder 
 }) {
   const handleChange = (selectedOption) => {
     if (selectedOption?.disabled) {
@@ -53,14 +54,14 @@ function SelectLessons({
         value={currentSelection || selectedCourse}
         onChange={handleChange}
         isOptionDisabled={(option) => option.disabled}
-        placeholder='Select Journals to View'
+        placeholder={placeholder || 'Select Journals to View'}
         menuPortalTarget={document.body}
         isSearchable={false}
         styles={{
           menuPortal: (base) => ({ ...base, zIndex: 9999 }),
           control: (base) => ({
             ...base,
-            width: '255px',
+            // width: '400px',
             minHeight: '40px',
             overflow: 'hidden',
             borderRadius: '6px',

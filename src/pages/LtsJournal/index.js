@@ -23,7 +23,8 @@ import {
   faUser,
   faArrowLeft,
   faArrowRight,
-  faPlay
+  faPlay,
+  faTimes
 } from '@fortawesome/free-solid-svg-icons'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -31,6 +32,7 @@ import searchIcon from '../../assets/images/search-icon.png'
 import circleIcon from '../../assets/images/circle-user-icon.png'
 import UserIcon from '../../assets/images/user-icon-journal.png'
 import LtsJournalContent from './content'
+import LtsJournalReflection from './reflection'
 import { Modal, ModalBody } from 'reactstrap'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import progressLogo from '../../assets/images/academy-icons/progress-details-logo.png'
@@ -50,6 +52,7 @@ import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
+import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
 
 function LtsJournal(props) {
   const dispatch = useDispatch()
@@ -70,6 +73,9 @@ function LtsJournal(props) {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0) // Track the current video index
   const [showLockModal, setShowLockModal] = useState(false);
   const [lockModalMessage, setLockModalMessage] = useState('');
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [reflectionContent, setReflectionContent] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const { finishedContent, levelProgress, loading } = useSelector(
     (state) => state.course
@@ -752,6 +758,29 @@ function LtsJournal(props) {
     return 'notStarted'
   }
 
+  // Handler to update reflection content from child
+  const handleReflectionContentChange = (value) => {
+    setReflectionContent(value);
+  };
+
+  // Handler for Save and Continue
+  const handleSaveAndContinue = async () => {
+    setSaving(true);
+    try {
+      // Call your save API here
+      await axiosInstance.post(
+        `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`,
+        { content: reflectionContent }
+      );
+      // Continue to next lesson logic here
+      goToNextLesson();
+    } catch (error) {
+      // handle error
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <>
       <div id='main-body'>
@@ -780,9 +809,9 @@ function LtsJournal(props) {
                   />
                 </div>
 
-              <div >
+              <div>
                 <div className='gradient-background-journal' ref={contentContainer}>
-                  <div >
+                  <div>
                     <div className='levels-container-journal'>
                       {levels.map((level, index) => (
                         <div
@@ -797,25 +826,6 @@ function LtsJournal(props) {
 
                       <div className='course-section'>
                         <div className='course-button-group'>
-                          <div className='search-input-wrapper'>
-                            <div className='justify-content-between'>
-                              <div>
-                                <ModalInput
-                                  className='course-btn search-journal'
-                                  onChange={handleJournalSearch}
-                                  id={'searchBar'}
-                                  type={'search'}
-                                  labelTitle={props.intl.formatMessage({
-                                    id: 'my_journal.search_lessons',
-                                    defaultMessage: 'Search lessons'
-                                  })}
-                                  imgSrc={searchJ}
-                                  imageStyle={{ filter: 'grayscale(1)' }}
-                                />
-                              </div>
-                            </div>
-                          </div>
-
                           <div className='select-lessons'>
                             <SelectLessons
                               options={options}
@@ -865,8 +875,12 @@ function LtsJournal(props) {
                                   }
                                 }
                               }}
+                              placeholder="Welcome to Level 1"
                             />
+                          
                           </div>
+
+                        
 
                           <div
                             className='review-course-btn'
@@ -881,15 +895,21 @@ function LtsJournal(props) {
                             }}
                           >
                             <button
-                             style={{padding:'.5rem'}}
-                              className='review-progress-btn'
-                              onClick={toggleModal}
-                            >
-                              {props.intl.formatMessage({
-                                id: 'my_journal.review_course_progress',
-                                defaultMessage: 'Review Course Progress'
-                              })}
-                            </button>
+    style={{ padding: '.5rem' }}
+    className='review-progress-btn'
+    onClick={handleSaveAndContinue}  
+    disabled={saving}
+  >
+    {saving
+      ? props.intl.formatMessage({
+          id: 'my_journal.saving',
+          defaultMessage: 'Saving...'
+        })
+      : props.intl.formatMessage({
+          id: 'my_journal.save_and_continue',
+          defaultMessage: 'Save and Continue'
+        })}
+  </button>
                           </div>
                         </div>
                       </div>
@@ -902,20 +922,68 @@ function LtsJournal(props) {
                         path={props.match.url}
                         render={() => (
                           <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
-                            <div id="video-container-journal" className="video-container-bg" style={{flex:'1 1 50%',height:'350px'}}>
+                            <div id="video-container-journal" className="video-container-bg" style={{flex:'1 1 50%'}}>
                               <div className="d-flex placeholder-content-img align-items-center">
                                 <img
                                   src={circleIcon}
                                   alt="circle-icon"
-                                  style={{ width: '40px', height: '40px', marginRight: '10px' }}
+                                  style={{ width: '36px', height: '36px', marginRight: '10px' }}
                                 />
                                 <h6>{levels[activeLevel]?.description}</h6>
                               </div>
-                              <div className="placeholder-content-video text-center m-4">
-                                <p className="mb-0">Select a lesson to view video content</p>
+                              <div style={{ position: 'relative', cursor: 'pointer' }}>
+                                <img
+                                  src="https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg"
+                                  alt="video-thumbnail"
+                                  style={{ width: '100%', borderRadius: '20px',marginTop:'1rem' }}
+                                  onClick={() => setShowVideoModal(true)}
+                                />
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    borderRadius: '50%',
+                                    padding: '1rem'
+                                  }}
+                                  onClick={() => setShowVideoModal(true)}
+                                >
+                                  <FontAwesomeIcon icon={faPlay} style={{ color: '#fff', fontSize: 32 }} />
+                                </div>
                               </div>
+                              <Modal
+                                isOpen={showVideoModal}
+                                toggle={() => setShowVideoModal(false)}
+                                className="videoPlayerModal"
+                                centered
+                              >
+                                <ModalBody className="p-0 m-0" style={{ position: 'relative' }}>
+                                  <button
+                                    className="media-lightbox__close"
+                                    onClick={() => setShowVideoModal(false)}
+                                    aria-label="Close"
+                                    type="button"
+                                  >
+                                    <FontAwesomeIcon icon={faTimes} />
+                                  </button>
+                                  <ReactPlayer
+                                    url="https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4"
+                                    controls
+                                    playing
+                                    width="100%"
+                                    height="100%"
+                                    config={{
+                                      file: {
+                                        attributes: {
+                                          controlsList: 'nodownload'
+                                        }
+                                      }
+                                    }}
+                                  />
+                                </ModalBody>
+                              </Modal>
                             </div>
-
                             <div id="content-container" className="content-container" 
                               style={{ 
                                 flex: '1 1 50%', 
@@ -924,17 +992,18 @@ function LtsJournal(props) {
                                 borderRadius: '20px',
                                 padding: '25px 25px'
                               }}>
-                              <div className="d-flex justify-content-center align-items-center reflection-header p-4">
-                               
-                             
-                              <div className="placeholder-content text-center p-4">
-                              <img
-                                  src={UserIcon}
-                                  alt="page-icon"
-
-                                />
-                                 </div>
-                              </div>
+                              <div className="d-flex align-items-center reflection-header">
+                          
+                                  <img
+                                    src={WhoAmI}
+                                    alt="page-icon"
+                                    style={{ width: '36px',height:'36px',marginRight: '10px' }}
+                                    />
+                                    <h6>Reflection</h6>
+                                  </div>
+                               <p className='pt-3'>Entrepreneurship is a mindset,and in the first level of this program,you will engage in developing this mindset as your preparation for starting your journey on the pathway to entrepreneurship.You need proof of yourself as an entrepreneur and through this program you will create content that can publicly speak to your values, your purpose,your mindset, and your skillset.The first step in creating this proof is developing content that solidifies your statement of "I Am". Who are you and how do you want the world to see you? It's time for you to communicate you professional identity.</p>
+                                 
+                              
                             </div>
                           </div>
                         )}
