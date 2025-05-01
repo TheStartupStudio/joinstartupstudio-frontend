@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Select from 'react-select'
+import { useLocation } from 'react-router-dom'
 
 function SelectLessons({ 
   options, 
@@ -9,6 +10,13 @@ function SelectLessons({
   setLockModalMessage,
   placeholder 
 }) {
+  const location = useLocation();
+  const isRootPath = location.pathname === '/my-course-in-entrepreneurship/journal';
+
+  const displayPlaceholder = isRootPath 
+    ? "Welcome to Level 1" 
+    : (selectedCourse?.label || placeholder || 'Select Journals to View');
+
   const handleChange = (selectedOption) => {
     if (selectedOption?.disabled) {
       setLockModalMessage('This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.');
@@ -54,7 +62,7 @@ function SelectLessons({
         value={currentSelection || selectedCourse}
         onChange={handleChange}
         isOptionDisabled={(option) => option.disabled}
-        placeholder={placeholder || 'Select Journals to View'}
+        placeholder={displayPlaceholder}
         menuPortalTarget={document.body}
         isSearchable={false}
         styles={{
