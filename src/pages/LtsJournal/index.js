@@ -1083,7 +1083,7 @@ function LtsJournal(props) {
                               {saving ? (
                                 <FontAwesomeIcon icon={faSpinner} spin />
                               ) : (
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ display: 'flex', alignItems: 'center',justifyContent:'center', gap: '8px' }}>
                                   {isRootPath
                                     ? props.intl.formatMessage({
                                       id: 'my_journal.continue',
