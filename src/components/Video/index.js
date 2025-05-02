@@ -133,6 +133,18 @@ export default function VideoView(props) {
                     by <IntlMessages id={props.description} />
                   </p>
                 )}
+                {videoData?.type === 'podcast' && (
+                  <p
+                    className='card-text'
+                    style={{
+                      textAlign: 'center',
+                      fontSize: '13px',
+                      color: '#666'
+                    }}
+                  >
+                    by <IntlMessages id={props.description} />
+                  </p>
+                )}
               </>
             </div>
           </Link>
@@ -194,6 +206,8 @@ export default function VideoView(props) {
             </Link>
           </div>
       )}
+
+
       <VideoModal
         show={showVideoModal}
         onHide={() => {

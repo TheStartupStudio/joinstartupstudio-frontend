@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import axiosInstance from '../../utils/AxiosInstance';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllPodcast, getGuidanceVideos, getMasterclassVideos } from '../../redux/podcast/Actions';
 import ReactPaginate from 'react-paginate';
-import Waveform from './waveform';
 import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png';
 import ModalInput from '../../components/ModalInput/ModalInput';
 import { injectIntl } from 'react-intl';
-import { Modal } from 'react-bootstrap'; 
 import searchJ from '../../assets/images/academy-icons/search.png';
 import Select from 'react-select';
 import Video from '../../components/Video';
-import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
-import storyInMotion from '../../assets/images/story-in-motion-logo.png'
 import './StoryInMotion.css';
 
 function StoryInMotion({ intl }) {
-  const [activeLevel, setActiveLevel] = useState(2); 
+  const dispatch = useDispatch();
+  const { podcasts, guidanceVideos, masterclassVideos, loading } = useSelector(state => state.podcast);
+
+  const [activeLevel, setActiveLevel] = useState(2);
   const [pageTitle, setPageTitle] = useState('');
   const [pageDescription, setPageDescription] = useState('');
   const [pageVideos, setPageVideos] = useState([]);
@@ -24,9 +24,6 @@ function StoryInMotion({ intl }) {
   const [itemOffset, setItemOffset] = useState(0);
   const videosPerPage = 10;
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [selectedAudio, setSelectedAudio] = useState(null); 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showAudioModal, setShowAudioModal] = useState(false);
   const [filterBy, setFilterBy] = useState(null);
   const location = useLocation();
 
@@ -63,52 +60,25 @@ function StoryInMotion({ intl }) {
       case 0: // Encouragement Videos
         setPageTitle('MASTER CLASSES | ENCOURAGEMENT VIDEOS');
         setPageDescription('Videos From The Founder And CEO Of The Startup Studio To Help You On Your Journey.');
-        getEncouragementVideos();
+        dispatch(getGuidanceVideos());
+        setPageVideos(guidanceVideos);
         break;
       case 1: // Career Guidance Videos
         setPageTitle('MASTER CLASSES | CAREER GUIDANCE');
         setPageDescription('Ongoing Guidance From Entrepreneurs And Experts To Help You On Your Journey');
-        getMasterClassVideos();
+        dispatch(getMasterclassVideos());
+        setPageVideos(masterclassVideos);
         break;
       case 2: // Story in Motion Podcast Episodes
         setPageTitle('MASTER CLASSES | STORY IN MOTION PODCAST EPISODES');
         setPageDescription('Ongoing Guidance From Entrepreneurs And Experts To Help You On Your Journey');
-        fetchPodcastEpisodes();
+        dispatch(getAllPodcast());
+        setPageVideos(podcasts);
         break;
       default:
         break;
     }
-  }, [activeLevel]);
-
-  const getEncouragementVideos = async () => {
-    try {
-      const response = await axiosInstance.get('/contents/by-type/guidance');
-      setPageVideos(response.data);
-      setItemOffset(0);
-    } catch (error) {
-      console.error('Error fetching encouragement videos:', error);
-    }
-  };
-
-  const getMasterClassVideos = async () => {
-    try {
-      const response = await axiosInstance.get('/contents/by-type/master');
-      setPageVideos(response.data);
-      setItemOffset(0);
-    } catch (error) {
-      console.error('Error fetching career guidance videos:', error);
-    }
-  };
-
-  const fetchPodcastEpisodes = async () => {
-    try {
-      const response = await axiosInstance.get('/podcast?page=0&size=100');
-      setPageVideos(response.data.data);
-      setItemOffset(0);
-    } catch (error) {
-      console.error('Error fetching podcast episodes:', error);
-    }
-  };
+  }, [activeLevel, dispatch]);
 
   const handleLevelChange = (index) => {
     setActiveLevel(index); // Update the active tab
@@ -148,14 +118,6 @@ function StoryInMotion({ intl }) {
     return '';
   };
 
-  const handleAudioClick = (podcast) => {
-    if (activeLevel === 2) {
-      setSelectedAudio(podcast);
-      setIsPlaying(true);
-      setShowAudioModal(true);
-    }
-  };
-
   return (
     <div id="main-body">
       <div>
@@ -175,162 +137,123 @@ function StoryInMotion({ intl }) {
           <div className="gradient-background-story">
             <div className="level-navigation">
               <div
-                className={`course-level ${
-                  activeLevel === 0 ? 'active-level-master' : ''
-                }`}
+                className={`course-level ${activeLevel === 0 ? 'active-level-master' : ''
+                  }`}
                 onClick={() => handleLevelChange(0)}
               >
                 Encouragement Videos
               </div>
               <div
-                className={`course-level ${
-                  activeLevel === 1 ? 'active-level-master' : ''
-                }`}
+                className={`course-level ${activeLevel === 1 ? 'active-level-master' : ''
+                  }`}
                 onClick={() => handleLevelChange(1)}
               >
                 Career Guidance Videos
               </div>
               <div
-                className={`course-level ${
-                  activeLevel === 2 ? 'active-level-master' : ''
-                }`}
+                className={`course-level ${activeLevel === 2 ? 'active-level-master' : ''
+                  }`}
                 onClick={() => handleLevelChange(2)}
               >
                 Story in Motion Podcast Episodes
               </div>
             </div>
 
-        <div className='d-flex justify-content-between'>
-        <div className="search-input-wrapper">
-              <div className="justify-content-between">
-                <div>
-                  <ModalInput
-                    className="course-btn search-journal"
-                    onChange={(e) => handleJournalSearch(e)}
-                    id={'searchBar'}
-                    type={'search'}
-                    labelTitle={
-                      activeLevel === 2
-                        ? intl.formatMessage({
-                            id: 'my_journal.search_podcasts',
-                            defaultMessage: 'Search podcasts',
-                          })
-                        : intl.formatMessage({
-                            id: 'my_journal.search_videos_',
-                            defaultMessage: 'Search lessons',
-                          })
-                    }
-                    imgSrc={searchJ}
-                    imageStyle={{ filter: 'grayscale(1)' }}
-                  />
+            <div className='d-flex justify-content-between'>
+              <div className="search-input-wrapper">
+                <div className="justify-content-between">
+                  <div>
+                    <ModalInput
+                      className="course-btn search-journal"
+                      onChange={(e) => handleJournalSearch(e)}
+                      id={'searchBar'}
+                      type={'search'}
+                      labelTitle={
+                        activeLevel === 2
+                          ? intl.formatMessage({
+                              id: 'my_journal.search_podcasts',
+                              defaultMessage: 'Search podcast episodes',
+                            })
+                          : intl.formatMessage({
+                              id: 'my_journal.search_videos_',
+                              defaultMessage: 'Search lessons',
+                            })
+                      }
+                      imgSrc={searchJ}
+                      imageStyle={{ filter: 'grayscale(1)' }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div
-                 style={{
-                                  display: 'inline-block',
-                                  borderRadius: '8px',
-                                  background:
-                                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
-                                  padding: '1px', // Adjust this value to control border thickness
-                                  height: '58px',
-                                  boxShadow: '0px 4px 10px 0px #00000040',
-                             
-                                }}>  
-                    <Select
-  options={filters}
-  value={filterBy}
-  onChange={handleFilter}
-  placeholder='Sort By'
-  menuPortalTarget={document.body}
-  isSearchable={false}
-  styles={{
-    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-    control: (base) => ({
-      ...base,
-      width: '157px',
-      minHeight: '40px',
-      overflow: 'hidden',
-      border: 'none',
-      borderRadius: '6px'
-    }),
-    singleValue: (base) => ({
-      ...base,
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis'
-    }),
-    option: (base, state) => ({
-      ...base,
-      backgroundColor: state.isFocused ? '#51C7DF' : base.backgroundColor,
-      color: state.isFocused ? 'white' : base.color,
-      '&:hover': {
-        backgroundColor: '#51C7DF',
-        color: 'white'
-      }
-    })
-  }}
-  components={{
-    IndicatorSeparator: () => null 
-  }}
-/></div>
-        </div>
+              <div
+                style={{
+                  display: 'inline-block',
+                  borderRadius: '8px',
+                  background:
+                    'linear-gradient(to bottom, #FF3399 0%, #51C7DF 100%)',
+                  padding: '1px', // Adjust this value to control border thickness
+                  height: '58px',
+                  boxShadow: '0px 4px 10px 0px #00000040',
 
-        <div className='content-videos-container-wrapper'>
-
-
-            <div className="content-videos-container">
-              {currentPageVideos.map((video, index) => (
-                  activeLevel === 2 ? (
-                    
-                    <div
-                    className="video-cards" 
-                    onClick={() => handleAudioClick(video)}
-                  >
-                      <img
-                        src={video.thumbnail || storyInMotionPodcast}
-                        alt={video.title}
-                        style={{width:'100%'}}
-                      />
-                      <h5 className="podcast-title" style={{ textAlign: 'center', marginTop: '10px' }}>
-                        {video.title}
-                      </h5>
-                      <p
-                        style={{
-                          textAlign: 'center',
-                          color: '#666',
-                          fontSize: '12px',
-                          marginTop: '5px',
-                        }}
-                      >
-                        {new Intl.DateTimeFormat('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        }).format(new Date(video.date || video.createdAt))}
-                      </p>
-                    </div>
-                  ) : (
-                    <Video
-                      id={video.id}
-                      thumbnail={video.thumbnail || storyInMotionPodcast}
-                      title={video.title}
-                      description={video.description}
-                      page={
-                        activeLevel === 1
-                          ? 'master-classes'
-                          : 'encouragement'
+                }}>
+                <Select
+                  options={filters}
+                  value={filterBy}
+                  onChange={handleFilter}
+                  placeholder='Sort By'
+                  menuPortalTarget={document.body}
+                  isSearchable={false}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    control: (base) => ({
+                      ...base,
+                      width: '157px',
+                      minHeight: '40px',
+                      overflow: 'hidden',
+                      border: 'none',
+                      borderRadius: '6px'
+                    }),
+                    singleValue: (base) => ({
+                      ...base,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }),
+                    option: (base, state) => ({
+                      ...base,
+                      backgroundColor: state.isFocused ? '#51C7DF' : base.backgroundColor,
+                      color: state.isFocused ? 'white' : base.color,
+                      '&:hover': {
+                        backgroundColor: '#51C7DF',
+                        color: 'white'
                       }
-                      videoData={video}
-                    />
-                  )
-
-              ))}
-
+                    })
+                  }}
+                  components={{
+                    IndicatorSeparator: () => null
+                  }}
+                /></div>
             </div>
 
-            {/* Pagination inside the podcast episodes div */}
-            {pageVideos.length > videosPerPage && (
+            <div className='content-videos-container-wrapper'>
+
+
+              <div className="content-videos-container">
+                {currentPageVideos.map((video, index) => (
+                  <Video
+                    key={index}
+                    id={video.id}
+                    thumbnail={video.thumbnail || storyInMotionPodcast}
+                    title={video.title}
+                    description={video.description}
+                    page={activeLevel === 2 ? 'podcast' : activeLevel === 1 ? 'master-classes' : 'encouragement'}
+                    videoData={video}
+                  />
+                ))}
+              </div>
+
+              {/* Pagination inside the podcast episodes div */}
+              {pageVideos.length > videosPerPage && (
                 <div className="pagination-container" style={{ marginTop: '20px' }}>
                   <ReactPaginate
                     previousLabel="<<"
@@ -350,64 +273,13 @@ function StoryInMotion({ intl }) {
                     activeClassName="active"
                   />
                 </div>
-            )}
+              )}
 
             </div>
 
           </div>
         </div>
       </div>
-
-      {showAudioModal && selectedAudio && activeLevel === 2 && (
-        <Modal
-          show={showAudioModal}
-          onHide={() => {
-            setShowAudioModal(false);
-            setIsPlaying(false);
-          }}
-          centered
-          size="lg"
-          className="podcast-modal"
-        >
-          <Modal.Header>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <img
-                    src={storyInMotion} // Use the correct imported logo
-                    alt="Story in Motion Logo"
-                    style={{ width: '36px', height: '36px' }}
-                  />
-                  <Modal.Title style={{ fontWeight: '400', fontSize: '13px' }}>
-                    {selectedAudio.title}
-                  </Modal.Title>
-                </div>
-                <img
-                className="left-arrow-modal"
-                  src={leftArrow}
-                  alt="Close"
-                 
-                  onClick={() => {
-                    setShowAudioModal(false);
-                    setIsPlaying(false);
-                  }}
-                />
-              </div>
-              <div style={{ fontWeight: '600', fontSize: '12px', color: '#333' }}>
-                Now Playing: {selectedAudio.title}
-              </div>
-            </div>
-          </Modal.Header>
-          <Modal.Body>
-            <Waveform
-              url={selectedAudio.url}
-              isPlayingParent={setIsPlaying}
-              isPlaying={isPlaying}
-              selectedTrack={selectedAudio}
-            />
-          </Modal.Body>
-        </Modal>
-      )}
     </div>
   );
 }
