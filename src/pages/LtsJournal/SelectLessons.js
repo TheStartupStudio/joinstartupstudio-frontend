@@ -1,13 +1,38 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Select from 'react-select'
+import { useLocation } from 'react-router-dom'
 
-function SelectLessons({ 
-  options, 
-  selectedCourse, 
+function SelectLessons({
+  options,
+  selectedCourse,
   setSelectedCourse,
   setShowLockModal,
-  setLockModalMessage 
+  setLockModalMessage,
+  placeholder,
+  activeLevel
 }) {
+  const location = useLocation();
+  const isRootPath = location.pathname === '/my-course-in-entrepreneurship/journal';
+
+  // Function to get level-specific placeholder
+  const getLevelPlaceholder = () => {
+    switch (activeLevel) {
+      case 0:
+        return "Welcome to Level 1";
+      case 1:
+        return "Understanding Learn to Start";
+      case 2:
+        return "The Journey of Entrepreneurship";
+      default:
+        return "Select a Lesson";
+    }
+  };
+
+  // Use selected course label if available and not on root path
+  const displayPlaceholder = isRootPath || !selectedCourse?.label
+    ? getLevelPlaceholder()
+    : selectedCourse.label;
+
   const handleChange = (selectedOption) => {
     if (selectedOption?.disabled) {
       setLockModalMessage('This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.');
@@ -17,15 +42,16 @@ function SelectLessons({
     setSelectedCourse(selectedOption);
   };
 
-  const currentSelection = options?.find(option => 
-    option.redirectId === selectedCourse?.redirectId
+  const currentSelection = options?.find(option =>
+    option.redirectId === selectedCourse?.redirectId ||
+    option.value === selectedCourse?.value
   );
 
   const CustomOption = ({ data, innerRef, innerProps }) => (
     <div
       ref={innerRef}
       {...innerProps}
-      style={{ 
+      style={{
         cursor: data.disabled ? 'not-allowed' : 'pointer',
         padding: '8px',
         opacity: data.disabled ? 0.6 : 1
@@ -53,14 +79,13 @@ function SelectLessons({
         value={currentSelection || selectedCourse}
         onChange={handleChange}
         isOptionDisabled={(option) => option.disabled}
-        placeholder='Select Journals to View'
+        placeholder={displayPlaceholder}
         menuPortalTarget={document.body}
         isSearchable={false}
         styles={{
           menuPortal: (base) => ({ ...base, zIndex: 9999 }),
           control: (base) => ({
             ...base,
-            width: '255px',
             minHeight: '40px',
             overflow: 'hidden',
             borderRadius: '6px',
@@ -69,6 +94,12 @@ function SelectLessons({
             cursor: 'pointer'
           }),
           singleValue: (base) => ({
+            ...base,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }),
+          placeholder: (base) => ({
             ...base,
             whiteSpace: 'nowrap',
             overflow: 'hidden',

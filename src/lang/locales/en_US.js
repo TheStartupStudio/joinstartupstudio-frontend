@@ -659,7 +659,8 @@ const EnLangs = {
   'my_journal.created_page': 'My Journal:',
   'my_journal.select_lessons': 'Select Lessons to View',
   'my_journal.review_course_progess': 'Review Course Progess',
-
+  'my_journal.save_and_continue': 'Save and Continue',
+  'my_journal.saving': 'Saving...',
   //Reset passsword
   'alert.fill_password_fields': 'Please fill password fields',
   'reset.reset_your_password': 'Reset Your Password',

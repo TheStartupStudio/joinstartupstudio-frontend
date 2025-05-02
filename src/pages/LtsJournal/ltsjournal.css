@@ -113,17 +113,17 @@
   width: 30vw;
   height: 54px;
 }
-
+/* 
 .search-input-wrapper {
   position: relative;
   display: inline-block;
   width: 500px;
-}
+} */
 
 .select-lessons {
   position: relative;
   display: inline-block;
-  width: 300px;
+  width: 500px;
 }
 
 .search-icon {
@@ -152,7 +152,7 @@
 .reflection-header h6 {
   margin-top: 10px;
   font-weight: 500;
-  font-size: 15px;
+  /* font-size: 15px; */
 }
 
 .video-container-bg {
@@ -212,7 +212,7 @@
   background-color: white;
   border: none;
   border-radius: 8px;
-  padding: .5rem !important;
+  padding: 1rem !important;
   text-transform: uppercase;
   font-weight: 700;
   height: 56px;
@@ -229,6 +229,12 @@
   margin-right: -10px;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.content-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .course-btn {
@@ -378,7 +384,12 @@
   transform: translateX(-50%);
   width: 90%;
 }
-
+.videoPlayerModal .modal-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
 .nav-videos button {
   background: none;
   border: none;
@@ -469,6 +480,9 @@
   .placeholder-content img {
     height: 200px;
   }
+  .video-landing-page{
+    width:350px
+  }
 }
 
 @media (max-width: 1170px) {
@@ -515,18 +529,17 @@
   }
 
   .course-button-group {
-    display: block;
     margin-left: 1.5rem !important;
   }
 
-  .search-input-wrapper {
-    margin-bottom: 1rem;
-    width: 100%;
+  .select-lessons {
+    /* margin-top:1rem!important; */
+    width:400px;
   }
-
+/* 
   .review-course-btn {
     margin-left: 4rem;
-  }
+  } */
 
   .submit-reflection-btn {
     left: 80% !important;
@@ -540,11 +553,7 @@
   }
 }
 
-@media (max-width: 849px) {
-  .review-course-btn {
-    margin: 2rem 0;
-  }
-}
+
 
 @media (max-width: 769px) {
   .levels-container-journal {
@@ -566,7 +575,7 @@
   }
 
   .course-button-group {
-    display: block;
+    /* display: block; */
     margin-left: 1rem !important;
   }
 
@@ -634,9 +643,15 @@
 
 @media(max-width:757px) {
   .select-lessons {
-    margin-top: 1rem !important;
+    /* margin-top: 1rem !important; */
+    width:350px;
   }
 }
+
+@media(max-width:676px) {
+  .select-lessons {
+    width:250px;
+  }}
 
 @media(max-width:624px) {
   .submit-reflection-btn {
@@ -687,13 +702,38 @@
     height: 200px;
 
   }
+  .review-progress-btn {
+    font-size:smaller;
+   padding: 0.5rem !important;
+   }
 }
 
+
+
 @media (max-width: 450px) {
+  .review-course-btn{
+    width: 90%;
+  }
+  .review-progress-btn{
+    width: 100%;
+  }
   .placeholder-content img {
     padding: 0 !important;
     height: 120px;
   }
+  .course-section{
+    padding-left:1rem;
+  }
+  .course-button-group{
+    display: flex;
+    flex-direction:column
+  }
+  .select-lessons{
+    width:95%;
+  }
+  /* .review-course-btn{
+    width:165px;
+  } */
 }
 
 @media(max-width:415px) {

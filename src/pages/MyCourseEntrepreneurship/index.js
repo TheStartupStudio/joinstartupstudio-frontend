@@ -69,7 +69,7 @@ function MyCourseEntrepreneurship() {
   };
 
   return (
-    <Container fluid>
+    <>
         <div style={{ minHeight: '100vh' }}>
           <div
             className='d-flex space-between align-items-center'
@@ -352,7 +352,7 @@ function MyCourseEntrepreneurship() {
             </Modal>
           </div>
         </div>
-    </Container>
+    </>
   )
 }
 

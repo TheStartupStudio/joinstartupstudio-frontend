@@ -29,7 +29,8 @@ const EntriesBox = (props) => {
     isEditable,
     isDeletable,
     accordion,
-    isAddReflection
+    isAddReflection,
+    onReflectionContentChange
   } = props
 
   const [isSaving, setIsSaving] = useState(false)
@@ -73,9 +74,9 @@ const EntriesBox = (props) => {
     const axiosMethodUrl = isNew
       ? axiosInstance.post(`/ltsJournals/accordionsTable/${accordion.id}`, data)
       : axiosInstance.patch(
-          `/ltsJournals/accordionsTable/${accordionDates.id}`,
-          data
-        )
+        `/ltsJournals/accordionsTable/${accordionDates.id}`,
+        data
+      )
 
     axiosMethodUrl
       .then((res) => {
@@ -203,29 +204,31 @@ const EntriesBox = (props) => {
                     deleted={deleteReflection(entry, userJournalEntry)}
                     saved={updateReflection(entry, userJournalEntry)}
                     popupContent={index === 0 ? entry.popupContent : null}
+                    onContentChange={onReflectionContentChange}
                   />
                 ))}
               {/* Add new reflection */}
               {(!userJournalEntries[entry.id] ||
                 showAddReflection[entry.id]) && (
-                <LtsJournalReflection
-                  journal={journal}
-                  journalEntry={entry}
-                  userEntry={journal.userEntry}
-                  entry={null}
-                  saved={addReflection(entry)}
-                  showCancel={!!userJournalEntries[entry.id]}
-                  isEditable={isEditable}
-                  isDeletable={isDeletable}
-                  popupContent={null}
-                  cancel={(e) => {
-                    handleShowAddReflection({
-                      ...showAddReflection,
-                      [entry.id]: false
-                    })
-                  }}
-                />
-              )}
+                  <LtsJournalReflection
+                    journal={journal}
+                    journalEntry={entry}
+                    userEntry={journal.userEntry}
+                    entry={null}
+                    saved={addReflection(entry)}
+                    showCancel={!!userJournalEntries[entry.id]}
+                    isEditable={isEditable}
+                    isDeletable={isDeletable}
+                    popupContent={null}
+                    cancel={(e) => {
+                      handleShowAddReflection({
+                        ...showAddReflection,
+                        [entry.id]: false
+                      })
+                    }}
+                    onContentChange={onReflectionContentChange}
+                  />
+                )}
               {/*Show add new reflection*/}
 
               {/*// temp solution to remove [+] button from some entry boxes*/}
@@ -233,11 +236,10 @@ const EntriesBox = (props) => {
                 <></>
               ) : (
                 <div
-                  className={`journal-entries__entry-reflections-actions ${
-                    userJournalEntries[entry.id] && !showAddReflection[entry.id]
-                      ? 'active'
-                      : ''
-                  }`}
+                  className={`journal-entries__entry-reflections-actions ${userJournalEntries[entry.id] && !showAddReflection[entry.id]
+                    ? 'active'
+                    : ''
+                    }`}
                 >
                   <a
                     href

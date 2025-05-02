@@ -6,7 +6,8 @@ import {
   Switch,
   Route,
   useParams,
-  Redirect
+  Redirect,
+  useLocation
 } from 'react-router-dom'
 import { injectIntl } from 'react-intl'
 import 'react-quill/dist/quill.snow.css'
@@ -23,7 +24,9 @@ import {
   faUser,
   faArrowLeft,
   faArrowRight,
-  faPlay
+  faPlay,
+  faTimes,
+  faSpinner
 } from '@fortawesome/free-solid-svg-icons'
 import IntlMessages from '../../utils/IntlMessages'
 import axiosInstance from '../../utils/AxiosInstance'
@@ -31,6 +34,7 @@ import searchIcon from '../../assets/images/search-icon.png'
 import circleIcon from '../../assets/images/circle-user-icon.png'
 import UserIcon from '../../assets/images/user-icon-journal.png'
 import LtsJournalContent from './content'
+import LtsJournalReflection from './reflection'
 import { Modal, ModalBody } from 'reactstrap'
 import leftArrow from '../../assets/images/academy-icons/left-arrow.png'
 import progressLogo from '../../assets/images/academy-icons/progress-details-logo.png'
@@ -50,11 +54,17 @@ import { fetchLtsCoursefinishedContent } from '../../redux/course/Actions'
 import SelectLanguage from '../../components/SelectLanguage/SelectLanguage'
 import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
 import { toggleCollapse } from '../../redux/sidebar/Actions'
+import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
+import { toast } from 'react-toastify'
+import FoulWords from '../../utils/FoulWords'
+import { JOURNALS } from '../../utils/constants'
 
 function LtsJournal(props) {
   const dispatch = useDispatch()
   const history = useHistory()
   const { journalId } = useParams()
+  const location = useLocation()
+  const isRootPath = location.pathname === '/my-course-in-entrepreneurship/journal'
   const [journals, setJournals] = useState([])
   const [journalsData, setJournalsData] = useState([])
   const [selectedLesson, setSelectedLesson] = useState(null)
@@ -67,9 +77,20 @@ function LtsJournal(props) {
   const [showVideo, setShowVideo] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [videos, setVideos] = useState([])
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0) // Track the current video index
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
   const [showLockModal, setShowLockModal] = useState(false);
   const [lockModalMessage, setLockModalMessage] = useState('');
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [reflectionContent, setReflectionContent] = useState('');
+  const [reflectionsData, setReflectionsData] = useState({});
+  const [saving, setSaving] = useState(false);
+  const [reflectionData, setReflectionData] = useState({
+    content: '',
+    journalId: null,
+    journalEntryId: null,
+    entryId: null,
+    foulWords: null
+  });
 
   const { finishedContent, levelProgress, loading } = useSelector(
     (state) => state.course
@@ -450,13 +471,12 @@ function LtsJournal(props) {
       setJournals(data)
       setLoaded(true)
 
-      if (data.length > 0 && redir) {
+      if (data.length > 0 && redir && isRootPath) {
         if (data[0].children?.length > 0) {
           history.push(`${props.match.url}/${data[0].children[0].id}`)
         } else {
           history.push(
-            `${props.match.url}/${
-              props.location.search.split('?')[1] || data[0].id
+            `${props.match.url}/${props.location.search.split('?')[1] || data[0].id
             }`
           )
         }
@@ -472,8 +492,10 @@ function LtsJournal(props) {
 
   useEffect(() => {
     dispatch(changeSidebarState(false))
-    getJournals()
-  }, [dispatch])
+    if (isRootPath) {
+      getJournals()
+    }
+  }, [dispatch, isRootPath])
 
   useEffect(() => {
     dispatch(fetchLtsCoursefinishedContent())
@@ -482,9 +504,12 @@ function LtsJournal(props) {
   useEffect(() => {
     if (journalId) {
       const numericId = parseInt(journalId);
+
+      // Find the lesson in the current level
       let foundLesson = null;
-      
+
       if (activeLevel === 2) {
+        // For Level 3's nested structure
         lessonsByLevel[2].some(section => {
           const found = section.children?.find(child => child.redirectId === numericId);
           if (found) {
@@ -509,24 +534,24 @@ function LtsJournal(props) {
           };
         }
       }
-      
-      if (foundLesson && !selectedLesson) {
+
+      if (foundLesson) {
         setSelectedLesson(foundLesson);
       }
     }
-  }, [journalId, activeLevel, lessonsByLevel]);
+  }, [journalId, activeLevel]);
 
   const handleJournalSearch = (e) => {
     const keyword = e.target.value.toLowerCase()
     setJournals(
       keyword
         ? journalsData.filter(
-            (journal) =>
-              journal.title.toLowerCase().includes(keyword) ||
-              journal.children.some((child) =>
-                child.title.toLowerCase().includes(keyword)
-              )
-          )
+          (journal) =>
+            journal.title.toLowerCase().includes(keyword) ||
+            journal.children.some((child) =>
+              child.title.toLowerCase().includes(keyword)
+            )
+        )
         : journalsData
     )
   }
@@ -648,13 +673,13 @@ function LtsJournal(props) {
             status.status === 'done'
               ? tickSign
               : status.status === 'inProgress'
-              ? circleSign
-              : lockSign,
+                ? circleSign
+                : lockSign,
           textColor:
             status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
           disabled: status.disabled,
           redirectId: child.redirectId,
-          parentId: lesson.id 
+          parentId: lesson.id
         }
       })
 
@@ -673,8 +698,8 @@ function LtsJournal(props) {
         status.status === 'done'
           ? tickSign
           : status.status === 'inProgress'
-          ? circleSign
-          : lockSign,
+            ? circleSign
+            : lockSign,
       textColor:
         status.status === 'notStarted' ? 'text-secondary' : 'text-dark',
       disabled: status.disabled,
@@ -752,6 +777,206 @@ function LtsJournal(props) {
     return 'notStarted'
   }
 
+  const handleReflectionContentChange = (content, data) => {
+    const reflectionKey = `${data.journalId}_${data.journalEntryId}_${data.entryId || 'new'}`;
+    setReflectionsData(prev => ({
+      ...prev,
+      [reflectionKey]: {
+        ...data,
+        content
+      }
+    }));
+  };
+
+  const findNextLesson = (currentId) => {
+    const numericId = parseInt(currentId);
+
+    if (numericId === 63) {
+      return 65;
+    }
+
+    const lastLessonsByLevel = {
+      0: 58, 
+      1: 68,
+      2: 126 
+    };
+
+    if (Object.values(lastLessonsByLevel).includes(numericId)) {
+      if (activeLevel < 2) {
+        const nextLevel = activeLevel + 1;
+        if (nextLevel === 2) {
+          const firstSection = lessonsByLevel[2][0];
+          return firstSection.children[0].redirectId;
+        } else {
+          return lessonsByLevel[nextLevel][0].redirectId;
+        }
+      }
+      return null; 
+    }
+
+    if (activeLevel === 2) {
+      const allLessons = lessonsByLevel[2].flatMap(section =>
+        section.children || []
+      ).filter(lesson => lesson);
+
+      const currentIndex = allLessons.findIndex(lesson => lesson.redirectId === numericId);
+      if (currentIndex !== -1 && currentIndex < allLessons.length - 1) {
+        return allLessons[currentIndex + 1].redirectId;
+      }
+      return null;
+    }
+
+    const currentLevelLessons = lessonsByLevel[activeLevel];
+    const currentIndex = currentLevelLessons.findIndex(lesson => lesson.redirectId === numericId);
+    if (currentIndex !== -1 && currentIndex < currentLevelLessons.length - 1) {
+      return currentLevelLessons[currentIndex + 1].redirectId;
+    }
+
+    return null;
+  };
+
+  const handleSaveAndContinue = async () => {
+    if (saving) return;
+    setSaving(true);
+
+    try {
+      const myTraining = history.location.pathname.includes('my-training');
+      let didSave = false;
+      let hasValidReflection = false;
+      let emptyReflections = [];
+
+      Object.entries(reflectionsData).forEach(([key, reflectionData]) => {
+        const { content } = reflectionData;
+        if (!content || content.trim() === '' || content === '<p><br></p>') {
+          emptyReflections.push(key);
+        } else {
+          hasValidReflection = true;
+        }
+      });
+
+      if (emptyReflections.length > 0) {
+        toast.info('Please complete the reflection before continuing.');
+        setSaving(false);
+        return;
+      }
+
+      if (!hasValidReflection) {
+        toast.info('Please write something on reflection before continuing.');
+        setSaving(false);
+        return;
+      }
+
+      const savePromises = Object.values(reflectionsData).map(async (reflectionData) => {
+        const { journalId, journalEntryId, entryId, content } = reflectionData;
+
+        if (!content || content.trim() === '' || content === '<p><br></p>') return; 
+
+        didSave = true; 
+
+        const payload = {
+          content: content,
+          trainingId: myTraining ? journalId : null
+        };
+
+        if (!entryId) {
+          return axiosInstance.post(
+            `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`,
+            payload
+          );
+        } else {
+          return axiosInstance.put(
+            `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`,
+            payload
+          );
+        }
+      });
+
+      await Promise.all(savePromises);
+
+      setReflectionsData({});
+
+      if (didSave) {
+        toast.success('Reflection has been saved successfully!');
+      } else {
+        toast.info('No reflection to save. Please write something before saving.');
+        setSaving(false);
+        return;
+      }
+
+      const currentPath = history.location.pathname;
+      const currentJournalId = parseInt(currentPath.split('/').pop());
+
+      console.log('Current journalId:', currentJournalId);
+      console.log('Current active level:', activeLevel);
+
+      const nextLessonId = findNextLesson(currentJournalId);
+      console.log('Next lesson ID:', nextLessonId);
+
+      if (nextLessonId) {
+        const nextPath = `/my-course-in-entrepreneurship/journal/${nextLessonId}`;
+        console.log('Navigating to:', nextPath);
+
+        await dispatch(fetchLtsCoursefinishedContent());
+
+        history.push(nextPath);
+      }
+
+    } catch (error) {
+      console.error('Save error:', error);
+      if (error.response) {
+        toast.error(error.response.data.errors.map(e => e.message).join('.'));
+      } else if (error.request) {
+        toast.error('No response received from server. Please check your connection.');
+      } else {
+        toast.error('Something went wrong, please try to save the answer again.');
+      }
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const getCurrentLessonTitle = () => {
+    if (!journalId) return "Select a Lesson";
+
+    const numericId = parseInt(journalId);
+
+    if (activeLevel === 2) {
+      for (const section of lessonsByLevel[2]) {
+        const found = section.children?.find(child => child.redirectId === numericId);
+        if (found) return found.title;
+      }
+    } else {
+      const found = lessonsByLevel[activeLevel]?.find(
+        lesson => lesson.redirectId === numericId
+      );
+      if (found) return found.title;
+    }
+
+    for (let level = 0; level <= 2; level++) {
+      if (level === 2) {
+        for (const section of lessonsByLevel[2]) {
+          const found = section.children?.find(child => child.redirectId === numericId);
+          if (found) return found.title;
+        }
+      } else {
+        const found = lessonsByLevel[level]?.find(
+          lesson => lesson.redirectId === numericId
+        );
+        if (found) return found.title;
+      }
+    }
+
+    if (selectedLesson?.label) {
+      return selectedLesson.label;
+    }
+
+    return "Select a Lesson";
+  };
+
+  const handleContinue = () => {
+    history.push('/my-course-in-entrepreneurship/journal/51');
+  };
+
   return (
     <>
       <div id='main-body'>
@@ -780,91 +1005,60 @@ function LtsJournal(props) {
                   />
                 </div>
 
-              <div >
-                <div className='gradient-background-journal' ref={contentContainer}>
-                  <div >
-                    <div className='levels-container-journal'>
-                      {levels.map((level, index) => (
-                        <div
-                          key={index}
-                          className={`course-level-journal ${index === activeLevel ? 'active-level-journal' : ''}`}
-                          onClick={() => handleLevelClick(index)}
-                        >
-                          {level.title}
-                        </div>
-                      ))}
-                    </div>
+                <div>
+                  <div className='gradient-background-journal' ref={contentContainer}>
+                    <div>
+                      <div className='levels-container-journal'>
+                        {levels.map((level, index) => (
+                          <div
+                            key={index}
+                            className={`course-level-journal ${index === activeLevel ? 'active-level-journal' : ''}`}
+                            onClick={() => handleLevelClick(index)}
+                          >
+                            {level.title}
+                          </div>
+                        ))}
+                      </div>
 
                       <div className='course-section'>
                         <div className='course-button-group'>
-                          <div className='search-input-wrapper'>
-                            <div className='justify-content-between'>
-                              <div>
-                                <ModalInput
-                                  className='course-btn search-journal'
-                                  onChange={handleJournalSearch}
-                                  id={'searchBar'}
-                                  type={'search'}
-                                  labelTitle={props.intl.formatMessage({
-                                    id: 'my_journal.search_lessons',
-                                    defaultMessage: 'Search lessons'
-                                  })}
-                                  imgSrc={searchJ}
-                                  imageStyle={{ filter: 'grayscale(1)' }}
-                                />
-                              </div>
-                            </div>
-                          </div>
-
                           <div className='select-lessons'>
                             <SelectLessons
                               options={options}
                               selectedCourse={selectedLesson}
                               setSelectedCourse={(selectedOption) => {
-                                if (!selectedOption || !selectedOption.value) {
-                                  console.error(
-                                    'Invalid selected option:',
-                                    selectedOption
-                                  )
-                                  return
-                                }
+                                if (!selectedOption || !selectedOption.value) return;
 
-                                setSelectedLesson(selectedOption)
+                                setSelectedLesson(selectedOption);
 
                                 if (activeLevel === 2) {
-                                  const [parentId, childId] =
-                                    selectedOption.value.split('_')
-                                  if (childId === 'parent') return 
+                                  const [parentId, childId] = selectedOption.value.split('_');
+                                  if (childId === 'parent') return;
 
-                                  const selectedSection =
-                                    lessonsByLevel[2].find(
-                                      (section) => section.id === parentId
-                                    )
-                                  const selectedLesson =
-                                    selectedSection?.children?.find(
-                                      (child) => child.id === childId
-                                    )
+                                  const selectedSection = lessonsByLevel[2].find(
+                                    section => section.id === parentId
+                                  );
+                                  const selectedLesson = selectedSection?.children?.find(
+                                    child => child.id === childId
+                                  );
 
                                   if (selectedLesson?.redirectId) {
-                                    history.push(
-                                      `/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`
-                                    )
+                                    history.push(`/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`);
                                   }
                                 } else {
-                                  const selectedLesson = lessonsByLevel[
-                                    activeLevel
-                                  ]?.find(
-                                    (lesson) =>
-                                      lesson.id === selectedOption.value
-                                  )
+                                  const selectedLesson = lessonsByLevel[activeLevel]?.find(
+                                    lesson => lesson.id === selectedOption.value
+                                  );
 
                                   if (selectedLesson?.redirectId) {
-                                    history.push(
-                                      `/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`
-                                    )
+                                    history.push(`/my-course-in-entrepreneurship/journal/${selectedLesson.redirectId}`);
                                   }
                                 }
                               }}
+                              setShowLockModal={setShowLockModal}
+                              setLockModalMessage={setLockModalMessage}
+                              activeLevel={activeLevel}
+                              placeholder={getCurrentLessonTitle() || levels[activeLevel]?.description}
                             />
                           </div>
 
@@ -881,14 +1075,27 @@ function LtsJournal(props) {
                             }}
                           >
                             <button
-                             style={{padding:'.5rem'}}
+                              style={{ padding: '.5rem' }}
                               className='review-progress-btn'
-                              onClick={toggleModal}
+                              onClick={isRootPath ? handleContinue : handleSaveAndContinue}
+                              disabled={saving}
                             >
-                              {props.intl.formatMessage({
-                                id: 'my_journal.review_course_progress',
-                                defaultMessage: 'Review Course Progress'
-                              })}
+                              {saving ? (
+                                <FontAwesomeIcon icon={faSpinner} spin />
+                              ) : (
+                                <span style={{ display: 'flex', alignItems: 'center',justifyContent:'center', gap: '8px' }}>
+                                  {isRootPath
+                                    ? props.intl.formatMessage({
+                                      id: 'my_journal.continue',
+                                      defaultMessage: 'Continue'
+                                    })
+                                    : props.intl.formatMessage({
+                                      id: 'my_journal.save_and_continue',
+                                      defaultMessage: 'Save and Continue'
+                                    })}
+                                  <FontAwesomeIcon icon={faArrowRight} />
+                                </span>
+                              )}
                             </button>
                           </div>
                         </div>
@@ -902,39 +1109,88 @@ function LtsJournal(props) {
                         path={props.match.url}
                         render={() => (
                           <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
-                            <div id="video-container-journal" className="video-container-bg" style={{flex:'1 1 50%',height:'350px'}}>
+                            <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%' }}>
                               <div className="d-flex placeholder-content-img align-items-center">
                                 <img
                                   src={circleIcon}
                                   alt="circle-icon"
-                                  style={{ width: '40px', height: '40px', marginRight: '10px' }}
+                                  style={{ width: '36px', height: '36px', marginRight: '10px' }}
                                 />
                                 <h6>{levels[activeLevel]?.description}</h6>
                               </div>
-                              <div className="placeholder-content-video text-center m-4">
-                                <p className="mb-0">Select a lesson to view video content</p>
+                              <div style={{ position: 'relative', cursor: 'pointer' }}>
+                                <img
+                                  src="https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Thumbnail.jpg"
+                                  alt="video-thumbnail"
+                                  style={{ width: '100%', borderRadius: '20px', marginTop: '1rem' }}
+                                  onClick={() => setShowVideoModal(true)}
+                                />
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    borderRadius: '50%',
+                                    padding: '1rem'
+                                  }}
+                                  onClick={() => setShowVideoModal(true)}
+                                >
+                                  <FontAwesomeIcon icon={faPlay} style={{ color: '#fff', fontSize: 32 }} />
+                                </div>
                               </div>
+                              <Modal
+                                isOpen={showVideoModal}
+                                toggle={() => setShowVideoModal(false)}
+                                className="videoPlayerModal"
+                                centered
+                              >
+                                <ModalBody className="p-0 m-0" style={{ position: 'relative' }}>
+                                  <button
+                                    className="media-lightbox__close"
+                                    onClick={() => setShowVideoModal(false)}
+                                    aria-label="Close"
+                                    type="button"
+                                  >
+                                    <FontAwesomeIcon icon={faTimes} />
+                                  </button>
+                                  <ReactPlayer
+                                    url="https://d5tx03iw7t69i.cloudfront.net/Month_1/M1-Vid-1-Welcome-to-Level-1-V3.mp4"
+                                    controls
+                                    playing
+                                    width="100%"
+                                    height="100%"
+                                    config={{
+                                      file: {
+                                        attributes: {
+                                          controlsList: 'nodownload'
+                                        }
+                                      }
+                                    }}
+                                  />
+                                </ModalBody>
+                              </Modal>
                             </div>
-
-                            <div id="content-container" className="content-container" 
-                              style={{ 
-                                flex: '1 1 50%', 
-                                width: '100%', 
+                            <div id="content-container" className="content-container"
+                              style={{
+                                flex: '1 1 50%',
+                                width: '100%',
                                 boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)',
                                 borderRadius: '20px',
                                 padding: '25px 25px'
                               }}>
-                              <div className="d-flex justify-content-center align-items-center reflection-header p-4">
-                               
-                             
-                              <div className="placeholder-content text-center p-4">
-                              <img
-                                  src={UserIcon}
-                                  alt="page-icon"
+                              <div className="d-flex align-items-center reflection-header">
 
+                                <img
+                                  src={WhoAmI}
+                                  alt="page-icon"
+                                  style={{ width: '36px', height: '36px', marginRight: '10px' }}
                                 />
-                                 </div>
+                                <h6>Reflection</h6>
                               </div>
+                              <p className='pt-3'>Entrepreneurship is a mindset,and in the first level of this program,you will engage in developing this mindset as your preparation for starting your journey on the pathway to entrepreneurship.You need proof of yourself as an entrepreneur and through this program you will create content that can publicly speak to your values, your purpose,your mindset, and your skillset.The first step in creating this proof is developing content that solidifies your statement of "I Am". Who are you and how do you want the world to see you? It's time for you to communicate you professional identity.</p>
+
+
                             </div>
                           </div>
                         )}
@@ -954,6 +1210,7 @@ function LtsJournal(props) {
                               contentContainer={contentContainer}
                               backRoute={props.match.url}
                               saved={journalChanged}
+                              onReflectionContentChange={handleReflectionContentChange}
                             />
                           )
                         }}
@@ -998,8 +1255,7 @@ function LtsJournal(props) {
                                   onClick={() =>
                                     journalItem.content &&
                                     history.push(
-                                      `${props.match.url}/${journalItem.id}`
-                                    )
+                                      `${props.match.url}/${journalItem.id}`)
                                   }
                                 >
                                   <span>{journalItem.title}</span>
@@ -1235,7 +1491,7 @@ function LtsJournal(props) {
         <Modal
           isOpen={showLockModal}
           toggle={() => setShowLockModal(false)}
-          className='certificate-modal' 
+          className='certificate-modal'
         >
           <span
             className='cursor-pointer'
@@ -1263,3 +1519,4 @@ function LtsJournal(props) {
 }
 
 export default injectIntl(LtsJournal)
+
