@@ -2,7 +2,7 @@ import plusIcon from '../../assets/images/academy-icons/svg/Plus-Icon.svg'
 
 function PortfolioWrapper({ img, title, children, setOpenNew }) {
   return (
-    <div className='p-4 register-section w-100 h-fit-content relative'>
+    <div className='p-4 register-section w-100 d-fit-content relative'>
       <div className='d-flex gap-3 align-items-center'>
         <img src={img} alt='who-am-i' />
         <h4 className='fs-14 fw-medium my-details-header text-black'>

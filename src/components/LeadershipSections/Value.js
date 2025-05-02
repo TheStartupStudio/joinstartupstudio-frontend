@@ -119,8 +119,7 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   height: '100%',
-                  maxWidth: '450px',
-                  aspectRatio: '1 / 1',
+                  aspectRatio: '16 / 9',
                 }}
               >
                 <img

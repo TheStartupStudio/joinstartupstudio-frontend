@@ -83,8 +83,7 @@ function YourInstructor({ profilePic, instructorName, userProffesion, videoUrl }
               justifyContent: 'center',
               alignItems: 'center',
               height: '100%',
-              maxWidth: '450px',
-              aspectRatio: '1 / 1',
+              aspectRatio: '16 / 9',
             }}
           >
 

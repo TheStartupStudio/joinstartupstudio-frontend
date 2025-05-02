@@ -103,8 +103,8 @@ const LeadershipJournal = memo(() => {
           icon: finishedContent.includes(sectionTitle)
             ? tickSign
             : nextUnfinishedIndex === 0
-            ? circleSign
-            : lockSign,
+              ? circleSign
+              : lockSign,
           textColor:
             finishedContent.includes(sectionTitle) || nextUnfinishedIndex === 0
               ? 'text-black'
@@ -227,11 +227,10 @@ const LeadershipJournal = memo(() => {
                 {allTabs.map((tab, index) => (
                   <span
                     key={index}
-                    className={`fs-14 fw-medium text-center p-2 cursor-pointer col-4 w-100-mob ${
-                      allTabs[activeTabData.activeTab].title === tab.title
+                    className={`fs-14 fw-medium text-center p-2 cursor-pointer col-4 w-100-mob ${allTabs[activeTabData.activeTab].title === tab.title
                         ? 'active-leadership'
                         : ''
-                    }`}
+                      }`}
                     onClick={() => {
                       if (!canAccessSection(index)) {
                         return
@@ -245,15 +244,6 @@ const LeadershipJournal = memo(() => {
               </div>
               <div className='mt-4 d-flex justify-content-between flex-col-mob gap-1rem-mob'>
                 <div className='search-journals-width w-100-mob'>
-                  <ModalInput
-                    id={'searchBar'}
-                    type={'search'}
-                    labelTitle={'Search journals'}
-                    imgSrc={searchJ}
-                    imageStyle={{ filter: 'grayscale(1)' }}
-                  />
-                </div>
-                <div className='d-flex gap-3 flex-col-mob align-items-end-mob'>
                   <SelectCourses
                     selectedCourse={activeTabData}
                     setSelectedCourse={setActiveTabData}
@@ -267,6 +257,8 @@ const LeadershipJournal = memo(() => {
                       return !finishedContent.includes(option.label) && !option.isNext
                     }}
                   />
+                </div>
+                <div className='d-flex gap-3 flex-col-mob align-items-end-mob'>
                   {isReflection && (
                     <AcademyBtn
                       title={'Save and Continue'}
@@ -276,32 +268,32 @@ const LeadershipJournal = memo(() => {
                   )}
                 </div>
                 {showLockModal && (
-                        <Modal
-                          isOpen={showLockModal}
-                          toggle={() => setShowLockModal(false)}
-                          className='certificate-modal' 
-                        >
-                          <span
-                            className='cursor-pointer'
-                            onClick={() => setShowLockModal(false)}
-                            style={{ zIndex: '1' }}
-                          >
-                            <img className='left-arrow-modal' src={leftArrow} alt='left' />
-                          </span>
-                          <ModalBody>
-                            <img src={lockSign} alt='lock' className='mb-3' />
-                            <div className='d-flex justify-content-between align-items-center'>
-                              <h3 className='fs-14' style={{ marginBottom: '0' }}>
-                                Lesson Locked
-                              </h3>
-                            </div>
-                
-                            <div className='mt-5'>
-                              <p className='text-secondary text-center'>This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.</p>
-                            </div>
-                          </ModalBody>
-                        </Modal>
-                      )}
+                  <Modal
+                    isOpen={showLockModal}
+                    toggle={() => setShowLockModal(false)}
+                    className='certificate-modal'
+                  >
+                    <span
+                      className='cursor-pointer'
+                      onClick={() => setShowLockModal(false)}
+                      style={{ zIndex: '1' }}
+                    >
+                      <img className='left-arrow-modal' src={leftArrow} alt='left' />
+                    </span>
+                    <ModalBody>
+                      <img src={lockSign} alt='lock' className='mb-3' />
+                      <div className='d-flex justify-content-between align-items-center'>
+                        <h3 className='fs-14' style={{ marginBottom: '0' }}>
+                          Lesson Locked
+                        </h3>
+                      </div>
+
+                      <div className='mt-5'>
+                        <p className='text-secondary text-center'>This lesson is currently locked. You must complete the lesson before it to gain access to this lesson.</p>
+                      </div>
+                    </ModalBody>
+                  </Modal>
+                )}
               </div>
               <div>
                 <div className='d-flex mt-4 gap-5'>{renderedSection}</div>

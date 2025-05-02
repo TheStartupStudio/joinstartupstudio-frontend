@@ -53,7 +53,7 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse }) {
           menuPortal: (base) => ({ ...base, zIndex: 9999 }),
           control: (base) => ({
             ...base,
-            width: '275px',
+            width: '100%',
             minHeight: '40px',
             overflow: 'hidden',
             borderRadius: '6px',
