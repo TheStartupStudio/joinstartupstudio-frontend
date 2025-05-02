@@ -17,6 +17,9 @@ import { setLoginLoading } from '../../../redux/user/Actions'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { Link, useLocation } from 'react-router-dom/cjs/react-router-dom.min'
 import StartupStudioLogo from '../../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+import facebookLogo from '../../../assets/images/academy-icons/svg/icons8-facebook.svg'
+import googleLogo from '../../../assets/images/academy-icons/svg/icons8-google.svg'
+import microsoftLogo from '../../../assets/images/academy-icons/svg/icons8-microsoft.svg'
 
 import Footer from '../../../components/Footer'
 import Faq from '../../../components/FAQ/Faq'
@@ -132,7 +135,7 @@ const ChooseLogin = () => {
 
   return (
     <div className='container-fluid md-px-5 ps-md-5 choose-login_container-academy gradient-background'>
-      <a href='http://mystartupcourse.com'>
+      <a href='https://academy.learntostart.com/'>
         <img src={StartupStudioLogo} alt='course-logo' className='w-200-mob' />
       </a>
       <Row className='m-0 p-0 align-items-center center-content justify-evenly'>
@@ -242,6 +245,28 @@ const ChooseLogin = () => {
                   <IntlMessages id='login.register_link' />
                 </Link>
               </p>
+              <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
+                <span className='mb-2 public-page-text'>OR USE</span>
+                <div className='d-flex gap-3'>
+                  <button>
+                    <img className='auth-logos' src={googleLogo} alt='google' />
+                  </button>
+                  <button>
+                    <img
+                      className='auth-logos'
+                      src={facebookLogo}
+                      alt='facebook'
+                    />
+                  </button>
+                  <button>
+                    <img
+                      className='auth-logos'
+                      src={microsoftLogo}
+                      alt='microsoft'
+                    />
+                  </button>
+                </div>
+              </div>
               <p className='text-center public-page-text font-12 m-0'>
                 <IntlMessages id='login.security' />
               </p>

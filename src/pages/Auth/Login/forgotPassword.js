@@ -107,7 +107,7 @@ const ForgotPassword = () => {
               <li>
                 <a
                   className={`fs-13 fw-medium `}
-                  href='https://mystartupcourse.com/explore-the-platform-1.html'
+                  href='https://academy.learntostart.com/explore-the-platform-1.html'
                   style={{ color: '#000000' }}
                 >
                   EXPLORE THE PLATFORM
@@ -116,7 +116,7 @@ const ForgotPassword = () => {
               <li>
                 <a
                   className='fs-13 fw-medium'
-                  href='https://mystartupcourse.com/explore-the-course.html'
+                  href='https://academy.learntostart.com/explore-the-course.html'
                   style={{ color: '#000000' }}
                 >
                   EXPLORE THE COURSE
@@ -134,7 +134,7 @@ const ForgotPassword = () => {
               <li>
                 <a
                   className='fs-13 fw-medium'
-                  href='https://mystartupcourse.com/contact.html'
+                  href='https://academy.learntostart.com/contact.html'
                   style={{ color: '#000000' }}
                 >
                   CONTACT

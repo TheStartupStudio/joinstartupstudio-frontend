@@ -5023,6 +5023,15 @@ wave > wave:first-child {
   margin-left: 3rem;
 }
 
+.sub-table td {
+  background-color: #dee1e6;
+}
+
+.auth-logos {
+  width: 32px;
+  height: 32px;
+}
+
 @media (max-width: 1024px) {
   .my-notes-content {
     padding: 10px;

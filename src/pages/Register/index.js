@@ -13,6 +13,9 @@ import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import StartupStudioLogo from '../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
+import facebookLogo from '../../assets/images/academy-icons/svg/icons8-facebook.svg'
+import googleLogo from '../../assets/images/academy-icons/svg/icons8-google.svg'
+import microsoftLogo from '../../assets/images/academy-icons/svg/icons8-microsoft.svg'
 
 function Register() {
   const [protectModal, setProtectModal] = useState(false)
@@ -106,7 +109,7 @@ function Register() {
 
   return (
     <>
-      <a href='http://mystartupcourse.com' className='logo-register'>
+      <a href='https://academy.learntostart.com/' className='logo-register'>
         <img src={StartupStudioLogo} alt='course-logo' className='w-200-mob' />
       </a>
 
@@ -385,6 +388,28 @@ function Register() {
                         />
                       </span>
                     )}
+                  </button>
+                </div>
+              </div>
+              <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
+                <span className='mb-2 public-page-text'>OR USE</span>
+                <div className='d-flex gap-3'>
+                  <button className='border-0'>
+                    <img className='auth-logos' src={googleLogo} alt='google' />
+                  </button>
+                  <button className='border-0'>
+                    <img
+                      className='auth-logos'
+                      src={facebookLogo}
+                      alt='facebook'
+                    />
+                  </button>
+                  <button className='border-0'>
+                    <img
+                      className='auth-logos'
+                      src={microsoftLogo}
+                      alt='microsoft'
+                    />
                   </button>
                 </div>
               </div>

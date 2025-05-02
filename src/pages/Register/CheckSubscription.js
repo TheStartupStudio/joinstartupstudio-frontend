@@ -79,7 +79,7 @@ function CheckSubscription() {
           </p>
 
           <h3 className='fs-21 fw-medium mb-1 mt-3 text-black'>
-            $15.00 / Month – Cancel anytime (48 hours notice required)
+            $15.00 / Month – Cancel anytime
           </h3>
 
           <div className='align-self-start mt-5 mb-5 payment-section mx-auto'>
@@ -112,8 +112,7 @@ function CheckSubscription() {
 
           <p className='text-black fs-13 mt-4 text-center'>
             Secure payment powered by Stripe. You can cancel your subscription
-            at any time with at least 48 hours' notice before the next billing
-            cycle.
+            at any time.
           </p>
 
           <div>
@@ -121,7 +120,7 @@ function CheckSubscription() {
               The Startup Studio
             </p>
             <p className='fs-13 fw-medium text-black'>
-              https://mystartupcourse.com
+              https://academy.learntostart.com/
             </p>
           </div>
         </div>
