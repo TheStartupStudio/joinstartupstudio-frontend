@@ -83,72 +83,18 @@ function LtsJournalReflection(props) {
     'align',
   ];
 
-const handleSubmit = async (from, value) => {
-    if (saving) return;
-
-    setSaving(true);
-    setContentDidUpdate(props.entry?.content !== value);
-
-    if (foulWords) {
-      await FoulWords.register(loggedUser.id, foulWords, JOURNALS);
-      setFoulWords(null); 
-    }
-
-    const myTraining = history.location.pathname.includes('my-training');
-
-    try {
-      if (!entryId) {
-        let { data } = await axiosInstance.post(
-          `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries`,
-          from === 'debounce'  
-            ? { content: value, trainingId: myTraining ? journalId : null }
-            : { content, trainingId: myTraining ? journalId : null }
-        );
-
-        props.saved && props.saved(data);
-        setNotSaved(false);
-        toast.success('Your answer has been saved successfully!');
-        // Don't hide editor when creating new entry
-      } else {
-        let { data } = await axiosInstance.put(
-          `/ltsJournals/${journalId}/entries/${journalEntryId}/userEntries/${entryId}`,
-          from === 'debounce'
-            ? { content: value, trainingId: myTraining ? journalId : null }
-            : { content, trainingId: myTraining ? journalId : null }
-        );
-        toast.success('Your answer has been changed successfully!');
-
-        props.saved &&
-          props.saved({
-            ...props,
-            data,
-            updatedAt: moment().locale(currentLanguage).toString(),
-          });
-
-        setNotSaved(false);
-        setEditing(false); // Only hide toolbar when editing existing entry
-      }
-      setContentDidUpdate(false);
-    } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.errors.map((e) => e.message).join('.'));
-      } else if (error.request) {
-        toast.error(
-          'Something went wrong, please try to save the answer again.'
-        );
-      } else {
-        toast.error(`Error: ${error.message}`);
-      }
-    } finally {
-      setSaving(false);
-      dispatch(fetchLtsCoursefinishedContent());
-    }
-};
-
   const handleContentChange = (value) => {
     setContent(value);
-    setNotSaved(true);
-    setContentDidUpdate(false);
+
+    // Pass all necessary data to parent
+    props.onContentChange?.(value, {
+      content: value,
+      journalId: props.journal?.id,
+      journalEntryId: props.journalEntry?.id,
+      entryId: props.entry?.id,
+      foulWords: foulWords
+    });
+
     detectFoulWords(removeHtmlFromString(value), (data) => {
       setFoulWords(data);
     });
@@ -156,8 +102,8 @@ const handleSubmit = async (from, value) => {
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault(); 
-      handleSubmit('enter', content); 
+      event.preventDefault();
+      handleSubmit('enter', content);
     }
   };
 
@@ -192,9 +138,8 @@ const handleSubmit = async (from, value) => {
       />
       <div
         style={{ marginBottom: 0, position: 'relative' }}
-        className={`journal-entries__entry-reflection ${
-          !entryId ? 'journal-entries__entry-reflection--new' : ''
-        } ${editing ? 'journal-entries__entry-reflection--editing' : ''}`}
+        className={`journal-entries__entry-reflection ${!entryId ? 'journal-entries__entry-reflection--new' : ''
+          } ${editing ? 'journal-entries__entry-reflection--editing' : ''}`}
       >
         <div
           className={`journal-entries__entry-reflection-body`}
@@ -223,32 +168,6 @@ const handleSubmit = async (from, value) => {
                 modules={quillModules}
                 formats={quillFormats}
               />
-              {/* Submit Button */}
-              <button
-                className="submit-reflection-btn"
-                style={{
-                  margin: '5px 0 20px 0',
-                  padding: '10px 20px',
-                  backgroundColor: '#51C7DF',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  position:'relative',
-                  left:'70%',
-                  width:'150px'
-
-                }}
-                onClick={() => handleSubmit('button', content)} 
-                disabled={saving}
-              >
-                {saving ? (
-                  <FontAwesomeIcon icon={faSpinner} spin />
-                ) : (
-                  'Save'
-                )}
-              </button>
             </>
           ) : (
             <div

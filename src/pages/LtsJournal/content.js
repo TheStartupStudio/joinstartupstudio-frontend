@@ -34,8 +34,8 @@ function LtsJournalContent(props) {
   let [loading, setLoading] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null)
   const [isExpanded, setIsExpanded] = useState(false)
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0); 
-  const [showVideo, setShowVideo] = useState(null); 
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [showVideo, setShowVideo] = useState(null);
 
   const handleAccordionClick = (accordion) => {
     if (openAccordion === accordion) {
@@ -59,7 +59,7 @@ function LtsJournalContent(props) {
         `/ltsJournals/${props.match.params.journalId}/student/${0}`
       )
       return data
-    } catch (err) {}
+    } catch (err) { }
   }
 
   async function getUserJournalEntries() {
@@ -83,7 +83,7 @@ function LtsJournalContent(props) {
       }
 
       return groupedByJournalEntry
-    } catch (err) {}
+    } catch (err) { }
   }
 
   function loadData() {
@@ -101,7 +101,7 @@ function LtsJournalContent(props) {
             setVideoWatchData(
               JSON.parse(journalData.userEntry[0].videoWatchData)
             )
-          } catch (err) {}
+          } catch (err) { }
         }
         setUserJournalEntries(userJournalEntries)
 
@@ -204,19 +204,19 @@ function LtsJournalContent(props) {
   const handleNextVideo = () => {
     if (currentVideoIndex < videos.length - 1) {
       setCurrentVideoIndex(currentVideoIndex + 1);
-      setShowVideo(null); 
+      setShowVideo(null);
     }
   };
 
   const handlePreviousVideo = () => {
     if (currentVideoIndex > 0) {
       setCurrentVideoIndex(currentVideoIndex - 1);
-      setShowVideo(null); 
+      setShowVideo(null);
     }
   };
 
   const handleShowVideo = (video) => {
-    setShowVideo(video.id); 
+    setShowVideo(video.id);
   };
 
   if (!journal) {
@@ -234,10 +234,10 @@ function LtsJournalContent(props) {
   return (
     <>
       <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
- 
-        
+
+
         <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%' }}>
-               {/* Video Container */}
+          {/* Video Container */}
           {/* Video Container */}
           {/* Title Section */}
           <div className="d-flex align-items-center">
@@ -246,27 +246,24 @@ function LtsJournalContent(props) {
               alt="circle-icon"
               style={{ width: '40px', height: '40px', marginRight: '10px' }}
             />
-            <h4 className="page-card__content-title">{journal.title}</h4> 
-            {console.log('patrik250',journal)}
-</div>
+            <h4 className="page-card__content-title">{journal.title}</h4>
+            {console.log('patrik250', journal)}
+          </div>
           <div className="journal-entries__videos">
             {videos[currentVideoIndex] && (
               <div
-                className={`journal-entries__video${
-                  journal.content === '' ? '--welcome-video' : ''
-                }`}
+                className={`journal-entries__video${journal.content === '' ? '--welcome-video' : ''
+                  }`}
               >
                 <div
-                  className={`journal-entries__video-thumbnail${
-                    journal.content === '' ? '--welcome-video' : ''
-                  }`}
+                  className={`journal-entries__video-thumbnail${journal.content === '' ? '--welcome-video' : ''
+                    }`}
                   onClick={() => handleShowVideo(videos[currentVideoIndex])}
                 >
                   <img src={videos[currentVideoIndex].thumbnail} alt="thumbnail" />
                   <div
-                    className={`journal-entries__video-thumbnail-icon${
-                      journal.content === '' ? '--welcome-video' : ''
-                    }`}
+                    className={`journal-entries__video-thumbnail-icon${journal.content === '' ? '--welcome-video' : ''
+                      }`}
                   >
                     <FontAwesomeIcon icon={faPlay} />
                   </div>
@@ -283,36 +280,36 @@ function LtsJournalContent(props) {
             )}
 
             {videos.length > 1 && (
-  <div className="nav-videos">
-    <button
-      className="btn"
-      onClick={handlePreviousVideo}
-      disabled={currentVideoIndex === 0}
-    >
-      &#8592; Previous
-    </button>
-    <button
-      className="btn"
-      onClick={handleNextVideo}
-      disabled={currentVideoIndex === videos.length - 1}
-    >
-      Next &#8594;
-    </button>
-  </div>
-)}
+              <div className="nav-videos">
+                <button
+                  className="btn"
+                  onClick={handlePreviousVideo}
+                  disabled={currentVideoIndex === 0}
+                >
+                  &#8592; Previous
+                </button>
+                <button
+                  className="btn"
+                  onClick={handleNextVideo}
+                  disabled={currentVideoIndex === videos.length - 1}
+                >
+                  Next &#8594;
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
 
-        <div id="content-container" className="content-container" style={{ flex: '1 1 50%' , width:'100%', boxShadow:'0px 15px 20px 8px rgba(0, 0, 0, 0.09)'}}>
-       <div className='d-flex align-items-center reflection-header'>
-       <img
-            src={WhoAmI}
-            alt="page-icon"
-            style={{ width: '36px',height:'36px',marginRight: '10px' }}
-          />
-          <h6>Reflection</h6>
-       </div>
+        <div id="content-container" className="content-container" style={{ flex: '1 1 50%', width: '100%', boxShadow: '0px 15px 20px 8px rgba(0, 0, 0, 0.09)' }}>
+          <div className='d-flex align-items-center reflection-header'>
+            <img
+              src={WhoAmI}
+              alt="page-icon"
+              style={{ width: '36px', height: '36px', marginRight: '10px' }}
+            />
+            <h6>Reflection</h6>
+          </div>
           {journal.entries && journal.entries.length > 0 ? (
             <div className="col-12">
               <div className="journal-entries">
@@ -335,6 +332,7 @@ function LtsJournalContent(props) {
                   }
                   showAddReflection={showAddReflection}
                   isAddReflection={isAddReflection}
+                  onReflectionContentChange={props.onReflectionContentChange}
                 />
               </div>
             </div>
@@ -505,66 +503,66 @@ function LtsJournalContent(props) {
 
         {journal.ltsJournalAccordions && journal.ltsJournalAccordions.length
           ? journal.ltsJournalAccordions
-              ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-              .map((accordion) => {
-                return (
-                  !!accordion?.interviewedMentor && (
-                    <div className='col-12'>
-                      <AccordionItemWrapper
-                        isOpened={openAccordion === `accordion-${accordion.id}`}
-                        handleAccordionClick={() =>
-                          handleAccordionClick(`accordion-${accordion.id}`)
-                        }
-                        isExanded={false}
-                        title={accordion.title}
-                        accordionStyle={{ backgroundColor: '#fff' }}
-                      >
-                        {openAccordion === `accordion-${accordion.id}` && (
-                          <InterviewedMentors
-                            accordion={accordion}
-                            journal={journal}
-                          />
-                        )}
-                      </AccordionItemWrapper>
-                    </div>
-                  )
+            ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .map((accordion) => {
+              return (
+                !!accordion?.interviewedMentor && (
+                  <div className='col-12'>
+                    <AccordionItemWrapper
+                      isOpened={openAccordion === `accordion-${accordion.id}`}
+                      handleAccordionClick={() =>
+                        handleAccordionClick(`accordion-${accordion.id}`)
+                      }
+                      isExanded={false}
+                      title={accordion.title}
+                      accordionStyle={{ backgroundColor: '#fff' }}
+                    >
+                      {openAccordion === `accordion-${accordion.id}` && (
+                        <InterviewedMentors
+                          accordion={accordion}
+                          journal={journal}
+                        />
+                      )}
+                    </AccordionItemWrapper>
+                  </div>
                 )
-              })
+              )
+            })
           : null}
         {journal.accordions && journal.accordions.length
           ? journal.accordions.map((accordion) => (
-              <>
-                <AccordionWithJournalEntries
-                  key={`entries-${accordion.id}`}
-                  accordion={accordion}
-                  journal={journal}
-                  openAccordion={openAccordion}
-                  handleAccordionClick={handleAccordionClick}
-                  userJournalEntries={userJournalEntries}
-                  deleteReflection={deleteReflection}
-                  updateReflection={updateReflection}
-                  addReflection={addReflection}
-                  handleShowAddReflection={handleShowAddReflection}
-                  showAddReflection={showAddReflection}
-                />
+            <>
+              <AccordionWithJournalEntries
+                key={`entries-${accordion.id}`}
+                accordion={accordion}
+                journal={journal}
+                openAccordion={openAccordion}
+                handleAccordionClick={handleAccordionClick}
+                userJournalEntries={userJournalEntries}
+                deleteReflection={deleteReflection}
+                updateReflection={updateReflection}
+                addReflection={addReflection}
+                handleShowAddReflection={handleShowAddReflection}
+                showAddReflection={showAddReflection}
+              />
 
-                <AccordionWithJournalTables
-                  key={`tables-${accordion.id}`}
-                  accordion={accordion}
-                  journal={journal}
-                  openAccordion={openAccordion}
-                  handleAccordionClick={handleAccordionClick}
-                  loading={loading}
-                  setLoading={setLoading}
-                  props={props}
-                />
-              </>
-            ))
+              <AccordionWithJournalTables
+                key={`tables-${accordion.id}`}
+                accordion={accordion}
+                journal={journal}
+                openAccordion={openAccordion}
+                handleAccordionClick={handleAccordionClick}
+                loading={loading}
+                setLoading={setLoading}
+                props={props}
+              />
+            </>
+          ))
           : null}
 
         {journal.brandsJournal &&
-        journal.brandsJournal.length &&
-        journal.brandsJournal.find((item) => item.hasAccordion) ? (
+          journal.brandsJournal.length &&
+          journal.brandsJournal.find((item) => item.hasAccordion) ? (
           <div className='col-12'>
             <AccordionItemWrapper
               isOpened={openAccordion === `accordion-brand`}
@@ -680,8 +678,8 @@ function LtsJournalContent(props) {
           <CertificationSkills journal={journal} isEditable={true} />
         ) : null}
         {journal.brandsJournal &&
-        journal.brandsJournal.length &&
-        !journal.brandsJournal.find((item) => item.hasAccordion) ? (
+          journal.brandsJournal.length &&
+          !journal.brandsJournal.find((item) => item.hasAccordion) ? (
           <JournalBrands
             hasAccordion={0}
             loadData={loadData}
