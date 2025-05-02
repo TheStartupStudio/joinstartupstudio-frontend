@@ -855,13 +855,13 @@ function LtsJournal(props) {
       });
 
       if (emptyReflections.length > 0) {
-        toast.info('Please complete all reflections before continuing.');
+        toast.info('Please complete the reflection before continuing.');
         setSaving(false);
         return;
       }
 
       if (!hasValidReflection) {
-        toast.info('Please write a reflection before continuing.');
+        toast.info('Please write something on reflection before continuing.');
         setSaving(false);
         return;
       }
