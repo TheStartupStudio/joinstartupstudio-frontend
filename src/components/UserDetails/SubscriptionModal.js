@@ -34,8 +34,6 @@ function SubscriptionModal({
     if (user?.customerId) fetchInvoices()
   }, [user?.customerId])
 
-  console.log('ridon38', invoices)
-
   return (
     <Modal
       isOpen={subsbsciptionModal}
@@ -120,12 +118,11 @@ function SubscriptionModal({
           </div>
         </form> */}
         <div className='table-responsive'>
-          <table className='table table-bordered table-striped mt-3'>
+          <table className='table table-bordered table-striped mt-3 sub-table'>
             <thead className='table-dark'>
               <tr>
                 <th>Date</th>
                 <th>Amount</th>
-                <th>Currency</th>
                 <th>Status</th>
                 <th>Invoice</th>
               </tr>
@@ -140,8 +137,7 @@ function SubscriptionModal({
                       day: 'numeric'
                     })}
                   </td>
-                  <td>{data.amount}</td>
-                  <td>{data.currency}</td>
+                  <td>$ {data.amount}</td>
                   <td className='text-capitalize'>{data.status}</td>
                   <td>
                     <a href={data.hosted_invoice_url} target='_blank'>

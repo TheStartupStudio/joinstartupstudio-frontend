@@ -15,7 +15,8 @@ import {
   SET_AUTH_MODAL,
   SET_EMAIL,
   SET_BIO,
-  SET_STRIPE
+  SET_STRIPE,
+  SET_CUSTOMER_ID
 } from './Types'
 
 const user = JSON.parse(localStorage.getItem('user'))
@@ -100,6 +101,18 @@ const userReducer = (state = initialState, action) => {
           user: {
             ...state.user.user,
             stripe_subscription_id: payload
+          }
+        }
+      }
+
+    case SET_CUSTOMER_ID:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          user: {
+            ...state.user.user,
+            customerId: payload
           }
         }
       }

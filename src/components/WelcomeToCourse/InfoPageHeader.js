@@ -13,7 +13,9 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
       className={`py-4 px-5 d-flex justify-content-between align-items-start p-1rem-tab ${className}`}
     >
       <img
-        onClick={() => (window.location.href = 'https://mystartupcourse.com')}
+        onClick={() =>
+          (window.location.href = 'https://academy.learntostart.com/')
+        }
         className='cursor-pointer'
         src={courseLogo}
         alt='course logo'
@@ -24,7 +26,7 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
           <li className={`${platformClass}`}>
             <a
               className={`fs-13 fw-medium `}
-              href='https://mystartupcourse.com/explore-the-platform-1.html'
+              href='https://academy.learntostart.com/explore-the-platform-1.html'
               style={{ color: '#000000' }}
             >
               EXPLORE THE PLATFORM
@@ -33,7 +35,7 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
           <li className={`${courseClass}`}>
             <a
               className='fs-13 fw-medium'
-              href='https://mystartupcourse.com/explore-the-course.html'
+              href='https://academy.learntostart.com/explore-the-course.html'
               style={{ color: '#000000' }}
             >
               EXPLORE THE COURSE
@@ -51,7 +53,7 @@ function InfoPageHeader({ className, linkColor, platformClass, courseClass }) {
           <li>
             <a
               className='fs-13 fw-medium'
-              href='https://mystartupcourse.com/contact.html'
+              href='https://academy.learntostart.com/contact.html'
               style={{ color: '#000000' }}
             >
               CONTACT

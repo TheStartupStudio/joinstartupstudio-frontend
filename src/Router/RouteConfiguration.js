@@ -469,6 +469,8 @@ export const redirects = [
   {
     from: '*',
     to: '/subscribe',
-    condition: (user) => user?.user?.stripe_subscription_id === false
+    condition: (user) =>
+      user?.user?.stripe_subscription_id === false &&
+      user?.user?.is_active === true
   }
 ]

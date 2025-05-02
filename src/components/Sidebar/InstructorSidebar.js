@@ -38,21 +38,17 @@ const InstructorSidebar = (props) => {
 
   const subToggle = () => {
     setModal((prev) => !prev)
-    setCancelSubModal((prev) => !prev)
+    setSubscriptionModal((prev) => !prev)
   }
 
   const toggleCancelModal = () => {
     setCancelSubModal((prev) => !prev)
-    setModal((prev) => !prev)
+    setSubscriptionModal((prev) => !prev)
   }
 
   const toggleCancelRenewal = () => {
     setCancelSubModal((prev) => !prev)
     setCanceledRenewal((prev) => !prev)
-  }
-
-  const toggleCertificate = () => {
-    setCertificate((prev) => !prev)
   }
 
   const truncateEmail = (email) => {
@@ -196,7 +192,13 @@ const InstructorSidebar = (props) => {
               props.props.hideHeaderIcons()
             }}
             to={'/my-course-in-entrepreneurship/journal'}
-            // className={`${location.pathname.includes('dashboard') ? 'active' : ''}`}
+            className={`${
+              location.pathname.includes(
+                'my-course-in-entrepreneurship/journal'
+              )
+                ? 'active'
+                : ''
+            }`}
             srcImage={CoursEnIcon}
             title={
               isTextVisible && !isCollapsed && 'Course in enterpreneurship'
@@ -445,11 +447,11 @@ const InstructorSidebar = (props) => {
       </ul>
       <EditUserModal isOpen={modal} toggle={toggle} subToggle={subToggle} />
 
-      {/* <SubscriptionModal
+      <SubscriptionModal
         subsbsciptionModal={subsbsciptionModal}
         setSubscriptionModal={setSubscriptionModal}
         toggleCancelModal={toggleCancelModal}
-      /> */}
+      />
 
       <CancelSubModal
         cancelSubModal={cancelSubModal}
@@ -460,12 +462,6 @@ const InstructorSidebar = (props) => {
       <CancelRenewalModal
         canceledRenewal={canceledRenewal}
         setCanceledRenewal={setCanceledRenewal}
-      />
-
-      <CertificateModal
-        certificate={certificate}
-        toggleCertificate={toggleCertificate}
-        name={user.name}
       />
     </div>
   )

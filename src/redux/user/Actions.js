@@ -16,7 +16,8 @@ import {
   SET_AUTH_MODAL,
   SET_EMAIL,
   SET_BIO,
-  SET_STRIPE
+  SET_STRIPE,
+  SET_CUSTOMER_ID
 } from './Types'
 import axiosInstance from '../../utils/AxiosInstance'
 
@@ -141,6 +142,12 @@ export const setBio = (payload) => {
 export const setStripe = (payload) => {
   return (dispatch) => {
     dispatch({ type: SET_STRIPE, payload })
+  }
+}
+
+export const setCustomerId = (payload) => {
+  return (dispatch) => {
+    dispatch({ type: SET_CUSTOMER_ID, payload })
   }
 }
 
