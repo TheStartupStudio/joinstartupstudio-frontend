@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 function AcademyBtn({ title, icon, onClick, disabled, buttonClass }) {
   return (
     <div
-      className='d-flex'
+      className='d-flex saveContinue-btn'
       style={{
         display: 'inline-block',
         borderRadius: '8px',
@@ -14,7 +14,7 @@ function AcademyBtn({ title, icon, onClick, disabled, buttonClass }) {
       }}
     >
       <button
-        className={`continue-course-btn fs-14 ${
+        className={`continue-course-btn fs-14 saveContinue-btn ${
           buttonClass ? buttonClass : ''
         }`}
         onClick={onClick}

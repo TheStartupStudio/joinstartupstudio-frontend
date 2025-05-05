@@ -242,7 +242,7 @@ const LeadershipJournal = memo(() => {
                   </span>
                 ))}
               </div>
-              <div className='mt-4 d-flex justify-content-between flex-col-mob gap-1rem-mob'>
+              <div className='mt-4 d-flex justify-content-between flex-col-mob gap-1rem-mob align-items-center leadership-btn-section'>
                 <div className='search-journals-width w-100-mob'>
                   <SelectCourses
                     selectedCourse={activeTabData}
@@ -258,7 +258,7 @@ const LeadershipJournal = memo(() => {
                     }}
                   />
                 </div>
-                <div className='d-flex gap-3 flex-col-mob align-items-end-mob'>
+                <div className='d-flex gap-3 flex-col-mob align-items-end-mob saveContinue-btn'>
                   {isReflection && (
                     <AcademyBtn
                       title={'Save and Continue'}
@@ -295,7 +295,7 @@ const LeadershipJournal = memo(() => {
                   </Modal>
                 )}
               </div>
-              <div>
+              <div className='leadership-btn-section'>
                 <div className='d-flex mt-4 gap-5'>{renderedSection}</div>
               </div>
             </>

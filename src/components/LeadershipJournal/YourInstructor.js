@@ -7,12 +7,12 @@ import linkedinLogo from '../../assets/images/academy-icons/linkedin.png'
 import userIcon from '../../assets/images/academy-icons/profile-icon.png'
 import twitterLogo from '../../assets/images/academy-icons/twitter.png'
 
-function YourInstructor({ profilePic, instructorName, userProffesion, videoUrl }) {
+function YourInstructor({ profilePic, instructorName, userProffesion, videoUrl, thumbnailUrl }) {
   const [showVideo, setShowVideo] = useState(false)
 
   const videoData = {
-    url: "https://learntostart-launch-dev.s3.amazonaws.com/Journal/MentorshipJournal/953ec493314eaa6a37b9a836c2679bce-1745399732978.mp4",
-    thumbnail: profilePic // Using profile pic as thumbnail, you can change this
+    url: videoUrl,
+    thumbnail: thumbnailUrl
   }
 
   return (
@@ -88,7 +88,7 @@ function YourInstructor({ profilePic, instructorName, userProffesion, videoUrl }
           >
 
             <img
-              src={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+              src={thumbnailUrl}
               alt="video thumbnail"
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />

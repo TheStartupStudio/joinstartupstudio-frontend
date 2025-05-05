@@ -29,6 +29,8 @@ function SectionThree({ setIsReflection }) {
           userProffesion={
             'Group Head of Social Impact and EDIB at Nord Anglia Education'
           }
+          videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 12 Section Three How Can I Prove It - V2.mov'}
+          thumbnailUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
         />
       </div>
       <SectionsWrapper
