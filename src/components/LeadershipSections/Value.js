@@ -150,7 +150,7 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
           </>
         )}
 
-        {paragraphs?.map((paragraph, index) => (
+        {/* {paragraphs?.map((paragraph, index) => (
           <p key={index} className='lh-sm'>
             {paragraph}
           </p>
@@ -172,7 +172,11 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
               </div>
             ))}
           </>
-        )}
+        )} */}
+
+        <div 
+          dangerouslySetInnerHTML={{ __html: journalData?.content }}
+        />
       </SectionsWrapper>
 
       <SectionsWrapper img={Light} title={'Reflection'}>
