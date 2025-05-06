@@ -4339,6 +4339,15 @@ wave > wave:first-child {
   -webkit-text-stroke: 0px;
 }
 
+.reset-pass-btn{
+  cursor: pointer;
+}
+
+.reset-pass-btn.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 .reset-btn-edit {
   width: 20px;
   height: 20px;

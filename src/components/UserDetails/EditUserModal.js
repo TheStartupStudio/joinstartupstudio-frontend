@@ -31,6 +31,7 @@ import ModalInput from '../ModalInput/ModalInput'
 function EditUserModal({ isOpen, toggle, subToggle }) {
   const [loading, setLoading] = useState(false)
   const [imageFile, setImageFile] = useState(null)
+  const [resetPasswordDisabled, setResetPasswordDisabled] = useState(false)
   const { user } = useSelector((state) => state.user.user)
   const [changedUser, setChangedUser] = useState({
     name: user?.name || '',
@@ -176,6 +177,55 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
     toggle()
   }
 
+  const handlePasswordChange = async (event) => {
+    event.preventDefault();
+    setResetPasswordDisabled(true); // Disable button at start
+    setLoading(true);
+    
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const userEmail = storedUser?.user?.email;
+
+    try {
+      if (!userEmail) {
+        toast.error(<IntlMessages id='alerts.email_required' />);
+        return;
+      }
+      
+      if (!validateEmail(userEmail)) {
+        toast.error(<IntlMessages id='alerts.email_not_valid' />);
+        return;
+      }
+
+      const res = await axiosInstance.post('/check-email', {
+        email: userEmail
+      });
+
+      if (res.data.exists) {
+        await axiosInstance
+          .post('/auth/forgot-password', {
+            email: userEmail
+          })
+          .then(() => {
+            toast.success(<IntlMessages id='alert.check_email_redirect' />);
+          })
+          .catch((error) => {
+            toast.error(
+              error.response.data.message || (
+                <IntlMessages id='alerts.something_went_wrong' />
+              )
+            );
+          });
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      toast.error(<IntlMessages id='alerts.something_went_wrong' />);
+    } finally {
+      setLoading(false);
+      setResetPasswordDisabled(false); // Re-enable button after completion
+    }
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} toggle={toggle}>
@@ -185,12 +235,16 @@ function EditUserModal({ isOpen, toggle, subToggle }) {
             <h3 className='fs-14' style={{ marginBottom: '0' }}>
               Edit Personal Details
             </h3>
-            <div className='d-flex gap-2'>
-              <img src={resetLogo} alt='reset' className='reset-btn-edit' />
-              <h3 className='fs-15' style={{ marginBottom: '0' }}>
-                Reset Password
-              </h3>
-            </div>
+            <div 
+  className={`d-flex gap-2 reset-pass-btn ${resetPasswordDisabled ? 'disabled' : ''}`} 
+  onClick={!resetPasswordDisabled ? handlePasswordChange : undefined}
+  style={{ cursor: resetPasswordDisabled ? 'not-allowed' : 'pointer' }}
+>
+  <img src={resetLogo} alt='reset' className='reset-btn-edit' />
+  <h3 className='fs-15' style={{ marginBottom: '0' }}>
+    Reset Password
+  </h3>
+</div>
           </div>
 
           <form>
