@@ -14,7 +14,7 @@ import { toast } from 'react-toastify'
 import { NotesButton } from '../Notes'
 import { useHistory } from 'react-router-dom'
 
-const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
+const Value = memo(forwardRef(({ id, setIsReflection, onTitleChange }, ref) => {
   const [currentId, setCurrentId] = useState(id)
   const [pendingChanges, setPendingChanges] = useState({})
   const [showVideo, setShowVideo] = useState(false)
@@ -31,7 +31,15 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
 
   useEffect(() => {
     refreshData()
+    // Clear any stale title when currentId changes
+    onTitleChange?.('')
   }, [currentId])
+
+  useEffect(() => {
+    if (journalData?.title) {
+      onTitleChange?.(journalData.title)
+    }
+  }, [journalData?.title]) // Remove onTitleChange from dependencies
 
   const handleContentChange = (entryId, data) => {
     setPendingChanges((prev) => ({
@@ -72,6 +80,7 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
         now: <Value id={1001071} setIsReflection={setIsReflection} />,
         next: <Value id={1001072} setIsReflection={setIsReflection} />
       },
+
       { 
         now: <Value id={1001073} setIsReflection={setIsReflection} />,
         next: <Value id={1001074} setIsReflection={setIsReflection} />
@@ -131,7 +140,14 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
         if (allEntriesHaveContent) {
           const nextComponent = findNextLesson(parseInt(currentId))
           if (nextComponent) {
-            setCurrentId(nextComponent.props.id)
+            const nextId = nextComponent.props.id
+            setCurrentId(nextId)
+            dispatch(getJournalData(nextId)).then(() => {
+              // Update title after data is fetched
+              if (journalData?.title) {
+                onTitleChange?.(journalData.title)
+              }
+            })
           }
         }
 

@@ -33,6 +33,7 @@ const LeadershipJournal = memo(() => {
     option: null
   })
   const [showLockModal, setShowLockModal] = useState(false)
+  const [currentTitle, setCurrentTitle] = useState('')
 
   const dispatch = useDispatch()
   const { finishedContent } = useSelector((state) => state.journal)
@@ -60,10 +61,15 @@ const LeadershipJournal = memo(() => {
       : allTabs[activeTab]?.mainComponent
   }, [activeTabData, allTabs])
 
+  const handleTitleUpdate = (title) => {
+    setCurrentTitle(title)
+  }
+
   const getComponentWithRef = (Component, id) => {
     if (Component.type === Value) {
       return React.cloneElement(Component, {
-        ref: (el) => (valueRefs.current[id] = el)
+        ref: (el) => (valueRefs.current[id] = el),
+        onTitleChange: handleTitleUpdate
       })
     }
     return Component
@@ -249,10 +255,12 @@ const LeadershipJournal = memo(() => {
                     setSelectedCourse={setActiveTabData}
                     options={allTabs[activeTabData.activeTab].options}
                     placeholder={
-                      allTabs[activeTabData.activeTab]?.title === 'Section One: Who am I?' ? 'Welcome to the Leadership Journal' :
-                      allTabs[activeTabData.activeTab]?.title === 'Section Two: What can I do?' ? 'What can I do?' :
-                      allTabs[activeTabData.activeTab]?.title === 'Section Three: How do I prove it?' ? 'How do I prove it?'
-                      : 'Select Journals to View'
+                      !activeTabData.option ? (
+                        allTabs[activeTabData.activeTab]?.title === 'Section One: Who am I?' ? 'Welcome to the Leadership Journal' :
+                        allTabs[activeTabData.activeTab]?.title === 'Section Two: What can I do?' ? 'What can I do?' :
+                        allTabs[activeTabData.activeTab]?.title === 'Section Three: How do I prove it?' ? 'How do I prove it?' :
+                        'Select Journals to View'
+                      ) : currentTitle || 'Select Journals to View'
                     }
                     isDisabled={(option) => {
                       if (allTabs[activeTabData.activeTab].title === 'Section Three: How do I prove it?') {
