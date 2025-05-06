@@ -39,15 +39,15 @@ const LeadershipJournal = memo(() => {
   const valueRefs = useRef({})
 
   const staticComponents = useMemo(() => ({
-    'SECTION ONE: WHO AM I?': {
+    'Section One: Who am I?': {
       mainComponent: <SectionOne setIsReflection={setIsReflection} />,
       introComponent: <IntroWhoAmI setIsReflection={setIsReflection} />
     },
-    'SECTION TWO: WHAT CAN I DO?': {
+    'Section Two: What can I do?': {
       mainComponent: <SectionTwo setIsReflection={setIsReflection} />,
       introComponent: <SectionTwo setIsReflection={setIsReflection} />
     },
-    'SECTION THREE: HOW DO I PROVE IT?': {
+    'Section Three: How do I prove it?': {
       mainComponent: <SectionThree setIsReflection={setIsReflection} />,
       introComponent: <SectionThree setIsReflection={setIsReflection} />
     }
@@ -164,14 +164,14 @@ const LeadershipJournal = memo(() => {
     if (sectionIndex === 0) return true
 
     const sections = {
-      one: ['SECTION ONE: WHO AM I?', 'Values', 'Expertise', 'Experiences', 'Style'],
-      two: ['SECTION TWO: WHAT CAN I DO?', 'Teamwork', 'Initiative', 'Methodology', 'Self-Assessment'],
-      three: ['SECTION THREE: HOW DO I PROVE IT?', 'Outcomes', 'Feedback', 'Iteration', 'Vision']
+      one: ['Section One: Who am I?', 'Values', 'Expertise', 'Experiences', 'Style'],
+      two: ['Section Two: What can I do?', 'Teamwork', 'Initiative', 'Methodology', 'Self-Assessment'],
+      three: ['Section Three: How do I prove it?', 'Outcomes', 'Feedback', 'Iteration', 'Vision']
     }
 
     const sectionTitle = allTabs[sectionIndex]?.title
 
-    if (sectionTitle === 'SECTION TWO: WHAT CAN I DO?') {
+    if (sectionTitle === 'Section Two: What can I do?') {
       const sectionOneComplete = sections.one.every(title => finishedContent.includes(title))
       if (!sectionOneComplete) {
         setShowLockModal(true)
@@ -179,7 +179,7 @@ const LeadershipJournal = memo(() => {
       }
     }
 
-    if (sectionTitle === 'SECTION THREE: HOW DO I PROVE IT?') {
+    if (sectionTitle === 'Section Three: How do I prove it?') {
       const sectionOneComplete = sections.one.every(title => finishedContent.includes(title))
       const sectionTwoComplete = sections.two.every(title => finishedContent.includes(title))
       if (!sectionOneComplete || !sectionTwoComplete) {
@@ -249,14 +249,14 @@ const LeadershipJournal = memo(() => {
                     setSelectedCourse={setActiveTabData}
                     options={allTabs[activeTabData.activeTab].options}
                     placeholder={
-                      allTabs[activeTabData.activeTab]?.title === 'SECTION ONE: WHO AM I?' ? 'Welcome to the Leadership Journal' :
-                      allTabs[activeTabData.activeTab]?.title === 'SECTION TWO: WHAT CAN I DO?' ? 'What can I do?' :
-                      allTabs[activeTabData.activeTab]?.title === 'SECTION THREE: HOW DO I PROVE IT?' ? 'How do I prove it?'
+                      allTabs[activeTabData.activeTab]?.title === 'Section One: Who am I?' ? 'Welcome to the Leadership Journal' :
+                      allTabs[activeTabData.activeTab]?.title === 'Section Two: What can I do?' ? 'What can I do?' :
+                      allTabs[activeTabData.activeTab]?.title === 'Section Three: How do I prove it?' ? 'How do I prove it?'
                       : 'Select Journals to View'
                     }
                     isDisabled={(option) => {
-                      if (allTabs[activeTabData.activeTab].title === 'SECTION THREE: HOW DO I PROVE IT?') {
-                        if (!finishedContent.includes('SECTION TWO: WHAT CAN I DO?')) {
+                      if (allTabs[activeTabData.activeTab].title === 'Section Three: How do I prove it?') {
+                        if (!finishedContent.includes('Section Two: What can I do?')) {
                           return true
                         }
                       }
