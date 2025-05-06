@@ -45,9 +45,9 @@ export const NotesButton = (props) => {
       .get(
         `/notes/new/${
           props.from === 'video' ? 'videoModal-' + props.data.id :
-      props.from === 'leadershipJournal' ? 'leadershipJournal-' + props.journalId :
-      props.from === 'courseGroup' ? 'courseGroup-' + props.data.id :
-      page
+          props.from === 'leadershipJournal' ? 'leadershipJournal-' + props.journalId :
+          props.from === 'entrepreneurshipJournal' ? 'entrepreneurshipJournal-' + props.data.id :
+          page
         }`
       )
       .then((res) => {
@@ -61,10 +61,9 @@ export const NotesButton = (props) => {
   }, [])
 
   useEffect(() => {
-    if (props.from === 'leadershipJournal' && props.journalId) {
-      getUser()
-    }
-  }, [props.journalId])
+    // Refresh notes when journalId changes
+    getUser();
+  }, [props.journalId]);
 
   function changeState(name, type) {
     if (name == 'create_new_note') {

@@ -23,6 +23,7 @@ import InterviewedMentors from './InterviewedMentors'
 import InstructorFeedback from './InstructorFeedback/InstructorFeedback.js'
 import circleIcon from '../../assets/images/circle-user-icon.png'
 import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
+import { NotesButton } from '../../components/Notes/index.js'
 
 function LtsJournalContent(props) {
   const location = useLocation()
@@ -219,6 +220,15 @@ function LtsJournalContent(props) {
     setShowVideo(video.id);
   };
 
+  useEffect(() => {
+    if (props.noteButtonProps?.journalId) {
+      props.noteButtonProps.data = {
+        id: props.noteButtonProps.journalId,
+        title: props.noteButtonProps.createdFrom
+      };
+    }
+  }, [props.noteButtonProps?.journalId]);
+
   if (!journal) {
     return null
   }
@@ -229,17 +239,17 @@ function LtsJournalContent(props) {
       : [journal.video]
   ).filter((video) => video && video.id);
 
-  // videos = videos.sort((a, b) => (a.id === 100000 ? -1 : b.id === 100000 ? 1 : 0));
-
   return (
     <>
       <div className="d-flex justify-content-between align-items-start general-video-container-journal" style={{ gap: '2rem' }}>
-
-
-        <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%' }}>
-          {/* Video Container */}
-          {/* Video Container */}
-          {/* Title Section */}
+        <div id="video-container-journal" className="video-container-bg" style={{ flex: '1 1 50%', position: 'relative' }}>
+          <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10 }}>
+            <NotesButton 
+              key={props.noteButtonProps?.journalId}
+              {...props.noteButtonProps} 
+            />
+          </div>
+          
           <div className="d-flex align-items-center">
             <img
               src={circleIcon}
@@ -339,7 +349,6 @@ function LtsJournalContent(props) {
           ) : (
             <p>No journal entries available.</p>
           )}
-          {/* <p className="page-card__content-description">{journal.content}</p> */}
         </div>
       </div>
 
@@ -423,8 +432,6 @@ function LtsJournalContent(props) {
                   </ul>
                 </>
               )}
-
-              {/* {openAccordion === 'evaluation' && <AccordionItems />} */}
             </AccordionItemWrapper>
           </>
         </div>
@@ -447,35 +454,6 @@ function LtsJournalContent(props) {
       ) : null}
 
       <div>
-        {/* {journal.entries && journal.entries.length ? (
-          <div className='col-12'>
-            <div className='journal-entries'>
-              <EntriesBox
-                // accordion={accordion}
-                entries={journal.entries}
-                entryBoxTitle={journal?.title}
-                journal={journal}
-                isEditable={true}
-                isDeletable={true}
-                userJournalEntries={userJournalEntries}
-                deleteReflection={(entry, userJournalEntry) =>
-                  deleteReflection(entry, userJournalEntry)
-                }
-                updateReflection={(entry, userJournalEntry) =>
-                  updateReflection(entry, userJournalEntry)
-                }
-                addReflection={(entry) => {
-                  addReflection(entry)
-                }}
-                handleShowAddReflection={(reflection) =>
-                  handleShowAddReflection(reflection)
-                }
-                showAddReflection={showAddReflection}
-                isAddReflection={isAddReflection}
-              />
-            </div>
-          </div>
-        ) : null} */}
         {journal.hasAccordion ? (
           <div className='col-12'>
             <div className={'custom-breakdowns-container'}>

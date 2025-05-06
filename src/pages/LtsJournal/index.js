@@ -58,6 +58,7 @@ import WhoAmI from '../../assets/images/academy-icons/WhoAmI.png'
 import { toast } from 'react-toastify'
 import FoulWords from '../../utils/FoulWords'
 import { JOURNALS } from '../../utils/constants'
+import { NotesButton } from '../../components/Notes'
 
 function LtsJournal(props) {
   const dispatch = useDispatch()
@@ -1206,12 +1207,21 @@ function LtsJournal(props) {
 
                           return (
                             <LtsJournalContent
-                              {...renderProps}
-                              contentContainer={contentContainer}
-                              backRoute={props.match.url}
-                              saved={journalChanged}
-                              onReflectionContentChange={handleReflectionContentChange}
-                            />
+  {...renderProps}
+  contentContainer={contentContainer}
+  backRoute={props.match.url}
+  saved={journalChanged}
+  onReflectionContentChange={handleReflectionContentChange}
+  noteButtonProps={{
+    from: "entrepreneurshipJournal",
+    data: {
+      id: selectedLesson?.redirectId || renderProps.match.params.journalId,
+      title: getCurrentLessonTitle()
+    },
+    createdFrom: getCurrentLessonTitle() || 'Entrepreneurship Journal',
+    journalId: selectedLesson?.redirectId || renderProps.match.params.journalId
+  }}
+/>
                           )
                         }}
                       />

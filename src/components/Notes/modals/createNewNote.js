@@ -128,7 +128,7 @@ const handleChange = (name, value) => {
     createdFrom: 
       props.from === 'video' ? 'videoModal-' + props.data.id :
       props.from === 'leadershipJournal' ? 'leadershipJournal-' + props.data.id :
-      props.from === 'courseGroup' ? 'courseGroup-' + props.data.id :
+      props.from === 'entrepreneurshipJournal' ? 'entrepreneurshipJournal-' + props.data.id :
       page
   }))
 
