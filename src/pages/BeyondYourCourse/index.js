@@ -10,6 +10,8 @@ import masterIcon from '../../assets/images/master-icon.png';
 import storyInMotion from '../../assets/images/story-in-motion-logo.png';
 import rightArrow from '../../assets/images/academy-icons/right-arrow.png';
 import storyInMotionPodcast from '../../assets/images/story-in-motion-podcast.png';
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
 import './index.css';
 
 export default function BeyondYourCourse() {
@@ -91,8 +93,16 @@ export default function BeyondYourCourse() {
                   <p className="fs-13 fw-light text-black">
                     <IntMessages id="beyond_your_course.page_description" />
                   </p>
+                
                 </div>
+               
               </div>
+              <img
+                    src={MenuIcon}
+                    alt='menu'
+                    className='menu-icon-cie self-start-tab cursor-pointer'
+                    onClick={() => dispatch(toggleCollapse())}
+                  />
             </div>
             <div className="gradient-background-master">
               <div className="videos-container">

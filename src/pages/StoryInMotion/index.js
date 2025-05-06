@@ -10,6 +10,8 @@ import searchJ from '../../assets/images/academy-icons/search.png';
 import Select from 'react-select';
 import Video from '../../components/Video';
 import './StoryInMotion.css';
+import MenuIcon from '../../assets/images/academy-icons/svg/icons8-menu.svg'
+import { toggleCollapse } from '../../redux/sidebar/Actions'
 
 function StoryInMotion({ intl }) {
   const dispatch = useDispatch();
@@ -123,16 +125,29 @@ function StoryInMotion({ intl }) {
       <div>
         <div>
           <div className="page-padding">
+          <img
+                    src={MenuIcon}
+                    alt='menu'
+                    className='menu-icon-cie self-start-tab cursor-pointer'
+                    onClick={() => dispatch(toggleCollapse())}
+                    style={{position:'absolute',right:'1rem'}}
+                  />
             <div style={{ marginBottom: '2rem' }}>
               <Link to="/beyond-your-course" style={{ color: '#000000' }}>
                 Master Classes &gt;{' '}
               </Link>
+              
               <span>{getSubtitle()}</span>
+             
             </div>
+           
 
             <h3 className="page-title">{pageTitle}</h3>
             <p className="page-description">{pageDescription}</p>
+         
           </div>
+        
+          
 
           <div className="gradient-background-story">
             <div className="level-navigation">
@@ -160,7 +175,7 @@ function StoryInMotion({ intl }) {
             </div>
 
             <div className='d-flex justify-content-between'>
-              <div className="search-input-wrapper">
+              {/* <div className="search-input-wrapper">
                 <div className="justify-content-between">
                   <div>
                     <ModalInput
@@ -184,8 +199,8 @@ function StoryInMotion({ intl }) {
                     />
                   </div>
                 </div>
-              </div>
-              <div
+              </div> */}
+              {/* <div
                 style={{
                   display: 'inline-block',
                   borderRadius: '8px',
@@ -232,7 +247,7 @@ function StoryInMotion({ intl }) {
                   components={{
                     IndicatorSeparator: () => null
                   }}
-                /></div>
+                /></div> */}
             </div>
 
             <div className='content-videos-container-wrapper'>
