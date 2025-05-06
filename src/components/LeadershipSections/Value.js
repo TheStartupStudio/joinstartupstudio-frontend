@@ -11,6 +11,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { useDispatch, useSelector } from 'react-redux'
 import { getJournalData } from '../../redux/journal/Actions'
 import { toast } from 'react-toastify'
+import { NotesButton } from '../Notes'
 
 const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
   const [pendingChanges, setPendingChanges] = useState({})
@@ -103,97 +104,94 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
 
   setIsReflection(true)
 
+  const noteButtonStyles = {
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem',
+    zIndex: 10
+  }
+
   return (
     <div className='d-grid grid-col-2 gap-4 grid-col-1-mob'>
       <SectionsWrapper title={journalData?.title}>
-        {journalData?.video && (
-          <>
-            <div className="mb-4">
-              <div
-                className="journal-entries__video-thumbnail"
-                onClick={() => setShowVideo(true)}
-                style={{
-                  cursor: 'pointer',
-                  position: 'relative',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100%',
-                  aspectRatio: '16 / 9',
-                }}
-              >
-                <img
-                  src={journalData.video.thumbnail}
-                  alt="video thumbnail"
-                  style={{ width: '100%', height:'100%', objectFit: 'cover' }}
-                />
-                <div className="journal-entries__video-thumbnail-icon"
+        <div style={{ position: 'relative' }}>
+          <div style={noteButtonStyles}>
+            <NotesButton
+              from="leadershipJournal"
+              data={{
+                id: id,
+                title: journalData?.title
+              }}
+              createdFrom={journalData?.title || 'Leadership Journal'}
+              journalId={id} // Make sure this is the correct journal ID from your database
+            />
+          </div>
+
+          {journalData?.video && (
+            <>
+              <div className="mb-4">
+                <div
+                  className="journal-entries__video-thumbnail"
+                  onClick={() => setShowVideo(true)}
                   style={{
-                    position: 'absolute',
+                    cursor: 'pointer',
+                    position: 'relative',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    height: '100%',
+                    aspectRatio: '16 / 9',
                   }}
                 >
-                  <FontAwesomeIcon icon={faPlay} />
+                  <img
+                    src={journalData.video.thumbnail}
+                    alt="video thumbnail"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <div className="journal-entries__video-thumbnail-icon"
+                    style={{
+                      position: 'absolute',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faPlay} />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {showVideo && (
-              <MediaLightbox
-                video={journalData.video}
-                show={showVideo}
-                onClose={() => setShowVideo(false)}
-              />
-            )}
-          </>
-        )}
-
-        {/* {paragraphs?.map((paragraph, index) => (
-          <p key={index} className='lh-sm'>
-            {paragraph}
-          </p>
-        ))}
-
-        {listItems?.length > 0 && (
-          <>
-            <p className='mb-0 fs-15 fw-medium'>
-              {journalData?.title}
-              <span className='fs-13 fw-light'></span>
-            </p>
-            {listItems.map((item, index) => (
-              <div key={index} className='d-flex gap-3 ml-2'>
-                <FontAwesomeIcon
-                  icon={faCircle}
-                  style={{ fontSize: '3px', marginTop: '0.65rem' }}
+              {showVideo && (
+                <MediaLightbox
+                  video={journalData.video}
+                  show={showVideo}
+                  onClose={() => setShowVideo(false)}
                 />
-                {item}
-              </div>
-            ))}
-          </>
-        )} */}
+              )}
+            </>
+          )}
 
-        <div 
-          dangerouslySetInnerHTML={{ __html: journalData?.content }}
-        />
+          <div
+            dangerouslySetInnerHTML={{ __html: journalData?.content }}
+          />
+        </div>
       </SectionsWrapper>
 
       <SectionsWrapper img={Light} title={'Reflection'}>
-  {journalData?.entries.map((item, index) => (
-    <LeadershipTextEditor
-      key={item.id}
-      title={item.title}
-      id={item.id}
-      journalId={id}
-      onContentChange={handleContentChange}
-      userAnswers={item.userAnswers}
-      order={index}
-      isLastEntry={index === journalData.entries.length - 1} // Add this prop
-      showControls={index === journalData.entries.length - 1} // Add this prop
-    />
-  ))}
-</SectionsWrapper>
+        {journalData?.entries.map((item, index) => (
+          <LeadershipTextEditor
+            key={item.id}
+            title={item.title}
+            id={item.id}
+            journalId={id}
+            onContentChange={handleContentChange}
+            userAnswers={item.userAnswers}
+            order={index}
+            isLastEntry={index === journalData.entries.length - 1}
+            showControls={index === journalData.entries.length - 1}
+          />
+        ))}
+      </SectionsWrapper>
     </div>
   )
 }), (prevProps, nextProps) => {

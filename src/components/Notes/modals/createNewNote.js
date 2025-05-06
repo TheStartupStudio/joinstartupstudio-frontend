@@ -18,6 +18,7 @@ import moment from 'moment'
 import { detectFoulWords, removeHtmlFromString } from '../../../utils/helpers'
 import FoulWords from '../../../utils/FoulWords'
 import { NOTES } from '../../../utils/constants'
+import { useRef } from 'react'
 
 class DraggableModalDialog extends React.Component {
   render() {
@@ -77,6 +78,8 @@ const CreateNewNote = (props) => {
   const [loading, setLoading] = useState(false)
   const [foulWords, setFoulWords] = useState(null)
   const loggedUser = useSelector((state) => state.user.user.user)
+  const [editTitle, setEditTitle] = useState(false)
+  const titleInputRef = useRef(null)
 
   const validate = () => {
     if (note.notesTitle == '' || note.notesTitle == undefined) {
@@ -117,25 +120,36 @@ const CreateNewNote = (props) => {
       })
   }
 
-  const handleChange = (name, value) => {
-    setNote((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-      createdFrom: props.from == 'video' ? 'videoModal-' + props.data.id : page
-    }))
+// In createNewNote.js
+const handleChange = (name, value) => {
+  setNote((prevValues) => ({
+    ...prevValues,
+    [name]: value,
+    createdFrom: 
+      props.from === 'video' ? 'videoModal-' + props.data.id :
+      props.from === 'leadershipJournal' ? 'leadershipJournal-' + props.data.id :
+      props.from === 'courseGroup' ? 'courseGroup-' + props.data.id :
+      page
+  }))
 
-    if (name == 'value') {
-      detectFoulWords(removeHtmlFromString(value), (data) => {
-        setFoulWords(data)
-      })
-    }
+  if (name === 'value') {
+    detectFoulWords(removeHtmlFromString(value), (data) => {
+      setFoulWords(data)
+    })
   }
+}
 
   useEffect(() => {
     setPage(window.location.pathname.split('/')[1])
     props.from == 'video' &&
       setNote((old) => ({ ...old, notesTitle: props.data.title }))
   }, [window.href])
+
+  useEffect(() => {
+    if (editTitle && titleInputRef.current) {
+      titleInputRef.current.focus()
+    }
+  }, [editTitle])
 
   return (
     <Modal
@@ -159,16 +173,33 @@ const CreateNewNote = (props) => {
           // style={{ cursor: 'move' }}
           className='add-new-note-title general-modal-header my-auto p-0 mx-3 mx-md-4 mb-2 d-flex'
         >
-          <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1'>
-            {props.from != 'video' ? (
-              <> New Note</>
+          <h3 className='mb-1 pt-4 mt-2 newNote_title flex-grow-1 d-flex align-items-center'>
+            {editTitle ? (
+              <input
+                ref={titleInputRef}
+                type="text"
+                className="form-control"
+                value={note?.notesTitle || ''}
+                onChange={e => handleChange('notesTitle', e.target.value)}
+                onBlur={() => setEditTitle(false)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') setEditTitle(false)
+                }}
+                style={{ maxWidth: 250, marginRight: 8 }}
+              />
             ) : (
-              <IntlMessages id={props.data.title} />
+              <>
+                {props.from !== 'video'
+                  ? (note?.notesTitle || 'New Note')
+                  : <IntlMessages id={props.data.title} />
+                }
+              </>
             )}
             <FontAwesomeIcon
               icon={faPencilAlt}
-              style={{ color: '#707070' }}
+              style={{ color: '#707070', cursor: 'pointer' }}
               className='ms-4'
+              onClick={() => setEditTitle(true)}
             />
           </h3>
           <button
@@ -178,7 +209,7 @@ const CreateNewNote = (props) => {
             onClick={() => {
               props.onHide('create_new_note')
               setNote({})
-            }}
+            }}  
           />
         </Modal.Header>
         <Modal.Body className='mx-md-4 px-md-0 pt-0'>
@@ -187,16 +218,6 @@ const CreateNewNote = (props) => {
             {moment(Date.now()).format('L')}
           </span>
           <div className='mt-2'>
-            {props.from != 'video' && (
-              <input
-                name={'notesTitle'}
-                type='text'
-                className={'form-control mb-2'}
-                placeholder='Title'
-                value={note?.notesTitle ? note?.notesTitle : ''}
-                onChange={(e) => handleChange(e.target.name, e.target.value)}
-              />
-            )}
             <ReactQuill
               theme='snow'
               name='textQuillStandart'
