@@ -180,18 +180,20 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
       </SectionsWrapper>
 
       <SectionsWrapper img={Light} title={'Reflection'}>
-        {journalData?.entries.map((item, index) => (
-          <LeadershipTextEditor
-            key={item.id}
-            title={item.title}
-            id={item.id}
-            journalId={id}
-            onContentChange={handleContentChange}
-            userAnswers={item.userAnswers}
-            order={index}
-          />
-        ))}
-      </SectionsWrapper>
+  {journalData?.entries.map((item, index) => (
+    <LeadershipTextEditor
+      key={item.id}
+      title={item.title}
+      id={item.id}
+      journalId={id}
+      onContentChange={handleContentChange}
+      userAnswers={item.userAnswers}
+      order={index}
+      isLastEntry={index === journalData.entries.length - 1} // Add this prop
+      showControls={index === journalData.entries.length - 1} // Add this prop
+    />
+  ))}
+</SectionsWrapper>
     </div>
   )
 }), (prevProps, nextProps) => {

@@ -2,11 +2,21 @@ import { useState, useEffect } from 'react'
 import ReactQuill from 'react-quill'
 import AddDoc from '../../assets/images/academy-icons/add-doc.png'
 import axiosInstance from '../../utils/AxiosInstance'
+import { debounce } from 'lodash'
 
-function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswers, order = 0 }) {
+function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswers, order = 0, showControls = false }) {
   const [reflections, setReflections] = useState([])
   const [startDate, setStartDate] = useState('')
   const [editDate, setEditDate] = useState('')
+  
+  // Create debounced versions of date updates
+  const debouncedStartDateUpdate = debounce((currentDate) => {
+    setStartDate(currentDate)
+  }, 2000)
+
+  const debouncedEditDateUpdate = debounce((currentDate) => {
+    setEditDate(currentDate) 
+  }, 2000)
 
   useEffect(() => {
     const resizeObserverError = window.ResizeObserver.prototype.observe
@@ -103,10 +113,12 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
     });
 
     if (!startDate && content.trim()) {
-      setStartDate(currentDate);
+      // Use debounced version for start date
+      debouncedStartDateUpdate(currentDate);
     }
     
-    setEditDate(currentDate);
+    // Use debounced version for edit date
+    debouncedEditDateUpdate(currentDate);
 
     setReflections(prev => prev.map(r =>
       r.id === reflectionId ? { ...r, content } : r
@@ -120,6 +132,14 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
       questionId: id
     });
   }
+
+  // Clear both debounce timers on unmount
+  useEffect(() => {
+    return () => {
+      debouncedStartDateUpdate.cancel();
+      debouncedEditDateUpdate.cancel();
+    };
+  }, []);
 
   const questionReflections = reflections.filter(r => r.questionId === id)
     .sort((a, b) => a.order - b.order)
@@ -155,30 +175,32 @@ function LeadershipTextEditor({ title, id, journalId, onContentChange, userAnswe
             }}
           />
 
-          <div className='d-flex mt-2 justify-content-between'>
-            <div
-              className={`d-flex gap-2 align-items-center ${
-                reflection.id === questionReflections[0].id ? 'visibility-hidden' : ''
-              }`}
-            >
-              <p
-                className='mb-0 fs-15 fw-medium cursor-pointer add-reflection'
-                onClick={() => handleRemoveReflection(reflection.id, reflection.isExisting)}
+          {showControls && (
+            <div className='d-flex mt-2 justify-content-between reflection-controls'>
+              <div
+                className={`d-flex gap-2 align-items-center ${
+                  reflection.id === questionReflections[0].id ? 'visibility-hidden' : ''
+                }`}
               >
-                Remove the reflection
-              </p>
-              <img src={AddDoc} alt='add-doc' />
+                <p
+                  className='mb-0 fs-15 fw-medium cursor-pointer add-reflection'
+                  onClick={() => handleRemoveReflection(reflection.id, reflection.isExisting)}
+                >
+                  Remove the reflection
+                </p>
+                <img src={AddDoc} alt='add-doc' />
+              </div>
+              <div className='d-flex gap-2 align-items-center'>
+                <p
+                  className='mb-0 fs-15 fw-medium cursor-pointer add-reflection'
+                  onClick={handleAddReflection}
+                >
+                  Add new reflection
+                </p>
+                <img src={AddDoc} alt='add-doc' />
+              </div>
             </div>
-            <div className='d-flex gap-2 align-items-center'>
-              <p
-                className='mb-0 fs-15 fw-medium cursor-pointer add-reflection'
-                onClick={handleAddReflection}
-              >
-                Add new reflection
-              </p>
-              <img src={AddDoc} alt='add-doc' />
-            </div>
-          </div>
+          )}
         </div>
       ))}
     </>
