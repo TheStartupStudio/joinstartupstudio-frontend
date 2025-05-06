@@ -99,7 +99,7 @@ const LeadershipJournal = memo(() => {
       const options = [
         {
           value: 0,
-          label: `Intro to ${sectionTitle}`,
+          label: `${sectionTitle}`,
           icon: finishedContent.includes(sectionTitle)
             ? tickSign
             : nextUnfinishedIndex === 0
@@ -248,6 +248,12 @@ const LeadershipJournal = memo(() => {
                     selectedCourse={activeTabData}
                     setSelectedCourse={setActiveTabData}
                     options={allTabs[activeTabData.activeTab].options}
+                    placeholder={
+                      allTabs[activeTabData.activeTab]?.title === 'SECTION ONE: WHO AM I?' ? 'Welcome to the Leadership Journal' :
+                      allTabs[activeTabData.activeTab]?.title === 'SECTION TWO: WHAT CAN I DO?' ? 'What can I do?' :
+                      allTabs[activeTabData.activeTab]?.title === 'SECTION THREE: HOW DO I PROVE IT?' ? 'How do I prove it?'
+                      : 'Select Journals to View'
+                    }
                     isDisabled={(option) => {
                       if (allTabs[activeTabData.activeTab].title === 'SECTION THREE: HOW DO I PROVE IT?') {
                         if (!finishedContent.includes('SECTION TWO: WHAT CAN I DO?')) {

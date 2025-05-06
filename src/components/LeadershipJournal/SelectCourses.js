@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Select from 'react-select'
 import lockSign from '../../assets/images/academy-icons/lock.png'
 
-function SelectCourses({ options, selectedCourse, setSelectedCourse }) {
+function SelectCourses({ options, selectedCourse, setSelectedCourse, placeholder }) {
   const handleChange = (selectedOption) => {
     if (selectedOption.icon !== lockSign) {
       setSelectedCourse((prev) => ({ ...prev, option: selectedOption }))
@@ -46,7 +46,7 @@ function SelectCourses({ options, selectedCourse, setSelectedCourse }) {
         value={selectedCourse?.option}
         onChange={handleChange}
         isOptionDisabled={isOptionDisabled}
-        placeholder='Select Journals to View'
+        placeholder={placeholder}
         menuPortalTarget={document.body}
         isSearchable={false}
         styles={{
