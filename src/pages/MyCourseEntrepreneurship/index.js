@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -25,6 +25,8 @@ function MyCourseEntrepreneurship() {
   const [selectedLanguage, setSelectedLanguage] = useState(null)
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [playingVideoIndex, setPlayingVideoIndex] = useState(null);
+  const [playingKeyPointIndex, setPlayingKeyPointIndex] = useState(null);
+  const accordionRefs = useRef([]);
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -54,18 +56,32 @@ function MyCourseEntrepreneurship() {
       setActiveAccordion(null);
     } else {
       setActiveAccordion(index);
+      // Scroll to the top of the opened accordion
+      setTimeout(() => {
+        if (accordionRefs.current[index]) {
+          accordionRefs.current[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
   };
 
-  const handlePlay = (index) => {
-    if (playingVideoIndex !== index) {
-      setPlayingVideoIndex(null); 
-      setTimeout(() => {
-        setPlayingVideoIndex(index);
-      }, 0);
-    } else {
+  const pauseAllVideos = () => {
+    setPlayingVideoIndex(null);
+    setPlayingKeyPointIndex(null);
+  };
+
+  const handlePlayEntrepreneur = (index) => {
+    pauseAllVideos();
+    setTimeout(() => {
       setPlayingVideoIndex(index);
-    }
+    }, 0);
+  };
+
+  const handlePlayKeyPoint = (index) => {
+    pauseAllVideos();
+    setTimeout(() => {
+      setPlayingKeyPointIndex(index);
+    }, 0);
   };
 
   return (
@@ -189,6 +205,7 @@ function MyCourseEntrepreneurship() {
                       }`}
                       aria-labelledby={`heading-${index}`}
                       data-bs-parent="#accordionExample"
+                      ref={el => accordionRefs.current[index] = el}
                     >
                       <div className="accordion-body py-4">
                         {data.type === 'entrepreneurs' && (
@@ -199,14 +216,18 @@ function MyCourseEntrepreneurship() {
                                   <h3 className="entrepreneurs__item-title">{entData.name}</h3>
                                   <div className="entrepreneurs__item-position">{entData.position}</div>
                                   <div className="entrepreneurs__item-video">
-                                    <div className="responsive-video">
+                                    <div
+                                      className="responsive-video"
+                                      onClick={() => handlePlayEntrepreneur(entIndex)}
+                                      style={{ cursor: 'pointer' }}
+                                    >
                                       <ReactPlayer
                                         className=""
                                         width="100%"
                                         height="100%"
                                         url={entData.video_url}
                                         controls
-                                        playing={playingVideoIndex === entIndex} 
+                                        playing={playingVideoIndex === entIndex}
                                         preload="metadata"
                                         light={entData.thumbnail}
                                         config={{
@@ -216,7 +237,6 @@ function MyCourseEntrepreneurship() {
                                             },
                                           },
                                         }}
-                                        onPlay={() => handlePlay(entIndex)} 
                                         onPause={() => setPlayingVideoIndex(null)}
                                       />
                                     </div>
@@ -232,7 +252,11 @@ function MyCourseEntrepreneurship() {
                             {LtsCourseIntro['key_points_videos'].map((entData, entIndex) => (
                               <div className="key_points__item col-12 col-md-3" key={entIndex}>
                                 <div className="key_points__item-inner">
-                                  <div className="key_points__item-video">
+                                  <div
+                                    className="key_points__item-video"
+                                    onClick={() => handlePlayKeyPoint(entIndex)}
+                                    style={{ cursor: 'pointer' }}
+                                  >
                                     <div className="responsive-video">
                                       <ReactPlayer
                                         className=""
@@ -240,7 +264,7 @@ function MyCourseEntrepreneurship() {
                                         height="100%"
                                         url={entData.url}
                                         controls
-                                        playing={true}
+                                        playing={playingKeyPointIndex === entIndex}
                                         preload="metadata"
                                         config={{
                                           file: {
@@ -250,6 +274,7 @@ function MyCourseEntrepreneurship() {
                                           },
                                         }}
                                         light={entData.thumbnail}
+                                        onPause={() => setPlayingKeyPointIndex(null)}
                                       />
                                     </div>
                                   </div>
@@ -267,14 +292,14 @@ function MyCourseEntrepreneurship() {
                                 <span>LEVEL 1 |</span> Entrepreneurship and You
                               </p>
                               <div className='levels-of-journey__description'>
-                                Entrepreneurship is a mindset,and in the first
-                                level of this program,you will engage in
+                                Entrepreneurship is a mindset, and in the first
+                                level of this program, you will engage in
                                 developing this mindset as your preparation for
                                 starting your journey on the pathway to
                                 entrepreneurship.You need proof of yourself as
                                 an entrepreneur and through this program you
                                 will create content that can publicly speak to
-                                your values,your purpose,your mindset, and your
+                                your values, your purpose, your mindset, and your
                                 skillset.The first step in creating this proof
                                 is developing content that solidifies your
                                 statement of "I Am.".Who are you and how do you

@@ -5808,7 +5808,7 @@ wave > wave:first-child {
 .journal-entries__video {
   float: right;
   margin-left: 13px;
-  margin-bottom: 13px;
+  /* margin-bottom: 13px; */
 
   /* max-width: 60%; */
   width: 100%;
@@ -5826,7 +5826,7 @@ strong {
   .journal-entries__video {
     max-width: 100%;
     width: 100%;
-    margin-bottom: 25px;
+    /* margin-bottom: 25px; */
   }
 }
 
@@ -7020,4 +7020,13 @@ _::-webkit-full-page-media,
 _:future,
 :root body {
   height: 100% !important;
+}
+
+.journal-entries__videos .journal-entries__video {
+  margin-bottom: 0;
+}
+
+.journal-entries__videos .journal-entries__video:has(+ .nav-videos),
+.journal-entries__videos .journal-entries__video--welcome-video:has(+ .nav-videos) {
+  margin-bottom: 2rem;
 }
