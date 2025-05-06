@@ -31,6 +31,8 @@ function IntroWhoAmI({ setIsReflection }) {
           }
           videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 2 Section One Who Am I - V2.mov'}
           thumbnailUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+          showInstructorInfo = {false}
+          customTitle="Who am I?"
         />
       </div>
       <SectionsWrapper

@@ -31,6 +31,8 @@ function SectionTwo({ setIsReflection }) {
           }
           videoUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/LJ 7 Section Two What Can I Do - V2.mov'}
           thumbnailUrl={'https://d5tx03iw7t69i.cloudfront.net/Journal/LeadershipJournal/Dr.Williams1.png'}
+          showInstructorInfo = {false}
+          customTitle="What can I do?"
         />
       </div>
       <SectionsWrapper
