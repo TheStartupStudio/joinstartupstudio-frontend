@@ -49,7 +49,7 @@ const LeadershipJournal = memo(() => {
     },
     'SECTION THREE: HOW DO I PROVE IT?': {
       mainComponent: <SectionThree setIsReflection={setIsReflection} />,
-      introComponent: <GoToJournal />
+      introComponent: <SectionThree setIsReflection={setIsReflection} />
     }
   }), [])
 

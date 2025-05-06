@@ -12,20 +12,26 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getJournalData } from '../../redux/journal/Actions'
 import { toast } from 'react-toastify'
 import { NotesButton } from '../Notes'
+import { useHistory } from 'react-router-dom'
 
 const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
+  const [currentId, setCurrentId] = useState(id)
   const [pendingChanges, setPendingChanges] = useState({})
   const [showVideo, setShowVideo] = useState(false)
   const dispatch = useDispatch()
   const { journalData } = useSelector((state) => state.journal)
 
+  useEffect(() => {
+    setCurrentId(id)
+  }, [id])
+
   const refreshData = () => {
-    dispatch(getJournalData(id))
+    dispatch(getJournalData(currentId))
   }
 
   useEffect(() => {
     refreshData()
-  }, [id])
+  }, [currentId])
 
   const handleContentChange = (entryId, data) => {
     setPendingChanges((prev) => ({
@@ -33,11 +39,53 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
       [entryId]: {
         content: data.content,
         isExisting: data.isExisting,
-        journalId: id,
+        journalId: currentId,
         entryId: entryId,
         order: typeof data.order === 'number' ? data.order : 0
       }
     }))
+  }
+
+  const findNextLesson = (currentId) => {
+    const lessons = [
+      { 
+        now: <Value id={1001065} setIsReflection={setIsReflection} />,
+        next: <Value id={1001066} setIsReflection={setIsReflection} />
+      },
+      { 
+        now: <Value id={1001066} setIsReflection={setIsReflection} />,
+        next: <Value id={1001067} setIsReflection={setIsReflection} />
+      },
+      { 
+        now: <Value id={1001067} setIsReflection={setIsReflection} />,
+        next: <Value id={1001068} setIsReflection={setIsReflection} />
+      },
+      { 
+        now: <Value id={1001069} setIsReflection={setIsReflection} />,
+        next: <Value id={1001070} setIsReflection={setIsReflection} />
+      },
+      { 
+        now: <Value id={1001070} setIsReflection={setIsReflection} />,
+        next: <Value id={1001071} setIsReflection={setIsReflection} />
+      },
+      { 
+        now: <Value id={1001071} setIsReflection={setIsReflection} />,
+        next: <Value id={1001072} setIsReflection={setIsReflection} />
+      },
+      { 
+        now: <Value id={1001073} setIsReflection={setIsReflection} />,
+        next: <Value id={1001074} setIsReflection={setIsReflection} />
+      },
+      { 
+        now: <Value id={1001074} setIsReflection={setIsReflection} />,
+        next: <Value id={1001075} setIsReflection={setIsReflection} />
+      },
+      { 
+        now: <Value id={1001075} setIsReflection={setIsReflection} />,
+        next: <Value id={1001076} setIsReflection={setIsReflection} />
+      }
+    ]
+    return lessons.find(l => l.now.props.id === parseInt(currentId))?.next
   }
 
   useImperativeHandle(ref, () => ({
@@ -47,7 +95,7 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
           async ([entryId, data]) => {
             try {
               const postResponse = await axiosInstance.post(
-                `/ltsJournals/ltsjournalEntries/${id}/${entryId}`,
+                `/ltsJournals/ltsjournalEntries/${currentId}/${entryId}`,
                 {
                   content: data.content,
                   order: data.order
@@ -58,7 +106,7 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
             } catch (postError) {
               if (postError.response?.status === 400 || data.isExisting) {
                 const putResponse = await axiosInstance.put(
-                  `/ltsJournals/ltsjournalEntries/${id}/${entryId}`,
+                  `/ltsJournals/ltsjournalEntries/${currentId}/${entryId}`,
                   {
                     content: data.content,
                     order: data.order
@@ -74,7 +122,19 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
 
         await Promise.all(savePromises)
         setPendingChanges({})
-        refreshData()
+        await refreshData()
+
+        const allEntriesHaveContent = journalData?.entries.every(entry => 
+          entry.userAnswers && entry.userAnswers.length > 0
+        )
+
+        if (allEntriesHaveContent) {
+          const nextComponent = findNextLesson(parseInt(currentId))
+          if (nextComponent) {
+            setCurrentId(nextComponent.props.id)
+          }
+        }
+
       } catch (error) {
         console.error('Error saving reflections:', error)
       }
@@ -87,12 +147,10 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
     const parser = new DOMParser()
     const doc = parser.parseFromString(content, 'text/html')
 
-    // Extract paragraphs
     const paragraphs = Array.from(doc.querySelectorAll('p')).map(
       (p) => p.textContent
     )
 
-    // Extract list items
     const listItems = Array.from(doc.querySelectorAll('li')).map(
       (li) => li.textContent
     )
@@ -119,11 +177,11 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
             <NotesButton
               from="leadershipJournal"
               data={{
-                id: id,
+                id: currentId,
                 title: journalData?.title
               }}
               createdFrom={journalData?.title || 'Leadership Journal'}
-              journalId={id} // Make sure this is the correct journal ID from your database
+              journalId={currentId}
             />
           </div>
 
@@ -183,7 +241,7 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
             key={item.id}
             title={item.title}
             id={item.id}
-            journalId={id}
+            journalId={currentId}
             onContentChange={handleContentChange}
             userAnswers={item.userAnswers}
             order={index}
@@ -195,7 +253,6 @@ const Value = memo(forwardRef(({ id, setIsReflection }, ref) => {
     </div>
   )
 }), (prevProps, nextProps) => {
-  // Custom comparison function for memo
   return prevProps.id === nextProps.id
 })
 
