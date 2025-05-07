@@ -22,18 +22,18 @@ function Payment() {
 
         if (user?.stripe_subscription_id) {
           dispatch(setStripe(user.stripe_subscription_id))
-          toast.success('✅ Subscription successful:')
+          toast.success('Subscription successful')
 
           setTimeout(() => {
             history.push('/dashboard')
           }, 2000)
         } else {
-          toast.error('⚠️ No subscription ID found for user.')
+          toast.error('No subscription ID found for user.')
           setLoading(false)
           history.push('/subscribe')
         }
       } catch (error) {
-        toast.error('❌ Error fetching user')
+        toast.error('Error fetching user')
         setLoading(false)
       }
     }

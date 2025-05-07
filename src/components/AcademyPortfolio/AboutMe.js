@@ -171,7 +171,9 @@ function AboutMe({ user }) {
             >
               <div
                 dangerouslySetInnerHTML={{
-                  __html: isExpanded ? fullText : `${shortText}...`
+                  __html: isExpanded
+                    ? fullText
+                    : `${shortText} ${fullText.length > 200 ? '...' : ''}`
                 }}
               />
 

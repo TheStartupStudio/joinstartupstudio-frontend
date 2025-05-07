@@ -444,6 +444,7 @@ body:has(.choose-login_container) section.loginpage-footer-section {
   min-height: 100vh;
   height: 100%;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   width: 100%;
   position: relative;
 }

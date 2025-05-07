@@ -118,7 +118,6 @@ function NewEducation({ isOpen, setIsOpen }) {
         const imageCreate = new FormData()
         imageCreate.append('img', imageFile)
 
-
         const res = await axiosInstance.post('/upload/img', imageCreate, {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -293,11 +292,25 @@ function NewEducation({ isOpen, setIsOpen }) {
                   selected={formData.startDate}
                   onChange={(date) => handleInputChange('startDate', date)}
                   className='form-control'
+                  popperPlacement='bottom-start'
+                  popperModifiers={[
+                    {
+                      name: 'preventOverflow',
+                      options: {
+                        boundary: 'window'
+                      }
+                    },
+                    {
+                      name: 'flip',
+                      enabled: false
+                    }
+                  ]}
                   customInput={
                     <div className='d-flex align-items-center gap-2'>
                       <FaRegCalendarAlt className='calendar-icon' />
                       <input
                         className='cursor-pointer'
+                        popperPlacement='bottom-start'
                         placeholder='Choose Date'
                         readOnly
                         value={
@@ -325,11 +338,25 @@ function NewEducation({ isOpen, setIsOpen }) {
                   onChange={(date) => handleInputChange('endDate', date)}
                   disabled={formData.currentPosition}
                   className='form-control'
+                  popperPlacement='bottom-start'
+                  popperModifiers={[
+                    {
+                      name: 'preventOverflow',
+                      options: {
+                        boundary: 'window'
+                      }
+                    },
+                    {
+                      name: 'flip',
+                      enabled: false
+                    }
+                  ]}
                   customInput={
                     <div className='d-flex align-items-center gap-2'>
                       <FaRegCalendarAlt className='calendar-icon' />
                       <input
                         className='cursor-pointer'
+                        popperPlacement='bottom-start'
                         placeholder='Choose Date'
                         readOnly
                         value={

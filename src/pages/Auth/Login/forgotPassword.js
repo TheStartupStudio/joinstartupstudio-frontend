@@ -7,7 +7,7 @@ import IntlMessages from '../../../utils/IntlMessages'
 import axiosInstance from '../../../utils/AxiosInstance'
 import { CustomInput } from '../../../ui/ContentItems'
 import './forgotPassword.css'
-import StartupLogo from '../../../assets/images/startup-logo-forgot-password.png'
+import StartupLogo from '../../../assets/images/academy-icons/svg/Startup-Studio-Logo.svg'
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false)
@@ -89,69 +89,13 @@ const ForgotPassword = () => {
   return (
     <div className='gradient-color'>
       <div className='d-flex justify-content-between p-2'>
-        <img
-          src={StartupLogo}
-          style={{ width: '250px', height: '120px', margin: '1rem 2rem' }}
-        />
-        <div
-          className='nav-buttons'
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            padding: '30px 50px',
-            gap: '40px'
-          }}
-        >
-          <nav className='mt-4'>
-            <ul className='list-unstyled d-flex gap-4'>
-              <li>
-                <a
-                  className={`fs-13 fw-medium `}
-                  href='https://academy.learntostart.com/explore-the-platform-1.html'
-                  style={{ color: '#000000' }}
-                >
-                  EXPLORE THE PLATFORM
-                </a>
-              </li>
-              <li>
-                <a
-                  className='fs-13 fw-medium'
-                  href='https://academy.learntostart.com/explore-the-course.html'
-                  style={{ color: '#000000' }}
-                >
-                  EXPLORE THE COURSE
-                </a>
-              </li>
-              <li>
-                <span
-                  className='fs-13 fw-medium cursor-pointer'
-                  onClick={() => setFaqModal(true)}
-                  style={{ color: '#000000' }}
-                >
-                  FAQS
-                </span>
-              </li>
-              <li>
-                <a
-                  className='fs-13 fw-medium'
-                  href='https://academy.learntostart.com/contact.html'
-                  style={{ color: '#000000' }}
-                >
-                  CONTACT
-                </a>
-              </li>
-              <li>
-                <Link
-                  className='fs-13 fw-medium'
-                  to='/'
-                  style={{ color: '#000000' }}
-                >
-                  LOGIN
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        <a href='https://academy.learntostart.com/'>
+          <img
+            src={StartupLogo}
+            alt='course-logo'
+            className='w-200-mob my-3 ms-4'
+          />
+        </a>
       </div>
       <div
         className='container-fluid my-auto px-5 d-flex align-items-center justify-content-center'

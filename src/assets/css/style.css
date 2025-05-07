@@ -5005,6 +5005,7 @@ wave > wave:first-child {
   width: 6rem;
   height: 6rem;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .menu-icon-cie {
@@ -5030,6 +5031,10 @@ wave > wave:first-child {
 .auth-logos {
   width: 32px;
   height: 32px;
+}
+
+.auth-logos-buttons button {
+  background-color: transparent;
 }
 
 @media (max-width: 1024px) {
@@ -5347,6 +5352,10 @@ wave > wave:first-child {
 
 .p-inl-100 {
   padding-inline: 10rem;
+}
+
+#content {
+  overflow: auto;
 }
 
 @media (max-width: 1190px) {

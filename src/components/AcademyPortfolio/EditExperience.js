@@ -366,6 +366,19 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   className='form-control'
+                  popperPlacement='bottom-start'
+                  popperModifiers={[
+                    {
+                      name: 'preventOverflow',
+                      options: {
+                        boundary: 'window'
+                      }
+                    },
+                    {
+                      name: 'flip',
+                      enabled: false
+                    }
+                  ]}
                   customInput={
                     <div className='d-flex align-items-center gap-2'>
                       <FaRegCalendarAlt className='calendar-icon' />
@@ -397,6 +410,19 @@ function EditExperience({ isOpen, setIsOpen, experienceData }) {
                   selected={endDate}
                   onChange={(date) => setEndDate(date)}
                   className='form-control'
+                  popperPlacement='bottom-start'
+                  popperModifiers={[
+                    {
+                      name: 'preventOverflow',
+                      options: {
+                        boundary: 'window'
+                      }
+                    },
+                    {
+                      name: 'flip',
+                      enabled: false
+                    }
+                  ]}
                   customInput={
                     <div className='d-flex align-items-center gap-2'>
                       <FaRegCalendarAlt className='calendar-icon' />

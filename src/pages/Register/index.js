@@ -110,7 +110,11 @@ function Register() {
   return (
     <>
       <a href='https://academy.learntostart.com/' className='logo-register'>
-        <img src={StartupStudioLogo} alt='course-logo' className='w-200-mob' />
+        <img
+          src={StartupStudioLogo}
+          alt='course-logo'
+          className='w-200-mob my-3'
+        />
       </a>
 
       <main className='register-main'>
@@ -380,7 +384,7 @@ function Register() {
                     {isLoading ? (
                       <span className='spinner-border spinner-border-sm' />
                     ) : (
-                      <span className='d-flex align-items-center justify-content-center'>
+                      <span className='d-flex align-items-center justify-content-center text-black'>
                         Register
                         <FontAwesomeIcon
                           icon={faArrowRight}
@@ -393,7 +397,7 @@ function Register() {
               </div>
               <div className='d-flex flex-column align-items-center justify-content-center mb-3'>
                 <span className='mb-2 public-page-text'>OR USE</span>
-                <div className='d-flex gap-3'>
+                <div className='d-flex gap-3 auth-logos-buttons'>
                   <button className='border-0'>
                     <img className='auth-logos' src={googleLogo} alt='google' />
                   </button>
